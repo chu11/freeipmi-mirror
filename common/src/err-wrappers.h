@@ -351,7 +351,7 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define __KCS_ERRNO_TO_UDM_ERRNUM                                       \
+#define __KCS_ERRNO_TO_ERRNUM                                           \
 do {                                                                    \
   if (errno == 0)                                                       \
     ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;                             \
@@ -377,7 +377,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        __KCS_ERRNO_TO_UDM_ERRNUM;                                      \
+        __KCS_ERRNO_TO_ERRNUM;                                          \
         __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         return (-1);                                                    \
@@ -388,10 +388,10 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        __KCS_ERRNO_TO_UDM_ERRNUM;                                      \
+        __KCS_ERRNO_TO_ERRNUM;                                          \
         __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
-        return (-1);                                                    \
+        goto cleanup;                                                   \
       }                                                                 \
   } while (0)
 
@@ -409,8 +409,6 @@ do {                                                                    \
     __KCS_TRACE;                                                        \
     goto cleanup;                                                       \
   } while (0)
-
-#define KCS_ERRNO
 
 #define KCS_ERR_PARAMETERS(expr)                                        \
   do {                                                                  \
@@ -540,6 +538,157 @@ do {                                                                    \
         ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                  \
         __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define __SSIF_ERRNO_TO_ERRNUM                                          \
+do {                                                                    \
+  if (errno == 0)                                                       \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;                            \
+  else if (errno == EINTR)                                              \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_BUSY;                               \
+  else if (errno == EAGAIN)                                             \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_BUSY;                               \
+  else if (errno == EPERM)                                              \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;                         \
+  else if (errno == EACCES)                                             \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;                         \
+  else if (errno == ENOENT)                                             \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND;                   \
+  else if (errno == ENOTDIR)                                            \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND;                   \
+  else if (errno == ENAMETOOLONG)                                       \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND;                   \
+  else if (errno == ENOMEM)                                             \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                      \
+  else if (errno == EINVAL)                                             \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                     \
+  else                                                                  \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR;                       \
+} while (0)
+
+#define SSIF_ERR(expr)                                                  \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        __SSIF_ERRNO_TO_ERRNUM;                                         \
+        __SSIF_SYSLOG;                                                  \
+        __SSIF_TRACE;                                                   \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SSIF_ERR_CLEANUP(expr)                                          \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        __SSIF_ERRNO_TO_ERRNUM;                                         \
+        __SSIF_SYSLOG;                                                  \
+        __SSIF_TRACE;                                                   \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SSIF_LOG(expr)                                                  \
+  do {                                                                  \
+    expr;                                                               \
+    __SSIF_SYSLOG;                                                      \
+    __SSIF_TRACE;                                                       \
+  } while (0)
+
+#define SSIF_LOG_CLEANUP(expr)                                          \
+  do {                                                                  \
+    expr;                                                               \
+    __SSIF_SYSLOG;                                                      \
+    __SSIF_TRACE;                                                       \
+    goto cleanup;                                                       \
+  } while (0)
+
+#define SSIF_ERR_PARAMETERS(expr)                                       \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;                     \
+        __SSIF_SYSLOG;                                                  \
+        __SSIF_TRACE;                                                   \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SSIF_ERR_PARAMETERS_CLEANUP(expr)                               \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;                     \
+        __SSIF_SYSLOG;                                                  \
+        __SSIF_TRACE;                                                   \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SSIF_ERR_IO_NOT_INITIALIZED(expr)                               \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;             \
+        __SSIF_SYSLOG;                                                  \
+        __SSIF_TRACE;                                                   \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SSIF_ERR_IO_NOT_INITIALIZED_CLEANUP(expr)                       \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;             \
+        __SSIF_SYSLOG;                                                  \
+        __SSIF_TRACE;                                                   \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SSIF_ERR_OUT_OF_MEMORY(expr)                                    \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                  \
+        __SSIF_SYSLOG;                                                  \
+        __SSIF_TRACE;                                                   \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SSIF_ERR_OUT_OF_MEMORY_CLEANUP(expr)                            \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                  \
+        __SSIF_SYSLOG;                                                  \
+        __SSIF_TRACE;                                                   \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SSIF_ERR_INTERNAL_ERROR(expr)                                   \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                 \
+        __SSIF_SYSLOG;                                                  \
+        __SSIF_TRACE;                                                   \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SSIF_ERR_INTERNAL_ERROR_CLEANUP(expr)                           \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                 \
+        __SSIF_SYSLOG;                                                  \
+        __SSIF_TRACE;                                                   \
         goto cleanup;                                                   \
       }                                                                 \
   } while (0)

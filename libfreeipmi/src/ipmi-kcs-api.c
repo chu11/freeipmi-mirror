@@ -68,10 +68,10 @@
 #define IPMI_KCS_SMS_REGISTER_SPACING_DEFAULT 1
 /* KCS Interface Status Register Bits */
 /* Scheme BIT Calculator Example
-  To BIN: 
-  (format #f "[~8,'0b]" #x80) => "[10000000]"
-  To HEX:
-  (format #f "[0x~2,'0x]" #b10000000) => "[0x80]"
+   To BIN: 
+   (format #f "[~8,'0b]" #x80) => "[10000000]"
+   To HEX:
+   (format #f "[0x~2,'0x]" #b10000000) => "[0x80]"
 */
 #define IPMI_KCS_STATUS_REG_S1          0x80
 #define IPMI_KCS_STATUS_REG_S0          0x40
@@ -94,38 +94,38 @@
 #define IPMI_KCS_STATUS_SUCCESS              IPMI_KCS_STATUS_NO_ERR
 #define IPMI_KCS_STATUS_OK                   IPMI_KCS_STATUS_NO_ERR
 
-#define IPMI_KCS_STATUS_NO_ERROR_STR \
-"No error"
+#define IPMI_KCS_STATUS_NO_ERROR_STR            \
+  "No error"
           
 #define IPMI_KCS_STATUS_ABORTED_BY_CMD         0x01
-#define IPMI_KCS_STATUS_ABORTED_BY_CMD_STR \
-"Aborted by command (Transfer in progress was " \
-"aborted by SMS issuing the Abort/Status control code)"
+#define IPMI_KCS_STATUS_ABORTED_BY_CMD_STR                      \
+  "Aborted by command (Transfer in progress was "               \
+  "aborted by SMS issuing the Abort/Status control code)"
 
 #define IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE      0x02
-#define IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE_STR \
-"Illegal control code"
+#define IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE_STR   \
+  "Illegal control code"
 
 #define IPMI_KCS_STATUS_LEN_ERROR              0x06
-#define IPMI_KCS_STATUS_LEN_ERROR_STR \
-"Length error (e.g.overrun)"
+#define IPMI_KCS_STATUS_LEN_ERROR_STR           \
+  "Length error (e.g.overrun)"
 
 #define IPMI_KCS_STATUS_OEM_ERROR_BEGIN        0xC0
 #define IPMI_KCS_STATUS_OEM_ERROR_END          0xFE
 
 #define IPMI_KCS_STATUS_UNSPECIFIED_ERROR      0xFF
-#define IPMI_KCS_STATUS_UNSPECIFIED_ERROR_STR \
-"Unspecified error"
+#define IPMI_KCS_STATUS_UNSPECIFIED_ERROR_STR   \
+  "Unspecified error"
 
 /* Reserved - all others */
 
 /* IPMI KCS SMS Interface Registers */
 #define IPMI_KCS_REG_DATAIN(sms_io_base)   (sms_io_base)
 #define IPMI_KCS_REG_DATAOUT(sms_io_base)  (sms_io_base)
-#define IPMI_KCS_REG_CMD(sms_io_base, register_spacing)     \
-       (sms_io_base + register_spacing)
-#define IPMI_KCS_REG_STATUS(sms_io_base, register_spacing)  \
-       (sms_io_base + register_spacing)
+#define IPMI_KCS_REG_CMD(sms_io_base, register_spacing) \
+  (sms_io_base + register_spacing)
+#define IPMI_KCS_REG_STATUS(sms_io_base, register_spacing)      \
+  (sms_io_base + register_spacing)
 
 /* IPMI KCS Control Codes */
 #define IPMI_KCS_CTRL_GET_STATUS       0x60 /* Request Interface Status / 
@@ -330,6 +330,9 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
 {
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
+  if (ctx->io_init)
+    goto out;
+
 #ifdef __FreeBSD__
 #ifdef USE_IOPERM
   /* i386_set_ioperm has known problems on FBSD 5.x (bus errors). */
@@ -343,12 +346,13 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
 #endif/* !__FreeBSD__ */
 
   ctx->io_init = 1;
+ out:
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return (0);
 }
 
 static int8_t
-ipmi_kcs_get_status (ipmi_kcs_ctx_t ctx)
+_ipmi_kcs_get_status (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
@@ -360,13 +364,13 @@ ipmi_kcs_get_status (ipmi_kcs_ctx_t ctx)
  * read the command. 
  */
 static int
-ipmi_kcs_wait_for_ibf_clear (ipmi_kcs_ctx_t ctx)
+_ipmi_kcs_wait_for_ibf_clear (ipmi_kcs_ctx_t ctx)
 {
   unsigned int poll_attempts = 0;
 
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  while ((ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_IBF)
+  while ((_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_IBF)
          && poll_attempts <= IPMI_KCS_POLL_ATTEMPTS)
     {
       usleep (ctx->poll_interval);
@@ -384,13 +388,13 @@ ipmi_kcs_wait_for_ibf_clear (ipmi_kcs_ctx_t ctx)
  */
 
 static int
-ipmi_kcs_wait_for_obf_set (ipmi_kcs_ctx_t ctx)
+_ipmi_kcs_wait_for_obf_set (ipmi_kcs_ctx_t ctx)
 {
   unsigned int poll_attempts = 0;
 
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  while ((!(ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_OBF))
+  while ((!(_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_OBF))
          && (poll_attempts <= IPMI_KCS_POLL_ATTEMPTS))
     {
       usleep (ctx->poll_interval);
@@ -406,7 +410,7 @@ ipmi_kcs_wait_for_obf_set (ipmi_kcs_ctx_t ctx)
  * Read byte from outbound data port. 
  */
 static int8_t
-ipmi_kcs_read_byte (ipmi_kcs_ctx_t ctx)
+_ipmi_kcs_read_byte (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
@@ -417,7 +421,7 @@ ipmi_kcs_read_byte (ipmi_kcs_ctx_t ctx)
  * Bump channel into sending next byte.
  */
 static void
-ipmi_kcs_read_next (ipmi_kcs_ctx_t ctx) 
+_ipmi_kcs_read_next (ipmi_kcs_ctx_t ctx) 
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
@@ -427,7 +431,7 @@ ipmi_kcs_read_next (ipmi_kcs_ctx_t ctx)
  * Set up channel for writing.
  */
 static void
-ipmi_kcs_start_write (ipmi_kcs_ctx_t ctx)
+_ipmi_kcs_start_write (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
@@ -438,7 +442,7 @@ ipmi_kcs_start_write (ipmi_kcs_ctx_t ctx)
  * Write byte to inound data port.
  */
 static void
-ipmi_kcs_write_byte (ipmi_kcs_ctx_t ctx, uint8_t byte)
+_ipmi_kcs_write_byte (ipmi_kcs_ctx_t ctx, uint8_t byte)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
@@ -449,7 +453,7 @@ ipmi_kcs_write_byte (ipmi_kcs_ctx_t ctx, uint8_t byte)
  * Set up channel to end write.
  */
 static void
-ipmi_kcs_end_write (ipmi_kcs_ctx_t ctx)
+_ipmi_kcs_end_write (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
@@ -457,11 +461,13 @@ ipmi_kcs_end_write (ipmi_kcs_ctx_t ctx)
 }
 
 #if 0
+/* Not used at all right now */
+
 /* 
  * Send Abort current processing command.
  */
 static void
-ipmi_kcs_get_abort (ipmi_kcs_ctx_t ctx)
+_ipmi_kcs_get_abort (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
@@ -470,11 +476,11 @@ ipmi_kcs_get_abort (ipmi_kcs_ctx_t ctx)
 #endif
 
 static int8_t
-ipmi_kcs_test_if_state (ipmi_kcs_ctx_t ctx, uint8_t status)
+_ipmi_kcs_test_if_state (ipmi_kcs_ctx_t ctx, uint8_t status)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  if ((ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_STATE) == 
+  if ((_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_STATE) == 
       (status & IPMI_KCS_STATUS_REG_STATE))
     return 1;
   else
@@ -485,12 +491,12 @@ ipmi_kcs_test_if_state (ipmi_kcs_ctx_t ctx, uint8_t status)
  * Read dummy byte to clear OBF if set.
  */
 static void
-ipmi_kcs_clear_obf (ipmi_kcs_ctx_t ctx)
+_ipmi_kcs_clear_obf (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  if (ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_OBF) 
-    ipmi_kcs_read_byte (ctx);
+  if (_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_OBF) 
+    _ipmi_kcs_read_byte (ctx);
 }
 
 #if 0
@@ -583,46 +589,46 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
     KCS_ERR_CLEANUP(!(IPMI_MUTEX_LOCK_INTERRUPTIBLE(ctx->semid) < 0));
   lock_flag++;
   
-  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
+  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
 
-  ipmi_kcs_clear_obf (ctx);
+  _ipmi_kcs_clear_obf (ctx);
 
-  ipmi_kcs_start_write (ctx);
+  _ipmi_kcs_start_write (ctx);
 
-  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
+  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
 
-  KCS_ERR_BUSY_CLEANUP(ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE));
+  KCS_ERR_BUSY_CLEANUP(_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE));
 
-  ipmi_kcs_clear_obf (ctx);
+  _ipmi_kcs_clear_obf (ctx);
 
   /* note we have to save last byte. */
   /* for (buf=data; data+len-1 < buf; buf++) */
   for (; buf_len > 1; buf_len--)
     {
-      ipmi_kcs_write_byte (ctx, *p);
+      _ipmi_kcs_write_byte (ctx, *p);
 
-      KCS_ERR_SYSTEM_ERROR_CLEANUP(!(ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
+      KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
 
-      KCS_ERR_BUSY_CLEANUP(ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE));
+      KCS_ERR_BUSY_CLEANUP(_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE));
 
-      ipmi_kcs_clear_obf (ctx);
+      _ipmi_kcs_clear_obf (ctx);
       p++;
       count++;
     }
-  ipmi_kcs_end_write (ctx);
+  _ipmi_kcs_end_write (ctx);
 
-  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
+  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
 
-  KCS_ERR_BUSY_CLEANUP(ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE));
+  KCS_ERR_BUSY_CLEANUP(_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE));
 
-  ipmi_kcs_clear_obf (ctx);
+  _ipmi_kcs_clear_obf (ctx);
 
-  ipmi_kcs_write_byte (ctx, *p);
+  _ipmi_kcs_write_byte (ctx, *p);
 
   count++;
 
 #if 0
-  if (!ipmi_kcs_test_if_state (IPMI_KCS_STATE_READ)) {
+  if (!_ipmi_kcs_test_if_state (IPMI_KCS_STATE_READ)) {
     printf ("Not in READ state after writing last byte?\n");
     ipmi_kcs_print_state (ipmi_kcs_get_state ());
     exit (1);
@@ -656,29 +662,29 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   
   KCS_ERR_IO_NOT_INITIALIZED_CLEANUP(ctx->io_init);
 
-  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
+  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
 
-  KCS_ERR_BUSY_CLEANUP(ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ));
+  KCS_ERR_BUSY_CLEANUP(_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ));
 
-  while (ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ))
+  while (_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ))
     {
       char c;
-      KCS_ERR_SYSTEM_ERROR_CLEANUP(!(ipmi_kcs_wait_for_obf_set (ctx) < 0));
-      c = ipmi_kcs_read_byte (ctx);
+      KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_obf_set (ctx) < 0));
+      c = _ipmi_kcs_read_byte (ctx);
       if (count < buf_len)
 	{
 	  *(p++) = c;
 	  count++;
 	}
-      ipmi_kcs_read_next (ctx);
-      KCS_ERR_SYSTEM_ERROR_CLEANUP(!(ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
+      _ipmi_kcs_read_next (ctx);
+      KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
     }
 
-  if (ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_IDLE))
+  if (_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_IDLE))
     {
       /* Clean up */
-      KCS_ERR_SYSTEM_ERROR_CLEANUP(!(ipmi_kcs_wait_for_obf_set (ctx) < 0));
-      ipmi_kcs_read_byte (ctx); /* toss it, ACK */
+      KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_obf_set (ctx) < 0));
+      _ipmi_kcs_read_byte (ctx); /* toss it, ACK */
     }
   else
     {
@@ -735,7 +741,8 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
                                                           pkt,
                                                           pkt_len) < 0));
   
-  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(ipmi_kcs_write (ctx, pkt, pkt_len) < 0));
+  if (ipmi_kcs_write (ctx, pkt, pkt_len) < 0)
+    goto cleanup;
   
   rv = 0;
  cleanup:
@@ -774,10 +781,11 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
   KCS_ERR_OUT_OF_MEMORY_CLEANUP((pkt = (uint8_t *)malloc(pkt_len)));
   memset (pkt, 0, pkt_len);
 
-  KCS_ERR_SYSTEM_ERROR_CLEANUP(!((read_len = ipmi_kcs_read (ctx, 
-                                                            pkt,
-                                                            pkt_len)) < 0));
-  
+  if ((read_len = ipmi_kcs_read (ctx, 
+                                 pkt,
+                                 pkt_len)) < 0)
+    goto cleanup;
+
   KCS_ERR_INTERNAL_ERROR_CLEANUP(!(unassemble_ipmi_kcs_pkt (pkt,
                                                             read_len,
                                                             obj_hdr,

@@ -56,13 +56,8 @@ do {								    \
   break;                                                            \
 } while (1)
 
-#define IPMI_MUTEX_DOWN(semid)               IPMI_MUTEX_LOCK (semid)
-
 #define IPMI_MUTEX_LOCK_INTERRUPTIBLE(semid)  \
     semop (semid, &mutex_lock_buf_interruptible, 1)
-#define IPMI_MUTEX_LOCK_ASYNC(semid)         IPMI_MUTEX_LOCK_INTERRUPTIBLE (semid)
-#define IPMI_MUTEX_DOWN_INTERRUPTIBLE(semid) IPMI_MUTEX_LOCK_INTERRUPTIBLE (semid)
-#define IPMI_MUTEX_DOWN_ASYNC(semid)         IPMI_MUTEX_LOCK_INTERRUPTIBLE (semid)
 
 #define IPMI_MUTEX_UNLOCK(semid)                                    \
 do {								    \
@@ -74,8 +69,6 @@ do {								    \
   */								    \
   usleep (1);                                                       \
 } while (0)
-
-#define IPMI_MUTEX_UP(semid)                 IPMI_MUTEX_UNLOCK (semid)
 
 #if defined(__FreeBSD__)
   /* union semun is defined by including <sys/sem.h> */
@@ -96,7 +89,6 @@ extern struct sembuf mutex_lock_buf;
 extern struct sembuf mutex_unlock_buf;
 
 int ipmi_mutex_init (void);
-
 
 #ifdef __cplusplus
 }

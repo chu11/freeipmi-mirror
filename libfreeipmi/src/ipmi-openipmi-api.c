@@ -297,6 +297,9 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
 
   ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
+  if (ctx->io_init)
+    goto out;
+
   if (ctx->driver_device)
     device = ctx->driver_device;
   else
@@ -324,6 +327,7 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
     }
 
   ctx->io_init = 1;
+ out:
   ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;
   return (0);
 

@@ -121,10 +121,10 @@ struct ipmi_i2c_smbus_ioctl_data
 /*      and prefixed IPMI.                               */
 
 static inline int 
-ipmi_i2c_smbus_access (int dev_fd, 
-		       char read_write, 
-		       uint8_t command, 
-		       union ipmi_i2c_smbus_data *data)
+_ipmi_i2c_smbus_access (int dev_fd, 
+                        char read_write, 
+                        uint8_t command, 
+                        union ipmi_i2c_smbus_data *data)
 {
   struct ipmi_i2c_smbus_ioctl_data args;
   
@@ -137,9 +137,9 @@ ipmi_i2c_smbus_access (int dev_fd,
 }
 
 static inline ssize_t 
-ipmi_ssif_single_part_write (int dev_fd, 
-			     uint8_t *buf, 
-			     size_t buf_len)
+_ipmi_ssif_single_part_write (int dev_fd, 
+                              uint8_t *buf, 
+                              size_t buf_len)
 {
 
   union ipmi_i2c_smbus_data data;
@@ -151,16 +151,16 @@ ipmi_ssif_single_part_write (int dev_fd,
       data.block[i + 1] = buf[i];
     }
   
-  return (ipmi_i2c_smbus_access (dev_fd, 
-				 IPMI_I2C_SMBUS_WRITE, 
-				 IPMI_SSIF_SINGLE_PART_WRITE_SMBUS_CMD, 
-				 &data));
+  return (_ipmi_i2c_smbus_access (dev_fd, 
+                                  IPMI_I2C_SMBUS_WRITE, 
+                                  IPMI_SSIF_SINGLE_PART_WRITE_SMBUS_CMD, 
+                                  &data));
 }
 
 static inline ssize_t 
-ipmi_ssif_multi_part_write (int dev_fd, 
-			    uint8_t *buf, 
-			    size_t buf_len)
+_ipmi_ssif_multi_part_write (int dev_fd, 
+                             uint8_t *buf, 
+                             size_t buf_len)
 {
   union ipmi_i2c_smbus_data data;
   int middle_parts;
@@ -170,6 +170,7 @@ ipmi_ssif_multi_part_write (int dev_fd,
   
   if (buf_len % IPMI_I2C_SMBUS_BLOCK_MAX == 0)
     {
+#if 0
       fprintf (stderr, "%s:%s(): "
 	       "PECULIAR IPMI COMMAND: As of this writing, "
 	       "there are no standard IPMI messages to the "
@@ -180,6 +181,8 @@ ipmi_ssif_multi_part_write (int dev_fd,
 	       "FreeIPMI mailing list <freeipmi-devel@gnu.org>\n", 
 	       __FILE__, __PRETTY_FUNCTION__, 
 	       IPMI_I2C_SMBUS_BLOCK_MAX);
+#endif
+      errno = EINVAL;
       return (-1);
     }
   
@@ -187,44 +190,34 @@ ipmi_ssif_multi_part_write (int dev_fd,
   
   data.block[0] = IPMI_I2C_SMBUS_BLOCK_MAX;
   for (i = 0; i < IPMI_I2C_SMBUS_BLOCK_MAX; i++)
-    {
-      data.block[i + 1] = buf[i];
-    }
-  if (ipmi_i2c_smbus_access (dev_fd, 
-			     IPMI_I2C_SMBUS_WRITE, 
-			     IPMI_SSIF_MULTI_PART_WRITE_START_SMBUS_CMD, 
-			     &data) == -1)
-    {
-      return (-1);
-    }
+    data.block[i + 1] = buf[i];
+  if (_ipmi_i2c_smbus_access (dev_fd, 
+                              IPMI_I2C_SMBUS_WRITE, 
+                              IPMI_SSIF_MULTI_PART_WRITE_START_SMBUS_CMD, 
+                              &data) < 0)
+    return (-1);
   
   for (mpart = 1; mpart <= middle_parts; mpart++)
     {
       index = mpart * IPMI_I2C_SMBUS_BLOCK_MAX;
       data.block[0] = IPMI_I2C_SMBUS_BLOCK_MAX;
       for (i = 0; i < IPMI_I2C_SMBUS_BLOCK_MAX; i++)
-	{
-	  data.block[i + 1] = buf[index + i];
-	}
-      if (ipmi_i2c_smbus_access (dev_fd, 
-				 IPMI_I2C_SMBUS_WRITE, 
-				 IPMI_SSIF_MULTI_PART_WRITE_MIDDLE_SMBUS_CMD, 
-				 &data) == -1)
-	{
-	  return (-1);
-	}
+        data.block[i + 1] = buf[index + i];
+      if (_ipmi_i2c_smbus_access (dev_fd, 
+                                  IPMI_I2C_SMBUS_WRITE, 
+                                  IPMI_SSIF_MULTI_PART_WRITE_MIDDLE_SMBUS_CMD, 
+                                  &data) < 0)
+        return (-1);
     }
   
   index = (middle_parts + 1) * IPMI_I2C_SMBUS_BLOCK_MAX;
   data.block[0] = buf_len % IPMI_I2C_SMBUS_BLOCK_MAX;
   for (i = 0; i < data.block[0]; i++)
-    {
-      data.block[i + 1] = buf[index + i];
-    }
-  return (ipmi_i2c_smbus_access (dev_fd, 
-				 IPMI_I2C_SMBUS_WRITE, 
-				 IPMI_SSIF_MULTI_PART_WRITE_END_SMBUS_CMD, 
-				 &data));
+    data.block[i + 1] = buf[index + i];
+  return (_ipmi_i2c_smbus_access (dev_fd, 
+                                  IPMI_I2C_SMBUS_WRITE, 
+                                  IPMI_SSIF_MULTI_PART_WRITE_END_SMBUS_CMD, 
+                                  &data));
 }
 
 static inline ssize_t 
@@ -241,19 +234,13 @@ _ipmi_ssif_read (int dev_fd,
   int multi_read_start = 0;
   int i;
   
-  if (buf == NULL || buf_len <= 0)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  assert(buf && buf_len);
   
-  if (ipmi_i2c_smbus_access (dev_fd, 
-			     IPMI_I2C_SMBUS_READ, 
-			     IPMI_SSIF_SINGLE_PART_READ_SMBUS_CMD, 
-			     &data) == -1)
-    {
-      return (-1);
-    }
+  if (_ipmi_i2c_smbus_access (dev_fd, 
+                              IPMI_I2C_SMBUS_READ, 
+                              IPMI_SSIF_SINGLE_PART_READ_SMBUS_CMD, 
+                              &data) == -1)
+    return (-1);
   
   if (data.block[0] == IPMI_SSIF_MULTI_PART_READ_START_SIZE && 
       data.block[1] == IPMI_SSIF_MULTI_PART_READ_START_PATTERN1 && 
@@ -263,55 +250,41 @@ _ipmi_ssif_read (int dev_fd,
       multi_read_start = 1;
     }
   else
-    {
-      sindex = 1;
-    }
+    sindex = 1;
   
   length = data.block[0];
   bytes_read = length;
   
   if (bytes_read > buf_len)
-    {
-      length = buf_len;
-    }
+    length = buf_len;
   
   for (i = 0; i < length; i++)
-    {
-      buf[i] = data.block[sindex + i];
-    }
+    buf[i] = data.block[sindex + i];
   
   bytes_copied = length;
   
   while (multi_read_start)
     {
-      if (ipmi_i2c_smbus_access (dev_fd, 
-				 IPMI_I2C_SMBUS_READ, 
-				 IPMI_SSIF_MULTI_PART_READ_MIDDLE_SMBUS_CMD, 
-				 &data) == -1)
-	{
-	  return (-1);
-	}
+      if (_ipmi_i2c_smbus_access (dev_fd, 
+                                  IPMI_I2C_SMBUS_READ, 
+                                  IPMI_SSIF_MULTI_PART_READ_MIDDLE_SMBUS_CMD, 
+                                  &data) < 0)
+        return (-1);
       
       length = data.block[0];
       block_number = data.block[1];
       bytes_read += length;
       
       if ((bytes_copied + length) > buf_len)
-	{
-	  length = buf_len - bytes_copied;
-	}
+        length = buf_len - bytes_copied;
       
       for (i = 0; i < length; i++)
-	{
-	  buf[bytes_copied + i] = data.block[i + 2];
-	}
+        buf[bytes_copied + i] = data.block[i + 2];
       
       bytes_copied += length;
       
       if (block_number == IPMI_SSIF_MULTI_PART_READ_END_PATTERN)
-	{
-	  break;
-	}
+        break;
     }
   
   return bytes_read;
@@ -414,11 +387,7 @@ ipmi_ssif_ctx_get_driver_device(ipmi_ssif_ctx_t ctx, char **driver_device)
 {
   ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
 
-  if (!driver_device)
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
-      return (-1);
-    }
+  SSIF_ERR_PARAMETERS(driver_device);
   
   *driver_device = ctx->driver_device;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
@@ -430,11 +399,7 @@ ipmi_ssif_ctx_get_driver_address(ipmi_ssif_ctx_t ctx, uint8_t *driver_address)
 {
   ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
 
-  if (!driver_address)
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
-      return (-1);
-    }
+  SSIF_ERR_PARAMETERS(driver_address);
 
   *driver_address = ctx->driver_address;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
@@ -446,11 +411,7 @@ ipmi_ssif_ctx_get_flags(ipmi_ssif_ctx_t ctx, uint32_t *flags)
 {
   ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
 
-  if (!flags)
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
-      return (-1);
-    }
+  SSIF_ERR_PARAMETERS(flags);
 
   *flags = ctx->flags;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
@@ -462,21 +423,13 @@ ipmi_ssif_ctx_set_driver_device(ipmi_ssif_ctx_t ctx, char* driver_device)
 {
   ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
 
-  if (!driver_device)
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
-      return (-1);
-    }
+  SSIF_ERR_PARAMETERS(driver_device);
 
   if (ctx->driver_device)
     free(ctx->driver_device);
   ctx->driver_device = NULL;
   
-  if (!(ctx->driver_device = strdup(IPMI_DEFAULT_I2C_DEVICE)))
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;
-      return (-1);
-    }
+  SSIF_ERR_OUT_OF_MEMORY((ctx->driver_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));
   
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (0);
@@ -497,11 +450,7 @@ ipmi_ssif_ctx_set_flags(ipmi_ssif_ctx_t ctx, uint32_t flags)
 {
   ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
 
-  if (flags & ~IPMI_SSIF_FLAGS_MASK)
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
-      return (-1);
-    }
+  SSIF_ERR_PARAMETERS(flags & IPMI_SSIF_FLAGS_MASK);
 
   ctx->flags = flags;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
@@ -513,37 +462,27 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
 {
   ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
   
-  if (!(ctx->driver_device && ctx->device_fd))
-    {
-      ctx->errnum = EINVAL;
-      return (-1);
-    }
+  SSIF_ERR_PARAMETERS(ctx->driver_device && ctx->device_fd);
   
-  if ((ctx->device_fd = open (ctx->driver_device, O_RDWR)) < 0)
-    {
-      if (errno == EACCES || errno == EPERM)
-	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION);
-      else if (errno == ENOENT 
-	       || errno == ENOTDIR 
-	       || errno == ENAMETOOLONG)
-	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND);
-      else
-	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
-      return (-1);
-    }
+  if (ctx->io_init)
+    goto out;
 
-  if (ioctl (ctx->device_fd, IPMI_I2C_SLAVE, ctx->driver_address) < 0)
-    {
-      if (errno == EACCES || errno == EPERM)
-	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION);
-      else
-	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
-      return (-1);
-    }
+  SSIF_ERR_CLEANUP(!((ctx->device_fd = open (ctx->driver_device, 
+                                             O_RDWR)) < 0));
+  
+  SSIF_ERR_CLEANUP(!(ioctl (ctx->device_fd, 
+                            IPMI_I2C_SLAVE, 
+                            ctx->driver_address) < 0));
 
   ctx->io_init = 1;
+ out:
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (0);
+
+ cleanup:
+  close(ctx->device_fd);
+  ctx->device_fd = -1;
+  return (-1);
 }
 
 int32_t
@@ -556,57 +495,25 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
 
-  if (!buf || !buf_len)
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
-      return (-1);
-    }
+  SSIF_ERR_PARAMETERS(buf && buf_len);
 
-  if (!ctx->io_init)
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;
-      return (-1);
-    }
+  SSIF_ERR_IO_NOT_INITIALIZED(ctx->io_init);
 
   if (!(ctx->flags & IPMI_SSIF_FLAGS_NONBLOCKING))
     IPMI_MUTEX_LOCK(ctx->semid);
   else
-    {
-      int ret;
-
-      if ((ret = IPMI_MUTEX_LOCK_INTERRUPTIBLE(ctx->semid)) < 0)
-        {
-          if (errno == EINTR || errno == EAGAIN)
-            ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_BUSY);
-          else
-            ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
-          goto cleanup;
-        }
-    }
+    SSIF_ERR_CLEANUP(!(IPMI_MUTEX_LOCK_INTERRUPTIBLE(ctx->semid) < 0));
   lock_flag++;
   
   if (buf_len <= IPMI_I2C_SMBUS_BLOCK_MAX)
-    {
-      count = ipmi_ssif_single_part_write (ctx->device_fd, 
-					   buf, 
-					   buf_len);
-    }
+    SSIF_ERR_CLEANUP(!((count = _ipmi_ssif_single_part_write (ctx->device_fd, 
+                                                              buf, 
+                                                              buf_len)) < 0));
   else 
-    {
-      count = ipmi_ssif_multi_part_write (ctx->device_fd, 
-					  buf, 
-					  buf_len);
-    }
+    SSIF_ERR_CLEANUP(!((count = _ipmi_ssif_multi_part_write (ctx->device_fd, 
+                                                             buf, 
+                                                             buf_len)) < 0));
   
-  if (count < 0)
-    {
-      if (errno == EACCES || errno == EPERM)
-	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION);
-      else
-	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
-      goto cleanup;
-    }
-
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (count);
 
@@ -626,31 +533,16 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
 
-  if (!buf || !buf_len)
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
-      goto cleanup;
-    }
+  SSIF_ERR_PARAMETERS_CLEANUP(buf && buf_len);
 
-  if (!ctx->io_init)
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;
-      goto cleanup;
-    }
+  SSIF_ERR_IO_NOT_INITIALIZED_CLEANUP(ctx->io_init);
   
   if (buf_len > IPMI_I2C_SMBUS_BLOCK_MAX)
     buf_len = IPMI_I2C_SMBUS_BLOCK_MAX;
   
-  if ((count = _ipmi_ssif_read (ctx->device_fd, 
-				buf, 
-				buf_len)) < 0)
-    {
-      if (errno == EACCES || errno == EPERM)
-	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION);
-      else
-	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
-      goto cleanup;
-    }
+  SSIF_ERR_CLEANUP(!((count = _ipmi_ssif_read (ctx->device_fd, 
+                                               buf, 
+                                               buf_len)) < 0));
   
   rv = count;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
@@ -677,54 +569,29 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
   assert(fiid_obj_valid(obj_cmd_rq));
   assert(fiid_obj_packet_valid(obj_cmd_rq));
 
-  if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0)
-    {
-      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  SSIF_ERR_INTERNAL_ERROR(!((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0));
   
-  if ((cmd_len = fiid_obj_len_bytes(obj_cmd_rq)) < 0)
-    {
-      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  SSIF_ERR_INTERNAL_ERROR(!((cmd_len = fiid_obj_len_bytes(obj_cmd_rq)) < 0));
   
-  if (!(obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;
-      goto cleanup;
-    }
+  SSIF_ERR_OUT_OF_MEMORY_CLEANUP((obj_hdr = fiid_obj_create(tmpl_hdr_kcs)));
   
   pkt_len = hdr_len + cmd_len;
-  if (!(pkt = (uint8_t *)malloc (pkt_len)))
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;
-      goto cleanup;
-    }
+
+  SSIF_ERR_OUT_OF_MEMORY_CLEANUP((pkt = (uint8_t *)malloc (pkt_len)));
+
   memset (pkt, 0, pkt_len);
     
-  if (fill_hdr_ipmi_kcs (lun,
-			 net_fn,
-			 obj_hdr) < 0)
-    {
-      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  SSIF_ERR_INTERNAL_ERROR_CLEANUP(!(fill_hdr_ipmi_kcs (lun,
+                                                       net_fn,
+                                                       obj_hdr) < 0));
   
-  if (assemble_ipmi_kcs_pkt (obj_hdr,
-			     obj_cmd_rq,
-			     pkt,
-			     pkt_len) < 0)
-    {
-      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  SSIF_ERR_INTERNAL_ERROR_CLEANUP(!(assemble_ipmi_kcs_pkt (obj_hdr,
+                                                           obj_cmd_rq,
+                                                           pkt,
+                                                           pkt_len) < 0));
   
   if (ipmi_ssif_write (ctx, pkt, pkt_len) < 0)
-    {
-      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
-      return (-1);
-    }
+    goto cleanup;
 
   rv = 0;
  cleanup:
@@ -750,55 +617,29 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
   assert(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
   assert(fiid_obj_valid(obj_cmd_rs));
 
-  if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0)
-    {
-      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
-      return -1;
-    }
+  SSIF_ERR_INTERNAL_ERROR(!((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0));
   
-  if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
-    {
-      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
-      return -1;
-    }
+  SSIF_ERR_INTERNAL_ERROR(!((cmd_len = fiid_template_len_bytes(tmpl)) < 0));
 
-  if (!(tmpl = fiid_obj_template(obj_cmd_rs)) < 0)
-    {
-      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
-      goto cleanup;
-    }
+  SSIF_ERR_OUT_OF_MEMORY_CLEANUP((tmpl = fiid_obj_template(obj_cmd_rs)));
 
-  if (!(obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;
-      goto cleanup;
-    }
+  SSIF_ERR_OUT_OF_MEMORY_CLEANUP((obj_hdr = fiid_obj_create(tmpl_hdr_kcs)));
 
   pkt_len = hdr_len + cmd_len;
   
-  if (!(pkt = (uint8_t *)malloc(pkt_len)))
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;
-      goto cleanup;
-    }
+  SSIF_ERR_OUT_OF_MEMORY_CLEANUP((pkt = (uint8_t *)malloc(pkt_len)));
+
   memset (pkt, 0, pkt_len);
 
   if ((read_len = ipmi_ssif_read (ctx, 
 				  pkt,
 				  pkt_len)) < 0)
-    {
-      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
-      goto cleanup;
-    }
+    goto cleanup;
   
-  if (unassemble_ipmi_kcs_pkt (pkt,
-			       read_len,
-			       obj_hdr,
-			       obj_cmd_rs) < 0)
-    {
-      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
-      goto cleanup;
-    }
+  SSIF_ERR_INTERNAL_ERROR_CLEANUP(!(unassemble_ipmi_kcs_pkt (pkt,
+                                                             read_len,
+                                                             obj_hdr,
+                                                             obj_cmd_rs) < 0));
 
   rv = 0;
  cleanup:
@@ -818,21 +659,13 @@ ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
 {
   ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
  
-  if (!IPMI_BMC_LUN_VALID(lun)
-      || !IPMI_NET_FN_RQ_VALID(net_fn)
-      || !fiid_obj_valid(obj_cmd_rq)
-      || !fiid_obj_valid(obj_cmd_rs)
-      || !fiid_obj_packet_valid(obj_cmd_rq))
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
-      return (-1); 
-    }
+  SSIF_ERR_PARAMETERS (IPMI_BMC_LUN_VALID(lun)
+                       && IPMI_NET_FN_RQ_VALID(net_fn)
+                       && fiid_obj_valid(obj_cmd_rq)
+                       && fiid_obj_valid(obj_cmd_rs)
+                       && fiid_obj_packet_valid(obj_cmd_rq));
   
-  if (!ctx->io_init)
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;
-      return (-1); 
-    }
+  SSIF_ERR_IO_NOT_INITIALIZED(ctx->io_init);
 
   if (_ipmi_ssif_cmd_write(ctx, lun, net_fn, obj_cmd_rq) < 0)
     return -1;
