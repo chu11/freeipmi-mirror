@@ -584,9 +584,9 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   KCS_ERR_IO_NOT_INITIALIZED(ctx->io_init);
 
   if (!(ctx->flags & IPMI_KCS_FLAGS_NONBLOCKING))
-    IPMI_MUTEX_LOCK(ctx->semid);
+    KCS_ERR_CLEANUP(!(ipmi_mutex_lock(ctx->semid) < 0));
   else
-    KCS_ERR_CLEANUP(!(IPMI_MUTEX_LOCK_INTERRUPTIBLE(ctx->semid) < 0));
+    KCS_ERR_CLEANUP(!(ipmi_mutex_lock_interruptible(ctx->semid) < 0));
   lock_flag++;
   
   KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
@@ -640,7 +640,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
 
  cleanup:
   if (lock_flag)
-    IPMI_MUTEX_UNLOCK (ctx->semid);
+    ipmi_mutex_unlock (ctx->semid);
   return (-1);
 }
 
@@ -698,7 +698,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
     ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   rv = count;
  cleanup:
-  IPMI_MUTEX_UNLOCK (ctx->semid);
+  ipmi_mutex_unlock (ctx->semid);
   return (rv);
 }
 

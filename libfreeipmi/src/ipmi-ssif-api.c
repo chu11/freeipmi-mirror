@@ -500,9 +500,9 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
   SSIF_ERR_IO_NOT_INITIALIZED(ctx->io_init);
 
   if (!(ctx->flags & IPMI_SSIF_FLAGS_NONBLOCKING))
-    IPMI_MUTEX_LOCK(ctx->semid);
+    SSIF_ERR_CLEANUP(!(ipmi_mutex_lock(ctx->semid) < 0));
   else
-    SSIF_ERR_CLEANUP(!(IPMI_MUTEX_LOCK_INTERRUPTIBLE(ctx->semid) < 0));
+    SSIF_ERR_CLEANUP(!(ipmi_mutex_lock_interruptible(ctx->semid) < 0));
   lock_flag++;
   
   if (buf_len <= IPMI_I2C_SMBUS_BLOCK_MAX)
@@ -519,7 +519,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 
  cleanup:
   if (lock_flag)
-    IPMI_MUTEX_UNLOCK (ctx->semid);
+    ipmi_mutex_unlock (ctx->semid);
   return (-1);
 }
 
@@ -547,7 +547,7 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
   rv = count;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
  cleanup:
-  IPMI_MUTEX_UNLOCK (ctx->semid);
+  ipmi_mutex_unlock (ctx->semid);
   return (rv);
 }
 

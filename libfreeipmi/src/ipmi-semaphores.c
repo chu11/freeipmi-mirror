@@ -25,6 +25,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <errno.h>
 
 #include "ipmi-semaphores.h"
@@ -38,7 +41,9 @@ struct sembuf mutex_unlock_buf_interruptible = {0,  1, IPC_NOWAIT|SEM_UNDO};
 struct sembuf mutex_lock_buf   = {0, -1, SEM_UNDO};
 struct sembuf mutex_unlock_buf = {0,  1, SEM_UNDO};
 
-/* Initialize Mutex and return semid */
+#define IPMI_INBAND_PROJ_ID       0x02
+#define IPMI_INBAND_DEBUG_PROJ_ID 0x03
+
 int
 ipmi_mutex_init (void)
 {
@@ -46,7 +51,9 @@ ipmi_mutex_init (void)
   key_t key;
 
   /* Allocate Mutex */
-  key = IPMI_INBAND_IPCKEY();
+  ERR(!((key = ftok (IPMI_IPCKEY, 
+                     IPMI_INBAND_PROJ_ID)) == ((key_t)-1)));
+
   semid = semget (key, 1, IPC_CREAT | IPC_EXCL | 0600);
 #ifndef NDEBUG
   if (semid == -1 && errno == ENOENT)
@@ -55,7 +62,8 @@ ipmi_mutex_init (void)
        * IPCKEY file may not yet exist, so we do a hack to get it to
        * work.  This is only when we work in debug mode.
        */
-      key = IPMI_INBAND_DEBUG_IPCKEY();
+      ERR(!((key =  ftok (IPMI_DEBUG_IPCKEY, 
+                          IPMI_INBAND_DEBUG_PROJ_ID)) == ((key_t)-1)));
       semid = semget (key, 1, IPC_CREAT | IPC_EXCL | 0600);
     }
 #endif /* NDEBUG */
@@ -64,10 +72,11 @@ ipmi_mutex_init (void)
       if (errno == EEXIST) /* You are not the first one */
 	{ 
 	  /* Get the orignial semid */
-	  semid = semget (key, 1, IPC_CREAT | 0600);  
-	  ERR (semid != -1);
+	  ERR (!((semid = semget (key, 1, IPC_CREAT | 0600)) < 0));
+
 	  /* achu: errno may not get reset, so put it back to 0 */
 	  errno = 0;
+
 	  return (semid);
 	}
       ERR (0); /* FAIL */
@@ -79,7 +88,47 @@ ipmi_mutex_init (void)
     unsigned short values[1];
     values[0] = 1;
     mutex_init.array = values;
-    ERR (semctl (semid, 0, SETALL, mutex_init) != -1);
+    ERR (!(semctl (semid, 0, SETALL, mutex_init) < 0));
   }
   return (semid);
+}
+
+int 
+ipmi_mutex_lock (int semid)
+{
+  /* achu: don't check for valid semid - responsibility of calling libs */
+  do {
+    if (semop (semid, &mutex_lock_buf, 1) < 0)
+      {
+        /* While blocked in this system call, the process caught a signal */
+        if (errno == EINTR)
+          continue;
+        ERR(0);
+      }
+    break;
+  } while (1);
+   
+  return 0;
+}
+
+int 
+ipmi_mutex_lock_interruptible (int semid)
+{
+  /* achu: don't check for valid semid - responsibility of calling libs */
+  return semop(semid, &mutex_lock_buf_interruptible, 1);
+}
+
+int 
+ipmi_mutex_unlock (int semid)
+{
+  /* achu: don't check for valid semid - responsibility of calling libs */
+  
+  ERR (!(semop (semid, &mutex_unlock_buf, 1) < 0));
+  /* If you are in a loop to go grab LOCK again, Other tasks will
+     never get a chance until you break. Give fair chance to other
+     tasks as well. This is probably because of scheduler
+     optimizations in Linux kernel.  --Anand Babu
+  */
+  usleep (1);
+  return 0;
 }

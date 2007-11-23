@@ -36,40 +36,6 @@ extern "C" {
 #include <sys/ipc.h>
 #include <sys/sem.h>
 
-#define IPMI_INBAND_PROJ_ID       0x02
-#define IPMI_INBAND_DEBUG_PROJ_ID 0x03
-
-#define IPMI_INBAND_IPCKEY()  ftok (IPMI_IPCKEY, IPMI_INBAND_PROJ_ID)
-#define IPMI_INBAND_DEBUG_IPCKEY() ftok (IPMI_DEBUG_IPCKEY, IPMI_INBAND_DEBUG_PROJ_ID)
-
-#define IPMI_MUTEX_LOCK(semid)                                      \
-do {								    \
-  int status;							    \
-  status = semop (semid, &mutex_lock_buf, 1);			    \
-  if (status == -1)						    \
-    {								    \
-      if (errno == EINTR)					    \
-	continue; /* While blocked in this system call, the process \
-		     caught a signal */				    \
-      ERR (status != -1);					    \
-    }								    \
-  break;                                                            \
-} while (1)
-
-#define IPMI_MUTEX_LOCK_INTERRUPTIBLE(semid)  \
-    semop (semid, &mutex_lock_buf_interruptible, 1)
-
-#define IPMI_MUTEX_UNLOCK(semid)                                    \
-do {								    \
-  ERR (semop (semid, &mutex_unlock_buf, 1) != -1);                  \
-  /* If you are in a loop to go grab LOCK again, Other tasks will   \
-     never get a chance until you break. Give fair chance to other  \
-     tasks as well. This is probably because of scheduler	    \
-     optimizations in Linux kernel.  --Anand Babu 		    \
-  */								    \
-  usleep (1);                                                       \
-} while (0)
-
 #if defined(__FreeBSD__)
   /* union semun is defined by including <sys/sem.h> */
 #else
@@ -83,12 +49,13 @@ do {								    \
   };
 #endif
 
-extern struct sembuf mutex_lock_buf_interruptible;
-extern struct sembuf mutex_unlock_buf_interruptible;
-extern struct sembuf mutex_lock_buf;
-extern struct sembuf mutex_unlock_buf;
-
 int ipmi_mutex_init (void);
+
+int ipmi_mutex_lock (int semid);
+
+int ipmi_mutex_lock_interruptible (int semid);
+
+int ipmi_mutex_unlock (int semid);
 
 #ifdef __cplusplus
 }
