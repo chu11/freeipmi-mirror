@@ -81,8 +81,6 @@
 #include "freeipmi/udm/ipmi-sensor-cmds-udm.h"
 
 #include "bit-ops.h"
-#include "err-wrappers.h"
-#include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
 #include "common-utils.h"

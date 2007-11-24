@@ -1,7 +1,7 @@
 XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
-	* common/src/udm-err-wrappers.h: Update error logging routines
-	with more details.
+	* common/src/err-wrappers.h, common/src/udm-err-wrappers.h: Update
+	error logging routines with more details.
 
 	* libfreeipmi/src/ipmi-kcs-aci.c,
 	libfreeipmi/src/ipmi-openipmi-api.c,
@@ -11,6 +11,31 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	libfreeipmi/src/ipmi-semaphores.c: Remove unused code.  Re-work
 	for better erorr reporting/logging.
 		
+2007-11-24  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/manpage-common-outofband-hostname-hostranged.man: Fix
+	english.
+	
+2007-11-24  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-kcs-api.c (_ipmi_kcs_cmd_write),
+	libfreeipmi/src/ipmi-ssif-api.c (_ipmi_ssif_cmd_write): Fix error
+	handling mem-leak corner case.
+
+	* configure.ac: Prepare for beta release.
+
+	* Tagged Release-0_5_0_beta2.
+
+2007-11-24  Dmitry Frolov <frol@nov.net>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c: Fix FreeBSD
+	port compile bug.
+
+2007-11-22  Albert Chu <chu11@llnl.gov>
+
+	* common/src/ipmi-sdr-cache.c, common/src/ipmi-sdr-cache-reads.c,
+	common/src/ipmi-sdr-cache-writes.c: Remove unneeded includes.
+	
 2007-11-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-openipmi-api.c: Adjust INTERNAL errors to
