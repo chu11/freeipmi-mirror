@@ -1,3 +1,8 @@
+2007-11-24  Dmitry Frolov <frol@nov.net>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c: Fix FreeBSD
+	port compile bug.
+
 2007-11-22  Albert Chu <chu11@llnl.gov>
 
 	* common/src/ipmi-sdr-cache.c, common/src/ipmi-sdr-cache-reads.c,
