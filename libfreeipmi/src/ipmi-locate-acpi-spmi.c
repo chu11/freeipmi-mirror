@@ -1227,10 +1227,7 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
-#if 0
-  /* LOCATE XXX */
-  ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
-#endif
+  LOCATE_ERR_PARAMETERS(IPMI_INTERFACE_TYPE_VALID(type) && info);
 
   memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
   linfo.interface_type = type;

@@ -49,13 +49,10 @@ ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
-#if 0
-  /* LOCATE XXX */
-  ERR_EINVAL ((type == IPMI_INTERFACE_KCS
-	       || type == IPMI_INTERFACE_SMIC
-	       || type == IPMI_INTERFACE_SSIF) 
-	      && info);
-#endif
+  LOCATE_ERR_PARAMETERS ((type == IPMI_INTERFACE_KCS
+                          || type == IPMI_INTERFACE_SMIC
+                          || type == IPMI_INTERFACE_SSIF) 
+                         && info);
 
   memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
   linfo.interface_type = type;

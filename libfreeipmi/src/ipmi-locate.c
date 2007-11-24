@@ -121,10 +121,7 @@ ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
-#if 0
-  /* LOCATE XXX */
-  (IPMI_INTERFACE_TYPE_VALID(type) && info);
-#endif
+  LOCATE_ERR_PARAMETERS(IPMI_INTERFACE_TYPE_VALID(type) && info);
   
   for (i = 0; things_to_try[i] != NULL; i++)
     {
@@ -138,5 +135,6 @@ ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
 	}
     }
 
+  LOCATE_ERRNUM_SET(IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
   return (-1);
 }
