@@ -1,5 +1,10 @@
 2007-11-24  Albert Chu <chu11@llnl.gov>
 
+	* common/doc/manpage-common-outofband-hostname-hostranged.man: Fix
+	english.
+	
+2007-11-24  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/ipmi-kcs-api.c (_ipmi_kcs_cmd_write),
 	libfreeipmi/src/ipmi-ssif-api.c (_ipmi_ssif_cmd_write): Fix error
 	handling mem-leak corner case.
