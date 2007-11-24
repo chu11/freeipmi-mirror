@@ -46,265 +46,106 @@ extern "C" {
 #include "err-wrappers.h"
 
 #if defined (IPMI_SYSLOG)
-#define __KCS_SYSLOG                                                         \
-do {                                                                         \
-  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                                    \
-  int __errnum = ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx);                \
-  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                               \
-            "%s: %d: %s: error %s (%d): expression failed",                  \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
-            ipmi_kcs_ctx_strerror(__errnum), __errnum);                      \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);            \
-} while (0)
-
-#define __SSIF_SYSLOG                                                        \
-do {                                                                         \
-  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                                    \
-  int __errnum = ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx);              \
-  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                               \
-            "%s: %d: %s: error %s (%d): expression failed",                  \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
-            ipmi_ssif_ctx_strerror(__errnum), __errnum);                     \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);            \
-} while (0)
-
-#define __OPENIPMI_SYSLOG                                                    \
-do {                                                                         \
-  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                                    \
-  int __errnum = ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx);      \
-  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                               \
-            "%s: %d: %s: error %s (%d): expression failed",                  \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
-            ipmi_openipmi_ctx_strerror(__errnum), __errnum);                 \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);            \
-} while (0)
-
 #define __UDM_SYSLOG                                                         \
 do {                                                                         \
-  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                                    \
-  int __errnum = dev->errnum;                                                \
-  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                               \
-            "%s: %d: %s: error %s (%d): expression failed",                  \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
-            ipmi_device_strerror(__errnum), __errnum);                       \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);            \
+  int __ctxerrnum = dev->errnum;                                             \
+  char *__ctxerrstr = ipmi_device_strerror(__ctxerrnum);                     \
+  __SYSLOG_CTX_OUTPUT;                                                       \
 } while (0)
 
 #define __ERR_UDM_SYSLOG                                                     \
 do {                                                                         \
-  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                                    \
-  int __errnum = ipmi_device_errnum(dev);                                    \
-  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                               \
-            "%s: %d: %s: error %s (%d): expression failed",                  \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
-            ipmi_device_strerror(__errnum), __errnum);                       \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);            \
+  int __ctxerrnum = ipmi_device_errnum(dev);                                 \
+  char *__ctxerrstr = ipmi_device_strerror(__ctxerrnum);                     \
+  __SYSLOG_CTX_OUTPUT;                                                       \
+} while (0)
+
+#define __UDM_KCS_SYSLOG                                                     \
+do {                                                                         \
+  int __ctxerrnum = ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx);             \
+  char *__ctxerrstr = ipmi_kcs_ctx_strerror(__ctxerrnum);                    \
+  __SYSLOG_CTX_OUTPUT;                                                       \
+} while (0)
+
+#define __UDM_SSIF_SYSLOG                                                    \
+do {                                                                         \
+  int __ctxerrnum = ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx);           \
+  char *__ctxerrstr = ipmi_ssif_ctx_strerror(__ctxerrnum);                   \
+  __SYSLOG_CTX_OUTPUT;                                                       \
+} while (0)
+
+#define __UDM_OPENIPMI_SYSLOG                                                \
+do {                                                                         \
+  int __ctxerrnum = ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx);   \
+  char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);               \
+  __SYSLOG_CTX_OUTPUT;                                                       \
 } while (0)
 #else
-#define __KCS_SYSLOG
-#define __SSIF_SYSLOG
-#define __OPENIPMI_SYSLOG
 #define __UDM_SYSLOG
 #define __ERR_UDM_SYSLOG
+#define __UDM_KCS_SYSLOG
+#define __UDM_SSIF_SYSLOG
+#define __UDM_OPENIPMI_SYSLOG
 #endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
-#define __KCS_TRACE                                                          \
-do {                                                                         \
-  int __errnum = ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx);                \
-  fprintf (stderr,                                                           \
-            "%s: %d: %s: error %s (%d): expression failed",                  \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
-            ipmi_kcs_ctx_strerror(__errnum), __errnum);                      \
-  fflush (stderr);                                                           \
-} while (0)
-
-#define __SSIF_TRACE                                                         \
-do {                                                                         \
-  int __errnum = ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx);              \
-  fprintf (stderr,                                                           \
-            "%s: %d: %s: error %s (%d): expression failed",                  \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
-            ipmi_ssif_ctx_strerror(__errnum), __errnum);                     \
-  fflush (stderr);                                                           \
-} while (0)
-
-#define __OPENIPMI_TRACE                                                     \
-do {                                                                         \
-  int __errnum = ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx);      \
-  fprintf (stderr,                                                           \
-            "%s: %d: %s: error %s (%d): expression failed",                  \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
-            ipmi_openipmi_ctx_strerror(__errnum), __errnum);                 \
-  fflush (stderr);                                                           \
-} while (0)
-
 #define __UDM_TRACE                                                          \
 do {                                                                         \
-  int __errnum = dev->errnum;                                                \
-  fprintf (stderr,                                                           \
-           "%s: %d: %s: error %s (%d): expression failed",                   \
-           __FILE__, __LINE__, __PRETTY_FUNCTION__,                          \
-           ipmi_device_strerror(__errnum), __errnum);                        \
-  fflush (stderr);                                                           \
+  int __ctxerrnum = dev->errnum;                                             \
+  char *__ctxerrstr = ipmi_device_strerror(__ctxerrnum);                     \
+  __TRACE_CTX_OUTPUT;                                                        \
 } while (0)
 
 #define __ERR_UDM_TRACE                                                      \
 do {                                                                         \
-  int __errnum = ipmi_device_errnum(dev);                                    \
-  fprintf (stderr,                                                           \
-           "%s: %d: %s: error %s (%d): expression failed",                   \
-           __FILE__, __LINE__, __PRETTY_FUNCTION__,                          \
-           ipmi_device_strerror(__errnum), __errnum);                        \
-  fflush (stderr);                                                           \
+  int __ctxerrnum = ipmi_device_errnum(dev);                                 \
+  char *__ctxerrstr = ipmi_device_strerror(__ctxerrnum);                     \
+  __TRACE_CTX_OUTPUT;                                                        \
 } while (0)
 
 #define __UDM_TRACE_ERRMSG_CLEANUP(___dev, ___rs)                            \
 do {                                                                         \
-  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                                    \
-  memset(__errstr, '\0', IPMI_ERR_STR_MAX_LEN);                              \
-  if (!ipmi_strerror_cmd_r ((___rs),                                         \
-		      	    (___dev)->net_fn,                                \
-			    __errstr,                                        \
-			    IPMI_ERR_STR_MAX_LEN))                           \
-    fprintf (stderr,                                                         \
-	     "%s: %d: %s: errmsg = %s\n", __FILE__,                          \
-	     __LINE__, __PRETTY_FUNCTION__, __errstr);                       \
-  fflush(stderr);                                                            \
+  int __ctxerrnum = 0;                                                       \
+  char __ctxerrstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
+  memset(__ctxerrstr, '\0', IPMI_ERR_STR_MAX_LEN);                           \
+  ipmi_strerror_cmd_r ((___rs),                                              \
+		       (___dev)->net_fn,                                     \
+		       __ctxerrstr,                                          \
+		       IPMI_ERR_STR_MAX_LEN);                                \
   goto cleanup;                                                              \
 } while (0) 
+
+#define __UDM_KCS_TRACE                                                      \
+do {                                                                         \
+  int __ctxerrnum = ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx);             \
+  char *__ctxerrstr = ipmi_kcs_ctx_strerror(__ctxerrnum);                    \
+  __TRACE_CTX_OUTPUT;                                                        \
+} while (0)
+
+#define __UDM_SSIF_TRACE                                                     \
+do {                                                                         \
+  int __ctxerrnum = ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx);           \
+  char *__ctxerrstr = ipmi_ssif_ctx_strerror(__ctxerrnum);                   \
+  __TRACE_CTX_OUTPUT;                                                        \
+} while (0)
+
+#define __UDM_OPENIPMI_TRACE                                                 \
+do {                                                                         \
+  int __ctxerrnum = ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx);   \
+  char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);               \
+  __TRACE_CTX_OUTPUT;                                                        \
+} while (0)
 #else
-#define __KCS_TRACE
-#define __SSIF_TRACE
-#define __OPENIPMI_TRACE
 #define __UDM_TRACE
 #define __ERR_UDM_TRACE
 #define __UDM_TRACE_ERRMSG_CLEANUP(__dev, __rs)                              \
 do {                                                                         \
   goto cleanup;                                                              \
 } while (0) 
+#define __UDM_KCS_TRACE
+#define __UDM_SSIF_TRACE
+#define __UDM_OPENIPMI_TRACE
 #endif /* IPMI_TRACE */
-
-#define __KCS_ERRNUM_TO_UDM_ERRNUM                                \
-do {                                                              \
-  int32_t __errnum = ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx); \
-  if (__errnum == IPMI_KCS_CTX_ERR_SUCCESS)                       \
-    dev->errnum = IPMI_ERR_SUCCESS;                               \
-  else if (__errnum == IPMI_KCS_CTX_ERR_OUT_OF_MEMORY)            \
-    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;                         \
-  else if (__errnum == IPMI_KCS_CTX_ERR_PERMISSION)               \
-    dev->errnum = IPMI_ERR_PERMISSION;                            \
-  else if (__errnum == IPMI_KCS_CTX_ERR_PARAMETERS)               \
-    dev->errnum = IPMI_ERR_LIBRARY_ERROR;                         \
-  else if (__errnum == IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND)         \
-    dev->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                      \
-  else if (__errnum == IPMI_KCS_CTX_ERR_SYSTEM_ERROR)             \
-    dev->errnum = IPMI_ERR_SYSTEM_ERROR;                          \
-  else                                                            \
-    dev->errnum = IPMI_ERR_INTERNAL_ERROR;                        \
-} while (0)
-
-#define UDM_ERR_KCS(expr)                                               \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
-      __KCS_SYSLOG;                                                     \
-      __KCS_TRACE;                                                      \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define UDM_ERR_KCS_CLEANUP(expr)                                       \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
-      __KCS_SYSLOG;                                                     \
-      __KCS_TRACE;                                                      \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define __SSIF_ERRNUM_TO_UDM_ERRNUM                                 \
-do {                                                                \
-  int32_t __errnum = ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx); \
-  if (__errnum == IPMI_SSIF_CTX_ERR_SUCCESS)                        \
-    dev->errnum = IPMI_ERR_SUCCESS;                                 \
-  else if (__errnum == IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY)             \
-    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;                           \
-  else if (__errnum == IPMI_SSIF_CTX_ERR_PERMISSION)                \
-    dev->errnum = IPMI_ERR_PERMISSION;                              \
-  else if (__errnum == IPMI_SSIF_CTX_ERR_PARAMETERS)                \
-    dev->errnum = IPMI_ERR_LIBRARY_ERROR;                           \
-  else if (__errnum == IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND)          \
-    dev->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                        \
-  else                                                              \
-    dev->errnum = IPMI_ERR_INTERNAL_ERROR;                          \
-} while (0)
-
-#define UDM_ERR_SSIF(expr)                                              \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
-      __SSIF_SYSLOG;                                                    \
-      __SSIF_TRACE;                                                     \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define UDM_ERR_SSIF_CLEANUP(expr)                                      \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
-      __SSIF_SYSLOG;                                                    \
-      __SSIF_TRACE;                                                     \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define __OPENIPMI_ERRNUM_TO_UDM_ERRNUM                                     \
-do {                                                                        \
-  int32_t __errnum = ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx); \
-  if (__errnum == IPMI_OPENIPMI_CTX_ERR_SUCCESS)                            \
-    dev->errnum = IPMI_ERR_SUCCESS;                                         \
-  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY)                 \
-    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;                                   \
-  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PERMISSION)                    \
-    dev->errnum = IPMI_ERR_PERMISSION;                                      \
-  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND)              \
-    dev->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                                \
-  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)                    \
-    dev->errnum = IPMI_ERR_LIBRARY_ERROR;                                   \
-  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR)                  \
-    dev->errnum = IPMI_ERR_SYSTEM_ERROR;                                    \
-  else                                                                      \
-    dev->errnum = IPMI_ERR_INTERNAL_ERROR;                                  \
-} while (0)
-
-#define UDM_ERR_OPENIPMI(expr)                                          \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
-      __OPENIPMI_SYSLOG;                                                \
-      __OPENIPMI_TRACE;                                                 \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define UDM_ERR_OPENIPMI_CLEANUP(expr)                                  \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
-      __OPENIPMI_SYSLOG;                                                \
-      __OPENIPMI_TRACE;                                                 \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
 
 #define __ERRNO_TO_UDM_ERRNUM                      \
 do {                                               \
@@ -641,6 +482,127 @@ do {                                                                    \
     {                                                                   \
       __ERR_UDM_SYSLOG;                                                 \
       __ERR_UDM_TRACE;                                                  \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define __KCS_ERRNUM_TO_UDM_ERRNUM                                \
+do {                                                              \
+  int32_t __errnum = ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx); \
+  if (__errnum == IPMI_KCS_CTX_ERR_SUCCESS)                       \
+    dev->errnum = IPMI_ERR_SUCCESS;                               \
+  else if (__errnum == IPMI_KCS_CTX_ERR_OUT_OF_MEMORY)            \
+    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;                         \
+  else if (__errnum == IPMI_KCS_CTX_ERR_PERMISSION)               \
+    dev->errnum = IPMI_ERR_PERMISSION;                            \
+  else if (__errnum == IPMI_KCS_CTX_ERR_PARAMETERS)               \
+    dev->errnum = IPMI_ERR_LIBRARY_ERROR;                         \
+  else if (__errnum == IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND)         \
+    dev->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                      \
+  else if (__errnum == IPMI_KCS_CTX_ERR_SYSTEM_ERROR)             \
+    dev->errnum = IPMI_ERR_SYSTEM_ERROR;                          \
+  else                                                            \
+    dev->errnum = IPMI_ERR_INTERNAL_ERROR;                        \
+} while (0)
+
+#define UDM_ERR_KCS(expr)                                               \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
+      __UDM_KCS_SYSLOG;                                                 \
+      __UDM_KCS_TRACE;                                                  \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_KCS_CLEANUP(expr)                                       \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
+      __UDM_KCS_SYSLOG;                                                 \
+      __UDM_KCS_TRACE;                                                  \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define __SSIF_ERRNUM_TO_UDM_ERRNUM                                 \
+do {                                                                \
+  int32_t __errnum = ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx); \
+  if (__errnum == IPMI_SSIF_CTX_ERR_SUCCESS)                        \
+    dev->errnum = IPMI_ERR_SUCCESS;                                 \
+  else if (__errnum == IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY)             \
+    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;                           \
+  else if (__errnum == IPMI_SSIF_CTX_ERR_PERMISSION)                \
+    dev->errnum = IPMI_ERR_PERMISSION;                              \
+  else if (__errnum == IPMI_SSIF_CTX_ERR_PARAMETERS)                \
+    dev->errnum = IPMI_ERR_LIBRARY_ERROR;                           \
+  else if (__errnum == IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND)          \
+    dev->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                        \
+  else                                                              \
+    dev->errnum = IPMI_ERR_INTERNAL_ERROR;                          \
+} while (0)
+
+#define UDM_ERR_SSIF(expr)                                              \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
+      __UDM_SSIF_SYSLOG;                                                \
+      __UDM_SSIF_TRACE;                                                 \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_SSIF_CLEANUP(expr)                                      \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
+      __UDM_SSIF_SYSLOG;                                                \
+      __UDM_SSIF_TRACE;                                                 \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define __OPENIPMI_ERRNUM_TO_UDM_ERRNUM                                     \
+do {                                                                        \
+  int32_t __errnum = ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx); \
+  if (__errnum == IPMI_OPENIPMI_CTX_ERR_SUCCESS)                            \
+    dev->errnum = IPMI_ERR_SUCCESS;                                         \
+  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY)                 \
+    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;                                   \
+  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PERMISSION)                    \
+    dev->errnum = IPMI_ERR_PERMISSION;                                      \
+  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND)              \
+    dev->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                                \
+  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)                    \
+    dev->errnum = IPMI_ERR_LIBRARY_ERROR;                                   \
+  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR)                  \
+    dev->errnum = IPMI_ERR_SYSTEM_ERROR;                                    \
+  else                                                                      \
+    dev->errnum = IPMI_ERR_INTERNAL_ERROR;                                  \
+} while (0)
+
+#define UDM_ERR_OPENIPMI(expr)                                          \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
+      __UDM_OPENIPMI_SYSLOG;                                            \
+      __UDM_OPENIPMI_TRACE;                                             \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_OPENIPMI_CLEANUP(expr)                                  \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
+      __UDM_OPENIPMI_SYSLOG;                                            \
+      __UDM_OPENIPMI_TRACE;                                             \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
