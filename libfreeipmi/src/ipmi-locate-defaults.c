@@ -35,18 +35,27 @@
 #include "freeipmi/ipmi-smic-api.h"
 #include "freeipmi/ipmi-ssif-api.h"
 
+#include "ipmi-locate-definitions.h"
+
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
 
 int
-ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_info *info)
+ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
+                                      ipmi_interface_type_t type,
+                                      struct ipmi_locate_info *info)
 {
   struct ipmi_locate_info linfo;
 
+  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+
+#if 0
+  /* LOCATE XXX */
   ERR_EINVAL ((type == IPMI_INTERFACE_KCS
 	       || type == IPMI_INTERFACE_SMIC
 	       || type == IPMI_INTERFACE_SSIF) 
 	      && info);
+#endif
 
   memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
   linfo.interface_type = type;

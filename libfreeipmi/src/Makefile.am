@@ -84,6 +84,7 @@ libfreeipmi_la_LIBADD = \
 
 noinst_HEADERS = \
 	ipmi-inband.h \
+	ipmi-locate-definitions.h \
 	ipmi-semaphores.h \
 	ipmi-common.h
 

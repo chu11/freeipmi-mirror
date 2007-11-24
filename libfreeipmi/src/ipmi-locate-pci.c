@@ -28,6 +28,8 @@
 #include "freeipmi/ipmi-locate.h"
 #include "freeipmi/ipmi-ssif-api.h"
 
+#include "ipmi-locate-definitions.h"
+
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
 
@@ -90,7 +92,7 @@ typedef struct pci_class_regs pci_class_regs_t;
 /* return : pregs if successful, otherwise NULL */
 
 static pci_class_regs_t*
-pci_get_regs (uint8_t bus, uint8_t dev, uint16_t func, pci_class_regs_t* pregs)
+_pci_get_regs (uint8_t bus, uint8_t dev, uint16_t func, pci_class_regs_t* pregs)
 {
   FILE* fp;
   char fname[128];
@@ -120,8 +122,10 @@ pci_get_regs (uint8_t bus, uint8_t dev, uint16_t func, pci_class_regs_t* pregs)
 /* type = which interface (KCS, SMIC, BT) */
 /* pinfo = pointer to information structure filled in by this function */
 
-into
-ipmi_locate_pci_get_dev_info (ipmi_interface_t type, struct ipmi_locate_info *info)
+int
+ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
+                                 ipmi_interface_type_t type,
+                                 struct ipmi_locate_info *info)
 {
   unsigned dfn;
   unsigned vendor;
@@ -137,7 +141,12 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type, struct ipmi_locate_info *in
   int status;
   struct ipmi_locate_info linfo;
 
+  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+
+#if 0
+  /* LOCATE XXX */
   ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
+#endif
 
   memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
   linfo.interface_type = type;
@@ -163,7 +172,7 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type, struct ipmi_locate_info *in
     bus = dfn >> 8U;
     dev = PCI_SLOT(dfn & 0xff);
     func = PCI_FUNC(dfn & 0xff);
-    ERR_CLEANUP (pci_get_regs (bus, dev, func, &regs, &status));
+    ERR_CLEANUP (_pci_get_regs (bus, dev, func, &regs, &status));
 
     if (regs.pci_class != IPMI_CLASS ||
 	regs.pci_subclass != IPMI_SUBCLASS ||
@@ -199,11 +208,13 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type, struct ipmi_locate_info *in
 #else  /* __linux */
 
 int
-ipmi_locate_pci_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_info *info)
+ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
+                                 ipmi_interface_type_t type,
+                                 struct ipmi_locate_info *info)
 {
   ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
 
   return -1;
 }
 
-#endif
+#endif /* !__linux */

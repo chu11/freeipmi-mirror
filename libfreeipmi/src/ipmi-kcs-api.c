@@ -740,10 +740,10 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
                                                           obj_cmd_rq,
                                                           pkt,
                                                           pkt_len) < 0));
-  
+ 
   if (ipmi_kcs_write (ctx, pkt, pkt_len) < 0)
     goto cleanup;
-  
+
   rv = 0;
  cleanup:
   if (obj_hdr)

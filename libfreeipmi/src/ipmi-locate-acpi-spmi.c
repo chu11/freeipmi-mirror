@@ -43,6 +43,8 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-ssif-api.h"
 
+#include "ipmi-locate-definitions.h"
+
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
@@ -579,29 +581,29 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
     {0,  "", 0}
   };
 
-static uint8_t ipmi_acpi_table_checksum (uint8_t *buffer, size_t len);
-static int ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, 
-			       size_t rsdp_window_size,
-			       fiid_obj_t obj_acpi_rsdp_descriptor);
-static int ipmi_acpi_get_table (uint64_t table_address, 
-				char *signature,
-				uint8_t **acpi_table, 
-				uint32_t *acpi_table_length);
-static int ipmi_acpi_get_firmware_table (char *signature, 
-					 int table_instance,
-					 fiid_obj_t obj_acpi_table_hdr,
-					 uint8_t **sign_table_data,
-					 uint32_t *sign_table_data_length);
-static int ipmi_acpi_get_spmi_table (uint8_t interface_type,
-				     fiid_obj_t obj_acpi_table_hdr,
-				     fiid_obj_t obj_acpi_spmi_table_descriptor);
+static uint8_t _ipmi_acpi_table_checksum (uint8_t *buffer, size_t len);
+static int _ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, 
+                                size_t rsdp_window_size,
+                                fiid_obj_t obj_acpi_rsdp_descriptor);
+static int _ipmi_acpi_get_table (uint64_t table_address, 
+                                 char *signature,
+                                 uint8_t **acpi_table, 
+                                 uint32_t *acpi_table_length);
+static int _ipmi_acpi_get_firmware_table (char *signature, 
+                                          int table_instance,
+                                          fiid_obj_t obj_acpi_table_hdr,
+                                          uint8_t **sign_table_data,
+                                          uint32_t *sign_table_data_length);
+static int _ipmi_acpi_get_spmi_table (uint8_t interface_type,
+                                      fiid_obj_t obj_acpi_table_hdr,
+                                      fiid_obj_t obj_acpi_spmi_table_descriptor);
 
 #define IPMI_INTERFACE_COUNT 5
 
 static uint64_t physical_memory_size = 0; 
 
 static int
-ipmi_physical_address_valid(uint64_t physical_address, size_t length)
+_ipmi_physical_address_valid(uint64_t physical_address, size_t length)
 {
   /* achu: Some buggy kernels will crash the system if the physical
    * address is bad.  Yes, I know it's the kernel's fault, but we have
@@ -619,12 +621,12 @@ ipmi_physical_address_valid(uint64_t physical_address, size_t length)
       physical_memory_size = pagesize * physical_pages;
     }
 
-    if (physical_address < physical_memory_size
-        && (physical_address + length) > physical_address
-        && (physical_address + length) < physical_memory_size)
-      return 1;
-    else
-      return 0;
+  if (physical_address < physical_memory_size
+      && (physical_address + length) > physical_address
+      && (physical_address + length) < physical_memory_size)
+    return 1;
+  else
+    return 0;
 #else /* !(_SC_PAGESIZE && _SC_PHYS_PAGES) */
   /* achu: For now we return 1.  Later we can maybe read /dev/meminfo
    * or something.
@@ -636,7 +638,7 @@ ipmi_physical_address_valid(uint64_t physical_address, size_t length)
 /*******************************************************************************
  *
  * FUNCTION:
- *   ipmi_acpi_table_checksum
+ *   _ipmi_acpi_table_checksum
  *
  * PARAMETERS:
  *   buffer  - Buffer to checksum
@@ -650,7 +652,7 @@ ipmi_physical_address_valid(uint64_t physical_address, size_t length)
  *
  ******************************************************************************/
 static uint8_t 
-ipmi_acpi_table_checksum (uint8_t *buffer, size_t len)
+_ipmi_acpi_table_checksum (uint8_t *buffer, size_t len)
 {
   int i = 0;
   uint8_t sum = 0;
@@ -665,9 +667,9 @@ ipmi_acpi_table_checksum (uint8_t *buffer, size_t len)
 }
 
 static int
-ipmi_ioremap (uint64_t physical_address, size_t physical_address_len,
-              void **virtual_address,
-              void **mapped_address, size_t *mapped_address_len)
+_ipmi_ioremap (uint64_t physical_address, size_t physical_address_len,
+               void **virtual_address,
+               void **mapped_address, size_t *mapped_address_len)
 {
   uint64_t startaddress;
   uint32_t pad;
@@ -678,7 +680,7 @@ ipmi_ioremap (uint64_t physical_address, size_t physical_address_len,
 	      && mapped_address 
 	      && mapped_address_len);
 
-  ERR (ipmi_physical_address_valid (physical_address, physical_address_len) == 1);
+  ERR (_ipmi_physical_address_valid (physical_address, physical_address_len) == 1);
 
   ERR (!((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) < 0));
 
@@ -699,15 +701,15 @@ ipmi_ioremap (uint64_t physical_address, size_t physical_address_len,
 }
 
 static int
-ipmi_iounmap (void *mapped_address, size_t mapped_address_len)
+_ipmi_iounmap (void *mapped_address, size_t mapped_address_len)
 {
   return (munmap (mapped_address, mapped_address_len));
 }
 
 static int
-ipmi_get_physical_mem_data (uint64_t physical_address,
-                            size_t length,
-                            uint8_t *data)
+_ipmi_get_physical_mem_data (uint64_t physical_address,
+                             size_t length,
+                             uint8_t *data)
 {
   void *virtual_address = NULL;
   void *mapped_address = NULL;
@@ -715,13 +717,13 @@ ipmi_get_physical_mem_data (uint64_t physical_address,
 
   ERR_EINVAL (data);
 
-  ERR (!(ipmi_ioremap (physical_address, length,
-		       &virtual_address,
-		       &mapped_address, &mapped_address_len) != 0));
+  ERR (!(_ipmi_ioremap (physical_address, length,
+                        &virtual_address,
+                        &mapped_address, &mapped_address_len) != 0));
 
   memcpy (data, virtual_address, length);
 
-  ipmi_iounmap (mapped_address, mapped_address_len);
+  _ipmi_iounmap (mapped_address, mapped_address_len);
 
   return 0;
 }
@@ -729,7 +731,7 @@ ipmi_get_physical_mem_data (uint64_t physical_address,
 /*******************************************************************************
  *
  * FUNCTION:
- *   ipmi_acpi_get_rsdp
+ *   _ipmi_acpi_get_rsdp
  *
  * PARAMETERS:
  *   rsdp_window_base_address  - Starting pointer for search
@@ -750,8 +752,8 @@ ipmi_get_physical_mem_data (uint64_t physical_address,
  *
  ******************************************************************************/
 static int 
-ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, size_t rsdp_window_size, 
-		    fiid_obj_t obj_acpi_rsdp_descriptor)
+_ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, size_t rsdp_window_size, 
+                     fiid_obj_t obj_acpi_rsdp_descriptor)
 {
   uint8_t *memdata = NULL;
   int acpi_rsdp_descriptor_len;
@@ -767,8 +769,8 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, size_t rsdp_window_size,
   FIID_TEMPLATE_LEN_BYTES (acpi_rsdp_descriptor_len,
 			   tmpl_acpi_rsdp_descriptor);
   
-  ERR (!(ipmi_get_physical_mem_data (rsdp_window_base_address, 
-				     rsdp_window_size, memdata) != 0));
+  ERR (!(_ipmi_get_physical_mem_data (rsdp_window_base_address, 
+                                      rsdp_window_size, memdata) != 0));
   
   /* Search from given start address for the requested length  */
   for (i = 0; i < rsdp_window_size; i += IPMI_ACPI_RSDP_SCAN_STEP)
@@ -780,8 +782,8 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, size_t rsdp_window_size,
 	continue;
       
       /* now check the checksum */
-      if (ipmi_acpi_table_checksum (&memdata[i], 
-				    IPMI_ACPI_RSDP_CHECKSUM_LENGTH) == 0)
+      if (_ipmi_acpi_table_checksum (&memdata[i], 
+                                     IPMI_ACPI_RSDP_CHECKSUM_LENGTH) == 0)
 	{
 	  FIID_OBJ_SET_ALL(obj_acpi_rsdp_descriptor,
 			   &memdata[i], 
@@ -816,10 +818,10 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, size_t rsdp_window_size,
 		rsdt_xsdt_signature = IPMI_ACPI_XSDT_SIG;
 	      }
 	    
-	    if (ipmi_acpi_get_table (rsdt_xsdt_address, 
-				     rsdt_xsdt_signature, 
-				     &rsdt_xsdt_table, 
-				     &rsdt_xsdt_table_length) == 0)
+	    if (_ipmi_acpi_get_table (rsdt_xsdt_address, 
+                                      rsdt_xsdt_signature, 
+                                      &rsdt_xsdt_table, 
+                                      &rsdt_xsdt_table_length) == 0)
 	      {
 		/* we found RSDT/XSDT */
 		free (rsdt_xsdt_table);
@@ -834,9 +836,9 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, size_t rsdp_window_size,
 
 	    memdata = alloca (acpi_rsdp_descriptor_len);
 	    memset (memdata, 0, acpi_rsdp_descriptor_len);
-	    ERR (!(ipmi_get_physical_mem_data (rsdt_xsdt_address, 
-					       acpi_rsdp_descriptor_len, 
-					       memdata) != 0));
+	    ERR (!(_ipmi_get_physical_mem_data (rsdt_xsdt_address, 
+                                                acpi_rsdp_descriptor_len, 
+                                                memdata) != 0));
 	    
 	    /* check RSDP signature */
 	    ERR (!(strncmp ((char *)memdata, 
@@ -844,8 +846,8 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, size_t rsdp_window_size,
 			    strlen (IPMI_ACPI_RSDP_SIG)) != 0));
 	    
 	    /* now check the checksum */
-	    ERR (!(ipmi_acpi_table_checksum (memdata, 
-					     IPMI_ACPI_RSDP_CHECKSUM_LENGTH) != 0));
+	    ERR (!(_ipmi_acpi_table_checksum (memdata, 
+                                              IPMI_ACPI_RSDP_CHECKSUM_LENGTH) != 0));
 	    
 	    /* we found another RSDP */
 	    memcpy (obj_acpi_rsdp_descriptor, memdata, acpi_rsdp_descriptor_len);
@@ -861,7 +863,7 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, size_t rsdp_window_size,
 /*******************************************************************************
  *
  * FUNCTION:
- *   ipmi_acpi_get_table
+ *   _ipmi_acpi_get_table
  *
  * PARAMETERS:
  *   table_address     - ACPI table physical address
@@ -878,8 +880,8 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, size_t rsdp_window_size,
  *
  ******************************************************************************/
 static int 
-ipmi_acpi_get_table (uint64_t table_address, char *signature, 
-		     uint8_t **acpi_table, uint32_t *acpi_table_length)
+_ipmi_acpi_get_table (uint64_t table_address, char *signature, 
+                      uint8_t **acpi_table, uint32_t *acpi_table_length)
 {
   uint64_t val;
   
@@ -913,9 +915,9 @@ ipmi_acpi_get_table (uint64_t table_address, char *signature,
 
   memset (acpi_table_buf, 0, acpi_table_hdr_length);
   
-  ERR_CLEANUP (!(ipmi_get_physical_mem_data (table_address, 
-					     acpi_table_hdr_length, 
-					     acpi_table_buf) != 0));
+  ERR_CLEANUP (!(_ipmi_get_physical_mem_data (table_address, 
+                                              acpi_table_hdr_length, 
+                                              acpi_table_buf) != 0));
   
   FIID_OBJ_SET_ALL_CLEANUP(obj_acpi_table_hdr,
 			   acpi_table_buf,
@@ -933,11 +935,11 @@ ipmi_acpi_get_table (uint64_t table_address, char *signature,
   
   table = alloca (table_length);
   memset (table, 0, table_length);
-  ERR_CLEANUP (!(ipmi_get_physical_mem_data (table_address, 
-					     table_length, 
-					     table) != 0));
+  ERR_CLEANUP (!(_ipmi_get_physical_mem_data (table_address, 
+                                              table_length, 
+                                              table) != 0));
   
-  ERR_CLEANUP (!(ipmi_acpi_table_checksum (table, table_length) != 0));
+  ERR_CLEANUP (!(_ipmi_acpi_table_checksum (table, table_length) != 0));
   
   *acpi_table = malloc (table_length);
   memcpy (*acpi_table, table, table_length);
@@ -952,7 +954,7 @@ ipmi_acpi_get_table (uint64_t table_address, char *signature,
 /*******************************************************************************
  *
  * FUNCTION:
- *   ipmi_acpi_get_firmware_table
+ *   _ipmi_acpi_get_firmware_table
  *
  * PARAMETERS:
  *   signature               - ACPI signature for firmware table header
@@ -972,10 +974,10 @@ ipmi_acpi_get_table (uint64_t table_address, char *signature,
  *
  ******************************************************************************/
 static int 
-ipmi_acpi_get_firmware_table (char *signature, int table_instance, 
-			      fiid_obj_t obj_acpi_table_hdr, 
-			      uint8_t **sign_table_data, 
-			      uint32_t *sign_table_data_length)
+_ipmi_acpi_get_firmware_table (char *signature, int table_instance, 
+                               fiid_obj_t obj_acpi_table_hdr, 
+                               uint8_t **sign_table_data, 
+                               uint32_t *sign_table_data_length)
 {
   uint64_t val;
   
@@ -1025,13 +1027,13 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
   FIID_TEMPLATE_LEN_BYTES_CLEANUP (acpi_rsdp_descriptor_length, 
 				   tmpl_acpi_rsdp_descriptor);
 
-  if (ipmi_acpi_get_rsdp (IPMI_ACPI_LO_RSDP_WINDOW_BASE,
-			  IPMI_ACPI_LO_RSDP_WINDOW_SIZE,
-			  obj_acpi_rsdp_descriptor) != 0)
+  if (_ipmi_acpi_get_rsdp (IPMI_ACPI_LO_RSDP_WINDOW_BASE,
+                           IPMI_ACPI_LO_RSDP_WINDOW_SIZE,
+                           obj_acpi_rsdp_descriptor) != 0)
     {
-      ERR_CLEANUP (!(ipmi_acpi_get_rsdp (IPMI_ACPI_HI_RSDP_WINDOW_BASE,
-					 IPMI_ACPI_HI_RSDP_WINDOW_SIZE,
-					 obj_acpi_rsdp_descriptor) != 0));
+      ERR_CLEANUP (!(_ipmi_acpi_get_rsdp (IPMI_ACPI_HI_RSDP_WINDOW_BASE,
+                                          IPMI_ACPI_HI_RSDP_WINDOW_SIZE,
+                                          obj_acpi_rsdp_descriptor) != 0));
     }
   
   FIID_OBJ_GET_CLEANUP (obj_acpi_rsdp_descriptor, "revision", &val);
@@ -1052,9 +1054,9 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
       rsdt_xsdt_signature = IPMI_ACPI_XSDT_SIG;
     }
   
-  ERR_CLEANUP (!(ipmi_acpi_get_table (rsdt_xsdt_address, rsdt_xsdt_signature, 
-				      &rsdt_xsdt_table, 
-				      &rsdt_xsdt_table_length) != 0));
+  ERR_CLEANUP (!(_ipmi_acpi_get_table (rsdt_xsdt_address, rsdt_xsdt_signature, 
+                                       &rsdt_xsdt_table, 
+                                       &rsdt_xsdt_table_length) != 0));
   
   rsdt_xsdt_table_data_length = rsdt_xsdt_table_length - acpi_table_hdr_length;
   rsdt_xsdt_table_data = (rsdt_xsdt_table + acpi_table_hdr_length);
@@ -1090,10 +1092,10 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
       
       FIID_OBJ_DESTROY(obj_table);
 
-      if (ipmi_acpi_get_table (table_address, 
-			       signature, 
-			       &acpi_table, 
-			       &acpi_table_length) != 0)
+      if (_ipmi_acpi_get_table (table_address, 
+                                signature, 
+                                &acpi_table, 
+                                &acpi_table_length) != 0)
 	continue;
       
       signature_table_count++;
@@ -1129,7 +1131,7 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
 /*******************************************************************************
  *
  * FUNCTION:
- *   ipmi_acpi_get_spmi_table
+ *   _ipmi_acpi_get_spmi_table
  *
  * PARAMETERS:
  *   interface_type           - Type of interface to look for (KCS, SSIF, SMIC, BT)
@@ -1146,9 +1148,9 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
  *
  ******************************************************************************/
 static int 
-ipmi_acpi_get_spmi_table (uint8_t interface_type,
-			  fiid_obj_t obj_acpi_table_hdr,
-			  fiid_obj_t obj_acpi_spmi_table_descriptor)
+_ipmi_acpi_get_spmi_table (uint8_t interface_type,
+                           fiid_obj_t obj_acpi_table_hdr,
+                           fiid_obj_t obj_acpi_spmi_table_descriptor)
 {
   uint64_t val;
   uint8_t table_interface_type; 
@@ -1167,10 +1169,10 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
 
   for (instance = 0; instance < IPMI_INTERFACE_COUNT; instance++)
     {
-      if (ipmi_acpi_get_firmware_table (IPMI_ACPI_SPMI_SIG, instance, 
-					obj_acpi_table_hdr,
-					&table_data, 
-					&table_data_length) != 0)
+      if (_ipmi_acpi_get_firmware_table (IPMI_ACPI_SPMI_SIG, instance, 
+                                         obj_acpi_table_hdr,
+                                         &table_data, 
+                                         &table_data_length) != 0)
 	continue;
       
       printf ("__DEBUG__ instance = %d, signature = [%s] found\n", 
@@ -1212,14 +1214,21 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
 }
 
 int
-ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_info *info)
+ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
+                                       ipmi_interface_type_t type,
+                                       struct ipmi_locate_info *info)
 {
   fiid_obj_t obj_acpi_table_hdr = NULL;
   fiid_obj_t obj_acpi_spmi_table_descriptor = NULL;
   struct ipmi_locate_info linfo;
   int rv = -1;
 
+  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+
+#if 0
+  /* LOCATE XXX */
   ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
+#endif
 
   memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
   linfo.interface_type = type;
@@ -1234,9 +1243,9 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type, struct ipmi_loca
 
   FIID_OBJ_CREATE_CLEANUP (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor);
 
-  ERR_CLEANUP (!(ipmi_acpi_get_spmi_table (type,
-					   obj_acpi_table_hdr,
-					   obj_acpi_spmi_table_descriptor) != 0));
+  ERR_CLEANUP (!(_ipmi_acpi_get_spmi_table (type,
+                                            obj_acpi_table_hdr,
+                                            obj_acpi_spmi_table_descriptor) != 0));
   
   /* I don't see any reason to perform this check now -- Anand Babu */
   /* This field must always be 01h to be compatible with any software

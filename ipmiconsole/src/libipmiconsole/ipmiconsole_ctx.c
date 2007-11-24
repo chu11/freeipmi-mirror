@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.24 2007-10-18 16:18:46 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.24.2.1 2007-11-24 15:29:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -71,6 +71,8 @@
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_fiid_wrappers.h"
 #include "ipmiconsole_util.h"
+
+#include "freeipmi-portability.h"
 
 #define GETHOSTBYNAME_AUX_BUFLEN 1024
 

@@ -47,6 +47,8 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-ssif-api.h"
 
+#include "ipmi-locate-definitions.h"
+
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
 #include "xmalloc.h"
@@ -165,7 +167,7 @@ fiid_template_t tmpl_smbios_ipmi_device_info_record =
   };
 
 static int
-ipmi_smbios_register_spacing (uint8_t register_spacing_boundary, uint8_t *register_spacing)
+_ipmi_smbios_register_spacing (uint8_t register_spacing_boundary, uint8_t *register_spacing)
 {
   ERR_EINVAL (register_spacing 
 	      && (register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_1BYTE_BOUND
@@ -196,14 +198,14 @@ ipmi_smbios_register_spacing (uint8_t register_spacing_boundary, uint8_t *regist
    000fffff.  The IPMI Entry Structure begins on a 16-byte boundary,
    with a 4 byte "_SM_" signature.  */
 
-/* is_ipmi_entry
+/* _is_ipmi_entry
    ARGUMENTS:
    sigp = points to start of purported SMBIOS entry structure
    RETURNS:
    0 = not really a SMBIOS entry structure
    1 = yes, a real SMBIOS entry structure */ 
 static int
-is_ipmi_entry (uint8_t* sigp)
+_is_ipmi_entry (uint8_t* sigp)
 {
   static const char smbios_entry_sig[4] = { '_', 'S', 'M', '_' };
   static const char smbios_entry_anchor[5] = { '_', 'D', 'M', 'I', '_' };
@@ -235,7 +237,7 @@ is_ipmi_entry (uint8_t* sigp)
 }
 
 
-/* is_ipmi_dev_info
+/* _is_ipmi_dev_info
    ARGUMENTS:
    type = which interface (KCS, SMIC, BT)
    dev_info_p = points to start of purported IPMI device info structure
@@ -243,7 +245,7 @@ is_ipmi_entry (uint8_t* sigp)
    0 = not a IPMI device info structure for TYPE
    1 = yes, IPMI device info structure for TYPE */
 static int
-is_ipmi_dev_info (ipmi_interface_type_t type, uint8_t* dev_info_p)
+_is_ipmi_dev_info (ipmi_interface_type_t type, uint8_t* dev_info_p)
 {
   if (*dev_info_p != IPMI_SMBIOS_IPMI_DEV_INFO_SIG)
     return 0;
@@ -254,7 +256,7 @@ is_ipmi_dev_info (ipmi_interface_type_t type, uint8_t* dev_info_p)
   return 1;
 }
 
-/* map_physmem
+/* _map_physmem
    ARGUMENTS:
    physaddress = physical address to access
    len = length of area to access
@@ -263,7 +265,7 @@ is_ipmi_dev_info (ipmi_interface_type_t type, uint8_t* dev_info_p)
    RETURNS:
    pointer to area of physical memory at physmem */
 static uint8_t*
-map_physmem (uint32_t physaddress, size_t len, void** startp, size_t* totallen)
+_map_physmem (uint32_t physaddress, size_t len, void** startp, size_t* totallen)
 {
   uint32_t startaddress;
   uint32_t pad;
@@ -288,14 +290,14 @@ map_physmem (uint32_t physaddress, size_t len, void** startp, size_t* totallen)
   return NULL;	  
 }
 
-/* copy_impi_dev_info
+/* _copy_impi_dev_info
    ARGUMENTS:
    type = which interface (KCS, SMIC, BT)
    RETURNS:
    pointer to the device info structure in heap (caller responsible
    for freeing */
 static uint8_t*
-copy_impi_dev_info (ipmi_interface_type_t type)
+_copy_impi_dev_info (ipmi_interface_type_t type)
 {
   int status;
   uint8_t* result = NULL;
@@ -304,13 +306,13 @@ copy_impi_dev_info (ipmi_interface_type_t type)
   uint8_t* pmem_entry; 
 
   status = 1;
-  pmem_entry = map_physmem (IPMI_SMBIOS_AREA_START, IPMI_SMBIOS_AREA_LEN, &map_entry, &map_entry_len);
+  pmem_entry = _map_physmem (IPMI_SMBIOS_AREA_START, IPMI_SMBIOS_AREA_LEN, &map_entry, &map_entry_len);
   if (pmem_entry != NULL)
     {
       uint8_t* sigp;
       for (sigp = pmem_entry; sigp - pmem_entry < IPMI_SMBIOS_AREA_LEN; sigp += IPMI_SMBIOS_AREA_ALIGN)
 	{
-	  if (is_ipmi_entry (sigp))
+	  if (_is_ipmi_entry (sigp))
 	    {
 	      uint16_t s_table_len;
 	      uint8_t* pmem_table;
@@ -318,8 +320,8 @@ copy_impi_dev_info (ipmi_interface_type_t type)
 	      size_t map_table_len;
 
 	      s_table_len = *(uint16_t*)(sigp + IPMI_SMBIOS_ENTRY_TLEN_OFFSET);
-	      pmem_table = map_physmem (*(uint32_t*)(sigp + IPMI_SMBIOS_ENTRY_PTR_OFFSET), s_table_len,
-					&map_table, &map_table_len);
+	      pmem_table = _map_physmem (*(uint32_t*)(sigp + IPMI_SMBIOS_ENTRY_PTR_OFFSET), s_table_len,
+                                         &map_table, &map_table_len);
 	      if (pmem_table != NULL)
 		{
 		  uint8_t* dev_info_p;
@@ -330,7 +332,7 @@ copy_impi_dev_info (ipmi_interface_type_t type)
 		  size = dev_info_p[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET];
 		  while (dev_info_p - pmem_table < s_table_len)
 		    {
-		      if (is_ipmi_dev_info (type, dev_info_p))
+		      if (_is_ipmi_dev_info (type, dev_info_p))
 			{
 			  ERR_NULL_RETURN ((result = xmalloc (size)));
 			  if (result != NULL)
@@ -357,14 +359,17 @@ copy_impi_dev_info (ipmi_interface_type_t type)
   return (status == 0 ? result : NULL);
 }
 
-/* get_smbios_dev_info
+/* ipmi_locate_smbios_get_device_info
    ARGUMENTS:
+   ctx = ipmi locate context
    type = which interface (KCS, SMIC, BT)
    pinfo = pointer to information structure filled in by this function
    RETURNS:
-   pinfo if successful, NULL otherwise */
+   0 on success, -1 on error */
 int
-ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_info *info)
+ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
+                                    ipmi_interface_type_t type,
+                                    struct ipmi_locate_info *info)
 {
   uint8_t* bufp = NULL;
   uint8_t version;
@@ -372,7 +377,12 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_
   uint64_t strobed;
   struct ipmi_locate_info linfo;
 
+  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+
+#if 0
+  /* LOCATE XXX */
   ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
+#endif
 
   memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
   linfo.interface_type = type;
@@ -382,7 +392,7 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_
       linfo.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
 
-  ERR_CLEANUP ((bufp = copy_impi_dev_info (type)));
+  ERR_CLEANUP ((bufp = _copy_impi_dev_info (type)));
 
   linfo.locate_driver_type = IPMI_LOCATE_DRIVER_SMBIOS;
 
@@ -405,7 +415,7 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_
       strobed = (strobed & ~1) | lsb;
 
       register_spacing_boundary = (modifier >> IPMI_SMBIOS_REGSPACING_SHIFT) & IPMI_SMBIOS_REGSPACING_MASK;
-      ERR_CLEANUP (!(ipmi_smbios_register_spacing (register_spacing_boundary, &linfo.register_spacing) == -1));
+      ERR_CLEANUP (!(_ipmi_smbios_register_spacing (register_spacing_boundary, &linfo.register_spacing) == -1));
     }
 
   if (linfo.interface_type == IPMI_INTERFACE_SSIF)

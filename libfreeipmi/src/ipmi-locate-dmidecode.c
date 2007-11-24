@@ -43,6 +43,8 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-ssif-api.h"
 
+#include "ipmi-locate-definitions.h"
+
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
 #include "xmalloc.h"
@@ -121,7 +123,7 @@ struct dmi_header
 
 #ifndef HAVE_MMAP
 static int 
-myread (int fd, fipmiu8 *buf, size_t count, const char *prefix)
+_myread (int fd, fipmiu8 *buf, size_t count, const char *prefix)
 {
   ssize_t r = 1;
   size_t r2 = 0;
@@ -154,7 +156,7 @@ myread (int fd, fipmiu8 *buf, size_t count, const char *prefix)
 #endif
 
 static int 
-checksum (const fipmiu8 *buf, size_t len)
+_checksum (const fipmiu8 *buf, size_t len)
 {
   fipmiu8 sum = 0;
   size_t a;
@@ -169,7 +171,7 @@ checksum (const fipmiu8 *buf, size_t len)
  * This function allocates memory.
  */
 static void *
-mem_chunk (size_t base, size_t len, const char *devmem)
+_mem_chunk (size_t base, size_t len, const char *devmem)
 {
   void *p;
   int fd;
@@ -226,7 +228,7 @@ mem_chunk (size_t base, size_t len, const char *devmem)
       return NULL;
     }
   
-  if (myread (fd, p, len, devmem) == -1)
+  if (_myread (fd, p, len, devmem) == -1)
     {
       free (p);
       return NULL;
@@ -242,13 +244,13 @@ mem_chunk (size_t base, size_t len, const char *devmem)
 }
 
 static int 
-dmi_table (fipmiu32 base, fipmiu16 len, fipmiu16 num, fipmiu16 ver, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
+_dmi_table (fipmiu32 base, fipmiu16 len, fipmiu16 num, fipmiu16 ver, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
 {
   fipmiu8 *buf;
   fipmiu8 *data;
   int i = 0;
   
-  if ((buf = mem_chunk (base, len, devmem)) == NULL)
+  if ((buf = _mem_chunk (base, len, devmem)) == NULL)
     {
       return (-1);
     }
@@ -365,15 +367,15 @@ dmi_table (fipmiu32 base, fipmiu16 len, fipmiu16 num, fipmiu16 ver, const char *
 }
 
 static int 
-smbios_decode (fipmiu8 *buf, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
+_smbios_decode (fipmiu8 *buf, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
 {
-  if (checksum (buf, buf[0x05]) && 
+  if (_checksum (buf, buf[0x05]) && 
       (memcmp (buf + 0x10, "_DMI_", 5) == 0) && 
-      checksum (buf + 0x10, 0x0F))
+      _checksum (buf + 0x10, 0x0F))
     {
-      return dmi_table (DWORD (buf + 0x18), WORD (buf + 0x16), WORD (buf + 0x1C), 
-			(buf[0x06] << 8) + buf[0x07], devmem, 
-			interface_type, locate_info);
+      return _dmi_table (DWORD (buf + 0x18), WORD (buf + 0x16), WORD (buf + 0x1C), 
+                         (buf[0x06] << 8) + buf[0x07], devmem, 
+                         interface_type, locate_info);
     }
   
   return (-1);
@@ -381,13 +383,13 @@ smbios_decode (fipmiu8 *buf, const char *devmem, ipmi_interface_type_t interface
 
 #ifndef USE_EFI
 static int 
-legacy_decode (fipmiu8 *buf, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
+_legacy_decode (fipmiu8 *buf, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
 {
-  if (checksum (buf, 0x0F))
+  if (_checksum (buf, 0x0F))
     {
-      return dmi_table (DWORD (buf + 0x08), WORD (buf + 0x06), WORD (buf + 0x0C), 
-			((buf[0x0E] & 0xF0) << 4) + (buf[0x0E] & 0x0F), devmem, 
-			interface_type, locate_info);
+      return _dmi_table (DWORD (buf + 0x08), WORD (buf + 0x06), WORD (buf + 0x0C), 
+                         ((buf[0x0E] & 0xF0) << 4) + (buf[0x0E] & 0x0F), devmem, 
+                         interface_type, locate_info);
     }
 	
   return (-1);
@@ -395,7 +397,9 @@ legacy_decode (fipmiu8 *buf, const char *devmem, ipmi_interface_type_t interface
 #endif /* USE_EFI */
 
 int
-ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type,  struct ipmi_locate_info *info)
+ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
+                                       ipmi_interface_type_t type,
+                                       struct ipmi_locate_info *info)
 {
   struct ipmi_locate_info locate_info;
   int found = 0;
@@ -408,7 +412,12 @@ ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type,  struct ipmi_loc
   fipmiu8 *buf;
   int rv = -1;
   
+  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+
+#if 0
+  /* LOCATE XXX */
   ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
+#endif
 
   memset(&locate_info, '\0', sizeof(struct ipmi_locate_info));
 #ifdef USE_EFI
@@ -441,19 +450,19 @@ ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type,  struct ipmi_loc
       return -1;
     }
   
-  if ((buf = mem_chunk (fp, 0x20, DEFAULT_MEM_DEV)) == NULL)
+  if ((buf = _mem_chunk (fp, 0x20, DEFAULT_MEM_DEV)) == NULL)
     {
       return -1;
     }
   
-  if (!smbios_decode (buf, DEFAULT_MEM_DEV, type, &locate_info))
+  if (!_smbios_decode (buf, DEFAULT_MEM_DEV, type, &locate_info))
     {
       found++;
     }
   
   free (buf);
 #else /* USE_EFI */
-  if ((buf = mem_chunk (0xF0000, 0x10000, DEFAULT_MEM_DEV)) == NULL)
+  if ((buf = _mem_chunk (0xF0000, 0x10000, DEFAULT_MEM_DEV)) == NULL)
     {
       return -1;
     }
@@ -462,7 +471,7 @@ ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type,  struct ipmi_loc
     {
       if ((memcmp (buf + fp, "_SM_", 4) == 0) && (fp <= 0xFFE0))
 	{
-	  if (!smbios_decode (buf + fp, DEFAULT_MEM_DEV, type, &locate_info))
+	  if (!_smbios_decode (buf + fp, DEFAULT_MEM_DEV, type, &locate_info))
 	    {
 	      found++;
 	      break;
@@ -471,7 +480,7 @@ ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type,  struct ipmi_loc
 	}
       else if (memcmp (buf + fp, "_DMI_", 5) == 0)
 	{
-	  if (!legacy_decode (buf + fp, DEFAULT_MEM_DEV, type, &locate_info))
+	  if (!_legacy_decode (buf + fp, DEFAULT_MEM_DEV, type, &locate_info))
 	    {
 	      found++;
 	      break;
