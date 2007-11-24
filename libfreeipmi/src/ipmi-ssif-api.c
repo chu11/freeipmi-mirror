@@ -718,7 +718,7 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
 			 obj_hdr) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
-      return (-1);
+      goto cleanup;
     }
   
   if (assemble_ipmi_kcs_pkt (obj_hdr,
@@ -727,13 +727,13 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
 			     pkt_len) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
-      return (-1);
+      goto cleanup;
     }
   
   if (ipmi_ssif_write (ctx, pkt, pkt_len) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
-      return (-1);
+      goto cleanup;
     }
 
   rv = 0;
