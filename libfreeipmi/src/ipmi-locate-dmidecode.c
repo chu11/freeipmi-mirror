@@ -37,6 +37,7 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
+#include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/ipmi-locate.h"
@@ -127,7 +128,7 @@ _myread (int fd, fipmiu8 *buf, size_t count, const char *prefix)
 {
   ssize_t r = 1;
   size_t r2 = 0;
-  
+
   while (r2 != count && r != 0)
     {
       r = read (fd, buf + r2, count - r2);
@@ -160,6 +161,8 @@ _checksum (const fipmiu8 *buf, size_t len)
 {
   fipmiu8 sum = 0;
   size_t a;
+
+  assert(buf);
   
   for (a = 0; a < len; a++)
     sum += buf[a];
@@ -180,6 +183,8 @@ _mem_chunk (size_t base, size_t len, const char *devmem)
   void *mmp;
 #endif
   
+  assert(devmem);
+
   if ((fd = open (devmem, O_RDONLY)) == -1)
     {
       /* perror (devmem); */
@@ -244,7 +249,13 @@ _mem_chunk (size_t base, size_t len, const char *devmem)
 }
 
 static int 
-_dmi_table (fipmiu32 base, fipmiu16 len, fipmiu16 num, fipmiu16 ver, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
+_dmi_table (fipmiu32 base, 
+            fipmiu16 len, 
+            fipmiu16 num, 
+            fipmiu16 ver, 
+            const char *devmem, 
+            ipmi_interface_type_t interface_type, 
+            struct ipmi_locate_info *locate_info)
 {
   fipmiu8 *buf;
   fipmiu8 *data;
@@ -367,7 +378,10 @@ _dmi_table (fipmiu32 base, fipmiu16 len, fipmiu16 num, fipmiu16 ver, const char 
 }
 
 static int 
-_smbios_decode (fipmiu8 *buf, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
+_smbios_decode (fipmiu8 *buf, 
+                const char *devmem, 
+                ipmi_interface_type_t interface_type, 
+                struct ipmi_locate_info *locate_info)
 {
   if (_checksum (buf, buf[0x05]) && 
       (memcmp (buf + 0x10, "_DMI_", 5) == 0) && 
@@ -383,7 +397,10 @@ _smbios_decode (fipmiu8 *buf, const char *devmem, ipmi_interface_type_t interfac
 
 #ifndef USE_EFI
 static int 
-_legacy_decode (fipmiu8 *buf, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
+_legacy_decode (fipmiu8 *buf, 
+                const char *devmem, 
+                ipmi_interface_type_t interface_type, 
+                struct ipmi_locate_info *locate_info)
 {
   if (_checksum (buf, 0x0F))
     {

@@ -112,6 +112,7 @@ do {                                                                         \
 		       (___dev)->net_fn,                                     \
 		       __ctxerrstr,                                          \
 		       IPMI_ERR_STR_MAX_LEN);                                \
+  __TRACE_CTX_OUTPUT;                                                        \
   goto cleanup;                                                              \
 } while (0) 
 

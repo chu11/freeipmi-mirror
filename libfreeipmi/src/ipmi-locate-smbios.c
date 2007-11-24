@@ -41,6 +41,7 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
+#include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/ipmi-locate.h"
@@ -169,12 +170,12 @@ fiid_template_t tmpl_smbios_ipmi_device_info_record =
 static int
 _ipmi_smbios_register_spacing (uint8_t register_spacing_boundary, uint8_t *register_spacing)
 {
-  ERR_EINVAL (register_spacing 
-	      && (register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_1BYTE_BOUND
-		  || register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_4BYTE_BOUND
-		  || register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_16BYTE_BOUND
-		  || register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_RESERVED));
-
+  assert (register_spacing 
+          && (register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_1BYTE_BOUND
+              || register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_4BYTE_BOUND
+              || register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_16BYTE_BOUND
+              || register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_RESERVED));
+  
   switch (register_spacing_boundary)
     {
     case IPMI_SMBIOS_REGISTER_SPACING_1BYTE_BOUND:
@@ -189,6 +190,7 @@ _ipmi_smbios_register_spacing (uint8_t register_spacing_boundary, uint8_t *regis
     case IPMI_SMBIOS_REGISTER_SPACING_RESERVED:
     default:
       *register_spacing = 0;
+      /* Should not reach */
       ERR_EINVAL(0);
     }
 }
@@ -271,8 +273,7 @@ _map_physmem (uint32_t physaddress, size_t len, void** startp, size_t* totallen)
   uint32_t pad;
   int mem_fd;
 
-  if (startp == NULL || totallen == NULL)
-    return NULL;
+  assert(startp && totallen);
 
   mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC);
 

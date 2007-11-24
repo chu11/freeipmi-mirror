@@ -212,7 +212,12 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
                                  ipmi_interface_type_t type,
                                  struct ipmi_locate_info *info)
 {
+  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+
+#if 0
+  /* LOCATE XXX */
   ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
+#endif
 
   return -1;
 }

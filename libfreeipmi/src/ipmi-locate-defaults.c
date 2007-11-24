@@ -92,6 +92,7 @@ ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
       linfo.register_spacing = 1;
       break;
     default:
+      /* Should not reach */
       ERR_EXIT(0);
     }
 

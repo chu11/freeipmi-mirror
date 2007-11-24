@@ -37,6 +37,7 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
+#include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/ipmi-locate.h"
@@ -656,9 +657,8 @@ _ipmi_acpi_table_checksum (uint8_t *buffer, size_t len)
 {
   int i = 0;
   uint8_t sum = 0;
-  
-  if (buffer == NULL)
-    return 0;
+ 
+  assert(buffer);
   
   for (i = 0; i < len; i++)
     sum += buffer[i];
@@ -675,10 +675,10 @@ _ipmi_ioremap (uint64_t physical_address, size_t physical_address_len,
   uint32_t pad;
   int mem_fd;
 
-  ERR_EINVAL (physical_address_len 
-	      && virtual_address 
-	      && mapped_address 
-	      && mapped_address_len);
+  assert (physical_address_len 
+          && virtual_address 
+          && mapped_address 
+          && mapped_address_len);
 
   ERR (_ipmi_physical_address_valid (physical_address, physical_address_len) == 1);
 
@@ -715,7 +715,7 @@ _ipmi_get_physical_mem_data (uint64_t physical_address,
   void *mapped_address = NULL;
   size_t mapped_address_len = 0;
 
-  ERR_EINVAL (data);
+  assert(data);
 
   ERR (!(_ipmi_ioremap (physical_address, length,
                         &virtual_address,
@@ -723,7 +723,7 @@ _ipmi_get_physical_mem_data (uint64_t physical_address,
 
   memcpy (data, virtual_address, length);
 
-  _ipmi_iounmap (mapped_address, mapped_address_len);
+  ERR (!(_ipmi_iounmap (mapped_address, mapped_address_len) < 0));
 
   return 0;
 }
@@ -759,7 +759,7 @@ _ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, size_t rsdp_window_size,
   int acpi_rsdp_descriptor_len;
   int i;
 
-  ERR_EINVAL (fiid_obj_valid(obj_acpi_rsdp_descriptor));
+  assert (fiid_obj_valid(obj_acpi_rsdp_descriptor));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_rsdp_descriptor, tmpl_acpi_rsdp_descriptor);
   
@@ -896,7 +896,9 @@ _ipmi_acpi_get_table (uint64_t table_address, char *signature,
   int32_t len;
   int rv = -1;
 
-  ERR (signature && acpi_table && acpi_table_length);
+  assert (signature 
+          && acpi_table 
+          && acpi_table_length);
 
   FIID_TEMPLATE_FIELD_LEN_BYTES_CLEANUP(len, 
 					tmpl_acpi_table_hdr, 
@@ -1013,10 +1015,10 @@ _ipmi_acpi_get_firmware_table (char *signature, int table_instance,
       {0,  "", 0}
     };
 
-  ERR (signature  
-       && fiid_obj_valid(obj_acpi_table_hdr)
-       && sign_table_data  
-       && sign_table_data_length);
+  assert (signature  
+          && fiid_obj_valid(obj_acpi_table_hdr)
+          && sign_table_data  
+          && sign_table_data_length);
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_table_hdr, tmpl_acpi_table_hdr);
 
@@ -1161,8 +1163,8 @@ _ipmi_acpi_get_spmi_table (uint8_t interface_type,
   int32_t acpi_spmi_table_descriptor_len;
   int rv = -1;
 
-  ERR_EINVAL (fiid_obj_valid(obj_acpi_table_hdr)
-	      && fiid_obj_valid(obj_acpi_spmi_table_descriptor));
+  assert (fiid_obj_valid(obj_acpi_table_hdr)
+          && fiid_obj_valid(obj_acpi_spmi_table_descriptor));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_table_hdr, tmpl_acpi_table_hdr);
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor);
