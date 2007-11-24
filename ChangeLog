@@ -1,3 +1,9 @@
+2007-11-24  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Prepare for beta release.
+
+	* Tagged Release-0_5_0_beta2.
+
 2007-11-24  Dmitry Frolov <frol@nov.net>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c: Fix FreeBSD
