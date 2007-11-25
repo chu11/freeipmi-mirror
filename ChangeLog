@@ -20,6 +20,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	libfreeipmi/src/ipmi-locate-smbios.c: Re-work locate API with
 	contexts.  Use new error logging routines appropriately.
 
+	* ipmi-locate/src/, libfreeipmi/src/udm/: Re-work to use new
+	locate API.
+
 	* libfreeipmi/src/ipmi-semaphores.h,
 	libfreeipmi/src/ipmi-semaphores.c: Remove unused code.  Re-work
 	for better erorr reporting/logging.

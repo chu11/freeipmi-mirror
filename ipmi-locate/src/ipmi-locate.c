@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.32 2007-09-05 20:13:26 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.32.4.1 2007-11-25 23:14:41 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -28,6 +28,7 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <assert.h>
 #include <errno.h>
 
 #include <freeipmi/freeipmi.h>
@@ -112,260 +113,290 @@ display_ipmi_locate_info (struct ipmi_locate_info *info)
 }
 
 void 
-dmidecode_probe_display ()
+dmidecode_probe_display (ipmi_locate_ctx_t ctx)
 {
   struct ipmi_locate_info info;
   
+  assert(ctx);
+
   printf ("Probing KCS device using DMIDECODE... ");
-  if (ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_KCS, &info) == 0)
+  if (ipmi_locate_dmidecode_get_device_info (ctx,
+                                             IPMI_INTERFACE_KCS, 
+                                             &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
 
   printf ("Probing SMIC device using DMIDECODE... ");
-  if (ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_SMIC, &info) == 0)
+  if (ipmi_locate_dmidecode_get_device_info (ctx,
+                                             IPMI_INTERFACE_SMIC, 
+                                             &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   printf ("Probing BT device using DMIDECODE... ");
-  if (ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_BT, &info) == 0)
+  if (ipmi_locate_dmidecode_get_device_info (ctx,
+                                             IPMI_INTERFACE_BT, 
+                                             &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   printf ("Probing SSIF device using DMIDECODE... ");
-  if (ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_SSIF, &info) == 0)
+  if (ipmi_locate_dmidecode_get_device_info (ctx,
+                                             IPMI_INTERFACE_SSIF, 
+                                             &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   return;
 }
 
 void 
-smbios_probe_display ()
+smbios_probe_display (ipmi_locate_ctx_t ctx)
 {
   struct ipmi_locate_info info;
   
+  assert(ctx);
+
   printf ("Probing KCS device using SMBIOS... ");
-  if (ipmi_locate_smbios_get_dev_info (IPMI_INTERFACE_KCS, &info) == 0)
+  if (ipmi_locate_smbios_get_device_info (ctx,
+                                          IPMI_INTERFACE_KCS, 
+                                          &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
 
   printf ("Probing SMIC device using SMBIOS... ");
-  if (ipmi_locate_smbios_get_dev_info (IPMI_INTERFACE_SMIC, &info) == 0)
+  if (ipmi_locate_smbios_get_device_info (ctx,
+                                          IPMI_INTERFACE_SMIC, 
+                                          &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   printf ("Probing BT device using SMBIOS... ");
-  if (ipmi_locate_smbios_get_dev_info (IPMI_INTERFACE_BT, &info) == 0)
+  if (ipmi_locate_smbios_get_device_info (ctx,
+                                          IPMI_INTERFACE_BT, 
+                                          &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   printf ("Probing SSIF device using SMBIOS... ");
-  if (ipmi_locate_smbios_get_dev_info (IPMI_INTERFACE_SSIF, &info) == 0)
+  if (ipmi_locate_smbios_get_device_info (ctx,
+                                          IPMI_INTERFACE_SSIF, 
+                                          &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   return;
 }
 
 void 
-acpi_probe_display ()
+acpi_probe_display (ipmi_locate_ctx_t ctx)
 {
   struct ipmi_locate_info info;
   
+  assert(ctx);
+
   printf ("Probing KCS device using ACPI... ");
-  if (ipmi_locate_acpi_spmi_get_dev_info (IPMI_INTERFACE_KCS, &info) == 0)
+  if (ipmi_locate_acpi_spmi_get_device_info (ctx,
+                                             IPMI_INTERFACE_KCS, 
+                                             &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   printf ("Probing SMIC device using ACPI... ");
-  if (ipmi_locate_acpi_spmi_get_dev_info (IPMI_INTERFACE_SMIC, &info) == 0)
+  if (ipmi_locate_acpi_spmi_get_device_info (ctx,
+                                             IPMI_INTERFACE_SMIC, 
+                                             &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   printf ("Probing BT device using ACPI... ");
-  if (ipmi_locate_acpi_spmi_get_dev_info (IPMI_INTERFACE_BT, &info) == 0)
+  if (ipmi_locate_acpi_spmi_get_device_info (ctx,
+                                             IPMI_INTERFACE_BT, 
+                                             &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   printf ("Probing SSIF device using ACPI... ");
-  if (ipmi_locate_acpi_spmi_get_dev_info (IPMI_INTERFACE_SSIF, &info) == 0)
+  if (ipmi_locate_acpi_spmi_get_device_info (ctx,
+                                             IPMI_INTERFACE_SSIF, 
+                                             &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   return;
 }
 
 void 
-pci_probe_display ()
+pci_probe_display (ipmi_locate_ctx_t ctx)
 {
   struct ipmi_locate_info info;
   
+  assert(ctx);
+
   printf ("Probing KCS device using PCI... ");
-  if (ipmi_locate_pci_get_dev_info (IPMI_INTERFACE_KCS, &info) == 0)
+  if (ipmi_locate_pci_get_device_info (ctx,
+                                       IPMI_INTERFACE_KCS, 
+                                       &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   printf ("Probing SMIC device using PCI... ");
-  if (ipmi_locate_pci_get_dev_info (IPMI_INTERFACE_SMIC, &info) == 0)
+  if (ipmi_locate_pci_get_device_info (ctx,
+                                       IPMI_INTERFACE_SMIC, 
+                                       &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   printf ("Probing BT device using PCI... ");
-  if (ipmi_locate_pci_get_dev_info (IPMI_INTERFACE_BT, &info) == 0)
+  if (ipmi_locate_pci_get_device_info (ctx,
+                                       IPMI_INTERFACE_BT, 
+                                       &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   printf ("Probing SSIF device using PCI... ");
-  if (ipmi_locate_pci_get_dev_info (IPMI_INTERFACE_SSIF, &info) == 0)
+  if (ipmi_locate_pci_get_device_info (ctx,
+                                       IPMI_INTERFACE_SSIF, 
+                                       &info) == 0)
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
   else 
-    {
-      printf ("FAILED\n");
-    }
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
   return;
 }
 
 void 
-defaults_display ()
+defaults_display (ipmi_locate_ctx_t ctx)
 {
   struct ipmi_locate_info info;
+
+  assert(ctx);
   
-  printf ("KCS device default values:\n");
-  if (ipmi_locate_defaults_get_dev_info (IPMI_INTERFACE_KCS, &info) == 0)
+  printf ("KCS device default values: ");
+  if (ipmi_locate_defaults_get_device_info (ctx,
+                                            IPMI_INTERFACE_KCS,
+                                            &info) == 0)
     {
+      printf("\n");
       display_ipmi_locate_info (&info);
     }
+  else 
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
-  printf ("SMIC device default values:\n");
-  if (ipmi_locate_defaults_get_dev_info (IPMI_INTERFACE_SMIC, &info) == 0)
+  printf ("SMIC device default values: ");
+  if (ipmi_locate_defaults_get_device_info (ctx,
+                                            IPMI_INTERFACE_SMIC, 
+                                            &info) == 0)
     {
+      printf("\n");
       display_ipmi_locate_info (&info);
     }
+  else 
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
-  printf ("BT device default values:\n");
-  if (ipmi_locate_defaults_get_dev_info (IPMI_INTERFACE_BT, &info) == 0)
+  printf ("BT device default values: ");
+  if (ipmi_locate_defaults_get_device_info (ctx,
+                                            IPMI_INTERFACE_BT, 
+                                            &info) == 0)
     {
+      printf("\n");
       display_ipmi_locate_info (&info);
     }
+  else 
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   
-  printf ("SSIF device default values:\n");
-  if (ipmi_locate_defaults_get_dev_info (IPMI_INTERFACE_SSIF, &info) == 0)
+  printf ("SSIF device default values: ");
+  if (ipmi_locate_defaults_get_device_info (ctx,
+                                            IPMI_INTERFACE_SSIF, 
+                                            &info) == 0)
     {
+      printf("\n");
       display_ipmi_locate_info (&info);
     }
+  else 
+    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
   printf ("\n");
   return;
 }
@@ -373,6 +404,8 @@ defaults_display ()
 int 
 main (int argc, char **argv)
 {
+  ipmi_locate_ctx_t ctx = NULL;
+
   if (!ipmi_is_root())
     {
       fprintf(stderr, "%s: Permission Denied\n", argv[0]);
@@ -382,13 +415,21 @@ main (int argc, char **argv)
   ipmi_disable_coredump();
 
   ipmi_locate_argp_parse (argc, argv);
+
+  if (!(ctx = ipmi_locate_ctx_create()))
+    {
+      perror("ipmi_locate_ctx_create");
+      exit(1);
+    }
   
-  dmidecode_probe_display ();
-  smbios_probe_display ();
-  acpi_probe_display ();
-  pci_probe_display ();
-  defaults_display ();
+  dmidecode_probe_display (ctx);
+  smbios_probe_display (ctx);
+  acpi_probe_display (ctx);
+  pci_probe_display (ctx);
+  defaults_display (ctx);
   
+  if (ctx)
+    ipmi_locate_ctx_destroy(ctx);
   return (0);
 }
 
