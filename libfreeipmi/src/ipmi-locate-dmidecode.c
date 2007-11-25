@@ -124,21 +124,25 @@ struct dmi_header
 
 #ifndef HAVE_MMAP
 static int 
-_myread (int fd, fipmiu8 *buf, size_t count, const char *prefix)
+_myread (ipmi_locate_ctx_t ctx,
+         int fd, 
+         fipmiu8 *buf, 
+         size_t count)
 {
   ssize_t r = 1;
   size_t r2 = 0;
 
+  assert(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(buf);
+
   while (r2 != count && r != 0)
     {
-      r = read (fd, buf + r2, count - r2);
-      if (r == -1)
+      if ((r = read (fd, buf + r2, count - r2)) < 0)
 	{
 	  if (errno != EINTR)
 	    {
 	      close (fd);
-	      /* perror (prefix); */
-	      return -1;
+              LOCATE_ERR(0);
 	    }
 	}
       else
@@ -147,11 +151,11 @@ _myread (int fd, fipmiu8 *buf, size_t count, const char *prefix)
   
   if (r2 != count)
     {
+      LOCATE_ERRNUM_SET(IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
       close (fd);
-      /* fprintf (stderr, "%s: Unexpected end of file\n", prefix); */
       return -1;
     }
-  
+
   return 0;
 }
 #endif
@@ -174,32 +178,35 @@ _checksum (const fipmiu8 *buf, size_t len)
  * This function allocates memory.
  */
 static void *
-_mem_chunk (size_t base, size_t len, const char *devmem)
+_mem_chunk (ipmi_locate_ctx_t ctx,
+            size_t base,
+            size_t len, 
+            const char *devmem)
 {
-  void *p;
-  int fd;
+  void *p = NULL;
+  void *rv = NULL;
+  int fd = -1;
 #ifdef HAVE_MMAP
   size_t mmoffset;
   void *mmp;
+#ifdef _SC_PAGESIZE
+  long pagesize;
+#endif
 #endif
   
+  assert(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
   assert(devmem);
 
-  if ((fd = open (devmem, O_RDONLY)) == -1)
-    {
-      /* perror (devmem); */
-      return NULL;
-    }
+  LOCATE_ERR_CLEANUP(!((fd = open (devmem, O_RDONLY)) < 0));
   
-  if ((p = malloc (len)) == NULL)
-    {
-      /* perror ("malloc"); */
-      return NULL;
-    }
+  LOCATE_ERR_OUT_OF_MEMORY_CLEANUP((p = malloc (len)));
   
 #ifdef HAVE_MMAP
 #ifdef _SC_PAGESIZE
-  mmoffset = base % sysconf (_SC_PAGESIZE);
+  {
+    LOCATE_ERR_CLEANUP(!((pagesize = sysconf (_SC_PAGESIZE)) < 0));
+    mmoffset = base % pagesize;
+  }
 #else
   mmoffset = base % getpagesize ();
 #endif /* _SC_PAGESIZE */
@@ -208,63 +215,52 @@ _mem_chunk (size_t base, size_t len, const char *devmem)
    * but to workaround problems many people encountered when trying
    * to read from /dev/mem using regular read() calls.
    */
-  mmp = mmap (0, mmoffset + len, PROT_READ, MAP_SHARED, fd, base - mmoffset);
-  if (mmp == ((void *) -1))
-    {
-      /* fprintf (stderr, "%s: ", devmem); */
-      /* perror ("mmap"); */
-      free (p);
-      return NULL;
-    }
+  LOCATE_ERR_CLEANUP(!((mmp = mmap (0, 
+                                    mmoffset + len, 
+                                    PROT_READ, 
+                                    MAP_SHARED, 
+                                    fd, 
+                                    base - mmoffset)) == MAP_FAILED));
   
   memcpy (p, (fipmiu8 *) mmp + mmoffset, len);
-  
-  if (munmap (mmp, mmoffset + len) == -1)
-    {
-      /* fprintf (stderr, "%s: ", devmem); */
-      /* perror ("munmap"); */
-    }
+  rv = p;
+  munmap (mmp, mmoffset + len);
 #else /* HAVE_MMAP */
-  if (lseek (fd, base, SEEK_SET) == -1)
-    {
-      /* fprintf (stderr, "%s: ", devmem); */
-      /* perror ("lseek"); */
-      free (p);
-      return NULL;
-    }
+
+  LOCATE_ERR_CLEANUP(!(lseek (fd, base, SEEK_SET) < 0));
   
-  if (_myread (fd, p, len, devmem) == -1)
-    {
-      free (p);
-      return NULL;
-    }
+  if (_myread (ctx, fd, p, len) < 0)
+    goto cleanup;
+  
+  rv = p;
 #endif /* HAVE_MMAP */
   
-  if (close (fd) == -1)
-    {
-      /* perror (devmem); */
-    }
-  
-  return p;
+ cleanup:
+  close(fd);
+  if (!rv)
+    free(p);
+  return rv;
 }
 
 static int 
-_dmi_table (fipmiu32 base, 
+_dmi_table (ipmi_locate_ctx_t ctx,
+            fipmiu32 base, 
             fipmiu16 len, 
             fipmiu16 num, 
             fipmiu16 ver, 
             const char *devmem, 
-            ipmi_interface_type_t interface_type, 
+            ipmi_interface_type_t type, 
             struct ipmi_locate_info *locate_info)
 {
   fipmiu8 *buf;
   fipmiu8 *data;
   int i = 0;
-  
-  if ((buf = _mem_chunk (base, len, devmem)) == NULL)
-    {
-      return (-1);
-    }
+  int rv = -1;
+
+  assert(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+
+  if ((buf = _mem_chunk (ctx, base, len, devmem)) == NULL)
+    return -1;
   
   data = buf;
   while ((i < num) && 
@@ -304,13 +300,9 @@ _dmi_table (fipmiu32 base,
 	      
 	      ptr = data + 0x08;
 	      if (h->length < 0x12)
-		{
-		  lsb = 0;
-		}
+                lsb = 0;
 	      else 
-		{
-		  lsb = (data[0x10] >> 5) & 1;
-		}
+                lsb = (data[0x10] >> 5) & 1;
 	      
 	      address = QWORD (ptr);
 	      
@@ -361,53 +353,71 @@ _dmi_table (fipmiu32 base,
 		  locate_info->register_spacing);
 #endif
 	  
-	  if (locate_info->interface_type == interface_type)
+	  if (locate_info->interface_type == type)
 	    {
-	      free (buf);
-	      return 0;
+              rv = 0;
+              goto cleanup;
 	    }
 	}
       
       data = next;
       i++;
     }
-  
+
+ cleanup:
   free (buf);
-  
-  return (-1);
+  return (rv);
 }
 
 static int 
-_smbios_decode (fipmiu8 *buf, 
+_smbios_decode (ipmi_locate_ctx_t ctx,
+                fipmiu8 *buf, 
                 const char *devmem, 
-                ipmi_interface_type_t interface_type, 
+                ipmi_interface_type_t type, 
                 struct ipmi_locate_info *locate_info)
 {
+  assert(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(devmem);
+  assert(IPMI_INTERFACE_TYPE_VALID(type));
+  assert(locate_info);
+
   if (_checksum (buf, buf[0x05]) && 
       (memcmp (buf + 0x10, "_DMI_", 5) == 0) && 
       _checksum (buf + 0x10, 0x0F))
-    {
-      return _dmi_table (DWORD (buf + 0x18), WORD (buf + 0x16), WORD (buf + 0x1C), 
-                         (buf[0x06] << 8) + buf[0x07], devmem, 
-                         interface_type, locate_info);
-    }
+    return _dmi_table (ctx,
+                       DWORD (buf + 0x18), 
+                       WORD (buf + 0x16), 
+                       WORD (buf + 0x1C), 
+                       (buf[0x06] << 8) + buf[0x07], 
+                       devmem, 
+                       type, 
+                       locate_info);
   
   return (-1);
 }
 
 #ifndef USE_EFI
 static int 
-_legacy_decode (fipmiu8 *buf, 
+_legacy_decode (ipmi_locate_ctx_t ctx,
+                fipmiu8 *buf, 
                 const char *devmem, 
-                ipmi_interface_type_t interface_type, 
+                ipmi_interface_type_t type, 
                 struct ipmi_locate_info *locate_info)
 {
+  assert(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(devmem);
+  assert(IPMI_INTERFACE_TYPE_VALID(type));
+  assert(locate_info);
+
   if (_checksum (buf, 0x0F))
-    {
-      return _dmi_table (DWORD (buf + 0x08), WORD (buf + 0x06), WORD (buf + 0x0C), 
-                         ((buf[0x0E] & 0xF0) << 4) + (buf[0x0E] & 0x0F), devmem, 
-                         interface_type, locate_info);
-    }
+    return _dmi_table (ctx,
+                       DWORD (buf + 0x08), 
+                       WORD (buf + 0x06), 
+                       WORD (buf + 0x0C), 
+                       ((buf[0x0E] & 0xF0) << 4) + (buf[0x0E] & 0x0F), 
+                       devmem, 
+                       type, 
+                       locate_info);
 	
   return (-1);
 }
@@ -439,11 +449,8 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
    * Linux up to 2.6.6-rc2: /proc/efi/systab
    * Linux 2.6.6-rc3 and up: /sys/firmware/efi/systab
    */
-  if (((efi_systab = fopen (filename = "/proc/efi/systab", "r")) == NULL) && 
-      ((efi_systab = fopen (filename = "/sys/firmware/efi/systab", "r")) == NULL))
-    {
-      return -1;
-    }
+  LOCATE_ERR_SYSTEM_ERROR(!((!(efi_systab = fopen (filename = "/proc/efi/systab", "r"))) 
+                            && (!(efi_systab = fopen (filename = "/sys/firmware/efi/systab", "r")))));
   
   fp = 0;
   while ((fgets (linebuf, sizeof (linebuf) - 1, efi_systab)) != NULL)
@@ -451,41 +458,32 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
       char *addr = memchr (linebuf, '=', strlen (linebuf));
       *(addr++) = '\0';
       if (strcmp (linebuf, "SMBIOS") == 0)
-	{
-	  fp = strtoul (addr, NULL, 0);
-	}
+        fp = strtoul (addr, NULL, 0);
     }
-  if (fclose (efi_systab) != 0)
-    {
-      /* perror (filename); */
-    }
-  if (fp == 0)
-    {
-      return -1;
-    }
+  fclose(efi_systab);
+
+  LOCATE_ERR_SYSTEM_ERROR(fp);
   
-  if ((buf = _mem_chunk (fp, 0x20, DEFAULT_MEM_DEV)) == NULL)
-    {
-      return -1;
-    }
+  if (!(buf = _mem_chunk (ctx, fp, 0x20, DEFAULT_MEM_DEV)))
+    return -1;
   
-  if (!_smbios_decode (buf, DEFAULT_MEM_DEV, type, &locate_info))
-    {
-      found++;
-    }
+  if (!(_smbios_decode (buf, DEFAULT_MEM_DEV, type, &locate_info) < 0))
+    found++;
   
   free (buf);
 #else /* USE_EFI */
-  if ((buf = _mem_chunk (0xF0000, 0x10000, DEFAULT_MEM_DEV)) == NULL)
-    {
-      return -1;
-    }
+  if (!(buf = _mem_chunk (ctx, 0xF0000, 0x10000, DEFAULT_MEM_DEV)))
+    return -1;
   
   for (fp = 0; fp <= 0xFFF0; fp += 16)
     {
       if ((memcmp (buf + fp, "_SM_", 4) == 0) && (fp <= 0xFFE0))
 	{
-	  if (!_smbios_decode (buf + fp, DEFAULT_MEM_DEV, type, &locate_info))
+	  if (!(_smbios_decode (ctx,
+                                buf + fp, 
+                                DEFAULT_MEM_DEV, 
+                                type, 
+                                &locate_info) < 0))
 	    {
 	      found++;
 	      break;
@@ -494,7 +492,11 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
 	}
       else if (memcmp (buf + fp, "_DMI_", 5) == 0)
 	{
-	  if (!_legacy_decode (buf + fp, DEFAULT_MEM_DEV, type, &locate_info))
+	  if (!(_legacy_decode (ctx,
+                                buf + fp, 
+                                DEFAULT_MEM_DEV, 
+                                type,
+                                &locate_info) < 0))
 	    {
 	      found++;
 	      break;
@@ -510,6 +512,8 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
       memcpy(info, &locate_info, sizeof(struct ipmi_locate_info));
       rv = 0;
     }
+  else
+    LOCATE_ERRNUM_SET(IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
   
   return rv;
 }
