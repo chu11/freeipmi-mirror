@@ -43,16 +43,17 @@ extern "C" {
 #define __FIID_SYSLOG                                                   \
 do {                                                                    \
   extern int errno;                                                     \
-  int save_errno = errno;                                               \
-  char errstr[FIID_WRAPPER_STR_MAX_LEN];                                \
-  snprintf (errstr, FIID_WRAPPER_STR_MAX_LEN,                           \
-	    "%s: %d: %s: errno (%d): expression failed",                \
-	    __FILE__,                                                   \
-	    __LINE__,                                                   \
-	    __PRETTY_FUNCTION__,                                        \
-	    save_errno);                                                \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
-  errno = save_errno;                                                   \
+  int __save_errno = errno;                                             \
+  char __errbuf[ERR_WRAPPER_STR_MAX_LEN];                               \
+  char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                             \
+  memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                   \
+  strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
+  snprintf (__errbuf, FIID_WRAPPER_STR_MAX_LEN,                         \
+	    "%s: %d: %s: errno %s (%d)",                                \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
+            __errnostr, __save_errno);                                  \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errbuf);       \
+  errno = __save_errno;                                                 \
 } while (0)
 
 #define __FIID_OBJ_SYSLOG(___obj)                                  \
@@ -60,11 +61,10 @@ do {                                                               \
   int32_t __obj_errnum = fiid_obj_errnum((___obj));                \
   char errstr[FIID_WRAPPER_STR_MAX_LEN];                           \
   snprintf (errstr, FIID_WRAPPER_STR_MAX_LEN,                      \
-	    "%s: %d: %s: error = %s",                              \
-	    __FILE__,                                              \
-	    __LINE__,                                              \
-	    __PRETTY_FUNCTION__,                                   \
-	    fiid_strerror(__obj_errnum));                          \
+	    "%s: %d: %s: error = %s (%d)",                         \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,               \
+	    fiid_strerror(__obj_errnum),                           \
+            __obj_errnum);                                         \
   syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);    \
 } while (0)
 
@@ -73,11 +73,10 @@ do {                                                               \
   int32_t __iter_errnum = fiid_iterator_errnum((___iter));         \
   char errstr[FIID_WRAPPER_STR_MAX_LEN];                           \
   snprintf (errstr, FIID_WRAPPER_STR_MAX_LEN,                      \
-	    "%s: %d: %s: error = %s",                              \
-	    __FILE__,                                              \
-	    __LINE__,                                              \
-	    __PRETTY_FUNCTION__,                                   \
-	    fiid_strerror(__iter_errnum));                         \
+	    "%s: %d: %s: error = %s (%d)",                         \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,               \
+	    fiid_strerror(__iter_errnum),                          \
+            __iter_errnum);                                        \
   syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);    \
 } while (0)
 #else
@@ -87,29 +86,29 @@ do {                                                               \
 #endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
-#define __FIID_TRACE                                                    \
-do {                                                                    \
-  extern int errno;                                                     \
-  int save_errno = errno;                                               \
-  fprintf (stderr,                                                      \
-           "%s: %d: %s: errno (%d): expression failed\n",               \
-	   __FILE__,                                                    \
-           __LINE__,                                                    \
-	   __PRETTY_FUNCTION__,                                         \
-	   save_errno);                                                 \
-  fflush (stderr);                                                      \
-  errno = save_errno;                                                   \
+#define __FIID_TRACE                                               \
+do {                                                               \
+  extern int errno;                                                \
+  int __save_errno = errno;                                        \
+  char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                        \
+  memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);              \
+  strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);   \
+  fprintf (stderr,                                                 \
+           "%s: %d: %s: errno %s (%d)",                            \
+           __FILE__, __LINE__, __PRETTY_FUNCTION__,                \
+           __errnostr, __save_errno);                              \
+  fflush (stderr);                                                 \
+  errno = __save_errno;                                            \
 } while (0)
 
 #define __FIID_OBJ_TRACE(___obj)                                   \
 do {                                                               \
   int32_t __obj_errnum = fiid_obj_errnum((___obj));                \
   fprintf (stderr,                                                 \
-	   "%s: %d: %s: error = %s\n",                             \
-	   __FILE__,                                               \
-	   __LINE__,                                               \
-	   __PRETTY_FUNCTION__,                                    \
-	   fiid_strerror(__obj_errnum));                           \
+	    "%s: %d: %s: error = %s (%d)\n",                       \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,               \
+	    fiid_strerror(__obj_errnum),                           \
+            __obj_errnum);                                         \
   fflush (stderr);                                                 \
 } while (0)
 
@@ -117,11 +116,10 @@ do {                                                               \
 do {                                                               \
   int32_t __iter_errnum = fiid_iterator_errnum((___iter));         \
   fprintf (stderr,                                                 \
-	   "%s: %d: %s: error = %s\n",                             \
-	   __FILE__,                                               \
-	   __LINE__,                                               \
-	   __PRETTY_FUNCTION__,                                    \
-	   fiid_strerror(__iter_errnum));                          \
+	   "%s: %d: %s: error = %s (%d)\n",                        \
+           __FILE__, __LINE__, __PRETTY_FUNCTION__,                \
+	   fiid_strerror(__iter_errnum),                           \
+           __iter_errnum);                                         \
   fflush (stderr);                                                 \
 } while (0)
 
@@ -1039,6 +1037,164 @@ do {                                                                            
       __FIID_ITER_SET_ERRNO((__iter));                                           \
       goto cleanup;                                                              \
     }                                                                            \
+} while (0)
+
+#define __FIID_ERRNO_TO_LOCATE_ERRNUM                                       \
+do {                                                                        \
+  if (errno == 0)                                                           \
+    ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;                              \
+  else if (errno == ENOMEM)                                                 \
+    ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                        \
+  else                                                                      \
+    ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                       \
+} while (0)
+
+#define __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM(___obj)                          \
+do {                                                                        \
+  int32_t __errnum = fiid_obj_errnum((___obj));                             \
+  if (__errnum == FIID_ERR_SUCCESS)                                         \
+    ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;                              \
+  else if (__errnum == FIID_ERR_OUT_OF_MEMORY)                              \
+    ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                        \
+  else                                                                      \
+    ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                       \
+} while (0)
+
+#define LOCATE_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                       \
+do {                                                                        \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                   \
+    {                                                                       \
+      __FIID_SYSLOG;                                                        \
+      __FIID_TRACE;                                                         \
+      __FIID_ERRNO_TO_LOCATE_ERRNUM;                                        \
+      return (-1);                                                          \
+    }                                                                       \
+} while (0)
+
+#define LOCATE_FIID_TEMPLATE_LEN_BYTES_CLEANUP(__len, __tmpl)               \
+do {                                                                        \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                   \
+    {                                                                       \
+      __FIID_SYSLOG;                                                        \
+      __FIID_TRACE;                                                         \
+      __FIID_ERRNO_TO_LOCATE_ERRNUM;                                        \
+      goto cleanup;                                                         \
+    }                                                                       \
+} while (0)
+
+#define LOCATE_FIID_OBJ_CREATE(__obj, __tmpl)                               \
+do {                                                                        \
+  if (!((__obj) = fiid_obj_create(__tmpl)))                                 \
+    {                                                                       \
+      __FIID_SYSLOG;                                                        \
+      __FIID_TRACE;                                                         \
+      ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                      \
+      return (-1);                                                          \
+    }                                                                       \
+} while (0)
+
+#define LOCATE_FIID_OBJ_CREATE_CLEANUP(__obj, __tmpl)                       \
+do {                                                                        \
+  if (!((__obj) = fiid_obj_create(__tmpl)))                                 \
+    {                                                                       \
+      __FIID_SYSLOG;                                                        \
+      __FIID_TRACE;                                                         \
+      ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                      \
+      goto cleanup;                                                         \
+    }                                                                       \
+} while (0)
+
+#define LOCATE_FIID_OBJ_DESTROY(__obj) FIID_OBJ_DESTROY((__obj))
+
+#define LOCATE_FIID_OBJ_TEMPLATE_COMPARE(__obj, __tmpl)                      \
+do {                                                                         \
+    int __ret;                                                               \
+    if ((__ret = fiid_obj_template_compare ((__obj), (__tmpl))) < 0)         \
+      {                                                                      \
+         __FIID_OBJ_SYSLOG((__obj));                                         \
+         __FIID_OBJ_TRACE((__obj));                                          \
+         __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM((__obj));                        \
+         return (-1);                                                        \
+      }                                                                      \
+    if (!__ret)                                                              \
+      {                                                                      \
+        __FIID_OBJ_SYSLOG((__obj));                                          \
+        __FIID_OBJ_TRACE((__obj));                                           \
+        ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                    \
+	return (-1);                                                         \
+      }                                                                      \
+} while (0)
+
+#define LOCATE_FIID_OBJ_SET_ALL(__obj, __data, __data_len)                   \
+do {                                                                         \
+    if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)              \
+      {                                                                      \
+         __FIID_OBJ_SYSLOG((__obj));                                         \
+         __FIID_OBJ_TRACE((__obj));                                          \
+         __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM((__obj));                        \
+         return (-1);                                                        \
+      }                                                                      \
+} while (0)
+
+#define LOCATE_FIID_OBJ_SET_ALL_CLEANUP(__obj, __data, __data_len)           \
+do {                                                                         \
+    if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)              \
+      {                                                                      \
+         __FIID_OBJ_SYSLOG((__obj));                                         \
+         __FIID_OBJ_TRACE((__obj));                                          \
+         __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM((__obj));                        \
+         goto cleanup;                                                       \
+      }                                                                      \
+} while (0)
+
+#define LOCATE_FIID_OBJ_GET(__obj, __field, __val)                           \
+do {                                                                         \
+    uint64_t __localval = 0, *__localval_ptr;                                \
+    __localval_ptr = (__val);                                                \
+    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)                  \
+      {                                                                      \
+         __FIID_OBJ_SYSLOG((__obj));                                         \
+         __FIID_OBJ_TRACE((__obj));                                          \
+         __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM((__obj));                        \
+         return (-1);                                                        \
+      }                                                                      \
+    *__localval_ptr = __localval;                                            \
+} while (0)
+
+#define LOCATE_FIID_OBJ_GET_CLEANUP(__obj, __field, __val)                   \
+do {                                                                         \
+    uint64_t __localval = 0, *__localval_ptr;                                \
+    __localval_ptr = (__val);                                                \
+    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)                  \
+      {                                                                      \
+         __FIID_OBJ_SYSLOG((__obj));                                         \
+         __FIID_OBJ_TRACE((__obj));                                          \
+         __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM((__obj));                        \
+         goto cleanup;                                                       \
+      }                                                                      \
+    *__localval_ptr = __localval;                                            \
+} while (0)
+
+#define LOCATE_FIID_OBJ_GET_DATA(__obj, __field, __data, __data_len)         \
+do {                                                                         \
+    if (fiid_obj_get_data ((__obj), (__field), (__data), (__data_len)) < 0)  \
+      {                                                                      \
+         __FIID_OBJ_SYSLOG((__obj));                                         \
+         __FIID_OBJ_TRACE((__obj));                                          \
+         __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM((__obj));                        \
+         return (-1);                                                        \
+      }                                                                      \
+} while (0)
+
+#define LOCATE_FIID_OBJ_GET_DATA_CLEANUP(__obj, __field, __data, __data_len) \
+do {                                                                         \
+    if (fiid_obj_get_data ((__obj), (__field), (__data), (__data_len)) < 0)  \
+      {                                                                      \
+         __FIID_OBJ_SYSLOG((__obj));                                         \
+         __FIID_OBJ_TRACE((__obj));                                          \
+         __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM((__obj));                        \
+         goto cleanup;                                                       \
+      }                                                                      \
 } while (0)
 
 #ifdef __cplusplus

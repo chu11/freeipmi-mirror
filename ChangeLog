@@ -1,11 +1,24 @@
 XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
-	* common/src/err-wrappers.h, common/src/udm-err-wrappers.h: Update
-	error logging routines with more details.
+	* common/src/err-wrappers.h, common/src/fiid-wrappers.h,
+	common/src/udm-err-wrappers.h, common/src/udm-fiid-wrappers.h:
+	Update error logging routines with more details.  Add locate error
+	logging routines.  Fix several logging bugs.
 
 	* libfreeipmi/src/ipmi-kcs-aci.c,
 	libfreeipmi/src/ipmi-openipmi-api.c,
 	libfreeipmi/src/ipmi-ssif-api.c: Use error logging routines.
+
+	* libfreeipmi/src/ipmi-locate-definitions.h: New file.
+
+	* libfreeipmi/include/freeipmi/ipmi-locate.h,
+	libfreeipmi/src/ipmi-locate.c,
+	libfreeipmi/src/ipmi-locate-acpi-spmi.c,
+	libfreeipmi/src/ipmi-locate-defaults.c,
+	libfreeipmi/src/ipmi-locate-dmidecode.c,
+	libfreeipmi/src/ipmi-locate-pci.c,
+	libfreeipmi/src/ipmi-locate-smbios.c: Re-work locate API with
+	contexts.  Use new error logging routines appropriately.
 
 	* libfreeipmi/src/ipmi-semaphores.h,
 	libfreeipmi/src/ipmi-semaphores.c: Remove unused code.  Re-work

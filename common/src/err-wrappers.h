@@ -53,7 +53,7 @@ do {                                                                    \
   memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                   \
   strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
   snprintf (__errbuf, ERR_WRAPPER_STR_MAX_LEN,                          \
-            "%s: %d: %s: errno %s (%d)\n",                              \
+            "%s: %d: %s: errno %s (%d)",                                \
             __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
             __errnostr, __save_errno);                                  \
   syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errbuf);       \
