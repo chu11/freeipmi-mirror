@@ -54,8 +54,9 @@
 #include <limits.h>
 #include <arpa/inet.h>
 #include <pwd.h>
-#include <errno.h>
+#include <syslog.h>
 #include <assert.h>
+#include <errno.h>
 
 #define SDR_CACHE_DIR                "sdr-cache"
 #define SDR_CACHE_FILENAME_PREFIX    "sdr-cache"
