@@ -25,6 +25,9 @@ split off and install sdr parsing/caching lib?
   code.
 - re-org locate/drivers/udm/core into separate dirs
 - remove fiid-ness from udm lib, use pointers for returns?
+- rename fiid?
+- rename udm?
+- reorg files in subdirs drivers, locate, fill, etc.
 
 Autoconf/Portability
 --------------------
