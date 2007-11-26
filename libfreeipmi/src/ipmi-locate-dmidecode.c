@@ -467,7 +467,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
   if (!(buf = _mem_chunk (ctx, fp, 0x20, DEFAULT_MEM_DEV)))
     return -1;
   
-  if (!(_smbios_decode (buf, DEFAULT_MEM_DEV, type, &locate_info) < 0))
+  if (!(_smbios_decode (ctx, buf, DEFAULT_MEM_DEV, type, &locate_info) < 0))
     found++;
   
   free (buf);
