@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.32.4.1 2007-11-25 23:14:41 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.32.4.2 2007-11-26 03:53:55 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -128,7 +128,13 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
 
   printf ("Probing SMIC device using DMIDECODE... ");
@@ -140,7 +146,13 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("Probing BT device using DMIDECODE... ");
@@ -152,7 +164,13 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("Probing SSIF device using DMIDECODE... ");
@@ -164,7 +182,13 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   return;
@@ -186,7 +210,13 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
 
   printf ("Probing SMIC device using SMBIOS... ");
@@ -198,7 +228,13 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("Probing BT device using SMBIOS... ");
@@ -210,7 +246,13 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("Probing SSIF device using SMBIOS... ");
@@ -222,7 +264,13 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   return;
@@ -244,7 +292,13 @@ acpi_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("Probing SMIC device using ACPI... ");
@@ -256,7 +310,13 @@ acpi_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("Probing BT device using ACPI... ");
@@ -268,7 +328,13 @@ acpi_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("Probing SSIF device using ACPI... ");
@@ -280,7 +346,13 @@ acpi_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   return;
@@ -302,7 +374,13 @@ pci_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("Probing SMIC device using PCI... ");
@@ -314,7 +392,13 @@ pci_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("Probing BT device using PCI... ");
@@ -326,7 +410,13 @@ pci_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("Probing SSIF device using PCI... ");
@@ -338,7 +428,13 @@ pci_probe_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   return;
@@ -360,7 +456,13 @@ defaults_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("SMIC device default values: ");
@@ -372,7 +474,13 @@ defaults_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("BT device default values: ");
@@ -384,7 +492,13 @@ defaults_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   
   printf ("SSIF device default values: ");
@@ -396,7 +510,13 @@ defaults_display (ipmi_locate_ctx_t ctx)
       display_ipmi_locate_info (&info);
     }
   else 
-    printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+    {
+#ifndef NDEBUG
+      printf ("FAILED: %s", ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx)));
+#else
+      printf ("FAILED");
+#endif
+    }
   printf ("\n");
   return;
 }
