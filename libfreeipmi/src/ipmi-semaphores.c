@@ -47,33 +47,28 @@ struct sembuf mutex_unlock_buf = {0,  1, SEM_UNDO};
 int
 ipmi_mutex_init (void)
 {
-  int semid;
+  int semid = -1;
   key_t key;
 
   /* Allocate Mutex */
-  ERR(!((key = ftok (IPMI_IPCKEY, 
-                     IPMI_INBAND_PROJ_ID)) == ((key_t)-1)));
-
-  semid = semget (key, 1, IPC_CREAT | IPC_EXCL | 0600);
 #ifndef NDEBUG
-  if (semid == -1 && errno == ENOENT)
-    {
-      /* When doing development out of the source code tree, the
-       * IPCKEY file may not yet exist, so we do a hack to get it to
-       * work.  This is only when we work in debug mode.
-       */
-      ERR(!((key =  ftok (IPMI_DEBUG_IPCKEY, 
-                          IPMI_INBAND_DEBUG_PROJ_ID)) == ((key_t)-1)));
-      semid = semget (key, 1, IPC_CREAT | IPC_EXCL | 0600);
-    }
+  if ((key = ftok (IPMI_IPCKEY, IPMI_INBAND_PROJ_ID)) == ((key_t)-1))
+    /* When doing development out of the source code tree, the
+     * IPCKEY file may not yet exist, so we do a hack to get it to
+     * work.  This is only when we work in debug mode.
+     */
+    key = ftok (IPMI_DEBUG_IPCKEY, IPMI_INBAND_DEBUG_PROJ_ID);
+#else /* !NDEBUG */
+  ERR(!((key = ftok (IPMI_IPCKEY, IPMI_INBAND_PROJ_ID)) == ((key_t)-1)));
 #endif /* NDEBUG */
-  if (semid == -1)
+
+  if ((semid = semget (key, 1, IPC_CREAT | IPC_EXCL | 0600)) < 0)
     {
       if (errno == EEXIST) /* You are not the first one */
 	{ 
 	  /* Get the orignial semid */
 	  ERR (!((semid = semget (key, 1, IPC_CREAT | 0600)) < 0));
-
+          
 	  /* achu: errno may not get reset, so put it back to 0 */
 	  errno = 0;
 
@@ -81,7 +76,7 @@ ipmi_mutex_init (void)
 	}
       ERR (0); /* FAIL */
     }
-
+  
   /* You are the first one. Initialize the mutex now */
   {
     union semun mutex_init;  

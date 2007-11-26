@@ -264,7 +264,7 @@ ipmi_openipmi_ctx_set_flags(ipmi_openipmi_ctx_t ctx, uint32_t flags)
 {
   ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
-  OPENIPMI_ERR_PARAMETERS(flags & IPMI_OPENIPMI_FLAGS_MASK);
+  OPENIPMI_ERR_PARAMETERS(!(flags & ~IPMI_OPENIPMI_FLAGS_MASK));
   
   ctx->flags = flags;
   ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;

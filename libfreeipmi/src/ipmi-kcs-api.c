@@ -318,7 +318,7 @@ ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, uint32_t flags)
 {
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  KCS_ERR_PARAMETERS(flags & IPMI_KCS_FLAGS_MASK);
+  KCS_ERR_PARAMETERS(!(flags & ~IPMI_KCS_FLAGS_MASK));
   
   ctx->flags = flags;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
@@ -692,7 +692,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
       goto cleanup;
     }
 
-  if (count >= buf_len)
+  if (count > buf_len)
     KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_OVERFLOW);
   else
     ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;

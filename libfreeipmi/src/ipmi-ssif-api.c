@@ -450,7 +450,7 @@ ipmi_ssif_ctx_set_flags(ipmi_ssif_ctx_t ctx, uint32_t flags)
 {
   ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
 
-  SSIF_ERR_PARAMETERS(flags & IPMI_SSIF_FLAGS_MASK);
+  SSIF_ERR_PARAMETERS(!(flags & ~IPMI_SSIF_FLAGS_MASK));
 
   ctx->flags = flags;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
