@@ -1,3 +1,10 @@
+0.6.1
+-----
+For Developers
+--------------
+o Many libfreeipmi API changes.
+  o locate/probing API revamped with context API.
+
 0.5.1
 -----
 For Users

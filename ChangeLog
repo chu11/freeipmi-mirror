@@ -27,6 +27,11 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	libfreeipmi/src/ipmi-semaphores.c: Remove unused code.  Re-work
 	for better erorr reporting/logging.
 
+	* libfreeipmi/include/freeipmi/ipmi-smic-api.h,
+	libfreeipmi/src/ipmi-smic-api.c: Removed files.
+
+	* libfreeipmi/: Adjust remaining code for removal of smic api.
+
 	* configure.ac: Update libfreeipmi version.
 		
 2007-11-24  Albert Chu <chu11@llnl.gov>

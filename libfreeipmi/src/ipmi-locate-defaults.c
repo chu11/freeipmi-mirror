@@ -40,6 +40,9 @@
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
 
+/* achu: Used to be in ipmi-smic-api.h, but that is now removed. */
+#define IPMI_SMIC_SMS_IO_BASE_DEFAULT    0x0CA9
+
 int
 ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
                                       ipmi_interface_type_t type,
