@@ -1,3 +1,7 @@
+2007-11-27  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Fix changelog typo.
+	
 2007-11-24  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-outofband-hostname-hostranged.man: Fix
