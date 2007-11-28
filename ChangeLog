@@ -1,6 +1,8 @@
 2007-11-27  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Fix changelog typo.
+
+	* doc/freeipmi-coding.txt: Various fixes.
 	
 2007-11-24  Albert Chu <chu11@llnl.gov>
 

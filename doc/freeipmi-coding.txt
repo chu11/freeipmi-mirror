@@ -254,8 +254,8 @@ The macros are located in header files in common/src.
 --------------------------------------------------
 
 Several programmers have asked us why we have chosen a relatively
-unpopular method to marshall/unmarshall IPMI packets and build network
-packets.
+unpopular/different method to marshall/unmarshall IPMI packets and
+build network packets.
 
 First, there are several classic methods for marshalling/unmarshalling
 data when using structs to represent a packet.
@@ -328,7 +328,7 @@ pkt->field_4 = ntohs(pkt->field_4);
 
 Pros:
 
-A) Less code.  There's no need to create specific functions for
+A) Less code.  You may not need to create specific functions for
 marshalling/unmarshalling each packet type.
 B) The struct definition describes packets exactly.
 C) Very efficient (little actual marshalling/unmarshalling needs to be done.)
@@ -336,9 +336,13 @@ C) Very efficient (little actual marshalling/unmarshalling needs to be done.)
 Cons:
 
 A) Have to deal with endian problems.
-B) Have to deal with portability of struct packing techniques (differences in compilers).
-C) No mechanism to deal with optional fields (how do you know if something is set?)
-D) No mechanism to deal with variable length fields (how do you know how long the field is?)
+B) Have to deal with portability of struct packing techniques (there
+are differences in compilers, but nowadays, this may be
+easier/portable that I originally believed it to be).
+C) No mechanism to deal with optional fields (how do you know if
+something is set?)
+D) No mechanism to deal with variable length fields (how do you know
+how long the field is?)
 E) Difficult to do large packet dumps (you only get hex, or you have
 to create a separate debug function for each struct or packet type if
 you want nicer output).
@@ -390,7 +394,7 @@ Cons:
 A) Need to learn/use a reasonably sized API.
 B) Pretty inefficient (lots of string comparisons).
 C) Lots of duplicate templates (relative inability to "inherit"
-structs without #define mangling).
+structs without #define mangling/hackery).
 
 The authors acknowledge that the fiid interface is far less efficient
 than the traditional methods and may annoy some.  However, some of
@@ -399,7 +403,11 @@ traditional methods.
 
 A) The IPMI specification is very large, so reducing code size weighed
 in as an important factor for the authors.  This allowed there to be
-fewer unmarshalling/debug functions.
+fewer unmarshalling/debug functions.  By one authors counting in the
+specification, there are 304 different payloads in the IPMI
+specification.  (This doesn't count bitmask mapping, per packet unique
+completion codes, header/trailer packet construction, authentication,
+encryption, and all that other good stuff.)
 
 B) Although IPMI has a specification, the lack of IPMI compliance from
 vendors is a well known problem in the open-source community.  The
@@ -446,24 +454,9 @@ pwopr2: : --------------
 pwopr2: [              1Fh] = checksum2[ 8b]
 
 C) There are a relatively large number of optional fields and variable
-length fields in the IPMI specification.  The traditional struct based
-marshalling/unmarshalling would have problems with handling these.
-
-It should be noted that in IPMI, many of the optional and/or variable
-length fields may not be in the "trailer" of a packet.  Therefore, a
-traditional struct method of dealing with a variable length packet
-like the below:
-
-struct packet
-{
-  int field_1; /* 1 bit */
-  int field_2; /* 3 bits */
-  int field_3; /* 4 bits */
-  int field_4; /* 16 bits */
-  char *field_variable_length[1];
-};
-
-cannot be used.
+length fields in the IPMI specification.  As stated above, the
+traditional struct based marshalling/unmarshalling could have issues
+with it.
 
 7) Non-generic error messages
 -----------------------------
