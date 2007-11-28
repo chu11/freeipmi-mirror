@@ -30,6 +30,10 @@ split off and install sdr parsing/caching lib?
 - rename fiid?
 - rename udm?
 - remove errno return value usage, adjust to ctx usage
+- find way to consolidate sdrcache lib in common/src w/ sdrcache lib
+in ipmimonitoring and add into libfreeipmi?
+- find way to make sensor-api a legit lib and move into libfreeipmi?
+- move libipmiconsole and libipmimonitoring into libfreeipmi?
 
 Autoconf/Portability
 --------------------
