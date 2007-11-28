@@ -35,19 +35,27 @@
 #include "freeipmi/ipmi-smic-api.h"
 #include "freeipmi/ipmi-ssif-api.h"
 
+#include "ipmi-locate-definitions.h"
+
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
 
+/* achu: Used to be in ipmi-smic-api.h, but that is now removed. */
+#define IPMI_SMIC_SMS_IO_BASE_DEFAULT    0x0CA9
+
 int
-ipmi_locate_defaults_get_device_info (ipmi_interface_type_t type, 
+ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
+                                      ipmi_interface_type_t type,
                                       struct ipmi_locate_info *info)
 {
   struct ipmi_locate_info linfo;
 
-  ERR_EINVAL ((type == IPMI_INTERFACE_KCS
-	       || type == IPMI_INTERFACE_SMIC
-	       || type == IPMI_INTERFACE_SSIF) 
-	      && info);
+  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+
+  LOCATE_ERR_PARAMETERS ((type == IPMI_INTERFACE_KCS
+                          || type == IPMI_INTERFACE_SMIC
+                          || type == IPMI_INTERFACE_SSIF) 
+                         && info);
 
   memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
   linfo.interface_type = type;
@@ -84,6 +92,7 @@ ipmi_locate_defaults_get_device_info (ipmi_interface_type_t type,
       linfo.register_spacing = 1;
       break;
     default:
+      /* Should not reach */
       ERR_EXIT(0);
     }
 

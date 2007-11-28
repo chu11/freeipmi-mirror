@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.73.2.2 2007-11-28 22:30:51 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.73.2.3 2007-11-28 22:45:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -170,6 +170,7 @@ struct cmdline_info
 /* program name */
 char *err_progname = NULL;
 
+ipmi_locate_ctx_t locate_ctx = NULL;
 ipmi_kcs_ctx_t kcs_ctx = NULL;
 ipmi_ssif_ctx_t ssif_ctx = NULL;
 ipmi_openipmi_ctx_t openipmi_ctx = NULL;
@@ -321,10 +322,21 @@ static int
 _init_kcs_ipmi(void)
 {
   struct ipmi_locate_info l;
-
+  
   if (!cinfo.no_probing)
     {
-      if (ipmi_locate(IPMI_INTERFACE_KCS, &l) < 0)
+      if (!locate_ctx)
+        {
+          if (!(locate_ctx = ipmi_locate_ctx_create()))
+            {
+              _bmclog("ipmi_locate_ctx_create: %s", strerror(errno));
+              return -1;
+            }
+        }
+
+      if (ipmi_locate_get_device_info(locate_ctx, 
+                                      IPMI_INTERFACE_KCS,
+                                      &l) < 0)
         {
           _bmclog("ipmi_locate: %s", strerror(errno));
           return -1;
@@ -386,7 +398,18 @@ _init_ssif_ipmi(void)
 
   if (!cinfo.no_probing)
     {
-      if (ipmi_locate(IPMI_INTERFACE_SSIF, &l) < 0)
+      if (!locate_ctx)
+        {
+          if (!(locate_ctx = ipmi_locate_ctx_create()))
+            {
+              _bmclog("ipmi_locate_ctx_create: %s", strerror(errno));
+              return -1;
+            }
+        }
+
+      if (ipmi_locate_get_device_info(locate_ctx,
+                                      IPMI_INTERFACE_SSIF, 
+                                      &l) < 0)
         {
           _bmclog("ipmi_locate: %s", strerror(errno));
           return -1;
@@ -2420,6 +2443,8 @@ main(int argc, char **argv)
   else
     _err_exit("internal error, command not set");
 
+  if (locate_ctx)
+    ipmi_locate_ctx_destroy(locate_ctx);
   if (kcs_ctx)
     ipmi_kcs_ctx_destroy(kcs_ctx);
   if (ssif_ctx)
