@@ -102,19 +102,11 @@ do {                                                                    \
   char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);          \
   __SYSLOG_CTX_OUTPUT;                                                  \
 } while (0)
-
-#define __LOCATE_SYSLOG                                                 \
-do {                                                                    \
-  int __ctxerrnum = ctx->errnum;                                        \
-  char *__ctxerrstr = ipmi_locate_ctx_strerror(__ctxerrnum);            \
-  __SYSLOG_CTX_OUTPUT;                                                  \
-} while (0)
 #else
 #define __ERR_SYSLOG
 #define __KCS_SYSLOG
 #define __SSIF_SYSLOG
 #define __OPENIPMI_SYSLOG
-#define __LOCATE_SYSLOG
 #endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
@@ -175,19 +167,11 @@ do {                                                                    \
   char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);          \
   __TRACE_CTX_OUTPUT;                                                   \
 } while (0)
-
-#define __LOCATE_TRACE                                                  \
-do {                                                                    \
-  int __ctxerrnum = ipmi_locate_ctx_errnum(ctx);                        \
-  char *__ctxerrstr = ipmi_locate_ctx_strerror(__ctxerrnum);            \
-  __TRACE_CTX_OUTPUT;                                                   \
-} while (0)
 #else
 #define __ERR_TRACE
 #define __KCS_TRACE
 #define __SSIF_TRACE
 #define __OPENIPMI_TRACE
-#define __LOCATE_TRACE
 #endif /* IPMI_TRACE */
 
 #define ERR_LOG(expr)                                                   \
@@ -824,169 +808,6 @@ do {                                                                    \
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR;             \
         __OPENIPMI_SYSLOG;                                              \
         __OPENIPMI_TRACE;                                               \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define __LOCATE_ERRNO_TO_ERRNUM                                        \
-do {                                                                    \
-  if (errno == 0)                                                       \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;                          \
-  else if (errno == EPERM)                                              \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_PERMISSION;                       \
-  else if (errno == EACCES)                                             \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_PERMISSION;                       \
-  else if (errno == ENOMEM)                                             \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                    \
-  else if (errno == EINVAL)                                             \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                   \
-  else                                                                  \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR;                     \
-} while (0)
-
-#define LOCATE_ERR(expr)                                                \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        __LOCATE_ERRNO_TO_ERRNUM;                                       \
-        __LOCATE_SYSLOG;                                                \
-        __LOCATE_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERR_CLEANUP(expr)                                        \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        __LOCATE_ERRNO_TO_ERRNUM;                                       \
-        __LOCATE_SYSLOG;                                                \
-        __LOCATE_TRACE;                                                 \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERRNUM_SET(__errnum)                                     \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __LOCATE_SYSLOG;                                                    \
-    __LOCATE_TRACE;                                                     \
-  } while (0)
-
-#define LOCATE_ERRNUM_SET_CLEANUP(__errnum)                             \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __LOCATE_SYSLOG;                                                    \
-    __LOCATE_TRACE;                                                     \
-    goto cleanup;                                                       \
-  } while (0)
-
-#define LOCATE_ERR_PARAMETERS(expr)                                     \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_PARAMETERS;                   \
-        __LOCATE_SYSLOG;                                                \
-        __LOCATE_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERR_PARAMETERS_CLEANUP(expr)                             \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_PARAMETERS;                   \
-        __LOCATE_SYSLOG;                                                \
-        __LOCATE_TRACE;                                                 \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERR_IO_NOT_INITIALIZED(expr)                             \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_IO_NOT_INITIALIZED;           \
-        __LOCATE_SYSLOG;                                                \
-        __LOCATE_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERR_IO_NOT_INITIALIZED_CLEANUP(expr)                     \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_IO_NOT_INITIALIZED;           \
-        __LOCATE_SYSLOG;                                                \
-        __LOCATE_TRACE;                                                 \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERR_OUT_OF_MEMORY(expr)                                  \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                \
-        __LOCATE_SYSLOG;                                                \
-        __LOCATE_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERR_OUT_OF_MEMORY_CLEANUP(expr)                          \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                \
-        __LOCATE_SYSLOG;                                                \
-        __LOCATE_TRACE;                                                 \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERR_SYSTEM_ERROR(expr)                                   \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR;                 \
-        __LOCATE_SYSLOG;                                                \
-        __LOCATE_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERR_SYSTEM_ERROR_CLEANUP(expr)                           \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR;                 \
-        __LOCATE_SYSLOG;                                                \
-        __LOCATE_TRACE;                                                 \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERR_INTERNAL_ERROR(expr)                                 \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;               \
-        __LOCATE_SYSLOG;                                                \
-        __LOCATE_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERR_INTERNAL_ERROR_CLEANUP(expr)                         \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;               \
-        __LOCATE_SYSLOG;                                                \
-        __LOCATE_TRACE;                                                 \
         goto cleanup;                                                   \
       }                                                                 \
   } while (0)

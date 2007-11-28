@@ -80,20 +80,12 @@ do {                                                                         \
   char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);               \
   __SYSLOG_CTX_OUTPUT;                                                       \
 } while (0)
-
-#define __UDM_LOCATE_SYSLOG                                                  \
-do {                                                                         \
-  int __ctxerrnum = ipmi_locate_ctx_errnum(dev->io.inband.locate_ctx);       \
-  char *__ctxerrstr = ipmi_locate_ctx_strerror(__ctxerrnum);                 \
-  __SYSLOG_CTX_OUTPUT;                                                       \
-} while (0)
 #else
 #define __UDM_SYSLOG
 #define __ERR_UDM_SYSLOG
 #define __UDM_KCS_SYSLOG
 #define __UDM_SSIF_SYSLOG
 #define __UDM_OPENIPMI_SYSLOG
-#define __UDM_LOCATE_SYSLOG
 #endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
@@ -144,13 +136,6 @@ do {                                                                         \
   char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);               \
   __TRACE_CTX_OUTPUT;                                                        \
 } while (0)
-
-#define __UDM_LOCATE_TRACE                                                   \
-do {                                                                         \
-  int __ctxerrnum = ipmi_locate_ctx_errnum(dev->io.inband.locate_ctx);       \
-  char *__ctxerrstr = ipmi_locate_ctx_strerror(__ctxerrnum);                 \
-  __TRACE_CTX_OUTPUT;                                                        \
-} while (0)
 #else
 #define __UDM_TRACE
 #define __ERR_UDM_TRACE
@@ -161,7 +146,6 @@ do {                                                                         \
 #define __UDM_KCS_TRACE
 #define __UDM_SSIF_TRACE
 #define __UDM_OPENIPMI_TRACE
-#define __UDM_LOCATE_TRACE
 #endif /* IPMI_TRACE */
 
 #define __ERRNO_TO_UDM_ERRNUM                      \
@@ -620,45 +604,6 @@ do {                                                                    \
       __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
       __UDM_OPENIPMI_SYSLOG;                                            \
       __UDM_OPENIPMI_TRACE;                                             \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define __LOCATE_ERRNUM_TO_UDM_ERRNUM                                   \
-do {                                                                    \
-  int32_t __errnum = ipmi_locate_ctx_errnum(dev->io.inband.locate_ctx); \
-  if (__errnum == IPMI_LOCATE_CTX_ERR_SUCCESS)                          \
-    dev->errnum = IPMI_ERR_SUCCESS;                                     \
-  else if (__errnum == IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY)               \
-    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;                               \
-  else if (__errnum == IPMI_LOCATE_CTX_ERR_PERMISSION)                  \
-    dev->errnum = IPMI_ERR_PERMISSION;                                  \
-  else if (__errnum == IPMI_LOCATE_CTX_ERR_PARAMETERS)                  \
-    dev->errnum = IPMI_ERR_LIBRARY_ERROR;                               \
-  else if (__errnum == IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR)                \
-    dev->errnum = IPMI_ERR_SYSTEM_ERROR;                                \
-  else                                                                  \
-    dev->errnum = IPMI_ERR_INTERNAL_ERROR;                              \
-} while (0)
-
-#define UDM_ERR_LOCATE(expr)                                            \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __LOCATE_ERRNUM_TO_UDM_ERRNUM;                                    \
-      __UDM_LOCATE_SYSLOG;                                              \
-      __UDM_LOCATE_TRACE;                                               \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define UDM_ERR_LOCATE_CLEANUP(expr)                                    \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __LOCATE_ERRNUM_TO_UDM_ERRNUM;                                    \
-      __UDM_LOCATE_SYSLOG;                                              \
-      __UDM_LOCATE_TRACE;                                               \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
