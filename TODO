@@ -36,6 +36,7 @@ in ipmimonitoring and add into libfreeipmi?
 - move libipmiconsole and libipmimonitoring into libfreeipmi?
 - cleanup/split err-wrappers files as needed.
 - move libfreeipmi specific libs out of common/src into libfreeipmi dir
+- need debug capabilities in sdr cache libs (i.e. sdr cache dumping)
 
 Autoconf/Portability
 --------------------
