@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.32.4.3 2007-11-28 22:30:51 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.32.4.4 2007-11-28 22:36:51 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -454,6 +454,10 @@ defaults_display (void)
     }
   printf ("\n");
   
+#if 0
+
+  /* BT device defaults aren't returned, always an error */
+
   printf ("BT device default values: ");
   if (ipmi_locate_defaults_get_device_info (IPMI_INTERFACE_BT, 
                                             &info) == 0)
@@ -470,6 +474,7 @@ defaults_display (void)
 #endif
     }
   printf ("\n");
+#endif
   
   printf ("SSIF device default values: ");
   if (ipmi_locate_defaults_get_device_info (IPMI_INTERFACE_SSIF, 
