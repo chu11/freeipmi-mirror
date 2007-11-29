@@ -33,6 +33,24 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Update libfreeipmi version.
 
+	* libfreeipmi/include/freeipmi/fiid.h, libfreeipmi/src/fiid.c:
+	Rework portions of API to return error codes rather than errnos.
+
+	* common/src/, libfreeipmi/, bmc-watchdog/, ipmipower,
+	ipmimonitoring/, ipmidetect/, ipmi-sel/, ipmi-sensors/, bmc-info/,
+	rmcpping/, ipmiping/, ipmi-chassis/, ipmi-fru/: Adjust code
+	appropriately for fiid API change.
+	
+	* ipmi-sel/src/ipmi-sel-wrapper.c: Use fiid wrappers
+	appropriately.
+
+	* bmc-info/src/bmc-info.c: Fix code logic to remove mem-leaks.
+
+	* ipmiping/src/ipmiping.c (_fiid_obj_get), rmcpping/src/rmcpping.c
+	(_fiid_obj_get): Fix error message output.
+
+	* ipmi-chassis/src/ipmi-chassis.c: Add _FIID_OBJ_DESTROY macro.
+
 	* Various minor fixes.
 		
 2007-11-24  Albert Chu <chu11@llnl.gov>

@@ -36,7 +36,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <freeipmi/udm/udm.h>
 
 #include "cmdline-parse-common.h"
-#include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
@@ -76,6 +75,16 @@ do {                                                                    \
       }                                                                 \
     *_val_ptr = _val;                                                   \
 } while (0)
+
+#define _FIID_OBJ_DESTROY(__obj)                 \
+  do {                                           \
+    if ((__obj))                                 \
+      {                                          \
+        fiid_obj_destroy((__obj));               \
+        (__obj) = NULL;                          \
+      }                                          \
+  } while (0)
+
 
 static int32_t 
 set_boot_flags (ipmi_chassis_state_data_t *state_data)
@@ -276,9 +285,9 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (get_boot_flags_rs);
-  FIID_OBJ_DESTROY (boot_info_ack_cmd_rs);
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (get_boot_flags_rs);
+  _FIID_OBJ_DESTROY (boot_info_ack_cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -527,7 +536,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   pstdout_printf (state_data->pstate, "%s\n", tmp); 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -565,7 +574,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -625,7 +634,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -677,7 +686,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   rv = 0;
 
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -766,7 +775,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -803,7 +812,7 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
   
@@ -840,7 +849,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -1153,7 +1162,7 @@ print:
     
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -1254,7 +1263,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
