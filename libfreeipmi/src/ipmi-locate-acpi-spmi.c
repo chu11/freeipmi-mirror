@@ -1446,9 +1446,16 @@ int
 ipmi_locate_acpi_spmi_get_device_info (ipmi_interface_type_t type,
                                        struct ipmi_locate_info *info)
 {
-  int locate_errnum = 0;
-
-  if (_ipmi_locate_acpi_spmi_get_device_info(&locate_errnum, type, info) < 0)
-    return locate_errnum;
+  int errnum;
+  int *locate_errnum;
+  
+  locate_errnum = &errnum;
+  
+  if (_ipmi_locate_acpi_spmi_get_device_info(&errnum, type, info) < 0)
+    {
+      if (!errnum)
+        LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_INTERNAL_ERROR);
+      return errnum;
+    }
   return 0;
 }
