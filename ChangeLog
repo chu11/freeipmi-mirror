@@ -32,6 +32,8 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/: Adjust remaining code for removal of smic api.
 
 	* configure.ac: Update libfreeipmi version.
+
+	* Various minor fixes.
 		
 2007-11-24  Albert Chu <chu11@llnl.gov>
 

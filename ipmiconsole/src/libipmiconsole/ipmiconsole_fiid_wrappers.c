@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.c,v 1.9 2007-10-18 16:18:47 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.c,v 1.9.2.1 2007-11-29 21:20:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -35,7 +35,6 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <assert.h>
-#include <errno.h>
 
 #include "ipmiconsole.h"
 #include "ipmiconsole_defs.h"
@@ -47,15 +46,16 @@
 int32_t
 Fiid_template_len_bytes(ipmiconsole_ctx_t c, fiid_template_t tmpl)
 {
+  fiid_err_t err;
   int32_t rv;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(tmpl);
 
-  if ((rv = fiid_template_len_bytes(tmpl)) < 0)
+  if ((rv = fiid_template_len_bytes(&err, tmpl)) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("fiid_template_len_bytes: %s", strerror(errno)));
+      IPMICONSOLE_CTX_DEBUG(c, ("fiid_template_len_bytes: %s", fiid_strerror(err)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
@@ -66,6 +66,7 @@ Fiid_template_len_bytes(ipmiconsole_ctx_t c, fiid_template_t tmpl)
 int32_t
 Fiid_template_block_len_bytes(ipmiconsole_ctx_t c, fiid_template_t tmpl, char *field_start, char *field_end)
 {
+  fiid_err_t err;
   int32_t rv;
 
   assert(c);
@@ -74,9 +75,9 @@ Fiid_template_block_len_bytes(ipmiconsole_ctx_t c, fiid_template_t tmpl, char *f
   assert(field_start);
   assert(field_end);
 
-  if ((rv = fiid_template_block_len_bytes(tmpl, field_start, field_end)) < 0)
+  if ((rv = fiid_template_block_len_bytes(&err, tmpl, field_start, field_end)) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("fiid_template_len_bytes: field_start=%s; field_end=%s; %s", field_start, field_end, strerror(errno)));
+      IPMICONSOLE_CTX_DEBUG(c, ("fiid_template_len_bytes: field_start=%s; field_end=%s; %s", field_start, field_end, fiid_strerror(err)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
@@ -88,14 +89,15 @@ fiid_obj_t
 Fiid_obj_create(ipmiconsole_ctx_t c, fiid_template_t tmpl) 
 {
   fiid_obj_t obj;
+  fiid_err_t err;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(tmpl);
 
-  if (!(obj = fiid_obj_create(tmpl)))
+  if (!(obj = fiid_obj_create(&err, tmpl)))
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_create: %s", strerror(errno)));
+      IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_create: %s", fiid_strerror(err)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
       return NULL;
     }

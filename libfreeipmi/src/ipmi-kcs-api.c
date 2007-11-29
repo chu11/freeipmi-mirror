@@ -720,11 +720,11 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
   assert(fiid_obj_valid(obj_cmd_rq));
   assert(fiid_obj_packet_valid(obj_cmd_rq));
 
-  KCS_ERR_INTERNAL_ERROR(!((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0));
+  KCS_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
   
-  KCS_ERR_INTERNAL_ERROR(!((cmd_len = fiid_obj_len_bytes(obj_cmd_rq)) < 0));
+  KCS_FIID_OBJ_LEN_BYTES(cmd_len, obj_cmd_rq);
   
-  KCS_ERR_OUT_OF_MEMORY_CLEANUP((obj_hdr = fiid_obj_create(tmpl_hdr_kcs)));
+  KCS_FIID_OBJ_CREATE_CLEANUP(obj_hdr, tmpl_hdr_kcs);
   
   pkt_len = hdr_len + cmd_len;
 
@@ -746,8 +746,7 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  if (obj_hdr)
-    fiid_obj_destroy(obj_hdr);
+  KCS_FIID_OBJ_DESTROY(obj_hdr);
   if (pkt)
     free(pkt);
   return rv;
@@ -768,13 +767,13 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
   assert(fiid_obj_valid(obj_cmd_rs));
 
-  KCS_ERR_INTERNAL_ERROR(!((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0));
+  KCS_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
 
-  KCS_ERR_INTERNAL_ERROR(!((cmd_len = fiid_template_len_bytes(tmpl)) < 0));
+  KCS_FIID_OBJ_TEMPLATE_CLEANUP(tmpl, obj_cmd_rs);
 
-  KCS_ERR_OUT_OF_MEMORY_CLEANUP(((tmpl = fiid_obj_template(obj_cmd_rs)) < 0));
-
-  KCS_ERR_OUT_OF_MEMORY_CLEANUP((obj_hdr = fiid_obj_create(tmpl_hdr_kcs)));
+  KCS_FIID_TEMPLATE_LEN_BYTES_CLEANUP(cmd_len, tmpl);
+  
+  KCS_FIID_OBJ_CREATE_CLEANUP(obj_hdr, tmpl_hdr_kcs);
 
   pkt_len = hdr_len + cmd_len;
   
@@ -793,10 +792,8 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  if (tmpl)
-    fiid_template_free(tmpl);
-  if (obj_hdr)
-    fiid_obj_destroy(obj_hdr);
+  KCS_FIID_TEMPLATE_FREE(tmpl);
+  KCS_FIID_OBJ_DESTROY(obj_hdr);
   return rv;
 }
 

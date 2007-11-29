@@ -53,6 +53,7 @@
 #include "ipmi-semaphores.h"
 
 #include "err-wrappers.h"
+#include "fiid-wrappers.h"
 #include "ipmi-common.h"
 #include "freeipmi-portability.h"
 #include "xmalloc.h"
@@ -569,11 +570,11 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
   assert(fiid_obj_valid(obj_cmd_rq));
   assert(fiid_obj_packet_valid(obj_cmd_rq));
 
-  SSIF_ERR_INTERNAL_ERROR(!((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0));
+  SSIF_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
   
-  SSIF_ERR_INTERNAL_ERROR(!((cmd_len = fiid_obj_len_bytes(obj_cmd_rq)) < 0));
+  SSIF_FIID_OBJ_LEN_BYTES(cmd_len, obj_cmd_rq);
   
-  SSIF_ERR_OUT_OF_MEMORY_CLEANUP((obj_hdr = fiid_obj_create(tmpl_hdr_kcs)));
+  SSIF_FIID_OBJ_CREATE_CLEANUP(obj_hdr, tmpl_hdr_kcs);
   
   pkt_len = hdr_len + cmd_len;
 
@@ -595,8 +596,7 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  if (obj_hdr)
-    fiid_obj_destroy(obj_hdr);
+  SSIF_FIID_OBJ_DESTROY(obj_hdr);
   if (pkt)
     free(pkt);
   return rv;
@@ -617,13 +617,13 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
   assert(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
   assert(fiid_obj_valid(obj_cmd_rs));
 
-  SSIF_ERR_INTERNAL_ERROR(!((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0));
-  
-  SSIF_ERR_INTERNAL_ERROR(!((cmd_len = fiid_template_len_bytes(tmpl)) < 0));
+  SSIF_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
 
-  SSIF_ERR_OUT_OF_MEMORY_CLEANUP((tmpl = fiid_obj_template(obj_cmd_rs)));
+  SSIF_FIID_OBJ_TEMPLATE_CLEANUP(tmpl, obj_cmd_rs);
 
-  SSIF_ERR_OUT_OF_MEMORY_CLEANUP((obj_hdr = fiid_obj_create(tmpl_hdr_kcs)));
+  SSIF_FIID_TEMPLATE_LEN_BYTES_CLEANUP(cmd_len, tmpl);
+
+  SSIF_FIID_OBJ_CREATE(obj_hdr, tmpl_hdr_kcs);
 
   pkt_len = hdr_len + cmd_len;
   
@@ -643,10 +643,8 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  if (tmpl)
-    fiid_template_free(tmpl);
-  if (obj_hdr)
-    fiid_obj_destroy(obj_hdr);
+  SSIF_FIID_TEMPLATE_FREE(tmpl);
+  SSIF_FIID_OBJ_DESTROY(obj_hdr);
   return rv;
 }
 

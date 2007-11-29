@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_fiid_wrappers.c,v 1.7 2007-10-18 16:18:49 chu11 Exp $
+ *  $Id: ipmi_monitoring_fiid_wrappers.c,v 1.7.2.1 2007-11-29 21:20:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -45,15 +45,16 @@
 int32_t
 Fiid_template_len_bytes(ipmi_monitoring_ctx_t c, fiid_template_t tmpl)
 {
+  fiid_err_t err;
   int32_t rv;
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(tmpl);
 
-  if ((rv = fiid_template_len_bytes(tmpl)) < 0)
+  if ((rv = fiid_template_len_bytes(&err, tmpl)) < 0)
     {
-      IPMI_MONITORING_DEBUG(("fiid_template_len_bytes: %s", strerror(errno)));
+      IPMI_MONITORING_DEBUG(("fiid_template_len_bytes: %s", fiid_strerror(err)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
@@ -64,6 +65,7 @@ Fiid_template_len_bytes(ipmi_monitoring_ctx_t c, fiid_template_t tmpl)
 int32_t
 Fiid_template_block_len_bytes(ipmi_monitoring_ctx_t c, fiid_template_t tmpl, char *field_start, char *field_end)
 {
+  fiid_err_t err;
   int32_t rv;
 
   assert(c);
@@ -72,9 +74,9 @@ Fiid_template_block_len_bytes(ipmi_monitoring_ctx_t c, fiid_template_t tmpl, cha
   assert(field_start);
   assert(field_end);
 
-  if ((rv = fiid_template_block_len_bytes(tmpl, field_start, field_end)) < 0)
+  if ((rv = fiid_template_block_len_bytes(&err, tmpl, field_start, field_end)) < 0)
     {
-      IPMI_MONITORING_DEBUG(("fiid_template_len_bytes: field_start=%s; field_end=%s; %s", field_start, field_end, strerror(errno)));
+      IPMI_MONITORING_DEBUG(("fiid_template_len_bytes: field_start=%s; field_end=%s; %s", field_start, field_end, fiid_strerror(err)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
@@ -86,14 +88,15 @@ fiid_obj_t
 Fiid_obj_create(ipmi_monitoring_ctx_t c, fiid_template_t tmpl) 
 {
   fiid_obj_t obj;
+  fiid_err_t err;
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(tmpl);
 
-  if (!(obj = fiid_obj_create(tmpl)))
+  if (!(obj = fiid_obj_create(&err, tmpl)))
     {
-      IPMI_MONITORING_DEBUG(("fiid_obj_create: %s", strerror(errno)));
+      IPMI_MONITORING_DEBUG(("fiid_obj_create: %s", fiid_strerror(err)));
       c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
       return NULL;
     }

@@ -85,7 +85,7 @@ _construct_payload_buf(uint8_t payload_type,
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
     {
       ERR_EXIT (!((obj_lan_msg_hdr_len = fiid_obj_len_bytes (obj_lan_msg_hdr)) < 0));
-      ERR_EXIT (!((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
+      ERR_EXIT (!((obj_lan_msg_trlr_len = fiid_template_len_bytes (NULL, tmpl_lan_msg_trlr)) < 0));
     }
 
   ERR_CLEANUP (!((obj_cmd_len = fiid_obj_len_bytes (obj_cmd)) < 0));
@@ -109,7 +109,9 @@ _construct_payload_buf(uint8_t payload_type,
     {
       FIID_OBJ_CREATE_CLEANUP(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
 
-      ERR_EXIT (!((checksum_start_offset = fiid_template_field_end_bytes (tmpl_lan_msg_hdr_rq, "checksum1")) < 0));
+      ERR_EXIT (!((checksum_start_offset = fiid_template_field_end_bytes (NULL,
+                                                                          tmpl_lan_msg_hdr_rq, 
+                                                                          "checksum1")) < 0));
       
       checksum = ipmi_checksum (payload_buf + checksum_start_offset, indx - checksum_start_offset);
 
@@ -361,8 +363,12 @@ _construct_session_trlr_pad(uint8_t integrity_algorithm,
           && fiid_obj_valid(obj_rmcpplus_session_trlr)
           && fiid_obj_template_compare(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr));
 
-  ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "pad_length")) < 0)); 
-  ERR_EXIT (!((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "next_header")) < 0));
+  ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (NULL,
+                                                                     tmpl_rmcpplus_session_trlr, 
+                                                                     "pad_length")) < 0)); 
+  ERR_EXIT (!((next_header_field_len = fiid_template_field_len_bytes (NULL,
+                                                                      tmpl_rmcpplus_session_trlr, 
+                                                                      "next_header")) < 0));
   
   ipmi_msg_len += pad_length_field_len;
   ipmi_msg_len += next_header_field_len;
@@ -867,19 +873,23 @@ _deconstruct_payload_buf(uint8_t payload_type,
            || payload_type == IPMI_PAYLOAD_TYPE_SOL)
           && !(payload_type == IPMI_PAYLOAD_TYPE_IPMI
                && !(fiid_obj_valid(obj_lan_msg_hdr)
-                    && fiid_obj_template_compare(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1
+                    && fiid_obj_template_compare(obj_lan_msg_hdr, 
+                                                 tmpl_lan_msg_hdr_rs) == 1
                     && fiid_obj_valid(obj_lan_msg_trlr)
-                    && fiid_obj_template_compare(obj_lan_msg_trlr, tmpl_lan_msg_trlr) == 1))
+                    && fiid_obj_template_compare(obj_lan_msg_trlr, 
+                                                 tmpl_lan_msg_trlr) == 1))
           && fiid_obj_valid(obj_cmd)
           && !(payload_type == IPMI_PAYLOAD_TYPE_SOL
-               && !(fiid_obj_template_compare(obj_cmd, tmpl_sol_payload_data) == 1
-                    || fiid_obj_template_compare(obj_cmd, tmpl_sol_payload_data_bmc_to_remote_console) == 1))
+               && !(fiid_obj_template_compare(obj_cmd, 
+                                              tmpl_sol_payload_data) == 1
+                    || fiid_obj_template_compare(obj_cmd, 
+                                                 tmpl_sol_payload_data_bmc_to_remote_console) == 1))
           && pkt 
           && lan_msg_len);
 
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
     {
-      ERR_EXIT (!((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
+      ERR_EXIT (!((obj_lan_msg_trlr_len = fiid_template_len_bytes (NULL, tmpl_lan_msg_trlr)) < 0));
   
       FIID_OBJ_CLEAR (obj_lan_msg_hdr);
       FIID_OBJ_SET_ALL_LEN(len, 
@@ -1388,8 +1398,10 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       else /* IPMI_INTEGRITY_ALGORITHM_MD5_128 */
         authentication_code_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
 
-      ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "pad_length")) < 0)); 
-      ERR_EXIT (!((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "next_header")) < 0));
+      ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (NULL,
+                                                                         tmpl_rmcpplus_session_trlr, "pad_length")) < 0)); 
+      ERR_EXIT (!((next_header_field_len = fiid_template_field_len_bytes (NULL,
+                                                                          tmpl_rmcpplus_session_trlr, "next_header")) < 0));
       
       /* achu: There needs to be atleast the next_header and pad_length fields */
       if ((pkt_len - indx) < (authentication_code_len + pad_length_field_len + next_header_field_len))

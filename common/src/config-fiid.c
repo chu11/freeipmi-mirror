@@ -16,11 +16,12 @@ fiid_obj_t
 Fiid_obj_create(fiid_template_t tmpl)
 {
   fiid_obj_t obj;
+  fiid_err_t err;
 
   assert(tmpl);
 
-  if (!(obj = fiid_obj_create(tmpl)))
-    perror("fiid_obj_create");
+  if (!(obj = fiid_obj_create(&err, tmpl)))
+    fprintf(stderr, "fiid_obj_create: %s", fiid_strerror(err));
 
   return obj;
 }

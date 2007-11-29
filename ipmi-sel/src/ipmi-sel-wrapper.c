@@ -42,16 +42,17 @@
 
 #include "ipmi-sel-wrapper.h"
 
-#define _FIID_OBJ_CREATE(__obj, __tmpl)         \
-do {                                            \
-  if (!((__obj) = fiid_obj_create(__tmpl)))     \
-    {                                           \
-      pstdout_fprintf(state_data->pstate,       \
-                      stderr,                   \
-                      "fiid_obj_create: %s\n",  \
-                      strerror(errno));         \
-      goto cleanup;                             \
-    }                                           \
+#define _FIID_OBJ_CREATE(__obj, __tmpl)                   \
+do {                                                      \
+  fiid_err_t __err;                                       \
+  if (!((__obj) = fiid_obj_create(&__err, __tmpl)))       \
+    {                                                     \
+      pstdout_fprintf(state_data->pstate,                 \
+                      stderr,                             \
+                      "fiid_obj_create: %s\n",            \
+                      fiid_strerror(__err));              \
+      goto cleanup;                                       \
+    }                                                     \
 } while (0)
 
 #define _FIID_OBJ_GET(__obj, __field, __val)                    \
@@ -899,21 +900,19 @@ delete_sel_entry (ipmi_sel_state_data_t *state_data,
   uint16_t reservation_id;
   uint64_t val;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
   
   if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET(obj_cmd_rs, "reservation_id", &val);
+
   reservation_id = val;
   
   fiid_obj_destroy(obj_cmd_rs);
   obj_cmd_rs = NULL;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_delete_sel_entry_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_delete_sel_entry_rs);
   
   if (ipmi_cmd_delete_sel_entry (state_data->dev, 
 				 reservation_id, 
@@ -943,21 +942,19 @@ clear_sel_entries (ipmi_sel_state_data_t *state_data)
   uint16_t reservation_id;
   uint64_t val;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
 
   if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET(obj_cmd_rs, "reservation_id", &val);
+
   reservation_id = val;
   
   fiid_obj_destroy(obj_cmd_rs);
   obj_cmd_rs = NULL;
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_clear_sel_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_clear_sel_rs);
 
   if (ipmi_cmd_clear_sel (state_data->dev, 
 			  reservation_id, 
@@ -986,21 +983,19 @@ get_sel_clear_status (ipmi_sel_state_data_t *state_data,
   uint16_t reservation_id;
   uint64_t val;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
 
   if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET(obj_cmd_rs, "reservation_id", &val);
+
   reservation_id = val;
   
   fiid_obj_destroy(obj_cmd_rs);
   obj_cmd_rs = NULL;
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_clear_sel_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_clear_sel_rs);
 
   if (ipmi_cmd_clear_sel (state_data->dev, 
 			  reservation_id, 
@@ -1014,9 +1009,8 @@ get_sel_clear_status (ipmi_sel_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (fiid_obj_get (obj_cmd_rs, "erasure_progress", &val) < 0)
-    goto cleanup;
-  
+  _FIID_OBJ_GET(obj_cmd_rs, "erasure_progress", &val);
+
   fiid_obj_destroy(obj_cmd_rs);
   *status = val;
   return 0;
