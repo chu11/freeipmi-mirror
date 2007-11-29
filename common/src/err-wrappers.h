@@ -278,28 +278,6 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define ERR_EINVAL_NULL_RETURN(expr)                                    \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = EINVAL;                                                   \
-      __ERR_SYSLOG;                                                     \
-      __ERR_TRACE;                                                      \
-      return (NULL);                                                    \
-    }                                                                   \
-} while (0)
-
-#define ERR_EINVAL_VOID_RETURN(expr)                                    \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = EINVAL;                                                   \
-      __ERR_SYSLOG;                                                     \
-      __ERR_TRACE;                                                      \
-      return;                                                           \
-    }                                                                   \
-} while (0)
-
 #define ERR_ENOSPC(expr)                                                \
 do {                                                                    \
   if (!(expr))                                                          \
@@ -316,28 +294,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENOSPC;                                                   \
-      __ERR_SYSLOG;                                                     \
-      __ERR_TRACE;                                                      \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define ERR_ENODEV(expr)                                                \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = ENODEV;                                                   \
-      __ERR_SYSLOG;                                                     \
-      __ERR_TRACE;                                                      \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define ERR_ENODEV_CLEANUP(expr)                                        \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = ENODEV;                                                   \
       __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
