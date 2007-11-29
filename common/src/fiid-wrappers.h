@@ -1042,22 +1042,22 @@ do {                                                                            
 #define __FIID_ERRNO_TO_LOCATE_ERRNUM                                         \
 do {                                                                          \
   if (errno == 0)                                                             \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;                                \
+    (*locate_errnum) = IPMI_LOCATE_ERR_SUCCESS;                               \
   else if (errno == ENOMEM)                                                   \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                          \
+    (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                         \
   else                                                                        \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                         \
+    (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;                        \
 } while (0)
 
 #define __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM(___obj)                            \
 do {                                                                          \
   int32_t __errnum = fiid_obj_errnum((___obj));                               \
   if (__errnum == FIID_ERR_SUCCESS)                                           \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;                                \
+    (*locate_errnum) = IPMI_LOCATE_ERR_SUCCESS;                               \
   else if (__errnum == FIID_ERR_OUT_OF_MEMORY)                                \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                          \
+    (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                         \
   else                                                                        \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                         \
+    (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;                        \
 } while (0)
 
 #define LOCATE_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                         \
@@ -1110,7 +1110,7 @@ do {                                                                          \
     {                                                                         \
       __FIID_SYSLOG;                                                          \
       __FIID_TRACE;                                                           \
-      ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                        \
+      (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                       \
       return (-1);                                                            \
     }                                                                         \
 } while (0)
@@ -1121,7 +1121,7 @@ do {                                                                          \
     {                                                                         \
       __FIID_SYSLOG;                                                          \
       __FIID_TRACE;                                                           \
-      ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                        \
+      (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                       \
       goto cleanup;                                                           \
     }                                                                         \
 } while (0)
@@ -1142,7 +1142,7 @@ do {                                                                          \
       {                                                                       \
         __FIID_OBJ_SYSLOG((__obj));                                           \
         __FIID_OBJ_TRACE((__obj));                                            \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                     \
+        (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;                    \
 	return (-1);                                                          \
       }                                                                       \
 } while (0)

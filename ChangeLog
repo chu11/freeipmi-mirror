@@ -9,8 +9,6 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	libfreeipmi/src/ipmi-openipmi-api.c,
 	libfreeipmi/src/ipmi-ssif-api.c: Use error logging routines.
 
-	* libfreeipmi/src/ipmi-locate-definitions.h: New file.
-
 	* libfreeipmi/include/freeipmi/ipmi-locate.h,
 	libfreeipmi/src/ipmi-locate.c,
 	libfreeipmi/src/ipmi-locate-acpi-spmi.c,
@@ -18,7 +16,7 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	libfreeipmi/src/ipmi-locate-dmidecode.c,
 	libfreeipmi/src/ipmi-locate-pci.c,
 	libfreeipmi/src/ipmi-locate-smbios.c: Re-work locate API with
-	contexts.  Use new error logging routines appropriately.
+	error code returns.  Use new error logging routines appropriately.
 
 	* bmc-watchdog/src/, ipmi-locate/src/, libfreeipmi/src/udm/:
 	Re-work to use new locate API.

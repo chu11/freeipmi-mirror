@@ -33,15 +33,15 @@ extern "C" {
 #define IPMI_ADDRESS_SPACE_ID_SYSTEM_IO     0x01
 #define IPMI_ADDRESS_SPACE_ID_SMBUS         0x04
 
-#define IPMI_LOCATE_CTX_ERR_SUCCESS              0
-#define IPMI_LOCATE_CTX_ERR_NULL                 1
-#define IPMI_LOCATE_CTX_ERR_INVALID              2
-#define IPMI_LOCATE_CTX_ERR_PARAMETERS           3
-#define IPMI_LOCATE_CTX_ERR_PERMISSION           4
-#define IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY        5
-#define IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR         6
-#define IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR       7
-#define IPMI_LOCATE_CTX_ERR_ERRNUMRANGE          8
+#define IPMI_LOCATE_ERR_SUCCESS              0
+#define IPMI_LOCATE_ERR_NULL                 1
+#define IPMI_LOCATE_ERR_INVALID              2
+#define IPMI_LOCATE_ERR_PARAMETERS           3
+#define IPMI_LOCATE_ERR_PERMISSION           4
+#define IPMI_LOCATE_ERR_OUT_OF_MEMORY        5
+#define IPMI_LOCATE_ERR_SYSTEM_ERROR         6
+#define IPMI_LOCATE_ERR_INTERNAL_ERROR       7
+#define IPMI_LOCATE_ERR_ERRNUMRANGE          8
 
 enum ipmi_locate_driver_type
 {
@@ -90,38 +90,30 @@ struct ipmi_locate_info
   uint8_t register_spacing; /* Register spacing in bytes */
 };
 
-typedef struct ipmi_locate_ctx *ipmi_locate_ctx_t;
+char *ipmi_locate_strerror(int32_t errnum);
 
-ipmi_locate_ctx_t ipmi_locate_ctx_create(void);
-
-int8_t ipmi_locate_ctx_destroy(ipmi_locate_ctx_t ctx);
-
-int32_t ipmi_locate_ctx_errnum(ipmi_locate_ctx_t ctx);
-
-char *ipmi_locate_ctx_strerror(int32_t errnum);
-
-int ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
-                                 ipmi_interface_type_t type,
+/* Returns 0 on success, errnum on error */
+int ipmi_locate_get_device_info (ipmi_interface_type_t type,
                                  struct ipmi_locate_info *info);
 
-int ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
-                                        ipmi_interface_type_t type,
+/* Returns 0 on success, errnum on error */
+int ipmi_locate_smbios_get_device_info (ipmi_interface_type_t type,
                                         struct ipmi_locate_info *info);
 
-int ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
-                                     ipmi_interface_type_t type,
+/* Returns 0 on success, errnum on error */
+int ipmi_locate_pci_get_device_info (ipmi_interface_type_t type,
                                      struct ipmi_locate_info *info);
 
-int ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
-                                           ipmi_interface_type_t interface_type,
+/* Returns 0 on success, errnum on error */
+int ipmi_locate_acpi_spmi_get_device_info (ipmi_interface_type_t interface_type,
                                            struct ipmi_locate_info *info);
 
-int ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
-                                          ipmi_interface_type_t type,
+/* Returns 0 on success, errnum on error */
+int ipmi_locate_defaults_get_device_info (ipmi_interface_type_t type,
                                           struct ipmi_locate_info *info);
 
-int ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
-                                           ipmi_interface_type_t type,
+/* Returns 0 on success, errnum on error */
+int ipmi_locate_dmidecode_get_device_info (ipmi_interface_type_t type,
                                            struct ipmi_locate_info *info);
 
 #ifdef __cplusplus

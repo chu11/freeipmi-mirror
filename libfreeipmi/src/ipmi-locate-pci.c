@@ -23,12 +23,11 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/ipmi-locate.h"
 #include "freeipmi/ipmi-ssif-api.h"
-
-#include "ipmi-locate-definitions.h"
 
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
@@ -92,7 +91,7 @@ typedef struct pci_class_regs pci_class_regs_t;
 /* return : pregs if successful, otherwise NULL */
 
 static int
-_pci_get_regs (ipmi_locate_ctx_t ctx,
+_pci_get_regs (int *locate_errnum,
                uint8_t bus, 
                uint8_t dev, 
                uint16_t func, 
@@ -131,10 +130,10 @@ _pci_get_regs (ipmi_locate_ctx_t ctx,
 /* type = which interface (KCS, SMIC, BT) */
 /* pinfo = pointer to information structure filled in by this function */
 
-int
-ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
-                                 ipmi_interface_type_t type,
-                                 struct ipmi_locate_info *info)
+static int
+_ipmi_locate_pci_get_device_info (int *locate_errnum,
+                                  ipmi_interface_type_t type,
+                                  struct ipmi_locate_info *info)
 {
   unsigned dfn;
   unsigned vendor;
@@ -150,7 +149,7 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
   struct ipmi_locate_info linfo;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(locate_errnum);
 
   LOCATE_ERR_PARAMETERS(IPMI_INTERFACE_TYPE_VALID(type) && info);
 
@@ -178,7 +177,7 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
     dev = PCI_SLOT(dfn & 0xff);
     func = PCI_FUNC(dfn & 0xff);
 
-    if (_pci_get_regs (ctx, bus, dev, func, &regs) < 0)
+    if (_pci_get_regs (locate_errnum, bus, dev, func, &regs) < 0)
       goto cleanup;
 
     if (regs.pci_class != IPMI_CLASS ||
@@ -218,17 +217,28 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
 
 #else  /* __linux */
 
-int
-ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
-                                 ipmi_interface_type_t type,
-                                 struct ipmi_locate_info *info)
+static int
+_ipmi_locate_pci_get_device_info (int *locate_errnum,
+                                  ipmi_interface_type_t type,
+                                  struct ipmi_locate_info *info)
 {
-  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(locate_errnum);
 
   LOCATE_ERR_PARAMETERS(IPMI_INTERFACE_TYPE_VALID(type) && info);
 
-  LOCATE_ERRNUM_SET(IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+  LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
   return -1;
 }
 
 #endif /* !__linux */
+
+int
+ipmi_locate_pci_get_device_info (ipmi_interface_type_t type,
+                                 struct ipmi_locate_info *info)
+{
+  int locate_errnum = 0;
+
+  if (_ipmi_locate_pci_get_device_info(&locate_errnum, type, info) < 0)
+    return locate_errnum;
+  return 0;
+}

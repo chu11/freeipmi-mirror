@@ -105,8 +105,8 @@ do {                                                                    \
 
 #define __LOCATE_SYSLOG                                                 \
 do {                                                                    \
-  int __ctxerrnum = ctx->errnum;                                        \
-  char *__ctxerrstr = ipmi_locate_ctx_strerror(__ctxerrnum);            \
+  int __ctxerrnum = *locate_errnum;                                     \
+  char *__ctxerrstr = ipmi_locate_strerror(__ctxerrnum);                \
   __SYSLOG_CTX_OUTPUT;                                                  \
 } while (0)
 #else
@@ -178,8 +178,8 @@ do {                                                                    \
 
 #define __LOCATE_TRACE                                                  \
 do {                                                                    \
-  int __ctxerrnum = ipmi_locate_ctx_errnum(ctx);                        \
-  char *__ctxerrstr = ipmi_locate_ctx_strerror(__ctxerrnum);            \
+  int __ctxerrnum = *locate_errnum;                                     \
+  char *__ctxerrstr = ipmi_locate_strerror(__ctxerrnum);                \
   __TRACE_CTX_OUTPUT;                                                   \
 } while (0)
 #else
@@ -831,17 +831,17 @@ do {                                                                    \
 #define __LOCATE_ERRNO_TO_ERRNUM                                        \
 do {                                                                    \
   if (errno == 0)                                                       \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;                          \
+    (*locate_errnum) = IPMI_LOCATE_ERR_SUCCESS;                         \
   else if (errno == EPERM)                                              \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_PERMISSION;                       \
+    (*locate_errnum) = IPMI_LOCATE_ERR_PERMISSION;                      \
   else if (errno == EACCES)                                             \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_PERMISSION;                       \
+    (*locate_errnum) = IPMI_LOCATE_ERR_PERMISSION;                      \
   else if (errno == ENOMEM)                                             \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                    \
+    (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                   \
   else if (errno == EINVAL)                                             \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                   \
+    (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;                  \
   else                                                                  \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR;                     \
+    (*locate_errnum) = IPMI_LOCATE_ERR_SYSTEM_ERROR;                    \
 } while (0)
 
 #define LOCATE_ERR(expr)                                                \
@@ -868,14 +868,14 @@ do {                                                                    \
 
 #define LOCATE_ERRNUM_SET(__errnum)                                     \
   do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
+    (*locate_errnum) = (__errnum);                                      \
     __LOCATE_SYSLOG;                                                    \
     __LOCATE_TRACE;                                                     \
   } while (0)
 
 #define LOCATE_ERRNUM_SET_CLEANUP(__errnum)                             \
   do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
+    (*locate_errnum) = (__errnum);                                      \
     __LOCATE_SYSLOG;                                                    \
     __LOCATE_TRACE;                                                     \
     goto cleanup;                                                       \
@@ -885,7 +885,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_PARAMETERS;                   \
+        (*locate_errnum) = IPMI_LOCATE_ERR_PARAMETERS;                  \
         __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         return (-1);                                                    \
@@ -896,7 +896,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_PARAMETERS;                   \
+        (*locate_errnum) = IPMI_LOCATE_ERR_PARAMETERS;                  \
         __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         goto cleanup;                                                   \
@@ -907,7 +907,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_IO_NOT_INITIALIZED;           \
+        (*locate_errnum) = IPMI_LOCATE_ERR_IO_NOT_INITIALIZED;          \
         __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         return (-1);                                                    \
@@ -918,7 +918,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_IO_NOT_INITIALIZED;           \
+        (*locate_errnum) = IPMI_LOCATE_ERR_IO_NOT_INITIALIZED;          \
         __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         goto cleanup;                                                   \
@@ -929,7 +929,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                \
+        (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;               \
         __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         return (-1);                                                    \
@@ -940,7 +940,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                \
+        (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;               \
         __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         goto cleanup;                                                   \
@@ -951,7 +951,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR;                 \
+        (*locate_errnum) = IPMI_LOCATE_ERR_SYSTEM_ERROR;                \
         __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         return (-1);                                                    \
@@ -962,7 +962,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR;                 \
+        (*locate_errnum) = IPMI_LOCATE_ERR_SYSTEM_ERROR;                \
         __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         goto cleanup;                                                   \
@@ -973,7 +973,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;               \
+        (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;              \
         __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         return (-1);                                                    \
@@ -984,7 +984,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;               \
+        (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;              \
         __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         goto cleanup;                                                   \

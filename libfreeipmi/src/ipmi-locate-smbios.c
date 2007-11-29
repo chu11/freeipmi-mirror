@@ -48,8 +48,6 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-ssif-api.h"
 
-#include "ipmi-locate-definitions.h"
-
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
 #include "xmalloc.h"
@@ -206,7 +204,7 @@ _ipmi_smbios_register_spacing (uint8_t register_spacing_boundary, uint8_t *regis
    0 = not really a SMBIOS entry structure
    1 = yes, a real SMBIOS entry structure */ 
 static int
-_is_ipmi_entry (ipmi_locate_ctx_t ctx,
+_is_ipmi_entry (int *locate_errnum,
                 uint8_t* sigp)
 {
   static const char smbios_entry_sig[4] = { '_', 'S', 'M', '_' };
@@ -216,7 +214,7 @@ _is_ipmi_entry (ipmi_locate_ctx_t ctx,
   uint8_t entry_len;
   uint8_t* bp;
 
-  assert(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(locate_errnum);
   assert(sigp);
 
   if (memcmp (sigp, smbios_entry_sig, sizeof (smbios_entry_sig)) != 0)
@@ -250,11 +248,11 @@ _is_ipmi_entry (ipmi_locate_ctx_t ctx,
    0 = not a IPMI device info structure for TYPE
    1 = yes, IPMI device info structure for TYPE */
 static int
-_is_ipmi_dev_info (ipmi_locate_ctx_t ctx,
+_is_ipmi_dev_info (int *locate_errnum,
                    ipmi_interface_type_t type, 
                    uint8_t* dev_info_p)
 {
-  assert(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(locate_errnum);
   assert(IPMI_INTERFACE_TYPE_VALID(type));
   assert(dev_info_p);
 
@@ -276,7 +274,7 @@ _is_ipmi_dev_info (ipmi_locate_ctx_t ctx,
    RETURNS:
    pointer to area of physical memory at physmem */
 static uint8_t*
-_map_physmem (ipmi_locate_ctx_t ctx,
+_map_physmem (int *locate_errnum,
               uint32_t physaddress, 
               size_t len, 
               void** startp, 
@@ -286,7 +284,7 @@ _map_physmem (ipmi_locate_ctx_t ctx,
   uint32_t pad;
   int mem_fd = -1;
 
-  assert(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(locate_errnum);
   assert(startp && totallen);
 
   LOCATE_ERR_CLEANUP(!((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) < 0));
@@ -312,7 +310,7 @@ _map_physmem (ipmi_locate_ctx_t ctx,
    pointer to the device info structure in heap (caller responsible
    for freeing */
 static uint8_t*
-_copy_ipmi_dev_info (ipmi_locate_ctx_t ctx,
+_copy_ipmi_dev_info (int *locate_errnum,
                      ipmi_interface_type_t type)
 {
   uint8_t* result = NULL;
@@ -323,10 +321,10 @@ _copy_ipmi_dev_info (ipmi_locate_ctx_t ctx,
   uint8_t* sigp;
   int flag;
 
-  assert(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(locate_errnum);
   assert(IPMI_INTERFACE_TYPE_VALID(type));
 
-  if (!(pmem_entry = _map_physmem (ctx,
+  if (!(pmem_entry = _map_physmem (locate_errnum,
                                    IPMI_SMBIOS_AREA_START, 
                                    IPMI_SMBIOS_AREA_LEN, 
                                    &map_entry, 
@@ -335,7 +333,7 @@ _copy_ipmi_dev_info (ipmi_locate_ctx_t ctx,
 
   for (sigp = pmem_entry; sigp - pmem_entry < IPMI_SMBIOS_AREA_LEN; sigp += IPMI_SMBIOS_AREA_ALIGN)
     {
-      if ((flag = _is_ipmi_entry (ctx, sigp)) < 0)
+      if ((flag = _is_ipmi_entry (locate_errnum, sigp)) < 0)
         goto cleanup;
 
       if (flag)
@@ -349,7 +347,7 @@ _copy_ipmi_dev_info (ipmi_locate_ctx_t ctx,
           uint8_t* var_info_p;
           
           s_table_len = *(uint16_t*)(sigp + IPMI_SMBIOS_ENTRY_TLEN_OFFSET);
-          if (!(pmem_table = _map_physmem (ctx,
+          if (!(pmem_table = _map_physmem (locate_errnum,
                                            *(uint32_t*)(sigp + IPMI_SMBIOS_ENTRY_PTR_OFFSET), 
                                            s_table_len,
                                            &map_table, 
@@ -360,7 +358,7 @@ _copy_ipmi_dev_info (ipmi_locate_ctx_t ctx,
           size = dev_info_p[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET];
           while (dev_info_p - pmem_table < s_table_len)
             {
-              if ((flag = _is_ipmi_dev_info (ctx, 
+              if ((flag = _is_ipmi_dev_info (locate_errnum, 
                                              type, 
                                              dev_info_p)) < 0)
                 goto cleanup;
@@ -385,6 +383,7 @@ _copy_ipmi_dev_info (ipmi_locate_ctx_t ctx,
         break;
     }
 
+  LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
  cleanup:
   if (map_entry)
     munmap (map_entry, map_entry_len);
@@ -398,10 +397,10 @@ _copy_ipmi_dev_info (ipmi_locate_ctx_t ctx,
    pinfo = pointer to information structure filled in by this function
    RETURNS:
    0 on success, -1 on error */
-int
-ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
-                                    ipmi_interface_type_t type,
-                                    struct ipmi_locate_info *info)
+static int
+_ipmi_locate_smbios_get_device_info (int *locate_errnum,
+                                     ipmi_interface_type_t type,
+                                     struct ipmi_locate_info *info)
 {
   uint8_t* bufp = NULL;
   uint8_t version;
@@ -409,7 +408,7 @@ ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
   uint64_t strobed;
   struct ipmi_locate_info linfo;
 
-  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(locate_errnum);
 
   LOCATE_ERR_PARAMETERS(IPMI_INTERFACE_TYPE_VALID(type) && info);
 
@@ -421,7 +420,7 @@ ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
       linfo.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
 
-  if (!(bufp = _copy_ipmi_dev_info (ctx, type)))
+  if (!(bufp = _copy_ipmi_dev_info (locate_errnum, type)))
     goto cleanup;
 
   linfo.locate_driver_type = IPMI_LOCATE_DRIVER_SMBIOS;
@@ -477,4 +476,15 @@ ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
   if (bufp)
     free(bufp);
   return (-1);
+}
+
+int
+ipmi_locate_smbios_get_device_info (ipmi_interface_type_t type,
+                                    struct ipmi_locate_info *info)
+{
+  int locate_errnum = 0;
+
+  if (_ipmi_locate_smbios_get_device_info(&locate_errnum, type, info) < 0)
+    return locate_errnum;
+  return 0;
 }
