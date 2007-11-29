@@ -766,13 +766,13 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
       return -1;
     }
   
-  if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
+  if (!(tmpl = fiid_obj_template(obj_cmd_rs)) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
-      return -1;
+      goto cleanup;
     }
 
-  if (!(tmpl = fiid_obj_template(obj_cmd_rs)) < 0)
+  if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
