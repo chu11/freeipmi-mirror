@@ -34,7 +34,7 @@
 #include "freeipmi/ipmi-channel-spec.h"
 #include "freeipmi/ipmi-cmd-spec.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
-#include "freeipmi/ipmi-rmcpplus.h"
+#include "freeipmi/ipmi-rmcpplus-interface.h"
 
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"

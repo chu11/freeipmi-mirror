@@ -78,6 +78,12 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/src/ipmi-lan.c: Move everything into
 	ipmi-lan-interface.c.  Remove file.
 
+	* libfreeipmi/include/freeipmi/ipmi-rmcpplus.h: Move everything
+	into ipmi-rmcpplus-interface.h.  Remove file.
+	
+	* libfreeipmi/src/ipmi-rmcpplus.c: Move everything into
+	ipmi-rmcpplus-interface.c.  Remove file.
+
 	* libfreeipmi/src/ipmi-kcs.c,
 	libfreeipmi/include/freeipmi/ipmi-kcs.h: Rename to
 	ipmi-kcs-interface.c and ipmi-kcs-interface.h respectively.

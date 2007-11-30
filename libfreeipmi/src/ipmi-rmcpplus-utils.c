@@ -30,7 +30,7 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-rmcpplus-utils.h"
-#include "freeipmi/ipmi-rmcpplus.h"
+#include "freeipmi/ipmi-rmcpplus-interface.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-cipher-suite-spec.h"
