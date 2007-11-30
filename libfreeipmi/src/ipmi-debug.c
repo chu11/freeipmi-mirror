@@ -36,7 +36,6 @@
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-comp-code-spec.h"
-#include "freeipmi/ipmi-lan.h"
 #include "freeipmi/ipmi-lan-interface.h"
 #include "freeipmi/rmcp.h"
 

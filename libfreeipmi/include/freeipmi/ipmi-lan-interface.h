@@ -25,10 +25,45 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+#include <freeipmi/fiid.h>
+
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#define IPMI_LAN_PKT_PAD_SIZE   1
+#define IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX    0x3F /* 111111b */
+
+extern fiid_template_t tmpl_lan_session_hdr;
+extern fiid_template_t tmpl_lan_msg_hdr_rq;
+extern fiid_template_t tmpl_lan_msg_hdr_rs;
+extern fiid_template_t tmpl_lan_msg_trlr;
+
+int8_t fill_lan_session_hdr  (uint8_t authentication_type, 
+                              uint32_t session_sequence_number, 
+                              uint32_t session_id,
+                              fiid_obj_t obj_lan_session_hdr);
+
+int8_t fill_lan_msg_hdr (uint8_t net_fn, 
+			 uint8_t rs_lun, 
+			 uint8_t rq_seq, 
+			 fiid_obj_t obj_lan_msg_hdr);
+
+int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr, 
+			       fiid_obj_t obj_lan_session_hdr, 
+			       fiid_obj_t obj_lan_msg_hdr, 
+			       fiid_obj_t obj_cmd, 
+			       uint8_t *authentication_code_data,
+			       uint32_t authentication_code_data_len,
+			       uint8_t *pkt, 
+			       uint32_t pkt_len);
+
+int8_t unassemble_ipmi_lan_pkt (uint8_t *pkt, 
+				uint32_t pkt_len, 
+				fiid_obj_t obj_rmcp_hdr, 
+				fiid_obj_t obj_lan_session_hdr, 
+				fiid_obj_t obj_lan_msg_hdr, 
+				fiid_obj_t obj_cmd, 
+				fiid_obj_t obj_lan_msg_trlr);
 
 ssize_t ipmi_lan_sendto (int s, 
 			 const void *buf, 

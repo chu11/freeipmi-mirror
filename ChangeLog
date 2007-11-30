@@ -72,7 +72,14 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	ipmi-openipmi-driver-udm.c, ipmi-openipmi-driver-udm.h
 	respectively.
 
-	* Adjust remaining code and Makefiles for file name changes.
+	* libfreeipmi/include/freeipmi/ipmi-lan.h: Move everything into
+	ipmi-lan-interface.h.  Remove file.
+	
+	* libfreeipmi/src/ipmi-lan.c: Move everything into
+	ipmi-lan-interface.c.  Remove file.
+
+	* Adjust remaining code and Makefiles for file name changes and
+	removals.
 
 	* Various minor fixes.
 		

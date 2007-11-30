@@ -27,7 +27,7 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-locate.h"
-#include "freeipmi/ipmi-ssif-api.h"
+#include "freeipmi/ipmi-ssif-driver.h"
 
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"

@@ -50,7 +50,6 @@ extern "C" {
 #include <freeipmi/ipmi-kcs.h>
 #include <freeipmi/ipmi-kcs-driver.h>
 #include <freeipmi/ipmi-openipmi-driver.h>
-#include <freeipmi/ipmi-lan.h>
 #include <freeipmi/ipmi-lan-interface.h>
 #include <freeipmi/ipmi-lan-utils.h>
 #include <freeipmi/ipmi-crypt.h>

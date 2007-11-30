@@ -34,7 +34,7 @@
 #include "freeipmi/ipmi-rmcpplus-utils.h"
 #include "freeipmi/ipmi-crypt.h"
 #include "freeipmi/ipmi-debug.h"
-#include "freeipmi/ipmi-lan.h"
+#include "freeipmi/ipmi-lan-interface.h"
 #include "freeipmi/ipmi-sol-cmds.h"
 #include "freeipmi/rmcp.h"
 
