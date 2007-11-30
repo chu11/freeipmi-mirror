@@ -1,3 +1,9 @@
+2007-11-30  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Prepare for beta release.
+
+	* Tagged Release-0_5_0_beta3.
+
 2007-11-28  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-ssif-api.c, libfreeipmi/src/ipmi-kcs-api.c:
