@@ -27,12 +27,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <sys/socket.h>
-#include <freeipmi/ipmi-error.h>
-#include <freeipmi/ipmi-kcs-api.h>
-#include <freeipmi/ipmi-locate.h>
-#include <freeipmi/ipmi-messaging-support-cmds.h>
-#include <freeipmi/ipmi-ssif-api.h>
+#include <freeipmi/freeipmi.h>
 
 enum ipmi_errnum
   {
