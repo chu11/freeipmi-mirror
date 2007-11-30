@@ -47,8 +47,8 @@ extern "C" {
 #include <freeipmi/ipmi-error.h>
 #include <freeipmi/ipmi-utils.h>
 #include <freeipmi/ipmi-locate.h>
-#include <freeipmi/ipmi-kcs.h>
 #include <freeipmi/ipmi-kcs-driver.h>
+#include <freeipmi/ipmi-kcs-interface.h>
 #include <freeipmi/ipmi-openipmi-driver.h>
 #include <freeipmi/ipmi-lan-interface.h>
 #include <freeipmi/ipmi-lan-utils.h>

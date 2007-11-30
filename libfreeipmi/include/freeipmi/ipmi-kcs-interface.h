@@ -1,5 +1,5 @@
 /* 
-   ipmi-kcs.h - IPMI KCS
+   ipmi-kcs-interface.h - IPMI KCS
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -19,8 +19,8 @@
 
 */
 
-#ifndef _IPMI_KCS_H
-#define _IPMI_KCS_H 1
+#ifndef _IPMI_KCS_INTERFACE_H
+#define _IPMI_KCS_INTERFACE_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,10 +34,12 @@ extern fiid_template_t tmpl_hdr_kcs;
 int8_t fill_hdr_ipmi_kcs (uint8_t lun, 
 			  uint8_t fn, 
 			  fiid_obj_t obj_kcs_hdr);
+
 int32_t assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr, 
                                fiid_obj_t obj_cmd, 
                                uint8_t *pkt, 
                                uint32_t pkt_len);
+
 int32_t unassemble_ipmi_kcs_pkt (uint8_t *pkt, 
                                  uint32_t pkt_len, 
                                  fiid_obj_t obj_kcs_hdr, 
@@ -47,5 +49,5 @@ int32_t unassemble_ipmi_kcs_pkt (uint8_t *pkt,
 }
 #endif
 
-#endif /* ipmi-kcs.h */
+#endif /* ipmi-kcs-interface.h */
 

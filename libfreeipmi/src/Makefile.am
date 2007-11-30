@@ -23,8 +23,8 @@ libfreeipmi_la_SOURCES = \
 	ipmi-locate-defaults.c \
 	ipmi-locate-pci.c \
 	ipmi-locate-smbios.c \
-	ipmi-kcs.c \
 	ipmi-kcs-driver.c \
+	ipmi-kcs-interface.c \
 	ipmi-lan-interface.c \
 	ipmi-lan-utils.c \
 	ipmi-openipmi-driver.c \

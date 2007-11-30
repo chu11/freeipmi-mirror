@@ -1,5 +1,5 @@
 /* 
-   ipmi-kcs.c: IPMI KCS
+   ipmi-kcs-interface.c: IPMI KCS
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -30,7 +30,7 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "freeipmi/ipmi-kcs.h"
+#include "freeipmi/ipmi-kcs-interface.h"
 #include "freeipmi/ipmi-ipmb-interface.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 
