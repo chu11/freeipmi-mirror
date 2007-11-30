@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.1 2007-11-26 17:21:40 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.2 2007-11-30 19:33:36 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -10,7 +10,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-cipher-suite-spec.h \
 	freeipmi/ipmi-cmd-spec.h \
 	freeipmi/ipmi-comp-code-spec.h \
-	freeipmi/ipmi-ipmb-interface.h \
+	freeipmi/ipmi-ipmb-lun-spec.h \
 	freeipmi/ipmi-lan-parameter-spec.h \
 	freeipmi/ipmi-netfn-spec.h \
 	freeipmi/ipmi-pef-parameter-spec.h \
@@ -28,16 +28,16 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-utils.h \
 	freeipmi/ipmi-locate.h \
 	freeipmi/ipmi-kcs.h \
-	freeipmi/ipmi-kcs-api.h \
+	freeipmi/ipmi-kcs-driver.h \
 	freeipmi/ipmi-lan.h \
 	freeipmi/ipmi-lan-interface.h \
 	freeipmi/ipmi-lan-utils.h \
-	freeipmi/ipmi-openipmi-api.h \
+	freeipmi/ipmi-openipmi-driver.h \
 	freeipmi/ipmi-crypt.h \
 	freeipmi/ipmi-rmcpplus.h \
 	freeipmi/ipmi-rmcpplus-interface.h \
 	freeipmi/ipmi-rmcpplus-utils.h \
-	freeipmi/ipmi-ssif-api.h \
+	freeipmi/ipmi-ssif-driver.h \
 	freeipmi/ipmi-bmc-watchdog-timer-cmds.h \
 	freeipmi/ipmi-chassis-cmds.h \
 	freeipmi/ipmi-device-global-cmds.h \

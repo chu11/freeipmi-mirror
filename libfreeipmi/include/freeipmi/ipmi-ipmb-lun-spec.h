@@ -1,5 +1,5 @@
 /* 
-   ipmi-ipmb-interface.h - IPMI IPMB Interface 
+   ipmi-ipmb-lun-spec.h - IPMI IPMB Luns
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,8 +18,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _IPMI_IPMB_INTERFACE_H
-#define	_IPMI_IPMB_INTERFACE_H
+#ifndef _IPMI_IPMB_LUN_SPEC_H
+#define	_IPMI_IPMB_LUN_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {

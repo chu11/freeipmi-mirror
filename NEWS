@@ -4,6 +4,9 @@ For Developers
 --------------
 o Many libfreeipmi API changes.
   o locate/probing API revamped with context API.
+  o fiid API revamped with better error codes.
+  o Various code re-organization.
+  o SMIC driver/api removed. 
 
 0.5.1
 -----

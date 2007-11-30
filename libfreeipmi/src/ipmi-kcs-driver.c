@@ -1,5 +1,5 @@
 /* 
-   ipmi-kcs-api.c: IPMI - Keyboard Controller Style - SMS Api
+   ipmi-kcs-driver.c: IPMI - Keyboard Controller Style - SMS Driver
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -39,7 +39,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/ipmi-kcs-api.h"
+#include "freeipmi/ipmi-kcs-driver.h"
 #include "freeipmi/ipmi-kcs.h"
 #include "freeipmi/ipmi-ipmb-interface.h"
 #include "freeipmi/ipmi-netfn-spec.h"

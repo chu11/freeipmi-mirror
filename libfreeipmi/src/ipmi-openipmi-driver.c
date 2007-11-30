@@ -1,5 +1,5 @@
 /* 
-   ipmi-openipmi-api.c: IPMI - OpenIPMI Api
+   ipmi-openipmi-driver.c: IPMI - OpenIPMI Driver
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -51,7 +51,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/ipmi-openipmi-api.h"
+#include "freeipmi/ipmi-openipmi-driver.h"
 #include "freeipmi/ipmi-ipmb-interface.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 #include "freeipmi/ipmi-slave-address-spec.h"

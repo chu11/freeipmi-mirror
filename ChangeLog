@@ -51,6 +51,29 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-chassis/src/ipmi-chassis.c: Add _FIID_OBJ_DESTROY macro.
 
+	* libfreeipmi/include/freeipmi/ipmi-ipmb-interface.h: Renamed to
+	ipmi-ipmb-lun-spec.h.
+
+	* libfreeipmi/include/freeipmi/ipmi-kcs-api.h,
+	libfreeipmi/include/freeipmi/ipmi-ssif-api.h,
+	libfreeipmi/include/ipmi-openipmi-api.h,
+	libfreeipmi/src/ipmi-kcs-api.c, libfreeipmi/src/ipmi-ssif-api.c,
+	libfreeipmi/src/ipmi-openipmi-api.c,
+	libfreeipmi/src/udm/ipmi-kcs-api-udm.c,
+	libfreeipmi/src/udm/ipmi-kcs-api-udm.h,
+	libfreeipmi/src/udm/ipmi-ssif-api-udm.c,
+	libfreeipmi/src/udm/ipmi-ssif-api-udm.h,
+	libfreeipmi/src/udm/ipmi-openipmi-api-udm.c,
+	libfreeipmi/src/udm/ipmi-openipmi-api-udm.h: Renamed to
+	ipmi-kcs-driver.h, ipmi-ssif-driver.h, ipmi-openipmi-driver.h,
+	ipmi-kcs-driver.c, ipmi-ssif-driver.c, ipmi-openipmi-driver.c,
+	ipmi-kcs-driver-udm.c, ipmi-kcs-driver-udm.h,
+	ipmi-ssif-driver-udm.c, ipmi-ssif-driver-udm.h,
+	ipmi-openipmi-driver-udm.c, ipmi-openipmi-driver-udm.h
+	respectively.
+
+	* Adjust remaining code and Makefiles for file name changes.
+
 	* Various minor fixes.
 		
 2007-11-24  Albert Chu <chu11@llnl.gov>

@@ -31,7 +31,7 @@ extern "C" {
 #include <freeipmi/ipmi-cipher-suite-spec.h>
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-comp-code-spec.h>
-#include <freeipmi/ipmi-ipmb-interface.h>
+#include <freeipmi/ipmi-ipmb-lun-spec.h>
 #include <freeipmi/ipmi-lan-parameter-spec.h>
 #include <freeipmi/ipmi-netfn-spec.h>
 #include <freeipmi/ipmi-pef-parameter-spec.h>
@@ -48,8 +48,8 @@ extern "C" {
 #include <freeipmi/ipmi-utils.h>
 #include <freeipmi/ipmi-locate.h>
 #include <freeipmi/ipmi-kcs.h>
-#include <freeipmi/ipmi-kcs-api.h>
-#include <freeipmi/ipmi-openipmi-api.h>
+#include <freeipmi/ipmi-kcs-driver.h>
+#include <freeipmi/ipmi-openipmi-driver.h>
 #include <freeipmi/ipmi-lan.h>
 #include <freeipmi/ipmi-lan-interface.h>
 #include <freeipmi/ipmi-lan-utils.h>
@@ -57,7 +57,7 @@ extern "C" {
 #include <freeipmi/ipmi-rmcpplus.h>
 #include <freeipmi/ipmi-rmcpplus-interface.h>
 #include <freeipmi/ipmi-rmcpplus-utils.h>
-#include <freeipmi/ipmi-ssif-api.h>
+#include <freeipmi/ipmi-ssif-driver.h>
 #include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>
 #include <freeipmi/ipmi-chassis-cmds.h>
 #include <freeipmi/ipmi-chassis-boot-options-parameter-spec.h>

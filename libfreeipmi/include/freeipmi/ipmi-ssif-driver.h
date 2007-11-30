@@ -1,5 +1,5 @@
 /* 
-   ipmi-ssif-api.h: IPMI - SMBus System Interface - SMS Api
+   ipmi-ssif-driver.h: IPMI - SMBus System Interface - SMS Driver
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -24,8 +24,8 @@
 
 */
 
-#ifndef IPMI_SSIF_API_H
-#define IPMI_SSIF_API_H
+#ifndef IPMI_SSIF_DRIVER_H
+#define IPMI_SSIF_DRIVER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -94,4 +94,4 @@ int8_t ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
 }
 #endif
 
-#endif /* IPMI_SSIF_API_H */
+#endif /* IPMI_SSIF_DRIVER_H */

@@ -24,17 +24,17 @@ libfreeipmi_la_SOURCES = \
 	ipmi-locate-pci.c \
 	ipmi-locate-smbios.c \
 	ipmi-kcs.c \
-	ipmi-kcs-api.c \
+	ipmi-kcs-driver.c \
 	ipmi-lan.c \
 	ipmi-lan-interface.c \
 	ipmi-lan-utils.c \
-	ipmi-openipmi-api.c \
+	ipmi-openipmi-driver.c \
 	ipmi-crypt.c \
 	ipmi-rmcpplus.c \
 	ipmi-rmcpplus-debug.c \
 	ipmi-rmcpplus-interface.c \
 	ipmi-rmcpplus-utils.c \
-	ipmi-ssif-api.c \
+	ipmi-ssif-driver.c \
 	ipmi-semaphores.c \
 	ipmi-bmc-watchdog-timer-cmds.c \
 	ipmi-chassis-cmds.c \

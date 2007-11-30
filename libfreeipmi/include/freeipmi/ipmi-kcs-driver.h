@@ -1,5 +1,5 @@
 /* 
-   ipmi-kcs-api.h - IPMI KCS SMS Api
+   ipmi-kcs-driver.h - IPMI KCS SMS Driver
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -19,8 +19,8 @@
 
 */
 
-#ifndef _IPMI_KCS_API_H
-#define _IPMI_KCS_API_H 1
+#ifndef _IPMI_KCS_DRIVER_H
+#define _IPMI_KCS_DRIVER_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -85,5 +85,5 @@ int8_t ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
 }
 #endif
 
-#endif /* ipmi-kcs-api.h */
+#endif /* ipmi-kcs-driver.h */
 

@@ -1,5 +1,5 @@
 /* 
-   ipmi-openipmi-api.h - IPMI OPENIPMI Api
+   ipmi-openipmi-driver.h - IPMI OPENIPMI Driver
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -19,8 +19,8 @@
 
 */
 
-#ifndef _IPMI_OPENIPMI_API_H
-#define _IPMI_OPENIPMI_API_H 1
+#ifndef _IPMI_OPENIPMI_DRIVER_H
+#define _IPMI_OPENIPMI_DRIVER_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,5 +70,5 @@ int8_t ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
 }
 #endif
 
-#endif /* ipmi-openipmi-api.h */
+#endif /* ipmi-openipmi-driver.h */
 

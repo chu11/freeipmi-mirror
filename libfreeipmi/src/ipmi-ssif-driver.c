@@ -1,5 +1,5 @@
 /* 
-   ipmi-ssif-api.c: IPMI - SMBus System Interface - SMS Api
+   ipmi-ssif-driver.c: IPMI - SMBus System Interface - SMS Driver
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -45,7 +45,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "freeipmi/ipmi-ssif-api.h"
+#include "freeipmi/ipmi-ssif-driver.h"
 #include "freeipmi/ipmi-ipmb-interface.h"
 #include "freeipmi/ipmi-kcs.h"
 #include "freeipmi/ipmi-netfn-spec.h"
