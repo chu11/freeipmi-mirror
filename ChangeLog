@@ -148,6 +148,23 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* Various minor fixes.
 		
+2007-11-30  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Prepare for beta release.
+
+	* Tagged Release-0_5_0_beta3.
+
+2007-11-28  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-ssif-api.c, libfreeipmi/src/ipmi-kcs-api.c:
+	Fix logic bugs.
+	
+2007-11-27  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Fix changelog typo.
+
+	* doc/freeipmi-coding.txt: Various fixes.
+	
 2007-11-24  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-outofband-hostname-hostranged.man: Fix

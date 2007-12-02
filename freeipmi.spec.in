@@ -284,7 +284,7 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
-* Wed Nov 19 2007 Albert Chu <chu11@llnl.gov> 0.4.beta0-1
+* Wed Nov 19 2007 Albert Chu <chu11@llnl.gov> 0.5.0
 - Remove ipmimonitoring subpackage.  Merge into head package.
 
 * Wed Nov 19 2007 Phil Knirsch <pknirsch@redhat.com> 0.5.0

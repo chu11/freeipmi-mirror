@@ -19,12 +19,25 @@ split udm into another lib?
 re-work UDM for advanced IPMI lan connection detection?
 split off and install sdr parsing/caching lib?
 - add ctx to locate lib
+- add ctx to template funcs in fiid
 - add errno logging to all system error related events, not just
   ctx errnums
 - add error logging wrappers to all drivers/locate/ctx related
   code.
-- re-org locate/drivers/udm/core into separate dirs
+- re-org locate/drivers/fill/udm/core into separate dirs
+- rename functions, add "ipmi_" prefix to fill, etc. as appropriate. 
 - remove fiid-ness from udm lib, use pointers for returns?
+- rename fiid?
+- rename udm?
+- remove errno return value usage, adjust to ctx usage
+- find way to consolidate sdrcache lib in common/src w/ sdrcache lib
+in ipmimonitoring and add into libfreeipmi?
+- find way to make sensor-api a legit lib and move into libfreeipmi?
+- move libipmiconsole and libipmimonitoring into libfreeipmi?
+- cleanup/split err-wrappers files as needed.
+- move libfreeipmi specific libs out of common/src into libfreeipmi dir
+- need debug capabilities in sdr cache libs (i.e. sdr cache dumping)
+- prefix host output on debug for udm based tools
 
 Autoconf/Portability
 --------------------
