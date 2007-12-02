@@ -42,6 +42,11 @@
 
 #include "ipmi-sel-wrapper.h"
 
+#define SEL_RECORD_TYPE_UNKNOWN_RECORD             0x0
+#define SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD        0x1
+#define SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD     0x2
+#define SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD 0x3
+
 #define _FIID_OBJ_CREATE(__obj, __tmpl)                   \
 do {                                                      \
   fiid_err_t __err;                                       \
@@ -197,6 +202,21 @@ _round_double2 (double d)
     return ((long) d + (((long) r + 1) / 100.0));
 
   return ((long) d + ((long) r / 100.0));
+}
+
+static int
+_get_sel_record_type (uint8_t record_type)
+{
+  if (IPMI_SEL_RECORD_TYPE_IS_EVENT(record_type))
+    return SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
+  
+  if (IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM(record_type))
+    return SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD;
+  
+  if (IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM(record_type))
+    return SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD;
+  
+  return SEL_RECORD_TYPE_UNKNOWN_RECORD;
 }
 
 static int 
@@ -744,15 +764,15 @@ _parse_sel_record (ipmi_sel_state_data_t *state_data,
   _FIID_OBJ_GET (obj, "record_type", &val);
   record_type = val;
 
-  switch (ipmi_get_sel_record_type (record_type))
+  switch (_get_sel_record_type (record_type))
     {
-    case IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD:
+    case SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD:
       rv = _get_sel_system_event_record (state_data, record_data, record_data_len, sel_record);
       break;
-    case IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD:
+    case SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD:
       rv = _get_sel_timestamped_oem_record (state_data, record_data, record_data_len, sel_record);
       break;
-    case IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD:
+    case SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD:
       rv = _get_sel_non_timestamped_oem_record (state_data, record_data, record_data_len, sel_record);
       break;
     }

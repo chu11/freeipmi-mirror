@@ -104,7 +104,22 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	file, split off from ipmi-cipher-suite-spec.c.
 
 	* Adjust remaining code and Makefiles for file name changes, new
-	files, and removals.
+	files, new functions, function name changes, and removals.
+
+	* libfreeipmi/include/freeipmi/ipmi-sel-record-types.h
+	(IPMI_SEL_RECORD_TYPE_IS_EVENT,
+	IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM,
+	IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM): Add new macros.
+
+	* libfreeipmi/include/freeipmi/ipmi-sel-record-types.h,
+	libfreeipmi/src/ipmi-sel-record-types.c
+	(ipmi_get_sel_record_type): Removed function.
+
+	* ipmi-sel/src/ipmi-sel-wrapper.c (_get_sel_record_type): New
+	function.
+
+	* ipm-sel/src/ipmi-sel-wrapper.c (_get_sel_system_event_record):
+	Use _get_sel_record_type.
 
 	* Various minor fixes.
 		

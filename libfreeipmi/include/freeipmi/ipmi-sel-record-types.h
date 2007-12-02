@@ -28,11 +28,7 @@ extern "C" {
 #define IPMI_V1_0_EVENT_MESSAGE_FORMAT 0x03
 #define IPMI_V1_5_EVENT_MESSAGE_FORMAT 0x04
 
-#define IPMI_SEL_RECORD_TYPE_UNKNOWN_RECORD             0x00
-#define IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD        0x02 
-#define IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD     0xDF 
-#define IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD 0xFF 
-
+/* Refer to Table 29-6 */
 #define IPMI_SEL_UNSPECIFIED_BYTE                  0x0
 #define IPMI_SEL_TRIGGER_THRESHOLD_VALUE           0x1
 #define IPMI_SEL_OEM_CODE                          0x2
@@ -43,6 +39,18 @@ extern "C" {
 #define IPMI_SEL_RECORD_ASSERTION_EVENT   0x0
 #define IPMI_SEL_RECORD_DEASSERTION_EVENT 0x1
 
+#define IPMI_SEL_RECORD_TYPE_IS_EVENT(__record_type) \
+  (((__record_type) == 0x02) ? 1 : 0)
+
+#define IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM(__record_type) \
+  (((__record_type) >= 0xC0 \
+    && (__record_type) <= 0xDF) ? 1 : 0)
+
+/* "== 0xFF" to remove warnings */
+#define IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM(__record_type) \
+  (((__record_type) >= 0xE0 \
+    && ((__record_type) <= 0xFE || (__record_type) == 0xFF)) ? 1 : 0)
+
 extern fiid_template_t tmpl_sel_record_header;
 
 extern fiid_template_t tmpl_sel_system_event_record;
@@ -52,8 +60,6 @@ extern fiid_template_t tmpl_sel_non_timestamped_oem_record;
 extern fiid_template_t tmpl_threshold_event_data;
 extern fiid_template_t tmpl_discrete_event_data;
 extern fiid_template_t tmpl_oem_event_data;
-
-int ipmi_get_sel_record_type (uint8_t record_type);
 
 #ifdef __cplusplus
 }

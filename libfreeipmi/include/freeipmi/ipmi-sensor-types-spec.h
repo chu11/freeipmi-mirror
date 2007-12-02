@@ -75,9 +75,10 @@ extern "C" {
         (((__sensor_type) >= IPMI_SENSOR_TYPE_RESERVED \
           && (__sensor_type) <= IPMI_SENSOR_TYPE_FRU_STATE) ? 1 : 0)
 
+/* "== 0xFF" to remove warnings */
 #define IPMI_SENSOR_TYPE_IS_OEM(__sensor_type) \
         (((__sensor_type) >= 0xC0 \
-          && (__sensor_type) <= 0xFF) ? 1 : 0)
+          && ((__sensor_type) <= 0xFE || (__sensor_type) == 0xFF)) ? 1 : 0)
 
 extern const char *const ipmi_sensor_types[];
 extern const char *const ipmi_oem_sensor_type;

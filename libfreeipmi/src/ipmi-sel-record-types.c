@@ -91,20 +91,4 @@ fiid_template_t tmpl_sel_non_timestamped_oem_record =
     {0, "", 0}
   };
 
-int 
-ipmi_get_sel_record_type (uint8_t record_type)
-{
-  if (record_type == 0x02)
-    return IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
-  
-  if ((record_type >= 0xC0) && (record_type <= 0xDF))
-    return IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD;
-  
-  /* To avoid "warning: comparison is always true due to limited range of data type" */
-  if ((record_type >= 0xE0) && ((record_type - 1) <= 0xFE))
-    return IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD;
-  
-  return IPMI_SEL_RECORD_TYPE_UNKNOWN_RECORD;
-}
-
 
