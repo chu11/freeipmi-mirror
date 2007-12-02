@@ -97,6 +97,12 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	libfreeipmi/src/ipmi-debug-common.h: New files, split off from
 	ipmi-debug.c.
 
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-utils.h: New
+	file, split off from ipmi-cipher-suite-spec.h.
+
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-utils.c: New
+	file, split off from ipmi-cipher-suite-spec.c.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, and removals.
 

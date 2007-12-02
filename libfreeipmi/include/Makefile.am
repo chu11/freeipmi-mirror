@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.5 2007-11-30 22:35:18 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.6 2007-12-02 06:25:56 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -8,6 +8,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-authentication-type-spec.h \
 	freeipmi/ipmi-channel-spec.h \
 	freeipmi/ipmi-cipher-suite-spec.h \
+	freeipmi/ipmi-cipher-suite-utils.h \
 	freeipmi/ipmi-cmd-spec.h \
 	freeipmi/ipmi-comp-code-spec.h \
 	freeipmi/ipmi-ipmb-lun-spec.h \

@@ -10,6 +10,7 @@ lib_LTLIBRARIES = libfreeipmi.la
 libfreeipmi_la_SOURCES = \
 	fiid.c \
 	ipmi-cipher-suite-spec.c \
+	ipmi-cipher-suite-utils.c \
 	ipmi-sensor-types-spec.c \
 	ipmi-sensor-units-spec.c \
 	rmcp.c \

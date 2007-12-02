@@ -1,5 +1,5 @@
 /* 
-   ipmi-cipher-suite-spec.h - IPMI Network Function Specification
+   ipmi-cipher-suite-spec.h - IPMI Cipher Suite Specification
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -115,16 +115,6 @@ extern fiid_template_t tmpl_oem_cipher_suite_record;
    ((((__id + 1) >= (0 + 1) && (__id) <= 3) \
      || ((__id) >= 6 && (__id) <= 8) \
      || ((__id) >= 11 && (__id) <= 12)) ? 1 : 0)
-
-int8_t ipmi_cipher_suite_id_to_algorithms(uint8_t cipher_suite_id,
-					  uint8_t *authentication_algorithm,
-					  uint8_t *integrity_algorithm,
-					  uint8_t *confidentiality_algorithm);
-
-int8_t ipmi_algorithms_to_cipher_suite_id(uint8_t authentication_algorithm,
-					  uint8_t integrity_algorithm,
-					  uint8_t confidentiality_algorithm,
-					  uint8_t *cipher_suite_id);
 
 #ifdef __cplusplus
 }
