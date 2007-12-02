@@ -9,7 +9,7 @@ lib_LTLIBRARIES = libfreeipmi.la
 
 libfreeipmi_la_SOURCES = \
 	fiid.c \
-	ipmi-cipher-suite-spec.c \
+	ipmi-cipher-suite-record-format.c \
 	ipmi-cipher-suite-utils.c \
 	ipmi-sensor-types-spec.c \
 	ipmi-sensor-units-spec.c \
@@ -52,8 +52,8 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sensor-cmds.c \
 	ipmi-serial-modem-cmds.c \
 	ipmi-sol-cmds.c \
-	ipmi-sdr-record-types.c \
-	ipmi-sel-record-types.c \
+	ipmi-sdr-record-format.c \
+	ipmi-sel-record-format.c \
 	ipmi-sensor-and-event-code-tables.c \
 	ipmi-sensor-utils.c \
 	ipmi-common.c

@@ -28,7 +28,7 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/ipmi-authentication-type-spec.h>
 #include <freeipmi/ipmi-channel-spec.h>
-#include <freeipmi/ipmi-cipher-suite-spec.h>
+#include <freeipmi/ipmi-cipher-suite-record-format.h>
 #include <freeipmi/ipmi-cipher-suite-utils.h>
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-comp-code-spec.h>
@@ -72,8 +72,8 @@ extern "C" {
 #include <freeipmi/ipmi-sensor-cmds.h>
 #include <freeipmi/ipmi-serial-modem-cmds.h>
 #include <freeipmi/ipmi-sol-cmds.h>
-#include <freeipmi/ipmi-sdr-record-types.h>
-#include <freeipmi/ipmi-sel-record-types.h>
+#include <freeipmi/ipmi-sdr-record-format.h>
+#include <freeipmi/ipmi-sel-record-format.h>
 #include <freeipmi/ipmi-sensor-and-event-code-tables.h>
 #include <freeipmi/ipmi-sensor-utils.h>
 

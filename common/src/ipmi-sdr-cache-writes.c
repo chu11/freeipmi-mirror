@@ -56,7 +56,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-sdr-repository-cmds.h"
-#include "freeipmi/ipmi-sdr-record-types.h"
+#include "freeipmi/ipmi-sdr-record-format.h"
 #include "freeipmi/udm/ipmi-sdr-repository-cmds-udm.h"
 #include "freeipmi/udm/ipmi-sensor-cmds-udm.h"
 

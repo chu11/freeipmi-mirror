@@ -1,5 +1,5 @@
 /* 
-   ipmi-sdr-record-types.h - IPMI SDR record types
+   ipmi-sdr-record-format.h - IPMI SDR record format
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -19,8 +19,8 @@
 
 */
 
-#ifndef _IPMI_SDR_RECORD_TYPES_H
-#define _IPMI_SDR_RECORD_TYPES_H
+#ifndef _IPMI_SDR_RECORD_FORMAT_H
+#define _IPMI_SDR_RECORD_FORMAT_H
 
 #ifdef __cplusplus
 extern "C" {

@@ -28,7 +28,7 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-sensor-utils.h"
-#include "freeipmi/ipmi-sdr-record-types.h"
+#include "freeipmi/ipmi-sdr-record-format.h"
 #include "freeipmi/ipmi-sensor-units-spec.h"
 
 #include "err-wrappers.h"

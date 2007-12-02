@@ -1,5 +1,5 @@
 /* 
-   ipmi-cipher-suite-spec.c - IPMI Sensor Types
+   ipmi-cipher-suite-record-format.c - IPMI Sensor Types
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "freeipmi/ipmi-cipher-suite-spec.h"
+#include "freeipmi/ipmi-cipher-suite-record-format.h"
 
 #include "err-wrappers.h"
 

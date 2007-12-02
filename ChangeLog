@@ -103,9 +103,6 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-utils.c: New
 	file, split off from ipmi-cipher-suite-spec.c.
 
-	* Adjust remaining code and Makefiles for file name changes, new
-	files, new functions, function name changes, and removals.
-
 	* libfreeipmi/include/freeipmi/ipmi-sel-record-types.h
 	(IPMI_SEL_RECORD_TYPE_IS_EVENT,
 	IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM,
@@ -120,6 +117,19 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* ipm-sel/src/ipmi-sel-wrapper.c (_get_sel_system_event_record):
 	Use _get_sel_record_type.
+
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h,
+	libfreeipmi/include/freeipmi/ipmi-sel-record-types.h,
+	libfreeipmi/include/freeipmi/ipmi-sdr-record-types.h,
+	libfreeipmi/src/ipmi-cipher-suite-spec.c,
+	libfreeipmi/src/ipmi-sel-record-format.c,
+	libfreeipmi/src/ipmi-sdr-record-format.c: Rename to
+	ipmi-cipher-suite-record-format.h, ipmi-sel-record-format.h,
+	ipmi-sdr-record-format.h, ipmi-cipher-suite-record-format.c,
+	ipmi-sel-record-format.c, ipmi-sdr-record-format.c respectively.
+
+	* Adjust remaining code and Makefiles for file name changes, new
+	files, new functions, function name changes, and removals.
 
 	* Various minor fixes.
 		

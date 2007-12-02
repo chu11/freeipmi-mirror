@@ -20,7 +20,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <stdio.h>
 #include "ipmi-sensor-api.h"
 #include "freeipmi/ipmi-sensor-units-spec.h"
-#include "freeipmi/ipmi-sdr-record-types.h"
+#include "freeipmi/ipmi-sdr-record-format.h"
 
 #include "ipmi-sensors.h"
 #include "pstdout.h"

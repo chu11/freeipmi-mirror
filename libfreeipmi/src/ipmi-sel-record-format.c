@@ -1,5 +1,5 @@
 /* 
-   ipmi-sel-record-types.c - IPMI System Event Log Record Type Definitions
+   ipmi-sel-record-format.c - IPMI System Event Log Record Type Definitions
    
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -27,7 +27,7 @@
 #include <errno.h>
 
 #include "freeipmi/fiid.h"
-#include "freeipmi/ipmi-sel-record-types.h"
+#include "freeipmi/ipmi-sel-record-format.h"
 
 fiid_template_t tmpl_sel_record_header = 
   {

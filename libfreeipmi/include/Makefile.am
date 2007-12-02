@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.6 2007-12-02 06:25:56 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.7 2007-12-02 20:22:47 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -7,7 +7,7 @@ nobase_include_HEADERS = \
 	freeipmi/fiid.h \
 	freeipmi/ipmi-authentication-type-spec.h \
 	freeipmi/ipmi-channel-spec.h \
-	freeipmi/ipmi-cipher-suite-spec.h \
+	freeipmi/ipmi-cipher-suite-record-format.h \
 	freeipmi/ipmi-cipher-suite-utils.h \
 	freeipmi/ipmi-cmd-spec.h \
 	freeipmi/ipmi-comp-code-spec.h \
@@ -51,8 +51,8 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sensor-cmds.h \
 	freeipmi/ipmi-serial-modem-cmds.h \
 	freeipmi/ipmi-sol-cmds.h \
-	freeipmi/ipmi-sdr-record-types.h \
-	freeipmi/ipmi-sel-record-types.h \
+	freeipmi/ipmi-sdr-record-format.h \
+	freeipmi/ipmi-sel-record-format.h \
 	freeipmi/ipmi-sensor-and-event-code-tables.h \
 	freeipmi/ipmi-sensor-utils.h \
 	freeipmi/ipmi-chassis-boot-options-parameter-spec.h \

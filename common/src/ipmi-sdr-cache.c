@@ -76,7 +76,7 @@
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-sensor-utils.h"
 #include "freeipmi/ipmi-sdr-repository-cmds.h"
-#include "freeipmi/ipmi-sdr-record-types.h"
+#include "freeipmi/ipmi-sdr-record-format.h"
 #include "freeipmi/ipmi-sensor-cmds.h"
 #include "freeipmi/udm/ipmi-sdr-repository-cmds-udm.h"
 #include "freeipmi/udm/ipmi-sensor-cmds-udm.h"

@@ -1,5 +1,5 @@
 /* 
-   ipmi-sel-record-types.h - IPMI System Event Log Record Type Definitions
+   ipmi-sel-record-format.h - IPMI System Event Log Record Format
    
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,8 +18,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _IPMI_SEL_RECORD_TYPES_H
-#define _IPMI_SEL_RECORD_TYPES_H
+#ifndef _IPMI_SEL_RECORD_FORMAT_H
+#define _IPMI_SEL_RECORD_FORMAT_H
 
 #ifdef __cplusplus
 extern "C" {

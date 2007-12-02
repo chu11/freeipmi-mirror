@@ -22,7 +22,7 @@
 
 #include "common-utils.h"
 #include "ipmi-sensor-api.h"
-#include "freeipmi/ipmi-sdr-record-types.h"
+#include "freeipmi/ipmi-sdr-record-format.h"
 
 #include "freeipmi-portability.h"
 
