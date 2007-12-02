@@ -33,7 +33,7 @@
 #include "freeipmi/ipmi-rmcpplus-interface.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
-#include "freeipmi/ipmi-cipher-suite-spec.h"
+#include "freeipmi/ipmi-cipher-suite-utils.h"
 #include "freeipmi/ipmi-crypt.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"

@@ -27,10 +27,9 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/ipmi-rmcpplus.h>
 
 /* Notes:
-   Refer to IPMI 2.0 spec Table 22-18 and Table 22-19. 
+   Refer to IPMI 2.0 spec Table 22-18. 
 */
 
 #define IPMI_CIPHER_SUITE_TAG_BITS_AUTHENTICATION_ALGORITHM   0x0
@@ -40,9 +39,6 @@ extern "C" {
 
 #define IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD              0x00
 #define IPMI_CIPHER_SUITE_RECORD_FORMAT_OEM                   0x01
-
-#define IPMI_CIPHER_SUITE_ID_MIN                              0
-#define IPMI_CIPHER_SUITE_ID_MAX                              14
 
 #define IPMI_CIPHER_SUITE_RECORD_FORMAT_VALID(__val) \
   (((__val) == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD \
@@ -57,64 +53,6 @@ extern "C" {
 extern fiid_template_t tmpl_cipher_suite_record_header;
 extern fiid_template_t tmpl_cipher_suite_record;
 extern fiid_template_t tmpl_oem_cipher_suite_record;
-
-#define IPMI_CIPHER_SUITE_COMBINATION_VALID(__a, __i, __c) \
-  ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE \
-     && (__i) == IPMI_INTEGRITY_ALGORITHM_NONE \
-     && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE) \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1 \
-	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE \
-	    && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)) \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1 \
-	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96 \
-	    && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE \
-		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 \
-		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128 \
-		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40))) \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 \
-	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE \
-	    && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)) \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 \
-	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128 \
-	    && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE \
-		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 \
-		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128 \
-		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40))) \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 \
-	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_MD5_128 \
-	    && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE \
-		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 \
-		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128 \
-		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40)))) ? 1 : 0)
-
-#define IPMI_CIPHER_SUITE_COMBINATION_SUPPORTED(__a, __i, __c) \
-  ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE \
-     && (__i) == IPMI_INTEGRITY_ALGORITHM_NONE \
-     && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE) \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1 \
-	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE \
-	    && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)) \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1 \
-	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96 \
-	    && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE \
-		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 \
-	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE \
-	    && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)) \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 \
-	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128 \
-	    && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE \
-		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 \
-	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_MD5_128 \
-	    && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE \
-		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)))) ? 1 : 0)
-
-/* To avoid gcc warnings, added +1 in comparison */
-#define IPMI_CIPHER_SUITE_ID_SUPPORTED(__id) \
-   ((((__id + 1) >= (0 + 1) && (__id) <= 3) \
-     || ((__id) >= 6 && (__id) <= 8) \
-     || ((__id) >= 11 && (__id) <= 12)) ? 1 : 0)
 
 #ifdef __cplusplus
 }
