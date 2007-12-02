@@ -116,10 +116,10 @@ do {                                                                         \
   int __ctxerrnum = 0;                                                       \
   char __ctxerrstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
   memset(__ctxerrstr, '\0', IPMI_ERR_STR_MAX_LEN);                           \
-  ipmi_strerror_cmd_r ((___rs),                                              \
-		       (___dev)->net_fn,                                     \
-		       __ctxerrstr,                                          \
-		       IPMI_ERR_STR_MAX_LEN);                                \
+  ipmi_completion_code_strerror_cmd_r ((___rs),                              \
+		                       (___dev)->net_fn,                     \
+		                       __ctxerrstr,                          \
+		                       IPMI_ERR_STR_MAX_LEN);                \
   __TRACE_CTX_OUTPUT;                                                        \
   goto cleanup;                                                              \
 } while (0) 

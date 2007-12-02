@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.73.2.5 2007-11-29 21:20:45 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.73.2.6 2007-12-02 20:33:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -551,11 +551,11 @@ _ipmi_err_exit(uint8_t cmd, uint8_t netfn, int comp_code, char *str)
     }
   else
     {
-      if (ipmi_strerror_r(cmd, 
-                          netfn,
-                          comp_code, 
-                          buf, 
-                          BMC_WATCHDOG_ERR_BUFLEN) < 0)
+      if (ipmi_completion_code_strerror_r(cmd, 
+                                          netfn,
+                                          comp_code, 
+                                          buf, 
+                                          BMC_WATCHDOG_ERR_BUFLEN) < 0)
         _err_exit("ipmi_strerror_r: %s", strerror(errno));     
       _err_exit("%s: %s", str, buf);
     }
@@ -2312,10 +2312,11 @@ _daemon_cmd(void)
         {
           char buf[BMC_WATCHDOG_STR_BUFLEN];
 
-          if (ipmi_strerror_r(IPMI_CMD_RESET_WATCHDOG_TIMER, 
-                              IPMI_NET_FN_APP_RQ,
-                              ret, 
-                              buf, BMC_WATCHDOG_STR_BUFLEN) < 0)
+          if (ipmi_completion_code_strerror_r(IPMI_CMD_RESET_WATCHDOG_TIMER, 
+                                              IPMI_NET_FN_APP_RQ,
+                                              ret, 
+                                              buf, 
+                                              BMC_WATCHDOG_STR_BUFLEN) < 0)
             _bmclog("Reset Watchdog Timer IPMI Error: %Xh", ret);
           else
             _bmclog("Reset Watchdog Timer IPMI Error: %s", buf);
