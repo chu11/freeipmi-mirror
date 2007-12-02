@@ -128,6 +128,13 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	ipmi-sdr-record-format.h, ipmi-cipher-suite-record-format.c,
 	ipmi-sel-record-format.c, ipmi-sdr-record-format.c respectively.
 
+	* libfreeipmi/include/freeipmi/ipmi-error.h,
+	libfreeipmi/src/ipmi-error.c (ipmi_strerror_r,
+	ipmi_strerror_cmd_r, rmcpplus_status_strerror_r): Renamed to
+	ipmi_completion_code_strerror_r,
+	ipmi_completion_code_strerror_cmd_r, and
+	ipmi_rmcpplus_status_strerror_r respectively.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 
