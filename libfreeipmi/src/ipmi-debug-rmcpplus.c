@@ -1,5 +1,5 @@
 /* 
-   ipmi-rmcpplus-interface.c - IPMI RMCPPLUS Debug
+   ipmi-debug-rmcpplus.c - IPMI RMCPPLUS Debug
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -37,6 +37,8 @@
 #include "freeipmi/ipmi-lan-interface.h"
 #include "freeipmi/ipmi-sol-cmds.h"
 #include "freeipmi/rmcp.h"
+
+#include "ipmi-debug-common.h"
 
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
@@ -769,7 +771,7 @@ ipmi_dump_rmcpplus_packet (int fd,
 {
   int32_t obj_rmcp_hdr_len, obj_len;
   uint64_t payload_type=0, payload_authenticated=0, payload_encrypted, session_id=0, ipmi_payload_len=0;
-  char prefix_buf[IPMI_MAX_PAYLOAD_LENGTH];
+  char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   fiid_obj_t obj_rmcp_hdr = NULL;
   fiid_obj_t obj_unexpected_data = NULL;
   char *rmcp_hdr = 
@@ -809,7 +811,9 @@ ipmi_dump_rmcpplus_packet (int fd,
                         && confidentiality_key_len))
 	      && tmpl_cmd);
 
-  ERR_CLEANUP (!(ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_MAX_PAYLOAD_LENGTH) < 0));
+  ERR_CLEANUP(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
+
+  ERR_CLEANUP(!(ipmi_debug_output_str (fd, prefix_buf, hdr) < 0));
 
   /* Dump rmcp header */
 

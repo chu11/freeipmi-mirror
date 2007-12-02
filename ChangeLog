@@ -88,8 +88,17 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	libfreeipmi/include/freeipmi/ipmi-kcs.h: Rename to
 	ipmi-kcs-interface.c and ipmi-kcs-interface.h respectively.
 
-	* Adjust remaining code and Makefiles for file name changes and
-	removals.
+	* libfreeipmi/src/ipmi-rmcpplus-debug.c: Rename to
+	libfreeipmi/src/ipmi-debug-rmcpplus.c.
+
+	* libfreeipmi/src/ipmi-debug-lan.c,
+	libfreeipmi/src/ipmi-debug-rmcp.c,
+	libfreeipmi/src/ipmi-debug-common.c,
+	libfreeipmi/src/ipmi-debug-common.h: New files, split off from
+	ipmi-debug.c.
+
+	* Adjust remaining code and Makefiles for file name changes, new
+	files, and removals.
 
 	* Various minor fixes.
 		

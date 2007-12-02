@@ -15,6 +15,10 @@ libfreeipmi_la_SOURCES = \
 	rmcp.c \
 	rmcp-utils.c \
 	ipmi-debug.c \
+	ipmi-debug-common.c \
+	ipmi-debug-lan.c \
+	ipmi-debug-rmcp.c \
+	ipmi-debug-rmcpplus.c \
 	ipmi-error.c \
 	ipmi-utils.c \
 	ipmi-locate.c \
@@ -29,7 +33,6 @@ libfreeipmi_la_SOURCES = \
 	ipmi-lan-utils.c \
 	ipmi-openipmi-driver.c \
 	ipmi-crypt.c \
-	ipmi-rmcpplus-debug.c \
 	ipmi-rmcpplus-interface.c \
 	ipmi-rmcpplus-utils.c \
 	ipmi-ssif-driver.c \
@@ -80,6 +83,7 @@ libfreeipmi_la_LIBADD = \
 	../../common/src/libxmalloc.la
 
 noinst_HEADERS = \
+	ipmi-debug-common.h \
 	ipmi-inband.h \
 	ipmi-semaphores.h \
 	ipmi-common.h
