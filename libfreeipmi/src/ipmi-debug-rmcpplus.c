@@ -36,7 +36,7 @@
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-lan-interface.h"
 #include "freeipmi/ipmi-sol-cmds.h"
-#include "freeipmi/rmcp.h"
+#include "freeipmi/rmcp-interface.h"
 
 #include "ipmi-debug-common.h"
 

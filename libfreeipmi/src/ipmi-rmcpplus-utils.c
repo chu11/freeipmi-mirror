@@ -38,7 +38,7 @@
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
-#include "freeipmi/rmcp.h"
+#include "freeipmi/rmcp-interface.h"
 
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"

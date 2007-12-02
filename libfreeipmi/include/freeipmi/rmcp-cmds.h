@@ -1,5 +1,5 @@
 /* 
-   rmcp-utils.c - RMCP Utils
+   rmcp-cmds.h - remote management control protocol commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -16,42 +16,32 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+
+#ifndef _RMCP_CMDS_H
+#define	_RMCP_CMDS_H	1
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
+#include <stdint.h>
+#include <freeipmi/fiid.h>
 
-#include "freeipmi/rmcp-utils.h"
-#include "freeipmi/rmcp-cmds.h"
+extern fiid_template_t tmpl_cmd_asf_presence_ping;
+extern fiid_template_t tmpl_cmd_asf_presence_pong;
 
-#include "err-wrappers.h"
-#include "fiid-wrappers.h"
-#include "freeipmi-portability.h"
+/* MESSAGE_TAG:
+   achu: Consecutive ping messages should use different message tags,
+   ranging from 0x00 to 0xFE.  This is because the RMCP consumers may
+   optionally discard duplicate messages.  */
 
-int8_t
-ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag)
-{
-  uint64_t val;
-  int32_t len;
+int8_t fill_cmd_asf_presence_ping(uint8_t message_tag, fiid_obj_t obj_cmd);
 
-  ERR_EINVAL (fiid_obj_valid(pong));
-
-  FIID_OBJ_TEMPLATE_COMPARE(pong, tmpl_cmd_asf_presence_pong);
-
-  FIID_OBJ_FIELD_LEN (len, pong, "message_tag");
-
-  ERR_EINVAL (len);
-
-  FIID_OBJ_GET (pong, "message_tag", &val);
-
-  if (message_tag == val)
-    return 1;
-  else
-    return 0;
+#ifdef __cplusplus
 }
+#endif
 
+#endif /* rmcp-cmds.h */

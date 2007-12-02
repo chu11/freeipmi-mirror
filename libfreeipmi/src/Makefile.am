@@ -13,7 +13,8 @@ libfreeipmi_la_SOURCES = \
 	ipmi-cipher-suite-utils.c \
 	ipmi-sensor-types-spec.c \
 	ipmi-sensor-units-spec.c \
-	rmcp.c \
+	rmcp-cmds.c \
+	rmcp-interface.c \
 	rmcp-utils.c \
 	ipmi-debug.c \
 	ipmi-debug-common.c \

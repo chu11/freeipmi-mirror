@@ -41,7 +41,7 @@
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 #include "freeipmi/ipmi-sol-cmds.h"
 #include "freeipmi/ipmi-utils.h"
-#include "freeipmi/rmcp.h"
+#include "freeipmi/rmcp-interface.h"
 
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"

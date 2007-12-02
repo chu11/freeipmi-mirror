@@ -135,6 +135,14 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	ipmi_completion_code_strerror_cmd_r, and
 	ipmi_rmcpplus_status_strerror_r respectively.
 
+	* libfreeipmi/include/freeipmi/rmcp-interface.h,
+	libfreeipmi/include/freeipmi/rmcp-cmds.h,
+	libfreeipmi/src/rmcp-interface.c, libfreeipmi/src/rmcp-cmds.c: New
+	files, split off from rmcp.h and rmcp.c.
+
+	* libfreeipmi/include/freeipmi/rmcp.h, libfreeipmi/src/rmcp.c:
+	Remove files.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 
