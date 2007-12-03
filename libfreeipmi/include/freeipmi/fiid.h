@@ -162,43 +162,35 @@ typedef struct fiid_iterator *fiid_iterator_t;
  * fiid_template_field_lookup
  *
  * Returns 1 if the field is found in the template, 0 if not, -1 on
- * error.  If specified, errnum will be set to the appropriate error
- * code.
+ * error.
  */
-int8_t fiid_template_field_lookup (fiid_err_t *errnum,
-                                   fiid_template_t tmpl, 
+int8_t fiid_template_field_lookup (fiid_template_t tmpl, 
                                    char *field);
 
 /* 
  * fiid_template_len
  *
  * Returns the total length (in bits) of the all the fields in the
- * template, -1 on error.  If specified, errnum will be set to the
- * appropriate error code.
+ * template, -1 on error.
  */
-int32_t fiid_template_len (fiid_err_t *errnum,
-                           fiid_template_t tmpl);
+int32_t fiid_template_len (fiid_template_t tmpl);
 
 /* 
  * fiid_template_len_bytes
  *
  * Returns the total length (in bytes) of the all the fields in the
  * template, -1 on error.  Will return an error if template bit length
- * is not a multiple of 8.  If specified, errnum will be set to the
- * appropriate error code.
+ * is not a multiple of 8.
  */
-int32_t fiid_template_len_bytes (fiid_err_t *errnum,
-                                 fiid_template_t tmpl);
+int32_t fiid_template_len_bytes (fiid_template_t tmpl);
 
 /* 
  * fiid_template_field_start
  *
  * Returns the offset (in bits) of the beginning of the field within
- * this template, -1 on error.  If specified, errnum will be set to
- * the appropriate error code.
+ * this template, -1 on error.
  */
-int32_t fiid_template_field_start (fiid_err_t *errnum,
-                                   fiid_template_t tmpl, 
+int32_t fiid_template_field_start (fiid_template_t tmpl, 
                                    char *field);
 
 /* 
@@ -206,22 +198,18 @@ int32_t fiid_template_field_start (fiid_err_t *errnum,
  *
  * Returns the offset (in bytes) of the beginning of the field within
  * this template, -1 on error.  Will return an error if field bit
- * offset is not a multiple of 8.  If specified, errnum will be set to
- * the appropriate error code.
+ * offset is not a multiple of 8.
  */
-int32_t fiid_template_field_start_bytes (fiid_err_t *errnum,
-                                         fiid_template_t tmpl, 
+int32_t fiid_template_field_start_bytes (fiid_template_t tmpl, 
                                          char *field);
 
 /* 
  * fiid_template_field_end
  *
  * Returns the offset (in bits) of the ending of the field within this
- * template, -1 on error.  If specified, errnum will be set to the
- * appropriate error code.
+ * template, -1 on error.
  */
-int32_t fiid_template_field_end (fiid_err_t *errnum,
-                                 fiid_template_t tmpl, 
+int32_t fiid_template_field_end (fiid_template_t tmpl, 
                                  char *field);
 
 /* 
@@ -229,22 +217,18 @@ int32_t fiid_template_field_end (fiid_err_t *errnum,
  *
  * Returns the offset (in bytes) of the ending of the field within
  * this template, -1 on error.  Will return an error if field bit
- * offset is not a multiple of 8.  If specified, errnum will be set to
- * the appropriate error code.
+ * offset is not a multiple of 8.
  */
-int32_t fiid_template_field_end_bytes (fiid_err_t *errnum,
-                                       fiid_template_t tmpl, 
+int32_t fiid_template_field_end_bytes (fiid_template_t tmpl, 
                                        char *field);
 
 /* 
  * fiid_template_field_len
  *
  * Returns the maximum length (in bits) of the specified field, -1 on
- * error.  If specified, errnum will be set to the appropriate error
- * code.
+ * error.
  */
-int32_t fiid_template_field_len (fiid_err_t *errnum,
-                                 fiid_template_t tmpl, 
+int32_t fiid_template_field_len (fiid_template_t tmpl, 
                                  char *field);
 
 /* 
@@ -252,11 +236,9 @@ int32_t fiid_template_field_len (fiid_err_t *errnum,
  *
  * Returns the maximum length (in bytes) of the specified field, -1 on
  * error.  Will return an error if the field maximum bit length is not
- * a multiple of 8.  If specified, errnum will be set to the
- * appropriate error code.
+ * a multiple of 8.
  */
-int32_t fiid_template_field_len_bytes (fiid_err_t *errnum,
-                                       fiid_template_t tmpl, 
+int32_t fiid_template_field_len_bytes (fiid_template_t tmpl, 
                                        char *field);
 
 /* 
@@ -264,11 +246,9 @@ int32_t fiid_template_field_len_bytes (fiid_err_t *errnum,
  *
  * Returns the maximum length (in bits) of the block of fields
  * beginning at 'field_start' and ending at 'field_end'.  Returns -1
- * on error.  If specified, errnum will be set to the appropriate
- * error code.
+ * on error.
  */
-int32_t fiid_template_block_len (fiid_err_t *errnum,
-                                 fiid_template_t tmpl, 
+int32_t fiid_template_block_len (fiid_template_t tmpl, 
 				 char *field_start, 
 				 char *field_end);
 
@@ -278,11 +258,9 @@ int32_t fiid_template_block_len (fiid_err_t *errnum,
  * Returns the maximum length (in bytes) of the block of fields
  * beginning at 'field_start' and ending at 'field_end'.  Returns -1
  * on error.  Will return an error if the calculated bit length is not
- * a multiple of 8.  If specified, errnum will be set to the
- * appropriate error code.
+ * a multiple of 8.
  */
-int32_t fiid_template_block_len_bytes (fiid_err_t *errnum,
-                                       fiid_template_t tmpl, 
+int32_t fiid_template_block_len_bytes (fiid_template_t tmpl, 
 				       char *field_start, 
 				       char *field_end);
 
@@ -290,11 +268,9 @@ int32_t fiid_template_block_len_bytes (fiid_err_t *errnum,
  * fiid_template_compare
  *
  * Returns 1 if the two specified templates are identical, 0 if not,
- * -1 on error.  If specified, errnum will be set to the appropriate
- * error code.
+ * -1 on error.
  */
-int8_t fiid_template_compare(fiid_err_t *errnum,
-                             fiid_template_t tmpl1, 
+int8_t fiid_template_compare(fiid_template_t tmpl1, 
                              fiid_template_t tmpl2);
 
 /* 
@@ -319,11 +295,9 @@ char *fiid_strerror(fiid_err_t errnum);
  * fiid_obj_create
  *
  * Return a fiid object based on the specified template.  Returns NULL
- * on error.  If specified, errnum will be set to the appropriate
- * error code.
+ * on error.
  */
-fiid_obj_t fiid_obj_create (fiid_err_t *errnum,
-                            fiid_template_t tmpl);
+fiid_obj_t fiid_obj_create (fiid_template_t tmpl);
 
 /* 
  * fiid_obj_destroy

@@ -79,16 +79,15 @@ display_sdr_repository_info (ipmi_sensors_state_data_t *state_data)
   time_t t;
   struct tm tmp;
   int rv = -1;
-  fiid_err_t err;
 
   assert(state_data);
   
-  if (!(obj_cmd_rs = fiid_obj_create(&err, tmpl_cmd_get_sdr_repository_info_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sdr_repository_info_rs)))
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "fiid_obj_create: %s\n",
-                      fiid_strerror(err));
+                      strerror(errno));
       goto cleanup;
     }
 

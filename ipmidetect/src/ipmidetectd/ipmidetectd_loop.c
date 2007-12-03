@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.6.2.1 2007-11-29 21:20:47 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.6.2.2 2007-12-03 02:27:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -252,20 +252,19 @@ _ipmi_ping_build(struct ipmidetectd_info *info, char *buf, unsigned int buflen)
   fiid_obj_t obj_lan_msg_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
   int len;
-  fiid_err_t err;
 
   assert(info);
   assert(buf);
   assert(buflen);
 
-  if (!(obj_rmcp_hdr = fiid_obj_create(&err, tmpl_rmcp_hdr)))
-    ERR_EXIT(("fiid_obj_create: %s", fiid_strerror(err)));
-  if (!(obj_lan_session_hdr = fiid_obj_create(&err, tmpl_lan_session_hdr)))
-    ERR_EXIT(("fiid_obj_create: %s", fiid_strerror(err)));
-  if (!(obj_lan_msg_hdr = fiid_obj_create(&err, tmpl_lan_msg_hdr_rq)))
-    ERR_EXIT(("fiid_obj_create: %s", fiid_strerror(err)));
-  if (!(obj_cmd = fiid_obj_create(&err, tmpl_cmd_get_channel_authentication_capabilities_rq)))
-    ERR_EXIT(("fiid_obj_create: %s", fiid_strerror(err)));
+  if (!(obj_rmcp_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
+    ERR_EXIT(("fiid_obj_create: %s", strerror(errno)));
+  if (!(obj_lan_session_hdr = fiid_obj_create(tmpl_lan_session_hdr)))
+    ERR_EXIT(("fiid_obj_create: %s", strerror(errno)));
+  if (!(obj_lan_msg_hdr = fiid_obj_create(tmpl_lan_msg_hdr_rq)))
+    ERR_EXIT(("fiid_obj_create: %s", strerror(errno)));
+  if (!(obj_cmd = fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rq)))
+    ERR_EXIT(("fiid_obj_create: %s", strerror(errno)));
   
   if (fill_rmcp_hdr_ipmi(obj_rmcp_hdr) < 0)
     ERR_EXIT(("fill_rmcp_hdr_ipmi: %s", strerror(errno)));

@@ -40,6 +40,23 @@ extern "C" {
 #define FIID_WRAPPER_STR_MAX_LEN 4096
 
 #if defined (IPMI_SYSLOG)
+
+#define __FIID_SYSLOG                                                   \
+do {                                                                    \
+  extern int errno;                                                     \
+  int __save_errno = errno;                                             \
+  char __errbuf[ERR_WRAPPER_STR_MAX_LEN];                               \
+  char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                             \
+  memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                   \
+  strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
+  snprintf (__errbuf, FIID_WRAPPER_STR_MAX_LEN,                         \
+            "%s: %d: %s: errno %s (%d)",                                \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
+            __errnostr, __save_errno);                                  \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errbuf);       \
+  errno = __save_errno;                                                 \
+ } while (0)
+
 #define __FIID_ERRNUM_SYSLOG(___errnum)                              \
 do {                                                                 \
   char __errbuf[ERR_WRAPPER_STR_MAX_LEN];                            \
@@ -63,12 +80,27 @@ do {                                                                 \
   __FIID_ERRNUM_SYSLOG(__iter_errnum);                               \
 } while (0)
 #else
-#define __FIID_ERRNUM_SYSLOG(___errnum)
+#define __FIID_SYSLOG
 #define __FIID_OBJ_SYSLOG(___obj)
 #define __FIID_ITER_SYSLOG(___iter)
 #endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
+#define __FIID_TRACE                                                 \
+do {                                                                 \
+  extern int errno;                                                  \
+  int __save_errno = errno;                                          \
+  char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                          \
+  memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                \
+  strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);     \
+  fprintf (stderr,                                                   \
+           "%s: %d: %s: errno %s (%d)",                              \
+           __FILE__, __LINE__, __PRETTY_FUNCTION__,                  \
+           __errnostr, __save_errno);                                \
+  fflush (stderr);                                                   \
+  errno = __save_errno;                                              \
+} while (0)
+
 #define __FIID_ERRNUM_TRACE(___errnum)                             \
 do {                                                               \
   fprintf (stderr,                                                 \
@@ -92,7 +124,7 @@ do {                                                               \
 } while (0)
 
 #else
-#define __FIID_ERRNUM_TRACE(___errnum)
+#define __FIID_TRACE
 #define __FIID_OBJ_TRACE(___obj)
 #define __FIID_ITER_TRACE(___iter)
 #endif /* IPMI_TRACE */
@@ -123,96 +155,80 @@ do {                                                        \
 
 #define FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                           \
 do {                                                                     \
-  fiid_err_t __err;                                                      \
-  if (((__len) = fiid_template_len_bytes (&__err, (__tmpl))) < 0)        \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                \
     {                                                                    \
-      __FIID_ERRNUM_SYSLOG(__err);                                       \
-      __FIID_ERRNUM_TRACE(__err);                                        \
-      __FIID_ERRNUM_SET_ERRNO(__err);                                    \
+      __FIID_SYSLOG;                                                     \
+      __FIID_TRACE;                                                      \
       return (-1);                                                       \
     }                                                                    \
 } while (0)
 
 #define FIID_TEMPLATE_LEN_BYTES_CLEANUP(__len, __tmpl)                   \
 do {                                                                     \
-  fiid_err_t __err;                                                      \
-  if (((__len) = fiid_template_len_bytes (&__err, (__tmpl))) < 0)        \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                \
     {                                                                    \
-      __FIID_ERRNUM_SYSLOG(__err);                                       \
-      __FIID_ERRNUM_TRACE(__err);                                        \
-      __FIID_ERRNUM_SET_ERRNO(__err);                                    \
+      __FIID_SYSLOG;                                                     \
+      __FIID_TRACE;                                                      \
       goto cleanup;                                                      \
     }                                                                    \
 } while (0)
 
 #define FIID_TEMPLATE_FIELD_START_BYTES(__len, __tmpl, __field)                      \
 do {                                                                                 \
-  fiid_err_t __err;                                                                  \
-  if (((__len) = fiid_template_field_start_bytes (&__err, (__tmpl), (__field))) < 0) \
+  if (((__len) = fiid_template_field_start_bytes ((__tmpl), (__field))) < 0)         \
     {                                                                                \
-      __FIID_ERRNUM_SYSLOG(__err);                                                   \
-      __FIID_ERRNUM_TRACE(__err);                                                    \
-      __FIID_ERRNUM_SET_ERRNO(__err);                                                \
+      __FIID_SYSLOG;                                                                 \
+      __FIID_TRACE;                                                                  \
       return (-1);                                                                   \
     }                                                                                \
 } while (0)
 
 #define FIID_TEMPLATE_FIELD_START_BYTES_CLEANUP(__len, __tmpl, __field)              \
 do {                                                                                 \
-  fiid_err_t __err;                                                                  \
-  if (((__len) = fiid_template_field_start_bytes (&__err, (__tmpl), (__field))) < 0) \
+  if (((__len) = fiid_template_field_start_bytes ((__tmpl), (__field))) < 0)         \
     {                                                                                \
-      __FIID_ERRNUM_SYSLOG(__err);                                                   \
-      __FIID_ERRNUM_TRACE(__err);                                                    \
-      __FIID_ERRNUM_SET_ERRNO(__err);                                                \
+      __FIID_SYSLOG;                                                                 \
+      __FIID_TRACE;                                                                  \
       goto cleanup;                                                                  \
     }                                                                                \
 } while (0)
 
 #define FIID_TEMPLATE_FIELD_LEN(__len, __tmpl, __field)                            \
 do {                                                                               \
-  fiid_err_t __err;                                                                \
-  if (((__len) = fiid_template_field_len (&__err, (__tmpl), (__field))) < 0)       \
+  if (((__len) = fiid_template_field_len ((__tmpl), (__field))) < 0)               \
     {                                                                              \
-      __FIID_ERRNUM_SYSLOG(__err);                                                 \
-      __FIID_ERRNUM_TRACE(__err);                                                  \
-      __FIID_ERRNUM_SET_ERRNO(__err);                                              \
+      __FIID_SYSLOG;                                                               \
+      __FIID_TRACE;                                                                \
       return (-1);                                                                 \
     }                                                                              \
 } while (0)
 
 #define FIID_TEMPLATE_FIELD_LEN_BYTES(__len, __tmpl, __field)                      \
 do {                                                                               \
-  fiid_err_t __err;                                                                \
-  if (((__len) = fiid_template_field_len_bytes (&__err, (__tmpl), (__field))) < 0) \
+  if (((__len) = fiid_template_field_len_bytes ((__tmpl), (__field))) < 0)         \
     {                                                                              \
-      __FIID_ERRNUM_SYSLOG(__err);                                                 \
-      __FIID_ERRNUM_TRACE(__err);                                                  \
-      __FIID_ERRNUM_SET_ERRNO(__err);                                              \
+      __FIID_SYSLOG;                                                               \
+      __FIID_TRACE;                                                                \
       return (-1);                                                                 \
     }                                                                              \
 } while (0)
 
 #define FIID_TEMPLATE_FIELD_LEN_BYTES_CLEANUP(__len, __tmpl, __field)              \
 do {                                                                               \
-  fiid_err_t __err;                                                                \
-  if (((__len) = fiid_template_field_len_bytes (&__err, (__tmpl), (__field))) < 0) \
+  if (((__len) = fiid_template_field_len_bytes ((__tmpl), (__field))) < 0)         \
     {                                                                              \
-      __FIID_ERRNUM_SYSLOG(__err);                                                 \
-      __FIID_ERRNUM_TRACE(__err);                                                  \
-      __FIID_ERRNUM_SET_ERRNO(__err);                                              \
+      __FIID_SYSLOG;                                                               \
+      __FIID_TRACE;                                                                \
       goto cleanup;                                                                \
     }                                                                              \
 } while (0)
 
 #define FIID_TEMPLATE_BLOCK_LEN_BYTES(__len, __tmpl, __field_start, __field_end)                        \
 do {                                                                                                    \
-  fiid_err_t __err;                                                                                     \
-  if (((__len) = fiid_template_block_len_bytes (&__err, (__tmpl), (__field_start), (__field_end))) < 0) \
+  if (((__len) = fiid_template_block_len_bytes ((__tmpl), (__field_start), (__field_end))) < 0)         \
     {                                                                                                   \
-      __FIID_ERRNUM_SYSLOG(__err);                                                                      \
-      __FIID_ERRNUM_TRACE(__err);                                                                       \
-      __FIID_ERRNUM_SET_ERRNO(__err);                                                                   \
+      __FIID_SYSLOG;                                                                                    \
+      __FIID_TRACE;                                                                                     \
       return (-1);                                                                                      \
     }                                                                                                   \
 } while (0)
@@ -220,19 +236,17 @@ do {                                                                            
 #define FIID_TEMPLATE_COMPARE(__tmpl1, __tmpl2)                              \
 do {                                                                         \
     int __ret;                                                               \
-    fiid_err_t __err;                                                        \
-    if ((__ret = fiid_template_compare (&__err, (__tmpl1), (__tmpl2))) < 0)  \
+    if ((__ret = fiid_template_compare ((__tmpl1), (__tmpl2))) < 0)          \
       {                                                                      \
-        __FIID_ERRNUM_SYSLOG(__err);                                         \
-        __FIID_ERRNUM_TRACE(__err);                                          \
-        __FIID_ERRNUM_SET_ERRNO(__err);                                      \
+        __FIID_SYSLOG;                                                       \
+        __FIID_TRACE;                                                        \
         return (-1);                                                         \
       }                                                                      \
     if (!__ret)                                                              \
       {                                                                      \
 	errno = EINVAL;                                                      \
-        __FIID_ERRNUM_SYSLOG(__err);                                         \
-        __FIID_ERRNUM_TRACE(__err);                                          \
+        __FIID_SYSLOG;                                                       \
+        __FIID_TRACE;                                                        \
 	return (-1);                                                         \
       }                                                                      \
 } while (0)
@@ -240,19 +254,17 @@ do {                                                                         \
 #define FIID_TEMPLATE_COMPARE_CLEANUP(__tmpl1, __tmpl2)                      \
 do {                                                                         \
     int __ret;                                                               \
-    fiid_err_t __err;                                                        \
-    if ((__ret = fiid_template_compare (&__err, (__tmpl1), (__tmpl2))) < 0)  \
+    if ((__ret = fiid_template_compare ((__tmpl1), (__tmpl2))) < 0)          \
       {                                                                      \
-        __FIID_ERRNUM_SYSLOG(__err);                                         \
-        __FIID_ERRNUM_TRACE(__err);                                          \
-        __FIID_ERRNUM_SET_ERRNO(__err);                                      \
+        __FIID_SYSLOG;                                                       \
+        __FIID_TRACE;                                                        \
         goto cleanup;                                                        \
       }                                                                      \
     if (!__ret)                                                              \
       {                                                                      \
 	errno = EINVAL;                                                      \
-        __FIID_ERRNUM_SYSLOG(__err);                                         \
-        __FIID_ERRNUM_TRACE(__err);                                          \
+        __FIID_SYSLOG;                                                       \
+        __FIID_TRACE;                                                        \
 	goto cleanup;                                                        \
       }                                                                      \
 } while (0)
@@ -265,24 +277,20 @@ do {                                           \
 
 #define FIID_OBJ_CREATE(__obj, __tmpl)                \
 do {                                                  \
-  fiid_err_t __err;                                   \
-  if (!((__obj) = fiid_obj_create(&__err, __tmpl)))   \
+  if (!((__obj) = fiid_obj_create(__tmpl)))           \
     {                                                 \
-      __FIID_ERRNUM_SYSLOG(__err);                    \
-      __FIID_ERRNUM_TRACE(__err);                     \
-      __FIID_ERRNUM_SET_ERRNO(__err);                 \
+      __FIID_SYSLOG;                                 \
+      __FIID_TRACE;                                   \
       return (-1);                                    \
     }                                                 \
 } while (0)
 
 #define FIID_OBJ_CREATE_CLEANUP(__obj, __tmpl)        \
 do {                                                  \
-  fiid_err_t __err;                                   \
-  if (!((__obj) = fiid_obj_create(&__err, __tmpl)))   \
+  if (!((__obj) = fiid_obj_create(__tmpl)))           \
     {                                                 \
-      __FIID_ERRNUM_SYSLOG(__err);                    \
-      __FIID_ERRNUM_TRACE(__err);                     \
-      __FIID_ERRNUM_SET_ERRNO(__err);                 \
+      __FIID_SYSLOG;                                 \
+      __FIID_TRACE;                                   \
       goto cleanup;                                   \
     }                                                 \
 } while (0)
@@ -989,11 +997,21 @@ do {                                                                            
     }                                                                            \
 } while (0)
 
+#define __FIID_ERRNO_TO_KCS_ERRNUM                                            \
+do {                                                                          \
+  if (errno == 0)                                                             \
+    ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;                                   \
+  else if (errno == ENOMEM)                                                   \
+    ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                             \
+  else                                                                        \
+    ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                            \
+} while (0)
+
 #define __FIID_ERRNUM_TO_KCS_ERRNUM(___errnum)                                \
 do {                                                                          \
   if ((___errnum) == 0)                                                       \
     ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;                                   \
-  else if ((___errnum) == ENOMEM)                                             \
+  else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
     ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                             \
   else                                                                        \
     ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                            \
@@ -1007,50 +1025,46 @@ do {                                                                          \
 
 #define KCS_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                            \
 do {                                                                          \
-  fiid_err_t __err;                                                           \
-  if (((__len) = fiid_template_len_bytes (&__err, (__tmpl))) < 0)             \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                     \
     {                                                                         \
-      __FIID_ERRNUM_SYSLOG(__err);                                            \
-      __FIID_ERRNUM_TRACE(__err);                                             \
-      __FIID_ERRNUM_TO_KCS_ERRNUM(__err);                                     \
+      __FIID_SYSLOG;                                                          \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_KCS_ERRNUM;                                             \
       return (-1);                                                            \
     }                                                                         \
 } while (0)
 
 #define KCS_FIID_TEMPLATE_LEN_BYTES_CLEANUP(__len, __tmpl)                    \
 do {                                                                          \
-  fiid_err_t __err;                                                           \
-  if (((__len) = fiid_template_len_bytes (&__err, (__tmpl))) < 0)             \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                     \
     {                                                                         \
-      __FIID_ERRNUM_SYSLOG(__err);                                            \
-      __FIID_ERRNUM_TRACE(__err);                                             \
-      __FIID_ERRNUM_TO_KCS_ERRNUM(__err);                                     \
+      __FIID_SYSLOG;                                                          \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_KCS_ERRNUM;                                             \
       goto cleanup;                                                           \
     }                                                                         \
 } while (0)
 
 #define KCS_FIID_TEMPLATE_FREE(__tmpl) FIID_TEMPLATE_FREE((__tmpl))
 
-#define KCS_FIID_OBJ_CREATE(__obj, __tmpl)                                   \
+#define KCS_FIID_OBJ_CREATE(__obj, __tmpl)                                    \
 do {                                                                          \
-  fiid_err_t __err;                                                           \
-  if (!((__obj) = fiid_obj_create(&__err, __tmpl)))                           \
+  if (!((__obj) = fiid_obj_create(__tmpl)))                                   \
     {                                                                         \
-      __FIID_ERRNUM_SYSLOG(__err);                                            \
-      __FIID_ERRNUM_TRACE(__err);                                             \
-      __FIID_ERRNUM_TO_KCS_ERRNUM(__err);                                     \
+      __FIID_SYSLOG;                                                          \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_KCS_ERRNUM;                                             \
       return (-1);                                                            \
     }                                                                         \
 } while (0)
 
 #define KCS_FIID_OBJ_CREATE_CLEANUP(__obj, __tmpl)                            \
 do {                                                                          \
-  fiid_err_t __err;                                                           \
-  if (!((__obj) = fiid_obj_create(&__err, __tmpl)))                           \
+  if (!((__obj) = fiid_obj_create(__tmpl)))                                   \
     {                                                                         \
-      __FIID_ERRNUM_SYSLOG(__err);                                            \
-      __FIID_ERRNUM_TRACE(__err);                                             \
-      __FIID_ERRNUM_TO_KCS_ERRNUM(__err);                                     \
+      __FIID_SYSLOG;                                                          \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_KCS_ERRNUM;                                             \
       goto cleanup;                                                           \
     }                                                                         \
 } while (0)
@@ -1090,11 +1104,21 @@ do {                                                     \
       }                                                  \
 } while (0)
 
+#define __FIID_ERRNO_TO_SSIF_ERRNUM                                           \
+do {                                                                          \
+  if (errno == 0)                                                             \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;                                  \
+  else if (errno == ENOMEM)                                                   \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                            \
+  else                                                                        \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                           \
+} while (0)
+
 #define __FIID_ERRNUM_TO_SSIF_ERRNUM(___errnum)                               \
 do {                                                                          \
   if ((___errnum) == 0)                                                       \
     ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;                                  \
-  else if ((___errnum) == ENOMEM)                                             \
+  else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
     ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                            \
   else                                                                        \
     ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                           \
@@ -1108,24 +1132,22 @@ do {                                                                          \
 
 #define SSIF_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                           \
 do {                                                                          \
-  fiid_err_t __err;                                                           \
-  if (((__len) = fiid_template_len_bytes (&__err, (__tmpl))) < 0)             \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                     \
     {                                                                         \
-      __FIID_ERRNUM_SYSLOG(__err);                                            \
-      __FIID_ERRNUM_TRACE(__err);                                             \
-      __FIID_ERRNUM_TO_SSIF_ERRNUM(__err);                                    \
+      __FIID_SYSLOG;                                                          \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_SSIF_ERRNUM;                                            \
       return (-1);                                                            \
     }                                                                         \
 } while (0)
 
 #define SSIF_FIID_TEMPLATE_LEN_BYTES_CLEANUP(__len, __tmpl)                   \
 do {                                                                          \
-  fiid_err_t __err;                                                           \
-  if (((__len) = fiid_template_len_bytes (&__err, (__tmpl))) < 0)             \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                     \
     {                                                                         \
-      __FIID_ERRNUM_SYSLOG(__err);                                            \
-      __FIID_ERRNUM_TRACE(__err);                                             \
-      __FIID_ERRNUM_TO_SSIF_ERRNUM(__err);                                    \
+      __FIID_SYSLOG;                                                          \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_SSIF_ERRNUM;                                            \
       goto cleanup;                                                           \
     }                                                                         \
 } while (0)
@@ -1134,24 +1156,22 @@ do {                                                                          \
 
 #define SSIF_FIID_OBJ_CREATE(__obj, __tmpl)                                   \
 do {                                                                          \
-  fiid_err_t __err;                                                           \
-  if (!((__obj) = fiid_obj_create(&__err, __tmpl)))                           \
+  if (!((__obj) = fiid_obj_create(__tmpl)))                                   \
     {                                                                         \
-      __FIID_ERRNUM_SYSLOG(__err);                                            \
-      __FIID_ERRNUM_TRACE(__err);                                             \
-      __FIID_ERRNUM_TO_SSIF_ERRNUM(__err);                                    \
+      __FIID_SYSLOG;                                                          \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_SSIF_ERRNUM;                                            \
       return (-1);                                                            \
     }                                                                         \
 } while (0)
 
 #define SSIF_FIID_OBJ_CREATE_CLEANUP(__obj, __tmpl)                           \
 do {                                                                          \
-  fiid_err_t __err;                                                           \
-  if (!((__obj) = fiid_obj_create(&__err, __tmpl)))                           \
+  if (!((__obj) = fiid_obj_create(__tmpl)))                                   \
     {                                                                         \
-      __FIID_ERRNUM_SYSLOG(__err);                                            \
-      __FIID_ERRNUM_TRACE(__err);                                             \
-      __FIID_ERRNUM_TO_SSIF_ERRNUM(__err);                                    \
+      __FIID_SYSLOG;                                                          \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_SSIF_ERRNUM;                                            \
       goto cleanup;                                                           \
     }                                                                         \
 } while (0)
@@ -1191,11 +1211,21 @@ do {                                                     \
       }                                                  \
 } while (0)
 
+#define __FIID_ERRNO_TO_LOCATE_ERRNUM                                         \
+do {                                                                          \
+  if (errno == 0)                                                             \
+    (*locate_errnum) = IPMI_LOCATE_ERR_SUCCESS;                               \
+  else if (errno == ENOMEM)                                                   \
+    (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                         \
+  else                                                                        \
+    (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;                        \
+} while (0)
+
 #define __FIID_ERRNUM_TO_LOCATE_ERRNUM(___errnum)                             \
 do {                                                                          \
   if ((___errnum) == 0)                                                       \
     (*locate_errnum) = IPMI_LOCATE_ERR_SUCCESS;                               \
-  else if ((___errnum) == ENOMEM)                                             \
+  else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
     (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                         \
   else                                                                        \
     (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;                        \
@@ -1209,72 +1239,66 @@ do {                                                                          \
 
 #define LOCATE_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                         \
 do {                                                                          \
-  fiid_err_t __err;                                                           \
-  if (((__len) = fiid_template_len_bytes (&__err, (__tmpl))) < 0)             \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                     \
     {                                                                         \
-      __FIID_ERRNUM_SYSLOG(__err);                                            \
-      __FIID_ERRNUM_TRACE(__err);                                             \
-      __FIID_ERRNUM_TO_LOCATE_ERRNUM(__err);                                  \
+      __FIID_SYSLOG;                                                          \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_LOCATE_ERRNUM;                                          \
       return (-1);                                                            \
     }                                                                         \
 } while (0)
 
 #define LOCATE_FIID_TEMPLATE_LEN_BYTES_CLEANUP(__len, __tmpl)                 \
 do {                                                                          \
-  fiid_err_t __err;                                                           \
-  if (((__len) = fiid_template_len_bytes (&__err, (__tmpl))) < 0)             \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                     \
     {                                                                         \
-      __FIID_ERRNUM_SYSLOG(__err);                                            \
-      __FIID_ERRNUM_TRACE(__err);                                             \
-      __FIID_ERRNUM_TO_LOCATE_ERRNUM(__err);                                  \
+      __FIID_SYSLOG;                                                          \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_LOCATE_ERRNUM;                                          \
       goto cleanup;                                                           \
     }                                                                         \
 } while (0)
 
 #define LOCATE_FIID_TEMPLATE_FIELD_LEN_BYTES(__len, __tmpl, __field)                  \
 do {                                                                                  \
-  fiid_err_t __err;                                                                   \
-  if (((__len) = fiid_template_field_len_bytes (&__err, (__tmpl), (__field))) < 0)    \
+  if (((__len) = fiid_template_field_len_bytes ((__tmpl), (__field))) < 0)            \
     {                                                                                 \
-      __FIID_ERRNUM_SYSLOG(__err);                                                    \
-      __FIID_ERRNUM_TRACE(__err);                                                     \
-      __FIID_ERRNUM_TO_LOCATE_ERRNUM(__err);                                          \
+      __FIID_SYSLOG;                                                                  \
+      __FIID_TRACE;                                                                   \
+      __FIID_ERRNO_TO_LOCATE_ERRNUM;                                                  \
       return (-1);                                                                    \
     }                                                                                 \
 } while (0)
 
 #define LOCATE_FIID_TEMPLATE_FIELD_LEN_BYTES_CLEANUP(__len, __tmpl, __field)          \
 do {                                                                                  \
-  fiid_err_t __err;                                                                   \
-  if (((__len) = fiid_template_field_len_bytes (&__err, (__tmpl), (__field))) < 0)    \
+  if (((__len) = fiid_template_field_len_bytes ((__tmpl), (__field))) < 0)            \
     {                                                                                 \
-      __FIID_ERRNUM_SYSLOG(__err);                                                    \
-      __FIID_ERRNUM_TRACE(__err);                                                     \
-      __FIID_ERRNUM_TO_LOCATE_ERRNUM(__err);                                          \
+      __FIID_SYSLOG;                                                                  \
+      __FIID_TRACE;                                                                   \
+      __FIID_ERRNO_TO_LOCATE_ERRNUM;                                                  \
       goto cleanup;                                                                   \
     }                                                                                 \
 } while (0)
 
 #define LOCATE_FIID_OBJ_CREATE(__obj, __tmpl)                                 \
 do {                                                                          \
-  fiid_err_t __err;                                                           \
-  if (!((__obj) = fiid_obj_create(&__err, __tmpl)))                           \
+  if (!((__obj) = fiid_obj_create(__tmpl)))                                   \
     {                                                                         \
-      __FIID_ERRNUM_SYSLOG(__err);                                            \
-      __FIID_ERRNUM_TRACE(__err);                                             \
-      (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                       \
+      __FIID_SYSLOG;                                                          \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_LOCATE_ERRNUM;                                          \
       return (-1);                                                            \
     }                                                                         \
 } while (0)
 
 #define LOCATE_FIID_OBJ_CREATE_CLEANUP(__obj, __tmpl)                         \
 do {                                                                          \
-  fiid_err_t __err;                                                           \
-  if (!((__obj) = fiid_obj_create(&__err, __tmpl)))                           \
+  if (!((__obj) = fiid_obj_create(__tmpl)))                                   \
     {                                                                         \
-      __FIID_ERRNUM_SYSLOG(__err);                                            \
-      __FIID_ERRNUM_TRACE(__err);                                             \
-      (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                       \
+      __FIID_SYSLOG;                                                          \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_LOCATE_ERRNUM;                                          \
       goto cleanup;                                                           \
     }                                                                         \
 } while (0)

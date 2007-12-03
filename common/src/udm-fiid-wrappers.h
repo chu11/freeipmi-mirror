@@ -40,6 +40,16 @@ extern "C" {
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 
+#define __FIID_ERRNO_SET_UDM_ERRNUM                \
+do {                                               \
+  if (errno == 0)                                  \
+    dev->errnum = IPMI_ERR_SUCCESS;                \
+  else if (errno == ENOMEM)                        \
+    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
+  else                                             \
+    dev->errnum = IPMI_ERR_INTERNAL_ERROR;         \
+} while (0)
+
 #define __FIID_ERRNUM_SET_UDM_ERRNUM(___errnum)    \
 do {                                               \
   if ((___errnum) == FIID_ERR_SUCCESS)             \
@@ -58,24 +68,22 @@ do {                                               \
 
 #define UDM_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                       \
 do {                                                                     \
-  fiid_err_t __err;                                                      \
-  if (((__len) = fiid_template_len_bytes (&__err, (__tmpl))) < 0)        \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                \
     {                                                                    \
-      __FIID_ERRNUM_SYSLOG(__err);                                       \
-      __FIID_ERRNUM_TRACE(__err);                                        \
-      __FIID_ERRNUM_SET_UDM_ERRNUM(__err);                               \
+      __FIID_SYSLOG;                                                     \
+      __FIID_TRACE;                                                      \
+      __FIID_ERRNO_SET_UDM_ERRNUM;                                       \
       return (-1);                                                       \
     }                                                                    \
 } while (0)
 
 #define UDM_FIID_TEMPLATE_LEN_BYTES_CLEANUP(__len, __tmpl)               \
 do {                                                                     \
-  fiid_err_t __err;                                                      \
-  if (((__len) = fiid_template_len_bytes (&__err, (__tmpl))) < 0)        \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                \
     {                                                                    \
-      __FIID_ERRNUM_SYSLOG(__err);                                       \
-      __FIID_ERRNUM_TRACE(__err);                                        \
-      __FIID_ERRNUM_SET_UDM_ERRNUM(__err);                               \
+      __FIID_SYSLOG;                                                     \
+      __FIID_TRACE;                                                      \
+      __FIID_ERRNO_SET_UDM_ERRNUM;                                       \
       goto cleanup;                                                      \
     }                                                                    \
 } while (0)
@@ -84,24 +92,22 @@ do {                                                                     \
 
 #define UDM_FIID_OBJ_CREATE(__obj, __tmpl)                  \
 do {                                                        \
-  fiid_err_t __err;                                         \
-  if (!((__obj) = fiid_obj_create(&__err, (__tmpl))))       \
+  if (!((__obj) = fiid_obj_create((__tmpl))))               \
     {                                                       \
-      __FIID_ERRNUM_SYSLOG(__err);                          \
-      __FIID_ERRNUM_TRACE(__err);                           \
-      __FIID_ERRNUM_SET_UDM_ERRNUM(__err);                  \
+      __FIID_SYSLOG;                                        \
+      __FIID_TRACE;                                         \
+      __FIID_ERRNO_SET_UDM_ERRNUM;                          \
       return (-1);                                          \
     }                                                       \
 } while (0)
 
 #define UDM_FIID_OBJ_CREATE_CLEANUP(__obj, __tmpl)          \
 do {                                                        \
-  fiid_err_t __err;                                         \
-  if (!((__obj) = fiid_obj_create(&__err, (__tmpl))))       \
+  if (!((__obj) = fiid_obj_create((__tmpl))))               \
     {                                                       \
-      __FIID_ERRNUM_SYSLOG(__err);                          \
-      __FIID_ERRNUM_TRACE(__err);                           \
-      __FIID_ERRNUM_SET_UDM_ERRNUM(__err);                  \
+      __FIID_SYSLOG;                                        \
+      __FIID_TRACE;                                         \
+      __FIID_ERRNO_SET_UDM_ERRNUM;                          \
       goto cleanup;                                         \
     }                                                       \
 } while (0)

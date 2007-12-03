@@ -1062,7 +1062,7 @@ ipmi_rmcpplus_check_packet_session_authentication_code(int8_t integrity_algorith
      
   ERR_EXIT (crypt_digest_len == expected_digest_len);
   
-  ERR_EXIT (!((rmcp_header_len = fiid_template_len_bytes(NULL, tmpl_rmcp_hdr)) < 0));
+  ERR_EXIT (!((rmcp_header_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0));
 
   FIID_OBJ_GET_DATA_LEN_CLEANUP(authentication_code_len,
                                 obj_rmcpplus_session_trlr,

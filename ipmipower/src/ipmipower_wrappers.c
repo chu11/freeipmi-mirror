@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.23.2.1 2007-11-29 21:20:47 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.23.2.2 2007-12-03 02:27:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -33,11 +33,11 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <errno.h>
-#include <assert.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <assert.h>
+#include <errno.h>
 
 #include "ipmipower_wrappers.h"
 
@@ -164,12 +164,11 @@ fiid_obj_t
 Fiid_obj_create(fiid_template_t tmpl) 
 {
   fiid_obj_t obj;
-  fiid_err_t err;
 
   assert(tmpl != NULL);
 
-  if ((obj = fiid_obj_create(&err, tmpl)) == NULL)
-    err_exit("Fiid_obj_create: %s", fiid_strerror(err));
+  if ((obj = fiid_obj_create(tmpl)) == NULL)
+    err_exit("Fiid_obj_create: %s", strerror(errno));
   return obj;
 }
 

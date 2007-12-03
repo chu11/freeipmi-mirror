@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.73.2.6 2007-12-02 20:33:26 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.73.2.7 2007-12-03 02:27:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -714,19 +714,18 @@ _reset_watchdog_timer_cmd(int retry_wait_time, int retry_attempt)
   fiid_obj_t cmd_rq = NULL;
   fiid_obj_t cmd_rs = NULL;
   int retval = -1;
-  fiid_err_t err;
 
-  if ((cmd_rq = fiid_obj_create(&err, tmpl_cmd_reset_watchdog_timer_rq)) == NULL)
+  if ((cmd_rq = fiid_obj_create(tmpl_cmd_reset_watchdog_timer_rq)) == NULL)
     {
       _bmclog("_reset_watchdog_timer_cmd: fiid_obj_create: %s", 
-              fiid_strerror(err));
+              strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_create(&err, tmpl_cmd_reset_watchdog_timer_rs)) == NULL)
+  if ((cmd_rs = fiid_obj_create(tmpl_cmd_reset_watchdog_timer_rs)) == NULL)
     {
       _bmclog("_reset_watchdog_timer_cmd: fiid_obj_create: %s", 
-              fiid_strerror(err));
+              strerror(errno));
       goto cleanup;
     }
 
@@ -770,22 +769,21 @@ _set_watchdog_timer_cmd(int retry_wait_time,
   fiid_obj_t cmd_rs = NULL;
   uint16_t initial_countdown_chunks;
   int retval = -1;
-  fiid_err_t err;
 
   /* IPMI specifies timeout in 100 millisecond chunks */
   initial_countdown_chunks = initial_countdown_seconds * 10;
 
-  if ((cmd_rq = fiid_obj_create(&err, tmpl_cmd_set_watchdog_timer_rq)) == NULL)
+  if ((cmd_rq = fiid_obj_create(tmpl_cmd_set_watchdog_timer_rq)) == NULL)
     {
       _bmclog("_set_watchdog_timer_cmd: fiid_obj_create: %s", 
-              fiid_strerror(err));
+              strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_create(&err, tmpl_cmd_set_watchdog_timer_rs)) == NULL)
+  if ((cmd_rs = fiid_obj_create(tmpl_cmd_set_watchdog_timer_rs)) == NULL)
     {
       _bmclog("_set_watchdog_timer_cmd: fiid_obj_create: %s", 
-              fiid_strerror(err));
+              strerror(errno));
       goto cleanup;
     }
 
@@ -842,19 +840,18 @@ _get_watchdog_timer_cmd(int retry_wait_time,
   fiid_obj_t cmd_rs = NULL;
   uint64_t val, *valptr;
   int retval = -1;
-  fiid_err_t err;
 
-  if ((cmd_rq = fiid_obj_create(&err, tmpl_cmd_get_watchdog_timer_rq)) == NULL)
+  if ((cmd_rq = fiid_obj_create(tmpl_cmd_get_watchdog_timer_rq)) == NULL)
     {
       _bmclog("_get_watchdog_timer_cmd: fiid_obj_create: %s", 
-              fiid_strerror(err));
+              strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_create(&err, tmpl_cmd_get_watchdog_timer_rs)) == NULL)
+  if ((cmd_rs = fiid_obj_create(tmpl_cmd_get_watchdog_timer_rs)) == NULL)
     {
       _bmclog("_get_watchdog_timer_cmd: fiid_obj_create: %s", 
-              fiid_strerror(err));
+              strerror(errno));
       goto cleanup;
     }
 
@@ -975,17 +972,16 @@ _get_channel_number(int retry_wait_time, int retry_attempt)
   uint64_t manufacturer_id, product_id;
   uint64_t val;
   int i, ret, rv = -1;
-  fiid_err_t err;
 
-  if (!(dev_id_cmd_rq = fiid_obj_create(&err, tmpl_cmd_get_device_id_rq)))
+  if (!(dev_id_cmd_rq = fiid_obj_create(tmpl_cmd_get_device_id_rq)))
     {
-      _bmclog("fiid_obj_create: %s", fiid_strerror(err));
+      _bmclog("fiid_obj_create: %s", strerror(errno));
       goto cleanup;
     }
 
-  if (!(dev_id_cmd_rs = fiid_obj_create(&err, tmpl_cmd_get_device_id_rs)))
+  if (!(dev_id_cmd_rs = fiid_obj_create(tmpl_cmd_get_device_id_rs)))
     {
-      _bmclog("fiid_obj_create: %s", fiid_strerror(err));
+      _bmclog("fiid_obj_create: %s", strerror(errno));
       goto cleanup;
     }
   
@@ -1027,15 +1023,15 @@ _get_channel_number(int retry_wait_time, int retry_attempt)
 	}
     }
 
-  if (!(channel_info_cmd_rq = fiid_obj_create(&err, tmpl_cmd_get_channel_info_rq)))
+  if (!(channel_info_cmd_rq = fiid_obj_create(tmpl_cmd_get_channel_info_rq)))
     {
-      _bmclog("fiid_obj_create: %s", fiid_strerror(err));
+      _bmclog("fiid_obj_create: %s", strerror(errno));
       goto cleanup;
     }
 
-  if (!(channel_info_cmd_rs = fiid_obj_create(&err, tmpl_cmd_get_channel_info_rs)))
+  if (!(channel_info_cmd_rs = fiid_obj_create(tmpl_cmd_get_channel_info_rs)))
     {
-      _bmclog("fiid_obj_create: %s", fiid_strerror(err));
+      _bmclog("fiid_obj_create: %s", strerror(errno));
       goto cleanup;
     }
   
@@ -1095,19 +1091,18 @@ _suspend_bmc_arps_cmd(int retry_wait_time,
   fiid_obj_t cmd_rs = NULL;
   int retval = -1;
   int8_t num;
-  fiid_err_t err;
 
-  if ((cmd_rq = fiid_obj_create(&err, tmpl_cmd_suspend_bmc_arps_rq)) == NULL)
+  if ((cmd_rq = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rq)) == NULL)
     {
       _bmclog("_suspend_bmc_arps: fiid_obj_create: %s", 
-              fiid_strerror(err));
+              strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_create(&err, tmpl_cmd_suspend_bmc_arps_rs)) == NULL)
+  if ((cmd_rs = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rs)) == NULL)
     {
       _bmclog("_suspend_bmc_arps: fiid_obj_create: %s", 
-              fiid_strerror(err));
+              strerror(errno));
       goto cleanup;
     }
 

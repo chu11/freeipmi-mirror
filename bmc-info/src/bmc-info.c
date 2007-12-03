@@ -32,6 +32,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <err.h>
 #include <argp.h>
 #include <assert.h>
+#include <errno.h>
 
 #include <freeipmi/freeipmi.h>
 #include <freeipmi/udm/udm.h>
@@ -77,16 +78,15 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
   uint8_t buf[1024];
   int32_t len;
   int rv = -1;
-  fiid_err_t err;
 
   assert(state_data);
 
-  if (!(intel_rs = fiid_obj_create(&err, tmpl_cmd_get_device_id_sr870bn4_rs)))
+  if (!(intel_rs = fiid_obj_create(tmpl_cmd_get_device_id_sr870bn4_rs)))
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "fiid_obj_create: %s\n",
-                      fiid_strerror(err));
+                      strerror(errno));
       goto cleanup;
     }
 
@@ -139,17 +139,16 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 {
   fiid_obj_t cmd_rs = NULL;
   uint64_t val = 0;
-  fiid_err_t err;
   int rv = -1;
 
   assert(state_data);
 
-  if (!(cmd_rs = fiid_obj_create (&err, tmpl_cmd_get_device_id_rs)))
+  if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "fiid_obj_create: %s\n",
-                      fiid_strerror(err));
+                      strerror(errno));
       return (-1);
     }
 
@@ -295,18 +294,17 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
   uint8_t i;
   uint8_t ci;
   uint64_t val;
-  fiid_err_t err;
   int rv = -1;
 
   assert(state_data);
   assert(channel_info_list);
 
-  if (!(data_rs = fiid_obj_create (&err, tmpl_cmd_get_channel_info_rs)))
+  if (!(data_rs = fiid_obj_create (tmpl_cmd_get_channel_info_rs)))
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "fiid_obj_create: %s\n",
-                      fiid_strerror(err));
+                      strerror(errno));
       goto cleanup;
     }
 

@@ -22,9 +22,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #define _SDR_FIID_TEMPLATE_COMPARE(__tmpl1, __tmpl2)                        \
 do {                                                                        \
-    fiid_err_t __err;                                                       \
     int __ret;                                                              \
-    if ((__ret = fiid_template_compare (&__err, (__tmpl1), (__tmpl2))) < 0) \
+    if ((__ret = fiid_template_compare ((__tmpl1), (__tmpl2))) < 0)         \
       {                                                                     \
        ctx->errnum = SDR_CACHE_CTX_ERR_INTERNAL;                            \
        goto cleanup;                                                        \
@@ -38,8 +37,7 @@ do {                                                                        \
 
 #define _SDR_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                         \
 do {                                                                        \
-  fiid_err_t __err;                                                         \
-  if (((__len) = fiid_template_len_bytes (&__err, (__tmpl))) < 0)           \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                   \
     {                                                                       \
       ctx->errnum = SDR_CACHE_CTX_ERR_INTERNAL;                             \
       goto cleanup;                                                         \
@@ -57,8 +55,7 @@ do {                                                                \
 
 #define _SDR_FIID_OBJ_CREATE(__obj, __tmpl)                         \
 do {                                                                \
-  fiid_err_t __err;                                                 \
-  if (!((__obj) = fiid_obj_create (&__err, (__tmpl))))              \
+  if (!((__obj) = fiid_obj_create ((__tmpl))))                      \
     {                                                               \
       ctx->errnum = SDR_CACHE_CTX_ERR_OUTMEM;                       \
       goto cleanup;                                                 \

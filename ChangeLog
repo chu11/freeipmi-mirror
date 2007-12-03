@@ -33,14 +33,6 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Update libfreeipmi version.
 
-	* libfreeipmi/include/freeipmi/fiid.h, libfreeipmi/src/fiid.c:
-	Rework portions of API to return error codes rather than errnos.
-
-	* common/src/, libfreeipmi/, bmc-watchdog/, ipmipower,
-	ipmimonitoring/, ipmidetect/, ipmi-sel/, ipmi-sensors/, bmc-info/,
-	rmcpping/, ipmiping/, ipmi-chassis/, ipmi-fru/: Adjust code
-	appropriately for fiid API change.
-	
 	* ipmi-sel/src/ipmi-sel-wrapper.c: Use fiid wrappers
 	appropriately.
 
