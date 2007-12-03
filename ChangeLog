@@ -1,3 +1,7 @@
+2007-12-02  Albert Chu <chu11@llnl.gov>
+
+	* INSTALL: Overwrite ancient copy with GNU generic copy.
+	
 2007-11-30  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Prepare for beta release.
