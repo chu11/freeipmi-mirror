@@ -43,21 +43,21 @@ extern "C" {
 #define __FIID_ERRNO_SET_UDM_ERRNUM                \
 do {                                               \
   if (errno == 0)                                  \
-    dev->errnum = IPMI_ERR_SUCCESS;                \
+    ctx->errnum = IPMI_ERR_SUCCESS;                \
   else if (errno == ENOMEM)                        \
-    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
+    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
   else                                             \
-    dev->errnum = IPMI_ERR_INTERNAL_ERROR;         \
+    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;         \
 } while (0)
 
 #define __FIID_ERRNUM_SET_UDM_ERRNUM(___errnum)    \
 do {                                               \
   if ((___errnum) == FIID_ERR_SUCCESS)             \
-    dev->errnum = IPMI_ERR_SUCCESS;                \
+    ctx->errnum = IPMI_ERR_SUCCESS;                \
   else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)  \
-    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
+    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
   else                                             \
-    dev->errnum = IPMI_ERR_LIBRARY_ERROR;          \
+    ctx->errnum = IPMI_ERR_LIBRARY_ERROR;          \
 } while (0)
 
 #define __FIID_OBJ_SET_UDM_ERRNUM(___obj)          \
@@ -365,7 +365,7 @@ do {                                                   \
       {                                                \
         __FIID_OBJ_SYSLOG((__obj));                    \
         __FIID_OBJ_TRACE((__obj));                     \
-        dev->errnum = IPMI_ERR_PARAMETERS;             \
+        ctx->errnum = IPMI_ERR_PARAMETERS;             \
 	return (-1);                                   \
       }                                                \
 } while (0)

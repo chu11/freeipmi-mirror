@@ -29,28 +29,28 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
-int8_t ipmi_cmd_get_sel_info (ipmi_device_t dev, 
+int8_t ipmi_cmd_get_sel_info (ipmi_ctx_t ctx, 
 			      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sel_allocation_info (ipmi_device_t dev, 
+int8_t ipmi_cmd_get_sel_allocation_info (ipmi_ctx_t ctx, 
 					 fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_reserve_sel (ipmi_device_t dev, 
+int8_t ipmi_cmd_reserve_sel (ipmi_ctx_t ctx, 
 			     fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sel_entry (ipmi_device_t dev, 
+int8_t ipmi_cmd_get_sel_entry (ipmi_ctx_t ctx, 
 			       uint16_t reservation_id,
 			       uint16_t record_id,
 			       uint8_t offset_into_record,
 			       uint8_t bytes_to_read,
 			       fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_delete_sel_entry (ipmi_device_t dev, 
+int8_t ipmi_cmd_delete_sel_entry (ipmi_ctx_t ctx, 
 				  uint16_t reservation_id, 
 				  uint16_t record_id, 
 				  fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_clear_sel (ipmi_device_t dev, 
+int8_t ipmi_cmd_clear_sel (ipmi_ctx_t ctx, 
 			   uint16_t reservation_id, 
 			   uint8_t operation, 
 			   fiid_obj_t obj_cmd_rs);

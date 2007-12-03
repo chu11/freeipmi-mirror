@@ -61,7 +61,7 @@ _get_destination_type(pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_destination_type (state_data->dev,
+  if (ipmi_cmd_get_lan_configuration_parameters_destination_type (state_data->ipmi_ctx,
                                                                   channel_number,
                                                                   IPMI_GET_LAN_PARAMETER,
                                                                   destination_selector,
@@ -71,7 +71,7 @@ _get_destination_type(pef_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_destination_type: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -124,7 +124,7 @@ _set_destination_type(pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_destination_type (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_destination_type (state_data->ipmi_ctx,
                                                                   channel_number,
                                                                   destination_selector,
                                                                   dt->alert_destination_type,
@@ -136,7 +136,7 @@ _set_destination_type(pef_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_destination_type: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -348,7 +348,7 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_destination_addresses (state_data->dev,
+  if (ipmi_cmd_get_lan_configuration_parameters_destination_addresses (state_data->ipmi_ctx,
                                                                        channel_number,
                                                                        IPMI_GET_LAN_PARAMETER,
                                                                        destination_selector,
@@ -358,7 +358,7 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_destination_addresses: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -439,7 +439,7 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
   if (ipmi_mac_address_string2int(da->alert_mac, &alert_mac_address_val) < 0)
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (state_data->ipmi_ctx,
                                                                        channel_number,
                                                                        destination_selector,
                                                                        da->alert_gateway,
@@ -450,7 +450,7 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_destination_addresses: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

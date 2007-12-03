@@ -29,7 +29,7 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
-int8_t ipmi_cmd_set_user_payload_access (ipmi_device_t dev,
+int8_t ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
                                          uint8_t channel_number,
                                          uint8_t user_id,
                                          uint8_t operation,
@@ -50,7 +50,7 @@ int8_t ipmi_cmd_set_user_payload_access (ipmi_device_t dev,
                                          uint8_t oem_payload_7,
                                          fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_user_payload_access (ipmi_device_t dev,
+int8_t ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
                                          uint8_t channel_number,
                                          uint8_t user_id,
                                          fiid_obj_t obj_cmd_rs);

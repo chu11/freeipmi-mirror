@@ -51,7 +51,7 @@ int ipmi_sensor_classify (uint8_t event_reading_type_code);
 
 const char *ipmi_get_sensor_group (int sensor_type);
 
-int8_t get_sensor_reading (ipmi_device_t dev, 
+int8_t get_sensor_reading (ipmi_ctx_t ctx, 
                            sdr_record_t *sdr_record, 
                            sensor_reading_t *sensor_reading);
 

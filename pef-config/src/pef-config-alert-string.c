@@ -44,7 +44,7 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (state_data->dev,
+  if (ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (state_data->ipmi_ctx,
                                                                    IPMI_GET_PEF_PARAMETER,
                                                                    string_selector,
                                                                    BLOCK_SELECTOR,
@@ -53,7 +53,7 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_configuration_parameters_alert_string_keys: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -90,7 +90,7 @@ _set_alert_string_keys (pef_config_state_data_t *state_data,
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (state_data->dev,
+  if (ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (state_data->ipmi_ctx,
                                                                    string_selector,
                                                                    ask->event_filter_number,
                                                                    ask->alert_string_set,
@@ -99,7 +99,7 @@ _set_alert_string_keys (pef_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_pef_configuration_parameters_alert_string_keys: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -222,7 +222,7 @@ alert_string_checkout (const char *section_name,
       Fiid_obj_clear(obj_cmd_rs);
       int j;
 
-      if (ipmi_cmd_get_pef_configuration_parameters_alert_string (state_data->dev,
+      if (ipmi_cmd_get_pef_configuration_parameters_alert_string (state_data->ipmi_ctx,
                                                                   IPMI_GET_PEF_PARAMETER,
                                                                   string_selector,
                                                                   i + 1,
@@ -231,7 +231,7 @@ alert_string_checkout (const char *section_name,
           if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf(stderr,
                     "ipmi_cmd_get_pef_configuration_parameters_alert_string: %s\n",
-                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -314,7 +314,7 @@ alert_string_commit (const char *section_name,
       else
         len_to_write = 16;
 
-      if (ipmi_cmd_set_pef_configuration_parameters_alert_strings (state_data->dev,
+      if (ipmi_cmd_set_pef_configuration_parameters_alert_strings (state_data->ipmi_ctx,
                                                                    string_selector,
                                                                    i+1,
                                                                    alert_string_buf + (i * 16),
@@ -324,7 +324,7 @@ alert_string_commit (const char *section_name,
           if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf(stderr,
                     "ipmi_cmd_set_pef_configuration_parameters_alert_strings: %s\n",
-                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }

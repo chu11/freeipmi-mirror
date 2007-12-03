@@ -30,13 +30,13 @@ get_lan_channel_number (struct pef_config_state_data *state_data, uint8_t *chann
       return 0;
     }
 
-  if ((state_data->lan_channel_number = ipmi_get_channel_number (state_data->dev,
+  if ((state_data->lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
                                                                  IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0) 
     {
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_get_channel_number: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       return CONFIG_ERR_NON_FATAL_ERROR;
     }
   
@@ -72,7 +72,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (state_data->dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (state_data->ipmi_ctx, 
 									channel_number, 
 									IPMI_GET_LAN_PARAMETER, 
 									SET_SELECTOR, 
@@ -82,7 +82,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_number_of_destinations: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -124,7 +124,7 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->dev, 
+  if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->ipmi_ctx, 
 										IPMI_GET_PEF_PARAMETER, 
 										SET_SELECTOR, 
 										BLOCK_SELECTOR, 
@@ -133,7 +133,7 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -175,7 +175,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->dev, 
+  if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->ipmi_ctx, 
 										IPMI_GET_PEF_PARAMETER, 
 										SET_SELECTOR, 
 										BLOCK_SELECTOR, 
@@ -184,7 +184,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -226,7 +226,7 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *
   if (!(obj_cmd_rs = Fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->dev, 
+  if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->ipmi_ctx, 
 									 IPMI_GET_PEF_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
@@ -235,7 +235,7 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

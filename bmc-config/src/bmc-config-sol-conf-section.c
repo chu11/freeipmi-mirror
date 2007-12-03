@@ -54,7 +54,7 @@ enable_sol_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_enable (state_data->dev, 
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_enable (state_data->ipmi_ctx, 
 							    channel_number, 
 							    IPMI_GET_SOL_PARAMETER, 
 							    SET_SELECTOR, 
@@ -64,7 +64,7 @@ enable_sol_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_sol_configuration_parameters_sol_enable: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -101,7 +101,7 @@ enable_sol_commit (const char *section_name,
       goto cleanup;
     }
   
-  if (ipmi_cmd_set_sol_configuration_parameters_sol_enable (state_data->dev, 
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_enable (state_data->ipmi_ctx, 
 							    channel_number,
                                                             same (kv->value_input, "yes"),
 							    obj_cmd_rs) < 0)
@@ -109,7 +109,7 @@ enable_sol_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_sol_configuration_parameters_sol_enable: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -142,7 +142,7 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_authentication (state_data->dev, 
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_authentication (state_data->ipmi_ctx, 
 								    channel_number, 
 								    IPMI_GET_SOL_PARAMETER, 
 								    SET_SELECTOR, 
@@ -152,7 +152,7 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_sol_configuration_parameters_sol_authentication: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -196,7 +196,7 @@ _set_sol_sol_authentication(bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_sol_configuration_parameters_sol_authentication (state_data->dev, 
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_authentication (state_data->ipmi_ctx, 
 								    channel_number,
 								    sa->sol_privilege_level,
 								    sa->force_sol_payload_authentication,
@@ -206,7 +206,7 @@ _set_sol_sol_authentication(bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_sol_configuration_parameters_sol_authentication: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -344,7 +344,7 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (state_data->dev, 
+  if (ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (state_data->ipmi_ctx, 
 												  channel_number, 
 												  IPMI_GET_SOL_PARAMETER, 
 												  SET_SELECTOR, 
@@ -354,7 +354,7 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -394,7 +394,7 @@ _set_sol_character_accumulate_interval_and_send_threshold(bmc_config_state_data_
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (state_data->dev, 
+  if (ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (state_data->ipmi_ctx, 
 												  channel_number,
 												  it->character_accumulate_interval,
 												  it->character_send_threshold,
@@ -403,7 +403,7 @@ _set_sol_character_accumulate_interval_and_send_threshold(bmc_config_state_data_
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -506,7 +506,7 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_retry (state_data->dev, 
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_retry (state_data->ipmi_ctx, 
 							   channel_number, 
 							   IPMI_GET_SOL_PARAMETER, 
 							   SET_SELECTOR, 
@@ -516,7 +516,7 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_sol_configuration_parameters_sol_retry: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -553,7 +553,7 @@ _set_sol_sol_retry(bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_sol_configuration_parameters_sol_retry (state_data->dev, 
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_retry (state_data->ipmi_ctx, 
 							   channel_number,
 							   sr->retry_count,
 							   sr->retry_interval,
@@ -562,7 +562,7 @@ _set_sol_sol_retry(bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_sol_configuration_parameters_sol_retry: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -665,7 +665,7 @@ non_volatile_bit_rate_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (state_data->dev, 
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (state_data->ipmi_ctx, 
                                                                            channel_number, 
                                                                            IPMI_GET_SOL_PARAMETER, 
                                                                            SET_SELECTOR, 
@@ -675,7 +675,7 @@ non_volatile_bit_rate_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -712,7 +712,7 @@ non_volatile_bit_rate_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (state_data->dev, 
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (state_data->ipmi_ctx, 
 									   channel_number,
 									   sol_bit_rate_number (kv->value_input),
 									   obj_cmd_rs) < 0)
@@ -720,7 +720,7 @@ non_volatile_bit_rate_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -752,7 +752,7 @@ volatile_bit_rate_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (state_data->dev, 
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (state_data->ipmi_ctx, 
 								       channel_number, 
 								       IPMI_GET_SOL_PARAMETER, 
 								       SET_SELECTOR, 
@@ -762,7 +762,7 @@ volatile_bit_rate_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -799,7 +799,7 @@ volatile_bit_rate_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (state_data->dev, 
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (state_data->ipmi_ctx, 
 								       channel_number,
 								       sol_bit_rate_number (kv->value_input),
 								       obj_cmd_rs) < 0)
@@ -807,7 +807,7 @@ volatile_bit_rate_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -839,7 +839,7 @@ sol_payload_port_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (state_data->dev, 
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (state_data->ipmi_ctx, 
 									 channel_number, 
 									 IPMI_GET_SOL_PARAMETER, 
 									 SET_SELECTOR, 
@@ -849,7 +849,7 @@ sol_payload_port_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -886,7 +886,7 @@ sol_payload_port_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (state_data->dev, 
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (state_data->ipmi_ctx, 
 									 channel_number,
                                                                          atoi (kv->value_input),
 									 obj_cmd_rs) < 0)
@@ -894,7 +894,7 @@ sol_payload_port_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

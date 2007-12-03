@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-udm.h,v 1.3 2007-09-05 20:13:40 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-udm.h,v 1.3.4.1 2007-12-03 05:13:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -35,11 +35,11 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
-int8_t ipmi_cmd_get_fru_inventory_area_info (ipmi_device_t dev,
+int8_t ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
                                              uint8_t fru_device_id,
                                              fiid_obj_t obj_cmd_rs);
   
-int8_t ipmi_cmd_read_fru_data (ipmi_device_t dev,
+int8_t ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
                                uint8_t fru_device_id,
                                uint16_t fru_inventory_offset_to_read,
                                uint8_t count_to_read,

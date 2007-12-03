@@ -68,7 +68,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
       return (-1);
     }
 
-  if ((rs_len = ipmi_cmd_raw (state_data->dev, 
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx, 
                               bytes_rq[0],
                               bytes_rq[1],
                               &bytes_rq[2],
@@ -86,7 +86,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_raw: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       return -1;
     }
 
@@ -242,7 +242,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
           goto end_loop;
         }
 
-      if ((rs_len = ipmi_cmd_raw (state_data->dev, 
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx, 
 				  bytes_rq[0], 
 				  bytes_rq[1], 
 				  &bytes_rq[2], 
@@ -253,7 +253,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
           pstdout_fprintf(state_data->pstate,
                           stderr,
                           "ipmi_cmd_raw: %s\n",
-                          ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                          ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           goto end_loop;
         }
       
@@ -337,18 +337,18 @@ _ipmi_raw (pstdout_state_t pstate,
 {
   ipmi_raw_state_data_t state_data;
   ipmi_raw_prog_data_t *prog_data;
-  ipmi_device_t dev = NULL;
-  char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
+  ipmi_ctx_t ipmi_ctx = NULL;
+  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   prog_data = (ipmi_raw_prog_data_t *)arg;
   memset(&state_data, '\0', sizeof(ipmi_raw_state_data_t));
 
-  if (!(dev = ipmi_device_open(prog_data->progname,
-                               hostname,
-                               &(prog_data->args->common),
-                               errmsg,
-                               IPMI_DEVICE_OPEN_ERRMSGLEN)))
+  if (!(ipmi_ctx = ipmi_open(prog_data->progname,
+                             hostname,
+                             &(prog_data->args->common),
+                             errmsg,
+                             IPMI_OPEN_ERRMSGLEN)))
     {
       pstdout_fprintf(pstate,
                       stderr,
@@ -358,7 +358,7 @@ _ipmi_raw (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  state_data.dev = dev;
+  state_data.ipmi_ctx = ipmi_ctx;
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 
@@ -370,10 +370,10 @@ _ipmi_raw (pstdout_state_t pstate,
 
   exit_code = 0;
  cleanup:
-  if (dev)
+  if (ipmi_ctx)
     {
-      ipmi_close_device (dev);
-      ipmi_device_destroy (dev);
+      ipmi_ctx_close (ipmi_ctx);
+      ipmi_ctx_destroy (ipmi_ctx);
     }
   return exit_code;
 }

@@ -30,52 +30,52 @@ extern "C" {
 #include <freeipmi/udm/ipmi-udm.h>
 
 int8_t 
-ipmi_cmd_get_chassis_capabilities (ipmi_device_t dev, 
+ipmi_cmd_get_chassis_capabilities (ipmi_ctx_t ctx, 
                                    fiid_obj_t obj_cmd_rs);
 
 int8_t 
-ipmi_cmd_get_chassis_status (ipmi_device_t dev, 
+ipmi_cmd_get_chassis_status (ipmi_ctx_t ctx, 
                              fiid_obj_t obj_cmd_rs);
 
 int8_t 
-ipmi_cmd_chassis_control (ipmi_device_t dev,
+ipmi_cmd_chassis_control (ipmi_ctx_t ctx,
                           uint8_t chassis_control,
                           fiid_obj_t obj_cmd_rs);
 
 int8_t 
-ipmi_cmd_chassis_identify (ipmi_device_t dev,
+ipmi_cmd_chassis_identify (ipmi_ctx_t ctx,
                            uint8_t *identify_interval,
                            uint8_t *force_identify,
                            fiid_obj_t obj_cmd_rs);
 
 int8_t 
-ipmi_cmd_set_power_restore_policy (ipmi_device_t dev, 
+ipmi_cmd_set_power_restore_policy (ipmi_ctx_t ctx, 
                                    uint8_t power_restore_policy, 
                                    fiid_obj_t obj_cmd_rs);
 
 int8_t 
-ipmi_cmd_set_power_cycle_interval (ipmi_device_t dev,
+ipmi_cmd_set_power_cycle_interval (ipmi_ctx_t ctx,
                                    uint8_t interval,
                                    fiid_obj_t obj_cmd_rs);
 
 int8_t 
-ipmi_cmd_get_system_restart_cause (ipmi_device_t dev, 
+ipmi_cmd_get_system_restart_cause (ipmi_ctx_t ctx, 
                                    fiid_obj_t obj_cmd_rs);
 
 int8_t 
-ipmi_cmd_set_system_boot_options(ipmi_device_t dev,
+ipmi_cmd_set_system_boot_options(ipmi_ctx_t ctx,
                                  uint8_t parameter_selector,
                                  uint8_t *configuration_parameter_data,
                                  uint8_t data_len,
                                  fiid_obj_t obj_cmd_rs);
 
 int8_t
-ipmi_cmd_set_system_boot_options_set_in_progress(ipmi_device_t dev, 
+ipmi_cmd_set_system_boot_options_set_in_progress(ipmi_ctx_t ctx, 
                                                  uint8_t value,
                                                  fiid_obj_t obj_cmd_rs);
 
 int8_t 
-ipmi_cmd_set_system_boot_options_boot_flags (ipmi_device_t dev,
+ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                              uint8_t bios_boot_type,
                                              uint8_t boot_flags_persistent,
                                              uint8_t boot_flags_valid,
@@ -95,7 +95,7 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_device_t dev,
                                              fiid_obj_t obj_cmd_rs);
 
 int8_t 
-ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_device_t dev,
+ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
                                                         uint8_t *bios_or_post_handled_boot_info,
                                                         uint8_t *os_loader_handled_boot_info,
                                                         uint8_t *os_or_service_partition_handled_boot_info,
@@ -104,19 +104,19 @@ ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_device_t dev,
                                                         fiid_obj_t obj_cmd_rs);
 
 int8_t 
-ipmi_cmd_get_system_boot_options (ipmi_device_t dev,
+ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
                                   uint8_t parmeter_selector,
                                   uint8_t set_selector,
                                   uint8_t block_selector,
                                   fiid_obj_t obj_cmd_rs);
 int8_t 
-ipmi_cmd_get_system_boot_options_boot_flags (ipmi_device_t dev,
+ipmi_cmd_get_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                              uint8_t set_selector,
                                              uint8_t boot_selector,
                                              fiid_obj_t obj_cmd_rs);
 
 int8_t
-ipmi_cmd_get_power_on_hours_counter (ipmi_device_t dev,
+ipmi_cmd_get_power_on_hours_counter (ipmi_ctx_t ctx,
                                      fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus

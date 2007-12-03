@@ -91,12 +91,12 @@ display_sdr_repository_info (ipmi_sensors_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sdr_repository_info (state_data->dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_sdr_repository_info (state_data->ipmi_ctx, obj_cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_sdr_repository_info: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
  
@@ -245,7 +245,7 @@ display_group_sensors (ipmi_sensors_state_data_t *state_data)
 	{
           memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
           
-          if (get_sensor_reading(state_data->dev,
+          if (get_sensor_reading(state_data->ipmi_ctx,
                                  sdr_record,
                                  &_sensor_reading) < 0)
             sensor_reading = NULL;
@@ -312,7 +312,7 @@ display_sensor_list (ipmi_sensors_state_data_t *state_data)
 	{
           memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
 
-          if (get_sensor_reading(state_data->dev,
+          if (get_sensor_reading(state_data->ipmi_ctx,
                                  sdr_record,
                                  &_sensor_reading) < 0)
             sensor_reading = NULL;
@@ -385,7 +385,7 @@ display_sensors (ipmi_sensors_state_data_t *state_data)
 
 	  memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
 
-          if (get_sensor_reading(state_data->dev,
+          if (get_sensor_reading(state_data->ipmi_ctx,
                                  sdr_record,
                                  &_sensor_reading) < 0)
             sensor_reading = NULL;
@@ -461,7 +461,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
     return display_group_list (state_data);
   
   if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
-                                 state_data->dev,
+                                 state_data->ipmi_ctx,
                                  state_data->hostname,
                                  args->sdr.sdr_cache_dir,
                                  (args->sdr.quiet_cache_wanted) ? 0 : 1,
@@ -499,8 +499,8 @@ _ipmi_sensors (pstdout_state_t pstate,
 {
   ipmi_sensors_state_data_t state_data;
   ipmi_sensors_prog_data_t *prog_data;
-  ipmi_device_t dev = NULL;
-  char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
+  ipmi_ctx_t ipmi_ctx = NULL;
+  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   prog_data = (ipmi_sensors_prog_data_t *)arg;
@@ -509,11 +509,11 @@ _ipmi_sensors (pstdout_state_t pstate,
   /* Special case, just flush, don't do an IPMI connection */
   if (!prog_data->args->sdr.flush_cache_wanted)
     {
-      if (!(dev = ipmi_device_open(prog_data->progname,
-                                   hostname,
-                                   &(prog_data->args->common),
-                                   errmsg,
-                                   IPMI_DEVICE_OPEN_ERRMSGLEN)))
+      if (!(ipmi_ctx = ipmi_open(prog_data->progname,
+                                 hostname,
+                                 &(prog_data->args->common),
+                                 errmsg,
+                                 IPMI_OPEN_ERRMSGLEN)))
         {
           pstdout_fprintf(pstate,
                           stderr,
@@ -524,7 +524,7 @@ _ipmi_sensors (pstdout_state_t pstate,
         }
     }
       
-  state_data.dev = dev;
+  state_data.ipmi_ctx = ipmi_ctx;
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
@@ -546,10 +546,10 @@ _ipmi_sensors (pstdout_state_t pstate,
  cleanup:
   if (state_data.sdr_cache_ctx)
     sdr_cache_ctx_destroy(state_data.sdr_cache_ctx);
-  if (dev)
+  if (ipmi_ctx)
     {
-      ipmi_close_device (dev);
-      ipmi_device_destroy (dev);
+      ipmi_ctx_close (ipmi_ctx);
+      ipmi_ctx_destroy (ipmi_ctx);
     }
   return exit_code;
 }

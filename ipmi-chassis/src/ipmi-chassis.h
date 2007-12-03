@@ -87,7 +87,7 @@ typedef struct ipmi_chassis_prog_data
 typedef struct ipmi_chassis_state_data
 {
   ipmi_chassis_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
 } ipmi_chassis_state_data_t;
 

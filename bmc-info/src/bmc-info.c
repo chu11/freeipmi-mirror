@@ -152,12 +152,12 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       return (-1);
     }
 
-  if (ipmi_cmd_get_device_id (state_data->dev, cmd_rs) != 0)
+  if (ipmi_cmd_get_device_id (state_data->ipmi_ctx, cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_device_id: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -310,7 +310,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
 
   for (i = 0, ci = 0; i < NUM_CHANNELS; i++)
     {
-      if (ipmi_cmd_get_channel_info (state_data->dev, 
+      if (ipmi_cmd_get_channel_info (state_data->ipmi_ctx, 
 				     i, 
 				     data_rs) != 0)
 	continue;
@@ -454,18 +454,18 @@ _bmc_info(pstdout_state_t pstate,
 {
   bmc_info_state_data_t state_data;
   bmc_info_prog_data_t *prog_data;
-  ipmi_device_t dev = NULL;
-  char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
+  ipmi_ctx_t ipmi_ctx = NULL;
+  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   prog_data = (bmc_info_prog_data_t *)arg;
   memset(&state_data, '\0', sizeof(bmc_info_state_data_t));
   
-  if (!(dev = ipmi_device_open(prog_data->progname,
-                               hostname,
-                               &(prog_data->args->common),
-                               errmsg,
-                               IPMI_DEVICE_OPEN_ERRMSGLEN)))
+  if (!(ipmi_ctx = ipmi_open(prog_data->progname,
+                             hostname,
+                             &(prog_data->args->common),
+                             errmsg,
+                             IPMI_OPEN_ERRMSGLEN)))
     {
       pstdout_fprintf(pstate,
                       stderr,
@@ -475,7 +475,7 @@ _bmc_info(pstdout_state_t pstate,
       goto cleanup;
     }
 
-  state_data.dev = dev;
+  state_data.ipmi_ctx = ipmi_ctx;
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 
@@ -487,10 +487,10 @@ _bmc_info(pstdout_state_t pstate,
 
   exit_code = 0;
  cleanup:
-  if (dev)
+  if (ipmi_ctx)
     {
-      ipmi_close_device (dev);
-      ipmi_device_destroy (dev);
+      ipmi_ctx_close (ipmi_ctx);
+      ipmi_ctx_destroy (ipmi_ctx);
     }
   return exit_code;
 }

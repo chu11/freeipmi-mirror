@@ -24,12 +24,12 @@ pef_info (pef_config_state_data_t *state_data)
   if (!(obj_cmd_rs = Fiid_obj_create (tmpl_cmd_get_pef_capabilities_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_get_pef_capabilities (state_data->dev, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_pef_capabilities (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_capabilities: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       fprintf (stderr, "Failure Retrieving PEF info\n");
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
@@ -83,7 +83,7 @@ pef_info (pef_config_state_data_t *state_data)
       if (!(obj_cmd_rs = Fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))
         goto cleanup;
 
-      if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->dev,
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->ipmi_ctx,
                                                                              IPMI_GET_PEF_PARAMETER,
                                                                              SET_SELECTOR,
                                                                              BLOCK_SELECTOR,
@@ -92,7 +92,7 @@ pef_info (pef_config_state_data_t *state_data)
           if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf(stderr,
                     "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters: %s\n",
-                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           fprintf (stderr, "Failure Retrieving PEF info\n");
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
@@ -108,7 +108,7 @@ pef_info (pef_config_state_data_t *state_data)
       if (!(obj_cmd_rs = Fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
         goto cleanup;
 
-      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->dev,
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->ipmi_ctx,
                                                                                     IPMI_GET_PEF_PARAMETER,
                                                                                     SET_SELECTOR,
                                                                                     BLOCK_SELECTOR,
@@ -117,7 +117,7 @@ pef_info (pef_config_state_data_t *state_data)
           if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf(stderr,
                     "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries: %s\n",
-                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           fprintf (stderr, "Failure Retrieving PEF info\n");
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
@@ -133,7 +133,7 @@ pef_info (pef_config_state_data_t *state_data)
       if (!(obj_cmd_rs = Fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
         goto cleanup;
 
-      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->dev,
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->ipmi_ctx,
                                                                              IPMI_GET_PEF_PARAMETER,
                                                                              SET_SELECTOR,
                                                                              BLOCK_SELECTOR,
@@ -142,7 +142,7 @@ pef_info (pef_config_state_data_t *state_data)
           if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf(stderr,
                     "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings: %s\n",
-                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           fprintf (stderr, "Failure Retrieving PEF info\n");
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;

@@ -288,7 +288,7 @@ _get_event_message_list (int sensor_type_code, uint16_t sensor_state)
 }
 
 int8_t 
-get_sensor_reading (ipmi_device_t dev, 
+get_sensor_reading (ipmi_ctx_t ctx, 
 		    sdr_record_t *sdr_record, 
 		    sensor_reading_t *sensor_reading)
 {
@@ -348,7 +348,7 @@ get_sensor_reading (ipmi_device_t dev,
   int32_t len;
   uint64_t val;
   
-  ERR_EINVAL (dev
+  ERR_EINVAL (ctx
 	      && sdr_record
 	      && sensor_reading);
 
@@ -388,7 +388,7 @@ get_sensor_reading (ipmi_device_t dev,
       FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_get_sensor_reading_threshold_rs);
       FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_threshold_rs);
 
-      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sensor_reading_threshold (dev, 
+      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sensor_reading_threshold (ctx, 
                                                                 sensor_number, 
                                                                 obj_cmd_rs) < 0));
 
@@ -442,7 +442,7 @@ get_sensor_reading (ipmi_device_t dev,
 
       FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sensor_reading_discrete (dev, 
+      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sensor_reading_discrete (ctx, 
                                                                sensor_number, 
                                                                obj_cmd_rs) < 0));
       
@@ -483,7 +483,7 @@ get_sensor_reading (ipmi_device_t dev,
 
       FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sensor_reading_discrete (dev, 
+      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sensor_reading_discrete (ctx, 
                                                                sensor_number, 
                                                                obj_cmd_rs) < 0));
       
@@ -524,7 +524,7 @@ get_sensor_reading (ipmi_device_t dev,
 
       FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sensor_reading_discrete (dev, 
+      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sensor_reading_discrete (ctx, 
                                                                sensor_number, 
                                                                obj_cmd_rs) < 0));
       

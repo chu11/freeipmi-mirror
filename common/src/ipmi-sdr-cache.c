@@ -1362,7 +1362,7 @@ _get_sdr_oem_record (sdr_cache_ctx_t ctx,
 
 static int
 _get_sdr_sensor_record (sdr_cache_ctx_t ctx,
-                        ipmi_device_t dev, 
+                        ipmi_ctx_t ipmi_ctx, 
                         uint16_t record_id, 
                         fiid_obj_t obj_cmd_rs, 
                         uint8_t *sensor_record,
@@ -1387,7 +1387,7 @@ _get_sdr_sensor_record (sdr_cache_ctx_t ctx,
 
   assert(ctx);
   assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
-  assert(dev);
+  assert(ipmi_ctx);
   assert(sensor_record);
   assert(sensor_record_len);
 
@@ -1413,7 +1413,7 @@ _get_sdr_sensor_record (sdr_cache_ctx_t ctx,
 
   _SDR_FIID_OBJ_CREATE(obj_reserve_sdr_rs, tmpl_cmd_reserve_sdr_repository_rs);
 
-  if (ipmi_cmd_reserve_sdr_repository (dev, obj_reserve_sdr_rs) < 0)
+  if (ipmi_cmd_reserve_sdr_repository (ipmi_ctx, obj_reserve_sdr_rs) < 0)
     {
       ctx->errnum = SDR_CACHE_CTX_ERR_IPMI_COMMUNICATION;
       goto cleanup;
@@ -1422,7 +1422,7 @@ _get_sdr_sensor_record (sdr_cache_ctx_t ctx,
   _SDR_FIID_OBJ_GET (obj_reserve_sdr_rs, "reservation_id", &val);
   reservation_id = (uint16_t) val;
   
-  if (ipmi_cmd_get_sdr (dev, 
+  if (ipmi_cmd_get_sdr (ipmi_ctx, 
                         reservation_id,
                         record_id, 
                         0, 
@@ -1450,7 +1450,7 @@ _get_sdr_sensor_record (sdr_cache_ctx_t ctx,
   
   _SDR_FIID_OBJ_CLEAR(obj_reserve_sdr_rs);
 
-  if (ipmi_cmd_reserve_sdr_repository (dev, obj_reserve_sdr_rs) < 0)
+  if (ipmi_cmd_reserve_sdr_repository (ipmi_ctx, obj_reserve_sdr_rs) < 0)
     {
       ctx->errnum = SDR_CACHE_CTX_ERR_IPMI_COMMUNICATION;
       goto cleanup;
@@ -1474,7 +1474,7 @@ _get_sdr_sensor_record (sdr_cache_ctx_t ctx,
       
       _SDR_FIID_OBJ_CLEAR (obj_cmd_rs);
       
-      if (ipmi_cmd_get_sdr (dev, 
+      if (ipmi_cmd_get_sdr (ipmi_ctx, 
                             reservation_id, 
                             record_id, 
                             offset_into_record, 
@@ -1510,7 +1510,7 @@ _get_sdr_sensor_record (sdr_cache_ctx_t ctx,
 
 static int
 _get_sdr_record (sdr_cache_ctx_t ctx,
-                 ipmi_device_t dev, 
+                 ipmi_ctx_t ipmi_ctx, 
                  uint16_t record_id, 
                  uint16_t *next_record_id, 
                  sdr_record_t *sdr_record,
@@ -1526,14 +1526,14 @@ _get_sdr_record (sdr_cache_ctx_t ctx,
 
   assert(ctx);
   assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
-  assert(dev);
+  assert(ipmi_ctx);
 
   _SDR_FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sdr_rs);
   _SDR_FIID_OBJ_CREATE (obj_sdr_record, tmpl_sdr_record_header);
 
   sensor_record_len = 1024;
   if (_get_sdr_sensor_record (ctx,
-                              dev, 
+                              ipmi_ctx, 
                               record_id, 
                               obj_cmd_rs, 
                               sensor_record,
@@ -1569,7 +1569,7 @@ _get_sdr_record (sdr_cache_ctx_t ctx,
       
       _SDR_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_thresholds_rs);
 
-      if (ipmi_cmd_get_sensor_thresholds (dev, 
+      if (ipmi_cmd_get_sensor_thresholds (ipmi_ctx, 
 					  sdr_record->record.sdr_full_record.sensor_number, 
 					  obj_cmd_rs) != 0)
         /* This is ok - no biggie if we can't get thresholds*/
@@ -1684,7 +1684,7 @@ _get_sdr_record (sdr_cache_ctx_t ctx,
 
 int 
 sdr_cache_create (sdr_cache_ctx_t ctx,
-                  ipmi_device_t dev, 
+                  ipmi_ctx_t ipmi_ctx, 
                   char *host,
                   char *user_cache_dir,
                   int verbose,
@@ -1700,7 +1700,7 @@ sdr_cache_create (sdr_cache_ctx_t ctx,
   if (!ctx || ctx->magic != SDR_CACHE_CTX_MAGIC)
     return -1;
 
-  if (!dev)
+  if (!ipmi_ctx)
     {
       ctx->errnum = SDR_CACHE_CTX_ERR_PARAMETERS;
       return -1;
@@ -1748,7 +1748,7 @@ sdr_cache_create (sdr_cache_ctx_t ctx,
     fprintf (stderr, "Fetching SDR repository information... ");
 
   if (sdr_cache_write_repository_info (ctx, 
-                                       dev, 
+                                       ipmi_ctx, 
                                        fp,
                                        &sdr_record_count) < 0)
     goto cleanup;
@@ -1773,7 +1773,7 @@ sdr_cache_create (sdr_cache_ctx_t ctx,
                    record_id);
 
 	if (_get_sdr_record (ctx,
-                             dev, 
+                             ipmi_ctx, 
 			     record_id, 
 			     &next_record_id, 
 			     &sdr_record,
@@ -1955,7 +1955,7 @@ _get_record_count(sdr_cache_ctx_t ctx,
 
 static int 
 _get_sdr_timestamps (sdr_cache_ctx_t ctx,
-                     ipmi_device_t dev, 
+                     ipmi_ctx_t ipmi_ctx, 
                      unsigned int *addition_timestamp,
                      unsigned int *erase_timestamp)
 {
@@ -1965,13 +1965,13 @@ _get_sdr_timestamps (sdr_cache_ctx_t ctx,
 
   assert(ctx);
   assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
-  assert(dev);
+  assert(ipmi_ctx);
   assert(addition_timestamp);
   assert(erase_timestamp);
 
   _SDR_FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sdr_repository_info_rs);
   
-  if (ipmi_cmd_get_sdr_repository_info (dev, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_sdr_repository_info (ipmi_ctx, obj_cmd_rs) < 0)
     {
       ctx->errnum = SDR_CACHE_CTX_ERR_IPMI_COMMUNICATION;
       goto cleanup;
@@ -1992,7 +1992,7 @@ _get_sdr_timestamps (sdr_cache_ctx_t ctx,
 
 int 
 sdr_cache_load (sdr_cache_ctx_t ctx,
-                ipmi_device_t dev,
+                ipmi_ctx_t ipmi_ctx,
                 char *host,
                 char *user_cache_dir,
 		sdr_record_t **sdr_record_list,
@@ -2009,7 +2009,7 @@ sdr_cache_load (sdr_cache_ctx_t ctx,
   if (!ctx || ctx->magic != SDR_CACHE_CTX_MAGIC)
     return -1;
 
-  if (!dev
+  if (!ipmi_ctx
       || !sdr_record_list
       || !sdr_record_count)
     {
@@ -2055,7 +2055,7 @@ sdr_cache_load (sdr_cache_ctx_t ctx,
   cache_record = NULL;
   
   if (_get_sdr_timestamps (ctx,
-                           dev, 
+                           ipmi_ctx, 
                            &sdr_addition_timestamp,
                            &sdr_erase_timestamp) < 0)
     goto cleanup;
@@ -2126,7 +2126,7 @@ sdr_cache_load (sdr_cache_ctx_t ctx,
 
 int 
 sdr_cache_create_and_load (sdr_cache_ctx_t ctx,
-                           ipmi_device_t dev,
+                           ipmi_ctx_t ipmi_ctx,
                            char *host,
                            char *user_cache_dir,
                            int verbose,
@@ -2141,7 +2141,7 @@ sdr_cache_create_and_load (sdr_cache_ctx_t ctx,
   if (!ctx || ctx->magic != SDR_CACHE_CTX_MAGIC)
     return -1;
 
-  if (!dev
+  if (!ipmi_ctx
       || !sdr_record_list
       || !sdr_record_count
       || !errmsg
@@ -2154,7 +2154,7 @@ sdr_cache_create_and_load (sdr_cache_ctx_t ctx,
   *sdr_record_list = NULL;
   *sdr_record_count = 0;
   if (sdr_cache_load(ctx,
-                     dev,
+                     ipmi_ctx,
                      host,
                      user_cache_dir,
                      sdr_record_list,
@@ -2180,7 +2180,7 @@ sdr_cache_create_and_load (sdr_cache_ctx_t ctx,
   if (sdr_cache_ctx_errnum(ctx) == SDR_CACHE_CTX_ERR_CACHE_DOES_NOT_EXIST)
     {
       if (sdr_cache_create (ctx,
-                            dev,
+                            ipmi_ctx,
                             host,
                             user_cache_dir,
                             verbose,
@@ -2194,7 +2194,7 @@ sdr_cache_create_and_load (sdr_cache_ctx_t ctx,
         }
 
       if (sdr_cache_load(ctx,
-                         dev,
+                         ipmi_ctx,
                          host,
                          user_cache_dir,
                          sdr_record_list,

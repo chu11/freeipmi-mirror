@@ -44,7 +44,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
       if (!(obj_cmd_count_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs)))
 	goto cleanup;
 
-      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (state_data->dev, 
+      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (state_data->ipmi_ctx, 
 												   channel_number, 
 												   IPMI_GET_LAN_PARAMETER, 
 												   SET_SELECTOR, 
@@ -54,7 +54,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
           if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf(stderr,
                     "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support: %s\n",
-                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -73,7 +73,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
       if (!(obj_cmd_id_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs)))
 	goto cleanup;
 
-      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (state_data->dev, 
+      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (state_data->ipmi_ctx, 
 											     channel_number, 
 											     IPMI_GET_LAN_PARAMETER, 
 											     SET_SELECTOR, 
@@ -83,7 +83,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
           if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf(stderr,
                     "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries: %s\n",
-                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -139,7 +139,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
       if (!(obj_cmd_priv_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs)))
 	goto cleanup;
 
-      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (state_data->dev, 
+      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (state_data->ipmi_ctx, 
 												      channel_number, 
 												      IPMI_GET_LAN_PARAMETER, 
 												      SET_SELECTOR, 
@@ -149,7 +149,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
           if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf(stderr,
                     "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_level: %s\n",
-                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -273,7 +273,7 @@ id_commit (const char *section_name,
   memcpy(privs, state_data->cipher_suite_priv, CIPHER_SUITE_LEN);
   privs[id] = privilege;
   
-  if (ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(state_data->ipmi_ctx,
                                                                                                  channel_number,
                                                                                                  privs[0],
                                                                                                  privs[1],
@@ -296,7 +296,7 @@ id_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

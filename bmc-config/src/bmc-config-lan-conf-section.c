@@ -45,7 +45,7 @@ ip_address_source_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_ip_address_source (state_data->dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_ip_address_source (state_data->ipmi_ctx, 
 								   channel_number, 
 								   IPMI_GET_LAN_PARAMETER, 
 								   SET_SELECTOR, 
@@ -55,7 +55,7 @@ ip_address_source_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_ip_address_source: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -92,7 +92,7 @@ ip_address_source_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_ip_address_source (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_ip_address_source (state_data->ipmi_ctx,
                                                                    channel_number,
                                                                    ip_address_source_number (kv->value_input),
                                                                    obj_cmd_rs) < 0)
@@ -100,7 +100,7 @@ ip_address_source_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_ip_address_source: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -133,7 +133,7 @@ ip_address_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_ip_address (state_data->dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_ip_address (state_data->ipmi_ctx, 
 							    channel_number, 
 							    IPMI_GET_LAN_PARAMETER, 
 							    SET_SELECTOR, 
@@ -143,7 +143,7 @@ ip_address_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_ip_address: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -196,7 +196,7 @@ ip_address_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_ip_address (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_ip_address (state_data->ipmi_ctx,
                                                             channel_number,
                                                             ip_address_val,
                                                             obj_cmd_rs) < 0)
@@ -204,7 +204,7 @@ ip_address_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_ip_address: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -237,7 +237,7 @@ mac_address_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_mac_address (state_data->dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_mac_address (state_data->ipmi_ctx, 
 							     channel_number, 
 							     IPMI_GET_LAN_PARAMETER, 
 							     SET_SELECTOR, 
@@ -247,7 +247,7 @@ mac_address_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_mac_address: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -303,7 +303,7 @@ mac_address_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_mac_address (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_mac_address (state_data->ipmi_ctx,
                                                              channel_number,
                                                              mac_address_val,
                                                              obj_cmd_rs) < 0)
@@ -311,7 +311,7 @@ mac_address_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_mac_address: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -344,7 +344,7 @@ subnet_mask_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_subnet_mask (state_data->dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_subnet_mask (state_data->ipmi_ctx, 
 							     channel_number, 
 							     IPMI_GET_LAN_PARAMETER, 
 							     SET_SELECTOR, 
@@ -354,7 +354,7 @@ subnet_mask_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_subnet_mask: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -407,7 +407,7 @@ subnet_mask_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_subnet_mask (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_subnet_mask (state_data->ipmi_ctx,
                                                              channel_number,
                                                              subnet_mask_val,
                                                              obj_cmd_rs) < 0)
@@ -415,7 +415,7 @@ subnet_mask_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_subnet_mask: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -448,7 +448,7 @@ default_gateway_address_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (state_data->dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (state_data->ipmi_ctx, 
 									 channel_number, 
 									 IPMI_GET_LAN_PARAMETER, 
 									 SET_SELECTOR, 
@@ -458,7 +458,7 @@ default_gateway_address_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_default_gateway_address: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -512,7 +512,7 @@ default_gateway_address_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (state_data->ipmi_ctx,
                                                                          channel_number,
                                                                          ip_address_val,
                                                                          obj_cmd_rs) < 0)
@@ -520,7 +520,7 @@ default_gateway_address_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_default_gateway_address: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -553,7 +553,7 @@ default_gateway_mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (state_data->dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (state_data->ipmi_ctx, 
 									     channel_number, 
 									     IPMI_GET_LAN_PARAMETER, 
 									     SET_SELECTOR, 
@@ -563,7 +563,7 @@ default_gateway_mac_address_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -619,7 +619,7 @@ default_gateway_mac_address_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (state_data->ipmi_ctx,
                                                                              channel_number,
                                                                              mac_address_val,
                                                                              obj_cmd_rs) < 0)
@@ -627,7 +627,7 @@ default_gateway_mac_address_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -660,7 +660,7 @@ backup_gateway_address_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (state_data->dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (state_data->ipmi_ctx, 
 									channel_number, 
 									IPMI_GET_LAN_PARAMETER, 
 									SET_SELECTOR, 
@@ -670,7 +670,7 @@ backup_gateway_address_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -723,7 +723,7 @@ backup_gateway_address_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (state_data->ipmi_ctx,
                                                                         channel_number,
                                                                         ip_address_val,
                                                                         obj_cmd_rs) < 0)
@@ -731,7 +731,7 @@ backup_gateway_address_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -764,7 +764,7 @@ backup_gateway_mac_address_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (state_data->dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (state_data->ipmi_ctx, 
 									    channel_number, 
 									    IPMI_GET_LAN_PARAMETER, 
 									    SET_SELECTOR, 
@@ -774,7 +774,7 @@ backup_gateway_mac_address_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -829,7 +829,7 @@ backup_gateway_mac_address_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (state_data->ipmi_ctx,
                                                                             channel_number,
                                                                             mac_address_val,
                                                                             obj_cmd_rs) < 0)
@@ -837,7 +837,7 @@ backup_gateway_mac_address_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -870,7 +870,7 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_vlan_id (state_data->dev,
+  if (ipmi_cmd_get_lan_configuration_parameters_vlan_id (state_data->ipmi_ctx,
                                                          channel_number,
                                                          IPMI_GET_LAN_PARAMETER,
                                                          SET_SELECTOR,
@@ -880,7 +880,7 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_vlan_id: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -920,7 +920,7 @@ _set_vlan_id (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_vlan_id (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_vlan_id (state_data->ipmi_ctx,
                                                          channel_number,
                                                          vi->vlan_id,
                                                          vi->vlan_id_enable,
@@ -929,7 +929,7 @@ _set_vlan_id (bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_vlan_id: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1039,7 +1039,7 @@ vlan_priority_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_vlan_priority (state_data->dev,
+  if (ipmi_cmd_get_lan_configuration_parameters_vlan_priority (state_data->ipmi_ctx,
                                                                channel_number,
                                                                IPMI_GET_LAN_PARAMETER,
                                                                SET_SELECTOR,
@@ -1049,7 +1049,7 @@ vlan_priority_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_vlan_priority: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1086,7 +1086,7 @@ vlan_priority_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_vlan_priority (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_vlan_priority (state_data->ipmi_ctx,
                                                                channel_number,
                                                                atoi (kv->value_input),
                                                                obj_cmd_rs) < 0)
@@ -1094,7 +1094,7 @@ vlan_priority_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_vlan_priority: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

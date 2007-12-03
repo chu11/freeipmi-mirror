@@ -25,12 +25,12 @@ power_restore_policy_checkout (const char *section_name,
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_chassis_status (state_data->dev, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_chassis_status: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -59,14 +59,14 @@ power_restore_policy_commit (const char *section_name,
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_power_restore_policy_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_set_power_restore_policy (state_data->dev,
+  if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
                                          power_restore_policy_number (kv->value_input),
                                          obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_power_restore_policy: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

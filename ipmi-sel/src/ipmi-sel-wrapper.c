@@ -113,12 +113,12 @@ get_sel_info (ipmi_sel_state_data_t *state_data,
 
   _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_info_rs);
 
-  if (ipmi_cmd_get_sel_info (state_data->dev, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_sel_info (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_sel_info: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -803,7 +803,7 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
   if (!(sel_rec = (sel_record_t *)malloc(sizeof(sel_record_t))))
     goto cleanup;
 
-  if (ipmi_cmd_get_sel_entry (state_data->dev, 
+  if (ipmi_cmd_get_sel_entry (state_data->ipmi_ctx, 
 			      0,
 			      record_id, 
 			      0,
@@ -813,7 +813,7 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_sel_entry: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -881,7 +881,7 @@ get_sel_record_raw (ipmi_sel_state_data_t *state_data,
   
   _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
 
-  if (ipmi_cmd_get_sel_entry (state_data->dev, 
+  if (ipmi_cmd_get_sel_entry (state_data->ipmi_ctx, 
 			      0,
 			      record_id, 
 			      0,
@@ -891,7 +891,7 @@ get_sel_record_raw (ipmi_sel_state_data_t *state_data,
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_sel_entry: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -921,7 +921,7 @@ delete_sel_entry (ipmi_sel_state_data_t *state_data,
   
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
   
-  if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_cmd_rs) != 0)
     goto cleanup;
   
   _FIID_OBJ_GET(obj_cmd_rs, "reservation_id", &val);
@@ -933,7 +933,7 @@ delete_sel_entry (ipmi_sel_state_data_t *state_data,
   
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_delete_sel_entry_rs);
   
-  if (ipmi_cmd_delete_sel_entry (state_data->dev, 
+  if (ipmi_cmd_delete_sel_entry (state_data->ipmi_ctx, 
 				 reservation_id, 
 				 record_id, 
 				 obj_cmd_rs) < 0)
@@ -941,7 +941,7 @@ delete_sel_entry (ipmi_sel_state_data_t *state_data,
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_delete_sel_entry: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -963,7 +963,7 @@ clear_sel_entries (ipmi_sel_state_data_t *state_data)
   
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
 
-  if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_cmd_rs) != 0)
     goto cleanup;
   
   _FIID_OBJ_GET(obj_cmd_rs, "reservation_id", &val);
@@ -975,7 +975,7 @@ clear_sel_entries (ipmi_sel_state_data_t *state_data)
 
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_clear_sel_rs);
 
-  if (ipmi_cmd_clear_sel (state_data->dev, 
+  if (ipmi_cmd_clear_sel (state_data->ipmi_ctx, 
 			  reservation_id, 
 			  IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE, 
 			  obj_cmd_rs) < 0)
@@ -983,7 +983,7 @@ clear_sel_entries (ipmi_sel_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_clear_sel: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -1004,7 +1004,7 @@ get_sel_clear_status (ipmi_sel_state_data_t *state_data,
   
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
 
-  if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_cmd_rs) != 0)
     goto cleanup;
   
   _FIID_OBJ_GET(obj_cmd_rs, "reservation_id", &val);
@@ -1016,7 +1016,7 @@ get_sel_clear_status (ipmi_sel_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_clear_sel_rs);
 
-  if (ipmi_cmd_clear_sel (state_data->dev, 
+  if (ipmi_cmd_clear_sel (state_data->ipmi_ctx, 
 			  reservation_id, 
 			  IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS, 
 			  obj_cmd_rs) < 0)
@@ -1024,7 +1024,7 @@ get_sel_clear_status (ipmi_sel_state_data_t *state_data,
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_clear_sel: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   

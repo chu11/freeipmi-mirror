@@ -46,7 +46,7 @@ _bmc_config_state_data_init(bmc_config_state_data_t *state_data)
 
   memset(state_data, '\0', sizeof(bmc_config_state_data_t));
   state_data->prog_data = NULL;
-  state_data->dev = NULL;
+  state_data->ipmi_ctx = NULL;
   state_data->sections = NULL;
 
   state_data->cipher_suite_entry_count = 0;
@@ -64,8 +64,8 @@ _bmc_config (void *arg)
 {
   bmc_config_state_data_t state_data;
   bmc_config_prog_data_t *prog_data;
-  ipmi_device_t dev = NULL;
-  char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
+  ipmi_ctx_t ipmi_ctx = NULL;
+  char errmsg[IPMI_OPEN_ERRMSGLEN];
   struct config_section *sections = NULL;
   int exit_code = -1;
   config_err_t ret = 0;
@@ -74,11 +74,11 @@ _bmc_config (void *arg)
 
   prog_data = (bmc_config_prog_data_t *)arg;
 
-  if (!(dev = ipmi_device_open(prog_data->progname,
-                               prog_data->args->common.hostname,
-                               &(prog_data->args->common),
-                               errmsg,
-                               IPMI_DEVICE_OPEN_ERRMSGLEN)))
+  if (!(ipmi_ctx = ipmi_open(prog_data->progname,
+                             prog_data->args->common.hostname,
+                             &(prog_data->args->common),
+                             errmsg,
+                             IPMI_OPEN_ERRMSGLEN)))
     {
       fprintf(stderr, "%s\n", errmsg);
       exit_code = EXIT_FAILURE;
@@ -86,7 +86,7 @@ _bmc_config (void *arg)
     }
 
   _bmc_config_state_data_init(&state_data);
-  state_data.dev = dev;
+  state_data.ipmi_ctx = ipmi_ctx;
   state_data.prog_data = prog_data;
 
   if (!(sections = bmc_config_sections_create (&state_data)))
@@ -287,10 +287,10 @@ _bmc_config (void *arg)
 
   exit_code = 0;
  cleanup:
-  if (dev)
+  if (ipmi_ctx)
     {
-      ipmi_close_device (dev);
-      ipmi_device_destroy (dev);
+      ipmi_ctx_close (ipmi_ctx);
+      ipmi_ctx_destroy (ipmi_ctx);
     }
   if (file_opened)
     fclose(fp);

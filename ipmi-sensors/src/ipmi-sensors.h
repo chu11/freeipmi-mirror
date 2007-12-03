@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors.h,v 1.9 2007-09-05 20:13:27 chu11 Exp $ 
+   $Id: ipmi-sensors.h,v 1.9.4.1 2007-12-03 05:13:35 chu11 Exp $ 
    
    ipmi-sensors.h - IPMI Sensors utility.
    
@@ -66,7 +66,7 @@ typedef struct ipmi_sensors_prog_data
 typedef struct ipmi_sensors_state_data
 {
   ipmi_sensors_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   char *hostname;
   sdr_cache_ctx_t sdr_cache_ctx;

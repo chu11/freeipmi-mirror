@@ -213,7 +213,7 @@ char *sdr_cache_ctx_strerror(int32_t errnum);
 int sdr_cache_ctx_errnum(sdr_cache_ctx_t ctx);
 
 int sdr_cache_create (sdr_cache_ctx_t ctx,
-                      ipmi_device_t dev, 
+                      ipmi_ctx_t ipmi_ctx, 
                       char *host,
                       char *user_cache_dir,
                       int verbose, 
@@ -224,14 +224,14 @@ int sdr_cache_flush (sdr_cache_ctx_t ctx,
                      char *user_cache_dir);
 
 int sdr_cache_load (sdr_cache_ctx_t ctx,
-                    ipmi_device_t dev, 
+                    ipmi_ctx_t ipmi_ctx, 
                     char *host,
                     char *user_cache_dir,
 		    sdr_record_t **sdr_record_list, 
                     unsigned int *sdr_record_count);
 
 int sdr_cache_create_and_load (sdr_cache_ctx_t ctx,
-                               ipmi_device_t dev,
+                               ipmi_ctx_t ipmi_ctx,
                                char *host,
                                char *user_cache_dir,
                                int verbose,

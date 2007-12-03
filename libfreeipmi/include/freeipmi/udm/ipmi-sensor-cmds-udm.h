@@ -30,15 +30,15 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
-int8_t ipmi_cmd_get_sensor_reading_threshold (ipmi_device_t dev, 
+int8_t ipmi_cmd_get_sensor_reading_threshold (ipmi_ctx_t ctx, 
 					      uint8_t sensor_number, 
 					      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sensor_reading_discrete (ipmi_device_t dev, 
+int8_t ipmi_cmd_get_sensor_reading_discrete (ipmi_ctx_t ctx, 
 					     uint8_t sensor_number, 
 					     fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sensor_thresholds (ipmi_device_t dev, 
+int8_t ipmi_cmd_get_sensor_thresholds (ipmi_ctx_t ctx, 
 				       uint8_t sensor_number, 
 				       fiid_obj_t obj_cmd_rs);
 

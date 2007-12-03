@@ -63,7 +63,7 @@ typedef struct bmc_config_prog_data
 typedef struct bmc_config_state_data
 {
   bmc_config_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   struct config_section *sections;
 
   /* achu: caching to make rmcpplus priv go faster */

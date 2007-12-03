@@ -32,8 +32,8 @@ extern "C" {
 enum ipmi_errnum
   {
     IPMI_ERR_SUCCESS = 0,
-    IPMI_ERR_DEVICE_NULL = 1,
-    IPMI_ERR_DEVICE_INVALID = 2,
+    IPMI_ERR_CTX_NULL = 1,
+    IPMI_ERR_CTX_INVALID = 2,
     IPMI_ERR_PERMISSION = 3,
     IPMI_ERR_USERNAME_INVALID = 4,
     IPMI_ERR_PASSWORD_INVALID = 5,
@@ -98,56 +98,54 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_FLAGS_NONBLOCKING    0x00000001
 #define IPMI_FLAGS_DEBUG_DUMP     0x00000010
 
-typedef struct ipmi_device *ipmi_device_t;
+typedef struct ipmi_ctx *ipmi_ctx_t;
  
-ipmi_device_t ipmi_device_create(void);
+ipmi_ctx_t ipmi_ctx_create(void);
 
-char *ipmi_device_strerror(int errnum);
+char *ipmi_ctx_strerror(int errnum);
 
-int ipmi_device_errnum(ipmi_device_t dev);
+int ipmi_ctx_errnum(ipmi_ctx_t ctx);
 
-int ipmi_open_outofband (ipmi_device_t dev,
-			 ipmi_driver_type_t driver_type, 
-			 const char *hostname,
-			 const char *username, 
-			 const char *password, 
-			 uint8_t authentication_type, 
-			 uint8_t privilege_level,
-			 unsigned int session_timeout,
-			 unsigned int retransmission_timeout, 
-                         uint32_t workaround_flags,
-			 uint32_t flags);
-
-int ipmi_open_outofband_2_0 (ipmi_device_t dev,
-                             ipmi_driver_type_t driver_type, 
+int ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                              const char *hostname,
                              const char *username, 
                              const char *password, 
-                             const unsigned char *k_g,
-                             unsigned int k_g_len,
+                             uint8_t authentication_type, 
                              uint8_t privilege_level,
-                             uint8_t cipher_suite_id,
                              unsigned int session_timeout,
                              unsigned int retransmission_timeout, 
                              uint32_t workaround_flags,
                              uint32_t flags);
 
-int ipmi_open_inband (ipmi_device_t dev,
-		      ipmi_driver_type_t driver_type, 
-		      int disable_auto_probe, 
-		      uint16_t driver_address, 
-		      uint8_t register_spacing,
-		      char *driver_device, 
-                      uint32_t workaround_flags,
-		      uint32_t flags);
+int ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
+                                 const char *hostname,
+                                 const char *username, 
+                                 const char *password, 
+                                 const unsigned char *k_g,
+                                 unsigned int k_g_len,
+                                 uint8_t privilege_level,
+                                 uint8_t cipher_suite_id,
+                                 unsigned int session_timeout,
+                                 unsigned int retransmission_timeout, 
+                                 uint32_t workaround_flags,
+                                 uint32_t flags);
 
-int ipmi_cmd (ipmi_device_t dev, 
+int ipmi_ctx_open_inband (ipmi_ctx_t ctx,
+                          ipmi_driver_type_t driver_type, 
+                          int disable_auto_probe, 
+                          uint16_t driver_address, 
+                          uint8_t register_spacing,
+                          char *driver_device, 
+                          uint32_t workaround_flags,
+                          uint32_t flags);
+
+int ipmi_cmd (ipmi_ctx_t ctx, 
 	      uint8_t lun, 
 	      uint8_t net_fn, 
 	      fiid_obj_t obj_cmd_rq, 
 	      fiid_obj_t obj_cmd_rs);
 
-int ipmi_cmd_raw (ipmi_device_t dev, 
+int ipmi_cmd_raw (ipmi_ctx_t ctx, 
                   uint8_t lun, 
                   uint8_t net_fn, 
 		  uint8_t *in, 
@@ -155,9 +153,9 @@ int ipmi_cmd_raw (ipmi_device_t dev,
 		  uint8_t *out, 
 		  size_t out_len);
 
-int ipmi_close_device (ipmi_device_t dev);
+int ipmi_ctx_close (ipmi_ctx_t ctx);
 
-void ipmi_device_destroy (ipmi_device_t dev);
+void ipmi_ctx_destroy (ipmi_ctx_t ctx);
 
 #ifdef __cplusplus
 }

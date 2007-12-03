@@ -23,17 +23,17 @@
 #include "freeipmi/udm/ipmi-udm.h"
 #include "cmdline-parse-common.h"
 
-#define IPMI_DEVICE_OPEN_ERRMSGLEN 1024
+#define IPMI_OPEN_ERRMSGLEN 1024
 
 int ipmi_is_root ();
 
 void ipmi_disable_coredump(void);
 
-ipmi_device_t ipmi_device_open(const char *progname,
-                               const char *hostname,
-                               struct common_cmd_args *cmd_args,
-                               char *errmsg,
-                               unsigned int errmsglen);
+ipmi_ctx_t ipmi_open(const char *progname,
+                     const char *hostname,
+                     struct common_cmd_args *cmd_args,
+                     char *errmsg,
+                     unsigned int errmsglen);
 
 /* Check if kg len is decent */
 int check_kg_len(const char *instr);

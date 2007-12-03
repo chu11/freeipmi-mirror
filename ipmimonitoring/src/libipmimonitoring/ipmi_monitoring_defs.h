@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.11 2007-10-18 16:18:49 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.11.2.1 2007-12-03 05:13:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -121,7 +121,7 @@
 #define IPMI_MONITORING_PACKET_BUFLEN 1024
 
 struct ipmi_monitoring_communication {
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
 };
 
 struct ipmi_sensor_config {

@@ -140,7 +140,7 @@ _get_channel_access (bmc_config_state_data_t *state_data,
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_channel_access_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_channel_access (state_data->dev,
+  if (ipmi_cmd_get_channel_access (state_data->ipmi_ctx,
                                    channel_number,
                                    access_type,
                                    obj_cmd_rs) < 0)
@@ -148,7 +148,7 @@ _get_channel_access (bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_channel_access: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -214,7 +214,7 @@ _set_channel_access (bmc_config_state_data_t *state_data,
 
   /* yes/no is backwards several places, see ipmi spec */
 
-  if (ipmi_cmd_set_channel_access (state_data->dev,
+  if (ipmi_cmd_set_channel_access (state_data->ipmi_ctx,
                                    channel_number,
                                    ch->access_mode,
                                    (ch->user_level_authentication ? 0 : 1),
@@ -230,7 +230,7 @@ _set_channel_access (bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_channel_access: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

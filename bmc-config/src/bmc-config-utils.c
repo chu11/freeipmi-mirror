@@ -19,13 +19,13 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
       return CONFIG_ERR_SUCCESS;
     }
   
-  if ((state_data->lan_channel_number = ipmi_get_channel_number (state_data->dev, 
+  if ((state_data->lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx, 
                                                                  IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
     {
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr, 
                 "ipmi_get_channel_number: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       return CONFIG_ERR_NON_FATAL_ERROR;
     }
 
@@ -43,13 +43,13 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel
       return CONFIG_ERR_SUCCESS;
     }
   
-  if ((state_data->serial_channel_number = ipmi_get_channel_number (state_data->dev, 
+  if ((state_data->serial_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx, 
                                                                     IPMI_CHANNEL_MEDIUM_TYPE_RS232)) < 0)
     {
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr, 
                 "ipmi_get_channel_number: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       return CONFIG_ERR_NON_FATAL_ERROR;
     }
 
@@ -82,7 +82,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (state_data->dev,
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (state_data->ipmi_ctx,
                                                                      channel_number,
 								     IPMI_GET_SOL_PARAMETER,
 								     SET_SELECTOR,
@@ -92,7 +92,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr, 
                 "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -139,7 +139,7 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_user_access (state_data->dev,
+  if (ipmi_cmd_get_user_access (state_data->ipmi_ctx,
                                 channel_number,
                                 1, /* user_id number */
                                 obj_cmd_rs) < 0)
@@ -147,7 +147,7 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr, 
                 "ipmi_cmd_get_user_access: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

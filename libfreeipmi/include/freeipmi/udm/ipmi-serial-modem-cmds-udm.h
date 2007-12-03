@@ -29,7 +29,7 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
-int8_t ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_device_t dev, 
+int8_t ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx, 
 								uint8_t channel_number, 
 								uint8_t basic_mode,
 								uint8_t ppp_mode,
@@ -37,45 +37,45 @@ int8_t ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_device_t de
 								uint8_t connect_mode,
 								fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_device_t dev, 
+int8_t ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t ctx, 
 									     uint8_t channel_number, 
 									     uint8_t dtr_hangup,
 									     uint8_t flow_control,
 									     uint8_t bit_rate,
 									     fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (ipmi_device_t dev, 
+int8_t ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx, 
 								       uint8_t channel_number, 
 								       uint8_t page_blackout_interval, 
 								       fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_serial_modem_configuration_call_retry_interval (ipmi_device_t dev, 
+int8_t ipmi_cmd_set_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx, 
 								    uint8_t channel_number, 
 								    uint8_t call_retry_interval, 
 								    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_device_t dev, 
+int8_t ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx, 
 								uint8_t channel_number,
 								uint8_t get_parameter,
 								uint8_t set_selector,
 								uint8_t block_selector,
 								fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_device_t dev, 
+int8_t ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t ctx, 
 									     uint8_t channel_number,
 									     uint8_t get_parameter,
 									     uint8_t set_selector,
 									     uint8_t block_selector,
 									     fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (ipmi_device_t dev, 
+int8_t ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx, 
 								       uint8_t channel_number,
 								       uint8_t get_parameter,
 								       uint8_t set_selector,
 								       uint8_t block_selector,
 								       fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_serial_modem_configuration_call_retry_interval (ipmi_device_t dev, 
+int8_t ipmi_cmd_get_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx, 
 								    uint8_t channel_number,
 								    uint8_t get_parameter,
 								    uint8_t set_selector,

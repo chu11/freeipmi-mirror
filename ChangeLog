@@ -135,6 +135,13 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/include/freeipmi/rmcp.h, libfreeipmi/src/rmcp.c:
 	Remove files.
 
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
+	libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband,
+	ipmi_open_outofband_2_0): Remove pointless driver type argument.
+
+	* libfreeipmi/: Rework UDM interface to take ipmi_ctx_t instead of
+	ipmi_device_t which didn't make any sense.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

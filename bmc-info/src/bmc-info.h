@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info.h,v 1.6 2007-09-05 20:13:22 chu11 Exp $ 
+   $Id: bmc-info.h,v 1.6.4.1 2007-12-03 05:13:33 chu11 Exp $ 
    
    bmc-info.h - displays BMC information.
    
@@ -43,7 +43,7 @@ typedef struct bmc_info_prog_data
 typedef struct bmc_info_state_data
 {
   bmc_info_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
 } bmc_info_state_data_t;
 

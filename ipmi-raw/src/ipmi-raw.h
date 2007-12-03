@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw.h,v 1.5 2007-09-05 20:13:27 chu11 Exp $ 
+   $Id: ipmi-raw.h,v 1.5.4.1 2007-12-03 05:13:35 chu11 Exp $ 
    
    ipmi-raw.h - ipmi-raw command line argument parser.
    
@@ -52,7 +52,7 @@ typedef struct ipmi_raw_prog_data
 typedef struct ipmi_raw_state_data
 {
   ipmi_raw_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
 } ipmi_raw_state_data_t;
 

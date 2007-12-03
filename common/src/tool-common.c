@@ -49,20 +49,20 @@ ipmi_disable_coredump(void)
 #endif /* NDEBUG */
 }
 
-ipmi_device_t
-ipmi_device_open(const char *progname,
-                 const char *hostname,
-                 struct common_cmd_args *cmd_args,
-                 char *errmsg,
-                 unsigned int errmsglen)
+ipmi_ctx_t
+ipmi_open(const char *progname,
+          const char *hostname,
+          struct common_cmd_args *cmd_args,
+          char *errmsg,
+          unsigned int errmsglen)
 {
-  ipmi_device_t dev = NULL;
+  ipmi_ctx_t ipmi_ctx = NULL;
 
-  if (!(dev = ipmi_device_create()))
+  if (!(ipmi_ctx = ipmi_ctx_create()))
     {
       snprintf(errmsg, 
                errmsglen, 
-               "ipmi_device_create: %s",
+               "ipmi_ctx_create: %s",
                strerror(errno));
       goto cleanup;
     }
@@ -71,79 +71,77 @@ ipmi_device_open(const char *progname,
     {
       if (cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
         {
-          if (ipmi_open_outofband_2_0 (dev,
-                                       IPMI_DEVICE_LAN_2_0,
-                                       hostname,
-                                       cmd_args->username,
-                                       cmd_args->password,
-                                       (cmd_args->k_g_len) ? cmd_args->k_g : NULL,
-                                       (cmd_args->k_g_len) ? cmd_args->k_g_len : 0,
-                                       cmd_args->privilege_level,
-                                       cmd_args->cipher_suite_id,
-                                       cmd_args->session_timeout,
-                                       cmd_args->retransmission_timeout,
-                                       cmd_args->workaround_flags,
-                                       cmd_args->flags) < 0)
+          if (ipmi_ctx_open_outofband_2_0 (ipmi_ctx,
+                                           hostname,
+                                           cmd_args->username,
+                                           cmd_args->password,
+                                           (cmd_args->k_g_len) ? cmd_args->k_g : NULL,
+                                           (cmd_args->k_g_len) ? cmd_args->k_g_len : 0,
+                                           cmd_args->privilege_level,
+                                           cmd_args->cipher_suite_id,
+                                           cmd_args->session_timeout,
+                                           cmd_args->retransmission_timeout,
+                                           cmd_args->workaround_flags,
+                                           cmd_args->flags) < 0)
             {
-              if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME_INVALID
-                  || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_INVALID
-                  || ipmi_device_errnum(dev) == IPMI_ERR_K_G_INVALID
-                  || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
-                  || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE
-                  || ipmi_device_errnum(dev) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE
-                  || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
-                  || ipmi_device_errnum(dev) == IPMI_ERR_HOSTNAME_INVALID
-                  || ipmi_device_errnum(dev) == IPMI_ERR_IPMI_2_0_UNAVAILABLE)
+              if (ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_K_G_INVALID
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_IPMI_2_0_UNAVAILABLE)
                 {
                   snprintf(errmsg,
                            errmsglen,
                            "%s: %s",
                            progname,
-                           ipmi_device_strerror(ipmi_device_errnum(dev)));
+                           ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
                 }
               else
                 {
                   snprintf(errmsg,
                            errmsglen,
-                           "ipmi_open_outofband_2_0: %s",
-                           ipmi_device_strerror(ipmi_device_errnum(dev)));
+                           "ipmi_ctx_open_outofband_2_0: %s",
+                           ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
                 }
               goto cleanup;
             }
         }
       else
         {
-          if (ipmi_open_outofband (dev,
-                                   IPMI_DEVICE_LAN,
-                                   hostname,
-                                   cmd_args->username,
-                                   cmd_args->password,
-                                   cmd_args->authentication_type,
-                                   cmd_args->privilege_level,
-                                   cmd_args->session_timeout,
-                                   cmd_args->retransmission_timeout,
-                                   cmd_args->workaround_flags,
-                                   cmd_args->flags) < 0)
+          if (ipmi_ctx_open_outofband (ipmi_ctx,
+                                       hostname,
+                                       cmd_args->username,
+                                       cmd_args->password,
+                                       cmd_args->authentication_type,
+                                       cmd_args->privilege_level,
+                                       cmd_args->session_timeout,
+                                       cmd_args->retransmission_timeout,
+                                       cmd_args->workaround_flags,
+                                       cmd_args->flags) < 0)
             {
-              if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME_INVALID
-                  || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_INVALID
-                  || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
-                  || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE
-                  || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
-                  || ipmi_device_errnum(dev) == IPMI_ERR_HOSTNAME_INVALID)
+              if (ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID)
                 {
                   snprintf(errmsg,
                            errmsglen,
                            "%s: %s",
                            progname,
-                           ipmi_device_strerror(ipmi_device_errnum(dev)));
+                           ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
                 }
               else
                 {
                   snprintf(errmsg,
                            errmsglen,
-                           "ipmi_open_outofband: %s",
-                           ipmi_device_strerror(ipmi_device_errnum(dev)));
+                           "ipmi_ctx_open_outofband: %s",
+                           ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
                 }
               goto cleanup;
             }
@@ -157,43 +155,43 @@ ipmi_device_open(const char *progname,
                    errmsglen,
                    "%s: %s",
                    progname,
-                   ipmi_device_strerror(IPMI_ERR_PERMISSION));
+                   ipmi_ctx_strerror(IPMI_ERR_PERMISSION));
           goto cleanup;
         }
 
       if (cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
         {
-          if (ipmi_open_inband (dev,
-                                IPMI_DEVICE_OPENIPMI,
-                                cmd_args->disable_auto_probe,
-                                cmd_args->driver_address,
-                                cmd_args->register_spacing,
-                                cmd_args->driver_device,
-                                cmd_args->workaround_flags,
-                                cmd_args->flags) < 0)
-            {
-              if (ipmi_open_inband (dev,
-                                    IPMI_DEVICE_KCS,
+          if (ipmi_ctx_open_inband (ipmi_ctx,
+                                    IPMI_DEVICE_OPENIPMI,
                                     cmd_args->disable_auto_probe,
                                     cmd_args->driver_address,
                                     cmd_args->register_spacing,
                                     cmd_args->driver_device,
                                     cmd_args->workaround_flags,
                                     cmd_args->flags) < 0)
-                {
-                  if (ipmi_open_inband (dev,
-                                        IPMI_DEVICE_SSIF,
+            {
+              if (ipmi_ctx_open_inband (ipmi_ctx,
+                                        IPMI_DEVICE_KCS,
                                         cmd_args->disable_auto_probe,
                                         cmd_args->driver_address,
                                         cmd_args->register_spacing,
                                         cmd_args->driver_device,
                                         cmd_args->workaround_flags,
                                         cmd_args->flags) < 0)
+                {
+                  if (ipmi_ctx_open_inband (ipmi_ctx,
+                                            IPMI_DEVICE_SSIF,
+                                            cmd_args->disable_auto_probe,
+                                            cmd_args->driver_address,
+                                            cmd_args->register_spacing,
+                                            cmd_args->driver_device,
+                                            cmd_args->workaround_flags,
+                                            cmd_args->flags) < 0)
                     {
                       snprintf(errmsg,
                                errmsglen,
-                               "ipmi_open_inband: %s",
-                               ipmi_device_strerror(ipmi_device_errnum(dev)));
+                               "ipmi_ctx_open_inband: %s",
+                               ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
                       goto cleanup;
                     }
                 }
@@ -201,31 +199,31 @@ ipmi_device_open(const char *progname,
         }
       else
         {
-          if (ipmi_open_inband (dev,
-                                cmd_args->driver_type,
-                                cmd_args->disable_auto_probe,
-                                cmd_args->driver_address,
-                                cmd_args->register_spacing,
-                                cmd_args->driver_device,
-                                cmd_args->workaround_flags,
-                                cmd_args->flags) < 0)
+          if (ipmi_ctx_open_inband (ipmi_ctx,
+                                    cmd_args->driver_type,
+                                    cmd_args->disable_auto_probe,
+                                    cmd_args->driver_address,
+                                    cmd_args->register_spacing,
+                                    cmd_args->driver_device,
+                                    cmd_args->workaround_flags,
+                                    cmd_args->flags) < 0)
             {
               snprintf(errmsg,
                        errmsglen,
-                       "ipmi_open_inband: %s",
-                       ipmi_device_strerror(ipmi_device_errnum(dev)));
+                       "ipmi_ctx_open_inband: %s",
+                       ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
               goto cleanup;
             }
         }
     }
 
-  return dev;
+  return ipmi_ctx;
 
  cleanup:
-  if (dev)
+  if (ipmi_ctx)
     {
-      ipmi_close_device (dev);
-      ipmi_device_destroy (dev);
+      ipmi_ctx_close (ipmi_ctx);
+      ipmi_ctx_destroy (ipmi_ctx);
     }
   return NULL;
 }              

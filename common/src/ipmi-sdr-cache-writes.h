@@ -25,7 +25,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "ipmi-sdr-cache.h"
 
 int sdr_cache_write_repository_info (sdr_cache_ctx_t ctx,
-                                     ipmi_device_t dev,
+                                     ipmi_ctx_t ipmi_ctx,
                                      FILE *fp,
                                      unsigned int *sdr_record_count);
 
