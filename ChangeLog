@@ -2,8 +2,8 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* common/src/err-wrappers.h, common/src/fiid-wrappers.h,
 	common/src/udm-err-wrappers.h, common/src/udm-fiid-wrappers.h:
-	Update error logging routines with more details.  Add locate error
-	logging routines.  Fix several logging bugs.  Remove unused
+	Update error logging routines with more details.  Add additional
+	error logging routines.  Fix several logging bugs.  Remove unused
 	wrappers.
 
 	* libfreeipmi/src/ipmi-kcs-aci.c,
