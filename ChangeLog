@@ -1,3 +1,9 @@
+2007-12-05  Albert Chu <chu11@llnl.gov>
+
+	* Tagged Release-0_5_0_base.
+
+	* Branched Release-0_5_0_branch.
+
 2007-12-02  Albert Chu <chu11@llnl.gov>
 
 	* INSTALL: Overwrite ancient copy with GNU generic copy.
