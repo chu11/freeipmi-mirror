@@ -246,6 +246,7 @@ display_group_sensors (ipmi_sensors_state_data_t *state_data)
           memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
           
           if (get_sensor_reading(state_data->ipmi_ctx,
+                                 (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
                                  sdr_record,
                                  &_sensor_reading) < 0)
             sensor_reading = NULL;
@@ -313,6 +314,7 @@ display_sensor_list (ipmi_sensors_state_data_t *state_data)
           memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
 
           if (get_sensor_reading(state_data->ipmi_ctx,
+                                 (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
                                  sdr_record,
                                  &_sensor_reading) < 0)
             sensor_reading = NULL;
@@ -386,6 +388,7 @@ display_sensors (ipmi_sensors_state_data_t *state_data)
 	  memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
 
           if (get_sensor_reading(state_data->ipmi_ctx,
+                                 (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
                                  sdr_record,
                                  &_sensor_reading) < 0)
             sensor_reading = NULL;

@@ -149,6 +149,15 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	common/src/fiid-wrappers.h, common/src/udm-err-wrappers.h,
 	common/src/udm-fiid-wrappers.h: Remove --enable-syslog support.
 
+	* common/src/ipmi-sensor-api.c (system_software_type_desc):
+	Removed unused array of strings.
+
+	* common/src/ipmi-sensor-api.c: Add debugging via debug parameter.
+	Use internal wrapper functions rather than library wrapper
+	functions.
+
+	* ipmi-sensors/: Adjust code for sensor-api change.
+
 	* Various minor fixes.
 		
 2007-11-30  Albert Chu <chu11@llnl.gov>

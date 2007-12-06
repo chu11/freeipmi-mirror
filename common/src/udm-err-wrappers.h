@@ -52,13 +52,6 @@ do {                                                                         \
   __TRACE_CTX_OUTPUT;                                                        \
 } while (0)
 
-#define __ERR_UDM_TRACE                                                      \
-do {                                                                         \
-  int __ctxerrnum = ipmi_ctx_errnum(ctx);                                    \
-  char *__ctxerrstr = ipmi_ctx_strerror(__ctxerrnum);                        \
-  __TRACE_CTX_OUTPUT;                                                        \
-} while (0)
-
 #define __UDM_TRACE_ERRMSG_CLEANUP(___ctx, ___rs)                            \
 do {                                                                         \
   int __ctxerrnum = 0;                                                       \
@@ -101,7 +94,6 @@ do {                                                                         \
 } while (0)
 #else
 #define __UDM_TRACE
-#define __ERR_UDM_TRACE
 #define __UDM_TRACE_ERRMSG_CLEANUP(__ctx, __rs)                              \
 do {                                                                         \
   goto cleanup;                                                              \
@@ -404,24 +396,6 @@ do {                                                                            
       UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM((__ctx), (__rs));                                              \
       __UDM_TRACE_ERRMSG_CLEANUP(__ctx, __rs);                                                             \
     }                                                                                                      \
-} while (0)
-
-#define ERR_UDM(expr)                                                   \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __ERR_UDM_TRACE;                                                  \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define ERR_UDM_CLEANUP(expr)                                           \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __ERR_UDM_TRACE;                                                  \
-      goto cleanup;                                                     \
-    }                                                                   \
 } while (0)
 
 #define __KCS_ERRNUM_TO_UDM_ERRNUM                                \
