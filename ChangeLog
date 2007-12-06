@@ -158,6 +158,8 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/: Adjust code for sensor-api change.
 
+	* pef-config/: Remove linking to libsensor.la.
+
 	* Various minor fixes.
 		
 2007-11-30  Albert Chu <chu11@llnl.gov>
