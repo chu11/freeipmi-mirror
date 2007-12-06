@@ -57,7 +57,7 @@ Requires(preun): chkconfig
 IPMI node detection daemon.
 
 %if %{?_with_debug:1}%{!?_with_debug:0}
-  %define _enable_debug --enable-debug --enable-trace --enable-syslog
+  %define _enable_debug --enable-debug --enable-trace
 %endif
 
 %prep

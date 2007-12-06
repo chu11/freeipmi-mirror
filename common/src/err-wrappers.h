@@ -35,87 +35,11 @@ extern "C" {
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <syslog.h>
 #include <errno.h>
 
 #include "freeipmi/fiid.h"
 
 #define ERR_WRAPPER_STR_MAX_LEN 4096
-
-#if defined (IPMI_SYSLOG)
-
-#define __SYSLOG_OUTPUT                                                 \
-do {                                                                    \
-  extern int errno;                                                     \
-  int __save_errno = errno;                                             \
-  char __errbuf[ERR_WRAPPER_STR_MAX_LEN];                               \
-  char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                             \
-  memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                   \
-  strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
-  snprintf (__errbuf, ERR_WRAPPER_STR_MAX_LEN,                          \
-            "%s: %d: %s: errno %s (%d)",                                \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
-            __errnostr, __save_errno);                                  \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errbuf);       \
-  errno = __save_errno;                                                 \
-} while (0)
-
-#define __SYSLOG_CTX_OUTPUT                                             \
-do {                                                                    \
-  extern int errno;                                                     \
-  int __save_errno = errno;                                             \
-  char __errbuf[ERR_WRAPPER_STR_MAX_LEN];                               \
-  char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                             \
-  memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                   \
-  strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
-  snprintf (__errbuf, ERR_WRAPPER_STR_MAX_LEN,                          \
-            "%s: %d: %s: errno %s (%d), error %s (%d)",                 \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
-            __errnostr, __save_errno,                                   \
-            __ctxerrstr, __ctxerrnum);                                  \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errbuf);       \
-  errno = __save_errno;                                                 \
-} while (0)
-
-#define __ERR_SYSLOG                                                    \
-do {                                                                    \
-  __SYSLOG_OUTPUT;                                                      \
-} while (0)
-
-#define __KCS_SYSLOG                                                    \
-do {                                                                    \
-  int __ctxerrnum = ctx->errnum;                                        \
-  char *__ctxerrstr = ipmi_kcs_ctx_strerror(__ctxerrnum);               \
-  __SYSLOG_CTX_OUTPUT;                                                  \
-} while (0)
-
-#define __SSIF_SYSLOG                                                   \
-do {                                                                    \
-  int __ctxerrnum = ctx->errnum;                                        \
-  char *__ctxerrstr = ipmi_ssif_ctx_strerror(__ctxerrnum);              \
-  __SYSLOG_CTX_OUTPUT;                                                  \
-} while (0)
-
-#define __OPENIPMI_SYSLOG                                               \
-do {                                                                    \
-  int __ctxerrnum = ctx->errnum;                                        \
-  char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);          \
-  __SYSLOG_CTX_OUTPUT;                                                  \
-} while (0)
-
-#define __LOCATE_SYSLOG                                                 \
-do {                                                                    \
-  int __ctxerrnum = *locate_errnum;                                     \
-  char *__ctxerrstr = ipmi_locate_strerror(__ctxerrnum);                \
-  __SYSLOG_CTX_OUTPUT;                                                  \
-} while (0)
-#else
-#define __ERR_SYSLOG
-#define __KCS_SYSLOG
-#define __SSIF_SYSLOG
-#define __OPENIPMI_SYSLOG
-#define __LOCATE_SYSLOG
-#endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
 
@@ -192,7 +116,6 @@ do {                                                                    \
 
 #define ERR_LOG(expr)                                                   \
 do {                                                                    \
-  __ERR_SYSLOG;                                                         \
   __ERR_TRACE;                                                          \
   expr;                                                                 \
 } while (0)   
@@ -201,7 +124,6 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -211,7 +133,6 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -221,7 +142,6 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       exit(1);                                                          \
     }                                                                   \
@@ -231,7 +151,6 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       return (NULL);                                                    \
     }                                                                   \
@@ -241,7 +160,6 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       return;                                                           \
     }                                                                   \
@@ -251,7 +169,6 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
     }                                                                   \
 } while (0)
@@ -261,7 +178,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -272,7 +188,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -283,7 +198,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENOSPC;                                                   \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -294,7 +208,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENOSPC;                                                   \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -305,7 +218,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EMSGSIZE;                                                 \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -316,7 +228,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EMSGSIZE;                                                 \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -349,7 +260,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         __KCS_ERRNO_TO_ERRNUM;                                          \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         return (-1);                                                    \
       }                                                                 \
@@ -360,7 +270,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         __KCS_ERRNO_TO_ERRNUM;                                          \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         goto cleanup;                                                   \
       }                                                                 \
@@ -369,7 +278,6 @@ do {                                                                    \
 #define KCS_ERRNUM_SET(__errnum)                                        \
   do {                                                                  \
     ctx->errnum = (__errnum);                                           \
-    __KCS_SYSLOG;                                                       \
     __KCS_TRACE;                                                        \
   } while (0)
 
@@ -378,7 +286,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;                      \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         return (-1);                                                    \
       }                                                                 \
@@ -389,7 +296,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;                      \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         goto cleanup;                                                   \
       }                                                                 \
@@ -400,7 +306,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;              \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         return (-1);                                                    \
       }                                                                 \
@@ -411,7 +316,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;              \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         goto cleanup;                                                   \
       }                                                                 \
@@ -422,7 +326,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;                            \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         return (-1);                                                    \
       }                                                                 \
@@ -433,7 +336,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;                            \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         goto cleanup;                                                   \
       }                                                                 \
@@ -444,7 +346,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                   \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         return (-1);                                                    \
       }                                                                 \
@@ -455,7 +356,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                   \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         goto cleanup;                                                   \
       }                                                                 \
@@ -466,7 +366,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR;                    \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         return (-1);                                                    \
       }                                                                 \
@@ -477,7 +376,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR;                    \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         goto cleanup;                                                   \
       }                                                                 \
@@ -488,7 +386,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                  \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         return (-1);                                                    \
       }                                                                 \
@@ -499,7 +396,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                  \
-        __KCS_SYSLOG;                                                   \
         __KCS_TRACE;                                                    \
         goto cleanup;                                                   \
       }                                                                 \
@@ -536,7 +432,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         __SSIF_ERRNO_TO_ERRNUM;                                         \
-        __SSIF_SYSLOG;                                                  \
         __SSIF_TRACE;                                                   \
         return (-1);                                                    \
       }                                                                 \
@@ -547,7 +442,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         __SSIF_ERRNO_TO_ERRNUM;                                         \
-        __SSIF_SYSLOG;                                                  \
         __SSIF_TRACE;                                                   \
         goto cleanup;                                                   \
       }                                                                 \
@@ -558,7 +452,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;                     \
-        __SSIF_SYSLOG;                                                  \
         __SSIF_TRACE;                                                   \
         return (-1);                                                    \
       }                                                                 \
@@ -569,7 +462,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;                     \
-        __SSIF_SYSLOG;                                                  \
         __SSIF_TRACE;                                                   \
         goto cleanup;                                                   \
       }                                                                 \
@@ -580,7 +472,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;             \
-        __SSIF_SYSLOG;                                                  \
         __SSIF_TRACE;                                                   \
         return (-1);                                                    \
       }                                                                 \
@@ -591,7 +482,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;             \
-        __SSIF_SYSLOG;                                                  \
         __SSIF_TRACE;                                                   \
         goto cleanup;                                                   \
       }                                                                 \
@@ -602,7 +492,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                  \
-        __SSIF_SYSLOG;                                                  \
         __SSIF_TRACE;                                                   \
         return (-1);                                                    \
       }                                                                 \
@@ -613,7 +502,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                  \
-        __SSIF_SYSLOG;                                                  \
         __SSIF_TRACE;                                                   \
         goto cleanup;                                                   \
       }                                                                 \
@@ -624,7 +512,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                 \
-        __SSIF_SYSLOG;                                                  \
         __SSIF_TRACE;                                                   \
         return (-1);                                                    \
       }                                                                 \
@@ -635,7 +522,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                 \
-        __SSIF_SYSLOG;                                                  \
         __SSIF_TRACE;                                                   \
         goto cleanup;                                                   \
       }                                                                 \
@@ -664,7 +550,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         __OPENIPMI_ERRNO_TO_ERRNUM;                                     \
-        __OPENIPMI_SYSLOG;                                              \
         __OPENIPMI_TRACE;                                               \
         return (-1);                                                    \
       }                                                                 \
@@ -675,7 +560,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         __OPENIPMI_ERRNO_TO_ERRNUM;                                     \
-        __OPENIPMI_SYSLOG;                                              \
         __OPENIPMI_TRACE;                                               \
         goto cleanup;                                                   \
       }                                                                 \
@@ -684,14 +568,12 @@ do {                                                                    \
 #define OPENIPMI_ERRNUM_SET(__errnum)                                   \
   do {                                                                  \
     ctx->errnum = (__errnum);                                           \
-    __OPENIPMI_SYSLOG;                                                  \
     __OPENIPMI_TRACE;                                                   \
   } while (0)
 
 #define OPENIPMI_ERRNUM_SET_CLEANUP(__errnum)                           \
   do {                                                                  \
     ctx->errnum = (__errnum);                                           \
-    __OPENIPMI_SYSLOG;                                                  \
     __OPENIPMI_TRACE;                                                   \
     goto cleanup;                                                       \
   } while (0)
@@ -701,7 +583,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PARAMETERS;                 \
-        __OPENIPMI_SYSLOG;                                              \
         __OPENIPMI_TRACE;                                               \
         return (-1);                                                    \
       }                                                                 \
@@ -712,7 +593,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PARAMETERS;                 \
-        __OPENIPMI_SYSLOG;                                              \
         __OPENIPMI_TRACE;                                               \
         goto cleanup;                                                   \
       }                                                                 \
@@ -723,7 +603,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED;         \
-        __OPENIPMI_SYSLOG;                                              \
         __OPENIPMI_TRACE;                                               \
         return (-1);                                                    \
       }                                                                 \
@@ -734,7 +613,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED;         \
-        __OPENIPMI_SYSLOG;                                              \
         __OPENIPMI_TRACE;                                               \
         goto cleanup;                                                   \
       }                                                                 \
@@ -745,7 +623,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY;              \
-        __OPENIPMI_SYSLOG;                                              \
         __OPENIPMI_TRACE;                                               \
         return (-1);                                                    \
       }                                                                 \
@@ -756,7 +633,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY;              \
-        __OPENIPMI_SYSLOG;                                              \
         __OPENIPMI_TRACE;                                               \
         goto cleanup;                                                   \
       }                                                                 \
@@ -767,7 +643,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR;             \
-        __OPENIPMI_SYSLOG;                                              \
         __OPENIPMI_TRACE;                                               \
         return (-1);                                                    \
       }                                                                 \
@@ -778,7 +653,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR;             \
-        __OPENIPMI_SYSLOG;                                              \
         __OPENIPMI_TRACE;                                               \
         goto cleanup;                                                   \
       }                                                                 \
@@ -805,7 +679,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         __LOCATE_ERRNO_TO_ERRNUM;                                       \
-        __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         return (-1);                                                    \
       }                                                                 \
@@ -816,7 +689,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         __LOCATE_ERRNO_TO_ERRNUM;                                       \
-        __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         goto cleanup;                                                   \
       }                                                                 \
@@ -825,14 +697,12 @@ do {                                                                    \
 #define LOCATE_ERRNUM_SET(__errnum)                                     \
   do {                                                                  \
     (*locate_errnum) = (__errnum);                                      \
-    __LOCATE_SYSLOG;                                                    \
     __LOCATE_TRACE;                                                     \
   } while (0)
 
 #define LOCATE_ERRNUM_SET_CLEANUP(__errnum)                             \
   do {                                                                  \
     (*locate_errnum) = (__errnum);                                      \
-    __LOCATE_SYSLOG;                                                    \
     __LOCATE_TRACE;                                                     \
     goto cleanup;                                                       \
   } while (0)
@@ -842,7 +712,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         (*locate_errnum) = IPMI_LOCATE_ERR_PARAMETERS;                  \
-        __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         return (-1);                                                    \
       }                                                                 \
@@ -853,7 +722,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         (*locate_errnum) = IPMI_LOCATE_ERR_PARAMETERS;                  \
-        __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         goto cleanup;                                                   \
       }                                                                 \
@@ -864,7 +732,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         (*locate_errnum) = IPMI_LOCATE_ERR_IO_NOT_INITIALIZED;          \
-        __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         return (-1);                                                    \
       }                                                                 \
@@ -875,7 +742,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         (*locate_errnum) = IPMI_LOCATE_ERR_IO_NOT_INITIALIZED;          \
-        __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         goto cleanup;                                                   \
       }                                                                 \
@@ -886,7 +752,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;               \
-        __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         return (-1);                                                    \
       }                                                                 \
@@ -897,7 +762,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;               \
-        __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         goto cleanup;                                                   \
       }                                                                 \
@@ -908,7 +772,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         (*locate_errnum) = IPMI_LOCATE_ERR_SYSTEM_ERROR;                \
-        __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         return (-1);                                                    \
       }                                                                 \
@@ -919,7 +782,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         (*locate_errnum) = IPMI_LOCATE_ERR_SYSTEM_ERROR;                \
-        __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         goto cleanup;                                                   \
       }                                                                 \
@@ -930,7 +792,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;              \
-        __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         return (-1);                                                    \
       }                                                                 \
@@ -941,7 +802,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;              \
-        __LOCATE_SYSLOG;                                                \
         __LOCATE_TRACE;                                                 \
         goto cleanup;                                                   \
       }                                                                 \

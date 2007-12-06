@@ -32,7 +32,6 @@ extern "C" {
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <syslog.h>
 #include <errno.h>
 
 #include "freeipmi/fiid.h"
@@ -70,7 +69,6 @@ do {                                               \
 do {                                                                     \
   if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                \
     {                                                                    \
-      __FIID_SYSLOG;                                                     \
       __FIID_TRACE;                                                      \
       __FIID_ERRNO_SET_UDM_ERRNUM;                                       \
       return (-1);                                                       \
@@ -81,7 +79,6 @@ do {                                                                     \
 do {                                                                     \
   if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                \
     {                                                                    \
-      __FIID_SYSLOG;                                                     \
       __FIID_TRACE;                                                      \
       __FIID_ERRNO_SET_UDM_ERRNUM;                                       \
       goto cleanup;                                                      \
@@ -94,7 +91,6 @@ do {                                                                     \
 do {                                                        \
   if (!((__obj) = fiid_obj_create((__tmpl))))               \
     {                                                       \
-      __FIID_SYSLOG;                                        \
       __FIID_TRACE;                                         \
       __FIID_ERRNO_SET_UDM_ERRNUM;                          \
       return (-1);                                          \
@@ -105,7 +101,6 @@ do {                                                        \
 do {                                                        \
   if (!((__obj) = fiid_obj_create((__tmpl))))               \
     {                                                       \
-      __FIID_SYSLOG;                                        \
       __FIID_TRACE;                                         \
       __FIID_ERRNO_SET_UDM_ERRNUM;                          \
       goto cleanup;                                         \
@@ -118,7 +113,6 @@ do {                                                        \
 do {                                                     \
     if (((__len) = fiid_obj_len_bytes ((__obj))) < 0)    \
       {                                                  \
-         __FIID_OBJ_SYSLOG((__obj));                     \
          __FIID_OBJ_TRACE((__obj));                      \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));             \
          return (-1);                                    \
@@ -129,7 +123,6 @@ do {                                                     \
 do {                                                     \
     if (((__len) = fiid_obj_len_bytes ((__obj))) < 0)    \
       {                                                  \
-         __FIID_OBJ_SYSLOG((__obj));                     \
          __FIID_OBJ_TRACE((__obj));                      \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));             \
          goto cleanup;                                   \
@@ -140,7 +133,6 @@ do {                                                     \
 do {                                                     \
     if (fiid_obj_clear ((__obj)) < 0)                    \
       {                                                  \
-         __FIID_OBJ_SYSLOG((__obj));                     \
          __FIID_OBJ_TRACE((__obj));                      \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));             \
          return (-1);                                    \
@@ -151,7 +143,6 @@ do {                                                     \
 do {                                                     \
     if (fiid_obj_clear_field ((__obj), (__field)) < 0)   \
       {                                                  \
-         __FIID_OBJ_SYSLOG((__obj));                     \
          __FIID_OBJ_TRACE((__obj));                      \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));             \
          return (-1);                                    \
@@ -162,7 +153,6 @@ do {                                                     \
 do {                                                     \
     if (fiid_obj_clear_field ((__obj), (__field)) < 0)   \
       {                                                  \
-         __FIID_OBJ_SYSLOG((__obj));                     \
          __FIID_OBJ_TRACE((__obj));                      \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));             \
          goto cleanup;                                   \
@@ -175,7 +165,6 @@ do {                                                          \
     __localval_ptr = (__val);                                 \
     if (fiid_obj_get ((__obj), (__field), &__localval) < 0)   \
       {                                                       \
-         __FIID_OBJ_SYSLOG((__obj));                          \
          __FIID_OBJ_TRACE((__obj));                           \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                  \
          return (-1);                                         \
@@ -189,7 +178,6 @@ do {                                                          \
     __localval_ptr = (__val);                                 \
     if (fiid_obj_get ((__obj), (__field), &__localval) < 0)   \
       {                                                       \
-         __FIID_OBJ_SYSLOG((__obj));                          \
          __FIID_OBJ_TRACE((__obj));                           \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                  \
          goto cleanup;                                        \
@@ -201,7 +189,6 @@ do {                                                          \
 do {                                                          \
     if (fiid_obj_set ((__obj), (__field), (__val)) < 0)       \
       {                                                       \
-         __FIID_OBJ_SYSLOG((__obj));                          \
          __FIID_OBJ_TRACE((__obj));                           \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                  \
          return (-1);                                         \
@@ -212,7 +199,6 @@ do {                                                          \
 do {                                                          \
     if (fiid_obj_set ((__obj), (__field), (__val)) < 0)       \
       {                                                       \
-         __FIID_OBJ_SYSLOG((__obj));                          \
          __FIID_OBJ_TRACE((__obj));                           \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                  \
          goto cleanup;                                        \
@@ -223,7 +209,6 @@ do {                                                          \
 do {                                                                        \
     if (fiid_obj_set_data ((__obj), (__field), (__data), (__data_len)) < 0) \
       {                                                                     \
-         __FIID_OBJ_SYSLOG((__obj));                                        \
          __FIID_OBJ_TRACE((__obj));                                         \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                \
          return (-1);                                                       \
@@ -234,7 +219,6 @@ do {                                                                        \
 do {                                                                        \
     if (fiid_obj_set_data ((__obj), (__field), (__data), (__data_len)) < 0) \
       {                                                                     \
-         __FIID_OBJ_SYSLOG((__obj));                                        \
          __FIID_OBJ_TRACE((__obj));                                         \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                \
          goto cleanup;                                                      \
@@ -245,7 +229,6 @@ do {                                                                        \
 do {                                                                         \
     if (fiid_obj_get_data ((__obj), (__field), (__data), (__data_len)) < 0)  \
       {                                                                      \
-         __FIID_OBJ_SYSLOG((__obj));                                         \
          __FIID_OBJ_TRACE((__obj));                                          \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                 \
          return (-1);                                                        \
@@ -256,7 +239,6 @@ do {                                                                         \
 do {                                                                         \
     if (fiid_obj_get_data ((__obj), (__field), (__data), (__data_len)) < 0)  \
       {                                                                      \
-         __FIID_OBJ_SYSLOG((__obj));                                         \
          __FIID_OBJ_TRACE((__obj));                                          \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                 \
          goto cleanup;                                                       \
@@ -267,7 +249,6 @@ do {                                                                         \
 do {                                                                                    \
     if (((__len) = fiid_obj_get_data ((__obj), (__field), (__data), (__data_len))) < 0) \
       {                                                                                 \
-         __FIID_OBJ_SYSLOG((__obj));                                                    \
          __FIID_OBJ_TRACE((__obj));                                                     \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                            \
          return (-1);                                                                   \
@@ -278,7 +259,6 @@ do {                                                                            
 do {                                                                                    \
     if (((__len) = fiid_obj_get_data ((__obj), (__field), (__data), (__data_len))) < 0) \
       {                                                                                 \
-         __FIID_OBJ_SYSLOG((__obj));                                                    \
          __FIID_OBJ_TRACE((__obj));                                                     \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                            \
          goto cleanup;                                                                  \
@@ -289,7 +269,6 @@ do {                                                                            
 do {                                                                        \
     if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)             \
       {                                                                     \
-         __FIID_OBJ_SYSLOG((__obj));                                        \
          __FIID_OBJ_TRACE((__obj));                                         \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                \
          return (-1);                                                       \
@@ -300,7 +279,6 @@ do {                                                                        \
 do {                                                                        \
     if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)             \
       {                                                                     \
-         __FIID_OBJ_SYSLOG((__obj));                                        \
          __FIID_OBJ_TRACE((__obj));                                         \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                \
          goto cleanup;                                                      \
@@ -311,7 +289,6 @@ do {                                                                        \
 do {                                                                         \
     if (fiid_obj_get_all ((__obj), (__data), (__data_len)) < 0)              \
       {                                                                      \
-         __FIID_OBJ_SYSLOG((__obj));                                         \
          __FIID_OBJ_TRACE((__obj));                                          \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                 \
          return (-1);                                                        \
@@ -322,7 +299,6 @@ do {                                                                         \
 do {                                                                         \
     if (fiid_obj_get_all ((__obj), (__data), (__data_len)) < 0)              \
       {                                                                      \
-         __FIID_OBJ_SYSLOG((__obj));                                         \
          __FIID_OBJ_TRACE((__obj));                                          \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                 \
          goto cleanup;                                                       \
@@ -333,7 +309,6 @@ do {                                                                         \
 do {                                                                        \
     if (((__len) = fiid_obj_get_all ((__obj), (__data), (__data_len))) < 0) \
       {                                                                     \
-         __FIID_OBJ_SYSLOG((__obj));                                        \
          __FIID_OBJ_TRACE((__obj));                                         \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                \
          return (-1);                                                       \
@@ -344,7 +319,6 @@ do {                                                                        \
 do {                                                                        \
     if (((__len) = fiid_obj_get_all ((__obj), (__data), (__data_len))) < 0) \
       {                                                                     \
-         __FIID_OBJ_SYSLOG((__obj));                                        \
          __FIID_OBJ_TRACE((__obj));                                         \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                \
          goto cleanup;                                                      \
@@ -356,14 +330,12 @@ do {                                                   \
     int __ret;                                         \
     if ((__ret = fiid_obj_packet_valid((__obj))) < 0)  \
       {                                                \
-        __FIID_OBJ_SYSLOG((__obj));                    \
         __FIID_OBJ_TRACE((__obj));                     \
 	__FIID_OBJ_SET_UDM_ERRNUM((__obj));            \
         return (-1);                                   \
       }                                                \
     if (!__ret)                                        \
       {                                                \
-        __FIID_OBJ_SYSLOG((__obj));                    \
         __FIID_OBJ_TRACE((__obj));                     \
         ctx->errnum = IPMI_ERR_PARAMETERS;             \
 	return (-1);                                   \
@@ -374,7 +346,6 @@ do {                                                   \
 do {                                                   \
     if (!(__ptr = fiid_obj_template((__obj))))         \
       {                                                \
-        __FIID_OBJ_SYSLOG((__obj));                    \
         __FIID_OBJ_TRACE((__obj));                     \
 	__FIID_OBJ_SET_UDM_ERRNUM((__obj));            \
         goto cleanup;                                  \
@@ -386,7 +357,6 @@ do {                                                                 \
     int __ret;                                                       \
     if ((__ret = fiid_obj_template_compare ((__obj), (__tmpl))) < 0) \
       {                                                              \
-         __FIID_OBJ_SYSLOG((__obj));                                 \
          __FIID_OBJ_TRACE((__obj));                                  \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                         \
          return (-1);                                                \
@@ -394,7 +364,6 @@ do {                                                                 \
     if (!__ret)                                                      \
       {                                                              \
 	errno = EINVAL;                                              \
-         __FIID_OBJ_SYSLOG((__obj));                                 \
          __FIID_OBJ_TRACE((__obj));                                  \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                         \
 	return (-1);                                                 \
@@ -406,7 +375,6 @@ do {                                                                 \
     int __ret;                                                       \
     if ((__ret = fiid_obj_template_compare ((__obj), (__tmpl))) < 0) \
       {                                                              \
-         __FIID_OBJ_SYSLOG((__obj));                                 \
          __FIID_OBJ_TRACE((__obj));                                  \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                         \
          goto cleanup;                                               \
@@ -414,7 +382,6 @@ do {                                                                 \
     if (!__ret)                                                      \
       {                                                              \
 	errno = EINVAL;                                              \
-         __FIID_OBJ_SYSLOG((__obj));                                 \
          __FIID_OBJ_TRACE((__obj));                                  \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                         \
 	goto cleanup;                                                \

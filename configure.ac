@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.5.0.beta3],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.97.2.6 2007-12-05 17:49:48 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.97.2.7 2007-12-06 03:25:56 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -160,16 +160,6 @@ if test "x${enable_trace}" = "xyes" ; then
      AC_DEFINE([IPMI_TRACE],[1],[Define to turn on error tracing])
 elif test "x${enable_trace}" = "x" ; then
      enable_trace=no
-fi
-
-dnl Enable error syslogging. Lower level calls will spit log error messages
-dnl to the syslog.
-AC_ARG_ENABLE([syslog],
-              AC_HELP_STRING([--enable-syslog], [turn on error syslogging]))
-if test "x${enable_syslog}" = "xyes" ; then
-     AC_DEFINE([IPMI_SYSLOG],[1],[Define to turn on error syslogging])
-elif test "x${enable_syslog}" = "x" ; then
-     enable_syslog=no
 fi
 
 dnl Turn off all optimizations when debugging

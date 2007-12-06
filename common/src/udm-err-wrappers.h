@@ -1,5 +1,5 @@
 /* 
-   err-wrappers.h - IPMI error handling
+   udm-err-wrappers.h - IPMI error handling
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -35,7 +35,6 @@ extern "C" {
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <syslog.h>
 #include <errno.h>
 
 #include "freeipmi/fiid.h"
@@ -44,57 +43,6 @@ extern "C" {
 #include "freeipmi/udm/ipmi-udm.h"
 
 #include "err-wrappers.h"
-
-#if defined (IPMI_SYSLOG)
-#define __UDM_SYSLOG                                                         \
-do {                                                                         \
-  int __ctxerrnum = ctx->errnum;                                             \
-  char *__ctxerrstr = ipmi_ctx_strerror(__ctxerrnum);                        \
-  __SYSLOG_CTX_OUTPUT;                                                       \
-} while (0)
-
-#define __ERR_UDM_SYSLOG                                                     \
-do {                                                                         \
-  int __ctxerrnum = ipmi_ctx_errnum(ctx);                                    \
-  char *__ctxerrstr = ipmi_ctx_strerror(__ctxerrnum);                        \
-  __SYSLOG_CTX_OUTPUT;                                                       \
-} while (0)
-
-#define __UDM_KCS_SYSLOG                                                     \
-do {                                                                         \
-  int __ctxerrnum = ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx);             \
-  char *__ctxerrstr = ipmi_kcs_ctx_strerror(__ctxerrnum);                    \
-  __SYSLOG_CTX_OUTPUT;                                                       \
-} while (0)
-
-#define __UDM_SSIF_SYSLOG                                                    \
-do {                                                                         \
-  int __ctxerrnum = ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx);           \
-  char *__ctxerrstr = ipmi_ssif_ctx_strerror(__ctxerrnum);                   \
-  __SYSLOG_CTX_OUTPUT;                                                       \
-} while (0)
-
-#define __UDM_OPENIPMI_SYSLOG                                                \
-do {                                                                         \
-  int __ctxerrnum = ipmi_openipmi_ctx_errnum(ctx->io.inband.openipmi_ctx);   \
-  char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);               \
-  __SYSLOG_CTX_OUTPUT;                                                       \
-} while (0)
-
-#define __UDM_LOCATE_SYSLOG                                                  \
-do {                                                                         \
-  int __ctxerrnum = __locate_errnum;                                         \
-  char *__ctxerrstr = ipmi_locate_strerror(__ctxerrnum);                     \
-  __SYSLOG_CTX_OUTPUT;                                                       \
-} while (0)
-#else
-#define __UDM_SYSLOG
-#define __ERR_UDM_SYSLOG
-#define __UDM_KCS_SYSLOG
-#define __UDM_SSIF_SYSLOG
-#define __UDM_OPENIPMI_SYSLOG
-#define __UDM_LOCATE_SYSLOG
-#endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
 #define __UDM_TRACE                                                          \
@@ -183,7 +131,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -192,27 +139,23 @@ do {                                                                    \
 #define UDM_ERR_SET_ERRNUM(__errnum)                                    \
 do {                                                                    \
   ctx->errnum = (__errnum);                                             \
-  __UDM_SYSLOG;                                                         \
   __UDM_TRACE;                                                          \
 } while (0)   
 
 #define UDM_ERR_SET_ERRNUM_CLEANUP(__errnum)                            \
 do {                                                                    \
   ctx->errnum = (__errnum);                                             \
-  __UDM_SYSLOG;                                                         \
   __UDM_TRACE;                                                          \
   goto cleanup;                                                         \
 } while (0)   
 
 #define UDM_ERR_LOG(expr)                                               \
 do {                                                                    \
-  __UDM_SYSLOG;                                                         \
   __UDM_TRACE;                                                          \
 } while (0)   
 
 #define UDM_ERR_LOG_CLEANUP(expr)                                       \
 do {                                                                    \
-  __UDM_SYSLOG;                                                         \
   __UDM_TRACE;                                                          \
   goto cleanup;                                                         \
 } while (0)   
@@ -222,7 +165,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       __ERRNO_TO_UDM_ERRNUM;                                            \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -233,7 +175,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       __ERRNO_TO_UDM_ERRNUM;                                            \
-      __ERR_SYSLOG;                                                     \
       __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -244,7 +185,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_DEVICE_ALREADY_OPEN;                       \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -255,7 +195,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_DEVICE_ALREADY_OPEN;                       \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -266,7 +205,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_DEVICE_NOT_OPEN;                           \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -277,7 +215,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_DEVICE_NOT_OPEN;                           \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -288,7 +225,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;                      \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -299,7 +235,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;                      \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -310,7 +245,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_HOSTNAME_INVALID;                          \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -321,7 +255,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_HOSTNAME_INVALID;                          \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -332,7 +265,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_PARAMETERS;                                \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -343,7 +275,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_PARAMETERS;                                \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -354,7 +285,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_DRIVER_PATH_REQUIRED;                      \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -365,7 +295,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_DRIVER_PATH_REQUIRED;                      \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -376,7 +305,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                              \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -387,7 +315,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                              \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -398,7 +325,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                             \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -409,7 +335,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                             \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -420,7 +345,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                            \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -431,7 +355,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                            \
-      __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -487,7 +410,6 @@ do {                                                                            
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_UDM_SYSLOG;                                                 \
       __ERR_UDM_TRACE;                                                  \
       return (-1);                                                      \
     }                                                                   \
@@ -497,7 +419,6 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_UDM_SYSLOG;                                                 \
       __ERR_UDM_TRACE;                                                  \
       goto cleanup;                                                     \
     }                                                                   \
@@ -527,7 +448,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
-      __UDM_KCS_SYSLOG;                                                 \
       __UDM_KCS_TRACE;                                                  \
       return (-1);                                                      \
     }                                                                   \
@@ -538,7 +458,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
-      __UDM_KCS_SYSLOG;                                                 \
       __UDM_KCS_TRACE;                                                  \
       goto cleanup;                                                     \
     }                                                                   \
@@ -566,7 +485,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
-      __UDM_SSIF_SYSLOG;                                                \
       __UDM_SSIF_TRACE;                                                 \
       return (-1);                                                      \
     }                                                                   \
@@ -577,7 +495,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
-      __UDM_SSIF_SYSLOG;                                                \
       __UDM_SSIF_TRACE;                                                 \
       goto cleanup;                                                     \
     }                                                                   \
@@ -607,7 +524,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
-      __UDM_OPENIPMI_SYSLOG;                                            \
       __UDM_OPENIPMI_TRACE;                                             \
       return (-1);                                                      \
     }                                                                   \
@@ -618,7 +534,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
-      __UDM_OPENIPMI_SYSLOG;                                            \
       __UDM_OPENIPMI_TRACE;                                             \
       goto cleanup;                                                     \
     }                                                                   \
@@ -646,7 +561,6 @@ do {                                                                    \
   if ((__locate_errnum = (expr)))                                       \
     {                                                                   \
       __LOCATE_ERRNUM_TO_UDM_ERRNUM(__locate_errnum);                   \
-      __UDM_LOCATE_SYSLOG;                                              \
       __UDM_LOCATE_TRACE;                                               \
       return (-1);                                                      \
     }                                                                   \
@@ -658,7 +572,6 @@ do {                                                                    \
   if ((__locate_errnum = (expr)))                                       \
     {                                                                   \
       __LOCATE_ERRNUM_TO_UDM_ERRNUM(__locate_errnum);                   \
-      __UDM_LOCATE_SYSLOG;                                              \
       __UDM_LOCATE_TRACE;                                               \
       goto cleanup;                                                     \
     }                                                                   \
