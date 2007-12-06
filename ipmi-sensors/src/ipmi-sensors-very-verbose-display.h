@@ -16,8 +16,8 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _SENSORS_VERY_VERBOSE_DISPLAY_H
-#define _SENSORS_VERY_VERBOSE_DISPLAY_H
+#ifndef _IPMI_SENSORS_VERY_VERBOSE_DISPLAY_H
+#define _IPMI_SENSORS_VERY_VERBOSE_DISPLAY_H
 
 #include "ipmi-sensors.h"
 

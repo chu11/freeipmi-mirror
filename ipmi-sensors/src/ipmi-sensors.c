@@ -46,9 +46,9 @@
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-utils.h"
-#include "sensors-simple-display.h"
-#include "sensors-verbose-display.h"
-#include "sensors-very-verbose-display.h"
+#include "ipmi-sensors-simple-display.h"
+#include "ipmi-sensors-verbose-display.h"
+#include "ipmi-sensors-very-verbose-display.h"
 
 #include "pstdout.h"
 #include "hostrange.h"

@@ -147,6 +147,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	Renamed to ipmi-err-wrappers.h, ipmi-fiid-wrappers.h,
 	ipmi-err-wrappers-udm.h, and ipmi-fiid-wrappers.h respectively.
 	Moved into libfreeipmi/ appropriately.
+
+	* ipmi-sensors/src/: Rename files for consistency to code
+	organization in other tools.
 	
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.

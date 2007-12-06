@@ -16,13 +16,13 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _SENSORS_VERBOSE_DISPLAY_H
-#define _SENSORS_VERBOSE_DISPLAY_H
+#ifndef _IPMI_SENSORS_SIMPLE_DISPLAY_H
+#define _IPMI_SENSORS_SIMPLE_DISPLAY_H
 
 #include "ipmi-sensors.h"
 
-int sensors_display_verbose (ipmi_sensors_state_data_t *state_data,
-                             sdr_record_t *sdr_record, 
-			     sensor_reading_t *sensor_reading);
+int sensors_display_simple (ipmi_sensors_state_data_t *state_data,
+                            sdr_record_t *sdr_record, 
+			    sensor_reading_t *sensor_reading);
 
 #endif
