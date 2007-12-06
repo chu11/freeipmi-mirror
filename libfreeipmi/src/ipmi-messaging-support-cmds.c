@@ -1,6 +1,4 @@
 /* 
-   ipmi-messaging-support-cmds.c - IPMI Message Support Commands
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -36,8 +34,9 @@
 #include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/ipmi-rmcpplus-interface.h"
 
-#include "err-wrappers.h"
-#include "fiid-wrappers.h"
+#include "ipmi-err-wrappers.h"
+#include "ipmi-fiid-wrappers.h"
+
 #include "freeipmi-portability.h"
 
 #define IPMI_MAX_K_LENGTH 64

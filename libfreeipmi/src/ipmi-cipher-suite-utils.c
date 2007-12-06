@@ -1,6 +1,4 @@
 /* 
-   ipmi-cipher-suite-utils.c - IPMI Sensor Types
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -28,7 +26,7 @@
 #include "freeipmi/ipmi-cipher-suite-utils.h"
 #include "freeipmi/ipmi-cipher-suite-record-format.h"
 
-#include "err-wrappers.h"
+#include "ipmi-err-wrappers.h"
 
 int8_t 
 ipmi_cipher_suite_id_to_algorithms(uint8_t cipher_suite_id,

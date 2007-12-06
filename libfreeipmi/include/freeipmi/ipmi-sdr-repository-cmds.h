@@ -1,6 +1,4 @@
 /* 
-   ipmi-sdr-repository-cmds.h - IPMI SDR Repository commands
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify

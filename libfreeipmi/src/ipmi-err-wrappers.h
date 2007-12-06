@@ -1,6 +1,4 @@
 /* 
-   err-wrappers.h - IPMI error handling
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -19,8 +17,8 @@
 
 */
 
-#ifndef _ERR_WRAPPERS_H
-#define	_ERR_WRAPPERS_H
+#ifndef _IPMI_ERR_WRAPPERS_H
+#define	_IPMI_ERR_WRAPPERS_H
 
 #ifdef __cplusplus
 extern "C" {

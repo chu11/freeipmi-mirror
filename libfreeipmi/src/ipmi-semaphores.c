@@ -1,6 +1,4 @@
 /* 
-   ipmi-semaphores.c: Synchronization and Locking functionality.
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -32,7 +30,8 @@
 
 #include "ipmi-semaphores.h"
 
-#include "err-wrappers.h"
+#include "ipmi-err-wrappers.h"
+
 #include "freeipmi-portability.h"
 
 struct sembuf mutex_lock_buf_interruptible   = {0, -1, IPC_NOWAIT|SEM_UNDO};

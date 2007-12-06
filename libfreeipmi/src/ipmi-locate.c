@@ -1,7 +1,4 @@
 /* 
-   ipmi-locate.c - Locate IPMI interfaces by scanning various system
-   information
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -33,7 +30,8 @@
 
 #include "freeipmi/ipmi-locate.h"
 
-#include "err-wrappers.h"
+#include "ipmi-err-wrappers.h"
+
 #include "freeipmi-portability.h"
 #include "xmalloc.h"
 

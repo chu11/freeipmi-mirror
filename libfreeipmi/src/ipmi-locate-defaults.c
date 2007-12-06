@@ -1,6 +1,4 @@
 /* 
-   ipmi-locate-defaults.c - Return default locate info for IPMI interfaces.
-
    Copyright (C) 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -35,7 +33,8 @@
 #include "freeipmi/ipmi-slave-address-spec.h"
 #include "freeipmi/ipmi-ssif-driver.h"
 
-#include "err-wrappers.h"
+#include "ipmi-err-wrappers.h"
+
 #include "freeipmi-portability.h"
 
 /* achu: Used to be in ipmi-smic-api.h, but that is now removed. */

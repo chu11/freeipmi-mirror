@@ -1,6 +1,4 @@
 /*
-   ipmi-messaging-support-cmds-udm.h - IPMI UDM Message Support Commands
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify

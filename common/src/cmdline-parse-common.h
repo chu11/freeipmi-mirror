@@ -1,5 +1,4 @@
 /*
-   cmdline-parse-common.h: common code command line parsing
    Copyright (C) 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify

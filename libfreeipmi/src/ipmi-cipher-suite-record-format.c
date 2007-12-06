@@ -1,6 +1,4 @@
 /* 
-   ipmi-cipher-suite-record-format.c - IPMI Sensor Types
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -27,7 +25,7 @@
 
 #include "freeipmi/ipmi-cipher-suite-record-format.h"
 
-#include "err-wrappers.h"
+#include "ipmi-err-wrappers.h"
 
 fiid_template_t tmpl_cipher_suite_record_header =
   {

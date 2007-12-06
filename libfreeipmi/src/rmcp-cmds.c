@@ -1,6 +1,4 @@
 /* 
-   rmcp.c - remote management control protocol procedures
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -32,8 +30,9 @@
 #include "freeipmi/rmcp-cmds.h"
 #include "freeipmi/rmcp-interface.h"
 
-#include "err-wrappers.h"
-#include "fiid-wrappers.h"
+#include "ipmi-err-wrappers.h"
+#include "ipmi-fiid-wrappers.h"
+
 #include "freeipmi-portability.h"
 
 fiid_template_t tmpl_cmd_asf_presence_ping = 

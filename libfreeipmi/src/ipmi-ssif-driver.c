@@ -1,6 +1,4 @@
 /* 
-   ipmi-ssif-driver.c: IPMI - SMBus System Interface - SMS Driver
-
    Copyright (C) 2005 FreeIPMI Core Team
 
    Based on ipmitool.c provided by Amitoj Singh <amitoj@fnal.gov> and 
@@ -50,11 +48,11 @@
 #include "freeipmi/ipmi-kcs.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 
+#include "ipmi-common.h"
+#include "ipmi-err-wrappers.h"
+#include "ipmi-fiid-wrappers.h"
 #include "ipmi-semaphores.h"
 
-#include "err-wrappers.h"
-#include "fiid-wrappers.h"
-#include "ipmi-common.h"
 #include "freeipmi-portability.h"
 #include "xmalloc.h"
 

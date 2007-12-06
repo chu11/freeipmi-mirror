@@ -1,6 +1,4 @@
 /* 
-   ipmi-ssif-driver.h: IPMI - SMBus System Interface - SMS Driver
-
    Copyright (C) 2005 FreeIPMI Core Team
 
    Based on ipmitool.c provided by Amitoj Singh <amitoj@fnal.gov> and 

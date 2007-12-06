@@ -44,8 +44,9 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-ssif-driver.h"
 
-#include "err-wrappers.h"
+#include "ipmi-err-wrappers.h"
 #include "freeipmi-portability.h"
+
 #include "xmalloc.h"
 
 #ifdef __ia64__

@@ -1,6 +1,4 @@
 /* 
-   ipmi-rmcpplus-util.c - IPMI RMCPPLUS Utils
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -40,10 +38,11 @@
 #include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/rmcp-interface.h"
 
-#include "err-wrappers.h"
-#include "fiid-wrappers.h"
-#include "freeipmi-portability.h"
 #include "ipmi-common.h"
+#include "ipmi-err-wrappers.h"
+#include "ipmi-fiid-wrappers.h"
+
+#include "freeipmi-portability.h"
 
 #define IPMI_KEY_CONSTANT_LENGTH                          20
 #define IPMI_MAX_K1_LENGTH                                32

@@ -1,10 +1,6 @@
 noinst_HEADERS = \
 	cmdline-parse-common.h \
 	bit-ops.h \
-	err-wrappers.h \
-	fiid-wrappers.h \
-	udm-fiid-wrappers.h \
-	udm-err-wrappers.h \
 	freeipmi-portability.h \
 	tool-common.h \
 	ipmi-ping.h \

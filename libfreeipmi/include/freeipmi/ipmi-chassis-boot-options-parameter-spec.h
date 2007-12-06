@@ -1,6 +1,4 @@
 /* 
-   ipmi-chassis-boot-option-parameter-spec.h - IPMI Chassis Boot Option Paramter Information 
-   
    Copyright (C) 2007 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify

@@ -1,8 +1,4 @@
 /* 
-   $Id: pef-config-argp.c,v 1.14.2.1 2007-11-20 19:17:47 chu11 Exp $ 
-   
-   pef-config-argp.c - Platform Event Filtering utility.
-   
    Copyright (C) 2005 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify

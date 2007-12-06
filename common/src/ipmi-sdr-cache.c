@@ -1,5 +1,4 @@
 /*
-  ipmi-sdr-cache.c: SDR cache creation and management apis.
   Copyright (C) 2006 FreeIPMI Core Team
 
   This program is free software; you can redistribute it and/or modify

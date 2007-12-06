@@ -86,6 +86,8 @@ libfreeipmi_la_LIBADD = \
 
 noinst_HEADERS = \
 	ipmi-debug-common.h \
+	ipmi-err-wrappers.h \
+	ipmi-fiid-wrappers.h \
 	ipmi-inband.h \
 	ipmi-semaphores.h \
 	ipmi-common.h

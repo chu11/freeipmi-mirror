@@ -1,6 +1,4 @@
 /*
-  ipmi-debug.c - IPMI Debugging Functions
-
   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
   This program is free software; you can redistribute it and/or modify
@@ -38,10 +36,11 @@
 
 #include "ipmi-debug-common.h"
 
-#include "err-wrappers.h"
-#include "fiid-wrappers.h"
-#include "freeipmi-portability.h"
 #include "ipmi-common.h"
+#include "ipmi-err-wrappers.h"
+#include "ipmi-fiid-wrappers.h"
+
+#include "freeipmi-portability.h"
 
 int8_t 
 ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)

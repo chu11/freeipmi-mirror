@@ -1,8 +1,4 @@
 /* 
-   $Id: bmc-info.h,v 1.6.4.1 2007-12-03 05:13:33 chu11 Exp $ 
-   
-   bmc-info.h - displays BMC information.
-   
    Copyright (C) 2005 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify

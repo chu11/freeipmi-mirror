@@ -1,8 +1,4 @@
 /* 
-   $Id: ipmi-sensors-argp.h,v 1.7 2007-09-05 20:13:27 chu11 Exp $ 
-   
-   ipmi-sensors-argp.h - IPMI Sensors utility.
-   
    Copyright (C) 2006 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify

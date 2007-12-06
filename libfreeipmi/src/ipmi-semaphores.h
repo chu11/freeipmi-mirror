@@ -1,6 +1,4 @@
 /* 
-   ipmi-semaphores.h: Synchronization and Locking functionality.
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify

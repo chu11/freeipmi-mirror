@@ -1,6 +1,4 @@
 /* 
-   ipmi-openipmi-driver.c: IPMI - OpenIPMI Driver
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -56,13 +54,13 @@
 #include "freeipmi/ipmi-netfn-spec.h"
 #include "freeipmi/ipmi-slave-address-spec.h"
 
+#include "ipmi-common.h"
+#include "ipmi-err-wrappers.h"
+#include "ipmi-fiid-wrappers.h"
 #include "ipmi-inband.h"
 #include "ipmi-semaphores.h"
 
-#include "err-wrappers.h"
-#include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
-#include "ipmi-common.h"
 #include "xmalloc.h"
 
 #define IPMI_OPENIPMI_BUFLEN    1024

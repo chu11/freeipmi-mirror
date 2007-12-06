@@ -1,23 +1,22 @@
-/*   ipmi-pef-and-alerting-cmds.c - IPMI Platform Event Filtering Commands 
-   
-Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
+/*   
+     Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
-This file is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
+     This file is free software; you can redistribute it and/or modify
+     it under the terms of the GNU General Public License as published by
+     the Free Software Foundation; either version 2, or (at your option)
+     any later version.
 
-This file is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with GNU Emacs; see the file COPYING.  If not, write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA 02110-1301, USA.
-
-$Id: ipmi-pef-and-alerting-cmds.c,v 1.22 2007-06-03 00:52:48 chu11 Exp $  */
+     This file is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+     
+     You should have received a copy of the GNU General Public License
+     along with GNU Emacs; see the file COPYING.  If not, write to
+     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+     Boston, MA 02110-1301, USA.
+     
+*/
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -32,8 +31,9 @@ $Id: ipmi-pef-and-alerting-cmds.c,v 1.22 2007-06-03 00:52:48 chu11 Exp $  */
 #include "freeipmi/ipmi-channel-spec.h" 
 #include "freeipmi/ipmi-cmd-spec.h"
 
-#include "err-wrappers.h"
-#include "fiid-wrappers.h"
+#include "ipmi-err-wrappers.h"
+#include "ipmi-fiid-wrappers.h"
+
 #include "freeipmi-portability.h"
 
 fiid_template_t tmpl_cmd_get_pef_capabilities_rq =

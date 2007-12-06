@@ -1,8 +1,4 @@
 /* 
-   $Id: ipmi-locate-argp.c,v 1.6 2007-09-05 20:13:26 chu11 Exp $ 
-   
-   ipmi-locate-argp.c - command line argument parser.
-   
    Copyright (C) 2005 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify

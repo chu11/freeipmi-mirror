@@ -1,6 +1,4 @@
 /* 
-   ipmi-pef-and-alerting-cmds.h - IPMI Platform Event Filtering Commands 
-   
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -18,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.14 2007-09-05 20:13:38 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.14.4.1 2007-12-06 15:40:27 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H

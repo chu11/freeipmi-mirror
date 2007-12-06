@@ -1,6 +1,4 @@
 /* 
-   ipmi-crypt.c - IPMI Crypt Utils
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -37,7 +35,8 @@ GCRY_THREAD_OPTION_PTHREAD_IMPL;
 #include "freeipmi/ipmi-crypt.h"
 #include "freeipmi/ipmi-debug.h"
 
-#include "err-wrappers.h"
+#include "ipmi-err-wrappers.h"
+
 #include "freeipmi-portability.h"
 
 static int ipmi_crypt_initialized = 0;

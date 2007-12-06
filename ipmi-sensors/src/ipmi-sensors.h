@@ -1,8 +1,4 @@
 /* 
-   $Id: ipmi-sensors.h,v 1.9.4.1 2007-12-03 05:13:35 chu11 Exp $ 
-   
-   ipmi-sensors.h - IPMI Sensors utility.
-   
    Copyright (C) 2006 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify

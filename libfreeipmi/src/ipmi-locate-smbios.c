@@ -1,6 +1,4 @@
 /* 
-   ipmi-locate-smbios.c - SMBIOS driver to locate IPMI interfaces.
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -48,7 +46,8 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-ssif-driver.h"
 
-#include "err-wrappers.h"
+#include "ipmi-err-wrappers.h"
+
 #include "freeipmi-portability.h"
 #include "xmalloc.h"
 

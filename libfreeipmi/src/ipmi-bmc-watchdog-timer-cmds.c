@@ -1,6 +1,4 @@
 /* 
-   ipmi-msg-support-cmds.c - IPMI Message Support Commands
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -29,8 +27,9 @@
 #include "freeipmi/ipmi-bmc-watchdog-timer-cmds.h"
 #include "freeipmi/ipmi-cmd-spec.h"
 
-#include "err-wrappers.h"
-#include "fiid-wrappers.h"
+#include "ipmi-err-wrappers.h"
+#include "ipmi-fiid-wrappers.h"
+
 #include "freeipmi-portability.h"
 
 fiid_template_t tmpl_cmd_reset_watchdog_timer_rq =

@@ -1,6 +1,4 @@
 /* 
-   fiid-wrappers.h - FreeIPMI Interface Definition wrappers
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -19,8 +17,8 @@
 
 */
 
-#ifndef _FIID_WRAPPERS_H
-#define	_FIID_WRAPPERS_H 1
+#ifndef _IPMI_FIID_WRAPPERS_H
+#define	_IPMI_FIID_WRAPPERS_H 1
 
 #ifdef __cplusplus
 extern "C" {

@@ -142,6 +142,12 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/: Rework UDM interface to take ipmi_ctx_t instead of
 	ipmi_device_t which didn't make any sense.
 
+	* common/src/err-wrappers.h, common/src/fiid-wrappers.h,
+	common/src/udm-err-wrappers.h, common/src/udm-fiid-wrappers.h:
+	Renamed to ipmi-err-wrappers.h, ipmi-fiid-wrappers.h,
+	ipmi-err-wrappers-udm.h, and ipmi-fiid-wrappers.h respectively.
+	Moved into libfreeipmi/ appropriately.
+	
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

@@ -34,10 +34,10 @@
 
 #include "freeipmi/fiid.h"
 
-#include "freeipmi-portability.h"
+#include "ipmi-common.h"
 
 #include "bit-ops.h"
-#include "ipmi-common.h"
+#include "freeipmi-portability.h"
 #include "xmalloc.h"
 
 #define FIID_OBJ_MAGIC 0xf00fd00d
