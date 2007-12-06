@@ -38,6 +38,8 @@ in ipmimonitoring and add into libfreeipmi?
 - move libfreeipmi specific libs out of common/src into libfreeipmi dir
 - need debug capabilities in sdr cache libs (i.e. sdr cache dumping)
 - prefix host output on debug for udm based tools
+- common header throughout
+- fix copyrights in all non-llnl included files
 
 Autoconf/Portability
 --------------------
