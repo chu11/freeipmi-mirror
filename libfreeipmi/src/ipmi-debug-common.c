@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #ifdef STDC_HEADERS
 #include <string.h>
+#include <stdarg.h>
 #endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -44,15 +45,45 @@
 #define IPMI_DEBUG_CHAR_PER_LINE          8
 #define IPMI_DEBUG_DEFAULT_FD STDERR_FILENO
 
-#define FREEIPMI_DPRINTF(args) \
-        do { \
-          ERR (!((freeipmi_dprintf args) < 0)); \
-        } while(0) 
+static int
+_write(int fd, void *buf, size_t n)
+{
+  /* chu: by Chris Dunlap <dunlap6 at llnl dot gov> */
+  size_t nleft;
+  ssize_t nwritten;
+  unsigned char *p;
 
-#define FREEIPMI_DPRINTF_CLEANUP(args) \
-        do { \
-          ERR_CLEANUP (!((freeipmi_dprintf args) < 0)); \
-        } while(0) 
+  p = buf;
+  nleft = n;
+  while (nleft > 0)
+    {
+      if ((nwritten = write (fd, p, nleft)) < 0)
+        {
+          if (errno == EINTR)
+            continue;
+          else
+            return (-1);
+        }
+      nleft -= nwritten;
+      p += nwritten;
+    }
+  return (n);
+}
+
+int
+ipmi_debug_dprintf(int fd, char *fmt, ...)
+{
+  va_list ap;
+  int len, rv;
+  char buf[IPMI_DEBUG_MAX_BUF_LEN];
+
+  va_start(ap, fmt);
+  len = vsnprintf(buf, IPMI_DEBUG_MAX_BUF_LEN, fmt, ap);
+  rv = _write(fd, buf, len);
+  va_end(ap);
+
+  return rv;
+}
 
 int8_t
 ipmi_debug_set_prefix(char *buf, unsigned int buflen, char *prefix)
@@ -83,19 +114,19 @@ ipmi_debug_output_str(int fd, char *prefix, char *str)
       char *ptr = str;
 
       if (prefix)
-        FREEIPMI_DPRINTF((fd, "%s", prefix));
+        IPMI_DEBUG_DPRINTF((fd, "%s", prefix));
       while (*ptr != '\0')
         {
           if (*ptr == '\n')
             {
-              FREEIPMI_DPRINTF((fd, "%c", *ptr++));
+              IPMI_DEBUG_DPRINTF((fd, "%c", *ptr++));
               if (prefix)
-                FREEIPMI_DPRINTF((fd, "%s", prefix));
+                IPMI_DEBUG_DPRINTF((fd, "%s", prefix));
             }
           else
-            FREEIPMI_DPRINTF((fd, "%c", *ptr++));
+            IPMI_DEBUG_DPRINTF((fd, "%c", *ptr++));
         }
-      FREEIPMI_DPRINTF((fd, "\n"));
+      IPMI_DEBUG_DPRINTF((fd, "\n"));
     }
 
   return 0;
@@ -112,14 +143,14 @@ ipmi_debug_output_byte_array(int fd, char *prefix, uint8_t *buf, uint32_t buf_le
     {
       int i = 0;
       if (prefix)
-        FREEIPMI_DPRINTF ((fd, "%s", prefix));
-      FREEIPMI_DPRINTF ((fd, "[ "));
+        IPMI_DEBUG_DPRINTF ((fd, "%s", prefix));
+      IPMI_DEBUG_DPRINTF ((fd, "[ "));
       while (count < buf_len && i < IPMI_DEBUG_CHAR_PER_LINE)
 	{
-	  FREEIPMI_DPRINTF ((fd, "%02Xh ", buf[count++]));
+	  IPMI_DEBUG_DPRINTF ((fd, "%02Xh ", buf[count++]));
 	  i++;
 	}
-      FREEIPMI_DPRINTF ((fd, "]\n"));
+      IPMI_DEBUG_DPRINTF ((fd, "]\n"));
     }
 
   return 0;

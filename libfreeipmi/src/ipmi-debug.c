@@ -85,7 +85,7 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
         }
 
       if (prefix)
-        FREEIPMI_DPRINTF_CLEANUP ((fd, "%s", prefix));
+        IPMI_DEBUG_DPRINTF_CLEANUP ((fd, "%s", prefix));
 
       if (field_len <= 64)
         {
@@ -93,14 +93,14 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
 
 	  FIID_ITERATOR_GET_CLEANUP (iter, &val);
 
-          FREEIPMI_DPRINTF_CLEANUP ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, key, field_len));
+          IPMI_DEBUG_DPRINTF_CLEANUP ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, key, field_len));
         }
       else
         {
           uint8_t buf[IPMI_DEBUG_MAX_BUF_LEN];
           int len;
 
-          FREEIPMI_DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(field_len)));
+          IPMI_DEBUG_DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(field_len)));
 
 	  FIID_ITERATOR_GET_DATA_LEN_CLEANUP(len, iter, buf, IPMI_DEBUG_MAX_BUF_LEN);
        

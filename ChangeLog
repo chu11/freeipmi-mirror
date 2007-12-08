@@ -155,6 +155,10 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	directories.  Move respective sub-library code into those
 	directories.
 	
+ 	* libfreeipmi/src/ipmi-common.h, libfreeipmi/src/ipmi-common.c
+	(freeipmi_dprintf): Rename to ipmi_debug_dprintf.  Move into
+	ipmi-debug-common.h and ipmi-debug-common.c.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

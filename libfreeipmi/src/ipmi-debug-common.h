@@ -30,15 +30,18 @@ extern "C" {
 
 #define IPMI_DEBUG_MAX_PREFIX_LEN 32
 
-#define FREEIPMI_DPRINTF(args) \
+#define IPMI_DEBUG_DPRINTF(args) \
         do { \
-          ERR (!((freeipmi_dprintf args) < 0)); \
+          ERR (!((ipmi_debug_dprintf args) < 0)); \
         } while(0) 
 
-#define FREEIPMI_DPRINTF_CLEANUP(args) \
+#define IPMI_DEBUG_DPRINTF_CLEANUP(args) \
         do { \
-          ERR_CLEANUP (!((freeipmi_dprintf args) < 0)); \
+          ERR_CLEANUP (!((ipmi_debug_dprintf args) < 0)); \
         } while(0) 
+
+/* Portable version of the extremely unportable Linux dprintf() */
+int ipmi_debug_dprintf(int fd, char *fmt, ...);
 
 int8_t ipmi_debug_set_prefix(char *buf, unsigned int buflen, char *prefix);
 
