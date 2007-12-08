@@ -155,9 +155,10 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	directories.  Move respective sub-library code into those
 	directories.
 	
- 	* libfreeipmi/src/ipmi-common.h, libfreeipmi/src/ipmi-common.c
-	(freeipmi_dprintf): Rename to ipmi_debug_dprintf.  Move into
-	ipmi-debug-common.h and ipmi-debug-common.c.
+ 	* libfreeipmi/src/ipmi-common.h, libfreeipmi/src/ipmi-common.c:
+	Removed files.  Move some functionality into ipmi-debug-common.h
+	and ipmi-debug-common.c.  Use some library functionality in
+	common/src/ in other circumstances.
 
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
@@ -177,7 +178,7 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* pef-config/: Remove linking to libsensor.la.
 
-	* Various minor fixes.
+	* Various minor fixes and code cleanup.
 		
 2007-11-30  Albert Chu <chu11@llnl.gov>
 

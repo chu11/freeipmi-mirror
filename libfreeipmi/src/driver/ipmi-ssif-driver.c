@@ -48,7 +48,6 @@
 #include "freeipmi/ipmi-kcs.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 
-#include "ipmi-common.h"
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
 #include "ipmi-semaphores.h"

@@ -46,8 +46,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sdr-record-format.c \
 	ipmi-sel-record-format.c \
 	ipmi-sensor-and-event-code-tables.c \
-	ipmi-sensor-utils.c \
-	ipmi-common.c
+	ipmi-sensor-utils.c
 
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm -lgcrypt
 # libfreeipmi_la_CPPFLAGS = 
@@ -67,13 +66,13 @@ libfreeipmi_la_LIBADD = \
 	../../common/src/libfreeipmiportability.la \
 	../../common/src/libmd2.la \
 	../../common/src/libmd5.la \
+	../../common/src/libsecure.la \
 	../../common/src/libxmalloc.la
 
 noinst_HEADERS = \
 	ipmi-debug-common.h \
 	ipmi-err-wrappers.h \
-	ipmi-fiid-wrappers.h \
-	ipmi-common.h
+	ipmi-fiid-wrappers.h
 
 udm/libudm.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
@@ -88,6 +87,9 @@ udm/libudm.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libmd5.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libsecure.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libxmalloc.la: force-dependency-check

@@ -49,6 +49,7 @@ noinst_LTLIBRARIES = \
 	libllnlcommon.la \
 	libpstdout.la \
 	libhostrange.la \
+	libsecure.la \
 	libconfigcommon.la
 
 libcmdlineparsecommon_la_SOURCES = cmdline-parse-common.c
@@ -101,6 +102,8 @@ libpstdout_la_LDFLAGS = $(PTHREAD_LIBS)
 
 libhostrange_la_SOURCES = hostrange.c
 libhostrange_la_CPPFLAGS = -I$(srcdir)/../../ipmidetect/src/libipmidetect/
+
+libsecure_la_SOURCES = secure.c
 
 libconfigcommon_la_SOURCES = \
 	config-comment.c \

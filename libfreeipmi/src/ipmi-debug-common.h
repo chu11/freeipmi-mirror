@@ -25,7 +25,6 @@ extern "C" {
 
 #include <stdint.h>
 
-#include "ipmi-common.h"
 #include "ipmi-err-wrappers.h"
 
 #define IPMI_DEBUG_MAX_PREFIX_LEN 32

@@ -41,12 +41,12 @@
 #include "freeipmi/ipmi-utils.h"
 #include "freeipmi/rmcp-interface.h"
 
-#include "ipmi-common.h"
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 #include "md5.h"
+#include "secure.h"
 
 #define IPMI_MAX_RMCPPLUS_AUTHENTICATION_CODE_LENGTH      64
 #define IPMI_MAX_CONFIDENTIALITY_HEADER_LENGTH            64
@@ -962,7 +962,7 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       memcpy(hash_data + hash_data_len, 
              pwbuf, 
 	     IPMI_2_0_MAX_PASSWORD_LENGTH);
-      guaranteed_memset(pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
+      secure_memset(pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
       hash_data_len += IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
   
@@ -980,7 +980,7 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       memcpy(hash_data + hash_data_len, 
              pwbuf, 
 	     IPMI_2_0_MAX_PASSWORD_LENGTH);
-      guaranteed_memset(pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
+      secure_memset(pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
       hash_data_len += IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
   
@@ -1001,7 +1001,7 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       
   rv = copy_digest_len;
  cleanup:
-  guaranteed_memset(integrity_digest, '\0', IPMI_MAX_INTEGRITY_DATA_LENGTH);
+  secure_memset(integrity_digest, '\0', IPMI_MAX_INTEGRITY_DATA_LENGTH);
   return (rv);
 }
 

@@ -36,13 +36,13 @@
 #include "freeipmi/ipmi-utils.h"
 #include "freeipmi/rmcp-interface.h"
 
-#include "ipmi-common.h"
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 #include "md2.h"
 #include "md5.h"
+#include "secure.h"
 
 int8_t 
 ipmi_lan_check_session_sequence_number (fiid_obj_t obj_lan_session_hdr, uint32_t session_sequence_number)
@@ -223,9 +223,9 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
     rv = 0;
 
  cleanup:
-  guaranteed_memset(authentication_code_recv, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
-  guaranteed_memset(authentication_code_calc, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
-  guaranteed_memset(pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
+  secure_memset(authentication_code_recv, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
+  secure_memset(authentication_code_calc, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
+  secure_memset(pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   return rv;
 }
 
@@ -370,8 +370,8 @@ ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt, uint64_t pkt_le
     rv = 0;
 
  cleanup:
-  guaranteed_memset(authentication_code_buf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
-  guaranteed_memset(pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
+  secure_memset(authentication_code_buf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
+  secure_memset(pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   return rv;
 }
 

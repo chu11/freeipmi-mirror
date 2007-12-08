@@ -42,7 +42,6 @@
 #include "freeipmi/ipmi-ipmb-interface.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 
-#include "ipmi-common.h"
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
 #include "ipmi-inband.h"
@@ -496,75 +495,6 @@ _ipmi_kcs_clear_obf (ipmi_kcs_ctx_t ctx)
   if (_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_OBF) 
     _ipmi_kcs_read_byte (ctx);
 }
-
-#if 0
-static uint8_t
-ipmi_kcs_print_state (int fd, uint8_t state)
-{
-  /* we assume we have already ioperm'd the spacing */
-  freeipmi_dprintf (fd, "Current KCS state: 0x%x : ", state);
-  if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_IDLE) {
-    freeipmi_dprintf (fd, "IDLE_STATE ");
-  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_READ) {
-    freeipmi_dprintf (fd, "READ_STATE ");
-  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_WRITE) {
-    freeipmi_dprintf (fd, "WRITE_STATE ");
-  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_ERROR) {
-    freeipmi_dprintf (fd, "ERROR_STATE ");
-  } else {
-    freeipmi_dprintf (fd, "UNKNOWN_STATE "); /* cannot happen */
-  }
-  if (state & IPMI_KCS_STATUS_REG_IBF) {
-    freeipmi_dprintf (fd, "IBF ");
-  }
-  if (state & IPMI_KCS_STATUS_REG_OBF) {
-    freeipmi_dprintf (fd, "OBF ");
-  }
-  if (state & IPMI_KCS_STATUS_REG_OEM1) {
-    freeipmi_dprintf (fd, "OEM1 ");
-  }
-  if (state & IPMI_KCS_STATUS_REG_OEM2) {
-    freeipmi_dprintf (fd, "OEM2 ");
-  }
-  freeipmi_dprintf (fd, "\n");
-  return (0);
-}
-
-int8_t 
-ipmi_kcs_strstatus_r (uint8_t status_code, 
-		      char *errstr, 
-		      size_t len)
-{
-  ERR_EINVAL (errstr);
-  
-  switch (status_code)
-    {
-    case IPMI_KCS_STATUS_NO_ERROR:
-      SNPRINTF_RETURN (IPMI_KCS_STATUS_NO_ERROR_STR);
-      
-    case IPMI_KCS_STATUS_ABORTED_BY_CMD:
-      SNPRINTF_RETURN (IPMI_KCS_STATUS_ABORTED_BY_CMD_STR);
-      
-    case IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE:
-      SNPRINTF_RETURN (IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE_STR);
-      
-    case IPMI_KCS_STATUS_LEN_ERROR:
-      SNPRINTF_RETURN (IPMI_KCS_STATUS_LEN_ERROR_STR); 
-      
-    case IPMI_KCS_STATUS_UNSPECIFIED_ERROR:
-      SNPRINTF_RETURN (IPMI_KCS_STATUS_UNSPECIFIED_ERROR_STR); 
-    }
-  
-  if ((status_code >= IPMI_KCS_STATUS_OEM_ERROR_BEGIN) &&
-      (status_code <= IPMI_KCS_STATUS_OEM_ERROR_END))
-    {
-      SNPRINTF_RETURN ("OEM status code %02Xh.", status_code);
-    }
-  
-  SNPRINTF_RETURN ("Unknown KCS interface status code %02Xh.", status_code);
-};
-
-#endif /* 0 */
 
 int32_t
 ipmi_kcs_write (ipmi_kcs_ctx_t ctx, 

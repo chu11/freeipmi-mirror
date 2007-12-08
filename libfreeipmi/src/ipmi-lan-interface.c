@@ -38,13 +38,13 @@
 #include "freeipmi/ipmi-utils.h"
 #include "freeipmi/rmcp-interface.h"
 
-#include "ipmi-common.h"
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 #include "md2.h"
 #include "md5.h"
+#include "secure.h"
 
 #define IPMI_LAN_PKT_PAD_SIZE   1
 
@@ -412,7 +412,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  md2_init(&ctx);
 		  
 		  memcpy (authentication_code_field_ptr, digest, IPMI_1_5_MAX_PASSWORD_LENGTH);
-		  guaranteed_memset(digest, '\0', MD2_DIGEST_LENGTH);
+		  secure_memset(digest, '\0', MD2_DIGEST_LENGTH);
 		}
 	      else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
 		{
@@ -431,7 +431,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  md5_init(&ctx);
 		  
 		  memcpy (authentication_code_field_ptr, digest, IPMI_1_5_MAX_PASSWORD_LENGTH);
-		  guaranteed_memset(digest, '\0', MD5_DIGEST_LENGTH);
+		  secure_memset(digest, '\0', MD5_DIGEST_LENGTH);
 		}
 	    }
 	}
@@ -440,9 +440,9 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   rv = indx;
  cleanup:
   if (rv < 0)
-    guaranteed_memset(pkt, '\0', pkt_len);
+    secure_memset(pkt, '\0', pkt_len);
   FIID_OBJ_DESTROY(obj_lan_msg_trlr);
-  guaranteed_memset(pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
+  secure_memset(pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   return rv;
 }
 

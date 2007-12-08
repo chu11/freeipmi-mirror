@@ -38,11 +38,11 @@
 #include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/rmcp-interface.h"
 
-#include "ipmi-common.h"
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
+#include "secure.h"
 
 #define IPMI_KEY_CONSTANT_LENGTH                          20
 #define IPMI_MAX_K1_LENGTH                                32
@@ -164,7 +164,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
 
   rv = computed_digest_len;
  cleanup:
-  guaranteed_memset(hash_data, '\0', IPMI_MAX_KEY_DATA_LENGTH);
+  secure_memset(hash_data, '\0', IPMI_MAX_KEY_DATA_LENGTH);
   return (rv);
 }
 
@@ -538,10 +538,10 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
   *confidentiality_key_len = confidentiality_key_buf_len;
   rv = 0; 
  cleanup:
-  guaranteed_memset(k_g_buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
-  guaranteed_memset(sik, '\0', IPMI_MAX_SIK_KEY_LENGTH);
-  guaranteed_memset(k1, '\0', IPMI_MAX_K1_LENGTH);
-  guaranteed_memset(k2, '\0', IPMI_MAX_K2_LENGTH);
+  secure_memset(k_g_buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
+  secure_memset(sik, '\0', IPMI_MAX_SIK_KEY_LENGTH);
+  secure_memset(k1, '\0', IPMI_MAX_K1_LENGTH);
+  secure_memset(k2, '\0', IPMI_MAX_K2_LENGTH);
   return (rv);
 }
 
@@ -655,9 +655,9 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
   memcpy(key_exchange_authentication_code, digest, digest_len);
   rv = digest_len;
  cleanup:
-  guaranteed_memset(k_uid_buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
-  guaranteed_memset(buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
-  guaranteed_memset(digest, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
+  secure_memset(k_uid_buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
+  secure_memset(buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
+  secure_memset(digest, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
   return (rv);
 }
 
@@ -893,10 +893,10 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(int8_t authenticatio
   
   rv = memcmp(digest, key_exchange_authentication_code, digest_len) ? 0 : 1;
  cleanup:
-  guaranteed_memset(k_uid_buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
-  guaranteed_memset(buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
-  guaranteed_memset(digest, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
-  guaranteed_memset(key_exchange_authentication_code, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
+  secure_memset(k_uid_buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
+  secure_memset(buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
+  secure_memset(digest, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
+  secure_memset(key_exchange_authentication_code, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
   return (rv);
 }
 
@@ -998,8 +998,8 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value(int8_t authentication_algorithm
 
   rv = memcmp(digest, integrity_check_value, compare_len) ? 0 : 1;
  cleanup:
-  guaranteed_memset(buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
-  guaranteed_memset(buf, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
+  secure_memset(buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
+  secure_memset(buf, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
   return (rv);
 }
 
@@ -1133,8 +1133,8 @@ ipmi_rmcpplus_check_packet_session_authentication_code(int8_t integrity_algorith
 
   rv = memcmp(integrity_digest, authentication_code, compare_digest_len) ? 0 : 1;
  cleanup:
-  guaranteed_memset(integrity_digest, '\0', IPMI_MAX_INTEGRITY_DATA_LENGTH);
-  guaranteed_memset(authentication_code, '\0', IPMI_MAX_INTEGRITY_DATA_LENGTH);
+  secure_memset(integrity_digest, '\0', IPMI_MAX_INTEGRITY_DATA_LENGTH);
+  secure_memset(authentication_code, '\0', IPMI_MAX_INTEGRITY_DATA_LENGTH);
   return rv;
 }
 

@@ -34,7 +34,6 @@
 
 #include "ipmi-debug-common.h"
 
-#include "ipmi-common.h"
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
 
