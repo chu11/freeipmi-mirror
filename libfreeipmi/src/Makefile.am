@@ -1,4 +1,4 @@
-SUBDIRS = udm
+SUBDIRS = driver locate udm
 
 if WITH_GNU_LD
 VERSION_SCRIPT = $(srcdir)/freeipmi.map
@@ -23,22 +23,12 @@ libfreeipmi_la_SOURCES = \
 	ipmi-debug-rmcpplus.c \
 	ipmi-error.c \
 	ipmi-utils.c \
-	ipmi-locate.c \
-	ipmi-locate-dmidecode.c \
-	ipmi-locate-acpi-spmi.c \
-	ipmi-locate-defaults.c \
-	ipmi-locate-pci.c \
-	ipmi-locate-smbios.c \
-	ipmi-kcs-driver.c \
 	ipmi-kcs-interface.c \
 	ipmi-lan-interface.c \
 	ipmi-lan-utils.c \
-	ipmi-openipmi-driver.c \
 	ipmi-crypt.c \
 	ipmi-rmcpplus-interface.c \
 	ipmi-rmcpplus-utils.c \
-	ipmi-ssif-driver.c \
-	ipmi-semaphores.c \
 	ipmi-bmc-watchdog-timer-cmds.c \
 	ipmi-chassis-cmds.c \
 	ipmi-device-global-cmds.c \
@@ -62,21 +52,16 @@ libfreeipmi_la_SOURCES = \
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm -lgcrypt
 # libfreeipmi_la_CPPFLAGS = 
 
-# achu
-#
-# IPMI_DEBUG_IPCKEY is so we can do inband development without the real ipckey being
-# installed.
-
 libfreeipmi_la_CFLAGS = -Wall
 libfreeipmi_la_CPPFLAGS = \
 	-I$(srcdir)/../include \
 	-I$(srcdir)/../../common/src \
-	-DIPMI_IPCKEY=\"$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey\" \
-	-DIPMI_DEBUG_IPCKEY=\"$(top_builddir)/libfreeipmi/src/ipmi-semaphores.h\" \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 libfreeipmi_la_LIBADD = \
+	driver/libdriver.la \
+	locate/liblocate.la \
 	udm/libudm.la \
 	../../common/src/libbitops.la \
 	../../common/src/libfreeipmiportability.la \
@@ -88,8 +73,6 @@ noinst_HEADERS = \
 	ipmi-debug-common.h \
 	ipmi-err-wrappers.h \
 	ipmi-fiid-wrappers.h \
-	ipmi-inband.h \
-	ipmi-semaphores.h \
 	ipmi-common.h
 
 udm/libudm.la: force-dependency-check
