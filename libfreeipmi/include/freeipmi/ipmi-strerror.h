@@ -18,8 +18,8 @@
 */
 
 
-#ifndef _IPMI_ERROR_H
-#define	_IPMI_ERROR_H
+#ifndef _IPMI_STRERROR_H
+#define	_IPMI_STRERROR_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -50,5 +50,5 @@ int8_t ipmi_rmcpplus_status_strerror_r(uint8_t rmcpplus_status_code,
 }
 #endif
 
-#endif /* ipmi-error.h */
+#endif /* ipmi-strerror.h */
 
