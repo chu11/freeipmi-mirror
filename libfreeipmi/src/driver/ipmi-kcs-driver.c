@@ -37,8 +37,8 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/ipmi-kcs-driver.h"
-#include "freeipmi/ipmi-kcs.h"
+#include "freeipmi/driver/ipmi-kcs-driver.h"
+#include "freeipmi/ipmi-kcs-interface.h"
 #include "freeipmi/ipmi-ipmb-interface.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 

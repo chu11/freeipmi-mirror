@@ -43,19 +43,14 @@ extern "C" {
 #include <freeipmi/ipmi-slave-address-spec.h>
 #include <freeipmi/rmcp-cmds.h>
 #include <freeipmi/rmcp-interface.h>
-#include <freeipmi/ipmi-debug.h>
 #include <freeipmi/ipmi-error.h>
 #include <freeipmi/ipmi-utils.h>
-#include <freeipmi/ipmi-locate.h>
-#include <freeipmi/ipmi-kcs-driver.h>
 #include <freeipmi/ipmi-kcs-interface.h>
-#include <freeipmi/ipmi-openipmi-driver.h>
 #include <freeipmi/ipmi-lan-interface.h>
 #include <freeipmi/ipmi-lan-utils.h>
 #include <freeipmi/ipmi-crypt.h>
 #include <freeipmi/ipmi-rmcpplus-interface.h>
 #include <freeipmi/ipmi-rmcpplus-utils.h>
-#include <freeipmi/ipmi-ssif-driver.h>
 #include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>
 #include <freeipmi/ipmi-chassis-cmds.h>
 #include <freeipmi/ipmi-chassis-boot-options-parameter-spec.h>
@@ -75,6 +70,11 @@ extern "C" {
 #include <freeipmi/ipmi-sel-record-format.h>
 #include <freeipmi/ipmi-sensor-and-event-code-tables.h>
 #include <freeipmi/ipmi-sensor-utils.h>
+#include <freeipmi/debug/ipmi-debug.h>
+#include <freeipmi/driver/ipmi-kcs-driver.h>
+#include <freeipmi/driver/ipmi-openipmi-driver.h>
+#include <freeipmi/driver/ipmi-ssif-driver.h>
+#include <freeipmi/locate/ipmi-locate.h>
 
 #ifdef __cplusplus
 }

@@ -28,7 +28,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/ipmi-locate.h"
+#include "freeipmi/locate/ipmi-locate.h"
 
 #include "ipmi-err-wrappers.h"
 

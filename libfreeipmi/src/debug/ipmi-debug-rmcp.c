@@ -31,7 +31,7 @@
 #endif /* HAVE_UNISTD_H */
 #include <errno.h>
 
-#include "freeipmi/ipmi-debug.h"
+#include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/rmcp-interface.h"
 
 #include "ipmi-debug-common.h"

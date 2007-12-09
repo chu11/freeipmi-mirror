@@ -28,10 +28,10 @@
 #include <assert.h>
 #include <errno.h>
 
+#include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/ipmi-rmcpplus-interface.h"
 #include "freeipmi/ipmi-rmcpplus-utils.h"
 #include "freeipmi/ipmi-crypt.h"
-#include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-lan-interface.h"
 #include "freeipmi/ipmi-sol-cmds.h"
 #include "freeipmi/rmcp-interface.h"

@@ -154,7 +154,11 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/src/driver/, libfreeipmi/src/locate/,
 	libfreeipmi/src/debug/: New directories.  Move respective
 	sub-library code into those directories.
-	
+
+	* libfreeipmi/include/driver/, libfreeipmi/include/locate/,
+	libfreeipmi/include/debug/: New directories.  Move respective
+	sub-library headers into those directories.
+
  	* libfreeipmi/src/ipmi-common.h, libfreeipmi/src/ipmi-common.c:
 	Removed files.  Move some functionality into ipmi-debug-common.h
 	and ipmi-debug-common.c.  Use some library functionality in

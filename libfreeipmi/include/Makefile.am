@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.8 2007-12-02 22:15:39 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.9 2007-12-09 17:38:16 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -25,19 +25,14 @@ nobase_include_HEADERS = \
 	freeipmi/rmcp-cmds.h \
 	freeipmi/rmcp-interface.h \
 	freeipmi/rmcp-utils.h \
-	freeipmi/ipmi-debug.h \
 	freeipmi/ipmi-error.h \
 	freeipmi/ipmi-utils.h \
-	freeipmi/ipmi-locate.h \
-	freeipmi/ipmi-kcs-driver.h \
 	freeipmi/ipmi-kcs-interface.h \
 	freeipmi/ipmi-lan-interface.h \
 	freeipmi/ipmi-lan-utils.h \
-	freeipmi/ipmi-openipmi-driver.h \
 	freeipmi/ipmi-crypt.h \
 	freeipmi/ipmi-rmcpplus-interface.h \
 	freeipmi/ipmi-rmcpplus-utils.h \
-	freeipmi/ipmi-ssif-driver.h \
 	freeipmi/ipmi-bmc-watchdog-timer-cmds.h \
 	freeipmi/ipmi-chassis-cmds.h \
 	freeipmi/ipmi-device-global-cmds.h \
@@ -57,6 +52,11 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sensor-and-event-code-tables.h \
 	freeipmi/ipmi-sensor-utils.h \
 	freeipmi/ipmi-chassis-boot-options-parameter-spec.h \
+ 	freeipmi/debug/ipmi-debug.h \
+	freeipmi/locate/ipmi-locate.h \
+	freeipmi/driver/ipmi-kcs-driver.h \
+	freeipmi/driver/ipmi-openipmi-driver.h \
+	freeipmi/driver/ipmi-ssif-driver.h \
 	freeipmi/udm/udm.h \
 	freeipmi/udm/ipmi-udm.h \
 	freeipmi/udm/ipmi-chassis-cmds-udm.h \

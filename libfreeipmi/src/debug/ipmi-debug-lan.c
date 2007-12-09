@@ -31,8 +31,8 @@
 #endif /* HAVE_UNISTD_H */
 #include <errno.h>
 
+#include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
-#include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-lan-interface.h"
 #include "freeipmi/rmcp-interface.h"
 

@@ -24,8 +24,8 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/ipmi-locate.h"
-#include "freeipmi/ipmi-ssif-driver.h"
+#include "freeipmi/locate/ipmi-locate.h"
+#include "freeipmi/driver/ipmi-ssif-driver.h"
 
 #include "ipmi-err-wrappers.h"
 

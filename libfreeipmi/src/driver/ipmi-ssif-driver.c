@@ -43,9 +43,9 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "freeipmi/ipmi-ssif-driver.h"
+#include "freeipmi/driver/ipmi-ssif-driver.h"
 #include "freeipmi/ipmi-ipmb-interface.h"
-#include "freeipmi/ipmi-kcs.h"
+#include "freeipmi/ipmi-kcs-interface.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 
 #include "ipmi-err-wrappers.h"
