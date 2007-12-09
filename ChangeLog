@@ -151,9 +151,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* ipmi-sensors/src/: Rename files for consistency to code
 	organization in other tools.
 
-	* libfreeipmi/src/driver/, libfreeipmi/srd/locate/: New
-	directories.  Move respective sub-library code into those
-	directories.
+	* libfreeipmi/src/driver/, libfreeipmi/src/locate/,
+	libfreeipmi/src/debug/: New directories.  Move respective
+	sub-library code into those directories.
 	
  	* libfreeipmi/src/ipmi-common.h, libfreeipmi/src/ipmi-common.c:
 	Removed files.  Move some functionality into ipmi-debug-common.h

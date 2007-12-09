@@ -1,4 +1,4 @@
-SUBDIRS = driver locate udm
+SUBDIRS = debug driver locate udm
 
 if WITH_GNU_LD
 VERSION_SCRIPT = $(srcdir)/freeipmi.map
@@ -16,11 +16,6 @@ libfreeipmi_la_SOURCES = \
 	rmcp-cmds.c \
 	rmcp-interface.c \
 	rmcp-utils.c \
-	ipmi-debug.c \
-	ipmi-debug-common.c \
-	ipmi-debug-lan.c \
-	ipmi-debug-rmcp.c \
-	ipmi-debug-rmcpplus.c \
 	ipmi-error.c \
 	ipmi-utils.c \
 	ipmi-kcs-interface.c \
@@ -59,6 +54,7 @@ libfreeipmi_la_CPPFLAGS = \
 	-D_REENTRANT
 
 libfreeipmi_la_LIBADD = \
+	debug/libdebug.la \
 	driver/libdriver.la \
 	locate/liblocate.la \
 	udm/libudm.la \
@@ -70,9 +66,17 @@ libfreeipmi_la_LIBADD = \
 	../../common/src/libxmalloc.la
 
 noinst_HEADERS = \
-	ipmi-debug-common.h \
 	ipmi-err-wrappers.h \
 	ipmi-fiid-wrappers.h
+
+debug/libdebug.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+driver/libdriver.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+locate/liblocate.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
 
 udm/libudm.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
