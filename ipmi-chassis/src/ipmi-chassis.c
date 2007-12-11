@@ -32,7 +32,6 @@
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/api/api.h>
 
 #include "cmdline-parse-common.h"
 #include "freeipmi-portability.h"

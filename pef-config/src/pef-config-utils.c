@@ -11,7 +11,6 @@
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/api/api.h>
 
 #include "common-utils.h"
 

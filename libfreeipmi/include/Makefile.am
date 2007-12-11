@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.10 2007-12-11 19:04:35 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.11 2007-12-11 21:18:02 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -52,12 +52,11 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sensor-and-event-code-tables.h \
 	freeipmi/ipmi-sensor-utils.h \
 	freeipmi/ipmi-chassis-boot-options-parameter-spec.h \
- 	freeipmi/debug/ipmi-debug.h \
+	freeipmi/debug/ipmi-debug.h \
 	freeipmi/locate/ipmi-locate.h \
 	freeipmi/driver/ipmi-kcs-driver.h \
 	freeipmi/driver/ipmi-openipmi-driver.h \
 	freeipmi/driver/ipmi-ssif-driver.h \
-	freeipmi/api/api.h \
 	freeipmi/api/ipmi-api.h \
 	freeipmi/api/ipmi-chassis-cmds-api.h \
 	freeipmi/api/ipmi-device-global-cmds-api.h \

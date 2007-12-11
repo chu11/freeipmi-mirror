@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.11.2.2 2007-12-11 19:04:35 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.11.2.3 2007-12-11 21:18:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -32,7 +32,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/api/api.h>
 
 #include "ipmi_sdr_cache.h"
 #include "list.h"

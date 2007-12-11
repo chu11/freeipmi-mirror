@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.73.2.8 2007-12-11 19:04:33 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.73.2.9 2007-12-11 21:18:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -63,7 +63,6 @@
 #endif
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/api/ipmi-api.h>
 
 #include "cmdline-parse-common.h"
 

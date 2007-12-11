@@ -20,7 +20,6 @@
 #define _IPMI_SENSORS_H
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/api/api.h>
 
 #include "cmdline-parse-common.h"
 #include "ipmi-sdr-cache.h"

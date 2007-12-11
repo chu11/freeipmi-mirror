@@ -167,6 +167,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/src/udm/, libfreeipmi/include/udm/: Rename to 'api'
 	instead of non-meaningful 'udm'.
 
+	* libfreeipmi/include/freeipmi/api/api.h: Removed file.  Moved
+	includes to freeipmi.h.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

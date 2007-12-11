@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/freeipmi.h>
+#include <freeipmi/fiid.h>
 
 enum ipmi_errnum
   {

@@ -28,7 +28,6 @@
 #endif /* STDC_HEADERS */
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/api/api.h>
 
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"

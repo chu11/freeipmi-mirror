@@ -27,13 +27,13 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include <freeipmi/api/ipmi-chassis-cmds-api.h>
-#include <freeipmi/ipmi-chassis-cmds.h>
-#include <freeipmi/ipmi-ipmb-interface.h>
-#include <freeipmi/ipmi-netfn-spec.h>
-#include <freeipmi/ipmi-cmd-spec.h>
-#include <freeipmi/ipmi-chassis-boot-options-parameter-spec.h>
-#include <freeipmi/ipmi-comp-code-spec.h>
+#include "freeipmi/api/ipmi-chassis-cmds-api.h"
+#include "freeipmi/ipmi-chassis-cmds.h"
+#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-netfn-spec.h"
+#include "freeipmi/ipmi-cmd-spec.h"
+#include "freeipmi/ipmi-chassis-boot-options-parameter-spec.h"
+#include "freeipmi/ipmi-comp-code-spec.h"
 
 #include "ipmi-ctx.h"
 #include "ipmi-err-wrappers-api.h"

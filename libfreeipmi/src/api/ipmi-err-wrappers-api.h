@@ -37,6 +37,7 @@ extern "C" {
 
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-comp-code-spec.h"
+#include "freeipmi/ipmi-error.h"
 #include "freeipmi/ipmi-utils.h"
 #include "freeipmi/api/ipmi-api.h"
 
@@ -53,7 +54,7 @@ do {                                                                         \
 #define __API_TRACE_ERRMSG_CLEANUP(___ctx, ___rs)                            \
 do {                                                                         \
   int __ctxerrnum = 0;                                                       \
-  char __ctxerrstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
+  char __ctxerrstr[IPMI_ERR_STR_MAX_LEN];                                    \
   memset(__ctxerrstr, '\0', IPMI_ERR_STR_MAX_LEN);                           \
   ipmi_completion_code_strerror_cmd_r ((___rs),                              \
 		                       (___ctx)->net_fn,                     \
