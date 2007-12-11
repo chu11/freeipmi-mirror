@@ -10,20 +10,20 @@ lib_LTLIBRARIES = libfreeipmi.la
 libfreeipmi_la_SOURCES = \
 	fiid.c \
 	ipmi-cipher-suite-record-format.c \
-	ipmi-cipher-suite-utils.c \
+	ipmi-cipher-suite-util.c \
 	ipmi-sensor-types-spec.c \
 	ipmi-sensor-units-spec.c \
 	rmcp-cmds.c \
 	rmcp-interface.c \
-	rmcp-utils.c \
+	rmcp-util.c \
 	ipmi-error.c \
-	ipmi-utils.c \
+	ipmi-util.c \
 	ipmi-kcs-interface.c \
 	ipmi-lan-interface.c \
-	ipmi-lan-utils.c \
+	ipmi-lan-util.c \
 	ipmi-crypt.c \
 	ipmi-rmcpplus-interface.c \
-	ipmi-rmcpplus-utils.c \
+	ipmi-rmcpplus-util.c \
 	ipmi-bmc-watchdog-timer-cmds.c \
 	ipmi-chassis-cmds.c \
 	ipmi-device-global-cmds.c \
@@ -41,7 +41,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sdr-record-format.c \
 	ipmi-sel-record-format.c \
 	ipmi-sensor-and-event-code-tables.c \
-	ipmi-sensor-utils.c
+	ipmi-sensor-util.c
 
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm -lgcrypt
 # libfreeipmi_la_CPPFLAGS = 

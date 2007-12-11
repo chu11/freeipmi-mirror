@@ -35,7 +35,7 @@
 #include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 #include "freeipmi/ipmi-slave-address-spec.h"
-#include "freeipmi/ipmi-utils.h"
+#include "freeipmi/ipmi-util.h"
 #include "freeipmi/rmcp-interface.h"
 
 #include "ipmi-err-wrappers.h"

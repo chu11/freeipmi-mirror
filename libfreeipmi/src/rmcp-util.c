@@ -14,24 +14,43 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-
 */
 
-
-#ifndef _RMCP_UTILS_H
-#define	_RMCP_UTILS_H	1
-
-#ifdef __cplusplus
-extern "C" {
+#ifdef HAVE_CONFIG_H
+#include <config.h>
 #endif
 
-#include <stdint.h>
-#include <freeipmi/fiid.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
 
-int8_t ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag);
+#include "freeipmi/rmcp-util.h"
+#include "freeipmi/rmcp-cmds.h"
 
-#ifdef __cplusplus
+#include "ipmi-err-wrappers.h"
+#include "ipmi-fiid-wrappers.h"
+
+#include "freeipmi-portability.h"
+
+int8_t
+ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag)
+{
+  uint64_t val;
+  int32_t len;
+
+  ERR_EINVAL (fiid_obj_valid(pong));
+
+  FIID_OBJ_TEMPLATE_COMPARE(pong, tmpl_cmd_asf_presence_pong);
+
+  FIID_OBJ_FIELD_LEN (len, pong, "message_tag");
+
+  ERR_EINVAL (len);
+
+  FIID_OBJ_GET (pong, "message_tag", &val);
+
+  if (message_tag == val)
+    return 1;
+  else
+    return 0;
 }
-#endif
 
-#endif /* rmcp-utils.h */

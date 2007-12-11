@@ -16,8 +16,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _IPMI_CIPHER_SUITE_UTILS_H
-#define	_IPMI_CIPHER_SUITE_UTILS_H
+#ifndef _IPMI_CIPHER_SUITE_UTIL_H
+#define	_IPMI_CIPHER_SUITE_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -102,4 +102,4 @@ int8_t ipmi_algorithms_to_cipher_suite_id(uint8_t authentication_algorithm,
 }
 #endif
 
-#endif /* ipmi-cipher_suite-utils.h */
+#endif /* ipmi-cipher_suite-util.h */

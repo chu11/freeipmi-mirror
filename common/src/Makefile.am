@@ -6,11 +6,11 @@ noinst_HEADERS = \
 	ipmi-ping.h \
 	md2.h \
 	md5.h \
-	common-utils.h \
 	ipmi-sdr-cache-writes.h \
 	ipmi-sdr-cache-reads.h \
 	ipmi-sdr-cache.h \
 	ipmi-sdr-cache-defs.h \
+	ipmi-sdr-cache-utils.h \
 	ipmi-sensor-api.h \
 	xmalloc.h \
 	cbuf.h \
@@ -73,7 +73,10 @@ libmd2_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 libmd5_la_SOURCES = md5.c
 libmd5_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
 
-libsdr_la_SOURCES = common-utils.c ipmi-sdr-cache-writes.c ipmi-sdr-cache-reads.c \
+libsdr_la_SOURCES = \
+	ipmi-sdr-cache-writes.c \
+	ipmi-sdr-cache-reads.c \
+	ipmi-sdr-cache-utils.c \
 	ipmi-sdr-cache.c
 libsdr_la_CPPFLAGS = -D_GNU_SOURCE \
 		     -D_REENTRANT \

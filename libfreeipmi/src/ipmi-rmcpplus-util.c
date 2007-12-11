@@ -27,11 +27,11 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "freeipmi/ipmi-rmcpplus-utils.h"
+#include "freeipmi/ipmi-rmcpplus-util.h"
 #include "freeipmi/ipmi-rmcpplus-interface.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
-#include "freeipmi/ipmi-cipher-suite-utils.h"
+#include "freeipmi/ipmi-cipher-suite-util.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"

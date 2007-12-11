@@ -35,7 +35,7 @@
 #include <argp.h>
 
 #include "freeipmi/ipmi-authentication-type-spec.h"
-#include "freeipmi/ipmi-cipher-suite-utils.h"
+#include "freeipmi/ipmi-cipher-suite-util.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 
 #include "cmdline-parse-common.h"

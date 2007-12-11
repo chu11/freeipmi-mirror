@@ -73,7 +73,7 @@
 
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-debug.h"
-#include "freeipmi/ipmi-sensor-utils.h"
+#include "freeipmi/ipmi-sensor-util.h"
 #include "freeipmi/ipmi-sdr-repository-cmds.h"
 #include "freeipmi/ipmi-sdr-record-format.h"
 #include "freeipmi/ipmi-sensor-cmds.h"
@@ -83,12 +83,11 @@
 #include "bit-ops.h"
 #include "freeipmi-portability.h"
 
-#include "common-utils.h"
-
 #include "ipmi-sdr-cache.h"
 #include "ipmi-sdr-cache-defs.h"
 #include "ipmi-sdr-cache-writes.h"
 #include "ipmi-sdr-cache-reads.h"
+#include "ipmi-sdr-cache-utils.h"
 
 static char * sdr_cache_ctx_errmsg[] =
   {

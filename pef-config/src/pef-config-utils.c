@@ -12,8 +12,6 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "common-utils.h"
-
 #include "pef-config.h"
 #include "pef-config-utils.h"
 

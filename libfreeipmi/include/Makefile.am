@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.12 2007-12-11 22:13:05 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.13 2007-12-11 23:17:18 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -8,7 +8,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-authentication-type-spec.h \
 	freeipmi/ipmi-channel-spec.h \
 	freeipmi/ipmi-cipher-suite-record-format.h \
-	freeipmi/ipmi-cipher-suite-utils.h \
+	freeipmi/ipmi-cipher-suite-util.h \
 	freeipmi/ipmi-cmd-spec.h \
 	freeipmi/ipmi-comp-code-spec.h \
 	freeipmi/ipmi-ipmb-lun-spec.h \
@@ -24,14 +24,14 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-slave-address-spec.h \
 	freeipmi/rmcp-cmds.h \
 	freeipmi/rmcp-interface.h \
-	freeipmi/rmcp-utils.h \
+	freeipmi/rmcp-util.h \
 	freeipmi/ipmi-error.h \
-	freeipmi/ipmi-utils.h \
+	freeipmi/ipmi-util.h \
 	freeipmi/ipmi-kcs-interface.h \
 	freeipmi/ipmi-lan-interface.h \
-	freeipmi/ipmi-lan-utils.h \
+	freeipmi/ipmi-lan-util.h \
 	freeipmi/ipmi-rmcpplus-interface.h \
-	freeipmi/ipmi-rmcpplus-utils.h \
+	freeipmi/ipmi-rmcpplus-util.h \
 	freeipmi/ipmi-bmc-watchdog-timer-cmds.h \
 	freeipmi/ipmi-chassis-cmds.h \
 	freeipmi/ipmi-device-global-cmds.h \
@@ -49,7 +49,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sdr-record-format.h \
 	freeipmi/ipmi-sel-record-format.h \
 	freeipmi/ipmi-sensor-and-event-code-tables.h \
-	freeipmi/ipmi-sensor-utils.h \
+	freeipmi/ipmi-sensor-util.h \
 	freeipmi/ipmi-chassis-boot-options-parameter-spec.h \
 	freeipmi/debug/ipmi-debug.h \
 	freeipmi/locate/ipmi-locate.h \

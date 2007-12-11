@@ -38,7 +38,7 @@ extern "C" {
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-comp-code-spec.h"
 #include "freeipmi/ipmi-error.h"
-#include "freeipmi/ipmi-utils.h"
+#include "freeipmi/ipmi-util.h"
 #include "freeipmi/api/ipmi-api.h"
 
 #include "ipmi-err-wrappers.h"

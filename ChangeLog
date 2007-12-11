@@ -180,6 +180,11 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	config_ipv4_address_string2int and config_mac_address_string2int
 	respectively.
 
+	* libfreeipmi/: Rename 'utils' files to 'util' files.
+
+	* common/src/common-utils.h, common/src/common-utils.c: Rename to
+	ipmi-sdr-cache-utils.h and ipmi-sdr-cache-utils.c respectively.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

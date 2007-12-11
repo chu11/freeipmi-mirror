@@ -14,43 +14,37 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#ifndef _IPMI_UTIL_H
+#define	_IPMI_UTIL_H	1
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
+#include <stdint.h>
+#include <freeipmi/fiid.h>
 
-#include "freeipmi/rmcp-utils.h"
-#include "freeipmi/rmcp-cmds.h"
+uint8_t ipmi_checksum (uint8_t *buf, uint64_t len);
 
-#include "ipmi-err-wrappers.h"
-#include "ipmi-fiid-wrappers.h"
+int8_t ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd);
 
-#include "freeipmi-portability.h"
+int8_t ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code);
 
-int8_t
-ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag)
-{
-  uint64_t val;
-  int32_t len;
+int8_t ipmi_check_completion_code_success (fiid_obj_t obj_cmd);
 
-  ERR_EINVAL (fiid_obj_valid(pong));
+int ipmi_get_random (uint8_t *buf, unsigned int buflen);
 
-  FIID_OBJ_TEMPLATE_COMPARE(pong, tmpl_cmd_asf_presence_pong);
+int8_t ipmi_is_ipmi_1_5_packet(uint8_t *pkt, uint32_t pkt_len);
 
-  FIID_OBJ_FIELD_LEN (len, pong, "message_tag");
+int8_t ipmi_is_ipmi_2_0_packet(uint8_t *pkt, uint32_t pkt_len);
 
-  ERR_EINVAL (len);
-
-  FIID_OBJ_GET (pong, "message_tag", &val);
-
-  if (message_tag == val)
-    return 1;
-  else
-    return 0;
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* ipmi-util.h */
+
 

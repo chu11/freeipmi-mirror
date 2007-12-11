@@ -14,29 +14,24 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+
 */
 
 
-#ifndef _IPMI_SENSOR_UTILS_H
-#define _IPMI_SENSOR_UTILS_H
+#ifndef _RMCP_UTIL_H
+#define	_RMCP_UTIL_H	1
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stdint.h>
+#include <freeipmi/fiid.h>
 
-int ipmi_sensor_decode_value (int8_t r_exponent, 
-			      int8_t b_exponent, 
-                              int16_t m,
-                              int16_t b,
-                              uint8_t linearization,
-			      uint8_t analog_data_format, 
-			      uint8_t raw_data,
-			      double *value);
+int8_t ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _IPMI_SENSOR_UTILS_H */
+#endif /* rmcp-util.h */

@@ -20,7 +20,6 @@
 #include <limits.h>
 #include <string.h>
 
-#include "common-utils.h"
 #include "ipmi-sensor-api.h"
 #include "freeipmi/ipmi-sdr-record-format.h"
 

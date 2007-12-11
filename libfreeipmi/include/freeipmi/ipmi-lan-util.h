@@ -16,8 +16,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _IPMI_LAN_UTILS_H
-#define	_IPMI_LAN_UTILS_H	1
+#ifndef _IPMI_LAN_UTIL_H
+#define	_IPMI_LAN_UTIL_H	1
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,6 +60,6 @@ int8_t ipmi_lan_check_packet_checksum (uint8_t *pkt, uint64_t pkt_len);
 }
 #endif
 
-#endif /* ipmi-lan-utils.h */
+#endif /* ipmi-lan-util.h */
 
 

@@ -49,7 +49,7 @@
 #endif /* IPMI_SYSLOG */
 #include <gcrypt.h>
 
-#include "freeipmi/ipmi-utils.h"
+#include "freeipmi/ipmi-util.h"
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-comp-code-spec.h"

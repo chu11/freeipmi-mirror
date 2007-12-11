@@ -29,6 +29,8 @@
 #include <errno.h>
 #include <limits.h>
 
+#include "ipmi-sdr-cache-utils.h"
+
 char *
 stripwhite (char *string)
 {

@@ -40,7 +40,7 @@
 #include "freeipmi/ipmi-sensor-cmds.h"
 #include "freeipmi/ipmi-sensor-and-event-code-tables.h"
 #include "freeipmi/ipmi-sensor-types-spec.h"
-#include "freeipmi/ipmi-sensor-utils.h"
+#include "freeipmi/ipmi-sensor-util.h"
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
 
 #include "freeipmi-portability.h"

@@ -16,8 +16,8 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _COMMON_UTILS_H
-#define _COMMON_UTILS_H
+#ifndef _IPMI_SDR_CACHE_UTILS_H
+#define _IPMI_SDR_CACHE_UTILS_H
 
 #define STRING_WHITESPACES    " \f\n\r\t\v"
 
