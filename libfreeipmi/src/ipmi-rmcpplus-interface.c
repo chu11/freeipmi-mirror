@@ -31,7 +31,6 @@
 #include "freeipmi/ipmi-rmcpplus-interface.h"
 #include "freeipmi/ipmi-rmcpplus-utils.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
-#include "freeipmi/ipmi-crypt.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-lan-interface.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
@@ -41,6 +40,7 @@
 #include "freeipmi/ipmi-utils.h"
 #include "freeipmi/rmcp-interface.h"
 
+#include "ipmi-crypt.h"
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
 

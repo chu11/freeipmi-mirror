@@ -48,7 +48,6 @@
 #include "freeipmi/api/ipmi-api.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-cipher-suite-utils.h"
-#include "freeipmi/ipmi-crypt.h"
 #include "freeipmi/ipmi-kcs-interface.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-lan-interface.h"
@@ -71,6 +70,8 @@
 #include "ipmi-kcs-driver-api.h"
 #include "ipmi-openipmi-driver-api.h"
 #include "ipmi-ssif-driver-api.h"
+
+#include "ipmi-crypt.h"
 
 #include "freeipmi-portability.h"
 #include "secure.h"
@@ -362,7 +363,7 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
    
   API_ERR_PARAMETERS(!(workaround_flags & ~flags_mask));
 
-  API_ERR_CLEANUP (!(ipmi_crypt_init() < 0));
+  API_ERR_CLEANUP (!(ipmi_rmcpplus_init() < 0));
 
   ctx->type = IPMI_DEVICE_LAN_2_0;
   ctx->workaround_flags = workaround_flags;

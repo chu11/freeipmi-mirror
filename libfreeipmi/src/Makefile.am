@@ -66,6 +66,7 @@ libfreeipmi_la_LIBADD = \
 	../../common/src/libxmalloc.la
 
 noinst_HEADERS = \
+	ipmi-crypt.h \
 	ipmi-err-wrappers.h \
 	ipmi-fiid-wrappers.h
 

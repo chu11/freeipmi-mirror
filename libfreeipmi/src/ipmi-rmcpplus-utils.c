@@ -32,12 +32,12 @@
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-cipher-suite-utils.h"
-#include "freeipmi/ipmi-crypt.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/rmcp-interface.h"
 
+#include "ipmi-crypt.h"
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
 

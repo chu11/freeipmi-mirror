@@ -170,6 +170,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/include/freeipmi/api/api.h: Removed file.  Moved
 	includes to freeipmi.h.
 
+	* libfreeipmi/include/freeipmi/ipmi-crypt.h: Move to
+	libfreeipmi/src.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 
