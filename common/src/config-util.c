@@ -12,6 +12,130 @@
 
 #include "config-util.h"
 
+#include "bit-ops.h"
+
+int8_t
+config_ipv4_address_string2int(char *src, uint32_t *dest)
+{
+  unsigned int b1, b2, b3, b4;
+  uint64_t val;
+  int rv;
+
+  assert(src && dest);
+
+  if ((rv = sscanf (src, 
+                    "%u.%u.%u.%u", 
+                    &b1,
+                    &b2, 
+                    &b3, 
+                    &b4)) < 0)
+    {
+      perror("sscanf");
+      return (-1);
+    }
+
+  if (rv != 4)
+    {
+      fprintf(stderr, 
+              "config_ipv4_address_string2int: Invalid src input: %s\n",
+              src);
+      return (-1);
+    }
+
+  val = 0;
+
+  if (bits_merge (val, 0,  8,  b1, &val) < 0)
+    {
+      perror("bits_merge");
+      return (-1);
+    }
+  if (bits_merge (val, 8,  16, b2, &val) < 0)
+    {
+      perror("bits_merge");
+      return (-1);
+    }
+  if (bits_merge (val, 16, 24, b3, &val) < 0)
+    {
+      perror("bits_merge");
+      return (-1);
+    }
+  if (bits_merge (val, 24, 32, b4, &val) < 0)
+    {
+      perror("bits_merge");
+      return (-1);
+    }
+
+  *dest = val;
+  return (0);
+}
+
+int8_t
+config_mac_address_string2int(char *src, uint64_t *dest)
+{
+  unsigned int b1, b2, b3, b4, b5, b6;
+  uint64_t val;
+  int rv;
+
+  assert(src && dest);
+
+  if ((rv = sscanf (src,
+                    "%02X:%02X:%02X:%02X:%02X:%02X", 
+                    &b1,
+                    &b2, 
+                    &b3, 
+                    &b4,
+                    &b5, 
+                    &b6)) < 0)
+    {
+      perror("sscanf");
+      return (-1);
+    }
+
+  if (rv != 6)
+    {
+      fprintf(stderr, 
+              "config_mac_address_string2int: Invalid src input: %s\n",
+              src);
+      return (-1);
+    }
+
+  val = 0;
+
+  if (bits_merge (val, 0,  8,  b1, &val) < 0)
+    {
+      perror("bits_merge");
+      return (-1);
+    }
+  if (bits_merge (val, 8,  16, b2, &val) < 0)
+    {
+      perror("bits_merge");
+      return (-1);
+    }
+  if (bits_merge (val, 16, 24, b3, &val) < 0)
+    {
+      perror("bits_merge");
+      return (-1);
+    }
+  if (bits_merge (val, 24, 32, b4, &val) < 0)
+    {
+      perror("bits_merge");
+      return (-1);
+    }
+  if (bits_merge (val, 32, 40, b5, &val) < 0)
+    {
+      perror("bits_merge");
+      return (-1);
+    }
+  if (bits_merge (val, 40, 48, b6, &val) < 0)
+    {
+      perror("bits_merge");
+      return (-1);
+    }
+
+  *dest = val;
+  return (0);
+}
+
 int
 config_keypair_parse_string(char *str,
                             char **section_name,

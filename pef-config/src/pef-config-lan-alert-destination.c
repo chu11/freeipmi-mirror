@@ -433,10 +433,10 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_ipv4_address_string2int(da->alert_ip, &alert_ip_address_val) < 0)
+  if (config_ipv4_address_string2int(da->alert_ip, &alert_ip_address_val) < 0)
     goto cleanup;
 
-  if (ipmi_mac_address_string2int(da->alert_mac, &alert_mac_address_val) < 0)
+  if (config_mac_address_string2int(da->alert_mac, &alert_mac_address_val) < 0)
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (state_data->ipmi_ctx,

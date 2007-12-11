@@ -184,7 +184,7 @@ ip_address_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (ipmi_ipv4_address_string2int(kv->value_input, &ip_address_val) < 0)
+  if (config_ipv4_address_string2int(kv->value_input, &ip_address_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -291,7 +291,7 @@ mac_address_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (ipmi_mac_address_string2int(kv->value_input, &mac_address_val) < 0)
+  if (config_mac_address_string2int(kv->value_input, &mac_address_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -395,7 +395,7 @@ subnet_mask_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (ipmi_ipv4_address_string2int(kv->value_input, &subnet_mask_val) < 0)
+  if (config_ipv4_address_string2int(kv->value_input, &subnet_mask_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -500,7 +500,7 @@ default_gateway_address_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (ipmi_ipv4_address_string2int(kv->value_input, &ip_address_val) < 0)
+  if (config_ipv4_address_string2int(kv->value_input, &ip_address_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -607,7 +607,7 @@ default_gateway_mac_address_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (ipmi_mac_address_string2int(kv->value_input, &mac_address_val) < 0)
+  if (config_mac_address_string2int(kv->value_input, &mac_address_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -711,7 +711,7 @@ backup_gateway_address_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (ipmi_ipv4_address_string2int(kv->value_input, &ip_address_val) < 0)
+  if (config_ipv4_address_string2int(kv->value_input, &ip_address_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -817,7 +817,7 @@ backup_gateway_mac_address_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (ipmi_mac_address_string2int(kv->value_input, &mac_address_val) < 0)
+  if (config_mac_address_string2int(kv->value_input, &mac_address_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))

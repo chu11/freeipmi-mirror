@@ -173,54 +173,6 @@ ipmi_get_random(uint8_t *buf, uint32_t buflen)
 }
 
 int8_t
-ipmi_ipv4_address_string2int(char *src, uint32_t *dest)
-{
-  unsigned int b1, b2, b3, b4;
-  uint64_t val;
-  int rv;
-
-  ERR_EINVAL (src && dest);
-  
-  ERR (!((rv = sscanf (src, "%u.%u.%u.%u", &b1, &b2, &b3, &b4)) < 0));
-
-  ERR_EINVAL (rv == 4);
-
-  val = 0;
-  ERR (!(bits_merge (val, 0,  8,  b1, &val) < 0));
-  ERR (!(bits_merge (val, 8,  16, b2, &val) < 0));
-  ERR (!(bits_merge (val, 16, 24, b3, &val) < 0));
-  ERR (!(bits_merge (val, 24, 32, b4, &val) < 0));
-
-  *dest = val;
-  return (0);
-}
-
-int8_t
-ipmi_mac_address_string2int(char *src, uint64_t *dest)
-{
-  unsigned int b1, b2, b3, b4, b5, b6;
-  uint64_t val;
-  int rv;
-
-  ERR_EINVAL (src && dest);
-  
-  ERR (!((rv = sscanf (src, "%02X:%02X:%02X:%02X:%02X:%02X", &b1, &b2, &b3, &b4, &b5, &b6)) < 0));
-
-  ERR_EINVAL (rv == 6);
-
-  val = 0;
-  ERR (!(bits_merge (val, 0,  8,  b1, &val) < 0));
-  ERR (!(bits_merge (val, 8,  16, b2, &val) < 0));
-  ERR (!(bits_merge (val, 16, 24, b3, &val) < 0));
-  ERR (!(bits_merge (val, 24, 32, b4, &val) < 0));
-  ERR (!(bits_merge (val, 32, 40, b5, &val) < 0));
-  ERR (!(bits_merge (val, 40, 48, b6, &val) < 0));
-
-  *dest = val;
-  return (0);
-}
-
-int8_t
 ipmi_is_ipmi_1_5_packet(uint8_t *pkt, uint32_t pkt_len)
 {
   int32_t rmcp_hdr_len;

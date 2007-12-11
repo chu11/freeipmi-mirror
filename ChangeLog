@@ -173,6 +173,13 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/include/freeipmi/ipmi-crypt.h: Move to
 	libfreeipmi/src.
 
+	* libfreeipmi/include/freeipmi/ipmi-utils.h,
+	libfreeipmi/src/ipmi-utils.c (ipmi_ipv4_address_string2int,
+	ipmi_mac_address_string2int): Move to common/src/config-util.h and
+	common/src/config-util.c.  Rename to
+	config_ipv4_address_string2int and config_mac_address_string2int
+	respectively.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 
