@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.6 2007-10-18 16:18:45 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.6.2.1 2007-12-11 19:04:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -47,7 +47,7 @@
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
+#include <freeipmi/api/api.h>
 
 #include "ipmi-fru.h"
 #include "ipmi-fru-fiid.h"

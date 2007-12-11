@@ -1,4 +1,4 @@
-SUBDIRS = debug driver locate udm
+SUBDIRS = debug driver locate api
 
 if WITH_GNU_LD
 VERSION_SCRIPT = $(srcdir)/freeipmi.map
@@ -57,7 +57,7 @@ libfreeipmi_la_LIBADD = \
 	debug/libdebug.la \
 	driver/libdriver.la \
 	locate/liblocate.la \
-	udm/libudm.la \
+	api/libapi.la \
 	../../common/src/libbitops.la \
 	../../common/src/libfreeipmiportability.la \
 	../../common/src/libmd2.la \
@@ -78,7 +78,7 @@ driver/libdriver.la: force-dependency-check
 locate/liblocate.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-udm/libudm.la: force-dependency-check
+api/libapi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libbitops.la: force-dependency-check

@@ -26,7 +26,7 @@
 
 #include <freeipmi/ipmi-chassis-cmds.h>
 #include <freeipmi/ipmi-cmd-spec.h>
-#include <freeipmi/udm/ipmi-chassis-cmds-udm.h>
+#include <freeipmi/api/ipmi-chassis-cmds-api.h>
 #include <freeipmi/ipmi-chassis-boot-options-parameter-spec.h>
 
 #include "ipmi-err-wrappers.h"

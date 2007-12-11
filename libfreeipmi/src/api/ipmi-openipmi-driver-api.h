@@ -13,12 +13,11 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-#ifndef _IPMI_SENSOR_CMDS_UDM_H
-#define _IPMI_SENSOR_CMDS_UDM_H
+#ifndef _IPMI_OPENIPMI_DRIVER_API_H
+#define _IPMI_OPENIPMI_DRIVER_API_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,23 +25,21 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/udm/ipmi-udm.h>
+#include <freeipmi/api/ipmi-api.h>
 
-int8_t ipmi_cmd_get_sensor_reading_threshold (ipmi_ctx_t ctx, 
-					      uint8_t sensor_number, 
-					      fiid_obj_t obj_cmd_rs);
+int8_t ipmi_openipmi_cmd_api (ipmi_ctx_t ctx, 
+			      fiid_obj_t obj_cmd_rq, 
+			      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sensor_reading_discrete (ipmi_ctx_t ctx, 
-					     uint8_t sensor_number, 
-					     fiid_obj_t obj_cmd_rs);
-
-int8_t ipmi_cmd_get_sensor_thresholds (ipmi_ctx_t ctx, 
-				       uint8_t sensor_number, 
-				       fiid_obj_t obj_cmd_rs);
-
+int32_t ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx, 
+				   uint8_t *buf_rq, 
+				   size_t buf_rq_len, 
+				   uint8_t *buf_rs, 
+				   size_t buf_rs_len);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ipmi-sensor-cmds-udm.h */
+#endif /* ipmi-openipmi-driver-api.h */
+

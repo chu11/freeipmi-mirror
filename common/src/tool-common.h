@@ -20,7 +20,7 @@
 #ifndef _TOOL_COMMON_H
 #define _TOOL_COMMON_H
 
-#include "freeipmi/udm/ipmi-udm.h"
+#include "freeipmi/api/ipmi-api.h"
 #include "cmdline-parse-common.h"
 
 #define IPMI_OPEN_ERRMSGLEN 1024

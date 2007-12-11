@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.9 2007-12-09 17:38:16 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.10 2007-12-11 19:04:35 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -57,17 +57,17 @@ nobase_include_HEADERS = \
 	freeipmi/driver/ipmi-kcs-driver.h \
 	freeipmi/driver/ipmi-openipmi-driver.h \
 	freeipmi/driver/ipmi-ssif-driver.h \
-	freeipmi/udm/udm.h \
-	freeipmi/udm/ipmi-udm.h \
-	freeipmi/udm/ipmi-chassis-cmds-udm.h \
-	freeipmi/udm/ipmi-device-global-cmds-udm.h \
-	freeipmi/udm/ipmi-fru-inventory-device-cmds-udm.h \
-	freeipmi/udm/ipmi-lan-cmds-udm.h \
-	freeipmi/udm/ipmi-messaging-support-cmds-udm.h \
-	freeipmi/udm/ipmi-pef-and-alerting-cmds-udm.h \
-	freeipmi/udm/ipmi-rmcpplus-support-and-payload-cmds-udm.h \
-	freeipmi/udm/ipmi-sdr-repository-cmds-udm.h \
-	freeipmi/udm/ipmi-sensor-cmds-udm.h \
-	freeipmi/udm/ipmi-sel-cmds-udm.h \
-	freeipmi/udm/ipmi-serial-modem-cmds-udm.h \
-	freeipmi/udm/ipmi-sol-cmds-udm.h 
+	freeipmi/api/api.h \
+	freeipmi/api/ipmi-api.h \
+	freeipmi/api/ipmi-chassis-cmds-api.h \
+	freeipmi/api/ipmi-device-global-cmds-api.h \
+	freeipmi/api/ipmi-fru-inventory-device-cmds-api.h \
+	freeipmi/api/ipmi-lan-cmds-api.h \
+	freeipmi/api/ipmi-messaging-support-cmds-api.h \
+	freeipmi/api/ipmi-pef-and-alerting-cmds-api.h \
+	freeipmi/api/ipmi-rmcpplus-support-and-payload-cmds-api.h \
+	freeipmi/api/ipmi-sdr-repository-cmds-api.h \
+	freeipmi/api/ipmi-sensor-cmds-api.h \
+	freeipmi/api/ipmi-sel-cmds-api.h \
+	freeipmi/api/ipmi-serial-modem-cmds-api.h \
+	freeipmi/api/ipmi-sol-cmds-api.h 

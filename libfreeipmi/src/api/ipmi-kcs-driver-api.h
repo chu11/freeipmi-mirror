@@ -13,12 +13,11 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-#ifndef _IPMI_SDR_REPOSITORY_CMDS_UDM_H
-#define _IPMI_SDR_REPOSITORY_CMDS_UDM_H
+#ifndef _IPMI_KCS_DRIVER_API_H
+#define _IPMI_KCS_DRIVER_API_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,26 +25,26 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/udm/ipmi-udm.h>
+#include <freeipmi/api/ipmi-api.h>
 
-int8_t ipmi_cmd_get_sdr_repository_info (ipmi_ctx_t ctx, 
-					 fiid_obj_t obj_cmd_rs);
-
-int8_t ipmi_cmd_get_sdr_repository_allocation_info (ipmi_ctx_t ctx, 
-						    fiid_obj_t obj_cmd_rs);
-
-int8_t ipmi_cmd_reserve_sdr_repository (ipmi_ctx_t ctx, 
-					fiid_obj_t obj_cmd_rs);
-
-int8_t ipmi_cmd_get_sdr (ipmi_ctx_t ctx, 
-			 uint16_t reservation_id, 
-			 uint16_t record_id, 
-			 uint8_t offset_into_record, 
-			 uint8_t bytes_to_read, 
+/* High level calls */
+/* BMC treats "write followed by a read" as one transaction. It is
+   highly recommended to use ipmi_kcs_cmd instead. Otherwise make sure
+   you check the return status of write before calling read.
+*/
+int8_t ipmi_kcs_cmd_api (ipmi_ctx_t ctx, 
+			 fiid_obj_t obj_cmd_rq, 
 			 fiid_obj_t obj_cmd_rs);
+
+int32_t ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx, 
+                              uint8_t *buf_rq, 
+                              size_t buf_rq_len, 
+                              uint8_t *buf_rs, 
+                              size_t buf_rs_len);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* ipmi-kcs-driver-api.h */
+

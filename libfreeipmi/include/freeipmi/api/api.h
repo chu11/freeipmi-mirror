@@ -16,29 +16,29 @@
 
 */
 
-#ifndef _UDM_H
-#define _UDM_H
+#ifndef _API_H
+#define _API_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/udm/ipmi-udm.h>
-#include <freeipmi/udm/ipmi-chassis-cmds-udm.h>
-#include <freeipmi/udm/ipmi-device-global-cmds-udm.h>
-#include <freeipmi/udm/ipmi-fru-inventory-device-cmds-udm.h>
-#include <freeipmi/udm/ipmi-lan-cmds-udm.h>
-#include <freeipmi/udm/ipmi-messaging-support-cmds-udm.h>
-#include <freeipmi/udm/ipmi-pef-and-alerting-cmds-udm.h>
-#include <freeipmi/udm/ipmi-rmcpplus-support-and-payload-cmds-udm.h>
-#include <freeipmi/udm/ipmi-sdr-repository-cmds-udm.h>
-#include <freeipmi/udm/ipmi-sensor-cmds-udm.h>
-#include <freeipmi/udm/ipmi-sel-cmds-udm.h>
-#include <freeipmi/udm/ipmi-serial-modem-cmds-udm.h>
-#include <freeipmi/udm/ipmi-sol-cmds-udm.h>
+#include <freeipmi/api/ipmi-api.h>
+#include <freeipmi/api/ipmi-chassis-cmds-api.h>
+#include <freeipmi/api/ipmi-device-global-cmds-api.h>
+#include <freeipmi/api/ipmi-fru-inventory-device-cmds-api.h>
+#include <freeipmi/api/ipmi-lan-cmds-api.h>
+#include <freeipmi/api/ipmi-messaging-support-cmds-api.h>
+#include <freeipmi/api/ipmi-pef-and-alerting-cmds-api.h>
+#include <freeipmi/api/ipmi-rmcpplus-support-and-payload-cmds-api.h>
+#include <freeipmi/api/ipmi-sdr-repository-cmds-api.h>
+#include <freeipmi/api/ipmi-sensor-cmds-api.h>
+#include <freeipmi/api/ipmi-sel-cmds-api.h>
+#include <freeipmi/api/ipmi-serial-modem-cmds-api.h>
+#include <freeipmi/api/ipmi-sol-cmds-api.h>
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _UDM_H */
+#endif /* _API_H */

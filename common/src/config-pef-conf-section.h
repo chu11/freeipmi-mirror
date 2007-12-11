@@ -2,7 +2,7 @@
 #define _CONFIG_PEF_CONF_SECTION_H_
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
+#include <freeipmi/api/api.h>
 
 #include "config-common.h"
 

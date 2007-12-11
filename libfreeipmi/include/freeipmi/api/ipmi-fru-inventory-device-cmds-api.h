@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-udm.h,v 1.3.4.1 2007-12-03 05:13:36 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.h,v 1.1.2.1 2007-12-11 19:04:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -25,15 +25,15 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
-#ifndef _IPMI_FRU_INVENTORY_DEVICE_CMDS_UDM_H
-#define	_IPMI_FRU_INVENTORY_DEVICE_CMDS_UDM_H
+#ifndef _IPMI_FRU_INVENTORY_DEVICE_CMDS_API_H
+#define	_IPMI_FRU_INVENTORY_DEVICE_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <freeipmi/fiid.h>
-#include <freeipmi/udm/ipmi-udm.h>
+#include <freeipmi/api/ipmi-api.h>
 
 int8_t ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
                                              uint8_t fru_device_id,
@@ -49,4 +49,4 @@ int8_t ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
 }
 #endif
 
-#endif /* _IPMI_FRU_INVENTORY_DEVICE_CMDS_UDM_H */
+#endif /* _IPMI_FRU_INVENTORY_DEVICE_CMDS_API_H */

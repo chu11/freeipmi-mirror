@@ -22,7 +22,7 @@
 
 #include <stdint.h>
 
-#include "freeipmi/udm/ipmi-udm.h"
+#include "freeipmi/api/ipmi-api.h"
 
 #include "ipmi-sdr-cache.h"
 

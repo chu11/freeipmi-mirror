@@ -16,8 +16,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-#ifndef _IPMI_SOL_CMDS_UDM_H
-#define _IPMI_SOL_CMDS_UDM_H
+#ifndef _IPMI_SOL_CMDS_API_H
+#define _IPMI_SOL_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,7 +25,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/udm/ipmi-udm.h>
+#include <freeipmi/api/ipmi-api.h>
 
 int8_t ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx, 
 							     uint8_t channel_number, 

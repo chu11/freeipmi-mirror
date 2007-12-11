@@ -16,8 +16,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-#ifndef _IPMI_MESSAGING_SUPPORT_CMDS_UDM_H
-#define	_IPMI_MESSAGING_SUPPORT_CMDS_UDM_H
+#ifndef _IPMI_MESSAGING_SUPPORT_CMDS_API_H
+#define	_IPMI_MESSAGING_SUPPORT_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,7 +25,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/udm/ipmi-udm.h>
+#include <freeipmi/api/ipmi-api.h>
 
 int8_t ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx, 
                                                          uint8_t channel_number,
@@ -135,6 +135,6 @@ int8_t ipmi_get_channel_number (ipmi_ctx_t ctx,
 }
 #endif
 
-#endif /* _IPMI_MESSAGING_SUPPORT_CMDS_UDM_H */
+#endif /* _IPMI_MESSAGING_SUPPORT_CMDS_API_H */
 
 

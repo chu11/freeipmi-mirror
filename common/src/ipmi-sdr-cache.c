@@ -77,8 +77,8 @@
 #include "freeipmi/ipmi-sdr-repository-cmds.h"
 #include "freeipmi/ipmi-sdr-record-format.h"
 #include "freeipmi/ipmi-sensor-cmds.h"
-#include "freeipmi/udm/ipmi-sdr-repository-cmds-udm.h"
-#include "freeipmi/udm/ipmi-sensor-cmds-udm.h"
+#include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
+#include "freeipmi/api/ipmi-sensor-cmds-api.h"
 
 #include "bit-ops.h"
 #include "freeipmi-portability.h"

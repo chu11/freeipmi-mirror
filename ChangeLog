@@ -164,6 +164,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	and ipmi-debug-common.c.  Use some library functionality in
 	common/src/ in other circumstances.
 
+	* libfreeipmi/src/udm/, libfreeipmi/include/udm/: Rename to 'api'
+	instead of non-meaningful 'udm'.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 
