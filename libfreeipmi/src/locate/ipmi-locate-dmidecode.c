@@ -47,8 +47,6 @@
 #include "ipmi-err-wrappers.h"
 #include "freeipmi-portability.h"
 
-#include "xmalloc.h"
-
 #ifdef __ia64__
 #define USE_EFI
 #endif /* __ia64__ */

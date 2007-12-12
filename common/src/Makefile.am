@@ -10,7 +10,6 @@ noinst_HEADERS = \
 	ipmi-sdr-cache-defs.h \
 	ipmi-sdr-cache-utils.h \
 	ipmi-sensor-api.h \
-	xmalloc.h \
 	cbuf.h \
 	conffile.h \
 	fd.h \
@@ -40,7 +39,6 @@ noinst_LTLIBRARIES = \
 	libipmiping.la \
 	libsdr.la \
 	libsensor.la \
-	libxmalloc.la \
 	libcbuf.la \
 	libllnlcommon.la \
 	libpstdout.la \
@@ -75,9 +73,6 @@ libsdr_la_LIBADD = ./libbitops.la
 
 libsensor_la_SOURCES = ipmi-sensor-api.c
 libsensor_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
-
-libxmalloc_la_SOURCES = xmalloc.c
-libxmalloc_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
 
 libcbuf_la_SOURCES = cbuf.c
 

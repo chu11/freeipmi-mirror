@@ -192,6 +192,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/include/freeipmi/ipmi-error.h: Rename to
 	libfreeipmi/include/freeipmi/ipmi-error-util.h.
 
+	* common/src/xmalloc.h, common/src/xmalloc.c: Remove files.  Most
+	code uses normal malloc instead of xmalloc.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

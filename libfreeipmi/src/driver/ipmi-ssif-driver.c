@@ -53,7 +53,6 @@
 #include "ipmi-semaphores.h"
 
 #include "freeipmi-portability.h"
-#include "xmalloc.h"
 
 /* function error codes */
 #define IPMI_SSIF_SUCCESS         0x00
@@ -326,7 +325,7 @@ ipmi_ssif_ctx_create(void)
 {
   ipmi_ssif_ctx_t ctx = NULL;
 
-  ERR_CLEANUP ((ctx = (ipmi_ssif_ctx_t)xmalloc(sizeof(struct ipmi_ssif_ctx))));
+  ERR_CLEANUP ((ctx = (ipmi_ssif_ctx_t)malloc(sizeof(struct ipmi_ssif_ctx))));
 
   ctx->magic = IPMI_SSIF_CTX_MAGIC;
   ERR_CLEANUP ((ctx->driver_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));
@@ -342,7 +341,7 @@ ipmi_ssif_ctx_create(void)
 
  cleanup:
   if (ctx)
-    xfree(ctx);
+    free(ctx);
   return (NULL);
 }
 
@@ -356,7 +355,7 @@ ipmi_ssif_ctx_destroy(ipmi_ssif_ctx_t ctx)
   if (ctx->driver_device)
     free(ctx->driver_device);
   close(ctx->device_fd);
-  xfree(ctx);
+  free(ctx);
   return (0);
 }
 

@@ -33,7 +33,6 @@
 #include "ipmi-err-wrappers.h"
 
 #include "freeipmi-portability.h"
-#include "xmalloc.h"
 
 typedef int ((*ipmi_locate_func)(ipmi_interface_type_t, struct ipmi_locate_info *));
 

@@ -49,7 +49,6 @@
 #include "ipmi-err-wrappers.h"
 
 #include "freeipmi-portability.h"
-#include "xmalloc.h"
 
 /* SMBIOS Reference Specification: map area between 000f0000 and
    000fffff.  The IPMI Entry Structure begins on a 16-byte boundary,
@@ -364,7 +363,7 @@ _copy_ipmi_dev_info (int *locate_errnum,
 
               if (flag)
                 {
-                  LOCATE_ERR_OUT_OF_MEMORY_CLEANUP ((result = xmalloc (size)));
+                  LOCATE_ERR_OUT_OF_MEMORY_CLEANUP ((result = malloc (size)));
                   memcpy (result, dev_info_p, size);
                   rv = result;
                   break;

@@ -60,7 +60,6 @@
 #include "ipmi-semaphores.h"
 
 #include "freeipmi-portability.h"
-#include "xmalloc.h"
 
 #define IPMI_OPENIPMI_BUFLEN    1024
 
@@ -161,7 +160,7 @@ ipmi_openipmi_ctx_create(void)
 {
   ipmi_openipmi_ctx_t ctx = NULL;
 
-  ERR_CLEANUP ((ctx = (ipmi_openipmi_ctx_t)xmalloc(sizeof(struct ipmi_openipmi_ctx))));
+  ERR_CLEANUP ((ctx = (ipmi_openipmi_ctx_t)malloc(sizeof(struct ipmi_openipmi_ctx))));
 
   ctx->magic = IPMI_OPENIPMI_CTX_MAGIC;
   ctx->flags = IPMI_OPENIPMI_FLAGS_DEFAULT;
@@ -174,7 +173,7 @@ ipmi_openipmi_ctx_create(void)
 
  cleanup:
   if (ctx)
-    xfree(ctx);
+    free(ctx);
   return (NULL);
 }
 
@@ -187,11 +186,11 @@ ipmi_openipmi_ctx_destroy(ipmi_openipmi_ctx_t ctx)
   ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;
   if (ctx->driver_device)
     {
-      xfree(ctx->driver_device);
+      free(ctx->driver_device);
       ctx->driver_device = NULL;
     }
   close(ctx->device_fd);
-  xfree(ctx);
+  free(ctx);
   return (0);
 }
 

@@ -48,7 +48,6 @@
 #include "ipmi-semaphores.h"
 
 #include "freeipmi-portability.h"
-#include "xmalloc.h"
 
 #define IPMI_KCS_SLEEP_USECS                  0x01
 
@@ -177,7 +176,7 @@ ipmi_kcs_ctx_create(void)
 {
   ipmi_kcs_ctx_t ctx = NULL;
 
-  ERR_CLEANUP ((ctx = (ipmi_kcs_ctx_t)xmalloc(sizeof(struct ipmi_kcs_ctx))));
+  ERR_CLEANUP ((ctx = (ipmi_kcs_ctx_t)malloc(sizeof(struct ipmi_kcs_ctx))));
 
   ctx->magic = IPMI_KCS_CTX_MAGIC;
   ctx->driver_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;
@@ -192,7 +191,7 @@ ipmi_kcs_ctx_create(void)
 
  cleanup:
   if (ctx)
-    xfree(ctx);
+    free(ctx);
   return (NULL);
 }
 
@@ -208,7 +207,7 @@ ipmi_kcs_ctx_destroy(ipmi_kcs_ctx_t ctx)
   close(ctx->dev_fd);
 #endif
 #endif /* __FreeBSD__ */
-  xfree(ctx);
+  free(ctx);
   return (0);
 }
 
