@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.5.2.1 2007-12-12 18:30:20 chu11 Exp $
+## $Id: Makefile.am,v 1.5.2.2 2007-12-12 23:49:11 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -19,16 +19,12 @@ ipmimonitoring_CPPFLAGS = \
 	-I$(srcdir)/../../../libfreeipmi/include
 
 ipmimonitoring_LDADD = \
-	../../../common/src/libcmdlineparsecommon.la \
 	../../../common/src/libllnlcommon.la \
 	../libipmimonitoring/libipmimonitoring.la \
 	../../../common/src/libpstdout.la \
 	../../../ipmidetect/src/libipmidetect/libipmidetect.la \
 	../../../common/src/libhostrange.la \
 	../../../common/src/libtoolcommon.la
-
-../../../common/src/libcmdlineparsecommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../../common/src/libllnlcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
