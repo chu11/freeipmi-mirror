@@ -22,7 +22,6 @@ ipmipower_SOURCES= \
  
 ipmipower_LDADD = \
 	../../common/src/libcmdlineparsecommon.la \
-	../../common/src/libcbuf.la \
 	../../common/src/libllnlcommon.la \
 	../../common/src/libtoolcommon.la \
 	../../ipmidetect/src/libipmidetect/libipmidetect.la \
@@ -57,9 +56,6 @@ noinst_HEADERS= \
 	wrappers.h
  
 ../../common/src/libcmdlineparsecommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libcbuf.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libllnlcommon.la: force-dependency-check

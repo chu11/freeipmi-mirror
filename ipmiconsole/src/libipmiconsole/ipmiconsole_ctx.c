@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.24.2.1 2007-11-24 15:29:29 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.24.2.2 2007-12-12 18:30:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -63,7 +63,6 @@
 #include "ipmiconsole.h"
 #include "ipmiconsole_defs.h"
 
-#include "cbuf.h"
 #include "list.h"
 #include "secure.h"
 #include "timeval.h"
@@ -71,6 +70,7 @@
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_fiid_wrappers.h"
 #include "ipmiconsole_util.h"
+#include "scbuf.h"
 
 #include "freeipmi-portability.h"
 
@@ -452,16 +452,16 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
 
   secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
-  if (!(c->connection.console_remote_console_to_bmc = cbuf_create(CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MIN, CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MAX, secure_malloc_flag)))
+  if (!(c->connection.console_remote_console_to_bmc = scbuf_create(CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MIN, CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
-      IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
+      IPMICONSOLE_DEBUG(("scbuf_create: %s", strerror(errno)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
 
-  if (!(c->connection.console_bmc_to_remote_console = cbuf_create(CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MIN, CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MAX, secure_malloc_flag)))
+  if (!(c->connection.console_bmc_to_remote_console = scbuf_create(CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MIN, CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MAX, secure_malloc_flag)))
     {
-      IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
+      IPMICONSOLE_DEBUG(("scbuf_create: %s", strerror(errno)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
@@ -496,16 +496,16 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
       goto cleanup;
     }
 
-  if (!(c->connection.ipmi_from_bmc = cbuf_create(IPMI_FROM_BMC_BUF_MIN, IPMI_FROM_BMC_BUF_MAX, secure_malloc_flag)))
+  if (!(c->connection.ipmi_from_bmc = scbuf_create(IPMI_FROM_BMC_BUF_MIN, IPMI_FROM_BMC_BUF_MAX, secure_malloc_flag)))
     {
-      IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
+      IPMICONSOLE_DEBUG(("scbuf_create: %s", strerror(errno)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
 
-  if (!(c->connection.ipmi_to_bmc = cbuf_create(IPMI_TO_BMC_BUF_MIN, IPMI_TO_BMC_BUF_MAX, secure_malloc_flag)))
+  if (!(c->connection.ipmi_to_bmc = scbuf_create(IPMI_TO_BMC_BUF_MIN, IPMI_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
-      IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
+      IPMICONSOLE_DEBUG(("scbuf_create: %s", strerror(errno)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
@@ -699,15 +699,15 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
   if (c->connection.ipmiconsole_fd >= 0)
     close(c->connection.ipmiconsole_fd);
   if (c->connection.console_remote_console_to_bmc)
-    cbuf_destroy(c->connection.console_remote_console_to_bmc, secure_malloc_flag);
+    scbuf_destroy(c->connection.console_remote_console_to_bmc, secure_malloc_flag);
   if (c->connection.console_bmc_to_remote_console)
-    cbuf_destroy(c->connection.console_bmc_to_remote_console, secure_malloc_flag);
+    scbuf_destroy(c->connection.console_bmc_to_remote_console, secure_malloc_flag);
   if (c->connection.ipmi_fd >= 0)
     close(c->connection.ipmi_fd);
   if (c->connection.ipmi_from_bmc)
-    cbuf_destroy(c->connection.ipmi_from_bmc, secure_malloc_flag);
+    scbuf_destroy(c->connection.ipmi_from_bmc, secure_malloc_flag);
   if (c->connection.ipmi_to_bmc)
-    cbuf_destroy(c->connection.ipmi_to_bmc, secure_malloc_flag);
+    scbuf_destroy(c->connection.ipmi_to_bmc, secure_malloc_flag);
   /* Similarly to the user_fd above, it is the responsibility of other
    * code to close asynccomm[0] and asynccomm[1], which is replicated
    * in the context.

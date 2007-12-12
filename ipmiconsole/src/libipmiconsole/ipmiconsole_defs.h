@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.62 2007-10-18 16:18:47 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.62.2.1 2007-12-12 18:30:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -48,7 +48,7 @@
 #include <netinet/in.h>
 #include <freeipmi/freeipmi.h>
 
-#include "cbuf.h"
+#include "scbuf.h"
 
 #ifndef _IPMICONSOLE_DEFS_H
 #define _IPMICONSOLE_DEFS_H
@@ -261,13 +261,13 @@ struct ipmiconsole_ctx_connection {
   /* File Descriptor User Interface */
   int user_fd;                  /* never touched by this library */
   int ipmiconsole_fd;
-  cbuf_t console_remote_console_to_bmc;
-  cbuf_t console_bmc_to_remote_console;
+  scbuf_t console_remote_console_to_bmc;
+  scbuf_t console_bmc_to_remote_console;
 
   /* Connection Data */
   int ipmi_fd;
-  cbuf_t ipmi_from_bmc;
-  cbuf_t ipmi_to_bmc;
+  scbuf_t ipmi_from_bmc;
+  scbuf_t ipmi_to_bmc;
 
   /* Pipe for non-fd communication: from API to engine */
   int asynccomm[2];

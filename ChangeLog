@@ -195,6 +195,13 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* common/src/xmalloc.h, common/src/xmalloc.c: Remove files.  Most
 	code uses normal malloc instead of xmalloc.
 
+	* ipmiconsole/src/libipmiconsole/cbuf.h,
+	ipmiconsole/src/libipmiconsole/cbuf.c: Renamed to scbuf.h and
+	scbuf.c since it different than cbuf.
+
+	* common/src: Remove separate libcbuf library.  Put cbuf back into
+	llnlcommon library.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

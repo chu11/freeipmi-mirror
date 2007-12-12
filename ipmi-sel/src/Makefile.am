@@ -6,7 +6,6 @@ ipmi_sel_LDADD = ../../common/src/libcmdlineparsecommon.la \
 		 ../../common/src/libsdr.la \
 		 ../../common/src/libpstdout.la \
 		 ../../common/src/libhostrange.la \
-		 ../../common/src/libcbuf.la \
 		 ../../common/src/libllnlcommon.la \
 		 ../../ipmidetect/src/libipmidetect/libipmidetect.la \
 		 ../../libfreeipmi/src/libfreeipmi.la \
@@ -42,9 +41,6 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libhostrange.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libcbuf.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libllnlcommon.la: force-dependency-check

@@ -39,7 +39,6 @@ noinst_LTLIBRARIES = \
 	libipmiping.la \
 	libsdr.la \
 	libsensor.la \
-	libcbuf.la \
 	libllnlcommon.la \
 	libpstdout.la \
 	libhostrange.la \
@@ -74,9 +73,8 @@ libsdr_la_LIBADD = ./libbitops.la
 libsensor_la_SOURCES = ipmi-sensor-api.c
 libsensor_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 
-libcbuf_la_SOURCES = cbuf.c
-
 libllnlcommon_la_SOURCES = \
+	cbuf.c \
 	conffile.c \
 	fd.c \
 	hostlist.c \

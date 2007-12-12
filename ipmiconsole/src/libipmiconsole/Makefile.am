@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.10 2007-08-28 18:26:19 chu11 Exp $
+## $Id: Makefile.am,v 1.10.4.1 2007-12-12 18:30:19 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -9,7 +9,7 @@ VERSION_SCRIPT = $(srcdir)/ipmiconsole.map
 OTHER_FLAGS = -Wl,--version-script=$(VERSION_SCRIPT)
 endif
 
-noinst_HEADERS = cbuf.h \
+noinst_HEADERS = scbuf.h \
 		 ipmiconsole_checks.h \
 		 ipmiconsole_ctx.h \
 		 ipmiconsole_defs.h \
@@ -25,7 +25,7 @@ include_HEADERS = ipmiconsole.h
 
 lib_LTLIBRARIES = libipmiconsole.la
 		 
-libipmiconsole_la_SOURCES = cbuf.c \
+libipmiconsole_la_SOURCES = scbuf.c \
 			    ipmiconsole.c \
 			    ipmiconsole_checks.c \
 			    ipmiconsole_ctx.c \

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.67.2.1 2007-11-20 19:17:46 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.67.2.2 2007-12-12 18:30:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -48,7 +48,6 @@
 #include "ipmiconsole.h"
 #include "ipmiconsole_defs.h"
 
-#include "cbuf.h"
 #include "list.h"
 #include "secure.h"
 #include "ipmiconsole_ctx.h"
@@ -58,6 +57,7 @@
 #include "ipmiconsole_garbage_collector.h"
 #include "ipmiconsole_processing.h"
 #include "ipmiconsole_util.h"
+#include "scbuf.h"
 
 #include "freeipmi-portability.h"
 
@@ -392,7 +392,7 @@ _poll_setup(void *x, void *arg)
   poll_data->pfds[poll_data->pfds_index*3].events = 0;
   poll_data->pfds[poll_data->pfds_index*3].revents = 0;
   poll_data->pfds[poll_data->pfds_index*3].events |= POLLIN;
-  if (!cbuf_is_empty(c->connection.ipmi_to_bmc))
+  if (!scbuf_is_empty(c->connection.ipmi_to_bmc))
     poll_data->pfds[poll_data->pfds_index*3].events |= POLLOUT;
 
   /* If the session is being torn down, don't bother settings flags on
@@ -410,7 +410,7 @@ _poll_setup(void *x, void *arg)
       poll_data->pfds[poll_data->pfds_index*3 + 2].events = 0;
       poll_data->pfds[poll_data->pfds_index*3 + 2].revents = 0;
       poll_data->pfds[poll_data->pfds_index*3 + 2].events |= POLLIN;
-      if (!cbuf_is_empty(c->connection.console_bmc_to_remote_console))
+      if (!scbuf_is_empty(c->connection.console_bmc_to_remote_console))
 	poll_data->pfds[poll_data->pfds_index*3 + 2].events |= POLLOUT;
     }
   else
@@ -477,37 +477,37 @@ _ipmi_recvfrom(ipmiconsole_ctx_t c)
       return 0;
     }
 
-  /* Empty the cbuf if it's not empty */
-  if (!cbuf_is_empty(c->connection.ipmi_from_bmc))
+  /* Empty the scbuf if it's not empty */
+  if (!scbuf_is_empty(c->connection.ipmi_from_bmc))
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_from_bmc not empty, draining"));
       do {
         char tempbuf[IPMICONSOLE_PACKET_BUFLEN];
-        if (cbuf_read(c->connection.ipmi_from_bmc, tempbuf, IPMICONSOLE_PACKET_BUFLEN) < 0)
+        if (scbuf_read(c->connection.ipmi_from_bmc, tempbuf, IPMICONSOLE_PACKET_BUFLEN) < 0)
           {
-            IPMICONSOLE_CTX_DEBUG(c, ("cbuf_read: %s", strerror(errno)));
+            IPMICONSOLE_CTX_DEBUG(c, ("scbuf_read: %s", strerror(errno)));
             break;
           }
-      } while(!cbuf_is_empty(c->connection.ipmi_from_bmc));
+      } while(!scbuf_is_empty(c->connection.ipmi_from_bmc));
     }
   
-  if ((n = cbuf_write(c->connection.ipmi_from_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
+  if ((n = scbuf_write(c->connection.ipmi_from_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
+      IPMICONSOLE_CTX_DEBUG(c, ("scbuf_write: %s", strerror(errno)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
   if (n != len)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: invalid bytes written; n=%d; len=%d", n, len));
+      IPMICONSOLE_CTX_DEBUG(c, ("scbuf_write: invalid bytes written; n=%d; len=%d", n, len));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
   if (dropped)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: dropped data: dropped=%d", dropped));
+      IPMICONSOLE_CTX_DEBUG(c, ("scbuf_write: dropped data: dropped=%d", dropped));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
@@ -529,9 +529,9 @@ _ipmi_sendto(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  if ((n = cbuf_read(c->connection.ipmi_to_bmc, buffer, IPMICONSOLE_PACKET_BUFLEN)) < 0)
+  if ((n = scbuf_read(c->connection.ipmi_to_bmc, buffer, IPMICONSOLE_PACKET_BUFLEN)) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("cbuf_read: %s", strerror(errno)));
+      IPMICONSOLE_CTX_DEBUG(c, ("scbuf_read: %s", strerror(errno)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
@@ -555,8 +555,8 @@ _ipmi_sendto(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  /* cbuf should be empty now */
-  if (!cbuf_is_empty(c->connection.ipmi_to_bmc))
+  /* scbuf should be empty now */
+  if (!scbuf_is_empty(c->connection.ipmi_to_bmc))
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_to_bmc not empty"));
       /* Note: Not a fatal error, just return*/
@@ -602,9 +602,9 @@ _asynccomm(ipmiconsole_ctx_t c)
 	{
 	  c->session.break_requested++;
 
-	  if ((c->session.console_remote_console_to_bmc_bytes_before_break = cbuf_used(c->connection.console_remote_console_to_bmc)) < 0)
+	  if ((c->session.console_remote_console_to_bmc_bytes_before_break = scbuf_used(c->connection.console_remote_console_to_bmc)) < 0)
 	    {
-	      IPMICONSOLE_CTX_DEBUG(c, ("cbuf_used: %s", strerror(errno)));
+	      IPMICONSOLE_CTX_DEBUG(c, ("scbuf_used: %s", strerror(errno)));
 	      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
 	      return -1;
 	    }
@@ -650,23 +650,23 @@ _console_read(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  if ((n = cbuf_write(c->connection.console_remote_console_to_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
+  if ((n = scbuf_write(c->connection.console_remote_console_to_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
+      IPMICONSOLE_CTX_DEBUG(c, ("scbuf_write: %s", strerror(errno)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
   if (n != len)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: invalid bytes written; n=%d; len=%d", n, len));
+      IPMICONSOLE_CTX_DEBUG(c, ("scbuf_write: invalid bytes written; n=%d; len=%d", n, len));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
   
   if (dropped)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: dropped data: dropped=%d", dropped));
+      IPMICONSOLE_CTX_DEBUG(c, ("scbuf_write: dropped data: dropped=%d", dropped));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
@@ -696,9 +696,9 @@ _console_write(ipmiconsole_ctx_t c)
    * Deal with it later.
    */
 
-  if ((n = cbuf_read(c->connection.console_bmc_to_remote_console, buffer, IPMICONSOLE_PACKET_BUFLEN)) < 0)
+  if ((n = scbuf_read(c->connection.console_bmc_to_remote_console, buffer, IPMICONSOLE_PACKET_BUFLEN)) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("cbuf_read: %s", strerror(errno)));
+      IPMICONSOLE_CTX_DEBUG(c, ("scbuf_read: %s", strerror(errno)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
@@ -728,8 +728,8 @@ _console_write(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  /* cbuf should be empty now */
-  if (!cbuf_is_empty(c->connection.console_bmc_to_remote_console))
+  /* scbuf should be empty now */
+  if (!scbuf_is_empty(c->connection.console_bmc_to_remote_console))
     {
       IPMICONSOLE_CTX_DEBUG(c, ("console_bmc_to_remote_console not empty"));
       /* Note: Not a fatal error, just return*/

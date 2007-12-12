@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.5 2007-10-15 16:07:00 chu11 Exp $
+## $Id: Makefile.am,v 1.5.2.1 2007-12-12 18:30:20 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -25,8 +25,7 @@ ipmimonitoring_LDADD = \
 	../../../common/src/libpstdout.la \
 	../../../ipmidetect/src/libipmidetect/libipmidetect.la \
 	../../../common/src/libhostrange.la \
-	../../../common/src/libtoolcommon.la \
-	../../../common/src/libcbuf.la
+	../../../common/src/libtoolcommon.la
 
 ../../../common/src/libcmdlineparsecommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
@@ -47,9 +46,6 @@ ipmimonitoring_LDADD = \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../../common/src/libcbuf.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:
