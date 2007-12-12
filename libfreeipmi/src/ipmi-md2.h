@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: md5.h,v 1.10 2007-10-18 16:18:44 chu11 Exp $
+ *  $Id: ipmi-md2.h,v 1.7.2.2 2007-12-12 01:14:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _MD5_H
-#define _MD5_H
+#ifndef _IPMI_MD2_H
+#define _IPMI_MD2_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,30 +33,30 @@ extern "C" {
 
 #include <stdint.h>
 
-#define MD5_BLOCK_LENGTH       64
-#define MD5_BLOCK_WORDS_LENGTH (MD5_BLOCK_LENGTH/4)
-#define MD5_DIGEST_LENGTH      16
+#define MD2_BLOCK_LENGTH   16
+#define MD2_BUFFER_LENGTH  48
+#define MD2_CHKSUM_LENGTH  16
+#define MD2_DIGEST_LENGTH  16
+#define MD2_PADDING_LENGTH 16
+#define MD2_ROUNDS_LENGTH  18
 
-typedef struct __md5 {
+typedef struct __md2 {
   uint32_t magic;
+  uint8_t l;
   unsigned int mlen;
-  unsigned int bytes_mod_64;
-  uint32_t bit_count[2];
-  uint32_t a;
-  uint32_t b;
-  uint32_t c;
-  uint32_t d;
-  uint8_t m[MD5_BLOCK_LENGTH];
-} md5_t;
+  uint8_t x[MD2_BUFFER_LENGTH];
+  uint8_t c[MD2_CHKSUM_LENGTH];
+  uint8_t m[MD2_BLOCK_LENGTH];
+} md2_t;
 
-int md5_init(md5_t *ctx);
+int md2_init(md2_t *ctx);
 
-int md5_update_data(md5_t *ctx, uint8_t *buf, unsigned int buflen);
+int md2_update_data(md2_t *ctx, uint8_t *buf, unsigned int buflen);
 
-int md5_finish(md5_t *ctx, uint8_t *digest, unsigned int digestlen);
+int md2_finish(md2_t *ctx, uint8_t *digest, unsigned int digestlen);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _MD5_H */
+#endif /* _IPMI_MD2_H */

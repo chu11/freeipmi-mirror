@@ -9,6 +9,8 @@ lib_LTLIBRARIES = libfreeipmi.la
 
 libfreeipmi_la_SOURCES = \
 	fiid.c \
+	ipmi-md2.c \
+	ipmi-md5.c \
 	ipmi-cipher-suite-record-format.c \
 	ipmi-cipher-suite-util.c \
 	ipmi-sensor-types-spec.c \
@@ -60,15 +62,15 @@ libfreeipmi_la_LIBADD = \
 	api/libapi.la \
 	../../common/src/libbitops.la \
 	../../common/src/libfreeipmiportability.la \
-	../../common/src/libmd2.la \
-	../../common/src/libmd5.la \
 	../../common/src/libsecure.la \
 	../../common/src/libxmalloc.la
 
 noinst_HEADERS = \
 	ipmi-crypt.h \
 	ipmi-err-wrappers.h \
-	ipmi-fiid-wrappers.h
+	ipmi-fiid-wrappers.h \
+	ipmi-md2.h \
+	ipmi-md5.h
 
 debug/libdebug.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
@@ -86,12 +88,6 @@ api/libapi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libmd2.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libmd5.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libsecure.la: force-dependency-check

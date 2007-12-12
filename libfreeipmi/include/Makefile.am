@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.13 2007-12-11 23:17:18 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.14 2007-12-12 01:13:59 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -25,8 +25,8 @@ nobase_include_HEADERS = \
 	freeipmi/rmcp-cmds.h \
 	freeipmi/rmcp-interface.h \
 	freeipmi/rmcp-util.h \
-	freeipmi/ipmi-error.h \
 	freeipmi/ipmi-util.h \
+	freeipmi/ipmi-error-util.h \
 	freeipmi/ipmi-kcs-interface.h \
 	freeipmi/ipmi-lan-interface.h \
 	freeipmi/ipmi-lan-util.h \

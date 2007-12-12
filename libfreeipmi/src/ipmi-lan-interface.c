@@ -40,10 +40,10 @@
 
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
+#include "ipmi-md2.h"
+#include "ipmi-md5.h"
 
 #include "freeipmi-portability.h"
-#include "md2.h"
-#include "md5.h"
 #include "secure.h"
 
 #define IPMI_LAN_PKT_PAD_SIZE   1

@@ -43,9 +43,9 @@
 #include "ipmi-crypt.h"
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
+#include "ipmi-md5.h"
 
 #include "freeipmi-portability.h"
-#include "md5.h"
 #include "secure.h"
 
 #define IPMI_MAX_RMCPPLUS_AUTHENTICATION_CODE_LENGTH      64

@@ -4,8 +4,6 @@ noinst_HEADERS = \
 	freeipmi-portability.h \
 	tool-common.h \
 	ipmi-ping.h \
-	md2.h \
-	md5.h \
 	ipmi-sdr-cache-writes.h \
 	ipmi-sdr-cache-reads.h \
 	ipmi-sdr-cache.h \
@@ -40,8 +38,6 @@ noinst_LTLIBRARIES = \
 	libfreeipmiportability.la \
 	libtoolcommon.la \
 	libipmiping.la \
-	libmd2.la \
-	libmd5.la \
 	libsdr.la \
 	libsensor.la \
 	libxmalloc.la \
@@ -66,12 +62,6 @@ libtoolcommon_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 
 libipmiping_la_SOURCES = ipmi-ping.c
 libipmiping_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
-
-libmd2_la_SOURCES = md2.c
-libmd2_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
-
-libmd5_la_SOURCES = md5.c
-libmd5_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
 
 libsdr_la_SOURCES = \
 	ipmi-sdr-cache-writes.c \

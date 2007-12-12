@@ -185,6 +185,13 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* common/src/common-utils.h, common/src/common-utils.c: Rename to
 	ipmi-sdr-cache-utils.h and ipmi-sdr-cache-utils.c respectively.
 
+	* common/src/md2.h, common/src/md2.c, common/src/md5.c,
+	common/src/md5.h: Move to libfreeipmi/src and rename to
+	ipmi-md2.h, ipmi-md2.c, ipmi-md5.h, ipmi-md5.c respectively.
+
+	* libfreeipmi/include/freeipmi/ipmi-error.h: Rename to
+	libfreeipmi/include/freeipmi/ipmi-error-util.h.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

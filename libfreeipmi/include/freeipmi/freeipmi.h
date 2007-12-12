@@ -43,8 +43,8 @@ extern "C" {
 #include <freeipmi/ipmi-slave-address-spec.h>
 #include <freeipmi/rmcp-cmds.h>
 #include <freeipmi/rmcp-interface.h>
-#include <freeipmi/ipmi-error.h>
 #include <freeipmi/ipmi-util.h>
+#include <freeipmi/ipmi-error-util.h>
 #include <freeipmi/ipmi-kcs-interface.h>
 #include <freeipmi/ipmi-lan-interface.h>
 #include <freeipmi/ipmi-lan-util.h>

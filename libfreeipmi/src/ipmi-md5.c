@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: md5.c,v 1.9 2007-10-18 16:18:44 chu11 Exp $
+ *  $Id: ipmi-md5.c,v 1.10.2.2 2007-12-12 01:14:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -37,7 +37,7 @@
 #endif
 #include <errno.h>
 
-#include "md5.h"
+#include "ipmi-md5.h"
 
 static uint8_t padding[64] = 
   {
