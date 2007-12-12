@@ -183,7 +183,7 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/: Rename 'utils' files to 'util' files.
 
 	* common/src/common-utils.h, common/src/common-utils.c: Rename to
-	ipmi-sdr-cache-utils.h and ipmi-sdr-cache-utils.c respectively.
+	string-utils.h and string-utils.c respectively.
 
 	* common/src/md2.h, common/src/md2.c, common/src/md5.c,
 	common/src/md5.h: Move to libfreeipmi/src and rename to
