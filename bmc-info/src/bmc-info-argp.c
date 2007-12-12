@@ -27,7 +27,7 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
 

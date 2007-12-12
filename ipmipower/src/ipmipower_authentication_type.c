@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_authentication_type.c,v 1.6 2007-10-18 16:18:51 chu11 Exp $
+ *  $Id: ipmipower_authentication_type.c,v 1.6.2.1 2007-12-12 22:02:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -41,7 +41,7 @@
 #include "ipmipower_authentication_type.h"
 #include "ipmipower_wrappers.h"
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 
 #define IPMIPOWER_AUTHENTICATION_BUFLEN  4096
 

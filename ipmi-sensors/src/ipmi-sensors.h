@@ -21,7 +21,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 

@@ -23,7 +23,7 @@
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 
 #include "config-common.h"
 #include "config-comment.h"

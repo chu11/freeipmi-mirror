@@ -202,6 +202,12 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* common/src: Remove separate libcbuf library.  Put cbuf back into
 	llnlcommon library.
 
+	* common/src/cmdline-parse-common.h,
+	common/src/cmdline-parse-common.c: Rename to
+	common/src/tool-cmdline-common.h and
+	common/src/tool-cmdline-common.c.  Merge into toolcommon utility
+	library.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

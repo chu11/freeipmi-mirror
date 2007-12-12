@@ -21,10 +21,9 @@ bmc_config_SOURCES = \
 	bmc-config-misc-section.c \
 	bmc-config-validate.c
 
-bmc_config_LDADD = ../../common/src/libcmdlineparsecommon.la \
-                 ../../common/src/libtoolcommon.la \
-                 ../../libfreeipmi/src/libfreeipmi.la \
-		 ../../common/src/libconfigcommon.la
+bmc_config_LDADD = ../../common/src/libtoolcommon.la \
+                   ../../libfreeipmi/src/libfreeipmi.la \
+		   ../../common/src/libconfigcommon.la
 
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src -D_GNU_SOURCE \
@@ -51,9 +50,6 @@ noinst_HEADERS = bmc-config.h \
 		 bmc-config-validate.h
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libcmdlineparsecommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libtoolcommon.la: force-dependency-check

@@ -9,7 +9,6 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-very-verbose-display.c
 
 ipmi_sensors_LDADD = \
-	../../common/src/libcmdlineparsecommon.la \
 	../../common/src/libtoolcommon.la \
 	../../common/src/libsdr.la \
 	../../common/src/libpstdout.la \
@@ -37,9 +36,6 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
  
-../../common/src/libcmdlineparsecommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
 ../../common/src/libtoolcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 

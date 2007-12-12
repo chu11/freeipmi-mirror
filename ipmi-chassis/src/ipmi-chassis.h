@@ -21,7 +21,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "pstdout.h"
 
 enum ipmi_chassis_keys

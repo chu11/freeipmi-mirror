@@ -56,7 +56,7 @@
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 
 #include "bmc-config.h"
 #include "bmc-config-argp.h"

@@ -16,8 +16,7 @@ pef_config_SOURCES = \
 	pef-config-validate.c \
 	pef-config-wrapper.c
  
-pef_config_LDADD = ../../common/src/libcmdlineparsecommon.la \
-		   ../../common/src/libtoolcommon.la \
+pef_config_LDADD = ../../common/src/libtoolcommon.la \
 		   ../../libfreeipmi/src/libfreeipmi.la \
 		   ../../common/src/libfreeipmiportability.la \
 		   ../../common/src/libsdr.la \
@@ -47,9 +46,6 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
  
-../../common/src/libcmdlineparsecommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
 ../../common/src/libtoolcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 

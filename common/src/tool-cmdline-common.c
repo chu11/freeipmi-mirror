@@ -38,7 +38,7 @@
 #include "freeipmi/ipmi-cipher-suite-util.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "tool-common.h"

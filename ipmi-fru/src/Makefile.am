@@ -4,8 +4,7 @@ ipmi_fru_SOURCES = ipmi-fru.c \
 		   ipmi-fru-info-area.c \
 		   ipmi-fru-multirecord-area.c \
 		   ipmi-fru-util.c
-ipmi_fru_LDADD = ../../common/src/libcmdlineparsecommon.la \
-		 ../../common/src/libtoolcommon.la \
+ipmi_fru_LDADD = ../../common/src/libtoolcommon.la \
 		 ../../common/src/libsdr.la \
 		 ../../common/src/libpstdout.la \
 		 ../../common/src/libhostrange.la \
@@ -28,10 +27,6 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	-D_REENTRANT 
  
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-
-../../common/src/libcmdlineparsecommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libtoolcommon.la: force-dependency-check

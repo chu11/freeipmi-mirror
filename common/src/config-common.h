@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 
 #define CONFIG_CHECKOUT_KEY_COMMENTED_OUT                  0x01
 #define CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x02

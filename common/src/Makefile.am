@@ -1,8 +1,8 @@
 noinst_HEADERS = \
-	cmdline-parse-common.h \
 	bit-ops.h \
 	freeipmi-portability.h \
 	tool-common.h \
+	tool-cmdline-common.h \
 	ipmi-ping.h \
 	ipmi-sdr-cache-writes.h \
 	ipmi-sdr-cache-reads.h \
@@ -32,7 +32,6 @@ noinst_HEADERS = \
 	config-validate.h
 
 noinst_LTLIBRARIES = \
-	libcmdlineparsecommon.la \
 	libbitops.la \
 	libfreeipmiportability.la \
 	libtoolcommon.la \
@@ -45,17 +44,14 @@ noinst_LTLIBRARIES = \
 	libsecure.la \
 	libconfigcommon.la
 
-libcmdlineparsecommon_la_SOURCES = cmdline-parse-common.c
-libcmdlineparsecommon_la_CPPFLAGS = -D_GNU_SOURCE -I$(srcdir)/../../libfreeipmi/include 
-
 libbitops_la_SOURCES = bit-ops.c
 libbitops_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
 
 libfreeipmiportability_la_SOURCES = freeipmi-portability.c
 libfreeipmiportability_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
 
-libtoolcommon_la_SOURCES = tool-common.c
-libtoolcommon_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
+libtoolcommon_la_SOURCES = tool-cmdline-common.c tool-common.c
+libtoolcommon_la_CPPFLAGS = -D_GNU_SOURCE -I$(srcdir)/../../libfreeipmi/include 
 
 libipmiping_la_SOURCES = ipmi-ping.c
 libipmiping_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 

@@ -38,9 +38,9 @@
 #endif /* !TIME_WITH_SYS_TIME */
 #include <assert.h>
 
-#include "cmdline-parse-common.h"
 #include "freeipmi-portability.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 #include "ipmi-sdr-cache.h"
 #include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"

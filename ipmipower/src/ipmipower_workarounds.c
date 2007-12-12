@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_workarounds.c,v 1.12 2007-10-18 16:18:53 chu11 Exp $
+ *  $Id: ipmipower_workarounds.c,v 1.12.2.1 2007-12-12 22:02:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -40,7 +40,7 @@
 
 #include "wrappers.h"
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 
 extern struct ipmipower_config *conf;
 

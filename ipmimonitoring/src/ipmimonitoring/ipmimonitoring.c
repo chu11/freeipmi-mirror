@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.31.2.2 2007-12-11 21:18:01 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.31.2.3 2007-12-12 22:02:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -61,12 +61,12 @@
 
 #include "ipmi_monitoring.h"
 
-#include "cmdline-parse-common.h"
 #include "pstdout.h"
 #include "hostrange.h"
 #include "error.h"
 #include "secure.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64

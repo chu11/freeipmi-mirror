@@ -31,9 +31,9 @@
 #include <argp.h>
 #include <assert.h>
 
-#include "cmdline-parse-common.h"
 #include "freeipmi-portability.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
 #include "pef-config-info.h"

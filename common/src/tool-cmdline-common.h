@@ -16,8 +16,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-#ifndef _CMDLINE_PARSE_COMMON_H
-#define _CMDLINE_PARSE_COMMON_H
+#ifndef _TOOL_CMDLINE_COMMON_H
+#define _TOOL_CMDLINE_COMMON_H
 
 #if HAVE_CONFIG_H
 #include "config.h"

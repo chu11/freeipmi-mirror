@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.29 2007-10-18 16:18:46 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.29.2.1 2007-12-12 22:02:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -47,7 +47,7 @@
 #include <ipmiconsole.h>
 
 #include "ipmiconsole_config.h"
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "conffile.h"
 #include "error.h"
 #include "secure.h"

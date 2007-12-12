@@ -32,7 +32,7 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "ipmi-sensor-api.h"
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"

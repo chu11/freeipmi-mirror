@@ -31,11 +31,11 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "cmdline-parse-common.h"
 #include "freeipmi-portability.h"
 #include "ipmi-raw.h"
 #include "ipmi-raw-argp.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 #include "pstdout.h"
 #include "hostrange.h"
 

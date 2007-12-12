@@ -38,9 +38,9 @@
 #include <argp.h>
 #include <assert.h>
 
-#include "cmdline-parse-common.h"
 #include "freeipmi-portability.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 #include "ipmi-sensor-api.h"
 #include "ipmi-sdr-cache.h"
 #include "ipmi-sensors.h"

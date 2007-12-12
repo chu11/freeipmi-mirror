@@ -37,7 +37,7 @@
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
 

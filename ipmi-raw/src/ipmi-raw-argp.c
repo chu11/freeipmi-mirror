@@ -27,7 +27,7 @@
 #endif /* STDC_HEADERS */
 #include <argp.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "ipmi-raw.h"
 #include "ipmi-raw-argp.h"
 

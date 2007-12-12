@@ -35,10 +35,10 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "cmdline-parse-common.h"
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "hostrange.h"

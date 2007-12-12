@@ -21,7 +21,6 @@ ipmipower_SOURCES= \
 	wrappers.c
  
 ipmipower_LDADD = \
-	../../common/src/libcmdlineparsecommon.la \
 	../../common/src/libllnlcommon.la \
 	../../common/src/libtoolcommon.la \
 	../../ipmidetect/src/libipmidetect/libipmidetect.la \
@@ -55,9 +54,6 @@ noinst_HEADERS= \
 	ipmipower_wrappers.h \
 	wrappers.h
  
-../../common/src/libcmdlineparsecommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
 ../../common/src/libllnlcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 

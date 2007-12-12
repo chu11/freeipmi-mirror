@@ -22,7 +22,7 @@
 #include <freeipmi/freeipmi.h>
 #include <limits.h>	/* ARG_MAX */
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "pstdout.h"
 
 enum ipmi_raw_argp_option_keys

@@ -35,8 +35,8 @@
 #include "bmc-config-argp.h"
 #include "bmc-config-sections.h"
 
-#include "cmdline-parse-common.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 #include "freeipmi-portability.h"
 
 void
