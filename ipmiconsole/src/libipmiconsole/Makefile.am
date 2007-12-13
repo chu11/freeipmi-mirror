@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.10.4.1 2007-12-12 18:30:19 chu11 Exp $
+## $Id: Makefile.am,v 1.10.4.2 2007-12-13 01:21:59 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -48,7 +48,7 @@ libipmiconsole_la_LDFLAGS = $(PTHREAD_LIBS) \
 			    -version-info @LIBIPMICONSOLE_VERSION_INFO@ \
 			    $(OTHER_FLAGS)
 
-libipmiconsole_la_LIBADD = ../../../common/src/libllnlcommon.la \
+libipmiconsole_la_LIBADD = ../../../common/src/libmiscutils.la \
 			   ../../../libfreeipmi/src/libfreeipmi.la \
 			   ../../../common/src/libfreeipmiportability.la
 
@@ -59,7 +59,7 @@ install-logdir:
 
 EXTRA_DIST = ipmiconsole.map
 
-../../../common/src/libllnlcommon.la: force-dependency-check
+../../../common/src/libmiscutils.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../../libfreeipmi/src/libfreeipmi.la: force-dependency-check

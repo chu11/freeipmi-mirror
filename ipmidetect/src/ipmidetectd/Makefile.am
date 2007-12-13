@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.2 2007-10-15 16:07:00 chu11 Exp $
+## $Id: Makefile.am,v 1.2.2.1 2007-12-13 01:22:00 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -29,10 +29,10 @@ ipmidetectd_CPPFLAGS = \
 	-I$(srcdir)/../../../libfreeipmi/include
 
 ipmidetectd_LDADD = \
-	../../../common/src/libllnlcommon.la \
+	../../../common/src/libmiscutils.la \
 	../../../libfreeipmi/src/libfreeipmi.la
 
-../../../common/src/libllnlcommon.la: force-dependency-check
+../../../common/src/libmiscutils.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../../libfreeipmi/src/libfreeipmi.la: force-dependency-check

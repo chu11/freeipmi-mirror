@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.2 2007-10-15 16:07:00 chu11 Exp $
+## $Id: Makefile.am,v 1.2.2.1 2007-12-13 01:22:00 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -20,13 +20,13 @@ libipmidetect_la_CPPFLAGS = \
 	-I$(srcdir)/../../../common/src
 
 libipmidetect_la_LIBADD = \
-	../../../common/src/libllnlcommon.la
+	../../../common/src/libmiscutils.la
 
 libipmidetect_la_LDFLAGS = -version-info @LIBIPMIDETECT_VERSION_INFO@ $(OTHER_FLAGS)
 
 EXTRA_DIST = ipmidetect.map
 
-../../../common/src/libllnlcommon.la: force-dependency-check
+../../../common/src/libmiscutils.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

@@ -215,6 +215,8 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* common/src/bit-ops.h, common/src/bit-ops.c: Moved into
 	libfreeipmi/src and renamed ipmi-bit-ops.h and ipmi-bit-ops.c.
 
+	* common/src: Rename libllnlcommon to just libcommon.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

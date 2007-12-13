@@ -62,7 +62,7 @@ libfreeipmi_la_LIBADD = \
 	locate/liblocate.la \
 	api/libapi.la \
 	../../common/src/libfreeipmiportability.la \
-	../../common/src/libsecure.la
+	../../common/src/libcommon.la
 
 noinst_HEADERS = \
 	ipmi-crypt.h \
@@ -87,7 +87,7 @@ api/libapi.la: force-dependency-check
 ../../common/src/libfreeipmiportability.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libsecure.la: force-dependency-check
+../../common/src/libcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 EXTRA_DIST = freeipmi.map
