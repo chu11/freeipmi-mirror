@@ -10,7 +10,7 @@ libapi_la_SOURCES = \
 	ipmi-fru-inventory-device-cmds-api.c \
 	ipmi-lan-cmds-api.c \
 	ipmi-lan-interface-api.c \
-	ipmi-lan-session-util.c \
+	ipmi-lan-session-common.c \
 	ipmi-messaging-support-cmds-api.c \
 	ipmi-pef-and-alerting-cmds-api.c \
 	ipmi-rmcpplus-support-and-payload-cmds-api.c \
@@ -25,7 +25,7 @@ noinst_HEADERS = \
 	ipmi-fiid-wrappers-api.h \
 	ipmi-ctx.h \
 	ipmi-lan-interface-api.h \
-	ipmi-lan-session-util.h \
+	ipmi-lan-session-common.h \
 	ipmi-kcs-driver-api.h \
 	ipmi-openipmi-driver-api.h \
 	ipmi-ssif-driver-api.h

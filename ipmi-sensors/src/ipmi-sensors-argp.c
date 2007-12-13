@@ -35,11 +35,9 @@
 #include "tool-cmdline-common.h"
 #include "string-utils.h"
 
-#include "ipmi-sensor-api.h"
+#include "ipmi-sensor-common.h"
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
-#include "ipmi-sensors-utils.h"
-
 
 #include "freeipmi-portability.h"
 

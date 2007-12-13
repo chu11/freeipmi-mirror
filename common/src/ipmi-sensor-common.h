@@ -17,8 +17,8 @@
 
 */
 
-#ifndef _IPMI_SENSOR_API_H
-#define _IPMI_SENSOR_API_H
+#ifndef _IPMI_SENSOR_COMMON_H
+#define _IPMI_SENSOR_COMMON_H
 
 #include <stdint.h>
 

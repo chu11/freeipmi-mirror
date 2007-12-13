@@ -38,6 +38,10 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/src/bmc-info.c: Fix code logic to remove mem-leaks.
 
+	* ipmi-sensors/src/ipmi-sensors-util.h,
+	ipmi-sensors/src/ipmi-sensors-util.c: Removed files.  Move code
+	into other respective files.
+
 	* ipmiping/src/ipmiping.c (_fiid_obj_get), rmcpping/src/rmcpping.c
 	(_fiid_obj_get): Fix error message output.
 
@@ -222,6 +226,13 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/util/: New directories.  Move respective
 	sub-library headers into those directories.
+
+	* common/src/ipmi-sensor-api.h, common/src/ipmi-sensor-api.c:
+	Renamed to ipmi-sensor-common.h and ipmi-sensor-common.c.
+
+	* libfreeipmi/src/api/ipmi-lan-session-util.h,
+	libfreipmi/src/api/ipmi-lan-session-util.c: Renamed to
+	ipmi-lan-session-common.h ipmi-lan-session-common.c.
 
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.

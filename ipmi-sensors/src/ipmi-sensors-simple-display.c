@@ -17,13 +17,27 @@
 */
 
 #include <stdio.h>
-#include "ipmi-sensor-api.h"
+
 #include "freeipmi/ipmi-sensor-units-spec.h"
 #include "freeipmi/ipmi-sdr-record-format.h"
 
 #include "ipmi-sensors.h"
-#include "ipmi-sensors-utils.h"
+
+#include "ipmi-sensor-common.h"
 #include "pstdout.h"
+
+static double
+round_double2 (double d)
+{
+  double r = 0.0;
+
+  r = (d - (long) d) * 100.0;
+
+  if ((r - (long) r) > 0.5)
+    return ((long) d + (((long) r + 1) / 100.0));
+
+  return ((long) d + ((long) r / 100.0));
+}
 
 static int 
 sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,

@@ -8,7 +8,7 @@ noinst_HEADERS = \
 	ipmi-sdr-cache.h \
 	ipmi-sdr-cache-defs.h \
 	string-utils.h \
-	ipmi-sensor-api.h \
+	ipmi-sensor-common.h \
 	cbuf.h \
 	conffile.h \
 	fd.h \
@@ -59,7 +59,7 @@ libsdr_la_CPPFLAGS = -D_GNU_SOURCE \
 		     -D_REENTRANT \
 		     -I$(srcdir)/../../libfreeipmi/include
 
-libsensor_la_SOURCES = ipmi-sensor-api.c
+libsensor_la_SOURCES = ipmi-sensor-common.c
 libsensor_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 
 libmiscutils_la_SOURCES = \

@@ -66,7 +66,7 @@
 #include "ipmi-err-wrappers-api.h"
 #include "ipmi-fiid-wrappers-api.h"
 #include "ipmi-lan-interface-api.h"
-#include "ipmi-lan-session-util.h"
+#include "ipmi-lan-session-common.h"
 #include "ipmi-kcs-driver-api.h"
 #include "ipmi-openipmi-driver-api.h"
 #include "ipmi-ssif-driver-api.h"

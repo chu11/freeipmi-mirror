@@ -33,7 +33,7 @@
 #include <syslog.h>
 #endif /* IPMI_SYSLOG */
 
-#include "ipmi-sensor-api.h"
+#include "ipmi-sensor-common.h"
 
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-sdr-record-format.h"

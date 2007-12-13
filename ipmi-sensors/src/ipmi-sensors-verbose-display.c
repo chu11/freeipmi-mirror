@@ -17,11 +17,13 @@
 */
 
 #include <stdio.h>
-#include "ipmi-sensor-api.h"
+
 #include "freeipmi/ipmi-sensor-units-spec.h"
 #include "freeipmi/ipmi-sdr-record-format.h"
 
 #include "ipmi-sensors.h"
+
+#include "ipmi-sensor-common.h"
 #include "pstdout.h"
 
 static int 

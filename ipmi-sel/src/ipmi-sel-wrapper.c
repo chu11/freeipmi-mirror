@@ -38,7 +38,7 @@
 
 #include "freeipmi-portability.h"
 #include "ipmi-sdr-cache.h"
-#include "ipmi-sensor-api.h"
+#include "ipmi-sensor-common.h"
 
 #include "ipmi-sel-wrapper.h"
 
