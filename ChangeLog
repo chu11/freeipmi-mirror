@@ -1,5 +1,8 @@
 XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
+	Major code reorganization and code cleanup from branch
+	libfreeipmi_rearch_branch.
+
 	* common/src/err-wrappers.h, common/src/fiid-wrappers.h,
 	common/src/udm-err-wrappers.h, common/src/udm-fiid-wrappers.h:
 	Update error logging routines with more details.  Add additional
@@ -236,6 +239,8 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/src/api/ipmi-lan-session-util.h,
 	libfreipmi/src/api/ipmi-lan-session-util.c: Renamed to
 	ipmi-lan-session-common.h ipmi-lan-session-common.c.
+
+	* common/src/: Merge libpstdout into libhostrange.
 
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.

@@ -1,7 +1,6 @@
 sbin_PROGRAMS=bmc-info
 bmc_info_SOURCES=bmc-info-argp.c bmc-info.c 
 bmc_info_LDADD = ../../common/src/libtoolcommon.la \
-		 ../../common/src/libpstdout.la \
 		 ../../common/src/libhostrange.la \
 		 ../../common/src/libmiscutils.la \
                  ../../ipmidetect/src/libipmidetect/libipmidetect.la \
@@ -19,9 +18,6 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libpstdout.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libhostrange.la: force-dependency-check

@@ -2,7 +2,6 @@ sbin_PROGRAMS=ipmi-raw
 ipmi_raw_SOURCES=ipmi-raw-argp.c ipmi-raw.c 
 ipmi_raw_LDADD = ../../common/src/libtoolcommon.la \
 		 ../../libfreeipmi/src/libfreeipmi.la \
-		 ../../common/src/libpstdout.la \
 		 ../../common/src/libhostrange.la \
 		 ../../common/src/libmiscutils.la \
 		 ../../ipmidetect/src/libipmidetect/libipmidetect.la \
@@ -23,9 +22,6 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libpstdout.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libhostrange.la: force-dependency-check

@@ -37,7 +37,6 @@ noinst_LTLIBRARIES = \
 	libsdr.la \
 	libsensor.la \
 	libmiscutils.la \
-	libpstdout.la \
 	libhostrange.la \
 	libconfigcommon.la
 
@@ -71,12 +70,9 @@ libmiscutils_la_SOURCES = \
 	secure.c \
 	timeval.c
 
-libpstdout_la_SOURCES = pstdout.c
-libpstdout_la_CPPFLAGS = -D_REENTRANT
-libpstdout_la_LDFLAGS = $(PTHREAD_LIBS)
-
-libhostrange_la_SOURCES = hostrange.c
-libhostrange_la_CPPFLAGS = -I$(srcdir)/../../ipmidetect/src/libipmidetect/
+libhostrange_la_SOURCES = pstdout.c hostrange.c
+libhostrange_la_CPPFLAGS = -D_REENTRANT
+libhostrange_la_LDFLAGS = $(PTHREAD_LIBS)
 
 libconfigcommon_la_SOURCES = \
 	config-comment.c \

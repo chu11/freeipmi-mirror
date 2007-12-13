@@ -3,7 +3,6 @@ ipmi_sel_SOURCES=ipmi-sel-argp.c ipmi-sel-wrapper.c ipmi-sel.c
 ipmi_sel_LDADD = ../../common/src/libtoolcommon.la \
 		 ../../common/src/libsensor.la \
 		 ../../common/src/libsdr.la \
-		 ../../common/src/libpstdout.la \
 		 ../../common/src/libhostrange.la \
 		 ../../common/src/libmiscutils.la \
 		 ../../ipmidetect/src/libipmidetect/libipmidetect.la \
@@ -28,9 +27,6 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libsdr.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libpstdout.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check

@@ -10,7 +10,6 @@ ipmi_sensors_SOURCES = \
 ipmi_sensors_LDADD = \
 	../../common/src/libtoolcommon.la \
 	../../common/src/libsdr.la \
-	../../common/src/libpstdout.la \
 	../../common/src/libhostrange.la \
 	../../common/src/libmiscutils.la \
 	../../ipmidetect/src/libipmidetect/libipmidetect.la \
@@ -44,9 +43,6 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libsensor.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libpstdout.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libhostrange.la: force-dependency-check
