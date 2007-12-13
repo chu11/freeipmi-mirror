@@ -177,12 +177,13 @@ ipmi_kcs_ctx_create(void)
   ipmi_kcs_ctx_t ctx = NULL;
 
   ERR_CLEANUP ((ctx = (ipmi_kcs_ctx_t)malloc(sizeof(struct ipmi_kcs_ctx))));
+  memset(ctx, '\0', sizeof(struct ipmi_kcs_ctx));
 
   ctx->magic = IPMI_KCS_CTX_MAGIC;
   ctx->driver_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;
   ctx->register_spacing = IPMI_KCS_SMS_REGISTER_SPACING_DEFAULT;
-  ctx->poll_interval = IPMI_KCS_SLEEP_USECS;
   ctx->flags = IPMI_KCS_FLAGS_DEFAULT;
+  ctx->poll_interval = IPMI_KCS_SLEEP_USECS;
   ctx->io_init = 0;
 
   ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init ()) < 0));

@@ -326,6 +326,7 @@ ipmi_ssif_ctx_create(void)
   ipmi_ssif_ctx_t ctx = NULL;
 
   ERR_CLEANUP ((ctx = (ipmi_ssif_ctx_t)malloc(sizeof(struct ipmi_ssif_ctx))));
+  memset(ctx, '\0', sizeof(struct ipmi_ssif_ctx));
 
   ctx->magic = IPMI_SSIF_CTX_MAGIC;
   ERR_CLEANUP ((ctx->driver_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));

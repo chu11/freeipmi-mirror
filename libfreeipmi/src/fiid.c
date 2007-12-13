@@ -588,6 +588,7 @@ fiid_obj_create (fiid_template_t tmpl)
       errno = ENOMEM;
       goto cleanup;
     }
+  memset(obj, '\0', sizeof(struct fiid_obj));
   obj->magic = FIID_OBJ_MAGIC;
   
   if ((obj->data_len = _fiid_template_len_bytes (tmpl, 
@@ -607,6 +608,7 @@ fiid_obj_create (fiid_template_t tmpl)
       errno = ENOMEM;
       goto cleanup;
     }
+  memset(obj->data, '\0', obj->data_len);
   
   if (!(obj->field_data = malloc(obj->field_data_len * sizeof(struct fiid_field_data))))
     {
@@ -699,6 +701,7 @@ fiid_obj_dup (fiid_obj_t src_obj)
       src_obj->errnum = FIID_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
+  memset(dest_obj, '\0', sizeof(struct fiid_obj));
   dest_obj->magic = src_obj->magic;
   dest_obj->data_len = src_obj->data_len;
   dest_obj->field_data_len = src_obj->field_data_len;
@@ -866,8 +869,8 @@ fiid_obj_template(fiid_obj_t obj)
       obj->errnum = FIID_ERR_OUT_OF_MEMORY;
       return (NULL);
     }
-
   memset(tmpl, '\0', sizeof(fiid_field_t) * obj->field_data_len);
+
   for (i = 0; i < obj->field_data_len; i++)
     {
       tmpl[i].max_field_len = obj->field_data[i].max_field_len;
@@ -2160,6 +2163,7 @@ fiid_iterator_create(fiid_obj_t obj)
       obj->errnum = FIID_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
+  memset(iter, '\0', sizeof(struct fiid_iterator));
   iter->magic = FIID_ITERATOR_MAGIC;
   iter->current_index = 0;
 

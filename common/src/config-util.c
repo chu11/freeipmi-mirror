@@ -12,8 +12,6 @@
 
 #include "config-util.h"
 
-#include "bit-ops.h"
-
 int8_t
 config_ipv4_address_string2int(char *src, uint32_t *dest)
 {
@@ -43,27 +41,10 @@ config_ipv4_address_string2int(char *src, uint32_t *dest)
     }
 
   val = 0;
-
-  if (bits_merge (val, 0,  8,  b1, &val) < 0)
-    {
-      perror("bits_merge");
-      return (-1);
-    }
-  if (bits_merge (val, 8,  16, b2, &val) < 0)
-    {
-      perror("bits_merge");
-      return (-1);
-    }
-  if (bits_merge (val, 16, 24, b3, &val) < 0)
-    {
-      perror("bits_merge");
-      return (-1);
-    }
-  if (bits_merge (val, 24, 32, b4, &val) < 0)
-    {
-      perror("bits_merge");
-      return (-1);
-    }
+  val |= (uint64_t)b1;
+  val |= ((uint64_t)b2 << 8);
+  val |= ((uint64_t)b3 << 16);
+  val |= ((uint64_t)b4 << 24);
 
   *dest = val;
   return (0);
@@ -100,37 +81,12 @@ config_mac_address_string2int(char *src, uint64_t *dest)
     }
 
   val = 0;
-
-  if (bits_merge (val, 0,  8,  b1, &val) < 0)
-    {
-      perror("bits_merge");
-      return (-1);
-    }
-  if (bits_merge (val, 8,  16, b2, &val) < 0)
-    {
-      perror("bits_merge");
-      return (-1);
-    }
-  if (bits_merge (val, 16, 24, b3, &val) < 0)
-    {
-      perror("bits_merge");
-      return (-1);
-    }
-  if (bits_merge (val, 24, 32, b4, &val) < 0)
-    {
-      perror("bits_merge");
-      return (-1);
-    }
-  if (bits_merge (val, 32, 40, b5, &val) < 0)
-    {
-      perror("bits_merge");
-      return (-1);
-    }
-  if (bits_merge (val, 40, 48, b6, &val) < 0)
-    {
-      perror("bits_merge");
-      return (-1);
-    }
+  val |= (uint64_t)b1;
+  val |= ((uint64_t)b2 << 8);
+  val |= ((uint64_t)b3 << 16);
+  val |= ((uint64_t)b4 << 24);
+  val |= ((uint64_t)b5 << 32);
+  val |= ((uint64_t)b6 << 40);
 
   *dest = val;
   return (0);

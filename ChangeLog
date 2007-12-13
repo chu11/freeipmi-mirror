@@ -210,6 +210,8 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* common/src/ipmi-sdr-cache.c: Remove bit-ops library need.
 
+	* common/src/config-util.c: Remove bit-ops library need.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

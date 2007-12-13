@@ -97,7 +97,6 @@ libconfigcommon_la_SOURCES = \
 	config-section.c \
 	config-util.c \
 	config-validate.c
-libconfigcommon_la_LIBADD = ./libbitops.la
 libconfigcommon_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 
 ../../ipmidetect/src/libipmidetect/libipmidetect.la: force-dependency-check

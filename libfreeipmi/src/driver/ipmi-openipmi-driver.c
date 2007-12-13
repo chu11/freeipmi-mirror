@@ -161,9 +161,11 @@ ipmi_openipmi_ctx_create(void)
   ipmi_openipmi_ctx_t ctx = NULL;
 
   ERR_CLEANUP ((ctx = (ipmi_openipmi_ctx_t)malloc(sizeof(struct ipmi_openipmi_ctx))));
+  memset(ctx, '\0', sizeof(struct ipmi_openipmi_ctx));
 
   ctx->magic = IPMI_OPENIPMI_CTX_MAGIC;
   ctx->flags = IPMI_OPENIPMI_FLAGS_DEFAULT;
+  ctx->driver_device = NULL;
   ctx->device_fd = -1;
   ctx->io_init = 0;
 
