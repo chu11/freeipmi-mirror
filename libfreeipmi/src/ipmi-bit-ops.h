@@ -17,8 +17,8 @@
 
 */
 
-#ifndef _BIT_OPS_H
-#define	_BIT_OPS_H	1
+#ifndef _IPMI_BIT_OPS_H
+#define	_IPMI_BIT_OPS_H	1
 
 #ifdef __cplusplus
 extern "C" {
@@ -161,6 +161,6 @@ int bits_merge (uint64_t bits, uint8_t start, uint8_t end, uint64_t val, uint64_
 }
 #endif
 
-#endif /* bit-ops.h */
+#endif /* ipmi-bit-ops.h */
 
 

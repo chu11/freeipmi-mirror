@@ -9,6 +9,7 @@ lib_LTLIBRARIES = libfreeipmi.la
 
 libfreeipmi_la_SOURCES = \
 	fiid.c \
+	ipmi-bit-ops.c \
 	ipmi-md2.c \
 	ipmi-md5.c \
 	ipmi-cipher-suite-record-format.c \
@@ -60,7 +61,6 @@ libfreeipmi_la_LIBADD = \
 	driver/libdriver.la \
 	locate/liblocate.la \
 	api/libapi.la \
-	../../common/src/libbitops.la \
 	../../common/src/libfreeipmiportability.la \
 	../../common/src/libsecure.la
 
@@ -68,6 +68,7 @@ noinst_HEADERS = \
 	ipmi-crypt.h \
 	ipmi-err-wrappers.h \
 	ipmi-fiid-wrappers.h \
+	ipmi-bit-ops.h \
 	ipmi-md2.h \
 	ipmi-md5.h
 
@@ -81,9 +82,6 @@ locate/liblocate.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 api/libapi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libbitops.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check

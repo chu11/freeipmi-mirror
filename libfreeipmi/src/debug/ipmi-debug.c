@@ -34,10 +34,10 @@
 
 #include "ipmi-debug-common.h"
 
+#include "ipmi-bit-ops.h"
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
 
-#include "bit-ops.h"
 #include "freeipmi-portability.h"
 
 #define IPMI_DEBUG_MAX_BUF_LEN        65536

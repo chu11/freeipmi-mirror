@@ -58,7 +58,6 @@
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
 
-#include "bit-ops.h"
 #include "freeipmi-portability.h"
 
 uint8_t

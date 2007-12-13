@@ -1,5 +1,4 @@
 noinst_HEADERS = \
-	bit-ops.h \
 	freeipmi-portability.h \
 	tool-common.h \
 	tool-cmdline-common.h \
@@ -32,7 +31,6 @@ noinst_HEADERS = \
 	config-validate.h
 
 noinst_LTLIBRARIES = \
-	libbitops.la \
 	libfreeipmiportability.la \
 	libtoolcommon.la \
 	libipmiping.la \
@@ -43,9 +41,6 @@ noinst_LTLIBRARIES = \
 	libhostrange.la \
 	libsecure.la \
 	libconfigcommon.la
-
-libbitops_la_SOURCES = bit-ops.c
-libbitops_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
 
 libfreeipmiportability_la_SOURCES = freeipmi-portability.c
 libfreeipmiportability_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
