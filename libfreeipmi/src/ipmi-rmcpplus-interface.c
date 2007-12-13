@@ -29,7 +29,6 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-rmcpplus-interface.h"
-#include "freeipmi/ipmi-rmcpplus-util.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-lan-interface.h"
@@ -37,8 +36,9 @@
 #include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 #include "freeipmi/ipmi-sol-cmds.h"
-#include "freeipmi/ipmi-util.h"
 #include "freeipmi/rmcp-interface.h"
+#include "freeipmi/util/ipmi-rmcpplus-util.h"
+#include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-crypt.h"
 #include "ipmi-err-wrappers.h"

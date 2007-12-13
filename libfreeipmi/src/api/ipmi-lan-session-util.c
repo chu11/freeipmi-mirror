@@ -46,20 +46,20 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-channel-spec.h"
-#include "freeipmi/ipmi-cipher-suite-util.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 #include "freeipmi/ipmi-ipmb-interface.h"
 #include "freeipmi/ipmi-lan-interface.h"
-#include "freeipmi/ipmi-lan-util.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/ipmi-rmcpplus-interface.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
-#include "freeipmi/ipmi-rmcpplus-util.h"
 #include "freeipmi/rmcp-interface.h"
+#include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
+#include "freeipmi/util/ipmi-cipher-suite-util.h"
+#include "freeipmi/util/ipmi-lan-util.h"
+#include "freeipmi/util/ipmi-rmcpplus-util.h"
 
 #include "ipmi-ctx.h"
 #include "ipmi-err-wrappers-api.h"

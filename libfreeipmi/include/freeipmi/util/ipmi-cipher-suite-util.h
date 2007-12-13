@@ -24,11 +24,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/ipmi-rmcpplus.h>
-
-/* Refer to table 22-19 */
-#define IPMI_CIPHER_SUITE_ID_MIN  0
-#define IPMI_CIPHER_SUITE_ID_MAX  14
+#include <freeipmi/ipmi-rmcpplus-interface.h>
 
 #define IPMI_CIPHER_SUITE_COMBINATION_VALID(__a, __i, __c) \
   ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE \

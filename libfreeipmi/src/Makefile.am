@@ -1,4 +1,4 @@
-SUBDIRS = debug driver locate api
+SUBDIRS = api debug driver locate util
 
 if WITH_GNU_LD
 VERSION_SCRIPT = $(srcdir)/freeipmi.map
@@ -13,20 +13,14 @@ libfreeipmi_la_SOURCES = \
 	ipmi-md2.c \
 	ipmi-md5.c \
 	ipmi-cipher-suite-record-format.c \
-	ipmi-cipher-suite-util.c \
 	ipmi-sensor-types-spec.c \
 	ipmi-sensor-units-spec.c \
 	rmcp-cmds.c \
 	rmcp-interface.c \
-	rmcp-util.c \
-	ipmi-error.c \
-	ipmi-util.c \
 	ipmi-kcs-interface.c \
 	ipmi-lan-interface.c \
-	ipmi-lan-util.c \
 	ipmi-crypt.c \
 	ipmi-rmcpplus-interface.c \
-	ipmi-rmcpplus-util.c \
 	ipmi-bmc-watchdog-timer-cmds.c \
 	ipmi-chassis-cmds.c \
 	ipmi-device-global-cmds.c \
@@ -43,8 +37,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sol-cmds.c \
 	ipmi-sdr-record-format.c \
 	ipmi-sel-record-format.c \
-	ipmi-sensor-and-event-code-tables.c \
-	ipmi-sensor-util.c
+	ipmi-sensor-and-event-code-tables.c
 
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm -lgcrypt
 # libfreeipmi_la_CPPFLAGS = 
@@ -57,12 +50,13 @@ libfreeipmi_la_CPPFLAGS = \
 	-D_REENTRANT
 
 libfreeipmi_la_LIBADD = \
+	api/libapi.la \
 	debug/libdebug.la \
 	driver/libdriver.la \
 	locate/liblocate.la \
-	api/libapi.la \
+	util/libutil.la \
 	../../common/src/libfreeipmiportability.la \
-	../../common/src/libcommon.la
+	../../common/src/libmiscutils.la
 
 noinst_HEADERS = \
 	ipmi-crypt.h \
@@ -87,7 +81,7 @@ api/libapi.la: force-dependency-check
 ../../common/src/libfreeipmiportability.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libcommon.la: force-dependency-check
+../../common/src/libmiscutils.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 EXTRA_DIST = freeipmi.map

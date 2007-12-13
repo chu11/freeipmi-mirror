@@ -164,6 +164,10 @@ extern "C" {
 #define IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH      16
 #define IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH           16
 
+/* Refer to table 22-19 */
+#define IPMI_CIPHER_SUITE_ID_MIN                          0
+#define IPMI_CIPHER_SUITE_ID_MAX                          14
+
 extern fiid_template_t tmpl_rmcpplus_session_hdr;
 extern fiid_template_t tmpl_rmcpplus_session_trlr;
 

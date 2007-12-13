@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "freeipmi/rmcp-util.h"
+#include "freeipmi/util/rmcp-util.h"
 #include "freeipmi/rmcp-cmds.h"
 
 #include "ipmi-err-wrappers.h"

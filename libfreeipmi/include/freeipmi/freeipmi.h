@@ -27,7 +27,6 @@ extern "C" {
 #include <freeipmi/ipmi-authentication-type-spec.h>
 #include <freeipmi/ipmi-channel-spec.h>
 #include <freeipmi/ipmi-cipher-suite-record-format.h>
-#include <freeipmi/ipmi-cipher-suite-util.h>
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-comp-code-spec.h>
 #include <freeipmi/ipmi-ipmb-lun-spec.h>
@@ -43,13 +42,9 @@ extern "C" {
 #include <freeipmi/ipmi-slave-address-spec.h>
 #include <freeipmi/rmcp-cmds.h>
 #include <freeipmi/rmcp-interface.h>
-#include <freeipmi/ipmi-util.h>
-#include <freeipmi/ipmi-error-util.h>
 #include <freeipmi/ipmi-kcs-interface.h>
 #include <freeipmi/ipmi-lan-interface.h>
-#include <freeipmi/ipmi-lan-util.h>
 #include <freeipmi/ipmi-rmcpplus-interface.h>
-#include <freeipmi/ipmi-rmcpplus-util.h>
 #include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>
 #include <freeipmi/ipmi-chassis-cmds.h>
 #include <freeipmi/ipmi-chassis-boot-options-parameter-spec.h>
@@ -68,7 +63,6 @@ extern "C" {
 #include <freeipmi/ipmi-sdr-record-format.h>
 #include <freeipmi/ipmi-sel-record-format.h>
 #include <freeipmi/ipmi-sensor-and-event-code-tables.h>
-#include <freeipmi/ipmi-sensor-util.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/api/ipmi-chassis-cmds-api.h>
 #include <freeipmi/api/ipmi-device-global-cmds-api.h>
@@ -87,6 +81,13 @@ extern "C" {
 #include <freeipmi/driver/ipmi-openipmi-driver.h>
 #include <freeipmi/driver/ipmi-ssif-driver.h>
 #include <freeipmi/locate/ipmi-locate.h>
+#include <freeipmi/util/ipmi-cipher-suite-util.h>
+#include <freeipmi/util/ipmi-error-util.h>
+#include <freeipmi/util/ipmi-lan-util.h>
+#include <freeipmi/util/ipmi-rmcpplus-util.h>
+#include <freeipmi/util/ipmi-sensor-util.h>
+#include <freeipmi/util/ipmi-util.h>
+#include <freeipmi/util/rmcp-util.h>
 
 #ifdef __cplusplus
 }

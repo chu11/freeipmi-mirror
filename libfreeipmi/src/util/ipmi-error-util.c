@@ -28,7 +28,7 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "freeipmi/ipmi-error.h"
+#include "freeipmi/util/ipmi-error-util.h"
 #include "freeipmi/ipmi-cmd-spec.h"
 #include "freeipmi/ipmi-comp-code-spec.h"
 #include "freeipmi/ipmi-netfn-spec.h"

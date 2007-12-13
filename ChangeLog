@@ -217,6 +217,12 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* common/src: Rename libllnlcommon to just libcommon.
 
+	* libfreeipmi/src/util/: New directories.  Move respective
+	sub-library code into those directories.
+
+	* libfreeipmi/include/util/: New directories.  Move respective
+	sub-library headers into those directories.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 
