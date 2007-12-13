@@ -22,7 +22,7 @@
 #define STRING_WHITESPACES    " \f\n\r\t\v"
 
 char *stripwhite (char *string);
-char *get_token (char **line);
+int get_token (char **line, char **str);
 int remove_newline (char *str);
 char *strsep_noempty (char **strp, char *delims);
 int str2long (char *str, int base, long *l);

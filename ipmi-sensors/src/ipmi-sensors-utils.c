@@ -15,10 +15,16 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
 #include <errno.h>
 #include <limits.h>
-#include <string.h>
 
 #include "ipmi-sensor-api.h"
 #include "freeipmi/ipmi-sdr-record-format.h"

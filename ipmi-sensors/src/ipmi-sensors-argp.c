@@ -26,17 +26,20 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <argp.h>
-#include <ctype.h>
 #include <errno.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <assert.h>
 
 #include "tool-cmdline-common.h"
+#include "string-utils.h"
+
 #include "ipmi-sensor-api.h"
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-utils.h"
+
 
 #include "freeipmi-portability.h"
 
@@ -83,50 +86,12 @@ static struct argp_option options[] =
 
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
-static char *
-stripwhite (char *string)
-{
-  register char *s, *t;
-
-  for (s = string; isspace (*s); s++)
-    ;
-
-  if (*s == 0)
-    return s;
-
-  t = s + strlen (s) - 1;
-  while (t > s && isspace (*t))
-    t--;
-  *++t = '\0';
-
-  return s;
-}
-
-static char *
-get_token (char **line)
-{
-  char *command;
-  while (1)
-    {
-      command = (char *) strsep (line, " ,");
-      if (!command)
-        break;
-      if (*(command))
-        break;
-    }
-  
-  if (command)
-    return strdup (stripwhite (command));
-  return command;
-}
-
 static int 
 validate_sensor_list_string (char *sensor_list_string)
 {
   char *dlist = NULL;
-  
-  if (sensor_list_string == NULL)
-    return (-1);
+
+  assert(sensor_list_string);
   
   dlist = strdupa (sensor_list_string);
   while (sensor_list_string)
@@ -135,9 +100,12 @@ validate_sensor_list_string (char *sensor_list_string)
       char *token = NULL;
       char *str = NULL;
       
-      token = get_token (&dlist);
+      if (get_token (&dlist, &token) < 0)
+        return (-1);
+
       if (token == NULL)
 	break;
+
       str = strdupa (token);
       free (token);
       
@@ -153,20 +121,21 @@ get_sensor_list_count (char *sensor_list_string)
 {
   int count = 0;
   char *dlist = NULL;
-  
-  if (sensor_list_string == NULL)
-    return (-1);
+
+  assert(sensor_list_string);
   
   dlist = strdupa (sensor_list_string);
   while (sensor_list_string)
     {
       char *str = NULL;
       
-      str = get_token (&dlist);
+      if (get_token (&dlist, &str) < 0)
+        return -1;
+      
       if (str == NULL)
 	break;
+
       free (str);
-      
       count++;
     }
   
@@ -179,9 +148,8 @@ get_sensor_list (char *sensor_list_string, unsigned int *records, int count)
   int i = 0;
   char *dlist = NULL;
   
-  if (sensor_list_string == NULL || 
-      records == NULL)
-    return (-1);
+  assert(sensor_list_string);
+  assert(records);
   
   dlist = strdupa (sensor_list_string);
   for (i = 0; i < count; i++)
@@ -189,13 +157,16 @@ get_sensor_list (char *sensor_list_string, unsigned int *records, int count)
       unsigned int value = 0;
       char *str = NULL;
       
-      str = get_token (&dlist);
+      if (get_token (&dlist, &str) < 0)
+        return -1;
+
       if (str == NULL)
 	break;
       
-      str2uint (str, 10, &value);
+      if (str2uint (str, 10, &value) < 0)
+        return -1;
+
       records[i] = value;
-      
       free (str);
     }
   
@@ -231,7 +202,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->sensors_list_wanted = 1;
       {
 	char *sensors_list_arg = strdupa (arg);
-	
+	int ret;
+
 	if (validate_sensor_list_string (sensors_list_arg) == -1)
 	  {
 	    fprintf (stderr, "invalid integer in sensors list\n");
@@ -242,13 +214,28 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	if (cmd_args->sensors_list)
 	  free (cmd_args->sensors_list);
 	
-	cmd_args->sensors_list_length = 
-	  get_sensor_list_count (sensors_list_arg);
-	cmd_args->sensors_list = 
-	  calloc (cmd_args->sensors_list_length, sizeof (int));
-	get_sensor_list (sensors_list_arg, 
-			 cmd_args->sensors_list, 
-			 cmd_args->sensors_list_length);
+        if ((ret = get_sensor_list_count (sensors_list_arg)) < 0)
+          {
+	    fprintf (stderr, "invalid integer in sensors list\n");
+	    argp_usage (state);
+	    break;
+          }
+	cmd_args->sensors_list_length = ret;
+
+	if (!(cmd_args->sensors_list = 
+              calloc (cmd_args->sensors_list_length, sizeof (int))))
+          {
+            perror("calloc");
+            exit(1);
+          }
+	if (get_sensor_list (sensors_list_arg, 
+                             cmd_args->sensors_list, 
+                             cmd_args->sensors_list_length) < 0)
+          {
+	    fprintf (stderr, "invalid integer in sensors list\n");
+	    argp_usage (state);
+	    break;
+          }
       }
       break;
     case ARGP_KEY_ARG:

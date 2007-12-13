@@ -61,10 +61,10 @@
 
 #include "bit-ops.h"
 #include "freeipmi-portability.h"
+#include "string-utils.h"
 
 #include "ipmi-sdr-cache.h"
 #include "ipmi-sdr-cache-defs.h"
-#include "ipmi-sdr-cache-utils.h"
 
 #define GET_INT_VALUE_BY_KEY(__ctx, __cache_record, __key, __i) \
 do 							        \
@@ -905,6 +905,42 @@ _read_sdr_management_controller_device_locator_record (sdr_cache_ctx_t ctx,
   return rv;
 }
 
+static int
+_get_token (sdr_cache_ctx_t ctx,
+            char **line, 
+            char **str)
+{
+  char *command;
+
+  assert(ctx);
+  assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
+  assert(line);
+  assert(str);
+
+  while (1)
+    {
+      command = (char *) strsep (line, " ,");
+
+      if (!command)
+        break;
+
+      if (*(command))
+        break;
+    }
+
+  if (command)
+    {
+      char *ret;
+      if (!(ret = strdup (stripwhite (command))))
+        {
+          ctx->errnum = SDR_CACHE_CTX_ERR_OUTMEM;
+          return -1;
+        }
+      *str = ret;
+    }
+  return 0;
+}
+
 static int 
 _get_oem_data_count (sdr_cache_ctx_t ctx,
                      char *oem_data_string,
@@ -929,10 +965,13 @@ _get_oem_data_count (sdr_cache_ctx_t ctx,
     {
       char *str = NULL;
       
-      if (!(str = get_token (&dlist)))
-	break;
+      if (_get_token (ctx, &dlist, &str) < 0)
+        goto cleanup;
+
+      if (!str)
+        break;
+
       free (str);
-      
       count++;
     }
 
@@ -971,14 +1010,20 @@ _get_oem_data (sdr_cache_ctx_t ctx,
       unsigned int value = 0;
       char *str = NULL;
       
-      if (!(str = get_token (&dlist)))
-	break;
+      if (_get_token (ctx, &dlist, &str) < 0)
+        return -1;
+
+      if (!str)
+        break;
       
-      str2uint (str, 16, &value);
+      if (str2uint (str, 16, &value) < 0)
+        {
+          free (str);
+          ctx->errnum = SDR_CACHE_CTX_ERR_CACHE_INVALID;
+          return -1;
+        }
       oem_data[i] = (uint8_t)value;
-
       free (str);
-
     }
   
   return 0;

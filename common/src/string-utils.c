@@ -28,13 +28,16 @@
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
+#include <assert.h>
 
-#include "ipmi-sdr-cache-utils.h"
+#include "string-utils.h"
 
 char *
 stripwhite (char *string)
 {
   register char *s, *t;
+
+  assert(string);
 
   for (s = string; isspace (*s); s++)
     ;
@@ -50,22 +53,33 @@ stripwhite (char *string)
   return s;
 }
 
-char *
-get_token (char **line)
+int
+get_token (char **line, char **str)
 {
   char *command;
+
+  assert(line);
+  assert(str);
+
   while (1)
     {
       command = (char *) strsep (line, " ,");
+
       if (!command)
         break;
+
       if (*(command))
         break;
     }
   
   if (command)
-    return strdup (stripwhite (command));
-  return command;
+    {
+      char *ret;
+      if (!(ret = strdup (stripwhite (command))))
+        return -1;
+      *str = ret;
+    }
+  return 0;
 }
 
 int 
@@ -76,6 +90,7 @@ remove_newline (char *str)
 
   if (str == NULL)
     return 0;
+
   if ((len = strlen (str)) == 0)
     return 0;
 
@@ -84,6 +99,7 @@ remove_newline (char *str)
       str[--len] = '\0';
       rv = 0;
     }
+
   if (str[len - 1] == '\r')
     {
       str[--len] = '\0';

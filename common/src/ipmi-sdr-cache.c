@@ -82,12 +82,12 @@
 
 #include "bit-ops.h"
 #include "freeipmi-portability.h"
+#include "string-utils.h"
 
 #include "ipmi-sdr-cache.h"
 #include "ipmi-sdr-cache-defs.h"
 #include "ipmi-sdr-cache-writes.h"
 #include "ipmi-sdr-cache-reads.h"
-#include "ipmi-sdr-cache-utils.h"
 
 static char * sdr_cache_ctx_errmsg[] =
   {
