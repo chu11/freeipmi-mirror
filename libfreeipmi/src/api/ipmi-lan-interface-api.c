@@ -36,7 +36,7 @@
 
 #include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
-#include "freeipmi/ipmi-rmcpplus-interface.h"
+#include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 
 #include "ipmi-ctx.h"
 #include "ipmi-err-wrappers-api.h"

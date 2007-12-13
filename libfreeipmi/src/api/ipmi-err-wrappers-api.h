@@ -39,6 +39,7 @@ extern "C" {
 #include "freeipmi/ipmi-comp-code-spec.h"
 #include "freeipmi/ipmi-error.h"
 #include "freeipmi/api/ipmi-api.h"
+#include "freeipmi/util/ipmi-error-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-err-wrappers.h"

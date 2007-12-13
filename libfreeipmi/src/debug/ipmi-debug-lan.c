@@ -33,8 +33,8 @@
 
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
-#include "freeipmi/ipmi-lan-interface.h"
-#include "freeipmi/rmcp-interface.h"
+#include "freeipmi/interface/ipmi-lan-interface.h"
+#include "freeipmi/interface/rmcp-interface.h"
 
 #include "ipmi-debug-common.h"
 

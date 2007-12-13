@@ -36,7 +36,7 @@
 
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
-#include "freeipmi/ipmi-rmcpplus-interface.h"
+#include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 
 #include "tool-cmdline-common.h"

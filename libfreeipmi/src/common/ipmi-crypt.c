@@ -32,9 +32,8 @@
 #include <gcrypt.h>
 GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
-#include "freeipmi/ipmi-debug.h"
-
 #include "ipmi-crypt.h"
+
 #include "ipmi-err-wrappers.h"
 
 #include "freeipmi-portability.h"

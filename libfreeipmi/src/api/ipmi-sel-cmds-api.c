@@ -29,7 +29,7 @@
 
 #include "freeipmi/api/ipmi-sel-cmds-api.h"
 #include "freeipmi/ipmi-sel-cmds.h"
-#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 
 #include "ipmi-ctx.h"

@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/ipmi-rmcpplus-interface.h>
+#include <freeipmi/interface/ipmi-rmcpplus-interface.h>
 
 #define IPMI_CIPHER_SUITE_COMBINATION_VALID(__a, __i, __c) \
   ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE \

@@ -31,7 +31,7 @@
 #include "freeipmi/ipmi-serial-modem-cmds.h"
 #include "freeipmi/ipmi-serial-modem-parameter-spec.h"
 #include "freeipmi/ipmi-channel-spec.h"
-#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 
 #include "ipmi-ctx.h"

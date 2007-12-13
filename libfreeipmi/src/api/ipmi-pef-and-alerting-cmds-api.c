@@ -34,7 +34,7 @@
 #include "freeipmi/ipmi-pef-and-alerting-cmds.h"
 #include "freeipmi/ipmi-pef-parameter-spec.h"
 #include "freeipmi/ipmi-channel-spec.h"
-#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 
 #include "ipmi-ctx.h"

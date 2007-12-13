@@ -28,9 +28,9 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h"
-#include "freeipmi/ipmi-rmcpplus-interface.h"
 #include "freeipmi/ipmi-channel-spec.h"
 #include "freeipmi/ipmi-cmd-spec.h"
+#include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"

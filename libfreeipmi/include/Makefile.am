@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.15 2007-12-13 19:14:15 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.16 2007-12-13 23:03:05 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -22,10 +22,6 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sol-parameter-spec.h \
 	freeipmi/ipmi-slave-address-spec.h \
 	freeipmi/rmcp-cmds.h \
-	freeipmi/rmcp-interface.h \
-	freeipmi/ipmi-kcs-interface.h \
-	freeipmi/ipmi-lan-interface.h \
-	freeipmi/ipmi-rmcpplus-interface.h \
 	freeipmi/ipmi-bmc-watchdog-timer-cmds.h \
 	freeipmi/ipmi-chassis-cmds.h \
 	freeipmi/ipmi-device-global-cmds.h \
@@ -62,6 +58,10 @@ nobase_include_HEADERS = \
 	freeipmi/api/ipmi-sel-cmds-api.h \
 	freeipmi/api/ipmi-serial-modem-cmds-api.h \
 	freeipmi/api/ipmi-sol-cmds-api.h \
+	freeipmi/interface/rmcp-interface.h \
+	freeipmi/interface/ipmi-kcs-interface.h \
+	freeipmi/interface/ipmi-lan-interface.h \
+	freeipmi/interface/ipmi-rmcpplus-interface.h \
 	freeipmi/util/ipmi-cipher-suite-util.h \
 	freeipmi/util/ipmi-error-util.h \
 	freeipmi/util/ipmi-lan-util.h \

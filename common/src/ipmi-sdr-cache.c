@@ -72,12 +72,12 @@
 #define MAXIPADDRLEN 128
 
 #include "freeipmi/fiid.h"
-#include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-sdr-repository-cmds.h"
 #include "freeipmi/ipmi-sdr-record-format.h"
 #include "freeipmi/ipmi-sensor-cmds.h"
 #include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
+#include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
 
 #include "freeipmi-portability.h"

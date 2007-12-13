@@ -31,7 +31,7 @@
 #include "freeipmi/ipmi-lan-cmds.h"
 #include "freeipmi/ipmi-lan-parameter-spec.h"
 #include "freeipmi/ipmi-channel-spec.h"
-#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 

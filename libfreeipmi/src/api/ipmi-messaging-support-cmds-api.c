@@ -43,7 +43,7 @@
 #include "freeipmi/ipmi-channel-spec.h"
 #include "freeipmi/ipmi-comp-code-spec.h"
 #include "freeipmi/ipmi-device-global-cmds.h"
-#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/api/ipmi-device-global-cmds-api.h"

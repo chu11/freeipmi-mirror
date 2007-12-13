@@ -1,4 +1,11 @@
-SUBDIRS = api debug driver locate util
+SUBDIRS = \
+	api \
+	common \
+	debug \
+	driver \
+	interface \
+	locate \
+	util
 
 if WITH_GNU_LD
 VERSION_SCRIPT = $(srcdir)/freeipmi.map
@@ -10,17 +17,10 @@ lib_LTLIBRARIES = libfreeipmi.la
 libfreeipmi_la_SOURCES = \
 	fiid.c \
 	ipmi-bit-ops.c \
-	ipmi-md2.c \
-	ipmi-md5.c \
 	ipmi-cipher-suite-record-format.c \
 	ipmi-sensor-types-spec.c \
 	ipmi-sensor-units-spec.c \
 	rmcp-cmds.c \
-	rmcp-interface.c \
-	ipmi-kcs-interface.c \
-	ipmi-lan-interface.c \
-	ipmi-crypt.c \
-	ipmi-rmcpplus-interface.c \
 	ipmi-bmc-watchdog-timer-cmds.c \
 	ipmi-chassis-cmds.c \
 	ipmi-device-global-cmds.c \
@@ -39,7 +39,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sel-record-format.c \
 	ipmi-sensor-and-event-code-tables.c
 
-libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm -lgcrypt
+libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm 
 # libfreeipmi_la_CPPFLAGS = 
 
 libfreeipmi_la_CFLAGS = -Wall
@@ -51,20 +51,25 @@ libfreeipmi_la_CPPFLAGS = \
 
 libfreeipmi_la_LIBADD = \
 	api/libapi.la \
+	common/libcommon.la \
 	debug/libdebug.la \
 	driver/libdriver.la \
+	interface/libinterface.la \
 	locate/liblocate.la \
 	util/libutil.la \
 	../../common/src/libfreeipmiportability.la \
 	../../common/src/libmiscutils.la
 
 noinst_HEADERS = \
-	ipmi-crypt.h \
 	ipmi-err-wrappers.h \
 	ipmi-fiid-wrappers.h \
-	ipmi-bit-ops.h \
-	ipmi-md2.h \
-	ipmi-md5.h
+	ipmi-bit-ops.h
+
+api/libapi.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+common/libcommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
 
 debug/libdebug.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
@@ -72,10 +77,10 @@ debug/libdebug.la: force-dependency-check
 driver/libdriver.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-locate/liblocate.la: force-dependency-check
+interface/libinterface.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-api/libapi.la: force-dependency-check
+locate/liblocate.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check

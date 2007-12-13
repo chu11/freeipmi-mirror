@@ -33,8 +33,8 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "freeipmi/ipmi-kcs-interface.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
+#include "freeipmi/interface/ipmi-kcs-interface.h"
 
 #include "ipmi-ctx.h"
 #include "ipmi-err-wrappers-api.h"

@@ -53,7 +53,7 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-comp-code-spec.h"
-#include "freeipmi/rmcp-interface.h"
+#include "freeipmi/interface/rmcp-interface.h"
 
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"

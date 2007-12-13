@@ -30,16 +30,17 @@
 
 #include "freeipmi/util/ipmi-lan-util.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
-#include "freeipmi/ipmi-lan-interface.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-netfn-spec.h"
-#include "freeipmi/rmcp-interface.h"
+#include "freeipmi/interface/ipmi-lan-interface.h"
+#include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/util/ipmi-util.h"
+
+#include "common/ipmi-md2.h"
+#include "common/ipmi-md5.h"
 
 #include "ipmi-err-wrappers.h"
 #include "ipmi-fiid-wrappers.h"
-#include "ipmi-md2.h"
-#include "ipmi-md5.h"
 
 #include "freeipmi-portability.h"
 #include "secure.h"

@@ -1,0 +1,21 @@
+noinst_LTLIBRARIES = libcommon.la
+
+libcommon_la_SOURCES = \
+	ipmi-crypt.c \
+	ipmi-md2.c \
+	ipmi-md5.c
+
+noinst_HEADERS = \
+	ipmi-crypt.h \
+	ipmi-md2.h \
+	ipmi-md5.h
+
+libcommon_la_LDFLAGS = -lgcrypt
+libcommon_la_CFLAGS = -Wall
+libcommon_la_CPPFLAGS = \
+	-I$(srcdir)/.. \
+	-I$(srcdir)/../../include \
+	-I$(srcdir)/../../../common/src \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+

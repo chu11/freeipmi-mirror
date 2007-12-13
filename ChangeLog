@@ -242,6 +242,12 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* common/src/: Merge libpstdout into libhostrange.
 
+	* libfreeipmi/src/common/: New directories.  Move respective
+        sub-library headers into those directories.
+
+	* libfreeipmi/src/interface/: New directories.  Move respective
+        sub-library headers into those directories.
+	
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

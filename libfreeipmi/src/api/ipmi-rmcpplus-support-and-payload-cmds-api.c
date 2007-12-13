@@ -40,7 +40,7 @@
 #include "freeipmi/api/ipmi-rmcpplus-support-and-payload-cmds-api.h"
 #include "freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h"
 #include "freeipmi/ipmi-channel-spec.h"
-#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 
 #include "ipmi-ctx.h"

@@ -41,10 +41,6 @@ extern "C" {
 #include <freeipmi/ipmi-sol-parameter-spec.h>
 #include <freeipmi/ipmi-slave-address-spec.h>
 #include <freeipmi/rmcp-cmds.h>
-#include <freeipmi/rmcp-interface.h>
-#include <freeipmi/ipmi-kcs-interface.h>
-#include <freeipmi/ipmi-lan-interface.h>
-#include <freeipmi/ipmi-rmcpplus-interface.h>
 #include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>
 #include <freeipmi/ipmi-chassis-cmds.h>
 #include <freeipmi/ipmi-chassis-boot-options-parameter-spec.h>
@@ -80,6 +76,10 @@ extern "C" {
 #include <freeipmi/driver/ipmi-kcs-driver.h>
 #include <freeipmi/driver/ipmi-openipmi-driver.h>
 #include <freeipmi/driver/ipmi-ssif-driver.h>
+#include <freeipmi/interface/ipmi-kcs-interface.h>
+#include <freeipmi/interface/ipmi-lan-interface.h>
+#include <freeipmi/interface/ipmi-rmcpplus-interface.h>
+#include <freeipmi/interface/rmcp-interface.h>
 #include <freeipmi/locate/ipmi-locate.h>
 #include <freeipmi/util/ipmi-cipher-suite-util.h>
 #include <freeipmi/util/ipmi-error-util.h>
