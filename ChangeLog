@@ -38,6 +38,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/src/bmc-info.c: Fix code logic to remove mem-leaks.
 
+	* common/src/config-util.h, common/src/config-util.c: Renamed to
+	config-utils.h and config-utils.c for consistency.
+
 	* ipmi-sensors/src/ipmi-sensors-util.h,
 	ipmi-sensors/src/ipmi-sensors-util.c: Removed files.  Move code
 	into other respective files.

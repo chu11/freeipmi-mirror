@@ -32,7 +32,7 @@
 #include "config-fiid.h"
 #include "config-parse.h"
 #include "config-section.h"
-#include "config-util.h"
+#include "config-utils.h"
 #include "config-validate.h"
 
 enum argp_option_keys

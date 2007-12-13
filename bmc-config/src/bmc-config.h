@@ -33,7 +33,7 @@
 #include "config-fiid.h"
 #include "config-parse.h"
 #include "config-section.h"
-#include "config-util.h"
+#include "config-utils.h"
 #include "config-validate.h"
 
 #define CIPHER_SUITE_LEN 16

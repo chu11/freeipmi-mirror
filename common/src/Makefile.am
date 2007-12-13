@@ -27,7 +27,7 @@ noinst_HEADERS = \
 	config-parse.h \
 	config-pef-conf-section.h \
 	config-section.h \
-	config-util.h \
+	config-utils.h \
 	config-validate.h
 
 noinst_LTLIBRARIES = \
@@ -87,7 +87,7 @@ libconfigcommon_la_SOURCES = \
 	config-parse.c \
 	config-pef-conf-section.c \
 	config-section.c \
-	config-util.c \
+	config-utils.c \
 	config-validate.c
 libconfigcommon_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 
