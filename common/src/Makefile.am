@@ -37,9 +37,9 @@ noinst_LTLIBRARIES = \
 	libsdr.la \
 	libsensor.la \
 	libllnlcommon.la \
+	libsecure.la \
 	libpstdout.la \
 	libhostrange.la \
-	libsecure.la \
 	libconfigcommon.la
 
 libfreeipmiportability_la_SOURCES = freeipmi-portability.c
@@ -72,14 +72,14 @@ libllnlcommon_la_SOURCES = \
 	secure.c \
 	timeval.c
 
+libsecure_la_SOURCES = secure.c
+
 libpstdout_la_SOURCES = pstdout.c
 libpstdout_la_CPPFLAGS = -D_REENTRANT
 libpstdout_la_LDFLAGS = $(PTHREAD_LIBS)
 
 libhostrange_la_SOURCES = hostrange.c
 libhostrange_la_CPPFLAGS = -I$(srcdir)/../../ipmidetect/src/libipmidetect/
-
-libsecure_la_SOURCES = secure.c
 
 libconfigcommon_la_SOURCES = \
 	config-comment.c \
