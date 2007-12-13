@@ -64,7 +64,6 @@ libsdr_la_SOURCES = \
 libsdr_la_CPPFLAGS = -D_GNU_SOURCE \
 		     -D_REENTRANT \
 		     -I$(srcdir)/../../libfreeipmi/include
-libsdr_la_LIBADD = ./libbitops.la
 
 libsensor_la_SOURCES = ipmi-sensor-api.c
 libsensor_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include

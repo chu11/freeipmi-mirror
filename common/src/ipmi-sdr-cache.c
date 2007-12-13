@@ -80,7 +80,6 @@
 #include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
 
-#include "bit-ops.h"
 #include "freeipmi-portability.h"
 #include "string-utils.h"
 
@@ -607,25 +606,15 @@ _get_decode_parameters (sdr_cache_ctx_t ctx,
   
   _SDR_FIID_OBJ_GET (obj, "m_ls", &m_ls);
   _SDR_FIID_OBJ_GET (obj, "m_ms", &m_ms);
-  if (bits_merge (m_ls, 8, 10, m_ms, &val) < 0)
-    {
-      ctx->errnum = SDR_CACHE_CTX_ERR_INTERNAL;
-      goto cleanup;
-    }
-  *m = (short) val;
+  *m = (short)m_ls;
+  *m |= ((m_ms & 0x3) << 8);
   if (*m & 0x200)
     *m |= 0xFE00;
   
   _SDR_FIID_OBJ_GET (obj, "b_ls", &b_ls);
   _SDR_FIID_OBJ_GET (obj, "b_ms", &b_ms);
-
-  if (bits_merge (b_ls, 8, 10, b_ms, &val) < 0)
-    {
-      ctx->errnum = SDR_CACHE_CTX_ERR_INTERNAL;
-      goto cleanup;
-    }
-
-  *b = (short) val;
+  *b = (short)b_ls;
+  *b |= ((b_ms & 0x3) << 8);
   if (*b & 0x200)
     *b |= 0xFE00;
   

@@ -59,7 +59,6 @@
 #include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
 
-#include "bit-ops.h"
 #include "freeipmi-portability.h"
 
 #include "ipmi-sdr-cache.h"
