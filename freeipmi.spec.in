@@ -256,12 +256,30 @@ fi
 %{_libdir}/libipmidetect.so
 %{_libdir}/libipmimonitoring.so
 %dir %{_includedir}/freeipmi
-%dir %{_includedir}/freeipmi/udm
+%dir %{_includedir}/freeipmi/api
+%dir %{_includedir}/freeipmi/cmds
+%dir %{_includedir}/freeipmi/debug
+%dir %{_includedir}/freeipmi/driver
+%dir %{_includedir}/freeipmi/fiid
+%dir %{_includedir}/freeipmi/interface
+%dir %{_includedir}/freeipmi/locate
+%dir %{_includedir}/freeipmi/record-format
+%dir %{_includedir}/freeipmi/spec
+%dir %{_includedir}/freeipmi/util
 %{_includedir}/ipmiconsole.h
 %{_includedir}/ipmidetect.h
 %{_includedir}/ipmi_monitoring.h
 %{_includedir}/freeipmi/*.h
-%{_includedir}/freeipmi/udm/*.h
+%{_includedir}/freeipmi/api/*.h
+%{_includedir}/freeipmi/cmds/*.h
+%{_includedir}/freeipmi/debug/*.h
+%{_includedir}/freeipmi/driver/*.h
+%{_includedir}/freeipmi/fiid/*.h
+%{_includedir}/freeipmi/interface/*.h
+%{_includedir}/freeipmi/locate/*.h
+%{_includedir}/freeipmi/record-format/*.h
+%{_includedir}/freeipmi/spec/*.h
+%{_includedir}/freeipmi/util/*.h
 %{_mandir}/man3/*
 
 %files bmc-watchdog

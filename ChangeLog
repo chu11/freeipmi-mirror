@@ -1,5 +1,9 @@
 2007-12-14  Albert Chu <chu11@llnl.gov>
 
+	* freeipmi.spec.in: Fix for libfreeipmi reorg.
+	
+2007-12-14  Albert Chu <chu11@llnl.gov>
+
 	Major code reorganization and code cleanup from branch
 	libfreeipmi_rearch_branch.
 
