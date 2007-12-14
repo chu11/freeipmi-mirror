@@ -29,7 +29,7 @@
 #include <errno.h>
 
 #include "freeipmi/debug/ipmi-debug.h"
-#include "freeipmi/ipmi-sol-cmds.h"
+#include "freeipmi/cmds/ipmi-sol-cmds.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"

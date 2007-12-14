@@ -27,7 +27,7 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h"
+#include "freeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.1.2.3 2007-12-14 05:45:40 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.1.2.4 2007-12-14 17:18:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -37,7 +37,7 @@
 #include <errno.h>
 
 #include "freeipmi/api/ipmi-fru-inventory-device-cmds-api.h"
-#include "freeipmi/ipmi-fru-inventory-device-cmds.h"
+#include "freeipmi/cmds/ipmi-fru-inventory-device-cmds.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 

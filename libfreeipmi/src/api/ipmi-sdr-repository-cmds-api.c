@@ -29,7 +29,7 @@
 #include <errno.h>
 
 #include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
-#include "freeipmi/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/cmds/ipmi-sdr-repository-cmds.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 

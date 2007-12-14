@@ -1,5 +1,6 @@
 SUBDIRS = \
 	api \
+	cmds \
 	debug \
 	driver \
 	fiid \
@@ -17,22 +18,6 @@ endif
 
 lib_LTLIBRARIES = libfreeipmi.la
 
-libfreeipmi_la_SOURCES = \
-	rmcp-cmds.c \
-	ipmi-bmc-watchdog-timer-cmds.c \
-	ipmi-chassis-cmds.c \
-	ipmi-device-global-cmds.c \
-	ipmi-fru-inventory-device-cmds.c \
-	ipmi-lan-cmds.c \
-	ipmi-messaging-support-cmds.c \
-	ipmi-pef-and-alerting-cmds.c \
-	ipmi-rmcpplus-support-and-payload-cmds.c \
-	ipmi-sdr-repository-cmds.c \
-	ipmi-sel-cmds.c \
-	ipmi-sensor-cmds.c \
-	ipmi-serial-modem-cmds.c \
-	ipmi-sol-cmds.c
-
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm 
 # libfreeipmi_la_CPPFLAGS = 
 
@@ -45,6 +30,7 @@ libfreeipmi_la_CPPFLAGS = \
 
 libfreeipmi_la_LIBADD = \
 	api/libapi.la \
+	cmds/libcmds.la \
 	debug/libdebug.la \
 	driver/libdriver.la \
 	fiid/libfiid.la \
@@ -58,6 +44,9 @@ libfreeipmi_la_LIBADD = \
 	../../common/src/libmiscutils.la
 
 api/libapi.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+cmds/libcmds.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 debug/libdebug.la: force-dependency-check

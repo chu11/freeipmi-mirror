@@ -18,9 +18,11 @@
 #include <assert.h>
 
 #include "tool-common.h"
+
+#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
+
 #include "freeipmi-portability.h"
 
-#include "freeipmi/ipmi-messaging-support-cmds.h"
 
 int
 ipmi_is_root ()

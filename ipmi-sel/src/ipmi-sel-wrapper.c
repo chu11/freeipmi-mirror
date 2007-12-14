@@ -30,9 +30,9 @@
 #include <argp.h>
 #include <assert.h>
 
-#include "freeipmi/fiid.h"
-#include "freeipmi/ipmi-sel-cmds.h"
 #include "freeipmi/api/ipmi-sel-cmds-api.h"
+#include "freeipmi/cmds/ipmi-sel-cmds.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 

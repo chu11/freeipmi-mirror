@@ -1,23 +1,9 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.21 2007-12-14 06:04:46 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.22 2007-12-14 17:18:07 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
 	freeipmi/freeipmi.h \
-	freeipmi/ipmi-bmc-watchdog-timer-cmds.h \
-	freeipmi/ipmi-chassis-cmds.h \
-	freeipmi/ipmi-device-global-cmds.h \
-	freeipmi/ipmi-fru-inventory-device-cmds.h \
-	freeipmi/ipmi-lan-cmds.h \
-	freeipmi/ipmi-messaging-support-cmds.h \
-	freeipmi/ipmi-pef-and-alerting-cmds.h \
-	freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h \
-	freeipmi/ipmi-sdr-repository-cmds.h \
-	freeipmi/ipmi-sel-cmds.h \
-	freeipmi/ipmi-sensor-cmds.h \
-	freeipmi/ipmi-serial-modem-cmds.h \
-	freeipmi/ipmi-sol-cmds.h \
-	freeipmi/rmcp-cmds.h \
 	freeipmi/api/ipmi-api.h \
 	freeipmi/api/ipmi-chassis-cmds-api.h \
 	freeipmi/api/ipmi-device-global-cmds-api.h \
@@ -31,6 +17,20 @@ nobase_include_HEADERS = \
 	freeipmi/api/ipmi-sel-cmds-api.h \
 	freeipmi/api/ipmi-serial-modem-cmds-api.h \
 	freeipmi/api/ipmi-sol-cmds-api.h \
+	freeipmi/cmds/ipmi-bmc-watchdog-timer-cmds.h \
+	freeipmi/cmds/ipmi-chassis-cmds.h \
+	freeipmi/cmds/ipmi-device-global-cmds.h \
+	freeipmi/cmds/ipmi-fru-inventory-device-cmds.h \
+	freeipmi/cmds/ipmi-lan-cmds.h \
+	freeipmi/cmds/ipmi-messaging-support-cmds.h \
+	freeipmi/cmds/ipmi-pef-and-alerting-cmds.h \
+	freeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.h \
+	freeipmi/cmds/ipmi-sdr-repository-cmds.h \
+	freeipmi/cmds/ipmi-sel-cmds.h \
+	freeipmi/cmds/ipmi-sensor-cmds.h \
+	freeipmi/cmds/ipmi-serial-modem-cmds.h \
+	freeipmi/cmds/ipmi-sol-cmds.h \
+	freeipmi/cmds/rmcp-cmds.h \
 	freeipmi/debug/ipmi-debug.h \
 	freeipmi/driver/ipmi-kcs-driver.h \
 	freeipmi/driver/ipmi-openipmi-driver.h \

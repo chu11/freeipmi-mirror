@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "freeipmi/ipmi-sel-cmds.h"
+#include "freeipmi/cmds/ipmi-sel-cmds.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 
 #include "libcommon/ipmi-err-wrappers.h"

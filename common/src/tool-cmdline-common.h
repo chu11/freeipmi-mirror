@@ -25,8 +25,8 @@
 
 #include <argp.h>
 
-#include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/api/ipmi-api.h"
+#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 
 enum argp_common_option_keys
   { 

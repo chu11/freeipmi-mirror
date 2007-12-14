@@ -31,7 +31,7 @@
 #include <errno.h>
 
 #include "freeipmi/api/ipmi-pef-and-alerting-cmds-api.h"
-#include "freeipmi/ipmi-pef-and-alerting-cmds.h"
+#include "freeipmi/cmds/ipmi-pef-and-alerting-cmds.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"

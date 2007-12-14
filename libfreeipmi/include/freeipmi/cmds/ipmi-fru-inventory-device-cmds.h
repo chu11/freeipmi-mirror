@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.h,v 1.3.4.1 2007-12-14 06:04:47 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.h,v 1.1.2.1 2007-12-14 17:18:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

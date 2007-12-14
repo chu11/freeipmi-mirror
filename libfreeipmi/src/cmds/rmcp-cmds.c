@@ -27,7 +27,7 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "freeipmi/rmcp-cmds.h"
+#include "freeipmi/cmds/rmcp-cmds.h"
 #include "freeipmi/interface/rmcp-interface.h"
 
 #include "libcommon/ipmi-err-wrappers.h"

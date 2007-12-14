@@ -38,9 +38,9 @@
 #endif	/* !TIME_WITH_SYS_TIME */
 
 #include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
-#include "freeipmi/ipmi-device-global-cmds.h"
-#include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/api/ipmi-device-global-cmds-api.h"
+#include "freeipmi/cmds/ipmi-device-global-cmds.h"
+#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"

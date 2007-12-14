@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "freeipmi/ipmi-pef-and-alerting-cmds.h"
+#include "freeipmi/cmds/ipmi-pef-and-alerting-cmds.h"
 #include "freeipmi/spec/ipmi-channel-spec.h" 
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 #include "freeipmi/spec/ipmi-pef-parameter-spec.h"

@@ -38,7 +38,7 @@
 #endif	/* !TIME_WITH_SYS_TIME */
 
 #include "freeipmi/api/ipmi-rmcpplus-support-and-payload-cmds-api.h"
-#include "freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h"
+#include "freeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"

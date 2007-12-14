@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "freeipmi/ipmi-sol-cmds.h"
+#include "freeipmi/cmds/ipmi-sol-cmds.h"
 #include "freeipmi/spec/ipmi-channel-spec.h" 
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"

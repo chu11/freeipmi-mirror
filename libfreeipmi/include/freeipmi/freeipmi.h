@@ -23,20 +23,6 @@
 extern "C" {
 #endif
 
-#include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>
-#include <freeipmi/ipmi-chassis-cmds.h>
-#include <freeipmi/ipmi-device-global-cmds.h>
-#include <freeipmi/ipmi-fru-inventory-device-cmds.h>
-#include <freeipmi/ipmi-lan-cmds.h>
-#include <freeipmi/ipmi-messaging-support-cmds.h>
-#include <freeipmi/ipmi-pef-and-alerting-cmds.h>
-#include <freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h>
-#include <freeipmi/ipmi-sdr-repository-cmds.h>
-#include <freeipmi/ipmi-sel-cmds.h>
-#include <freeipmi/ipmi-sensor-cmds.h>
-#include <freeipmi/ipmi-serial-modem-cmds.h>
-#include <freeipmi/ipmi-sol-cmds.h>
-#include <freeipmi/rmcp-cmds.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/api/ipmi-chassis-cmds-api.h>
 #include <freeipmi/api/ipmi-device-global-cmds-api.h>
@@ -50,6 +36,20 @@ extern "C" {
 #include <freeipmi/api/ipmi-sel-cmds-api.h>
 #include <freeipmi/api/ipmi-serial-modem-cmds-api.h>
 #include <freeipmi/api/ipmi-sol-cmds-api.h>
+#include <freeipmi/cmds/ipmi-bmc-watchdog-timer-cmds.h>
+#include <freeipmi/cmds/ipmi-chassis-cmds.h>
+#include <freeipmi/cmds/ipmi-device-global-cmds.h>
+#include <freeipmi/cmds/ipmi-fru-inventory-device-cmds.h>
+#include <freeipmi/cmds/ipmi-lan-cmds.h>
+#include <freeipmi/cmds/ipmi-messaging-support-cmds.h>
+#include <freeipmi/cmds/ipmi-pef-and-alerting-cmds.h>
+#include <freeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.h>
+#include <freeipmi/cmds/ipmi-sdr-repository-cmds.h>
+#include <freeipmi/cmds/ipmi-sel-cmds.h>
+#include <freeipmi/cmds/ipmi-sensor-cmds.h>
+#include <freeipmi/cmds/ipmi-serial-modem-cmds.h>
+#include <freeipmi/cmds/ipmi-sol-cmds.h>
+#include <freeipmi/cmds/rmcp-cmds.h>
 #include <freeipmi/debug/ipmi-debug.h>
 #include <freeipmi/driver/ipmi-kcs-driver.h>
 #include <freeipmi/driver/ipmi-openipmi-driver.h>

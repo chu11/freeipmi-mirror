@@ -53,9 +53,9 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "freeipmi/ipmi-sdr-repository-cmds.h"
 #include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
+#include "freeipmi/cmds/ipmi-sdr-repository-cmds.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 

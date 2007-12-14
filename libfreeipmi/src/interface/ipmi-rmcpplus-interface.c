@@ -29,8 +29,8 @@
 #include <errno.h>
 
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
-#include "freeipmi/ipmi-messaging-support-cmds.h"
-#include "freeipmi/ipmi-sol-cmds.h"
+#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
+#include "freeipmi/cmds/ipmi-sol-cmds.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"

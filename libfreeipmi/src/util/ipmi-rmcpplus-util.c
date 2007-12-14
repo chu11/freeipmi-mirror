@@ -28,7 +28,7 @@
 #include <errno.h>
 
 #include "freeipmi/util/ipmi-rmcpplus-util.h"
-#include "freeipmi/ipmi-messaging-support-cmds.h"
+#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"

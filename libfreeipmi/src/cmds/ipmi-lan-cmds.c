@@ -25,7 +25,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/ipmi-lan-cmds.h"
+#include "freeipmi/cmds/ipmi-lan-cmds.h"
 #include "freeipmi/spec/ipmi-channel-spec.h" 
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 #include "freeipmi/spec/ipmi-lan-parameter-spec.h"

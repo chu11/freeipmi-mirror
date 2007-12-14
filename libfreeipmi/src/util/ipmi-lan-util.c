@@ -29,7 +29,7 @@
 #include <errno.h>
 
 #include "freeipmi/util/ipmi-lan-util.h"
-#include "freeipmi/ipmi-messaging-support-cmds.h"
+#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"

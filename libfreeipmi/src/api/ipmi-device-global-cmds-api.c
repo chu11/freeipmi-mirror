@@ -28,7 +28,7 @@
 #include <errno.h>
 
 #include "freeipmi/api/ipmi-device-global-cmds-api.h"
-#include "freeipmi/ipmi-device-global-cmds.h"
+#include "freeipmi/cmds/ipmi-device-global-cmds.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 

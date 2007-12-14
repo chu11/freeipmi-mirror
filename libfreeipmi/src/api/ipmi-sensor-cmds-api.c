@@ -28,7 +28,7 @@
 #include <errno.h>
 
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
-#include "freeipmi/ipmi-sensor-cmds.h"
+#include "freeipmi/cmds/ipmi-sensor-cmds.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 

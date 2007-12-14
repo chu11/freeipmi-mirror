@@ -46,8 +46,8 @@
 #include <errno.h>
 
 #include "freeipmi/api/ipmi-api.h"
-#include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
+#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/driver/ipmi-kcs-driver.h"
 #include "freeipmi/driver/ipmi-openipmi-driver.h"

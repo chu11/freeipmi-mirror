@@ -32,8 +32,8 @@
 
 #include "ipmi-sensor-common.h"
 
-#include "freeipmi/ipmi-sensor-cmds.h"
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
+#include "freeipmi/cmds/ipmi-sensor-cmds.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
