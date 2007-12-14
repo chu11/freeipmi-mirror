@@ -3,6 +3,21 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	Major code reorganization and code cleanup from branch
 	libfreeipmi_rearch_branch.
 
+	* common/src/ipmi-sensor-api.c (system_software_type_desc):
+	Removed unused array of strings.
+
+	* common/src/ipmi-sensor-api.c: Add debugging via debug parameter.
+	Use internal wrapper functions rather than library wrapper
+	functions.
+
+	* ipmi-sensors/: Adjust code for sensor-api change.
+
+	* pef-config/: Remove linking to libsensor.la.
+
+	* configure.ac, freeipmi.spec.in, common/src/err-wrappers.h,
+	common/src/fiid-wrappers.h, common/src/udm-err-wrappers.h,
+	common/src/udm-fiid-wrappers.h: Remove --enable-syslog support.
+
 	* common/src/err-wrappers.h, common/src/fiid-wrappers.h,
 	common/src/udm-err-wrappers.h, common/src/udm-fiid-wrappers.h:
 	Update error logging routines with more details.  Add additional
@@ -278,21 +293,6 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
-
-	* configure.ac, freeipmi.spec.in, common/src/err-wrappers.h,
-	common/src/fiid-wrappers.h, common/src/udm-err-wrappers.h,
-	common/src/udm-fiid-wrappers.h: Remove --enable-syslog support.
-
-	* common/src/ipmi-sensor-api.c (system_software_type_desc):
-	Removed unused array of strings.
-
-	* common/src/ipmi-sensor-api.c: Add debugging via debug parameter.
-	Use internal wrapper functions rather than library wrapper
-	functions.
-
-	* ipmi-sensors/: Adjust code for sensor-api change.
-
-	* pef-config/: Remove linking to libsensor.la.
 
 	* Various minor fixes and code cleanup.
 		
