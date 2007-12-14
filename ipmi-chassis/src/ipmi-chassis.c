@@ -1,20 +1,19 @@
 /*
-ipmi-chassis.c: IPMI Chassis control.
-Copyright (C) 2007 FreeIPMI Core Team
+  Copyright (C) 2007 FreeIPMI Core Team
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+  
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
 #if HAVE_CONFIG_H
@@ -33,14 +32,12 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
 
-#include "cmdline-parse-common.h"
-#include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 
 #include "pstdout.h"
 #include "hostrange.h"
@@ -77,6 +74,16 @@ do {                                                                    \
     *_val_ptr = _val;                                                   \
 } while (0)
 
+#define _FIID_OBJ_DESTROY(__obj)                 \
+  do {                                           \
+    if ((__obj))                                 \
+      {                                          \
+        fiid_obj_destroy((__obj));               \
+        (__obj) = NULL;                          \
+      }                                          \
+  } while (0)
+
+
 static int32_t 
 set_boot_flags (ipmi_chassis_state_data_t *state_data)
 {
@@ -97,23 +104,32 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (!(get_boot_flags_rs = fiid_obj_create (tmpl_cmd_get_system_boot_options_boot_flags_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n", 
+                      strerror(errno));
       goto cleanup;
     }
       
   if (!(boot_info_ack_cmd_rs = fiid_obj_create (tmpl_cmd_set_system_boot_options_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n", 
+                      strerror(errno));
       goto cleanup;
     }
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_set_system_boot_options_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n", 
+                      strerror(errno));
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_system_boot_options_boot_flags ( state_data->dev, 
+  if (ipmi_cmd_get_system_boot_options_boot_flags ( state_data->ipmi_ctx, 
                                                   IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR, 
                                                   IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
                                                   get_boot_flags_rs) != 0)
@@ -121,7 +137,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_system_boot_options_boot_flags: %s\n", 
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
 
@@ -220,7 +236,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   _FIID_OBJ_GET (get_boot_flags_rs, "bios_shared_mode_override", &val);
   bios_shared_mode_override = val;
 
-  if (ipmi_cmd_set_system_boot_options_boot_flags (state_data->dev, 
+  if (ipmi_cmd_set_system_boot_options_boot_flags (state_data->ipmi_ctx, 
                                                  bios_boot_type,
                                                  boot_flags_persistent,
                                                  boot_flags_valid,
@@ -242,11 +258,11 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_set_sytem_boot_option_boot_flags failed: %s\n", 
-                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_system_boot_options_boot_info_acknowledge (state_data->dev,
+  if (ipmi_cmd_set_system_boot_options_boot_info_acknowledge (state_data->ipmi_ctx,
                                                               &boot_info_acknowledge,
                                                               &boot_info_acknowledge,
                                                               &boot_info_acknowledge,
@@ -257,15 +273,15 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_set_system_boot_options_boot_info_acknowledge: %s\n", 
-                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
       goto cleanup;
     }
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (get_boot_flags_rs);
-  FIID_OBJ_DESTROY (boot_info_ack_cmd_rs);
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (get_boot_flags_rs);
+  _FIID_OBJ_DESTROY (boot_info_ack_cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -279,11 +295,14 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_system_boot_options_boot_flags_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n", 
+                      strerror(errno));
       return -1;
     }
   
-  if (ipmi_cmd_get_system_boot_options_boot_flags ( state_data->dev, 
+  if (ipmi_cmd_get_system_boot_options_boot_flags ( state_data->ipmi_ctx, 
                                                   IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR, 
                                                   IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
                                                   cmd_rs) != 0)
@@ -291,7 +310,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_system_boot_options_boot_flags failed: %s\n", 
-                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
       goto cleanup;
     }
 
@@ -509,7 +528,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   pstdout_printf (state_data->pstate, "%s\n", tmp); 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -525,24 +544,27 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_set_power_cycle_interval_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n", 
+                      strerror(errno));
       return (-1);
     }
 
-  if (ipmi_cmd_set_power_cycle_interval (state_data->dev, 
+  if (ipmi_cmd_set_power_cycle_interval (state_data->ipmi_ctx, 
                                          args->args.power_cycle_interval, 
                                          cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_set_power_cycle_interval: %s\n", 
-                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
       goto cleanup;
     }
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -558,18 +580,21 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_set_power_restore_policy_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n", 
+                      strerror(errno));
       return -1;
     }
 
-  if (ipmi_cmd_set_power_restore_policy (state_data->dev,
+  if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
                                          args->args.power_restore_policy, 
                                          cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_set_power_restore_policy: %s\n", 
-                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
       goto cleanup;
     }
 
@@ -597,7 +622,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -614,16 +639,19 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_power_on_hours_counter_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n", 
+                      strerror(errno));
       return -1;
     }
   
-  if (ipmi_cmd_get_power_on_hours_counter (state_data->dev, cmd_rs) != 0)
+  if (ipmi_cmd_get_power_on_hours_counter (state_data->ipmi_ctx, cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_power_on_hours_counter: %s\n", 
-                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
       goto cleanup;
     }
 
@@ -644,7 +672,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   rv = 0;
 
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -658,16 +686,19 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_system_restart_cause_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n", 
+                      strerror(errno));
       return -1;
     }
 
-  if (ipmi_cmd_get_system_restart_cause (state_data->dev, cmd_rs) != 0)
+  if (ipmi_cmd_get_system_restart_cause (state_data->ipmi_ctx, cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_system_restart_cause: %s\n", 
-                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
       goto cleanup;
     }
 
@@ -729,7 +760,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -744,11 +775,14 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_chassis_identify_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n", 
+                      strerror(errno));
       return (-1);
     }
 
-  if (ipmi_cmd_chassis_identify (state_data->dev, 
+  if (ipmi_cmd_chassis_identify (state_data->ipmi_ctx, 
                                  (args->args.identify_args.identify_interval_set) ? &args->args.identify_args.identify_interval : NULL, 
                                  (args->args.identify_args.force_identify_set) ? &args->args.identify_args.force_identify : NULL, 
                                  cmd_rs) != 0)
@@ -756,13 +790,13 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_chassis_identify: %s\n", 
-                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
       goto cleanup;
     }
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
   
@@ -778,24 +812,27 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_chassis_control_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n", 
+                      strerror(errno));
       return -1;
     }
 
-  if (ipmi_cmd_chassis_control (state_data->dev, 
+  if (ipmi_cmd_chassis_control (state_data->ipmi_ctx, 
                                 args->args.chassis_control, 
                                 cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_chassis_control: %s\n", 
-                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
       goto cleanup;
     }
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -809,16 +846,19 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_status_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n", 
+                      strerror(errno));
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_chassis_status (state_data->dev, cmd_rs) != 0)
+  if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_chassis_status: %s\n", 
-                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
       goto cleanup;
     }
 
@@ -1104,7 +1144,7 @@ print:
     
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -1117,16 +1157,19 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_capabilities_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n", 
+                      strerror(errno));
       return (-1);
     }
 
-  if (ipmi_cmd_get_chassis_capabilities (state_data->dev, cmd_rs) != 0)
+  if (ipmi_cmd_get_chassis_capabilities (state_data->ipmi_ctx, cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_chassis_capabilities: %s\n", 
-                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
       goto cleanup;
     }
 
@@ -1201,7 +1244,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY (cmd_rs);
+  _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -1273,18 +1316,18 @@ _ipmi_chassis (pstdout_state_t pstate,
 {
   ipmi_chassis_state_data_t state_data;
   ipmi_chassis_prog_data_t *prog_data;
-  ipmi_device_t dev = NULL;
-  char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
+  ipmi_ctx_t ipmi_ctx = NULL;
+  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   prog_data = (ipmi_chassis_prog_data_t *)arg;
   memset(&state_data, '\0', sizeof(ipmi_chassis_state_data_t));
 
-  if (!(dev = ipmi_device_open(prog_data->progname,
-                               hostname,
-                               &(prog_data->args->common),
-                               errmsg,
-                               IPMI_DEVICE_OPEN_ERRMSGLEN)))
+  if (!(ipmi_ctx = ipmi_open(prog_data->progname,
+                             hostname,
+                             &(prog_data->args->common),
+                             errmsg,
+                             IPMI_OPEN_ERRMSGLEN)))
     {
       pstdout_fprintf(pstate,
                       stderr,
@@ -1294,7 +1337,7 @@ _ipmi_chassis (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  state_data.dev = dev;
+  state_data.ipmi_ctx = ipmi_ctx;
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 
@@ -1306,8 +1349,11 @@ _ipmi_chassis (pstdout_state_t pstate,
  
   exit_code = 0;
  cleanup:
-  if (dev)
-    ipmi_close_device (dev);
+  if (ipmi_ctx)
+    {
+      ipmi_ctx_close (ipmi_ctx);
+      ipmi_ctx_destroy (ipmi_ctx);
+    }
   return exit_code;
 }
 

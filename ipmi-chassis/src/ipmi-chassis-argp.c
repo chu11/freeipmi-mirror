@@ -1,6 +1,4 @@
 /* 
-   ipmi-chassis-argp.c - IPMI Chassis ARGP parser
-   
    Copyright (C) 2007 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify
@@ -30,11 +28,10 @@
 #endif /* STDC_HEADERS */
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
 
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 
 #include "freeipmi-portability.h"
 

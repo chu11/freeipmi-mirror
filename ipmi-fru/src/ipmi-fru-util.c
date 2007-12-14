@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.6 2007-10-18 16:18:45 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.7 2007-12-14 19:16:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -37,8 +37,6 @@
 #include <errno.h>
 #include <assert.h>
 
-#include <freeipmi/udm/udm.h>
-
 #include "ipmi-fru.h"
 #include "ipmi-fru-fiid.h"
 #include "ipmi-fru-util.h"
@@ -69,14 +67,14 @@ ipmi_fru_get_fru_inventory_area (ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(fru_read_data_rs, tmpl_cmd_read_fru_data_rs);
 
-  if ((ret = ipmi_cmd_get_fru_inventory_area_info (state_data->dev, 
+  if ((ret = ipmi_cmd_get_fru_inventory_area_info (state_data->ipmi_ctx, 
                                                    device_id,
                                                    fru_get_inventory_rs)) != FRU_ERR_SUCCESS)
     {
       pstdout_fprintf(state_data->pstate, 
                       stderr,
                       "  FRU Get FRU Inventory Area Failure: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = ret;
       goto cleanup;
     }
@@ -123,7 +121,7 @@ ipmi_fru_get_fru_inventory_area (ipmi_fru_state_data_t *state_data,
       /* XXX: achu: Implement retry mechanism? - see spec on
        * completion code 0x81 
        */
-      if (ipmi_cmd_read_fru_data (state_data->dev,
+      if (ipmi_cmd_read_fru_data (state_data->ipmi_ctx,
                                   device_id,
                                   fru_inventory_area_read,
                                   count_to_read,
@@ -133,7 +131,7 @@ ipmi_fru_get_fru_inventory_area (ipmi_fru_state_data_t *state_data,
             pstdout_fprintf(state_data->pstate, 
                             stderr,
                             "  FRU Read FRU Failure: %s\n",
-                            ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           rv = FRU_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }

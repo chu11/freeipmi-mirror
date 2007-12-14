@@ -1,8 +1,4 @@
 /* 
-   $Id: bmc-info.h,v 1.6 2007-09-05 20:13:22 chu11 Exp $ 
-   
-   bmc-info.h - displays BMC information.
-   
    Copyright (C) 2005 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify
@@ -25,7 +21,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "pstdout.h"
 
 struct bmc_info_arguments
@@ -43,7 +39,7 @@ typedef struct bmc_info_prog_data
 typedef struct bmc_info_state_data
 {
   bmc_info_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
 } bmc_info_state_data_t;
 

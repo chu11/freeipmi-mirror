@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-fiid.h,v 1.5 2007-10-18 16:18:45 chu11 Exp $
+ *  $Id: ipmi-fru-fiid.h,v 1.6 2007-12-14 19:16:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -34,18 +34,25 @@
 do {                                                                 \
   if (((__len) = fiid_template_len_bytes((__tmpl))) < 0)             \
     {                                                                \
-      pstdout_perror(state_data->pstate, "fiid_template_len_bytes"); \
+      pstdout_fprintf(state_data->pstate,                            \
+                      stderr,                                        \
+                      "fiid_template_len_bytes: %s\n",               \
+                      strerror(errno));                              \
       goto cleanup;                                                  \
     }                                                                \
 } while (0)
 
-#define _FIID_TEMPLATE_FIELD_START_BYTES(__len, __tmpl, __field)             \
-do {                                                                         \
-  if (((__len) = fiid_template_field_start_bytes((__tmpl), (__field))) < 0)  \
-    {                                                                        \
-      pstdout_perror(state_data->pstate, "fiid_template_field_start_bytes"); \
-      goto cleanup;                                                          \
-    }                                                                        \
+#define _FIID_TEMPLATE_FIELD_START_BYTES(__len, __tmpl, __field)                    \
+do {                                                                                \
+  if (((__len) = fiid_template_field_start_bytes((__tmpl), (__field))) < 0)         \
+    {                                                                               \
+      pstdout_fprintf(state_data->pstate,                                           \
+                      stderr,                                                       \
+                      "fiid_template_field_start_bytes: %s: %s\n",                  \
+                      (__field),                                                    \
+                      strerror(errno));                                             \
+      goto cleanup;                                                                 \
+    }                                                                               \
 } while (0)
 
 #define _FIID_OBJ_CLEAR(__obj)                                      \
@@ -61,7 +68,10 @@ do {                                                                \
 do {                                                                \
   if (!((__obj) = fiid_obj_create ((__tmpl))))                      \
     {                                                               \
-      pstdout_perror(state_data->pstate, "fiid_obj_create");        \
+      pstdout_fprintf(state_data->pstate,                           \
+                      stderr,                                       \
+                      "fiid_obj_create: %s\n",                      \
+                      strerror(errno));                             \
       goto cleanup;                                                 \
     }                                                               \
 } while (0)

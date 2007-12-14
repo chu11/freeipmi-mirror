@@ -1,20 +1,19 @@
 /*
-bmc-info.c: displays BMC information.
-Copyright (C) 2005 FreeIPMI Core Team
+  Copyright (C) 2005 FreeIPMI Core Team
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+  
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
 #if HAVE_CONFIG_H
@@ -32,14 +31,14 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <err.h>
 #include <argp.h>
 #include <assert.h>
+#include <errno.h>
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
 
-#include "cmdline-parse-common.h"
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "hostrange.h"
@@ -64,32 +63,100 @@ do {                                                          \
                         "fiid_obj_get: %s: %s\n",             \
                         field,                                \
                         fiid_strerror(fiid_obj_errnum(obj))); \
-        return (-1);                                          \
+        goto cleanup;                                         \
       }                                                       \
     *_val_ptr = _val;                                         \
 } while (0)
 
-int 
+static int
+display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
+{
+  uint64_t bc_maj, bc_min, pia_maj, pia_min;
+  fiid_obj_t intel_rs = NULL;
+  uint8_t buf[1024];
+  int32_t len;
+  int rv = -1;
+
+  assert(state_data);
+
+  if (!(intel_rs = fiid_obj_create(tmpl_cmd_get_device_id_sr870bn4_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_all(device_id_rs, buf, 1024)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_all: %s\n",
+                      fiid_strerror(fiid_obj_errnum(device_id_rs)));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all(intel_rs, buf, len) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set_all: %s\n",
+                      fiid_strerror(fiid_obj_errnum(intel_rs)));
+      goto cleanup;
+    }
+  
+  _FIID_OBJ_GET (intel_rs,
+                 "auxiliary_firmware_revision_info.boot_code.major",
+                 &bc_maj);
+  _FIID_OBJ_GET (intel_rs,
+                 "auxiliary_firmware_revision_info.boot_code.minor",
+                 &bc_min);
+  _FIID_OBJ_GET (intel_rs,
+                 "auxiliary_firmware_revision_info.pia.major",
+                 &pia_maj);
+  _FIID_OBJ_GET (intel_rs,
+                 "auxiliary_firmware_revision_info.pia.minor",
+                 &pia_min);
+  pstdout_printf(state_data->pstate, 
+                 "Aux Firmware Revision Info: Boot Code v%02x.%2x, PIA v%02x.%2x\n",
+                 (unsigned int) bc_maj, 
+                 (unsigned int) bc_min, 
+                 (unsigned int) pia_maj, 
+                 (unsigned int) pia_min);
+  
+  rv = 0;
+ cleanup:
+  if (intel_rs)
+    fiid_obj_destroy(intel_rs);
+  return rv;
+}
+
+static int 
 display_get_device_id (bmc_info_state_data_t *state_data)
 {
   fiid_obj_t cmd_rs = NULL;
   uint64_t val = 0;
-  
+  int rv = -1;
+
   assert(state_data);
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
       return (-1);
     }
 
-  if (ipmi_cmd_get_device_id (state_data->dev, cmd_rs) != 0)
+  if (ipmi_cmd_get_device_id (state_data->ipmi_ctx, cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_device_id: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
-      return (-1);
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
     }
   
   _FIID_OBJ_GET (cmd_rs, "device_id", &val);
@@ -201,52 +268,9 @@ display_get_device_id (bmc_info_state_data_t *state_data)
                -- Anand Babu <ab@gnu.org.in>  */
 	  case IPMI_PRODUCT_ID_SR870BN4:
 	  default:
-	    {
-	      uint64_t bc_maj, bc_min, pia_maj, pia_min;
-	      fiid_obj_t intel_rs;
-	      uint8_t buf[1024];
-	      int32_t len;
-
-	      if (!(intel_rs = fiid_obj_create(tmpl_cmd_get_device_id_sr870bn4_rs)))
-		{
-                  pstdout_perror(state_data->pstate, "fiid_obj_create");
-                  return (-1);
-		}
-
-	      if ((len = fiid_obj_get_all(cmd_rs, buf, 1024)) < 0)
-		{
-                  pstdout_perror(state_data->pstate, "fiid_obj_get_all");
-                  return (-1);
-		}
-
-	      if (fiid_obj_set_all(intel_rs, buf, len) < 0)
-		{
-                  pstdout_perror(state_data->pstate, "fiid_obj_set_all");
-                  return (-1);
-		}
-	      
-	      _FIID_OBJ_GET (intel_rs,
-                             "auxiliary_firmware_revision_info.boot_code.major",
-                             &bc_maj);
-	      _FIID_OBJ_GET (intel_rs,
-                             "auxiliary_firmware_revision_info.boot_code.minor",
-                             &bc_min);
-	      _FIID_OBJ_GET (intel_rs,
-                             "auxiliary_firmware_revision_info.pia.major",
-                             &pia_maj);
-	      _FIID_OBJ_GET (intel_rs,
-                             "auxiliary_firmware_revision_info.pia.minor",
-                             &pia_min);
-              pstdout_printf(state_data->pstate, 
-                             "Aux Firmware Revision Info: Boot Code v%02x.%2x, PIA v%02x.%2x\n",
-                             (unsigned int) bc_maj, 
-                             (unsigned int) bc_min, 
-                             (unsigned int) pia_maj, 
-                             (unsigned int) pia_min);
-
-	      fiid_obj_destroy(intel_rs);
-	      break;
-	    }
+            if (display_intel(state_data, cmd_rs) < 0)
+              goto cleanup;
+            break;
 	  }
 	break;
       default:
@@ -254,8 +278,11 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       }
   }
 
-  fiid_obj_destroy(cmd_rs);
-  return 0;
+  rv = 0;
+ cleanup:
+  if (cmd_rs)
+    fiid_obj_destroy(cmd_rs);
+  return rv;
 }
 
 static int
@@ -265,19 +292,23 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
   uint8_t i;
   uint8_t ci;
   uint64_t val;
-  
+  int rv = -1;
+
   assert(state_data);
   assert(channel_info_list);
 
   if (!(data_rs = fiid_obj_create (tmpl_cmd_get_channel_info_rs)))
     {
-      pstdout_perror(state_data->pstate, "fiid_obj_create");
-      return (-1);
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
     }
 
   for (i = 0, ci = 0; i < NUM_CHANNELS; i++)
     {
-      if (ipmi_cmd_get_channel_info (state_data->dev, 
+      if (ipmi_cmd_get_channel_info (state_data->ipmi_ctx, 
 				     i, 
 				     data_rs) != 0)
 	continue;
@@ -300,8 +331,11 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
       ci++;
     }
 
-  fiid_obj_destroy(data_rs);
-  return (0);
+  rv = 0;
+ cleanup:
+  if (data_rs)
+    fiid_obj_destroy(data_rs);
+  return rv;
 }
 
 int 
@@ -309,7 +343,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
 {
   channel_info_t channel_info_list[NUM_CHANNELS];
   uint8_t i;
-  
+
   assert(state_data);
 
   memset(channel_info_list, '\0', sizeof(channel_info_t) * NUM_CHANNELS);
@@ -418,18 +452,18 @@ _bmc_info(pstdout_state_t pstate,
 {
   bmc_info_state_data_t state_data;
   bmc_info_prog_data_t *prog_data;
-  ipmi_device_t dev = NULL;
-  char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
+  ipmi_ctx_t ipmi_ctx = NULL;
+  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   prog_data = (bmc_info_prog_data_t *)arg;
   memset(&state_data, '\0', sizeof(bmc_info_state_data_t));
   
-  if (!(dev = ipmi_device_open(prog_data->progname,
-                               hostname,
-                               &(prog_data->args->common),
-                               errmsg,
-                               IPMI_DEVICE_OPEN_ERRMSGLEN)))
+  if (!(ipmi_ctx = ipmi_open(prog_data->progname,
+                             hostname,
+                             &(prog_data->args->common),
+                             errmsg,
+                             IPMI_OPEN_ERRMSGLEN)))
     {
       pstdout_fprintf(pstate,
                       stderr,
@@ -439,7 +473,7 @@ _bmc_info(pstdout_state_t pstate,
       goto cleanup;
     }
 
-  state_data.dev = dev;
+  state_data.ipmi_ctx = ipmi_ctx;
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 
@@ -451,10 +485,10 @@ _bmc_info(pstdout_state_t pstate,
 
   exit_code = 0;
  cleanup:
-  if (dev)
+  if (ipmi_ctx)
     {
-      ipmi_close_device (dev);
-      ipmi_device_destroy (dev);
+      ipmi_ctx_close (ipmi_ctx);
+      ipmi_ctx_destroy (ipmi_ctx);
     }
   return exit_code;
 }

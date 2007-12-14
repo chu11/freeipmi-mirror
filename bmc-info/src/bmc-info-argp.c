@@ -1,8 +1,4 @@
 /* 
-   $Id: bmc-info-argp.c,v 1.13 2007-09-05 20:13:22 chu11 Exp $ 
-   
-   bmc-info-argp.c - displays BMC information.
-   
    Copyright (C) 2005 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify
@@ -31,7 +27,7 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
 

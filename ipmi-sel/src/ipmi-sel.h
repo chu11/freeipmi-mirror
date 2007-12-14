@@ -1,8 +1,4 @@
 /* 
-   $Id: ipmi-sel.h,v 1.8 2007-09-05 20:13:27 chu11 Exp $ 
-   
-   ipmi-sel.h - System Event Logger utility.
-   
    Copyright (C) 2005 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify
@@ -25,7 +21,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 
@@ -64,7 +60,7 @@ typedef struct ipmi_sel_prog_data
 typedef struct ipmi_sel_state_data
 {
   ipmi_sel_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   char *hostname;
   sdr_cache_ctx_t sdr_cache_ctx;

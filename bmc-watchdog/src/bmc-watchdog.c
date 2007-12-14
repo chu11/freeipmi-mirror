@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.73 2007-10-18 00:33:08 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.74 2007-12-14 19:16:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -63,9 +63,8 @@
 #endif
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/ipmi-udm.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 
 /* Driver Types */
 #define DRIVER_TYPE_KCS      0
@@ -321,12 +320,16 @@ static int
 _init_kcs_ipmi(void)
 {
   struct ipmi_locate_info l;
-
+  
   if (!cinfo.no_probing)
     {
-      if (ipmi_locate(IPMI_INTERFACE_KCS, &l) < 0)
+      int err;
+
+      if ((err = ipmi_locate_get_device_info(IPMI_INTERFACE_KCS,
+                                             &l)))
         {
-          _bmclog("ipmi_locate: %s", strerror(errno));
+          _bmclog("ipmi_locate_get_device_info: %s",
+                  ipmi_locate_strerror(err));
           return -1;
         }
     }
@@ -386,9 +389,12 @@ _init_ssif_ipmi(void)
 
   if (!cinfo.no_probing)
     {
-      if (ipmi_locate(IPMI_INTERFACE_SSIF, &l) < 0)
+      int err;
+      if ((err = ipmi_locate_get_device_info(IPMI_INTERFACE_SSIF,
+                                             &l)))
         {
-          _bmclog("ipmi_locate: %s", strerror(errno));
+          _bmclog("ipmi_locate_get_device_info: %s",
+                  ipmi_locate_strerror(err));
           return -1;
         }
     }
@@ -544,11 +550,11 @@ _ipmi_err_exit(uint8_t cmd, uint8_t netfn, int comp_code, char *str)
     }
   else
     {
-      if (ipmi_strerror_r(cmd, 
-                          netfn,
-                          comp_code, 
-                          buf, 
-                          BMC_WATCHDOG_ERR_BUFLEN) < 0)
+      if (ipmi_completion_code_strerror_r(cmd, 
+                                          netfn,
+                                          comp_code, 
+                                          buf, 
+                                          BMC_WATCHDOG_ERR_BUFLEN) < 0)
         _err_exit("ipmi_strerror_r: %s", strerror(errno));     
       _err_exit("%s: %s", str, buf);
     }
@@ -762,7 +768,7 @@ _set_watchdog_timer_cmd(int retry_wait_time,
   fiid_obj_t cmd_rs = NULL;
   uint16_t initial_countdown_chunks;
   int retval = -1;
-  
+
   /* IPMI specifies timeout in 100 millisecond chunks */
   initial_countdown_chunks = initial_countdown_seconds * 10;
 
@@ -2300,10 +2306,11 @@ _daemon_cmd(void)
         {
           char buf[BMC_WATCHDOG_STR_BUFLEN];
 
-          if (ipmi_strerror_r(IPMI_CMD_RESET_WATCHDOG_TIMER, 
-                              IPMI_NET_FN_APP_RQ,
-                              ret, 
-                              buf, BMC_WATCHDOG_STR_BUFLEN) < 0)
+          if (ipmi_completion_code_strerror_r(IPMI_CMD_RESET_WATCHDOG_TIMER, 
+                                              IPMI_NET_FN_APP_RQ,
+                                              ret, 
+                                              buf, 
+                                              BMC_WATCHDOG_STR_BUFLEN) < 0)
             _bmclog("Reset Watchdog Timer IPMI Error: %Xh", ret);
           else
             _bmclog("Reset Watchdog Timer IPMI Error: %s", buf);

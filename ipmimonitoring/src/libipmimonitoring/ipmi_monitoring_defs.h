@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.11 2007-10-18 16:18:49 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.12 2007-12-14 19:16:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -32,7 +32,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
 
 #include "ipmi_sdr_cache.h"
 #include "list.h"
@@ -121,7 +120,7 @@
 #define IPMI_MONITORING_PACKET_BUFLEN 1024
 
 struct ipmi_monitoring_communication {
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
 };
 
 struct ipmi_sensor_config {

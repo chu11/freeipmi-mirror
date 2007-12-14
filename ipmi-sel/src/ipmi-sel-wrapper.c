@@ -30,28 +30,33 @@
 #include <argp.h>
 #include <assert.h>
 
-#include "freeipmi/fiid.h"
-#include "freeipmi/ipmi-sel-cmds.h"
-#include "freeipmi/ipmi-sel-record-types.h"
-#include "freeipmi/ipmi-sensor-and-event-code-tables.h"
-#include "freeipmi/udm/ipmi-sel-cmds-udm.h"
+#include "freeipmi/api/ipmi-sel-cmds-api.h"
+#include "freeipmi/cmds/ipmi-sel-cmds.h"
+#include "freeipmi/fiid/fiid.h"
+#include "freeipmi/record-format/ipmi-sel-record-format.h"
+#include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 
 #include "freeipmi-portability.h"
 #include "ipmi-sdr-cache.h"
-#include "ipmi-sensor-api.h"
+#include "ipmi-sensor-common.h"
 
 #include "ipmi-sel-wrapper.h"
 
-#define _FIID_OBJ_CREATE(__obj, __tmpl)         \
-do {                                            \
-  if (!((__obj) = fiid_obj_create(__tmpl)))     \
-    {                                           \
-      pstdout_fprintf(state_data->pstate,       \
-                      stderr,                   \
-                      "fiid_obj_create: %s\n",  \
-                      strerror(errno));         \
-      goto cleanup;                             \
-    }                                           \
+#define SEL_RECORD_TYPE_UNKNOWN_RECORD             0x0
+#define SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD        0x1
+#define SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD     0x2
+#define SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD 0x3
+
+#define _FIID_OBJ_CREATE(__obj, __tmpl)                   \
+do {                                                      \
+  if (!((__obj) = fiid_obj_create(__tmpl)))               \
+    {                                                     \
+      pstdout_fprintf(state_data->pstate,                 \
+                      stderr,                             \
+                      "fiid_obj_create: %s\n",            \
+                      strerror(errno));                   \
+      goto cleanup;                                       \
+    }                                                     \
 } while (0)
 
 #define _FIID_OBJ_GET(__obj, __field, __val)                    \
@@ -108,12 +113,12 @@ get_sel_info (ipmi_sel_state_data_t *state_data,
 
   _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_info_rs);
 
-  if (ipmi_cmd_get_sel_info (state_data->dev, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_sel_info (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_sel_info: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -196,6 +201,21 @@ _round_double2 (double d)
     return ((long) d + (((long) r + 1) / 100.0));
 
   return ((long) d + ((long) r / 100.0));
+}
+
+static int
+_get_sel_record_type (uint8_t record_type)
+{
+  if (IPMI_SEL_RECORD_TYPE_IS_EVENT(record_type))
+    return SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
+  
+  if (IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM(record_type))
+    return SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD;
+  
+  if (IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM(record_type))
+    return SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD;
+  
+  return SEL_RECORD_TYPE_UNKNOWN_RECORD;
 }
 
 static int 
@@ -743,15 +763,15 @@ _parse_sel_record (ipmi_sel_state_data_t *state_data,
   _FIID_OBJ_GET (obj, "record_type", &val);
   record_type = val;
 
-  switch (ipmi_get_sel_record_type (record_type))
+  switch (_get_sel_record_type (record_type))
     {
-    case IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD:
+    case SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD:
       rv = _get_sel_system_event_record (state_data, record_data, record_data_len, sel_record);
       break;
-    case IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD:
+    case SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD:
       rv = _get_sel_timestamped_oem_record (state_data, record_data, record_data_len, sel_record);
       break;
-    case IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD:
+    case SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD:
       rv = _get_sel_non_timestamped_oem_record (state_data, record_data, record_data_len, sel_record);
       break;
     }
@@ -783,7 +803,7 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
   if (!(sel_rec = (sel_record_t *)malloc(sizeof(sel_record_t))))
     goto cleanup;
 
-  if (ipmi_cmd_get_sel_entry (state_data->dev, 
+  if (ipmi_cmd_get_sel_entry (state_data->ipmi_ctx, 
 			      0,
 			      record_id, 
 			      0,
@@ -793,7 +813,7 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_sel_entry: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -861,7 +881,7 @@ get_sel_record_raw (ipmi_sel_state_data_t *state_data,
   
   _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
 
-  if (ipmi_cmd_get_sel_entry (state_data->dev, 
+  if (ipmi_cmd_get_sel_entry (state_data->ipmi_ctx, 
 			      0,
 			      record_id, 
 			      0,
@@ -871,7 +891,7 @@ get_sel_record_raw (ipmi_sel_state_data_t *state_data,
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_sel_entry: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -899,23 +919,21 @@ delete_sel_entry (ipmi_sel_state_data_t *state_data,
   uint16_t reservation_id;
   uint64_t val;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
+  
+  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
-    goto cleanup;
-  
-  if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET(obj_cmd_rs, "reservation_id", &val);
+
   reservation_id = val;
   
   fiid_obj_destroy(obj_cmd_rs);
   obj_cmd_rs = NULL;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_delete_sel_entry_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_delete_sel_entry_rs);
   
-  if (ipmi_cmd_delete_sel_entry (state_data->dev, 
+  if (ipmi_cmd_delete_sel_entry (state_data->ipmi_ctx, 
 				 reservation_id, 
 				 record_id, 
 				 obj_cmd_rs) < 0)
@@ -923,7 +941,7 @@ delete_sel_entry (ipmi_sel_state_data_t *state_data,
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_delete_sel_entry: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -943,23 +961,21 @@ clear_sel_entries (ipmi_sel_state_data_t *state_data)
   uint16_t reservation_id;
   uint64_t val;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
 
-  if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET(obj_cmd_rs, "reservation_id", &val);
+
   reservation_id = val;
   
   fiid_obj_destroy(obj_cmd_rs);
   obj_cmd_rs = NULL;
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_clear_sel_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_clear_sel_rs);
 
-  if (ipmi_cmd_clear_sel (state_data->dev, 
+  if (ipmi_cmd_clear_sel (state_data->ipmi_ctx, 
 			  reservation_id, 
 			  IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE, 
 			  obj_cmd_rs) < 0)
@@ -967,7 +983,7 @@ clear_sel_entries (ipmi_sel_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_clear_sel: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -986,23 +1002,21 @@ get_sel_clear_status (ipmi_sel_state_data_t *state_data,
   uint16_t reservation_id;
   uint64_t val;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
 
-  if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET(obj_cmd_rs, "reservation_id", &val);
+
   reservation_id = val;
   
   fiid_obj_destroy(obj_cmd_rs);
   obj_cmd_rs = NULL;
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_clear_sel_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_clear_sel_rs);
 
-  if (ipmi_cmd_clear_sel (state_data->dev, 
+  if (ipmi_cmd_clear_sel (state_data->ipmi_ctx, 
 			  reservation_id, 
 			  IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS, 
 			  obj_cmd_rs) < 0)
@@ -1010,13 +1024,12 @@ get_sel_clear_status (ipmi_sel_state_data_t *state_data,
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_clear_sel: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
-  if (fiid_obj_get (obj_cmd_rs, "erasure_progress", &val) < 0)
-    goto cleanup;
-  
+  _FIID_OBJ_GET(obj_cmd_rs, "erasure_progress", &val);
+
   fiid_obj_destroy(obj_cmd_rs);
   *status = val;
   return 0;

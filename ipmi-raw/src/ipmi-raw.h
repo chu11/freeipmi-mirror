@@ -1,8 +1,4 @@
 /* 
-   $Id: ipmi-raw.h,v 1.5 2007-09-05 20:13:27 chu11 Exp $ 
-   
-   ipmi-raw.h - ipmi-raw command line argument parser.
-   
    Copyright (C) 2005 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify
@@ -26,7 +22,7 @@
 #include <freeipmi/freeipmi.h>
 #include <limits.h>	/* ARG_MAX */
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "pstdout.h"
 
 enum ipmi_raw_argp_option_keys
@@ -52,7 +48,7 @@ typedef struct ipmi_raw_prog_data
 typedef struct ipmi_raw_state_data
 {
   ipmi_raw_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
 } ipmi_raw_state_data_t;
 

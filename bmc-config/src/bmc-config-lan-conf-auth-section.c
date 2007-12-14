@@ -64,7 +64,7 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (state_data->dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (state_data->ipmi_ctx, 
 									     channel_number, 
 									     IPMI_GET_LAN_PARAMETER, 
 									     SET_SELECTOR, 
@@ -74,7 +74,7 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -206,7 +206,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (state_data->ipmi_ctx,
                                                                              channel_number, 
                                                                              al->callback_level_none,
                                                                              al->callback_level_md2,
@@ -238,7 +238,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

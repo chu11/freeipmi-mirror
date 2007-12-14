@@ -27,7 +27,6 @@
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
 
 #include "freeipmi-portability.h"
 

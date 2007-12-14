@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.c,v 1.9 2007-10-18 16:18:47 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.c,v 1.10 2007-12-14 19:16:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.

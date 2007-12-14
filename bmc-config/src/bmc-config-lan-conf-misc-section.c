@@ -43,7 +43,7 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (state_data->dev,
+  if (ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (state_data->ipmi_ctx,
                                                                            channel_number,
                                                                            IPMI_GET_LAN_PARAMETER,
                                                                            SET_SELECTOR,
@@ -53,7 +53,7 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -93,7 +93,7 @@ _set_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (state_data->ipmi_ctx,
                                                                            channel_number,
                                                                            ac->bmc_generated_gratuitous_arps,
                                                                            ac->bmc_generated_arp_responses,
@@ -102,7 +102,7 @@ _set_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -203,7 +203,7 @@ gratuitous_arp_interval_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (state_data->dev,
+  if (ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (state_data->ipmi_ctx,
                                                                          channel_number,
                                                                          IPMI_GET_LAN_PARAMETER,
                                                                          SET_SELECTOR,
@@ -213,7 +213,7 @@ gratuitous_arp_interval_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -250,7 +250,7 @@ gratuitous_arp_interval_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (state_data->dev,
+  if (ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (state_data->ipmi_ctx,
                                                                          channel_number,
                                                                          atoi (kv->value_input),
                                                                          obj_cmd_rs) < 0)

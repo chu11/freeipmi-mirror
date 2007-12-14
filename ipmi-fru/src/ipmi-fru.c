@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.7 2007-10-18 16:18:45 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.8 2007-12-14 19:16:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -40,7 +40,6 @@
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
 
 #include "ipmi-fru.h"
 #include "ipmi-fru-argp.h"
@@ -49,8 +48,8 @@
 #include "ipmi-fru-multirecord-area.h"
 #include "ipmi-fru-util.h"
 
-#include "cmdline-parse-common.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 #include "hostrange.h"
@@ -292,7 +291,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
     }
 
   if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
-                                 state_data->dev,
+                                 state_data->ipmi_ctx,
                                  state_data->hostname,
                                  args->sdr.sdr_cache_dir,
                                  (args->sdr.quiet_cache_wanted) ? 0 : 1,
@@ -392,8 +391,8 @@ _ipmi_fru(pstdout_state_t pstate,
 {
   ipmi_fru_state_data_t state_data;
   ipmi_fru_prog_data_t *prog_data;
-  ipmi_device_t dev = NULL;
-  char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
+  ipmi_ctx_t ipmi_ctx = NULL;
+  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   prog_data = (ipmi_fru_prog_data_t *)arg;
@@ -402,11 +401,11 @@ _ipmi_fru(pstdout_state_t pstate,
   /* Special case, just flush, don't do an IPMI connection */
   if (!prog_data->args->sdr.flush_cache_wanted)
     {
-      if (!(dev = ipmi_device_open(prog_data->progname,
-                                   hostname,
-                                   &(prog_data->args->common),
-                                   errmsg,
-                                   IPMI_DEVICE_OPEN_ERRMSGLEN)))
+      if (!(ipmi_ctx = ipmi_open(prog_data->progname,
+                                 hostname,
+                                 &(prog_data->args->common),
+                                 errmsg,
+                                 IPMI_OPEN_ERRMSGLEN)))
         {
           pstdout_fprintf(pstate,
                           stderr,
@@ -417,7 +416,7 @@ _ipmi_fru(pstdout_state_t pstate,
         }
     }
 
-  state_data.dev = dev;
+  state_data.ipmi_ctx = ipmi_ctx;
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
@@ -439,10 +438,10 @@ _ipmi_fru(pstdout_state_t pstate,
  cleanup:
   if (state_data.sdr_cache_ctx)
     sdr_cache_ctx_destroy(state_data.sdr_cache_ctx);
-  if (dev)
+  if (ipmi_ctx)
     {
-      ipmi_close_device (dev);
-      ipmi_device_destroy (dev);
+      ipmi_ctx_close (ipmi_ctx);
+      ipmi_ctx_destroy (ipmi_ctx);
     }
   return exit_code;
 }

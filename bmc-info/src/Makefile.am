@@ -1,11 +1,8 @@
 sbin_PROGRAMS=bmc-info
 bmc_info_SOURCES=bmc-info-argp.c bmc-info.c 
-bmc_info_LDADD = ../../common/src/libcmdlineparsecommon.la \
-		 ../../common/src/libtoolcommon.la \
-		 ../../common/src/libpstdout.la \
+bmc_info_LDADD = ../../common/src/libtoolcommon.la \
 		 ../../common/src/libhostrange.la \
-		 ../../common/src/libcbuf.la \
-		 ../../common/src/libllnlcommon.la \
+		 ../../common/src/libmiscutils.la \
                  ../../ipmidetect/src/libipmidetect/libipmidetect.la \
 	         ../../libfreeipmi/src/libfreeipmi.la
  
@@ -20,23 +17,13 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-
-../../common/src/libcmdlineparsecommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
 ../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libpstdout.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libhostrange.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libcbuf.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libllnlcommon.la: force-dependency-check
+../../common/src/libmiscutils.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check

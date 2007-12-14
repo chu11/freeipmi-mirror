@@ -10,7 +10,7 @@ rmcpping_CPPFLAGS = \
 	-I$(srcdir)/../../libfreeipmi/include \
 	-I$(srcdir)/../../common/src
  
-../../libfreeipmi/src/libfreeipmie.la: force-dependency-check
+../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libipmiping.la: force-dependency-check

@@ -20,7 +20,7 @@ Fiid_obj_create(fiid_template_t tmpl)
   assert(tmpl);
 
   if (!(obj = fiid_obj_create(tmpl)))
-    perror("fiid_obj_create");
+    fprintf(stderr, "fiid_obj_create: %s", strerror(errno));
 
   return obj;
 }

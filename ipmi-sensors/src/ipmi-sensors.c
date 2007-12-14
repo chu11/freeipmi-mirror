@@ -1,20 +1,19 @@
 /*
-ipmi-sensors.c: IPMI Sensors utility.
-Copyright (C) 2006 FreeIPMI Core Team
+  Copyright (C) 2006 FreeIPMI Core Team
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+  
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
 #if HAVE_CONFIG_H
@@ -39,17 +38,16 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <argp.h>
 #include <assert.h>
 
-#include "cmdline-parse-common.h"
 #include "freeipmi-portability.h"
 #include "tool-common.h"
-#include "ipmi-sensor-api.h"
+#include "tool-cmdline-common.h"
+#include "ipmi-sensor-common.h"
 #include "ipmi-sdr-cache.h"
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
-#include "ipmi-sensors-utils.h"
-#include "sensors-simple-display.h"
-#include "sensors-verbose-display.h"
-#include "sensors-very-verbose-display.h"
+#include "ipmi-sensors-simple-display.h"
+#include "ipmi-sensors-verbose-display.h"
+#include "ipmi-sensors-very-verbose-display.h"
 
 #include "pstdout.h"
 #include "hostrange.h"
@@ -84,16 +82,19 @@ display_sdr_repository_info (ipmi_sensors_state_data_t *state_data)
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sdr_repository_info_rs)))
     {
-      pstdout_perror (state_data->pstate, "fiid_obj_create");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sdr_repository_info (state_data->dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_sdr_repository_info (state_data->ipmi_ctx, obj_cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_sdr_repository_info: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
  
@@ -183,6 +184,21 @@ cleanup:
   return (rv);
 }
 
+void
+str_replace_chr (char *str, char chr, char with)
+{
+  char *p = NULL;
+  char *s = NULL;
+
+  assert(str);
+
+  for (s = str;
+       (p = strchr (s, chr));
+       s = p + 1)
+    *p = with;
+}
+
+
 int 
 display_group_list (ipmi_sensors_state_data_t *state_data)
 {
@@ -218,6 +234,39 @@ display_group_list (ipmi_sensors_state_data_t *state_data)
   return 0;
 }
 
+int
+sensors_group_cmp (sdr_record_t *sdr_record, char *group_name)
+{
+  char *sdr_group_name = NULL;
+
+  assert(sdr_record);
+  assert(group_name);
+
+  switch (sdr_record->record_type)
+    {
+    case IPMI_SDR_FORMAT_FULL_RECORD:
+      sdr_group_name = (char *) ipmi_get_sensor_group (sdr_record->record.sdr_full_record.sensor_type);
+      break;
+    case IPMI_SDR_FORMAT_COMPACT_RECORD:
+      sdr_group_name = (char *) ipmi_get_sensor_group (sdr_record->record.sdr_compact_record.sensor_type);
+      break;
+    case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
+      sdr_group_name = (char *) ipmi_get_sensor_group (sdr_record->record.sdr_event_only_record.sensor_type);
+      break;
+    }
+  
+  if (sdr_group_name)
+    {
+      if (strcasecmp (sdr_group_name, group_name) == 0)
+        return 0;
+      sdr_group_name = strdupa (sdr_group_name);
+      str_replace_chr (sdr_group_name, ' ', '_');
+      return (strcasecmp (sdr_group_name, group_name));
+    }
+
+  return (-1);
+}
+
 int 
 display_group_sensors (ipmi_sensors_state_data_t *state_data)
 {
@@ -242,7 +291,8 @@ display_group_sensors (ipmi_sensors_state_data_t *state_data)
 	{
           memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
           
-          if (get_sensor_reading(state_data->dev,
+          if (get_sensor_reading(state_data->ipmi_ctx,
+                                 (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
                                  sdr_record,
                                  &_sensor_reading) < 0)
             sensor_reading = NULL;
@@ -281,6 +331,25 @@ display_group_sensors (ipmi_sensors_state_data_t *state_data)
   return 0;
 }
 
+int
+sensors_list_cmp (sdr_record_t *sdr_record,
+                  unsigned int *sensors_list,
+                  unsigned int sensors_list_length)
+{
+  int i;
+
+  assert(sdr_record);
+  assert(sensors_list);
+
+  for (i = 0; i < sensors_list_length; i++)
+    {
+      if (sdr_record->record_id == sensors_list[i])
+        return 0;
+    }
+
+  return (-1);
+}
+
 int 
 display_sensor_list (ipmi_sensors_state_data_t *state_data)
 {
@@ -309,7 +378,8 @@ display_sensor_list (ipmi_sensors_state_data_t *state_data)
 	{
           memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
 
-          if (get_sensor_reading(state_data->dev,
+          if (get_sensor_reading(state_data->ipmi_ctx,
+                                 (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
                                  sdr_record,
                                  &_sensor_reading) < 0)
             sensor_reading = NULL;
@@ -382,7 +452,8 @@ display_sensors (ipmi_sensors_state_data_t *state_data)
 
 	  memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
 
-          if (get_sensor_reading(state_data->dev,
+          if (get_sensor_reading(state_data->ipmi_ctx,
+                                 (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
                                  sdr_record,
                                  &_sensor_reading) < 0)
             sensor_reading = NULL;
@@ -458,7 +529,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
     return display_group_list (state_data);
   
   if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
-                                 state_data->dev,
+                                 state_data->ipmi_ctx,
                                  state_data->hostname,
                                  args->sdr.sdr_cache_dir,
                                  (args->sdr.quiet_cache_wanted) ? 0 : 1,
@@ -496,8 +567,8 @@ _ipmi_sensors (pstdout_state_t pstate,
 {
   ipmi_sensors_state_data_t state_data;
   ipmi_sensors_prog_data_t *prog_data;
-  ipmi_device_t dev = NULL;
-  char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
+  ipmi_ctx_t ipmi_ctx = NULL;
+  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   prog_data = (ipmi_sensors_prog_data_t *)arg;
@@ -506,11 +577,11 @@ _ipmi_sensors (pstdout_state_t pstate,
   /* Special case, just flush, don't do an IPMI connection */
   if (!prog_data->args->sdr.flush_cache_wanted)
     {
-      if (!(dev = ipmi_device_open(prog_data->progname,
-                                   hostname,
-                                   &(prog_data->args->common),
-                                   errmsg,
-                                   IPMI_DEVICE_OPEN_ERRMSGLEN)))
+      if (!(ipmi_ctx = ipmi_open(prog_data->progname,
+                                 hostname,
+                                 &(prog_data->args->common),
+                                 errmsg,
+                                 IPMI_OPEN_ERRMSGLEN)))
         {
           pstdout_fprintf(pstate,
                           stderr,
@@ -521,7 +592,7 @@ _ipmi_sensors (pstdout_state_t pstate,
         }
     }
       
-  state_data.dev = dev;
+  state_data.ipmi_ctx = ipmi_ctx;
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
@@ -543,10 +614,10 @@ _ipmi_sensors (pstdout_state_t pstate,
  cleanup:
   if (state_data.sdr_cache_ctx)
     sdr_cache_ctx_destroy(state_data.sdr_cache_ctx);
-  if (dev)
+  if (ipmi_ctx)
     {
-      ipmi_close_device (dev);
-      ipmi_device_destroy (dev);
+      ipmi_ctx_close (ipmi_ctx);
+      ipmi_ctx_destroy (ipmi_ctx);
     }
   return exit_code;
 }

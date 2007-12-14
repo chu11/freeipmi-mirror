@@ -1,6 +1,4 @@
 /* 
-   freeipmi-portability.h - portability includes & defines for libfreeipmi
-
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -69,10 +67,10 @@ extern "C" {
 /* FreeBSD don't have strdupa */
 #ifndef strdupa
 /* Duplicate S, returning an identical alloca'd string.  */
-# define strdupa(s)								\
-	({											\
-		const char *__old = (s);				\
-		size_t __len = strlen (__old) + 1;		\
+# define strdupa(s)					\
+	({						\
+		const char *__old = (s);		\
+		size_t __len = strlen (__old) + 1;	\
 		char *__new = (char *) alloca (__len);	\
 		(char *) memcpy (__new, __old, __len);	\
 	})

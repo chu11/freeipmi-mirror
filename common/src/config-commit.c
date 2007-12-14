@@ -11,7 +11,7 @@
 #include <assert.h>
 
 #include "config-commit.h"
-#include "config-util.h"
+#include "config-utils.h"
 
 config_err_t
 config_commit_section(struct config_section *section,

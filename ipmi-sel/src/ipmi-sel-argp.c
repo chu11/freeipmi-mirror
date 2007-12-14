@@ -1,8 +1,4 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.20 2007-09-05 20:13:27 chu11 Exp $ 
-   
-   ipmi-sel-argp.c - System Event Logger utility.
-   
    Copyright (C) 2005 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify
@@ -30,13 +26,15 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <argp.h>
-#include <ctype.h>
 #include <errno.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <assert.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
+#include "string-utils.h"
+
 #include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"
 
@@ -83,51 +81,12 @@ static struct argp_option options[] =
 
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
-
-static char *
-stripwhite (char *string)
-{
-  register char *s, *t;
-
-  for (s = string; isspace (*s); s++)
-    ;
-
-  if (*s == 0)
-    return s;
-
-  t = s + strlen (s) - 1;
-  while (t > s && isspace (*t))
-    t--;
-  *++t = '\0';
-
-  return s;
-}
-
-static char *
-get_token (char **line)
-{
-  char *command;
-  while (1)
-    {
-      command = (char *) strsep (line, " ,");
-      if (!command)
-        break;
-      if (*(command))
-        break;
-    }
-  
-  if (command)
-    return strdup (stripwhite (command));
-  return command;
-}
-
 static int 
 validate_delete_list_string (char *delete_list_string)
 {
   char *dlist = NULL;
-  
-  if (delete_list_string == NULL)
-    return (-1);
+
+  assert(delete_list_string);
   
   dlist = strdupa (delete_list_string);
   while (delete_list_string)
@@ -138,12 +97,18 @@ validate_delete_list_string (char *delete_list_string)
       char *tail = NULL;
       int errnum = 0;
       
-      token = get_token (&dlist);
+      if (get_token (&dlist, &token) < 0)
+        return (-1);
+
+      if (token == NULL)
+        break;
+
       if (token == NULL)
 	break;
+
       str = strdupa (token);
       free (token);
-      
+
       errno = 0;
       value = strtol (str, &tail, 10);
       errnum = errno;
@@ -167,19 +132,20 @@ get_delete_record_count (char *delete_list_string)
   int count = 0;
   char *dlist = NULL;
   
-  if (delete_list_string == NULL)
-    return (-1);
+  assert(delete_list_string);
   
   dlist = strdupa (delete_list_string);
   while (delete_list_string)
     {
       char *str = NULL;
       
-      str = get_token (&dlist);
+      if (get_token (&dlist, &str) < 0)
+        return -1;
+
       if (str == NULL)
 	break;
+
       free (str);
-      
       count++;
     }
   
@@ -192,9 +158,8 @@ get_delete_record_list (char *delete_list_string, int *records, int count)
   int i = 0;
   char *dlist = NULL;
   
-  if (delete_list_string == NULL || 
-      records == NULL)
-    return (-1);
+  assert(delete_list_string);
+  assert(records);
   
   dlist = strdupa (delete_list_string);
   for (i = 0; i < count; i++)
@@ -202,13 +167,16 @@ get_delete_record_list (char *delete_list_string, int *records, int count)
       int value = 0;
       char *str = NULL;
       
-      str = get_token (&dlist);
+      if (get_token (&dlist, &str) < 0)
+        return -1;
+
       if (str == NULL)
 	break;
       
-      value = strtol (str, NULL, 10);
-      records[i] = value;
-      
+      if (str2int (str, 10, &value) < 0)
+        return -1;
+
+      records[i] = value;     
       free (str);
     }
   
@@ -230,7 +198,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->delete_wanted = 1;
       {
 	char *delete_arg = strdupa (arg);
-	
+	int ret;
+
 	if (validate_delete_list_string (delete_arg) == -1)
 	  {
 	    fprintf (stderr, "invalid integer in delete list\n");
@@ -241,13 +210,28 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	if (cmd_args->delete_record_list)
 	  free (cmd_args->delete_record_list);
 	
-	cmd_args->delete_record_list_length = 
-	  get_delete_record_count (delete_arg);
-	cmd_args->delete_record_list = 
-	  calloc (cmd_args->delete_record_list_length, sizeof (int));
-	get_delete_record_list (delete_arg, 
-				cmd_args->delete_record_list, 
-				cmd_args->delete_record_list_length);
+        if ((ret = get_delete_record_count (delete_arg)) < 0)
+          {
+            fprintf (stderr, "invalid integer in delete list\n");
+            argp_usage (state);
+            break;
+          }
+	cmd_args->delete_record_list_length = ret;
+        
+	if (!(cmd_args->delete_record_list = 
+              calloc (cmd_args->delete_record_list_length, sizeof (int))))
+          {
+            perror("calloc");
+            exit(1);
+          }
+	if (get_delete_record_list (delete_arg, 
+                                    cmd_args->delete_record_list, 
+                                    cmd_args->delete_record_list_length) < 0)
+          {
+            fprintf (stderr, "invalid integer in delete list\n");
+            argp_usage (state);
+            break;
+          }
       }
       break;
     case DELETE_ALL_KEY:

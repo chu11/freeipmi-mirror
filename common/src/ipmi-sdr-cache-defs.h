@@ -1,47 +1,46 @@
 /*
-ipmi-sdr-cache-defs.h: SDR cache creation and management api defs.
-Copyright (C) 2006 FreeIPMI Core Team
+  Copyright (C) 2006 FreeIPMI Core Team
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
 #ifndef _IPMI_SDR_CACHE_DEFS_H
 #define _IPMI_SDR_CACHE_DEFS_H
 
-#define _SDR_FIID_TEMPLATE_COMPARE(__tmpl1, __tmpl2)                 \
-do {                                                                 \
-    int __ret;                                                       \
-    if ((__ret = fiid_template_compare ((__tmpl1), (__tmpl2))) < 0)  \
-      {                                                              \
-       ctx->errnum = SDR_CACHE_CTX_ERR_INTERNAL;                     \
-       goto cleanup;                                                 \
-      }                                                              \
-    if (!__ret)                                                      \
-      {                                                              \
-       ctx->errnum = SDR_CACHE_CTX_ERR_INTERNAL;                     \
-       goto cleanup;                                                 \
-      }                                                              \
+#define _SDR_FIID_TEMPLATE_COMPARE(__tmpl1, __tmpl2)                        \
+do {                                                                        \
+    int __ret;                                                              \
+    if ((__ret = fiid_template_compare ((__tmpl1), (__tmpl2))) < 0)         \
+      {                                                                     \
+       ctx->errnum = SDR_CACHE_CTX_ERR_INTERNAL;                            \
+       goto cleanup;                                                        \
+      }                                                                     \
+    if (!__ret)                                                             \
+      {                                                                     \
+       ctx->errnum = SDR_CACHE_CTX_ERR_INTERNAL;                            \
+       goto cleanup;                                                        \
+      }                                                                     \
 } while (0)
 
-#define _SDR_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)         \
-do {                                                        \
-  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)   \
-    {                                                       \
-      ctx->errnum = SDR_CACHE_CTX_ERR_INTERNAL;             \
-      goto cleanup;                                         \
-    }                                                       \
+#define _SDR_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                         \
+do {                                                                        \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                   \
+    {                                                                       \
+      ctx->errnum = SDR_CACHE_CTX_ERR_INTERNAL;                             \
+      goto cleanup;                                                         \
+    }                                                                       \
 } while (0)
 
 #define _SDR_FIID_OBJ_CLEAR(__obj)                                  \

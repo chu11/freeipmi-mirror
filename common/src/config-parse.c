@@ -10,7 +10,7 @@
 
 #include "config-parse.h"
 #include "config-section.h"
-#include "config-util.h"
+#include "config-utils.h"
 
 config_err_t
 config_parse (struct config_section *sections, 

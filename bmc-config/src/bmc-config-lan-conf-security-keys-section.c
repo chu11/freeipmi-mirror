@@ -41,7 +41,7 @@ _get_key(bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (ipmi_cmd_set_channel_security_keys (state_data->dev,
+  if (ipmi_cmd_set_channel_security_keys (state_data->ipmi_ctx,
                                           channel_number,
                                           IPMI_CHANNEL_SECURITY_KEYS_OPERATION_READ_KEY,
                                           key_type,
@@ -52,7 +52,7 @@ _get_key(bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_channel_security_keys: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -96,7 +96,7 @@ _set_key(bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_channel_security_keys (state_data->dev,
+  if (ipmi_cmd_set_channel_security_keys (state_data->ipmi_ctx,
                                           channel_number,
                                           IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY,
                                           key_type,
@@ -107,7 +107,7 @@ _set_key(bmc_config_state_data_t *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_channel_security_keys: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

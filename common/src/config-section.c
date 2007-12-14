@@ -11,7 +11,7 @@
 #include <assert.h>
 
 #include "config-section.h"
-#include "config-util.h"
+#include "config-utils.h"
 
 int
 config_section_append(struct config_section **sections, 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.24 2007-10-18 16:18:54 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.25 2007-12-14 19:17:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -49,7 +49,7 @@ static fiid_obj_t
 _fiid_obj_create(fiid_template_t tmpl)
 {
   fiid_obj_t obj;
- 
+
   assert(tmpl != NULL);
  
   if ((obj = fiid_obj_create(tmpl)) == NULL)
@@ -64,7 +64,8 @@ _fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
   assert(obj && field && val);
 
   if (fiid_obj_get(obj, field, val) < 0)
-    ipmi_ping_err_exit("fiid_obj_get: %s", strerror(errno));
+    ipmi_ping_err_exit("fiid_obj_get: %s",
+                       fiid_strerror(fiid_obj_errnum(obj)));
 }
 
 int 

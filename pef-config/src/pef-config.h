@@ -1,20 +1,19 @@
 /*
-pef-config.h: Platform Event Filtering utility.
-Copyright (C) 2007 FreeIPMI Core Team
+  Copyright (C) 2007 FreeIPMI Core Team
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+  
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
 #ifndef _PEF_CONFIG_H
@@ -22,9 +21,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 
 #include "config-common.h"
 #include "config-comment.h"
@@ -34,7 +32,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "config-fiid.h"
 #include "config-parse.h"
 #include "config-section.h"
-#include "config-util.h"
+#include "config-utils.h"
 #include "config-validate.h"
 
 enum argp_option_keys
@@ -59,7 +57,7 @@ typedef struct pef_config_prog_data
 typedef struct pef_config_state_data
 { 
   pef_config_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   struct config_section *sections;
 
   /* achu: caching to make pef-config work more quickly */

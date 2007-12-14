@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_privilege_level.c,v 1.6 2007-10-18 16:18:53 chu11 Exp $
+ *  $Id: ipmipower_privilege_level.c,v 1.7 2007-12-14 19:16:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -41,7 +41,7 @@
 #include "ipmipower_privilege_level.h"
 #include "ipmipower_wrappers.h"
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 
 #define IPMIPOWER_PRIVILEGE_BUFLEN  4096
 

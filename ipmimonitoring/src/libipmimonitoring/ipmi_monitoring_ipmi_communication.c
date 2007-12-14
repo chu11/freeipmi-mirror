@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.14 2007-10-18 16:18:50 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.15 2007-12-14 19:16:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -56,11 +56,11 @@ _ipmi_communication_cleanup(ipmi_monitoring_ctx_t c)
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
 
-  if (c->comm.dev)
+  if (c->comm.ipmi_ctx)
     {
-      ipmi_close_device(c->comm.dev);
-      ipmi_device_destroy(c->comm.dev);
-      c->comm.dev = NULL;
+      ipmi_ctx_close(c->comm.ipmi_ctx);
+      ipmi_ctx_destroy(c->comm.ipmi_ctx);
+      c->comm.ipmi_ctx = NULL;
     }
 }
 
@@ -73,7 +73,7 @@ _inband_init(ipmi_monitoring_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->comm.dev);
+  assert(c->comm.ipmi_ctx);
 
   if (config
       && (config->driver_type >= 0
@@ -100,51 +100,51 @@ _inband_init(ipmi_monitoring_ctx_t c,
 
   if (!config || config->driver_type < 0)
     {
-      if (ipmi_open_inband (c->comm.dev,
-                            IPMI_DEVICE_OPENIPMI,
-                            (config) ? config->disable_auto_probe : 0,
-                            (config) ? config->driver_address : 0,
-                            (config) ? config->register_spacing : 0,
-                            (config) ? config->driver_device : NULL,
-                            workaround_flags,
-                            flags) < 0)
-        {
-          IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_device_strerror(ipmi_device_errnum(c->comm.dev))));
-          
-          if (ipmi_open_inband (c->comm.dev,
-                                IPMI_DEVICE_KCS,
+      if (ipmi_ctx_open_inband (c->comm.ipmi_ctx,
+                                IPMI_DEVICE_OPENIPMI,
                                 (config) ? config->disable_auto_probe : 0,
                                 (config) ? config->driver_address : 0,
                                 (config) ? config->register_spacing : 0,
                                 (config) ? config->driver_device : NULL,
                                 workaround_flags,
                                 flags) < 0)
-            {
-              IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_device_strerror(ipmi_device_errnum(c->comm.dev))));
-              
-              if (ipmi_open_inband (c->comm.dev,
-                                    IPMI_DEVICE_SSIF,
+        {
+          IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->comm.ipmi_ctx))));
+          
+          if (ipmi_ctx_open_inband (c->comm.ipmi_ctx,
+                                    IPMI_DEVICE_KCS,
                                     (config) ? config->disable_auto_probe : 0,
                                     (config) ? config->driver_address : 0,
                                     (config) ? config->register_spacing : 0,
                                     (config) ? config->driver_device : NULL,
                                     workaround_flags,
                                     flags) < 0)
+            {
+              IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->comm.ipmi_ctx))));
+              
+              if (ipmi_ctx_open_inband (c->comm.ipmi_ctx,
+                                        IPMI_DEVICE_SSIF,
+                                        (config) ? config->disable_auto_probe : 0,
+                                        (config) ? config->driver_address : 0,
+                                        (config) ? config->register_spacing : 0,
+                                        (config) ? config->driver_device : NULL,
+                                        workaround_flags,
+                                        flags) < 0)
                 {
-                  IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_device_strerror(ipmi_device_errnum(c->comm.dev))));
+                  IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->comm.ipmi_ctx))));
                   
-                  if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BMC_BUSY)
+                  if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BMC_BUSY)
                     c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
-                  else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
-                           || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
-                           || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE
-                           || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_IPMI_ERROR)
+                  else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
+                           || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+                           || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                           || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_IPMI_ERROR)
                     c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-                  else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_OUT_OF_MEMORY)
+                  else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_OUT_OF_MEMORY)
                     c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-                  else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SYSTEM_ERROR)
+                  else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR)
                     c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
-                  else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_DRIVER_PATH_REQUIRED)
+                  else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_DRIVER_PATH_REQUIRED)
                     c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
                   else
                     c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
@@ -164,29 +164,29 @@ _inband_init(ipmi_monitoring_ctx_t c,
       else
         driver_type = IPMI_DEVICE_OPENIPMI;
 
-      if (ipmi_open_inband (c->comm.dev,
-                            driver_type,
-                            (config) ? config->disable_auto_probe : 0,
-                            (config) ? config->driver_address : 0,
-                            (config) ? config->register_spacing : 0,
-                            (config) ? config->driver_device : NULL,
-                            workaround_flags,
-                            flags) < 0)
+      if (ipmi_ctx_open_inband (c->comm.ipmi_ctx,
+                                driver_type,
+                                (config) ? config->disable_auto_probe : 0,
+                                (config) ? config->driver_address : 0,
+                                (config) ? config->register_spacing : 0,
+                                (config) ? config->driver_device : NULL,
+                                workaround_flags,
+                                flags) < 0)
         {
-          IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_device_strerror(ipmi_device_errnum(c->comm.dev))));
+          IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->comm.ipmi_ctx))));
 
-          if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BMC_BUSY)
+          if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BMC_BUSY)
             c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
-          else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
-                   || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
-                   || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE
-                   || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_IPMI_ERROR)
+          else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
+                   || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+                   || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                   || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_IPMI_ERROR)
             c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-          else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_OUT_OF_MEMORY)
+          else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_OUT_OF_MEMORY)
             c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-          else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SYSTEM_ERROR)
+          else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR)
             c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
-          else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_DRIVER_PATH_REQUIRED)
+          else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_DRIVER_PATH_REQUIRED)
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
           else
             c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
@@ -216,7 +216,7 @@ _ipmi_1_5_init(ipmi_monitoring_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->comm.dev);
+  assert(c->comm.ipmi_ctx);
   assert(hostname);
 
   if (strlen(hostname) > MAXHOSTNAMELEN
@@ -274,11 +274,11 @@ _ipmi_1_5_init(ipmi_monitoring_ctx_t c,
   else
     retransmission_timeout_len = IPMI_MONITORING_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT;
 
-   if (retransmission_timeout_len > session_timeout_len)
-     {
-       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-       return -1;
-     }
+  if (retransmission_timeout_len > session_timeout_len)
+    {
+      c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      return -1;
+    }
 
   workaround_flags = 0;
   if (config && config->workaround_flags)
@@ -301,47 +301,46 @@ _ipmi_1_5_init(ipmi_monitoring_ctx_t c,
   else
     flags = IPMI_FLAGS_DEFAULT;
   
-  if (ipmi_open_outofband (c->comm.dev,
-                           IPMI_DEVICE_LAN,
-                           hostname,
-                           (config) ? config->username : NULL,
-                           (config) ? config->password : NULL,
-                           authentication_type,
-                           privilege_level,
-                           session_timeout_len,
-                           retransmission_timeout_len,
-                           workaround_flags,
-                           flags) < 0)
+  if (ipmi_ctx_open_outofband (c->comm.ipmi_ctx,
+                               hostname,
+                               (config) ? config->username : NULL,
+                               (config) ? config->password : NULL,
+                               authentication_type,
+                               privilege_level,
+                               session_timeout_len,
+                               retransmission_timeout_len,
+                               workaround_flags,
+                               flags) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_open_outofband: %s", ipmi_device_strerror(ipmi_device_errnum(c->comm.dev))));
-      if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_USERNAME_INVALID)
+      IPMI_MONITORING_DEBUG(("ipmi_ctx_open_outofband: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->comm.ipmi_ctx))));
+      if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_USERNAME_INVALID)
         c->errnum = IPMI_MONITORING_ERR_USERNAME_INVALID;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PASSWORD_INVALID)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID)
         c->errnum = IPMI_MONITORING_ERR_PASSWORD_INVALID;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT)
         c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED)
         c->errnum = IPMI_MONITORING_ERR_PRIVILEGEL_LEVEL_CANNOT_BE_OBTAINED;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE)
         c->errnum = IPMI_MONITORING_ERR_AUTHENTICATION_TYPE_UNAVAILABLE;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT)
         c->errnum = IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SESSION_TIMEOUT)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT)
         c->errnum = IPMI_MONITORING_ERR_SESSION_TIMEOUT;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
-               || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
-               || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE
-               || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_IPMI_ERROR)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
+               || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+               || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+               || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_IPMI_ERROR)
         c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BMC_BUSY)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BMC_BUSY)
         c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_OUT_OF_MEMORY)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_OUT_OF_MEMORY)
         c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_HOSTNAME_INVALID)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID)
         c->errnum = IPMI_MONITORING_ERR_HOSTNAME_INVALID;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PARAMETERS)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_PARAMETERS)
         c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SYSTEM_ERROR)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR)
         c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
       else
         c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
@@ -368,7 +367,7 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
                                     | IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION);
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->comm.dev);
+  assert(c->comm.ipmi_ctx);
   assert(hostname);
 
   if (strlen(hostname) > MAXHOSTNAMELEN
@@ -423,11 +422,11 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
   else
     retransmission_timeout_len = IPMI_MONITORING_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT;
 
-   if (retransmission_timeout_len > session_timeout_len)
-     {
-       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-       return -1;
-     }
+  if (retransmission_timeout_len > session_timeout_len)
+    {
+      c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      return -1;
+    }
 
   workaround_flags = 0;
   if (config && config->workaround_flags)
@@ -448,53 +447,52 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
   else
     flags = IPMI_FLAGS_DEFAULT;
 
-  if (ipmi_open_outofband_2_0 (c->comm.dev,
-                               IPMI_DEVICE_LAN_2_0,
-                               hostname,
-                               (config) ? config->username : NULL,
-                               (config) ? config->password : NULL,
-                               (config) ? config->k_g : NULL,
-                               (config && config->k_g) ? config->k_g_len : 0,
-                               privilege_level,
-                               cipher_suite_id,
-                               session_timeout_len,
-                               retransmission_timeout_len,
-                               workaround_flags,
-                               flags) < 0)
+  if (ipmi_ctx_open_outofband_2_0 (c->comm.ipmi_ctx,
+                                   hostname,
+                                   (config) ? config->username : NULL,
+                                   (config) ? config->password : NULL,
+                                   (config) ? config->k_g : NULL,
+                                   (config && config->k_g) ? config->k_g_len : 0,
+                                   privilege_level,
+                                   cipher_suite_id,
+                                   session_timeout_len,
+                                   retransmission_timeout_len,
+                                   workaround_flags,
+                                   flags) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_open_outofband_2_0: %s", ipmi_device_strerror(ipmi_device_errnum(c->comm.dev))));
-      if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_USERNAME_INVALID)
+      IPMI_MONITORING_DEBUG(("ipmi_ctx_open_outofband_2_0: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->comm.ipmi_ctx))));
+      if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_USERNAME_INVALID)
         c->errnum = IPMI_MONITORING_ERR_USERNAME_INVALID;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PASSWORD_INVALID)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID)
         c->errnum = IPMI_MONITORING_ERR_PASSWORD_INVALID;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT)
         c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED)
         c->errnum = IPMI_MONITORING_ERR_PRIVILEGEL_LEVEL_CANNOT_BE_OBTAINED;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_K_G_INVALID)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_K_G_INVALID)
         c->errnum = IPMI_MONITORING_ERR_K_G_INVALID;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE)
         c->errnum = IPMI_MONITORING_ERR_CIPHER_SUITE_ID_UNAVAILABLE;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT)
         c->errnum = IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_IPMI_2_0_UNAVAILABLE)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_IPMI_2_0_UNAVAILABLE)
         c->errnum = IPMI_MONITORING_ERR_IPMI_2_0_UNAVAILABLE;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SESSION_TIMEOUT)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT)
         c->errnum = IPMI_MONITORING_ERR_SESSION_TIMEOUT;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
-               || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
-               || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE
-               || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_IPMI_ERROR)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
+               || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+               || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+               || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_IPMI_ERROR)
         c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BMC_BUSY)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BMC_BUSY)
         c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_OUT_OF_MEMORY)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_OUT_OF_MEMORY)
         c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_HOSTNAME_INVALID)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID)
         c->errnum = IPMI_MONITORING_ERR_HOSTNAME_INVALID;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PARAMETERS)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_PARAMETERS)
         c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SYSTEM_ERROR)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR)
         c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
       else
         c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
@@ -511,7 +509,7 @@ _outofband_init(ipmi_monitoring_ctx_t c,
 {
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->comm.dev);
+  assert(c->comm.ipmi_ctx);
   assert(hostname);
 
   if (strlen(hostname) > MAXHOSTNAMELEN
@@ -552,11 +550,11 @@ ipmi_monitoring_ipmi_communication_init(ipmi_monitoring_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(!c->comm.dev);
+  assert(!c->comm.ipmi_ctx);
 
   memset(&(c->comm), '\0', sizeof(struct ipmi_monitoring_communication));
  
-  if (!(c->comm.dev = ipmi_device_create()))
+  if (!(c->comm.ipmi_ctx = ipmi_ctx_create()))
     {
       IPMI_MONITORING_DEBUG(("ipmi_device_create: %s", strerror(errno)));
       c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
@@ -590,31 +588,31 @@ ipmi_monitoring_ipmi_sendrecv(ipmi_monitoring_ctx_t c,
 {
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->comm.dev);
+  assert(c->comm.ipmi_ctx);
   assert(fiid_obj_valid(obj_cmd_rq));
   assert(fiid_obj_valid(obj_cmd_rs));
 
-  if (ipmi_cmd (c->comm.dev,
+  if (ipmi_cmd (c->comm.ipmi_ctx,
                 lun,
                 net_fn,
                 obj_cmd_rq,
                 obj_cmd_rs) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_device_strerror(ipmi_device_errnum(c->comm.dev))));
-      if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SESSION_TIMEOUT)
+      IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->comm.ipmi_ctx))));
+      if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT)
         c->errnum = IPMI_MONITORING_ERR_SESSION_TIMEOUT;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
-               || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
-               || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE
-               || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_IPMI_ERROR)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
+               || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+               || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+               || ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_IPMI_ERROR)
         c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BMC_BUSY)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_BMC_BUSY)
         c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT)
         c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_OUT_OF_MEMORY)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_OUT_OF_MEMORY)
         c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SYSTEM_ERROR)
+      else if (ipmi_ctx_errnum(c->comm.ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR)
         c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
       else
         c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;

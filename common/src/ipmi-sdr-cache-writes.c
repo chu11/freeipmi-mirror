@@ -1,20 +1,19 @@
 /*
-ipmi-sdr-cache-writes.c: SDR cache creation and management apis.
-Copyright (C) 2006 FreeIPMI Core Team
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
+  Copyright (C) 2006 FreeIPMI Core Team
+  
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+  
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
 #if HAVE_CONFIG_H
@@ -54,13 +53,12 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <errno.h>
 #include <assert.h>
 
-#include "freeipmi/fiid.h"
-#include "freeipmi/ipmi-sdr-repository-cmds.h"
-#include "freeipmi/ipmi-sdr-record-types.h"
-#include "freeipmi/udm/ipmi-sdr-repository-cmds-udm.h"
-#include "freeipmi/udm/ipmi-sensor-cmds-udm.h"
+#include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
+#include "freeipmi/api/ipmi-sensor-cmds-api.h"
+#include "freeipmi/cmds/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/fiid/fiid.h"
+#include "freeipmi/record-format/ipmi-sdr-record-format.h"
 
-#include "bit-ops.h"
 #include "freeipmi-portability.h"
 
 #include "ipmi-sdr-cache.h"
@@ -68,7 +66,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 int 
 sdr_cache_write_repository_info (sdr_cache_ctx_t ctx,
-                                 ipmi_device_t dev,
+                                 ipmi_ctx_t ipmi_ctx,
                                  FILE *fp,
                                  unsigned int *sdr_record_count)
 {
@@ -78,13 +76,13 @@ sdr_cache_write_repository_info (sdr_cache_ctx_t ctx,
 
   assert(ctx);
   assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
-  assert(dev);
+  assert(ipmi_ctx);
   assert(fp);
   assert(sdr_record_count);
 
   _SDR_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sdr_repository_info_rs);
 
-  if (ipmi_cmd_get_sdr_repository_info (dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_sdr_repository_info (ipmi_ctx, obj_cmd_rs) != 0)
     {
       ctx->errnum = SDR_CACHE_CTX_ERR_IPMI_COMMUNICATION;
       goto cleanup;

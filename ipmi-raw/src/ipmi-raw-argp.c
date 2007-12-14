@@ -1,8 +1,4 @@
 /* 
-   $Id: ipmi-raw-argp.c,v 1.22 2007-09-05 20:13:26 chu11 Exp $ 
-   
-   ipmi-raw-argp.c - ipmi-raw command line argument parser.
-   
    Copyright (C) 2005 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify
@@ -31,7 +27,7 @@
 #endif /* STDC_HEADERS */
 #include <argp.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "ipmi-raw.h"
 #include "ipmi-raw-argp.h"
 

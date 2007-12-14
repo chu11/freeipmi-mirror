@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.23 2007-10-18 16:18:53 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.24 2007-12-14 19:16:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -33,11 +33,11 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <errno.h>
-#include <assert.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <assert.h>
+#include <errno.h>
 
 #include "ipmipower_wrappers.h"
 

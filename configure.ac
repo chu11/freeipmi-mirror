@@ -1,68 +1,104 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([freeipmi],[0.5.1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.102 2007-12-05 16:53:44 chu11 Exp $])
-AM_INIT_AUTOMAKE([1.8])
+AC_INIT([freeipmi],[0.6.0.alpha0],[freeipmi-devel@gnu.org])
+AC_REVISION([$Id: configure.ac,v 1.103 2007-12-14 19:16:10 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
 
+AC_CONFIG_AUX_DIR([config])
+
 dnl Locate the sources.
 AC_CONFIG_SRCDIR([ChangeLog.0])
 
+AM_INIT_AUTOMAKE([tar-ustar 1.9])
+
 dnl create a config.h file
-AM_CONFIG_HEADER([config.h])
+AM_CONFIG_HEADER([config/config.h])
 
 dnl define output files
 AC_CONFIG_FILES([
         Makefile doc/Makefile 
-	common/Makefile common/doc/Makefile common/src/Makefile
-        libfreeipmi/Makefile libfreeipmi/include/Makefile 
-	libfreeipmi/src/Makefile libfreeipmi/src/udm/Makefile
-        bmc-watchdog/Makefile bmc-watchdog/src/Makefile
-        ipmipower/Makefile ipmipower/src/Makefile
-	ipmiconsole/Makefile ipmiconsole/src/Makefile
-	ipmiconsole/src/libipmiconsole/Makefile ipmiconsole/src/ipmiconsole/Makefile
-	ipmimonitoring/Makefile ipmimonitoring/src/Makefile
-	ipmimonitoring/src/libipmisdrcache/Makefile ipmimonitoring/src/libipmimonitoring/Makefile ipmimonitoring/src/ipmimonitoring/Makefile
-        ipmidetect/Makefile 
-        ipmidetect/src/Makefile
-        ipmidetect/src/ipmidetect/Makefile
-        ipmidetect/src/ipmidetectd/Makefile
-        ipmidetect/src/libipmidetect/Makefile
-        ipmi-raw/Makefile ipmi-raw/src/Makefile 
-	ipmi-raw/ipmi-raw.8.pre
-        ipmi-sel/Makefile ipmi-sel/src/Makefile 
-	ipmi-sel/ipmi-sel.8.pre
-        pef-config/Makefile pef-config/src/Makefile 
-	pef-config/pef-config.8.pre
-        ipmi-sensors/Makefile ipmi-sensors/src/Makefile 
-	ipmi-sensors/ipmi-sensors.8.pre
-        ipmi-locate/Makefile ipmi-locate/src/Makefile
-        bmc-info/Makefile bmc-info/src/Makefile
-	bmc-info/bmc-info.8.pre
-        ipmi-fru/Makefile ipmi-fru/src/Makefile
-	ipmi-fru/ipmi-fru.8.pre
-        ipmiping/Makefile ipmiping/src/Makefile
-        rmcpping/Makefile rmcpping/src/Makefile
-        bmc-watchdog/bmc-watchdog.8.pre \
-        ipmipower/ipmipower.8.pre \
-        ipmipower/ipmipower.conf.5 \
-	ipmiconsole/ipmiconsole.8.pre \
-        ipmiconsole/ipmiconsole.conf.5 \
+	common/Makefile 
+        common/doc/Makefile 
+        common/src/Makefile
+        libfreeipmi/Makefile 
+        libfreeipmi/include/Makefile 
+	libfreeipmi/src/Makefile 
+        libfreeipmi/src/api/Makefile
+        libfreeipmi/src/cmds/Makefile
+        libfreeipmi/src/debug/Makefile
+        libfreeipmi/src/driver/Makefile
+        libfreeipmi/src/fiid/Makefile
+        libfreeipmi/src/interface/Makefile
+        libfreeipmi/src/libcommon/Makefile
+        libfreeipmi/src/locate/Makefile
+        libfreeipmi/src/record-format/Makefile
+        libfreeipmi/src/spec/Makefile
+        libfreeipmi/src/util/Makefile
+        bmc-watchdog/Makefile 
+        bmc-watchdog/bmc-watchdog.8.pre
+        bmc-watchdog/src/Makefile
+        ipmipower/Makefile 
+        ipmipower/ipmipower.8.pre
+        ipmipower/ipmipower.conf.5
+        ipmipower/src/Makefile
+	ipmiconsole/Makefile 
+	ipmiconsole/ipmiconsole.8.pre
+        ipmiconsole/ipmiconsole.conf.5
         ipmiconsole/libipmiconsole.3
+        ipmiconsole/src/Makefile
+	ipmiconsole/src/libipmiconsole/Makefile
+        ipmiconsole/src/ipmiconsole/Makefile
+	ipmimonitoring/Makefile
+        ipmimonitoring/src/Makefile
 	ipmimonitoring/ipmimonitoring.8.pre
         ipmimonitoring/libipmimonitoring.3
+	ipmimonitoring/src/libipmisdrcache/Makefile
+        ipmimonitoring/src/libipmimonitoring/Makefile 
+        ipmimonitoring/src/ipmimonitoring/Makefile
+        ipmidetect/Makefile
         ipmidetect/ipmidetect.8
         ipmidetect/ipmidetect.conf.5
         ipmidetect/ipmidetectd.8
         ipmidetect/ipmidetectd.conf.5
         ipmidetect/libipmidetect.3
-        ipmiping/ipmiping.8 rmcpping/rmcpping.8
-	bmc-config/Makefile bmc-config/src/Makefile
-	bmc-config/bmc-config.8.pre bmc-config/bmc-config.conf.5 
+        ipmidetect/src/Makefile
+        ipmidetect/src/ipmidetect/Makefile
+        ipmidetect/src/ipmidetectd/Makefile
+        ipmidetect/src/libipmidetect/Makefile
+        ipmi-raw/Makefile 
+	ipmi-raw/ipmi-raw.8.pre
+        ipmi-raw/src/Makefile 
+        ipmi-sel/Makefile 
+	ipmi-sel/ipmi-sel.8.pre
+        ipmi-sel/src/Makefile 
+        pef-config/Makefile
+	pef-config/pef-config.8.pre
+        pef-config/src/Makefile 
+        ipmi-sensors/Makefile 
+	ipmi-sensors/ipmi-sensors.8.pre
+        ipmi-sensors/src/Makefile 
+        ipmi-locate/Makefile 
+        ipmi-locate/src/Makefile
+        bmc-info/Makefile 
+	bmc-info/bmc-info.8.pre
+        bmc-info/src/Makefile
+        ipmi-fru/Makefile 
+	ipmi-fru/ipmi-fru.8.pre
+        ipmi-fru/src/Makefile
+        ipmiping/Makefile 
+        ipmiping/ipmiping.8 
+        ipmiping/src/Makefile
+        rmcpping/Makefile 
+        rmcpping/rmcpping.8
+        rmcpping/src/Makefile
+	bmc-config/Makefile 
+ 	bmc-config/bmc-config.8.pre 
+        bmc-config/bmc-config.conf.5 
+        bmc-config/src/Makefile
 	ipmi-chassis/Makefile
-	ipmi-chassis/src/Makefile
 	ipmi-chassis/ipmi-chassis.8.pre
+	ipmi-chassis/src/Makefile
         freeipmi.spec])
 
 ISODATE=`date +%Y-%m-%d`
@@ -80,7 +116,7 @@ AC_SUBST([ISODATE])
 #
 # If any interfaces have been removed, set age = 0
 #
-LIBFREEIPMI_CURRENT=5
+LIBFREEIPMI_CURRENT=6
 LIBFREEIPMI_REVISION=0
 LIBFREEIPMI_AGE=0
 
@@ -120,7 +156,7 @@ AC_SUBST([LIBIPMICONSOLE_VERSION_INFO])
 # If any interfaces have been removed, set age = 0
 #
 LIBIPMIMONITORING_CURRENT=1
-LIBIPMIMONITORING_REVISION=0
+LIBIPMIMONITORING_REVISION=1
 LIBIPMIMONITORING_AGE=0
 LIBIPMIMONITORING_VERSION_INFO=$LIBIPMIMONITORING_CURRENT:$LIBIPMIMONITORING_REVISION:$LIBIPMIMONITORING_AGE
 AC_SUBST([LIBIPMIMONITORING_VERSION_INFO])
@@ -160,16 +196,6 @@ if test "x${enable_trace}" = "xyes" ; then
      AC_DEFINE([IPMI_TRACE],[1],[Define to turn on error tracing])
 elif test "x${enable_trace}" = "x" ; then
      enable_trace=no
-fi
-
-dnl Enable error syslogging. Lower level calls will spit log error messages
-dnl to the syslog.
-AC_ARG_ENABLE([syslog],
-              AC_HELP_STRING([--enable-syslog], [turn on error syslogging]))
-if test "x${enable_syslog}" = "xyes" ; then
-     AC_DEFINE([IPMI_SYSLOG],[1],[Define to turn on error syslogging])
-elif test "x${enable_syslog}" = "x" ; then
-     enable_syslog=no
 fi
 
 dnl Turn off all optimizations when debugging

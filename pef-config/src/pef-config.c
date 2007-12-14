@@ -1,20 +1,19 @@
 /*
-pef-config.c: Platform Event Filtering utility.
-Copyright (C) 2005-2007 FreeIPMI Core Team
+  Copyright (C) 2005-2007 FreeIPMI Core Team
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
 #if HAVE_CONFIG_H
@@ -32,9 +31,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <argp.h>
 #include <assert.h>
 
-#include "cmdline-parse-common.h"
 #include "freeipmi-portability.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
 #include "pef-config-info.h"
@@ -47,7 +46,7 @@ _pef_config_state_data_init(pef_config_state_data_t *state_data)
 
   memset(state_data, '\0', sizeof(pef_config_state_data_t));
   state_data->prog_data = NULL;
-  state_data->dev = NULL;
+  state_data->ipmi_ctx = NULL;
 
   state_data->lan_channel_number_initialized = 0;
   state_data->number_of_lan_alert_destinations_initialized = 0;
@@ -61,8 +60,8 @@ _pef_config (void *arg)
 {
   pef_config_state_data_t state_data;
   pef_config_prog_data_t *prog_data;
-  ipmi_device_t dev = NULL;
-  char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
+  ipmi_ctx_t ipmi_ctx = NULL;
+  char errmsg[IPMI_OPEN_ERRMSGLEN];
   struct config_section *sections = NULL;
   int exit_code = -1;
   config_err_t ret = 0;
@@ -71,11 +70,11 @@ _pef_config (void *arg)
 
   prog_data = (pef_config_prog_data_t *) arg;
   
-  if (!(dev = ipmi_device_open(prog_data->progname,
-                               prog_data->args->common.hostname,
-                               &(prog_data->args->common),
-                               errmsg,
-                               IPMI_DEVICE_OPEN_ERRMSGLEN)))
+  if (!(ipmi_ctx = ipmi_open(prog_data->progname,
+                             prog_data->args->common.hostname,
+                             &(prog_data->args->common),
+                             errmsg,
+                             IPMI_OPEN_ERRMSGLEN)))
     {
       fprintf(stderr, "%s\n", errmsg);
       exit_code = EXIT_FAILURE;
@@ -83,7 +82,7 @@ _pef_config (void *arg)
     }
 
   _pef_config_state_data_init (&state_data);
-  state_data.dev = dev;
+  state_data.ipmi_ctx = ipmi_ctx;
   state_data.prog_data = prog_data;
 
   if (!(sections = pef_config_sections_create (&state_data)))
@@ -286,10 +285,10 @@ _pef_config (void *arg)
   
   exit_code = 0;
  cleanup:
-  if (dev)
+  if (ipmi_ctx)
     {
-      ipmi_close_device (dev);
-      ipmi_device_destroy (dev);
+      ipmi_ctx_close (ipmi_ctx);
+      ipmi_ctx_destroy (ipmi_ctx);
     }
   if (file_opened)
     fclose(fp);

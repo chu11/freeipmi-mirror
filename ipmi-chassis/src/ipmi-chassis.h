@@ -1,6 +1,4 @@
 /* 
-   ipmi-chassis.h - IPMI Chassis information
-   
    Copyright (C) 2007 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify
@@ -23,7 +21,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "pstdout.h"
 
 enum ipmi_chassis_keys
@@ -87,7 +85,7 @@ typedef struct ipmi_chassis_prog_data
 typedef struct ipmi_chassis_state_data
 {
   ipmi_chassis_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
 } ipmi_chassis_state_data_t;
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.h,v 1.5 2007-10-18 16:18:45 chu11 Exp $
+ *  $Id: ipmi-fru.h,v 1.6 2007-12-14 19:16:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -30,7 +30,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 
@@ -70,7 +70,7 @@ typedef struct ipmi_fru_prog_data
 typedef struct ipmi_fru_state_data
 {
   ipmi_fru_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   char *hostname;
   sdr_cache_ctx_t sdr_cache_ctx;

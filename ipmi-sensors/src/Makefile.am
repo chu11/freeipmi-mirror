@@ -1,21 +1,28 @@
 sbin_PROGRAMS=ipmi-sensors
-ipmi_sensors_SOURCES=ipmi-sensors.c sensors-very-verbose-display.c \
-	ipmi-sensors-argp.c sensors-simple-display.c ipmi-sensors-utils.c \
-	sensors-verbose-display.c
-ipmi_sensors_LDADD = ../../common/src/libcmdlineparsecommon.la \
+
+ipmi_sensors_SOURCES = \
+	ipmi-sensors.c \
+	ipmi-sensors-argp.c \
+	ipmi-sensors-simple-display.c \
+	ipmi-sensors-verbose-display.c \
+	ipmi-sensors-very-verbose-display.c
+
+ipmi_sensors_LDADD = \
 	../../common/src/libtoolcommon.la \
 	../../common/src/libsdr.la \
-	../../common/src/libpstdout.la \
 	../../common/src/libhostrange.la \
-	../../common/src/libcbuf.la \
-	../../common/src/libllnlcommon.la \
+	../../common/src/libmiscutils.la \
 	../../ipmidetect/src/libipmidetect/libipmidetect.la \
 	../../common/src/libsensor.la \
 	../../libfreeipmi/src/libfreeipmi.la \
 	../../common/src/libfreeipmiportability.la
  
-noinst_HEADERS=ipmi-sensors.h ipmi-sensors-utils.h sensors-verbose-display.h \
-	ipmi-sensors-argp.h sensors-simple-display.h sensors-very-verbose-display.h
+noinst_HEADERS = \
+	ipmi-sensors.h \
+	ipmi-sensors-argp.h \
+	ipmi-sensors-simple-display.h \
+	ipmi-sensors-verbose-display.h \
+	ipmi-sensors-very-verbose-display.h
  
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \
@@ -26,9 +33,6 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
  
-../../common/src/libcmdlineparsecommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
 ../../common/src/libtoolcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
@@ -41,16 +45,10 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../common/src/libsensor.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libpstdout.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
 ../../common/src/libhostrange.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libcbuf.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libllnlcommon.la: force-dependency-check
+../../common/src/libmiscutils.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check

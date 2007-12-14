@@ -77,7 +77,7 @@ _get_event_filter_table (struct pef_config_state_data *state_data,
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_get_pef_configuration_parameters_event_filter_table (state_data->dev,
+  if (ipmi_cmd_get_pef_configuration_parameters_event_filter_table (state_data->ipmi_ctx,
 								    IPMI_GET_PEF_PARAMETER,
 								    filter_number,
 								    BLOCK_SELECTOR,
@@ -86,7 +86,7 @@ _get_event_filter_table (struct pef_config_state_data *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_configuration_parameters_event_filter_table: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -201,7 +201,7 @@ _set_event_filter_table (struct pef_config_state_data *state_data,
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_pef_configuration_parameters_event_filter_table (state_data->dev, 
+  if (ipmi_cmd_set_pef_configuration_parameters_event_filter_table (state_data->ipmi_ctx, 
 								    filter_number, 
 								    eft->filter_type, 
 								    eft->enable_filter, 
@@ -235,7 +235,7 @@ _set_event_filter_table (struct pef_config_state_data *state_data,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_pef_configuration_parameters_event_filter_table: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

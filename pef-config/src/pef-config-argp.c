@@ -1,8 +1,4 @@
 /* 
-   $Id: pef-config-argp.c,v 1.15 2007-11-19 22:36:23 chu11 Exp $ 
-   
-   pef-config-argp.c - Platform Event Filtering utility.
-   
    Copyright (C) 2005 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify
@@ -41,7 +37,7 @@
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
 

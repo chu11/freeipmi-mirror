@@ -1,12 +1,9 @@
 sbin_PROGRAMS=ipmi-raw
 ipmi_raw_SOURCES=ipmi-raw-argp.c ipmi-raw.c 
-ipmi_raw_LDADD = ../../common/src/libcmdlineparsecommon.la \
-		 ../../common/src/libtoolcommon.la \
+ipmi_raw_LDADD = ../../common/src/libtoolcommon.la \
 		 ../../libfreeipmi/src/libfreeipmi.la \
-		 ../../common/src/libpstdout.la \
 		 ../../common/src/libhostrange.la \
-		 ../../common/src/libcbuf.la \
-		 ../../common/src/libllnlcommon.la \
+		 ../../common/src/libmiscutils.la \
 		 ../../ipmidetect/src/libipmidetect/libipmidetect.la \
 		 ../../common/src/libfreeipmiportability.la
  
@@ -21,25 +18,16 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
  
-../../common/src/libcmdlineparsecommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
 ../../common/src/libtoolcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libpstdout.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
 ../../common/src/libhostrange.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libcbuf.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libllnlcommon.la: force-dependency-check
+../../common/src/libmiscutils.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check

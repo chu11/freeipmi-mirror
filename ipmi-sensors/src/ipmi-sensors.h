@@ -1,8 +1,4 @@
 /* 
-   $Id: ipmi-sensors.h,v 1.9 2007-09-05 20:13:27 chu11 Exp $ 
-   
-   ipmi-sensors.h - IPMI Sensors utility.
-   
    Copyright (C) 2006 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify
@@ -24,9 +20,8 @@
 #define _IPMI_SENSORS_H
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 
@@ -66,7 +61,7 @@ typedef struct ipmi_sensors_prog_data
 typedef struct ipmi_sensors_state_data
 {
   ipmi_sensors_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   char *hostname;
   sdr_cache_ctx_t sdr_cache_ctx;

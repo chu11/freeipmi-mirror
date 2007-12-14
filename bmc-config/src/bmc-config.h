@@ -1,7 +1,4 @@
 /* 
-
-   bmc-config.h 
-
    Copyright (C) 2006 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -25,9 +22,8 @@
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
 
-#include "cmdline-parse-common.h"
+#include "tool-cmdline-common.h"
 
 #include "config-common.h"
 #include "config-comment.h"
@@ -37,7 +33,7 @@
 #include "config-fiid.h"
 #include "config-parse.h"
 #include "config-section.h"
-#include "config-util.h"
+#include "config-utils.h"
 #include "config-validate.h"
 
 #define CIPHER_SUITE_LEN 16
@@ -63,7 +59,7 @@ typedef struct bmc_config_prog_data
 typedef struct bmc_config_state_data
 {
   bmc_config_prog_data_t *prog_data;
-  ipmi_device_t dev;
+  ipmi_ctx_t ipmi_ctx;
   struct config_section *sections;
 
   /* achu: caching to make rmcpplus priv go faster */

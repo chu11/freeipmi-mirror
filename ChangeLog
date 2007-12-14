@@ -1,3 +1,307 @@
+2007-12-14  Albert Chu <chu11@llnl.gov>
+
+	Major code reorganization and code cleanup from branch
+	libfreeipmi_rearch_branch.
+
+	* configure.ac: Require automake 1.9, support long filenames.
+
+	* config/: New directory.  Move .m4 files in this directory.
+
+	* autogen.sh, configure.ac: Update for new config directory.
+
+	* common/src/ipmi-sensor-api.c (system_software_type_desc):
+	Removed unused array of strings.
+
+	* common/src/ipmi-sensor-api.c: Add debugging via debug parameter.
+	Use internal wrapper functions rather than library wrapper
+	functions.
+
+	* ipmi-sensors/: Adjust code for sensor-api change.
+
+	* pef-config/: Remove linking to libsensor.la.
+
+	* configure.ac, freeipmi.spec.in, common/src/err-wrappers.h,
+	common/src/fiid-wrappers.h, common/src/udm-err-wrappers.h,
+	common/src/udm-fiid-wrappers.h: Remove --enable-syslog support.
+
+	* common/src/err-wrappers.h, common/src/fiid-wrappers.h,
+	common/src/udm-err-wrappers.h, common/src/udm-fiid-wrappers.h:
+	Update error logging routines with more details.  Add additional
+	error logging routines.  Fix several logging bugs.  Remove unused
+	wrappers.
+
+	* libfreeipmi/src/ipmi-kcs-aci.c,
+	libfreeipmi/src/ipmi-openipmi-api.c,
+	libfreeipmi/src/ipmi-ssif-api.c: Use error logging routines.
+
+	* libfreeipmi/include/freeipmi/ipmi-locate.h,
+	libfreeipmi/src/ipmi-locate.c,
+	libfreeipmi/src/ipmi-locate-acpi-spmi.c,
+	libfreeipmi/src/ipmi-locate-defaults.c,
+	libfreeipmi/src/ipmi-locate-dmidecode.c,
+	libfreeipmi/src/ipmi-locate-pci.c,
+	libfreeipmi/src/ipmi-locate-smbios.c: Re-work locate API with
+	error code returns.  Use new error logging routines appropriately.
+
+	* bmc-watchdog/src/, ipmi-locate/src/, libfreeipmi/src/udm/:
+	Re-work to use new locate API.
+
+	* libfreeipmi/src/ipmi-semaphores.h,
+	libfreeipmi/src/ipmi-semaphores.c: Remove unused code.  Re-work
+	for better erorr reporting/logging.
+
+	* libfreeipmi/include/freeipmi/ipmi-smic-api.h,
+	libfreeipmi/src/ipmi-smic-api.c: Removed files.
+
+	* libfreeipmi/: Adjust remaining code for removal of smic api.
+
+	* configure.ac: Update libfreeipmi version.
+
+	* ipmi-sel/src/ipmi-sel-wrapper.c: Use fiid wrappers
+	appropriately.
+
+	* bmc-info/src/bmc-info.c: Fix code logic to remove mem-leaks.
+
+	* common/src/config-util.h, common/src/config-util.c: Renamed to
+	config-utils.h and config-utils.c for consistency.
+
+	* ipmi-sensors/src/ipmi-sensors-util.h,
+	ipmi-sensors/src/ipmi-sensors-util.c: Removed files.  Move code
+	into other respective files.
+
+	* ipmiping/src/ipmiping.c (_fiid_obj_get), rmcpping/src/rmcpping.c
+	(_fiid_obj_get): Fix error message output.
+
+	* ipmi-chassis/src/ipmi-chassis.c: Add _FIID_OBJ_DESTROY macro.
+
+	* libfreeipmi/include/freeipmi/ipmi-ipmb-interface.h: Renamed to
+	ipmi-ipmb-lun-spec.h.
+
+	* libfreeipmi/include/freeipmi/ipmi-kcs-api.h,
+	libfreeipmi/include/freeipmi/ipmi-ssif-api.h,
+	libfreeipmi/include/ipmi-openipmi-api.h,
+	libfreeipmi/src/ipmi-kcs-api.c, libfreeipmi/src/ipmi-ssif-api.c,
+	libfreeipmi/src/ipmi-openipmi-api.c,
+	libfreeipmi/src/udm/ipmi-kcs-api-udm.c,
+	libfreeipmi/src/udm/ipmi-kcs-api-udm.h,
+	libfreeipmi/src/udm/ipmi-ssif-api-udm.c,
+	libfreeipmi/src/udm/ipmi-ssif-api-udm.h,
+	libfreeipmi/src/udm/ipmi-openipmi-api-udm.c,
+	libfreeipmi/src/udm/ipmi-openipmi-api-udm.h: Renamed to
+	ipmi-kcs-driver.h, ipmi-ssif-driver.h, ipmi-openipmi-driver.h,
+	ipmi-kcs-driver.c, ipmi-ssif-driver.c, ipmi-openipmi-driver.c,
+	ipmi-kcs-driver-udm.c, ipmi-kcs-driver-udm.h,
+	ipmi-ssif-driver-udm.c, ipmi-ssif-driver-udm.h,
+	ipmi-openipmi-driver-udm.c, ipmi-openipmi-driver-udm.h
+	respectively.
+
+	* libfreeipmi/include/freeipmi/ipmi-lan.h: Move everything into
+	ipmi-lan-interface.h.  Remove file.
+	
+	* libfreeipmi/src/ipmi-lan.c: Move everything into
+	ipmi-lan-interface.c.  Remove file.
+
+	* libfreeipmi/include/freeipmi/ipmi-rmcpplus.h: Move everything
+	into ipmi-rmcpplus-interface.h.  Remove file.
+	
+	* libfreeipmi/src/ipmi-rmcpplus.c: Move everything into
+	ipmi-rmcpplus-interface.c.  Remove file.
+
+	* libfreeipmi/src/ipmi-kcs.c,
+	libfreeipmi/include/freeipmi/ipmi-kcs.h: Rename to
+	ipmi-kcs-interface.c and ipmi-kcs-interface.h respectively.
+
+	* libfreeipmi/src/ipmi-rmcpplus-debug.c: Rename to
+	libfreeipmi/src/ipmi-debug-rmcpplus.c.
+
+	* libfreeipmi/src/ipmi-debug-lan.c,
+	libfreeipmi/src/ipmi-debug-rmcp.c,
+	libfreeipmi/src/ipmi-debug-common.c,
+	libfreeipmi/src/ipmi-debug-common.h: New files, split off from
+	ipmi-debug.c.
+
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-utils.h: New
+	file, split off from ipmi-cipher-suite-spec.h.
+
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-utils.c: New
+	file, split off from ipmi-cipher-suite-spec.c.
+
+	* libfreeipmi/include/freeipmi/ipmi-sel-record-types.h
+	(IPMI_SEL_RECORD_TYPE_IS_EVENT,
+	IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM,
+	IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM): Add new macros.
+
+	* libfreeipmi/include/freeipmi/ipmi-sel-record-types.h,
+	libfreeipmi/src/ipmi-sel-record-types.c
+	(ipmi_get_sel_record_type): Removed function.
+
+	* ipmi-sel/src/ipmi-sel-wrapper.c (_get_sel_record_type): New
+	function.
+
+	* ipm-sel/src/ipmi-sel-wrapper.c (_get_sel_system_event_record):
+	Use _get_sel_record_type.
+
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h,
+	libfreeipmi/include/freeipmi/ipmi-sel-record-types.h,
+	libfreeipmi/include/freeipmi/ipmi-sdr-record-types.h,
+	libfreeipmi/src/ipmi-cipher-suite-spec.c,
+	libfreeipmi/src/ipmi-sel-record-format.c,
+	libfreeipmi/src/ipmi-sdr-record-format.c: Rename to
+	ipmi-cipher-suite-record-format.h, ipmi-sel-record-format.h,
+	ipmi-sdr-record-format.h, ipmi-cipher-suite-record-format.c,
+	ipmi-sel-record-format.c, ipmi-sdr-record-format.c respectively.
+
+	* libfreeipmi/include/freeipmi/ipmi-error.h,
+	libfreeipmi/src/ipmi-error.c (ipmi_strerror_r,
+	ipmi_strerror_cmd_r, rmcpplus_status_strerror_r): Renamed to
+	ipmi_completion_code_strerror_r,
+	ipmi_completion_code_strerror_cmd_r, and
+	ipmi_rmcpplus_status_strerror_r respectively.
+
+	* libfreeipmi/include/freeipmi/rmcp-interface.h,
+	libfreeipmi/include/freeipmi/rmcp-cmds.h,
+	libfreeipmi/src/rmcp-interface.c, libfreeipmi/src/rmcp-cmds.c: New
+	files, split off from rmcp.h and rmcp.c.
+
+	* libfreeipmi/include/freeipmi/rmcp.h, libfreeipmi/src/rmcp.c:
+	Remove files.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
+	libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband,
+	ipmi_open_outofband_2_0): Remove pointless driver type argument.
+
+	* libfreeipmi/: Rework UDM interface to take ipmi_ctx_t instead of
+	ipmi_device_t which didn't make any sense.
+
+	* common/src/err-wrappers.h, common/src/fiid-wrappers.h,
+	common/src/udm-err-wrappers.h, common/src/udm-fiid-wrappers.h:
+	Renamed to ipmi-err-wrappers.h, ipmi-fiid-wrappers.h,
+	ipmi-err-wrappers-udm.h, and ipmi-fiid-wrappers.h respectively.
+	Moved into libfreeipmi/ appropriately.
+
+	* ipmi-sensors/src/: Rename files for consistency to code
+	organization in other tools.
+
+	* libfreeipmi/src/driver/, libfreeipmi/src/locate/,
+	libfreeipmi/src/debug/: New directories.  Move respective
+	sub-library code into those directories.
+
+	* libfreeipmi/include/driver/, libfreeipmi/include/locate/,
+	libfreeipmi/include/debug/: New directories.  Move respective
+	sub-library headers into those directories.
+
+ 	* libfreeipmi/src/ipmi-common.h, libfreeipmi/src/ipmi-common.c:
+	Removed files.  Move some functionality into ipmi-debug-common.h
+	and ipmi-debug-common.c.  Use some library functionality in
+	common/src/ in other circumstances.
+
+	* libfreeipmi/src/udm/, libfreeipmi/include/udm/: Rename to 'api'
+	instead of non-meaningful 'udm'.
+
+	* libfreeipmi/include/freeipmi/api/api.h: Removed file.  Moved
+	includes to freeipmi.h.
+
+	* libfreeipmi/include/freeipmi/ipmi-crypt.h: Move to
+	libfreeipmi/src.
+
+	* libfreeipmi/include/freeipmi/ipmi-utils.h,
+	libfreeipmi/src/ipmi-utils.c (ipmi_ipv4_address_string2int,
+	ipmi_mac_address_string2int): Move to common/src/config-util.h and
+	common/src/config-util.c.  Rename to
+	config_ipv4_address_string2int and config_mac_address_string2int
+	respectively.
+
+	* libfreeipmi/: Rename 'utils' files to 'util' files.
+
+	* common/src/common-utils.h, common/src/common-utils.c: Rename to
+	string-utils.h and string-utils.c respectively.
+
+	* common/src/md2.h, common/src/md2.c, common/src/md5.c,
+	common/src/md5.h: Move to libfreeipmi/src and rename to
+	ipmi-md2.h, ipmi-md2.c, ipmi-md5.h, ipmi-md5.c respectively.
+
+	* libfreeipmi/include/freeipmi/ipmi-error.h: Rename to
+	libfreeipmi/include/freeipmi/ipmi-error-util.h.
+
+	* common/src/xmalloc.h, common/src/xmalloc.c: Remove files.  Most
+	code uses normal malloc instead of xmalloc.
+
+	* ipmiconsole/src/libipmiconsole/cbuf.h,
+	ipmiconsole/src/libipmiconsole/cbuf.c: Renamed to scbuf.h and
+	scbuf.c since it different than cbuf.
+
+	* common/src: Remove separate libcbuf library.  Put cbuf back into
+	llnlcommon library.
+
+	* common/src/cmdline-parse-common.h,
+	common/src/cmdline-parse-common.c: Rename to
+	common/src/tool-cmdline-common.h and
+	common/src/tool-cmdline-common.c.  Merge into toolcommon utility
+	library.
+
+	* common/src/ipmi-sdr-cache.c: Remove bit-ops library need.
+
+	* common/src/config-util.c: Remove bit-ops library need.
+
+	* common/src/bit-ops.h, common/src/bit-ops.c: Moved into
+	libfreeipmi/src and renamed ipmi-bit-ops.h and ipmi-bit-ops.c.
+
+	* common/src: Rename libllnlcommon to just libcommon.
+
+	* libfreeipmi/src/util/: New directories.  Move respective
+	sub-library code into those directories.
+
+	* libfreeipmi/include/util/: New directories.  Move respective
+	sub-library headers into those directories.
+
+	* common/src/ipmi-sensor-api.h, common/src/ipmi-sensor-api.c:
+	Renamed to ipmi-sensor-common.h and ipmi-sensor-common.c.
+
+	* libfreeipmi/src/api/ipmi-lan-session-util.h,
+	libfreipmi/src/api/ipmi-lan-session-util.c: Renamed to
+	ipmi-lan-session-common.h ipmi-lan-session-common.c.
+
+	* common/src/: Merge libpstdout into libhostrange.
+
+	* libfreeipmi/src/libcommon/: New directory.  Move respective
+        sub-library headers into those directories.
+
+	* libfreeipmi/include/interface/, libfreeipmi/src/interface/: New
+	directories.  Move respective sub-library headers into those
+	directories.
+
+	* libfreeipmi/include/freeipmi/ipmi-fru-information-storage-definition.h:
+	Split into ipmi-fru-information-record-format.h,
+	ipmi-fru-chassis-types-spec.h, and ipmi-fru-language-codes-spec.h.
+
+	* libfreeipmi/src/ipmi-fru-information-storage-definition.c:
+	Split into ipmi-fru-information-record-format.c,
+	ipmi-fru-chassis-types-spec.c, and ipmi-fru-language-codes-spec.c.
+	
+	* libfreeipmi/include/freeipmi/record-format/,
+	libfreeipmi/src/record-format/: New directories.  Move respective
+	sub-library code into those directories.
+
+	* libfreeipmi/include/freeipmi/ipmi-sensor-and-event-code-tables.h:
+	Renamed to
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-and-event-code-tables-util.h.
+
+	* libfreeipmi/src/ipmi-sensor-and-event-code-tables.c: Renamed to
+	libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c.
+	
+	* libfreeipmi/include/freeipmi/spec/, libfreeipmi/src/spec/: New
+	directories.  Move respective sub-library code into those
+	directories.
+
+	* libfreeipmi/include/freeipmi/cmds/, libfreeipmi/src/cmds/: New
+	directories.  Move respective sub-library code into those
+	directories.
+
+	* Adjust remaining code and Makefiles for file name changes, new
+	files, new functions, function name changes, and removals.
+
+	* Various minor fixes and code cleanup.
+		
 2007-12-05  Albert Chu <chu11@llnl.gov>
 
 	* Tagged Release-0_5_0_base.

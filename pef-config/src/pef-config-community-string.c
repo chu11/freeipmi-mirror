@@ -34,7 +34,7 @@ community_string_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->dev,
+  if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->ipmi_ctx,
                                                                   channel_number,
                                                                   IPMI_GET_LAN_PARAMETER,
                                                                   SET_SELECTOR,
@@ -44,7 +44,7 @@ community_string_checkout (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_community_string: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -85,7 +85,7 @@ community_string_commit (const char *section_name,
       goto cleanup;
     }
   
-  if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->ipmi_ctx,
                                                                   channel_number,
                                                                   kv->value_input,
                                                                   strlen(kv->value_input),
@@ -94,7 +94,7 @@ community_string_commit (const char *section_name,
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_community_string: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
