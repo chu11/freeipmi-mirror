@@ -3,6 +3,10 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	Major code reorganization and code cleanup from branch
 	libfreeipmi_rearch_branch.
 
+	* config/: New directory.  Move .m4 files in this directory.
+
+	* autogen.sh, configure.ac: Update for new config directory.
+
 	* common/src/ipmi-sensor-api.c (system_software_type_desc):
 	Removed unused array of strings.
 
