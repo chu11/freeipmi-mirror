@@ -25,7 +25,7 @@
 
 #include "freeipmi/record-format/ipmi-cipher-suite-record-format.h"
 
-#include "common/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-err-wrappers.h"
 
 fiid_template_t tmpl_cipher_suite_record_header =
   {

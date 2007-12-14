@@ -57,8 +57,8 @@
 #include "ipmi-inband.h"
 #include "ipmi-semaphores.h"
 
-#include "common/ipmi-err-wrappers.h"
-#include "common/ipmi-fiid-wrappers.h"
+#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 

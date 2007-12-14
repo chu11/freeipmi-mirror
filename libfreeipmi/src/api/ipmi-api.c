@@ -71,7 +71,7 @@
 #include "ipmi-openipmi-driver-api.h"
 #include "ipmi-ssif-driver-api.h"
 
-#include "common/ipmi-crypt.h"
+#include "libcommon/ipmi-crypt.h"
 
 #include "freeipmi-portability.h"
 #include "secure.h"

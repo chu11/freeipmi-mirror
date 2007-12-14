@@ -1,9 +1,9 @@
 SUBDIRS = \
 	api \
-	common \
 	debug \
 	driver \
 	interface \
+	libcommon \
 	locate \
 	record-format \
 	util
@@ -50,10 +50,10 @@ libfreeipmi_la_CPPFLAGS = \
 
 libfreeipmi_la_LIBADD = \
 	api/libapi.la \
-	common/libcommon.la \
 	debug/libdebug.la \
 	driver/libdriver.la \
 	interface/libinterface.la \
+	libcommon/libcommon.la \
 	locate/liblocate.la \
 	record-format/librecordformat.la \
 	util/libutil.la \
@@ -66,9 +66,6 @@ noinst_HEADERS = \
 api/libapi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-common/libcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
 debug/libdebug.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
@@ -76,6 +73,9 @@ driver/libdriver.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 interface/libinterface.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+libcommon/libcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 locate/liblocate.la: force-dependency-check

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.h,v 1.1.2.1 2007-12-13 23:03:10 chu11 Exp $
+ *  $Id: ipmi-md2.h,v 1.1.2.1 2007-12-14 01:59:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.

@@ -42,7 +42,7 @@ extern "C" {
 #include "freeipmi/util/ipmi-error-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
-#include "common/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-err-wrappers.h"
 
 #if defined (IPMI_TRACE)
 #define __API_TRACE                                                          \

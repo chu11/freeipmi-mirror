@@ -55,8 +55,8 @@
 #include "freeipmi/ipmi-comp-code-spec.h"
 #include "freeipmi/interface/rmcp-interface.h"
 
-#include "common/ipmi-err-wrappers.h"
-#include "common/ipmi-fiid-wrappers.h"
+#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 

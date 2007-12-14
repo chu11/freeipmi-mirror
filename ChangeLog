@@ -242,11 +242,12 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* common/src/: Merge libpstdout into libhostrange.
 
-	* libfreeipmi/src/common/: New directories.  Move respective
+	* libfreeipmi/src/libcommon/: New directory.  Move respective
         sub-library headers into those directories.
 
-	* libfreeipmi/src/interface/: New directories.  Move respective
-        sub-library headers into those directories.
+	* libfreeipmi/include/interface/, libfreeipmi/src/interface/: New
+	directories.  Move respective sub-library headers into those
+	directories.
 
 	* libfreeipmi/include/freeipmi/ipmi-fru-information-storage-definition.h:
 	Split into ipmi-fru-information-record-format.h,

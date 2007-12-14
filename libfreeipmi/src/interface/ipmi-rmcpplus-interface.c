@@ -39,10 +39,10 @@
 #include "freeipmi/util/ipmi-rmcpplus-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
-#include "common/ipmi-crypt.h"
-#include "common/ipmi-err-wrappers.h"
-#include "common/ipmi-fiid-wrappers.h"
-#include "common/ipmi-md5.h"
+#include "libcommon/ipmi-crypt.h"
+#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-fiid-wrappers.h"
+#include "libcommon/ipmi-md5.h"
 
 #include "freeipmi-portability.h"
 #include "secure.h"

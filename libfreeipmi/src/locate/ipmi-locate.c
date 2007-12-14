@@ -30,7 +30,7 @@
 
 #include "freeipmi/locate/ipmi-locate.h"
 
-#include "common/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-err-wrappers.h"
 
 #include "freeipmi-portability.h"
 

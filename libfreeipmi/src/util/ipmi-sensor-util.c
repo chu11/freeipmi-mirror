@@ -29,7 +29,7 @@
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/ipmi-sensor-units-spec.h"
 
-#include "common/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-err-wrappers.h"
 
 #include "freeipmi-portability.h"
 

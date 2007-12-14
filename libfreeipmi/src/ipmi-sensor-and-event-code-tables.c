@@ -34,8 +34,8 @@
 #include "freeipmi/ipmi-sensor-and-event-code-tables.h"
 #include "freeipmi/fiid.h"
 
-#include "common/ipmi-err-wrappers.h"
-#include "common/ipmi-fiid-wrappers.h"
+#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 
