@@ -34,7 +34,7 @@
 
 #include "freeipmi/fiid/fiid.h"
 
-#include "ipmi-bit-ops.h"
+#include "libcommon/ipmi-bit-ops.h"
 
 #include "freeipmi-portability.h"
 #include "secure.h"

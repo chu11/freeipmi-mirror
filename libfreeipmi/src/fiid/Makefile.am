@@ -1,11 +1,7 @@
 noinst_LTLIBRARIES = libfiid.la
 
 libfiid_la_SOURCES = \
-	fiid.c \
-	ipmi-bit-ops.c
-
-noinst_HEADERS = \
-	ipmi-bit-ops.h
+	fiid.c
 
 libfiid_la_CFLAGS = -Wall
 libfiid_la_CPPFLAGS = \

@@ -1,11 +1,13 @@
 noinst_LTLIBRARIES = libcommon.la
 
 libcommon_la_SOURCES = \
+	ipmi-bit-ops.c \
 	ipmi-crypt.c \
 	ipmi-md2.c \
 	ipmi-md5.c
 
 noinst_HEADERS = \
+	ipmi-bit-ops.h \
 	ipmi-crypt.h \
 	ipmi-err-wrappers.h \
 	ipmi-fiid-wrappers.h \
