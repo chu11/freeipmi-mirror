@@ -4,9 +4,10 @@ For Developers
 --------------
 o Many libfreeipmi API changes.
   o locate/probing API revamped with context API.
-  o Various code re-organization.
   o SMIC driver/api removed. 
-  o 'udm' renamed to generic 'api'.
+  o 'udm' renamed to 'api'.
+  o 'ipmi_device_t' device context renamed to 'ipmi_ctx_t'.
+  o Various code re-organization into subdirectories.
 
 0.5.1
 -----
