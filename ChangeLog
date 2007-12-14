@@ -3,6 +3,8 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	Major code reorganization and code cleanup from branch
 	libfreeipmi_rearch_branch.
 
+	* configure.ac: Require automake 1.9, support long filenames.
+
 	* config/: New directory.  Move .m4 files in this directory.
 
 	* autogen.sh, configure.ac: Update for new config directory.
