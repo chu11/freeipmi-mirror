@@ -809,5 +809,5 @@ do {                                                                    \
 }
 #endif
 
-#endif /* err-wrappers.h */
+#endif /* ipmi-err-wrappers.h */
 

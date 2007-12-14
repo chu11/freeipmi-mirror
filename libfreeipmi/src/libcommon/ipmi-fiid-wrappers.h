@@ -1247,4 +1247,4 @@ do {                                                                          \
 }
 #endif
 
-#endif /* fiid-wrappers.h */
+#endif /* ipmi-fiid-wrappers.h */
