@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.18 2007-12-14 00:57:30 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.19 2007-12-14 03:53:04 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -36,7 +36,6 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sensor-cmds.h \
 	freeipmi/ipmi-serial-modem-cmds.h \
 	freeipmi/ipmi-sol-cmds.h \
-	freeipmi/ipmi-sensor-and-event-code-tables.h \
 	freeipmi/ipmi-chassis-boot-options-parameter-spec.h \
 	freeipmi/debug/ipmi-debug.h \
 	freeipmi/locate/ipmi-locate.h \
@@ -68,6 +67,7 @@ nobase_include_HEADERS = \
 	freeipmi/util/ipmi-error-util.h \
 	freeipmi/util/ipmi-lan-util.h \
 	freeipmi/util/ipmi-rmcpplus-util.h \
+	freeipmi/util/ipmi-sensor-and-event-code-tables-util.h \
 	freeipmi/util/ipmi-sensor-util.h \
 	freeipmi/util/ipmi-util.h \
 	freeipmi/util/rmcp-util.h

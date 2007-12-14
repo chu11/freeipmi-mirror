@@ -56,7 +56,6 @@ extern "C" {
 #include <freeipmi/ipmi-sensor-cmds.h>
 #include <freeipmi/ipmi-serial-modem-cmds.h>
 #include <freeipmi/ipmi-sol-cmds.h>
-#include <freeipmi/ipmi-sensor-and-event-code-tables.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/api/ipmi-chassis-cmds-api.h>
 #include <freeipmi/api/ipmi-device-global-cmds-api.h>
@@ -87,6 +86,7 @@ extern "C" {
 #include <freeipmi/util/ipmi-error-util.h>
 #include <freeipmi/util/ipmi-lan-util.h>
 #include <freeipmi/util/ipmi-rmcpplus-util.h>
+#include <freeipmi/util/ipmi-sensor-and-event-code-tables-util.h>
 #include <freeipmi/util/ipmi-sensor-util.h>
 #include <freeipmi/util/ipmi-util.h>
 #include <freeipmi/util/rmcp-util.h>

@@ -35,8 +35,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sel-cmds.c \
 	ipmi-sensor-cmds.c \
 	ipmi-serial-modem-cmds.c \
-	ipmi-sol-cmds.c \
-	ipmi-sensor-and-event-code-tables.c
+	ipmi-sol-cmds.c
 
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm 
 # libfreeipmi_la_CPPFLAGS = 
