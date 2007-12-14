@@ -34,8 +34,8 @@ extern "C" {
 
 #include "freeipmi/fiid.h"
 
-#include "ipmi-err-wrappers.h"
-#include "ipmi-fiid-wrappers.h"
+#include "common/ipmi-err-wrappers.h"
+#include "common/ipmi-fiid-wrappers.h"
 
 #define __FIID_ERRNO_SET_API_ERRNUM                \
 do {                                               \

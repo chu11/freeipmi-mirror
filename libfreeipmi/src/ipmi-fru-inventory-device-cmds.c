@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.3.4.1 2007-12-06 15:40:37 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.3.4.2 2007-12-14 00:01:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -36,8 +36,8 @@
 #include "freeipmi/ipmi-fru-inventory-device-cmds.h"
 #include "freeipmi/ipmi-cmd-spec.h"
 
-#include "ipmi-err-wrappers.h"
-#include "ipmi-fiid-wrappers.h"
+#include "common/ipmi-err-wrappers.h"
+#include "common/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 

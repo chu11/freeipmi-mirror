@@ -41,8 +41,8 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 
-#include "ipmi-err-wrappers.h"
-#include "ipmi-fiid-wrappers.h"
+#include "common/ipmi-err-wrappers.h"
+#include "common/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 

@@ -26,7 +26,7 @@
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 #include "freeipmi/ipmi-cipher-suite-record-format.h"
 
-#include "ipmi-err-wrappers.h"
+#include "common/ipmi-err-wrappers.h"
 
 int8_t 
 ipmi_cipher_suite_id_to_algorithms(uint8_t cipher_suite_id,

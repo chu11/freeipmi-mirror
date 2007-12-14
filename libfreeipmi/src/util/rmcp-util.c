@@ -27,8 +27,8 @@
 #include "freeipmi/util/rmcp-util.h"
 #include "freeipmi/rmcp-cmds.h"
 
-#include "ipmi-err-wrappers.h"
-#include "ipmi-fiid-wrappers.h"
+#include "common/ipmi-err-wrappers.h"
+#include "common/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 

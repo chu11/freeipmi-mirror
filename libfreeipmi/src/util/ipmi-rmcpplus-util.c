@@ -37,9 +37,9 @@
 #include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 
-#include "ipmi-err-wrappers.h"
-#include "ipmi-fiid-wrappers.h"
 #include "common/ipmi-crypt.h"
+#include "common/ipmi-err-wrappers.h"
+#include "common/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 #include "secure.h"

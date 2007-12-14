@@ -36,8 +36,8 @@
 
 #include "ipmi-debug-common.h"
 
-#include "ipmi-err-wrappers.h"
-#include "ipmi-fiid-wrappers.h"
+#include "common/ipmi-err-wrappers.h"
+#include "common/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 

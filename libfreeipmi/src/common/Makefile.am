@@ -7,6 +7,8 @@ libcommon_la_SOURCES = \
 
 noinst_HEADERS = \
 	ipmi-crypt.h \
+	ipmi-err-wrappers.h \
+	ipmi-fiid-wrappers.h \
 	ipmi-md2.h \
 	ipmi-md5.h
 

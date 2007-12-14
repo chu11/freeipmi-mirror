@@ -61,8 +61,6 @@ libfreeipmi_la_LIBADD = \
 	../../common/src/libmiscutils.la
 
 noinst_HEADERS = \
-	ipmi-err-wrappers.h \
-	ipmi-fiid-wrappers.h \
 	ipmi-bit-ops.h
 
 api/libapi.la: force-dependency-check

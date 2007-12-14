@@ -30,7 +30,7 @@
 
 #include "ipmi-semaphores.h"
 
-#include "ipmi-err-wrappers.h"
+#include "common/ipmi-err-wrappers.h"
 
 #include "freeipmi-portability.h"
 
