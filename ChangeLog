@@ -256,6 +256,10 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	Split into ipmi-fru-information-record-format.c,
 	ipmi-fru-chassis-types-spec.c, and ipmi-fru-language-codes-spec.c.
 	
+	* libfreeipmi/include/freeipmi/record-format/
+	libfreeipmi/src/record-format/: New directories.  Move respective
+	sub-library code into those directories.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

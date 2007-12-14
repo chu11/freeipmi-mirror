@@ -24,7 +24,7 @@
 #include <stdlib.h>
 
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
-#include "freeipmi/ipmi-cipher-suite-record-format.h"
+#include "freeipmi/record-format/ipmi-cipher-suite-record-format.h"
 
 #include "common/ipmi-err-wrappers.h"
 

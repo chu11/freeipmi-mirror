@@ -32,9 +32,9 @@
 
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-sel-cmds.h"
-#include "freeipmi/ipmi-sel-record-format.h"
 #include "freeipmi/ipmi-sensor-and-event-code-tables.h"
 #include "freeipmi/api/ipmi-sel-cmds-api.h"
+#include "freeipmi/record-format/ipmi-sel-record-format.h"
 
 #include "freeipmi-portability.h"
 #include "ipmi-sdr-cache.h"

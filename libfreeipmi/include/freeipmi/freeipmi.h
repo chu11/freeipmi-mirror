@@ -26,7 +26,6 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/ipmi-authentication-type-spec.h>
 #include <freeipmi/ipmi-channel-spec.h>
-#include <freeipmi/ipmi-cipher-suite-record-format.h>
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-comp-code-spec.h>
 #include <freeipmi/ipmi-ipmb-lun-spec.h>
@@ -47,7 +46,6 @@ extern "C" {
 #include <freeipmi/ipmi-device-global-cmds.h>
 #include <freeipmi/ipmi-fru-chassis-types-spec.h>
 #include <freeipmi/ipmi-fru-language-codes-spec.h>
-#include <freeipmi/ipmi-fru-information-record-format.h>
 #include <freeipmi/ipmi-fru-inventory-device-cmds.h>
 #include <freeipmi/ipmi-lan-cmds.h>
 #include <freeipmi/ipmi-messaging-support-cmds.h>
@@ -58,8 +56,6 @@ extern "C" {
 #include <freeipmi/ipmi-sensor-cmds.h>
 #include <freeipmi/ipmi-serial-modem-cmds.h>
 #include <freeipmi/ipmi-sol-cmds.h>
-#include <freeipmi/ipmi-sdr-record-format.h>
-#include <freeipmi/ipmi-sel-record-format.h>
 #include <freeipmi/ipmi-sensor-and-event-code-tables.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/api/ipmi-chassis-cmds-api.h>
@@ -83,6 +79,10 @@ extern "C" {
 #include <freeipmi/interface/ipmi-rmcpplus-interface.h>
 #include <freeipmi/interface/rmcp-interface.h>
 #include <freeipmi/locate/ipmi-locate.h>
+#include <freeipmi/record-format/ipmi-cipher-suite-record-format.h>
+#include <freeipmi/record-format/ipmi-fru-information-record-format.h>
+#include <freeipmi/record-format/ipmi-sdr-record-format.h>
+#include <freeipmi/record-format/ipmi-sel-record-format.h>
 #include <freeipmi/util/ipmi-cipher-suite-util.h>
 #include <freeipmi/util/ipmi-error-util.h>
 #include <freeipmi/util/ipmi-lan-util.h>

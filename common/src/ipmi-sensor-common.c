@@ -36,11 +36,11 @@
 #include "ipmi-sensor-common.h"
 
 #include "freeipmi/fiid.h"
-#include "freeipmi/ipmi-sdr-record-format.h"
 #include "freeipmi/ipmi-sensor-cmds.h"
 #include "freeipmi/ipmi-sensor-and-event-code-tables.h"
 #include "freeipmi/ipmi-sensor-types-spec.h"
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
+#include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
 
 #include "freeipmi-portability.h"

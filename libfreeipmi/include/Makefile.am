@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.17 2007-12-14 00:32:23 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.18 2007-12-14 00:57:30 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -7,7 +7,6 @@ nobase_include_HEADERS = \
 	freeipmi/fiid.h \
 	freeipmi/ipmi-authentication-type-spec.h \
 	freeipmi/ipmi-channel-spec.h \
-	freeipmi/ipmi-cipher-suite-record-format.h \
 	freeipmi/ipmi-cmd-spec.h \
 	freeipmi/ipmi-comp-code-spec.h \
 	freeipmi/ipmi-ipmb-lun-spec.h \
@@ -28,7 +27,6 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-fru-inventory-device-cmds.h \
 	freeipmi/ipmi-fru-chassis-types-spec.h \
 	freeipmi/ipmi-fru-language-codes-spec.h \
-	freeipmi/ipmi-fru-information-record-format.h \
 	freeipmi/ipmi-lan-cmds.h \
 	freeipmi/ipmi-messaging-support-cmds.h \
 	freeipmi/ipmi-pef-and-alerting-cmds.h \
@@ -38,8 +36,6 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sensor-cmds.h \
 	freeipmi/ipmi-serial-modem-cmds.h \
 	freeipmi/ipmi-sol-cmds.h \
-	freeipmi/ipmi-sdr-record-format.h \
-	freeipmi/ipmi-sel-record-format.h \
 	freeipmi/ipmi-sensor-and-event-code-tables.h \
 	freeipmi/ipmi-chassis-boot-options-parameter-spec.h \
 	freeipmi/debug/ipmi-debug.h \
@@ -64,6 +60,10 @@ nobase_include_HEADERS = \
 	freeipmi/interface/ipmi-kcs-interface.h \
 	freeipmi/interface/ipmi-lan-interface.h \
 	freeipmi/interface/ipmi-rmcpplus-interface.h \
+	freeipmi/record-format/ipmi-cipher-suite-record-format.h \
+	freeipmi/record-format/ipmi-fru-information-record-format.h \
+	freeipmi/record-format/ipmi-sdr-record-format.h \
+	freeipmi/record-format/ipmi-sel-record-format.h \
 	freeipmi/util/ipmi-cipher-suite-util.h \
 	freeipmi/util/ipmi-error-util.h \
 	freeipmi/util/ipmi-lan-util.h \

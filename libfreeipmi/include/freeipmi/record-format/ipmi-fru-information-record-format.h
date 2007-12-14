@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-information-record-format.h,v 1.1.2.1 2007-12-14 00:32:24 chu11 Exp $
+ *  $Id: ipmi-fru-information-record-format.h,v 1.1.2.1 2007-12-14 00:57:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "freeipmi/ipmi-cipher-suite-record-format.h"
+#include "freeipmi/record-format/ipmi-cipher-suite-record-format.h"
 
 #include "common/ipmi-err-wrappers.h"
 

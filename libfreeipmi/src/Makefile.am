@@ -5,6 +5,7 @@ SUBDIRS = \
 	driver \
 	interface \
 	locate \
+	record-format \
 	util
 
 if WITH_GNU_LD
@@ -17,7 +18,6 @@ lib_LTLIBRARIES = libfreeipmi.la
 libfreeipmi_la_SOURCES = \
 	fiid.c \
 	ipmi-bit-ops.c \
-	ipmi-cipher-suite-record-format.c \
 	ipmi-sensor-types-spec.c \
 	ipmi-sensor-units-spec.c \
 	rmcp-cmds.c \
@@ -25,7 +25,6 @@ libfreeipmi_la_SOURCES = \
 	ipmi-chassis-cmds.c \
 	ipmi-device-global-cmds.c \
 	ipmi-fru-inventory-device-cmds.c \
-	ipmi-fru-information-record-format.c \
 	ipmi-fru-chassis-types-spec.c \
 	ipmi-fru-language-codes-spec.c \
 	ipmi-lan-cmds.c \
@@ -37,8 +36,6 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sensor-cmds.c \
 	ipmi-serial-modem-cmds.c \
 	ipmi-sol-cmds.c \
-	ipmi-sdr-record-format.c \
-	ipmi-sel-record-format.c \
 	ipmi-sensor-and-event-code-tables.c
 
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm 
@@ -58,6 +55,7 @@ libfreeipmi_la_LIBADD = \
 	driver/libdriver.la \
 	interface/libinterface.la \
 	locate/liblocate.la \
+	record-format/librecordformat.la \
 	util/libutil.la \
 	../../common/src/libfreeipmiportability.la \
 	../../common/src/libmiscutils.la
@@ -81,6 +79,9 @@ interface/libinterface.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 locate/liblocate.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+record-format/librecordformat.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check

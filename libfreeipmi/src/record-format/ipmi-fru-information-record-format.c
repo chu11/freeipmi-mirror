@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-information-record-format.c,v 1.1.2.1 2007-12-14 00:32:25 chu11 Exp $
+ *  $Id: ipmi-fru-information-record-format.c,v 1.1.2.1 2007-12-14 00:57:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "freeipmi/ipmi-fru-information-record-format.h"
+#include "freeipmi/record-format/ipmi-fru-information-record-format.h"
 #include "freeipmi/fiid.h"
 
 fiid_template_t tmpl_fru_common_header =
