@@ -29,9 +29,9 @@
 #include <errno.h>
 
 #include "freeipmi/locate/ipmi-locate.h"
-#include "freeipmi/ipmi-slave-address-spec.h"
 #include "freeipmi/driver/ipmi-kcs-driver.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
+#include "freeipmi/spec/ipmi-slave-address-spec.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
 

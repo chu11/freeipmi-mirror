@@ -44,9 +44,9 @@
 #include <assert.h>
 
 #include "freeipmi/driver/ipmi-ssif-driver.h"
-#include "freeipmi/ipmi-ipmb-lun-spec.h"
-#include "freeipmi/ipmi-netfn-spec.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
+#include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
+#include "freeipmi/spec/ipmi-netfn-spec.h"
 
 #include "ipmi-semaphores.h"
 

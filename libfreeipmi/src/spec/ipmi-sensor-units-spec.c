@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "freeipmi/ipmi-sensor-units-spec.h"
+#include "freeipmi/spec/ipmi-sensor-units-spec.h"
 
 const char *const ipmi_sensor_units[] = 
   {

@@ -36,8 +36,8 @@ extern "C" {
 #include <errno.h>
 
 #include "freeipmi/fiid.h"
-#include "freeipmi/ipmi-comp-code-spec.h"
 #include "freeipmi/api/ipmi-api.h"
+#include "freeipmi/spec/ipmi-comp-code-spec.h"
 #include "freeipmi/util/ipmi-error-util.h"
 #include "freeipmi/util/ipmi-util.h"
 

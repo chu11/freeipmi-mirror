@@ -25,9 +25,9 @@
 #include <errno.h>
 
 #include <freeipmi/ipmi-chassis-cmds.h>
-#include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/api/ipmi-chassis-cmds-api.h>
-#include <freeipmi/ipmi-chassis-boot-options-parameter-spec.h>
+#include <freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h>
+#include <freeipmi/spec/ipmi-cmd-spec.h>
 
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"

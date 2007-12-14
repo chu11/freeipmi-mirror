@@ -26,10 +26,10 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-lan-cmds.h"
-#include "freeipmi/ipmi-lan-parameter-spec.h"
-#include "freeipmi/ipmi-channel-spec.h" 
-#include "freeipmi/ipmi-cmd-spec.h"
-#include "freeipmi/ipmi-privilege-level-spec.h"
+#include "freeipmi/spec/ipmi-channel-spec.h" 
+#include "freeipmi/spec/ipmi-cmd-spec.h"
+#include "freeipmi/spec/ipmi-lan-parameter-spec.h"
+#include "freeipmi/spec/ipmi-privilege-level-spec.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"

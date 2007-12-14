@@ -34,9 +34,9 @@
 #include <assert.h>
 #include <argp.h>
 
-#include "freeipmi/ipmi-authentication-type-spec.h"
-#include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
+#include "freeipmi/spec/ipmi-authentication-type-spec.h"
+#include "freeipmi/spec/ipmi-privilege-level-spec.h"
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 
 #include "tool-cmdline-common.h"

@@ -1648,16 +1648,7 @@ _get_sdr_record (sdr_cache_ctx_t ctx,
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
     case IPMI_SDR_FORMAT_BMC_MESAAGE_CHANNEL_INFO_RECORD:
     default:
-      {
-#if defined (IPMI_SYSLOG)
-	char errstr[IPMI_ERR_STR_MAX_LEN];
-	snprintf (errstr, IPMI_ERR_STR_MAX_LEN, 
-		  "%s: record_type = %02Xh and record_id = %d not handled.  "
-		  "Please report to freeipmi-devel@gnu.org\n", 
-		  __PRETTY_FUNCTION__, sdr_record->record_type, sdr_record->record_type);
-	syslog (LOG_MAKEPRI(LOG_LOCAL1, LOG_ERR), errstr);
-#endif /* IPMI_SYSLOG */
-      }
+      break;
     }
   
   rv = 0;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-chassis-types-spec.c,v 1.1.2.1 2007-12-14 00:32:24 chu11 Exp $
+ *  $Id: ipmi-fru-chassis-types-spec.c,v 1.1.2.1 2007-12-14 05:45:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "freeipmi/ipmi-fru-chassis-types-spec.h"
+#include "freeipmi/spec/ipmi-fru-chassis-types-spec.h"
 
 const char *const ipmi_fru_chassis_types[] =
   {

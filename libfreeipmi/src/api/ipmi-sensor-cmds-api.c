@@ -29,8 +29,8 @@
 
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
 #include "freeipmi/ipmi-sensor-cmds.h"
-#include "freeipmi/ipmi-ipmb-lun-spec.h"
-#include "freeipmi/ipmi-netfn-spec.h"
+#include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
+#include "freeipmi/spec/ipmi-netfn-spec.h"
 
 #include "ipmi-ctx.h"
 #include "ipmi-err-wrappers-api.h"

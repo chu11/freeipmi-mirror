@@ -44,16 +44,13 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
-#if defined (IPMI_SYSLOG)
-#include <syslog.h>
-#endif /* IPMI_SYSLOG */
 #include <gcrypt.h>
 
 #include "freeipmi/util/ipmi-util.h"
 #include "freeipmi/fiid.h"
-#include "freeipmi/ipmi-authentication-type-spec.h"
-#include "freeipmi/ipmi-comp-code-spec.h"
 #include "freeipmi/interface/rmcp-interface.h"
+#include "freeipmi/spec/ipmi-authentication-type-spec.h"
+#include "freeipmi/spec/ipmi-comp-code-spec.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
@@ -110,16 +107,9 @@ ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code)
 
   FIID_OBJ_GET(obj_cmd, "comp_code", &completion_code_recv);
 
-#if defined (IPMI_SYSLOG) || defined (IPMI_TRACE)
+#if defined (IPMI_TRACE)
   if ((uint8_t)completion_code_recv != completion_code)
     {
-#if defined (IPMI_SYSLOG)
-      char errstr[ERR_WRAPPER_STR_MAX_LEN];
-      snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,
-                "ipmi_check_completion_code: completion code invalid: %x",
-                (uint8_t)completion_code_recv);
-      syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);
-#endif /* IPMI_SYSLOG */
 #if defined (IPMI_TRACE)
       fprintf(stderr,
               "ipmi_check_completion_code: completion code invalid: %x\n",
@@ -127,7 +117,7 @@ ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code)
       fflush(stderr);
 #endif /* IPMI_TRACE */
     }
-#endif /* IPMI_SYSLOG || IPMI_TRACE */
+#endif /* IPMI_TRACE */
 
   return ((((uint8_t)completion_code_recv) == completion_code) ? 1 : 0);
 }

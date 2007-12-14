@@ -29,10 +29,10 @@
 #include <errno.h>
 
 #include "freeipmi/util/ipmi-error-util.h"
-#include "freeipmi/ipmi-cmd-spec.h"
-#include "freeipmi/ipmi-comp-code-spec.h"
-#include "freeipmi/ipmi-netfn-spec.h"
-#include "freeipmi/ipmi-rmcpplus-status-spec.h"
+#include "freeipmi/spec/ipmi-cmd-spec.h"
+#include "freeipmi/spec/ipmi-comp-code-spec.h"
+#include "freeipmi/spec/ipmi-netfn-spec.h"
+#include "freeipmi/spec/ipmi-rmcpplus-status-spec.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"

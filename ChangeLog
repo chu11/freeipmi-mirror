@@ -268,6 +268,10 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/src/ipmi-sensor-and-event-code-tables.c: Renamed to
 	libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c.
 	
+	* libfreeipmi/include/freeipmi/spec/ libfreeipmi/src/spec/: New
+	directories.  Move respective sub-library code into those
+	directories.
+
 	* Adjust remaining code and Makefiles for file name changes, new
 	files, new functions, function name changes, and removals.
 

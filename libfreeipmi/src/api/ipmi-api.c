@@ -46,9 +46,7 @@
 #include <errno.h>
 
 #include "freeipmi/api/ipmi-api.h"
-#include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
-#include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/driver/ipmi-kcs-driver.h"
@@ -59,6 +57,8 @@
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/locate/ipmi-locate.h"
+#include "freeipmi/spec/ipmi-authentication-type-spec.h"
+#include "freeipmi/spec/ipmi-privilege-level-spec.h"
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 #include "freeipmi/util/ipmi-util.h"
 

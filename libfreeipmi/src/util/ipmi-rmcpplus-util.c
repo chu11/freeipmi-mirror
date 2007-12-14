@@ -28,13 +28,13 @@
 #include <errno.h>
 
 #include "freeipmi/util/ipmi-rmcpplus-util.h"
-#include "freeipmi/ipmi-rmcpplus-status-spec.h"
-#include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
-#include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
+#include "freeipmi/spec/ipmi-authentication-type-spec.h"
+#include "freeipmi/spec/ipmi-privilege-level-spec.h"
+#include "freeipmi/spec/ipmi-rmcpplus-status-spec.h"
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 
 #include "libcommon/ipmi-crypt.h"

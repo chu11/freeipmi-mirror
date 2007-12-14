@@ -18,8 +18,8 @@
 
 #include <stdio.h>
 
-#include "freeipmi/ipmi-sensor-units-spec.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
+#include "freeipmi/spec/ipmi-sensor-units-spec.h"
 
 #include "ipmi-sensors.h"
 

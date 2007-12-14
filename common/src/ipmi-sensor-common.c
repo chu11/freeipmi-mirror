@@ -29,17 +29,14 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <errno.h>
-#if defined (IPMI_SYSLOG)
-#include <syslog.h>
-#endif /* IPMI_SYSLOG */
 
 #include "ipmi-sensor-common.h"
 
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-sensor-cmds.h"
-#include "freeipmi/ipmi-sensor-types-spec.h"
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
+#include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
 

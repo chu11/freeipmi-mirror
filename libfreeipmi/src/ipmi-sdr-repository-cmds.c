@@ -26,7 +26,7 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-sdr-repository-cmds.h"
-#include "freeipmi/ipmi-cmd-spec.h"
+#include "freeipmi/spec/ipmi-cmd-spec.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"

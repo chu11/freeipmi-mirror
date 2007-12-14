@@ -16,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.14.4.1 2007-12-06 15:40:27 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.14.4.2 2007-12-14 05:45:32 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H
@@ -27,7 +27,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/ipmi-sensor-types-spec.h>
+#include <freeipmi/spec/ipmi-sensor-types-spec.h>
 
 #define IPMI_PEF_POSTPONE_TIMER_DISABLE                     0x00
 #define IPMI_PEF_POSTPONE_TIMER_TEMPORARY_DISABLE           0xFE

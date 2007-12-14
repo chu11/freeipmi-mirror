@@ -1,32 +1,15 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.19 2007-12-14 03:53:04 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.20 2007-12-14 05:45:31 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
 	freeipmi/freeipmi.h \
 	freeipmi/fiid.h \
-	freeipmi/ipmi-authentication-type-spec.h \
-	freeipmi/ipmi-channel-spec.h \
-	freeipmi/ipmi-cmd-spec.h \
-	freeipmi/ipmi-comp-code-spec.h \
-	freeipmi/ipmi-ipmb-lun-spec.h \
-	freeipmi/ipmi-lan-parameter-spec.h \
-	freeipmi/ipmi-netfn-spec.h \
-	freeipmi/ipmi-pef-parameter-spec.h \
-	freeipmi/ipmi-privilege-level-spec.h \
-	freeipmi/ipmi-rmcpplus-status-spec.h \
-	freeipmi/ipmi-sensor-types-spec.h \
-	freeipmi/ipmi-sensor-units-spec.h \
-	freeipmi/ipmi-serial-modem-parameter-spec.h \
-	freeipmi/ipmi-sol-parameter-spec.h \
-	freeipmi/ipmi-slave-address-spec.h \
 	freeipmi/rmcp-cmds.h \
 	freeipmi/ipmi-bmc-watchdog-timer-cmds.h \
 	freeipmi/ipmi-chassis-cmds.h \
 	freeipmi/ipmi-device-global-cmds.h \
 	freeipmi/ipmi-fru-inventory-device-cmds.h \
-	freeipmi/ipmi-fru-chassis-types-spec.h \
-	freeipmi/ipmi-fru-language-codes-spec.h \
 	freeipmi/ipmi-lan-cmds.h \
 	freeipmi/ipmi-messaging-support-cmds.h \
 	freeipmi/ipmi-pef-and-alerting-cmds.h \
@@ -36,7 +19,6 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sensor-cmds.h \
 	freeipmi/ipmi-serial-modem-cmds.h \
 	freeipmi/ipmi-sol-cmds.h \
-	freeipmi/ipmi-chassis-boot-options-parameter-spec.h \
 	freeipmi/debug/ipmi-debug.h \
 	freeipmi/locate/ipmi-locate.h \
 	freeipmi/driver/ipmi-kcs-driver.h \
@@ -63,6 +45,24 @@ nobase_include_HEADERS = \
 	freeipmi/record-format/ipmi-fru-information-record-format.h \
 	freeipmi/record-format/ipmi-sdr-record-format.h \
 	freeipmi/record-format/ipmi-sel-record-format.h \
+	freeipmi/spec/ipmi-authentication-type-spec.h \
+	freeipmi/spec/ipmi-channel-spec.h \
+	freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h \
+	freeipmi/spec/ipmi-cmd-spec.h \
+	freeipmi/spec/ipmi-comp-code-spec.h \
+	freeipmi/spec/ipmi-fru-chassis-types-spec.h \
+	freeipmi/spec/ipmi-fru-language-codes-spec.h \
+	freeipmi/spec/ipmi-ipmb-lun-spec.h \
+	freeipmi/spec/ipmi-lan-parameter-spec.h \
+	freeipmi/spec/ipmi-netfn-spec.h \
+	freeipmi/spec/ipmi-pef-parameter-spec.h \
+	freeipmi/spec/ipmi-privilege-level-spec.h \
+	freeipmi/spec/ipmi-rmcpplus-status-spec.h \
+	freeipmi/spec/ipmi-sensor-types-spec.h \
+	freeipmi/spec/ipmi-sensor-units-spec.h \
+	freeipmi/spec/ipmi-serial-modem-parameter-spec.h \
+	freeipmi/spec/ipmi-sol-parameter-spec.h \
+	freeipmi/spec/ipmi-slave-address-spec.h \
 	freeipmi/util/ipmi-cipher-suite-util.h \
 	freeipmi/util/ipmi-error-util.h \
 	freeipmi/util/ipmi-lan-util.h \
