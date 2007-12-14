@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.16 2007-12-13 23:03:05 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.17 2007-12-14 00:32:23 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -26,7 +26,9 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-chassis-cmds.h \
 	freeipmi/ipmi-device-global-cmds.h \
 	freeipmi/ipmi-fru-inventory-device-cmds.h \
-	freeipmi/ipmi-fru-information-storage-definition.h \
+	freeipmi/ipmi-fru-chassis-types-spec.h \
+	freeipmi/ipmi-fru-language-codes-spec.h \
+	freeipmi/ipmi-fru-information-record-format.h \
 	freeipmi/ipmi-lan-cmds.h \
 	freeipmi/ipmi-messaging-support-cmds.h \
 	freeipmi/ipmi-pef-and-alerting-cmds.h \

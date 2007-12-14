@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-information-storage-definition.h,v 1.3 2007-09-05 20:13:37 chu11 Exp $
+ *  $Id: ipmi-fru-language-codes-spec.h,v 1.1.2.1 2007-12-14 00:32:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -25,8 +25,8 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
-#ifndef _IPMI_FRU_INFORMATION_STORAGE_DEFINITION_H
-#define	_IPMI_FRU_INFORMATION_STORAGE_DEFINITION_H
+#ifndef _IPMI_FRU_LANGUAGE_CODES_SPEC_H
+#define	_IPMI_FRU_LANGUAGE_CODES_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -289,4 +289,4 @@ extern fiid_template_t tmpl_fru_oem_record;
 }
 #endif
 
-#endif /* _IPMI_FRU_INFORMATION_STORAGE_DEFINITION_H */
+#endif /* _IPMI_FRU_LANGUAGE_CODES_SPEC_H */

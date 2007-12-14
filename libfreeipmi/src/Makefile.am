@@ -25,7 +25,9 @@ libfreeipmi_la_SOURCES = \
 	ipmi-chassis-cmds.c \
 	ipmi-device-global-cmds.c \
 	ipmi-fru-inventory-device-cmds.c \
-	ipmi-fru-information-storage-definition.c \
+	ipmi-fru-information-record-format.c \
+	ipmi-fru-chassis-types-spec.c \
+	ipmi-fru-language-codes-spec.c \
 	ipmi-lan-cmds.c \
 	ipmi-messaging-support-cmds.c \
 	ipmi-pef-and-alerting-cmds.c \
