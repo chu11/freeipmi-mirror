@@ -29,7 +29,6 @@
 #include <errno.h>
 
 #include "freeipmi/debug/ipmi-debug.h"
-#include "freeipmi/ipmi-crypt.h"
 #include "freeipmi/ipmi-sol-cmds.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
@@ -38,6 +37,7 @@
 
 #include "ipmi-debug-common.h"
 
+#include "libcommon/ipmi-crypt.h"
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 

@@ -71,8 +71,10 @@ libmiscutils_la_SOURCES = \
 	timeval.c
 
 libhostrange_la_SOURCES = pstdout.c hostrange.c
-libhostrange_la_CPPFLAGS = -D_REENTRANT
 libhostrange_la_LDFLAGS = $(PTHREAD_LIBS)
+libhostrange_la_CPPFLAGS = \
+	-D_REENTRANT \
+	-I$(srcdir)/../../ipmidetect/src/libipmidetect/
 
 libconfigcommon_la_SOURCES = \
 	config-comment.c \
@@ -86,8 +88,3 @@ libconfigcommon_la_SOURCES = \
 	config-utils.c \
 	config-validate.c
 libconfigcommon_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
-
-../../ipmidetect/src/libipmidetect/libipmidetect.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-force-dependency-check:
