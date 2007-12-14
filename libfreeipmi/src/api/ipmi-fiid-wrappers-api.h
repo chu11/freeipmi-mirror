@@ -32,7 +32,7 @@ extern "C" {
 #include <stdlib.h>
 #include <errno.h>
 
-#include "freeipmi/fiid.h"
+#include "freeipmi/fiid/fiid.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"

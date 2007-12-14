@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 /**************************
  * IPMI 2.0 Payload Types *

@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 #define IPMI_SDR_FORMAT_FULL_RECORD                                 0x01
 #define IPMI_SDR_FORMAT_COMPACT_RECORD                              0x02

@@ -47,7 +47,7 @@
 #include <gcrypt.h>
 
 #include "freeipmi/util/ipmi-util.h"
-#include "freeipmi/fiid.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"

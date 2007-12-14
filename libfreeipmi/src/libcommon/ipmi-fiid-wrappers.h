@@ -32,7 +32,7 @@ extern "C" {
 #include <stdlib.h>
 #include <errno.h>
 
-#include "freeipmi/fiid.h"
+#include "freeipmi/fiid/fiid.h"
 
 #define FIID_WRAPPER_STR_MAX_LEN 4096
 

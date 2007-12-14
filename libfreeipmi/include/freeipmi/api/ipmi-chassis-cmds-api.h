@@ -24,8 +24,8 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
 #include <freeipmi/api/ipmi-api.h>
+#include <freeipmi/fiid/fiid.h>
 
 int8_t 
 ipmi_cmd_get_chassis_capabilities (ipmi_ctx_t ctx, 

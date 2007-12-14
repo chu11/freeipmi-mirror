@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 #define IPMI_DEVICE_ID_UNSPECIFIED        0x00
 #define IPMI_MANUFACTURER_ID_UNSPECIFIED  0x000000

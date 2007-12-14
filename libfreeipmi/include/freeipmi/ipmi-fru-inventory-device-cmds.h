@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.h,v 1.3 2007-09-05 20:13:37 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.h,v 1.3.4.1 2007-12-14 06:04:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,7 +33,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 #define IPMI_FRU_DEVICE_ID_DEFAULT         0x00  /* FRU for Management Controller - Chap 38 */
 #define IPMI_FRU_INVENTORY_AREA_SIZE_MAX   65536 /* 16 byte field for length */

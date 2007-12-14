@@ -23,8 +23,8 @@
 extern "C" {
 #endif
 
-#include <freeipmi/fiid.h>
 #include <freeipmi/api/ipmi-api.h>
+#include <freeipmi/fiid/fiid.h>
 
 int8_t ipmi_cmd_get_device_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs);
 

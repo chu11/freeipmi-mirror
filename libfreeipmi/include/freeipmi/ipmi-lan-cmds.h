@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 #define IPMI_AUTHENTICATION_TYPE_SUPPORTED             0x1
 #define IPMI_AUTHENTICATION_TYPE_UNSUPPORTED           0x0

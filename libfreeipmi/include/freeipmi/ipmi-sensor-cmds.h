@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 #define IPMI_SENSOR_GET_SENSOR_COUNT  0x00
 #define IPMI_SENSOR_GET_SDR_COUNT     0x01

@@ -26,7 +26,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 extern fiid_template_t tmpl_cmd_asf_presence_ping;
 extern fiid_template_t tmpl_cmd_asf_presence_pong;

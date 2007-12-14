@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 #define IPMI_V1_0_EVENT_MESSAGE_FORMAT 0x03
 #define IPMI_V1_5_EVENT_MESSAGE_FORMAT 0x04

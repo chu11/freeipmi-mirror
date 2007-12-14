@@ -27,7 +27,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <sys/types.h>
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 #define IPMI_ERR_STR_MAX_LEN                 2048
 

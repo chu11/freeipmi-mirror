@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
  
 #define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_ASSERTED   0x0
 #define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_DEASSERTED 0x1

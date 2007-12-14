@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <netinet/in.h>
 
-#include "freeipmi/fiid.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/driver/ipmi-kcs-driver.h"
 #include "freeipmi/driver/ipmi-openipmi-driver.h"

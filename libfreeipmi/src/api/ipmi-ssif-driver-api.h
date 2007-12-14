@@ -30,8 +30,8 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
 #include <freeipmi/api/ipmi-api.h>
+#include <freeipmi/fiid/fiid.h>
 
 int ipmi_ssif_cmd_api (ipmi_ctx_t ctx, 
 		   fiid_obj_t obj_cmd_rq, 

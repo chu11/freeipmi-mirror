@@ -2,6 +2,7 @@ SUBDIRS = \
 	api \
 	debug \
 	driver \
+	fiid \
 	interface \
 	libcommon \
 	locate \
@@ -17,8 +18,6 @@ endif
 lib_LTLIBRARIES = libfreeipmi.la
 
 libfreeipmi_la_SOURCES = \
-	fiid.c \
-	ipmi-bit-ops.c \
 	rmcp-cmds.c \
 	ipmi-bmc-watchdog-timer-cmds.c \
 	ipmi-chassis-cmds.c \
@@ -48,6 +47,7 @@ libfreeipmi_la_LIBADD = \
 	api/libapi.la \
 	debug/libdebug.la \
 	driver/libdriver.la \
+	fiid/libfiid.la \
 	interface/libinterface.la \
 	libcommon/libcommon.la \
 	locate/liblocate.la \
@@ -57,9 +57,6 @@ libfreeipmi_la_LIBADD = \
 	../../common/src/libfreeipmiportability.la \
 	../../common/src/libmiscutils.la
 
-noinst_HEADERS = \
-	ipmi-bit-ops.h
-
 api/libapi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
@@ -67,6 +64,9 @@ debug/libdebug.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 driver/libdriver.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+fiid/libfiid.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 interface/libinterface.la: force-dependency-check

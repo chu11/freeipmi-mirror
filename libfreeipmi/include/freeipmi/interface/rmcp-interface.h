@@ -26,7 +26,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 #define RMCP_VERSION_1_0              0x06 // RMCP Version 1.0
 

@@ -30,7 +30,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 #define IPMI_DEFAULT_I2C_DEVICE                "/dev/i2c-0"
 #define IPMI_DEFAULT_SSIF_IPMB_ADDR            0x42

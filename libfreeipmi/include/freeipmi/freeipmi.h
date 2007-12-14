@@ -23,7 +23,6 @@
 extern "C" {
 #endif
 
-#include <freeipmi/fiid.h>
 #include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>
 #include <freeipmi/ipmi-chassis-cmds.h>
 #include <freeipmi/ipmi-device-global-cmds.h>
@@ -55,6 +54,7 @@ extern "C" {
 #include <freeipmi/driver/ipmi-kcs-driver.h>
 #include <freeipmi/driver/ipmi-openipmi-driver.h>
 #include <freeipmi/driver/ipmi-ssif-driver.h>
+#include <freeipmi/fiid/fiid.h>
 #include <freeipmi/interface/ipmi-kcs-interface.h>
 #include <freeipmi/interface/ipmi-lan-interface.h>
 #include <freeipmi/interface/ipmi-rmcpplus-interface.h>

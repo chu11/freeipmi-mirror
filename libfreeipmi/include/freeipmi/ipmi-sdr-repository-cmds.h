@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 #define IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_UNSPECIFIED    0x0
 #define IPMI_SDR_NON_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED            0x1

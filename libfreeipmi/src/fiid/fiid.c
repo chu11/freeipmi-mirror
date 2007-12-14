@@ -32,7 +32,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/fiid.h"
+#include "freeipmi/fiid/fiid.h"
 
 #include "ipmi-bit-ops.h"
 

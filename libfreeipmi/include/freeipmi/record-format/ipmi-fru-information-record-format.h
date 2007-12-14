@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-information-record-format.h,v 1.1.2.1 2007-12-14 00:57:31 chu11 Exp $
+ *  $Id: ipmi-fru-information-record-format.h,v 1.1.2.2 2007-12-14 06:04:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -32,7 +32,7 @@
 extern "C" {
 #endif
 
-#include <freeipmi/fiid.h>
+#include <freeipmi/fiid/fiid.h>
 
 /*
  * achu:

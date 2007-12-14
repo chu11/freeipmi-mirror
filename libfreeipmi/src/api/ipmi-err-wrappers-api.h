@@ -35,8 +35,8 @@ extern "C" {
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "freeipmi/fiid.h"
 #include "freeipmi/api/ipmi-api.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
 #include "freeipmi/util/ipmi-error-util.h"
 #include "freeipmi/util/ipmi-util.h"

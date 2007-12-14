@@ -24,8 +24,8 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
 #include <freeipmi/api/ipmi-api.h>
+#include <freeipmi/fiid/fiid.h>
 
 int8_t ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_t ctx, 
 									      uint8_t channel_number, 

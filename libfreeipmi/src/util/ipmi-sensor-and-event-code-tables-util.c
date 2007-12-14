@@ -32,7 +32,7 @@
 #include <errno.h>
 
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
-#include "freeipmi/fiid.h"
+#include "freeipmi/fiid/fiid.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"

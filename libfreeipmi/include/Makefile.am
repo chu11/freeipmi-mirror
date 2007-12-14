@@ -1,11 +1,9 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.22.4.20 2007-12-14 05:45:31 chu11 Exp $
+## $Id: Makefile.am,v 1.22.4.21 2007-12-14 06:04:46 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
 	freeipmi/freeipmi.h \
-	freeipmi/fiid.h \
-	freeipmi/rmcp-cmds.h \
 	freeipmi/ipmi-bmc-watchdog-timer-cmds.h \
 	freeipmi/ipmi-chassis-cmds.h \
 	freeipmi/ipmi-device-global-cmds.h \
@@ -19,11 +17,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sensor-cmds.h \
 	freeipmi/ipmi-serial-modem-cmds.h \
 	freeipmi/ipmi-sol-cmds.h \
-	freeipmi/debug/ipmi-debug.h \
-	freeipmi/locate/ipmi-locate.h \
-	freeipmi/driver/ipmi-kcs-driver.h \
-	freeipmi/driver/ipmi-openipmi-driver.h \
-	freeipmi/driver/ipmi-ssif-driver.h \
+	freeipmi/rmcp-cmds.h \
 	freeipmi/api/ipmi-api.h \
 	freeipmi/api/ipmi-chassis-cmds-api.h \
 	freeipmi/api/ipmi-device-global-cmds-api.h \
@@ -37,10 +31,16 @@ nobase_include_HEADERS = \
 	freeipmi/api/ipmi-sel-cmds-api.h \
 	freeipmi/api/ipmi-serial-modem-cmds-api.h \
 	freeipmi/api/ipmi-sol-cmds-api.h \
+	freeipmi/debug/ipmi-debug.h \
+	freeipmi/driver/ipmi-kcs-driver.h \
+	freeipmi/driver/ipmi-openipmi-driver.h \
+	freeipmi/driver/ipmi-ssif-driver.h \
+	freeipmi/fiid/fiid.h \
 	freeipmi/interface/rmcp-interface.h \
 	freeipmi/interface/ipmi-kcs-interface.h \
 	freeipmi/interface/ipmi-lan-interface.h \
 	freeipmi/interface/ipmi-rmcpplus-interface.h \
+	freeipmi/locate/ipmi-locate.h \
 	freeipmi/record-format/ipmi-cipher-suite-record-format.h \
 	freeipmi/record-format/ipmi-fru-information-record-format.h \
 	freeipmi/record-format/ipmi-sdr-record-format.h \

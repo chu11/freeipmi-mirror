@@ -6,8 +6,8 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
 #include <freeipmi/api/ipmi-api.h>
+#include <freeipmi/fiid/fiid.h>
 
 #define IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_GET_SESSION_CHALLENGE     0x00000001
 #define IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE 0x00000002

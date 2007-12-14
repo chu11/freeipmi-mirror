@@ -35,7 +35,7 @@ extern "C" {
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "freeipmi/fiid.h"
+#include "freeipmi/fiid/fiid.h"
 
 #define ERR_WRAPPER_STR_MAX_LEN 4096
 

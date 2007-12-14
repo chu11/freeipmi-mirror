@@ -41,8 +41,6 @@
 #include <errno.h>
 
 #include "freeipmi/locate/ipmi-locate.h"
-#include "freeipmi/fiid.h"
-#include "freeipmi/driver/ipmi-ssif-driver.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
 
