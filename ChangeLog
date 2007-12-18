@@ -1,3 +1,7 @@
+2007-12-18  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Use %{version} instead of @VERSION@.
+	
 2007-12-14  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Fix for libfreeipmi reorg.
