@@ -12,9 +12,7 @@ libfreeipmi:
   - sdr-record-types
   - sel record-types
   - sensor-cmds
-* Modify system boot priority table.
-* how to support xRC4 (can we? should we?)
-* get event messages function that is passed fiids
+* how to support xRC4 (can we? should we? does any vendor support this?)
 - remove fiid-ness from udm lib, use pointers for returns?
 - find way to consolidate sdrcache lib in common/src w/ sdrcache lib
 in ipmimonitoring and add into libfreeipmi?
@@ -35,14 +33,13 @@ Chassis Config?
 pef-config
 -----------
 * conf.5 manpage
-* how to specify event reading type codes
+* how to specify event reading type codes easily
 
 general
 -------
 event handling
 sdr caching requires versioning
 tool for getting channel information - in ipmi-device tool for 0.5.0?
-remove get authentication capabilities checks?
 
 ipmi-chassis
 ------------
