@@ -302,6 +302,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Fri Dec 14 2007 Albert Chu <chu11@llnl.gov> 0.6.0
+- Update packaging for libfreeipmi reorganization
+
 * Wed Nov 19 2007 Albert Chu <chu11@llnl.gov> 0.5.0
 - Remove ipmimonitoring subpackage.  Merge into head package.
 
