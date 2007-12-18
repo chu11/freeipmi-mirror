@@ -16,7 +16,7 @@ Release: %{release}
 License: GPLv2+
 Group: Applications/System
 URL: http://www.gnu.org/software/freeipmi/
-Source: ftp://ftp.zresearch.com/pub/freeipmi/@VERSION@/%{name}-%{version}.tar.gz
+Source: ftp://ftp.zresearch.com/pub/freeipmi/%{version}/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libgcrypt-devel texinfo
 Requires(post): info
@@ -284,6 +284,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Tue Dec 18 2007 Albert Chu <chu11@llnl.gov> 0.5.2
+- Use %{version} instead of @VERSION@ for substituation in paths.
+
 * Wed Nov 19 2007 Albert Chu <chu11@llnl.gov> 0.5.0
 - Remove ipmimonitoring subpackage.  Merge into head package.
 
