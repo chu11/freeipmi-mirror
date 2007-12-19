@@ -1,3 +1,8 @@
+2007-12-19  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/manpage-common-troubleshooting.man: Tweak "password
+	verification timeout" troubleshooting.
+	
 2007-12-18  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Use %{version} instead of @VERSION@.
