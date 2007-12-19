@@ -22,10 +22,10 @@ was entered) is not correct.  Please try a different password.  It may
 also be possible the password for the user is not correctly configured
 on the remote BMC.
 .LP
-"password verification timeout" - The password entered is likely not
-correct.  Please try a different password.  It may also be possible
-the password for the user is not correctly configured on the remote
-BMC.
+"password verification timeout" - Password verification has timed out.
+A "password invalid" error (described above) or a generic "session
+timeout" (described below) occurred.  During this point in the
+protocol it cannot be differentiated which occurred.
 .LP
 "k_g invalid" - The K_g key entered (or a NULL K_g key if none was
 entered) is not correct.  Please try a different K_g key.  It may also
