@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache_delete.c,v 1.1.2.1 2007-12-20 22:59:43 chu11 Exp $
+ *  $Id: ipmi_sdr_cache_delete.c,v 1.1.2.2 2007-12-20 23:25:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -55,9 +55,7 @@ ipmi_sdr_cache_delete(ipmi_sdr_cache_ctx_t c, char *filename)
   if (c->operation != IPMI_SDR_CACHE_OPERATION_UNINITIALIZED)
     {
       if (c->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE)
-        c->errnum = IPMI_SDR_CACHE_ERR_CACHE_READ_ALREADY_INITIALIZED;
-      else if (c->operation == IPMI_SDR_CACHE_OPERATION_CREATE_CACHE)
-        c->errnum = IPMI_SDR_CACHE_ERR_CACHE_READ_CTX_SET_TO_CREATE;
+        c->errnum = IPMI_SDR_CACHE_ERR_CACHE_DELETE_CTX_SET_TO_READ;
       else
         c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       return -1;

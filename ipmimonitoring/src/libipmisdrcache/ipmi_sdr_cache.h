@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.h,v 1.6.6.2 2007-12-20 22:02:35 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.h,v 1.6.6.3 2007-12-20 23:25:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -37,26 +37,22 @@
 #define IPMI_SDR_CACHE_ERR_FILESYSTEM                                   6
 #define IPMI_SDR_CACHE_ERR_PERMISSION                                   7
 #define IPMI_SDR_CACHE_ERR_CACHE_CREATE_CACHE_EXISTS                    8
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_ALREADY_INITIALIZED             9
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_CTX_SET_TO_READ                 10
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_INITIALIZATION                  11
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_RECORD_COUNT_REACHED            12
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_INVALID_RECORD_LENGTH           13
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_DUPLICATE_RECORD_ID             14
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_DUPLICATE_SENSOR_NUMBER         15
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_INCOMPLETE_RECORD_COUNT_WRITTEN 16
-#define IPMI_SDR_CACHE_ERR_CACHE_READ_ALREADY_INITIALIZED               17
-#define IPMI_SDR_CACHE_ERR_CACHE_READ_CTX_SET_TO_CREATE                 18
-#define IPMI_SDR_CACHE_ERR_CACHE_READ_INITIALIZATION                    19
-#define IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST              20
-#define IPMI_SDR_CACHE_ERR_CACHE_DELETE_CTX_SET_TO_CREATE               21
-#define IPMI_SDR_CACHE_ERR_CACHE_DELETE_CTX_SET_TO_READ                 22
-#define IPMI_SDR_CACHE_ERR_CACHE_INVALID                                23
-#define IPMI_SDR_CACHE_ERR_NOT_FOUND                                    24
-#define IPMI_SDR_CACHE_ERR_IPMI_ERROR                                   25
-#define IPMI_SDR_CACHE_ERR_OVERFLOW                                     26
-#define IPMI_SDR_CACHE_ERR_INTERNAL_ERROR                               27
-#define IPMI_SDR_CACHE_ERR_ERRNUMRANGE                                  28
+#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_CTX_SET_TO_READ                 9
+#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_RECORD_COUNT_REACHED            10
+#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_INVALID_RECORD_LENGTH           11
+#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_DUPLICATE_RECORD_ID             12
+#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_DUPLICATE_SENSOR_NUMBER         13
+#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_INCOMPLETE_RECORD_COUNT_WRITTEN 14
+#define IPMI_SDR_CACHE_ERR_CACHE_READ_ALREADY_INITIALIZED               15
+#define IPMI_SDR_CACHE_ERR_CACHE_READ_INITIALIZATION                    16
+#define IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST              17
+#define IPMI_SDR_CACHE_ERR_CACHE_DELETE_CTX_SET_TO_READ                 18
+#define IPMI_SDR_CACHE_ERR_CACHE_INVALID                                19
+#define IPMI_SDR_CACHE_ERR_NOT_FOUND                                    20
+#define IPMI_SDR_CACHE_ERR_IPMI_ERROR                                   21
+#define IPMI_SDR_CACHE_ERR_OVERFLOW                                     22
+#define IPMI_SDR_CACHE_ERR_INTERNAL_ERROR                               23
+#define IPMI_SDR_CACHE_ERR_ERRNUMRANGE                                  24
 
 #define IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT            0x0
 /* During cache creation, overwrite any previously created cache.  Default

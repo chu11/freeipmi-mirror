@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.c,v 1.10.6.2 2007-12-20 22:59:42 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.c,v 1.10.6.3 2007-12-20 23:25:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -54,19 +54,15 @@ static char *ipmi_sdr_cache_errmsgs[] =
     "file system error",
     "filename path permission error",
     "SDR cache exists",
-    "SDR cache create initialization already called",
     "SDR cache context set for reading",
-    "cache creation not initialized",
     "number of records written has reached record count",
     "invalid SDR record length",
     "SDR record with an identical record id already written",
     "SDR record with an identical sensor number already written",
     "incomplete number of records written",
     "SDR cache reading initialization already called",
-    "SDR cache context set for creation",
     "cache reading not initialized",
     "SDR cache does not exist",
-    "SDR cache context set for creation",
     "SDR cache context set for reading",
     "SDR cache invalid",
     "not found",
@@ -96,12 +92,7 @@ ipmi_sdr_cache_ctx_destroy(ipmi_sdr_cache_ctx_t c)
     return;
 
   if (c->fd >= 0)
-    {
-      /* If the cache create never completed, try to remove the file */
-      if (c->operation == IPMI_SDR_CACHE_OPERATION_CREATE_CACHE)
-	unlink(c->filename);
-      close(c->fd);
-    }
+    close(c->fd);
   if (c->sdr_cache)
     munmap(c->sdr_cache, c->file_size);
   if (c->record_ids)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache_create.c,v 1.1.2.1 2007-12-20 22:59:42 chu11 Exp $
+ *  $Id: ipmi_sdr_cache_create.c,v 1.1.2.2 2007-12-20 23:25:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -80,9 +80,7 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
 
   if (c->operation != IPMI_SDR_CACHE_OPERATION_UNINITIALIZED)
     {
-      if (c->operation == IPMI_SDR_CACHE_OPERATION_CREATE_CACHE)
-        c->errnum = IPMI_SDR_CACHE_ERR_CACHE_CREATE_ALREADY_INITIALIZED;
-      else if (c->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE)
+      if (c->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE)
         c->errnum = IPMI_SDR_CACHE_ERR_CACHE_CREATE_CTX_SET_TO_READ;
       else
         c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
@@ -201,7 +199,6 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
       c->sensor_numbers_count = 0;
     }
   
-  c->operation = IPMI_SDR_CACHE_OPERATION_CREATE_CACHE;
   c->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
   return 0;
 
@@ -233,12 +230,6 @@ ipmi_sdr_cache_record_write(ipmi_sdr_cache_ctx_t c,
       return -1;
     }
   
-  if (c->operation != IPMI_SDR_CACHE_OPERATION_CREATE_CACHE)
-    {
-      c->errnum = IPMI_SDR_CACHE_ERR_CACHE_CREATE_INITIALIZATION;
-      return -1;
-    }
-
   if (c->record_count_written >= c->record_count)
     {
       c->errnum = IPMI_SDR_CACHE_ERR_CACHE_CREATE_RECORD_COUNT_REACHED;
@@ -342,12 +333,6 @@ ipmi_sdr_cache_complete(ipmi_sdr_cache_ctx_t c)
 {
   if (!c || c->magic != IPMI_SDR_CACHE_MAGIC)
     return -1;
-
-  if (c->operation != IPMI_SDR_CACHE_OPERATION_CREATE_CACHE)
-    {
-      c->errnum = IPMI_SDR_CACHE_ERR_CACHE_CREATE_INITIALIZATION;
-      return -1;
-    }
 
   if (c->record_count_written != c->record_count)
     {

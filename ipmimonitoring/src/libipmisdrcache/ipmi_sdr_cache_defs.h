@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache_defs.h,v 1.1.2.1 2007-12-20 22:59:42 chu11 Exp $
+ *  $Id: ipmi_sdr_cache_defs.h,v 1.1.2.2 2007-12-20 23:25:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -44,8 +44,7 @@
 #define IPMI_SDR_CACHE_FILE_MAGIC_3 0x7C
 
 #define IPMI_SDR_CACHE_OPERATION_UNINITIALIZED 0
-#define IPMI_SDR_CACHE_OPERATION_CREATE_CACHE  1
-#define IPMI_SDR_CACHE_OPERATION_READ_CACHE    2
+#define IPMI_SDR_CACHE_OPERATION_READ_CACHE    1
 
 struct ipmi_sdr_cache_ctx {
   uint32_t magic;

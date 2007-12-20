@@ -18,6 +18,10 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_delete.c,
 	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_read.c: New
 	files.  Split off code into appropriate files.
+
+	* ipmimonitoring/src/libipmimonitoring/,
+	ipmimonitoring/src/libipmisdrcache/: Re-work APIs to move all sdr
+	cache creation into libipmisdrcache and out of ipmimonitoring.
 	
 2007-12-19  Albert Chu <chu11@llnl.gov>
 
