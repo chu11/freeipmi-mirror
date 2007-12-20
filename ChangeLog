@@ -10,6 +10,14 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache.h: Add
 	comments on API.
+
+	* ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_defs.h,
+	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_common.h,
+	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_common.c,
+	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_create.c,
+	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_delete.c,
+	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_read.c: New
+	files.  Split off code into appropriate files.
 	
 2007-12-19  Albert Chu <chu11@llnl.gov>
 
