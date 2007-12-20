@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.69 2007-10-18 16:18:51 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.69.4.1 2007-12-20 01:30:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -555,13 +555,13 @@ cmdline_parse (int key,
       strcpy(conf->logfile, arg);
       break;
 #endif /* !NDEBUG */
-    case ARGP_SESSION_TIMEOUT_KEY:       /* --session-timeout */
+    case IPMIPOWER_SESSION_TIMEOUT_KEY:       /* --session-timeout */
       conf->session_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         err_exit("Command Line Error: session timeout length invalid\n");
       conf->session_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    case ARGP_RETRANSMISSION_TIMEOUT_KEY:       /* --retransmission-timeout */
+    case IPMIPOWER_RETRANSMISSION_TIMEOUT_KEY:       /* --retransmission-timeout */
       conf->retransmission_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         err_exit("Command Line Error: retransmission timeout length invalid\n");
