@@ -5,6 +5,11 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* ipmimonitoring/src/libipmimonitoring/: Remove struct
 	ipmi_monitoring_communication which is no longer needed.  Adjust
 	for direct use of ipmi_ctx_t as needed.
+
+	* ipmimonitoring/src/libipmisdrcache/: Support ipmi error code.
+
+	* ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache.h: Add
+	comments on API.
 	
 2007-12-19  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.c,v 1.10 2007-10-18 00:33:12 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.c,v 1.10.6.1 2007-12-20 22:02:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -80,6 +80,7 @@ static char *ipmi_sdr_cache_errmsgs[] =
     "SDR cache context set for reading",
     "SDR cache invalid",
     "not found",
+    "internal IPMI error",
     "buffer overflow",
     "internal error",
     "errnum out of range",

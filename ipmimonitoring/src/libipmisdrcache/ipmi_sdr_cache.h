@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.h,v 1.6.6.1 2007-12-20 21:59:22 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.h,v 1.6.6.2 2007-12-20 22:02:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -53,9 +53,10 @@
 #define IPMI_SDR_CACHE_ERR_CACHE_DELETE_CTX_SET_TO_READ                 22
 #define IPMI_SDR_CACHE_ERR_CACHE_INVALID                                23
 #define IPMI_SDR_CACHE_ERR_NOT_FOUND                                    24
-#define IPMI_SDR_CACHE_ERR_OVERFLOW                                     25
-#define IPMI_SDR_CACHE_ERR_INTERNAL_ERROR                               26
-#define IPMI_SDR_CACHE_ERR_ERRNUMRANGE                                  27
+#define IPMI_SDR_CACHE_ERR_IPMI_ERROR                                   25
+#define IPMI_SDR_CACHE_ERR_OVERFLOW                                     26
+#define IPMI_SDR_CACHE_ERR_INTERNAL_ERROR                               27
+#define IPMI_SDR_CACHE_ERR_ERRNUMRANGE                                  28
 
 #define IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT            0x0
 /* During cache creation, overwrite any previously created cache.  Default
