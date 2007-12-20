@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.h,v 1.6 2007-10-18 00:33:12 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.h,v 1.6.6.1 2007-12-20 21:59:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -58,10 +58,19 @@
 #define IPMI_SDR_CACHE_ERR_ERRNUMRANGE                                  27
 
 #define IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT            0x0
+/* During cache creation, overwrite any previously created cache.  Default
+ * is to return an error that the cache already exists.
+ */
 #define IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE          0x1
 
-#define IPMI_SDR_CACHE_VALIDATION_FLAGS_DEFAULT        0x0
-#define IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_RECORD_ID 0x1
+#define IPMI_SDR_CACHE_VALIDATION_FLAGS_DEFAULT                 0x0
+/* During cache creation, check for duplicate record ids and return error if
+ * one is found.
+ */
+#define IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_RECORD_ID     0x1
+/* During cache creation, check for duplicate sensor numbers and
+ * return error if one is found.
+ */
 #define IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_SENSOR_NUMBER 0x2
 
 typedef struct ipmi_sdr_cache_ctx *ipmi_sdr_cache_ctx_t;
