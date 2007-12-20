@@ -1,3 +1,11 @@
+XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	Merge from sdr_lib_rearch_branch, SDR library rearchitecture.
+
+	* ipmimonitoring/src/libipmimonitoring/: Remove struct
+	ipmi_monitoring_communication which is no longer needed.  Adjust
+	for direct use of ipmi_ctx_t as needed.
+	
 2007-12-19  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_config.c (cmdline_parse): Fix cmdline
