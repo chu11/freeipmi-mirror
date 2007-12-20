@@ -47,6 +47,10 @@ move set power cycle interval to bmc-config?
 remove set power restore policy b/c its in bmc-config?
 put boot options into bmc-config?
 
+ipmimonitoring
+--------------
+output caching like ipmi-sensors
+
 ipmiconsole
 -----------
 retry under a different port
