@@ -1,5 +1,10 @@
 2007-12-19  Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/src/ipmipower_config.c (cmdline_parse): Fix cmdline
+	parsing bug.
+	
+2007-12-19  Albert Chu <chu11@llnl.gov>
+
 	* common/doc/manpage-common-troubleshooting.man: Tweak "password
 	verification timeout" troubleshooting.
 	
