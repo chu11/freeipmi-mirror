@@ -1,5 +1,11 @@
 2007-12-21  Albert Chu <chu11@llnl.gov>
 
+        * configure.ac: Update version for release.
+
+        * tagged Release-0_5_2
+
+2007-12-21  Albert Chu <chu11@llnl.gov>
+
 	* common/src/hostlist.c: Update to newest library to support
 	suffixes on hostranges.
 	
