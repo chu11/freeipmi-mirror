@@ -1,3 +1,8 @@
+2007-12-21  Albert Chu <chu11@llnl.gov>
+
+	* common/src/hostlist.c: Update to newest library to support
+	suffixes on hostranges.
+	
 2007-12-19  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_config.c (cmdline_parse): Fix cmdline
