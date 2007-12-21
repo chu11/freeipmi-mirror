@@ -2,6 +2,7 @@
 -----
 o Clarify "Password Verification Timeout" troubleshooting information.
 o Fix ipmipower cmdline parse bug.
+o Support suffixes in hostrange inputs.
 
 0.5.1
 -----
