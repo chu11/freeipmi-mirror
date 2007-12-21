@@ -13,14 +13,12 @@ settings.
 The following are common issues for given error messages:
 .LP
 "username invalid" - The username entered (or a NULL username if none
-was entered) is not available on the remote machine.  Please try a
-different username.  It may also be possible the remote BMC's username
-configuration is incorrect.
+was entered) is not available on the remote machine.  It may also be
+possible the remote BMC's username configuration is incorrect.
 .LP
 "password invalid" - The password entered (or a NULL password if none
-was entered) is not correct.  Please try a different password.  It may
-also be possible the password for the user is not correctly configured
-on the remote BMC.
+was entered) is not correct.  It may also be possible the password for
+the user is not correctly configured on the remote BMC.
 .LP
 "password verification timeout" - Password verification has timed out.
 A "password invalid" error (described above) or a generic "session
@@ -28,8 +26,8 @@ timeout" (described below) occurred.  During this point in the
 protocol it cannot be differentiated which occurred.
 .LP
 "k_g invalid" - The K_g key entered (or a NULL K_g key if none was
-entered) is not correct.  Please try a different K_g key.  It may also
-be possible the K_g key is not correctly configured on the remote BMC.
+entered) is not correct.  It may also be possible the K_g key is not
+correctly configured on the remote BMC.
 .LP
 "privilege level insufficient" - An IPMI command requires a higher
 user privilege than the one authenticated with.  Please try to

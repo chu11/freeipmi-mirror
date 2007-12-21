@@ -1,5 +1,11 @@
 2007-12-21  Albert Chu <chu11@llnl.gov>
 
+	* common/doc/manpage-common-troubleshooting.man: Remove "Please
+	try ..." in a few troubleshooting sections, since it makes no
+	sense in some.
+	
+2007-12-21  Albert Chu <chu11@llnl.gov>
+
 	* common/src/hostlist.c: Update to newest library to support
 	suffixes on hostranges.
 	
