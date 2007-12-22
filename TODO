@@ -52,6 +52,17 @@ ipmimonitoring
 output caching like ipmi-sensors
 options like ipmi-sensors
 
+ipmi-sensors
+------------
+input multiple groups input
+auto regenerate caches when invalid/out of date
+
+ipmimonitoring/ipmi-sensors/otherstuff
+---------------------------
+parsing options (comma, no comma, space no space, need consistency)
+
+take out struint string-util lib need, its not needed
+
 ipmiconsole
 -----------
 retry under a different port

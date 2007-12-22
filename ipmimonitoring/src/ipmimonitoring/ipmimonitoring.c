@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.32 2007-12-14 19:16:25 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.32.2.1 2007-12-22 19:31:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -78,11 +78,12 @@
 
 #define IPMIMONITORING_SENSORS_KEY              's'
 #define IPMIMONITORING_GROUPS_KEY               'g'
-#define IPMIMONITORING_CACHE_DIR_KEY            'c'
-#define IPMIMONITORING_REGENERATE_SDR_CACHE_KEY 'r'
+#define IPMIMONITORING_CACHE_DIR_KEY            'c' /* legacy option */
+#define IPMIMONITORING_REGENERATE_SDR_CACHE_KEY 'r' /* legacy option */
 #define IPMIMONITORING_QUIET_READINGS_KEY       'q'
+#define IPMIMONITORING_LIST_GROUPS_KEY          'L'
 
-#define IPMIMONITORING_DEBUG_KEY                160
+#define IPMIMONITORING_DEBUG_KEY                161
 
 static struct ipmi_monitoring_ipmi_config conf;
 
@@ -91,13 +92,16 @@ static char *username;
 static char *password;
 static uint8_t *k_g;
 static int flags;
-static unsigned int record_ids[IPMIMONITORING_MAX_RECORD_IDS];
-static unsigned int record_ids_len;
 static unsigned int groups[IPMIMONITORING_MAX_GROUPS];
 static unsigned int groups_len;
-static char *cache_dir;
+static unsigned int record_ids[IPMIMONITORING_MAX_RECORD_IDS];
+static unsigned int record_ids_len;
+static char *sdr_cache_directory;
+static int flush_cache;
+static int quiet_cache;
 static int regenerate_sdr_cache;
 static int quiet_readings;
+static int list_groups;
 static int buffer_hostrange_output;
 static int consolidate_hostrange_output;
 static int fanout;
@@ -116,19 +120,23 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
-    ARGP_COMMON_HOSTRANGED_OPTIONS,
-    {"sensors", IPMIMONITORING_SENSORS_KEY, "SENSOR_IDS", 0,
-     "Specify a list of sensors record ids to specifically monitor.", 24},
-    {"groups", IPMIMONITORING_GROUPS_KEY, "GROUPS", 0,
-     "Specify a list of groups to specifically monitor.", 25},
-    {"cache-dir", IPMIMONITORING_CACHE_DIR_KEY, "DIRECTORY", 0,
-     "Specify an alternate directory to read and write SDR caches..", 26},
+    ARGP_COMMON_SDR_OPTIONS,
+    ARGP_COMMON_HOSTRANGED_OPTIONS, 
+    /* maintain "cache-dir" for backwards compatability */
+    {"cache-dir", IPMIMONITORING_CACHE_DIR_KEY, "DIRECTORY", OPTION_HIDDEN,
+     "Specify an alternate directory to read and write SDR caches..", 25},
     {"regenerate-sdr-cache", IPMIMONITORING_REGENERATE_SDR_CACHE_KEY, 0, 0,
-     "Regenerate the SDR cache.", 27},
+     "Regenerate the SDR cache.", 26},
     {"quiet-readings", IPMIMONITORING_QUIET_READINGS_KEY, 0, 0,
-     "Do not output sensor reading values, only Nominal, Warning, or Critical states.", 28},
+     "Do not output sensor reading values, only Nominal, Warning, or Critical states.", 27},
+    {"list-groups", IPMIMONITORING_LIST_GROUPS_KEY, 0, 0,
+     "List sensor groups.", 28},
+    {"groups", IPMIMONITORING_GROUPS_KEY, "GROUPS", 0,
+     "Specify a list of groups to specifically monitor.", 29},
+    {"sensors", IPMIMONITORING_SENSORS_KEY, "SENSOR_IDS", 0,
+     "Specify a list of sensors record ids to specifically monitor.", 30},
     {"debug", IPMIMONITORING_DEBUG_KEY, 0, 0,
-     "Turn on debugging.", 29},
+     "Turn on debugging.", 31},
     { 0 }
   };
 
@@ -172,9 +180,12 @@ _config_init(void)
   record_ids_len = 0;
   memset(groups, '\0', sizeof(unsigned int) * IPMIMONITORING_MAX_GROUPS);
   groups_len = 0;
-  cache_dir = NULL;
+  flush_cache = 0;
+  quiet_cache = 0;
+  sdr_cache_directory = NULL;
   regenerate_sdr_cache = 0;
   quiet_readings = 0;
+  list_groups = 0;
   buffer_hostrange_output = 0;
   consolidate_hostrange_output = 0;
   fanout = 0;
@@ -392,14 +403,24 @@ cmdline_parse (int key,
           tok = strtok(NULL, " ,");
         }
       break;
+    case ARGP_FLUSH_CACHE_KEY:
+      flush_cache++;
+      break;
+    case ARGP_QUIET_CACHE_KEY:
+      quiet_cache++;
+      break;
+    case ARGP_SDR_CACHE_DIR_KEY:
     case IPMIMONITORING_CACHE_DIR_KEY:
-      cache_dir = arg;
+      sdr_cache_directory = arg;
       break;
     case IPMIMONITORING_REGENERATE_SDR_CACHE_KEY:
       regenerate_sdr_cache++;
       break;
     case IPMIMONITORING_QUIET_READINGS_KEY:
       quiet_readings++;
+      break;
+    case IPMIMONITORING_LIST_GROUPS_KEY:
+      list_groups++;
       break;
     case ARGP_BUFFER_OUTPUT_KEY:
       buffer_hostrange_output++;
@@ -529,6 +550,58 @@ _ipmimonitoring(pstdout_state_t pstate,
   int i, num;
   int exit_code;
   unsigned int sensor_reading_flags;
+
+  /* Special Case #1: Just flushing the cache, don't need to do anything fancy */
+  if (flush_cache)
+    {
+      if (!quiet_cache)
+        pstdout_printf (pstate, "flushing cache... ");
+
+#if 0      
+      /* DO LATER */
+      if (sdr_cache_flush (state_data->sdr_cache_ctx,
+                           state_data->hostname,
+                           args->sdr.sdr_cache_dir) < 0)
+        {
+          pstdout_fprintf (pstate,
+                           stderr,
+                           "SDR Cache Flush failed: %s\n",
+                           sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
+          goto cleanup;
+        }
+#endif
+
+      if (!quiet_cache)
+        pstdout_printf (pstate, "done\n");
+      return 0;
+
+    }
+  
+  /* Special Case #2: Just outputting groups, don't need to do anything fancy */
+  if (list_groups)
+    {
+      pstdout_printf (pstate, "%s\n", "temperature");
+      pstdout_printf (pstate, "%s\n", "voltage");
+      pstdout_printf (pstate, "%s\n", "current");
+      pstdout_printf (pstate, "%s\n", "fan");
+      pstdout_printf (pstate, "%s\n", "physical_security");
+      pstdout_printf (pstate, "%s\n", "platform_security_violation_attempt");
+      pstdout_printf (pstate, "%s\n", "processor");
+      pstdout_printf (pstate, "%s\n", "power_supply");
+      pstdout_printf (pstate, "%s\n", "power_unit");
+      pstdout_printf (pstate, "%s\n", "memory");
+      pstdout_printf (pstate, "%s\n", "drive_slot");
+      pstdout_printf (pstate, "%s\n", "system_firmware_progress");
+      pstdout_printf (pstate, "%s\n", "event_logging_disabled");
+      pstdout_printf (pstate, "%s\n", "system_event");
+      pstdout_printf (pstate, "%s\n", "critical_interrupt");
+      pstdout_printf (pstate, "%s\n", "module_board");
+      pstdout_printf (pstate, "%s\n", "slot_connector");
+      pstdout_printf (pstate, "%s\n", "watchdog2");
+      return 0;
+    }
+
+  /* Normal Case: We're going be doing some sensor monitoring */
 
   if (!(c = ipmi_monitoring_ctx_create()))
     {
@@ -812,6 +885,7 @@ main(int argc, char **argv)
 {
   int exit_code;
   int errnum;
+  int hosts_count;
   int rv;
 
   err_init(argv[0]);
@@ -828,9 +902,9 @@ main(int argc, char **argv)
       goto cleanup;
     }
 
-  if (cache_dir)
+  if (sdr_cache_directory)
     {
-      if (ipmi_monitoring_sdr_cache_directory(cache_dir, &errnum) < 0)
+      if (ipmi_monitoring_sdr_cache_directory(sdr_cache_directory, &errnum) < 0)
         {
           fprintf(stderr, "ipmi_monitoring_sdr_cache_directory: %s\n", 
                   ipmi_monitoring_ctx_strerror(errnum));
@@ -838,15 +912,19 @@ main(int argc, char **argv)
         }
     }
   
-  if (pstdout_setup(&hostname,
-                    buffer_hostrange_output,
-                    consolidate_hostrange_output,
-                    fanout,
-                    eliminate) < 0)
+  if ((hosts_count = pstdout_setup(&hostname,
+                                   buffer_hostrange_output,
+                                   consolidate_hostrange_output,
+                                   fanout,
+                                   eliminate)) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
+
+  /* We don't want caching info to output when are doing ranged output */
+  if (hosts_count > 1)
+    quiet_cache = 1;
 
   if ((rv = pstdout_launch(hostname,
                            _ipmimonitoring,

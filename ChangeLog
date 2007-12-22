@@ -26,6 +26,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* ipmimonitoring/src/libipmimonitoring/,
 	ipmimonitoring/src/libipmisdrcache/: Re-work APIs to move all sdr
 	cache creation into libipmisdrcache and out of ipmimonitoring.
+
+	* ipmimonitoring/src/ipmimonitoring/: Make options in
+	ipmimonitoring more consistent to ipmi-sensors.
 	
 2007-12-19  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.pre.in,v 1.11 2007-10-18 16:18:49 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.11.6.1 2007-12-22 19:31:34 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
 \."  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -60,55 +60,30 @@ is cached in
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/common/doc/manpage-common-debug.man>
+#include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .TP
 \fB\-s\fR, \fB\-\-sensors list\fR
 Specify a list of sensors record ids to specifically monitor.  List of
-sensors can be separated by commas.
+sensors can be separated by commas or spaces.
 .TP
 \fB\-g\fR, \fB\-\-groups list\fR
 Specify a list of groups to specifically monitor.  List of groups can
-be separated by commas.  The available groups are:
-TEMPERATURE, VOLTAGE, CURRENT, FAN, PHYSICAL_SECURITY,
-PLATFORM_SECURITY_VIOLATION_ATTEMPT, PROCESSOR, POWER_SUPPLY,
-POWER_UNIT, MEMORY, DRIVE_SLOT, SYSTEM_FIRMWARE_PROGRESS,
-EVENT_LOGGING_DISABLED, SYSTEM_EVENT, CRITICAL_INTERRUPT,
-MODULE_BOARD, SLOT_CONNECTOR, WATCHDOG2.
+be separated by commas or spaces.
 .TP
-\fB\-c\fR, \fB\-\-cache-dir dir\fR
-Specify an alternate directory to read and write SDR caches.
-.TP
-\fB\-r\fR, \fB\-\-regenerate-sdr-cache\fR
-By default 
-.B ipmimonitoring,
-caches the sensor data repository (SDR) of a node for quicker
-monitoring on subsequent executions of 
-.B ipmimonitoring.
-This option informs
-.B ipmimonitoring 
-to regenerate the SDR cache.  This is often used if the firmware for a
-remote node has been changed.
+\fB\-L\fR, \fB\-\-list\-groups\fR
+List sensor groups.
 .TP
 \fB\-q\fR, \fB\-\-quiet-readings\fR
 Do not output sensor reading values, only Nominal, Warning, or
 Critical states.  This option is particularly useful if you want to
 use hostranged output across a cluster and want to consolidate the
 output.
+#include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
-.TP
-\fB\-H\fR, \fB\-\-help\fR
-Output help menu and exit.
-.TP
-\fB\-V\fR, \fB\-\-version\fR
-Output version and exit.
-.TP
-\fB\-\-debug\fR
-Turn on debugging.
-.LP
-
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
@@ -122,11 +97,6 @@ for
 .B libipmimonitoring(3)
 sensor configuration file.  Please see
 .B libipmimonitoring(3).
-.LP
-"sdr cache permission error" - The default SDR cache directory cannot
-be accessed.  Please specify an alternate directory with the 
-.I --cache-dir
-option.
 
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
