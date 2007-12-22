@@ -51,9 +51,6 @@ ipmimonitoring
 --------------
 output caching like ipmi-sensors
 
-check timestamps/version/etc
-cache invalid error code
-
 ipmiconsole
 -----------
 retry under a different port
