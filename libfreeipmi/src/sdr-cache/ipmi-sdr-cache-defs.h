@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache_defs.h,v 1.1.2.1 2007-12-22 19:41:16 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-defs.h,v 1.1.2.1 2007-12-22 20:20:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -30,7 +30,7 @@
 #include <stdint.h>
 #include <sys/param.h>
 
-#include "ipmi_sdr_cache.h"
+#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
 
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096

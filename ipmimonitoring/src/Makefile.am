@@ -1,1 +1,1 @@
-SUBDIRS = libipmisdrcache libipmimonitoring ipmimonitoring
+SUBDIRS = libipmimonitoring ipmimonitoring

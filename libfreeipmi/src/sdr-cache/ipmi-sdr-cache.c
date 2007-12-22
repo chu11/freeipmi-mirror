@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.c,v 1.10.6.4 2007-12-22 15:52:16 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.1.2.1 2007-12-22 20:20:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,9 +39,10 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmi_sdr_cache.h"
-#include "ipmi_sdr_cache_common.h"
-#include "ipmi_sdr_cache_defs.h"
+#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+
+#include "ipmi-sdr-cache-common.h"
+#include "ipmi-sdr-cache-defs.h"
 
 static char *ipmi_sdr_cache_errmsgs[] =
   {

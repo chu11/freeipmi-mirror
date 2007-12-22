@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.12.2.1 2007-12-20 21:45:45 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.12.2.2 2007-12-22 20:20:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -33,7 +33,6 @@
 #include <netinet/in.h>
 #include <freeipmi/freeipmi.h>
 
-#include "ipmi_sdr_cache.h"
 #include "list.h"
 
 #ifndef MAXHOSTNAMELEN

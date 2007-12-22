@@ -8,6 +8,7 @@ SUBDIRS = \
 	libcommon \
 	locate \
 	record-format \
+	sdr-cache \
 	spec \
 	util
 
@@ -40,6 +41,7 @@ libfreeipmi_la_LIBADD = \
 	libcommon/libcommon.la \
 	locate/liblocate.la \
 	record-format/librecordformat.la \
+	sdr-cache/libsdrcache.la \
 	spec/libspec.la \
 	util/libutil.la \
 	../../common/src/libfreeipmiportability.la \
@@ -70,6 +72,9 @@ locate/liblocate.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 record-format/librecordformat.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+sdr-cache/libsdrcache.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 spec/libspec.la: force-dependency-check

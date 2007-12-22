@@ -29,6 +29,13 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/ipmimonitoring/: Make options in
 	ipmimonitoring more consistent to ipmi-sensors.
+
+	* ipmimonitoring/src/libipmisdrcache/: Move into
+	libfreeipmi/include/freeipmi/sdr-cache/ and
+	libfreeipmi/src/sdr-cache/.
+
+	* Adjust Makefile.am, configure.ac, and code respectively for fall
+	out from above changes.
 	
 2007-12-19  Albert Chu <chu11@llnl.gov>
 

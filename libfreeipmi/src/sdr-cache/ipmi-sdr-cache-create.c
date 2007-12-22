@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache_create.c,v 1.1.2.1 2007-12-22 19:41:16 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.1.2.1 2007-12-22 20:20:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -43,9 +43,14 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmi_sdr_cache.h"
-#include "ipmi_sdr_cache_common.h"
-#include "ipmi_sdr_cache_defs.h"
+#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
+#include "freeipmi/cmds/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/record-format/ipmi-sdr-record-format.h"
+#include "freeipmi/spec/ipmi-comp-code-spec.h"
+
+#include "ipmi-sdr-cache-common.h"
+#include "ipmi-sdr-cache-defs.h"
 
 #include "fd.h"
 

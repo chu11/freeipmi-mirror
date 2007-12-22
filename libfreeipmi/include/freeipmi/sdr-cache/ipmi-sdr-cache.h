@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.h,v 1.6.6.4 2007-12-22 15:52:16 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.h,v 1.1.2.1 2007-12-22 20:20:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -27,7 +27,7 @@
 #define _IPMI_SDR_CACHE_H
 
 #include <stdint.h>
-#include <freeipmi/freeipmi.h>
+#include <freeipmi/api/ipmi-api.h>
 
 #define IPMI_SDR_CACHE_ERR_SUCCESS                                      0
 #define IPMI_SDR_CACHE_ERR_CONTEXT_NULL                                 1
