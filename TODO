@@ -50,6 +50,7 @@ put boot options into bmc-config?
 ipmimonitoring
 --------------
 output caching like ipmi-sensors
+options like ipmi-sensors
 
 ipmiconsole
 -----------
