@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache_common.c,v 1.1.2.1 2007-12-20 22:59:42 chu11 Exp $
+ *  $Id: ipmi_sdr_cache_common.c,v 1.1.2.2 2007-12-22 15:52:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,21 +46,101 @@ ipmi_sdr_cache_init_ctx(ipmi_sdr_cache_ctx_t c)
 
   c->operation = IPMI_SDR_CACHE_OPERATION_UNINITIALIZED;
 
-  c->fd = -1;
-  memset(c->filename, '\0', MAXPATHLEN+1);
-  c->version = 0;
+  c->sdr_version = 0;
   c->record_count = 0;
+  c->most_recent_addition_timestamp = 0;
+  c->most_recent_erase_timestamp = 0;
 
-  c->record_count_written = 0;
-  c->total_bytes_written = 0;
-  c->validation_flags = 0;
-  c->record_ids = NULL;
-  c->record_ids_count = 0;
-  c->sensor_numbers = NULL;
-  c->sensor_numbers_count = 0;
-
+  c->fd = -1;
   c->file_size = 0;
   c->records_start_offset = 0;
   c->sdr_cache = NULL;
 }
 
+int
+ipmi_sdr_cache_info(ipmi_sdr_cache_ctx_t c,
+                    ipmi_ctx_t ipmi_ctx,
+                    uint8_t *sdr_version,
+                    uint16_t *record_count,
+                    uint32_t *most_recent_addition_timestamp,
+                    uint32_t *most_recent_erase_timestamp)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+  
+  assert(c);
+  assert(c->magic == IPMI_SDR_CACHE_MAGIC);
+  assert(ipmi_ctx);
+  assert(sdr_version);
+  assert(record_count);
+  assert(most_recent_addition_timestamp);
+  assert(most_recent_erase_timestamp);
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sdr_repository_info_rs)))
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sdr_repository_info (ipmi_ctx, obj_cmd_rs) != 0)
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_IPMI_ERROR;
+      goto cleanup;
+    }
+
+  *sdr_version = 0;
+  if (fiid_obj_get(obj_cmd_rs,
+                   "sdr_version_minor",
+                   &val) < 0)
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
+  *sdr_version = val;
+
+  if (fiid_obj_get(obj_cmd_rs,
+                   "sdr_version_major",
+                   &val) < 0)
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
+  *sdr_version |= (val << 4);
+
+  *record_count = 0;
+  if (fiid_obj_get(obj_cmd_rs,
+                   "record_count",
+                   &val) < 0)
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
+  *record_count = val;
+
+  *most_recent_addition_timestamp = 0;
+  if (fiid_obj_get(obj_cmd_rs,
+                   "most_recent_addition_timestamp",
+                   &val) < 0)
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
+  *most_recent_addition_timestamp = val;
+
+  *most_recent_erase_timestamp = 0;
+  if (fiid_obj_get(obj_cmd_rs,
+                   "most_recent_erase_timestamp",
+                   &val) < 0)
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
+  *most_recent_erase_timestamp = val;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return rv;
+}

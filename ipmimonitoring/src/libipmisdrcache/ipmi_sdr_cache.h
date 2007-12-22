@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.h,v 1.6.6.3 2007-12-20 23:25:41 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.h,v 1.6.6.4 2007-12-22 15:52:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -27,6 +27,7 @@
 #define _IPMI_SDR_CACHE_H
 
 #include <stdint.h>
+#include <freeipmi/freeipmi.h>
 
 #define IPMI_SDR_CACHE_ERR_SUCCESS                                      0
 #define IPMI_SDR_CACHE_ERR_CONTEXT_NULL                                 1
@@ -38,21 +39,22 @@
 #define IPMI_SDR_CACHE_ERR_PERMISSION                                   7
 #define IPMI_SDR_CACHE_ERR_CACHE_CREATE_CACHE_EXISTS                    8
 #define IPMI_SDR_CACHE_ERR_CACHE_CREATE_CTX_SET_TO_READ                 9
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_RECORD_COUNT_REACHED            10
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_INVALID_RECORD_LENGTH           11
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_DUPLICATE_RECORD_ID             12
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_DUPLICATE_SENSOR_NUMBER         13
-#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_INCOMPLETE_RECORD_COUNT_WRITTEN 14
-#define IPMI_SDR_CACHE_ERR_CACHE_READ_ALREADY_INITIALIZED               15
-#define IPMI_SDR_CACHE_ERR_CACHE_READ_INITIALIZATION                    16
-#define IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST              17
-#define IPMI_SDR_CACHE_ERR_CACHE_DELETE_CTX_SET_TO_READ                 18
-#define IPMI_SDR_CACHE_ERR_CACHE_INVALID                                19
+#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_DUPLICATE_RECORD_ID             10
+#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_DUPLICATE_SENSOR_NUMBER         11
+#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_INVALID_RECORD_LENGTH           12
+#define IPMI_SDR_CACHE_ERR_CACHE_CREATE_INVALID_RECORD_COUNT            13
+#define IPMI_SDR_CACHE_ERR_CACHE_READ_ALREADY_INITIALIZED               14
+#define IPMI_SDR_CACHE_ERR_CACHE_READ_INITIALIZATION                    15
+#define IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST              16
+#define IPMI_SDR_CACHE_ERR_CACHE_DELETE_CTX_SET_TO_READ                 17
+#define IPMI_SDR_CACHE_ERR_CACHE_INVALID                                18
+#define IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE                            19
 #define IPMI_SDR_CACHE_ERR_NOT_FOUND                                    20
 #define IPMI_SDR_CACHE_ERR_IPMI_ERROR                                   21
-#define IPMI_SDR_CACHE_ERR_OVERFLOW                                     22
-#define IPMI_SDR_CACHE_ERR_INTERNAL_ERROR                               23
-#define IPMI_SDR_CACHE_ERR_ERRNUMRANGE                                  24
+#define IPMI_SDR_CACHE_ERR_SYSTEM_ERROR                                 22
+#define IPMI_SDR_CACHE_ERR_OVERFLOW                                     23
+#define IPMI_SDR_CACHE_ERR_INTERNAL_ERROR                               24
+#define IPMI_SDR_CACHE_ERR_ERRNUMRANGE                                  25
 
 #define IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT            0x0
 /* During cache creation, overwrite any previously created cache.  Default
@@ -72,6 +74,13 @@
 
 typedef struct ipmi_sdr_cache_ctx *ipmi_sdr_cache_ctx_t;
 
+/* Callback between every record that is cached */
+typedef void (*Sdr_Create_Callback)(uint8_t sdr_version,
+                                    uint16_t record_count,
+                                    uint32_t most_recent_addition_timestamp,
+                                    uint32_t most_recent_erase_timestamp,
+                                    uint16_t record_id);
+
 /* SDR Cache Context Functions */
 ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx_create(void);
 void ipmi_sdr_cache_ctx_destroy(ipmi_sdr_cache_ctx_t c);
@@ -80,20 +89,20 @@ char * ipmi_sdr_cache_ctx_strerror(int errnum);
 
 /* SDR Cache Creation Functions */
 int ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c, 
+                          ipmi_ctx_t ipmi_ctx,
 			  char *filename, 
-			  uint8_t version,
-			  uint16_t record_count,
 			  int create_flags,
-			  int validation_flags);
-int ipmi_sdr_cache_record_write(ipmi_sdr_cache_ctx_t c, 
-				uint8_t *buf,
-				unsigned int buflen);
-int ipmi_sdr_cache_complete(ipmi_sdr_cache_ctx_t c);
+			  int validation_flags,
+                          Sdr_Create_Callback create_callback);
 
 /* SDR Cache Reading Functions */
-int ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t c, char *filename);
-int ipmi_sdr_cache_version(ipmi_sdr_cache_ctx_t c, uint8_t *version);
+int ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t c, 
+                        ipmi_ctx_t ipmi_ctx,
+                        char *filename);
+int ipmi_sdr_cache_sdr_version(ipmi_sdr_cache_ctx_t c, uint8_t *sdr_version);
 int ipmi_sdr_cache_record_count(ipmi_sdr_cache_ctx_t c, uint16_t *record_count);
+int ipmi_sdr_cache_most_recent_addition_timestamp(ipmi_sdr_cache_ctx_t c, uint32_t *most_recent_addition_timestamp);
+int ipmi_sdr_cache_most_recent_erase_timestamp(ipmi_sdr_cache_ctx_t c, uint32_t *most_recent_erase_timestamp);
 
 int ipmi_sdr_cache_first(ipmi_sdr_cache_ctx_t c);
 int ipmi_sdr_cache_next(ipmi_sdr_cache_ctx_t c);

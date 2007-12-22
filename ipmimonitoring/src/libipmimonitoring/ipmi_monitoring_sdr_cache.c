@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.11.2.1 2007-12-20 21:45:45 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.11.2.2 2007-12-22 15:52:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -54,12 +54,6 @@
 #define IPMI_MONITORING_SDR_CACHE_FILENAME       "ipmimonitoringsdrcache"
 #define IPMI_MONITORING_SDR_CACHE_INBAND         "localhost"
 
-#define IPMI_MONITORING_MAX_SDR_RECORD_LENGTH    1024
-#define IPMI_MONITORING_MAX_RESERVATION_ID_RETRY 4
-
-#define IPMI_MONITORING_BYTES_TO_READ_START      16
-#define IPMI_MONITORING_BYTES_TO_READ_DECREMENT  4
-
 char sdr_cache_dir[MAXPATHLEN+1];
 int sdr_cache_dir_set = 0;
 
@@ -97,445 +91,34 @@ _ipmi_monitoring_sdr_cache_filename(ipmi_monitoring_ctx_t c,
 }
 
 static int
-_ipmi_monitoring_sdr_cache_info(ipmi_monitoring_ctx_t c,
-                                uint8_t *version,
-                                uint16_t *record_count)
-{
-  fiid_obj_t obj_cmd_rq = NULL;
-  fiid_obj_t obj_cmd_rs = NULL;
-  int ret, rv = -1;
-  uint64_t val;
-
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(version);
-  assert(record_count);
-
-  if (!(obj_cmd_rq = Fiid_obj_create(c, tmpl_cmd_get_sdr_repository_info_rq)))
-    goto cleanup;
-
-  if (!(obj_cmd_rs = Fiid_obj_create(c, tmpl_cmd_get_sdr_repository_info_rs)))
-    goto cleanup;
-
-  if (fill_cmd_get_repository_info(obj_cmd_rq) < 0)
-    {
-      IPMI_MONITORING_DEBUG(("fill_cmd_get_repository_info: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      goto cleanup;
-    }
-
-  if (ipmi_monitoring_ipmi_sendrecv (c,
-                                     IPMI_BMC_IPMB_LUN_BMC,
-                                     IPMI_NET_FN_STORAGE_RQ,
-                                     obj_cmd_rq,
-                                     obj_cmd_rs) < 0)
-    goto cleanup;
-  
-  if ((ret = ipmi_check_completion_code_success(obj_cmd_rs)) < 0)
-    {
-      IPMI_MONITORING_DEBUG(("ipmi_check_completion_code_success: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      goto cleanup;
-    }
-
-  if (!ret)
-    {
-      if (Fiid_obj_get(c, obj_cmd_rs, "comp_code", &val) < 0)
-        IPMI_MONITORING_DEBUG(("fiid_obj_get: %s", strerror(errno)));
-      else
-        IPMI_MONITORING_DEBUG(("bad completion code: 0x%X", val));
-      c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-      goto cleanup;
-    }
-
-  *version = 0;
-  if (Fiid_obj_get(c,
-                   obj_cmd_rs,
-                   "sdr_version_major",
-                   &val) < 0)
-    goto cleanup;
-  *version = val;
-
-  if (Fiid_obj_get(c,
-                   obj_cmd_rs,
-                   "sdr_version_minor",
-                   &val) < 0)
-    goto cleanup;
-  *version |= (val << 4);
-
-  *record_count = 0;
-  if (Fiid_obj_get(c,
-                   obj_cmd_rs,
-                   "record_count",
-                   &val) < 0)
-    goto cleanup;
-  *record_count = val;
-  
-  rv = 0;
- cleanup:
-  if (obj_cmd_rq)
-    Fiid_obj_destroy(c, obj_cmd_rq);
-  if (obj_cmd_rs)
-    Fiid_obj_destroy(c, obj_cmd_rs);
-  return rv;
-}
-
-static int
-_ipmi_monitoring_sdr_cache_reservation_id(ipmi_monitoring_ctx_t c,
-                                          uint16_t *reservation_id)
-{
-  fiid_obj_t obj_cmd_rq = NULL;
-  fiid_obj_t obj_cmd_rs = NULL;
-  int ret, rv = -1;
-  uint64_t val;
-
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(reservation_id);
-
-  if (!(obj_cmd_rq = Fiid_obj_create(c, tmpl_cmd_reserve_sdr_repository_rq)))
-    goto cleanup;
-
-  if (!(obj_cmd_rs = Fiid_obj_create(c, tmpl_cmd_reserve_sdr_repository_rs)))
-    goto cleanup;
-
-  if (fill_cmd_reserve_sdr_repository(obj_cmd_rq) < 0)
-    {
-      IPMI_MONITORING_DEBUG(("fill_cmd_reserve_sdr_repository: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      goto cleanup;
-    }
-
-  if (ipmi_monitoring_ipmi_sendrecv (c,
-                                     IPMI_BMC_IPMB_LUN_BMC,
-                                     IPMI_NET_FN_STORAGE_RQ,
-                                     obj_cmd_rq,
-                                     obj_cmd_rs) < 0)
-    goto cleanup;
-  
-  if ((ret = ipmi_check_completion_code_success(obj_cmd_rs)) < 0)
-    {
-      IPMI_MONITORING_DEBUG(("ipmi_check_completion_code_success: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      goto cleanup;
-    }
-
-  if (!ret)
-    {
-      if (Fiid_obj_get(c, obj_cmd_rs, "comp_code", &val) < 0)
-        IPMI_MONITORING_DEBUG(("fiid_obj_get: %s", strerror(errno)));
-      else
-        IPMI_MONITORING_DEBUG(("bad completion code: 0x%X", val));
-      c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-      goto cleanup;
-    }
-  
-  *reservation_id = 0;
-  if (Fiid_obj_get(c,
-                   obj_cmd_rs,
-                   "reservation_id",
-                   &val) < 0)
-    goto cleanup;
-  *reservation_id = val;
-
-  rv = 0;
- cleanup:
-  if (obj_cmd_rq)
-    Fiid_obj_destroy(c, obj_cmd_rq);
-  if (obj_cmd_rs)
-    Fiid_obj_destroy(c, obj_cmd_rs);
-  return rv;
-}
-
-static int
-_ipmi_monitoring_sdr_cache_get_record(ipmi_monitoring_ctx_t c,
-                                      uint16_t record_id,
-                                      uint8_t *record_buf,
-                                      unsigned int record_buf_len,
-                                      uint16_t *reservation_id,
-                                      uint16_t *next_record_id)
-{
-  fiid_obj_t obj_cmd_rq = NULL;
-  fiid_obj_t obj_cmd_rs = NULL;
-  fiid_obj_t obj_sdr_record_header = NULL;
-  int32_t sdr_record_header_length = 0;
-  int32_t record_length = 0;
-  int ret, rv = -1;
-  uint32_t bytes_to_read = IPMI_MONITORING_BYTES_TO_READ_START;
-  uint32_t offset_into_record = 0;
-  unsigned int reservation_id_retry_count = 0;
-  uint64_t val;
-
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(record_buf);
-  assert(record_buf_len);
-  assert(reservation_id);
-  assert(next_record_id);
-
-  if (!(obj_cmd_rq = Fiid_obj_create(c, tmpl_cmd_get_sdr_rq)))
-    goto cleanup;
-
-  if (!(obj_cmd_rs = Fiid_obj_create(c, tmpl_cmd_get_sdr_rs)))
-    goto cleanup;
-
-  if (!(obj_sdr_record_header = Fiid_obj_create(c, tmpl_sdr_record_header)))
-    goto cleanup;
-
-  if ((sdr_record_header_length = Fiid_template_len_bytes(c, tmpl_sdr_record_header)) < 0)
-    goto cleanup;
-
-  reservation_id_retry_count = 0;
-  while (!record_length)
-    {
-      uint8_t record_header_buf[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
-      int sdr_record_header_len;
-
-      if (fill_cmd_get_sdr(*reservation_id,
-                           record_id,
-                           0,
-                           sdr_record_header_length,
-                           obj_cmd_rq) < 0)
-        {
-          IPMI_MONITORING_DEBUG(("fill_cmd_get_sdr: %s", strerror(errno)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          goto cleanup;
-        }
-      
-      if (ipmi_monitoring_ipmi_sendrecv (c,
-                                         IPMI_BMC_IPMB_LUN_BMC,
-                                         IPMI_NET_FN_STORAGE_RQ,
-                                         obj_cmd_rq,
-                                         obj_cmd_rs) < 0)
-        goto cleanup;
-      
-      if ((ret = ipmi_check_completion_code_success(obj_cmd_rs)) < 0)
-        {
-          IPMI_MONITORING_DEBUG(("ipmi_check_completion_code_success: %s", strerror(errno)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          goto cleanup;
-        }
-      
-      if (!ret)
-        {
-          if (Fiid_obj_get(c, obj_cmd_rs, "comp_code", &val) < 0)
-            IPMI_MONITORING_DEBUG(("fiid_obj_get: %s", strerror(errno)));
-
-          if (val == IPMI_COMP_CODE_RESERVATION_CANCELLED
-              && (reservation_id_retry_count < IPMI_MONITORING_MAX_RESERVATION_ID_RETRY))
-            {
-              if (_ipmi_monitoring_sdr_cache_reservation_id(c,
-                                                            reservation_id) < 0)
-                goto cleanup;
-              reservation_id_retry_count++;
-              continue;
-            }
-
-          IPMI_MONITORING_DEBUG(("bad completion code: 0x%X", val));
-          c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-          goto cleanup;
-        }
-
-      if ((sdr_record_header_len = Fiid_obj_get_data(c,
-                                                     obj_cmd_rs,
-                                                     "record_data",
-                                                     record_header_buf,
-                                                     IPMI_MONITORING_MAX_SDR_RECORD_LENGTH)) < 0)
-        goto cleanup;
-
-      if (sdr_record_header_len < sdr_record_header_length)
-        {
-          IPMI_MONITORING_DEBUG(("sdr_record_header_len = %d; sdr_record_header_length = %d", sdr_record_header_len, sdr_record_header_length));
-          c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-          goto cleanup;
-        }
-
-      if (Fiid_obj_set_all(c,
-                           obj_sdr_record_header,
-                           record_header_buf,
-                           sdr_record_header_len) < 0)
-        goto cleanup;
-
-      if (Fiid_obj_get(c,
-                       obj_sdr_record_header,
-                       "record_length",
-                       &val) < 0)
-        goto cleanup;
-      
-      record_length = val + sdr_record_header_length;
-    }
-  
-  if (record_length > record_buf_len)
-    {
-      IPMI_MONITORING_DEBUG(("record_length = %d, record_buf_len = %d", record_length, record_buf_len));
-      goto cleanup;
-    }
-  
-  if (Fiid_obj_get(c,
-                   obj_cmd_rs,
-                   "next_record_id",
-                   &val) < 0)
-    goto cleanup;
-  *next_record_id = val;
-
-  reservation_id_retry_count = 0;
-  while (offset_into_record < record_length) 
-    {
-      int32_t record_data_len;
-
-      if ((record_length - offset_into_record) < bytes_to_read)
-        bytes_to_read = record_length - offset_into_record;
-
-      if (fill_cmd_get_sdr(*reservation_id,
-                           record_id,
-                           offset_into_record,
-                           bytes_to_read,
-                           obj_cmd_rq) < 0)
-        {
-          IPMI_MONITORING_DEBUG(("fill_cmd_get_sdr: %s", strerror(errno)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          goto cleanup;
-        }
-      
-      if (ipmi_monitoring_ipmi_sendrecv (c,
-                                         IPMI_BMC_IPMB_LUN_BMC,
-                                         IPMI_NET_FN_STORAGE_RQ,
-                                         obj_cmd_rq,
-                                         obj_cmd_rs) < 0)
-        goto cleanup;
-      
-      if ((ret = ipmi_check_completion_code_success(obj_cmd_rs)) < 0)
-        {
-          IPMI_MONITORING_DEBUG(("ipmi_check_completion_code_success: %s", strerror(errno)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          goto cleanup;
-        }
-
-      if (!ret)
-        {
-          if (Fiid_obj_get(c, obj_cmd_rs, "comp_code", &val) < 0)
-            IPMI_MONITORING_DEBUG(("fiid_obj_get: %s", strerror(errno)));
-
-          if (val == IPMI_COMP_CODE_RESERVATION_CANCELLED
-              && reservation_id_retry_count < IPMI_MONITORING_MAX_RESERVATION_ID_RETRY)
-            {
-              if (_ipmi_monitoring_sdr_cache_reservation_id(c,
-                                                            reservation_id) < 0)
-                goto cleanup;
-              reservation_id_retry_count++;
-              continue;
-            }
-          else if  (val == IPMI_COMP_CODE_CANNOT_RETURN_REQUESTED_NUMBER_OF_BYTES
-                    && bytes_to_read > sdr_record_header_length)
-            {
-              bytes_to_read -= IPMI_MONITORING_BYTES_TO_READ_DECREMENT;
-              if (bytes_to_read < sdr_record_header_length)
-                bytes_to_read = sdr_record_header_length;
-              IPMI_MONITORING_DEBUG(("lower bytes_to_read: %d", bytes_to_read));
-              continue;
-            }
-
-          IPMI_MONITORING_DEBUG(("bad completion code: 0x%X", val));
-          c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-          goto cleanup;
-        }
-      
-      if ((record_data_len = Fiid_obj_get_data(c,
-                                               obj_cmd_rs,
-                                               "record_data",
-                                               record_buf + offset_into_record,
-                                               record_buf_len - offset_into_record)) < 0)
-        goto cleanup;
-
-      offset_into_record += record_data_len;
-    }
-
-  rv = offset_into_record;
- cleanup:
-  if (obj_cmd_rq)
-    Fiid_obj_destroy(c, obj_cmd_rq);
-  if (obj_cmd_rs)
-    Fiid_obj_destroy(c, obj_cmd_rs);
-  if (obj_sdr_record_header)
-    Fiid_obj_destroy(c, obj_sdr_record_header);
-  return rv;
-}
-     
-static int
 _ipmi_monitoring_sdr_cache_retrieve(ipmi_monitoring_ctx_t c,
                                     const char *hostname,
                                     char *filename)
 {
-  uint8_t version;
-  uint16_t record_count;
-  uint16_t reservation_id;
-  uint16_t record_id;
-  uint16_t next_record_id;
-
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->sc);
   assert(c->ipmi_ctx);
   assert(filename && strlen(filename));
   
-  if (_ipmi_monitoring_sdr_cache_info(c,
-                                      &version,
-                                      &record_count) < 0)
-    return -1;
-
   if (ipmi_sdr_cache_create(c->sc,
+                            c->ipmi_ctx,
                             filename,
-                            version,
-                            record_count,
                             IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT,
-                            IPMI_SDR_CACHE_VALIDATION_FLAGS_DEFAULT) < 0)
+                            IPMI_SDR_CACHE_VALIDATION_FLAGS_DEFAULT,
+                            NULL) < 0)
     {
       IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_create: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
       if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_FILESYSTEM)
         c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM;
       else if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_PERMISSION)
         c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION;
+      else if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_IPMI_ERROR)
+        ipmi_monitoring_ipmi_ctx_error_convert(c);
+      else if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_SYSTEM_ERROR)
+        c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
       else
         c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      return -1;
-    }
-
-  if (_ipmi_monitoring_sdr_cache_reservation_id(c,
-                                                &reservation_id) < 0)
-    return -1;
-
-  next_record_id = IPMI_SDR_RECORD_ID_FIRST;
-  while (next_record_id != IPMI_SDR_RECORD_ID_LAST)
-    {
-      uint8_t record_buf[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
-      int record_len;
-      
-      record_id = next_record_id;
-      if ((record_len = _ipmi_monitoring_sdr_cache_get_record(c,
-                                                              record_id,
-                                                              record_buf,
-                                                              IPMI_MONITORING_MAX_SDR_RECORD_LENGTH,
-                                                              &reservation_id,
-                                                              &next_record_id)) < 0)
-        return -1;
-
-      if (ipmi_sdr_cache_record_write(c->sc,
-                                      record_buf,
-                                      record_len) < 0)
-        {
-          IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_write: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
-          if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_CACHE_CREATE_INVALID_RECORD_LENGTH)
-            c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-          else
-            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          return -1;
-        }
-    }
-  
-  if (ipmi_sdr_cache_complete(c->sc) < 0)
-    {
-      IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_complete: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
          
@@ -594,14 +177,17 @@ ipmi_monitoring_sdr_cache_load(ipmi_monitoring_ctx_t c,
         }
     }
 
-  if (ipmi_sdr_cache_open(c->sc, filename) < 0)
+  if (ipmi_sdr_cache_open(c->sc, 
+                          c->ipmi_ctx,
+                          filename) < 0)
     {
       if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST)
         {
           if (_ipmi_monitoring_sdr_cache_retrieve(c, hostname, filename) < 0)
             goto cleanup;
         }
-      else if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_CACHE_INVALID)
+      else if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_CACHE_INVALID
+               || ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
         {
           if (_ipmi_monitoring_sdr_cache_delete(c, hostname, filename) < 0)
             goto cleanup;
@@ -627,7 +213,9 @@ ipmi_monitoring_sdr_cache_load(ipmi_monitoring_ctx_t c,
         }
 
       /* 2nd try after the sdr was retrieved*/
-      if (ipmi_sdr_cache_open(c->sc, filename) < 0)
+      if (ipmi_sdr_cache_open(c->sc, 
+                              c->ipmi_ctx,
+                              filename) < 0)
         {
           if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_FILESYSTEM)
             {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.15.2.1 2007-12-20 21:45:45 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.15.2.2 2007-12-22 15:52:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -577,47 +577,26 @@ ipmi_monitoring_ipmi_communication_init(ipmi_monitoring_ctx_t c,
   return -1;
 }
 
-int 
-ipmi_monitoring_ipmi_sendrecv(ipmi_monitoring_ctx_t c,
-                              uint8_t lun,
-                              uint8_t net_fn,
-                              fiid_obj_t obj_cmd_rq,
-                              fiid_obj_t obj_cmd_rs)
+void
+ipmi_monitoring_ipmi_ctx_error_convert(ipmi_monitoring_ctx_t c)
 {
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->ipmi_ctx);
-  assert(fiid_obj_valid(obj_cmd_rq));
-  assert(fiid_obj_valid(obj_cmd_rs));
-
-  if (ipmi_cmd (c->ipmi_ctx,
-                lun,
-                net_fn,
-                obj_cmd_rq,
-                obj_cmd_rs) < 0)
-    {
-      IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->ipmi_ctx))));
-      if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT)
-        c->errnum = IPMI_MONITORING_ERR_SESSION_TIMEOUT;
-      else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
-               || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
-               || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-               || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_IPMI_ERROR)
-        c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-      else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BMC_BUSY)
-        c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
-      else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT)
-        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
-      else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_OUT_OF_MEMORY)
-        c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-      else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR)
-        c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
-      else
-        c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      return -1;
-    }
-
-  return 0;
+  if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT)
+    c->errnum = IPMI_MONITORING_ERR_SESSION_TIMEOUT;
+  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
+           || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+           || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+           || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_IPMI_ERROR)
+    c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
+  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BMC_BUSY)
+    c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
+  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT)
+    c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
+  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_OUT_OF_MEMORY)
+    c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
+  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR)
+    c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
+  else
+    c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
 }
 
 int 

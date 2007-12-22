@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache_read.c,v 1.1.2.2 2007-12-20 23:25:41 chu11 Exp $
+ *  $Id: ipmi_sdr_cache_read.c,v 1.1.2.3 2007-12-22 15:52:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -50,17 +50,26 @@
 #include "ipmi_sdr_cache_defs.h"
 
 int 
-ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t c, char *filename)
+ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t c, 
+                    ipmi_ctx_t ipmi_ctx,
+                    char *filename)
 {
-  char version_buf;
+  uint8_t sdr_version;
+  uint16_t record_count;
+  uint32_t most_recent_addition_timestamp, most_recent_erase_timestamp;
+  char sdr_version_buf;
+  char sdr_cache_magic_buf[4];
+  char sdr_cache_version_buf[4];
   char record_count_buf[2];
-  char magic_buf[4];
+  char most_recent_addition_timestamp_buf[4];
+  char most_recent_erase_timestamp_buf[4];
   struct stat stat_buf;
   
   if (!c || c->magic != IPMI_SDR_CACHE_MAGIC)
     return -1;
   
-  if (!filename)
+  if (!ipmi_ctx
+      || !filename)
     {
       c->errnum = IPMI_SDR_CACHE_ERR_PARAMETERS;
       return -1;
@@ -90,12 +99,14 @@ ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t c, char *filename)
       goto cleanup;
     }
 
-  /* File Size must be atleast magic_buf + version_buf +
-   * record_count_buf in size. 
+  /* File Size must be atleast magic_buf + file_version_buf +
+   * sdr_version_buf + record_count_buf +
+   * most_recent_addition_timestamp_buf +
+   * most_recent_erase_timestamp-buf in size.
    */
   
   c->file_size = stat_buf.st_size;
-  if (c->file_size < (4 + 1 + 2))
+  if (c->file_size < (4 + 4 + 1 + 2 + 4 + 4))
     {
       c->errnum = IPMI_SDR_CACHE_ERR_FILENAME_INVALID;
       goto cleanup;
@@ -134,25 +145,64 @@ ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t c, char *filename)
       goto cleanup;
     }
     
-  memcpy(magic_buf, c->sdr_cache + c->records_start_offset, 4);
+  memcpy(sdr_cache_magic_buf, c->sdr_cache + c->records_start_offset, 4);
   c->records_start_offset += 4;
-  memcpy(&version_buf, c->sdr_cache + c->records_start_offset, 1);
+  memcpy(sdr_cache_version_buf, c->sdr_cache + c->records_start_offset, 4);
+  c->records_start_offset += 4;
+  memcpy(&sdr_version_buf, c->sdr_cache + c->records_start_offset, 1);
   c->records_start_offset += 1;
   memcpy(record_count_buf, c->sdr_cache + c->records_start_offset, 2);
   c->records_start_offset += 2;
+  memcpy(most_recent_addition_timestamp_buf, c->sdr_cache + c->records_start_offset, 4);
+  c->records_start_offset += 4;
+  memcpy(most_recent_erase_timestamp_buf, c->sdr_cache + c->records_start_offset, 4);
+  c->records_start_offset += 4;
 
-  if ((uint8_t)magic_buf[0] != IPMI_SDR_CACHE_FILE_MAGIC_0
-      || (uint8_t)magic_buf[1] != IPMI_SDR_CACHE_FILE_MAGIC_1
-      || (uint8_t)magic_buf[2] != IPMI_SDR_CACHE_FILE_MAGIC_2
-      || (uint8_t)magic_buf[3] != IPMI_SDR_CACHE_FILE_MAGIC_3)
+  if ((uint8_t)sdr_cache_magic_buf[0] != IPMI_SDR_CACHE_FILE_MAGIC_0
+      || (uint8_t)sdr_cache_magic_buf[1] != IPMI_SDR_CACHE_FILE_MAGIC_1
+      || (uint8_t)sdr_cache_magic_buf[2] != IPMI_SDR_CACHE_FILE_MAGIC_2
+      || (uint8_t)sdr_cache_magic_buf[3] != IPMI_SDR_CACHE_FILE_MAGIC_3)
     {
       c->errnum = IPMI_SDR_CACHE_ERR_CACHE_INVALID;
       goto cleanup;
     }
 
-  c->version = (uint8_t)version_buf;
+  if ((uint8_t)sdr_cache_version_buf[0] != IPMI_SDR_CACHE_FILE_VERSION_0
+      || (uint8_t)sdr_cache_version_buf[1] != IPMI_SDR_CACHE_FILE_VERSION_1
+      || (uint8_t)sdr_cache_version_buf[2] != IPMI_SDR_CACHE_FILE_VERSION_2
+      || (uint8_t)sdr_cache_version_buf[3] != IPMI_SDR_CACHE_FILE_VERSION_3)
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_CACHE_INVALID;
+      goto cleanup;
+    }
+
+  c->sdr_version = (uint8_t)sdr_version_buf;
   c->record_count = ((uint16_t)record_count_buf[0] & 0xFF);
   c->record_count |= ((uint16_t)record_count_buf[1] & 0xFF) << 8;
+  c->most_recent_addition_timestamp = ((uint32_t)most_recent_addition_timestamp_buf[0] & 0xFF);
+  c->most_recent_addition_timestamp = ((uint32_t)most_recent_addition_timestamp_buf[1] & 0xFF) << 8;
+  c->most_recent_addition_timestamp = ((uint32_t)most_recent_addition_timestamp_buf[2] & 0xFF) << 16;
+  c->most_recent_addition_timestamp = ((uint32_t)most_recent_addition_timestamp_buf[3] & 0xFF) << 24;
+  c->most_recent_erase_timestamp = ((uint32_t)most_recent_erase_timestamp_buf[0] & 0xFF);
+  c->most_recent_erase_timestamp = ((uint32_t)most_recent_erase_timestamp_buf[1] & 0xFF) << 8;
+  c->most_recent_erase_timestamp = ((uint32_t)most_recent_erase_timestamp_buf[2] & 0xFF) << 16;
+  c->most_recent_erase_timestamp = ((uint32_t)most_recent_erase_timestamp_buf[3] & 0xFF) << 24;
+
+  if (ipmi_sdr_cache_info(c,
+                          ipmi_ctx,
+                          &sdr_version,
+                          &record_count,
+                          &most_recent_addition_timestamp,
+                          &most_recent_erase_timestamp) < 0)
+    goto cleanup; 
+
+  if (c->sdr_version != sdr_version
+      || c->most_recent_addition_timestamp != most_recent_addition_timestamp
+      || c->most_recent_erase_timestamp != most_recent_erase_timestamp)
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE;
+      goto cleanup;
+    }
 
   c->current_offset = c->records_start_offset;
   c->operation = IPMI_SDR_CACHE_OPERATION_READ_CACHE;
@@ -169,12 +219,12 @@ ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t c, char *filename)
 }
 
 int 
-ipmi_sdr_cache_version(ipmi_sdr_cache_ctx_t c, uint8_t *version)
+ipmi_sdr_cache_sdr_version(ipmi_sdr_cache_ctx_t c, uint8_t *sdr_version)
 {
   if (!c || c->magic != IPMI_SDR_CACHE_MAGIC)
     return -1;
 
-  if (!version)
+  if (!sdr_version)
     {
       c->errnum = IPMI_SDR_CACHE_ERR_PARAMETERS;
       return -1;
@@ -186,7 +236,7 @@ ipmi_sdr_cache_version(ipmi_sdr_cache_ctx_t c, uint8_t *version)
       return -1;
     }
 
-  *version = c->version;
+  *sdr_version = c->sdr_version;
   c->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
   return 0;
 }
@@ -210,6 +260,52 @@ ipmi_sdr_cache_record_count(ipmi_sdr_cache_ctx_t c, uint16_t *record_count)
     }
 
   *record_count = c->record_count;
+  c->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
+  return 0;
+}
+
+int 
+ipmi_sdr_cache_most_recent_addition_timestamp(ipmi_sdr_cache_ctx_t c, uint32_t *most_recent_addition_timestamp)
+{
+  if (!c || c->magic != IPMI_SDR_CACHE_MAGIC)
+    return -1;
+
+  if (!most_recent_addition_timestamp)
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (c->operation != IPMI_SDR_CACHE_OPERATION_READ_CACHE)
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_CACHE_READ_INITIALIZATION;
+      return -1;
+    }
+
+  *most_recent_addition_timestamp = c->most_recent_addition_timestamp;
+  c->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
+  return 0;
+}
+
+int 
+ipmi_sdr_cache_most_recent_erase_timestamp(ipmi_sdr_cache_ctx_t c, uint32_t *most_recent_erase_timestamp)
+{
+  if (!c || c->magic != IPMI_SDR_CACHE_MAGIC)
+    return -1;
+
+  if (!most_recent_erase_timestamp)
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (c->operation != IPMI_SDR_CACHE_OPERATION_READ_CACHE)
+    {
+      c->errnum = IPMI_SDR_CACHE_ERR_CACHE_READ_INITIALIZATION;
+      return -1;
+    }
+
+  *most_recent_erase_timestamp = c->most_recent_erase_timestamp;
   c->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
   return 0;
 }
