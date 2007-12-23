@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-delete.c,v 1.1.2.3 2007-12-23 22:36:49 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-delete.c,v 1.1.2.4 2007-12-23 22:46:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -59,7 +59,12 @@ ipmi_sdr_cache_delete(ipmi_sdr_cache_ctx_t ctx, char *filename)
       return -1;
     }
 
-  SDR_CACHE_ERR(!(unlink(filename) < 0));
+  if (unlink(filename) < 0)
+    {
+      /* If there is no file (ENOENT), its ok */
+      if (errno != ENOENT)
+        SDR_CACHE_ERR(0);
+    }
   
   ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;
   return 0;
