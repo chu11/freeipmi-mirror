@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.1.2.2 2007-12-22 20:20:53 chu11 Exp $
+## $Id: Makefile.am,v 1.1.2.3 2007-12-23 02:03:11 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -17,9 +17,11 @@ libsdrcache_la_SOURCES = \
 	ipmi-sdr-cache-delete.c \
 	ipmi-sdr-cache-read.c
 
-libsdrcache_la_CPPFLAGS = -D_REENTRANT \
-			  -I$(srcdir)/../../../common/src \
-			  -I$(srcdir)/../../../libfreeipmi/include
+libsdrcache_la_CPPFLAGS = \
+	-I$(srcdir)/.. \
+	-I$(srcdir)/../../include \
+	-I$(srcdir)/../../../common/src \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
 
-force-dependency-check:
 

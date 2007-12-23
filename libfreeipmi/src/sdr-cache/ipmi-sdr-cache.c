@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.1.2.1 2007-12-22 20:20:55 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.1.2.2 2007-12-23 02:03:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -44,6 +44,8 @@
 #include "ipmi-sdr-cache-common.h"
 #include "ipmi-sdr-cache-defs.h"
 
+#include "libcommon/ipmi-err-wrappers.h"
+
 static char *ipmi_sdr_cache_errmsgs[] =
   {
     "success",
@@ -80,11 +82,15 @@ ipmi_sdr_cache_ctx_create(void)
 {
   struct ipmi_sdr_cache_ctx *c = NULL;
 
-  if (!(c = (ipmi_sdr_cache_ctx_t)malloc(sizeof(struct ipmi_sdr_cache_ctx))))
-    return NULL;
+  ERR_CLEANUP((c = (ipmi_sdr_cache_ctx_t)malloc(sizeof(struct ipmi_sdr_cache_ctx))));
   c->magic = IPMI_SDR_CACHE_MAGIC;
   ipmi_sdr_cache_init_ctx(c);
   return c;
+
+ cleanup:
+  if (c)
+    free(c);
+  return NULL;
 }
 
 void
@@ -107,9 +113,9 @@ int
 ipmi_sdr_cache_ctx_errnum(ipmi_sdr_cache_ctx_t c)
 {
   if (!c)
-    return IPMI_SDR_CACHE_ERR_CONTEXT_NULL;
+    return IPMI_SDR_CACHE_CTX_ERR_CONTEXT_NULL;
   else if (c->magic != IPMI_SDR_CACHE_MAGIC)
-    return IPMI_SDR_CACHE_ERR_CONTEXT_INVALID;
+    return IPMI_SDR_CACHE_CTX_ERR_CONTEXT_INVALID;
   else
     return c->errnum;
 }
@@ -117,8 +123,8 @@ ipmi_sdr_cache_ctx_errnum(ipmi_sdr_cache_ctx_t c)
 char *
 ipmi_sdr_cache_ctx_strerror(int errnum)
 {
-  if (errnum >= IPMI_SDR_CACHE_ERR_SUCCESS && errnum <= IPMI_SDR_CACHE_ERR_ERRNUMRANGE)
+  if (errnum >= IPMI_SDR_CACHE_CTX_ERR_SUCCESS && errnum <= IPMI_SDR_CACHE_CTX_ERR_ERRNUMRANGE)
     return ipmi_sdr_cache_errmsgs[errnum];
   else
-    return ipmi_sdr_cache_errmsgs[IPMI_SDR_CACHE_ERR_ERRNUMRANGE];
+    return ipmi_sdr_cache_errmsgs[IPMI_SDR_CACHE_CTX_ERR_ERRNUMRANGE];
 }

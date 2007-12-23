@@ -34,6 +34,11 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	libfreeipmi/include/freeipmi/sdr-cache/ and
 	libfreeipmi/src/sdr-cache/.
 
+	* libfreeipmi/src/libcommon/: Add sdr-cache equivalent error
+	wrappers.
+
+	* libfreeipmi/src/sdr-cache/: Use wrappers appropriately.
+
 	* Adjust Makefile.am, configure.ac, and code respectively for fall
 	out from above changes.
 	
