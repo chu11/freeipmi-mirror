@@ -40,6 +40,8 @@ general
 event handling
 sdr caching requires versioning
 tool for getting channel information - in ipmi-device tool for 0.5.0?
+sdr dumping debugging in tools
+sdr callback needs context
 
 ipmi-chassis
 ------------
@@ -67,6 +69,10 @@ ipmiconsole
 -----------
 retry under a different port
 - has never been tested, does any manufacturer do this?
+
+sdr-cache
+---------
+use 'ctx' instead of 'c'.
 
 ASUS issues to resolve
 ----------------------
