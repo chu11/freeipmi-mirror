@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-delete.c,v 1.1.2.2 2007-12-23 02:03:11 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-delete.c,v 1.1.2.3 2007-12-23 22:36:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -44,15 +44,15 @@
 #include "libcommon/ipmi-err-wrappers.h"
 
 int 
-ipmi_sdr_cache_delete(ipmi_sdr_cache_ctx_t c, char *filename)
+ipmi_sdr_cache_delete(ipmi_sdr_cache_ctx_t ctx, char *filename)
 {
-  ERR(c && c->magic == IPMI_SDR_CACHE_MAGIC);
+  ERR(ctx && ctx->magic == IPMI_SDR_CACHE_MAGIC);
   
   SDR_CACHE_ERR_PARAMETERS(filename);
 
-  if (c->operation != IPMI_SDR_CACHE_OPERATION_UNINITIALIZED)
+  if (ctx->operation != IPMI_SDR_CACHE_OPERATION_UNINITIALIZED)
     {
-      if (c->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE)
+      if (ctx->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE)
         SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_CACHE_DELETE_CTX_SET_TO_READ);
       else
         SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR);
@@ -61,6 +61,6 @@ ipmi_sdr_cache_delete(ipmi_sdr_cache_ctx_t c, char *filename)
 
   SDR_CACHE_ERR(!(unlink(filename) < 0));
   
-  c->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;
   return 0;
 }

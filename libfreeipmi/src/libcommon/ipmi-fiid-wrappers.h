@@ -1246,21 +1246,21 @@ do {                                                                          \
 #define __FIID_ERRNO_TO_SDR_CACHE_ERRNUM                                      \
 do {                                                                          \
   if (errno == 0)                                                             \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;                               \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;                             \
   else if (errno == ENOMEM)                                                   \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;                         \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;                       \
   else                                                                        \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;                        \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;                      \
 } while (0)
 
 #define __FIID_ERRNUM_TO_SDR_CACHE_ERRNUM(___errnum)                          \
 do {                                                                          \
   if ((___errnum) == 0)                                                       \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;                               \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;                             \
   else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;                         \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;                       \
   else                                                                        \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;                        \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;                      \
 } while (0)
 
 #define __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM(___obj)                         \

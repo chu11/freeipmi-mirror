@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.c,v 1.1.2.2 2007-12-23 02:03:11 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-common.c,v 1.1.2.3 2007-12-23 22:36:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -45,26 +45,26 @@
 #include "libcommon/ipmi-fiid-wrappers.h"
 
 void
-ipmi_sdr_cache_init_ctx(ipmi_sdr_cache_ctx_t c)
+ipmi_sdr_cache_init_ctx(ipmi_sdr_cache_ctx_t ctx)
 {
-  assert(c);
-  assert(c->magic == IPMI_SDR_CACHE_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_SDR_CACHE_MAGIC);
 
-  c->operation = IPMI_SDR_CACHE_OPERATION_UNINITIALIZED;
+  ctx->operation = IPMI_SDR_CACHE_OPERATION_UNINITIALIZED;
 
-  c->sdr_version = 0;
-  c->record_count = 0;
-  c->most_recent_addition_timestamp = 0;
-  c->most_recent_erase_timestamp = 0;
+  ctx->sdr_version = 0;
+  ctx->record_count = 0;
+  ctx->most_recent_addition_timestamp = 0;
+  ctx->most_recent_erase_timestamp = 0;
 
-  c->fd = -1;
-  c->file_size = 0;
-  c->records_start_offset = 0;
-  c->sdr_cache = NULL;
+  ctx->fd = -1;
+  ctx->file_size = 0;
+  ctx->records_start_offset = 0;
+  ctx->sdr_cache = NULL;
 }
 
 int
-ipmi_sdr_cache_info(ipmi_sdr_cache_ctx_t c,
+ipmi_sdr_cache_info(ipmi_sdr_cache_ctx_t ctx,
                     ipmi_ctx_t ipmi_ctx,
                     uint8_t *sdr_version,
                     uint16_t *record_count,
@@ -75,8 +75,8 @@ ipmi_sdr_cache_info(ipmi_sdr_cache_ctx_t c,
   uint64_t val;
   int rv = -1;
   
-  assert(c);
-  assert(c->magic == IPMI_SDR_CACHE_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_SDR_CACHE_MAGIC);
   assert(ipmi_ctx);
   assert(sdr_version);
   assert(record_count);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.h,v 1.1.2.1 2007-12-22 20:20:53 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-common.h,v 1.1.2.2 2007-12-23 22:36:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -33,9 +33,9 @@
 
 #include "ipmi-sdr-cache-defs.h"
 
-void ipmi_sdr_cache_init_ctx(ipmi_sdr_cache_ctx_t c);
+void ipmi_sdr_cache_init_ctx(ipmi_sdr_cache_ctx_t ctx);
 
-int ipmi_sdr_cache_info(ipmi_sdr_cache_ctx_t c,
+int ipmi_sdr_cache_info(ipmi_sdr_cache_ctx_t ctx,
                         ipmi_ctx_t ipmi_ctx,
                         uint8_t *sdr_version,
                         uint16_t *record_count,

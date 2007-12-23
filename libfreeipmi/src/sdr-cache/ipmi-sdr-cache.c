@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.1.2.2 2007-12-23 02:03:12 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.1.2.3 2007-12-23 22:36:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -80,44 +80,44 @@ static char *ipmi_sdr_cache_errmsgs[] =
 ipmi_sdr_cache_ctx_t
 ipmi_sdr_cache_ctx_create(void)
 {
-  struct ipmi_sdr_cache_ctx *c = NULL;
+  struct ipmi_sdr_cache_ctx *ctx = NULL;
 
-  ERR_CLEANUP((c = (ipmi_sdr_cache_ctx_t)malloc(sizeof(struct ipmi_sdr_cache_ctx))));
-  c->magic = IPMI_SDR_CACHE_MAGIC;
-  ipmi_sdr_cache_init_ctx(c);
-  return c;
+  ERR_CLEANUP((ctx = (ipmi_sdr_cache_ctx_t)malloc(sizeof(struct ipmi_sdr_cache_ctx))));
+  ctx->magic = IPMI_SDR_CACHE_MAGIC;
+  ipmi_sdr_cache_init_ctx(ctx);
+  return ctx;
 
  cleanup:
-  if (c)
-    free(c);
+  if (ctx)
+    free(ctx);
   return NULL;
 }
 
 void
-ipmi_sdr_cache_ctx_destroy(ipmi_sdr_cache_ctx_t c)
+ipmi_sdr_cache_ctx_destroy(ipmi_sdr_cache_ctx_t ctx)
 {
-  if (!c || c->magic != IPMI_SDR_CACHE_MAGIC)
+  if (!ctx || ctx->magic != IPMI_SDR_CACHE_MAGIC)
     return;
 
-  if (c->fd >= 0)
-    close(c->fd);
-  if (c->sdr_cache)
-    munmap(c->sdr_cache, c->file_size);
+  if (ctx->fd >= 0)
+    close(ctx->fd);
+  if (ctx->sdr_cache)
+    munmap(ctx->sdr_cache, ctx->file_size);
 
-  c->magic = ~IPMI_SDR_CACHE_MAGIC;
-  c->operation = IPMI_SDR_CACHE_OPERATION_UNINITIALIZED;
-  free(c);
+  ctx->magic = ~IPMI_SDR_CACHE_MAGIC;
+  ctx->operation = IPMI_SDR_CACHE_OPERATION_UNINITIALIZED;
+  free(ctx);
 }
 
 int 
-ipmi_sdr_cache_ctx_errnum(ipmi_sdr_cache_ctx_t c)
+ipmi_sdr_cache_ctx_errnum(ipmi_sdr_cache_ctx_t ctx)
 {
-  if (!c)
+  if (!ctx)
     return IPMI_SDR_CACHE_CTX_ERR_CONTEXT_NULL;
-  else if (c->magic != IPMI_SDR_CACHE_MAGIC)
+  else if (ctx->magic != IPMI_SDR_CACHE_MAGIC)
     return IPMI_SDR_CACHE_CTX_ERR_CONTEXT_INVALID;
   else
-    return c->errnum;
+    return ctx->errnum;
 }
 
 char *

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.1.2.2 2007-12-23 02:03:11 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.1.2.3 2007-12-23 22:36:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -64,7 +64,7 @@
 #define IPMI_SDR_CACHE_BYTES_TO_READ_DECREMENT  4
 
 static int
-_sdr_cache_header_write(ipmi_sdr_cache_ctx_t c,
+_sdr_cache_header_write(ipmi_sdr_cache_ctx_t ctx,
                         ipmi_ctx_t ipmi_ctx,
                         int fd,
                         unsigned int *total_bytes_written,
@@ -80,8 +80,8 @@ _sdr_cache_header_write(ipmi_sdr_cache_ctx_t c,
   char most_recent_erase_timestamp_buf[4];
   ssize_t n;
 
-  assert(c);
-  assert(c->magic == IPMI_SDR_CACHE_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_SDR_CACHE_MAGIC);
   assert(ipmi_ctx);
   assert(fd);
   assert(total_bytes_written);
@@ -140,7 +140,7 @@ _sdr_cache_header_write(ipmi_sdr_cache_ctx_t c,
 }
 
 static int
-_sdr_cache_reservation_id(ipmi_sdr_cache_ctx_t c,
+_sdr_cache_reservation_id(ipmi_sdr_cache_ctx_t ctx,
                           ipmi_ctx_t ipmi_ctx,
                           uint16_t *reservation_id)
 {
@@ -148,8 +148,8 @@ _sdr_cache_reservation_id(ipmi_sdr_cache_ctx_t c,
   uint64_t val;
   int rv = -1;
 
-  assert(c);
-  assert(c->magic == IPMI_SDR_CACHE_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_SDR_CACHE_MAGIC);
   assert(ipmi_ctx);
   assert(reservation_id);
 
@@ -170,7 +170,7 @@ _sdr_cache_reservation_id(ipmi_sdr_cache_ctx_t c,
 }
 
 static int
-_sdr_cache_get_record(ipmi_sdr_cache_ctx_t c,
+_sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
                       ipmi_ctx_t ipmi_ctx, 
                       uint16_t record_id,
                       uint8_t *record_buf,
@@ -188,8 +188,8 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t c,
   unsigned int reservation_id_retry_count = 0;
   uint64_t val;
 
-  assert(c);
-  assert(c->magic == IPMI_SDR_CACHE_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_SDR_CACHE_MAGIC);
   assert(ipmi_ctx);
   assert(record_buf);
   assert(record_buf_len);
@@ -229,7 +229,7 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t c,
               if (val == IPMI_COMP_CODE_RESERVATION_CANCELLED
                   && (reservation_id_retry_count < IPMI_SDR_CACHE_MAX_RESERVATION_ID_RETRY))
                 {
-                  if (_sdr_cache_reservation_id(c,
+                  if (_sdr_cache_reservation_id(ctx,
                                                 ipmi_ctx,
                                                 reservation_id) < 0)
                     goto cleanup;
@@ -296,7 +296,7 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t c,
               if (val == IPMI_COMP_CODE_RESERVATION_CANCELLED
                   && (reservation_id_retry_count < IPMI_SDR_CACHE_MAX_RESERVATION_ID_RETRY))
                 {
-                  if (_sdr_cache_reservation_id(c,
+                  if (_sdr_cache_reservation_id(ctx,
                                                 ipmi_ctx,
                                                 reservation_id) < 0)
                     goto cleanup;
@@ -334,7 +334,7 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t c,
 }
 
 static int 
-_sdr_cache_record_write(ipmi_sdr_cache_ctx_t c,
+_sdr_cache_record_write(ipmi_sdr_cache_ctx_t ctx,
                         int fd,
                         unsigned int *total_bytes_written,
                         uint16_t *record_ids,
@@ -346,8 +346,8 @@ _sdr_cache_record_write(ipmi_sdr_cache_ctx_t c,
 {
   ssize_t n;
 
-  assert(c);
-  assert(c->magic == IPMI_SDR_CACHE_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_SDR_CACHE_MAGIC);
   assert(fd);
   assert(total_bytes_written);
   assert(!record_ids || (record_ids && record_ids_count));
@@ -433,7 +433,7 @@ _sdr_cache_record_write(ipmi_sdr_cache_ctx_t c,
 }
 
 int 
-ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c, 
+ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx, 
                       ipmi_ctx_t ipmi_ctx,
 		      char *filename, 
 		      int create_flags,
@@ -454,7 +454,7 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
   int fd = -1;
   int rv = -1;
 
-  ERR(c && c->magic == IPMI_SDR_CACHE_MAGIC);
+  ERR(ctx && ctx->magic == IPMI_SDR_CACHE_MAGIC);
 
   /* Version cannot be 0h according to the IPMI spec */
   SDR_CACHE_ERR_PARAMETERS(ipmi_ctx
@@ -464,9 +464,9 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
                                || create_flags == IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE)
                            && !(validation_flags & ~(IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_RECORD_ID | IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_SENSOR_NUMBER)));
 
-  if (c->operation != IPMI_SDR_CACHE_OPERATION_UNINITIALIZED)
+  if (ctx->operation != IPMI_SDR_CACHE_OPERATION_UNINITIALIZED)
     {
-      if (c->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE)
+      if (ctx->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE)
         SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_CACHE_DELETE_CTX_SET_TO_READ);
       else
         SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR);
@@ -482,26 +482,26 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
     {
       if (create_flags == IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT
 	  && errno == EEXIST)
-	c->errnum = IPMI_SDR_CACHE_CTX_ERR_CACHE_CREATE_CACHE_EXISTS;
+	ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_CACHE_CREATE_CACHE_EXISTS;
       else if (errno == EPERM
                || errno == EACCES
                || errno == EISDIR
 	       || errno == EROFS)
-	c->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;
+	ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;
       else if (errno == ENAMETOOLONG
 	       || errno == ENOENT
 	       || errno == ELOOP)
-	c->errnum = IPMI_SDR_CACHE_CTX_ERR_FILENAME_INVALID;
+	ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_FILENAME_INVALID;
       else if (errno == ENOSPC
 	       || errno == EMFILE
 	       || errno == ENFILE)
-	c->errnum = IPMI_SDR_CACHE_CTX_ERR_FILESYSTEM;
+	ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_FILESYSTEM;
       else
-	c->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;
+	ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
-  if (ipmi_sdr_cache_info(c,
+  if (ipmi_sdr_cache_info(ctx,
                           ipmi_ctx,
                           &sdr_version,
                           &record_count,
@@ -509,7 +509,7 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
                           &most_recent_erase_timestamp) < 0)
     goto cleanup; 
 
-  if (_sdr_cache_header_write(c,
+  if (_sdr_cache_header_write(ctx,
                               ipmi_ctx,
                               fd,
                               &total_bytes_written,
@@ -519,24 +519,24 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
                               most_recent_erase_timestamp) < 0)
     goto cleanup;
   
-  c->sdr_version = sdr_version;
-  c->record_count = record_count;
-  c->most_recent_addition_timestamp = most_recent_addition_timestamp;
-  c->most_recent_erase_timestamp = most_recent_erase_timestamp;
+  ctx->sdr_version = sdr_version;
+  ctx->record_count = record_count;
+  ctx->most_recent_addition_timestamp = most_recent_addition_timestamp;
+  ctx->most_recent_erase_timestamp = most_recent_erase_timestamp;
 
   if (validation_flags & IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_RECORD_ID)
     {
-      SDR_CACHE_ERR_OUT_OF_MEMORY_CLEANUP((record_ids = (uint16_t *)malloc(c->record_count * sizeof(uint16_t))));
+      SDR_CACHE_ERR_OUT_OF_MEMORY_CLEANUP((record_ids = (uint16_t *)malloc(ctx->record_count * sizeof(uint16_t))));
       record_ids_count = 0;
     }
 
   if (validation_flags & IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_SENSOR_NUMBER)
     {
-      SDR_CACHE_ERR_OUT_OF_MEMORY_CLEANUP((sensor_numbers = (uint8_t *)malloc(c->record_count * sizeof(uint8_t))));
+      SDR_CACHE_ERR_OUT_OF_MEMORY_CLEANUP((sensor_numbers = (uint8_t *)malloc(ctx->record_count * sizeof(uint8_t))));
       sensor_numbers_count = 0;
     }
 
-  if (_sdr_cache_reservation_id(c,
+  if (_sdr_cache_reservation_id(ctx,
                                 ipmi_ctx,
                                 &reservation_id) < 0)
     return -1;
@@ -547,14 +547,14 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
       uint8_t record_buf[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
       int record_len;
 
-      if (record_count_written >= c->record_count)
+      if (record_count_written >= ctx->record_count)
         {
           SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_CACHE_CREATE_INVALID_RECORD_COUNT);
           return -1;
         }
 
       record_id = next_record_id;
-      if ((record_len = _sdr_cache_get_record(c,
+      if ((record_len = _sdr_cache_get_record(ctx,
                                               ipmi_ctx,
                                               record_id,
                                               record_buf,
@@ -563,7 +563,7 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
                                               &next_record_id)) < 0)
         goto cleanup;
 
-      if (_sdr_cache_record_write(c,
+      if (_sdr_cache_record_write(ctx,
                                   fd,
                                   &total_bytes_written,
                                   record_ids,
@@ -577,21 +577,21 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
       record_count_written++;
 
       if (create_callback)
-        (*create_callback)(c->sdr_version,
-                           c->record_count,
-                           c->most_recent_addition_timestamp,
-                           c->most_recent_erase_timestamp,
+        (*create_callback)(ctx->sdr_version,
+                           ctx->record_count,
+                           ctx->most_recent_addition_timestamp,
+                           ctx->most_recent_erase_timestamp,
                            record_id);
     }
 
-  if (record_count_written != c->record_count)
+  if (record_count_written != ctx->record_count)
     {
       SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_CACHE_CREATE_INVALID_RECORD_COUNT);
       goto cleanup;
     }
   
   rv = 0;
-  c->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;
  cleanup:
   if (fd >= 0)
     {
@@ -604,7 +604,7 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
     free(record_ids);
   if (sensor_numbers)
     free(sensor_numbers);
-  ipmi_sdr_cache_init_ctx(c);
+  ipmi_sdr_cache_init_ctx(ctx);
   return rv;
 }
 

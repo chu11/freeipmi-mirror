@@ -107,7 +107,7 @@ do {                                                                    \
 
 #define __SDR_CACHE_TRACE                                               \
 do {                                                                    \
-  int __ctxerrnum = ipmi_sdr_cache_ctx_errnum(c);                       \
+  int __ctxerrnum = ipmi_sdr_cache_ctx_errnum(ctx);                     \
   char *__ctxerrstr = ipmi_sdr_cache_ctx_strerror(__ctxerrnum);         \
   __TRACE_CTX_OUTPUT;                                                   \
 } while (0)
@@ -814,39 +814,38 @@ do {                                                                    \
       }                                                                 \
   } while (0)
 
-
-#define __SDR_CACHE_ERRNO_TO_ERRNUM                                     \
-do {                                                                    \
-  if (errno == 0)                                                       \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;                         \
-  else if (errno == ENOSPC)                                             \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_FILESYSTEM;                      \
-  else if (errno == EMFILE)                                             \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_FILESYSTEM;                      \
-  else if (errno == ENFILE)                                             \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_FILESYSTEM;                      \
-  else if (errno == EPERM)                                              \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;                      \
-  else if (errno == EACCES)                                             \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;                      \
-  else if (errno == EISDIR)                                             \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;                      \
-  else if (errno == EROFS)                                              \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;                      \
-  else if (errno == ENOENT)                                             \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST; \
-  else if (errno == ENOTDIR)                                            \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST; \
-  else if (errno == ENAMETOOLONG)                                       \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_FILENAME_INVALID;                \
-  else if (errno == ELOOP)                                              \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_FILENAME_INVALID;                \
-  else if (errno == ENOMEM)                                             \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;                   \
-  else if (errno == EINVAL)                                             \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;                  \
-  else                                                                  \
-    c->errnum = IPMI_SDR_CACHE_CTX_ERR_SYSTEM_ERROR;                    \
+#define __SDR_CACHE_ERRNO_TO_ERRNUM                                       \
+do {                                                                      \
+  if (errno == 0)                                                         \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;                         \
+  else if (errno == ENOSPC)                                               \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_FILESYSTEM;                      \
+  else if (errno == EMFILE)                                               \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_FILESYSTEM;                      \
+  else if (errno == ENFILE)                                               \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_FILESYSTEM;                      \
+  else if (errno == EPERM)                                                \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;                      \
+  else if (errno == EACCES)                                               \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;                      \
+  else if (errno == EISDIR)                                               \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;                      \
+  else if (errno == EROFS)                                                \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;                      \
+  else if (errno == ENOENT)                                               \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST; \
+  else if (errno == ENOTDIR)                                              \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST; \
+  else if (errno == ENAMETOOLONG)                                         \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_FILENAME_INVALID;                \
+  else if (errno == ELOOP)                                                \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_FILENAME_INVALID;                \
+  else if (errno == ENOMEM)                                               \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;                   \
+  else if (errno == EINVAL)                                               \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;                  \
+  else                                                                    \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SYSTEM_ERROR;                    \
 } while (0)
 
 #define SDR_CACHE_ERR(expr)                                             \
@@ -871,7 +870,7 @@ do {                                                                    \
 
 #define SDR_CACHE_ERRNUM_SET(__errnum)                                  \
   do {                                                                  \
-    c->errnum = (__errnum);                                             \
+    ctx->errnum = (__errnum);                                           \
     __SDR_CACHE_TRACE;                                                  \
   } while (0)
 
@@ -879,7 +878,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        c->errnum = IPMI_SDR_CACHE_CTX_ERR_PARAMETERS;                  \
+        ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_PARAMETERS;                \
         __SDR_CACHE_TRACE;                                              \
         return (-1);                                                    \
       }                                                                 \
@@ -890,7 +889,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        c->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;               \
+        ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;             \
         __SDR_CACHE_TRACE;                                              \
         return (-1);                                                    \
       }                                                                 \
@@ -900,7 +899,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        c->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;               \
+        ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;             \
         __SDR_CACHE_TRACE;                                              \
         goto cleanup;                                                   \
       }                                                                 \
@@ -910,7 +909,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        c->errnum = IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_INITIALIZATION;   \
+        ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_INITIALIZATION; \
         __SDR_CACHE_TRACE;                                              \
         return (-1);                                                    \
       }                                                                 \
@@ -920,7 +919,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        c->errnum = IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_INITIALIZATION;   \
+        ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_INITIALIZATION; \
         __SDR_CACHE_TRACE;                                              \
         goto cleanup;                                                   \
       }                                                                 \
@@ -930,7 +929,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        c->errnum = IPMI_SDR_CACHE_CTX_ERR_IPMI_ERROR;                  \
+        ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_IPMI_ERROR;                \
         __SDR_CACHE_TRACE;                                              \
         return (-1);                                                    \
       }                                                                 \
@@ -940,7 +939,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        c->errnum = IPMI_SDR_CACHE_CTX_ERR_IPMI_ERROR;                  \
+        ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_IPMI_ERROR;                \
         __SDR_CACHE_TRACE;                                              \
         goto cleanup;                                                   \
       }                                                                 \
@@ -950,7 +949,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        c->errnum = IPMI_SDR_CACHE_CTX_ERR_SYSTEM_ERROR;                \
+        ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SYSTEM_ERROR;              \
         __SDR_CACHE_TRACE;                                              \
         return (-1);                                                    \
       }                                                                 \
@@ -960,7 +959,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        c->errnum = IPMI_SDR_CACHE_CTX_ERR_SYSTEM_ERROR;                \
+        ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SYSTEM_ERROR;              \
         __SDR_CACHE_TRACE;                                              \
         goto cleanup;                                                   \
       }                                                                 \
@@ -970,7 +969,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        c->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;              \
+        ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;            \
         __SDR_CACHE_TRACE;                                              \
         return (-1);                                                    \
       }                                                                 \
@@ -980,7 +979,7 @@ do {                                                                    \
   do {                                                                  \
     if (!(expr))                                                        \
       {                                                                 \
-        c->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;              \
+        ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;            \
         __SDR_CACHE_TRACE;                                              \
         goto cleanup;                                                   \
       }                                                                 \
