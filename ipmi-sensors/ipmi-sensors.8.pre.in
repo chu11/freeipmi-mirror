@@ -86,7 +86,7 @@ Show all sensors on a remote machine using IPMI over LAN.
 Show all sensors across a cluster using IPMI over LAN.
 .PP
 .SH "SEE ALSO"
-bmc-config(8)
+bmc-config(8), ipmimonitoring(8)
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

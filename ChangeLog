@@ -1,3 +1,8 @@
+2007-12-23  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/ipmi-sensors.8.pre.in,
+	ipmimonitoring/ipmimonitoring.8.pre.in: Minor doc fixes/updates.
+	
 2007-12-21  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-troubleshooting.man: Remove "Please
