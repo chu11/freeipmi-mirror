@@ -43,7 +43,10 @@ noinst_LTLIBRARIES = \
 libfreeipmiportability_la_SOURCES = freeipmi-portability.c
 libfreeipmiportability_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
 
-libtoolcommon_la_SOURCES = tool-cmdline-common.c tool-common.c
+libtoolcommon_la_SOURCES = \
+	tool-common.c \
+	tool-cmdline-common.c \
+	tool-sdr-cache-common.c
 libtoolcommon_la_CPPFLAGS = -D_GNU_SOURCE -I$(srcdir)/../../libfreeipmi/include 
 
 libipmiping_la_SOURCES = ipmi-ping.c
