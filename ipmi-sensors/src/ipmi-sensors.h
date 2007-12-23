@@ -22,7 +22,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
-#include "ipmi-sdr-cache.h"
+#include "sdr-cache.h"
 #include "pstdout.h"
 
 enum ipmi_sensors_argp_option_keys

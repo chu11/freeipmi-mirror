@@ -61,8 +61,8 @@
 
 #include "freeipmi-portability.h"
 
-#include "ipmi-sdr-cache.h"
-#include "ipmi-sdr-cache-defs.h"
+#include "sdr-cache.h"
+#include "sdr-cache-defs.h"
 
 int 
 sdr_cache_write_repository_info (sdr_cache_ctx_t ctx,

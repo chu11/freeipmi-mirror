@@ -37,7 +37,7 @@
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 
 #include "freeipmi-portability.h"
-#include "ipmi-sdr-cache.h"
+#include "sdr-cache.h"
 #include "ipmi-sensor-common.h"
 
 #include "ipmi-sel-wrapper.h"

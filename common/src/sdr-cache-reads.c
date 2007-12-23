@@ -62,8 +62,8 @@
 #include "freeipmi-portability.h"
 #include "string-utils.h"
 
-#include "ipmi-sdr-cache.h"
-#include "ipmi-sdr-cache-defs.h"
+#include "sdr-cache.h"
+#include "sdr-cache-defs.h"
 
 #define GET_INT_VALUE_BY_KEY(__ctx, __cache_record, __key, __i) \
 do 							        \

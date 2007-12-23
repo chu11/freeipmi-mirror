@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.h,v 1.6 2007-12-14 19:16:20 chu11 Exp $
+ *  $Id: ipmi-fru.h,v 1.6.2.1 2007-12-23 05:45:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -31,7 +31,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
-#include "ipmi-sdr-cache.h"
+#include "sdr-cache.h"
 #include "pstdout.h"
 
 #define FRU_BUF_LEN 2048

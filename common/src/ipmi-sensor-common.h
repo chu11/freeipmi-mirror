@@ -24,7 +24,7 @@
 
 #include "freeipmi/api/ipmi-api.h"
 
-#include "ipmi-sdr-cache.h"
+#include "sdr-cache.h"
 
 struct sensor_reading
 {

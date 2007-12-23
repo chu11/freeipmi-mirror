@@ -16,20 +16,18 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _IPMI_SDR_CACHE_WRITES_H
-#define _IPMI_SDR_CACHE_WRITES_H
+#ifndef _SDR_CACHE_READS_H
+#define _SDR_CACHE_READS_H
 
-#include <stdio.h>
+#include "sdr-cache.h"
 
-#include "ipmi-sdr-cache.h"
+int sdr_cache_read_repository_info_timestamps (sdr_cache_ctx_t ctx,
+                                               char *cache_record,
+                                               unsigned int *addition_timestamp,
+                                               unsigned int *erase_timestamp);
 
-int sdr_cache_write_repository_info (sdr_cache_ctx_t ctx,
-                                     ipmi_ctx_t ipmi_ctx,
-                                     FILE *fp,
-                                     unsigned int *sdr_record_count);
-
-int sdr_cache_write_record (sdr_cache_ctx_t ctx,
-                            FILE *fp,
-                            sdr_record_t *record);
+int sdr_cache_read_record (sdr_cache_ctx_t ctx,
+                           char *cache_record, 
+                           sdr_record_t *record);
 
 #endif

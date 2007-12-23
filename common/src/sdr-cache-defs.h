@@ -16,8 +16,8 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _IPMI_SDR_CACHE_DEFS_H
-#define _IPMI_SDR_CACHE_DEFS_H
+#ifndef _SDR_CACHE_DEFS_H
+#define _SDR_CACHE_DEFS_H
 
 #define _SDR_FIID_TEMPLATE_COMPARE(__tmpl1, __tmpl2)                        \
 do {                                                                        \

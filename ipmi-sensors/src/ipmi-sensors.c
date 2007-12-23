@@ -42,7 +42,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "ipmi-sensor-common.h"
-#include "ipmi-sdr-cache.h"
+#include "sdr-cache.h"
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-simple-display.h"

@@ -41,7 +41,7 @@
 #include "freeipmi-portability.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
-#include "ipmi-sdr-cache.h"
+#include "sdr-cache.h"
 #include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"
 #include "ipmi-sel-wrapper.h"

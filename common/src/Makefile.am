@@ -3,10 +3,10 @@ noinst_HEADERS = \
 	tool-common.h \
 	tool-cmdline-common.h \
 	ipmi-ping.h \
-	ipmi-sdr-cache-writes.h \
-	ipmi-sdr-cache-reads.h \
-	ipmi-sdr-cache.h \
-	ipmi-sdr-cache-defs.h \
+	sdr-cache-writes.h \
+	sdr-cache-reads.h \
+	sdr-cache.h \
+	sdr-cache-defs.h \
 	string-utils.h \
 	ipmi-sensor-common.h \
 	cbuf.h \
@@ -51,9 +51,9 @@ libipmiping_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 
 libsdr_la_SOURCES = \
 	string-utils.c \
-	ipmi-sdr-cache-writes.c \
-	ipmi-sdr-cache-reads.c \
-	ipmi-sdr-cache.c
+	sdr-cache-writes.c \
+	sdr-cache-reads.c \
+	sdr-cache.c
 libsdr_la_CPPFLAGS = -D_GNU_SOURCE \
 		     -D_REENTRANT \
 		     -I$(srcdir)/../../libfreeipmi/include
