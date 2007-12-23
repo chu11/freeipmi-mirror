@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.32.2.1 2007-12-22 19:31:34 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.32.2.2 2007-12-23 23:05:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -542,6 +542,32 @@ _secure_initialization(void)
 }
 
 static int
+_list_groups(pstdout_state_t pstate)
+{
+  assert(pstate);
+
+  pstdout_printf (pstate, "%s\n", "temperature");
+  pstdout_printf (pstate, "%s\n", "voltage");
+  pstdout_printf (pstate, "%s\n", "current");
+  pstdout_printf (pstate, "%s\n", "fan");
+  pstdout_printf (pstate, "%s\n", "physical_security");
+  pstdout_printf (pstate, "%s\n", "platform_security_violation_attempt");
+  pstdout_printf (pstate, "%s\n", "processor");
+  pstdout_printf (pstate, "%s\n", "power_supply");
+  pstdout_printf (pstate, "%s\n", "power_unit");
+  pstdout_printf (pstate, "%s\n", "memory");
+  pstdout_printf (pstate, "%s\n", "drive_slot");
+  pstdout_printf (pstate, "%s\n", "system_firmware_progress");
+  pstdout_printf (pstate, "%s\n", "event_logging_disabled");
+  pstdout_printf (pstate, "%s\n", "system_event");
+  pstdout_printf (pstate, "%s\n", "critical_interrupt");
+  pstdout_printf (pstate, "%s\n", "module_board");
+  pstdout_printf (pstate, "%s\n", "slot_connector");
+  pstdout_printf (pstate, "%s\n", "watchdog2");
+  return 0;
+}
+
+static int
 _ipmimonitoring(pstdout_state_t pstate,
                 const char *_hostname,
                 void *arg)
@@ -551,7 +577,11 @@ _ipmimonitoring(pstdout_state_t pstate,
   int exit_code;
   unsigned int sensor_reading_flags;
 
-  /* Special Case #1: Just flushing the cache, don't need to do anything fancy */
+  /* Special Case #1: Just outputting groups, don't need to do anything fancy */
+  if (list_groups)
+    return _list_groups(pstate);
+
+  /* Special Case #2: Just flushing the cache, don't need to do anything fancy */
   if (flush_cache)
     {
       if (!quiet_cache)
@@ -576,33 +606,9 @@ _ipmimonitoring(pstdout_state_t pstate,
       return 0;
 
     }
-  
-  /* Special Case #2: Just outputting groups, don't need to do anything fancy */
-  if (list_groups)
-    {
-      pstdout_printf (pstate, "%s\n", "temperature");
-      pstdout_printf (pstate, "%s\n", "voltage");
-      pstdout_printf (pstate, "%s\n", "current");
-      pstdout_printf (pstate, "%s\n", "fan");
-      pstdout_printf (pstate, "%s\n", "physical_security");
-      pstdout_printf (pstate, "%s\n", "platform_security_violation_attempt");
-      pstdout_printf (pstate, "%s\n", "processor");
-      pstdout_printf (pstate, "%s\n", "power_supply");
-      pstdout_printf (pstate, "%s\n", "power_unit");
-      pstdout_printf (pstate, "%s\n", "memory");
-      pstdout_printf (pstate, "%s\n", "drive_slot");
-      pstdout_printf (pstate, "%s\n", "system_firmware_progress");
-      pstdout_printf (pstate, "%s\n", "event_logging_disabled");
-      pstdout_printf (pstate, "%s\n", "system_event");
-      pstdout_printf (pstate, "%s\n", "critical_interrupt");
-      pstdout_printf (pstate, "%s\n", "module_board");
-      pstdout_printf (pstate, "%s\n", "slot_connector");
-      pstdout_printf (pstate, "%s\n", "watchdog2");
-      return 0;
-    }
+ 
 
   /* Normal Case: We're going be doing some sensor monitoring */
-
   if (!(c = ipmi_monitoring_ctx_create()))
     {
       pstdout_perror(pstate, "ipmi_monitoring_ctx_create:");
