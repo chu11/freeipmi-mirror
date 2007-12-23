@@ -2,6 +2,9 @@
 
 	* ipmi-sensors/ipmi-sensors.8.pre.in,
 	ipmimonitoring/ipmimonitoring.8.pre.in: Minor doc fixes/updates.
+
+	* common/src/tool-common.c (ipmi_open): Check for "127.0.0.1" as
+	well as "localhost".
 	
 2007-12-21  Albert Chu <chu11@llnl.gov>
 
