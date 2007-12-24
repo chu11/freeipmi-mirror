@@ -130,6 +130,12 @@ display_sel_records (ipmi_sel_state_data_t *state_data)
                                       record_id, 
                                       &next_record_id)))
         {
+          /* If we error on the first record, assume its b/c the sel
+           * is empty so we don't exit with an error.
+           */
+          if (record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY)
+            return 0;
+
           pstdout_fprintf (state_data->pstate, 
                            stderr, 
                            "%s: unable to get SEL record\n", 
@@ -178,6 +184,12 @@ hex_display_sel_records (ipmi_sel_state_data_t *state_data, FILE *stream)
                               record_data_len, 
                               &next_record_id) != 0)
 	{
+          /* If we error on the first record, assume its b/c the sel
+           * is empty so we don't exit with an error.
+           */
+          if (record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY)
+            return 0;
+          
 	  pstdout_fprintf (state_data->pstate, 
                            stderr, 
                            "%s: unable to get SEL record\n", 

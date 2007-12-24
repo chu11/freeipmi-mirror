@@ -782,6 +782,7 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
   
   if (!(sel_rec = (sel_record_t *)malloc(sizeof(sel_record_t))))
     goto cleanup;
+  memset(sel_rec, '\0', sizeof(sel_record_t));
 
   if (ipmi_cmd_get_sel_entry (state_data->dev, 
 			      0,
@@ -790,10 +791,16 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
 			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
 			      obj_cmd_rs) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_cmd_get_sel_entry: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      /* If the sel is empty, don't bother outputting an error
+       * message, it's not a real error.
+       */
+      if (!(record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+            && ipmi_check_completion_code(obj_cmd_rs,
+                                          IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_sel_entry: %s\n",
+                        ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       goto cleanup;
     }
   
@@ -868,10 +875,16 @@ get_sel_record_raw (ipmi_sel_state_data_t *state_data,
 			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
 			      obj_cmd_rs) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_cmd_get_sel_entry: %s\n",
-                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      /* If the sel is empty, don't bother outputting an error
+       * message, it's not a real error.
+       */
+      if (!(record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+            && ipmi_check_completion_code(obj_cmd_rs,
+                                          IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_sel_entry: %s\n",
+                        ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       goto cleanup;
     }
   
@@ -903,7 +916,13 @@ delete_sel_entry (ipmi_sel_state_data_t *state_data,
     goto cleanup;
   
   if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
-    goto cleanup;
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_reserve_sel: %s\n",
+                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
     goto cleanup;
@@ -947,7 +966,13 @@ clear_sel_entries (ipmi_sel_state_data_t *state_data)
     goto cleanup;
 
   if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
-    goto cleanup;
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_reserve_sel: %s\n",
+                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
     goto cleanup;
@@ -990,7 +1015,13 @@ get_sel_clear_status (ipmi_sel_state_data_t *state_data,
     goto cleanup;
 
   if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
-    goto cleanup;
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_reserve_sel: %s\n",
+                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
     goto cleanup;
