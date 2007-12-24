@@ -79,12 +79,6 @@
 
 #define GETHOSTBYNAME_AUX_BUFLEN 1024
 
-struct sdr_cache_callback_data 
-{
-  pstdout_state_t pstate;
-  int count;
-};
-
 static int
 _get_home_directory (pstdout_state_t pstate,
                      char *buf,
@@ -431,49 +425,44 @@ _sdr_cache_create_callback(uint8_t sdr_version,
                            uint16_t record_id,
                            void *data)
 {
-  struct sdr_cache_callback_data *callback_data;
+  int *count;
 
   assert(data);
 
-  callback_data = (struct sdr_cache_callback_data *)data;
+  count = (int *)data;
 
-  assert(callback_data->pstate);
+  (*count)++;
 
-  callback_data->count++;
-
-  pstdout_fprintf (callback_data->pstate,
-                   stderr, 
-                   "Caching SDR record %d of %d (current record ID %d) \r",
-                   callback_data->count,
-                   record_count,
-                   record_id);
+  /* pstdout library can't handle \r, its the responsibility of
+   * tool code to set quiet_cache if there are multiple
+   * hosts are generating the cache at the same time.
+   */
+  fprintf (stderr, 
+           "Caching SDR record %d of %d (current record ID %d) \r",
+           *count,
+           record_count,
+           record_id);
 }
 
 
 int 
-sdr_cache_create (pstdout_state_t pstate,
+sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
+                  pstdout_state_t pstate,
                   ipmi_ctx_t ipmi_ctx,
+                  int quiet_cache,
                   const char *hostname,
-                  const char *cache_dir,
-                  int quiet_cache)
+                  const char *cache_dir)
 {
-  ipmi_sdr_cache_ctx_t ctx = NULL;
   char cachedirectorybuf[MAXPATHLEN+1];
   char cachefilenamebuf[MAXPATHLEN+1];
   struct stat buf;
-  struct sdr_cache_callback_data callback_data;
+  int count = 0;
   int rv = -1;
 
   assert(ctx);
   assert(pstate);
   assert(ipmi_ctx);
   
-  if (!(ctx = ipmi_sdr_cache_ctx_create()))
-    {
-      pstdout_perror(pstate, "ipmi_sdr_cache_ctx_create");
-      goto cleanup;
-    }
-
   if (sdr_cache_get_cache_directory (pstate,
                                      cache_dir,
                                      cachedirectorybuf,
@@ -496,18 +485,20 @@ sdr_cache_create (pstdout_state_t pstate,
                                    MAXPATHLEN) < 0)
     goto cleanup;
 
+  /* pstdout library can't handle \r, its the responsibility of
+   * tool code to set quiet_cache if there are multiple
+   * hosts are generating the cache at the same time.
+   */
   if (!quiet_cache)
-    fprintf (stderr, "Caching SDR repository information ... ");
+    fprintf (stderr, "Caching SDR repository information ... \n");
 
-  callback_data.pstate = pstate;
-  callback_data.count = 0;
   if (ipmi_sdr_cache_create(ctx,
                             ipmi_ctx,
                             cachefilenamebuf,
                             IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT,
                             IPMI_SDR_CACHE_VALIDATION_FLAGS_DEFAULT,
                             quiet_cache ? NULL : _sdr_cache_create_callback,
-                            quiet_cache ? NULL : (void *)&callback_data) < 0)
+                            quiet_cache ? NULL : (void *)&count) < 0)
     {
       pstdout_fprintf(pstate,
                       stderr,
@@ -517,38 +508,112 @@ sdr_cache_create (pstdout_state_t pstate,
     }
 
   if (!quiet_cache)
-    pstdout_fprintf (pstate,
-                     stderr, 
-                     "\n");
+    fprintf (stderr, "\n");
 
   rv = 0;
  cleanup:
-  if (ctx) 
+  if (rv < 0)
+    ipmi_sdr_cache_delete(ctx, cachefilenamebuf);
+  return rv;
+}
+
+int
+sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
+                           pstdout_state_t pstate,
+                           ipmi_ctx_t ipmi_ctx,
+                           int quiet_cache,
+                           const char *hostname,
+                           const char *cache_dir)
+{
+  char cachefilenamebuf[MAXPATHLEN+1];
+  int rv = -1;
+
+  assert(ctx);
+  assert(pstate);
+
+  memset(cachefilenamebuf, '\0', MAXPATHLEN+1);
+  if (sdr_cache_get_cache_filename(pstate,
+                                   hostname,
+                                   cache_dir,
+                                   cachefilenamebuf,
+                                   MAXPATHLEN) < 0)
+    goto cleanup;
+
+  if (ipmi_sdr_cache_open(ctx,
+                          ipmi_ctx,
+                          cachefilenamebuf) < 0)
     {
-      if (rv < 0)
-        ipmi_sdr_cache_delete(ctx, cachefilenamebuf);
-      ipmi_sdr_cache_ctx_destroy(ctx);
+      if (ipmi_sdr_cache_ctx_errnum(ctx) != IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST)
+        {
+          if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_INVALID)
+            {
+              pstdout_fprintf(pstate,
+                              stderr,
+                              "SDR Cache '%s' invalid: Please flush the cache and regenerate it\n",
+                              cachefilenamebuf);
+              goto cleanup;
+            }
+          else if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE)
+            {
+              pstdout_fprintf(pstate,
+                              stderr,
+                              "SDR Cache '%s' out of date: Please flush the cache and regenerate it\n",
+                              cachefilenamebuf);
+              goto cleanup;
+              
+            }
+          else
+            {
+              pstdout_fprintf(pstate,
+                              stderr,
+                              "ipmi_sdr_cache_open: %s: %s\n",
+                              cachefilenamebuf,
+                              ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+              goto cleanup;
+            }
+        }
     }
+
+  if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_INVALID)
+    {
+      if (sdr_cache_create (ctx,
+                            pstate,
+                            ipmi_ctx,
+                            quiet_cache,
+                            hostname,
+                            cache_dir) < 0)
+        goto cleanup;
+
+      if (ipmi_sdr_cache_open(ctx,
+                              ipmi_ctx,
+                              cachefilenamebuf) < 0)
+        {
+          pstdout_fprintf(pstate,
+                          stderr,
+                          "ipmi_sdr_cache_open: %s: %s\n",
+                          cachefilenamebuf,
+                          ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+          goto cleanup;
+        }
+    }
+
+  rv = 0;
+ cleanup:
   return rv;
 }
 
 int 
-sdr_cache_flush_cache (pstdout_state_t pstate,
+sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
+                       pstdout_state_t pstate,
                        int quiet_cache,
                        const char *hostname,
                        const char *cache_dir)
 {
-  ipmi_sdr_cache_ctx_t ctx = NULL;
   char cachefilenamebuf[MAXPATHLEN+1];
   int rv = -1;
 
+  assert(ctx);
   assert(pstate);
-
-  if (!(ctx = ipmi_sdr_cache_ctx_create()))
-    {
-      pstdout_perror(pstate, "ipmi_sdr_cache_ctx_create");
-      goto cleanup;
-    }
 
   memset(cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (sdr_cache_get_cache_filename(pstate,
@@ -575,7 +640,5 @@ sdr_cache_flush_cache (pstdout_state_t pstate,
 
   rv = 0;
  cleanup:
-  if (ctx)
-    ipmi_sdr_cache_ctx_destroy(ctx);
   return rv;
 }
