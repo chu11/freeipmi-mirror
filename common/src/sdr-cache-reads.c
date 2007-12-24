@@ -60,10 +60,10 @@
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 
 #include "freeipmi-portability.h"
-#include "string-utils.h"
 
 #include "sdr-cache.h"
 #include "sdr-cache-defs.h"
+#include "sdr-cache-utils.h"
 
 #define GET_INT_VALUE_BY_KEY(__ctx, __cache_record, __key, __i) \
 do 							        \

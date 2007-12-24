@@ -81,12 +81,12 @@
 #include "freeipmi/util/ipmi-sensor-util.h"
 
 #include "freeipmi-portability.h"
-#include "string-utils.h"
 
 #include "sdr-cache.h"
 #include "sdr-cache-defs.h"
 #include "sdr-cache-writes.h"
 #include "sdr-cache-reads.h"
+#include "sdr-cache-utils.h"
 
 static char * sdr_cache_ctx_errmsg[] =
   {
