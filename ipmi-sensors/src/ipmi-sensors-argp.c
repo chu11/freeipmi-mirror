@@ -33,7 +33,6 @@
 #include <assert.h>
 
 #include "tool-cmdline-common.h"
-#include "string-utils.h"
 
 #include "ipmi-sensor-common.h"
 #include "ipmi-sensors.h"
@@ -84,97 +83,12 @@ static struct argp_option options[] =
 
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
-static int 
-validate_sensor_list_string (char *sensor_list_string)
-{
-  char *dlist = NULL;
-
-  assert(sensor_list_string);
-  
-  dlist = strdupa (sensor_list_string);
-  while (sensor_list_string)
-    {
-      unsigned int value = 0;
-      char *token = NULL;
-      char *str = NULL;
-      
-      if (get_token (&dlist, &token) < 0)
-        return (-1);
-
-      if (token == NULL)
-	break;
-
-      str = strdupa (token);
-      free (token);
-      
-      if (str2uint (str, 10, &value))
-        return (-1);
-    }
-  
-  return 0;
-}
-
-static int 
-get_sensor_list_count (char *sensor_list_string)
-{
-  int count = 0;
-  char *dlist = NULL;
-
-  assert(sensor_list_string);
-  
-  dlist = strdupa (sensor_list_string);
-  while (sensor_list_string)
-    {
-      char *str = NULL;
-      
-      if (get_token (&dlist, &str) < 0)
-        return -1;
-      
-      if (str == NULL)
-	break;
-
-      free (str);
-      count++;
-    }
-  
-  return count;
-}
-
-static int 
-get_sensor_list (char *sensor_list_string, unsigned int *records, int count)
-{
-  int i = 0;
-  char *dlist = NULL;
-  
-  assert(sensor_list_string);
-  assert(records);
-  
-  dlist = strdupa (sensor_list_string);
-  for (i = 0; i < count; i++)
-    {
-      unsigned int value = 0;
-      char *str = NULL;
-      
-      if (get_token (&dlist, &str) < 0)
-        return -1;
-
-      if (str == NULL)
-	break;
-      
-      if (str2uint (str, 10, &value) < 0)
-        return -1;
-
-      records[i] = value;
-      free (str);
-    }
-  
-  return 0;
-}
-
 static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_sensors_arguments *cmd_args = state->input;
+  char *ptr;
+  char *tok;
   error_t ret;
   
   switch (key)
@@ -198,43 +112,16 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case SENSORS_LIST_KEY:
       cmd_args->sensors_list_wanted = 1;
-      {
-	char *sensors_list_arg = strdupa (arg);
-	int ret;
-
-	if (validate_sensor_list_string (sensors_list_arg) == -1)
-	  {
-	    fprintf (stderr, "invalid integer in sensors list\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (cmd_args->sensors_list)
-	  free (cmd_args->sensors_list);
-	
-        if ((ret = get_sensor_list_count (sensors_list_arg)) < 0)
-          {
-	    fprintf (stderr, "invalid integer in sensors list\n");
-	    argp_usage (state);
-	    break;
-          }
-	cmd_args->sensors_list_length = ret;
-
-	if (!(cmd_args->sensors_list = 
-              calloc (cmd_args->sensors_list_length, sizeof (int))))
-          {
-            perror("calloc");
-            exit(1);
-          }
-	if (get_sensor_list (sensors_list_arg, 
-                             cmd_args->sensors_list, 
-                             cmd_args->sensors_list_length) < 0)
-          {
-	    fprintf (stderr, "invalid integer in sensors list\n");
-	    argp_usage (state);
-	    break;
-          }
-      }
+      tok = strtok(arg, " ,");
+      while (tok && cmd_args->sensors_list_length < IPMI_SENSORS_MAX_RECORD_IDS)
+        {
+          unsigned int n = strtoul(tok, &ptr, 10);
+          if (ptr != (tok + strlen(tok)))
+            fprintf (stderr, "invalid sensor record id");
+          cmd_args->sensors_list[cmd_args->sensors_list_length] = n;
+          cmd_args->sensors_list_length++;
+          tok = strtok(NULL, " ,");
+        }
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -268,7 +155,9 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->group_wanted = 0;
   cmd_args->group = NULL;
   cmd_args->sensors_list_wanted = 0;
-  cmd_args->sensors_list = NULL;
+  memset(cmd_args->sensors_list, 
+         '\0', 
+         sizeof(unsigned int)*IPMI_SENSORS_MAX_RECORD_IDS);
   cmd_args->sensors_list_length = 0;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);

@@ -1,3 +1,9 @@
+2007-12-24  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-argp.c,
+	ipmi-sensors/src/ipmi-sensors.h, ipmi-sel/src/ipmi-sel-argp.c,
+	ipmi-sel/src/ipmi-sel.h: Cleanup arg parsing.
+	
 2007-12-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/ipmi-sensors.8.pre.in,

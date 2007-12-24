@@ -33,7 +33,6 @@
 #include <assert.h>
 
 #include "tool-cmdline-common.h"
-#include "string-utils.h"
 
 #include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"
@@ -81,112 +80,12 @@ static struct argp_option options[] =
 
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
-static int 
-validate_delete_list_string (char *delete_list_string)
-{
-  char *dlist = NULL;
-
-  assert(delete_list_string);
-  
-  dlist = strdupa (delete_list_string);
-  while (delete_list_string)
-    {
-      int value = 0;
-      char *token = NULL;
-      char *str = NULL;
-      char *tail = NULL;
-      int errnum = 0;
-      
-      if (get_token (&dlist, &token) < 0)
-        return (-1);
-
-      if (token == NULL)
-        break;
-
-      if (token == NULL)
-	break;
-
-      str = strdupa (token);
-      free (token);
-
-      errno = 0;
-      value = strtol (str, &tail, 10);
-      errnum = errno;
-      
-      if (errnum)
-	return (-1); // overflow
-      
-      if (tail[0] != '\0')
-	return (-1); // invalid integer format
-      
-      if (value < 0)
-	return (-1); // negative number
-    }
-  
-  return 0;
-}
-
-static int 
-get_delete_record_count (char *delete_list_string)
-{
-  int count = 0;
-  char *dlist = NULL;
-  
-  assert(delete_list_string);
-  
-  dlist = strdupa (delete_list_string);
-  while (delete_list_string)
-    {
-      char *str = NULL;
-      
-      if (get_token (&dlist, &str) < 0)
-        return -1;
-
-      if (str == NULL)
-	break;
-
-      free (str);
-      count++;
-    }
-  
-  return count;
-}
-
-static int 
-get_delete_record_list (char *delete_list_string, int *records, int count)
-{
-  int i = 0;
-  char *dlist = NULL;
-  
-  assert(delete_list_string);
-  assert(records);
-  
-  dlist = strdupa (delete_list_string);
-  for (i = 0; i < count; i++)
-    {
-      int value = 0;
-      char *str = NULL;
-      
-      if (get_token (&dlist, &str) < 0)
-        return -1;
-
-      if (str == NULL)
-	break;
-      
-      if (str2int (str, 10, &value) < 0)
-        return -1;
-
-      records[i] = value;     
-      free (str);
-    }
-  
-  return 0;
-}
-
 static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_sel_arguments *cmd_args = state->input;
+  char *ptr;
+  char *tok;
   error_t ret;
 
   switch (key)
@@ -196,43 +95,16 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case DELETE_KEY:
       cmd_args->delete_wanted = 1;
-      {
-	char *delete_arg = strdupa (arg);
-	int ret;
-
-	if (validate_delete_list_string (delete_arg) == -1)
-	  {
-	    fprintf (stderr, "invalid integer in delete list\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (cmd_args->delete_record_list)
-	  free (cmd_args->delete_record_list);
-	
-        if ((ret = get_delete_record_count (delete_arg)) < 0)
-          {
-            fprintf (stderr, "invalid integer in delete list\n");
-            argp_usage (state);
-            break;
-          }
-	cmd_args->delete_record_list_length = ret;
-        
-	if (!(cmd_args->delete_record_list = 
-              calloc (cmd_args->delete_record_list_length, sizeof (int))))
-          {
-            perror("calloc");
-            exit(1);
-          }
-	if (get_delete_record_list (delete_arg, 
-                                    cmd_args->delete_record_list, 
-                                    cmd_args->delete_record_list_length) < 0)
-          {
-            fprintf (stderr, "invalid integer in delete list\n");
-            argp_usage (state);
-            break;
-          }
-      }
+      tok = strtok(arg, " ,");
+      while (tok && cmd_args->delete_record_list_length < IPMI_SEL_MAX_DELETE_RECORD)
+        {
+          unsigned int n = strtoul(tok, &ptr, 10);
+          if (ptr != (tok + strlen(tok)))
+            fprintf (stderr, "invalid delete record number");
+          cmd_args->delete_record_list[cmd_args->delete_record_list_length] = n;
+          cmd_args->delete_record_list_length++;
+          tok = strtok(NULL, " ,");
+        }
       break;
     case DELETE_ALL_KEY:
       cmd_args->delete_all_wanted = 1;
@@ -361,8 +233,10 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->info_wanted = 0;
   cmd_args->delete_wanted = 0;
-  cmd_args->delete_record_list = NULL;
-  cmd_args->delete_record_list_length = 0;
+  memset(cmd_args->delete_record_list,
+         '\0',
+         sizeof(int)*IPMI_SEL_MAX_DELETE_RECORD);
+   cmd_args->delete_record_list_length = 0;
   cmd_args->delete_all_wanted = 0;
   cmd_args->delete_range_wanted = 0;
   cmd_args->delete_range1 = 0;

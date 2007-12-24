@@ -25,6 +25,8 @@
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 
+#define IPMI_SENSORS_MAX_RECORD_IDS 256
+
 enum ipmi_sensors_argp_option_keys
   { 
     VERBOSE_KEY = 'v', 
@@ -48,7 +50,7 @@ struct ipmi_sensors_arguments
   int group_wanted;
   char *group;
   int sensors_list_wanted;
-  unsigned int *sensors_list;
+  unsigned int sensors_list[IPMI_SENSORS_MAX_RECORD_IDS];
   unsigned int sensors_list_length;
 };
 

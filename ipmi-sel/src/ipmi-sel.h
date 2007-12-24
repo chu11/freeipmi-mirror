@@ -25,6 +25,8 @@
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 
+#define IPMI_SEL_MAX_DELETE_RECORD 4096
+
 enum ipmi_sel_argp_option_keys
   { 
     INFO_KEY = 'i', 
@@ -41,7 +43,7 @@ struct ipmi_sel_arguments
   struct hostrange_cmd_args hostrange;
   int info_wanted;
   int delete_wanted;
-  int *delete_record_list;
+  int delete_record_list[IPMI_SEL_MAX_DELETE_RECORD];
   int delete_record_list_length;
   int delete_all_wanted;
   int delete_range_wanted;
