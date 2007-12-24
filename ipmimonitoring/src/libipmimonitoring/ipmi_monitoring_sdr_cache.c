@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.11.2.4 2007-12-23 02:03:11 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.11.2.5 2007-12-24 06:30:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -33,6 +33,9 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -52,8 +55,11 @@
 #define IPMI_MONITORING_SDR_CACHE_FILENAME       "ipmimonitoringsdrcache"
 #define IPMI_MONITORING_SDR_CACHE_INBAND         "localhost"
 
-char sdr_cache_dir[MAXPATHLEN+1];
-int sdr_cache_dir_set = 0;
+char sdr_cache_directory[MAXPATHLEN+1];
+int sdr_cache_directory_set = 0;
+
+char sdr_cache_filename_format[MAXPATHLEN+1];
+int sdr_cache_filename_format_set = 0;
 
 static int
 _ipmi_monitoring_sdr_cache_filename(ipmi_monitoring_ctx_t c,
@@ -61,6 +67,7 @@ _ipmi_monitoring_sdr_cache_filename(ipmi_monitoring_ctx_t c,
                                     char *buf,
                                     unsigned int buflen)
 {
+  char sdr_cache_filename[MAXPATHLEN+1];
   char *dir;
 
   assert(c);
@@ -68,22 +75,96 @@ _ipmi_monitoring_sdr_cache_filename(ipmi_monitoring_ctx_t c,
   assert(buf);
   assert(buflen);
 
-  if (sdr_cache_dir_set)
-    dir = sdr_cache_dir;
+  if (sdr_cache_directory_set)
+    dir = sdr_cache_directory;
   else
     dir = IPMI_MONITORING_SDR_CACHE_DIRECTORY;
 
-  memset(buf, '\0', buflen);
-  if (hostname)
-    snprintf(buf, buflen - 1, "%s/%s.%s", 
-             dir,
+  if (!hostname)
+    hostname = IPMI_MONITORING_SDR_CACHE_INBAND;
+
+  memset(sdr_cache_filename, '\0', MAXPATHLEN+1);
+  if (sdr_cache_filename_format_set)
+    {
+      int index = 0;
+      int percent = 0;
+      char *str;
+
+      str = sdr_cache_filename_format;
+      while (str && *str && index < MAXPATHLEN)
+        {
+          if (percent)
+            {
+              percent = 0;
+              if (*str == '%')
+                {
+                  sdr_cache_filename[index] = *str;
+                  index++;
+                }
+              else if (*str == 'L')
+                {
+                  char local_hostname[MAXHOSTNAMELEN+1];
+                  
+                  memset(local_hostname, '\0', MAXHOSTNAMELEN+1);
+                  if (gethostname(local_hostname, MAXHOSTNAMELEN) < 0)
+                    {
+                      IPMI_MONITORING_DEBUG(("gethostname: %s", strerror(errno)));
+                      c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
+                      return -1;
+                    }
+
+                  if ((index + strlen(local_hostname)) >= MAXPATHLEN)
+                    {
+                      IPMI_MONITORING_DEBUG(("_ipmi_monitoring_sdr_cache_filename: overflow"));
+                      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+                      return -1;
+                    }                  
+
+                  strcat(&sdr_cache_filename[index], local_hostname);
+                  index += strlen(local_hostname);
+                }
+              else if (*str == 'H')
+                {
+                  if ((index + strlen(hostname)) >= MAXPATHLEN)
+                    {
+                      IPMI_MONITORING_DEBUG(("_ipmi_monitoring_sdr_cache_filename: overflow"));
+                      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+                      return -1;
+                    }
+                  strcat(&sdr_cache_filename[index], hostname);
+                  index += strlen(hostname);
+                }
+              else
+                {
+                  sdr_cache_filename[index] = '%';
+                  index++;
+                  sdr_cache_filename[index] = *str;
+                  index++;
+                }
+            }
+          else if (*str == '%')
+            percent = 1;
+          else 
+            {
+              sdr_cache_filename[index] = *str;
+              index++;
+            }
+          str++;
+        }
+    }
+  else
+    snprintf(sdr_cache_filename,
+             MAXPATHLEN,
+             "%s.%s",
              IPMI_MONITORING_SDR_CACHE_FILENAME,
              hostname);
-  else
-    snprintf(buf, buflen - 1, "%s/%s.%s", 
-             dir,
-             IPMI_MONITORING_SDR_CACHE_FILENAME, 
-             IPMI_MONITORING_SDR_CACHE_INBAND);
+             
+  memset(buf, '\0', buflen);
+  snprintf(buf, 
+           buflen - 1, 
+           "%s/%s", 
+           dir,
+           sdr_cache_filename);
 
   return 0;
 }
@@ -104,6 +185,7 @@ _ipmi_monitoring_sdr_cache_retrieve(ipmi_monitoring_ctx_t c,
                             filename,
                             IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT,
                             IPMI_SDR_CACHE_VALIDATION_FLAGS_DEFAULT,
+                            NULL,
                             NULL) < 0)
     {
       IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_create: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
