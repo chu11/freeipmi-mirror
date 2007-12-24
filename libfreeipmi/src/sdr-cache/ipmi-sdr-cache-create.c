@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.1.2.3 2007-12-23 22:36:49 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.1.2.4 2007-12-24 04:41:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -438,7 +438,8 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx,
 		      char *filename, 
 		      int create_flags,
 		      int validation_flags,
-                      Sdr_Create_Callback create_callback)
+                      Sdr_Create_Callback create_callback,
+                      void *create_callback_data)
 {
   int open_flags;
   uint8_t sdr_version;
@@ -581,7 +582,8 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx,
                            ctx->record_count,
                            ctx->most_recent_addition_timestamp,
                            ctx->most_recent_erase_timestamp,
-                           record_id);
+                           record_id,
+                           create_callback_data);
     }
 
   if (record_count_written != ctx->record_count)

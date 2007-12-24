@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.h,v 1.1.2.3 2007-12-23 23:20:08 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.h,v 1.1.2.4 2007-12-24 04:41:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -79,7 +79,8 @@ typedef void (*Sdr_Create_Callback)(uint8_t sdr_version,
                                     uint16_t record_count,
                                     uint32_t most_recent_addition_timestamp,
                                     uint32_t most_recent_erase_timestamp,
-                                    uint16_t record_id);
+                                    uint16_t record_id,
+                                    void *data);
 
 /* SDR Cache Context Functions */
 ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx_create(void);
@@ -93,16 +94,20 @@ int ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx,
 			  char *filename, 
 			  int create_flags,
 			  int validation_flags,
-                          Sdr_Create_Callback create_callback);
+                          Sdr_Create_Callback create_callback,
+                          void *create_callback_data);
 
 /* SDR Cache Reading Functions */
 int ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t ctx, 
                         ipmi_ctx_t ipmi_ctx,
                         char *filename);
+
 int ipmi_sdr_cache_sdr_version(ipmi_sdr_cache_ctx_t ctx, uint8_t *sdr_version);
 int ipmi_sdr_cache_record_count(ipmi_sdr_cache_ctx_t ctx, uint16_t *record_count);
-int ipmi_sdr_cache_most_recent_addition_timestamp(ipmi_sdr_cache_ctx_t ctx, uint32_t *most_recent_addition_timestamp);
-int ipmi_sdr_cache_most_recent_erase_timestamp(ipmi_sdr_cache_ctx_t ctx, uint32_t *most_recent_erase_timestamp);
+int ipmi_sdr_cache_most_recent_addition_timestamp(ipmi_sdr_cache_ctx_t ctx,
+                                                  uint32_t *most_recent_addition_timestamp);
+int ipmi_sdr_cache_most_recent_erase_timestamp(ipmi_sdr_cache_ctx_t ctx, 
+                                               uint32_t *most_recent_erase_timestamp);
 
 int ipmi_sdr_cache_first(ipmi_sdr_cache_ctx_t ctx);
 int ipmi_sdr_cache_next(ipmi_sdr_cache_ctx_t ctx);
