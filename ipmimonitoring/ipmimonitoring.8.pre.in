@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.pre.in,v 1.11.6.1 2007-12-22 19:31:34 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.11.6.2 2007-12-24 15:10:15 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
 \."  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -145,8 +145,6 @@ Before placing ipmimonitoring in a production system, it is recommended
 that the program be compiled with debugging turned off.
 \}
 .SH FILES
-@IPMI_MONITORING_SDR_CACHE_DIR@
-
 @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
 
 .SH "ORIGIN"
