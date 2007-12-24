@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.32.2.2 2007-12-23 23:05:18 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.32.2.3 2007-12-24 06:39:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -620,13 +620,10 @@ _ipmimonitoring(pstdout_state_t pstate,
   if (regenerate_sdr_cache)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;
 
-  if (_hostname && !strcasecmp(_hostname, "localhost"))
-    _hostname = NULL;
-
   if (!record_ids_len && !groups_len)
     {
       if ((num = ipmi_monitoring_sensor_readings_by_record_id(c,
-                                                              (_hostname) ? _hostname : NULL,
+                                                              _hostname,
                                                               (_hostname) ? &conf : NULL,
                                                               sensor_reading_flags,
                                                               NULL,
@@ -643,7 +640,7 @@ _ipmimonitoring(pstdout_state_t pstate,
   else if (record_ids_len)
     {
       if ((num = ipmi_monitoring_sensor_readings_by_record_id(c,
-                                                              (_hostname) ? _hostname : NULL,
+                                                              _hostname,
                                                               (_hostname) ? &conf : NULL,
                                                               sensor_reading_flags,
                                                               record_ids,

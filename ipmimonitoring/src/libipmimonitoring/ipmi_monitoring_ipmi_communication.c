@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.15.2.2 2007-12-22 15:52:15 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.15.2.3 2007-12-24 06:39:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -559,7 +559,9 @@ ipmi_monitoring_ipmi_communication_init(ipmi_monitoring_ctx_t c,
       goto cleanup;
     }
   
-  if (!hostname)
+  if (!hostname 
+      || !strcasecmp(hostname, "localhost") 
+      || !strcmp(hostname, "127.0.0.1"))
     {
       if (_inband_init(c, config) < 0)
         goto cleanup;
