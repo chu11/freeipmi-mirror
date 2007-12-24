@@ -25,7 +25,9 @@
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 
-#define IPMI_SENSORS_MAX_RECORD_IDS 256
+#define IPMI_SENSORS_MAX_RECORD_IDS           256
+#define IPMI_SENSORS_MAX_GROUPS               256
+#define IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH 256
 
 enum ipmi_sensors_argp_option_keys
   { 
@@ -33,7 +35,8 @@ enum ipmi_sensors_argp_option_keys
     QUIET_READINGS_KEY = 'q',
     SDR_INFO_KEY = 'i', 
     LIST_GROUPS_KEY = 'L', 
-    GROUP_KEY = 'g', 
+    GROUP_KEY = 160,            /* legacy */
+    GROUPS_KEY = 'g', 
     SENSORS_LIST_KEY = 's', 
   };
 
@@ -47,8 +50,9 @@ struct ipmi_sensors_arguments
   int quiet_readings_wanted;
   int sdr_info_wanted;
   int list_groups_wanted;
-  int group_wanted;
-  char *group;
+  int groups_list_wanted;
+  char groups_list[IPMI_SENSORS_MAX_GROUPS][IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH+1];
+  unsigned int groups_list_length;
   int sensors_list_wanted;
   unsigned int sensors_list[IPMI_SENSORS_MAX_RECORD_IDS];
   unsigned int sensors_list_length;

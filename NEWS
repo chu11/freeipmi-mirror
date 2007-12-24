@@ -1,5 +1,12 @@
 0.6.1
 -----
+For Users
+---------
+o Support --groups (plural) for multiple groups listing in
+  ipmi-sensors.  Older --group option maintained for backwards
+  compatability.
+o Minor corner case fixes throughout.
+
 For Developers
 --------------
 o Many libfreeipmi API changes.

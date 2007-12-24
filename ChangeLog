@@ -1,5 +1,9 @@
 2007-12-24  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/: Support --groups option.
+	
+2007-12-24  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/: Fix several corner case outputs.
 	
 2007-12-24  Albert Chu <chu11@llnl.gov>

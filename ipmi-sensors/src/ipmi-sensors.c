@@ -235,12 +235,14 @@ display_group_list (ipmi_sensors_state_data_t *state_data)
 }
 
 int
-sensors_group_cmp (sdr_record_t *sdr_record, char *group_name)
+sensors_group_cmp (ipmi_sensors_state_data_t *state_data,
+                   sdr_record_t *sdr_record)
 {
   char *sdr_group_name = NULL;
+  int i;
 
   assert(sdr_record);
-  assert(group_name);
+  assert(state_data->prog_data->args->groups_list_wanted);
 
   switch (sdr_record->record_type)
     {
@@ -257,11 +259,19 @@ sensors_group_cmp (sdr_record_t *sdr_record, char *group_name)
   
   if (sdr_group_name)
     {
-      if (strcasecmp (sdr_group_name, group_name) == 0)
-        return 0;
-      sdr_group_name = strdupa (sdr_group_name);
-      str_replace_chr (sdr_group_name, ' ', '_');
-      return (strcasecmp (sdr_group_name, group_name));
+      char sdr_group_name_subst[IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH];
+
+      strcpy(sdr_group_name_subst, sdr_group_name);
+      str_replace_chr (sdr_group_name_subst, ' ', '_');
+      
+      for (i = 0; i < state_data->prog_data->args->groups_list_length; i++)
+        {
+          if ((strcasecmp (sdr_group_name, 
+                           state_data->prog_data->args->groups_list[i]) == 0)
+              || (strcasecmp (sdr_group_name_subst, 
+                              state_data->prog_data->args->groups_list[i]) == 0))
+            return 0;
+        }
     }
 
   return (-1);
@@ -274,20 +284,18 @@ display_group_sensors (ipmi_sensors_state_data_t *state_data)
   sdr_record_t *sdr_record;
   sensor_reading_t _sensor_reading;
   sensor_reading_t *sensor_reading;
-  char *group;
   int verbose_count;
 
   assert(state_data);
-  assert(state_data->prog_data->args->group);
+  assert(state_data->prog_data->args->groups_list_wanted);
 
-  group = state_data->prog_data->args->group;
   verbose_count = state_data->prog_data->args->verbose_count;
 
   for (i = 0; i < state_data->sdr_record_count; i++)
     {
       sdr_record = state_data->sdr_record_list + i;
       
-      if (sensors_group_cmp (sdr_record, group) == 0)
+      if (sensors_group_cmp (state_data, sdr_record) == 0)
 	{
           memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
           
@@ -427,7 +435,7 @@ display_sensors (ipmi_sensors_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (args->group)
+  if (args->groups_list_wanted)
     {
       if (display_group_sensors (state_data) < 0)
         return (-1);
@@ -439,7 +447,7 @@ display_sensors (ipmi_sensors_state_data_t *state_data)
         return (-1);
     }
   
-  if (!args->group && !args->sensors_list_wanted)
+  if (!args->groups_list_wanted && !args->sensors_list_wanted)
     {
       int i;
       sdr_record_t *sdr_record;
