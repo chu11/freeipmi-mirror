@@ -38,25 +38,6 @@
 #include <assert.h>
 #include <errno.h>
 
-#if 0
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <sys/resource.h>
-#if TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#include <time.h>
-#else /* !TIME_WITH_SYS_TIME */
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#else /* !HAVE_SYS_TIME_H */
-#include <time.h>
-#endif /* !HAVE_SYS_TIME_H */
-#endif /* !TIME_WITH_SYS_TIME */
-#include <arpa/inet.h>
-#include <syslog.h>
-#endif
-
 #define SDR_CACHE_DIR                     "sdr-cache"
 #define SDR_CACHE_FILENAME_PREFIX         "sdr-cache"
 #define FREEIPMI_CONFIG_DIRECTORY_MODE    0700
@@ -76,8 +57,6 @@
 #include "tool-sdr-cache-common.h"
 
 #include "freeipmi-portability.h"
-
-#define GETHOSTBYNAME_AUX_BUFLEN 1024
 
 static int
 _get_home_directory (pstdout_state_t pstate,
@@ -310,12 +289,12 @@ sdr_cache_get_cache_directory (pstdout_state_t pstate,
   return 0;
 }
 
-int
-sdr_cache_get_cache_filename (pstdout_state_t pstate,
-                              const char *hostname,
-                              const char *cache_dir,
-                              char *buf,
-                              unsigned int buflen)
+static int
+_get_cache_filename (pstdout_state_t pstate,
+                     const char *hostname,
+                     const char *cache_dir,
+                     char *buf,
+                     unsigned int buflen)
 {
   char hostnamebuf[MAXHOSTNAMELEN+1];
   char sdrcachebuf[MAXPATHLEN+1];
@@ -478,11 +457,11 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
     }
 
   memset(cachefilenamebuf, '\0', MAXPATHLEN+1);
-  if (sdr_cache_get_cache_filename(pstate,
-                                   hostname,
-                                   cache_dir,
-                                   cachefilenamebuf,
-                                   MAXPATHLEN) < 0)
+  if (_get_cache_filename(pstate,
+                          hostname,
+                          cache_dir,
+                          cachefilenamebuf,
+                          MAXPATHLEN) < 0)
     goto cleanup;
 
   /* pstdout library can't handle \r, its the responsibility of
@@ -532,11 +511,11 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
   assert(pstate);
 
   memset(cachefilenamebuf, '\0', MAXPATHLEN+1);
-  if (sdr_cache_get_cache_filename(pstate,
-                                   hostname,
-                                   cache_dir,
-                                   cachefilenamebuf,
-                                   MAXPATHLEN) < 0)
+  if (_get_cache_filename(pstate,
+                          hostname,
+                          cache_dir,
+                          cachefilenamebuf,
+                          MAXPATHLEN) < 0)
     goto cleanup;
 
   if (ipmi_sdr_cache_open(ctx,
@@ -616,11 +595,11 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
   assert(pstate);
 
   memset(cachefilenamebuf, '\0', MAXPATHLEN+1);
-  if (sdr_cache_get_cache_filename(pstate,
-                                   hostname,
-                                   cache_dir,
-                                   cachefilenamebuf,
-                                   MAXPATHLEN) < 0)
+  if (_get_cache_filename(pstate,
+                          hostname,
+                          cache_dir,
+                          cachefilenamebuf,
+                          MAXPATHLEN) < 0)
     goto cleanup;
   
   if (!quiet_cache)

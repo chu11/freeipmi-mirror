@@ -33,18 +33,19 @@ int sdr_cache_get_cache_directory(pstdout_state_t pstate,
                                   char *buf,
                                   unsigned int buflen);
 
-int sdr_cache_get_cache_filename (pstdout_state_t pstate,
-                                  const char *hostname,
-                                  const char *cache_dir,
-                                  char *buf,
-                                  unsigned int buflen);
-
 int sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                       pstdout_state_t pstate,
                       ipmi_ctx_t ipmi_ctx,
                       int quiet_cache,
                       const char *hostname,
                       const char *cache_dir);
+
+int sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
+                               pstdout_state_t pstate,
+                               ipmi_ctx_t ipmi_ctx,
+                               int quiet_cache,
+                               const char *hostname,
+                               const char *cache_dir);
 
 int sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
                            pstdout_state_t pstate,
