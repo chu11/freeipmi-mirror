@@ -1,6 +1,8 @@
 2007-12-24  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Fix several corner case outputs.
+
+	* ipmi-sensors/: Fix corner case output w/ --list-groups.
 	
 2007-12-23  Albert Chu <chu11@llnl.gov>
 

@@ -504,7 +504,9 @@ _ipmi_sensors (pstdout_state_t pstate,
   memset(&state_data, '\0', sizeof(ipmi_sensors_state_data_t));
   
   /* Special case, just flush, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache_wanted)
+  /* Special case, just list groups, don't do an IPMI connection */
+  if (!prog_data->args->sdr.flush_cache_wanted
+      && !prog_data->args->list_groups_wanted)
     {
       if (!(dev = ipmi_device_open(prog_data->progname,
                                    hostname,
