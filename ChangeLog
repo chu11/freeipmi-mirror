@@ -39,8 +39,13 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sdr-cache/: Use wrappers appropriately.
 
-	* ipmimonitoring/src/libipmimonitoring/: Support new function
-	ipmi_monitoring_sdr_cache_filenames.
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring.c
+	ipmimonitoring/include/freeipmi/sdr-cache/ipmi_monitoring.h: New
+	function.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sdr_cache.c
+	(_ipmi_monitoring_sdr_cache_filename): Handle user specified
+	filename formats.
 
 	* common/src/tool-sdr-cache-common.h,
 	common/src/tool-sdr-cache-common.c: New files.
