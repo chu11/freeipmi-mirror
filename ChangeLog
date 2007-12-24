@@ -3,6 +3,10 @@
 	* ipmi-sensors/: Support --groups option.
 
 	* ipmi-sensors/: Fix corner case output w/ --list-groups.
+
+	* common/src/string-utils.h, common/src/string-utils.c: Rename to
+	ipmi-sdr-cache-utils.h and ipmi-sdr-cache-utils.c since no code
+	other than the sdr cache common code uses the files.
 	
 2007-12-24  Albert Chu <chu11@llnl.gov>
 
