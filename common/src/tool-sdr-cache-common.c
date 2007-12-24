@@ -462,9 +462,17 @@ sdr_cache_create (pstdout_state_t pstate,
                                    MAXPATHLEN) < 0)
     goto cleanup;
 
-  if (!stat(cachefilenamebuf, &buf))
+  if (ipmi_sdr_cache_create(ctx,
+                            ipmi_ctx,
+                            cachefilenamebuf,
+                            IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT,
+                            IPMI_SDR_CACHE_VALIDATION_FLAGS_DEFAULT,
+                            NULL) < 0)
     {
-      /* foo */
+      pstdout_fprintf(pstate,
+                      stderr,
+                      "ipmi_sdr_cache_create: %s\n",
+                      ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
       goto cleanup;
     }
 

@@ -39,6 +39,12 @@ int sdr_cache_get_cache_filename (pstdout_state_t pstate,
                                   char *buf,
                                   unsigned int buflen);
 
+int sdr_cache_create (pstdout_state_t pstate,
+                      ipmi_ctx_t ipmi_ctx,
+                      const char *hostname,
+                      const char *cache_dir,
+                      int quiet_cache);
+
 int sdr_cache_flush_cache (pstdout_state_t pstate,
                            int quiet_cache,
                            const char *hostname,
