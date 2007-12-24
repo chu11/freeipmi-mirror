@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostlist.c,v 1.2 2007-09-05 20:13:23 chu11 Exp $
+ *  $Id: hostlist.c,v 1.2.8.1 2007-12-24 19:06:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,26 +26,25 @@
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
+#  if HAVE_STRING_H
+#    include <string.h>
+#  endif
 #  if HAVE_PTHREAD_H
 #    include <pthread.h>
 #  endif
 #else                /* !HAVE_CONFIG_H */
+#  include <string.h>
 #  include <pthread.h>
 #endif                /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
-#if STDC_HEADERS
-#include <string.h>
 #include <stdarg.h>
-#endif /* STDC_HEADERS */
 #include <assert.h>
 #include <errno.h>
 #include <ctype.h>
 #include <sys/param.h>
-#if HAVE_UNISTD_H
 #include <unistd.h>
-#endif /* HAVE_UNISTD_H */
 
 #include "hostlist.h"
 
@@ -97,6 +96,9 @@
 
 /* max host range: anything larger will be assumed to be an error */
 #define MAX_RANGE    16384    /* 16K Hosts */
+
+/* max host suffix value */
+#define MAX_HOST_SUFFIX 1<<25
 
 /* max number of ranges that will be processed between brackets */
 #define MAX_RANGES    10240    /* 10K Ranges */
@@ -205,7 +207,7 @@ static char * _next_tok(char *, char **);
 static int    _zero_padded(unsigned long, int);
 static int    _width_equiv(unsigned long, int *, unsigned long, int *);
 
-static size_t        host_prefix_end(const char *);
+static int           host_prefix_end(const char *);
 static hostname_t    hostname_create(const char *);
 static void          hostname_destroy(hostname_t);
 static int           hostname_suffix_is_valid(hostname_t);
@@ -348,6 +350,22 @@ static void _error(char *file, int line, char *msg, ...)
     return;
 }
 
+static int _advance_past_brackets (char *tok, char **str)
+{
+    /* if _single_ opening bracket exists b/w tok and str, push str
+     * past first closing bracket to next seperator */
+    if (   memchr(tok, '[', *str - tok) != NULL
+        && memchr(tok, ']', *str - tok) == NULL ) {
+        char *q = strchr(*str, ']');
+        if (q && memchr(*str, '[', q - *str) == NULL) {
+            *str = q + 1;
+            return (1);
+        }
+    }
+
+    return 0;
+}
+
 /* 
  * Helper function for host list string parsing routines 
  * Returns a pointer to the next token; additionally advance *str
@@ -372,20 +390,18 @@ static char * _next_tok(char *sep, char **str)
     /* assign token ptr */
     tok = *str;
 
-    /* push str past token and leave pointing to first separator */
-    while (**str != '\0' && strchr(sep, **str) == '\0')
-        (*str)++;
+    /*
+     * Advance str past any separators, but if a separator occurs between
+     *  brackets, e.g. foo[0-3,5], then advance str past closing brackets and
+     *  try again.
+     */
+    do {
+        /* push str past token and leave pointing to first separator */
+        while (**str != '\0' && strchr(sep, **str) == '\0')
+            (*str)++;
+    } while (_advance_past_brackets (tok, str));
 
-    /* if _single_ opening bracket exists b/w tok and str, push str
-     * past first closing bracket */
-    if (   memchr(tok, '[', *str - tok) != NULL
-        && memchr(tok, ']', *str - tok) == NULL ) {
-        char *q = strchr(*str, ']');
-        if (q && memchr(*str, '[', q - *str) == NULL)
-            *str = q + 1;
-    }
-
-    /* nullify consecutive separators and push str beyond them */
+   /* nullify consecutive separators and push str beyond them */
     while (**str != '\0' && strchr(sep, **str) != '\0')
         *(*str)++ = '\0';
 
@@ -454,9 +470,9 @@ static int _width_equiv(unsigned long n, int *wn, unsigned long m, int *wm)
 /* 
  * return the location of the last char in the hostname prefix
  */
-static size_t host_prefix_end(const char *hostname)
+static int host_prefix_end(const char *hostname)
 {
-    size_t idx = strlen(hostname) - 1;
+    int idx = strlen(hostname) - 1;
 
     while (idx >= 0 && isdigit((char) hostname[idx])) 
         idx--;
@@ -470,7 +486,7 @@ static hostname_t hostname_create(const char *hostname)
 {
     hostname_t hn = NULL;
     char *p = '\0';
-    size_t idx = 0;
+    int idx = 0;
 
     assert(hostname != NULL);
 
@@ -499,7 +515,7 @@ static hostname_t hostname_create(const char *hostname)
     hn->suffix = hn->hostname + idx + 1;
     hn->num = strtoul(hn->suffix, &p, 10);
 
-    if (*p == '\0') {
+    if ((*p == '\0') && (hn->num <= MAX_HOST_SUFFIX)) {
         if (!(hn->prefix = malloc((idx + 2) * sizeof(char)))) {
             hostname_destroy(hn);
             out_of_memory("hostname prefix create");
@@ -891,6 +907,9 @@ static hostrange_t hostrange_intersect(hostrange_t h1, hostrange_t h2)
 static int hostrange_hn_within(hostrange_t hr, hostname_t hn)
 {
     int retval = 0;
+
+    if (hr->singlehost && (strcmp(hn->hostname, hr->prefix) == 0))
+        return 1;
 
     if (strcmp(hr->prefix, hn->prefix) == 0) {
         if (!hostname_suffix_is_valid(hn)) {
@@ -1339,7 +1358,7 @@ static int _parse_single_range(const char *str, struct _range *range)
         goto error;
 
     if (range->hi - range->lo + 1 > MAX_RANGE ) {
-        _error(__FILE__, __LINE__, "Too many hosts in range `%s'\n", orig);
+        _error(__FILE__, __LINE__, "Too many hosts in range `%s'", orig);
         free(orig);
         seterrno_ret(ERANGE, 0);
     }
@@ -1349,7 +1368,7 @@ static int _parse_single_range(const char *str, struct _range *range)
     return 1;
 
   error:
-    _error(__FILE__, __LINE__, "Invalid range: `%s'\n", orig);
+    _error(__FILE__, __LINE__, "Invalid range: `%s'", orig);
     free(orig);
     seterrno_ret(EINVAL, 0);
 }
@@ -1389,6 +1408,28 @@ _push_range_list(hostlist_t hl, char *pfx, struct _range *rng,
     }
 }
 
+static void
+_push_range_list_with_suffix(hostlist_t hl, char *pfx, char *sfx, 
+                             struct _range *rng, int n)
+{
+    int i;
+    unsigned long j;
+    for (i = 0; i < n; i++) {
+        for (j = rng->lo; j <= rng->hi; j++) {
+            char host[4096];
+            hostrange_t hr;
+            snprintf (host, 4096, "%s%0*lu%s", pfx, rng->width, j, sfx);
+            hr = hostrange_create_single (host);
+            hostlist_push_range (hl, hr);
+            /*
+             * hr is copied in hostlist_push_range. Need to free here.
+             */
+            hostrange_destroy (hr);
+        }
+        rng++;
+    }
+}
+
 /*
  * Create a hostlist from a string with brackets '[' ']' to aid 
  * detection of ranges and compressed lists
@@ -1422,7 +1463,11 @@ _hostlist_create_bracketed(const char *hostlist, char *sep, char *r_op)
                 nr = _parse_range_list(p, ranges, MAX_RANGES);
                 if (nr < 0) 
                     goto error;
-                _push_range_list(new, prefix, ranges, nr);
+
+                if (*(++q) != '\0')
+                    _push_range_list_with_suffix (new, prefix, q, ranges, nr);
+                else
+                    _push_range_list(new, prefix, ranges, nr);
 
                 
             } else
@@ -1819,7 +1864,7 @@ int hostlist_find(hostlist_t hl, const char *hostname)
 
     for (i = 0, count = 0; i < hl->nranges; i++) {
         if (hostrange_hn_within(hl->hr[i], hn)) {
-            if (hostname_suffix_is_valid(hn))
+            if (hostname_suffix_is_valid(hn) && !hl->hr[i]->singlehost)
                 ret = count + hn->num - hl->hr[i]->lo;
             else
                 ret = count;
@@ -2172,7 +2217,7 @@ static void _iterator_advance(hostlist_iterator_t i)
     assert(i->magic == HOSTLIST_MAGIC);
     if (i->idx > i->hl->nranges - 1)
         return;
-    if (++(i->depth) > i->hr->hi - i->hr->lo) {
+    if (++(i->depth) > (i->hr->hi - i->hr->lo)) {
         i->depth = 0;
         i->hr = i->hl->hr[++i->idx];
     }
@@ -2202,7 +2247,8 @@ static void _iterator_advance_range(hostlist_iterator_t i)
 
 char *hostlist_next(hostlist_iterator_t i)
 {
-    char buf[MAXHOSTNAMELEN + 16];
+    char *buf = NULL;
+    char suffix[16];
     int len = 0;
     assert(i != NULL);
     assert(i->magic == HOSTLIST_MAGIC);
@@ -2214,12 +2260,21 @@ char *hostlist_next(hostlist_iterator_t i)
         return NULL;
     }
 
-    len = snprintf(buf, MAXHOSTNAMELEN + 15, "%s", i->hr->prefix);
+    suffix[0] = '\0';
+
     if (!i->hr->singlehost)
-        snprintf(buf + len, MAXHOSTNAMELEN + 15 - len, "%0*lu",
-             i->hr->width, i->hr->lo + i->depth);
+        snprintf (suffix, 15, "%0*lu", i->hr->width, i->hr->lo + i->depth);
+
+    len = strlen (i->hr->prefix) + strlen (suffix) + 1;
+    if (!(buf = malloc (len)))
+        out_of_memory("hostlist_next");
+    
+    buf[0] = '\0';
+    strcat (buf, i->hr->prefix);
+    strcat (buf, suffix);
+
     UNLOCK_HOSTLIST(i->hl);
-    return strdup(buf);
+    return (buf);
 }
 
 char *hostlist_next_range(hostlist_iterator_t i)
@@ -2256,12 +2311,10 @@ int hostlist_remove(hostlist_iterator_t i)
     if (new) {
         hostlist_insert_range(i->hl, new, i->idx + 1);
         hostrange_destroy(new);
-        i->hr = i->hl->hr[i->idx];
+        i->hr = i->hl->hr[++i->idx];
         i->depth = -1;
     } else if (hostrange_empty(i->hr)) {
         hostlist_delete_range(i->hl, i->idx);
-        i->hr = i->hl->hr[i->idx];
-        i->depth = -1;
     } else
         i->depth--;
 

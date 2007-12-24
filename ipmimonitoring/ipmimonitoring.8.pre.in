@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.pre.in,v 1.11.6.2 2007-12-24 15:10:15 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.11.6.3 2007-12-24 19:06:31 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
 \."  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -123,9 +123,14 @@ Show all sensors on a remote machine using IPMI over LAN.
 Show all sensors across a cluster using IPMI over LAN.
 .PP
 .SH "KNOWN ISSUES"
+
 Interpretation rules have not been written for all sensors
-permutations and types.  If sensor interpretation rules are needed,
-please contact the author listed below.
+permutations and types.  Users may notice some sensors output in 
+.B ipmi-sensors(8)
+do not output in 
+.B ipmimonitoring.
+If sensor interpretation rules are needed,
+please contact the FreeIPMI maintainers.
 
 .if @WITH_DEBUG@ \{
 This version of ipmimonitoring was compiled with debugging.  When compiled

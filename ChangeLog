@@ -53,6 +53,56 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* Adjust Makefile.am, configure.ac, documentation and code
 	respectively for fall out from above changes.
 	
+	/* LATER XXXXX */
+	* common/src/ipmi-sdr-cache-utils.h,
+	common/src/ipmi-sdr-cache-utils.c,
+	common/src/ipmi-sdr-cache-reads.h,
+	common/src/ipmi-sdr-cache-reads.c,
+ 	common/src/ipmi-sdr-cache-writes.h,
+	common/src/ipmi-sdr-cache-writes.c,
+ 	common/src/ipmi-sdr-cache.h,
+	common/src/ipmi-sdr-cache.c,
+	common/src/ipmi-sdr-cache_defs.h: Removed files.
+
+2007-12-24  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/: Support --groups option.
+
+	* ipmi-sensors/: Fix corner case output w/ --list-groups.
+
+	* common/src/string-utils.h, common/src/string-utils.c: Rename to
+	ipmi-sdr-cache-utils.h and ipmi-sdr-cache-utils.c since no code
+	other than the sdr cache common code uses the files.
+	
+2007-12-24  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/: Fix several corner case outputs.
+	
+2007-12-24  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-argp.c,
+	ipmi-sensors/src/ipmi-sensors.h, ipmi-sel/src/ipmi-sel-argp.c,
+	ipmi-sel/src/ipmi-sel.h: Cleanup arg parsing.
+
+2007-12-23  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/ipmi-sensors.8.pre.in,
+	ipmimonitoring/ipmimonitoring.8.pre.in: Minor doc fixes/updates.
+
+	* common/src/tool-common.c (ipmi_open): Check for "127.0.0.1" as
+	well as "localhost".
+	
+2007-12-21  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/manpage-common-troubleshooting.man: Remove "Please
+	try ..." in a few troubleshooting sections, since it makes no
+	sense in some.
+	
+2007-12-21  Albert Chu <chu11@llnl.gov>
+
+	* common/src/hostlist.c: Update to newest library to support
+	suffixes on hostranges.
+	
 2007-12-19  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_config.c (cmdline_parse): Fix cmdline

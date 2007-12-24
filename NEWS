@@ -1,5 +1,12 @@
 0.6.1
 -----
+For Users
+---------
+o Support --groups (plural) for multiple groups listing in
+  ipmi-sensors.  Older --group option maintained for backwards
+  compatability.
+o Minor corner case fixes throughout.
+
 For Developers
 --------------
 o Many libfreeipmi API changes.
@@ -8,6 +15,12 @@ o Many libfreeipmi API changes.
   o 'udm' renamed to 'api'.
   o 'ipmi_device_t' device context renamed to 'ipmi_ctx_t'.
   o Various code re-organization into subdirectories.
+
+0.5.2
+-----
+o Clarify "Password Verification Timeout" troubleshooting information.
+o Fix ipmipower cmdline parse bug.
+o Support suffixes in hostrange inputs.
 
 0.5.1
 -----

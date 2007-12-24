@@ -30,7 +30,7 @@
 #include <limits.h>
 #include <assert.h>
 
-#include "string-utils.h"
+#include "ipmi-sdr-cache-utils.h"
 
 char *
 stripwhite (char *string)

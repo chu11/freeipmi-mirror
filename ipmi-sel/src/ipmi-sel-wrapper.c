@@ -802,6 +802,7 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
   
   if (!(sel_rec = (sel_record_t *)malloc(sizeof(sel_record_t))))
     goto cleanup;
+  memset(sel_rec, '\0', sizeof(sel_record_t));
 
   if (ipmi_cmd_get_sel_entry (state_data->ipmi_ctx, 
 			      0,
@@ -810,10 +811,17 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
 			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
 			      obj_cmd_rs) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_cmd_get_sel_entry: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      /* If the sel is empty, don't bother outputting an error
+       * message, it's not a real error.
+       */
+      if (!(record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+            && ipmi_check_completion_code(obj_cmd_rs,
+                                          IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+        
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_sel_entry: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -888,10 +896,16 @@ get_sel_record_raw (ipmi_sel_state_data_t *state_data,
 			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
 			      obj_cmd_rs) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_cmd_get_sel_entry: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      /* If the sel is empty, don't bother outputting an error
+       * message, it's not a real error.
+       */
+      if (!(record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+            && ipmi_check_completion_code(obj_cmd_rs,
+                                          IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_sel_entry: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
   
@@ -921,8 +935,14 @@ delete_sel_entry (ipmi_sel_state_data_t *state_data,
   
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
   
-  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_cmd_rs) != 0)
-    goto cleanup;
+  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_reserve_sel: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
   
   _FIID_OBJ_GET(obj_cmd_rs, "reservation_id", &val);
 
@@ -964,7 +984,13 @@ clear_sel_entries (ipmi_sel_state_data_t *state_data)
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
 
   if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_cmd_rs) != 0)
-    goto cleanup;
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_reserve_sel: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
   
   _FIID_OBJ_GET(obj_cmd_rs, "reservation_id", &val);
 
@@ -1005,7 +1031,13 @@ get_sel_clear_status (ipmi_sel_state_data_t *state_data,
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
 
   if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_cmd_rs) != 0)
-    goto cleanup;
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_reserve_sel: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
   
   _FIID_OBJ_GET(obj_cmd_rs, "reservation_id", &val);
 

@@ -45,8 +45,9 @@ Show sensor data repository (SDR) information
 \fB\-L\fR, \fB\-\-list\-groups\fR
 List sensor groups.
 .TP
-\fB\-g\fR GROUP-NAME, \fB\-\-group\fR=\fIGROUP\-NAME\fR
-Show sensors belonging to a specific group.
+\fB\-g\fR GROUP-LIST, \fB\-\-groups\fR=\fIGROUP\-LIST\fR
+Show sensors belonging to specific groups.  Accepts space or comma
+separated lists.
 .TP
 \fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"
 Show sensors by record id.  Accepts space or comma separated lists.
@@ -86,7 +87,7 @@ Show all sensors on a remote machine using IPMI over LAN.
 Show all sensors across a cluster using IPMI over LAN.
 .PP
 .SH "SEE ALSO"
-bmc-config(8)
+bmc-config(8), ipmimonitoring(8)
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

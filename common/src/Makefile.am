@@ -7,7 +7,7 @@ noinst_HEADERS = \
 	sdr-cache-reads.h \
 	sdr-cache.h \
 	sdr-cache-defs.h \
-	string-utils.h \
+	sdr-cache-utils.h \
 	ipmi-sensor-common.h \
 	cbuf.h \
 	conffile.h \
@@ -53,7 +53,7 @@ libipmiping_la_SOURCES = ipmi-ping.c
 libipmiping_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
 
 libsdr_la_SOURCES = \
-	string-utils.c \
+	sdr-cache-utils.c \
 	sdr-cache-writes.c \
 	sdr-cache-reads.c \
 	sdr-cache.c

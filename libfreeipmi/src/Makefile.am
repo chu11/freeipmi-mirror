@@ -80,6 +80,9 @@ sdr-cache/libsdrcache.la : force-dependency-check
 spec/libspec.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
+util/libutil.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
 ../../common/src/libfreeipmiportability.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
