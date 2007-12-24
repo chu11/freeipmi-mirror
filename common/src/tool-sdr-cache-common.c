@@ -79,6 +79,12 @@
 
 #define GETHOSTBYNAME_AUX_BUFLEN 1024
 
+struct sdr_cache_callback_data 
+{
+  pstdout_state_t pstate;
+  int count;
+};
+
 static int
 _get_home_directory (pstdout_state_t pstate,
                      char *buf,
@@ -417,6 +423,33 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
   return 0;
 }
 
+void
+_sdr_cache_create_callback(uint8_t sdr_version,
+                           uint16_t record_count,
+                           uint32_t most_recent_addition_timestamp,
+                           uint32_t most_recent_erase_timestamp,
+                           uint16_t record_id,
+                           void *data)
+{
+  struct sdr_cache_callback_data *callback_data;
+
+  assert(data);
+
+  callback_data = (struct sdr_cache_callback_data *)data;
+
+  assert(callback_data->pstate);
+
+  callback_data->count++;
+
+  pstdout_fprintf (callback_data->pstate,
+                   stderr, 
+                   "Caching SDR record %d of %d (current record ID %d) \r",
+                   callback_data->count,
+                   record_count,
+                   record_id);
+}
+
+
 int 
 sdr_cache_create (pstdout_state_t pstate,
                   ipmi_ctx_t ipmi_ctx,
@@ -428,6 +461,7 @@ sdr_cache_create (pstdout_state_t pstate,
   char cachedirectorybuf[MAXPATHLEN+1];
   char cachefilenamebuf[MAXPATHLEN+1];
   struct stat buf;
+  struct sdr_cache_callback_data callback_data;
   int rv = -1;
 
   assert(ctx);
@@ -462,12 +496,18 @@ sdr_cache_create (pstdout_state_t pstate,
                                    MAXPATHLEN) < 0)
     goto cleanup;
 
+  if (!quiet_cache)
+    fprintf (stderr, "Caching SDR repository information ... ");
+
+  callback_data.pstate = pstate;
+  callback_data.count = 0;
   if (ipmi_sdr_cache_create(ctx,
                             ipmi_ctx,
                             cachefilenamebuf,
                             IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT,
                             IPMI_SDR_CACHE_VALIDATION_FLAGS_DEFAULT,
-                            NULL) < 0)
+                            quiet_cache ? NULL : _sdr_cache_create_callback,
+                            quiet_cache ? NULL : (void *)&callback_data) < 0)
     {
       pstdout_fprintf(pstate,
                       stderr,
@@ -475,6 +515,11 @@ sdr_cache_create (pstdout_state_t pstate,
                       ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
       goto cleanup;
     }
+
+  if (!quiet_cache)
+    pstdout_fprintf (pstate,
+                     stderr, 
+                     "\n");
 
   rv = 0;
  cleanup:
