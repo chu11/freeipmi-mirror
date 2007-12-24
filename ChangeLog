@@ -50,8 +50,8 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* common/src/tool-sdr-cache-common.h,
 	common/src/tool-sdr-cache-common.c: New files.
 
-	* Adjust Makefile.am, configure.ac, and code respectively for fall
-	out from above changes.
+	* Adjust Makefile.am, configure.ac, documentation and code
+	respectively for fall out from above changes.
 	
 2007-12-19  Albert Chu <chu11@llnl.gov>
 
