@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.15.2.3 2007-12-24 06:39:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.15.2.4 2007-12-25 17:58:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -142,7 +142,8 @@ _inband_init(ipmi_monitoring_ctx_t c,
                     c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
                   else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_OUT_OF_MEMORY)
                     c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-                  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR)
+                  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR
+                           || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_DEVICE_NOT_FOUND)
                     c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
                   else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_DRIVER_PATH_REQUIRED)
                     c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
@@ -184,7 +185,8 @@ _inband_init(ipmi_monitoring_ctx_t c,
             c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
           else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_OUT_OF_MEMORY)
             c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-          else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR)
+          else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR
+                   || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_DEVICE_NOT_FOUND)
             c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
           else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_DRIVER_PATH_REQUIRED)
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
