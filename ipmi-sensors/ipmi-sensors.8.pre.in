@@ -46,11 +46,13 @@ Show sensor data repository (SDR) information
 List sensor groups.
 .TP
 \fB\-g\fR GROUP-LIST, \fB\-\-groups\fR=\fIGROUP\-LIST\fR
-Show sensors belonging to specific groups.  Accepts space or comma
-separated lists.
+Specify groups to show sensor outps for.  Multiple groups can be
+separated by commas or spaces.
 .TP
 \fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"
-Show sensors by record id.  Accepts space or comma separated lists.
+Specify sensors to show by record id.  Multiple record ids can be
+separated by commas or spaces.
+
 #include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
@@ -94,11 +96,6 @@ Report bugs to <@PACKAGE_BUGREPORT@>.
 Copyright \(co 2003,04,05 FreeIPMI Core Team.  
 This program is free software; you may redistribute it under the terms of
 the GNU General Public License.  This program has absolutely no warranty.
-.SH WORKAROUND
-On the IBM e325, the BMC firmware is very buggy and prohibits most
-in-band communication in FreeIPMI.  We recommend using the IBM
-provided 'lancfg' tool to initially configure the BMC, then use
-out-of-band access for further communication.
 .SH "AUTHORS"
 Albert Chu <chu11@llnl.gov>, Anand Babu <ab@gnu.org.in>, Balamurugan
 <bala.a@californiadigital.com>, Ian Zimmerman
