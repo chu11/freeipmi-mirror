@@ -50,6 +50,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* common/src/tool-sdr-cache-common.h,
 	common/src/tool-sdr-cache-common.c: New files.
 
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sdr_cache.c:
+	Remove /tmp debug cache location.
+
 	* Adjust Makefile.am, configure.ac, documentation and code
 	respectively for fall out from above changes.
 	
