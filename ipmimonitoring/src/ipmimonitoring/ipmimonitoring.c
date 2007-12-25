@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.31.4.1 2007-12-25 17:47:03 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.31.4.2 2007-12-25 18:02:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -153,6 +153,7 @@ _config_init(void)
   conf.register_spacing = 0;
   conf.driver_device = NULL;
 
+  conf.protocol_version = -1;
   conf.username = NULL;
   conf.password = NULL;
   conf.k_g = NULL;
@@ -585,7 +586,7 @@ _ipmimonitoring(pstdout_state_t pstate,
     {
       if ((num = ipmi_monitoring_sensor_readings_by_sensor_group(c,
                                                                  (_hostname) ? _hostname : NULL,
-                                                                 (_hostname) ? &conf : NULL,
+                                                                 &conf,
                                                                  sensor_reading_flags,
                                                                  groups,
                                                                  groups_len)) < 0)
