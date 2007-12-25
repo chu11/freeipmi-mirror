@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.32.2.4 2007-12-25 21:23:26 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.32.2.5 2007-12-25 21:42:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -108,7 +108,7 @@ _flush_cache (ipmimonitoring_state_data_t *state_data)
   if (sdr_cache_flush_cache(state_data->ipmi_sdr_cache_ctx,
                             state_data->pstate,
                             state_data->prog_data->args->sdr.quiet_cache_wanted,
-                            state_data->prog_data->args->common.hostname,
+                            state_data->hostname,
                             state_data->prog_data->args->sdr.sdr_cache_dir_wanted ? state_data->prog_data->args->sdr.sdr_cache_dir : NULL) < 0)
     return -1;
   
@@ -141,7 +141,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                 state_data->pstate,
                                 state_data->ipmi_ctx,
                                 args->sdr.quiet_cache_wanted,
-                                args->common.hostname,
+                                state_data->hostname,
                                 args->sdr.sdr_cache_dir_wanted ? args->sdr.sdr_cache_dir : NULL) < 0)
     return -1;
 
@@ -169,7 +169,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   if (!args->sensors_list_length && !args->ipmimonitoring_groups_length)
     {
       if ((num = ipmi_monitoring_sensor_readings_by_record_id(state_data->ctx,
-                                                              args->common.hostname,
+                                                              state_data->hostname,
                                                               &(args->conf),
                                                               sensor_reading_flags,
                                                               NULL,
@@ -185,7 +185,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   else if (args->sensors_list_length)
     {
       if ((num = ipmi_monitoring_sensor_readings_by_record_id(state_data->ctx,
-                                                              args->common.hostname,
+                                                              state_data->hostname,
                                                               &(args->conf),
                                                               sensor_reading_flags,
                                                               args->sensors_list,
@@ -201,7 +201,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   else 
     {
       if ((num = ipmi_monitoring_sensor_readings_by_sensor_group(state_data->ctx,
-                                                                 args->common.hostname,
+                                                                 state_data->hostname,
                                                                  &(args->conf),
                                                                  sensor_reading_flags,
                                                                  args->ipmimonitoring_groups,
@@ -482,10 +482,7 @@ _ipmimonitoring(pstdout_state_t pstate,
   if (state_data.ctx)
     ipmi_monitoring_ctx_destroy(state_data.ctx);
   if (state_data.ipmi_sdr_cache_ctx)
-    {
-      ipmi_sdr_cache_close(state_data.ipmi_sdr_cache_ctx);
-      ipmi_sdr_cache_ctx_destroy(state_data.ipmi_sdr_cache_ctx);
-    }
+    ipmi_sdr_cache_ctx_destroy(state_data.ipmi_sdr_cache_ctx);
   if (state_data.ipmi_ctx)
     {
       ipmi_ctx_close (state_data.ipmi_ctx); 

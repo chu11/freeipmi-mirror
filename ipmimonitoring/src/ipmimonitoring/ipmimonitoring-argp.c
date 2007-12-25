@@ -180,7 +180,14 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
          '\0', 
          sizeof(unsigned int)*IPMIMONITORING_MAX_RECORD_IDS);
   cmd_args->sensors_list_length = 0;
-  
+
+  memset(&(cmd_args->conf), '\0', sizeof(struct ipmi_monitoring_ipmi_config));
+  cmd_args->ipmimonitoring_flags = 0;
+  memset(cmd_args->ipmimonitoring_groups,
+         '\0',
+         sizeof(unsigned int)*IPMIMONITORING_MAX_GROUPS);
+
+    cmd_args->ipmimonitoring_groups_length = 0;
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
   verify_sdr_cmd_args (&(cmd_args->sdr));

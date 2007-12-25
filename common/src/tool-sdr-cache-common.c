@@ -176,12 +176,12 @@ _get_home_directory (pstdout_state_t pstate,
                                 stderr,
                                 "Cannot make cache directory: %s: %s\n",
                                 buf,
-                                errno);
+                                strerror(errno));
               else
                 fprintf(stderr,
                         "Cannot make cache directory: %s: %s\n",
                         buf,
-                        errno);
+                        strerror(errno));
               return -1;
             }
 	}
@@ -249,12 +249,12 @@ _get_config_directory (pstdout_state_t pstate,
                                     stderr,
                                     "Cannot make cache directory: %s: %s\n",
                                     tbuf,
-                                    errno);
+                                    strerror(errno));
                   else
                     fprintf(stderr,
                             "Cannot make cache directory: %s: %s\n",
                             tbuf,
-                            errno);
+                            strerror(errno));
                   return -1;
                 }
             }
@@ -613,7 +613,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
         }
     }
 
-  if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_INVALID)
+  if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST)
     {
       if (sdr_cache_create (ctx,
                             pstate,
