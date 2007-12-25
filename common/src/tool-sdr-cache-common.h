@@ -28,7 +28,16 @@
 
 #define SDR_CACHE_ERRMSGLEN 1024
 
+/* For sdr_cache_get_cache_directory: pstate can be NULL if we aren't
+ * yet threaded 
+ */
 int sdr_cache_get_cache_directory(pstdout_state_t pstate,
+                                  const char *cache_dir,
+                                  char *buf,
+                                  unsigned int buflen);
+
+int sdr_cache_get_cache_filename (pstdout_state_t pstate,
+                                  const char *hostname,
                                   const char *cache_dir,
                                   char *buf,
                                   unsigned int buflen);

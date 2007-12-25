@@ -55,7 +55,7 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* Adjust Makefile.am, configure.ac, documentation and code
 	respectively for fall out from above changes.
-	
+
 	/* LATER XXXXX */
 	* common/src/ipmi-sdr-cache-utils.h,
 	common/src/ipmi-sdr-cache-utils.c,

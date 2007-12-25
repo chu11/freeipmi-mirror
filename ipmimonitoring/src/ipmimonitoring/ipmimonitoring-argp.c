@@ -34,23 +34,22 @@
 
 #include "tool-cmdline-common.h"
 
-#include "ipmi-sensor-common.h"
-#include "ipmi-sensors.h"
-#include "ipmi-sensors-argp.h"
+#include "ipmimonitoring.h"
+#include "ipmimonitoring-argp.h"
 
 #include "freeipmi-portability.h"
 
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 const char *argp_program_version = 
-"IPMI Sensors [ipmi-sensors-" PACKAGE_VERSION "]\n"
-"Copyright (C) 2003-2005 FreeIPMI Core Team\n"
+"Ipmimonitoring [ipmimonitoring-" PACKAGE_VERSION "]\n"
+"Copyright (C) 2007 Lawrence Livermore National Security, LLC.\n"
 "This program is free software; you may redistribute it under the terms of\n"
 "the GNU General Public License.  This program has absolutely no warranty.";
 
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
-static char doc[] = "IPMI Sensors - displays IPMI sensor readings.";
+static char doc[] = "IPMIMonitoring - IPMI Sensor Monitoring Utility";
 
 static char args_doc[] = "";
 
@@ -66,17 +65,16 @@ static struct argp_option options[] =
     ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    {"verbose",        VERBOSE_KEY,        0, 0, 
-     "Increase verbosity in output.  May be specified multiple times.", 25}, 
+    /* maintain "regenerate-sdr-cache" for backwards compatability */
+    {"regenerate-sdr-cache", REGENERATE_SDR_CACHE_KEY, 0, OPTION_HIDDEN,
+     "Regenerate the SDR cache.", 25},
+    /* maintain "cache-dir" for backwards compatability */
+    {"cache-dir", CACHE_DIR_KEY, "DIRECTORY", OPTION_HIDDEN,
+     "Specify an alternate directory to read and write SDR caches..", 26},
     {"quiet-readings", QUIET_READINGS_KEY,  0, 0,
-     "Do not output sensor readings or thresholds on simple output.", 26},
-    {"sdr-info",       SDR_INFO_KEY,       0, 0, 
-     "Show sendor data repository (SDR) information.", 27}, 
+     "Do not output sensor readings, only states.", 27},
     {"list-groups",    LIST_GROUPS_KEY,    0, 0, 
      "List sensor groups.", 28}, 
-    /* maintain "group" for backwards compatability */
-    {"group",          GROUP_KEY,        "GROUP-NAME", OPTION_HIDDEN, 
-     "Show sensors belonging to a specific group.", 29}, 
     {"groups",         GROUPS_KEY,       "GROUP-NAME", 0, 
      "Show sensors belonging to a specific group.", 30}, 
     {"sensors",        SENSORS_LIST_KEY, "SENSORS-LIST", 0, 
@@ -89,16 +87,23 @@ static struct argp argp = { options, parse_opt, args_doc, doc };
 static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  struct ipmi_sensors_arguments *cmd_args = state->input;
+  struct ipmimonitoring_arguments *cmd_args = state->input;
   char *ptr;
   char *tok;
   error_t ret;
   
   switch (key)
     {
-    case VERBOSE_KEY:
-      cmd_args->verbose_wanted = 1;
-      cmd_args->verbose_count++;
+      /* legacy option */
+    case REGENERATE_SDR_CACHE_KEY:
+      cmd_args->regenerate_sdr_cache_wanted = 1;
+      break;
+      /* legacy option */
+    case CACHE_DIR_KEY:
+      return sdr_parse_opt (ARGP_SDR_CACHE_DIR_KEY, 
+                            arg, 
+                            state, 
+                            &(cmd_args->sdr));
       break;
     case QUIET_READINGS_KEY:
       cmd_args->quiet_readings_wanted = 1;
@@ -109,22 +114,14 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case LIST_GROUPS_KEY:
       cmd_args->list_groups_wanted = 1;
       break;
-    /* maintain "group" for backwards compatability */
-    case GROUP_KEY:
-      cmd_args->groups_list_wanted = 1;
-      strncpy(cmd_args->groups_list[cmd_args->groups_list_length], 
-              arg, 
-              IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
-      cmd_args->groups_list_length++;
-      break;
     case GROUPS_KEY:
       cmd_args->groups_list_wanted = 1;
       tok = strtok(arg, " ,");
-      while (tok && cmd_args->groups_list_length < IPMI_SENSORS_MAX_GROUPS)
+      while (tok && cmd_args->groups_list_length < IPMIMONITORING_MAX_GROUPS)
         {
           strncpy(cmd_args->groups_list[cmd_args->groups_list_length],
                   tok,
-                  IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
+                  IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
           cmd_args->groups_list_length++;
           tok = strtok(NULL, " ,");
         }
@@ -132,7 +129,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case SENSORS_LIST_KEY:
       cmd_args->sensors_list_wanted = 1;
       tok = strtok(arg, " ,");
-      while (tok && cmd_args->sensors_list_length < IPMI_SENSORS_MAX_RECORD_IDS)
+      while (tok && cmd_args->sensors_list_length < IPMIMONITORING_MAX_RECORD_IDS)
         {
           unsigned int n = strtoul(tok, &ptr, 10);
           if (ptr != (tok + strlen(tok)))
@@ -161,28 +158,27 @@ parse_opt (int key, char *arg, struct argp_state *state)
 }
 
 void 
-ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *cmd_args)
+ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_arguments *cmd_args)
 {
   int i;
 
   init_common_cmd_args (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
-  cmd_args->verbose_wanted = 0;
-  cmd_args->verbose_count = 0;
+  cmd_args->regenerate_sdr_cache_wanted = 0;
   cmd_args->quiet_readings_wanted = 0;
   cmd_args->sdr_info_wanted = 0;
   cmd_args->list_groups_wanted = 0;
   cmd_args->groups_list_wanted = 0;
-  for (i = 0; i < IPMI_SENSORS_MAX_GROUPS; i++)
+  for (i = 0; i < IPMIMONITORING_MAX_GROUPS; i++)
     memset(cmd_args->groups_list[i],
            '\0',
-           IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH+1);
+           IPMIMONITORING_MAX_GROUPS_STRING_LENGTH+1);
   cmd_args->groups_list_length = 0;
   cmd_args->sensors_list_wanted = 0;
   memset(cmd_args->sensors_list, 
          '\0', 
-         sizeof(unsigned int)*IPMI_SENSORS_MAX_RECORD_IDS);
+         sizeof(unsigned int)*IPMIMONITORING_MAX_RECORD_IDS);
   cmd_args->sensors_list_length = 0;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
