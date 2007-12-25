@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.32.2.5 2007-12-25 21:42:35 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.32.2.6 2007-12-25 22:57:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -538,7 +538,7 @@ _grab_ipmimonitoring_options(struct ipmimonitoring_arguments *cmd_args)
   else if (cmd_args->common.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
     cmd_args->conf.privilege_level = IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN;
   else
-    cmd_args->conf.privilege_level = -1;
+    cmd_args->conf.privilege_level = IPMI_MONITORING_PRIVILEGE_LEVEL_USER;
 
   if (cmd_args->common.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
     cmd_args->conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_NONE;
@@ -549,7 +549,7 @@ _grab_ipmimonitoring_options(struct ipmimonitoring_arguments *cmd_args)
   else if (cmd_args->common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
     cmd_args->conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_MD5;
   else
-    cmd_args->conf.authentication_type = -1;
+    cmd_args->conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_MD5;
 
   cmd_args->conf.cipher_suite_id = cmd_args->common.cipher_suite_id;
 
