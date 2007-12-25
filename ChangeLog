@@ -1,3 +1,7 @@
+2007-12-25  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring.c: Fix corner cases.
+	
 2007-12-24  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Fix several corner case outputs.

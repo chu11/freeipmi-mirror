@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.31 2007-10-18 16:18:49 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.31.4.1 2007-12-25 17:47:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -542,14 +542,16 @@ _ipmimonitoring(pstdout_state_t pstate,
   if (regenerate_sdr_cache)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;
 
-  if (_hostname && !strcasecmp(_hostname, "localhost"))
+  if (_hostname 
+      && (!strcasecmp(_hostname, "localhost")
+          || !strcasecmp(_hostname, "127.0.0.1")))
     _hostname = NULL;
 
   if (!record_ids_len && !groups_len)
     {
       if ((num = ipmi_monitoring_sensor_readings_by_record_id(c,
                                                               (_hostname) ? _hostname : NULL,
-                                                              (_hostname) ? &conf : NULL,
+                                                              &conf,
                                                               sensor_reading_flags,
                                                               NULL,
                                                               0)) < 0)
@@ -566,7 +568,7 @@ _ipmimonitoring(pstdout_state_t pstate,
     {
       if ((num = ipmi_monitoring_sensor_readings_by_record_id(c,
                                                               (_hostname) ? _hostname : NULL,
-                                                              (_hostname) ? &conf : NULL,
+                                                              &conf,
                                                               sensor_reading_flags,
                                                               record_ids,
                                                               record_ids_len)) < 0)
