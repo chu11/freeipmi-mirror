@@ -1,3 +1,8 @@
+2007-12-25  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/manpage-common-outofband-timeout.man: Fix option name
+	typos.
+	
 2007-12-24  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/: Support --groups option.
