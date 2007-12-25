@@ -2,6 +2,8 @@
 
 	* common/doc/manpage-common-outofband-timeout.man: Fix option name
 	typos.
+
+	* Variety of code cleanup.
 	
 2007-12-24  Albert Chu <chu11@llnl.gov>
 

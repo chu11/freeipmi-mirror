@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.8 2007-12-14 19:16:20 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.9 2007-12-25 21:09:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -391,21 +391,24 @@ _ipmi_fru(pstdout_state_t pstate,
 {
   ipmi_fru_state_data_t state_data;
   ipmi_fru_prog_data_t *prog_data;
-  ipmi_ctx_t ipmi_ctx = NULL;
   char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   prog_data = (ipmi_fru_prog_data_t *)arg;
   memset(&state_data, '\0', sizeof(ipmi_fru_state_data_t));
 
+  state_data.prog_data = prog_data;
+  state_data.pstate = pstate;
+  state_data.hostname = (char *)hostname;
+
   /* Special case, just flush, don't do an IPMI connection */
   if (!prog_data->args->sdr.flush_cache_wanted)
     {
-      if (!(ipmi_ctx = ipmi_open(prog_data->progname,
-                                 hostname,
-                                 &(prog_data->args->common),
-                                 errmsg,
-                                 IPMI_OPEN_ERRMSGLEN)))
+      if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
+                                            hostname,
+                                            &(prog_data->args->common),
+                                            errmsg,
+                                            IPMI_OPEN_ERRMSGLEN)))
         {
           pstdout_fprintf(pstate,
                           stderr,
@@ -415,11 +418,6 @@ _ipmi_fru(pstdout_state_t pstate,
           goto cleanup;
         }
     }
-
-  state_data.ipmi_ctx = ipmi_ctx;
-  state_data.prog_data = prog_data;
-  state_data.pstate = pstate;
-  state_data.hostname = (char *)hostname;
 
   if (!(state_data.sdr_cache_ctx = sdr_cache_ctx_create()))
     {
@@ -438,10 +436,10 @@ _ipmi_fru(pstdout_state_t pstate,
  cleanup:
   if (state_data.sdr_cache_ctx)
     sdr_cache_ctx_destroy(state_data.sdr_cache_ctx);
-  if (ipmi_ctx)
+  if (state_data.ipmi_ctx)
     {
-      ipmi_ctx_close (ipmi_ctx);
-      ipmi_ctx_destroy (ipmi_ctx);
+      ipmi_ctx_close (state_data.ipmi_ctx);
+      ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
   return exit_code;
 }

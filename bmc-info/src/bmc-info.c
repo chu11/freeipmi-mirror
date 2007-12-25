@@ -452,18 +452,20 @@ _bmc_info(pstdout_state_t pstate,
 {
   bmc_info_state_data_t state_data;
   bmc_info_prog_data_t *prog_data;
-  ipmi_ctx_t ipmi_ctx = NULL;
   char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   prog_data = (bmc_info_prog_data_t *)arg;
   memset(&state_data, '\0', sizeof(bmc_info_state_data_t));
+
+  state_data.prog_data = prog_data;
+  state_data.pstate = pstate;
   
-  if (!(ipmi_ctx = ipmi_open(prog_data->progname,
-                             hostname,
-                             &(prog_data->args->common),
-                             errmsg,
-                             IPMI_OPEN_ERRMSGLEN)))
+  if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
+                                        hostname,
+                                        &(prog_data->args->common),
+                                        errmsg,
+                                        IPMI_OPEN_ERRMSGLEN)))
     {
       pstdout_fprintf(pstate,
                       stderr,
@@ -473,10 +475,6 @@ _bmc_info(pstdout_state_t pstate,
       goto cleanup;
     }
 
-  state_data.ipmi_ctx = ipmi_ctx;
-  state_data.prog_data = prog_data;
-  state_data.pstate = pstate;
-
   if (run_cmd_args (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;
@@ -485,10 +483,10 @@ _bmc_info(pstdout_state_t pstate,
 
   exit_code = 0;
  cleanup:
-  if (ipmi_ctx)
+  if (state_data.ipmi_ctx)
     {
-      ipmi_ctx_close (ipmi_ctx);
-      ipmi_ctx_destroy (ipmi_ctx);
+      ipmi_ctx_close (state_data.ipmi_ctx);
+      ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
   return exit_code;
 }

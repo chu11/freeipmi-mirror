@@ -575,23 +575,26 @@ _ipmi_sensors (pstdout_state_t pstate,
 {
   ipmi_sensors_state_data_t state_data;
   ipmi_sensors_prog_data_t *prog_data;
-  ipmi_ctx_t ipmi_ctx = NULL;
   char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   prog_data = (ipmi_sensors_prog_data_t *)arg;
   memset(&state_data, '\0', sizeof(ipmi_sensors_state_data_t));
   
+  state_data.prog_data = prog_data;
+  state_data.pstate = pstate;
+  state_data.hostname = (char *)hostname;
+
   /* Special case, just flush, don't do an IPMI connection */
   /* Special case, just list groups, don't do an IPMI connection */
   if (!prog_data->args->sdr.flush_cache_wanted
       && !prog_data->args->list_groups_wanted)
     {
-      if (!(ipmi_ctx = ipmi_open(prog_data->progname,
-                                 hostname,
-                                 &(prog_data->args->common),
-                                 errmsg,
-                                 IPMI_OPEN_ERRMSGLEN)))
+      if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
+                                            hostname,
+                                            &(prog_data->args->common),
+                                            errmsg,
+                                            IPMI_OPEN_ERRMSGLEN)))
         {
           pstdout_fprintf(pstate,
                           stderr,
@@ -600,13 +603,8 @@ _ipmi_sensors (pstdout_state_t pstate,
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }
-    }
-      
-  state_data.ipmi_ctx = ipmi_ctx;
-  state_data.prog_data = prog_data;
-  state_data.pstate = pstate;
-  state_data.hostname = (char *)hostname;
-  
+    }      
+ 
   if (!(state_data.sdr_cache_ctx = sdr_cache_ctx_create()))
     {
       pstdout_perror (pstate, "sdr_cache_ctx_create()");
@@ -624,10 +622,10 @@ _ipmi_sensors (pstdout_state_t pstate,
  cleanup:
   if (state_data.sdr_cache_ctx)
     sdr_cache_ctx_destroy(state_data.sdr_cache_ctx);
-  if (ipmi_ctx)
+  if (state_data.ipmi_ctx)
     {
-      ipmi_ctx_close (ipmi_ctx);
-      ipmi_ctx_destroy (ipmi_ctx);
+      ipmi_ctx_close (state_data.ipmi_ctx);
+      ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
   return exit_code;
 }
