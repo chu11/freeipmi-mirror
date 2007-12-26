@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.1.2.3 2007-12-23 22:36:49 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.1.2.4 2007-12-26 04:10:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -146,13 +146,13 @@ ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t ctx,
   ctx->record_count = ((uint16_t)record_count_buf[0] & 0xFF);
   ctx->record_count |= ((uint16_t)record_count_buf[1] & 0xFF) << 8;
   ctx->most_recent_addition_timestamp = ((uint32_t)most_recent_addition_timestamp_buf[0] & 0xFF);
-  ctx->most_recent_addition_timestamp = ((uint32_t)most_recent_addition_timestamp_buf[1] & 0xFF) << 8;
-  ctx->most_recent_addition_timestamp = ((uint32_t)most_recent_addition_timestamp_buf[2] & 0xFF) << 16;
-  ctx->most_recent_addition_timestamp = ((uint32_t)most_recent_addition_timestamp_buf[3] & 0xFF) << 24;
+  ctx->most_recent_addition_timestamp |= ((uint32_t)most_recent_addition_timestamp_buf[1] & 0xFF) << 8;
+  ctx->most_recent_addition_timestamp |= ((uint32_t)most_recent_addition_timestamp_buf[2] & 0xFF) << 16;
+  ctx->most_recent_addition_timestamp |= ((uint32_t)most_recent_addition_timestamp_buf[3] & 0xFF) << 24;
   ctx->most_recent_erase_timestamp = ((uint32_t)most_recent_erase_timestamp_buf[0] & 0xFF);
-  ctx->most_recent_erase_timestamp = ((uint32_t)most_recent_erase_timestamp_buf[1] & 0xFF) << 8;
-  ctx->most_recent_erase_timestamp = ((uint32_t)most_recent_erase_timestamp_buf[2] & 0xFF) << 16;
-  ctx->most_recent_erase_timestamp = ((uint32_t)most_recent_erase_timestamp_buf[3] & 0xFF) << 24;
+  ctx->most_recent_erase_timestamp |= ((uint32_t)most_recent_erase_timestamp_buf[1] & 0xFF) << 8;
+  ctx->most_recent_erase_timestamp |= ((uint32_t)most_recent_erase_timestamp_buf[2] & 0xFF) << 16;
+  ctx->most_recent_erase_timestamp |= ((uint32_t)most_recent_erase_timestamp_buf[3] & 0xFF) << 24;
 
   if (ipmi_sdr_cache_info(ctx,
                           ipmi_ctx,
