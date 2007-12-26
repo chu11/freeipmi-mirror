@@ -661,9 +661,13 @@ get_sensor_reading (ipmi_ctx_t ctx,
 
       {
 	char *event_message = NULL;
-	asprintf (&event_message, 
-		  "OEM State = %04Xh", 
-		  (uint16_t) val);
+	if (asprintf (&event_message, 
+                      "OEM State = %04Xh", 
+                      (uint16_t) val) < 0)
+          {
+            perror("asprintf");
+            goto cleanup;
+          }
 	if (!(sensor_reading->event_message_list = (char **) malloc (sizeof (char *) * 2)))
           {
             perror("malloc");

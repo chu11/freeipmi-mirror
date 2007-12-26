@@ -326,7 +326,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
         goto cleanup;
       }
   }
-
+  
   sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
   if ((sdr_record_found = _find_sdr_record(state_data, 
                                            sensor_number,
@@ -335,13 +335,13 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                                            &sdr_record_type,
                                            &sdr_event_reading_type_code)) < 0)
     goto cleanup;
-
+  
   if (sdr_record_found)
     {
       char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
-
+      
       memset(id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
-
+      
       if (sdr_cache_get_id_string(state_data->pstate,
                                   sdr_record,
                                   sdr_record_len,
@@ -349,16 +349,31 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                                   IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
         goto cleanup;
 
-      asprintf (sensor_info, 
-                "%s %s", 
-                ipmi_get_sensor_group (sensor_type), 
-                id_string);
+      if (asprintf (sensor_info, 
+                    "%s %s", 
+                    ipmi_get_sensor_group (sensor_type), 
+                    id_string) < 0)
+        {
+          /* asprintf can leave pointer in an unknown state */
+          *sensor_info = NULL;  
+          pstdout_perror(state_data->pstate, "asprintf");
+          goto cleanup;
+        }
     }
   else
-    asprintf (sensor_info, 
-              "%s #%d", 
-              ipmi_get_sensor_group (sensor_type), sensor_number);
-  
+    {
+      if (asprintf (sensor_info, 
+                    "%s #%d", 
+                    ipmi_get_sensor_group (sensor_type), 
+                    sensor_number) < 0)
+        {
+          /* asprintf can leave pointer in an unknown state */
+          *sensor_info = NULL;  
+          pstdout_perror(state_data->pstate, "asprintf");
+          goto cleanup;
+        }
+    }      
+
   {
     char buffer[1024];
     int rv;
@@ -367,22 +382,22 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
       {
       case IPMI_SENSOR_CLASS_THRESHOLD:
       case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
-	rv = ipmi_get_generic_event_message(event_type_code,
-					    offset_from_event_reading_type_code,
-					    buffer, 
-					    1024);
-	break;
+        rv = ipmi_get_generic_event_message(event_type_code,
+                                            offset_from_event_reading_type_code,
+                                            buffer, 
+                                            1024);
+        break;
       case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
-	rv = ipmi_get_sensor_type_code_message(sensor_type,
-					       offset_from_event_reading_type_code,
-					       buffer,
-					       1024);
-	break;
+        rv = ipmi_get_sensor_type_code_message(sensor_type,
+                                               offset_from_event_reading_type_code,
+                                               buffer,
+                                               1024);
+        break;
       case IPMI_SENSOR_CLASS_OEM:
       default:
-	snprintf(buffer, 1024, "Event Type Code = %02Xh", event_type_code);
-	rv = 0;
-	break;
+        snprintf(buffer, 1024, "Event Type Code = %02Xh", event_type_code);
+        rv = 0;
+        break;
       }
 
     if (!rv)
@@ -399,14 +414,14 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
       {
-	switch (event_data2_flag)
-	  {
-	  case IPMI_SEL_TRIGGER_READING:
-	    if (sdr_record_found
+        switch (event_data2_flag)
+          {
+          case IPMI_SEL_TRIGGER_READING:
+            if (sdr_record_found
                 && sdr_record_type == IPMI_SDR_FORMAT_FULL_RECORD
-		&& sdr_event_reading_type_code == IPMI_SENSOR_CLASS_THRESHOLD)
-	      {
-		double reading;
+                && sdr_event_reading_type_code == IPMI_SENSOR_CLASS_THRESHOLD)
+              {
+                double reading;
                 uint8_t sensor_unit;
 
                 if (_decode_sensor_value (state_data,
@@ -417,32 +432,52 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                                           &sensor_unit) < 0)
                   goto cleanup;
 		
-		asprintf (event_data2_message,
-			  "Reading = %.2f %s",
-			  _round_double2 (reading),
-			  ipmi_sensor_units_abbreviated[sensor_unit]);
-	      }
-	    else
-              asprintf (event_data2_message, 
-                        "Trigger reading = %02Xh", 
-                        event_data2);
-	    break;
-	  case IPMI_SEL_OEM_CODE:
-	    asprintf (event_data2_message, 
-		      "OEM code = %02Xh", 
-		      event_data2);
-	    break;
-	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
-	    {
-	      char buffer[1024];
-	      int rv;
+                if (asprintf (event_data2_message,
+                              "Reading = %.2f %s",
+                              _round_double2 (reading),
+                              ipmi_sensor_units_abbreviated[sensor_unit]) < 0)
+                  {
+                    /* asprintf can leave pointer in an unknown state */
+                    *event_data2_message = NULL;  
+                    pstdout_perror(state_data->pstate, "asprintf");
+                    goto cleanup;
+                  }
+              }
+            else
+              {
+                if (asprintf (event_data2_message, 
+                              "Trigger reading = %02Xh", 
+                              event_data2) < 0)
+                  {
+                    /* asprintf can leave pointer in an unknown state */
+                    *event_data2_message = NULL;  
+                    pstdout_perror(state_data->pstate, "asprintf");
+                    goto cleanup;
+                  }
+              }
+            break;
+          case IPMI_SEL_OEM_CODE:
+            if (asprintf (event_data2_message, 
+                          "OEM code = %02Xh", 
+                          event_data2) < 0)
+              {
+                /* asprintf can leave pointer in an unknown state */
+                *event_data2_message = NULL;  
+                pstdout_perror(state_data->pstate, "asprintf");
+                goto cleanup;
+              }
+            break;
+          case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+            {
+              char buffer[1024];
+              int rv;
 
-	      rv = ipmi_get_event_data2_message (sensor_type, 
-						 offset_from_event_reading_type_code, 
-						 event_data2,
-						 buffer,
-						 1024);
-	      if (!rv)
+              rv = ipmi_get_event_data2_message (sensor_type, 
+                                                 offset_from_event_reading_type_code, 
+                                                 event_data2,
+                                                 buffer,
+                                                 1024);
+              if (!rv)
                 {
                   if (!((*event_data2_message) = strdup(buffer)))
                     {
@@ -450,18 +485,18 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                       goto cleanup;
                     }
                 }
-	    }
-	    break;
-	  }
+            }
+            break;
+          }
 	
-	switch (event_data3_flag)
-	  {
-	  case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
+        switch (event_data3_flag)
+          {
+          case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
             if (sdr_record_found
                 && sdr_record_type == IPMI_SDR_FORMAT_FULL_RECORD
-		&& sdr_event_reading_type_code == IPMI_SENSOR_CLASS_THRESHOLD)
-	      {
-		double reading;
+                && sdr_event_reading_type_code == IPMI_SENSOR_CLASS_THRESHOLD)
+              {
+                double reading;
                 uint8_t sensor_unit;
                 
                 if (_decode_sensor_value (state_data,
@@ -472,33 +507,51 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                                           &sensor_unit) < 0)
                   goto cleanup;
 		
-		asprintf (event_data3_message,
-			  "Threshold = %.2f %s",
-			  _round_double2 (reading),
-			  ipmi_sensor_units_abbreviated[sensor_unit]);
-	      }
-	    else
-	      {
-		asprintf (event_data3_message, 
-			  "Trigger reading = %02Xh", 
-			  event_data3);
-	      }
-	    break;
-	  case IPMI_SEL_OEM_CODE:
-	    asprintf (event_data3_message, 
-		      "OEM code = %02Xh", 
-		      event_data3);
-	    break;
-	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
-	    {
-	      char buffer[1024];
+                if (asprintf (event_data3_message,
+                              "Threshold = %.2f %s",
+                              _round_double2 (reading),
+                              ipmi_sensor_units_abbreviated[sensor_unit]) < 0)
+                  {
+                    /* asprintf can leave pointer in an unknown state */
+                    *event_data3_message = NULL;  
+                    pstdout_perror(state_data->pstate, "asprintf");
+                    goto cleanup;
+                  }
+              }
+            else
+              {
+                if (asprintf (event_data3_message, 
+                              "Trigger reading = %02Xh", 
+                              event_data3) < 0)
+                  {
+                    /* asprintf can leave pointer in an unknown state */
+                    *event_data3_message = NULL;  
+                    pstdout_perror(state_data->pstate, "asprintf");
+                    goto cleanup;
+                  }
+              }
+            break;
+          case IPMI_SEL_OEM_CODE:
+            if (asprintf (event_data3_message, 
+                          "OEM code = %02Xh", 
+                          event_data3) < 0)
+              {
+                /* asprintf can leave pointer in an unknown state */
+                *event_data3_message = NULL;  
+                pstdout_perror(state_data->pstate, "asprintf");
+                goto cleanup;
+              }
+            break;
+          case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+            {
+              char buffer[1024];
 
-	      if (!ipmi_get_event_data3_message (sensor_type, 
-						 offset_from_event_reading_type_code, 
-						 event_data2,
-						 event_data3,
-						 buffer,
-						 1024))
+              if (!ipmi_get_event_data3_message (sensor_type, 
+                                                 offset_from_event_reading_type_code, 
+                                                 event_data2,
+                                                 event_data3,
+                                                 buffer,
+                                                 1024))
                 {
                   if (!((*event_data3_message) = strdup(buffer)))
                     {
@@ -506,32 +559,38 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                       goto cleanup;
                     }
                 }
-	    }
-	    break;
-	  }
-	
-	break;
+            }
+            break;
+          }
+        
+        break;
       }
     case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
     case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
       {
-	switch (event_data2_flag)
-	  {
-	  case IPMI_SEL_OEM_CODE:
-	    asprintf (event_data2_message,
-		      "OEM code = %02Xh",
-		      event_data2);
-	    break;
-	  case IPMI_SEL_PREV_STATE_SEVERITY:
-	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
-	    {
-	      char buffer[1024];
+        switch (event_data2_flag)
+          {
+          case IPMI_SEL_OEM_CODE:
+            if (asprintf (event_data2_message,
+                          "OEM code = %02Xh",
+                          event_data2) < 0)
+              {
+                /* asprintf can leave pointer in an unknown state */
+                *event_data2_message = NULL;  
+                pstdout_perror(state_data->pstate, "asprintf");
+                goto cleanup;
+              }
+            break;
+          case IPMI_SEL_PREV_STATE_SEVERITY:
+          case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+            {
+              char buffer[1024];
               
-	      if (!ipmi_get_event_data2_message (sensor_type, 
-						 offset_from_event_reading_type_code, 
-						 event_data2,
-						 buffer,
-						 1024))
+              if (!ipmi_get_event_data2_message (sensor_type, 
+                                                 offset_from_event_reading_type_code, 
+                                                 event_data2,
+                                                 buffer,
+                                                 1024))
                 {
                   if (!((*event_data2_message) = strdup(buffer)))
                     {
@@ -539,26 +598,32 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                       goto cleanup;
                     }
                 }
-	    }
-	  }
+            }
+          }
 	
-	switch (event_data3_flag)
-	  {
-	  case IPMI_SEL_OEM_CODE:
-	    asprintf (event_data3_message,
-		      "OEM code = %02Xh",
-		      event_data3);
-	    break;
-	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
-	    {
-	      char buffer[1024];
+        switch (event_data3_flag)
+          {
+          case IPMI_SEL_OEM_CODE:
+            if (asprintf (event_data3_message,
+                          "OEM code = %02Xh",
+                          event_data3) < 0)
+              {
+                /* asprintf can leave pointer in an unknown state */
+                *event_data3_message = NULL;  
+                pstdout_perror(state_data->pstate, "asprintf");
+                goto cleanup;
+              }
+            break;
+          case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+            {
+              char buffer[1024];
 
-	      if (!ipmi_get_event_data3_message (sensor_type, 
-						 offset_from_event_reading_type_code, 
-						 event_data2,
-						 event_data3,
-						 buffer,
-						 1024))
+              if (!ipmi_get_event_data3_message (sensor_type, 
+                                                 offset_from_event_reading_type_code, 
+                                                 event_data2,
+                                                 event_data3,
+                                                 buffer,
+                                                 1024))
                 {
                   if (!((*event_data3_message) = strdup(buffer)))
                     {
@@ -566,21 +631,33 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                       goto cleanup;
                     }
                 }
-	    }
-	    break;
-	  }
+            }
+            break;
+          }
 	
-	break;
+        break;
       }
     case IPMI_SENSOR_CLASS_OEM:
       {
-	asprintf (event_data2_message, 
-		  "Event Data2 = %02Xh", 
-		  event_data2);
-	asprintf (event_data3_message, 
-		  "Event Data3 = %02Xh", 
-		  event_data3);
-	break;
+        if (asprintf (event_data2_message, 
+                      "Event Data2 = %02Xh", 
+                      event_data2) < 0)
+          {
+            /* asprintf can leave pointer in an unknown state */
+            *event_data2_message = NULL;  
+            pstdout_perror(state_data->pstate, "asprintf");
+            goto cleanup;
+          }
+        if (asprintf (event_data3_message, 
+                      "Event Data3 = %02Xh", 
+                      event_data3) < 0)
+          {
+            /* asprintf can leave pointer in an unknown state */
+            *event_data3_message = NULL;  
+            pstdout_perror(state_data->pstate, "asprintf");
+            goto cleanup;
+          }
+        break;
       }
     default:
       break;
@@ -635,11 +712,11 @@ _get_sel_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
     char buffer[256];
     time_t t;
     struct tm tmp;
-
+        
     t = timestamp_val;
     localtime_r (&t, &tmp);
     strftime (buffer, 256, "%d-%b-%Y %H:%M:%S", &tmp);
-    
+        
     if (!((*timestamp) = strdup (buffer)))
       {
         pstdout_perror(state_data->pstate, "strdup");
@@ -648,12 +725,12 @@ _get_sel_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
   }
 
   asprintf (sensor_info, 
-	    "Manufacturer ID %02Xh", 
-	    manufacturer_id);
+            "Manufacturer ID %02Xh", 
+            manufacturer_id);
 
   asprintf (event_message, 
-	    "OEM Defined = " FI_64 "Xh",
-	    oem_defined);
+            "OEM Defined = " FI_64 "Xh",
+            oem_defined);
   
   rv = 0;
  cleanup:
@@ -836,11 +913,11 @@ ipmi_sel_record_get (ipmi_sel_state_data_t *state_data,
   _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
   
   if (ipmi_cmd_get_sel_entry (state_data->ipmi_ctx, 
-			      0,
-			      record_id, 
-			      0,
-			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
-			      obj_cmd_rs) < 0)
+                              0,
+                              record_id, 
+                              0,
+                              IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
+                              obj_cmd_rs) < 0)
     {
       /* If the sel is empty, don't bother outputting an error
        * message, it's not a real error.
