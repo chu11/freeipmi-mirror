@@ -53,6 +53,11 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sdr_cache.c:
 	Remove /tmp debug cache location.
 
+	* ipmimonitoring/src/ipmimonitoring/: Adjust to use new sdr cache
+	library and match ipmi-sensors behavior more.
+
+	* ipmi-fru/src/: Adjust to use new sdr cache library.
+
 	* Adjust Makefile.am, configure.ac, documentation and code
 	respectively for fall out from above changes.
 

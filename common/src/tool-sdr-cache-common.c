@@ -52,6 +52,7 @@
 
 #define MAXIPADDRLEN 128
 
+#include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
 
 #include "tool-sdr-cache-common.h"
@@ -679,5 +680,93 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
 
   rv = 0;
  cleanup:
+  return rv;
+}
+
+int 
+sdr_cache_get_record_id_and_type (pstdout_state_t pstate,
+                                  uint8_t *sdr_record,
+                                  unsigned int sdr_record_len,
+                                  uint16_t *record_id,
+                                  uint8_t *record_type)
+{
+  fiid_obj_t obj_sdr_record_header = NULL;
+  int32_t sdr_record_header_length;
+  uint64_t val;
+  int rv = -1;
+
+  assert(pstate);
+  assert(sdr_record);
+  assert(sdr_record_len);
+  assert(record_type);
+
+  if ((sdr_record_header_length = fiid_template_len_bytes(tmpl_sdr_record_header)) < 0)
+    {
+      pstdout_perror(pstate,
+                     "fiid_template_len_bytes");
+      goto cleanup;
+    }
+
+  if (sdr_record_len < sdr_record_header_length)
+    {
+      pstdout_fprintf(pstate,
+                      stderr,
+                      "sdr_record invalid length: %d\n",
+                      sdr_record_len);
+      goto cleanup;
+    }
+
+  if (!(obj_sdr_record_header = fiid_obj_create(tmpl_sdr_record_header)))
+    {
+      pstdout_perror(pstate,
+                     "fiid_obj_create");
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all(obj_sdr_record_header,
+                       sdr_record,
+                       sdr_record_header_length) < 0)
+    {
+      pstdout_fprintf(pstate,
+                      stderr,
+                      "fiid_obj_set_all: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_sdr_record_header)));
+      goto cleanup;
+    }
+
+  if (record_id)
+    {
+      if (fiid_obj_get(obj_sdr_record_header,
+                       "record_id",
+                       &val) < 0)
+        {
+          pstdout_fprintf(pstate,
+                          stderr,
+                          "fiid_obj_get: %s\n",
+                          fiid_strerror(fiid_obj_errnum(obj_sdr_record_header)));
+          goto cleanup;
+        }
+      *record_id = val;
+    }
+
+  if (record_type)
+    {
+      if (fiid_obj_get(obj_sdr_record_header,
+                       "record_type",
+                       &val) < 0)
+        {
+          pstdout_fprintf(pstate,
+                          stderr,
+                          "fiid_obj_get: %s\n",
+                          fiid_strerror(fiid_obj_errnum(obj_sdr_record_header)));
+          goto cleanup;
+        }
+      *record_type = val;
+    }
+
+  rv = 0;
+ cleanup:
+  if (obj_sdr_record_header)
+    fiid_obj_destroy(obj_sdr_record_header);
   return rv;
 }

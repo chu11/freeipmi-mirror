@@ -27,6 +27,7 @@
 #include "pstdout.h"
 
 #define SDR_CACHE_ERRMSGLEN 1024
+#define IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH 1024
 
 /* For sdr_cache_get_cache_directory: pstate can be NULL if we aren't
  * yet threaded 
@@ -61,4 +62,10 @@ int sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
                            int quiet_cache,
                            const char *hostname,
                            const char *cache_dir);
+
+int sdr_cache_get_record_id_and_type (pstdout_state_t pstate,
+                                      uint8_t *sdr_record,
+                                      unsigned int sdr_record_len,
+                                      uint16_t *record_id,
+                                      uint8_t *record_type);
 #endif
