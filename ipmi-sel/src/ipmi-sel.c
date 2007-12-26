@@ -452,11 +452,20 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
        record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
        record_id = next_record_id)
     {
-      ipmi_sel_record_t ipmi_sel_rec = NULL;
-
-      if (!(ipmi_sel_rec = ipmi_sel_record_get (state_data, 
-                                                record_id, 
-                                                &next_record_id)))
+      char *timestamp = NULL;
+      char *sensor_info = NULL;
+      char *event_message = NULL;
+      char *event_data2_message = NULL;
+      char *event_data3_message = NULL;
+      
+      if (ipmi_sel_record_get (state_data, 
+                               record_id, 
+                               &next_record_id,
+                               &timestamp,
+                               &sensor_info,
+                               &event_message,
+                               &event_data2_message,
+                               &event_data3_message) < 0)
         {
           /* If we error on the first record, assume its b/c the sel
            * is empty so we don't exit with an error.
@@ -471,20 +480,29 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           return (-1);
         }
       
-      pstdout_printf (state_data->pstate, "%d", ipmi_sel_rec->record_id);
-      if (ipmi_sel_rec->timestamp)
-	pstdout_printf (state_data->pstate, ":%s", ipmi_sel_rec->timestamp);
-      if (ipmi_sel_rec->sensor_info)
-	pstdout_printf (state_data->pstate, ":%s", ipmi_sel_rec->sensor_info);
-      if (ipmi_sel_rec->event_message)
-	pstdout_printf (state_data->pstate, ":%s", ipmi_sel_rec->event_message);
-      if (ipmi_sel_rec->event_data2_message)
-	pstdout_printf (state_data->pstate, ":%s", ipmi_sel_rec->event_data2_message);
-      if (ipmi_sel_rec->event_data3_message)
-	pstdout_printf (state_data->pstate, ":%s", ipmi_sel_rec->event_data3_message);
+      pstdout_printf (state_data->pstate, "%d", record_id);
+      if (timestamp)
+	pstdout_printf (state_data->pstate, ":%s", timestamp);
+      if (sensor_info)
+	pstdout_printf (state_data->pstate, ":%s", sensor_info);
+      if (event_message)
+	pstdout_printf (state_data->pstate, ":%s", event_message);
+      if (event_data2_message)
+	pstdout_printf (state_data->pstate, ":%s", event_data2_message);
+      if (event_data3_message)
+	pstdout_printf (state_data->pstate, ":%s", event_data3_message);
       pstdout_printf (state_data->pstate, "\n");
 
-      ipmi_sel_record_destroy (ipmi_sel_rec);
+      if (timestamp)
+        free(timestamp);
+      if (sensor_info)
+        free(sensor_info);
+      if (event_message)
+        free(event_message);
+      if (event_data2_message)
+        free(event_data2_message);
+      if (event_data3_message)
+        free(event_data3_message);
     }
   
   return (0);

@@ -231,14 +231,17 @@ static int
 _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                               uint8_t *record_data, 
                               uint32_t record_data_len,
-                              ipmi_sel_record_t ipmi_sel_rec)
+                              char **timestamp,
+                              char **sensor_info,
+                              char **event_message,
+                              char **event_data2_message,
+                              char **event_data3_message)
 {
   uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
   unsigned int sdr_record_len;
   uint8_t sdr_record_type;
   uint8_t sdr_event_reading_type_code;
-  uint16_t record_id;
-  uint32_t timestamp;
+  uint32_t timestamp_val;
   uint8_t generator_id_type;
   uint8_t generator_id;
   uint8_t channel_number;
@@ -258,17 +261,18 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 
   assert(state_data);
   assert(record_data);
-  assert(ipmi_sel_rec);
+  assert (timestamp);
+  assert (sensor_info);
+  assert (event_message);
+  assert (event_data2_message);
+  assert (event_data3_message);
 
   _FIID_OBJ_CREATE (obj, tmpl_sel_system_event_record);
 
   _FIID_OBJ_SET_ALL(obj, record_data, record_data_len);
 
-  _FIID_OBJ_GET (obj, "record_id", &val);
-  record_id = val;
-  
   _FIID_OBJ_GET (obj, "timestamp", &val);
-  timestamp = val;
+  timestamp_val = val;
   
   _FIID_OBJ_GET (obj, "generator_id.id_type", &val);
   generator_id_type = val;
@@ -306,25 +310,22 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
   _FIID_OBJ_GET (obj, "event_data3", &val);
   event_data3 = val;
   
-  ipmi_sel_rec->record_id = record_id;
   {
     char buffer[256];
     time_t t;
     struct tm tmp;
 
-    t = timestamp;
+    t = timestamp_val;
     localtime_r (&t, &tmp);
     strftime (buffer, 256, "%d-%b-%Y %H:%M:%S", &tmp);
     
-    if (!(ipmi_sel_rec->timestamp = strdup (buffer)))
+    if (!((*timestamp) = strdup (buffer)))
       {
         pstdout_perror(state_data->pstate, 
                        "strdup");
         goto cleanup;
       }
   }
-
-  ipmi_sel_rec->sensor_info = NULL;
 
   sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
   if ((sdr_record_found = _find_sdr_record(state_data, 
@@ -348,13 +349,13 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                                   IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
         goto cleanup;
 
-      asprintf (&(ipmi_sel_rec->sensor_info), 
+      asprintf (sensor_info, 
                 "%s %s", 
                 ipmi_get_sensor_group (sensor_type), 
                 id_string);
     }
   else
-    asprintf (&(ipmi_sel_rec->sensor_info), 
+    asprintf (sensor_info, 
               "%s #%d", 
               ipmi_get_sensor_group (sensor_type), sensor_number);
   
@@ -386,21 +387,18 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 
     if (!rv)
       {
-        if (!(ipmi_sel_rec->event_message = strdup(buffer)))
+        if (!((*event_message) = strdup(buffer)))
           {
             pstdout_perror (state_data->pstate, "strdup");
             goto cleanup;
           }
       }
-    else
-      ipmi_sel_rec->event_message = NULL;
   }
 
   switch (ipmi_sensor_classify (event_type_code))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
       {
-	ipmi_sel_rec->event_data2_message = NULL;
 	switch (event_data2_flag)
 	  {
 	  case IPMI_SEL_TRIGGER_READING:
@@ -419,18 +417,18 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                                           &sensor_unit) < 0)
                   goto cleanup;
 		
-		asprintf (&(ipmi_sel_rec->event_data2_message),
+		asprintf (event_data2_message,
 			  "Reading = %.2f %s",
 			  _round_double2 (reading),
 			  ipmi_sensor_units_abbreviated[sensor_unit]);
 	      }
 	    else
-              asprintf (&(ipmi_sel_rec->event_data2_message), 
+              asprintf (event_data2_message, 
                         "Trigger reading = %02Xh", 
                         event_data2);
 	    break;
 	  case IPMI_SEL_OEM_CODE:
-	    asprintf (&(ipmi_sel_rec->event_data2_message), 
+	    asprintf (event_data2_message, 
 		      "OEM code = %02Xh", 
 		      event_data2);
 	    break;
@@ -446,19 +444,16 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 						 1024);
 	      if (!rv)
                 {
-                  if (!(ipmi_sel_rec->event_data2_message = strdup(buffer)))
+                  if (!((*event_data2_message) = strdup(buffer)))
                     {
                       pstdout_perror (state_data->pstate, "strdup");
                       goto cleanup;
                     }
                 }
-	      else
-		ipmi_sel_rec->event_data2_message = NULL;
 	    }
 	    break;
 	  }
 	
-	ipmi_sel_rec->event_data3_message = NULL;
 	switch (event_data3_flag)
 	  {
 	  case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
@@ -477,20 +472,20 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                                           &sensor_unit) < 0)
                   goto cleanup;
 		
-		asprintf (&(ipmi_sel_rec->event_data3_message),
+		asprintf (event_data3_message,
 			  "Threshold = %.2f %s",
 			  _round_double2 (reading),
 			  ipmi_sensor_units_abbreviated[sensor_unit]);
 	      }
 	    else
 	      {
-		asprintf (&(ipmi_sel_rec->event_data3_message), 
+		asprintf (event_data3_message, 
 			  "Trigger reading = %02Xh", 
 			  event_data3);
 	      }
 	    break;
 	  case IPMI_SEL_OEM_CODE:
-	    asprintf (&(ipmi_sel_rec->event_data3_message), 
+	    asprintf (event_data3_message, 
 		      "OEM code = %02Xh", 
 		      event_data3);
 	    break;
@@ -505,14 +500,12 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 						 buffer,
 						 1024))
                 {
-                  if (!(ipmi_sel_rec->event_data3_message = strdup(buffer)))
+                  if (!((*event_data3_message) = strdup(buffer)))
                     {
                       pstdout_perror (state_data->pstate, "strdup");
                       goto cleanup;
                     }
                 }
-	      else
-		ipmi_sel_rec->event_data3_message = NULL;
 	    }
 	    break;
 	  }
@@ -522,11 +515,10 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
     case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
     case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
       {
-	ipmi_sel_rec->event_data2_message = NULL;
 	switch (event_data2_flag)
 	  {
 	  case IPMI_SEL_OEM_CODE:
-	    asprintf (&(ipmi_sel_rec->event_data2_message),
+	    asprintf (event_data2_message,
 		      "OEM code = %02Xh",
 		      event_data2);
 	    break;
@@ -541,22 +533,19 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 						 buffer,
 						 1024))
                 {
-                  if (!(ipmi_sel_rec->event_data2_message = strdup(buffer)))
+                  if (!((*event_data2_message) = strdup(buffer)))
                     {
                       pstdout_perror (state_data->pstate, "strdup");
                       goto cleanup;
                     }
                 }
-	      else
-		ipmi_sel_rec->event_data2_message = NULL;
 	    }
 	  }
 	
-	ipmi_sel_rec->event_data3_message = NULL;
 	switch (event_data3_flag)
 	  {
 	  case IPMI_SEL_OEM_CODE:
-	    asprintf (&(ipmi_sel_rec->event_data3_message),
+	    asprintf (event_data3_message,
 		      "OEM code = %02Xh",
 		      event_data3);
 	    break;
@@ -571,14 +560,12 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 						 buffer,
 						 1024))
                 {
-                  if (!(ipmi_sel_rec->event_data3_message = strdup(buffer)))
+                  if (!((*event_data3_message) = strdup(buffer)))
                     {
                       pstdout_perror (state_data->pstate, "strdup");
                       goto cleanup;
                     }
                 }
-	      else
-		ipmi_sel_rec->event_data3_message = NULL;
 	    }
 	    break;
 	  }
@@ -587,17 +574,16 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
       }
     case IPMI_SENSOR_CLASS_OEM:
       {
-	asprintf (&(ipmi_sel_rec->event_data2_message), 
+	asprintf (event_data2_message, 
 		  "Event Data2 = %02Xh", 
 		  event_data2);
-	asprintf (&(ipmi_sel_rec->event_data3_message), 
+	asprintf (event_data3_message, 
 		  "Event Data3 = %02Xh", 
 		  event_data3);
 	break;
       }
     default:
-      ipmi_sel_rec->event_data2_message = NULL;
-      ipmi_sel_rec->event_data3_message = NULL;
+      break;
     }
   
   rv = 0;
@@ -611,10 +597,13 @@ static int
 _get_sel_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
                                  uint8_t *record_data, 
                                  uint32_t record_data_len,
-                                 ipmi_sel_record_t ipmi_sel_rec)
+                                 char **timestamp,
+                                 char **sensor_info,
+                                 char **event_message,
+                                 char **event_data2_message,
+                                 char **event_data3_message)
 {
-  uint16_t record_id;
-  uint32_t timestamp;
+  uint32_t timestamp_val;
   uint32_t manufacturer_id;
   uint64_t oem_defined;
   uint64_t val;
@@ -623,17 +612,18 @@ _get_sel_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
 
   assert (state_data);
   assert (record_data);
-  assert (ipmi_sel_rec);
+  assert (timestamp);
+  assert (sensor_info);
+  assert (event_message);
+  assert (event_data2_message);
+  assert (event_data3_message);
 
   _FIID_OBJ_CREATE (obj, tmpl_sel_timestamped_oem_record);
   
   _FIID_OBJ_SET_ALL(obj, record_data, record_data_len);
 
-  _FIID_OBJ_GET (obj, "record_id", &val);
-  record_id = val;
-  
   _FIID_OBJ_GET (obj, "timestamp", &val);
-  timestamp = val;
+  timestamp_val = val;
   
   _FIID_OBJ_GET (obj, "manufacturer_id", &val);
   manufacturer_id = val;
@@ -641,33 +631,29 @@ _get_sel_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
   _FIID_OBJ_GET (obj, "oem_defined", &val);
   oem_defined = val;
   
-  ipmi_sel_rec->record_id = record_id;
   {
     char buffer[256];
     time_t t;
     struct tm tmp;
 
-    t = timestamp;
+    t = timestamp_val;
     localtime_r (&t, &tmp);
     strftime (buffer, 256, "%d-%b-%Y %H:%M:%S", &tmp);
     
-    if (!(ipmi_sel_rec->timestamp = strdup (buffer)))
+    if (!((*timestamp) = strdup (buffer)))
       {
         pstdout_perror(state_data->pstate, "strdup");
         goto cleanup;
       }
   }
 
-  asprintf (&(ipmi_sel_rec->sensor_info), 
+  asprintf (sensor_info, 
 	    "Manufacturer ID %02Xh", 
 	    manufacturer_id);
 
-  asprintf (&(ipmi_sel_rec->event_message), 
+  asprintf (event_message, 
 	    "OEM Defined = " FI_64 "Xh",
 	    oem_defined);
-  
-  ipmi_sel_rec->event_data2_message = NULL;
-  ipmi_sel_rec->event_data3_message = NULL;
   
   rv = 0;
  cleanup:
@@ -680,10 +666,12 @@ static int
 _get_sel_non_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
                                      uint8_t *record_data, 
                                      uint32_t record_data_len, 
-                                     ipmi_sel_record_t ipmi_sel_rec)
+                                     char **timestamp,
+                                     char **sensor_info,
+                                     char **event_message,
+                                     char **event_data2_message,
+                                     char **event_data3_message)
 {
-  uint16_t record_id;
-  uint64_t val;
   fiid_obj_t obj = NULL;
   int8_t rv = -1;
   uint8_t buf[1024];
@@ -694,14 +682,15 @@ _get_sel_non_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
 
   assert (state_data);
   assert (record_data);
-  assert (ipmi_sel_rec);
+  assert (timestamp);
+  assert (sensor_info);
+  assert (event_message);
+  assert (event_data2_message);
+  assert (event_data3_message);
 
   _FIID_OBJ_CREATE (obj, tmpl_sel_non_timestamped_oem_record);
 
   _FIID_OBJ_SET_ALL(obj, record_data, record_data_len);
-
-  _FIID_OBJ_GET (obj, "record_id", &val);
-  record_id = val;
 
   memset(buf, '\0', 1024);
   _FIID_OBJ_GET_DATA_LEN (len,
@@ -709,11 +698,6 @@ _get_sel_non_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
                           "oem_defined",
                           buf,
                           1024);
-
-  ipmi_sel_rec->record_id = record_id;
-  ipmi_sel_rec->timestamp = NULL;
-  ipmi_sel_rec->sensor_info = NULL;
-  ipmi_sel_rec->event_message = NULL;
 
   for (i = 0; i < len; i++)
     {
@@ -730,12 +714,9 @@ _get_sel_non_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
 
   if (str)
     {
-      asprintf (&(ipmi_sel_rec->event_message), "OEM defined = %s", str);
+      asprintf (event_message, "OEM defined = %s", str);
       free (str);
     }
-
-  ipmi_sel_rec->event_data2_message = NULL;
-  ipmi_sel_rec->event_data3_message = NULL;
 
   rv = 0;
  cleanup:
@@ -748,7 +729,11 @@ static int
 _parse_sel_record (ipmi_sel_state_data_t *state_data, 
                    uint8_t *record_data,
                    uint32_t record_data_len,
-                   ipmi_sel_record_t ipmi_sel_rec)
+                   char **timestamp,
+                   char **sensor_info,
+                   char **event_message,
+                   char **event_data2_message,
+                   char **event_data3_message)
 {
   fiid_obj_t obj = NULL;
   uint8_t record_type;
@@ -757,7 +742,12 @@ _parse_sel_record (ipmi_sel_state_data_t *state_data,
 
   assert (state_data);
   assert (record_data);
-  assert (ipmi_sel_rec);
+  assert (record_data_len);
+  assert (timestamp);
+  assert (sensor_info);
+  assert (event_message);
+  assert (event_data2_message);
+  assert (event_data3_message);
 
   _FIID_OBJ_CREATE (obj, tmpl_sel_record_header);
 
@@ -769,13 +759,40 @@ _parse_sel_record (ipmi_sel_state_data_t *state_data,
   switch (_get_sel_record_type (record_type))
     {
     case SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD:
-      rv = _get_sel_system_event_record (state_data, record_data, record_data_len, ipmi_sel_rec);
+      rv = _get_sel_system_event_record (state_data, 
+                                         record_data, 
+                                         record_data_len, 
+                                         timestamp,
+                                         sensor_info,
+                                         event_message,
+                                         event_data2_message,
+                                         event_data3_message);
       break;
     case SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD:
-      rv = _get_sel_timestamped_oem_record (state_data, record_data, record_data_len, ipmi_sel_rec);
+      rv = _get_sel_timestamped_oem_record (state_data, 
+                                            record_data, 
+                                            record_data_len, 
+                                            timestamp,
+                                            sensor_info,
+                                            event_message,
+                                            event_data2_message,
+                                            event_data3_message);
       break;
     case SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD:
-      rv = _get_sel_non_timestamped_oem_record (state_data, record_data, record_data_len, ipmi_sel_rec);
+      rv = _get_sel_non_timestamped_oem_record (state_data,
+                                                record_data, 
+                                                record_data_len,
+                                                timestamp,
+                                                sensor_info,
+                                                event_message,
+                                                event_data2_message,
+                                                event_data3_message);
+      break;
+    default:
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "Unknown SEL Record Type: %X\n", 
+                      record_type);
       break;
     }
 
@@ -785,28 +802,39 @@ _parse_sel_record (ipmi_sel_state_data_t *state_data,
   return (rv);
 }
 
-ipmi_sel_record_t
+int
 ipmi_sel_record_get (ipmi_sel_state_data_t *state_data, 
                      uint16_t record_id, 
-                     uint16_t *next_record_id)
+                     uint16_t *next_record_id,
+                     char **timestamp,
+                     char **sensor_info,
+                     char **event_message,
+                     char **event_data2_message,
+                     char **event_data3_message)
 {
-  ipmi_sel_record_t ipmi_sel_rec = NULL;
+  uint8_t record_data[SEL_RECORD_SIZE];
+  uint32_t record_data_len = SEL_RECORD_SIZE;
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int32_t len;
-  
-  uint8_t record_data[SEL_RECORD_SIZE];
-  uint32_t record_data_len = SEL_RECORD_SIZE;
+  int rv = -1;
   
   assert (state_data);
   assert (next_record_id);
+  assert (timestamp);
+  assert (sensor_info);
+  assert (event_message);
+  assert (event_data2_message);
+  assert (event_data3_message);
   
+  *timestamp = NULL;
+  *sensor_info = NULL;
+  *event_message = NULL;
+  *event_data2_message = NULL;
+  *event_data3_message = NULL;
+
   _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
   
-  if (!(ipmi_sel_rec = (ipmi_sel_record_t)malloc(sizeof(struct ipmi_sel_record))))
-    goto cleanup;
-  memset(ipmi_sel_rec, '\0', sizeof(sizeof(struct ipmi_sel_record)));
-
   if (ipmi_cmd_get_sel_entry (state_data->ipmi_ctx, 
 			      0,
 			      record_id, 
@@ -840,35 +868,26 @@ ipmi_sel_record_get (ipmi_sel_state_data_t *state_data,
   if (_parse_sel_record (state_data,
                          record_data, 
                          record_data_len, 
-                         ipmi_sel_rec) < 0)
+                         timestamp,
+                         sensor_info,
+                         event_message,
+                         event_data2_message,
+                         event_data3_message) < 0)
     goto cleanup;
 
-  fiid_obj_destroy(obj_cmd_rs);
-  return ipmi_sel_rec;
-
+  rv = 0;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  if (ipmi_sel_rec)
-    ipmi_sel_record_destroy(ipmi_sel_rec);
-  return NULL;
-}
-
-void
-ipmi_sel_record_destroy (ipmi_sel_record_t ipmi_sel_rec)
-{
-  if (ipmi_sel_rec)
-    {
-      if (ipmi_sel_rec->timestamp)
-        free (ipmi_sel_rec->timestamp);
-      if (ipmi_sel_rec->sensor_info) 
-        free (ipmi_sel_rec->sensor_info);
-      if (ipmi_sel_rec->event_message) 
-        free (ipmi_sel_rec->event_message);
-      if (ipmi_sel_rec->event_data2_message) 
-        free (ipmi_sel_rec->event_data2_message);
-      if (ipmi_sel_rec->event_data3_message) 
-        free (ipmi_sel_rec->event_data3_message);
-      free(ipmi_sel_rec);
-    }
+  if (timestamp)
+    free(timestamp);
+  if (sensor_info)
+    free(sensor_info);
+  if (event_message)
+    free(event_message);
+  if (event_data2_message)
+    free(event_data2_message);
+  if (event_data3_message)
+    free(event_data3_message);
+  return rv;
 }
