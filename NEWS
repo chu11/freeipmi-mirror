@@ -1,7 +1,12 @@
 0.5.3
 -----
-o Minor documentation/manpage updates/fixes.
-o Minor corner case fixes throughout FreeIPMI.
+o Fix documentation/manpage typos.
+o Fix minor ipmimonitoring command line option combination bugs.
+o Fix several minor corner case fixes in ipmi-sel, ipmi-sensors, and
+ipmimonitoring.
+o Fix corner case in all tools by recognizing 127.0.0.1 as well as
+localhost.
+
 
 0.5.2
 -----
