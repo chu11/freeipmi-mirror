@@ -38,164 +38,332 @@
 #endif /* !TIME_WITH_SYS_TIME */
 #include <assert.h>
 
+#include "freeipmi/api/ipmi-sel-cmds-api.h"
+#include "freeipmi/cmds/ipmi-sel-cmds.h"
+
+#include "ipmi-sel.h"
+#include "ipmi-sel-argp.h"
+#include "ipmi-sel-fiid.h"
+#include "ipmi-sel-wrapper.h"
+
 #include "freeipmi-portability.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
-#include "sdr-cache.h"
-#include "ipmi-sel.h"
-#include "ipmi-sel-argp.h"
-#include "ipmi-sel-wrapper.h"
+#include "tool-sdr-cache-common.h"
 #include "pstdout.h"
 #include "hostrange.h"
 
-int 
-display_sel_info (ipmi_sel_state_data_t *state_data)
+static int 
+_display_sel_info (ipmi_sel_state_data_t *state_data)
 {
-  local_sel_info_t sel_info;
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val, val1, val2;
   char str[512];
+  int rv = -1;
   time_t t;
-  struct tm *tmp;
+  struct tm tmp;
   
   assert(state_data);
 
-  memset (&sel_info, 0, sizeof (local_sel_info_t));
-  
-  if (get_sel_info (state_data, &sel_info) != 0)
+  _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_info_rs);
+
+  if (ipmi_cmd_get_sel_info (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr, 
-                       "%s: unable to get SEL information\n", 
-                       state_data->prog_data->progname);
-      return (-1);
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_sel_info: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
     }
   
+  _FIID_OBJ_GET (obj_cmd_rs, "sel_version_major", &val1);
+  
+  _FIID_OBJ_GET (obj_cmd_rs, "sel_version_minor", &val2);
+
   pstdout_printf (state_data->pstate, 
                   "SEL version:                                      %d.%d\n", 
-                  sel_info.sel_version_major, 
-                  sel_info.sel_version_minor);
+                  val1,
+                  val2);
+
+  _FIID_OBJ_GET (obj_cmd_rs, "entries", &val);
+  
   pstdout_printf (state_data->pstate, 
                   "Number of log entries:                            %d\n", 
-                  sel_info.log_entry_count);
+                  val);
+
+  _FIID_OBJ_GET (obj_cmd_rs, "free_space", &val);
+
   pstdout_printf (state_data->pstate, 
                   "Free space remaining:                             %d bytes\n", 
-                  sel_info.free_space);
+                  val);
   
-  t = sel_info.recent_addition_timestamp;
-  tmp = localtime (&t);
-  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", tmp);
-  pstdout_printf (state_data->pstate, 
-                  "Recent addition timestamp:                        %s\n", str);
+  _FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val);
   
-  t = sel_info.recent_erase_timestamp;
-  tmp = localtime (&t);
-  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", tmp);
+  t = val;
+  localtime_r (&t, &tmp);
+  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tmp);
   pstdout_printf (state_data->pstate, 
-                  "Recent erase timestamp:                           %s\n", str);
+                  "Recent addition timestamp:                        %s\n", 
+                  str);
+  
+  _FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val);
+
+  t = val;
+  localtime_r (&t, &tmp);
+  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tmp);
+  pstdout_printf (state_data->pstate, 
+                  "Recent erase timestamp:                           %s\n", 
+                  str);
+  
+  _FIID_OBJ_GET (obj_cmd_rs, "get_sel_allocation_info_command_supported", &val);
   
   pstdout_printf (state_data->pstate, 
                   "Get SEL Allocation Information Command supported: %s\n", 
-                  (sel_info.get_sel_alloc_info_cmd_support ? "Yes" : "No"));
+                  (val ? "Yes" : "No"));
+
+  _FIID_OBJ_GET (obj_cmd_rs, "reserve_sel_command_supported", &val);
+  
   pstdout_printf (state_data->pstate, 
                   "Reserve SEL Command supported:                    %s\n", 
-                  (sel_info.reserve_sel_cmd_support ? "Yes" : "No"));
+                  (val ? "Yes" : "No"));
+
+  _FIID_OBJ_GET (obj_cmd_rs, "partial_add_sel_entry_command_supported", &val);
+  
   pstdout_printf (state_data->pstate, 
                   "Partial Add SEL Entry Command supported:          %s\n", 
-                  (sel_info.partial_add_sel_entry_cmd_support ? "Yes" : "No"));
+                  (val ? "Yes" : "No"));
+
+  _FIID_OBJ_GET (obj_cmd_rs, "delete_sel_command_supported", &val);
+  
   pstdout_printf (state_data->pstate, 
                   "Delete SEL Command supported:                     %s\n", 
-                  (sel_info.delete_sel_cmd_support ? "Yes" : "No"));
+                  (val ? "Yes" : "No"));
+
+  _FIID_OBJ_GET (obj_cmd_rs, "overflow_flag", &val);
+
   pstdout_printf (state_data->pstate, 
                   "Events drop due to lack of space in SEL:          %s\n", 
-                  (sel_info.overflow_flag ? "Yes" : "No"));
+                  (val ? "Yes" : "No"));
   
-  return (0);
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
-int 
-display_sel_records (ipmi_sel_state_data_t *state_data)
+static int
+_flush_cache (ipmi_sel_state_data_t *state_data)
 {
-  uint16_t record_id = 0;
-  uint16_t next_record_id = 0;
-  
   assert(state_data);
 
-  for (record_id = IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY;
-       record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
-       record_id = next_record_id)
-    {
-      sel_record_t *sel_rec;
+  if (sdr_cache_flush_cache(state_data->ipmi_sdr_cache_ctx,
+                            state_data->pstate,
+                            state_data->hostname,
+                            state_data->prog_data->args->sdr.sdr_cache_dir_wanted ? state_data->prog_data->args->sdr.sdr_cache_dir : NULL) < 0)
+    return -1;
 
-      if (!(sel_rec = get_sel_record (state_data, 
-                                      record_id, 
-                                      &next_record_id)))
-        {
-          /* If we error on the first record, assume its b/c the sel
-           * is empty so we don't exit with an error.
-           */
-          if (record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY)
-            return 0;
-
-          pstdout_fprintf (state_data->pstate, 
-                           stderr, 
-                           "%s: unable to get SEL record\n", 
-                           state_data->prog_data->progname);
-          return (-1);
-        }
-      
-      pstdout_printf (state_data->pstate, "%d", sel_rec->record_id);
-      if (sel_rec->timestamp)
-	pstdout_printf (state_data->pstate, ":%s", sel_rec->timestamp);
-      if (sel_rec->sensor_info)
-	pstdout_printf (state_data->pstate, ":%s", sel_rec->sensor_info);
-      if (sel_rec->event_message)
-	pstdout_printf (state_data->pstate, ":%s", sel_rec->event_message);
-      if (sel_rec->event_data2_message)
-	pstdout_printf (state_data->pstate, ":%s", sel_rec->event_data2_message);
-      if (sel_rec->event_data3_message)
-	pstdout_printf (state_data->pstate, ":%s", sel_rec->event_data3_message);
-      pstdout_printf (state_data->pstate, "\n");
-
-      destroy_sel_record(sel_rec);
-    }
-  
-  return (0);
+  return 0;
 }
 
-int 
-hex_display_sel_records (ipmi_sel_state_data_t *state_data, FILE *stream)
+static int
+_clear_entries (ipmi_sel_state_data_t *state_data)
 {
+  struct ipmi_sel_arguments *args;
+  fiid_obj_t obj_reserve_sel_rs = NULL;
+  fiid_obj_t obj_clear_sel_rs = NULL;
+  uint16_t reservation_id;
+  uint64_t val;
+  int rv = -1;
+
+  assert(state_data);
+
+  args = state_data->prog_data->args;
+
+  _FIID_OBJ_CREATE(obj_reserve_sel_rs, tmpl_cmd_reserve_sel_rs);
+  _FIID_OBJ_CREATE(obj_clear_sel_rs, tmpl_cmd_clear_sel_rs);
+
+  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_reserve_sel_rs) != 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_reserve_sel: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET(obj_reserve_sel_rs, "reservation_id", &val);
+  reservation_id = val;
+
+  if (ipmi_cmd_clear_sel (state_data->ipmi_ctx,
+                          reservation_id,
+                          IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE,
+                          obj_clear_sel_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_clear_sel: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  if (obj_reserve_sel_rs)
+    fiid_obj_destroy(obj_reserve_sel_rs);
+  if (obj_clear_sel_rs)
+    fiid_obj_destroy(obj_clear_sel_rs);
+  return rv;
+}
+
+static int
+_delete_entry (ipmi_sel_state_data_t *state_data, 
+               uint16_t record_id,
+               int ignore_missing_sel_entries)
+{
+  fiid_obj_t obj_reserve_sel_rs = NULL;
+  fiid_obj_t obj_delete_sel_entry_rs = NULL;
+  uint16_t reservation_id;
+  uint64_t val;
+  int rv = -1;
+
+  assert(state_data);
+  assert(record_id);
+
+  _FIID_OBJ_CREATE(obj_reserve_sel_rs, tmpl_cmd_reserve_sel_rs);
+  _FIID_OBJ_CREATE(obj_delete_sel_entry_rs, tmpl_cmd_delete_sel_entry_rs);
+
+  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_reserve_sel_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_reserve_sel: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET(obj_reserve_sel_rs, "reservation_id", &val);
+  reservation_id = val;
+
+  if (ipmi_cmd_delete_sel_entry (state_data->ipmi_ctx,
+                                 reservation_id,
+                                 record_id,
+                                 obj_delete_sel_entry_rs) < 0)
+    {
+      if (!(ignore_missing_sel_entries
+            && (ipmi_check_completion_code(obj_delete_sel_entry_rs, IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1
+                || ipmi_check_completion_code(obj_delete_sel_entry_rs, IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1)))
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "ipmi_cmd_delete_sel_entry: %s\n",
+                          ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+          goto cleanup;
+        }
+    }
+  
+  rv = 0;
+ cleanup:
+  if (obj_reserve_sel_rs)
+    fiid_obj_destroy(obj_reserve_sel_rs);
+  if (obj_delete_sel_entry_rs)
+    fiid_obj_destroy(obj_delete_sel_entry_rs);
+  return rv;
+}
+
+static int
+_delete_records (ipmi_sel_state_data_t *state_data)
+{
+  struct ipmi_sel_arguments *args;
+  int i;
+  
+  assert(state_data);
+  
+  args = state_data->prog_data->args;
+  
+  for (i = 0; i < args->delete_record_list_length; i++)
+    {
+      if (_delete_entry (state_data, 
+                         args->delete_record_list[i],
+                         0) < 0)
+        return -1;
+    }
+
+  return 0;
+}
+
+static int
+_delete_range (ipmi_sel_state_data_t *state_data)
+{
+  struct ipmi_sel_arguments *args;
+  int i;
+  
+  assert(state_data);
+  
+  args = state_data->prog_data->args;
+ 
+  for (i = args->delete_range1; i <= args->delete_range2; i++)
+    {
+      if (_delete_entry (state_data, i, 1) < 0)
+        return -1;
+    }
+  
+  return 0;
+}
+
+static int 
+_hex_display_sel_records (ipmi_sel_state_data_t *state_data, 
+                          FILE *stream)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
   uint8_t record_data[SEL_RECORD_SIZE];
   uint32_t record_data_len = SEL_RECORD_SIZE;
   uint16_t record_id = 0;
   uint16_t next_record_id = 0;
-  
+  uint64_t val;
+  int32_t len;
+  int rv = -1;
+
   assert(state_data);
   assert(stream);
+
+  _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
 
   for (record_id = IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY;
        record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
        record_id = next_record_id)
     {
-      memset (record_data, 0, record_data_len);
-      if (get_sel_record_raw (state_data, 
-                              record_id, 
-                              record_data, 
-                              record_data_len, 
-                              &next_record_id) != 0)
-	{
-          /* If we error on the first record, assume its b/c the sel
-           * is empty so we don't exit with an error.
-           */
-          if (record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY)
-            return 0;
+      memset (record_data, '\0', record_data_len);
 
-	  pstdout_fprintf (state_data->pstate, 
-                           stderr, 
-                           "%s: unable to get SEL record\n", 
-                           state_data->prog_data->progname);
-	  return (-1);
-	}
-      
+      if (ipmi_cmd_get_sel_entry (state_data->ipmi_ctx,
+                                  0,
+                                  record_id,
+                                  0,
+                                  IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
+                                  obj_cmd_rs) < 0)
+        {
+          /* If the sel is empty, don't bother outputting an error
+           * message, it's not a real error.
+           */
+          if (!(record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+                && ipmi_check_completion_code(obj_cmd_rs,
+                                              IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "ipmi_cmd_get_sel_entry: %s\n",
+                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+          goto cleanup;
+        }
+
+      _FIID_OBJ_GET (obj_cmd_rs, "next_record_id", &val);
+      next_record_id = val;
+
+      _FIID_OBJ_GET_DATA_LEN (len,
+                              obj_cmd_rs,
+                              "record_data",
+                              record_data,
+                              record_data_len);
+
       pstdout_fprintf (state_data->pstate, 
                        stream, 
                        "RID:[%02X][%02X] " 
@@ -222,6 +390,103 @@ hex_display_sel_records (ipmi_sel_state_data_t *state_data, FILE *stream)
                        record_data[15]);
     }
   
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+static int
+_hex_dump (ipmi_sel_state_data_t *state_data)
+{
+  struct ipmi_sel_arguments *args;
+  int rv = -1;
+  
+  assert(state_data);
+
+  args = state_data->prog_data->args;
+
+  if (args->hex_dump_filename)
+    {
+      FILE *stream = NULL;
+      
+      if ((stream = fopen (args->hex_dump_filename, "a+")))
+        {
+          rv = _hex_display_sel_records (state_data, stream);
+          fclose (stream);
+        }
+      else 
+        pstdout_fprintf (state_data->pstate, 
+                         stderr, 
+                         "%s: unable to open hex dump file [%s]\n", 
+                         state_data->prog_data->progname,
+                         args->hex_dump_filename);
+    }
+  else 
+    rv = _hex_display_sel_records (state_data, stdout);
+  
+  return rv;
+}
+
+static int 
+_display_sel_records (ipmi_sel_state_data_t *state_data)
+{
+  struct ipmi_sel_arguments *args;
+  uint16_t record_id = 0;
+  uint16_t next_record_id = 0;
+  
+  assert(state_data);
+
+  args = state_data->prog_data->args;
+
+  if (sdr_cache_create_and_load (state_data->ipmi_sdr_cache_ctx,
+                                 state_data->pstate,
+                                 state_data->ipmi_ctx,
+                                 args->sdr.quiet_cache_wanted,
+                                 state_data->hostname,
+                                 args->sdr.sdr_cache_dir_wanted ? args->sdr.sdr_cache_dir : NULL) < 0)
+    return -1;
+
+  for (record_id = IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY;
+       record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
+       record_id = next_record_id)
+    {
+      ipmi_sel_record_t ipmi_sel_rec = NULL;
+
+      if (!(ipmi_sel_rec = ipmi_sel_record_get (state_data, 
+                                                record_id, 
+                                                &next_record_id)))
+        {
+          /* If we error on the first record, assume its b/c the sel
+           * is empty so we don't exit with an error.
+           */
+          if (record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY)
+            return 0;
+
+          pstdout_fprintf (state_data->pstate, 
+                           stderr, 
+                           "%s: unable to get SEL record\n", 
+                           state_data->prog_data->progname);
+          return (-1);
+        }
+      
+      pstdout_printf (state_data->pstate, "%d", ipmi_sel_rec->record_id);
+      if (ipmi_sel_rec->timestamp)
+	pstdout_printf (state_data->pstate, ":%s", ipmi_sel_rec->timestamp);
+      if (ipmi_sel_rec->sensor_info)
+	pstdout_printf (state_data->pstate, ":%s", ipmi_sel_rec->sensor_info);
+      if (ipmi_sel_rec->event_message)
+	pstdout_printf (state_data->pstate, ":%s", ipmi_sel_rec->event_message);
+      if (ipmi_sel_rec->event_data2_message)
+	pstdout_printf (state_data->pstate, ":%s", ipmi_sel_rec->event_data2_message);
+      if (ipmi_sel_rec->event_data3_message)
+	pstdout_printf (state_data->pstate, ":%s", ipmi_sel_rec->event_data3_message);
+      pstdout_printf (state_data->pstate, "\n");
+
+      ipmi_sel_record_destroy (ipmi_sel_rec);
+    }
+  
   return (0);
 }
 
@@ -229,126 +494,35 @@ int
 run_cmd_args (ipmi_sel_state_data_t *state_data)
 {
   struct ipmi_sel_arguments *args;
-  char errmsg[IPMI_SDR_CACHE_ERRMSGLEN];
-  int rv = -1;
 
   assert(state_data);
 
   args = state_data->prog_data->args;
   
   if (args->info_wanted)
-    return display_sel_info (state_data);
+    return _display_sel_info (state_data);
   
   if (args->sdr.flush_cache_wanted)
-    {
-      if (!args->sdr.quiet_cache_wanted)
-        pstdout_printf (state_data->pstate, "flushing cache... ");
-      if (sdr_cache_flush (state_data->sdr_cache_ctx,
-                           state_data->hostname, 
-                           args->sdr.sdr_cache_dir) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr, 
-                           "SDR Cache Flush failed: %s\n",
-                           sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
-          goto cleanup;
-        }
-      if (!args->sdr.quiet_cache_wanted)
-        pstdout_printf (state_data->pstate, "done\n");
-      return 0;
-    }
+    return _flush_cache (state_data);
+   
+  if (args->delete_all_wanted)
+    return _clear_entries (state_data);
+
+  if (args->delete_wanted)
+    return _delete_records (state_data);  
+ 
+  if (args->delete_range_wanted)
+    return _delete_range (state_data);
 
   if (args->hex_dump_wanted)
-    {
-      int retval = -1;
+    return _hex_dump (state_data);
 
-      if (args->hex_dump_filename)
-	{
-	  FILE *stream = NULL;
-	  
-	  if ((stream = fopen (args->hex_dump_filename, "a+")))
-	    {
-	      retval = hex_display_sel_records (state_data, stream);
-	      fclose (stream);
-	    }
-	  else 
-	    {
-	      pstdout_fprintf (state_data->pstate, 
-                               stderr, 
-                               "%s: unable to open hex dump file [%s]\n", 
-                               state_data->prog_data->progname,
-                               args->hex_dump_filename);
-	    }
-	}
-      else 
-        retval = hex_display_sel_records (state_data, stdout);
-      
-      return retval;
-    }
-  
-  if (args->delete_wanted)
-    {
-      int i;
-      
-      for (i = 0; i < args->delete_record_list_length; i++)
-	{
-	  if (delete_sel_entry (state_data, args->delete_record_list[i]) < 0)
-            {
-              pstdout_fprintf (state_data->pstate, 
-                               stderr, 
-                               "deletion of record ID %d failed\n", 
-                               args->delete_record_list[i]);
-              return (-1);
-            }
-	}
-      
-      return 0;
-    }
-  
-  if (args->delete_all_wanted)
-    return clear_sel_entries (state_data);
-  
-  if (args->delete_range_wanted)
-    {
-      int i = 0;
-      
-      for (i = args->delete_range1; i <= args->delete_range2; i++)
-        /* ignore errors - some numbers may not exist */
-        delete_sel_entry (state_data, i);
-      
-      return 0;
-    }
-  
-  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
-                                 state_data->ipmi_ctx,
-                                 state_data->hostname,
-                                 args->sdr.sdr_cache_dir,
-                                 (args->sdr.quiet_cache_wanted) ? 0 : 1,
-                                 (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
-                                 &(state_data->sdr_record_list),
-                                 &(state_data->sdr_record_count),
-                                 errmsg,
-                                 IPMI_SDR_CACHE_ERRMSGLEN) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s\n",
-                       errmsg);
-      goto cleanup;
-    }
+  /* else default to displaying records */
 
-  if (display_sel_records (state_data) < 0)
-    goto cleanup;
+  if (_display_sel_records (state_data) < 0)
+    return -1;
 
-  rv = 0;
- cleanup:
-  if (state_data->sdr_record_list)
-    {
-      free(state_data->sdr_record_list);
-      state_data->sdr_record_list = NULL;
-      state_data->sdr_record_count = 0;
-    }
-  return (rv);
+  return 0;
 }
 
 static int
@@ -386,9 +560,9 @@ _ipmi_sel (pstdout_state_t pstate,
         }
     }
 
-  if (!(state_data.sdr_cache_ctx = sdr_cache_ctx_create()))
+  if (!(state_data.ipmi_sdr_cache_ctx = ipmi_sdr_cache_ctx_create()))
     {
-      pstdout_perror (pstate, "sdr_cache_ctx_create()");
+      pstdout_perror (pstate, "ipmi_sdr_cache_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -401,8 +575,8 @@ _ipmi_sel (pstdout_state_t pstate,
 
   exit_code = 0;
  cleanup:
-  if (state_data.sdr_cache_ctx)
-    sdr_cache_ctx_destroy(state_data.sdr_cache_ctx);
+  if (state_data.ipmi_sdr_cache_ctx)
+    ipmi_sdr_cache_ctx_destroy(state_data.ipmi_sdr_cache_ctx);
   if (state_data.ipmi_ctx)
     {
       ipmi_ctx_close (state_data.ipmi_ctx);

@@ -93,6 +93,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case INFO_KEY:
       cmd_args->info_wanted = 1;
       break;
+    case DELETE_ALL_KEY:
+      cmd_args->delete_all_wanted = 1;
+      break;
     case DELETE_KEY:
       cmd_args->delete_wanted = 1;
       tok = strtok(arg, " ,");
@@ -105,9 +108,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
           cmd_args->delete_record_list_length++;
           tok = strtok(NULL, " ,");
         }
-      break;
-    case DELETE_ALL_KEY:
-      cmd_args->delete_all_wanted = 1;
       break;
     case DELETE_RANGE_KEY:
       cmd_args->delete_range_wanted = 1;
@@ -232,12 +232,12 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->info_wanted = 0;
+  cmd_args->delete_all_wanted = 0;
   cmd_args->delete_wanted = 0;
   memset(cmd_args->delete_record_list,
          '\0',
          sizeof(int)*IPMI_SEL_MAX_DELETE_RECORD);
    cmd_args->delete_record_list_length = 0;
-  cmd_args->delete_all_wanted = 0;
   cmd_args->delete_range_wanted = 0;
   cmd_args->delete_range1 = 0;
   cmd_args->delete_range2 = 0;

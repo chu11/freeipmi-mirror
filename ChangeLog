@@ -58,6 +58,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/src/: Adjust to use new sdr cache library.
 
+	* ipmi-sel/src/: Adjust to use new sdr cache library.  Fix thread
+	safety issues.  General code cleanup.
+
 	* Adjust Makefile.am, configure.ac, documentation and code
 	respectively for fall out from above changes.
 

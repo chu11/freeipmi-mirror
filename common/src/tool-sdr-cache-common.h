@@ -26,8 +26,8 @@
 
 #include "pstdout.h"
 
-#define SDR_CACHE_ERRMSGLEN 1024
 #define IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH 1024
+#define IPMI_SDR_CACHE_MAX_ID_STRING         16
 
 /* For sdr_cache_get_cache_directory: pstate can be NULL if we aren't
  * yet threaded 
@@ -67,4 +67,36 @@ int sdr_cache_get_record_id_and_type (pstdout_state_t pstate,
                                       unsigned int sdr_record_len,
                                       uint16_t *record_id,
                                       uint8_t *record_type);
+
+int sdr_cache_get_sensor_number (pstdout_state_t pstate,
+                                 uint8_t *sdr_record,
+                                 unsigned int sdr_record_len,
+                                 uint8_t *sensor_number);
+
+int sdr_cache_get_event_reading_type_code (pstdout_state_t pstate,
+                                           uint8_t *sdr_record,
+                                           unsigned int sdr_record_len,
+                                           uint8_t *event_reading_type_code);
+
+int sdr_cache_get_sensor_unit (pstdout_state_t pstate,
+                               uint8_t *sdr_record,
+                               unsigned int sdr_record_len,
+                               uint8_t *sensor_unit);
+
+int sdr_cache_get_id_string (pstdout_state_t pstate,
+                             uint8_t *sdr_record,
+                             unsigned int sdr_record_len,
+                             char *id_string,
+                             unsigned int id_string_len);
+
+int sdr_cache_get_sensor_decoding_data (pstdout_state_t pstate,
+                                        uint8_t *sdr_record,
+                                        unsigned int sdr_record_len,
+                                        int8_t *r_exponent,
+                                        int8_t *b_exponent,
+                                        int16_t *m,
+                                        int16_t *b,
+                                        uint8_t *linearization,
+                                        uint8_t *analog_data_format);
+
 #endif

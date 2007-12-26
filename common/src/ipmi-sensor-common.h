@@ -24,8 +24,6 @@
 
 #include "freeipmi/api/ipmi-api.h"
 
-#include "sdr-cache.h"
-
 struct sensor_reading
 {
   double current_reading;
@@ -49,11 +47,13 @@ int ipmi_sensor_classify (uint8_t event_reading_type_code);
 
 const char *ipmi_get_sensor_group (int sensor_type);
 
+#if 0
 int8_t get_sensor_reading (ipmi_ctx_t ctx, 
                            int debug,
                            sdr_record_t *sdr_record, 
                            sensor_reading_t *sensor_reading);
 
 void sensor_reading_cleanup(sensor_reading_t *sensor_reading);
+#endif
 
 #endif

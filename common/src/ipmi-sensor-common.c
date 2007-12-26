@@ -40,6 +40,8 @@
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
 
+#include "tool-sdr-cache-common.h"
+
 #include "freeipmi-portability.h"
 
 enum system_software_type
@@ -145,6 +147,7 @@ ipmi_get_sensor_group (int sensor_type)
   return NULL;
 }
 
+#if 0
 static int
 _get_system_software_type (uint8_t system_software_id)
 {
@@ -698,3 +701,4 @@ sensor_reading_cleanup(sensor_reading_t *sensor_reading)
         }
     }
 }
+#endif
