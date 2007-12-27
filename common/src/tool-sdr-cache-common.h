@@ -68,10 +68,21 @@ int sdr_cache_get_record_id_and_type (pstdout_state_t pstate,
                                       uint16_t *record_id,
                                       uint8_t *record_type);
 
+int sdr_cache_get_sensor_owner_id (pstdout_state_t pstate,
+                                   uint8_t *sdr_record,
+                                   unsigned int sdr_record_len,
+                                   uint8_t *sensor_owner_id_type,
+                                   uint8_t *sensor_owner_id);
+
 int sdr_cache_get_sensor_number (pstdout_state_t pstate,
                                  uint8_t *sdr_record,
                                  unsigned int sdr_record_len,
                                  uint8_t *sensor_number);
+
+int sdr_cache_get_sensor_type (pstdout_state_t pstate,
+                               uint8_t *sdr_record,
+                               unsigned int sdr_record_len,
+                               uint8_t *sensor_type);
 
 int sdr_cache_get_event_reading_type_code (pstdout_state_t pstate,
                                            uint8_t *sdr_record,

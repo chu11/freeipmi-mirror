@@ -61,8 +61,15 @@
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
 
 #include "tool-sdr-cache-common.h"
+#include "tool-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
+
+/* achu:
+ *
+ * We don't have "state_data" so can't use most of the 
+ * tool-fiid-wrappers.h.
+ */
 
 #define _SDR_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                      \
   do {                                                                   \
@@ -792,8 +799,7 @@ sdr_cache_get_record_id_and_type (pstdout_state_t pstate,
 
   rv = 0;
  cleanup:
-  if (obj_sdr_record_header)
-    fiid_obj_destroy(obj_sdr_record_header);
+  _FIID_OBJ_DESTROY(obj_sdr_record_header);
   return rv;
 }
 
@@ -847,9 +853,52 @@ _sdr_cache_get_common(pstdout_state_t pstate,
   return obj_sdr_record;
 
  cleanup:
-  if (obj_sdr_record)
-    fiid_obj_destroy(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record);
   return NULL;
+}
+
+int 
+sdr_cache_get_sensor_owner_id (pstdout_state_t pstate,
+                               uint8_t *sdr_record,
+                               unsigned int sdr_record_len,
+                               uint8_t *sensor_owner_id_type,
+                               uint8_t *sensor_owner_id)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  assert(pstate);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+
+  if (sensor_owner_id_type)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "sensor_owner_id.type", &val);
+      *sensor_owner_id_type = val;
+    }
+
+  if (sensor_owner_id)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "sensor_owner_id", &val);
+      *sensor_owner_id = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
 }
 
 int 
@@ -883,8 +932,51 @@ sdr_cache_get_sensor_number (pstdout_state_t pstate,
 
   rv = 0;
  cleanup:
-  if (obj_sdr_record)
-    fiid_obj_destroy(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+sdr_cache_get_sensor_type (pstdout_state_t pstate,
+                           uint8_t *sdr_record,
+                           unsigned int sdr_record_len,
+                           uint8_t *sensor_type)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  assert(pstate);
+  assert(sdr_record);
+  assert(sdr_record_len);
+  assert(sensor_type);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  if (fiid_obj_get(obj_sdr_record,
+                   "sensor_type",
+                   &val) < 0)
+    {
+      pstdout_fprintf(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
+      goto cleanup;
+    }
+  *sensor_type = val;
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
@@ -928,8 +1020,7 @@ sdr_cache_get_event_reading_type_code (pstdout_state_t pstate,
 
   rv = 0;
  cleanup:
-  if (obj_sdr_record)
-    fiid_obj_destroy(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
@@ -972,8 +1063,7 @@ sdr_cache_get_sensor_unit (pstdout_state_t pstate,
 
   rv = 0;
  cleanup:
-  if (obj_sdr_record)
-    fiid_obj_destroy(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
@@ -1011,8 +1101,7 @@ sdr_cache_get_id_string (pstdout_state_t pstate,
 
   rv = 0;
  cleanup:
-  if (obj_sdr_record)
-    fiid_obj_destroy(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
@@ -1083,8 +1172,7 @@ sdr_cache_get_sensor_decoding_data (pstdout_state_t pstate,
 
   rv = 0;
  cleanup:
-  if (obj_sdr_record)
-    fiid_obj_destroy(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record);
   return rv; 
 }
 

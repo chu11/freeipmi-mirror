@@ -414,6 +414,9 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
     switch (sensor_classify (event_type_code))
       {
       case SENSOR_CLASS_THRESHOLD:
+        /* Don't use ipmi_get_threshold_message, b/c we didn't call
+         * get_sensor_reading.  Fall through to below.
+         */
       case SENSOR_CLASS_GENERIC_DISCRETE:
         rv = ipmi_get_generic_event_message(event_type_code,
                                             offset_from_event_reading_type_code,

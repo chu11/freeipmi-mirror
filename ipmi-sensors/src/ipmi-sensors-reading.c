@@ -24,17 +24,18 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <errno.h>
+#include <assert.h>
 
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sensor-cmds.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
+#include "freeipmi/spec/ipmi-system-software-id-spec.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
 
@@ -44,210 +45,257 @@
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
-enum system_software_type
+fiid_template_t l_tmpl_cmd_get_sensor_reading_threshold_rs =
   {
-    IPMI_BIOS,
-    IPMI_SMI_HANDLER,
-    IPMI_SYSTEM_MANAGEMENT_SOFTWARE,
-    IPMI_OEM,
-    IPMI_REMOTE_CONSOLE_SOFTWARE,
-    IPMI_TERMINAL_MODE_REMOTE_CONSOLE_SOFTWARE,
-    IPMI_SYS_SOFT_ID_RESERVED
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {8, "sensor_reading", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "reading_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {6, "sensor_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    /* optional byte */
+    {8, "ignore", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {0,  "", 0}
+  };
+  
+fiid_template_t l_tmpl_cmd_get_sensor_reading_discrete_rs =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {8, "sensor_reading", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "reading_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {15, "sensor_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {0,  "", 0}
   };
 
+#define IPMI_SENSORS_BUFLEN   1024
+#define IPMI_SENSORS_MAX_LIST   32
+
 static int
-_get_system_software_type (uint8_t system_software_id)
+_get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
+                             char ***event_message_list,
+                             unsigned int *event_message_list_len,
+                             uint8_t sensor_state)
 {
-  /* To avoid "warning: comparison is always true due to limited range
-   * of data type" 
-   */
-  if ((system_software_id + 1) >= 1 && system_software_id <= 0x0F)
-    return IPMI_BIOS;
-  if (system_software_id >= 0x10 && system_software_id <= 0x1F)
-    return IPMI_SMI_HANDLER;
-  if (system_software_id >= 0x20 && system_software_id <= 0x2F)
-    return IPMI_SYSTEM_MANAGEMENT_SOFTWARE;
-  if (system_software_id >= 0x30 && system_software_id <= 0x3F)
-    return IPMI_OEM;
-  if (system_software_id >= 0x40 && system_software_id <= 0x46)
-    return IPMI_REMOTE_CONSOLE_SOFTWARE;
-  if (system_software_id == 0x47)
-    return IPMI_TERMINAL_MODE_REMOTE_CONSOLE_SOFTWARE;
-
-  return IPMI_SYS_SOFT_ID_RESERVED;
-}
-
-static char **
-_get_threshold_message_list (int debug, uint8_t sensor_state)
-{
-  char **event_message_list = NULL;
-  char *message_list[16];
-  char buf[1024];
-  int indx = 0;
-  int16_t offset;
-  uint16_t bit; 
+  char **tmp_event_message_list = NULL;
+  char *tmp_message_list[IPMI_SENSORS_MAX_LIST];
+  int num_messages = 0;
   int i;
   
-  /* achu: multiple threshold flags can be crossed but we only want to
-   * output one message at the max.  Luckily for us (and due to smarts
-   * by the IPMI specification authors) if we go from high bits to low
-   * bits, we will read the flags in the correct order for output.
+  assert(state_data);
+  assert(event_message_list);
+  assert(event_message_list_len);
+
+  /* achu: multiple threshold flags can be set (i.e. if we pass the
+   * critical threshold, we've also passed the non-critical threshold)
+   * but we only want to * output one message at the max.  Luckily for
+   * us (and due to smarts * by the IPMI specification authors) if we
+   * go from high bits to low * bits, we will read the flags in the
+   * correct order for output.
+   *
+   * If you're confused why were use 'ipmi_get_threshold_message'
+   * instead of 'ipmi_get_generic_event_message' (b/c this is
+   * presumably event_reading_type_code == 0x01), the reason is b/c we
+   * actually called the get_sensor_reading command.  In other IPMI
+   * subsystems (like the SEL) we don't call the get_sensor_reading
+   * command, which is when you fall back on
+   * 'ipmi_get_generic_event_message'.
    */
 
-  for (offset = 5; offset >= 0; offset--)
+  for (i = 5; i >= 0; i--)
     {
-      bit = pow (2, offset);
+      char buf[IPMI_SENSORS_BUFLEN];
+      uint16_t bit; 
+
+      bit = 0x1 << i;
+
       if (sensor_state & bit)
 	{
-	  if (ipmi_get_threshold_message (offset,
+	  if (ipmi_get_threshold_message (i,
                                           buf,
-                                          1024) < 0)
+                                          IPMI_SENSORS_BUFLEN) < 0)
             continue;
 	  
-	  if (!(message_list[indx] = strdup(buf)))
+	  if (!(tmp_message_list[num_messages] = strdup(buf)))
             {
-              if (debug)
-                perror("strdup");
+              pstdout_perror(state_data->pstate, "strdup");
               goto cleanup;
             }
-	  else
-	    {
-	      indx++;
-	      break;
-	    }
+          
+          num_messages++;
+          break;
 	}
     }
   
-  if (indx)
+  if (num_messages)
     {
-      if (!(event_message_list = (char **) malloc (sizeof (char *) * (indx + 1))))
+      if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (num_messages + 1))))
         {
-          if (debug)
-            perror("malloc");
+          pstdout_perror(state_data->pstate, "malloc");
           goto cleanup;
         }
-      for (offset = 0; offset < indx; offset++)
-	event_message_list[offset] = message_list[offset];
-      event_message_list[indx] = NULL;
+      
+      for (i = 0; i < num_messages; i++)
+	tmp_event_message_list[i] = tmp_message_list[i];
+      
+      tmp_event_message_list[num_messages] = NULL;
+
+      *event_message_list = tmp_event_message_list;
+      *event_message_list_len = 1;
     }
   
-  return event_message_list;
+  return 0;
 
  cleanup:
-  for (i = 0; i < indx; i++)
-    free(message_list[indx]);
+  for (i = 0; i < num_messages; i++)
+    free(tmp_message_list[num_messages]);
   return NULL;
 }
 
-static char **
-_get_generic_event_message_list (int debug,
+static int
+_get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
+                                 char ***event_message_list,
+                                 unsigned int *event_message_list_len,
                                  uint8_t event_reading_type_code, 
-                                 uint16_t sensor_state)
+                                 uint16_t sensor_state)  
 {
-  char **event_message_list = NULL;
-  char *message_list[16];
-  char buf[1024];
-  int indx = 0;
-  uint16_t offset;
-  uint16_t bit; 
+  char **tmp_event_message_list = NULL;
+  char *tmp_message_list[IPMI_SENSORS_MAX_LIST];
+  int num_messages = 0;
   int i;
   
-  for (offset = 0; offset < 16; offset++)
+  assert(state_data);
+  assert(event_message_list);
+  assert(event_message_list_len);
+
+  for (i = 0; i < 16; i++)
     {
-      bit = pow (2, offset);
+      char buf[IPMI_SENSORS_BUFLEN];
+      uint16_t bit; 
+
+      bit = 0x1 << i;
       if (sensor_state & bit)
 	{
 	  if (ipmi_get_generic_event_message (event_reading_type_code,
-					      offset,
+					      i,
 					      buf,
-					      1024) < 0)
+					      IPMI_SENSORS_BUFLEN) < 0)
             continue;
 
-	  if (!(message_list[indx] = strdup(buf)))
+	  if (!(tmp_message_list[num_messages] = strdup(buf)))
             {
-              if (debug)
-                perror("strdup");
+              pstdout_perror(state_data->pstate, "strdup");
               goto cleanup;
             }
-	  else
-	    indx++; 
+
+          num_messages++; 
 	}
     }
   
-  if (indx)
+  if (num_messages)
     {
-      if (!(event_message_list = (char **) malloc (sizeof (char *) * (indx + 1))))
+      if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (num_messages + 1))))
         {
-          if (debug)
-            perror("malloc");
+          pstdout_perror(state_data->pstate, "malloc");
           goto cleanup;
         }
-      for (offset = 0; offset < indx; offset++)
-	event_message_list[offset] = message_list[offset];
-      event_message_list[indx] = NULL;
+
+      for (i = 0; i < num_messages; i++)
+	tmp_event_message_list[i] = tmp_message_list[i];
+
+      tmp_event_message_list[num_messages] = NULL;
+
+      *event_message_list = tmp_event_message_list;
+      *event_message_list_len = num_messages;
     }
   
-  return event_message_list;
+  return 0;
 
  cleanup:
-  for (i = 0; i < indx; i++)
-    free(message_list[indx]);
+  for (i = 0; i < num_messages; i++)
+    free(tmp_message_list[num_messages]);
   return NULL;
 }
 
-static char **
-_get_event_message_list (int debug,
-                         int sensor_type_code, 
-                         uint16_t sensor_state)
+static int
+_get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_data,
+                                         char ***event_message_list,
+                                         unsigned int *event_message_list_len,
+                                         uint8_t sensor_type, 
+                                         uint16_t sensor_state)
 {
-  char **event_message_list = NULL;
-  char *message_list[16];
-  char buf[1024];
-  int indx = 0;
-  uint16_t offset;
-  uint16_t bit; 
+  char **tmp_event_message_list = NULL;
+  char *tmp_message_list[IPMI_SENSORS_MAX_LIST];
+  int num_messages = 0;
   int i;
   
-  for (offset = 0; offset < 16; offset++)
+  assert(state_data);
+  assert(event_message_list);
+  assert(event_message_list_len);
+
+  for (i = 0; i < 16; i++)
     {
-      bit = pow (2, offset);
+      char buf[IPMI_SENSORS_BUFLEN];
+      uint16_t bit; 
+
+      bit = 0x1 << i;
+
       if (sensor_state & bit)
 	{
-	  if (ipmi_get_sensor_type_code_message (sensor_type_code,
-						 offset,
+	  if (ipmi_get_sensor_type_code_message (sensor_type,
+						 i,
 						 buf,
-						 1024) < 0)
+						 IPMI_SENSORS_BUFLEN) < 0)
             continue;
 
-	  if (!(message_list[indx] = strdup(buf)))
+	  if (!(tmp_message_list[num_messages] = strdup(buf)))
             {
-              if (debug)
-                perror("strdup");
+              pstdout_perror(state_data->pstate, "strdup");
               goto cleanup;
             }
-	  else
-	    indx++;
+
+          num_messages++;
 	}
     }
   
-  if (indx)
+  if (num_messages)
     {
-      if (!(event_message_list = (char **) malloc (sizeof (char *) * (indx + 1))))
+      if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (num_messages + 1))))
         {
-          if (debug)
-            perror("malloc");
+          pstdout_perror(state_data->pstate, "malloc");
           goto cleanup;
         }
-      for (offset = 0; offset < indx; offset++)
-	event_message_list[offset] = message_list[offset];
-      event_message_list[indx] = NULL;
+
+      for (i = 0; i < num_messages; i++)
+	tmp_event_message_list[i] = tmp_message_list[i];
+
+      tmp_event_message_list[num_messages] = NULL;
+
+      *event_message_list = tmp_event_message_list;
+      *event_message_list_len = num_messages;
     }
   
-  return event_message_list;
+  return 0;
 
  cleanup:
-  for (i = 0; i < indx; i++)
-    free(message_list[indx]);
+  for (i = 0; i < num_messages; i++)
+    free(tmp_message_list[num_messages]);
   return NULL;
 }
 
@@ -255,65 +303,22 @@ int
 sensor_reading (struct ipmi_sensors_state_data *state_data,
                 uint8_t *sdr_record,
                 unsigned int sdr_record_len,
-                double *reading,
-                char *event_message_list[],
-                unsigned int event_message_list_len)
-{
-  fiid_template_t l_tmpl_cmd_get_sensor_reading_threshold_rs =
-    {
-      {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      
-      {8, "sensor_reading", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      
-      {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "reading_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      
-      {6, "sensor_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {2, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      
-      /* optional byte */
-      {8, "ignore", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
-      
-      {0,  "", 0}
-    };
-  
-  fiid_template_t l_tmpl_cmd_get_sensor_reading_discrete_rs =
-    {
-      {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      
-      {8, "sensor_reading", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      
-      {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "reading_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      
-      {15, "sensor_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      
-      {0,  "", 0}
-    };
-  
-  uint8_t slave_sys_soft_id;
-  uint8_t event_reading_type_code;
+                double **reading,
+                char ***event_message_list,
+                unsigned int *event_message_list_len)
+{ 
+  uint8_t record_type;
+  uint8_t sensor_owner_id;
   uint8_t sensor_number;
   uint8_t sensor_type;
-  int16_t b = 0;
-  int16_t m = 0;
-  int8_t r_exponent = 0;
-  int8_t b_exponent = 0;
-  uint8_t linearization = 0;
-  uint8_t analog_data_format = 0;
-  int rv = -1;
+  uint8_t event_reading_type_code;
+  int sensor_class;
   fiid_obj_t obj_cmd_rs = NULL;  
   fiid_obj_t l_obj_cmd_rs = NULL;
-  uint8_t buf[1024];
+  uint8_t buf[IPMI_SENSORS_BUFLEN];
   int32_t len;
   uint64_t val;
+  int rv = -1;
 
   assert(state_data);
   assert(sdr_record);
@@ -322,39 +327,60 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   assert(event_message_list);
   assert(event_message_list_len);
 
-  switch (sdr_record->record_type)
-    {
-    case IPMI_SDR_FORMAT_FULL_RECORD:
-      slave_sys_soft_id = sdr_record->record.sdr_full_record.sensor_owner_id;
-      if (_get_system_software_type (slave_sys_soft_id) == IPMI_SYS_SOFT_ID_RESERVED)
-	return -1;
-      
-      event_reading_type_code = sdr_record->record.sdr_full_record.event_reading_type_code;
-      sensor_number = sdr_record->record.sdr_full_record.sensor_number;
-      sensor_type = sdr_record->record.sdr_full_record.sensor_type;
-      b = sdr_record->record.sdr_full_record.b;
-      m = sdr_record->record.sdr_full_record.m;
-      r_exponent = sdr_record->record.sdr_full_record.r_exponent;
-      b_exponent = sdr_record->record.sdr_full_record.b_exponent;
-      linearization = sdr_record->record.sdr_full_record.linearization;
-      analog_data_format = sdr_record->record.sdr_full_record.analog_data_format;
-      break;
-    case IPMI_SDR_FORMAT_COMPACT_RECORD:
-      slave_sys_soft_id = sdr_record->record.sdr_compact_record.sensor_owner_id;
-      if (_get_system_software_type (slave_sys_soft_id) == IPMI_SYS_SOFT_ID_RESERVED)
-	return -1;
-      
-      event_reading_type_code = sdr_record->record.sdr_compact_record.event_reading_type_code;
-      sensor_number = sdr_record->record.sdr_compact_record.sensor_number;
-      sensor_type = sdr_record->record.sdr_compact_record.sensor_type;
-      break;
-    default:
-      return -1;
-    }
+  *reading = NULL;
+  *event_message_list = NULL;
+  *event_message_list_len = 0;
+
+  if (sdr_cache_get_record_id_and_type(state_data->pstate,
+                                       sdr_record,
+                                       sdr_record_len,
+                                       NULL,
+                                       &record_type) < 0)
+    goto cleanup;
+
+  /* can't get reading for this sdr entry don't output an error
+   * though, since this isn't really an error.  The tool will
+   * output something appropriate as it sees fit.
+   */
+  if (record_type != IPMI_SDR_FORMAT_FULL_RECORD
+      && record_type != IPMI_SDR_FORMAT_COMPACT_RECORD)
+    goto cleanup;
+
+  if (sdr_cache_get_sensor_owner_id(state_data->pstate,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    NULL,
+                                    &sensor_owner_id) < 0)
+    goto cleanup;
+
+  /* don't bother with this sensor if its an OEM sensor, again don't
+   * output an error, let the tool output something as it sees fit.
+   */
+  if (IPMI_SYSTEM_SOFTWARE_TYPE_IS_RESERVED(sensor_owner_id))
+    goto cleanup;
   
-  switch (sensor_classify (event_reading_type_code))
+  if (sdr_cache_get_sensor_number (state_data->pstate,
+                                   sdr_record,
+                                   sdr_record_len,
+                                   &sensor_number) < 0)
+    goto cleanup;
+    
+  if (sdr_cache_get_sensor_type (state_data->pstate,
+                                 sdr_record,
+                                 sdr_record_len,
+                                 &sensor_type) < 0)
+    goto cleanup;
+
+  if (sdr_cache_get_event_reading_type_code (state_data->pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
+    goto cleanup;
+
+  sensor_class = sensor_classify (event_reading_type_code);
+
+  if (sensor_class == SENSOR_CLASS_THRESHOLD)
     {
-    case SENSOR_CLASS_THRESHOLD:
       _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_threshold_rs);
       _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_threshold_rs);
 
@@ -362,26 +388,57 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                                  sensor_number, 
                                                  obj_cmd_rs) < 0)
         {
-          
-          if (debug)
-            fprintf(stderr, 
-                    "ipmi_cmd_get_sensor_reading_discrete: %s\n",
-                    ipmi_ctx_strerror(ipmi_ctx_errnum(ctx)));
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "ipmi_cmd_get_sensor_reading_discrete: %s\n",
+                          ipmi_ctx_strerror(ipmi_ctx_errnum(ctx)));
           goto cleanup;
         }
 
       _FIID_OBJ_GET_ALL_LEN(len,
                             obj_cmd_rs,
                             buf,
-                            1024);
+                            IPMI_SENSORS_BUFLEN);
 
       _FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
       
       _FIID_OBJ_GET (l_obj_cmd_rs, "sensor_reading", &val);
 
-      if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
-	  && analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
-	{
+      if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+        {
+          int8_t r_exponent, b_exponent;
+          int16_t m, b;
+          uint8_t linearization, analog_data_format;
+
+          if (sdr_cache_get_sensor_decoding_data(state_data->pstate,
+                                                 sdr_record,
+                                                 sdr_record_len,
+                                                 &r_exponent,
+                                                 &b_exponent,
+                                                 &m,
+                                                 &b,
+                                                 &linearization,
+                                                 &analog_data_format) < 0)
+            goto cleanup;
+
+          /* if the sensor is not analog, this is most likely a bug in the
+           * SDR, since we shouldn't be decoding a non-threshold sensor.
+           */
+          if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
+            {
+              if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+                pstdout_fprintf(state_data->pstate,
+                                stderr,
+                                "Attempting to decode non-analog sensor\n");
+              goto cleanup;
+            }
+          
+          /* if the sensor is non-linear, I just don't know what to do, 
+           * let the tool figure out what to output.
+           */
+          if (!IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(linearization))
+            goto cleanup;
+          
 	  if (ipmi_sensor_decode_value (r_exponent, 
                                         b_exponent, 
                                         m, 
@@ -389,152 +446,115 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                         linearization, 
                                         analog_data_format, 
                                         (uint8_t) val,
-                                        &(sensor_reading->current_reading)) < 0)
+                                        (*reading)) < 0)
             {
-              if (debug)
-                perror("ipmi_sensor_decode_value");
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sensor_decode_value: %s\n",
+                               strerror(errno));
               goto cleanup;
             }
 	}
-      else 
-        sensor_reading->current_reading = val;
+      /* else
+       *
+       * I guess there is a mistake, it should have been listed as a non-threshold
+       * sensor?  We'll still fall through to grab event messages, since maybe we
+       * can still output something.
+       */
            
       _FIID_OBJ_GET (l_obj_cmd_rs, 
                      "sensor_state", 
                      &val);
-      sensor_reading->event_message_list = 
-	_get_threshold_message_list (debug, val);
+
+      if (_get_threshold_message_list (state_data,
+                                       event_message_list,
+                                       event_message_list_len,
+                                       val) < 0)
+        goto cleanup;
       
       rv = 0;
-      break;
-    case SENSOR_CLASS_GENERIC_DISCRETE:
-      _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
-
-      _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
-
-      if (ipmi_cmd_get_sensor_reading_discrete (ctx, 
-                                                sensor_number, 
-                                                obj_cmd_rs) < 0)
-        {
-          if (debug)
-            fprintf(stderr, 
-                    "ipmi_cmd_get_sensor_reading_discrete: %s\n",
-                    ipmi_ctx_strerror(ipmi_ctx_errnum(ctx)));
-          goto cleanup;
-        }
-      
-      _FIID_OBJ_GET_ALL_LEN(len,
-                            obj_cmd_rs,
-                            buf,
-                            1024);
-
-      _FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
-
-      _FIID_OBJ_GET (l_obj_cmd_rs, "sensor_reading", &val);
-
-      sensor_reading->current_reading = val;
-            
-      _FIID_OBJ_GET (l_obj_cmd_rs, 
-                     "sensor_state", 
-                     &val);
-      sensor_reading->event_message_list = 
-	_get_generic_event_message_list (debug, 
-                                         event_reading_type_code, 
-                                         val);
-      
-      rv = 0;
-      break;
-    case SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
-      _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
-
-      _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
-
-      if (ipmi_cmd_get_sensor_reading_discrete (ctx, 
-                                                sensor_number, 
-                                                obj_cmd_rs) < 0)
-        {
-          if (debug)
-            fprintf(stderr, 
-                    "ipmi_cmd_get_sensor_reading_discrete: %s\n",
-                    ipmi_ctx_strerror(ipmi_ctx_errnum(ctx)));
-          goto cleanup;
-        }
-      
-      _FIID_OBJ_GET_ALL_LEN(len,
-                            obj_cmd_rs,
-                            buf,
-                            1024);
-
-      _FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
-
-      _FIID_OBJ_GET (l_obj_cmd_rs, "sensor_reading", &val);
-
-      sensor_reading->current_reading = val;
-            
-      _FIID_OBJ_GET (l_obj_cmd_rs, 
-                     "sensor_state", 
-                     &val);
-      sensor_reading->event_message_list = 
-	_get_event_message_list (debug,
-                                 sensor_type, 
-                                 val);
-      
-      rv = 0;
-      break;
-    case SENSOR_CLASS_OEM:
-      _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
-
-      _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
-
-      if (ipmi_cmd_get_sensor_reading_discrete (ctx, 
-                                                sensor_number, 
-                                                obj_cmd_rs) < 0)
-        {
-          if (debug)
-            fprintf(stderr, 
-                    "ipmi_cmd_get_sensor_reading_discrete: %s\n",
-                    ipmi_ctx_strerror(ipmi_ctx_errnum(ctx)));
-          goto cleanup;
-        }
-      
-      _FIID_OBJ_GET_ALL_LEN(len,
-                            obj_cmd_rs,
-                            buf,
-                            1024);
-
-      _FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
-
-      _FIID_OBJ_GET (l_obj_cmd_rs, 
-                     "sensor_reading",
-                     &val);
-      sensor_reading->current_reading = val;
-     
-      _FIID_OBJ_GET (l_obj_cmd_rs, 
-                     "sensor_state", 
-                     &val);
-
-      {
-	char *event_message = NULL;
-	if (asprintf (&event_message, 
-                      "OEM State = %04Xh", 
-                      (uint16_t) val) < 0)
-          {
-            perror("asprintf");
-            goto cleanup;
-          }
-	if (!(sensor_reading->event_message_list = (char **) malloc (sizeof (char *) * 2)))
-          {
-            perror("malloc");
-            goto cleanup;
-          }
-	sensor_reading->event_message_list[0] = event_message;
-	sensor_reading->event_message_list[1] = NULL;
-      }
-      
-      rv = 0;
-      break;
     }
-  
+  else (sensor_class == SENSOR_CLASS_GENERIC_DISCRETE
+        || sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE
+        || sensor_class == SENSOR_CLASS_OEM)
+    {
+      _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
+      _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
+
+      if (ipmi_cmd_get_sensor_reading_discrete (ctx, 
+                                                sensor_number, 
+                                                obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "ipmi_cmd_get_sensor_reading_discrete: %s\n",
+                          ipmi_ctx_strerror(ipmi_ctx_errnum(ctx)));
+          goto cleanup;
+        }
+      
+      _FIID_OBJ_GET_ALL_LEN(len,
+                            obj_cmd_rs,
+                            buf,
+                            IPMI_SENSORS_BUFLEN);
+
+      _FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
+
+      _FIID_OBJ_GET (l_obj_cmd_rs, 
+                     "sensor_state", 
+                     &val);
+      
+      if (sensor_class == SENSOR_CLASS_GENERIC_DISCRETE)
+        {
+          if (_get_generic_event_message_list (state_data,
+                                               event_message_list,
+                                               event_message_list_len, 
+                                               event_reading_type_code, 
+                                               val) < 0)
+            goto cleanup;
+
+          rv = 0;
+        }
+      else if (sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
+        {
+          if (_get_sensor_specific_event_message_list (state_data,
+                                                       event_message_list,
+                                                       event_message_list_len,
+                                                       sensor_type, 
+                                                       val) < 0)
+            goto cleanup;
+
+          rv = 0;
+        }
+      else if (sensor_class == SENSOR_CLASS_OEM)
+        {
+          /* FIXUP */
+          char *event_message = NULL;
+          char **tmp_event_message_list = NULL;
+
+          if (asprintf (&event_message, 
+                        "OEM State = %04Xh", 
+                        (uint16_t) val) < 0)
+            {
+              pstdout_perror(state_data->pstate, "asprintf");
+              goto cleanup;
+            }
+
+          if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * 2)))
+            {
+              pstdout_perror(state_data->pstate, "malloc");
+              goto cleanup;
+            }
+      
+          tmp_event_message_list[0] = event_message;
+          tmp_event_message_list[1] = NULL;
+
+          *event_message_list = tmp_event_message_list;
+          *event_message_list_len = 1;
+          
+          rv = 0;
+        }
+    }
+
  cleanup:
   _FIID_OBJ_DESTROY(obj_cmd_rs);
   _FIID_OBJ_DESTROY(l_obj_cmd_rs);

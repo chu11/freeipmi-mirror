@@ -83,6 +83,11 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	ipmi-sel/src/ipmi-sel-wrappers.c: Renamed to ipmi-sel-entry.h and
 	ipmi-sel-entry.c.
 
+	*
+	libfreeipmi/include/freeipmi/spec/ipmi-system-software-id-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-event-reading-type-code-spec.h:
+	New files.
+
 	* ipmi-sensors/src/: Adjust to use new sdr cache library.  General
 	code cleanup.
 

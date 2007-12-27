@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.23.2.1 2007-12-22 20:20:52 chu11 Exp $
+## $Id: Makefile.am,v 1.23.2.2 2007-12-27 18:06:00 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -51,6 +51,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h \
 	freeipmi/spec/ipmi-cmd-spec.h \
 	freeipmi/spec/ipmi-comp-code-spec.h \
+	freeipmi/spec/ipmi-event-reading-type-code-spec.h \
 	freeipmi/spec/ipmi-fru-chassis-types-spec.h \
 	freeipmi/spec/ipmi-fru-language-codes-spec.h \
 	freeipmi/spec/ipmi-ipmb-lun-spec.h \
@@ -62,8 +63,9 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-sensor-types-spec.h \
 	freeipmi/spec/ipmi-sensor-units-spec.h \
 	freeipmi/spec/ipmi-serial-modem-parameter-spec.h \
-	freeipmi/spec/ipmi-sol-parameter-spec.h \
 	freeipmi/spec/ipmi-slave-address-spec.h \
+	freeipmi/spec/ipmi-sol-parameter-spec.h \
+	freeipmi/spec/ipmi-system-software-id-spec.h \
 	freeipmi/util/ipmi-cipher-suite-util.h \
 	freeipmi/util/ipmi-error-util.h \
 	freeipmi/util/ipmi-lan-util.h \
