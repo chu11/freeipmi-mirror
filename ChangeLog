@@ -52,23 +52,6 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* common/src/tool-sensor-common.h,
 	common/src/tool-sensor-common.c: New files.
 
-	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sdr_cache.c:
-	Remove /tmp debug cache location.
-
-	* ipmimonitoring/src/ipmimonitoring/: Adjust to use new sdr cache
-	library and match ipmi-sensors behavior more.
-
-	* ipmi-fru/src/: Adjust to use new sdr cache library.
-
-	* ipmi-sel/src/: Adjust to use new sdr cache library.  Fix thread
-	safety issues.  General code cleanup.
-
-	* Check error return on asprintf globally.
-
-	* Adjust Makefile.am, configure.ac, documentation and code
-	respectively for fall out from above changes.
-
-	/* LATER XXXXX */
 	* common/src/ipmi-sdr-cache-utils.h,
 	common/src/ipmi-sdr-cache-utils.c,
 	common/src/ipmi-sdr-cache-reads.h,
@@ -80,6 +63,25 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	common/src/ipmi-sdr-cache_defs.h,
 	common/src/ipmi-sensor-common.h,
 	common/src/ipmi-sensor-common.c: Removed files.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sdr_cache.c:
+	Remove /tmp debug cache location.
+
+	* ipmimonitoring/src/ipmimonitoring/: Adjust to use new sdr cache
+	library and match ipmi-sensors behavior more.
+
+	* ipmi-fru/src/: Adjust to use new sdr cache library.
+
+	* ipmi-sel/src/: Adjust to use new sdr cache library.  Fix thread
+	safety issues.  General code cleanup.
+
+	* ipmi-sensors/src/: Adjust to use new sdr cache library.  General
+	code cleanup.
+	
+	* Check error return on asprintf globally.
+
+	* Adjust Makefile.am, configure.ac, documentation and code
+	respectively for fall out from above changes.
 
 2007-12-25  Albert Chu <chu11@llnl.gov>
 

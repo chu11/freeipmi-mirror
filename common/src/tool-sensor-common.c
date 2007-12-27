@@ -30,8 +30,6 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-sensor-common.h"
-
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sensor-cmds.h"
 #include "freeipmi/fiid/fiid.h"
@@ -41,6 +39,7 @@
 #include "freeipmi/util/ipmi-sensor-util.h"
 
 #include "tool-sdr-cache-common.h"
+#include "tool-sensor-common.h"
 
 #include "freeipmi-portability.h"
 

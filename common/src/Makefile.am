@@ -5,12 +5,6 @@ noinst_HEADERS = \
 	tool-sdr-cache-common.h \
 	tool-sensor-common.h \
 	ipmi-ping.h \
-	sdr-cache-writes.h \
-	sdr-cache-reads.h \
-	sdr-cache.h \
-	sdr-cache-defs.h \
-	sdr-cache-utils.h \
-	ipmi-sensor-common.h \
 	cbuf.h \
 	conffile.h \
 	fd.h \
@@ -36,8 +30,6 @@ noinst_LTLIBRARIES = \
 	libfreeipmiportability.la \
 	libtoolcommon.la \
 	libipmiping.la \
-	libsdr.la \
-	libsensor.la \
 	libmiscutils.la \
 	libhostrange.la \
 	libconfigcommon.la
@@ -50,22 +42,13 @@ libtoolcommon_la_SOURCES = \
 	tool-cmdline-common.c \
 	tool-sdr-cache-common.c \
 	tool-sensor-common.c
-libtoolcommon_la_CPPFLAGS = -D_GNU_SOURCE -I$(srcdir)/../../libfreeipmi/include 
+libtoolcommon_la_CPPFLAGS = \
+	-D_GNU_SOURCE \
+	-D_REENTRANT \
+	-I$(srcdir)/../../libfreeipmi/include 
 
 libipmiping_la_SOURCES = ipmi-ping.c
 libipmiping_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
-
-libsdr_la_SOURCES = \
-	sdr-cache-utils.c \
-	sdr-cache-writes.c \
-	sdr-cache-reads.c \
-	sdr-cache.c
-libsdr_la_CPPFLAGS = -D_GNU_SOURCE \
-		     -D_REENTRANT \
-		     -I$(srcdir)/../../libfreeipmi/include
-
-libsensor_la_SOURCES = ipmi-sensor-common.c
-libsensor_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 
 libmiscutils_la_SOURCES = \
 	cbuf.c \
