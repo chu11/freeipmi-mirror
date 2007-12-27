@@ -46,7 +46,7 @@ static char *threshold_comparison_status_desc[] =
     "At or Above (>=) Upper Non-Recoverable Threshold",
     NULL,
   };
-int threshold_comparison_status_desc_max = 0x5;
+static int threshold_comparison_status_desc_max = 0x5;
 
 int 
 ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen)
