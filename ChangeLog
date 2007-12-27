@@ -71,16 +71,28 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* ipmimonitoring/src/ipmimonitoring/: Adjust to use new sdr cache
 	library and match ipmi-sensors behavior more.
 
-	* ipmi-fru/src/: Adjust to use new sdr cache library.
+	* ipmi-fru/src/: Adjust to use new sdr cache library.  General
+	code cleanup.
+
+	* ipmi-fru/src/ipmi-fru-fiid.h: Remove file.
 
 	* ipmi-sel/src/: Adjust to use new sdr cache library.  Fix thread
 	safety issues.  General code cleanup.
 
+	* ipmi-sel/src/ipmi-sel-wrappers.h,
+	ipmi-sel/src/ipmi-sel-wrappers.c: Renamed to ipmi-sel-entry.h and
+	ipmi-sel-entry.c.
+
 	* ipmi-sensors/src/: Adjust to use new sdr cache library.  General
 	code cleanup.
+
+	* ipmi-sensors/src/ipmi-sensors-reading.h,
+	ipmi-sensors/src/ipmi-sensors-reading.c: New files.
 	
 	* Check error return on asprintf globally.
 
+	* ipmi-chassis/src/, bmc-info/src/: Use new tool fiid wrappers.
+	
 	* Adjust Makefile.am, configure.ac, documentation and code
 	respectively for fall out from above changes.
 

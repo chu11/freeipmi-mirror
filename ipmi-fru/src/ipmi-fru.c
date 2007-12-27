@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.8.2.4 2007-12-26 04:12:41 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.8.2.5 2007-12-27 04:32:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -43,13 +43,13 @@
 
 #include "ipmi-fru.h"
 #include "ipmi-fru-argp.h"
-#include "ipmi-fru-fiid.h"
 #include "ipmi-fru-info-area.h"
 #include "ipmi-fru-multirecord-area.h"
 #include "ipmi-fru-util.h"
 
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
 #include "pstdout.h"
 #include "hostrange.h"
@@ -143,7 +143,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(fru_common_header, tmpl_fru_common_header);
 
-  _FIID_OBJ_SET_ALL(len, fru_common_header, frubuf, frusize);
+  _FIID_OBJ_SET_ALL_LEN(len, fru_common_header, frubuf, frusize);
 
   _FIID_OBJ_GET (fru_common_header,
                  "format_version",
@@ -291,10 +291,10 @@ _get_logical_fru_info(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_fru_device_locator_record);
 
-  _FIID_OBJ_SET_ALL(len,
-                    obj_sdr_record,
-                    sdr_record,
-                    sdr_record_len);
+  _FIID_OBJ_SET_ALL_LEN(len,
+                        obj_sdr_record,
+                        sdr_record,
+                        sdr_record_len);
 
   _FIID_OBJ_GET(obj_sdr_record,
                 "logical_physical_fru_device",

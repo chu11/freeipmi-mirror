@@ -36,53 +36,13 @@
 #include "freeipmi-portability.h"
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
+
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-fiid-wrappers.h"
 
 #include "pstdout.h"
 #include "hostrange.h"
-
-#define _FIID_OBJ_GET_WITH_RETURN_VALUE(obj, field, val, rv)            \
-do {                                                                    \
-    uint64_t _val = 0, *_val_ptr;                                       \
-    _val_ptr = val;                                                     \
-    if ((rv = fiid_obj_get (obj, field, &_val)) < 0)                    \
-      {                                                                 \
-        pstdout_fprintf(state_data->pstate,                             \
-                        stderr,                                         \
-                        "fiid_obj_get: %s: %s\n",                       \
-                        field,                                          \
-                        fiid_strerror(fiid_obj_errnum(obj)));           \
-        goto cleanup;                                                   \
-      }                                                                 \
-    *_val_ptr = _val;                                                   \
-} while (0)
-
-#define _FIID_OBJ_GET(obj, field, val)                                  \
-do {                                                                    \
-    uint64_t _val = 0, *_val_ptr;                                       \
-    _val_ptr = val;                                                     \
-    if (fiid_obj_get (obj, field, &_val) < 0)                           \
-      {                                                                 \
-        pstdout_fprintf(state_data->pstate,                             \
-                        stderr,                                         \
-                        "fiid_obj_get: %s: %s\n",                       \
-                        field,                                          \
-                        fiid_strerror(fiid_obj_errnum(obj)));           \
-        goto cleanup;                                                   \
-      }                                                                 \
-    *_val_ptr = _val;                                                   \
-} while (0)
-
-#define _FIID_OBJ_DESTROY(__obj)                 \
-  do {                                           \
-    if ((__obj))                                 \
-      {                                          \
-        fiid_obj_destroy((__obj));               \
-        (__obj) = NULL;                          \
-      }                                          \
-  } while (0)
-
 
 static int32_t 
 set_boot_flags (ipmi_chassis_state_data_t *state_data)

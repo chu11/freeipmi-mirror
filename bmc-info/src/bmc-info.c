@@ -39,6 +39,7 @@
 #include "bmc-info-argp.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-fiid-wrappers.h"
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "hostrange.h"
@@ -51,22 +52,6 @@ typedef struct channel_info
 } channel_info_t;
 
 #define NUM_CHANNELS 8
-
-#define _FIID_OBJ_GET(obj, field, val)                        \
-do {                                                          \
-    uint64_t _val = 0, *_val_ptr;                             \
-    _val_ptr = val;                                           \
-    if (fiid_obj_get (obj, field, &_val) < 0)                 \
-      {                                                       \
-        pstdout_fprintf(state_data->pstate,                   \
-                        stderr,                               \
-                        "fiid_obj_get: %s: %s\n",             \
-                        field,                                \
-                        fiid_strerror(fiid_obj_errnum(obj))); \
-        goto cleanup;                                         \
-      }                                                       \
-    *_val_ptr = _val;                                         \
-} while (0)
 
 static int
 display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)

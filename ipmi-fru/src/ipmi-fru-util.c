@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.7 2007-12-14 19:16:20 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.7.2.1 2007-12-27 04:32:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -38,8 +38,9 @@
 #include <assert.h>
 
 #include "ipmi-fru.h"
-#include "ipmi-fru-fiid.h"
 #include "ipmi-fru-util.h"
+
+#include "tool-fiid-wrappers.h"
 
 #define FRU_COUNT_TO_READ_BLOCK_SIZE  16
 
@@ -566,10 +567,10 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(fru_info_area_header, tmpl_fru_info_area_header);
 
-  _FIID_OBJ_SET_ALL(len, 
-                    fru_info_area_header, 
-                    frubuf + offset*8, 
-                    frusize - offset*8);
+  _FIID_OBJ_SET_ALL_LEN(len, 
+                        fru_info_area_header, 
+                        frubuf + offset*8, 
+                        frusize - offset*8);
 
   _FIID_OBJ_GET (fru_info_area_header,
                  "format_version",
