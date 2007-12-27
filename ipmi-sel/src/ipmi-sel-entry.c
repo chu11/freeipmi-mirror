@@ -216,7 +216,7 @@ _decode_sensor_value (ipmi_sel_state_data_t *state_data,
    */
   if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
     {
-      if (state_data->prog_data->args->common.flags &IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "Attempting to decode non-analog sensor\n");
