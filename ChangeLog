@@ -49,8 +49,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-sdr-cache-common.h,
 	common/src/tool-sdr-cache-common.c,
-	* common/src/tool-sensor-common.h,
-	common/src/tool-sensor-common.c: New files.
+	common/src/tool-sensor-common.h,
+	common/src/tool-sensor-common.c,
+	common/src/tool-fiid-wrappers.h: New files.
 
 	* common/src/ipmi-sdr-cache-utils.h,
 	common/src/ipmi-sdr-cache-utils.c,
