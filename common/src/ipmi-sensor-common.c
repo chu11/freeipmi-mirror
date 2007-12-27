@@ -121,18 +121,18 @@ int
 sensor_classify (uint8_t event_reading_type_code)
 {
   if (event_reading_type_code == 0x01)
-    return IPMI_SENSOR_CLASS_THRESHOLD;
+    return SENSOR_CLASS_THRESHOLD;
   
   if (event_reading_type_code >= 0x02 && event_reading_type_code <= 0x0C)
-    return IPMI_SENSOR_CLASS_GENERIC_DISCRETE;
+    return SENSOR_CLASS_GENERIC_DISCRETE;
   
   if (event_reading_type_code == 0x6F)
-    return IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE;
+    return SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE;
   
   if (event_reading_type_code >= 0x70 && event_reading_type_code <= 0x7F)
-    return IPMI_SENSOR_CLASS_OEM;
+    return SENSOR_CLASS_OEM;
   
-  return IPMI_SENSOR_CLASS_NOT_AVAILABLE;
+  return SENSOR_CLASS_NOT_AVAILABLE;
 }
 
 const char *
@@ -450,7 +450,7 @@ get_sensor_reading (ipmi_ctx_t ctx,
   
   switch (ipmi_sensor_classify (event_reading_type_code))
     {
-    case IPMI_SENSOR_CLASS_THRESHOLD:
+    case SENSOR_CLASS_THRESHOLD:
       _SENSOR_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_threshold_rs);
       _SENSOR_FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_threshold_rs);
 
@@ -515,7 +515,7 @@ get_sensor_reading (ipmi_ctx_t ctx,
       
       rv = 0;
       break;
-    case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
+    case SENSOR_CLASS_GENERIC_DISCRETE:
       _SENSOR_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
 
       _SENSOR_FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
@@ -565,7 +565,7 @@ get_sensor_reading (ipmi_ctx_t ctx,
       
       rv = 0;
       break;
-    case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
+    case SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
       _SENSOR_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
 
       _SENSOR_FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
@@ -615,7 +615,7 @@ get_sensor_reading (ipmi_ctx_t ctx,
       
       rv = 0;
       break;
-    case IPMI_SENSOR_CLASS_OEM:
+    case SENSOR_CLASS_OEM:
       _SENSOR_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
 
       _SENSOR_FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);

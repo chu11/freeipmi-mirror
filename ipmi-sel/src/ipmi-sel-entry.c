@@ -397,20 +397,20 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 
     switch (sensor_classify (event_type_code))
       {
-      case IPMI_SENSOR_CLASS_THRESHOLD:
-      case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
+      case SENSOR_CLASS_THRESHOLD:
+      case SENSOR_CLASS_GENERIC_DISCRETE:
         rv = ipmi_get_generic_event_message(event_type_code,
                                             offset_from_event_reading_type_code,
                                             buffer, 
                                             1024);
         break;
-      case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
+      case SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
         rv = ipmi_get_sensor_type_code_message(sensor_type,
                                                offset_from_event_reading_type_code,
                                                buffer,
                                                1024);
         break;
-      case IPMI_SENSOR_CLASS_OEM:
+      case SENSOR_CLASS_OEM:
       default:
         snprintf(buffer, 1024, "Event Type Code = %02Xh", event_type_code);
         rv = 0;
@@ -429,14 +429,14 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 
   switch (sensor_classify (event_type_code))
     {
-    case IPMI_SENSOR_CLASS_THRESHOLD:
+    case SENSOR_CLASS_THRESHOLD:
       {
         switch (event_data2_flag)
           {
           case IPMI_SEL_TRIGGER_READING:
             if (sdr_record_found
                 && sdr_record_type == IPMI_SDR_FORMAT_FULL_RECORD
-                && sensor_classify (sdr_event_reading_type_code) == IPMI_SENSOR_CLASS_THRESHOLD)
+                && sensor_classify (sdr_event_reading_type_code) == SENSOR_CLASS_THRESHOLD)
               {
                 double reading;
                 uint8_t sensor_unit;
@@ -511,7 +511,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
           case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
             if (sdr_record_found
                 && sdr_record_type == IPMI_SDR_FORMAT_FULL_RECORD
-                && sensor_classify (sdr_event_reading_type_code) == IPMI_SENSOR_CLASS_THRESHOLD)
+                && sensor_classify (sdr_event_reading_type_code) == SENSOR_CLASS_THRESHOLD)
               {
                 double reading;
                 uint8_t sensor_unit;
@@ -582,8 +582,8 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
         
         break;
       }
-    case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
-    case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
+    case SENSOR_CLASS_GENERIC_DISCRETE:
+    case SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
       {
         switch (event_data2_flag)
           {
@@ -654,7 +654,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 	
         break;
       }
-    case IPMI_SENSOR_CLASS_OEM:
+    case SENSOR_CLASS_OEM:
       {
         if (asprintf (event_data2_message, 
                       "Event Data2 = %02Xh", 
