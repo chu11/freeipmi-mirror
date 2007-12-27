@@ -44,7 +44,7 @@ const char *const ipmi_sensor_types[] =
     "Post Memory Resize",
     "System Firmware",
     "Event Logging Disabled",
-    "Watchdog1",
+    "Watchdog 1",
     "System Event",
     "Critical Interrupt",
     "Button",

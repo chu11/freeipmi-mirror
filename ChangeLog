@@ -1,3 +1,7 @@
+2007-12-26  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/spec/ipmi-sensor-types-spec.c: Fix typo.
+	
 2007-12-25  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-outofband-timeout.man: Fix option name
