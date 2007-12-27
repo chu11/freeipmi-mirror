@@ -6,7 +6,6 @@ ipmi_sel_SOURCES = \
 	ipmi-sel-entry.c
 
 ipmi_sel_LDADD = ../../common/src/libtoolcommon.la \
-		 ../../common/src/libsensor.la \
 		 ../../common/src/libhostrange.la \
 		 ../../common/src/libmiscutils.la \
 		 ../../ipmidetect/src/libipmidetect/libipmidetect.la \
@@ -29,9 +28,6 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
  
 ../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libsensor.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check

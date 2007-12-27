@@ -48,7 +48,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	filename formats.
 
 	* common/src/tool-sdr-cache-common.h,
-	common/src/tool-sdr-cache-common.c: New files.
+	common/src/tool-sdr-cache-common.c,
+	* common/src/tool-sensor-common.h,
+	common/src/tool-sensor-common.c: New files.
 
 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sdr_cache.c:
 	Remove /tmp debug cache location.
@@ -75,7 +77,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	common/src/ipmi-sdr-cache-writes.c,
  	common/src/ipmi-sdr-cache.h,
 	common/src/ipmi-sdr-cache.c,
-	common/src/ipmi-sdr-cache_defs.h: Removed files.
+	common/src/ipmi-sdr-cache_defs.h,
+	common/src/ipmi-sensor-common.h,
+	common/src/ipmi-sensor-common.c: Removed files.
 
 2007-12-25  Albert Chu <chu11@llnl.gov>
 
