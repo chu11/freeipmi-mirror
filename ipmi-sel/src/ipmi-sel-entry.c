@@ -40,7 +40,7 @@
 #include "tool-sdr-cache-common.h"
 #include "ipmi-sensor-common.h"
 
-#include "ipmi-sel-wrapper.h"
+#include "ipmi-sel-entry.h"
 #include "ipmi-sel-fiid.h"
 
 #define SEL_RECORD_TYPE_UNKNOWN_RECORD             0x0
@@ -919,18 +919,18 @@ _parse_sel_record (ipmi_sel_state_data_t *state_data,
 }
 
 int
-ipmi_sel_record_get (ipmi_sel_state_data_t *state_data, 
-                     uint16_t record_id, 
-                     uint16_t *next_record_id,
-                     uint16_t *stored_record_id,
-                     char **timestamp,
-                     char **sensor_info,
-                     char **event_message,
-                     char **event_data2_message,
-                     char **event_data3_message)
+ipmi_sel_get_entry (ipmi_sel_state_data_t *state_data, 
+                    uint16_t record_id, 
+                    uint16_t *next_record_id,
+                    uint16_t *stored_record_id,
+                    char **timestamp,
+                    char **sensor_info,
+                    char **event_message,
+                    char **event_data2_message,
+                    char **event_data3_message)
 {
-  uint8_t record_data[SEL_RECORD_SIZE];
-  uint32_t record_data_len = SEL_RECORD_SIZE;
+  uint8_t record_data[IPMI_SEL_RECORD_SIZE];
+  uint32_t record_data_len = IPMI_SEL_RECORD_SIZE;
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int32_t len;

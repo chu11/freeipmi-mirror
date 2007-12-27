@@ -43,8 +43,8 @@
 
 #include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"
+#include "ipmi-sel-entry.h"
 #include "ipmi-sel-fiid.h"
-#include "ipmi-sel-wrapper.h"
 
 #include "freeipmi-portability.h"
 #include "tool-common.h"
@@ -316,8 +316,8 @@ _hex_display_sel_records (ipmi_sel_state_data_t *state_data,
                           FILE *stream)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t record_data[SEL_RECORD_SIZE];
-  uint32_t record_data_len = SEL_RECORD_SIZE;
+  uint8_t record_data[IPMI_SEL_RECORD_SIZE];
+  uint32_t record_data_len = IPMI_SEL_RECORD_SIZE;
   uint16_t record_id = 0;
   uint16_t next_record_id = 0;
   uint64_t val;
@@ -459,15 +459,15 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
       char *event_data2_message = NULL;
       char *event_data3_message = NULL;
       
-      if (ipmi_sel_record_get (state_data, 
-                               record_id, 
-                               &next_record_id,
-                               &stored_record_id,
-                               &timestamp,
-                               &sensor_info,
-                               &event_message,
-                               &event_data2_message,
-                               &event_data3_message) < 0)
+      if (ipmi_sel_get_entry (state_data, 
+                              record_id, 
+                              &next_record_id,
+                              &stored_record_id,
+                              &timestamp,
+                              &sensor_info,
+                              &event_message,
+                              &event_data2_message,
+                              &event_data3_message) < 0)
         {
           /* If we error on the first record, assume its b/c the sel
            * is empty so we don't exit with an error.

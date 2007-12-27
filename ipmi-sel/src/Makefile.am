@@ -3,7 +3,7 @@ sbin_PROGRAMS = ipmi-sel
 ipmi_sel_SOURCES = \
 	ipmi-sel.c \
 	ipmi-sel-argp.c \
-	ipmi-sel-wrapper.c
+	ipmi-sel-entry.c
 
 ipmi_sel_LDADD = ../../common/src/libtoolcommon.la \
 		 ../../common/src/libsensor.la \
@@ -17,7 +17,7 @@ noinst_HEADERS = \
 	ipmi-sel.h \
 	ipmi-sel-argp.h \
 	ipmi-sel-fiid.h \
-	ipmi-sel-wrapper.h 
+	ipmi-sel-entry.h 
  
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \
