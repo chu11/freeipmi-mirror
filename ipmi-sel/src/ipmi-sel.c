@@ -357,7 +357,7 @@ _hex_display_sel_records (ipmi_sel_state_data_t *state_data,
 
       _FIID_OBJ_GET (obj_cmd_rs, "next_record_id", &val);
       next_record_id = val;
-
+      
       _FIID_OBJ_GET_DATA_LEN (len,
                               obj_cmd_rs,
                               "record_data",
@@ -452,6 +452,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
        record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
        record_id = next_record_id)
     {
+      uint16_t stored_record_id;
       char *timestamp = NULL;
       char *sensor_info = NULL;
       char *event_message = NULL;
@@ -461,6 +462,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
       if (ipmi_sel_record_get (state_data, 
                                record_id, 
                                &next_record_id,
+                               &stored_record_id,
                                &timestamp,
                                &sensor_info,
                                &event_message,
@@ -480,7 +482,11 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           return (-1);
         }
       
-      pstdout_printf (state_data->pstate, "%d", record_id);
+      /* We output the record id stored in the SEL record, not the
+       * above, b/c the above may not be legit.  For example,
+       * IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY is not a valid record id.
+       */
+      pstdout_printf (state_data->pstate, "%d", stored_record_id);
       if (timestamp)
 	pstdout_printf (state_data->pstate, ":%s", timestamp);
       if (sensor_info)

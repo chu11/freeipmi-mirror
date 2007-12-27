@@ -913,7 +913,7 @@ sdr_cache_get_event_reading_type_code (pstdout_state_t pstate,
                                                sdr_record_len,
                                                acceptable_record_types)))
     goto cleanup;
-
+  
   if (fiid_obj_get(obj_sdr_record,
                    "event_reading_type_code",
                    &val) < 0)
