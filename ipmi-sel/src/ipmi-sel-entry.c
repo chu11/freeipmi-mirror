@@ -211,6 +211,22 @@ _decode_sensor_value (ipmi_sel_state_data_t *state_data,
                                          &analog_data_format) < 0)
     return -1;
   
+  /* if the sensor is not analog, this is most likely a bug in the
+   * SDR, since we shouldn't be decoding a non-threshold sensor.
+   */
+  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
+    {
+      if (state_data->prog_data->args->common.flags &IPMI_FLAGS_DEBUG_DUMP)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Attempting to decode non-analog sensor\n");
+      return -1;
+    }
+
+  /* if the sensor is non-linear, I just don't know what to do */
+  if (!IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(linearization))
+    return -1;
+  
   if (ipmi_sensor_decode_value (r_exponent,
                                 b_exponent,
                                 m,
@@ -447,17 +463,30 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                                           event_data2,
                                           &reading,
                                           &sensor_unit) < 0)
-                  goto cleanup;
-		
-                if (asprintf (event_data2_message,
-                              "Reading = %.2f %s",
-                              _round_double2 (reading),
-                              ipmi_sensor_units_abbreviated[sensor_unit]) < 0)
                   {
-                    /* asprintf can leave pointer in an unknown state */
-                    *event_data2_message = NULL;  
-                    pstdout_perror(state_data->pstate, "asprintf");
-                    goto cleanup;
+                    /* If the decode fails, we will just output hex */
+                    if (asprintf (event_data2_message, 
+                                  "Trigger reading = %02Xh", 
+                                  event_data2) < 0)
+                      {
+                        /* asprintf can leave pointer in an unknown state */
+                        *event_data2_message = NULL;  
+                        pstdout_perror(state_data->pstate, "asprintf");
+                        goto cleanup;
+                      }
+                  }
+                else
+                  {
+                    if (asprintf (event_data2_message,
+                                  "Reading = %.2f %s",
+                                  _round_double2 (reading),
+                                  ipmi_sensor_units_abbreviated[sensor_unit]) < 0)
+                      {
+                        /* asprintf can leave pointer in an unknown state */
+                        *event_data2_message = NULL;  
+                        pstdout_perror(state_data->pstate, "asprintf");
+                        goto cleanup;
+                      }
                   }
               }
             else
@@ -522,17 +551,30 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                                           event_data3,
                                           &reading,
                                           &sensor_unit) < 0)
-                  goto cleanup;
-		
-                if (asprintf (event_data3_message,
-                              "Threshold = %.2f %s",
-                              _round_double2 (reading),
-                              ipmi_sensor_units_abbreviated[sensor_unit]) < 0)
                   {
-                    /* asprintf can leave pointer in an unknown state */
-                    *event_data3_message = NULL;  
-                    pstdout_perror(state_data->pstate, "asprintf");
-                    goto cleanup;
+                    /* If the decode fails, we will just output hex */
+                    if (asprintf (event_data2_message, 
+                                  "Trigger reading = %02Xh", 
+                                  event_data2) < 0)
+                      {
+                        /* asprintf can leave pointer in an unknown state */
+                        *event_data2_message = NULL;  
+                        pstdout_perror(state_data->pstate, "asprintf");
+                        goto cleanup;
+                      }
+                  }
+                else
+                  {
+                    if (asprintf (event_data3_message,
+                                  "Threshold = %.2f %s",
+                                  _round_double2 (reading),
+                                  ipmi_sensor_units_abbreviated[sensor_unit]) < 0)
+                      {
+                        /* asprintf can leave pointer in an unknown state */
+                        *event_data3_message = NULL;  
+                        pstdout_perror(state_data->pstate, "asprintf");
+                        goto cleanup;
+                      }
                   }
               }
             else
