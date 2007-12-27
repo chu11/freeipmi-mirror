@@ -118,7 +118,7 @@ enum system_software_type
   } while (0)
 
 int 
-ipmi_sensor_classify (uint8_t event_reading_type_code)
+sensor_classify (uint8_t event_reading_type_code)
 {
   if (event_reading_type_code == 0x01)
     return IPMI_SENSOR_CLASS_THRESHOLD;
@@ -136,7 +136,7 @@ ipmi_sensor_classify (uint8_t event_reading_type_code)
 }
 
 const char *
-ipmi_get_sensor_group (int sensor_type)
+sensor_group (int sensor_type)
 {
   if (IPMI_SENSOR_TYPE_VALID(sensor_type))
     return (ipmi_sensor_types[sensor_type]);

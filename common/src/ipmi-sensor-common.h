@@ -43,15 +43,15 @@ enum ipmi_sensor_class
     IPMI_SENSOR_CLASS_OEM
   };
 
-int ipmi_sensor_classify (uint8_t event_reading_type_code);
+int sensor_classify (uint8_t event_reading_type_code);
 
-const char *ipmi_get_sensor_group (int sensor_type);
+const char *sensor_group (int sensor_type);
 
 #if 0
-int8_t get_sensor_reading (ipmi_ctx_t ctx, 
-                           int debug,
-                           sdr_record_t *sdr_record, 
-                           sensor_reading_t *sensor_reading);
+int8_t sensor_reading (ipmi_ctx_t ctx, 
+                       int debug,
+                       sdr_record_t *sdr_record, 
+                       sensor_reading_t *sensor_reading);
 
 void sensor_reading_cleanup(sensor_reading_t *sensor_reading);
 #endif

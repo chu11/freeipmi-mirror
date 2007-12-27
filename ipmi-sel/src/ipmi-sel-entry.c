@@ -368,7 +368,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 
       if (asprintf (sensor_info, 
                     "%s %s", 
-                    ipmi_get_sensor_group (sensor_type), 
+                    sensor_group (sensor_type), 
                     id_string) < 0)
         {
           /* asprintf can leave pointer in an unknown state */
@@ -381,7 +381,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
     {
       if (asprintf (sensor_info, 
                     "%s #%d", 
-                    ipmi_get_sensor_group (sensor_type), 
+                    sensor_group (sensor_type), 
                     sensor_number) < 0)
         {
           /* asprintf can leave pointer in an unknown state */
@@ -395,7 +395,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
     char buffer[1024];
     int rv;
 
-    switch (ipmi_sensor_classify (event_type_code))
+    switch (sensor_classify (event_type_code))
       {
       case IPMI_SENSOR_CLASS_THRESHOLD:
       case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
@@ -427,7 +427,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
       }
   }
 
-  switch (ipmi_sensor_classify (event_type_code))
+  switch (sensor_classify (event_type_code))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
       {
@@ -436,7 +436,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
           case IPMI_SEL_TRIGGER_READING:
             if (sdr_record_found
                 && sdr_record_type == IPMI_SDR_FORMAT_FULL_RECORD
-                && ipmi_sensor_classify (sdr_event_reading_type_code) == IPMI_SENSOR_CLASS_THRESHOLD)
+                && sensor_classify (sdr_event_reading_type_code) == IPMI_SENSOR_CLASS_THRESHOLD)
               {
                 double reading;
                 uint8_t sensor_unit;
@@ -511,7 +511,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
           case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
             if (sdr_record_found
                 && sdr_record_type == IPMI_SDR_FORMAT_FULL_RECORD
-                && ipmi_sensor_classify (sdr_event_reading_type_code) == IPMI_SENSOR_CLASS_THRESHOLD)
+                && sensor_classify (sdr_event_reading_type_code) == IPMI_SENSOR_CLASS_THRESHOLD)
               {
                 double reading;
                 uint8_t sensor_unit;
