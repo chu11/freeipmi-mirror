@@ -22,7 +22,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
-#include "sdr-cache.h"
+#include "tool-sdr-cache-common.h"
 #include "pstdout.h"
 
 #define IPMI_SENSORS_MAX_RECORD_IDS           256
@@ -70,9 +70,7 @@ typedef struct ipmi_sensors_state_data
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   char *hostname;
-  sdr_cache_ctx_t sdr_cache_ctx;
-  sdr_record_t *sdr_record_list;
-  unsigned int sdr_record_count;
+  ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx;
 } ipmi_sensors_state_data_t;
 
 #endif

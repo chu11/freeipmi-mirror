@@ -41,8 +41,8 @@
 #include "freeipmi-portability.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
-#include "ipmi-sensor-common.h"
-#include "sdr-cache.h"
+#include "tool-sensor-common.h"
+#include "tool-sdr-cache-common.h"
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-simple-display.h"
@@ -68,8 +68,8 @@ do {                                                          \
     *_val_ptr = _val;                                         \
 } while (0)
 
-int 
-display_sdr_repository_info (ipmi_sensors_state_data_t *state_data)
+static int 
+_sdr_repository_info (ipmi_sensors_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val, val1, val2;
@@ -512,7 +512,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
   args = state_data->prog_data->args;
   
   if (args->sdr_info_wanted)
-    return display_sdr_repository_info (state_data);
+    return _sdr_repository_info (state_data);
   
   if (args->sdr.flush_cache_wanted)
     {
@@ -559,12 +559,6 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  if (state_data->sdr_record_list)
-    {
-      free(state_data->sdr_record_list);
-      state_data->sdr_record_list = NULL;
-      state_data->sdr_record_count = 0;
-    }
   return (rv);
 }
 
@@ -605,9 +599,9 @@ _ipmi_sensors (pstdout_state_t pstate,
         }
     }      
  
-  if (!(state_data.sdr_cache_ctx = sdr_cache_ctx_create()))
+  if (!(state_data.ipmi_sdr_cache_ctx = ipmi_sdr_cache_ctx_create()))
     {
-      pstdout_perror (pstate, "sdr_cache_ctx_create()");
+      pstdout_perror (pstate, "ipmi_sdr_cache_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -620,8 +614,8 @@ _ipmi_sensors (pstdout_state_t pstate,
   
   exit_code = 0;
  cleanup:
-  if (state_data.sdr_cache_ctx)
-    sdr_cache_ctx_destroy(state_data.sdr_cache_ctx);
+  if (state_data.ipmi_sdr_cache_ctx)
+    ipmi_sdr_cache_ctx_destroy(state_data.ipmi_sdr_cache_ctx);
   if (state_data.ipmi_ctx)
     {
       ipmi_ctx_close (state_data.ipmi_ctx);

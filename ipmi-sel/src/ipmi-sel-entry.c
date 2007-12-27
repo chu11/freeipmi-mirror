@@ -37,11 +37,11 @@
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 
 #include "freeipmi-portability.h"
+#include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
 #include "ipmi-sel-entry.h"
-#include "ipmi-sel-fiid.h"
 
 #define SEL_RECORD_TYPE_UNKNOWN_RECORD             0x0
 #define SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD        0x1

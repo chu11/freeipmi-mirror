@@ -2,6 +2,7 @@ noinst_HEADERS = \
 	freeipmi-portability.h \
 	tool-common.h \
 	tool-cmdline-common.h \
+	tool-fiid-wrappers.h \
 	tool-sdr-cache-common.h \
 	tool-sensor-common.h \
 	ipmi-ping.h \

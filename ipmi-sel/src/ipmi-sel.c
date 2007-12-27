@@ -44,10 +44,10 @@
 #include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"
 #include "ipmi-sel-entry.h"
-#include "ipmi-sel-fiid.h"
 
 #include "freeipmi-portability.h"
 #include "tool-common.h"
+#include "tool-fiid-wrappers.h"
 #include "tool-cmdline-common.h"
 #include "tool-sdr-cache-common.h"
 #include "pstdout.h"

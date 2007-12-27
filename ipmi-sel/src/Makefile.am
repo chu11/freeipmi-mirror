@@ -15,7 +15,6 @@ ipmi_sel_LDADD = ../../common/src/libtoolcommon.la \
 noinst_HEADERS = \
 	ipmi-sel.h \
 	ipmi-sel-argp.h \
-	ipmi-sel-fiid.h \
 	ipmi-sel-entry.h 
  
 AM_CFLAGS = -Wall

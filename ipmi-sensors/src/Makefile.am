@@ -1,8 +1,9 @@
-sbin_PROGRAMS=ipmi-sensors
+sbin_PROGRAMS = ipmi-sensors
 
 ipmi_sensors_SOURCES = \
 	ipmi-sensors.c \
 	ipmi-sensors-argp.c \
+	ipmi-sensors-reading.c \
 	ipmi-sensors-simple-display.c \
 	ipmi-sensors-verbose-display.c \
 	ipmi-sensors-very-verbose-display.c
@@ -18,6 +19,7 @@ ipmi_sensors_LDADD = \
 noinst_HEADERS = \
 	ipmi-sensors.h \
 	ipmi-sensors-argp.h \
+	ipmi-sensors-reading.h \
 	ipmi-sensors-simple-display.h \
 	ipmi-sensors-verbose-display.h \
 	ipmi-sensors-very-verbose-display.h
