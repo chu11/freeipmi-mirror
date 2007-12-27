@@ -23,8 +23,8 @@
 
 #include "ipmi-sensors.h"
 
-#include "ipmi-sensor-common.h"
 #include "pstdout.h"
+#include "tool-sensor-common.h"
 
 static double
 round_double2 (double d)
@@ -57,7 +57,7 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
                     record->sensor_name, 
                     ipmi_get_sensor_group (record->sensor_type));
   
-  switch (ipmi_sensor_classify (record->event_reading_type_code))
+  switch (sensor_classify (record->event_reading_type_code))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
       if (!state_data->prog_data->args->quiet_readings_wanted)

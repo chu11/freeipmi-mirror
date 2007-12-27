@@ -23,8 +23,8 @@
 
 #include "ipmi-sensors.h"
 
-#include "ipmi-sensor-common.h"
 #include "pstdout.h"
+#include "tool-sensor-common.h"
 
 static int 
 sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
@@ -44,7 +44,7 @@ sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                   record->sensor_name);
   pstdout_printf (state_data->pstate, 
                   "Group Name: %s\n", 
-                  ipmi_get_sensor_group (record->sensor_type));
+                  sensor_group (record->sensor_type));
   pstdout_printf (state_data->pstate, 
                   "Sensor Number: %d\n", 
                   record->sensor_number);
@@ -232,7 +232,7 @@ sensors_display_very_verbose_compact_record (ipmi_sensors_state_data_t *state_da
                   record->sensor_name);
   pstdout_printf (state_data->pstate, 
                   "Group Name: %s\n", 
-                  ipmi_get_sensor_group (record->sensor_type));
+                  sensor_group (record->sensor_type));
   pstdout_printf (state_data->pstate, 
                   "Sensor Number: %d\n", 
                   record->sensor_number);
@@ -302,7 +302,7 @@ sensors_display_very_verbose_event_only_record (ipmi_sensors_state_data_t *state
                   record->sensor_name);
   pstdout_printf (state_data->pstate, 
                   "Group Name: %s\n", 
-                  ipmi_get_sensor_group (record->sensor_type));
+                  sensor_group (record->sensor_type));
   pstdout_printf (state_data->pstate, 
                   "Sensor Number: %d\n", 
                   record->sensor_number);

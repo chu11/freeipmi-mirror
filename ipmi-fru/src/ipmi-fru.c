@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.8.2.5 2007-12-27 04:32:51 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.8.2.6 2007-12-27 05:32:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -266,8 +266,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  if (fru_common_header)
-    fiid_obj_destroy(fru_common_header);
+  _FIID_OBJ_DESTROY(fru_common_header);
   return (rv);
 }
 
@@ -308,8 +307,7 @@ _get_logical_fru_info(ipmi_fru_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  if (obj_sdr_record)
-    fiid_obj_destroy(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record);
   return (rv);
 }
 

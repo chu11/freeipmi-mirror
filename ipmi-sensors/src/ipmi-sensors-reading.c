@@ -40,6 +40,7 @@
 
 #include "ipmi-sensors.h"
 
+#include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
@@ -53,68 +54,6 @@ enum system_software_type
     IPMI_TERMINAL_MODE_REMOTE_CONSOLE_SOFTWARE,
     IPMI_SYS_SOFT_ID_RESERVED
   };
-
-#define _SENSOR_FIID_OBJ_CREATE(__obj, __tmpl)                  \
-  do {                                                          \
-    if (!((__obj) = fiid_obj_create ((__tmpl))))                \
-      {                                                         \
-        if (debug)                                              \
-          perror("fiid_obj_create");                            \
-        goto cleanup;                                           \
-      }                                                         \
-  } while (0)
-
-#define _SENSOR_FIID_OBJ_GET(__obj, __field, __val)                 \
-  do {                                                              \
-    uint64_t __tmp_val = 0, *__val_ptr;                             \
-    __val_ptr = (__val);                                            \
-    if (fiid_obj_get ((__obj), (__field), &__tmp_val) < 0)          \
-      {                                                             \
-        if (debug)                                                  \
-          fprintf(stderr,                                           \
-                  "fiid_obj_get: field=%s: %s\n",                   \
-                  (__field),                                        \
-                  fiid_strerror(fiid_obj_errnum((__obj))));         \
-        goto cleanup;                                               \
-      }                                                             \
-    *__val_ptr = __tmp_val;                                         \
-  } while (0)
-
-#define _SENSOR_FIID_OBJ_GET_ALL_LEN(__len, __obj, __data, __data_len)       \
-  do {                                                                       \
-    if (((__len) = fiid_obj_get_all ((__obj), (__data), (__data_len))) < 0)  \
-      {                                                                      \
-        if (debug)                                                           \
-          fprintf(stderr,                                                    \
-                  "fiid_obj_get_all: %s\n",                                  \
-                  fiid_strerror(fiid_obj_errnum((__obj))));                  \
-        goto cleanup;                                                        \
-      }                                                                      \
-  } while (0)
-
-
-#define _SENSOR_FIID_OBJ_SET_ALL( __obj, __data, __datalen)          \
-  do {                                                               \
-    if (fiid_obj_set_all ((__obj),                                   \
-                          (__data),                                  \
-                          (__datalen)) < 0)                          \
-      {                                                              \
-        if (debug)                                                   \
-          fprintf(stderr,                                            \
-                  "fiid_obj_set_all: %s\n",                          \
-                  fiid_strerror(fiid_obj_errnum((__obj))));          \
-        goto cleanup;                                                \
-      }                                                              \
-  } while (0)
-
-#define _SENSOR_FIID_OBJ_DESTROY(__obj)          \
-  do {                                           \
-    if ((__obj))                                 \
-      {                                          \
-        fiid_obj_destroy((__obj));               \
-        (__obj) = NULL;                          \
-      }                                          \
-  } while (0)
 
 static int
 _get_system_software_type (uint8_t system_software_id)
@@ -416,8 +355,8 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   switch (sensor_classify (event_reading_type_code))
     {
     case SENSOR_CLASS_THRESHOLD:
-      _SENSOR_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_threshold_rs);
-      _SENSOR_FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_threshold_rs);
+      _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_threshold_rs);
+      _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_threshold_rs);
 
       if (ipmi_cmd_get_sensor_reading_threshold (ctx, 
                                                  sensor_number, 
@@ -431,14 +370,14 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           goto cleanup;
         }
 
-      _SENSOR_FIID_OBJ_GET_ALL_LEN(len,
-				   obj_cmd_rs,
-				   buf,
-				   1024);
+      _FIID_OBJ_GET_ALL_LEN(len,
+                            obj_cmd_rs,
+                            buf,
+                            1024);
 
-      _SENSOR_FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
+      _FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
       
-      _SENSOR_FIID_OBJ_GET (l_obj_cmd_rs, "sensor_reading", &val);
+      _FIID_OBJ_GET (l_obj_cmd_rs, "sensor_reading", &val);
 
       if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
 	  && analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
@@ -460,18 +399,18 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
       else 
         sensor_reading->current_reading = val;
            
-      _SENSOR_FIID_OBJ_GET (l_obj_cmd_rs, 
-			    "sensor_state", 
-			    &val);
+      _FIID_OBJ_GET (l_obj_cmd_rs, 
+                     "sensor_state", 
+                     &val);
       sensor_reading->event_message_list = 
 	_get_threshold_message_list (debug, val);
       
       rv = 0;
       break;
     case SENSOR_CLASS_GENERIC_DISCRETE:
-      _SENSOR_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
+      _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      _SENSOR_FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
+      _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
       if (ipmi_cmd_get_sensor_reading_discrete (ctx, 
                                                 sensor_number, 
@@ -484,20 +423,20 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           goto cleanup;
         }
       
-      _SENSOR_FIID_OBJ_GET_ALL_LEN(len,
-				   obj_cmd_rs,
-				   buf,
-				   1024);
+      _FIID_OBJ_GET_ALL_LEN(len,
+                            obj_cmd_rs,
+                            buf,
+                            1024);
 
-      _SENSOR_FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
+      _FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
 
-      _SENSOR_FIID_OBJ_GET (l_obj_cmd_rs, "sensor_reading", &val);
+      _FIID_OBJ_GET (l_obj_cmd_rs, "sensor_reading", &val);
 
       sensor_reading->current_reading = val;
             
-      _SENSOR_FIID_OBJ_GET (l_obj_cmd_rs, 
-			    "sensor_state", 
-			    &val);
+      _FIID_OBJ_GET (l_obj_cmd_rs, 
+                     "sensor_state", 
+                     &val);
       sensor_reading->event_message_list = 
 	_get_generic_event_message_list (debug, 
                                          event_reading_type_code, 
@@ -506,9 +445,9 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
       rv = 0;
       break;
     case SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
-      _SENSOR_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
+      _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      _SENSOR_FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
+      _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
       if (ipmi_cmd_get_sensor_reading_discrete (ctx, 
                                                 sensor_number, 
@@ -521,20 +460,20 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           goto cleanup;
         }
       
-      _SENSOR_FIID_OBJ_GET_ALL_LEN(len,
-				   obj_cmd_rs,
-				   buf,
-				   1024);
+      _FIID_OBJ_GET_ALL_LEN(len,
+                            obj_cmd_rs,
+                            buf,
+                            1024);
 
-      _SENSOR_FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
+      _FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
 
-      _SENSOR_FIID_OBJ_GET (l_obj_cmd_rs, "sensor_reading", &val);
+      _FIID_OBJ_GET (l_obj_cmd_rs, "sensor_reading", &val);
 
       sensor_reading->current_reading = val;
             
-      _SENSOR_FIID_OBJ_GET (l_obj_cmd_rs, 
-			    "sensor_state", 
-			    &val);
+      _FIID_OBJ_GET (l_obj_cmd_rs, 
+                     "sensor_state", 
+                     &val);
       sensor_reading->event_message_list = 
 	_get_event_message_list (debug,
                                  sensor_type, 
@@ -543,9 +482,9 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
       rv = 0;
       break;
     case SENSOR_CLASS_OEM:
-      _SENSOR_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
+      _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      _SENSOR_FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
+      _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
       if (ipmi_cmd_get_sensor_reading_discrete (ctx, 
                                                 sensor_number, 
@@ -558,21 +497,21 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           goto cleanup;
         }
       
-      _SENSOR_FIID_OBJ_GET_ALL_LEN(len,
-				   obj_cmd_rs,
-				   buf,
-				   1024);
+      _FIID_OBJ_GET_ALL_LEN(len,
+                            obj_cmd_rs,
+                            buf,
+                            1024);
 
-      _SENSOR_FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
+      _FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
 
-      _SENSOR_FIID_OBJ_GET (l_obj_cmd_rs, 
-			    "sensor_reading",
-			    &val);
+      _FIID_OBJ_GET (l_obj_cmd_rs, 
+                     "sensor_reading",
+                     &val);
       sensor_reading->current_reading = val;
      
-      _SENSOR_FIID_OBJ_GET (l_obj_cmd_rs, 
-			    "sensor_state", 
-			    &val);
+      _FIID_OBJ_GET (l_obj_cmd_rs, 
+                     "sensor_state", 
+                     &val);
 
       {
 	char *event_message = NULL;
@@ -597,7 +536,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
     }
   
  cleanup:
-  _SENSOR_FIID_OBJ_DESTROY(obj_cmd_rs);
-  _SENSOR_FIID_OBJ_DESTROY(l_obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(l_obj_cmd_rs);
   return (rv);
 }

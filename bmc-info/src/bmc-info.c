@@ -64,32 +64,11 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 
   assert(state_data);
 
-  if (!(intel_rs = fiid_obj_create(tmpl_cmd_get_device_id_sr870bn4_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
-      goto cleanup;
-    }
+  _FIID_OBJ_CREATE(intel_rs, tmpl_cmd_get_device_id_sr870bn4_rs);
 
-  if ((len = fiid_obj_get_all(device_id_rs, buf, 1024)) < 0)
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get_all: %s\n",
-                      fiid_strerror(fiid_obj_errnum(device_id_rs)));
-      goto cleanup;
-    }
+  _FIID_OBJ_GET_ALL_LEN(len, device_id_rs, buf, 1024);
 
-  if (fiid_obj_set_all(intel_rs, buf, len) < 0)
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set_all: %s\n",
-                      fiid_strerror(fiid_obj_errnum(intel_rs)));
-      goto cleanup;
-    }
+  _FIID_OBJ_SET_ALL(intel_rs, buf, len);
   
   _FIID_OBJ_GET (intel_rs,
                  "auxiliary_firmware_revision_info.boot_code.major",
@@ -112,8 +91,7 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
   
   rv = 0;
  cleanup:
-  if (intel_rs)
-    fiid_obj_destroy(intel_rs);
+  _FIID_OBJ_DESTROY(intel_rs);
   return rv;
 }
 
@@ -126,14 +104,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 
   assert(state_data);
 
-  if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
-      return (-1);
-    }
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_device_id_rs);
 
   if (ipmi_cmd_get_device_id (state_data->ipmi_ctx, cmd_rs) != 0)
     {
@@ -265,8 +236,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  if (cmd_rs)
-    fiid_obj_destroy(cmd_rs);
+  _FIID_OBJ_DESTROY(cmd_rs);
   return rv;
 }
 
@@ -282,14 +252,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
   assert(state_data);
   assert(channel_info_list);
 
-  if (!(data_rs = fiid_obj_create (tmpl_cmd_get_channel_info_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
-      goto cleanup;
-    }
+  _FIID_OBJ_CREATE(data_rs, tmpl_cmd_get_channel_info_rs);
 
   for (i = 0, ci = 0; i < NUM_CHANNELS; i++)
     {
@@ -318,8 +281,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
 
   rv = 0;
  cleanup:
-  if (data_rs)
-    fiid_obj_destroy(data_rs);
+  _FIID_OBJ_DESTROY(data_rs);
   return rv;
 }
 

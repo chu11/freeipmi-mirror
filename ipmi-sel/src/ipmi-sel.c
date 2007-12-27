@@ -147,8 +147,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   
   rv = 0;
  cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -209,10 +208,8 @@ _clear_entries (ipmi_sel_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  if (obj_reserve_sel_rs)
-    fiid_obj_destroy(obj_reserve_sel_rs);
-  if (obj_clear_sel_rs)
-    fiid_obj_destroy(obj_clear_sel_rs);
+  _FIID_OBJ_DESTROY(obj_reserve_sel_rs);
+  _FIID_OBJ_DESTROY(obj_clear_sel_rs);
   return rv;
 }
 
@@ -264,10 +261,8 @@ _delete_entry (ipmi_sel_state_data_t *state_data,
   
   rv = 0;
  cleanup:
-  if (obj_reserve_sel_rs)
-    fiid_obj_destroy(obj_reserve_sel_rs);
-  if (obj_delete_sel_entry_rs)
-    fiid_obj_destroy(obj_delete_sel_entry_rs);
+  _FIID_OBJ_DESTROY(obj_reserve_sel_rs);
+  _FIID_OBJ_DESTROY(obj_delete_sel_entry_rs);
   return rv;
 }
 
@@ -392,8 +387,7 @@ _hex_display_sel_records (ipmi_sel_state_data_t *state_data,
   
   rv = 0;
  cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

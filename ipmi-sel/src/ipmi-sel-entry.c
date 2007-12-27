@@ -682,8 +682,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
   
   rv = 0;
  cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+  _FIID_OBJ_DESTROY(obj);
   return (rv);
 }
 
@@ -759,8 +758,7 @@ _get_sel_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
   
   rv = 0;
  cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+  _FIID_OBJ_DESTROY(obj);
   return (rv);
 }
 
@@ -831,8 +829,7 @@ _get_sel_non_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+  _FIID_OBJ_DESTROY(obj);
   return (rv);
 }
 
@@ -913,8 +910,7 @@ _parse_sel_record (ipmi_sel_state_data_t *state_data,
     }
 
  cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+  _FIID_OBJ_DESTROY(obj);
   return (rv);
 }
 
@@ -997,8 +993,7 @@ ipmi_sel_get_entry (ipmi_sel_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   if (rv < 0)
     {
       if (*timestamp)
