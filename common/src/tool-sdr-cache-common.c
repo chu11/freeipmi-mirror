@@ -1207,8 +1207,6 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-
   if (nominal_reading)
     *nominal_reading = NULL;
   if (normal_maximum)
@@ -1219,6 +1217,8 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
     *sensor_maximum_reading = NULL;
   if (sensor_minimum_reading)
     *sensor_minimum_reading = NULL;
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,
@@ -1260,7 +1260,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
 
   if (nominal_reading)
     {
-      _FIID_OBJ_GET(obj_cmd_rs,
+      _FIID_OBJ_GET(obj_sdr_record,
                     "nominal_reading",
                     &val);
 
@@ -1289,7 +1289,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
     }
   if (normal_maximum)
     {
-      _FIID_OBJ_GET(obj_cmd_rs,
+      _FIID_OBJ_GET(obj_sdr_record,
                     "normal_maximum",
                     &val);
 
@@ -1318,7 +1318,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
     }
   if (normal_minimum)
     {
-      _FIID_OBJ_GET(obj_cmd_rs,
+      _FIID_OBJ_GET(obj_sdr_record,
                     "normal_minimum",
                     &val);
 
@@ -1347,7 +1347,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
     }
   if (sensor_maximum_reading)
     {
-      _FIID_OBJ_GET(obj_cmd_rs,
+      _FIID_OBJ_GET(obj_sdr_record,
                     "sensor_maximum_reading",
                     &val);
 
@@ -1376,7 +1376,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
     }
   if (sensor_minimum_reading)
     {
-      _FIID_OBJ_GET(obj_cmd_rs,
+      _FIID_OBJ_GET(obj_sdr_record,
                     "sensor_minimum_reading",
                     &val);
 
@@ -1430,6 +1430,151 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
         free(sensor_maximum_reading);
       if (tmp_sensor_minimum_reading)
         free(sensor_minimum_reading);
+    }
+  return rv; 
+}
+
+int
+sdr_cache_get_hysteresis (pstdout_state_t pstate,
+                          uint8_t *sdr_record,
+                          unsigned int sdr_record_len,
+                          double **positive_going_threshold_hysteresis,
+                          double **negative_going_threshold_hysteresis)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  int8_t r_exponent, b_exponent;
+  int16_t m, b;
+  uint8_t linearization, analog_data_format;
+  double *tmp_positive_going_threshold_hysteresis = NULL;
+  double *tmp_negative_going_threshold_hysteresis = NULL;
+  uint64_t val;
+  double hysteresis;
+  int rv = -1;
+
+  assert(pstate);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+
+  if (positive_going_threshold_hysteresis)
+    *positive_going_threshold_hysteresis = NULL;
+  if (negative_going_threshold_hysteresis)
+    *negative_going_threshold_hysteresis = NULL;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  if (sdr_cache_get_sensor_decoding_data(state_data->pstate,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &r_exponent,
+                                         &b_exponent,
+                                         &m,
+                                         &b,
+                                         &linearization,
+                                         &analog_data_format) < 0)
+    goto cleanup;
+
+  /* if the sensor is not analog, this is most likely a bug in the
+   * SDR, since we shouldn't be decoding a non-threshold sensor.
+   *
+   * Don't return an error.  Allow code to output "NA" or something.
+   */
+  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  /* if the sensor is non-linear, I just don't know what to do
+   *
+   * Don't return an error.  Allow code to output "NA" or something.
+   */
+  if (!IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(linearization))
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  if (positive_going_threshold_hysteresis)
+    {
+      _FIID_OBJ_GET(obj_sdr_record,
+                    "positive_going_threshold_hysteresis",
+                    &val);
+
+      if (ipmi_sensor_decode_value (r_exponent,
+                                    b_exponent,
+                                    m,
+                                    b,
+                                    linearization,
+                                    analog_data_format,
+                                    val,
+                                    &reading) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sensor_decode_value: %s\n",
+                           strerror(errno));
+          goto cleanup;
+        }
+
+      if (!(tmp_positive_going_threshold_hysteresis = (double *)malloc(sizeof(double))))
+        {
+          pstdout_perror(state_data->pstate, "malloc");
+          goto cleanup;
+        }
+      *tmp_positive_going_threshold_hysteresis = reading;
+    }
+  if (negative_going_threshold_hysteresis)
+    {
+      _FIID_OBJ_GET(obj_sdr_record,
+                    "negative_going_threshold_hysteresis",
+                    &val);
+
+      if (ipmi_sensor_decode_value (r_exponent,
+                                    b_exponent,
+                                    m,
+                                    b,
+                                    linearization,
+                                    analog_data_format,
+                                    val,
+                                    &reading) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sensor_decode_value: %s\n",
+                           strerror(errno));
+          goto cleanup;
+        }
+
+      if (!(tmp_negative_going_threshold_hysteresis = (double *)malloc(sizeof(double))))
+        {
+          pstdout_perror(state_data->pstate, "malloc");
+          goto cleanup;
+        }
+      *tmp_negative_going_threshold_hysteresis = reading;
+    }
+  
+  if (positive_going_threshold_hysteresis)
+    *positive_going_threshold_hysteresis = tmp_positive_going_threshold_hysteresis;
+  if (negative_going_threshold_hysteresis)
+    *negative_going_threshold_hysteresis = tmp_negative_going_threshold_hysteresis;
+  
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  if (rv < 0)
+    {
+      if (tmp_positive_going_threshold_hysteresis)
+        free(positive_going_threshold_hysteresis);
+      if (tmp_negative_going_threshold_hysteresis)
+        free(negative_going_threshold_hysteresis);
     }
   return rv; 
 }

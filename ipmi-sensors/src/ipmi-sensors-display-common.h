@@ -25,7 +25,7 @@ int ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_dat
                                             char **event_message_list,
                                             unsigned int event_message_list_len);
 
-int ipmi_sensors_verbose_output_event_message_list (ipmi_sensors_state_data_t *state_data,
+int ipmi_sensors_output_verbose_event_message_list (ipmi_sensors_state_data_t *state_data,
                                                     char **event_message_list,
                                                     unsigned int event_message_list_len);
 
@@ -38,4 +38,18 @@ int ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                  double **upper_non_critical_threshold,
                                  double **upper_critical_threshold,
                                  double **upper_non_recoverable_threshold);
+
+int ipmi_sensors_output_verbose_thresholds (ipmi_sensors_state_data_t *state_data,
+                                            uint8_t *sdr_record,
+                                            unsigned int sdr_record_len);
+
+int ipmi_sensors_output_verbose_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
+                                                       uint8_t *sdr_record,
+                                                       unsigned int sdr_record_len);
+
+int ipmi_sensors_output_verbose_sensor_reading (ipmi_sensors_state_data_t *state_data,
+                                                uint8_t *sdr_record,
+                                                unsigned int sdr_record_len,
+                                                double *reading);
+
 #endif

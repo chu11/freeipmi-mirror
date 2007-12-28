@@ -41,10 +41,10 @@ round_double2 (double d)
 }
 
 static int
-_output_header (ipmi_sensors_state_data_t *state_data,
-                uint8_t *sdr_record,
-                unsigned int sdr_record_len,
-                uint8_t record_id)
+_output_simple_header (ipmi_sensors_state_data_t *state_data,
+                       uint8_t *sdr_record,
+                       unsigned int sdr_record_len,
+                       uint16_t record_id)
 {
   char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
 
@@ -90,7 +90,7 @@ static int
 sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
                                     uint8_t *sdr_record,
                                     unsigned int sdr_record_len,
-                                    uint8_t record_id,
+                                    uint16_t record_id,
                                     double *reading,
                                     char **event_message_list,
                                     unsigned int event_message_list_len)
@@ -104,10 +104,10 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  if (_output_header (state_data,
-                      sdr_record,
-                      sdr_record_len,
-                      record_id) < 0)
+  if (_output_simple_header (state_data,
+                             sdr_record,
+                             sdr_record_len,
+                             record_id) < 0)
     goto cleanup;
 
   if (sdr_cache_get_event_reading_type_code (state_data->pstate,
@@ -193,8 +193,7 @@ static int
 sensors_display_simple_compact_record (ipmi_sensors_state_data_t *state_data,
                                        uint8_t *sdr_record,
                                        unsigned int sdr_record_len,
-                                       uint8_t record_id,
-                                       double *reading,
+                                       uint16_t record_id,
                                        char **event_message_list,
                                        unsigned int event_message_list_len)
 {
@@ -202,10 +201,10 @@ sensors_display_simple_compact_record (ipmi_sensors_state_data_t *state_data,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  if (_output_header (state_data,
-                      sdr_record,
-                      sdr_record_len,
-                      record_id) < 0)
+  if (_output_simple_header (state_data,
+                             sdr_record,
+                             sdr_record_len,
+                             record_id) < 0)
     goto cleanup;
 
   if (ipmi_sensors_output_event_message_list(state_data,
@@ -253,7 +252,6 @@ ipmi_sensors_display_simple (ipmi_sensors_state_data_t *state_data,
                                                     sdr_record,
                                                     sdr_record_len,
                                                     record_id, 
-                                                    reading,
                                                     event_message_list,
                                                     event_message_list_len);
     default:
