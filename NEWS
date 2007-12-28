@@ -5,15 +5,16 @@ For Users
 o Support --groups (plural) for multiple groups listing in
   ipmi-sensors.  Older --group option maintained for backwards
   compatability.
-o Support --list-groups in ipmimonitoring.
+o Support --list-groups and --flush in ipmimonitoring for consistency
+  to ipmi-sensors.
 o Change --cache-dir to --sdr-cache-dir in ipmimonitoring for consistency
-to ipmi-sensors.
-o Text changes to SDR cache output behaviors in ipmi-sensors,
-ipmi-sel, ipmi-fru, and ipmimonitoring.
-o Ipmi-sensors SDR output changes under verbose and very verbose
-output modes.
+  to ipmi-sensors.
 o Support shared SDR caches for ipmi-sensors, ipmi-fru, ipmi-sel, and
-ipmimonitoring.
+  ipmimonitoring.
+o Slightly modified SDR cache output messages in ipmi-sensors,
+  ipmi-sel, ipmi-fru, and ipmimonitoring.
+o Updated SDR output under verbose and very verbose output modes with
+  correct output, more output, more SDR record types.
 o Minor corner case fixes throughout.
 
 For Developers

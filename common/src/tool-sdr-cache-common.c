@@ -52,10 +52,18 @@
 
 #define MAXIPADDRLEN 128
 
-#define IPMI_SDR_RECORD_TYPE_ALL_RECORDS       0x0000
-#define IPMI_SDR_RECORD_TYPE_FULL_RECORD       0x0001
-#define IPMI_SDR_RECORD_TYPE_COMPACT_RECORD    0x0002
-#define IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD 0x0004
+#define IPMI_SDR_RECORD_TYPE_ALL_RECORDS                                 0x0000
+#define IPMI_SDR_RECORD_TYPE_FULL_RECORD                                 0x0001
+#define IPMI_SDR_RECORD_TYPE_COMPACT_RECORD                              0x0002
+#define IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD                           0x0004
+#define IPMI_SDR_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD                   0x0008     
+#define IPMI_SDR_RECORD_TYPE_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD   0x0010
+#define IPMI_SDR_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD               0x0020
+#define IPMI_SDR_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD                   0x0040
+#define IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD 0x0080
+#define IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD   0x0100
+#define IPMI_SDR_RECORD_TYPE_BMC_MESAAGE_CHANNEL_INFO_RECORD             0x0200
+#define IPMI_SDR_RECORD_TYPE_OEM_RECORD                                  0x0400
 
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
@@ -829,7 +837,25 @@ _sdr_cache_get_common(pstdout_state_t pstate,
         || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_COMPACT_RECORD)
             && record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
         || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD)
-            && record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)))
+            && record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
+        || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD)
+            && record_type == IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD)
+        || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD)
+            && record_type == IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD)
+
+        || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD)
+            && record_type == IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
+        || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD)
+            && record_type == IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
+        || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
+            && record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
+        || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
+            && record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
+        || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_BMC_MESAAGE_CHANNEL_INFO_RECORD)
+            && record_type == IPMI_SDR_FORMAT_BMC_MESAAGE_CHANNEL_INFO_RECORD)
+        || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_OEM_RECORD)
+            && record_type == IPMI_SDR_FORMAT_OEM_RECORD)
+        ))
     {
       pstdout_fprintf(pstate,
                       stderr,
@@ -843,9 +869,25 @@ _sdr_cache_get_common(pstdout_state_t pstate,
     _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_full_sensor_record);
   else if (record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
     _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_compact_sensor_record);
-  else /* record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD */
+  else if (record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
     _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_event_only_record);
-  
+  else if (record_type == IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD)
+    _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_entity_association_record);
+  else if (record_type == IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD)
+    _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_device_relative_entity_association_record);
+  else if (record_type == IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
+    _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_generic_device_locator_record);
+  else if (record_type == IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
+    _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_fru_device_locator_record);
+  else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
+    _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_management_controller_device_locator_record);
+  else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
+    _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_management_controller_confirmation_record);
+  else if (record_type == IPMI_SDR_FORMAT_BMC_MESAAGE_CHANNEL_INFO_RECORD)
+    _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_bmc_message_channel_info_record);
+  else if (record_type == IPMI_SDR_FORMAT_OEM_RECORD)
+    _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_oem_record);
+
   _SDR_FIID_OBJ_SET_ALL(obj_sdr_record,
                         sdr_record,
                         sdr_record_len);
@@ -1102,6 +1144,44 @@ sdr_cache_get_id_string (pstdout_state_t pstate,
                          "id_string",
                          (uint8_t *)id_string,
                          id_string_len);
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+sdr_cache_get_device_id_string (pstdout_state_t pstate,
+                                uint8_t *sdr_record,
+                                unsigned int sdr_record_len,
+                                char *device_id_string,
+                                unsigned int device_id_string_len)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  int rv = -1;
+
+  assert(pstate);
+  assert(sdr_record);
+  assert(sdr_record_len);
+  assert(device_id_string);
+  assert(device_id_string_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+
+  _SDR_FIID_OBJ_GET_DATA(obj_sdr_record,
+                         "device_id_string",
+                         (uint8_t *)device_id_string,
+                         device_id_string_len);
 
   rv = 0;
  cleanup:
@@ -1577,4 +1657,47 @@ sdr_cache_get_hysteresis (pstdout_state_t pstate,
         free(negative_going_threshold_hysteresis);
     }
   return rv; 
+}
+
+int 
+sdr_cache_get_container_entity (pstdout_state_t pstate,
+                                uint8_t *sdr_record,
+                                unsigned int sdr_record_len,
+                                uint8_t *container_entity_id,
+                                uint8_t *container_entity_instance)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  assert(pstate);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+
+  if (container_entity_id)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "container_entity_id", &val);
+      *container_entity_id = val;
+    }
+
+  if (container_entity_instance)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "container_entity_instance", &val);
+      *container_entity_instance = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
 }

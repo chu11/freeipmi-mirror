@@ -88,6 +88,9 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	libfreeipmi/include/freeipmi/spec/ipmi-event-reading-type-code-spec.h:
 	New files.
 
+	* libfreeipmi/src/record-format/ipmi-sdr-record-format.c: Fix
+	field names in some sdr records.
+
 	* ipmi-sensors/src/: Adjust to use new sdr cache library.  General
 	code cleanup.
 

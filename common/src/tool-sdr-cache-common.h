@@ -28,6 +28,7 @@
 
 #define IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH 1024
 #define IPMI_SDR_CACHE_MAX_ID_STRING         16
+#define IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING  16
 
 /* For sdr_cache_get_cache_directory: pstate can be NULL if we aren't
  * yet threaded 
@@ -100,6 +101,12 @@ int sdr_cache_get_id_string (pstdout_state_t pstate,
                              char *id_string,
                              unsigned int id_string_len);
 
+int sdr_cache_get_device_id_string (pstdout_state_t pstate,
+                                    uint8_t *sdr_record,
+                                    unsigned int sdr_record_len,
+                                    char *device_id_string,
+                                    unsigned int device_id_string_len);
+
 int sdr_cache_get_sensor_decoding_data (pstdout_state_t pstate,
                                         uint8_t *sdr_record,
                                         unsigned int sdr_record_len,
@@ -124,5 +131,11 @@ int sdr_cache_get_hysteresis (pstdout_state_t pstate,
                               unsigned int sdr_record_len,
                               double **positive_going_threshold_hysteresis,
                               double **negative_going_threshold_hysteresis);
+
+int sdr_cache_get_container_entity (pstdout_state_t pstate,
+                                    uint8_t *sdr_record,
+                                    unsigned int sdr_record_len,
+                                    uint8_t *container_entity_id,
+                                    uint8_t *container_entity_instance);
 
 #endif

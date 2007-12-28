@@ -60,6 +60,8 @@ input multiple groups input
 auto regenerate caches when invalid/out of date
 reserach how get thresholds - via sdr or command, or are they the same?
 check analog data format before decoding?
+sdr cache data output ordering
+extra output info in fru and other stuff
 
 ipmimonitoring/ipmi-sensors/otherstuff
 ---------------------------

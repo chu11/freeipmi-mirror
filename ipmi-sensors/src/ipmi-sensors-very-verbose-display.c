@@ -28,6 +28,23 @@
 #include "tool-sensor-common.h"
 
 static int
+_output_very_verbose_record_type_and_id (ipmi_sensors_state_data_t *state_data,
+                                         uint8_t record_type,
+                                         uint16_t record_id)
+{
+  assert(state_data);
+
+  pstdout_printf (state_data->pstate, 
+                  "Record ID: %d\n", 
+                  record_id);
+  pstdout_printf (state_data->pstate, 
+                  "Record Type: %Xh\n", 
+                  record_type);
+
+  return 0;
+}
+
+static int
 _output_very_verbose_header (ipmi_sensors_state_data_t *state_data,
                              uint8_t *sdr_record,
                              unsigned int sdr_record_len,
@@ -79,12 +96,11 @@ _output_very_verbose_header (ipmi_sensors_state_data_t *state_data,
                                      &sensor_owner_id) < 0)
     return -1;
 
-  pstdout_printf (state_data->pstate, 
-                  "Record ID: %d\n", 
-                  record_id);
-  pstdout_printf (state_data->pstate, 
-                  "Record Type: %Xh\n", 
-                  record_type);
+  if (_output_very_verbose_record_type_and_id (state_data->pstate,
+                                               record_type,
+                                               record_id) < 0)
+    return -1;
+  
   pstdout_printf (state_data->pstate, 
                   "Sensor ID String: %s\n", 
                   id_string);
@@ -144,6 +160,7 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
     free(negative_going_threshold_hysteresis);
   return rv;
 }
+
 static int 
 sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                                           uint8_t *sdr_record,
@@ -298,25 +315,65 @@ sensors_display_very_verbose_entity_association_record (ipmi_sensors_state_data_
                                                         char **event_message_list,
                                                         unsigned int event_message_list_len)
 {
+  uint8_t container_entity_id;
+  uint8_t container_entity_instance;
+
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
 
-  pstdout_printf (state_data->pstate, 
-                  "Record ID: %d\n",
-                  record_id);
-  pstdout_printf (state_data->pstate, 
-                  "Record Type: %Xh\n", 
-                  record_type);
-  pstdout_printf (state_data->pstate, 
-                  "Sensor Name: %s\n", 
-                  "NONE");
+  if (sdr_cache_get_container_entity (state_data->pstate,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      &container_entity_id,
+                                      &container_entity_instance) < 0)
+    return -1;
+  
+  if (_output_very_verbose_record_type_and_id (state_data->pstate,
+                                               record_type,
+                                               record_id) < 0)
+    return -1;
+
   pstdout_printf (state_data->pstate, 
                   "Container Entity ID: %Xh\n", 
-                  record->container_entity_id);
+                  container_entity_id);
   pstdout_printf (state_data->pstate, 
                   "Container Entity Instance: %Xh\n\n", 
-                  record->container_entity_instance);
+                  container_entity_instance);
+  
+  return 0;
+}
+
+static int
+_output_very_verbose_header2 (ipmi_sensors_state_data_t *state_data,
+                              uint8_t *sdr_record,
+                              unsigned int sdr_record_len,
+                              uint8_t record_type,
+                              uint16_t record_id)
+{
+  char device_id_string[IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1];
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  memset(device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1);
+
+  if (sdr_cache_get_device_id_string (state_data->pstate,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      device_id_string,
+                                      IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING) < 0)
+    return -1;
+
+  if (_output_very_verbose_record_type_and_id (state_data->pstate,
+                                               record_type,
+                                               record_id) < 0)
+    return -1;
+
+  pstdout_printf (state_data->pstate, 
+                  "Device ID String: %s\n", 
+                  device_id_string);
   
   return 0;
 }
@@ -334,15 +391,13 @@ sensors_display_very_verbose_general_device_locator_record (ipmi_sensors_state_d
   assert(sdr_record);
   assert(sdr_record_len);
 
-  pstdout_printf (state_data->pstate, 
-                  "Record ID: %d\n",
-                  record_id);
-  pstdout_printf (state_data->pstate,
-                  "Record Type: %Xh\n",
-                  record_type);
-  pstdout_printf (state_data->pstate, 
-                  "Device Name: %s\n", 
-                  record->device_name);
+  if (_output_very_verbose_header2 (state_data,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    record_type,
+                                    record_id) < 0)
+    return -1;
+
   pstdout_printf (state_data->pstate, 
                   "Direct Access Address: %Xh\n", 
                   record->direct_access_address);
@@ -383,19 +438,22 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                                                         char **event_message_list,
                                                         unsigned int event_message_list_len)
 {
+  uint8_t device_type;
+  uint8_t device_type_modifier;
+  uint8_t fru_entity_id;
+  uint8_t fru_entity_instance;
+
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
 
-  pstdout_printf (state_data->pstate, 
-                  "Record ID: %d\n",
-                  record_id);
-  pstdout_printf (state_data->pstate, 
-                  "Record Type: %Xh\n",
-                  record_type);
-  pstdout_printf (state_data->pstate, 
-                  "Device Name: %s\n",
-                  record->device_name);
+  if (_output_very_verbose_header2 (state_data,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    record_type,
+                                    record_id) < 0)
+    return -1;
+
   pstdout_printf (state_data->pstate,
                   "Device Type: %Xh\n", 
                   record->device_type);
@@ -425,15 +483,13 @@ sensors_display_very_verbose_management_controller_device_locator_record (ipmi_s
   assert(sdr_record);
   assert(sdr_record_len);
 
-  pstdout_printf (state_data->pstate, 
-                  "Record ID: %d\n", 
-                  record_id);
-  pstdout_printf (state_data->pstate, 
-                  "Record Type: %Xh\n",
-                  record_type);
-  pstdout_printf (state_data->pstate, 
-                  "Device Name: %s\n", 
-                  record->device_name);
+  if (_output_very_verbose_header2 (state_data,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    record_type,
+                                    record_id) < 0)
+    return -1;
+
   pstdout_printf (state_data->pstate, 
                   "Entity ID: %Xh\n", 
                   record->entity_id);
@@ -459,15 +515,17 @@ sensors_display_very_verbose_oem_record (ipmi_sensors_state_data_t *state_data,
   assert(sdr_record);
   assert(sdr_record_len);
 
+  if (_output_very_verbose_record_type_and_id (state_data->pstate,
+                                               record_type,
+                                               record_id) < 0)
+    return -1;
+
   pstdout_printf (state_data->pstate, 
                   "Record ID: %d\n", 
                   record_id);
   pstdout_printf (state_data->pstate, 
                   "Record Type: %Xh\n", 
                   record_type);
-  pstdout_printf (state_data->pstate, 
-                  "Sensor Name: %s\n", 
-                  "NONE");
   pstdout_printf (state_data->pstate,
                   "Manufacturer ID: %Xh\n", 
                   record->manufacturer_id);
@@ -543,6 +601,18 @@ ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
                                                                      record_id,
                                                                      event_message_list,
                                                                      event_message_list_len);
+
+#if 0
+      /* XXX support later */
+    case IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD:
+      return sensors_display_very_verbose_entity_association_record (state_data,
+                                                                     sdr_record,
+                                                                     sdr_record_len,
+                                                                     record_type,
+                                                                     record_id,
+                                                                     event_message_list,
+                                                                     event_message_list_len);
+#endif
     case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
       return sensors_display_very_verbose_general_device_locator_record (state_data,
                                                                          sdr_record,
@@ -567,6 +637,14 @@ ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
                                                                                        record_id,
                                                                                        event_message_list,
                                                                                        event_message_list_len);
+#if 0
+      /* XXX support later */
+    case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
+      break;
+      /* XXX support later */
+    case IPMI_SDR_FORMAT_BMC_MESAAGE_CHANNEL_INFO_RECORD:
+      break;
+#endif
     case IPMI_SDR_FORMAT_OEM_RECORD:
       return sensors_display_very_verbose_oem_record (state_data,
                                                       sdr_record,
