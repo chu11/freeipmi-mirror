@@ -30,8 +30,8 @@
 int sensor_reading (struct ipmi_sensors_state_data *state_data,
                     uint8_t *sdr_record,
                     unsigned int sdr_record_len,
-                    double *reading,
-                    char *event_message_list[],
-                    unsigned int event_message_list_len);
+                    double **reading,
+                    char ***event_message_list,
+                    unsigned int *event_message_list_len);
 
 #endif

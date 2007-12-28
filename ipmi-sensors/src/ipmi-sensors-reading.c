@@ -316,6 +316,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   fiid_obj_t obj_cmd_rs = NULL;  
   fiid_obj_t l_obj_cmd_rs = NULL;
   uint8_t buf[IPMI_SENSORS_BUFLEN];
+  double *tmp_reading = NULL;
   int32_t len;
   uint64_t val;
   int rv = -1;
@@ -336,46 +337,46 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                        sdr_record_len,
                                        NULL,
                                        &record_type) < 0)
-    goto cleanup;
+    return -1;
 
-  /* can't get reading for this sdr entry don't output an error
-   * though, since this isn't really an error.  The tool will
-   * output something appropriate as it sees fit.
+  /* can't get reading for this sdr entry. don't output an error
+   * though, since this isn't really an error.  The tool will output
+   * something appropriate as it sees fit.
    */
   if (record_type != IPMI_SDR_FORMAT_FULL_RECORD
       && record_type != IPMI_SDR_FORMAT_COMPACT_RECORD)
-    goto cleanup;
+    return 0;
 
   if (sdr_cache_get_sensor_owner_id(state_data->pstate,
                                     sdr_record,
                                     sdr_record_len,
                                     NULL,
                                     &sensor_owner_id) < 0)
-    goto cleanup;
+    return -1;
 
   /* don't bother with this sensor if its an OEM sensor, again don't
    * output an error, let the tool output something as it sees fit.
    */
   if (IPMI_SYSTEM_SOFTWARE_TYPE_IS_RESERVED(sensor_owner_id))
-    goto cleanup;
+    return 0;
   
   if (sdr_cache_get_sensor_number (state_data->pstate,
                                    sdr_record,
                                    sdr_record_len,
                                    &sensor_number) < 0)
-    goto cleanup;
+    return -1;
     
   if (sdr_cache_get_sensor_type (state_data->pstate,
                                  sdr_record,
                                  sdr_record_len,
                                  &sensor_type) < 0)
-    goto cleanup;
+    return -1;
 
   if (sdr_cache_get_event_reading_type_code (state_data->pstate,
                                              sdr_record,
                                              sdr_record_len,
                                              &event_reading_type_code) < 0)
-    goto cleanup;
+    return -1;
 
   sensor_class = sensor_classify (event_reading_type_code);
 
@@ -439,6 +440,12 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           if (!IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(linearization))
             goto cleanup;
           
+          if (!(tmp_reading = (double *)malloc(sizeof(double))))
+            {
+              pstdout_perror(state_data->pstate, "malloc");
+              goto cleanup;
+            }
+          
 	  if (ipmi_sensor_decode_value (r_exponent, 
                                         b_exponent, 
                                         m, 
@@ -446,7 +453,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                         linearization, 
                                         analog_data_format, 
                                         (uint8_t) val,
-                                        (*reading)) < 0)
+                                        tmp_reading) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
@@ -472,7 +479,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                        val) < 0)
         goto cleanup;
       
-      rv = 0;
+      rv = 1;
     }
   else (sensor_class == SENSOR_CLASS_GENERIC_DISCRETE
         || sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE
@@ -512,7 +519,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                                val) < 0)
             goto cleanup;
 
-          rv = 0;
+          rv = 1;
         }
       else if (sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
         {
@@ -523,11 +530,10 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                                        val) < 0)
             goto cleanup;
 
-          rv = 0;
+          rv = 1;
         }
       else if (sensor_class == SENSOR_CLASS_OEM)
         {
-          /* FIXUP */
           char *event_message = NULL;
           char **tmp_event_message_list = NULL;
 
@@ -551,12 +557,20 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           *event_message_list = tmp_event_message_list;
           *event_message_list_len = 1;
           
-          rv = 0;
+          rv = 1;
         }
     }
 
+
+  if (rv > 0)
+    *reading = tmp_reading;
  cleanup:
   _FIID_OBJ_DESTROY(obj_cmd_rs);
   _FIID_OBJ_DESTROY(l_obj_cmd_rs);
+  if (rv < 0)
+    {
+      if (tmp_reading)
+        free(tmp_reading);
+    }
   return (rv);
 }

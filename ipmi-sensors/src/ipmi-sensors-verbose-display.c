@@ -22,31 +22,114 @@
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 
 #include "ipmi-sensors.h"
+#include "ipmi-sensors-util.h"
 
 #include "pstdout.h"
 #include "tool-sensor-common.h"
 
-static int 
-sensors_display_verbose_full_record (ipmi_sensors_state_data_t *state_data,
-                                     int record_id, 
-				     sdr_full_record_t *record, 
-				     sensor_reading_t *sensor_reading)
+static int
+_output_header (ipmi_sensors_state_data_t *state_data,
+                uint8_t *sdr_record,
+                unsigned int sdr_record_len,
+                uint8_t record_id)
 {
+  char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+  uint8_t sensor_number;
+  uint8_t sensor_type;
+  uint8_t event_reading_type_code;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (sdr_cache_get_sensor_number (state_data->pstate,
+                                   sdr_record,
+                                   sdr_record_len,
+                                   &sensor_number) < 0)
+    return -1;
+
+  if (sdr_cache_get_sensor_type (state_data->pstate,
+                                 sdr_record,
+                                 sdr_record_len,
+                                 &sensor_type) < 0)
+    return -1;
+
+  if (sdr_cache_get_event_reading_type_code (state_data->pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
+    return -1;
+  
+  memset(id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
+
+  if (sdr_cache_get_id_string (state_data->pstate,
+                               sdr_record,
+                               sdr_record_len,
+                               id_string,
+                               IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
+    return -1;
+
   pstdout_printf (state_data->pstate, 
                   "Record ID: %d\n", 
                   record_id);
   pstdout_printf (state_data->pstate, 
-                  "Sensor Name: %s\n", 
-                  record->sensor_name);
+                  "Sensor ID String: %s\n", 
+                  id_string);
   pstdout_printf (state_data->pstate, 
                   "Group Name: %s\n",
-                  sensor_group (record->sensor_type));
+                  sensor_group (sensor_type));
   pstdout_printf (state_data->pstate, 
                   "Sensor Number: %d\n", 
-                  record->sensor_number);
+                  sensor_number);
   pstdout_printf (state_data->pstate, 
                   "Event/Reading Type Code: %Xh\n", 
-                  record->event_reading_type_code);
+                  event_reading_type_code);
+
+  return 0;
+}
+
+static int
+_output_event_message_list (ipmi_sensors_state_data_t *state_data,
+                            char **event_message_list,
+                            unsigned int event_message_list_len)
+{
+  assert (state_data);
+
+  pstdout_printf (state_data->pstate, 
+                  "Sensor Status: ");
+  
+  if (ipmi_sensors_output_event_message_list (state_data,
+                                              event_message_list,
+                                              event_message_list_len) < 0)
+    return -1;
+  
+  /* Extra \n in verbose output */
+  pstdout_printf (state_data->pstate, "\n");
+  
+  return 0;
+}
+
+static int 
+sensors_display_verbose_full_record (ipmi_sensors_state_data_t *state_data,
+                                     uint8_t *sdr_record,
+                                     unsigned int sdr_record_len,
+                                     uint8_t record_id,
+                                     double *reading,
+                                     char **event_message_list,
+                                     unsigned int event_message_list_len)
+{
+  int rv = -1;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (_output_header (state_data,
+                      sdr_record,
+                      sdr_record_len,
+                      record_id) < 0)
+    goto cleanup;
+
   if (record->readable_threshold_lower_critical_threshold)
     {
       pstdout_printf (state_data->pstate,
@@ -145,185 +228,132 @@ sensors_display_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                   "Nominal reading: %f %s\n", 
                   record->nominal_reading, 
                   ipmi_sensor_units[record->sensor_unit]);
-  if (sensor_reading == NULL)
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Sensor Reading: %s\n", 
-                      "NA");
-      pstdout_printf (state_data->pstate, 
-                      "Sensor Status: [%s]\n\n", 
-                      "Unknown");
-    }
-  else 
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Sensor Reading: %f %s\n", 
-                      sensor_reading->current_reading, 
-                      ipmi_sensor_units[record->sensor_unit]);
-      if (sensor_reading->event_message_list == NULL)
-	{
-	  pstdout_printf (state_data->pstate, 
-                          "Sensor Status: [%s]\n\n", 
-                          "OK");
-	}
-      else 
-	{
-	  int i;
-	  
-	  pstdout_printf (state_data->pstate, 
-                          "Sensor Status: ");
-	  for (i = 0; 
-	       sensor_reading->event_message_list[i]; 
-	       i++)
-	    {
-	      pstdout_printf (state_data->pstate, 
-                              "[%s]",
-                              sensor_reading->event_message_list[i]);
-	    }
-	  pstdout_printf (state_data->pstate, 
-                          "\n\n");
-	}
-    }
+
+  if (reading)
+    pstdout_printf (state_data->pstate, 
+                    "Sensor Reading: %f %s\n", 
+                    *reading, 
+                    ipmi_sensor_units[sensor_unit]);
+  else
+    pstdout_printf (state_data->pstate,
+                    "Sensor Reading: %s\n",
+                    "NA");
   
-  return 0;
+  if (_output_event_message_list (state_data,
+                                  event_message_list,
+                                  event_message_list_len) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  return rv;
 }
 
 static int 
 sensors_display_verbose_compact_record (ipmi_sensors_state_data_t *state_data,
-                                        int record_id, 
-					sdr_compact_record_t *record, 
-					sensor_reading_t *sensor_reading)
+                                        uint8_t *sdr_record,
+                                        unsigned int sdr_record_len,
+                                        uint8_t record_id,
+                                        double *reading,
+                                        char **event_message_list,
+                                        unsigned int event_message_list_len)
 {
-  pstdout_printf (state_data->pstate, 
-                  "Record ID: %d\n", 
-                  record_id);
-  pstdout_printf (state_data->pstate, 
-                  "Sensor Name: %s\n", 
-                  record->sensor_name);
-  pstdout_printf (state_data->pstate, 
-                  "Group Name: %s\n", 
-                  sensor_group (record->sensor_type));
-  pstdout_printf (state_data->pstate, 
-                  "Sensor Number: %d\n", 
-                  record->sensor_number);
-  pstdout_printf (state_data->pstate, 
-                  "Event/Reading Type Code: %Xh\n", 
-                  record->event_reading_type_code);
-  if (sensor_reading == NULL)
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Sensor Status: [%s]\n\n", 
-                      "Unknown");
-    }
-  else 
-    {
-      if (sensor_reading->event_message_list == NULL)
-	{
-	  pstdout_printf (state_data->pstate, 
-                          "Sensor Status: [%s]\n\n", 
-                          "OK");
-	}
-      else 
-	{
-	  int i;
-	  
-	  pstdout_printf (state_data->pstate, 
-                          "Sensor Status: ");
-	  for (i = 0; 
-	       sensor_reading->event_message_list[i]; 
-	       i++)
-	    {
-	      pstdout_printf (state_data->pstate, 
-                              "[%s]", 
-                              sensor_reading->event_message_list[i]);
-	    }
-	  pstdout_printf (state_data->pstate, 
-                          "\n\n");
-	}
-    }
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (_output_header (state_data,
+                      sdr_record,
+                      sdr_record_len,
+                      record_id) < 0)
+    return -1;
+
+  if (_output_event_message_list (state_data,
+                                  event_message_list,
+                                  event_message_list_len) < 0)
+    return -1;
   
   return 0;
 }
 
 static int 
 sensors_display_verbose_event_only_record (ipmi_sensors_state_data_t *state_data,
-                                           int record_id, 
-					   sdr_event_only_record_t *record, 
-					   sensor_reading_t *sensor_reading)
+                                           uint8_t *sdr_record,
+                                           unsigned int sdr_record_len,
+                                           uint8_t record_id,
+                                           double *reading,
+                                           char **event_message_list,
+                                           unsigned int event_message_list_len)
 {
-  pstdout_printf (state_data->pstate, 
-                  "Record ID: %d\n", 
-                  record_id);
-  pstdout_printf (state_data->pstate, 
-                  "Sensor Name: %s\n", 
-                  record->sensor_name);
-  pstdout_printf (state_data->pstate, 
-                  "Group Name: %s\n", 
-                  sensor_group (record->sensor_type));
-  pstdout_printf (state_data->pstate, 
-                  "Sensor Number: %d\n", 
-                  record->sensor_number);
-  pstdout_printf (state_data->pstate, 
-                  "Event/Reading Type Code: %Xh\n", 
-                  record->event_reading_type_code);
-  if (sensor_reading == NULL)
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Sensor Status: [%s]\n\n", 
-                      "Unknown");
-    }
-  else 
-    {
-      if (sensor_reading->event_message_list == NULL)
-	{
-	  pstdout_printf (state_data->pstate, 
-                          "Sensor Status: [%s]\n\n", 
-                          "OK");
-	}
-      else 
-	{
-	  int i;
-	  
-	  pstdout_printf (state_data->pstate, 
-                          "Sensor Status: ");
-	  for (i = 0; 
-	       sensor_reading->event_message_list[i]; 
-	       i++)
-	    {
-	      pstdout_printf (state_data->pstate, 
-                              "[%s]", 
-                              sensor_reading->event_message_list[i]);
-	    }
-	  pstdout_printf (state_data->pstate, 
-                          "\n\n");
-	}
-    }
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (_output_header (state_data,
+                      sdr_record,
+                      sdr_record_len,
+                      record_id) < 0)
+    return -1;
   
+  if (_output_event_message_list (state_data,
+                                  event_message_list,
+                                  event_message_list_len) < 0)
+    return -1;
+
   return 0;
 }
 
-int 
-sensors_display_verbose (ipmi_sensors_state_data_t *state_data,
-                         sdr_record_t *sdr_record, 
-                         sensor_reading_t *sensor_reading)
+int
+ipmi_sensors_display_verbose (ipmi_sensors_state_data_t *state_data,
+                              uint8_t *sdr_record,
+                              unsigned int sdr_record_len,
+                              double *reading,
+                              char **event_message_list,
+                              unsigned int event_message_list_len);
 {
-  switch (sdr_record->record_type)
+  uint16_t record_id;
+  uint8_t record_type;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (sdr_cache_get_record_id_and_type(state_data->pstate,
+                                       sdr_record,
+                                       sdr_record_len,
+                                       &record_id,
+                                       &record_type) < 0)
+    return -1;
+
+  switch (record_type)
     {
     case IPMI_SDR_FORMAT_FULL_RECORD:
       return sensors_display_verbose_full_record (state_data,
-                                                  sdr_record->record_id, 
-						  &(sdr_record->record.sdr_full_record), 
-						  sensor_reading);
+                                                  sdr_record,
+                                                  sdr_record_len,
+                                                  record_id,
+                                                  reading,
+                                                  event_message_list,
+                                                  event_message_list_len);
     case IPMI_SDR_FORMAT_COMPACT_RECORD:
       return sensors_display_verbose_compact_record (state_data,
-                                                     sdr_record->record_id, 
-						     &(sdr_record->record.sdr_compact_record), 
-						     sensor_reading);
+                                                     sdr_record,
+                                                     sdr_record_len,
+                                                     record_id,
+                                                     reading,
+                                                     event_message_list,
+                                                     event_message_list_len);
     case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
       return sensors_display_verbose_event_only_record (state_data,
-                                                        sdr_record->record_id, 
-							&(sdr_record->record.sdr_event_only_record), 
-							sensor_reading);
+                                                        sdr_record,
+                                                        sdr_record_len,
+                                                        record_id,
+                                                        reading,
+                                                        event_message_list,
+                                                        event_message_list_len);
+    default:
+      /* don't output any other types in verbose mode */
+      break;
     }
   
   return (0);

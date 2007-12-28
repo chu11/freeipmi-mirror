@@ -6,7 +6,8 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-reading.c \
 	ipmi-sensors-simple-display.c \
 	ipmi-sensors-verbose-display.c \
-	ipmi-sensors-very-verbose-display.c
+	ipmi-sensors-very-verbose-display.c \
+	ipmi-sensors-util.c
 
 ipmi_sensors_LDADD = \
 	../../common/src/libtoolcommon.la \
@@ -22,7 +23,8 @@ noinst_HEADERS = \
 	ipmi-sensors-reading.h \
 	ipmi-sensors-simple-display.h \
 	ipmi-sensors-verbose-display.h \
-	ipmi-sensors-very-verbose-display.h
+	ipmi-sensors-very-verbose-display.h \
+	ipmi-sensors-util.h
  
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \

@@ -59,6 +59,7 @@ ipmi-sensors
 input multiple groups input
 auto regenerate caches when invalid/out of date
 reserach how get thresholds - via sdr or command, or are they the same?
+check analog data format before decoding?
 
 ipmimonitoring/ipmi-sensors/otherstuff
 ---------------------------

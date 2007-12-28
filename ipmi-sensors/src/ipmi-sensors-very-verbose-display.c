@@ -515,9 +515,9 @@ sensors_display_very_verbose_oem_record (ipmi_sensors_state_data_t *state_data,
 }
 
 int 
-sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,                            
-                              sdr_record_t *sdr_record, 
-                              sensor_reading_t *sensor_reading)
+ipmi_sensors_display_very_verbose (ipmi_>sensors_state_data_t *state_data,                            
+                                   sdr_record_t *sdr_record, 
+                                   sensor_reading_t *sensor_reading)
 {
   switch (sdr_record->record_type)
     {
@@ -569,6 +569,12 @@ sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
 						      sdr_record->record_type, 
 						      &(sdr_record->record.sdr_oem_record), 
 						      sensor_reading);
+    default:
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "Unknown Record Type: %X\n",
+                      sdr_record->record_type);
+      break;
     }
   
   return (0);

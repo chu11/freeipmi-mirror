@@ -21,8 +21,8 @@
 
 #include "ipmi-sensors.h"
 
-int sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
-                                  sdr_record_t *sdr_record, 
-				  sensor_reading_t *sensor_reading);
+int ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
+                                       sdr_record_t *sdr_record, 
+                                       sensor_reading_t *sensor_reading);
 
 #endif
