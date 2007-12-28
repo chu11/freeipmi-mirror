@@ -131,6 +131,21 @@
       }                                                                  \
   } while (0)
 
+#define _SDR_FIID_OBJ_GET_DATA_LEN(__len, __obj, __field, __data, __datalen) \
+  do {                                                                       \
+    if (((__len) = fiid_obj_get_data ((__obj),                               \
+                                      (__field),                             \
+                                      (__data),                              \
+                                      (__datalen))) < 0)                     \
+      {                                                                      \
+        pstdout_fprintf(pstate,                                              \
+                        stderr,                                              \
+                        "fiid_obj_get_data: %s\n",                           \
+                        fiid_strerror(fiid_obj_errnum((__obj))));            \
+        goto cleanup;                                                        \
+      }                                                                      \
+  } while (0)
+
 #define _SDR_FIID_OBJ_SET_ALL(__obj, __data, __datalen)                  \
   do {                                                                   \
     if (fiid_obj_set_all ((__obj),                                       \
@@ -1697,6 +1712,223 @@ sdr_cache_get_container_entity (pstdout_state_t pstate,
       _SDR_FIID_OBJ_GET(obj_sdr_record, "container_entity_instance", &val);
       *container_entity_instance = val;
     }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+sdr_cache_get_general_device_parameters (pstdout_state_t pstate,
+                                         uint8_t *sdr_record,
+                                         unsigned int sdr_record_len,
+                                         uint8_t *direct_access_address,
+                                         uint8_t *channel_number,
+                                         uint8_t *device_slave_address,
+                                         uint8_t *lun_for_master_write_read_command,
+                                         uint8_t *address_span)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  assert(pstate);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  if (direct_access_address)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "direct_access_address", &val);
+      *direct_access_address = val;
+    }
+  if (channel_number)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "channel_number", &val);
+      *channel_number = val;
+    }
+  if (device_slave_address)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "device_slave_address", &val);
+      *device_slave_address = val;
+    }
+  if (lun_for_master_write_read_command)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "lun_for_master_write_read_command", &val);
+      *lun_for_master_write_read_command = val;
+    }
+  if (address_span)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "address_span", &val);
+      *address_span = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+sdr_cache_get_device_type (pstdout_state_t pstate,
+                           uint8_t *sdr_record,
+                           unsigned int sdr_record_len,
+                           uint8_t *device_type,
+                           uint8_t *device_type_modifier)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  assert(pstate);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  if (device_type)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "device_type", &val);
+      *device_type = val;
+    }
+  if (device_type_modifier)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "device_type_modifier", &val);
+      *device_type_modifier = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+sdr_cache_get_entity_id (pstdout_state_t pstate,
+                         uint8_t *sdr_record,
+                         unsigned int sdr_record_len,
+                         uint8_t *entity_id,
+                         uint8_t *entity_instance)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  assert(pstate);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  if (entity_id)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "entity_id", &val);
+      *entity_id = val;
+    }
+  if (entity_instance)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "entity_instance", &val);
+      *entity_instance = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+sdr_cache_get_manufacturer_id (pstdout_state_t pstate,
+                               uint8_t *sdr_record,
+                               unsigned int sdr_record_len,
+                               uint32_t *manufacturer_id)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  assert(pstate)
+  assert(sdr_record);
+  assert(sdr_record_len);
+  assert(manufacturer_id);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_OEM_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  _SDR_FIID_OBJ_GET(obj_sdr_record, "manufacturer_id", &val);
+  *manufacturer_id = val;
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+sdr_cache_get_oem_data (pstdout_state_t pstate,
+                        uint8_t *sdr_record,
+                        unsigned int sdr_record_len,
+                        uint8_t *oem_data,
+                        unsigned int *oem_data_len)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  int32_t len;
+  uint64_t val;
+  int rv = -1;
+
+  assert(pstate)
+  assert(sdr_record);
+  assert(sdr_record_len);
+  assert(!oem_data || oem_data_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_OEM_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+
+  _SDR_FIID_OBJ_GET_DATA_LEN(len,
+                             obj_sdr_record,
+                             "oem_data", 
+                             oem_data, 
+                             *oem_data_len);
+  *oem_data_len = len;
 
   rv = 0;
  cleanup:

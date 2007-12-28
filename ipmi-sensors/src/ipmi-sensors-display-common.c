@@ -69,9 +69,6 @@ ipmi_sensors_output_verbose_event_message_list (ipmi_sensors_state_data_t *state
                                               event_message_list_len) < 0)
     return -1;
   
-  /* Extra \n in verbose output */
-  pstdout_printf (state_data->pstate, "\n");
-  
   return 0;
 }
 

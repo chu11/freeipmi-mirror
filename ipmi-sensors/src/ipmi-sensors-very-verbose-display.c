@@ -27,6 +27,8 @@
 #include "pstdout.h"
 #include "tool-sensor-common.h"
 
+#define IPMI_SENSORS_OEM_DATA_LEN 1024
+
 static int
 _output_very_verbose_record_type_and_id (ipmi_sensors_state_data_t *state_data,
                                          uint8_t record_type,
@@ -241,6 +243,8 @@ sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                                                       event_message_list,
                                                       event_message_list_len) < 0)
     return -1;
+
+  pstdout_printf (state_data->pstate, "\n");
   
   return 0;
 }
@@ -275,6 +279,8 @@ sensors_display_very_verbose_compact_record (ipmi_sensors_state_data_t *state_da
                                                       event_message_list_len) < 0)
     goto cleanup;
 
+  pstdout_printf (state_data->pstate, "\n");
+
   return 0;
 }
 
@@ -303,6 +309,8 @@ sensors_display_very_verbose_event_only_record (ipmi_sensors_state_data_t *state
                                                       event_message_list_len) < 0)
     goto cleanup;
   
+  pstdout_printf (state_data->pstate, "\n");
+
   return 0;
 }
 
@@ -338,8 +346,10 @@ sensors_display_very_verbose_entity_association_record (ipmi_sensors_state_data_
                   "Container Entity ID: %Xh\n", 
                   container_entity_id);
   pstdout_printf (state_data->pstate, 
-                  "Container Entity Instance: %Xh\n\n", 
+                  "Container Entity Instance: %Xh\n", 
                   container_entity_instance);
+
+  pstdout_printf (state_data->pstate, "\n");
   
   return 0;
 }
@@ -378,6 +388,66 @@ _output_very_verbose_header2 (ipmi_sensors_state_data_t *state_data,
   return 0;
 }
 
+static int
+_output_device_type_and_modifier (ipmi_sensors_state_data_t *state_data,
+                                  uint8_t *sdr_record,
+                                  unsigned int sdr_record_len)
+{
+  uint8_t entity_id;
+  uint8_t entity_instance;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (sdr_cache_get_device_type (state_data->pstate,
+                                 sdr_record,
+                                 sdr_record_len,
+                                 &device_type,
+                                 &device_type_modifier) < 0)
+    return -1;
+
+  pstdout_printf (state_data->pstate, 
+                  "Device Type: %Xh\n", 
+                  device_type);
+
+  pstdout_printf (state_data->pstate, 
+                  "Device Type Modifier: %Xh\n", 
+                  device_type_modifier);
+
+  return 0;
+}
+
+static int
+_output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
+                                uint8_t *sdr_record,
+                                unsigned int sdr_record_len)
+{
+  uint8_t entity_id;
+  uint8_t entity_instance;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (sdr_cache_get_entity_id (state_data->pstate,
+                               sdr_record,
+                               sdr_record_len,
+                               &entity_id,
+                               &entity_instance) < 0)
+    return -1;
+
+  pstdout_printf (state_data->pstate, 
+                  "Entity ID: %Xh\n", 
+                  entity_id);
+  
+  pstdout_printf (state_data->pstate, 
+                  "Entity Instance: %Xh\n", 
+                  entity_instance);
+
+  return 0;
+}
+
 static int 
 sensors_display_very_verbose_general_device_locator_record (ipmi_sensors_state_data_t *state_data,
                                                             uint8_t *sdr_record,
@@ -387,6 +457,12 @@ sensors_display_very_verbose_general_device_locator_record (ipmi_sensors_state_d
                                                             char **event_message_list,
                                                             unsigned int event_message_list_len)
 {
+  uint8_t direct_access_address;
+  uint8_t channel_number;
+  uint8_t device_slave_address;
+  uint8_t lun_for_master_write_read_command;
+  uint8_t address_span;
+
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
@@ -398,34 +474,44 @@ sensors_display_very_verbose_general_device_locator_record (ipmi_sensors_state_d
                                     record_id) < 0)
     return -1;
 
+  if (sdr_cache_get_general_device_parameters (state_data->pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               &direct_access_address,
+                                               &channel_number,
+                                               &device_slave_address,
+                                               &lun_for_master_write_read_command,
+                                               &address_span) < 0)
+    return -1;
+
   pstdout_printf (state_data->pstate, 
                   "Direct Access Address: %Xh\n", 
-                  record->direct_access_address);
+                  direct_access_address);
   pstdout_printf (state_data->pstate, 
                   "Channel Number: %Xh\n", 
-                  record->channel_number);
+                  channel_number);
   pstdout_printf (state_data->pstate, 
                   "Direct Slave Address: %Xh\n", 
-                  record->device_slave_address);
+                  device_slave_address);
   pstdout_printf (state_data->pstate, 
                   "Access LUN/Bus ID: %Xh\n", 
-                  record->lun_for_master_write_read_command);
+                  lun_for_master_write_read_command);
   pstdout_printf (state_data->pstate, 
                   "Address Span: %Xh\n", 
-                  record->address_span);
-  pstdout_printf (state_data->pstate, 
-                  "Device Type: %Xh\n", 
-                  record->device_type);
-  pstdout_printf (state_data->pstate, 
-                  "Device Type Modifier: %Xh\n", 
-                  record->device_type_modifier);
-  pstdout_printf (state_data->pstate, 
-                  "Entity ID: %Xh\n", 
-                  record->entity_id);
-  pstdout_printf (state_data->pstate, 
-                  "Entity Instance: %Xh\n\n", 
-                  record->entity_instance);
-  
+                  address_span);
+
+  if (_output_device_type_and_modifier (state_data,
+                                        sdr_record,
+                                        sdr_record_len) < 0)
+    return -1;
+
+  if (_output_entity_id_and_instance (state_data,
+                                      sdr_record,
+                                      sdr_record_len) < 0)
+    return -1;
+
+  pstdout_printf (state_data->pstate, "\n");
+
   return 0;
 }
 
@@ -438,10 +524,8 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                                                         char **event_message_list,
                                                         unsigned int event_message_list_len)
 {
-  uint8_t device_type;
-  uint8_t device_type_modifier;
-  uint8_t fru_entity_id;
-  uint8_t fru_entity_instance;
+  uint8_t entity_id;
+  uint8_t entity_instance;
 
   assert(state_data);
   assert(sdr_record);
@@ -454,19 +538,28 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                                     record_id) < 0)
     return -1;
 
-  pstdout_printf (state_data->pstate,
-                  "Device Type: %Xh\n", 
-                  record->device_type);
-  pstdout_printf (state_data->pstate, 
-                  "Device Type Modifier: %Xh\n", 
-                  record->device_type_modifier);
+  if (_output_device_type_and_modifier (state_data,
+                                        sdr_record,
+                                        sdr_record_len) < 0)
+    return -1;
+
+  if (sdr_cache_get_entity_id (state_data->pstate,
+                               sdr_record,
+                               sdr_record_len,
+                               &entity_id,
+                               &entity_instance) < 0)
+    return -1;
+
   pstdout_printf (state_data->pstate, 
                   "FRU Entity ID: %Xh\n", 
-                  record->fru_entity_id);
-  pstdout_printf (state_data->pstate, 
-                  "FRU Entity Instance: %Xh\n\n", 
-                  record->fru_entity_instance);
+                  entity_id);
   
+  pstdout_printf (state_data->pstate, 
+                  "FRU Entity Instance: %Xh\n", 
+                  entity_instance);
+
+  pstdout_printf (state_data->pstate, "\n");
+
   return 0;
 }
 
@@ -490,13 +583,13 @@ sensors_display_very_verbose_management_controller_device_locator_record (ipmi_s
                                     record_id) < 0)
     return -1;
 
-  pstdout_printf (state_data->pstate, 
-                  "Entity ID: %Xh\n", 
-                  record->entity_id);
-  pstdout_printf (state_data->pstate, 
-                  "Entity Instance: %Xh\n\n", 
-                  record->entity_instance);
-  
+  if (_output_entity_id_and_instance (state_data,
+                                      sdr_record,
+                                      sdr_record_len) < 0)
+    return -1;
+
+  pstdout_printf (state_data->pstate, "\n");
+
   return 0;
 }
 
@@ -509,6 +602,9 @@ sensors_display_very_verbose_oem_record (ipmi_sensors_state_data_t *state_data,
                                          char **event_message_list,
                                          unsigned int event_message_list_len)
 {
+  uint32_t manufacturer_id;
+  uint8_t oem_data[IPMI_SENSORS_OEM_DATA_LEN];
+  unsigned int oem_data_len = IPMI_SENSORS_OEM_DATA_LEN;
   int i;
   
   assert(state_data);
@@ -520,25 +616,33 @@ sensors_display_very_verbose_oem_record (ipmi_sensors_state_data_t *state_data,
                                                record_id) < 0)
     return -1;
 
-  pstdout_printf (state_data->pstate, 
-                  "Record ID: %d\n", 
-                  record_id);
-  pstdout_printf (state_data->pstate, 
-                  "Record Type: %Xh\n", 
-                  record_type);
+  if (sdr_cache_get_manufacturer_id (state_data->pstate,
+                                     sdr_record,
+                                     sdr_record_len,
+                                     &manufacturer_id) < 0)
+    return -1;
+
   pstdout_printf (state_data->pstate,
                   "Manufacturer ID: %Xh\n", 
                   record->manufacturer_id);
+
+  if (sdr_cache_get_oem_data (state_data->pstate,
+                              sdr_record,
+                              sdr_record_len,
+                              oem_data,
+                              &oem_data_len) < 0)
+    return -1;
+
   pstdout_printf (state_data->pstate, 
                   "OEM Data: ");
-  for (i = 0; i < record->oem_data_length; i++)
-    {
-      pstdout_printf (state_data->pstate, 
-                      "%02X ", 
-                      record->oem_data[i]);
-    }
-  pstdout_printf (state_data->pstate, 
-                  "\n\n");
+  
+  for (i = 0; i < oem_data_len; i++)
+    pstdout_printf (state_data->pstate, 
+                    "%02X ", 
+                    oem_data[i]);
+  pstdout_printf (state_data->pstate, "\n");
+
+  pstdout_printf (state_data->pstate, "\n");
   
   return 0;
 }

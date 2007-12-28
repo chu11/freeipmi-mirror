@@ -138,4 +138,35 @@ int sdr_cache_get_container_entity (pstdout_state_t pstate,
                                     uint8_t *container_entity_id,
                                     uint8_t *container_entity_instance);
 
+int sdr_cache_get_general_device_parameters (pstdout_state_t pstate,
+                                             uint8_t *sdr_record,
+                                             unsigned int sdr_record_len,
+                                             uint8_t *direct_access_address,
+                                             uint8_t *channel_number,
+                                             uint8_t *device_slave_address,
+                                             uint8_t *lun_for_master_write_read_command,
+                                             uint8_t *address_span);
+
+int sdr_cache_get_device_type (pstdout_state_t pstate,
+                               uint8_t *sdr_record,
+                               unsigned int sdr_record_len,
+                               uint8_t *device_type,
+                               uint8_t *device_type_modifier);
+
+int sdr_cache_get_entity_id (pstdout_state_t pstate,
+                             uint8_t *sdr_record,
+                             unsigned int sdr_record_len,
+                             uint8_t *entity_id,
+                             uint8_t *entity_instance);
+
+int sdr_cache_get_manufacturer_id (pstdout_state_t pstate,
+                                   uint8_t *sdr_record,
+                                   unsigned int sdr_record_len,
+                                   uint32_t *manufacturer_id);
+
+int sdr_cache_get_oem_data (pstdout_state_t pstate,
+                            uint8_t *sdr_record,
+                            unsigned int sdr_record_len,
+                            uint8_t *oem_data,
+                            unsigned int *oem_data_len);
 #endif

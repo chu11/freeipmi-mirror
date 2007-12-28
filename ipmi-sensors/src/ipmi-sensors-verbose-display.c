@@ -146,6 +146,8 @@ sensors_display_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                                                       event_message_list_len) < 0)
     return -1;
   
+  pstdout_printf (state_data->pstate, "\n");
+
   return 0;
 }
 
@@ -172,6 +174,8 @@ sensors_display_verbose_compact_record (ipmi_sensors_state_data_t *state_data,
                                                       event_message_list_len) < 0)
     return -1;
   
+  pstdout_printf (state_data->pstate, "\n");
+
   return 0;
 }
 
@@ -197,6 +201,8 @@ sensors_display_verbose_event_only_record (ipmi_sensors_state_data_t *state_data
                                                       event_message_list,
                                                       event_message_list_len) < 0)
     return -1;
+
+  pstdout_printf (state_data->pstate, "\n");
 
   return 0;
 }

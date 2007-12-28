@@ -456,8 +456,12 @@ fiid_template_t tmpl_sdr_fru_device_locator_record =
     {8, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "device_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "device_type_modifier", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "fru_entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "fru_entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    /* achu: spec says "fru_entity_id" and "fru_entity_instance, but I
+     * rename for consistency to other records.  I assume it's a typo
+     * in the spec.
+     */
+    {8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // oem 
     {8, "oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // ID String type/Length code
