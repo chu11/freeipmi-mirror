@@ -22,6 +22,7 @@
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 
 #include "ipmi-sensors.h"
+#include "ipmi-sensors-display-common.h"
 
 #include "pstdout.h"
 #include "tool-fiid-wrappers.h"
@@ -49,6 +50,27 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate,
                     "[%s]\n", 
                     "OK");
+  
+  return 0;
+}
+
+int
+ipmi_sensors_verbose_output_event_message_list (ipmi_sensors_state_data_t *state_data,
+                                                char **event_message_list,
+                                                unsigned int event_message_list_len)
+{
+  assert (state_data);
+
+  pstdout_printf (state_data->pstate, 
+                  "Sensor Status: ");
+  
+  if (ipmi_sensors_output_event_message_list (state_data,
+                                              event_message_list,
+                                              event_message_list_len) < 0)
+    return -1;
+  
+  /* Extra \n in verbose output */
+  pstdout_printf (state_data->pstate, "\n");
   
   return 0;
 }

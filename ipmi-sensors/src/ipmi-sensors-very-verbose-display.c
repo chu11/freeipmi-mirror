@@ -22,18 +22,25 @@
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 
 #include "ipmi-sensors.h"
-#include "ipmi-sensors-util.h"
+#include "ipmi-sensors-display-common.h"
 
 #include "pstdout.h"
 #include "tool-sensor-common.h"
 
 static int 
 sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
-                                          int record_id, 
-					  int record_type, 
-					  sdr_full_record_t *record, 
-					  sensor_reading_t *sensor_reading)
+                                          uint8_t *sdr_record,
+                                          unsigned int sdr_record_len,
+                                          uint8_t record_type,
+                                          uint16_t record_id,
+                                          double *reading,
+                                          char **event_message_list,
+                                          unsigned int event_message_list_len)
 {
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
   pstdout_printf (state_data->pstate, 
                   "Record ID: %d\n", 
                   record_id);
@@ -172,56 +179,39 @@ sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
   pstdout_printf (state_data->pstate, 
                   "Positive Hysteresis: %d\n", 
                   record->positive_going_threshold_hysteresis);
-  if (sensor_reading == NULL)
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Sensor Reading: %s\n", 
-                      "NA");
-      pstdout_printf (state_data->pstate, 
-                      "Sensor Status: [%s]\n\n", 
-                      "Unknown");
-    }
-  else 
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Sensor Reading: %f %s\n", 
-                      sensor_reading->current_reading, 
-                      ipmi_sensor_units[record->sensor_unit]);
-      if (sensor_reading->event_message_list == NULL)
-	{
-	  pstdout_printf (state_data->pstate, 
-                          "Sensor Status: [%s]\n\n", 
-                          "OK");
-	}
-      else 
-	{
-	  int i;
-	  
-	  pstdout_printf (state_data->pstate, 
-                          "Sensor Status: ");
-	  for (i = 0; 
-	       sensor_reading->event_message_list[i]; 
-	       i++)
-	    {
-	      pstdout_printf (state_data->pstate, 
-                              "[%s]", 
-                              sensor_reading->event_message_list[i]);
-	    }
-	  pstdout_printf (state_data->pstate, 
-                          "\n\n");
-	}
-    }
+
+  if (reading)
+    pstdout_printf (state_data->pstate, 
+                    "Sensor Reading: %f %s\n", 
+                    *reading, 
+                    ipmi_sensor_units[sensor_unit]);
+  else
+    pstdout_printf (state_data->pstate,
+                    "Sensor Reading: %s\n",
+                    "NA");
+  
+  if (ipmi_sensors_verbose_output_event_message_list (state_data,
+                                                      event_message_list,
+                                                      event_message_list_len) < 0)
+    goto cleanup;
   
   return 0;
 }
 
 static int 
 sensors_display_very_verbose_compact_record (ipmi_sensors_state_data_t *state_data,
-                                             int record_id, 
-					     int record_type, 
-					     sdr_compact_record_t *record, 
-					     sensor_reading_t *sensor_reading)
+                                             uint8_t *sdr_record,
+                                             unsigned int sdr_record_len,
+                                             uint8_t record_type,
+                                             uint16_t record_id,
+                                             double *reading,
+                                             char **event_message_list,
+                                             unsigned int event_message_list_len)
 {
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
   pstdout_printf (state_data->pstate, 
                   "Record ID: %d\n", 
                   record_id);
@@ -249,49 +239,29 @@ sensors_display_very_verbose_compact_record (ipmi_sensors_state_data_t *state_da
   pstdout_printf (state_data->pstate, 
                   "Positive Hysteresis: %d\n", 
                   record->positive_going_threshold_hysteresis);
-  if (sensor_reading == NULL)
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Sensor Status: [%s]\n\n", 
-                      "Unknown");
-    }
-  else 
-    {
-      if (sensor_reading->event_message_list == NULL)
-	{
-	  pstdout_printf (state_data->pstate, 
-                          "Sensor Status: [%s]\n\n", 
-                          "OK");
-	}
-      else 
-	{
-	  int i;
-	  
-	  pstdout_printf (state_data->pstate, 
-                          "Sensor Status: ");
-	  for (i = 0; 
-	       sensor_reading->event_message_list[i]; 
-	       i++)
-	    {
-	      pstdout_printf (state_data->pstate, 
-                              "[%s]", 
-                              sensor_reading->event_message_list[i]);
-	    }
-	  pstdout_printf (state_data->pstate, 
-                          "\n\n");
-	}
-    }
-  
+
+  if (ipmi_sensors_verbose_output_event_message_list (state_data,
+                                                      event_message_list,
+                                                      event_message_list_len) < 0)
+    goto cleanup;
+
   return 0;
 }
 
 static int 
 sensors_display_very_verbose_event_only_record (ipmi_sensors_state_data_t *state_data,
-                                                int record_id, 
-						int record_type, 
-						sdr_event_only_record_t *record, 
-						sensor_reading_t *sensor_reading)
+                                                uint8_t *sdr_record,
+                                                unsigned int sdr_record_len,
+                                                uint8_t record_type,
+                                                uint16_t record_id,
+                                                double *reading,
+                                                char **event_message_list,
+                                                unsigned int event_message_list_len)
 {
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
   pstdout_printf (state_data->pstate, 
                   "Record ID: %d\n", 
                   record_id);
@@ -313,49 +283,29 @@ sensors_display_very_verbose_event_only_record (ipmi_sensors_state_data_t *state
   pstdout_printf (state_data->pstate, 
                   "Slave Address/System Software ID: %Xh\n", 
                   record->sensor_owner_id);
-  if (sensor_reading == NULL)
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Sensor Status: [%s]\n\n", 
-                      "Unknown");
-    }
-  else 
-    {
-      if (sensor_reading->event_message_list == NULL)
-	{
-	  pstdout_printf (state_data->pstate, 
-                          "Sensor Status: [%s]\n\n", 
-                          "OK");
-	}
-      else 
-	{
-	  int i;
-	  
-	  pstdout_printf (state_data->pstate, 
-                          "Sensor Status: ");
-	  for (i = 0; 
-	       sensor_reading->event_message_list[i]; 
-	       i++)
-	    {
-	      pstdout_printf (state_data->pstate, 
-                              "[%s]", 
-                              sensor_reading->event_message_list[i]);
-	    }
-	  pstdout_printf (state_data->pstate, 
-                          "\n\n");
-	}
-    }
+
+  if (ipmi_sensors_verbose_output_event_message_list (state_data,
+                                                      event_message_list,
+                                                      event_message_list_len) < 0)
+    goto cleanup;
   
   return 0;
 }
 
 static int 
-sensors_display_very_verbose_entity_asso_record (ipmi_sensors_state_data_t *state_data,
-                                                 int record_id, 
-						 int record_type, 
-						 sdr_entity_association_record_t *record, 
-						 sensor_reading_t *sensor_reading)
+sensors_display_very_verbose_entity_association_record (ipmi_sensors_state_data_t *state_data,
+                                                        uint8_t *sdr_record,
+                                                        unsigned int sdr_record_len,
+                                                        uint8_t record_type,
+                                                        uint16_t record_id,
+                                                        double *reading,
+                                                        char **event_message_list,
+                                                        unsigned int event_message_list_len)
 {
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
   pstdout_printf (state_data->pstate, 
                   "Record ID: %d\n",
                   record_id);
@@ -376,12 +326,19 @@ sensors_display_very_verbose_entity_asso_record (ipmi_sensors_state_data_t *stat
 }
 
 static int 
-sensors_display_very_verbose_gen_dev_locator_record (ipmi_sensors_state_data_t *state_data,
-                                                     int record_id, 
-						     int record_type, 
-						     sdr_generic_device_locator_record_t *record, 
-						     sensor_reading_t *sensor_reading)
+sensors_display_very_verbose_general_device_locator_record (ipmi_sensors_state_data_t *state_data,
+                                                            uint8_t *sdr_record,
+                                                            unsigned int sdr_record_len,
+                                                            uint8_t record_type,
+                                                            uint16_t record_id,
+                                                            double *reading,
+                                                            char **event_message_list,
+                                                            unsigned int event_message_list_len)
 {
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
   pstdout_printf (state_data->pstate, 
                   "Record ID: %d\n",
                   record_id);
@@ -423,12 +380,19 @@ sensors_display_very_verbose_gen_dev_locator_record (ipmi_sensors_state_data_t *
 }
 
 static int 
-sensors_display_very_verbose_fru_dev_locator_record (ipmi_sensors_state_data_t *state_data,
-                                                     int record_id, 
-						     int record_type, 
-						     sdr_fru_device_locator_record_t *record, 
-						     sensor_reading_t *sensor_reading)
+sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_t *state_data,
+                                                        uint8_t *sdr_record,
+                                                        unsigned int sdr_record_len,
+                                                        uint8_t record_type,
+                                                        uint16_t record_id,
+                                                        double *reading,
+                                                        char **event_message_list,
+                                                        unsigned int event_message_list_len)
 {
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
   pstdout_printf (state_data->pstate, 
                   "Record ID: %d\n",
                   record_id);
@@ -455,12 +419,19 @@ sensors_display_very_verbose_fru_dev_locator_record (ipmi_sensors_state_data_t *
 }
 
 static int 
-sensors_display_very_verbose_mgmt_cntrlr_dev_locator_record (ipmi_sensors_state_data_t *state_data,
-                                                             int record_id, 
-							     int record_type, 
-							     sdr_management_controller_device_locator_record_t *record, 
-							     sensor_reading_t *sensor_reading)
+sensors_display_very_verbose_management_controller_device_locator_record (ipmi_sensors_state_data_t *state_data,
+                                                                          uint8_t *sdr_record,
+                                                                          unsigned int sdr_record_len,
+                                                                          uint8_t record_type,
+                                                                          uint16_t record_id,
+                                                                          double *reading,
+                                                                          char **event_message_list,
+                                                                          unsigned int event_message_list_len)
 {
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
   pstdout_printf (state_data->pstate, 
                   "Record ID: %d\n", 
                   record_id);
@@ -482,13 +453,20 @@ sensors_display_very_verbose_mgmt_cntrlr_dev_locator_record (ipmi_sensors_state_
 
 static int 
 sensors_display_very_verbose_oem_record (ipmi_sensors_state_data_t *state_data,
-                                         int record_id, 
-					 int record_type, 
-					 sdr_oem_record_t *record, 
-					 sensor_reading_t *sensor_reading)
+                                         uint8_t *sdr_record,
+                                         unsigned int sdr_record_len,
+                                         uint8_t record_type,
+                                         uint16_t record_id,
+                                         double *reading,
+                                         char **event_message_list,
+                                         unsigned int event_message_list_len)
 {
   int i;
   
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
   pstdout_printf (state_data->pstate, 
                   "Record ID: %d\n", 
                   record_id);
@@ -516,60 +494,102 @@ sensors_display_very_verbose_oem_record (ipmi_sensors_state_data_t *state_data,
 }
 
 int 
-ipmi_sensors_display_very_verbose (ipmi_>sensors_state_data_t *state_data,                            
-                                   sdr_record_t *sdr_record, 
-                                   sensor_reading_t *sensor_reading)
+ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
+                                   uint8_t *sdr_record,
+                                   unsigned int sdr_record_len,
+                                   double *reading,
+                                   char **event_message_list,
+                                   unsigned int event_message_list_len);
+
 {
-  switch (sdr_record->record_type)
+  uint16_t record_id;
+  uint8_t record_type;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (sdr_cache_get_record_id_and_type(state_data->pstate,
+                                       sdr_record,
+                                       sdr_record_len,
+                                       &record_id,
+                                       &record_type) < 0)
+    return -1;
+
+  switch (record_type)
     {
     case IPMI_SDR_FORMAT_FULL_RECORD:
       return sensors_display_very_verbose_full_record (state_data,
-                                                       sdr_record->record_id, 
-						       sdr_record->record_type, 
-						       &(sdr_record->record.sdr_full_record), 
-						       sensor_reading);
+                                                       sdr_record,
+                                                       sdr_record_len,
+                                                       record_type,
+                                                       record_id,
+                                                       reading,
+                                                       event_message_list,
+                                                       event_message_list_len);
     case IPMI_SDR_FORMAT_COMPACT_RECORD:
       return sensors_display_very_verbose_compact_record (state_data,
-                                                          sdr_record->record_id, 
-							  sdr_record->record_type, 
-							  &(sdr_record->record.sdr_compact_record), 
-							  sensor_reading);
+                                                          sdr_record,
+                                                          sdr_record_len,
+                                                          record_type,
+                                                          record_id,
+                                                          reading,
+                                                          event_message_list,
+                                                          event_message_list_len);
     case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
       return sensors_display_very_verbose_event_only_record (state_data,
-                                                             sdr_record->record_id, 
-							     sdr_record->record_type, 
-							     &(sdr_record->record.sdr_event_only_record), 
-							     sensor_reading);
+                                                             sdr_record,
+                                                             sdr_record_len,
+                                                             record_type,
+                                                             record_id,
+                                                             reading,
+                                                             event_message_list,
+                                                             event_message_list_len);
     case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
-      return sensors_display_very_verbose_entity_asso_record (state_data,
-                                                              sdr_record->record_id, 
-							      sdr_record->record_type, 
-							      &(sdr_record->record.sdr_entity_association_record), 
-							      sensor_reading);
+      return sensors_display_very_verbose_entity_association_record (state_data,
+                                                                     sdr_record,
+                                                                     sdr_record_len,
+                                                                     record_type,
+                                                                     record_id,
+                                                                     reading,
+                                                                     event_message_list,
+                                                                     event_message_list_len);
     case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
-      return sensors_display_very_verbose_gen_dev_locator_record (state_data,
-                                                                  sdr_record->record_id, 
-								  sdr_record->record_type, 
-								  &(sdr_record->record.sdr_generic_device_locator_record), 
-								  sensor_reading);
+      return sensors_display_very_verbose_general_device_locator_record (state_data,
+                                                                         sdr_record,
+                                                                         sdr_record_len,
+                                                                         record_type,
+                                                                         record_id,
+                                                                         reading,
+                                                                         event_message_list,
+                                                                         event_message_list_len);
     case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
-      return sensors_display_very_verbose_fru_dev_locator_record (state_data,
-                                                                  sdr_record->record_id, 
-								  sdr_record->record_type, 
-								  &(sdr_record->record.sdr_fru_device_locator_record), 
-								  sensor_reading);
+      return sensors_display_very_verbose_fru_device_locator_record (state_data,
+                                                                     sdr_record,
+                                                                     sdr_record_len,
+                                                                     record_type,
+                                                                     record_id,
+                                                                     reading,
+                                                                     event_message_list,
+                                                                     event_message_list_len);
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
-      return sensors_display_very_verbose_mgmt_cntrlr_dev_locator_record (state_data,
-                                                                          sdr_record->record_id, 
-									  sdr_record->record_type, 
-									  &(sdr_record->record.sdr_management_controller_device_locator_record), 
-									  sensor_reading);
+      return sensors_display_very_verbose_management_controller_device_locator_record (state_data,
+                                                                                       sdr_record,
+                                                                                       sdr_record_len,
+                                                                                       record_type,
+                                                                                       record_id,
+                                                                                       reading,
+                                                                                       event_message_list,
+                                                                                       event_message_list_len);
     case IPMI_SDR_FORMAT_OEM_RECORD:
       return sensors_display_very_verbose_oem_record (state_data,
-                                                      sdr_record->record_id, 
-						      sdr_record->record_type, 
-						      &(sdr_record->record.sdr_oem_record), 
-						      sensor_reading);
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      record_type,
+                                                      record_id,
+                                                      reading,
+                                                      event_message_list,
+                                                      event_message_list_len);
     default:
       pstdout_fprintf(state_data->pstate,
                       stderr,

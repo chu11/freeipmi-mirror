@@ -22,7 +22,7 @@
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 
 #include "ipmi-sensors.h"
-#include "ipmi-sensors-util.h"
+#include "ipmi-sensors-display-common.h"
 
 #include "pstdout.h"
 #include "tool-sensor-common.h"
@@ -85,27 +85,6 @@ _output_header (ipmi_sensors_state_data_t *state_data,
                   "Event/Reading Type Code: %Xh\n", 
                   event_reading_type_code);
 
-  return 0;
-}
-
-static int
-_output_event_message_list (ipmi_sensors_state_data_t *state_data,
-                            char **event_message_list,
-                            unsigned int event_message_list_len)
-{
-  assert (state_data);
-
-  pstdout_printf (state_data->pstate, 
-                  "Sensor Status: ");
-  
-  if (ipmi_sensors_output_event_message_list (state_data,
-                                              event_message_list,
-                                              event_message_list_len) < 0)
-    return -1;
-  
-  /* Extra \n in verbose output */
-  pstdout_printf (state_data->pstate, "\n");
-  
   return 0;
 }
 
@@ -289,9 +268,9 @@ sensors_display_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                     "Sensor Reading: %s\n",
                     "NA");
   
-  if (_output_event_message_list (state_data,
-                                  event_message_list,
-                                  event_message_list_len) < 0)
+  if (ipmi_sensors_verbose_output_event_message_list (state_data,
+                                                      event_message_list,
+                                                      event_message_list_len) < 0)
     goto cleanup;
   
   rv = 0;
@@ -308,6 +287,16 @@ sensors_display_verbose_full_record (ipmi_sensors_state_data_t *state_data,
     free(upper_critical_threshold);
   if (upper_non_recoverable_threshold)
     free(upper_non_recoverable_threshold);
+  if (nominal_reading)
+    free(nominal_reading);
+  if (normal_maximum)
+    free(normal_maximum);
+  if (normal_minimum)
+    free(normal_minimum);
+  if (sensor_maximum_reading)
+    free(sensor_maximum_reading);
+  if (sensor_minimum_reading)
+    free(sensor_minimum_reading);
   return rv;
 }
 
@@ -330,9 +319,9 @@ sensors_display_verbose_compact_record (ipmi_sensors_state_data_t *state_data,
                       record_id) < 0)
     return -1;
 
-  if (_output_event_message_list (state_data,
-                                  event_message_list,
-                                  event_message_list_len) < 0)
+  if (ipmi_sensors_verbose_output_event_message_list (state_data,
+                                                      event_message_list,
+                                                      event_message_list_len) < 0)
     return -1;
   
   return 0;
@@ -357,9 +346,9 @@ sensors_display_verbose_event_only_record (ipmi_sensors_state_data_t *state_data
                       record_id) < 0)
     return -1;
   
-  if (_output_event_message_list (state_data,
-                                  event_message_list,
-                                  event_message_list_len) < 0)
+  if (ipmi_sensors_verbose_output_event_message_list (state_data,
+                                                      event_message_list,
+                                                      event_message_list_len) < 0)
     return -1;
 
   return 0;

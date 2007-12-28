@@ -22,7 +22,10 @@
 #include "ipmi-sensors.h"
 
 int ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
-                                       sdr_record_t *sdr_record, 
-                                       sensor_reading_t *sensor_reading);
+                                       uint8_t *sdr_record,
+                                       unsigned int sdr_record_len,
+                                       double *reading,
+                                       char **event_message_list,
+                                       unsigned int event_message_list_len);
 
 #endif
