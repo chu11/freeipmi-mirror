@@ -461,9 +461,12 @@ fiid_template_t tmpl_sdr_fru_device_locator_record =
     // oem 
     {8, "oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // ID String type/Length code
-    {8, "id_string_type_length_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "device_id_string_type_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // ID String bytes
-    {128, "device_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
+    /* achu: spec says "device_string", but I rename for consistency to other 
+     * records.  I assume it's a typo in the spec.
+     */
+    {128, "device_id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
     {0, "", 0}
   };
 
@@ -502,9 +505,12 @@ fiid_template_t tmpl_sdr_non_intelligent_fru_device_locator_record =
     // oem 
     {8, "oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // ID String type/Length code
-    {8, "id_string_type_length_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "device_id_string_type_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // ID String bytes
-    {128, "device_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
+    /* achu: spec says "device_string", but I rename for consistency to other 
+     * records.  I assume it's a typo in the spec.
+     */
+    {128, "device_id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
     {0, "", 0}
   };
 
@@ -550,7 +556,7 @@ fiid_template_t tmpl_sdr_management_controller_device_locator_record =
     {8, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // ID String type/Length code
-    {8, "id_string_type_length_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "device_id_string_type_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // ID String bytes
     {128, "device_id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
     {0, "", 0}
