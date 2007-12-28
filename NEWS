@@ -5,8 +5,15 @@ For Users
 o Support --groups (plural) for multiple groups listing in
   ipmi-sensors.  Older --group option maintained for backwards
   compatability.
-o Minor changes to SDR cache output behaviors in ipmi-sensors,
+o Support --list-groups in ipmimonitoring.
+o Change --cache-dir to --sdr-cache-dir in ipmimonitoring for consistency
+to ipmi-sensors.
+o Text changes to SDR cache output behaviors in ipmi-sensors,
 ipmi-sel, ipmi-fru, and ipmimonitoring.
+o Ipmi-sensors SDR output changes under verbose and very verbose
+output modes.
+o Support shared SDR caches for ipmi-sensors, ipmi-fru, ipmi-sel, and
+ipmimonitoring.
 o Minor corner case fixes throughout.
 
 For Developers
@@ -18,6 +25,7 @@ o Many libfreeipmi API changes.
   o 'ipmi_device_t' device context renamed to 'ipmi_ctx_t'.
   o New sdr-caching library.
   o Various code re-organization into subdirectories.
+o SDR debugging/dumping added into all tools.
 
 0.5.2
 -----
