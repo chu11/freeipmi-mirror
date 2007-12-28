@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.8.2.6 2007-12-27 05:32:34 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.8.2.7 2007-12-28 23:13:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -270,47 +270,6 @@ _output_fru(ipmi_fru_state_data_t *state_data,
   return (rv);
 }
 
-static int
-_get_logical_fru_info(ipmi_fru_state_data_t *state_data,
-                      uint8_t *sdr_record,
-                      unsigned int sdr_record_len,
-                      uint8_t *logical_physical_fru_device,
-                      uint8_t *logical_fru_device_device_slave_address)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint64_t val;
-  int32_t len;
-  int rv = -1;
-
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(logical_physical_fru_device);
-  assert(logical_fru_device_device_slave_address);
-
-  _FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_fru_device_locator_record);
-
-  _FIID_OBJ_SET_ALL_LEN(len,
-                        obj_sdr_record,
-                        sdr_record,
-                        sdr_record_len);
-
-  _FIID_OBJ_GET(obj_sdr_record,
-                "logical_physical_fru_device",
-                &val);
-  *logical_physical_fru_device = val;
-
-  _FIID_OBJ_GET(obj_sdr_record,
-                "logical_fru_device_device_slave_address",
-                &val);
-  *logical_fru_device_device_slave_address = val;
-
-  rv = 0;
- cleanup:
-  _FIID_OBJ_DESTROY(obj_sdr_record);
-  return (rv);
-}
-
 int
 run_cmd_args (ipmi_fru_state_data_t *state_data)
 {
@@ -381,11 +340,11 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
               if (record_type != IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
                 continue;
 
-              if (_get_logical_fru_info(state_data,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        &logical_physical_fru_device,
-                                        &logical_fru_device_device_slave_address) < 0)
+              if (sdr_cache_get_logical_fru_info (state_data->pstate,
+                                                  sdr_record,
+                                                  sdr_record_len,
+                                                  &logical_physical_fru_device,
+                                                  &logical_fru_device_device_slave_address) < 0)
                 return -1;
               
               if (logical_physical_fru_device
@@ -444,11 +403,11 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
           if (record_type != IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
             continue;
           
-          if (_get_logical_fru_info(state_data,
-                                    sdr_record,
-                                    sdr_record_len,
-                                    &logical_physical_fru_device,
-                                    &logical_fru_device_device_slave_address) < 0)
+          if (sdr_cache_get_logical_fru_info (state_data->pstate,
+                                              sdr_record,
+                                              sdr_record_len,
+                                              &logical_physical_fru_device,
+                                              &logical_fru_device_device_slave_address) < 0)
             return -1;
           
           if (logical_physical_fru_device

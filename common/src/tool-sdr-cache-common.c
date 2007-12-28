@@ -1778,6 +1778,48 @@ sdr_cache_get_general_device_parameters (pstdout_state_t pstate,
   return rv;
 }
 
+int 
+sdr_cache_get_logical_fru_info (pstdout_state_t pstate,
+                                uint8_t *sdr_record,
+                                unsigned int sdr_record_len,
+                                uint8_t *logical_physical_fru_device,
+                                uint8_t *logical_fru_device_device_slave_address)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+  
+  assert(pstate);
+  assert(sdr_record);
+  assert(sdr_record_len);
+  
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
+  
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  if (logical_physical_fru_device)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "logical_physical_fru_device", &val);
+      *logical_physical_fru_device = val;
+    }
+  if (logical_fru_device_device_slave_address)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "logical_fru_device_device_slave_address", &val);
+      *logical_fru_device_device_slave_address = val;
+    }
+  
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+ 
+}
+
 int
 sdr_cache_get_device_type (pstdout_state_t pstate,
                            uint8_t *sdr_record,
@@ -1874,7 +1916,7 @@ sdr_cache_get_manufacturer_id (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate)
+  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(manufacturer_id);
@@ -1910,7 +1952,7 @@ sdr_cache_get_oem_data (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate)
+  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(!oem_data || oem_data_len);
