@@ -22,6 +22,7 @@
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 
 #include "ipmi-sensors.h"
+#include "ipmi-sensors-util.h"
 
 #include "pstdout.h"
 #include "tool-sensor-common.h"

@@ -110,4 +110,13 @@ int sdr_cache_get_sensor_decoding_data (pstdout_state_t pstate,
                                         uint8_t *linearization,
                                         uint8_t *analog_data_format);
 
+int sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
+                                         uint8_t *sdr_record,
+                                         unsigned int sdr_record_len,
+                                         double **nominal_reading,
+                                         double **normal_maximum,
+                                         double **normal_minimum,
+                                         double **sensor_maximum_reading,
+                                         double **sensor_minimum_reading);
+
 #endif

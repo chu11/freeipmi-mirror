@@ -225,7 +225,13 @@ _decode_sensor_value (ipmi_sel_state_data_t *state_data,
 
   /* if the sensor is non-linear, I just don't know what to do */
   if (!IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(linearization))
-    return -1;
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Cannot decode non-linear sensor\n");
+      return -1;
+    }
   
   if (ipmi_sensor_decode_value (r_exponent,
                                 b_exponent,

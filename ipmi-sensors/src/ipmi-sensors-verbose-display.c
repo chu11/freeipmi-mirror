@@ -118,8 +118,20 @@ sensors_display_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                                      char **event_message_list,
                                      unsigned int event_message_list_len)
 {
+  double *lower_non_critical_threshold = NULL;
+  double *lower_critical_threshold = NULL;
+  double *lower_non_recoverable_threshold = NULL;
+  double *upper_non_critical_threshold = NULL;
+  double *upper_critical_threshold = NULL;
+  double *upper_non_recoverable_threshold = NULL;
+  double *nominal_reading = NULL;
+  double *normal_maximum = NULL;
+  double *normal_minimum = NULL;
+  double *sensor_maximum_reading = NULL;
+  double *sensor_minimum_reading = NULL;
+  uint8_t sensor_unit;
   int rv = -1;
-
+  
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
@@ -130,104 +142,142 @@ sensors_display_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                       record_id) < 0)
     goto cleanup;
 
-  if (record->readable_threshold_lower_critical_threshold)
-    {
-      pstdout_printf (state_data->pstate,
-                      "Lower Critical Threshold: %f %s\n", 
-                      record->lower_critical_threshold, 
-                      ipmi_sensor_units[record->sensor_unit]);
-    }
+  if (sdr_cache_get_sensor_unit (state_data->pstate,
+                                 sdr_record,
+                                 sdr_record_len,
+                                 &sensor_unit) < 0)
+    goto cleanup;
+
+  if (ipmi_sensors_get_thresholds (state_data,
+                                   sdr_record,
+                                   sdr_record_len,
+                                   &lower_non_critical_threshold,
+                                   &lower_critical_threshold,
+                                   &lower_non_recoverable_threshold,
+                                   &upper_non_critical_threshold,
+                                   &upper_critical_threshold,
+                                   &upper_non_recoverable_threshold) < 0)
+    goto cleanup;
+
+  if (lower_critical_threshold)
+    pstdout_printf (state_data->pstate,
+                    "Lower Critical Threshold: %f %s\n", 
+                    *lower_critical_threshold, 
+                    ipmi_sensor_units[sensor_unit]);
   else
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Lower Critical Threshold: %s\n", 
-                      "NA");
-    }
-  if (record->readable_threshold_upper_critical_threshold)
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Upper Critical Threshold: %f %s\n", 
-                      record->upper_critical_threshold, 
-                      ipmi_sensor_units[record->sensor_unit]);
-    }
+    pstdout_printf (state_data->pstate, 
+                    "Lower Critical Threshold: %s\n", 
+                    "NA");
+
+  if (upper_critical_threshold)
+    pstdout_printf (state_data->pstate, 
+                    "Upper Critical Threshold: %f %s\n", 
+                    *upper_critical_threshold, 
+                    ipmi_sensor_units[sensor_unit]);
   else
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Upper Critical Threshold: %s\n", 
-                      "NA");
-    }
-  if (record->readable_threshold_lower_non_critical_threshold)
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Lower Non-Critical Threshold: %f %s\n", 
-                      record->lower_non_critical_threshold, 
-                      ipmi_sensor_units[record->sensor_unit]);
-    }
+    pstdout_printf (state_data->pstate, 
+                    "Upper Critical Threshold: %s\n", 
+                    "NA");
+
+  if (lower_non_critical_threshold)
+    pstdout_printf (state_data->pstate, 
+                    "Lower Non-Critical Threshold: %f %s\n", 
+                    *lower_non_critical_threshold, 
+                    ipmi_sensor_units[sensor_unit]);
   else
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Lower Non-Critical Threshold: %s\n", 
-                      "NA");
-    }
-  if (record->readable_threshold_upper_non_critical_threshold)
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Upper Non-Critical Threshold: %f %s\n", 
-                      record->upper_non_critical_threshold, 
-                      ipmi_sensor_units[record->sensor_unit]);
-    }
+    pstdout_printf (state_data->pstate, 
+                    "Lower Non-Critical Threshold: %s\n", 
+                    "NA");
+
+  if (upper_non_critical_threshold)
+    pstdout_printf (state_data->pstate, 
+                    "Upper Non-Critical Threshold: %f %s\n", 
+                    *upper_non_critical_threshold, 
+                    ipmi_sensor_units[sensor_unit]);
   else
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Upper Non-Critical Threshold: %s\n", 
-                      "NA");
-    }
-  if (record->readable_threshold_lower_non_recoverable_threshold)
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Lower Non-Recoverable Threshold: %f %s\n", 
-                      record->lower_non_recoverable_threshold, 
-                      ipmi_sensor_units[record->sensor_unit]);
-    }
+    pstdout_printf (state_data->pstate, 
+                    "Upper Non-Critical Threshold: %s\n", 
+                    "NA");
+
+  if (lower_non_recoverable_threshold)
+    pstdout_printf (state_data->pstate, 
+                    "Lower Non-Recoverable Threshold: %f %s\n", 
+                    *lower_non_recoverable_threshold, 
+                    ipmi_sensor_units[sensor_unit]);
   else
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Lower Non-Recoverable Threshold: %s\n", 
-                      "NA");
-    }
-  if (record->readable_threshold_upper_non_recoverable_threshold)
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Upper Non-Recoverable Threshold: %f %s\n", 
-                      record->upper_non_recoverable_threshold, 
-                      ipmi_sensor_units[record->sensor_unit]);
-    }
+    pstdout_printf (state_data->pstate, 
+                    "Lower Non-Recoverable Threshold: %s\n", 
+                    "NA");
+
+  if (upper_non_recoverable_threshold)
+    pstdout_printf (state_data->pstate, 
+                    "Upper Non-Recoverable Threshold: %f %s\n", 
+                    *upper_non_recoverable_threshold, 
+                    ipmi_sensor_units[sensor_unit]);
   else
-    {
-      pstdout_printf (state_data->pstate, 
-                      "Upper Non-Recoverable Threshold: %s\n", 
-                      "NA");
-    }
-  pstdout_printf (state_data->pstate, 
-                  "Sensor Min. Reading: %f %s\n", 
-                  record->sensor_minimum_reading, 
-                  ipmi_sensor_units[record->sensor_unit]);
-  pstdout_printf (state_data->pstate, 
-                  "Sensor Max. Reading: %f %s\n", 
-                  record->sensor_maximum_reading, 
-                  ipmi_sensor_units[record->sensor_unit]);
-  pstdout_printf (state_data->pstate, 
-                  "Normal Min.: %f %s\n", 
-                  record->normal_minimum, 
-                  ipmi_sensor_units[record->sensor_unit]);
-  pstdout_printf (state_data->pstate, 
-                  "Normal Max.: %f %s\n", 
-                  record->normal_maximum, 
-                  ipmi_sensor_units[record->sensor_unit]);
-  pstdout_printf (state_data->pstate, 
-                  "Nominal reading: %f %s\n", 
-                  record->nominal_reading, 
-                  ipmi_sensor_units[record->sensor_unit]);
+    pstdout_printf (state_data->pstate, 
+                    "Upper Non-Recoverable Threshold: %s\n", 
+                    "NA");
+
+  if (sdr_cache_get_sensor_reading_ranges (state_data->pstate,
+                                           sdr_record,
+                                           sdr_record_len,
+                                           &nominal_reading,
+                                           &normal_maximum,
+                                           &normal_minimum,
+                                           &sensor_maximum_reading,
+                                           &sensor_minimum_reading) < 0)
+    goto cleanup;
+
+  if (sensor_minimum_reading)
+    pstdout_printf (state_data->pstate, 
+                    "Sensor Min. Reading: %f %s\n", 
+                    *sensor_minimum_reading, 
+                    ipmi_sensor_units[sensor_unit]);
+  else
+    pstdout_printf (state_data->pstate, 
+                    "Sensor Min. Reading: %s\n", 
+                    "NA");
+
+  if (sensor_maximum_reading)
+    pstdout_printf (state_data->pstate, 
+                    "Sensor Max. Reading: %f %s\n", 
+                    *sensor_maximum_reading, 
+                    ipmi_sensor_units[sensor_unit]);
+  else
+    pstdout_printf (state_data->pstate, 
+                    "Sensor Max. Reading: %s\n", 
+                    "NA");
+
+  if (normal_minimum)
+    pstdout_printf (state_data->pstate, 
+                    "Normal Min.: %f %s\n", 
+                    *normal_minimum, 
+                    ipmi_sensor_units[sensor_unit]);
+  else
+    pstdout_printf (state_data->pstate, 
+                    "Normal Min.: %s\n", 
+                    "NA");
+
+  if (normal_maximum)
+    pstdout_printf (state_data->pstate, 
+                    "Normal Max.: %f %s\n", 
+                    *normal_maximum, 
+                    ipmi_sensor_units[sensor_unit]);
+  else
+    pstdout_printf (state_data->pstate, 
+                    "Normal Max.: %s\n", 
+                    "NA");
+
+  if (nominal_reading)
+    pstdout_printf (state_data->pstate, 
+                    "Nominal reading: %f %s\n", 
+                    *nominal_reading, 
+                    ipmi_sensor_units[sensor_unit]);
+  else
+    pstdout_printf (state_data->pstate, 
+                    "Nominal reading: %s\n", 
+                    "NA");
 
   if (reading)
     pstdout_printf (state_data->pstate, 
@@ -246,6 +296,18 @@ sensors_display_verbose_full_record (ipmi_sensors_state_data_t *state_data,
   
   rv = 0;
  cleanup:
+  if (lower_non_critical_threshold)
+    free(lower_non_critical_threshold);
+  if (lower_critical_threshold)
+    free(lower_critical_threshold);
+  if (lower_non_recoverable_threshold)
+    free(lower_non_recoverable_threshold);
+  if (upper_non_critical_threshold)
+    free(upper_non_critical_threshold);
+  if (upper_critical_threshold)
+    free(upper_critical_threshold);
+  if (upper_non_recoverable_threshold)
+    free(upper_non_recoverable_threshold);
   return rv;
 }
 
