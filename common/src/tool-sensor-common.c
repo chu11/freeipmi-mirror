@@ -27,7 +27,7 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 
-#include "freeipmi/spec/ipmi-event-reading-type-codes-spec.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 
 #include "tool-sensor-common.h"

@@ -67,6 +67,8 @@
 
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/spec/ipmi-sensor-units-spec.h"
+#include "freeipmi/util/ipmi-sensor-util.h"
 
 #include "tool-sdr-cache-common.h"
 #include "tool-fiid-wrappers.h"
@@ -1306,7 +1308,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
                                                acceptable_record_types)))
     goto cleanup;
 
-  if (sdr_cache_get_sensor_decoding_data(state_data->pstate,
+  if (sdr_cache_get_sensor_decoding_data(pstate,
                                          sdr_record,
                                          sdr_record_len,
                                          &r_exponent,
@@ -1340,9 +1342,9 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
 
   if (nominal_reading)
     {
-      _FIID_OBJ_GET(obj_sdr_record,
-                    "nominal_reading",
-                    &val);
+      _SDR_FIID_OBJ_GET(obj_sdr_record,
+                        "nominal_reading",
+                        &val);
 
       if (ipmi_sensor_decode_value (r_exponent,
                                     b_exponent,
@@ -1353,7 +1355,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
                                     val,
                                     &reading) < 0)
         {
-          pstdout_fprintf (state_data->pstate,
+          pstdout_fprintf (pstate,
                            stderr,
                            "ipmi_sensor_decode_value: %s\n",
                            strerror(errno));
@@ -1362,16 +1364,16 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
 
       if (!(tmp_nominal_reading = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(state_data->pstate, "malloc");
+          pstdout_perror(pstate, "malloc");
           goto cleanup;
         }
       *tmp_nominal_reading = reading;
     }
   if (normal_maximum)
     {
-      _FIID_OBJ_GET(obj_sdr_record,
-                    "normal_maximum",
-                    &val);
+      _SDR_FIID_OBJ_GET(obj_sdr_record,
+                        "normal_maximum",
+                        &val);
 
       if (ipmi_sensor_decode_value (r_exponent,
                                     b_exponent,
@@ -1382,7 +1384,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
                                     val,
                                     &reading) < 0)
         {
-          pstdout_fprintf (state_data->pstate,
+          pstdout_fprintf (pstate,
                            stderr,
                            "ipmi_sensor_decode_value: %s\n",
                            strerror(errno));
@@ -1391,17 +1393,17 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
 
       if (!(tmp_normal_maximum = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(state_data->pstate, "malloc");
+          pstdout_perror(pstate, "malloc");
           goto cleanup;
         }
       *tmp_normal_maximum = reading;
     }
   if (normal_minimum)
     {
-      _FIID_OBJ_GET(obj_sdr_record,
-                    "normal_minimum",
-                    &val);
-
+      _SDR_FIID_OBJ_GET(obj_sdr_record,
+                        "normal_minimum",
+                        &val);
+      
       if (ipmi_sensor_decode_value (r_exponent,
                                     b_exponent,
                                     m,
@@ -1411,7 +1413,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
                                     val,
                                     &reading) < 0)
         {
-          pstdout_fprintf (state_data->pstate,
+          pstdout_fprintf (pstate,
                            stderr,
                            "ipmi_sensor_decode_value: %s\n",
                            strerror(errno));
@@ -1420,16 +1422,16 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
 
       if (!(tmp_normal_minimum = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(state_data->pstate, "malloc");
+          pstdout_perror(pstate, "malloc");
           goto cleanup;
         }
       *tmp_normal_minimum = reading;
     }
   if (sensor_maximum_reading)
     {
-      _FIID_OBJ_GET(obj_sdr_record,
-                    "sensor_maximum_reading",
-                    &val);
+      _SDR_FIID_OBJ_GET(obj_sdr_record,
+                        "sensor_maximum_reading",
+                        &val);
 
       if (ipmi_sensor_decode_value (r_exponent,
                                     b_exponent,
@@ -1440,7 +1442,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
                                     val,
                                     &reading) < 0)
         {
-          pstdout_fprintf (state_data->pstate,
+          pstdout_fprintf (pstate,
                            stderr,
                            "ipmi_sensor_decode_value: %s\n",
                            strerror(errno));
@@ -1449,16 +1451,16 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
 
       if (!(tmp_sensor_maximum_reading = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(state_data->pstate, "malloc");
+          pstdout_perror(pstate, "malloc");
           goto cleanup;
         }
       *tmp_sensor_maximum_reading = reading;
     }
   if (sensor_minimum_reading)
     {
-      _FIID_OBJ_GET(obj_sdr_record,
-                    "sensor_minimum_reading",
-                    &val);
+      _SDR_FIID_OBJ_GET(obj_sdr_record,
+                        "sensor_minimum_reading",
+                        &val);
 
       if (ipmi_sensor_decode_value (r_exponent,
                                     b_exponent,
@@ -1469,7 +1471,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
                                     val,
                                     &reading) < 0)
         {
-          pstdout_fprintf (state_data->pstate,
+          pstdout_fprintf (pstate,
                            stderr,
                            "ipmi_sensor_decode_value: %s\n",
                            strerror(errno));
@@ -1478,7 +1480,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
 
       if (!(tmp_sensor_minimum_reading = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(state_data->pstate, "malloc");
+          pstdout_perror(pstate, "malloc");
           goto cleanup;
         }
       *tmp_sensor_minimum_reading = reading;
@@ -1550,7 +1552,7 @@ sdr_cache_get_hysteresis (pstdout_state_t pstate,
                                                acceptable_record_types)))
     goto cleanup;
   
-  if (sdr_cache_get_sensor_decoding_data(state_data->pstate,
+  if (sdr_cache_get_sensor_decoding_data(pstate,
                                          sdr_record,
                                          sdr_record_len,
                                          &r_exponent,
@@ -1584,9 +1586,9 @@ sdr_cache_get_hysteresis (pstdout_state_t pstate,
 
   if (positive_going_threshold_hysteresis)
     {
-      _FIID_OBJ_GET(obj_sdr_record,
-                    "positive_going_threshold_hysteresis",
-                    &val);
+      _SDR_FIID_OBJ_GET(obj_sdr_record,
+                        "positive_going_threshold_hysteresis",
+                        &val);
 
       if (ipmi_sensor_decode_value (r_exponent,
                                     b_exponent,
@@ -1595,9 +1597,9 @@ sdr_cache_get_hysteresis (pstdout_state_t pstate,
                                     linearization,
                                     analog_data_format,
                                     val,
-                                    &reading) < 0)
+                                    &hysteresis) < 0)
         {
-          pstdout_fprintf (state_data->pstate,
+          pstdout_fprintf (pstate,
                            stderr,
                            "ipmi_sensor_decode_value: %s\n",
                            strerror(errno));
@@ -1606,16 +1608,16 @@ sdr_cache_get_hysteresis (pstdout_state_t pstate,
 
       if (!(tmp_positive_going_threshold_hysteresis = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(state_data->pstate, "malloc");
+          pstdout_perror(pstate, "malloc");
           goto cleanup;
         }
-      *tmp_positive_going_threshold_hysteresis = reading;
+      *tmp_positive_going_threshold_hysteresis = hysteresis;
     }
   if (negative_going_threshold_hysteresis)
     {
-      _FIID_OBJ_GET(obj_sdr_record,
-                    "negative_going_threshold_hysteresis",
-                    &val);
+      _SDR_FIID_OBJ_GET(obj_sdr_record,
+                        "negative_going_threshold_hysteresis",
+                        &val);
 
       if (ipmi_sensor_decode_value (r_exponent,
                                     b_exponent,
@@ -1624,9 +1626,9 @@ sdr_cache_get_hysteresis (pstdout_state_t pstate,
                                     linearization,
                                     analog_data_format,
                                     val,
-                                    &reading) < 0)
+                                    &hysteresis) < 0)
         {
-          pstdout_fprintf (state_data->pstate,
+          pstdout_fprintf (pstate,
                            stderr,
                            "ipmi_sensor_decode_value: %s\n",
                            strerror(errno));
@@ -1635,10 +1637,10 @@ sdr_cache_get_hysteresis (pstdout_state_t pstate,
 
       if (!(tmp_negative_going_threshold_hysteresis = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(state_data->pstate, "malloc");
+          pstdout_perror(pstate, "malloc");
           goto cleanup;
         }
-      *tmp_negative_going_threshold_hysteresis = reading;
+      *tmp_negative_going_threshold_hysteresis = hysteresis;
     }
   
   if (positive_going_threshold_hysteresis)
@@ -1675,7 +1677,7 @@ sdr_cache_get_container_entity (pstdout_state_t pstate,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD;
   acceptable_record_types |= IPMI_SDR_RECORD_TYPE_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
