@@ -45,6 +45,7 @@
 #include "tool-sdr-cache-common.h"
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
+#include "ipmi-sensors-reading.h"
 #include "ipmi-sensors-simple-display.h"
 #include "ipmi-sensors-verbose-display.h"
 #include "ipmi-sensors-very-verbose-display.h"
@@ -177,7 +178,7 @@ _flush_cache (ipmi_sensors_state_data_t *state_data)
 }
 
 static void
-_str_replace_chr (char *str, char chr, char with)
+_str_replace_char (char *str, char chr, char with)
 {
   char *p = NULL;
   char *s = NULL;
@@ -285,7 +286,7 @@ _sensors_list_specified (ipmi_sensors_state_data_t *state_data,
                          uint8_t *sdr_record,
                          unsigned int sdr_record_len)
 {
-  uint8_t record_id;
+  uint16_t record_id;
   int i;
 
   assert(state_data);
@@ -313,125 +314,115 @@ static int
 _display_sensors (ipmi_sensors_state_data_t *state_data)
 {
   struct ipmi_sensors_arguments *args = NULL;
+  uint16_t record_count;
+  int verbose_count;
+  int i;
   
   assert(state_data);
 
   args = state_data->prog_data->args;
 
-  if (args->groups_list_wanted)
-    return _display_group_sensors (state_data);
+  verbose_count = state_data->prog_data->args->verbose_count;
 
-  if (args->sensors_list_wanted)
-    return _display_sensor_list (state_data);
-  
-  if (!args->groups_list_wanted && !args->sensors_list_wanted)
+  if (ipmi_sdr_cache_record_count(state_data->ipmi_sdr_cache_ctx, &record_count) < 0)
     {
-      uint16_t record_count;
-      int verbose_count;
-      int i;
-
-      verbose_count = state_data->prog_data->args->verbose_count;
-
-      if (ipmi_sdr_cache_record_count(state_data->ipmi_sdr_cache_ctx, &record_count) < 0)
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_sdr_cache_record_count: %s\n",
+                      ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
+      return -1;
+    }
+  
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next(state_data->ipmi_sdr_cache_ctx))
+    {
+      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      int sdr_record_len = 0;
+      int ret;
+      
+      if ((sdr_record_len = ipmi_sdr_cache_record_read(state_data->ipmi_sdr_cache_ctx,
+                                                       sdr_record,
+                                                       IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,
-                          "ipmi_sdr_cache_record_count: %s\n",
+                          "ipmi_sdr_cache_record_read: %s\n",
                           ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
           return -1;
         }
-  
-      for (i = 0; i < record_count; i++, ipmi_sdr_cache_next(state_data->ipmi_sdr_cache_ctx))
+      
+      if (args->groups_list_wanted)
         {
-          uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-          int sdr_record_len = 0;
-          int ret;
-
-          if ((sdr_record_len = ipmi_sdr_cache_record_read(state_data->ipmi_sdr_cache_ctx,
-                                                           sdr_record,
-                                                           IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
-            {
-              pstdout_fprintf(state_data->pstate,
-                              stderr,
-                              "ipmi_sdr_cache_record_read: %s\n",
-                              ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
-              return -1;
-            }
+          if ((ret = _sensors_group_specified (state_data,
+                                               sdr_record,
+                                               sdr_record_len)) < 0)
+            return -1;
+        }
+      else if (args->sensors_list_wanted)
+        {
+          if ((ret = _sensors_list_specified (state_data,
+                                              sdr_record,
+                                              sdr_record_len)) < 0)
+            return -1;
+        }
+      else
+        ret = 1;            /* display everything */
+      
+      if (ret)
+        {
+          double *reading = NULL;
+          char **event_message_list = NULL;
+          unsigned int event_message_list_len = 0;
           
-          if (state_data->prog_data->args->groups_list_wanted)
+          if ((ret = sensor_reading(state_data,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &reading,
+                                    &event_message_list,
+                                    &event_message_list_len)) < 0)
+            return -1;
+          
+          switch (verbose_count)
             {
-              if ((ret = _sensors_group_specified (state_data,
-                                                   sdr_record,
-                                                   sdr_record_len)) < 0)
-                return -1;
-            }
-          else if (state_data->prog_data->args->sensors_list_wanted)
-            {
-              if ((ret = _sensors_list_specified (state_data,
+            case 0:
+              ret = ipmi_sensors_display_simple (state_data, 
+                                                 sdr_record,
+                                                 sdr_record_len,
+                                                 reading,
+                                                 event_message_list,
+                                                 event_message_list_len);
+              break;
+            case 1:
+              ret = ipmi_sensors_display_verbose (state_data, 
                                                   sdr_record,
-                                                  sdr_record_len)) < 0)
-                return -1;
+                                                  sdr_record_len,
+                                                  reading,
+                                                  event_message_list,
+                                                  event_message_list_len);
+              break;
+            case 2:
+            default:
+              ret = ipmi_sensors_display_very_verbose (state_data, 
+                                                       sdr_record,
+                                                       sdr_record_len,
+                                                       reading,
+                                                       event_message_list,
+                                                       event_message_list_len);
+              break;
             }
-          else
-            ret = 1;            /* display everything */
           
-          if (ret)
+          if (reading)
+            free(reading);
+
+          if (event_message_list)
             {
-              double *reading = NULL;
-              char **event_message_list = NULL;
-              unsigned int event_message_list_len = 0;
-              
-              if ((ret = sensor_reading(state_data,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        &reading,
-                                        &event_message_list,
-                                        &event_message_list_len)) < 0)
-                goto cleanup;
-              
-              switch (verbose_count)
-                {
-                case 0:
-                  ret = ipmi_sensors_display_simple (state_data, 
-                                                     sdr_record,
-                                                     sdr_record_len,
-                                                     reading,
-                                                     event_message_list,
-                                                     event_message_list_len);
-                  break;
-                case 1:
-                  ret = ipmi_sensors_display_verbose (state_data, 
-                                                      sdr_record,
-                                                      sdr_record_len,
-                                                      reading,
-                                                      event_message_list,
-                                                      event_message_list_len);
-                  break;
-                case 2:
-                default:
-                  ret = ipmi_sensors_display_very_verbose (state_data, 
-                                                           sdr_record,
-                                                           sdr_record_len,
-                                                           reading,
-                                                           event_message_list,
-                                                           event_message_list_len);
-                  break;
-                }
-
-              if (reading)
-                free(reading);
-
-              if (event_message_list)
-                {
-                  int j;
-                  for (j = 0; j < event_message_list; j++)
-                    free(event_message_list[j]);
-                  free(event_message_list);
-                }
-              
-              if (ret < 0)
-                return -1;
+              int j;
+              for (j = 0; j < event_message_list_len; j++)
+                free(event_message_list[j]);
+              free(event_message_list);
             }
+          
+          if (ret < 0)
+            return -1;
         }
     }
   
@@ -465,7 +456,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
     return -1;
   
   if (_display_sensors (state_data) < 0)
-    goto cleanup;
+    return -1;
 
   return 0;
 }

@@ -16,7 +16,17 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <assert.h>
+#include <errno.h>
 
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
@@ -73,7 +83,12 @@ _output_verbose_header (ipmi_sensors_state_data_t *state_data,
                   "Record ID: %d\n", 
                   record_id);
   pstdout_printf (state_data->pstate, 
+#if 0
+                  /* XXX */
                   "Sensor ID String: %s\n", 
+#else
+                  "Sensor Name: %s\n",
+#endif
                   id_string);
   pstdout_printf (state_data->pstate, 
                   "Group Name: %s\n",
@@ -120,19 +135,9 @@ sensors_display_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                                               sdr_record_len) < 0)
     return -1;
 
-  if (ipmi_sensors_output_sensor_reading_ranges (state_ata,
-                                                 sdr_record,
-                                                 sdr_record_len) < 0)
-    return -1;
-
-  if (sdr_cache_get_sensor_reading_ranges (state_data->pstate,
-                                           sdr_record,
-                                           sdr_record_len,
-                                           &nominal_reading,
-                                           &normal_maximum,
-                                           &normal_minimum,
-                                           &sensor_maximum_reading,
-                                           &sensor_minimum_reading) < 0)
+  if (ipmi_sensors_output_verbose_sensor_reading_ranges (state_data,
+                                                         sdr_record,
+                                                         sdr_record_len) < 0)
     return -1;
 
   if (ipmi_sensors_output_verbose_sensor_reading (state_data,
@@ -213,7 +218,7 @@ ipmi_sensors_display_verbose (ipmi_sensors_state_data_t *state_data,
                               unsigned int sdr_record_len,
                               double *reading,
                               char **event_message_list,
-                              unsigned int event_message_list_len);
+                              unsigned int event_message_list_len)
 {
   uint16_t record_id;
   uint8_t record_type;

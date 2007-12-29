@@ -16,7 +16,17 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <assert.h>
+#include <errno.h>
 
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
@@ -205,12 +215,12 @@ sensors_display_simple_compact_record (ipmi_sensors_state_data_t *state_data,
                              sdr_record,
                              sdr_record_len,
                              record_id) < 0)
-    goto cleanup;
+    return -1;
 
   if (ipmi_sensors_output_event_message_list(state_data,
                                              event_message_list,
                                              event_message_list_len) < 0)
-    goto cleanup;
+    return -1;
   
   return 0;
 }

@@ -16,7 +16,17 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <assert.h>
+#include <errno.h>
 
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
@@ -94,7 +104,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
   double *tmp_upper_non_critical_threshold = NULL;
   double *tmp_upper_critical_threshold = NULL;
   double *tmp_upper_non_recoverable_threshold = NULL;
-  uint64_t threshold;
+  double threshold;
   uint64_t val;
   int rv = -1;
 
@@ -616,16 +626,6 @@ ipmi_sensors_output_verbose_sensor_reading_ranges (ipmi_sensors_state_data_t *st
                     "Nominal reading: %s\n",
                     "NA");
 
-  if (reading)
-    pstdout_printf (state_data->pstate,
-                    "Sensor Reading: %f %s\n",
-                    *reading,
-                    ipmi_sensor_units[sensor_unit]);
-  else
-    pstdout_printf (state_data->pstate,
-                    "Sensor Reading: %s\n",
-                    "NA");
-  
   rv = 0;
  cleanup:
   if (nominal_reading)
@@ -657,7 +657,7 @@ ipmi_sensors_output_verbose_sensor_reading (ipmi_sensors_state_data_t *state_dat
                                  sdr_record,
                                  sdr_record_len,
                                  &sensor_unit) < 0)
-    goto cleanup;
+    return -1;
 
   if (reading)
     pstdout_printf (state_data->pstate,

@@ -33,8 +33,8 @@
 #include <assert.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-sensor-common.h"
 
-#include "ipmi-sensor-common.h"
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
 

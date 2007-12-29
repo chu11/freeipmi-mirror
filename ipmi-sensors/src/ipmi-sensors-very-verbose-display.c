@@ -16,7 +16,17 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <assert.h>
+#include <errno.h>
 
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
@@ -98,13 +108,18 @@ _output_very_verbose_header (ipmi_sensors_state_data_t *state_data,
                                      &sensor_owner_id) < 0)
     return -1;
 
-  if (_output_very_verbose_record_type_and_id (state_data->pstate,
+  if (_output_very_verbose_record_type_and_id (state_data,
                                                record_type,
                                                record_id) < 0)
     return -1;
   
   pstdout_printf (state_data->pstate, 
+#if 0
+                  /* XXX */
                   "Sensor ID String: %s\n", 
+#else
+                  "Sensor Name: %s\n",
+#endif
                   id_string);
   pstdout_printf (state_data->pstate, 
                   "Group Name: %s\n",
@@ -197,12 +212,12 @@ sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                                          &b,
                                          &linearization,
                                          &analog_data_format) < 0)
-    goto cleanup;
-
+    return -1;
+  
   pstdout_printf (state_data->pstate, 
                   "B: %d\n", 
                   b);
-  pstdout_printf (state_data->pstate, 
+  pstdout_printf (state_data->pstate,
                   "M: %d\n", 
                   m);
   pstdout_printf (state_data->pstate, 
@@ -277,7 +292,7 @@ sensors_display_very_verbose_compact_record (ipmi_sensors_state_data_t *state_da
   if (ipmi_sensors_output_verbose_event_message_list (state_data,
                                                       event_message_list,
                                                       event_message_list_len) < 0)
-    goto cleanup;
+    return -1;
 
   pstdout_printf (state_data->pstate, "\n");
 
@@ -307,7 +322,7 @@ sensors_display_very_verbose_event_only_record (ipmi_sensors_state_data_t *state
   if (ipmi_sensors_output_verbose_event_message_list (state_data,
                                                       event_message_list,
                                                       event_message_list_len) < 0)
-    goto cleanup;
+    return -1;
   
   pstdout_printf (state_data->pstate, "\n");
 
@@ -337,7 +352,7 @@ sensors_display_very_verbose_entity_association_record (ipmi_sensors_state_data_
                                       &container_entity_instance) < 0)
     return -1;
   
-  if (_output_very_verbose_record_type_and_id (state_data->pstate,
+  if (_output_very_verbose_record_type_and_id (state_data,
                                                record_type,
                                                record_id) < 0)
     return -1;
@@ -376,13 +391,18 @@ _output_very_verbose_header2 (ipmi_sensors_state_data_t *state_data,
                                       IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING) < 0)
     return -1;
 
-  if (_output_very_verbose_record_type_and_id (state_data->pstate,
+  if (_output_very_verbose_record_type_and_id (state_data,
                                                record_type,
                                                record_id) < 0)
     return -1;
 
   pstdout_printf (state_data->pstate, 
+#if 0
+                  /* XXX */
                   "Device ID String: %s\n", 
+#else
+                  "Device Name: %s\n",
+#endif
                   device_id_string);
   
   return 0;
@@ -393,8 +413,8 @@ _output_device_type_and_modifier (ipmi_sensors_state_data_t *state_data,
                                   uint8_t *sdr_record,
                                   unsigned int sdr_record_len)
 {
-  uint8_t entity_id;
-  uint8_t entity_instance;
+  uint8_t device_type;
+  uint8_t device_type_modifier;
 
   assert(state_data);
   assert(sdr_record);
@@ -611,7 +631,7 @@ sensors_display_very_verbose_oem_record (ipmi_sensors_state_data_t *state_data,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  if (_output_very_verbose_record_type_and_id (state_data->pstate,
+  if (_output_very_verbose_record_type_and_id (state_data,
                                                record_type,
                                                record_id) < 0)
     return -1;
@@ -624,7 +644,7 @@ sensors_display_very_verbose_oem_record (ipmi_sensors_state_data_t *state_data,
 
   pstdout_printf (state_data->pstate,
                   "Manufacturer ID: %Xh\n", 
-                  record->manufacturer_id);
+                  manufacturer_id);
 
   if (sdr_cache_get_oem_data (state_data->pstate,
                               sdr_record,
@@ -653,8 +673,7 @@ ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
                                    unsigned int sdr_record_len,
                                    double *reading,
                                    char **event_message_list,
-                                   unsigned int event_message_list_len);
-
+                                   unsigned int event_message_list_len)
 {
   uint16_t record_id;
   uint8_t record_type;

@@ -21,7 +21,6 @@
 #include <config.h>
 #endif
 
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef STDC_HEADERS
@@ -165,7 +164,7 @@ _get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
  cleanup:
   for (i = 0; i < num_messages; i++)
     free(tmp_message_list[num_messages]);
-  return NULL;
+  return -1;
 }
 
 static int
@@ -230,7 +229,7 @@ _get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
  cleanup:
   for (i = 0; i < num_messages; i++)
     free(tmp_message_list[num_messages]);
-  return NULL;
+  return -1;
 }
 
 static int
@@ -296,7 +295,7 @@ _get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_d
  cleanup:
   for (i = 0; i < num_messages; i++)
     free(tmp_message_list[num_messages]);
-  return NULL;
+  return -1;
 }
 
 int
@@ -385,14 +384,14 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
       _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_threshold_rs);
       _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_threshold_rs);
 
-      if (ipmi_cmd_get_sensor_reading_threshold (ctx, 
+      if (ipmi_cmd_get_sensor_reading_threshold (state_data->ipmi_ctx, 
                                                  sensor_number, 
                                                  obj_cmd_rs) < 0)
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,
                           "ipmi_cmd_get_sensor_reading_discrete: %s\n",
-                          ipmi_ctx_strerror(ipmi_ctx_errnum(ctx)));
+                          ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           goto cleanup;
         }
 
@@ -481,21 +480,21 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
       
       rv = 1;
     }
-  else (sensor_class == SENSOR_CLASS_GENERIC_DISCRETE
-        || sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE
-        || sensor_class == SENSOR_CLASS_OEM)
+  else if (sensor_class == SENSOR_CLASS_GENERIC_DISCRETE
+           || sensor_class ==  SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE
+           || sensor_class == SENSOR_CLASS_OEM)
     {
       _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
       _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      if (ipmi_cmd_get_sensor_reading_discrete (ctx, 
+      if (ipmi_cmd_get_sensor_reading_discrete (state_data->ipmi_ctx, 
                                                 sensor_number, 
                                                 obj_cmd_rs) < 0)
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,
                           "ipmi_cmd_get_sensor_reading_discrete: %s\n",
-                          ipmi_ctx_strerror(ipmi_ctx_errnum(ctx)));
+                          ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           goto cleanup;
         }
       
@@ -560,7 +559,6 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           rv = 1;
         }
     }
-
 
   if (rv > 0)
     *reading = tmp_reading;

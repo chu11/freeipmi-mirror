@@ -50,7 +50,7 @@ extern "C" {
         (((__val) == 0x47)) ? 1 : 0)
 
 #define IPMI_SYSTEM_SOFTWARE_TYPE_IS_RESERVED(__val) \
-        (((__val) > 0x47)) ? 1 : 0)   
+        (((__val) > 0x47) ? 1 : 0)
 
 #ifdef __cplusplus
 }
