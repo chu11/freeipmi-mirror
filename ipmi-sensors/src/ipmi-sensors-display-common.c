@@ -173,7 +173,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
    *
    * Don't return an error.  Allow code to output "NA" or something.
    */
-  if (!IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(linearization))
+  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
     {
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
         pstdout_fprintf(state_data->pstate,

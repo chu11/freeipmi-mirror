@@ -430,15 +430,23 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                 pstdout_fprintf(state_data->pstate,
                                 stderr,
                                 "Attempting to decode non-analog sensor\n");
+              rv = 0;
               goto cleanup;
             }
           
           /* if the sensor is non-linear, I just don't know what to do, 
            * let the tool figure out what to output.
            */
-          if (!IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(linearization))
-            goto cleanup;
-          
+          if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
+            {
+              if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+                pstdout_fprintf(state_data->pstate,
+                                stderr,
+                                "Cannot decode non-linear sensor\n");
+              rv = 0;
+              goto cleanup;
+            }
+             
           if (!(tmp_reading = (double *)malloc(sizeof(double))))
             {
               pstdout_perror(state_data->pstate, "malloc");
@@ -559,13 +567,15 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           rv = 1;
         }
     }
+  else
+    rv = 0;
 
   if (rv > 0)
     *reading = tmp_reading;
  cleanup:
   _FIID_OBJ_DESTROY(obj_cmd_rs);
   _FIID_OBJ_DESTROY(l_obj_cmd_rs);
-  if (rv < 0)
+  if (rv <= 0)
     {
       if (tmp_reading)
         free(tmp_reading);

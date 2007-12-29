@@ -159,22 +159,16 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
             pstdout_printf (state_data->pstate, "NA");
           
           if (lower_critical_threshold)
-            {
-              pstdout_printf (state_data->pstate,
-                              "(%.2f/", 
-                              round_double2 (*lower_critical_threshold));
-              free(lower_critical_threshold);
-            }
+            pstdout_printf (state_data->pstate,
+                            "(%.2f/", 
+                            round_double2 (*lower_critical_threshold));
           else 
             pstdout_printf (state_data->pstate, "(NA/");
 
           if (upper_critical_threshold)
-            {
-              pstdout_printf (state_data->pstate,
-                              "%.2f): ", 
-                              round_double2 (*upper_critical_threshold));
-              free(upper_critical_threshold);
-            }
+            pstdout_printf (state_data->pstate,
+                            "%.2f): ", 
+                            round_double2 (*upper_critical_threshold));
           else 
             pstdout_printf (state_data->pstate, "NA): ");
         }

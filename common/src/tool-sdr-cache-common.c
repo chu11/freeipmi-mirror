@@ -763,6 +763,8 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
                                    MAXPATHLEN) < 0)
     goto cleanup;
   
+  pstdout_printf (pstate, "Flushing cache: %s\n", cachefilenamebuf);
+
   if (ipmi_sdr_cache_delete(ctx, cachefilenamebuf) < 0)
     {
       pstdout_fprintf(pstate,
@@ -1349,7 +1351,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
    *
    * Don't return an error.  Allow code to output "NA" or something.
    */
-  if (!IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(linearization))
+  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
     {
       rv = 0;
       goto cleanup;
@@ -1593,7 +1595,7 @@ sdr_cache_get_hysteresis (pstdout_state_t pstate,
    *
    * Don't return an error.  Allow code to output "NA" or something.
    */
-  if (!IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(linearization))
+  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
     {
       rv = 0;
       goto cleanup;
@@ -1949,7 +1951,6 @@ sdr_cache_get_oem_data (pstdout_state_t pstate,
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
   int32_t len;
-  uint64_t val;
   int rv = -1;
 
   assert(pstate);
