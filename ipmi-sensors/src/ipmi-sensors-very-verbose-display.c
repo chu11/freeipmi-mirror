@@ -407,6 +407,44 @@ sensors_display_very_verbose_entity_association_record (ipmi_sensors_state_data_
   return 0;
 }
 
+static int 
+sensors_display_very_verbose_device_relative_entity_association_record (ipmi_sensors_state_data_t *state_data,
+                                                                        uint8_t *sdr_record,
+                                                                        unsigned int sdr_record_len,
+                                                                        uint8_t record_type,
+                                                                        uint16_t record_id)
+{
+  uint8_t container_entity_id;
+  uint8_t container_entity_instance;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (sdr_cache_get_container_entity (state_data->pstate,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      &container_entity_id,
+                                      &container_entity_instance) < 0)
+    return -1;
+  
+  if (_output_very_verbose_record_type_and_id (state_data,
+                                               record_type,
+                                               record_id) < 0)
+    return -1;
+
+  pstdout_printf (state_data->pstate, 
+                  "Container Entity ID: %Xh\n", 
+                  container_entity_id);
+  pstdout_printf (state_data->pstate, 
+                  "Container Entity Instance: %Xh\n", 
+                  container_entity_instance);
+
+  pstdout_printf (state_data->pstate, "\n");
+  
+  return 0;
+}
+
 static int
 _output_very_verbose_header2 (ipmi_sensors_state_data_t *state_data,
                               uint8_t *sdr_record,
@@ -640,6 +678,77 @@ sensors_display_very_verbose_management_controller_device_locator_record (ipmi_s
   return 0;
 }
 
+static int
+_output_manufacturer_id (ipmi_sensors_state_data_t *state_data,
+                         uint8_t *sdr_record,
+                         unsigned int sdr_record_len)
+{
+  uint32_t manufacturer_id;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (sdr_cache_get_manufacturer_id (state_data->pstate,
+                                     sdr_record,
+                                     sdr_record_len,
+                                     &manufacturer_id) < 0)
+    return -1;
+
+  pstdout_printf (state_data->pstate,
+                  "Manufacturer ID: %Xh\n", 
+                  manufacturer_id);
+
+  return 0;
+}
+
+static int 
+sensors_display_very_verbose_management_controller_information_record (ipmi_sensors_state_data_t *state_data,
+                                                                       uint8_t *sdr_record,
+                                                                       unsigned int sdr_record_len,
+                                                                       uint8_t record_type,
+                                                                       uint16_t record_id)
+{
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (_output_very_verbose_record_type_and_id (state_data,
+                                               record_type,
+                                               record_id) < 0)
+    return -1;
+
+  if (_output_manufacturer_id (state_data,
+                               sdr_record,
+                               sdr_record_len) < 0)
+    return -1;
+
+  pstdout_printf (state_data->pstate, "\n");
+
+  return 0;
+}
+
+static int 
+sensors_display_very_verbose_bmc_message_channel_info_record (ipmi_sensors_state_data_t *state_data,
+                                                              uint8_t *sdr_record,
+                                                              unsigned int sdr_record_len,
+                                                              uint8_t record_type,
+                                                              uint16_t record_id)
+{
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (_output_very_verbose_record_type_and_id (state_data,
+                                               record_type,
+                                               record_id) < 0)
+    return -1;
+
+  pstdout_printf (state_data->pstate, "\n");
+
+  return 0;
+}
+
 static int 
 sensors_display_very_verbose_oem_record (ipmi_sensors_state_data_t *state_data,
                                          uint8_t *sdr_record,
@@ -647,7 +756,6 @@ sensors_display_very_verbose_oem_record (ipmi_sensors_state_data_t *state_data,
                                          uint8_t record_type,
                                          uint16_t record_id)
 {
-  uint32_t manufacturer_id;
   uint8_t oem_data[IPMI_SENSORS_OEM_DATA_LEN];
   unsigned int oem_data_len = IPMI_SENSORS_OEM_DATA_LEN;
   int i;
@@ -661,15 +769,11 @@ sensors_display_very_verbose_oem_record (ipmi_sensors_state_data_t *state_data,
                                                record_id) < 0)
     return -1;
 
-  if (sdr_cache_get_manufacturer_id (state_data->pstate,
-                                     sdr_record,
-                                     sdr_record_len,
-                                     &manufacturer_id) < 0)
-    return -1;
 
-  pstdout_printf (state_data->pstate,
-                  "Manufacturer ID: %Xh\n", 
-                  manufacturer_id);
+  if (_output_manufacturer_id (state_data,
+                               sdr_record,
+                               sdr_record_len) < 0)
+    return -1;
 
   if (sdr_cache_get_oem_data (state_data->pstate,
                               sdr_record,
@@ -746,15 +850,12 @@ ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
                                                                      record_type,
                                                                      record_id);
 
-#if 0
-      /* XXX support later */
     case IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD:
-      return sensors_display_very_verbose_entity_association_record (state_data,
-                                                                     sdr_record,
-                                                                     sdr_record_len,
-                                                                     record_type,
-                                                                     record_id);
-#endif
+      return sensors_display_very_verbose_device_relative_entity_association_record (state_data,
+                                                                                     sdr_record,
+                                                                                     sdr_record_len,
+                                                                                     record_type,
+                                                                                     record_id);
     case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
       return sensors_display_very_verbose_general_device_locator_record (state_data,
                                                                          sdr_record,
@@ -773,14 +874,20 @@ ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
                                                                                        sdr_record_len,
                                                                                        record_type,
                                                                                        record_id);
-#if 0
-      /* XXX support later */
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
+      return sensors_display_very_verbose_management_controller_information_record (state_data,
+                                                                                    sdr_record,
+                                                                                    sdr_record_len,
+                                                                                    record_type,
+                                                                                    record_id);
       break;
-      /* XXX support later */
-    case IPMI_SDR_FORMAT_BMC_MESAAGE_CHANNEL_INFO_RECORD:
+    case IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD:
+      return sensors_display_very_verbose_bmc_message_channel_info_record (state_data,
+                                                                           sdr_record,
+                                                                           sdr_record_len,
+                                                                           record_type,
+                                                                           record_id);
       break;
-#endif
     case IPMI_SDR_FORMAT_OEM_RECORD:
       return sensors_display_very_verbose_oem_record (state_data,
                                                       sdr_record,

@@ -62,7 +62,7 @@
 #define IPMI_SDR_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD                   0x0040
 #define IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD 0x0080
 #define IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD   0x0100
-#define IPMI_SDR_RECORD_TYPE_BMC_MESAAGE_CHANNEL_INFO_RECORD             0x0200
+#define IPMI_SDR_RECORD_TYPE_BMC_MESSAGE_CHANNEL_INFO_RECORD             0x0200
 #define IPMI_SDR_RECORD_TYPE_OEM_RECORD                                  0x0400
 
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
@@ -872,8 +872,8 @@ _sdr_cache_get_common(pstdout_state_t pstate,
             && record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
         || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
             && record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
-        || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_BMC_MESAAGE_CHANNEL_INFO_RECORD)
-            && record_type == IPMI_SDR_FORMAT_BMC_MESAAGE_CHANNEL_INFO_RECORD)
+        || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_BMC_MESSAGE_CHANNEL_INFO_RECORD)
+            && record_type == IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD)
         || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_OEM_RECORD)
             && record_type == IPMI_SDR_FORMAT_OEM_RECORD)
         ))
@@ -904,7 +904,7 @@ _sdr_cache_get_common(pstdout_state_t pstate,
     _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_management_controller_device_locator_record);
   else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
     _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_management_controller_confirmation_record);
-  else if (record_type == IPMI_SDR_FORMAT_BMC_MESAAGE_CHANNEL_INFO_RECORD)
+  else if (record_type == IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD)
     _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_bmc_message_channel_info_record);
   else if (record_type == IPMI_SDR_FORMAT_OEM_RECORD)
     _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_oem_record);
