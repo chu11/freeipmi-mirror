@@ -114,12 +114,7 @@ _output_very_verbose_header (ipmi_sensors_state_data_t *state_data,
     return -1;
   
   pstdout_printf (state_data->pstate, 
-#if 0
-                  /* XXX */
                   "Sensor ID String: %s\n", 
-#else
-                  "Sensor Name: %s\n",
-#endif
                   id_string);
   pstdout_printf (state_data->pstate, 
                   "Group Name: %s\n",
@@ -147,12 +142,18 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
 {
   double *positive_going_threshold_hysteresis = NULL;
   double *negative_going_threshold_hysteresis = NULL;
-
+  uint8_t sensor_unit;
   int rv = -1;
 
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
+
+  if (sdr_cache_get_sensor_unit (state_data->pstate,
+                                 sdr_record,
+                                 sdr_record_len,
+                                 &sensor_unit) < 0)
+    goto cleanup;
 
   if (sdr_cache_get_hysteresis (state_data->pstate,
                                 sdr_record,
@@ -163,8 +164,9 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
 
   if (negative_going_threshold_hysteresis)
     pstdout_printf (state_data->pstate, 
-                    "Negative Hysteresis: %f\n", 
-                    *negative_going_threshold_hysteresis);
+                    "Negative Hysteresis: %f %s\n", 
+                    *negative_going_threshold_hysteresis,
+                    ipmi_sensor_units[sensor_unit]);
   else
     pstdout_printf (state_data->pstate,
                     "Negative Hysteresis: %s\n", 
@@ -172,8 +174,9 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
 
   if (positive_going_threshold_hysteresis)
     pstdout_printf (state_data->pstate, 
-                    "Positive Hysteresis: %f\n", 
-                    *positive_going_threshold_hysteresis);
+                    "Positive Hysteresis: %f %s\n", 
+                    *positive_going_threshold_hysteresis,
+                    ipmi_sensor_units[sensor_unit]);
   else
     pstdout_printf (state_data->pstate,
                     "Positive Hysteresis: %s\n", 
@@ -398,12 +401,7 @@ _output_very_verbose_header2 (ipmi_sensors_state_data_t *state_data,
     return -1;
 
   pstdout_printf (state_data->pstate, 
-#if 0
-                  /* XXX */
                   "Device ID String: %s\n", 
-#else
-                  "Device Name: %s\n",
-#endif
                   device_id_string);
   
   return 0;

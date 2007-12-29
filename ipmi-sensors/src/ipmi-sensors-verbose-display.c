@@ -83,12 +83,7 @@ _output_verbose_header (ipmi_sensors_state_data_t *state_data,
                   "Record ID: %d\n", 
                   record_id);
   pstdout_printf (state_data->pstate, 
-#if 0
-                  /* XXX */
                   "Sensor ID String: %s\n", 
-#else
-                  "Sensor Name: %s\n",
-#endif
                   id_string);
   pstdout_printf (state_data->pstate, 
                   "Group Name: %s\n",
