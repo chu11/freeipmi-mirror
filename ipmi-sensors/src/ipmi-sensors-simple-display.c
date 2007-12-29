@@ -190,7 +190,7 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
     free(lower_critical_threshold);
   if (upper_critical_threshold)
     free(upper_critical_threshold);
-  return 0;
+  return rv;
 }
 
 static int 

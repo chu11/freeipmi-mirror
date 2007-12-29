@@ -138,10 +138,11 @@ _output_very_verbose_header (ipmi_sensors_state_data_t *state_data,
 static int
 _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
                                  uint8_t *sdr_record,
-                                 unsigned int sdr_record_len)
+                                 unsigned int sdr_record_len,
+                                 uint8_t record_type)
 {
-  double *positive_going_threshold_hysteresis = NULL;
-  double *negative_going_threshold_hysteresis = NULL;
+  double *positive_going_threshold_hysteresis_real = NULL;
+  double *negative_going_threshold_hysteresis_real = NULL;
   uint8_t sensor_unit;
   int rv = -1;
 
@@ -155,39 +156,70 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
                                  &sensor_unit) < 0)
     goto cleanup;
 
-  if (sdr_cache_get_hysteresis (state_data->pstate,
-                                sdr_record,
-                                sdr_record_len,
-                                &positive_going_threshold_hysteresis,
-                                &negative_going_threshold_hysteresis) < 0)
-    goto cleanup;
-
-  if (negative_going_threshold_hysteresis)
-    pstdout_printf (state_data->pstate, 
-                    "Negative Hysteresis: %f %s\n", 
-                    *negative_going_threshold_hysteresis,
-                    ipmi_sensor_units[sensor_unit]);
+  /* achu: Well, compact records don't have the values to compute a
+   * hysteresis value.  Perhaps that's a typo in the spec?  We just
+   * output the integer values?  That's as good as guess as any I
+   * could make.
+   */
+  
+  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+    {
+      if (sdr_cache_get_hysteresis_real (state_data->pstate,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &positive_going_threshold_hysteresis_real,
+                                         &negative_going_threshold_hysteresis_real) < 0)
+        goto cleanup;
+      
+      if (negative_going_threshold_hysteresis_real)
+        pstdout_printf (state_data->pstate, 
+                        "Negative Hysteresis: %f %s\n", 
+                        *negative_going_threshold_hysteresis_real,
+                        ipmi_sensor_units[sensor_unit]);
+      else
+        pstdout_printf (state_data->pstate,
+                        "Negative Hysteresis: %s\n", 
+                        "NA");
+      
+      if (positive_going_threshold_hysteresis_real)
+        pstdout_printf (state_data->pstate, 
+                        "Positive Hysteresis: %f %s\n", 
+                        *positive_going_threshold_hysteresis_real,
+                        ipmi_sensor_units[sensor_unit]);
+      else
+        pstdout_printf (state_data->pstate,
+                        "Positive Hysteresis: %s\n", 
+                        "NA");
+    }
   else
-    pstdout_printf (state_data->pstate,
-                    "Negative Hysteresis: %s\n", 
-                    "NA");
+    {
+      uint8_t positive_going_threshold_hysteresis_integer;
+      uint8_t negative_going_threshold_hysteresis_integer;
 
-  if (positive_going_threshold_hysteresis)
-    pstdout_printf (state_data->pstate, 
-                    "Positive Hysteresis: %f %s\n", 
-                    *positive_going_threshold_hysteresis,
-                    ipmi_sensor_units[sensor_unit]);
-  else
-    pstdout_printf (state_data->pstate,
-                    "Positive Hysteresis: %s\n", 
-                    "NA");
+      if (sdr_cache_get_hysteresis_integer (state_data->pstate,
+                                            sdr_record,
+                                            sdr_record_len,
+                                            &positive_going_threshold_hysteresis_integer,
+                                            &negative_going_threshold_hysteresis_integer) < 0)
+        goto cleanup;
+      
+      pstdout_printf (state_data->pstate, 
+                      "Negative Hysteresis: %d %s\n", 
+                      negative_going_threshold_hysteresis_integer,
+                      ipmi_sensor_units[sensor_unit]);
+      
+      pstdout_printf (state_data->pstate, 
+                      "Positive Hysteresis: %d %s\n", 
+                      positive_going_threshold_hysteresis_integer,
+                      ipmi_sensor_units[sensor_unit]);
+    }
 
   rv = 0;
  cleanup:
-  if (positive_going_threshold_hysteresis)
-    free(positive_going_threshold_hysteresis);
-  if (negative_going_threshold_hysteresis)
-    free(negative_going_threshold_hysteresis);
+  if (positive_going_threshold_hysteresis_real)
+    free(positive_going_threshold_hysteresis_real);
+  if (negative_going_threshold_hysteresis_real)
+    free(negative_going_threshold_hysteresis_real);
   return rv;
 }
 
@@ -258,7 +290,8 @@ sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
 
   if (_output_very_verbose_hysteresis (state_data,
                                        sdr_record,
-                                       sdr_record_len) < 0)
+                                       sdr_record_len,
+                                       record_type) < 0)
     return -1;
 
   if (ipmi_sensors_output_verbose_sensor_reading (state_data,
@@ -299,7 +332,8 @@ sensors_display_very_verbose_compact_record (ipmi_sensors_state_data_t *state_da
 
   if (_output_very_verbose_hysteresis (state_data,
                                        sdr_record,
-                                       sdr_record_len) < 0)
+                                       sdr_record_len,
+                                       record_type) < 0)
     return -1;
 
   if (ipmi_sensors_output_verbose_event_message_list (state_data,

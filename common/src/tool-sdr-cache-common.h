@@ -126,11 +126,17 @@ int sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
                                          double **sensor_maximum_reading,
                                          double **sensor_minimum_reading);
 
-int sdr_cache_get_hysteresis (pstdout_state_t pstate,
-                              uint8_t *sdr_record,
-                              unsigned int sdr_record_len,
-                              double **positive_going_threshold_hysteresis,
-                              double **negative_going_threshold_hysteresis);
+int sdr_cache_get_hysteresis_real (pstdout_state_t pstate,
+                                   uint8_t *sdr_record,
+                                   unsigned int sdr_record_len,
+                                   double **positive_going_threshold_hysteresis,
+                                   double **negative_going_threshold_hysteresis);
+
+int sdr_cache_get_hysteresis_integer (pstdout_state_t pstate,
+                                      uint8_t *sdr_record,
+                                      unsigned int sdr_record_len,
+                                      uint8_t *positive_going_threshold_hysteresis,
+                                      uint8_t *negative_going_threshold_hysteresis);
 
 int sdr_cache_get_container_entity (pstdout_state_t pstate,
                                     uint8_t *sdr_record,
