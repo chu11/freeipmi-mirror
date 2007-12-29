@@ -631,7 +631,9 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
    * hosts are generating the cache at the same time.
    */
   if (!quiet_cache)
-    fprintf (stderr, "Caching SDR repository information ... \n");
+    fprintf (stderr, 
+             "Caching SDR repository information: %s\n",
+             cachefilenamebuf);
 
   if (ipmi_sdr_cache_create(ctx,
                             ipmi_ctx,
