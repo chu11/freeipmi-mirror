@@ -613,6 +613,8 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
 {
   uint8_t entity_id;
   uint8_t entity_instance;
+  uint8_t logical_physical_fru_device;
+  uint8_t logical_fru_device_device_slave_address;
 
   assert(state_data);
   assert(sdr_record);
@@ -645,6 +647,21 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                   "FRU Entity Instance: %Xh\n", 
                   entity_instance);
 
+  if (sdr_cache_get_logical_fru_info (state_data->pstate,
+				      sdr_record,
+				      sdr_record_len,
+				      &logical_physical_fru_device,
+				      &logical_fru_device_device_slave_address) < 0)
+    return -1;
+
+  pstdout_printf (state_data->pstate, 
+                  "Logical Physical FRU Device: %d\n", 
+                  logical_physical_fru_device);
+  
+  pstdout_printf (state_data->pstate, 
+                  "FRU Device ID / Device Slave Address: %Xh\n", 
+                  logical_fru_device_device_slave_address);
+    
   pstdout_printf (state_data->pstate, "\n");
 
   return 0;
@@ -709,6 +726,9 @@ sensors_display_very_verbose_management_controller_information_record (ipmi_sens
                                                                        uint8_t record_type,
                                                                        uint16_t record_id)
 {
+  uint32_t manufacturer_id;
+  uint16_t product_id;
+
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
@@ -722,6 +742,16 @@ sensors_display_very_verbose_management_controller_information_record (ipmi_sens
                                sdr_record,
                                sdr_record_len) < 0)
     return -1;
+
+  if (sdr_cache_get_product_id (state_data->pstate,
+                                sdr_record,
+                                sdr_record_len,
+                                &product_id) < 0)
+    return -1;
+  
+  pstdout_printf (state_data->pstate,
+                  "Product ID: %Xh\n", 
+                  product_id);
 
   pstdout_printf (state_data->pstate, "\n");
 

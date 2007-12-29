@@ -1987,7 +1987,39 @@ sdr_cache_get_manufacturer_id (pstdout_state_t pstate,
   return rv;
 }
 
-int
+int 
+sdr_cache_get_product_id (pstdout_state_t pstate,
+                          uint8_t *sdr_record,
+                          unsigned int sdr_record_len,
+                          uint16_t *product_id)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  assert(pstate);
+  assert(sdr_record);
+  assert(sdr_record_len);
+  assert(product_id);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  _SDR_FIID_OBJ_GET(obj_sdr_record, "product_id", &val);
+  *product_id = val;
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
 sdr_cache_get_oem_data (pstdout_state_t pstate,
                         uint8_t *sdr_record,
                         unsigned int sdr_record_len,

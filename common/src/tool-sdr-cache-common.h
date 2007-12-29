@@ -176,6 +176,11 @@ int sdr_cache_get_manufacturer_id (pstdout_state_t pstate,
                                    unsigned int sdr_record_len,
                                    uint32_t *manufacturer_id);
 
+int sdr_cache_get_product_id (pstdout_state_t pstate,
+                              uint8_t *sdr_record,
+                              unsigned int sdr_record_len,
+                              uint16_t *product_id);
+
 int sdr_cache_get_oem_data (pstdout_state_t pstate,
                             uint8_t *sdr_record,
                             unsigned int sdr_record_len,
