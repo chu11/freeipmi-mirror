@@ -21,7 +21,7 @@ o Updated SDR output under verbose and very verbose output modes with:
     will not have a default output.
   o Fix incorrect hysterisis calculation and output.
   o Fix incorrect OEM data output.
-  o Support more SDR record types.
+  o Support more SDR record types for output.
 o Various other minor bug fixes and enhancements.
 
 For Developers
