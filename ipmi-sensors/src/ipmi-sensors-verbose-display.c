@@ -188,9 +188,7 @@ static int
 sensors_display_verbose_event_only_record (ipmi_sensors_state_data_t *state_data,
                                            uint8_t *sdr_record,
                                            unsigned int sdr_record_len,
-                                           uint16_t record_id,
-                                           char **event_message_list,
-                                           unsigned int event_message_list_len)
+                                           uint16_t record_id)
 {
   assert(state_data);
   assert(sdr_record);
@@ -202,11 +200,6 @@ sensors_display_verbose_event_only_record (ipmi_sensors_state_data_t *state_data
                               record_id) < 0)
     return -1;
   
-  if (ipmi_sensors_output_verbose_event_message_list (state_data,
-                                                      event_message_list,
-                                                      event_message_list_len) < 0)
-    return -1;
-
   pstdout_printf (state_data->pstate, "\n");
 
   return 0;
@@ -255,9 +248,7 @@ ipmi_sensors_display_verbose (ipmi_sensors_state_data_t *state_data,
       return sensors_display_verbose_event_only_record (state_data,
                                                         sdr_record,
                                                         sdr_record_len,
-                                                        record_id,
-                                                        event_message_list,
-                                                        event_message_list_len);
+                                                        record_id);
     default:
       /* don't output any other types in verbose mode */
       break;

@@ -161,13 +161,23 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
                                 &negative_going_threshold_hysteresis) < 0)
     goto cleanup;
 
-  pstdout_printf (state_data->pstate, 
-                  "Negative Hysteresis: %d\n", 
-                  negative_going_threshold_hysteresis);
+  if (negative_going_threshold_hysteresis)
+    pstdout_printf (state_data->pstate, 
+                    "Negative Hysteresis: %f\n", 
+                    *negative_going_threshold_hysteresis);
+  else
+    pstdout_printf (state_data->pstate,
+                    "Negative Hysteresis: %s\n", 
+                    "NA");
 
-  pstdout_printf (state_data->pstate, 
-                  "Positive Hysteresis: %d\n", 
-                  positive_going_threshold_hysteresis);
+  if (positive_going_threshold_hysteresis)
+    pstdout_printf (state_data->pstate, 
+                    "Positive Hysteresis: %f\n", 
+                    *positive_going_threshold_hysteresis);
+  else
+    pstdout_printf (state_data->pstate,
+                    "Positive Hysteresis: %s\n", 
+                    "NA");
 
   rv = 0;
  cleanup:
@@ -304,9 +314,7 @@ sensors_display_very_verbose_event_only_record (ipmi_sensors_state_data_t *state
                                                 uint8_t *sdr_record,
                                                 unsigned int sdr_record_len,
                                                 uint8_t record_type,
-                                                uint16_t record_id,
-                                                char **event_message_list,
-                                                unsigned int event_message_list_len)
+                                                uint16_t record_id)
 {
   assert(state_data);
   assert(sdr_record);
@@ -319,11 +327,6 @@ sensors_display_very_verbose_event_only_record (ipmi_sensors_state_data_t *state
                                    record_id) < 0)
     return -1;
 
-  if (ipmi_sensors_output_verbose_event_message_list (state_data,
-                                                      event_message_list,
-                                                      event_message_list_len) < 0)
-    return -1;
-  
   pstdout_printf (state_data->pstate, "\n");
 
   return 0;
@@ -334,9 +337,7 @@ sensors_display_very_verbose_entity_association_record (ipmi_sensors_state_data_
                                                         uint8_t *sdr_record,
                                                         unsigned int sdr_record_len,
                                                         uint8_t record_type,
-                                                        uint16_t record_id,
-                                                        char **event_message_list,
-                                                        unsigned int event_message_list_len)
+                                                        uint16_t record_id)
 {
   uint8_t container_entity_id;
   uint8_t container_entity_instance;
@@ -473,9 +474,7 @@ sensors_display_very_verbose_general_device_locator_record (ipmi_sensors_state_d
                                                             uint8_t *sdr_record,
                                                             unsigned int sdr_record_len,
                                                             uint8_t record_type,
-                                                            uint16_t record_id,
-                                                            char **event_message_list,
-                                                            unsigned int event_message_list_len)
+                                                            uint16_t record_id)
 {
   uint8_t direct_access_address;
   uint8_t channel_number;
@@ -540,9 +539,7 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                                                         uint8_t *sdr_record,
                                                         unsigned int sdr_record_len,
                                                         uint8_t record_type,
-                                                        uint16_t record_id,
-                                                        char **event_message_list,
-                                                        unsigned int event_message_list_len)
+                                                        uint16_t record_id)
 {
   uint8_t entity_id;
   uint8_t entity_instance;
@@ -588,9 +585,7 @@ sensors_display_very_verbose_management_controller_device_locator_record (ipmi_s
                                                                           uint8_t *sdr_record,
                                                                           unsigned int sdr_record_len,
                                                                           uint8_t record_type,
-                                                                          uint16_t record_id,
-                                                                          char **event_message_list,
-                                                                          unsigned int event_message_list_len)
+                                                                          uint16_t record_id)
 {
   assert(state_data);
   assert(sdr_record);
@@ -618,9 +613,7 @@ sensors_display_very_verbose_oem_record (ipmi_sensors_state_data_t *state_data,
                                          uint8_t *sdr_record,
                                          unsigned int sdr_record_len,
                                          uint8_t record_type,
-                                         uint16_t record_id,
-                                         char **event_message_list,
-                                         unsigned int event_message_list_len)
+                                         uint16_t record_id)
 {
   uint32_t manufacturer_id;
   uint8_t oem_data[IPMI_SENSORS_OEM_DATA_LEN];
@@ -713,17 +706,13 @@ ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
                                                              sdr_record,
                                                              sdr_record_len,
                                                              record_type,
-                                                             record_id,
-                                                             event_message_list,
-                                                             event_message_list_len);
+                                                             record_id);
     case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
       return sensors_display_very_verbose_entity_association_record (state_data,
                                                                      sdr_record,
                                                                      sdr_record_len,
                                                                      record_type,
-                                                                     record_id,
-                                                                     event_message_list,
-                                                                     event_message_list_len);
+                                                                     record_id);
 
 #if 0
       /* XXX support later */
@@ -732,34 +721,26 @@ ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
                                                                      sdr_record,
                                                                      sdr_record_len,
                                                                      record_type,
-                                                                     record_id,
-                                                                     event_message_list,
-                                                                     event_message_list_len);
+                                                                     record_id);
 #endif
     case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
       return sensors_display_very_verbose_general_device_locator_record (state_data,
                                                                          sdr_record,
                                                                          sdr_record_len,
                                                                          record_type,
-                                                                         record_id,
-                                                                         event_message_list,
-                                                                         event_message_list_len);
+                                                                         record_id);
     case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
       return sensors_display_very_verbose_fru_device_locator_record (state_data,
                                                                      sdr_record,
                                                                      sdr_record_len,
                                                                      record_type,
-                                                                     record_id,
-                                                                     event_message_list,
-                                                                     event_message_list_len);
+                                                                     record_id);
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
       return sensors_display_very_verbose_management_controller_device_locator_record (state_data,
                                                                                        sdr_record,
                                                                                        sdr_record_len,
                                                                                        record_type,
-                                                                                       record_id,
-                                                                                       event_message_list,
-                                                                                       event_message_list_len);
+                                                                                       record_id);
 #if 0
       /* XXX support later */
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
@@ -773,9 +754,7 @@ ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
                                                       sdr_record,
                                                       sdr_record_len,
                                                       record_type,
-                                                      record_id,
-                                                      event_message_list,
-                                                      event_message_list_len);
+                                                      record_id);
     default:
       pstdout_fprintf(state_data->pstate,
                       stderr,

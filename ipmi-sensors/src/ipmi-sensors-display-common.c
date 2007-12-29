@@ -576,6 +576,16 @@ ipmi_sensors_output_verbose_sensor_reading_ranges (ipmi_sensors_state_data_t *st
                                  &sensor_unit) < 0)
     goto cleanup;
 
+  if (sdr_cache_get_sensor_reading_ranges (state_data->pstate,
+                                           sdr_record,
+                                           sdr_record_len,
+                                           &nominal_reading,
+                                           &normal_maximum,
+                                           &normal_minimum,
+                                           &sensor_maximum_reading,
+                                           &sensor_minimum_reading) < 0)
+      goto cleanup;
+
   if (sensor_minimum_reading)
     pstdout_printf (state_data->pstate,
                     "Sensor Min. Reading: %f %s\n",
