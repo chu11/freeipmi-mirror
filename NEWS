@@ -11,10 +11,15 @@ o Change --cache-dir to --sdr-cache-dir in ipmimonitoring for consistency
   to ipmi-sensors.
 o Support shared SDR caches for ipmi-sensors, ipmi-fru, ipmi-sel, and
   ipmimonitoring.
-o Slightly modified SDR cache output messages in ipmi-sensors,
+o Slightly modified SDR caching output messages in ipmi-sensors,
   ipmi-sel, ipmi-fru, and ipmimonitoring.
-o Updated SDR output under verbose and very verbose output modes with
-  correct output, more output, more SDR record types.
+o Updated SDR output under verbose and very verbose output modes with:
+  o More IPMI compliant field names.  For example, 'Sensor Name' has
+    been replaced with 'Sensor ID String'.
+  o More correct output.  For example, 'NA' will be output instead of
+    0.0 when a value is not truly available.  Fields that don't exist,
+    will not have a default output.
+  o More SDR record types supported.
 o Minor corner case fixes throughout.
 
 For Developers
