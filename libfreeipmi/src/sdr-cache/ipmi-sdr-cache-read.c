@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.2 2007-12-29 17:20:34 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.3 2007-12-29 21:11:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,6 +46,7 @@
 #include <errno.h>
 
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/debug/ipmi-debug.h"
 
 #include "ipmi-sdr-cache-common.h"
 #include "ipmi-sdr-cache-defs.h"
@@ -367,6 +368,12 @@ ipmi_sdr_cache_record_read(ipmi_sdr_cache_ctx_t ctx,
       return -1;
     }
 
+  if (ctx->flags & IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP)
+    ipmi_dump_sdr_record (STDERR_FILENO,
+                          NULL,
+                          ctx->sdr_cache + ctx->current_offset,
+                          record_length + 5);
+  
   memcpy(buf, ctx->sdr_cache + ctx->current_offset, record_length + 5);
   ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;
   return (record_length + 5);

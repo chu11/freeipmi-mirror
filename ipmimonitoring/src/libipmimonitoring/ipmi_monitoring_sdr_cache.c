@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.12 2007-12-29 17:20:32 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.13 2007-12-29 21:11:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -56,6 +56,37 @@ int sdr_cache_directory_set = 0;
 
 char sdr_cache_filename_format[MAXPATHLEN+1];
 int sdr_cache_filename_format_set = 0;
+
+extern uint32_t _ipmi_monitoring_flags;
+
+static int
+_ipmi_monitoring_sdr_cache_ctx_init(ipmi_monitoring_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMI_MONITORING_MAGIC);
+
+  if (!(c->sc))
+    {
+      if (!(c->sc = ipmi_sdr_cache_ctx_create()))
+        {
+          IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_create: %s", strerror(errno)));
+          if (errno == EPERM || errno == EACCES)
+            c->errnum = IPMI_MONITORING_ERR_PERMISSION;
+          else
+            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          return -1;
+        }
+      
+      if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS)
+        {
+          /* Don't error out, if this fails we can still continue */
+          if (ipmi_sdr_cache_ctx_set_flags(c->sc, IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+            IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_ctx_set_flags: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+        }
+    } 
+
+  return 0;
+}
 
 static int
 _ipmi_monitoring_sdr_cache_filename(ipmi_monitoring_ctx_t c,
@@ -240,18 +271,8 @@ ipmi_monitoring_sdr_cache_load(ipmi_monitoring_ctx_t c,
   if (_ipmi_monitoring_sdr_cache_filename(c, hostname, filename, MAXPATHLEN + 1) < 0)
     goto cleanup;
 
-  if (!(c->sc))
-    {
-      if (!(c->sc = ipmi_sdr_cache_ctx_create()))
-        {
-          IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_create: %s", strerror(errno)));
-          if (errno == EPERM || errno == EACCES)
-            c->errnum = IPMI_MONITORING_ERR_PERMISSION;
-          else
-            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          goto cleanup;
-        }
-    }
+  if (_ipmi_monitoring_sdr_cache_ctx_init(c) < 0)
+    goto cleanup;
 
   if (ipmi_sdr_cache_open(c->sc, 
                           c->ipmi_ctx,
@@ -352,18 +373,8 @@ ipmi_monitoring_sdr_cache_flush(ipmi_monitoring_ctx_t c,
   if (_ipmi_monitoring_sdr_cache_filename(c, hostname, filename, MAXPATHLEN + 1) < 0)
     goto cleanup;
 
-  if (!(c->sc))
-    {
-      if (!(c->sc = ipmi_sdr_cache_ctx_create()))
-        {
-          IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_create: %s", strerror(errno)));
-          if (errno == EPERM || errno == EACCES)
-            c->errnum = IPMI_MONITORING_ERR_PERMISSION;
-          else
-            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          goto cleanup;
-        }
-    }
+  if (_ipmi_monitoring_sdr_cache_ctx_init(c) < 0)
+    goto cleanup;
 
   if (_ipmi_monitoring_sdr_cache_delete(c, hostname, filename) < 0)
     goto cleanup;

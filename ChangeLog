@@ -1,5 +1,16 @@
 2007-12-29  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/sdr-cache/, libfreeipmi/include/sdr-cache/:
+	Support sdr cache ctx flags.  Support SDR debug dumping.
+
+	* common/src/tool-sdr-cache-common.c,
+	common/src/tool-sdr-cache-common.h: Support SDR debug dumping
+	appropriately.
+
+	* ipmimonitoring/: Support SDR debug dumping appropriately.
+	
+2007-12-29  Albert Chu <chu11@llnl.gov>
+
 	* pef-config/src/Makefile.am: Remove linking to libsdr.la.
 	
 2007-12-29  Albert Chu <chu11@llnl.gov>

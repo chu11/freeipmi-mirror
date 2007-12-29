@@ -43,7 +43,6 @@ general
 -------
 event handling
 tool for getting channel information - in ipmi-device tool for 0.5.0?
-sdr dumping debugging in tools
 
 ipmi-chassis
 ------------

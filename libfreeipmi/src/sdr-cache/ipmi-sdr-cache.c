@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.2 2007-12-29 17:20:35 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.3 2007-12-29 21:11:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -128,3 +128,26 @@ ipmi_sdr_cache_ctx_strerror(int errnum)
   else
     return ipmi_sdr_cache_errmsgs[IPMI_SDR_CACHE_CTX_ERR_ERRNUMRANGE];
 }
+
+int
+ipmi_sdr_cache_ctx_get_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int *flags)
+{
+  ERR(ctx && ctx->magic == IPMI_SDR_CACHE_MAGIC);
+
+  SDR_CACHE_ERR_PARAMETERS(flags);
+
+  *flags = ctx->flags;
+  return 0;
+}
+
+int
+ipmi_sdr_cache_ctx_set_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int flags)
+{
+  ERR(ctx && ctx->magic == IPMI_SDR_CACHE_MAGIC);
+
+  SDR_CACHE_ERR_PARAMETERS(!(flags & ~IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP));
+
+  ctx->flags = flags;
+  return 0;
+}
+

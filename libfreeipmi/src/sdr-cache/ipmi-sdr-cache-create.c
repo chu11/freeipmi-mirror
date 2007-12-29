@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.2 2007-12-29 17:20:34 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.3 2007-12-29 21:11:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,6 +46,7 @@
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
 #include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
 
@@ -563,6 +564,12 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx,
                                               &reservation_id,
                                               &next_record_id)) < 0)
         goto cleanup;
+
+      if (ctx->flags & IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP)
+        ipmi_dump_sdr_record (STDERR_FILENO,
+                              NULL,
+                              record_buf,
+                              record_len);
 
       if (_sdr_cache_record_write(ctx,
                                   fd,

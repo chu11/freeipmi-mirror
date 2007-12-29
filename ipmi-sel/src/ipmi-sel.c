@@ -585,6 +585,17 @@ _ipmi_sel (pstdout_state_t pstate,
       goto cleanup;
     }
 
+  if (state_data.prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+    {
+      /* Don't error out, if this fails we can still continue */
+      if (ipmi_sdr_cache_ctx_set_flags(state_data.ipmi_sdr_cache_ctx,
+                                       IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+        pstdout_fprintf (pstate,
+                         stderr,
+                         "ipmi_sdr_cache_ctx_set_flags: %s\n",
+                         ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+    }
+
   if (run_cmd_args (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.h,v 1.2 2007-12-29 17:20:33 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.h,v 1.3 2007-12-29 21:11:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -56,6 +56,9 @@
 #define IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR                               24
 #define IPMI_SDR_CACHE_CTX_ERR_ERRNUMRANGE                                  25
 
+#define IPMI_SDR_CACHE_FLAGS_DEFAULT                   0x0000
+#define IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP                0x0001
+
 #define IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT            0x0
 /* During cache creation, overwrite any previously created cache.  Default
  * is to return an error that the cache already exists.
@@ -87,6 +90,10 @@ ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx_create(void);
 void ipmi_sdr_cache_ctx_destroy(ipmi_sdr_cache_ctx_t ctx);
 int ipmi_sdr_cache_ctx_errnum(ipmi_sdr_cache_ctx_t ctx);
 char * ipmi_sdr_cache_ctx_strerror(int errnum);
+
+/* SDR flag functions */
+int ipmi_sdr_cache_ctx_get_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int *flags);
+int ipmi_sdr_cache_ctx_set_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int flags);
 
 /* SDR Cache Creation Functions */
 int ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx, 

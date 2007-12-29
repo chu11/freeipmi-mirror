@@ -5,7 +5,8 @@ libdebug_la_SOURCES = \
 	ipmi-debug-common.c \
 	ipmi-debug-lan.c \
 	ipmi-debug-rmcp.c \
-	ipmi-debug-rmcpplus.c
+	ipmi-debug-rmcpplus.c \
+	ipmi-debug-sdr.c
 
 noinst_HEADERS = \
 	ipmi-debug-common.h

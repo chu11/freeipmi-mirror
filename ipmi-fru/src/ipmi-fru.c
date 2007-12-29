@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.10 2007-12-29 17:20:30 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.11 2007-12-29 21:11:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -466,6 +466,17 @@ _ipmi_fru(pstdout_state_t pstate,
       pstdout_perror (pstate, "ipmi_sdr_cache_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
+    }
+
+  if (state_data.prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+    {
+      /* Don't error out, if this fails we can still continue */
+      if (ipmi_sdr_cache_ctx_set_flags(state_data.ipmi_sdr_cache_ctx,
+                                       IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+        pstdout_fprintf (pstate, 
+                         stderr,
+                         "ipmi_sdr_cache_ctx_set_flags: %s\n",
+                         ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
     }
 
   if (run_cmd_args (&state_data) < 0)
