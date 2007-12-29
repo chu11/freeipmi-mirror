@@ -24,7 +24,11 @@ Autoconf/Portability
 --------------------
 * socklet_t, doesn't exist on all OSes.
 * stdarg.h, other OSes use varargs.h
-         
+       
+ipmipower
+---------
+fanout/something mechanism to limit parallelism
+  
 bmc-config:
 -----------
 Missing Serial Config
