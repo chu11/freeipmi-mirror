@@ -25,14 +25,15 @@ o Various other minor bug fixes and enhancements.
 
 For Developers
 --------------
-o Many libfreeipmi API changes.
+o Many libfreeipmi API changes.  Not counting specific tool changes
+  listed above, these API changes should not affect any user tools.
   o locate/probing API revamped.
   o SMIC driver/api removed. 
   o 'udm' renamed to 'api' globally.
   o 'ipmi_device_t' device context renamed to 'ipmi_ctx_t'.
   o New sdr-caching library added. 
   o Various code re-organization into subdirectories.
-  o New header files for more ipmi spec subsections.
+  o New header files for more ipmi spec subsections. 
 o SDR debugging/dumping added into all tools.
 
 0.5.2
