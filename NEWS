@@ -19,8 +19,9 @@ o Updated SDR output under verbose and very verbose output modes with:
   o More correct output.  For example, 'NA' will be output instead of
     0.0 when a value is not truly available.  Fields that don't exist,
     will not have a default output.
+  o Fix incorrect hysterisis output.
   o More SDR record types supported.
-o Minor corner case fixes throughout.
+o Various other minor bug fixes and enhancements.
 
 For Developers
 --------------
