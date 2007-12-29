@@ -28,6 +28,10 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
+int8_t ipmi_cmd_get_sensor_reading (ipmi_ctx_t ctx, 
+                                    uint8_t sensor_number, 
+                                    fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_sensor_reading_threshold (ipmi_ctx_t ctx, 
 					      uint8_t sensor_number, 
 					      fiid_obj_t obj_cmd_rs);

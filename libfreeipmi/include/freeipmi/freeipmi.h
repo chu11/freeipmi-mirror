@@ -64,11 +64,13 @@ extern "C" {
 #include <freeipmi/record-format/ipmi-fru-information-record-format.h>
 #include <freeipmi/record-format/ipmi-sdr-record-format.h>
 #include <freeipmi/record-format/ipmi-sel-record-format.h>
+#include <freeipmi/sdr-cache/ipmi-sdr-cache.h>
 #include <freeipmi/spec/ipmi-authentication-type-spec.h>
 #include <freeipmi/spec/ipmi-channel-spec.h>
 #include <freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h>
 #include <freeipmi/spec/ipmi-cmd-spec.h>
 #include <freeipmi/spec/ipmi-comp-code-spec.h>
+#include <freeipmi/spec/ipmi-event-reading-type-code-spec.h>
 #include <freeipmi/spec/ipmi-fru-chassis-types-spec.h>
 #include <freeipmi/spec/ipmi-fru-language-codes-spec.h>
 #include <freeipmi/spec/ipmi-ipmb-lun-spec.h>
@@ -80,8 +82,9 @@ extern "C" {
 #include <freeipmi/spec/ipmi-sensor-types-spec.h>
 #include <freeipmi/spec/ipmi-sensor-units-spec.h>
 #include <freeipmi/spec/ipmi-serial-modem-parameter-spec.h>
-#include <freeipmi/spec/ipmi-sol-parameter-spec.h>
 #include <freeipmi/spec/ipmi-slave-address-spec.h>
+#include <freeipmi/spec/ipmi-sol-parameter-spec.h>
+#include <freeipmi/spec/ipmi-system-software-id-spec.h>
 #include <freeipmi/util/ipmi-cipher-suite-util.h>
 #include <freeipmi/util/ipmi-error-util.h>
 #include <freeipmi/util/ipmi-lan-util.h>

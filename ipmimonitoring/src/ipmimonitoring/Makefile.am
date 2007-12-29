@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.6 2007-12-14 19:16:25 chu11 Exp $
+## $Id: Makefile.am,v 1.7 2007-12-29 17:20:31 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -7,11 +7,12 @@
 sbin_PROGRAMS = ipmimonitoring
 
 noinst_HEADERS = \
-	error.h
+	ipmimonitoring.h \
+	ipmimonitoring-argp.h
 
 ipmimonitoring_SOURCES = \
 	ipmimonitoring.c \
-	error.c
+	ipmimonitoring-argp.c
 
 ipmimonitoring_CPPFLAGS = \
 	-I$(srcdir)/../libipmimonitoring \

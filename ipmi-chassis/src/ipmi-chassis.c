@@ -36,53 +36,13 @@
 #include "freeipmi-portability.h"
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
+
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-fiid-wrappers.h"
 
 #include "pstdout.h"
 #include "hostrange.h"
-
-#define _FIID_OBJ_GET_WITH_RETURN_VALUE(obj, field, val, rv)            \
-do {                                                                    \
-    uint64_t _val = 0, *_val_ptr;                                       \
-    _val_ptr = val;                                                     \
-    if ((rv = fiid_obj_get (obj, field, &_val)) < 0)                    \
-      {                                                                 \
-        pstdout_fprintf(state_data->pstate,                             \
-                        stderr,                                         \
-                        "fiid_obj_get: %s: %s\n",                       \
-                        field,                                          \
-                        fiid_strerror(fiid_obj_errnum(obj)));           \
-        goto cleanup;                                                   \
-      }                                                                 \
-    *_val_ptr = _val;                                                   \
-} while (0)
-
-#define _FIID_OBJ_GET(obj, field, val)                                  \
-do {                                                                    \
-    uint64_t _val = 0, *_val_ptr;                                       \
-    _val_ptr = val;                                                     \
-    if (fiid_obj_get (obj, field, &_val) < 0)                           \
-      {                                                                 \
-        pstdout_fprintf(state_data->pstate,                             \
-                        stderr,                                         \
-                        "fiid_obj_get: %s: %s\n",                       \
-                        field,                                          \
-                        fiid_strerror(fiid_obj_errnum(obj)));           \
-        goto cleanup;                                                   \
-      }                                                                 \
-    *_val_ptr = _val;                                                   \
-} while (0)
-
-#define _FIID_OBJ_DESTROY(__obj)                 \
-  do {                                           \
-    if ((__obj))                                 \
-      {                                          \
-        fiid_obj_destroy((__obj));               \
-        (__obj) = NULL;                          \
-      }                                          \
-  } while (0)
-
 
 static int32_t 
 set_boot_flags (ipmi_chassis_state_data_t *state_data)
@@ -102,37 +62,16 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (!(get_boot_flags_rs = fiid_obj_create (tmpl_cmd_get_system_boot_options_boot_flags_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n", 
-                      strerror(errno));
-      goto cleanup;
-    }
-      
-  if (!(boot_info_ack_cmd_rs = fiid_obj_create (tmpl_cmd_set_system_boot_options_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n", 
-                      strerror(errno));
-      goto cleanup;
-    }
+  _FIID_OBJ_CREATE(get_boot_flags_rs, tmpl_cmd_get_system_boot_options_boot_flags_rs);
+  
+  _FIID_OBJ_CREATE(boot_info_ack_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
 
-  if (!(cmd_rs = fiid_obj_create (tmpl_cmd_set_system_boot_options_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n", 
-                      strerror(errno));
-      goto cleanup;
-    }
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_system_boot_options_rs);
 
-  if (ipmi_cmd_get_system_boot_options_boot_flags ( state_data->ipmi_ctx, 
-                                                  IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR, 
-                                                  IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
-                                                  get_boot_flags_rs) != 0)
+  if (ipmi_cmd_get_system_boot_options_boot_flags (state_data->ipmi_ctx, 
+                                                   IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR, 
+                                                   IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
+                                                   get_boot_flags_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -293,14 +232,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   int32_t rv = -1;
   char tmp[256];
 
-  if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_system_boot_options_boot_flags_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n", 
-                      strerror(errno));
-      return -1;
-    }
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_system_boot_options_boot_flags_rs);
   
   if (ipmi_cmd_get_system_boot_options_boot_flags ( state_data->ipmi_ctx, 
                                                   IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR, 
@@ -542,14 +474,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (!(cmd_rs = fiid_obj_create (tmpl_cmd_set_power_cycle_interval_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n", 
-                      strerror(errno));
-      return (-1);
-    }
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_power_cycle_interval_rs);
 
   if (ipmi_cmd_set_power_cycle_interval (state_data->ipmi_ctx, 
                                          args->args.power_cycle_interval, 
@@ -578,14 +503,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (!(cmd_rs = fiid_obj_create (tmpl_cmd_set_power_restore_policy_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n", 
-                      strerror(errno));
-      return -1;
-    }
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_power_restore_policy_rs);
 
   if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
                                          args->args.power_restore_policy, 
@@ -637,14 +555,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   uint32_t min, hrs;
   int32_t rv = -1;
 
-  if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_power_on_hours_counter_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n", 
-                      strerror(errno));
-      return -1;
-    }
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_power_on_hours_counter_rs);
   
   if (ipmi_cmd_get_power_on_hours_counter (state_data->ipmi_ctx, cmd_rs) != 0)
     {
@@ -684,14 +595,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
   char restart_cause[256];
   int32_t rv = -1;
 
-  if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_system_restart_cause_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n", 
-                      strerror(errno));
-      return -1;
-    }
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_system_restart_cause_rs);
 
   if (ipmi_cmd_get_system_restart_cause (state_data->ipmi_ctx, cmd_rs) != 0)
     {
@@ -773,14 +677,7 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (!(cmd_rs = fiid_obj_create (tmpl_cmd_chassis_identify_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n", 
-                      strerror(errno));
-      return (-1);
-    }
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_chassis_identify_rs);
 
   if (ipmi_cmd_chassis_identify (state_data->ipmi_ctx, 
                                  (args->args.identify_args.identify_interval_set) ? &args->args.identify_args.identify_interval : NULL, 
@@ -810,14 +707,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (!(cmd_rs = fiid_obj_create (tmpl_cmd_chassis_control_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n", 
-                      strerror(errno));
-      return -1;
-    }
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_chassis_control_rs);
 
   if (ipmi_cmd_chassis_control (state_data->ipmi_ctx, 
                                 args->args.chassis_control, 
@@ -844,14 +734,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
   uint8_t front_panel_capabilities = 0, misc_chassis_status = 0;
   int32_t rv = -1;
 
-  if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_status_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n", 
-                      strerror(errno));
-      goto cleanup;
-    }
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_chassis_status_rs);
 
   if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, cmd_rs) != 0)
     {
@@ -1155,14 +1038,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
   int32_t rv = -1;
   uint64_t val = 0;
 
-  if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_capabilities_rs)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n", 
-                      strerror(errno));
-      return (-1);
-    }
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_chassis_capabilities_rs);
 
   if (ipmi_cmd_get_chassis_capabilities (state_data->ipmi_ctx, cmd_rs) != 0)
     {

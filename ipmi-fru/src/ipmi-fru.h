@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.h,v 1.6 2007-12-14 19:16:20 chu11 Exp $
+ *  $Id: ipmi-fru.h,v 1.7 2007-12-29 17:20:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -31,7 +31,6 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
-#include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 
 #define FRU_BUF_LEN 2048
@@ -73,9 +72,7 @@ typedef struct ipmi_fru_state_data
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   char *hostname;
-  sdr_cache_ctx_t sdr_cache_ctx;
-  sdr_record_t *sdr_record_list;
-  unsigned int sdr_record_count;
+  ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx;
 } ipmi_fru_state_data_t;
 
 #endif

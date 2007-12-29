@@ -59,7 +59,7 @@ static char * ipmi_generic_event_reading_type_code_01_desc[] =
     "Upper Non-recoverable - going high",
     NULL
   };
-int ipmi_generic_event_reading_type_code_01_desc_max = 0x0B;
+static int ipmi_generic_event_reading_type_code_01_desc_max = 0x0B;
 
 static char * ipmi_generic_event_reading_type_code_02_desc[] =
   {
@@ -68,14 +68,14 @@ static char * ipmi_generic_event_reading_type_code_02_desc[] =
     "Transition to Busy",
     NULL
   };
-int ipmi_generic_event_reading_type_code_02_desc_max = 0x02;
+static int ipmi_generic_event_reading_type_code_02_desc_max = 0x02;
 
 static char * ipmi_generic_event_reading_type_code_03_desc[] =  {
     "State Deasserted",
     "State Asserted",
     NULL
   };
-int ipmi_generic_event_reading_type_code_03_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_03_desc_max = 0x01;
 
 static char * ipmi_generic_event_reading_type_code_04_desc[] =
   {
@@ -83,7 +83,7 @@ static char * ipmi_generic_event_reading_type_code_04_desc[] =
     "Predictive Failure asserted",
     NULL
   };
-int ipmi_generic_event_reading_type_code_04_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_04_desc_max = 0x01;
 
 static char * ipmi_generic_event_reading_type_code_05_desc[] =
   {
@@ -91,7 +91,7 @@ static char * ipmi_generic_event_reading_type_code_05_desc[] =
     "Limit Exceeded",
     NULL
   };
-int ipmi_generic_event_reading_type_code_05_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_05_desc_max = 0x01;
 
 static char * ipmi_generic_event_reading_type_code_06_desc[] =
   {
@@ -99,7 +99,7 @@ static char * ipmi_generic_event_reading_type_code_06_desc[] =
     "Performance Lags",
     NULL
   };
-int ipmi_generic_event_reading_type_code_06_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_06_desc_max = 0x01;
 
 static char * ipmi_generic_event_reading_type_code_07_desc[] =
   {
@@ -114,7 +114,7 @@ static char * ipmi_generic_event_reading_type_code_07_desc[] =
     "Informational",
     NULL
   };
-int ipmi_generic_event_reading_type_code_07_desc_max = 0x08;
+static int ipmi_generic_event_reading_type_code_07_desc_max = 0x08;
 
 static char * ipmi_generic_event_reading_type_code_08_desc[] =
   {
@@ -122,7 +122,7 @@ static char * ipmi_generic_event_reading_type_code_08_desc[] =
     "Device Inserted/Device Present",
     NULL
   };
-int ipmi_generic_event_reading_type_code_08_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_08_desc_max = 0x01;
 
 static char * ipmi_generic_event_reading_type_code_09_desc[] =
   {
@@ -130,7 +130,7 @@ static char * ipmi_generic_event_reading_type_code_09_desc[] =
     "Device Enabled",
     NULL
   };
-int ipmi_generic_event_reading_type_code_09_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_09_desc_max = 0x01;
 
 static char * ipmi_generic_event_reading_type_code_0A_desc[] =
   {
@@ -145,7 +145,7 @@ static char * ipmi_generic_event_reading_type_code_0A_desc[] =
     "Install Error",
     NULL
   };
-int ipmi_generic_event_reading_type_code_0A_desc_max = 0x08;
+static int ipmi_generic_event_reading_type_code_0A_desc_max = 0x08;
 
 static char * ipmi_generic_event_reading_type_code_0B_desc[] =
   {
@@ -159,7 +159,7 @@ static char * ipmi_generic_event_reading_type_code_0B_desc[] =
     "Redundancy Degraded from Non-redundant",
     NULL
   };
-int ipmi_generic_event_reading_type_code_0B_desc_max = 0x07;
+static int ipmi_generic_event_reading_type_code_0B_desc_max = 0x07;
 
 static char * ipmi_generic_event_reading_type_code_0C_desc[] =
   {
@@ -169,7 +169,7 @@ static char * ipmi_generic_event_reading_type_code_0C_desc[] =
     "D3 Power State",
     NULL
   };
-int ipmi_generic_event_reading_type_code_0C_desc_max = 0x03;
+static int ipmi_generic_event_reading_type_code_0C_desc_max = 0x03;
 
 /*********************** 
  * Sensor Type Strings *
@@ -180,28 +180,28 @@ static char * ipmi_sensor_type_code_01_desc[] =
     "Temperature",
     NULL
   };
-int ipmi_sensor_type_code_01_desc_max = 0x00;
+static int ipmi_sensor_type_code_01_desc_max = 0x00;
 
 static char * ipmi_sensor_type_code_02_desc[] =
   {
     "Voltage",
     NULL
   };
-int ipmi_sensor_type_code_02_desc_max = 0x00;
+static int ipmi_sensor_type_code_02_desc_max = 0x00;
 
 static char * ipmi_sensor_type_code_03_desc[] =
   {
     "Current",
     NULL
   };
-int ipmi_sensor_type_code_03_desc_max = 0x00;
+static int ipmi_sensor_type_code_03_desc_max = 0x00;
 
 static char * ipmi_sensor_type_code_04_desc[] =
   {
     "Fan",
     NULL
   };
-int ipmi_sensor_type_code_04_desc_max = 0x00;
+static int ipmi_sensor_type_code_04_desc_max = 0x00;
 
 /* achu: 'undock' removed as noted in errata */
 static char * ipmi_sensor_type_code_05_desc[] =
@@ -215,7 +215,7 @@ static char * ipmi_sensor_type_code_05_desc[] =
     "FAN area intrusion (supports detection of hot plug fan tampering)",
     NULL
   };
-int ipmi_sensor_type_code_05_desc_max = 0x06;
+static int ipmi_sensor_type_code_05_desc_max = 0x06;
 
 static char * ipmi_sensor_type_code_06_desc[] =
   {
@@ -227,7 +227,7 @@ static char * ipmi_sensor_type_code_06_desc[] =
     "Out-of-band Access Password Violation",
     NULL
   };
-int ipmi_sensor_type_code_06_desc_max = 0x05;
+static int ipmi_sensor_type_code_06_desc_max = 0x05;
 
 static char * ipmi_sensor_type_code_07_desc[] =
   {
@@ -244,7 +244,7 @@ static char * ipmi_sensor_type_code_07_desc[] =
     "Processor Automatically Throttled (processor throttling triggered by a hardware-based mechanism operating independent from system software, such as automatic thermal throttling or throttling to limit power consumption.)",
     NULL
   };
-int ipmi_sensor_type_code_07_desc_max = 0x0A;
+static int ipmi_sensor_type_code_07_desc_max = 0x0A;
 
 static char * ipmi_sensor_type_code_08_desc[] =
   {
@@ -257,7 +257,7 @@ static char * ipmi_sensor_type_code_08_desc[] =
     "Configuration error",
     NULL
   };
-int ipmi_sensor_type_code_08_desc_max = 0x06;
+static int ipmi_sensor_type_code_08_desc_max = 0x06;
 
 static char * ipmi_sensor_type_code_09_desc[] =
   {
@@ -271,7 +271,7 @@ static char * ipmi_sensor_type_code_09_desc[] =
     "Predictive Failure",
     NULL
   };
-int ipmi_sensor_type_code_09_desc_max = 0x07;
+static int ipmi_sensor_type_code_09_desc_max = 0x07;
 
 /* achu: new additions as stated in errata */
 static char * ipmi_sensor_type_code_0C_desc[] =
@@ -289,7 +289,7 @@ static char * ipmi_sensor_type_code_0C_desc[] =
     "Critical Overtemperature.  Memory device has entered a critical overtemperature state, exceeding specified operating conditions.  Memory devices in this state may produce errors or become inaccessible",
     NULL
   };
-int ipmi_sensor_type_code_0C_desc_max = 0x0A;
+static int ipmi_sensor_type_code_0C_desc_max = 0x0A;
 
 static char * ipmi_sensor_type_code_0D_desc[] =
   {
@@ -304,7 +304,7 @@ static char * ipmi_sensor_type_code_0D_desc[] =
     "Rebuild/Remap Aborted (was not completed normally)",
     NULL
   };
-int ipmi_sensor_type_code_0D_desc_max = 0x08;
+static int ipmi_sensor_type_code_0D_desc_max = 0x08;
 
 static char * ipmi_sensor_type_code_0F_desc[] =
   {
@@ -313,7 +313,7 @@ static char * ipmi_sensor_type_code_0F_desc[] =
     "System Firmware Progress",
     NULL
   };
-int ipmi_sensor_type_code_0F_desc_max = 0x02;
+static int ipmi_sensor_type_code_0F_desc_max = 0x02;
 
 static char * ipmi_sensor_type_code_10_desc[] =
   {
@@ -325,7 +325,7 @@ static char * ipmi_sensor_type_code_10_desc[] =
     "SEL Almost Full",
     NULL
   };
-int ipmi_sensor_type_code_10_desc_max = 0x05;
+static int ipmi_sensor_type_code_10_desc_max = 0x05;
 
 static char * ipmi_sensor_type_code_11_desc[] =
   {
@@ -339,7 +339,7 @@ static char * ipmi_sensor_type_code_11_desc[] =
     "OS Watchdog pre-timeout Interrupt, non-NMI",
     NULL
   };
-int ipmi_sensor_type_code_11_desc_max = 0x07;
+static int ipmi_sensor_type_code_11_desc_max = 0x07;
 
 static char * ipmi_sensor_type_code_12_desc[] =
   {
@@ -351,7 +351,7 @@ static char * ipmi_sensor_type_code_12_desc[] =
     "Timestamp Clock Synch",
     NULL
   };
-int ipmi_sensor_type_code_12_desc_max = 0x05;
+static int ipmi_sensor_type_code_12_desc_max = 0x05;
 
 static char * ipmi_sensor_type_code_13_desc[] =
   {
@@ -369,7 +369,7 @@ static char * ipmi_sensor_type_code_13_desc[] =
     "Bus Degraded (bus operating in a degraded performance state)",
     NULL
   };
-int ipmi_sensor_type_code_13_desc_max = 0x0B;
+static int ipmi_sensor_type_code_13_desc_max = 0x0B;
 
 static char * ipmi_sensor_type_code_14_desc[] =
   {
@@ -380,14 +380,14 @@ static char * ipmi_sensor_type_code_14_desc[] =
     "FRU service request button (pressed, service, e.g. removal/replacement, requested)",
     NULL
   };
-int ipmi_sensor_type_code_14_desc_max = 0x04;
+static int ipmi_sensor_type_code_14_desc_max = 0x04;
 
 static char * ipmi_sensor_type_code_19_desc[] =
   {
     "Soft Power Control Failure (chipset did not respond to BMC request to change system power state)", 
     NULL
   };
-int ipmi_sensor_type_code_19_desc_max = 0x00;
+static int ipmi_sensor_type_code_19_desc_max = 0x00;
 
 static char * ipmi_sensor_type_code_1B_desc[] =
   {
@@ -395,7 +395,7 @@ static char * ipmi_sensor_type_code_1B_desc[] =
     "Configuration Error - Incorrect cable connected / Incorrect interconnection",
     NULL
   };
-int ipmi_sensor_type_code_1B_desc_max = 0x01;
+static int ipmi_sensor_type_code_1B_desc_max = 0x01;
 
 /* achu: new additions as stated in errata */
 static char * ipmi_sensor_type_code_1D_desc[] =
@@ -410,7 +410,7 @@ static char * ipmi_sensor_type_code_1D_desc[] =
     "System Restart",
     NULL
   };
-int ipmi_sensor_type_code_1D_desc_max = 0x07;
+static int ipmi_sensor_type_code_1D_desc_max = 0x07;
 
 static char * ipmi_sensor_type_code_1E_desc[] =
   {
@@ -421,7 +421,7 @@ static char * ipmi_sensor_type_code_1E_desc[] =
     "Timeout waiting for user selection of boot source",
     NULL
   };
-int ipmi_sensor_type_code_1E_desc_max = 0x04;
+static int ipmi_sensor_type_code_1E_desc_max = 0x04;
 
 static char * ipmi_sensor_type_code_1F_desc[] =
   {
@@ -434,7 +434,7 @@ static char * ipmi_sensor_type_code_1F_desc[] =
     "boot completed - boot device not specified",
     NULL
   };
-int ipmi_sensor_type_code_1F_desc_max = 0x06;
+static int ipmi_sensor_type_code_1F_desc_max = 0x06;
 
 /* achu: modified per errata */
 static char * ipmi_sensor_type_code_20_desc[] =
@@ -447,7 +447,7 @@ static char * ipmi_sensor_type_code_20_desc[] =
     "Agent Not Responding.  Graceful shutdown request to agent via BMC did not occur due to missing or malfunctioning local agent.",
     NULL
   };
-int ipmi_sensor_type_code_20_desc_max = 0x05;
+static int ipmi_sensor_type_code_20_desc_max = 0x05;
 
 static char * ipmi_sensor_type_code_21_desc[] =
   {
@@ -463,7 +463,7 @@ static char * ipmi_sensor_type_code_21_desc[] =
     "Slot holds spare device",
     NULL
   };
-int ipmi_sensor_type_code_21_desc_max = 0x09;
+static int ipmi_sensor_type_code_21_desc_max = 0x09;
 
 static char * ipmi_sensor_type_code_22_desc[] =
   {
@@ -484,7 +484,7 @@ static char * ipmi_sensor_type_code_22_desc[] =
     "Unknown",
     NULL
   };
-int ipmi_sensor_type_code_22_desc_max = 0x0E;
+static int ipmi_sensor_type_code_22_desc_max = 0x0E;
 
 static char * ipmi_sensor_type_code_23_desc[] =
   {
@@ -499,7 +499,7 @@ static char * ipmi_sensor_type_code_23_desc[] =
     "Timer interrupt",
     NULL
   };
-int ipmi_sensor_type_code_23_desc_max = 0x08;
+static int ipmi_sensor_type_code_23_desc_max = 0x08;
 
 static char * ipmi_sensor_type_code_24_desc[] =
   {
@@ -509,7 +509,7 @@ static char * ipmi_sensor_type_code_24_desc[] =
     "platform generated SNMP trap, OEM format",
     NULL
   };
-int ipmi_sensor_type_code_24_desc_max = 0x03;
+static int ipmi_sensor_type_code_24_desc_max = 0x03;
 
 static char * ipmi_sensor_type_code_25_desc[] =
   {
@@ -518,7 +518,7 @@ static char * ipmi_sensor_type_code_25_desc[] =
     "Entity Disabled",
     NULL
   };
-int ipmi_sensor_type_code_25_desc_max = 0x02;
+static int ipmi_sensor_type_code_25_desc_max = 0x02;
 
 static char * ipmi_sensor_type_code_27_desc[] =
   {
@@ -526,7 +526,7 @@ static char * ipmi_sensor_type_code_27_desc[] =
     "LAN Heartbeat",
     NULL
   };
-int ipmi_sensor_type_code_27_desc_max = 0x01;
+static int ipmi_sensor_type_code_27_desc_max = 0x01;
 
 /* achu: new additions as stated in errata */
 static char * ipmi_sensor_type_code_28_desc[] =
@@ -539,7 +539,7 @@ static char * ipmi_sensor_type_code_28_desc[] =
     "FRU failure",
     NULL
   };
-int ipmi_sensor_type_code_28_desc_max = 0x05;
+static int ipmi_sensor_type_code_28_desc_max = 0x05;
 
 static char * ipmi_sensor_type_code_29_desc[] =
   {
@@ -548,7 +548,7 @@ static char * ipmi_sensor_type_code_29_desc[] =
     "battery presence detected",
     NULL
   };
-int ipmi_sensor_type_code_29_desc_max = 0x02;
+static int ipmi_sensor_type_code_29_desc_max = 0x02;
 
 static char * ipmi_sensor_type_code_2A_desc[] =
   {
@@ -556,7 +556,7 @@ static char * ipmi_sensor_type_code_2A_desc[] =
     "Session Deactivated",
     NULL
   };
-int ipmi_sensor_type_code_2A_desc_max = 0x01;
+static int ipmi_sensor_type_code_2A_desc_max = 0x01;
 
 static char * ipmi_sensor_type_code_2B_desc[] =
   {
@@ -570,7 +570,7 @@ static char * ipmi_sensor_type_code_2B_desc[] =
     "Software or F/W Change detected with associated Entity was successful",
     NULL
   };
-int ipmi_sensor_type_code_2B_desc_max = 0x07;
+static int ipmi_sensor_type_code_2B_desc_max = 0x07;
 
 static char * ipmi_sensor_type_code_2C_desc[] =
   {
@@ -584,7 +584,7 @@ static char * ipmi_sensor_type_code_2C_desc[] =
     "FRU Communication Lost",
     NULL
   };
-int ipmi_sensor_type_code_2C_desc_max = 0x07;
+static int ipmi_sensor_type_code_2C_desc_max = 0x07;
 
 /****************************************
  * Sensor Type Strings for Event Data 2 *
@@ -608,7 +608,7 @@ static char * ipmi_sensor_type_code_0F_event_data2_offset_00_desc[] =
     "CPU speed matching failure",
     NULL
   };
-int ipmi_sensor_type_code_0F_event_data2_offset_00_desc_max = 0x0D;
+static int ipmi_sensor_type_code_0F_event_data2_offset_00_desc_max = 0x0D;
 
 static char * ipmi_sensor_type_code_0F_event_data2_offset_01_desc[] =
   {
@@ -639,7 +639,7 @@ static char * ipmi_sensor_type_code_0F_event_data2_offset_01_desc[] =
     "Primary processor initialization",
     NULL
   };
-int ipmi_sensor_type_code_0F_event_data2_offset_01_desc_max = 0x18;
+static int ipmi_sensor_type_code_0F_event_data2_offset_01_desc_max = 0x18;
 
 static char * ipmi_sensor_type_code_0F_event_data2_offset_02_desc[] =
   {
@@ -670,7 +670,7 @@ static char * ipmi_sensor_type_code_0F_event_data2_offset_02_desc[] =
     "Primary processor initialization",
     NULL
   };
-int ipmi_sensor_type_code_0F_event_data2_offset_02_desc_max = 0x18;
+static int ipmi_sensor_type_code_0F_event_data2_offset_02_desc_max = 0x18;
 
 static char * ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc[] =
   {
@@ -682,7 +682,7 @@ static char * ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_de
    "Log entry action = log enabled",
    NULL
   };
-int ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc_max = 0x05;
+static int ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc_max = 0x05;
 
 static char * ipmi_sensor_type_code_12_event_data2_offset_03_log_type_desc[] =
   {
@@ -691,7 +691,7 @@ static char * ipmi_sensor_type_code_12_event_data2_offset_03_log_type_desc[] =
     "Log Type = OEM2",
     NULL
   };
-int ipmi_sensor_type_code_12_event_data2_offset_03_log_type_desc_max = 0x02;
+static int ipmi_sensor_type_code_12_event_data2_offset_03_log_type_desc_max = 0x02;
 
 static char * ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[] =
   {
@@ -703,7 +703,7 @@ static char * ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[] =
     "Diagnostic Interrupt (NMI)",
     NULL,
   };
-int ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc_max = 0x05;
+static int ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc_max = 0x05;
 
 static char * ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc[] =
   {
@@ -711,7 +711,7 @@ static char * ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc[]
     "event is second of pair",
     NULL,
   };
-int ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc_max = 0x01;
+static int ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc_max = 0x01;
 
 static char * ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc[] =
   {
@@ -719,7 +719,7 @@ static char * ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_typ
     "SDR Timestamp Clock updated",
     NULL,
   };
-int ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc_max = 0x01;
+static int ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc_max = 0x01;
 
 static char * ipmi_sensor_type_code_19_event_data2_offset_00_desc[] =
   {
@@ -738,7 +738,7 @@ static char * ipmi_sensor_type_code_19_event_data2_offset_00_desc[] =
     "Requested power state = Legacy OFF state",
     NULL,
   };
-int ipmi_sensor_type_code_19_event_data2_offset_00_desc_max = 0x0C;
+static int ipmi_sensor_type_code_19_event_data2_offset_00_desc_max = 0x0C;
 
 static char * ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc[] =
   {
@@ -756,7 +756,7 @@ static char * ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc[
     "power-up via RTC (system real time clock) wakeup",
     NULL
   };
-int ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc_max = 0x0B;
+static int ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc_max = 0x0B;
 
 static char * ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc[] =
   {
@@ -771,7 +771,7 @@ static char * ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type
     "Slot/Connector Type = FAN",
     NULL
   };
-int ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max = 0x08;
+static int ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max = 0x08;
 
 static char * ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc[] =
   {
@@ -793,7 +793,7 @@ static char * ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc
     "Interrupt type = unspecified",
     NULL,
   };
-int ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc_max = 0x0F;
+static int ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc_max = 0x0F;
 
 static char * ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc[] =
   {
@@ -815,7 +815,7 @@ static char * ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expira
     "Timer use at expiration = unspecified",
     NULL
   };
-int ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc_max = 0x0F;
+static int ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc_max = 0x0F;
 
 static char * ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc[] = 
   {
@@ -823,7 +823,7 @@ static char * ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_
     "device is logical FRU Device (accessed via FRU commands to mgmt. controller",
     NULL
   };
-int ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc_max = 0x01;
+static int ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc_max = 0x01;
 
 static char * ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc[] =
   {
@@ -853,7 +853,7 @@ static char * ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type
     "Version change type = board/FRU hardware configuration change (e.g. strap, jumper, cable change, etc.)",
     NULL
   };
-int ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc_max = 0x17;
+static int ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc_max = 0x17;
 
 static char * ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc[] =
   {
@@ -875,7 +875,7 @@ static char * ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_chan
     "Cause of state change = State Change, Cause Unknown",
     NULL
   };
-int ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc_max = 0x0F;
+static int ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc_max = 0x0F;
 
 /* 
  * Sensor Type Strings for Event Data 3
@@ -888,7 +888,7 @@ static char * ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc[] =
     "Processor missing or unexpected/unsupported condition",
     NULL
   };
-int ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc_max = 0x02;
+static int ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc_max = 0x02;
 
 static char * ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc[] =
   {
@@ -896,7 +896,7 @@ static char * ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_des
     "assertion event",
     NULL
   };
-int ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc_max = 0x01;
+static int ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc_max = 0x01;
 
 static char * ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc[] =
   {
@@ -904,7 +904,7 @@ static char * ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_al
     "logging has been disabled for all events of given type",
     NULL
   };
-int ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc_max = 0x01;
+static int ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc_max = 0x01;
 
 static char * ipmi_sensor_type_code_19_event_data3_offset_00_desc[] =
   {
@@ -924,7 +924,7 @@ static char * ipmi_sensor_type_code_19_event_data3_offset_00_desc[] =
     "Power state at time of request = unknown",
     NULL
   };
-int ipmi_sensor_type_code_19_event_data3_offset_00_desc_max = 0x0D;
+static int ipmi_sensor_type_code_19_event_data3_offset_00_desc_max = 0x0D;
 
 static char * ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc[] =
   {
@@ -934,7 +934,7 @@ static char * ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_
     "Session deactivated by configuration change",
     NULL
   };
-int ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc_max = 0x03;
+static int ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc_max = 0x03;
 
 static int
 _snprintf(char *buf, unsigned int buflen, char *fmt, ...)

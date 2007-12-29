@@ -142,6 +142,7 @@ enum argp_common_option_keys
 
 #if 0 /* see achu comments near top of file */
 /* retry-timeout is maintained for backwards compatability */
+/* timeout is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT                                                      \
     {"retry-timeout", ARGP_RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                       \
      "Specify the packet retransmission timeout in milliseconds. "                                 \
@@ -157,6 +158,7 @@ enum argp_common_option_keys
      "Defaults to 1000 milliseconds (1 second) if not specified.", 12}
 #else
 /* retry-timeout is maintained for backwards compatability */
+/* timeout is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT                                                      \
     {"retry-timeout", ARGP_RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                       \
      "Specify the packet retransmission timeout in milliseconds.", 11},                            \

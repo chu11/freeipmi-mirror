@@ -33,8 +33,8 @@
 #include <assert.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-sensor-common.h"
 
-#include "ipmi-sensor-common.h"
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
 
@@ -50,7 +50,7 @@ const char *argp_program_version =
 
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
-static char doc[] = "IPMI Sensors - displays current readings of sensor chips through BMC.";
+static char doc[] = "IPMI Sensors - displays IPMI sensor readings.";
 
 static char args_doc[] = "";
 

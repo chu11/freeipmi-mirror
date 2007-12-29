@@ -1,3 +1,113 @@
+2007-12-29  Albert Chu <chu11@llnl.gov>
+
+	* pef-config/src/Makefile.am: Remove linking to libsdr.la.
+	
+2007-12-29  Albert Chu <chu11@llnl.gov>
+
+	Merge from sdr_lib_rearch_branch, SDR library rearchitecture.
+
+	* ipmimonitoring/src/libipmimonitoring/: Remove struct
+	ipmi_monitoring_communication which is no longer needed.  Adjust
+	for direct use of ipmi_ctx_t as needed.
+
+	* ipmimonitoring/src/libipmisdrcache/: Support ipmi error code.
+
+	* ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache.h: Add
+	comments on API.
+
+	* ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_defs.h,
+	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_common.h,
+	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_common.c,
+	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_create.c,
+	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_delete.c,
+	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache_read.c: New
+	files.  Split off code into appropriate files.
+
+	* libfreeipmi/src/api/ipmi-sensor-cmds-api.c,
+	libfreeipmi/include/freeipmi/api/ipmi-sensor-cmds-api.h
+	(ipmi_cmd_get_sensor_reading): New function.
+
+	* ipmimonitoring/src/libipmimonitoring/,
+	ipmimonitoring/src/libipmisdrcache/: Re-work APIs to move all sdr
+	cache creation into libipmisdrcache and out of ipmimonitoring.
+
+	* ipmimonitoring/src/ipmimonitoring/: Make options in
+	ipmimonitoring more consistent to ipmi-sensors.
+
+	* ipmimonitoring/src/libipmisdrcache/: Move into
+	libfreeipmi/include/freeipmi/sdr-cache/ and
+	libfreeipmi/src/sdr-cache/.
+
+	* libfreeipmi/src/libcommon/: Add sdr-cache equivalent error
+	wrappers.
+
+	* libfreeipmi/src/sdr-cache/: Use wrappers appropriately.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring.c
+	ipmimonitoring/include/freeipmi/sdr-cache/ipmi_monitoring.h: New
+	function.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sdr_cache.c
+	(_ipmi_monitoring_sdr_cache_filename): Handle user specified
+	filename formats.
+
+	* common/src/tool-sdr-cache-common.h,
+	common/src/tool-sdr-cache-common.c,
+	common/src/tool-sensor-common.h,
+	common/src/tool-sensor-common.c,
+	common/src/tool-fiid-wrappers.h: New files.
+
+	* common/src/ipmi-sdr-cache-utils.h,
+	common/src/ipmi-sdr-cache-utils.c,
+	common/src/ipmi-sdr-cache-reads.h,
+	common/src/ipmi-sdr-cache-reads.c,
+ 	common/src/ipmi-sdr-cache-writes.h,
+	common/src/ipmi-sdr-cache-writes.c,
+ 	common/src/ipmi-sdr-cache.h,
+	common/src/ipmi-sdr-cache.c,
+	common/src/ipmi-sdr-cache_defs.h,
+	common/src/ipmi-sensor-common.h,
+	common/src/ipmi-sensor-common.c: Removed files.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sdr_cache.c:
+	Remove /tmp debug cache location.
+
+	* ipmimonitoring/src/ipmimonitoring/: Adjust to use new sdr cache
+	library and match ipmi-sensors behavior more.
+
+	* ipmi-fru/src/: Adjust to use new sdr cache library.  General
+	code cleanup.
+
+	* ipmi-fru/src/ipmi-fru-fiid.h: Remove file.
+
+	* ipmi-sel/src/: Adjust to use new sdr cache library.  Fix thread
+	safety issues.  General code cleanup.
+
+	* ipmi-sel/src/ipmi-sel-wrappers.h,
+	ipmi-sel/src/ipmi-sel-wrappers.c: Renamed to ipmi-sel-entry.h and
+	ipmi-sel-entry.c.
+
+	*
+	libfreeipmi/include/freeipmi/spec/ipmi-system-software-id-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-event-reading-type-code-spec.h:
+	New files.
+
+	* libfreeipmi/src/record-format/ipmi-sdr-record-format.c: Fix
+	field names in some sdr records.
+
+	* ipmi-sensors/src/: Adjust to use new sdr cache library.  General
+	code cleanup.  Minor bug fixes.  Minor output adjustments.
+
+	* ipmi-sensors/src/ipmi-sensors-reading.h,
+	ipmi-sensors/src/ipmi-sensors-reading.c: New files.
+	
+	* Check error return on asprintf globally.
+
+	* ipmi-chassis/src/, bmc-info/src/: Use new tool fiid wrappers.
+	
+	* Adjust Makefile.am, configure.ac, documentation and code
+	respectively for fall out from above changes.
+
 2007-12-26  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/spec/ipmi-sensor-types-spec.c: Fix typo.

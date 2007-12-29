@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.23 2007-12-14 19:16:26 chu11 Exp $
+## $Id: Makefile.am,v 1.24 2007-12-29 17:20:33 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -45,11 +45,13 @@ nobase_include_HEADERS = \
 	freeipmi/record-format/ipmi-fru-information-record-format.h \
 	freeipmi/record-format/ipmi-sdr-record-format.h \
 	freeipmi/record-format/ipmi-sel-record-format.h \
+	freeipmi/sdr-cache/ipmi-sdr-cache.h \
 	freeipmi/spec/ipmi-authentication-type-spec.h \
 	freeipmi/spec/ipmi-channel-spec.h \
 	freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h \
 	freeipmi/spec/ipmi-cmd-spec.h \
 	freeipmi/spec/ipmi-comp-code-spec.h \
+	freeipmi/spec/ipmi-event-reading-type-code-spec.h \
 	freeipmi/spec/ipmi-fru-chassis-types-spec.h \
 	freeipmi/spec/ipmi-fru-language-codes-spec.h \
 	freeipmi/spec/ipmi-ipmb-lun-spec.h \
@@ -61,8 +63,9 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-sensor-types-spec.h \
 	freeipmi/spec/ipmi-sensor-units-spec.h \
 	freeipmi/spec/ipmi-serial-modem-parameter-spec.h \
-	freeipmi/spec/ipmi-sol-parameter-spec.h \
 	freeipmi/spec/ipmi-slave-address-spec.h \
+	freeipmi/spec/ipmi-sol-parameter-spec.h \
+	freeipmi/spec/ipmi-system-software-id-spec.h \
 	freeipmi/util/ipmi-cipher-suite-util.h \
 	freeipmi/util/ipmi-error-util.h \
 	freeipmi/util/ipmi-lan-util.h \

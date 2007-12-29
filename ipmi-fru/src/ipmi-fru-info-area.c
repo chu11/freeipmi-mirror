@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.7 2007-12-14 19:16:20 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.8 2007-12-29 17:20:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -49,9 +49,10 @@
 #include <freeipmi/freeipmi.h>
 
 #include "ipmi-fru.h"
-#include "ipmi-fru-fiid.h"
 #include "ipmi-fru-info-area.h"
 #include "ipmi-fru-util.h"
+
+#include "tool-fiid-wrappers.h"
 
 fru_err_t
 ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,

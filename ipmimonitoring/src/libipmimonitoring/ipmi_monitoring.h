@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.18 2007-10-18 16:18:49 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.19 2007-12-29 17:20:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -635,6 +635,25 @@ int ipmi_monitoring_init(unsigned int flags, int *errnum);
  * Returns 0 on success, -1 on error
  */
 int ipmi_monitoring_sdr_cache_directory(char *dir, int *errnum);
+
+/*
+ * ipmi_monitoring_sdr_cache_filenames
+ *
+ * Initialize how sdr cache filenames will be formatted when
+ * written/read.  Threaded applications are responsible for calling
+ * this function before any thread may call another function in the
+ * library.
+ *
+ * The may be included in the format.
+ *
+ * %L - the hostname of the local machine
+ * %H - the remote host being monitored
+ *
+ * Atleast %H must be specified. 
+ * 
+ * Returns 0 on success, -1 on error
+ */
+int ipmi_monitoring_sdr_cache_filenames(char *format, int *errnum);
 
 /* 
  * ipmi_monitoring_ctx_create

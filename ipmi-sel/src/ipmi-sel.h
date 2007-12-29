@@ -22,7 +22,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
-#include "ipmi-sdr-cache.h"
+#include "tool-sdr-cache-common.h"
 #include "pstdout.h"
 
 #define IPMI_SEL_MAX_DELETE_RECORD 4096
@@ -30,10 +30,10 @@
 enum ipmi_sel_argp_option_keys
   { 
     INFO_KEY = 'i', 
-    DELETE_KEY = 'd', 
     DELETE_ALL_KEY = 'c', 
+    DELETE_KEY = 'd', 
+    DELETE_RANGE_KEY = 'R',
     HEX_DUMP_KEY = 'x', 
-    DELETE_RANGE_KEY = 'R'
   };
 
 struct ipmi_sel_arguments
@@ -42,10 +42,10 @@ struct ipmi_sel_arguments
   struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
   int info_wanted;
+  int delete_all_wanted;
   int delete_wanted;
   int delete_record_list[IPMI_SEL_MAX_DELETE_RECORD];
   int delete_record_list_length;
-  int delete_all_wanted;
   int delete_range_wanted;
   int delete_range1;
   int delete_range2;
@@ -65,9 +65,7 @@ typedef struct ipmi_sel_state_data
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   char *hostname;
-  sdr_cache_ctx_t sdr_cache_ctx;
-  sdr_record_t *sdr_record_list;
-  unsigned int sdr_record_count;
+  ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx;
 } ipmi_sel_state_data_t;
 
 #endif

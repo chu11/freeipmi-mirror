@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.19 2007-10-18 16:18:49 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.20 2007-12-29 17:20:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -90,8 +90,11 @@ static int _ipmi_monitoring_initialized = 0;
 
 uint32_t _ipmi_monitoring_flags = 0;
 
-extern char sdr_cache_dir[MAXPATHLEN+1];
-extern int sdr_cache_dir_set;
+extern char sdr_cache_directory[MAXPATHLEN+1];
+extern int sdr_cache_directory_set;
+
+extern char sdr_cache_filename_format[MAXPATHLEN+1];
+extern int sdr_cache_filename_format_set;
 
 static void
 _init_ctx(ipmi_monitoring_ctx_t c)
@@ -244,8 +247,40 @@ ipmi_monitoring_sdr_cache_directory(char *dir, int *errnum)
       return -1;
     }
 
-  strncpy(sdr_cache_dir, dir, MAXPATHLEN);
-  sdr_cache_dir_set = 1;
+  strncpy(sdr_cache_directory, dir, MAXPATHLEN);
+  sdr_cache_directory_set = 1;
+
+  if (errnum)
+    *errnum = IPMI_MONITORING_ERR_SUCCESS;
+  return 0;
+}
+
+int 
+ipmi_monitoring_sdr_cache_filenames(char *format, int *errnum)
+{
+  if (!format)
+    {
+      if (errnum)
+        *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (strchr(format, '/'))
+    {
+      if (errnum)
+        *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (!strstr(format, "%H"))
+    {
+      if (errnum)
+        *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      return -1;
+    }
+
+  strncpy(sdr_cache_filename_format, format, MAXPATHLEN);
+  sdr_cache_filename_format_set = 1;
 
   if (errnum)
     *errnum = IPMI_MONITORING_ERR_SUCCESS;
@@ -334,7 +369,7 @@ ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
 
           if (ipmi_sdr_cache_search_record_id(c->sc, record_ids[i]) < 0)
             {
-              if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
+              if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_CTX_ERR_NOT_FOUND)
                 {
                   c->errnum = IPMI_MONITORING_ERR_SENSOR_NOT_FOUND;
                   goto cleanup;

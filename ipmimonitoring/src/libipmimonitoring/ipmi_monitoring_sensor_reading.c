@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.9 2007-12-14 19:16:25 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.10 2007-12-29 17:20:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -338,7 +338,6 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
                     uint8_t *sensor_reading,
                     uint16_t *sensor_state)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
   int ret, rv = -1;
   uint64_t val;
@@ -353,9 +352,6 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
   assert(sensor_name_len);
   assert(sensor_reading);
   assert(sensor_state);
-
-  if (!(obj_cmd_rq = Fiid_obj_create(c, tmpl_cmd_get_sensor_reading_rq)))
-    goto cleanup;
 
   if (!(obj_cmd_rs = Fiid_obj_create(c, tmpl_cmd_get_sensor_reading_rs)))
     goto cleanup;
@@ -382,27 +378,11 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
       return -1;
     }
 
-  if (fill_cmd_get_sensor_reading(*sensor_number, obj_cmd_rq) < 0)
-    goto cleanup;
-  
-  if (ipmi_monitoring_ipmi_sendrecv (c,
-                                     IPMI_BMC_IPMB_LUN_BMC,
-                                     IPMI_NET_FN_SENSOR_EVENT_RQ,
-                                     obj_cmd_rq,
-                                     obj_cmd_rs) < 0)
-    goto cleanup;
-  
-  if ((ret = ipmi_check_completion_code_success(obj_cmd_rs)) < 0)
+  if (ipmi_cmd_get_sensor_reading(c->ipmi_ctx, 
+                                  *sensor_number, 
+                                  obj_cmd_rs) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_check_completion_code_success: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      goto cleanup;
-    }
-  
-  if (!ret)
-    {
-      IPMI_MONITORING_DEBUG(("bad completion code: 0x%X", val));
-      c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
+      ipmi_monitoring_ipmi_ctx_error_convert(c);
       goto cleanup;
     }
   
@@ -422,8 +402,6 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return rv;
@@ -1205,7 +1183,7 @@ ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c,
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->sensor_readings);
-  assert(c->comm.ipmi_ctx);
+  assert(c->ipmi_ctx);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(!sensor_groups || sensor_groups_len);

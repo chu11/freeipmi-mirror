@@ -5,16 +5,37 @@ For Users
 o Support --groups (plural) for multiple groups listing in
   ipmi-sensors.  Older --group option maintained for backwards
   compatability.
-o Minor corner case fixes throughout.
+o Support --list-groups and --flush in ipmimonitoring for consistency
+  to ipmi-sensors.
+o Change --cache-dir to --sdr-cache-dir in ipmimonitoring for consistency
+  to ipmi-sensors.
+o Support shared SDR caches for ipmi-sensors, ipmi-fru, ipmi-sel, and
+  ipmimonitoring.
+o Slightly modified SDR caching output messages in ipmi-sensors,
+  ipmi-sel, ipmi-fru, and ipmimonitoring.
+o Updated SDR output under verbose and very verbose output modes with:
+  o More IPMI compliant field names.  For example, 'Sensor Name' has
+    been replaced with 'Sensor ID String'.
+  o More correct output.  For example, 'NA' will be output instead of
+    '0.0' when a value is not truly available.  Fields that don't exist
+    will not have a default output.
+  o Fix incorrect hysterisis calculation and output.
+  o Fix incorrect OEM data output.
+  o Support more SDR record types for output.
+o Various other minor bug fixes and enhancements.
 
 For Developers
 --------------
-o Many libfreeipmi API changes.
-  o locate/probing API revamped with context API.
+o Many libfreeipmi API changes.  Not counting specific tool changes
+  listed above, these API changes should not affect any user tools.
+  o locate/probing API revamped.
   o SMIC driver/api removed. 
-  o 'udm' renamed to 'api'.
+  o 'udm' renamed to 'api' globally.
   o 'ipmi_device_t' device context renamed to 'ipmi_ctx_t'.
+  o New sdr-caching library added. 
   o Various code re-organization into subdirectories.
+  o New header files for more ipmi spec subsections. 
+o SDR debugging/dumping added into all tools.
 
 0.5.2
 -----

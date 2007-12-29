@@ -482,13 +482,16 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
 
   ret = get_lan_channel_number (state_data, &lan_channel_number);
   if (ret == CONFIG_ERR_SUCCESS)
-    asprintf(&strp, "Give a valid number (LAN = %u)", lan_channel_number);
-  if (!strp)
     {
-      if (!(strp = "Give a valid number\n"))
+      if (asprintf(&strp, 
+                   "Give a valid number (LAN = %u)", 
+                   lan_channel_number) < 0)
         {
-          perror("strdup");
-          goto cleanup;
+          if (!(strp = "Give a valid number\n"))
+            {
+              perror("asprintf");
+              goto cleanup;
+            }
         }
     }
 

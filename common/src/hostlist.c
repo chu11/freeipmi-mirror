@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostlist.c,v 1.3 2007-12-21 17:17:48 chu11 Exp $
+ *  $Id: hostlist.c,v 1.4 2007-12-29 17:20:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

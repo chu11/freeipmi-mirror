@@ -32,21 +32,6 @@
 
 #include "freeipmi-portability.h"
 
-/* 
- * Threshold Comparsion status
- */
-static char *threshold_comparison_status_desc[] =
-  {
-    "At or Below (<=) Lower Non-Critical Threshold",
-    "At or Below (<=) Lower Critical Threshold",
-    "At or Below (<=) Lower Non-Recoverable Threshold",
-    "At or Above (>=) Upper Non-Critical Threshold",
-    "At or Above (>=) Upper Critical Threshold",
-    "At or Above (>=) Upper Non-Recoverable Threshold",
-    NULL,
-  };
-int threshold_comparison_status_desc_max = 0x5;
-
 fiid_template_t tmpl_cmd_get_device_sdr_info_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -732,21 +717,6 @@ fiid_template_t tmpl_cmd_get_sensor_type_rs =
     {1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
-
-int 
-ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen)
-{
-  int rv;
-
-  ERR_EINVAL(buf && buflen);
-  ERR_EINVAL((offset <= threshold_comparison_status_desc_max));
-
-  rv = snprintf(buf, buflen, threshold_comparison_status_desc[offset]);
-  /* -1 to account for '\0' */
-  ERR_ENOSPC(!(rv >= (buflen - 1)));
-
-  return (0);
-}
 
 int8_t 
 fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)

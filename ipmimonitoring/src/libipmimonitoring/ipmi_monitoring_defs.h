@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.12 2007-12-14 19:16:25 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.13 2007-12-29 17:20:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -33,7 +33,6 @@
 #include <netinet/in.h>
 #include <freeipmi/freeipmi.h>
 
-#include "ipmi_sdr_cache.h"
 #include "list.h"
 
 #ifndef MAXHOSTNAMELEN
@@ -119,10 +118,6 @@
 
 #define IPMI_MONITORING_PACKET_BUFLEN 1024
 
-struct ipmi_monitoring_communication {
-  ipmi_ctx_t ipmi_ctx;
-};
-
 struct ipmi_sensor_config {
   char *option_str;
   int sensor_state;
@@ -150,7 +145,7 @@ struct ipmi_monitoring_ctx {
 
   ipmi_sdr_cache_ctx_t sc;
 
-  struct ipmi_monitoring_communication comm;
+  ipmi_ctx_t ipmi_ctx;
 
   List sensor_readings;
   ListIterator sensor_readings_itr;

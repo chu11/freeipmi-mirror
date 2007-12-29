@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.6 2007-12-14 19:16:25 chu11 Exp $
+## $Id: Makefile.am,v 1.7 2007-12-29 17:20:32 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -28,8 +28,7 @@ libipmimonitoring_la_SOURCES = \
 
 libipmimonitoring_la_CPPFLAGS = -D_REENTRANT \
 	-I$(srcdir)/../../../common/src \
-	-I$(srcdir)/../../../libfreeipmi/include \
-	-I$(srcdir)/../libipmisdrcache
+	-I$(srcdir)/../../../libfreeipmi/include
 
 libipmimonitoring_la_LDFLAGS = \
 	-version-info @LIBIPMIMONITORING_VERSION_INFO@ \
@@ -38,16 +37,12 @@ libipmimonitoring_la_LDFLAGS = \
 libipmimonitoring_la_LIBADD = \
 	../../../common/src/libmiscutils.la \
 	../../../libfreeipmi/src/libfreeipmi.la \
-	../../../common/src/libfreeipmiportability.la \
-	../libipmisdrcache/libipmisdrcache.la
+	../../../common/src/libfreeipmiportability.la
 
 ../../../common/src/libmiscutils.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../libipmisdrcache/libipmisdrcache.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../../common/src/libfreeipmiportability.la: force-dependency-check

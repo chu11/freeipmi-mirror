@@ -1243,6 +1243,142 @@ do {                                                                          \
       }                                                                       \
 } while (0)
 
+#define __FIID_ERRNO_TO_SDR_CACHE_ERRNUM                                      \
+do {                                                                          \
+  if (errno == 0)                                                             \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;                             \
+  else if (errno == ENOMEM)                                                   \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;                       \
+  else                                                                        \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;                      \
+} while (0)
+
+#define __FIID_ERRNUM_TO_SDR_CACHE_ERRNUM(___errnum)                          \
+do {                                                                          \
+  if ((___errnum) == 0)                                                       \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;                             \
+  else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;                       \
+  else                                                                        \
+    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;                      \
+} while (0)
+
+#define __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM(___obj)                         \
+do {                                                                          \
+  int32_t __obj_errnum = fiid_obj_errnum((___obj));                           \
+  __FIID_ERRNUM_TO_SDR_CACHE_ERRNUM(__obj_errnum);                            \
+} while (0)
+
+#define SDR_CACHE_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                      \
+do {                                                                          \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                     \
+    {                                                                         \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_SDR_CACHE_ERRNUM;                                       \
+      return (-1);                                                            \
+    }                                                                         \
+} while (0)
+
+#define SDR_CACHE_FIID_TEMPLATE_LEN_BYTES_CLEANUP(__len, __tmpl)              \
+do {                                                                          \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                     \
+    {                                                                         \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_SDR_CACHE_ERRNUM;                                       \
+      goto cleanup;                                                           \
+    }                                                                         \
+} while (0)
+
+#define SDR_CACHE_FIID_TEMPLATE_FREE(__tmpl) FIID_TEMPLATE_FREE((__tmpl))
+
+#define SDR_CACHE_FIID_OBJ_CREATE(__obj, __tmpl)                              \
+do {                                                                          \
+  if (!((__obj) = fiid_obj_create(__tmpl)))                                   \
+    {                                                                         \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_SDR_CACHE_ERRNUM;                                       \
+      return (-1);                                                            \
+    }                                                                         \
+} while (0)
+
+#define SDR_CACHE_FIID_OBJ_CREATE_CLEANUP(__obj, __tmpl)                      \
+do {                                                                          \
+  if (!((__obj) = fiid_obj_create(__tmpl)))                                   \
+    {                                                                         \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_SDR_CACHE_ERRNUM;                                       \
+      goto cleanup;                                                           \
+    }                                                                         \
+} while (0)
+
+#define SDR_CACHE_FIID_OBJ_SET_ALL(__obj, __data, __data_len)                 \
+do {                                                                          \
+    if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)               \
+      {                                                                       \
+         __FIID_OBJ_TRACE((__obj));                                           \
+         __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM((__obj));                      \
+         return (-1);                                                         \
+      }                                                                       \
+} while (0)
+
+#define SDR_CACHE_FIID_OBJ_SET_ALL_CLEANUP(__obj, __data, __data_len)         \
+do {                                                                          \
+    if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)               \
+      {                                                                       \
+         __FIID_OBJ_TRACE((__obj));                                           \
+         __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM((__obj));                      \
+         goto cleanup;                                                        \
+      }                                                                       \
+} while (0)
+
+#define SDR_CACHE_FIID_OBJ_GET(__obj, __field, __val)                         \
+do {                                                                          \
+    uint64_t __localval = 0, *__localval_ptr;                                 \
+    __localval_ptr = (__val);                                                 \
+    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)                   \
+      {                                                                       \
+         __FIID_OBJ_TRACE((__obj));                                           \
+         __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM((__obj));                      \
+         return (-1);                                                         \
+      }                                                                       \
+    *__localval_ptr = __localval;                                             \
+} while (0)
+
+#define SDR_CACHE_FIID_OBJ_GET_CLEANUP(__obj, __field, __val)                 \
+do {                                                                          \
+    uint64_t __localval = 0, *__localval_ptr;                                 \
+    __localval_ptr = (__val);                                                 \
+    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)                   \
+      {                                                                       \
+         __FIID_OBJ_TRACE((__obj));                                           \
+         __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM((__obj));                      \
+         goto cleanup;                                                        \
+      }                                                                       \
+    *__localval_ptr = __localval;                                             \
+} while (0)
+
+#define SDR_CACHE_FIID_OBJ_GET_DATA_LEN(__len, __obj, __field, __data, __data_len)         \
+do {                                                                                       \
+    if (((__len) = fiid_obj_get_data ((__obj), (__field), (__data), (__data_len))) < 0)    \
+      {                                                                                    \
+         __FIID_OBJ_TRACE((__obj));                                                        \
+         __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM((__obj));                                   \
+         return (-1);                                                                      \
+      }                                                                                    \
+} while (0)
+
+#define SDR_CACHE_FIID_OBJ_GET_DATA_LEN_CLEANUP(__len, __obj, __field, __data, __data_len) \
+do {                                                                                       \
+    if (((__len) = fiid_obj_get_data ((__obj), (__field), (__data), (__data_len))) < 0)    \
+      {                                                                                    \
+         __FIID_OBJ_TRACE((__obj));                                                        \
+         __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM((__obj));                                   \
+         goto cleanup;                                                                     \
+      }                                                                                    \
+} while (0)
+
+#define SDR_CACHE_FIID_OBJ_DESTROY(__obj) FIID_OBJ_DESTROY((__obj))
+
 #ifdef __cplusplus
 }
 #endif

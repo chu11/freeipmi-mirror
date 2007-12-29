@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.5 2007-10-18 16:18:45 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.6 2007-12-29 17:20:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -37,9 +37,10 @@
 #include <assert.h>
 
 #include "ipmi-fru.h"
-#include "ipmi-fru-fiid.h"
 #include "ipmi-fru-multirecord-area.h"
 #include "ipmi-fru-util.h"
+
+#include "tool-fiid-wrappers.h"
 
 static char *
 voltage_str(uint8_t voltage)
@@ -124,7 +125,10 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(obj_record, tmpl_fru_power_supply_information);
 
-  _FIID_OBJ_SET_ALL(len, obj_record, &frubuf[record_offset], record_length);
+  _FIID_OBJ_SET_ALL_LEN(len, 
+                        obj_record, 
+                        &frubuf[record_offset], 
+                        record_length);
 
   _FIID_OBJ_GET(obj_record,
                 "overall_capacity",
@@ -281,8 +285,7 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  if (obj_record)
-    fiid_obj_destroy(obj_record);
+  _FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -340,7 +343,10 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(obj_record, tmpl_fru_dc_output);
 
-  _FIID_OBJ_SET_ALL(len, obj_record, &frubuf[record_offset], record_length);
+  _FIID_OBJ_SET_ALL_LEN(len, 
+                        obj_record, 
+                        &frubuf[record_offset], 
+                        record_length);
 
   _FIID_OBJ_GET(obj_record,
                 "output_number",
@@ -400,8 +406,7 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  if (obj_record)
-    fiid_obj_destroy(obj_record);
+  _FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -458,7 +463,10 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(obj_record, tmpl_fru_dc_load);
 
-  _FIID_OBJ_SET_ALL(len, obj_record, &frubuf[record_offset], record_length);
+  _FIID_OBJ_SET_ALL_LEN(len, 
+                        obj_record, 
+                        &frubuf[record_offset], 
+                        record_length);
 
   _FIID_OBJ_GET(obj_record,
                 "output_number",
@@ -513,8 +521,7 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  if (obj_record)
-    fiid_obj_destroy(obj_record);
+  _FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -572,7 +579,10 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
  
   _FIID_OBJ_CREATE(obj_record, tmpl_fru_management_access_record);
 
-  _FIID_OBJ_SET_ALL(len, obj_record, &frubuf[record_offset], record_length);
+  _FIID_OBJ_SET_ALL_LEN(len, 
+                        obj_record, 
+                        &frubuf[record_offset], 
+                        record_length);
 
   _FIID_OBJ_GET(obj_record,
                 "sub_record_type",
@@ -667,8 +677,7 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  if (obj_record)
-    fiid_obj_destroy(obj_record);
+  _FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -728,7 +737,10 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(obj_record, tmpl_fru_base_compatibility_record);
 
-  _FIID_OBJ_SET_ALL(len, obj_record, &frubuf[record_offset], record_length);
+  _FIID_OBJ_SET_ALL_LEN(len, 
+                        obj_record, 
+                        &frubuf[record_offset], 
+                        record_length);
 
   _FIID_OBJ_GET(obj_record,
                 "manufacturer_id",
@@ -789,8 +801,7 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  if (obj_record)
-    fiid_obj_destroy(obj_record);
+  _FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -850,7 +861,10 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(obj_record, tmpl_fru_extended_compatibility_record);
 
-  _FIID_OBJ_SET_ALL(len, obj_record, &frubuf[record_offset], record_length);
+  _FIID_OBJ_SET_ALL_LEN(len, 
+                        obj_record, 
+                        &frubuf[record_offset], 
+                        record_length);
 
   _FIID_OBJ_GET(obj_record,
                 "manufacturer_id",
@@ -912,8 +926,7 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  if (obj_record)
-    fiid_obj_destroy(obj_record);
+  _FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -970,7 +983,10 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(obj_record, tmpl_fru_oem_record);
 
-  _FIID_OBJ_SET_ALL(len, obj_record, &frubuf[record_offset], record_length);
+  _FIID_OBJ_SET_ALL_LEN(len,
+                        obj_record, 
+                        &frubuf[record_offset], 
+                        record_length);
 
   _FIID_OBJ_GET(obj_record,
                 "manufacturer_id",
@@ -1010,8 +1026,7 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  if (obj_record)
-    fiid_obj_destroy(obj_record);
+  _FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -1055,10 +1070,10 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
   multirecord_offset = offset*8;
   while (multirecord_offset < frusize)
     {
-      _FIID_OBJ_SET_ALL(len, 
-                        fru_multirecord_header, 
-                        &frubuf[multirecord_offset], 
-                        frusize - multirecord_offset);
+      _FIID_OBJ_SET_ALL_LEN(len, 
+                            fru_multirecord_header, 
+                            &frubuf[multirecord_offset], 
+                            frusize - multirecord_offset);
       
       _FIID_OBJ_GET (fru_multirecord_header,
                      "record_type_id",
@@ -1278,8 +1293,7 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  if (fru_multirecord_header)
-    fiid_obj_destroy(fru_multirecord_header);
+  _FIID_OBJ_DESTROY(fru_multirecord_header);
   return (rv);
 
 }
