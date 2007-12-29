@@ -92,7 +92,7 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	field names in some sdr records.
 
 	* ipmi-sensors/src/: Adjust to use new sdr cache library.  General
-	code cleanup.
+	code cleanup.  Minor bug fixes.  Minor output adjustments.
 
 	* ipmi-sensors/src/ipmi-sensors-reading.h,
 	ipmi-sensors/src/ipmi-sensors-reading.c: New files.
