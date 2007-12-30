@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.4 2007-12-30 04:54:26 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.5 2007-12-30 05:19:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -565,34 +565,57 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx,
                                               &next_record_id)) < 0)
         goto cleanup;
 
-      if (ctx->flags & IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP)
-        ipmi_dump_sdr_record (STDERR_FILENO,
-                              NULL,
-                              NULL,
-                              NULL,
-                              record_buf,
-                              record_len);
+      if (record_len)
+        {
+          if (ctx->flags & IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP)
+            {
+              char *record_str;
 
-      if (_sdr_cache_record_write(ctx,
-                                  fd,
-                                  &total_bytes_written,
-                                  record_ids,
-                                  &record_ids_count,
-                                  sensor_numbers,
-                                  &sensor_numbers_count,
-                                  record_buf,
-                                  record_len) < 0)
-        goto cleanup;
+              if ((record_str = ipmi_sdr_cache_record_type_str(ctx, 
+                                                               record_buf,
+                                                               record_len)))
+                {
+                  char *hdr_format =
+                    "================================================\n"
+                    "%s\n"
+                    "================================================";
+                  char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
 
-      record_count_written++;
-
-      if (create_callback)
-        (*create_callback)(ctx->sdr_version,
-                           ctx->record_count,
-                           ctx->most_recent_addition_timestamp,
-                           ctx->most_recent_erase_timestamp,
-                           record_id,
-                           create_callback_data);
+                  snprintf(hdrbuf, 
+                           IPMI_SDR_CACHE_DEBUG_BUFLEN,
+                           hdr_format,
+                           record_str);
+                           
+                  ipmi_dump_sdr_record (STDERR_FILENO,
+                                        NULL,
+                                        hdrbuf,
+                                        NULL,
+                                        record_buf,
+                                        record_len);
+                }
+            }
+          
+          if (_sdr_cache_record_write(ctx,
+                                      fd,
+                                      &total_bytes_written,
+                                      record_ids,
+                                      &record_ids_count,
+                                      sensor_numbers,
+                                      &sensor_numbers_count,
+                                      record_buf,
+                                      record_len) < 0)
+            goto cleanup;
+          
+          record_count_written++;
+          
+          if (create_callback)
+            (*create_callback)(ctx->sdr_version,
+                               ctx->record_count,
+                               ctx->most_recent_addition_timestamp,
+                               ctx->most_recent_erase_timestamp,
+                               record_id,
+                               create_callback_data);
+        }
     }
 
   if (record_count_written != ctx->record_count)

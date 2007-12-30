@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.4 2007-12-30 04:54:26 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.5 2007-12-30 05:19:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -369,13 +369,33 @@ ipmi_sdr_cache_record_read(ipmi_sdr_cache_ctx_t ctx,
     }
 
   if (ctx->flags & IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP)
-    ipmi_dump_sdr_record (STDERR_FILENO,
-                          NULL,
-                          NULL,
-                          NULL,
-                          ctx->sdr_cache + ctx->current_offset,
-                          record_length + 5);
-  
+    {
+      char *record_str;
+      
+      if ((record_str = ipmi_sdr_cache_record_type_str(ctx, 
+						       ctx->sdr_cache + ctx->current_offset,
+						       record_length + 5)))
+        {
+          char *hdr_format =
+            "================================================\n"
+            "%s\n"
+            "================================================";
+          char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
+          
+          snprintf(hdrbuf, 
+                   IPMI_SDR_CACHE_DEBUG_BUFLEN,
+                   hdr_format,
+                   record_str);
+          
+          ipmi_dump_sdr_record (STDERR_FILENO,
+                                NULL,
+                                hdrbuf,
+                                NULL,
+                                ctx->sdr_cache + ctx->current_offset,
+                                record_length + 5);
+        }
+    }
+
   memcpy(buf, ctx->sdr_cache + ctx->current_offset, record_length + 5);
   ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;
   return (record_length + 5);

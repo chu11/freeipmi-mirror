@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.c,v 1.2 2007-12-29 17:20:34 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-common.c,v 1.3 2007-12-30 05:19:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -37,6 +37,7 @@
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
 #include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/record-format/ipmi-sdr-record-format.h"
 
 #include "ipmi-sdr-cache-common.h"
 #include "ipmi-sdr-cache-defs.h"
@@ -122,5 +123,63 @@ ipmi_sdr_cache_info(ipmi_sdr_cache_ctx_t ctx,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
+  return rv;
+}
+
+const char *
+ipmi_sdr_cache_record_type_str(ipmi_sdr_cache_ctx_t ctx,
+			       uint8_t *sdr_record,
+			       unsigned int sdr_record_len)
+{
+  fiid_obj_t obj_sdr_record_header = NULL;
+  uint64_t record_type;
+  int32_t sdr_record_header_len;
+  char *rv = NULL;
+
+  assert(ctx);
+  assert(ctx->magic == IPMI_SDR_CACHE_MAGIC);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  FIID_TEMPLATE_LEN_BYTES_CLEANUP(sdr_record_header_len, tmpl_sdr_record_header);
+
+  if (sdr_record_len < sdr_record_header_len)
+    goto cleanup;
+  
+  FIID_OBJ_CREATE_CLEANUP(obj_sdr_record_header, tmpl_sdr_record_header);
+  
+  FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record_header,
+			   sdr_record,
+			   sdr_record_header_len);
+  
+  FIID_OBJ_GET_CLEANUP(obj_sdr_record_header, "record_type", &record_type);
+
+  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+    rv = "SDR Full Sensor Record";
+  else if (record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
+    rv = "SDR Compact Sensor Record";
+  else if (record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
+    rv = "SDR Event Only Record";
+  else if (record_type == IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD)
+    rv = "SDR Entity Association Record";
+  else if (record_type == IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD)
+    rv = "SDR Device Relative Entity Association Record";
+  else if (record_type == IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
+    rv = "SDR Generic Device Locator Record";
+  else if (record_type == IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
+    rv = "SDR FRU Device Locator Record";
+  else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
+    rv = "SDR Management Controller Device Locator Record";
+  else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
+    rv = "SDR Management Controller Confirmation Record";
+  else if (record_type == IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD)
+    rv = "SDR Message Channel Info Record";
+  else if (record_type == IPMI_SDR_FORMAT_OEM_RECORD)
+    rv = "SDR OEM Record";
+  else
+    rv = "SDR Unknown Record";
+
+ cleanup:
+  FIID_OBJ_DESTROY(obj_sdr_record_header);
   return rv;
 }

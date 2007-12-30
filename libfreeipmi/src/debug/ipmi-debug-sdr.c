@@ -42,56 +42,6 @@ int32_t
 ipmi_dump_sdr_record (int fd, const char *prefix, const char *hdr, const char *trlr, uint8_t *sdr_record, uint32_t sdr_record_len)
 {
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
-#if 0
-  char *sdr_record_header_hdr = 
-    "================================================\n"
-    "SDR Record Header\n"
-    "================================================";
-  char *sdr_full_sensor_record_hdr = 
-    "================================================\n"
-    "SDR Full Sensor Record\n"
-    "================================================";
-  char *sdr_compact_sensor_record_hdr = 
-    "================================================\n"
-    "SDR Compact Sensor Record\n"
-    "================================================";
-  char *sdr_event_only_record_hdr = 
-    "================================================\n"
-    "SDR Event Only Record\n"
-    "================================================";
-  char *sdr_entity_association_record_hdr = 
-    "================================================\n"
-    "SDR Entity Association Record\n"
-    "================================================";
-  char *sdr_device_relative_entity_association_record_hdr = 
-    "================================================\n"
-    "SDR Device Relative Entity Association Record\n"
-    "================================================";
-  char *sdr_generic_device_locator_record_hdr = 
-    "================================================\n"
-    "SDR Generic Device Locator Record\n"
-    "================================================";
-  char *sdr_fru_device_locator_record_hdr = 
-    "================================================\n"
-    "SDR FRU Device Locator Record\n"
-    "================================================";
-  char *sdr_management_controller_device_locator_record_hdr = 
-    "================================================\n"
-    "SDR Management Controller Device Locator Record\n"
-    "================================================";
-  char *sdr_management_controller_confirmation_record_hdr = 
-    "================================================\n"
-    "SDR Management Controller Confirmation Record\n"
-    "================================================";
-  char *sdr_bmc_message_channel_info_record_hdr = 
-    "================================================\n"
-    "SDR Message Channel Info Record\n"
-    "================================================";
-  char *sdr_oem_record_hdr = 
-    "================================================\n"
-    "SDR OEM Record\n"
-    "================================================";
-#endif
   fiid_obj_t obj_sdr_record_header = NULL;
   fiid_obj_t obj_sdr_record = NULL;
   uint64_t val;
