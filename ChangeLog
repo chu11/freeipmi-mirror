@@ -8,6 +8,16 @@
 	appropriately.
 
 	* ipmimonitoring/: Support SDR debug dumping appropriately.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-spec.h: Fix spelling
+	of macros.  Add new macros appropriately.
+
+	* Update spelling of command names globally as necessary.
+
+	* libfreeipmi/src/debug/ipmi-debug-common.h,
+	libfreeipmi/src/debug/ipmi-debug-common.c
+	(ipmi_debug_get_request_response_str, ipmi_debug_get_cmd_str): New
+	functions.
 	
 2007-12-29  Albert Chu <chu11@llnl.gov>
 

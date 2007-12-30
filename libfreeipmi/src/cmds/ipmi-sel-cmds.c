@@ -156,7 +156,7 @@ fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sel_info_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SEL_DEV_CMDS_GET_SEL_INFO);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_INFO);
   return 0;
 }
 

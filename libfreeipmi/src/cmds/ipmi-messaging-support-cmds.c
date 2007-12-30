@@ -734,7 +734,7 @@ fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq)
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_info_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_INFO_CMD);  
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_INFO_COMMAND);  
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   
@@ -812,7 +812,7 @@ fill_cmd_set_user_access (uint8_t channel_number,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_user_access_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_ACCESS_CMD);  
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_ACCESS_COMMAND);  
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "user_ipmi_messaging", user_ipmi_messaging);
   FIID_OBJ_SET (obj_cmd_rq, "user_link_authentication", user_link_authentication);
@@ -839,7 +839,7 @@ fill_cmd_get_user_access (uint8_t channel_number,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_user_access_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_ACCESS_CMD);  
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_ACCESS_COMMAND);  
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
@@ -887,7 +887,7 @@ fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_cmd_rq)
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_user_name_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_NAME_CMD);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_NAME_COMMAND);
   FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
   FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
 
@@ -913,7 +913,7 @@ fill_cmd_set_user_password (uint8_t user_id,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_user_password_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_CMD);  
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_COMMAND);  
   FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
   FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
   FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
@@ -962,7 +962,7 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_user_password_v20_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_CMD);  
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_COMMAND);  
   FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
   FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
   FIID_OBJ_SET (obj_cmd_rq, "password_size", password_size);

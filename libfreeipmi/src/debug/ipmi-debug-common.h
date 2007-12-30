@@ -28,6 +28,7 @@ extern "C" {
 #include "libcommon/ipmi-err-wrappers.h"
 
 #define IPMI_DEBUG_MAX_PREFIX_LEN 32
+#define IPMI_DEBUG_MAX_HDR_LEN 1024
 
 #define IPMI_DEBUG_DPRINTF(args) \
         do { \
@@ -47,6 +48,10 @@ int8_t ipmi_debug_set_prefix(char *buf, unsigned int buflen, char *prefix);
 int8_t ipmi_debug_output_str(int fd, char *prefix, char *str);
 
 int8_t ipmi_debug_output_byte_array(int fd, char *prefix, uint8_t *buf, uint32_t buf_len);
+
+char *ipmi_debug_get_request_response_str(uint8_t net_fn);
+
+char *ipmi_debug_get_cmd_str(uint8_t net_fn, uint8_t cmd);
 
 #ifdef __cplusplus
 }
