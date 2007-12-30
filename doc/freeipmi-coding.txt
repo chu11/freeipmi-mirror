@@ -62,8 +62,8 @@ indicating that how and why the inputted parameters were incorrect.
 -------------------
 
 Please keep your code as consistent as possible to other code in
-FreeIPMI.  That includes code indenting/stype, API style, and naming
-convention (which is discussed in more detail below).
+FreeIPMI.  That includes code indenting style, brace style, API style,
+and naming convention (which is discussed in more detail below).
 
 Although there may be situations that a particular API style or naming
 convention will make things easier for you and your code (such as
@@ -85,8 +85,8 @@ is that both fields are optional and need not be filled according to
 the IPMI specification.  The pointer gives the caller the ability to
 set values (by passing a valid pointer) or not (by passing NULL).
 
-4) Libfreeipmi naming conventions
----------------------------------
+4) Libfreeipmi naming/function parameter conventions
+----------------------------------------------------
 
 The naming style in libfreeipmi was developed primarily for the
 purpose of readability when code is being compared to the IPMI
@@ -248,8 +248,6 @@ stderr/syslog when appropriate debugging is enabled.  It has allowed
 the FreeIPMI developers to debug issues very quickly and figure out
 vendor IPMI compliance very quickly.
 
-The macros are located in header files in common/src.
-
 6) Fiid vs. other Marshalling/Unmarshalling Styles
 --------------------------------------------------
 
@@ -383,8 +381,10 @@ Pros:
 A) No need to deal with endian problems (handled internally in the API).
 B) No need to deal with struct packing issues (bit shifts are handled
 internally in the API).
-C) Easier to deal with optional fields (just don't set a field).
-D) Easier to deal with variable length fields (set whatever length you want).
+C) Easier to deal with optional fields (just don't set a field, on a
+read the api can identify if a field is set or not).
+D) Easier to deal with variable length fields (set whatever length you
+want, on a read the api can identify the length of the field).
 E) Templates describe the packets exactly.
 F) Easy to do large packet dumps (fields and values easily output and identified).
 G) Significantly reduce the amount of unmarshalling/debug code needed.
@@ -468,14 +468,15 @@ example, returning a generic error message of "Permission Denied"
 would not give a malicious user information on whether the username or
 password was input incorrectly.
 
-The authors have elected to not implement this, because the benefits
-did not seem to outweigh the costs.  There are many vendor
-implementations of IPMI and many configuration options (authentication
-mechanism, cipher suite id, username, password, K_g, privilege level)
-needed for proper IPMI session establishment.  The number of error
-messages that could be mapped into a generic "Permission Denied" would
-make it too difficult for users to determine why they failed to
-connect properly.
+Although implemented earlier on, the authors have elected to not
+implement this now.  There are many vendor implementations of IPMI and
+many configuration options (authentication mechanism, cipher suite id,
+username, password, K_g, privilege level) needed for proper IPMI
+session establishment.  The number of error messages that could be
+mapped into a generic "Permission Denied" would make it too difficult
+for users to determine why they failed to connect properly.  The
+overall worth of implementing a generic "Permission Denied" error
+message just doesn't seem worth it now.
 
 8) Get Channel Authentication Capabilities Command
 --------------------------------------------------
@@ -516,23 +517,23 @@ by a number of vendors, so that overall benefit of checks
 has been put in question.  The authors have elected to keep 
 all the checks for the following reasons.
 
-A and B should be checked to avoid potential timeouts:
+* 'A' and 'B' should be checked to avoid potential timeouts:
 
-A) Later in the protocol, the password could be sent/hashed
-incorrectly, leading to a timeout because packets are not accepted by
-the remote machine.
+  - Later in the protocol, the password could be sent/hashed
+    incorrectly, leading to a timeout because packets are not accepted by
+    the remote machine.
 
-B) If the remote machine does not support IPMI 2.0, later packets
-could timeout because the remote machine does not recognize the packet
-format.
+  - If the remote machine does not support IPMI 2.0, later packets
+    could timeout because the remote machine does not recognize the packet
+    format.
 
-C's checks could be skipped as long as per msg authentication was not
-supported.
+* 'C''s checks could be skipped as long as per msg authentication was not
+  supported.
 
-D checks could be skipped, because an improper null vs non-null K_g
+* 'D''s checks could be skipped, because an improper null vs non-null K_g
 will be caught later during IPMI 2.0 authentication.
 
-E's checks are the most complicated.  An improper null vs non-null
+* 'E''s checks are the most complicated.  An improper null vs non-null
 username will be caught later during IPMI 1.5 and IPMI 2.0
 authentication.  An improper null vs non-null password can be caught
 later during IPMI 2.0 authentication, but may result in a timeout
@@ -542,9 +543,10 @@ An argument could also be made that the speed at which an invalid
 username/password error is returned to a user could also give a
 malicious user information on the username/password of the remote BMC.
 
-In the end, the authors have felt the overall benefits provided by the
-checking of these values provides more than the cost.  Changes in the
-overall industry implementation could change this viewpoint later.
+In the end, the authors have felt the overall positive benefits
+provided by the checking of these values provides more than the
+negative implications.  Changes in the overall industry implementation
+could change this viewpoint later.
 
 9) Bmc-Config/Pef-config callback design
 ----------------------------------------
@@ -573,9 +575,11 @@ the values.
 Obviously, this sounds like (and is!) very inefficient. 
 
 The authors acknowledge that the code is very inefficient b/c it will
-cause an excess number of request/response packets to be generated.
-However, here are some of the major reasons why this was done and is
-still kept.
+cause an excess number of request/response packets to be generated.  With
+a large number of inputs Bmc-config can be slow.
+
+Here are some of the major reasons why this was done and is still
+kept.
 
 A) (This is the primary reason this architecture is still kept.)  Due
 to widely varying hardware and implementations, this handles the write
