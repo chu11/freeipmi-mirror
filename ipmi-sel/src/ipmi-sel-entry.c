@@ -56,8 +56,10 @@ _find_sdr_record(ipmi_sel_state_data_t *state_data,
                  uint8_t *sdr_record_type,
                  uint8_t *sdr_event_reading_type_code)
 {
-  uint16_t record_count;
-  int i;
+  uint8_t tmp_sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+  int tmp_sdr_record_len;
+  uint8_t tmp_record_type;
+  uint8_t tmp_event_reading_type_code;
   
   assert(state_data);
   assert(sdr_record);
@@ -65,93 +67,64 @@ _find_sdr_record(ipmi_sel_state_data_t *state_data,
   assert(sdr_record_type);
   assert(sdr_event_reading_type_code);
 
-  if (ipmi_sdr_cache_record_count(state_data->ipmi_sdr_cache_ctx, &record_count) < 0)
+  if (ipmi_sdr_cache_search_sensor_number(state_data->ipmi_sdr_cache_ctx, sensor_number) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_cache_record_count: %s\n",
-                      ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
-      return -1;
-    }
-
-  if (ipmi_sdr_cache_first(state_data->ipmi_sdr_cache_ctx) < 0)
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_cache_first: %s\n",
-                      ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
-      return -1;
-    }
-
-  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next(state_data->ipmi_sdr_cache_ctx))
-    {
-      uint8_t tmp_sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-      int tmp_sdr_record_len;
-      uint8_t tmp_record_type;
-      uint8_t record_sensor_number;
-
-      memset(sdr_record, '\0', (*sdr_record_len));
-
-      memset(tmp_sdr_record, '\0', IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH);
-      
-      if ((tmp_sdr_record_len = ipmi_sdr_cache_record_read(state_data->ipmi_sdr_cache_ctx,
-                                                           tmp_sdr_record,
-                                                           IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
-        {
+      if (ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx) != IPMI_SDR_CACHE_CTX_ERR_NOT_FOUND)
+        { 
           pstdout_fprintf(state_data->pstate,
                           stderr,
-                          "ipmi_sdr_cache_record_read: %s\n",
+                          "ipmi_sdr_cache_search_record_id: %s\n",
                           ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
           return -1;
         }
-
-      if (sdr_cache_get_record_id_and_type (state_data->pstate,
-                                            tmp_sdr_record,
-                                            tmp_sdr_record_len,
-                                            NULL,
-                                            &tmp_record_type) < 0)
-        return -1;
-
-      if (tmp_record_type == IPMI_SDR_FORMAT_FULL_RECORD
-          || tmp_record_type == IPMI_SDR_FORMAT_COMPACT_RECORD
-          || tmp_record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
-        {
-          if (sdr_cache_get_sensor_number (state_data->pstate,
-                                           tmp_sdr_record,
-                                           tmp_sdr_record_len,
-                                           &record_sensor_number) < 0)
-            return -1;
-          
-          if (sensor_number == record_sensor_number)
-            {
-              uint8_t tmp_event_reading_type_code;
-
-              if (sdr_cache_get_event_reading_type_code (state_data->pstate,
-                                                         tmp_sdr_record,
-                                                         tmp_sdr_record_len,
-                                                         &tmp_event_reading_type_code) < 0)
-                return -1;
-              
-              if ((*sdr_record_len) < tmp_sdr_record_len)
-                {
-                  pstdout_fprintf(state_data->pstate,
-                                  stderr,
-                                  "buffer too small: %d\n", 
-                                  (*sdr_record_len));
-                  return -1;
-                }
-              
-              memcpy(sdr_record, tmp_sdr_record, tmp_sdr_record_len);
-              (*sdr_record_len) = tmp_sdr_record_len;
-              *sdr_record_type = tmp_record_type;
-              *sdr_event_reading_type_code = tmp_event_reading_type_code;
-
-              return 1;
-            }
-        }
+      else
+        /* can't find it */
+        return 0;
     }
 
-  return 0;
+  memset(sdr_record, '\0', (*sdr_record_len));
+  
+  memset(tmp_sdr_record, '\0', IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH);
+  
+  if ((tmp_sdr_record_len = ipmi_sdr_cache_record_read(state_data->ipmi_sdr_cache_ctx,
+                                                       tmp_sdr_record,
+                                                       IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_sdr_cache_record_read: %s\n",
+                      ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
+      return -1;
+    }
+
+  if (sdr_cache_get_record_id_and_type (state_data->pstate,
+                                        tmp_sdr_record,
+                                        tmp_sdr_record_len,
+                                        NULL,
+                                        &tmp_record_type) < 0)
+    return -1;
+  
+  if (sdr_cache_get_event_reading_type_code (state_data->pstate,
+                                             tmp_sdr_record,
+                                             tmp_sdr_record_len,
+                                             &tmp_event_reading_type_code) < 0)
+    return -1;
+  
+  if ((*sdr_record_len) < tmp_sdr_record_len)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "buffer too small: %d\n", 
+                      (*sdr_record_len));
+      return -1;
+    }
+              
+  memcpy(sdr_record, tmp_sdr_record, tmp_sdr_record_len);
+  (*sdr_record_len) = tmp_sdr_record_len;
+  *sdr_record_type = tmp_record_type;
+  *sdr_event_reading_type_code = tmp_event_reading_type_code;
+  
+  return 1;
 }
 
 static double

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.6 2007-12-30 07:11:03 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.7 2007-12-30 15:49:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,6 +47,7 @@
 
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
 #include "freeipmi/debug/ipmi-debug.h"
+#include "freeipmi/record-format/ipmi-sdr-record-format.h"
 
 #include "ipmi-sdr-cache-common.h"
 #include "ipmi-sdr-cache-defs.h"
@@ -316,6 +317,7 @@ ipmi_sdr_cache_search_record_id(ipmi_sdr_cache_ctx_t ctx, uint16_t record_id)
     {
       uint8_t *ptr = ctx->sdr_cache + offset;
       uint16_t record_id_current;
+      unsigned int record_length;
   
       /* Record ID stored little-endian */
       record_id_current = (uint16_t)ptr[0] & 0xFF;
@@ -327,13 +329,60 @@ ipmi_sdr_cache_search_record_id(ipmi_sdr_cache_ctx_t ctx, uint16_t record_id)
 	  ctx->current_offset = offset;
 	  break;
 	}
-      else
-	{
-	  unsigned int record_length;
-          record_length = (uint8_t)((ctx->sdr_cache + offset)[4]);
-	  offset += 5;
-	  offset += record_length;
-	}
+      
+      record_length = (uint8_t)((ctx->sdr_cache + offset)[4]);
+      offset += 5;
+      offset += record_length;
+    }
+
+  if (!found)
+    {
+      SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_NOT_FOUND);
+      return -1;
+    }
+
+  ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;
+  return 0;
+}
+
+int 
+ipmi_sdr_cache_search_sensor_number(ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_number)
+{
+  off_t offset;
+  int found = 0;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_CACHE_MAGIC);
+
+  SDR_CACHE_ERR_CACHE_READ_INITIALIZATION(ctx->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE);
+
+  offset = ctx->records_start_offset;
+  while (offset < ctx->file_size)
+    {
+      uint8_t *ptr = ctx->sdr_cache + offset;
+      uint8_t record_type_current;
+      unsigned int record_length;
+  
+      record_type_current = ptr[3];
+
+      if (record_type_current == IPMI_SDR_FORMAT_FULL_RECORD
+          || record_type_current == IPMI_SDR_FORMAT_COMPACT_RECORD
+          || record_type_current == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
+        {
+          uint8_t sensor_number_current;
+
+          sensor_number_current = ptr[7];
+
+          if (sensor_number_current == sensor_number)
+            {
+              found++;
+              ctx->current_offset = offset;
+              break;
+            }
+        }
+          
+      record_length = (uint8_t)((ctx->sdr_cache + offset)[4]);
+      offset += 5;
+      offset += record_length;
     }
 
   if (!found)
