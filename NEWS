@@ -10,7 +10,8 @@ o Support --list-groups and --flush in ipmimonitoring for consistency
 o Change --cache-dir to --sdr-cache-dir in ipmimonitoring for consistency
   to ipmi-sensors.
 o Support shared SDR caches for ipmi-sensors, ipmi-fru, ipmi-sel, and
-  ipmimonitoring.
+  ipmimonitoring.  (libipmimonitoring will still use a different
+  default cache directory.)
 o Slightly modified SDR caching output messages in ipmi-sensors,
   ipmi-sel, ipmi-fru, and ipmimonitoring.
 o Updated SDR output under verbose and very verbose output modes with:

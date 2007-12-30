@@ -13,12 +13,6 @@ libfreeipmi:
   - sel record-types
   - sensor-cmds
 * how to support xRC4 (can we? should we? does any vendor support this?)
-- remove fiid-ness from udm lib, use pointers for returns?
-- find way to consolidate sdrcache lib in common/src w/ sdrcache lib
-in ipmimonitoring and add into libfreeipmi?
-- find way to make sensor-common a legit lib and move into libfreeipmi?
-- need debug capabilities in sdr cache libs (i.e. sdr cache dumping)
-- prefix host output on debug for udm based tools
 
 Autoconf/Portability
 --------------------
@@ -42,17 +36,12 @@ pef-config
 general
 -------
 event handling
-tool for getting channel information - in ipmi-device tool for 0.5.0?
 
 ipmi-chassis
 ------------
 move set power cycle interval to bmc-config?
 remove set power restore policy b/c its in bmc-config?
 put boot options into bmc-config?
-
-ipmi-sensors
-------------
-auto regenerate caches when invalid/out of date?
 
 ipmiconsole
 -----------
@@ -68,8 +57,8 @@ SOL config read (P5M2, P5MT-R)
 get/st payload access (P5M2, P5MT-R)
 invalid RAKP2 err code (P5MT-R)
 
-RELEASE TODOS
--------------
+RELEASE TODOS - Do on every release
+-----------------------------------
 Email freeipmi-users && freeipmi-devel
 Update savannah announcements
 Update freshmeat.net
