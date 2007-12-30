@@ -818,7 +818,7 @@ ipmi_dump_rmcpplus_packet (int fd,
   /* Dump rmcpplus session header */
 
   ERR_CLEANUP (!((obj_len = _dump_rmcpplus_session_hdr(fd,
-                                                       prefix_buf,
+                                                       prefix,
                                                        session_hdr,
                                                        pkt + indx,
                                                        pkt_len - indx,
@@ -881,7 +881,7 @@ ipmi_dump_rmcpplus_packet (int fd,
   /* Dump Payload */
 
   ERR_CLEANUP (!(_dump_rmcpplus_payload(fd, 
-                                        prefix_buf, 
+                                        prefix, 
                                         payload_hdr, 
                                         msg_hdr,
                                         cmd_hdr,
@@ -906,7 +906,7 @@ ipmi_dump_rmcpplus_packet (int fd,
   /* Dump trailer */
 
   ERR_CLEANUP (!((obj_len = _dump_rmcpplus_session_trlr(fd,
-							prefix_buf,
+							prefix,
 							session_trailer_hdr,
 							session_id,
 							payload_authenticated,

@@ -154,12 +154,10 @@ static void
 _ipmi_lan_dump_rq (ipmi_ctx_t ctx, 
                    uint8_t *pkt,
                    uint32_t pkt_len,
+		   uint8_t cmd,
+		   uint8_t net_fn,
                    fiid_obj_t obj_cmd_rq)
 {
-  char *hdr =
-    "================================================\n"
-    "IPMI 1.5 Request\n"
-    "================================================";
   fiid_field_t *tmpl_cmd = NULL;
 
   assert (ctx
@@ -173,15 +171,34 @@ _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
 
   if ((tmpl_cmd = fiid_obj_template(obj_cmd_rq)))
     {
-      ipmi_dump_lan_packet (STDERR_FILENO,
-                            NULL,
-                            hdr,
-                            NULL,
-                            pkt,
-                            pkt_len,
-                            tmpl_lan_msg_hdr_rq,
-                            tmpl_cmd);
-      fiid_template_free (tmpl_cmd);
+      const char *cmd_str;
+      
+      if ((cmd_str = ipmi_cmd_str (net_fn, cmd)))
+        {
+          char *hdr_format =
+            "================================================\n"
+            "IPMI 1.5 %s Request\n"
+            "================================================";
+          char hdrbuf[1024];
+              
+	  if (strcasecmp(cmd_str, "unknown") == 0)
+	    printf("FOO %X %X\n", ctx->net_fn, cmd);
+
+          snprintf(hdrbuf,
+                   1024,
+                   hdr_format,
+                   cmd_str);
+          
+          ipmi_dump_lan_packet (STDERR_FILENO,
+                                NULL,
+                                hdrbuf,
+                                NULL,
+                                pkt,
+                                pkt_len,
+                                tmpl_lan_msg_hdr_rq,
+                                tmpl_cmd);
+          fiid_template_free (tmpl_cmd);
+        }
     }
 }
 
@@ -189,12 +206,10 @@ static void
 _ipmi_lan_dump_rs (ipmi_ctx_t ctx, 
                    uint8_t *pkt,
                    uint32_t pkt_len,
+		   uint8_t cmd,
+		   uint8_t net_fn,
                    fiid_obj_t obj_cmd_rs)
 {
-  char *hdr =
-    "================================================\n"
-    "IPMI 1.5 Response\n"
-    "================================================";
   fiid_field_t *tmpl_cmd = NULL;
 
   assert (ctx
@@ -208,15 +223,31 @@ _ipmi_lan_dump_rs (ipmi_ctx_t ctx,
 
   if ((tmpl_cmd = fiid_obj_template(obj_cmd_rs)))
     {
-      ipmi_dump_lan_packet (STDERR_FILENO,
-                            NULL,
-                            hdr,
-                            NULL,
-                            pkt,
-                            pkt_len,
-                            tmpl_lan_msg_hdr_rs,
-                            tmpl_cmd);
-      fiid_template_free (tmpl_cmd);
+      const char *cmd_str;
+      
+      if ((cmd_str = ipmi_cmd_str (net_fn, cmd)))
+        {
+          char *hdr_format =
+            "================================================\n"
+            "IPMI 1.5 %s Response\n"
+            "================================================";
+          char hdrbuf[1024];
+	  
+          snprintf(hdrbuf,
+                   1024,
+                   hdr_format,
+                   cmd_str);
+          
+          ipmi_dump_lan_packet (STDERR_FILENO,
+                                NULL,
+                                hdrbuf,
+                                NULL,
+                                pkt,
+                                pkt_len,
+                                tmpl_lan_msg_hdr_rs,
+                                tmpl_cmd);
+          fiid_template_free (tmpl_cmd);
+        }
     }
 }
 
@@ -364,7 +395,6 @@ _ipmi_check_session_sequence_number(ipmi_ctx_t ctx,
   return rv;
 }
                                         
-
 static int8_t
 _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                     uint8_t lun,
@@ -375,6 +405,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                     uint8_t rq_seq,
                     char *password,
                     uint32_t password_len,
+		    uint8_t cmd, /* for debug dumping */
                     fiid_obj_t obj_cmd_rq)
 {
   uint8_t *pkt;
@@ -422,7 +453,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
 					      pkt_len)) != -1);
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && send_len)
-    _ipmi_lan_dump_rq (ctx, pkt, send_len, obj_cmd_rq);
+    _ipmi_lan_dump_rq (ctx, pkt, send_len, cmd, net_fn, obj_cmd_rq);
 
   API_ERR (!(ipmi_lan_sendto (ctx->io.outofband.sockfd, 
 			      pkt, 
@@ -441,6 +472,8 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                     uint8_t *pkt,
                     uint32_t pkt_len,
                     unsigned int retransmission_count,
+		    uint8_t cmd, /* for debug dumping */
+		    uint8_t net_fn, /* for debug dumping */
                     fiid_obj_t obj_cmd_rs)
 {
   struct sockaddr_in from;
@@ -491,6 +524,8 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
     _ipmi_lan_dump_rs (ctx, 
                        pkt,
                        recv_len,
+		       cmd,
+		       net_fn,
                        obj_cmd_rs);
 
   API_ERR (unassemble_ipmi_lan_pkt(pkt,
@@ -526,6 +561,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
   struct socket_to_close *sockets = NULL;
   uint64_t rs_session_id;
   uint64_t rs_session_sequence_number;
+  uint64_t cmd = 0;		/* used for debugging */
   
   assert(ctx
 	 && ctx->magic == IPMI_CTX_MAGIC
@@ -546,6 +582,9 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
       && !ctx->io.outofband.last_received.tv_usec)
     API_ERR (!(gettimeofday(&ctx->io.outofband.last_received, NULL) < 0));
 
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
+
   if (_ipmi_lan_cmd_send (ctx, 
                           lun, 
                           net_fn,
@@ -555,6 +594,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                           (rq_seq) ? *rq_seq : 0,
                           password,
                           password_len,
+			  cmd,	/* for debug dumping */
                           obj_cmd_rq) < 0)
     goto cleanup;
 
@@ -567,11 +607,14 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
           break;
         }
      
+      /* its ok to use the "request" net_fn, dump code doesn't care */
       memset(pkt, '\0', IPMI_PKT_LEN);
       if ((recv_len = _ipmi_lan_cmd_recv (ctx, 
                                           pkt,
                                           IPMI_PKT_LEN,
-                                          retransmission_count,
+                                          retransmission_count,			  
+					  cmd, /* for debug dumping */
+					  net_fn, /* for debug dumping */
                                           obj_cmd_rs)) < 0)
         {
           retval = -1;
@@ -639,6 +682,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                                   (rq_seq) ? *rq_seq : 0,
                                   password,
                                   password_len,
+				  cmd,	/* for debug dumping */
                                   obj_cmd_rq) < 0)
             goto cleanup;
           
@@ -1093,12 +1137,10 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
                        uint32_t confidentiality_key_len,
                        uint8_t *pkt,
                        uint32_t pkt_len,
+		       uint8_t cmd,
+		       uint8_t net_fn,
                        fiid_obj_t obj_cmd_rq)
 {
-  char *hdr =
-    "================================================\n"
-    "IPMI 2.0 Request\n"
-    "================================================";
   fiid_field_t *tmpl_cmd = NULL;
 
   assert (ctx
@@ -1115,22 +1157,46 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
 
   if ((tmpl_cmd = fiid_obj_template(obj_cmd_rq)))
     {
-      ipmi_dump_rmcpplus_packet (STDERR_FILENO,
-                                 NULL,
-                                 hdr,
-                                 NULL,
-                                 authentication_algorithm,
-                                 integrity_algorithm,
-                                 confidentiality_algorithm,
-                                 integrity_key,
-                                 integrity_key_len,
-                                 confidentiality_key,
-                                 confidentiality_key_len,
-                                 pkt,
-                                 pkt_len,
-                                 tmpl_lan_msg_hdr_rq,
-                                 tmpl_cmd);
-      fiid_template_free (tmpl_cmd);
+      const char *cmd_str;
+      
+      if ((cmd_str = ipmi_cmd_str (net_fn, cmd)))
+        {
+          char *hdr_format =
+            "================================================\n"
+            "IPMI 2.0 %s Request\n"
+            "================================================";
+          char hdrbuf[1024];
+
+          /* Handle a few IPMI 2.0 special cases */
+          if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_open_session_request) == 1)
+            cmd_str = "Open Session";
+          else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_1) == 1)
+            cmd_str = "RAKP Message 1";
+          else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_3) == 1)
+            cmd_str = "RAKP Message 3";
+          
+          snprintf(hdrbuf,
+                   1024,
+                   hdr_format,
+                   cmd_str);
+          
+          ipmi_dump_rmcpplus_packet (STDERR_FILENO,
+                                     NULL,
+                                     hdrbuf,
+                                     NULL,
+                                     authentication_algorithm,
+                                     integrity_algorithm,
+                                     confidentiality_algorithm,
+                                     integrity_key,
+                                     integrity_key_len,
+                                     confidentiality_key,
+                                     confidentiality_key_len,
+                                     pkt,
+                                     pkt_len,
+                                     tmpl_lan_msg_hdr_rq,
+                                     tmpl_cmd);
+          fiid_template_free (tmpl_cmd);
+        }
     }
 }
 
@@ -1145,12 +1211,10 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
                        uint32_t confidentiality_key_len,
                        uint8_t *pkt,
                        uint32_t pkt_len,
+		       uint8_t cmd,
+		       uint8_t net_fn,
                        fiid_obj_t obj_cmd_rs)
 {
-  char *hdr =
-    "================================================\n"
-    "IPMI 2.0 Response\n"
-    "================================================";
   fiid_field_t *tmpl_cmd = NULL;
 
   assert (ctx
@@ -1167,22 +1231,46 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
 
   if ((tmpl_cmd = fiid_obj_template(obj_cmd_rs)))
     {
-      ipmi_dump_rmcpplus_packet (STDERR_FILENO,
-                                 NULL,
-                                 hdr,
-                                 NULL,
-                                 authentication_algorithm,
-                                 integrity_algorithm,
-                                 confidentiality_algorithm,
-                                 integrity_key,
-                                 integrity_key_len,
-                                 confidentiality_key,
-                                 confidentiality_key_len,
-                                 pkt,
-                                 pkt_len,
-                                 tmpl_lan_msg_hdr_rs,
-                                 tmpl_cmd);
-      fiid_template_free (tmpl_cmd);
+      const char *cmd_str;
+
+      if ((cmd_str = ipmi_cmd_str (net_fn, cmd)))
+        {
+          char *hdr_format =
+            "================================================\n"
+            "IPMI 2.0 %s Response\n"
+            "================================================";
+          char hdrbuf[1024];
+          
+          /* Handle a few IPMI 2.0 special cases */
+          if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_open_session_response) == 1)
+            cmd_str = "Open Session";
+          else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_2) == 1)
+            cmd_str = "RAKP Message 2";
+          else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_4) == 1)
+            cmd_str = "RAKP Message 4";
+
+          snprintf(hdrbuf,
+                   1024,
+                   hdr_format,
+                   cmd_str);
+          
+          ipmi_dump_rmcpplus_packet (STDERR_FILENO,
+                                     NULL,
+                                     hdrbuf,
+                                     NULL,
+                                     authentication_algorithm,
+                                     integrity_algorithm,
+                                     confidentiality_algorithm,
+                                     integrity_key,
+                                     integrity_key_len,
+                                     confidentiality_key,
+                                     confidentiality_key_len,
+                                     pkt,
+                                     pkt_len,
+                                     tmpl_lan_msg_hdr_rs,
+                                     tmpl_cmd);
+          fiid_template_free (tmpl_cmd);
+        }
     }
 }
 
@@ -1205,6 +1293,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                         uint32_t confidentiality_key_len,
                         char *password,
                         uint32_t password_len,
+			uint8_t cmd, /* for debug dumping */
                         fiid_obj_t obj_cmd_rq)
 {
   uint8_t *pkt;
@@ -1284,6 +1373,8 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                            confidentiality_key_len,
                            pkt,
                            send_len,
+			   cmd,
+			   net_fn,
                            obj_cmd_rq);
 
   API_ERR (!(ipmi_lan_sendto (ctx->io.outofband.sockfd, 
@@ -1310,6 +1401,8 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                         uint8_t *pkt,
                         uint32_t pkt_len,
                         unsigned int retransmission_count,
+			uint8_t cmd, /* for debug dumping */
+			uint8_t net_fn, /* for debug dumping */
                         fiid_obj_t obj_cmd_rs)
 {
   struct sockaddr_in from;
@@ -1372,6 +1465,8 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                            confidentiality_key_len,
                            pkt,
                            recv_len,
+			   cmd,
+			   net_fn,
                            obj_cmd_rs);
 
   API_ERR (unassemble_ipmi_rmcpplus_pkt (authentication_algorithm,
@@ -1424,6 +1519,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
   int32_t recv_len;
   uint64_t val;
   uint64_t rs_session_sequence_number;
+  uint64_t cmd = 0;		/* used for debugging */
 
   assert(ctx
 	 && ctx->magic == IPMI_CTX_MAGIC
@@ -1451,6 +1547,9 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
       && !ctx->io.outofband.last_received.tv_usec)
     API_ERR (!(gettimeofday(&ctx->io.outofband.last_received, NULL) < 0));
 
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
+
   if (_ipmi_lan_2_0_cmd_send (ctx, 
                               lun, 
                               net_fn,
@@ -1469,6 +1568,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                               confidentiality_key_len,
                               password,
                               password_len,
+			      cmd, /* for debug dumping */
                               obj_cmd_rq) < 0)
     goto cleanup;
 
@@ -1481,6 +1581,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
           break;
         }
      
+      /* its ok to use the "request" net_fn, dump code doesn't care */
       memset(pkt, '\0', IPMI_PKT_LEN);
       if ((recv_len = _ipmi_lan_2_0_cmd_recv (ctx, 
                                               authentication_algorithm,
@@ -1493,6 +1594,8 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                               pkt,
                                               IPMI_PKT_LEN,
                                               retransmission_count,
+					      cmd, /* for debug dumping */
+					      net_fn, /* for debug dumping */
                                               obj_cmd_rs)) < 0)
         {
           retval = -1;
@@ -1544,6 +1647,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                       confidentiality_key_len,
                                       password,
                                       password_len,
+				      cmd, /* for debug dumping */
                                       obj_cmd_rq) < 0)
             goto cleanup;
           

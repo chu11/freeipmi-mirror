@@ -689,11 +689,32 @@ ipmi_cmd (ipmi_ctx_t ctx,
       /* lan packets are dumped in ipmi lan code */
       if (ctx->type != IPMI_DEVICE_LAN
           && ctx->type != IPMI_DEVICE_LAN_2_0)
-        ipmi_obj_dump (STDERR_FILENO, 
-                       NULL,
-                       NULL, 
-                       NULL, 
-                       obj_cmd_rq);
+        {
+          const char *cmd_str;
+          uint64_t cmd = 0;
+
+          API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
+
+          if ((cmd_str = ipmi_cmd_str (ctx->net_fn, cmd)))
+            {
+              char *hdr_format =
+                "================================================\n"
+                "%s Request\n"
+                "================================================";
+              char hdrbuf[1024];
+
+              snprintf(hdrbuf,
+                       1024,
+                       hdr_format,
+                       cmd_str);
+              
+              ipmi_obj_dump (STDERR_FILENO, 
+                             NULL,
+                             hdrbuf, 
+                             NULL, 
+                             obj_cmd_rq);
+            }
+        }
     }
 
   if (ctx->type == IPMI_DEVICE_LAN)
@@ -712,11 +733,33 @@ ipmi_cmd (ipmi_ctx_t ctx,
       /* lan packets are dumped in ipmi lan code */
       if (ctx->type != IPMI_DEVICE_LAN
           && ctx->type != IPMI_DEVICE_LAN_2_0)
-        ipmi_obj_dump (STDERR_FILENO, 
-                       NULL,
-                       NULL, 
-                       NULL, 
-                       obj_cmd_rq);
+        {
+          const char *cmd_str;
+          uint64_t cmd = 0;
+
+          API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rs, "cmd", &cmd);
+
+	  /* its ok to use the "request" net_fn */
+          if ((cmd_str = ipmi_cmd_str (ctx->net_fn, cmd)))
+            {
+              char *hdr_format =
+                "================================================\n"
+                "%s Response\n"
+                "================================================";
+              char hdrbuf[1024];
+              
+              snprintf(hdrbuf,
+                       1024,
+                       hdr_format,
+                       cmd_str);
+              
+              ipmi_obj_dump (STDERR_FILENO, 
+                             NULL,
+                             hdrbuf, 
+                             NULL, 
+                             obj_cmd_rs);
+            }
+        }
     }
 
   /* errnum set in ipmi_*_cmd functions */

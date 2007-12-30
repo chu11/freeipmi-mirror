@@ -386,6 +386,21 @@ do {                                                                 \
       }                                                              \
 } while (0)
 
+/* Special one used for debug dumping */
+#define API_FIID_OBJ_GET_NO_RETURN(__obj, __field, __val)             \
+do {                                                                  \
+    uint64_t __localval = 0, *__localval_ptr;                         \
+    __localval_ptr = (__val);                                         \
+    int8_t __rv;                                                      \
+    if ((__rv = fiid_obj_get ((__obj), (__field), &__localval)) < 0)  \
+      {                                                               \
+         __FIID_OBJ_TRACE((__obj));                                   \
+         __FIID_OBJ_SET_ERRNO((__obj));                               \
+      }                                                               \
+    if (__rv > 0)                                                     \
+      *__localval_ptr = __localval;                                   \
+} while (0)
+
 #ifdef __cplusplus
 }
 #endif

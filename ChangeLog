@@ -34,6 +34,9 @@
 	libfreeipmi/src/debug/ipmi-debug.c: Make char * input parameters
 	const char *.
 
+	* libfreeipmi/src/api: Support headers in packet dumps describing
+	the packet specifically rather than through generic headers.
+
 	* Adjust all calls to debug functions appropriately.
 	
 	* Fix various compiler warnings.

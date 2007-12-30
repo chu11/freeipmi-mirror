@@ -36,6 +36,8 @@ o Many libfreeipmi API changes.  Not counting specific tool changes
   o Various code re-organization into subdirectories.
   o New header files for more ipmi spec subsections. 
 o SDR debugging/dumping added into all tools.
+o Packet names added to IPMI debug outputs in all tools for easier
+  packet identification.
 
 0.5.2
 -----

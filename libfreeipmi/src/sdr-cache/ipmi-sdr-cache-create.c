@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.5 2007-12-30 05:19:54 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.6 2007-12-30 07:11:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -569,7 +569,7 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx,
         {
           if (ctx->flags & IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP)
             {
-              char *record_str;
+              const char *record_str;
 
               if ((record_str = ipmi_sdr_cache_record_type_str(ctx, 
                                                                record_buf,
