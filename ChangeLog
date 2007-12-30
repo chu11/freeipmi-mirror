@@ -14,10 +14,8 @@
 
 	* Update spelling of command names globally as necessary.
 
-	* libfreeipmi/src/debug/ipmi-debug-common.h,
-	libfreeipmi/src/debug/ipmi-debug-common.c
-	(ipmi_debug_get_request_response_str, ipmi_debug_get_cmd_str): New
-	functions.
+	* libfreeipmi/include/freeipmi/util/ipmi-util.h,
+	libfreeipmi/src/util/ipmi-util.c (ipmi_cmd_str): New function.
 	
 2007-12-29  Albert Chu <chu11@llnl.gov>
 
