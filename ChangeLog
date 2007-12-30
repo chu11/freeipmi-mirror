@@ -14,6 +14,8 @@
 
 	* ipmi-sel/src/ipmi-sel-entry.c (_find_sdr_record): Use
 	ipmi_sdr_cache_search_sensor_number appropriately.
+
+	* doc/freeipmi-faq.texi: Minor updates.
 	
 2007-12-29  Albert Chu <chu11@llnl.gov>
 
