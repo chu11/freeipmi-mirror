@@ -1,3 +1,13 @@
+2007-12-30  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors.c (_sensors_list_specified):
+	Removed function.
+
+	* ipmi-sensors/src/ipmi-sensors.c (_output_sensor): New function.
+
+	* ipmi-sensors/src/ipmi-sensors.c (_display_sensors): Re-work for
+	better efficiency.
+	
 2007-12-29  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sdr-cache/, libfreeipmi/include/sdr-cache/:
