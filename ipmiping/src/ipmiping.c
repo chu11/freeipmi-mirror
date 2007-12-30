@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.40 2007-12-14 19:16:26 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.41 2007-12-30 04:54:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -148,6 +148,7 @@ createpacket(char *buffer,
       if (ipmi_dump_lan_packet(STDERR_FILENO, 
                                "Request", 
                                NULL, 
+                               NULL,
                                (uint8_t *)buffer, 
                                len, 
                                tmpl_lan_msg_hdr_rq, 
@@ -209,6 +210,7 @@ parsepacket(char *buffer,
       if (ipmi_dump_lan_packet(STDERR_FILENO, 
                                "Response", 
                                NULL, 
+                               NULL,
                                (uint8_t *)buffer, 
                                buflen, 
                                tmpl_lan_msg_hdr_rs, 

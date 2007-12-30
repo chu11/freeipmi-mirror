@@ -689,7 +689,11 @@ ipmi_cmd (ipmi_ctx_t ctx,
       /* lan packets are dumped in ipmi lan code */
       if (ctx->type != IPMI_DEVICE_LAN
           && ctx->type != IPMI_DEVICE_LAN_2_0)
-	ipmi_obj_dump(STDERR_FILENO, obj_cmd_rq);
+        ipmi_obj_dump (STDERR_FILENO, 
+                       NULL,
+                       NULL, 
+                       NULL, 
+                       obj_cmd_rq);
     }
 
   if (ctx->type == IPMI_DEVICE_LAN)
@@ -708,7 +712,11 @@ ipmi_cmd (ipmi_ctx_t ctx,
       /* lan packets are dumped in ipmi lan code */
       if (ctx->type != IPMI_DEVICE_LAN
           && ctx->type != IPMI_DEVICE_LAN_2_0)
-	ipmi_obj_dump(STDERR_FILENO, obj_cmd_rs);
+        ipmi_obj_dump (STDERR_FILENO, 
+                       NULL,
+                       NULL, 
+                       NULL, 
+                       obj_cmd_rq);
     }
 
   /* errnum set in ipmi_*_cmd functions */

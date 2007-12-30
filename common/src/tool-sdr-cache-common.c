@@ -2020,6 +2020,7 @@ sdr_cache_get_product_id (pstdout_state_t pstate,
   return rv;
 }
 
+int
 sdr_cache_get_oem_data (pstdout_state_t pstate,
                         uint8_t *sdr_record,
                         unsigned int sdr_record_len,

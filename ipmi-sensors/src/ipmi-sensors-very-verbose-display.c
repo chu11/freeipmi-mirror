@@ -726,7 +726,6 @@ sensors_display_very_verbose_management_controller_information_record (ipmi_sens
                                                                        uint8_t record_type,
                                                                        uint16_t record_id)
 {
-  uint32_t manufacturer_id;
   uint16_t product_id;
 
   assert(state_data);

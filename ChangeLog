@@ -16,7 +16,28 @@
 
 	* libfreeipmi/include/freeipmi/util/ipmi-util.h,
 	libfreeipmi/src/util/ipmi-util.c (ipmi_cmd_str): New function.
+
+	* libfreeipmi/include/freeipmi/debug/ipmi-debug.h,
+	libfreeipmi/src/debug/ipmi-debug.c (ipmi_obj_dump): Removed
+	function.
+
+	* libfreeipmi/include/freeipmi/debug/ipmi-debug.h,
+	libfreeipmi/src/debug/ipmi-debug.c (ipmi_obj_dump_perror): Renamed
+	to ipmi_obj_dump.
+
+	* libfreeipmi/include/freeipmi/debug/ipmi-debug.h,
+	libfreeipmi/src/debug/ipmi-debug.c (ipmi_dump_lan_packet,
+	ipmi_dump_rmcp_packet, ipmi_dump_rmcpplus_packet): Add trlr
+	output.
+
+	* libfreeipmi/include/freeipmi/debug/ipmi-debug.h,
+	libfreeipmi/src/debug/ipmi-debug.c: Make char * input parameters
+	const char *.
+
+	* Adjust all calls to debug functions appropriately.
 	
+	* Fix various compiler warnings.
+
 2007-12-29  Albert Chu <chu11@llnl.gov>
 
 	* pef-config/src/Makefile.am: Remove linking to libsdr.la.

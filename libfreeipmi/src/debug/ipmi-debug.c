@@ -55,8 +55,16 @@ fiid_template_t tmpl_unexpected_data =
   };
 
 int8_t
-ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj)
+ipmi_obj_dump (int fd, const char *prefix, const char *hdr, const char *trlr, fiid_obj_t obj)
 {
+#if 0
+  char *default_hdr = 
+    "================================================================\n"
+    "[ VALUE               TAG NAME:LENGTH                          ]\n"
+    "================================================================";
+  char *default_trlr = 
+    "================================================================";
+#endif
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   fiid_iterator_t iter = NULL;
 
@@ -84,7 +92,7 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
         }
 
       if (prefix)
-        IPMI_DEBUG_DPRINTF_CLEANUP ((fd, "%s", prefix));
+        IPMI_DEBUG_DPRINTF_CLEANUP ((fd, "%s", prefix_buf));
 
       if (field_len <= 64)
         {
@@ -103,13 +111,13 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
 
 	  FIID_ITERATOR_GET_DATA_LEN_CLEANUP(len, iter, buf, IPMI_DEBUG_MAX_BUF_LEN);
        
-          ERR_CLEANUP (!(ipmi_debug_output_byte_array(fd, prefix, buf, len) < 0));
+          ERR_CLEANUP (!(ipmi_debug_output_byte_array(fd, prefix_buf, buf, len) < 0));
         }
 
       fiid_iterator_next(iter);
     }
 
-  ERR_CLEANUP (!(ipmi_debug_output_str(fd, prefix, trlr) < 0));
+  ERR_CLEANUP (!(ipmi_debug_output_str(fd, prefix_buf, trlr) < 0));
 
   fiid_iterator_destroy(iter);
   return (0);
@@ -119,17 +127,3 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
     fiid_iterator_destroy(iter);
   return (-1);
 }
-
-int8_t
-ipmi_obj_dump (int fd, fiid_obj_t obj)
-{
-  char *hdr = 
-    "================================================================\n"
-    "[ VALUE               TAG NAME:LENGTH                          ]\n"
-    "================================================================";
-  char *trlr = 
-    "================================================================";
-
-  return ipmi_obj_dump_perror(fd, NULL, hdr, trlr, obj);
-}
-

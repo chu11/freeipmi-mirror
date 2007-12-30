@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.21 2007-10-18 16:18:52 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.22 2007-12-30 04:54:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -145,6 +145,7 @@ ipmipower_ping_process_pings(int *timeout)
               Ipmi_dump_rmcp_packet(STDERR_FILENO, 
                                     ics[i].hostname, 
                                     hdr, 
+                                    NULL,
                                     (uint8_t *)buffer, 
                                     (uint32_t)len, 
                                     tmpl_cmd_asf_presence_ping);
@@ -185,6 +186,7 @@ ipmipower_ping_process_pings(int *timeout)
               Ipmi_dump_rmcp_packet(STDERR_FILENO, 
                                     ics[i].hostname, 
                                     hdr, 
+                                    NULL,
                                     (uint8_t *)buffer, 
                                     (uint32_t)len, 
                                     tmpl_cmd_asf_presence_pong);

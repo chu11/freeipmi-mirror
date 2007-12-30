@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.74 2007-12-14 19:16:13 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.75 2007-12-30 04:54:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -600,8 +600,8 @@ _cmd(char *str,
 
   if (cinfo.debug)
     {
-      if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq) < 0)
-        _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
+      if (ipmi_obj_dump(STDERR_FILENO, str, NULL, NULL, cmd_rq) < 0)
+        _bmclog("%s: ipmi_obj_dump: %s", str, strerror(errno));
     }
 
   while (1)
@@ -692,8 +692,8 @@ _cmd(char *str,
 
   if (cinfo.debug)
     {
-      if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs) < 0)
-        _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
+      if (ipmi_obj_dump(STDERR_FILENO, str, NULL, NULL, cmd_rs) < 0)
+        _bmclog("%s: ipmi_obj_dump: %s", str, strerror(errno));
     }
 
   _FIID_OBJ_GET(cmd_rs, "comp_code", &comp_code, str);

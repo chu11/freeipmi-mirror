@@ -45,8 +45,8 @@
 
 static int32_t
 _dump_rmcpplus_session_hdr(int fd, 
-                           char *prefix, 
-                           char *session_hdr, 
+                           const char *prefix, 
+                           const char *session_hdr, 
                            uint8_t *pkt, 
                            uint32_t pkt_len,
                            uint64_t *payload_type,
@@ -132,7 +132,11 @@ _dump_rmcpplus_session_hdr(int fd,
 			ipmi_payload_len);
   
  output:
-  ERR_CLEANUP (!(ipmi_obj_dump_perror (fd, prefix, session_hdr, NULL, obj_rmcpplus_session_hdr) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump (fd, 
+                                prefix, 
+                                session_hdr, 
+                                NULL, 
+                                obj_rmcpplus_session_hdr) < 0));
   
   rv = indx;
  cleanup:
@@ -142,10 +146,10 @@ _dump_rmcpplus_session_hdr(int fd,
 
 static int32_t
 _dump_rmcpplus_payload_data(int fd, 
-                            char *prefix, 
-                            char *msg_hdr,
-                            char *cmd_hdr,
-                            char *trlr_hdr,
+                            const char *prefix, 
+                            const char *msg_hdr,
+                            const char *cmd_hdr,
+                            const char *trailer_hdr,
                             uint8_t payload_type,
                             fiid_template_t tmpl_lan_msg_hdr,
                             fiid_template_t tmpl_cmd,
@@ -188,7 +192,11 @@ _dump_rmcpplus_payload_data(int fd,
                                    pkt + indx,
                                    ipmi_payload_len - indx);
       indx += len;
-      ERR_CLEANUP (!(ipmi_obj_dump_perror (fd, prefix, msg_hdr, NULL, obj_lan_msg_hdr) < 0));
+      ERR_CLEANUP (!(ipmi_obj_dump (fd, 
+                                    prefix, 
+                                    msg_hdr,
+                                    NULL, 
+                                    obj_lan_msg_hdr) < 0));
       
       if (ipmi_payload_len <= indx)
 	{
@@ -217,11 +225,11 @@ _dump_rmcpplus_payload_data(int fd,
 				    pkt + indx,
 				    obj_cmd_len);
       indx += len;
-      ERR_CLEANUP (!(ipmi_obj_dump_perror (fd, 
-					   prefix, 
-					   cmd_hdr, 
-					   NULL, 
-					   obj_cmd) < 0));
+      ERR_CLEANUP (!(ipmi_obj_dump (fd, 
+                                    prefix, 
+                                    cmd_hdr, 
+                                    NULL, 
+                                    obj_cmd) < 0));
       
       if (ipmi_payload_len <= indx)
 	{
@@ -240,11 +248,11 @@ _dump_rmcpplus_payload_data(int fd,
                                     pkt + indx,
                                     ipmi_payload_len - indx);
       indx += len;
-      ERR_CLEANUP (!(ipmi_obj_dump_perror (fd,
-                                           prefix, 
-                                           trlr_hdr, 
-                                           NULL, 
-                                           obj_lan_msg_trlr) < 0));
+      ERR_CLEANUP (!(ipmi_obj_dump (fd,
+                                    prefix, 
+                                    trailer_hdr, 
+                                    NULL, 
+                                    obj_lan_msg_trlr) < 0));
     }
 
   rv = 0;
@@ -257,11 +265,11 @@ _dump_rmcpplus_payload_data(int fd,
 
 static int32_t
 _dump_rmcpplus_payload_confidentiality_none(int fd, 
-                                            char *prefix, 
-                                            char *payload_hdr, 
-                                            char *msg_hdr,
-                                            char *cmd_hdr,
-                                            char *trlr_hdr,
+                                            const char *prefix, 
+                                            const char *payload_hdr, 
+                                            const char *msg_hdr,
+                                            const char *cmd_hdr,
+                                            const char *trailer_hdr,
                                             uint8_t payload_type,
                                             fiid_template_t tmpl_lan_msg_hdr,
                                             fiid_template_t tmpl_cmd,
@@ -298,17 +306,17 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
                              pkt,
                              ipmi_payload_len);
 
-  ERR_CLEANUP (!(ipmi_obj_dump_perror (fd,
-				       prefix,
-				       payload_hdr,
-				       NULL,
-				       obj_rmcpplus_payload) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump (fd,
+                                prefix,
+                                payload_hdr,
+                                NULL,
+                                obj_rmcpplus_payload) < 0));
 
   ERR_CLEANUP (!(_dump_rmcpplus_payload_data(fd,
                                              prefix,
                                              msg_hdr,
                                              cmd_hdr,
-                                             trlr_hdr,
+                                             trailer_hdr,
                                              payload_type,
                                              tmpl_lan_msg_hdr,
                                              tmpl_cmd,
@@ -323,11 +331,11 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
 
 static int32_t
 _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
-                                                   char *prefix,
-                                                   char *payload_hdr,
-                                                   char *msg_hdr,
-                                                   char *cmd_hdr,
-                                                   char *trlr_hdr,
+                                                   const char *prefix,
+                                                   const char *payload_hdr,
+                                                   const char *msg_hdr,
+                                                   const char *cmd_hdr,
+                                                   const char *trailer_hdr,
                                                    uint8_t payload_type,
                                                    fiid_template_t tmpl_lan_msg_hdr,
                                                    fiid_template_t tmpl_cmd,
@@ -418,17 +426,17 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
 			    payload_buf + cmd_data_len,
 			    pad_len + 1);
 
-  ERR_CLEANUP (!(ipmi_obj_dump_perror (fd,
-				       prefix,
-				       payload_hdr,
-				       NULL,
-				       obj_rmcpplus_payload) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump (fd,
+                                prefix,
+                                payload_hdr,
+                                NULL,
+                                obj_rmcpplus_payload) < 0));
   
   ERR_CLEANUP (!(_dump_rmcpplus_payload_data(fd,
                                              prefix,
                                              msg_hdr,
                                              cmd_hdr,
-                                             trlr_hdr,
+                                             trailer_hdr,
                                              payload_type,
                                              tmpl_lan_msg_hdr,
                                              tmpl_cmd,
@@ -442,9 +450,9 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
 
 static int32_t
 _dump_rmcpplus_payload_rakp(int fd,
-                            char *prefix,
-                            char *payload_hdr,
-                            char *cmd_hdr,
+                            const char *prefix,
+                            const char *payload_hdr,
+                            const char *cmd_hdr,
                             uint8_t payload_type,
                             fiid_template_t tmpl_cmd,
                             uint8_t *pkt,
@@ -489,11 +497,11 @@ _dump_rmcpplus_payload_rakp(int fd,
 			    pkt,
 			    ipmi_payload_len);
 
-  ERR_CLEANUP (!(ipmi_obj_dump_perror (fd,
-				       prefix,
-				       payload_hdr,
-				       NULL,
-				       obj_rmcpplus_payload) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump (fd,
+                                prefix,
+                                payload_hdr,
+                                NULL,
+                                obj_rmcpplus_payload) < 0));
 
   if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
     FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_open_session_request);
@@ -512,11 +520,11 @@ _dump_rmcpplus_payload_rakp(int fd,
 			   pkt,
 			   ipmi_payload_len);
   
-  ERR_CLEANUP (!(ipmi_obj_dump_perror (fd,
-				       prefix,
-				       cmd_hdr,
-				       NULL,
-				       obj_cmd) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump (fd,
+                                prefix,
+                                cmd_hdr,
+                                NULL,
+                                obj_cmd) < 0));
 
   rv = 0;
  cleanup:
@@ -527,11 +535,11 @@ _dump_rmcpplus_payload_rakp(int fd,
 
 static int32_t
 _dump_rmcpplus_payload(int fd, 
-                       char *prefix, 
-                       char *payload_hdr, 
-                       char *msg_hdr,
-                       char *cmd_hdr,
-                       char *trlr_hdr,
+                       const char *prefix, 
+                       const char *payload_hdr, 
+                       const char *msg_hdr,
+                       const char *cmd_hdr,
+                       const char *trailer_hdr,
                        uint8_t payload_type,
                        uint8_t authentication_algorithm,
                        uint8_t confidentiality_algorithm,
@@ -583,7 +591,7 @@ _dump_rmcpplus_payload(int fd,
                                                            payload_hdr,
                                                            msg_hdr,
                                                            cmd_hdr,
-                                                           trlr_hdr,
+                                                           trailer_hdr,
                                                            payload_type,
                                                            tmpl_lan_msg_hdr,
                                                            tmpl_cmd,
@@ -595,7 +603,7 @@ _dump_rmcpplus_payload(int fd,
                                                                   payload_hdr,
                                                                   msg_hdr,
                                                                   cmd_hdr,
-                                                                  trlr_hdr,
+                                                                  trailer_hdr,
                                                                   payload_type,
                                                                   tmpl_lan_msg_hdr,
                                                                   tmpl_cmd,
@@ -620,8 +628,8 @@ _dump_rmcpplus_payload(int fd,
 
 static int32_t
 _dump_rmcpplus_session_trlr(int fd,
-                            char *prefix,
-                            char *session_trlr_hdr,
+                            const char *prefix,
+                            const char *session_trailer_hdr,
 			    uint64_t session_id,
 			    uint64_t payload_authenticated,
                             uint8_t integrity_algorithm,
@@ -709,11 +717,11 @@ _dump_rmcpplus_session_trlr(int fd,
     }
   
   
-  ERR_CLEANUP (!(ipmi_obj_dump_perror (fd, 
-                                       prefix, 
-                                       session_trlr_hdr, 
-                                       NULL, 
-                                       obj_rmcpplus_session_trlr) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump (fd, 
+                                prefix, 
+                                session_trailer_hdr, 
+                                NULL, 
+                                obj_rmcpplus_session_trlr) < 0));
   /* Clear out data */
   FIID_OBJ_CLEAR_CLEANUP(obj_rmcpplus_session_trlr);
 
@@ -725,8 +733,9 @@ _dump_rmcpplus_session_trlr(int fd,
 
 int32_t
 ipmi_dump_rmcpplus_packet (int fd, 
-                           char *prefix, 
-                           char *hdr, 
+                           const char *prefix, 
+                           const char *hdr, 
+                           const char *trlr,
                            uint8_t authentication_algorithm,
                            uint8_t integrity_algorithm,
                            uint8_t confidentiality_algorithm,
@@ -759,10 +768,10 @@ ipmi_dump_rmcpplus_packet (int fd,
   char *cmd_hdr =
     "IPMI Command Data:\n"
     "------------------";
-  char *trlr_hdr =
+  char *trailer_hdr =
     "IPMI Trailer:\n"
     "-------------";
-  char *session_trlr_hdr = 
+  char *session_trailer_hdr = 
     "IPMI RMCPPLUS Session Trailer:\n"
     "------------------------------";
   char *extra_hdr =
@@ -794,7 +803,11 @@ ipmi_dump_rmcpplus_packet (int fd,
                                pkt_len - indx);
   indx += obj_rmcp_hdr_len;
                            
-  ERR_CLEANUP(!(ipmi_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, obj_rmcp_hdr) < 0));
+  ERR_CLEANUP(!(ipmi_obj_dump (fd, 
+                               prefix,
+                               rmcp_hdr, 
+                               NULL,
+                               obj_rmcp_hdr) < 0));
 
   if (pkt_len <= indx)
     {
@@ -872,7 +885,7 @@ ipmi_dump_rmcpplus_packet (int fd,
                                         payload_hdr, 
                                         msg_hdr,
                                         cmd_hdr,
-                                        trlr_hdr,
+                                        trailer_hdr,
                                         payload_type,
                                         authentication_algorithm,
                                         confidentiality_algorithm,
@@ -894,7 +907,7 @@ ipmi_dump_rmcpplus_packet (int fd,
 
   ERR_CLEANUP (!((obj_len = _dump_rmcpplus_session_trlr(fd,
 							prefix_buf,
-							session_trlr_hdr,
+							session_trailer_hdr,
 							session_id,
 							payload_authenticated,
 							integrity_algorithm,
@@ -917,8 +930,14 @@ ipmi_dump_rmcpplus_packet (int fd,
       FIID_OBJ_SET_ALL_LEN_CLEANUP (obj_len, obj_unexpected_data, pkt + indx, pkt_len - indx);
       indx += obj_len;
 
-      ERR_CLEANUP (!(ipmi_obj_dump_perror(fd, prefix_buf, extra_hdr, NULL, obj_unexpected_data) < 0));
+      ERR_CLEANUP (!(ipmi_obj_dump (fd, 
+                                    prefix,
+                                    extra_hdr, 
+                                    NULL,
+                                    obj_unexpected_data) < 0));
     }
+
+  ERR_CLEANUP (!(ipmi_debug_output_str(fd, prefix_buf, trlr) < 0));
 
   rv = 0;
  cleanup:

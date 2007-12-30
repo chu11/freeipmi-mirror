@@ -703,7 +703,10 @@ static char * ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[] =
     "Diagnostic Interrupt (NMI)",
     NULL,
   };
+#if 0
+/* Not used */
 static int ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc_max = 0x05;
+#endif
 
 static char * ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc[] =
   {
@@ -1151,7 +1154,9 @@ _get_12_event_data2_message_offset_05(int offset, uint8_t event_data2, char *buf
   if (first_second <= ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc_max)
     str2 = ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc[first_second];
 
-  rv = _snprintf(buf, buflen, "%s; %s", str1, str2);
+  rv = _snprintf(buf, buflen, "%s; %s", 
+                 str1 ? str1 : "",
+                 str2 ? str2 : "");
 
  cleanup:
   FIID_OBJ_DESTROY(obj);
@@ -1345,7 +1350,9 @@ get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 	str = ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc[fru_device];
 
       
-      rv = _snprintf(buf, buflen, "%s; LUN for Master Write-Read command or FRU Command #%d; Private bus ID #%d", str, lun, private_bus_id);
+      rv = _snprintf(buf, buflen, "%s; LUN for Master Write-Read command or FRU Command #%d; Private bus ID #%d", 
+                     str ? str : "", 
+                     lun, private_bus_id);
 
     cleanup:
       FIID_OBJ_DESTROY(obj);
@@ -1432,10 +1439,10 @@ get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       FIID_OBJ_GET_CLEANUP (obj, "cause_os_state_change", &val);
       cause_of_state_change = val;
       
-      if (cause_of_state_change <= 0x0F)
+      if (cause_of_state_change <= ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc_max)
 	str = ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc[cause_of_state_change];
 
-      rv = _snprintf (buf, buflen, "Previous state offset value = %d; %s", previous_state_offset, str);
+      rv = _snprintf (buf, buflen, "Previous state offset value = %d; %s", previous_state_offset, str ? str : "");
 
     cleanup:
       FIID_OBJ_DESTROY(obj);
@@ -1628,7 +1635,7 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 	str = ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc[deactivation_cause];
 
       rv = _snprintf (buf, buflen, "Channel number that session was activated/deactivated = %d%s%s", 
-		      channel_number, (str) ? "; " : "", str); 
+		      channel_number, (str) ? "; " : "", str ? str : ""); 
 
     cleanup:
       FIID_OBJ_DESTROY(obj);

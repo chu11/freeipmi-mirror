@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.71 2007-10-31 17:22:28 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.72 2007-12-30 04:54:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -250,6 +250,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
         Ipmi_dump_rmcpplus_packet(STDERR_FILENO,
                                   ip->ic->hostname,
                                   hdrbuf,
+                                  NULL,
                                   IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
                                   IPMI_INTEGRITY_ALGORITHM_NONE,
                                   IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
@@ -273,6 +274,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
         Ipmi_dump_rmcpplus_packet(STDERR_FILENO,
                                   ip->ic->hostname,
                                   hdrbuf,
+                                  NULL,
                                   ip->authentication_algorithm,
                                   ip->integrity_algorithm,
                                   ip->confidentiality_algorithm,
@@ -288,6 +290,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
         Ipmi_dump_lan_packet(STDERR_FILENO, 
                              ip->ic->hostname, 
                              hdrbuf, 
+                             NULL,
                              (uint8_t *)buffer, 
                              (uint32_t)len,
                              tmpl_lan_msg_hdr,

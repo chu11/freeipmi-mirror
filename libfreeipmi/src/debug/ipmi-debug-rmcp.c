@@ -42,7 +42,7 @@
 #include "freeipmi-portability.h"
 
 int8_t 
-ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)
+ipmi_dump_rmcp_packet (int fd, const char *prefix, const char *hdr, const char *trlr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)
 {
   uint32_t indx = 0;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
@@ -74,7 +74,7 @@ ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t p
   FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_rmcp_hdr, pkt + indx, pkt_len - indx);
   indx += len;
   
-  ERR_CLEANUP (!(ipmi_obj_dump_perror(fd, prefix_buf, rmcp_hdr, NULL, obj_rmcp_hdr) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump(fd, prefix, rmcp_hdr, NULL, obj_rmcp_hdr) < 0));
   
   if (pkt_len <= indx)
     {
@@ -89,7 +89,7 @@ ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t p
   FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_cmd, pkt + indx, pkt_len - indx);
   indx += len;
   
-  ERR_CLEANUP (!(ipmi_obj_dump_perror(fd, prefix_buf, rmcp_cmd, NULL, obj_cmd) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump(fd, prefix, rmcp_cmd, NULL, obj_cmd) < 0));
   
   if (pkt_len <= indx)
     {
@@ -104,8 +104,10 @@ ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t p
   FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_unexpected_data, pkt + indx, pkt_len - indx);
   indx += len;
   
-  ERR_CLEANUP (!(ipmi_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected_data) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump(fd, prefix, unexpected_hdr, NULL, obj_unexpected_data) < 0));
   
+  ERR_CLEANUP (!(ipmi_debug_output_str(fd, prefix_buf, trlr) < 0));
+
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY(obj_rmcp_hdr);

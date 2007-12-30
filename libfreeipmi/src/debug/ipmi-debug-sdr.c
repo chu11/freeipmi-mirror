@@ -39,9 +39,10 @@
 #include "freeipmi-portability.h"
 
 int32_t
-ipmi_dump_sdr_record (int fd, char *prefix, uint8_t *sdr_record, uint32_t sdr_record_len)
+ipmi_dump_sdr_record (int fd, const char *prefix, const char *hdr, const char *trlr, uint8_t *sdr_record, uint32_t sdr_record_len)
 {
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
+#if 0
   char *sdr_record_header_hdr = 
     "================================================\n"
     "SDR Record Header\n"
@@ -90,7 +91,7 @@ ipmi_dump_sdr_record (int fd, char *prefix, uint8_t *sdr_record, uint32_t sdr_re
     "================================================\n"
     "SDR OEM Record\n"
     "================================================";
-  char *sdr_record_header_hdr_ptr;
+#endif
   fiid_obj_t obj_sdr_record_header = NULL;
   fiid_obj_t obj_sdr_record = NULL;
   uint64_t val;
@@ -101,6 +102,8 @@ ipmi_dump_sdr_record (int fd, char *prefix, uint8_t *sdr_record, uint32_t sdr_re
   ERR_EINVAL (sdr_record);
 
   ERR(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
+
+  ERR(!(ipmi_debug_output_str (fd, prefix_buf, hdr) < 0));
 
   FIID_TEMPLATE_LEN_BYTES(sdr_record_header_len, tmpl_sdr_record_header);
 
@@ -113,11 +116,11 @@ ipmi_dump_sdr_record (int fd, char *prefix, uint8_t *sdr_record, uint32_t sdr_re
   /* Not enough for a real SDR record, just dump whatever we have */
   if (sdr_record_len <= sdr_record_header_len)
     {
-      ERR_CLEANUP (!(ipmi_obj_dump_perror(fd, 
-                                          prefix_buf, 
-                                          sdr_record_header_hdr, 
-                                          NULL, 
-                                          obj_sdr_record_header) < 0));
+      ERR_CLEANUP (!(ipmi_obj_dump (fd, 
+                                    prefix, 
+                                    hdr, 
+                                    trlr, 
+                                    obj_sdr_record_header) < 0));
       rv = 0;
       goto cleanup;
     }
@@ -126,76 +129,42 @@ ipmi_dump_sdr_record (int fd, char *prefix, uint8_t *sdr_record, uint32_t sdr_re
   record_type = val;
 
   if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
-    {
-      FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_full_sensor_record);
-      sdr_record_header_hdr_ptr = sdr_full_sensor_record_hdr;
-    }
+    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_full_sensor_record);
   else if (record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
-    {
-      FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_compact_sensor_record);
-      sdr_record_header_hdr_ptr = sdr_compact_sensor_record_hdr;
-    }
+    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_compact_sensor_record);
   else if (record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
-    {
-      FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_event_only_record);
-      sdr_record_header_hdr_ptr = sdr_event_only_record_hdr;
-    }
+    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_event_only_record);
   else if (record_type == IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD)
-    {
-      FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_entity_association_record);
-      sdr_record_header_hdr_ptr = sdr_entity_association_record_hdr;
-    }
+    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_entity_association_record);
   else if (record_type == IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD)
-    {
-      FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_device_relative_entity_association_record);
-      sdr_record_header_hdr_ptr = sdr_device_relative_entity_association_record_hdr;
-    }
+    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_device_relative_entity_association_record);
   else if (record_type == IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
-    {
-      FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_generic_device_locator_record);
-      sdr_record_header_hdr_ptr = sdr_generic_device_locator_record_hdr;
-    }
+    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_generic_device_locator_record);
   else if (record_type == IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
-    {
       FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_fru_device_locator_record);
-      sdr_record_header_hdr_ptr = sdr_fru_device_locator_record_hdr;
-    }
   else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
-    {
       FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_management_controller_device_locator_record);
-      sdr_record_header_hdr_ptr = sdr_management_controller_device_locator_record_hdr;
-    }
   else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
-    {
       FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_management_controller_confirmation_record);
-      sdr_record_header_hdr_ptr = sdr_management_controller_confirmation_record_hdr;
-    }
   else if (record_type == IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD)
-    {
       FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_bmc_message_channel_info_record);
-      sdr_record_header_hdr_ptr = sdr_bmc_message_channel_info_record_hdr;
-    }
   else if (record_type == IPMI_SDR_FORMAT_OEM_RECORD)
-    {
       FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_oem_record);
-      sdr_record_header_hdr_ptr = sdr_oem_record_hdr;
-    }
   else
-    {
-      /* I don't know this record_type, maybe its in a newer spec?? */
-      FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_record_header);
-      sdr_record_header_hdr_ptr = sdr_record_header_hdr;
-    }
- 
+    /* I don't know this record_type, maybe its in a newer spec?? */
+    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_record_header);
+  
   FIID_OBJ_SET_ALL(obj_sdr_record,
                    sdr_record,
                    sdr_record_len);
 
-  ERR_CLEANUP (!(ipmi_obj_dump_perror(fd, 
-                                      prefix_buf, 
-                                      sdr_record_header_hdr_ptr, 
-                                      NULL, 
-                                      obj_sdr_record) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump(fd, 
+                               prefix, 
+                               NULL, 
+                               NULL, 
+                               obj_sdr_record) < 0));
+
+  ERR_CLEANUP (!(ipmi_debug_output_str(fd, prefix_buf, trlr) < 0));
   
   rv = 0;
  cleanup:

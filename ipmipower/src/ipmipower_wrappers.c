@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.24 2007-12-14 19:16:26 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.25 2007-12-30 04:54:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -259,8 +259,9 @@ Fiid_obj_set_all(fiid_obj_t obj, uint8_t *data, uint32_t data_len)
 
 void 
 Ipmi_dump_lan_packet(int fd, 
-                     char *prefix, 
-                     char *hdr,
+                     const char *prefix, 
+                     const char *hdr,
+                     const char *trlr,
                      uint8_t *pkt,
                      uint32_t pkt_len, 
                      fiid_template_t tmpl_lan_msg_hdr,
@@ -273,6 +274,7 @@ Ipmi_dump_lan_packet(int fd,
   if (ipmi_dump_lan_packet(fd, 
                            prefix,
                            hdr,
+                           trlr,
                            pkt,
                            pkt_len,
                            tmpl_lan_msg_hdr,
@@ -282,22 +284,24 @@ Ipmi_dump_lan_packet(int fd,
 
 void 
 Ipmi_dump_rmcp_packet(int fd,
-                      char *prefix, 
-                      char *hdr, 
+                      const char *prefix, 
+                      const char *hdr,
+                      const char *trlr,
                       uint8_t *pkt, 
                       uint32_t pkt_len, 
                       fiid_template_t tmpl_cmd) 
 {
   assert(pkt != NULL && tmpl_cmd != NULL);
 
-  if (ipmi_dump_rmcp_packet(fd, prefix, hdr, pkt, pkt_len, tmpl_cmd) < 0)
+  if (ipmi_dump_rmcp_packet(fd, prefix, hdr, trlr, pkt, pkt_len, tmpl_cmd) < 0)
     dbg("Ipmi_dump_rmcp_packet: %s", strerror(errno));
 }
 
 void 
 Ipmi_dump_rmcpplus_packet (int fd, 
-                           char *prefix,
-                           char *hdr, 
+                           const char *prefix,
+                           const char *hdr, 
+                           const char *trlr,
                            uint8_t authentication_algorithm, 
                            uint8_t integrity_algorithm,
                            uint8_t confidentiality_algorithm, 
@@ -315,6 +319,7 @@ Ipmi_dump_rmcpplus_packet (int fd,
   if (ipmi_dump_rmcpplus_packet(fd, 
                                 prefix, 
                                 hdr,
+                                trlr,
                                 authentication_algorithm,
                                 integrity_algorithm,
                                 confidentiality_algorithm,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.24 2007-10-18 16:18:53 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.25 2007-12-30 04:54:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -122,8 +122,9 @@ int32_t Fiid_obj_set_all(fiid_obj_t obj, uint8_t *data, uint32_t data_len);
  * - Dump lan contents
  */
 void Ipmi_dump_lan_packet(int fd,
-                          char *prefix,
-                          char *hdr,
+                          const char *prefix,
+                          const char *hdr,
+                          const char *trlr,
                           uint8_t *pkt,
                           uint32_t pkt_len,
                           fiid_template_t tmpl_lan_msg_hdr,
@@ -133,8 +134,9 @@ void Ipmi_dump_lan_packet(int fd,
  * - Dump rmcp contents
  */
 void Ipmi_dump_rmcp_packet(int fd,
-                           char *prefix,
-                           char *hdr,
+                           const char *prefix,
+                           const char *hdr,
+                           const char *trlr,
                            uint8_t *pkt,
                            uint32_t pkt_len,
                            fiid_template_t tmpl_cmd);
@@ -143,8 +145,9 @@ void Ipmi_dump_rmcp_packet(int fd,
  * - Dump rmcp contents
  */
 void Ipmi_dump_rmcpplus_packet (int fd,
-                                char *prefix,
-                                char *hdr,
+                                const char *prefix,
+                                const char *hdr,
+                                const char *trlr,
                                 uint8_t authentication_algorithm,
                                 uint8_t integrity_algorithm,
                                 uint8_t confidentiality_algorithm,

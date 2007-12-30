@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.25 2007-12-14 19:17:05 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.26 2007-12-30 04:54:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -111,6 +111,7 @@ createpacket(char *buffer,
       if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
                                 "Ping", 
                                 NULL, 
+                                NULL, 
                                 (uint8_t *)buffer, 
                                 (uint32_t)len, 
                                 tmpl_cmd_asf_presence_ping) < 0)
@@ -148,6 +149,7 @@ parsepacket(char *buffer,
     {
       if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
                                 "Pong", 
+                                NULL,
                                 NULL,
                                 (uint8_t *)buffer,
                                 (uint32_t)buflen, 

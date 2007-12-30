@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.10 2007-12-29 17:20:32 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.11 2007-12-30 04:54:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -339,7 +339,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
                     uint16_t *sensor_state)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   uint64_t val;
   int32_t len;
 
