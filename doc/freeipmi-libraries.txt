@@ -12,39 +12,65 @@ Libfreeipmi
 -----------
 
 This is the primary library that most of the FreeIPMI tools are based
-upon.  There are various sub-sections and APIs in this library:
+upon.  The following describe the sub-sections of the library stored
+within various subdirectories.
 
-   fiid - The "FreeIPMI Interface Definition" is an API used for the
-   construction/deconstruction of packets in libfreeipmi.  The API
-   works primarily around fiid-templates.  Fiid-templates are used to
-   describe packets through a string-name to bit-field mapping.  The
-   API allows users to read/write fields in an object using the string
-   to bit-field mapping.  In some cases (such as when IPMI over LAN
-   packets are needed), multiple fiid objects must be
-   assembled/disassembled together to/from a single packet.  This is
-   done via a number of 'assemble' or 'disassemble' functions within
-   libfreeipmi.
+   api - Provides the highest level API provided by libfreeipmi.  It
+   abstracts away the details of inband and outofband protocols from
+   the user.  It also provides useful error codes for the user to
+   easily interpret.  'api' is used by most FreeIPMI tools and
+   libraries, such as bmc-info, ipmi-sensors, and libipmimonitoring.
 
-   fill - A large number of "fill" functions are available to make it
-   easier for the user to fill fiid objects with appropriate IPMI
-   data.  The fill functions cover most of the sections and packets in
-   the IPMI specification.
+   cmds - Provides fiid templates and 'fill' functions for IPMI
+   commands.  Also provides macros definining common parameters for
+   IPMI commands.  The cmds are used by most other portions of
+   libfreeipmi including the 'api' sub-section and tools such as
+   ipmipower and ipmiconsole.
 
-   driver - Several IPMI in-band driver APIs are provided.  Most
-   notably supported are the KCS, SSIF, and OpenIPMI driver APIs.
+   debug - Provides various packet/record dumping utility functions.
+   Utilized by the 'api' subsection and by tools such as ipmipower and
+   ipmiconsole.
 
-   locate - The locate API allows users to probe for device addresses
-   and other information on the motherboard.
+   driver - Provides APIs for in-band IPMI communication.  Currently
+   supported drivers are KCS, SSIF, and OpenIPMI.  The 'driver'
+   subsction is used by tools such as bmc-watchdog and the 'api'
+   sub-section.
 
-   udm - The "Unified Driver Model" is a higher level API that tries to
-   hide the underlying driver (i.e. KCS vs. SSIF vs. LAN) away from 
-   higher level IPMI functions (i.e. Get Sensor Reading).
+   fiid - The "FreeIPMI Interface Definition" provides an API used for
+   the construction/deconstruction of packets in libfreeipmi.  The API
+   works around fiid-templates, which are then used to create
+   fiid-objects.  Fiid-templates are used to describe packets through
+   a string-name to bit-field mapping.  The API allows users to
+   read/write fields in an object using the string to bit-field
+   mapping.  Marshalling, packing, endian, and various other network
+   issues are handled within 'fiid'.  Fiid objects are used throughout
+   libfreeipmi, including the 'api' sub-section, 'cmds' sub-sections,
+   and various tools.
 
-   utility - There are a large number of utility functions in the
-   library for the calculation of keys, sensor readings, etc.  There
-   are also arrays and functions to aid developers in mapping integers
-   to their appropriate string mapping (i.e. 0x01 = "Temperature",
-   0x02 = "Voltage").
+   interface - Provides 'assemble' and 'disassemble' functions for
+   building packets for individual in-band or out-of-band protocols.
+   Also provides all necessary fiid templates, 'fill' functions, and
+   other utility functions necessary to communicate on an IPMI
+   interface.  Utilized by the 'api' sub-section and tools such as
+   ipmipower and ipmiconsole.
+
+   locate - Provides an API to probe several standards to find default
+   values for in-band IPMI communication.  Utilized by the 'api'
+   sub-section and the ipmi-locate tool.
+
+   record-format - Provides macros, fiid-templates, and information on
+   records used in IPMI.  Utilized by the 'sdr-cache' subsection and
+   tools like ipmi-sel.
+
+   sdr-cache - Provides and API for creating, caching, reading, and
+   parsing a sensor data repository (SDR).  Utilized by tools such as
+   ipmi-sensors and ipmimonitoring.
+
+   spec - Provides macros and arrays for various other definitions and
+   tables in IPMI.  Utilized by tools such as ipmi-sensors.
+
+   util - Provides various utility functions for the calculation of keys,
+   sensor readings, etc.  Utilized by most of the rest of FreeIPMI.
 
 Libipmiconsole
 --------------
@@ -54,20 +80,22 @@ remote console access.  The goal of this library is to abstract away
 all of the underlying IPMI/SOL details away from the user into a
 relatively simple file descriptor interface.
 
-Initial attempts were made to create a TCP socket like interface,
-however there were limitations on mapping IPMI like connections to a
-TCP like interface.  For example, TCP non-blocking connection
-semantics could not be met reliably and portably.  IPMI error
-conditions could not be mapped into TCP error conditions as well.
-
 Libipmimonitoring
 -----------------
 
 This library implements a high level sensor monitoring API for IPMI
 sensors.  The goal of this library is to abstract away all of the
-underlying IPMI details away from the user.  An iterator interface is
-provided that allows the user to iterate through sensor values,
-groups, units, and states.
+underlying IPMI details away from the user and map IPMI sensor
+readings in 'Nominal', 'Warning' and 'Critical' states for easy
+analysis.  An iterator interface is provided that allows the user to
+iterate through sensor values, groups, units, and states.
 
+Libipmidetect
+-------------
+
+This library implements a high level API for determing which nodes in
+a cluster do or do-not support IPMI.  This library is primarily useful
+for detecting whe nodes are removed from a cluster for servicing, so
+that IPMI applications will not timeout needlessly.
 
 
