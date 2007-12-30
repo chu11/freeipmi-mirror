@@ -32,7 +32,7 @@ wopr3: wopr3
 wopr5: wopr5
 wopr4: wopr4
 
-Now, determining the hostname of every node in your cluster isn't too
+Determining the hostname of every node in your cluster isn't too
 useful or interesting.  However, perhaps you want to determine if
 every node of your cluster booted with the same kernel.
 
@@ -131,7 +131,7 @@ node's configuration is different.
 Another problem that often comes up with large clusters is that nodes
 are removed from the cluster for servicing or are down due to hardware
 problems, hangs, crashes, etc.  So tools like pdsh can often sit and
-eventually time out on those nodes that are removed or have problems.
+timeout on those nodes that have problems.
 
 In the cluster used in this example, wopr6 is a node that is currently
 down and times out after awhile when you use pdsh.
@@ -150,7 +150,7 @@ user    0m0.003s
 sys     0m0.007s
 
 However, your average user may not know wopr6 is down, or does not
-wish to continaully remove problem nodes (in this case wopr6) from the
+wish to continually remove problem nodes (in this case wopr6) from the
 list of nodes to communicate with.
 
 The -v option in pdsh is used to selectively eliminate those nodes
@@ -177,7 +177,7 @@ real    0m0.034s
 user    0m0.005s
 sys     0m0.012s
 
-The time differences may not seem like much difference here in these
+The time differences may not seem like much difference in these
 examples.  But think of when this is done across an extremeley large
 cluster.
 
@@ -187,7 +187,7 @@ cluster.
 Much of the hostrange input/output can be handled by running FreeIPMI
 tools with pdsh.  However, pdsh requires that a shell be executed on
 the remote node.  This can disrupt the CPU of running jobs on the
-cluster and removes the advantages that IPMI over LAN does not
+cluster and removes the advantage that IPMI over LAN does not
 interrupt a CPU.
 
 Starting with FreeIPMI 0.4.0, hostrange support has been added into
@@ -331,9 +331,10 @@ complete.
 Unlike pdsh, where you can run an arbitrary shell command, each
 FreeIPMI tool has a relatively fixed type of output or sets of outputs
 you can run.  Based on the features run or the output of the command,
-the hostrange input/output will likely be used differently dependent
-with the tool.  The following are some suggestions.  They are they
-ways most will use the hostrange input/output.
+the hostrange input/output will likely be used differently
+dependending with the tool.  The following are some suggestions.  They
+are the ways the author thinks most will use the hostrange
+input/output.
 
 bmc-info:
 
@@ -391,7 +392,7 @@ Based on what you see, you can of course dig deeper on those
 individual nodes.  I imagine many users will want to run ipmi-sensors
 with the default output (each line of output is prepended with
 "hostname: ").  In this mode, key error messages and the node it came
-from can be easily monitored along w/ grep and sed in scripts.
+from can be easily monitored along w/ grep and awk in scripts.
 
 ipmimonitoring:
 
@@ -417,7 +418,9 @@ are two major reasons for this:
 
 1) Almost always, bmc-config must be run in-band before it can be used
 out-of-band.  This is because you can't run out-of-band until the BMC
-is configured with atleast the IP address and MAC address.
+is configured with atleast the IP address and MAC address of the
+motherboard.  So there's really no point to supporting hostranged
+configuration if it is mostly run in-band.
 
 2) Each BMC in the cluster must be configured with a different IP
 address and MAC address.  So the parallelism that the hostrange input
@@ -427,10 +430,9 @@ gives you effectively cannot be used when trying to use bmc-config's
 An alternate hostrange output model is supported in ipmipower.  This
 is due partly to legacy but mostly due to technical reasons.
 Ipmipower was developed with a different architecture than bmc-info,
-ipmi-sensors, ipmi-sel, etc. because of advanced scalability needs and
-the need for it to interact with Powerman.  So it cannot use the
-parallel stdout libraries developed.  It effectively emulates the
---consolidate-output functionality of the other tools.  A buffered
-output option would not make any technical sense since every output
-from ipmipower is 1 line long.
+ipmi-sensors, ipmi-sel, etc. because of need for it to interact with
+Powerman.  So it cannot use the parallel stdout libraries developed.
+It effectively emulates the --consolidate-output functionality of the
+other tools.  A buffered output option would not make any technical
+sense since every output from ipmipower is 1 line long.
 
