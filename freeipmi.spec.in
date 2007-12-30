@@ -303,7 +303,7 @@ fi
 
 %changelog
 * Tue Dec 18 2007 Albert Chu <chu11@llnl.gov> 0.6.0
-- Use %{version} instead of @VERSION@ for substituation in paths.
+- Use %{version} instead of @VERSION@ for substitution in paths.
 
 * Fri Dec 14 2007 Albert Chu <chu11@llnl.gov> 0.6.0
 - Update packaging for libfreeipmi reorganization
