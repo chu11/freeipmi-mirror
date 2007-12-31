@@ -12,6 +12,6 @@ listed below are listed in the order of their implementation.
 Therefore, workarounds implemented earlier may work for other vendors.
 .LP
 The hardware listed below only indicates the hardware that a problem
-was discovered on.  Newer versions hardware may fix the problems
+was discovered on.  Newer versions of hardware may fix the problems
 indicated below.  Similar machines from vendors may or may not exhibit
 the same problems.

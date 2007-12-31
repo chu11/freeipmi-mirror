@@ -173,8 +173,8 @@ template.
 The coding conditions specified above may lead to function names or
 function parameters names that exceed the 80 column mark or having
 very long parameter lists.  We accept this annoyance (or poor coding
-style, we admit it), as we consider matching the specification as the
-primary objective of the coding style in libfreeipmi.
+style, we admit it), as we consider matching the specification as a
+more important need in libfreeipmi.
 
 For example: 
 
