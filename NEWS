@@ -12,8 +12,8 @@ o Change --cache-dir to --sdr-cache-dir in ipmimonitoring for consistency
 o Support shared SDR caches for ipmi-sensors, ipmi-fru, ipmi-sel, and
   ipmimonitoring.  (libipmimonitoring will still use a different
   default cache directory.)
-o Slightly modified SDR caching output messages in ipmi-sensors,
-  ipmi-sel, ipmi-fru, and ipmimonitoring.
+o Modified SDR caching output messages in ipmi-sensors,
+  ipmi-sel, ipmi-fru, and ipmimonitoring to provide more useful information.
 o Updated SDR output under verbose and very verbose output modes with:
   o More IPMI compliant field names.  For example, 'Sensor Name' has
     been replaced with 'Sensor ID String'.
