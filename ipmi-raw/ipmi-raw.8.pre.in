@@ -48,7 +48,7 @@ Execute command 0x01 with LUN 0x0 and NETFN 0x06 on a remote machine using IPMI 
 .PP
 .B # ipmi-raw -h mycluster[0-127] -u myusername -p mypassword 0 6 01
 .PP
-Execute command 0x01 with LUN 0x0 and NETFN 0x06 on a remote machine using IPMI over LAN.
+Execute command 0x01 with LUN 0x0 and NETFN 0x06 across a cluster using IPMI over LAN.
 .PP
 .B # ipmi-raw
 .PP 
