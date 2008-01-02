@@ -1,6 +1,11 @@
 SUBDIRS = src
 
-dist_man_MANS = ipmi-locate.8
+MANS_CPP=ipmi-locate.8
 
-CLEANFILES = *~
-DISTCLEANFILES = .deps/*.P
+$(MANS_CPP): $(MANS_CPP:%=%.pre)
+	cpp -P -I. -x c $@.pre -o $@
+
+dist_man_MANS = $(MANS_CPP)
+
+CLEANFILES = $(MANS_CPP) *~
+DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
