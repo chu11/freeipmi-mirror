@@ -1,3 +1,11 @@
+2008-01-02  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-locate/ipmi-locate.8: Rename to ipmi-locate.8.pre.in.  Use
+	common/doc manpages.  Remove unsupported options.
+
+        * ipmi-locate/Makefile.am, configure.ac: Support
+        ipmi-locate.8.pre.in appropriately.
+	
 2007-12-31  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-workaround-heading-text.man: Fix typo.

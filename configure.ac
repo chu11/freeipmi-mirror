@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.5.2],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.102.2.1 2007-12-21 19:05:40 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.102.2.2 2008-01-02 22:43:56 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -38,6 +38,7 @@ AC_CONFIG_FILES([
         ipmi-sensors/Makefile ipmi-sensors/src/Makefile 
 	ipmi-sensors/ipmi-sensors.8.pre
         ipmi-locate/Makefile ipmi-locate/src/Makefile
+        ipmi-locate/ipmi-locate.8.pre
         bmc-info/Makefile bmc-info/src/Makefile
 	bmc-info/bmc-info.8.pre
         ipmi-fru/Makefile ipmi-fru/src/Makefile

@@ -6,24 +6,8 @@ IPMI \- manual page for ipmi-locate.  IPMI Locate version @PACKAGE_VERSION@
 [\fIOPTION\fR...]
 .SH DESCRIPTION
 IPMI Locate \- Probes and displays IPMI devices.
-.TP
-\fB\-\-brief\fR
-Shorten output.
-.TP
-\fB\-q\fR, \fB\-\-quiet\fR, \fB\-\-silent\fR
-Inhibit usual output.
-.TP
-\fB\-v\fR, \fB\-\-verbose\fR
-Print more information.
-.TP
-\-?, \fB\-\-help\fR
-Give this help list
-.TP
-\fB\-\-usage\fR
-Give a short usage message
-.TP
-\fB\-V\fR, \fB\-\-version\fR
-Print program version
+.SH OPTIONS
+#include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .SH "REPORTING BUGS"
 Report bugs to <freeipmi\-devel@gnu.org>.
 .SH COPYRIGHT
