@@ -1,5 +1,11 @@
 2008-01-02  Albert Chu <chu11@llnl.gov>
 
+        * configure.ac: Update version for release.
+
+        * tagged Release-0_5_3
+
+2008-01-02  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-locate/ipmi-locate.8: Rename to ipmi-locate.8.pre.in.  Use
 	common/doc manpages.  Remove unsupported options.
 
