@@ -1,3 +1,10 @@
+2008-01-02  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-faq.texi: Fix some english.
+
+	* libfreeipmi/src/api/ipmi-lan-session-common.c: Remove left over
+	debug statement.
+	
 2007-12-31  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-workaround-heading-text.man: Fix typo.

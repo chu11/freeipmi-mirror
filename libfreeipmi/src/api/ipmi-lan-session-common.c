@@ -181,9 +181,6 @@ _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
             "================================================";
           char hdrbuf[1024];
               
-	  if (strcasecmp(cmd_str, "unknown") == 0)
-	    printf("FOO %X %X\n", ctx->net_fn, cmd);
-
           snprintf(hdrbuf,
                    1024,
                    hdr_format,
