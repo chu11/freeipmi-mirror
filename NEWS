@@ -1,7 +1,7 @@
 0.5.3
 -----
 o Fix minor ipmimonitoring command line option combination bugs.
-o Fix several minor corner case fixes in ipmi-sel, ipmi-sensors, and
+o Fix several minor corner cases in ipmi-sel, ipmi-sensors, and
 ipmimonitoring.
 o Fix corner case in all tools by recognizing 127.0.0.1 as the same as
 localhost.
