@@ -1,6 +1,6 @@
 .TH IPMI-CHASSIS 8 "@ISODATE@" "ipmi-chassis @PACKAGE_VERSION@" "System Commands"
 .SH NAME
-ipmi-chassis \- manual page for ipmi-chassis.  IPMI Chassis @PACKAGE_VERSION@
+ipmi-chassis \- IPMI chassis management utility
 .SH DESCRIPTION
 .B Ipmi-chassis
 manages an IPMI chassis, such as chassis power, indentification, and

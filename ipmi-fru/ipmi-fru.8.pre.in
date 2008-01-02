@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmi-fru.8.pre.in,v 1.9 2007-10-18 16:18:45 chu11 Exp $
+\."$Id: ipmi-fru.8.pre.in,v 1.10 2008-01-02 22:54:28 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
 \."  Copyright (C) 2007 The Regents of the University of California.
@@ -26,7 +26,7 @@
 \."#############################################################################
 .TH IPMI-FRU 8 "@ISODATE@" "ipmi-fru @PACKAGE_VERSION@" "System Commands"
 .SH NAME
-ipmi-fru \- manual page for ipmi-fru.  IPMI FRU @PACKAGE_VERSION@
+ipmi-fru \- display FRU information
 .SH DESCRIPTION
 .B Ipmi-fru
 displays Field Replaceable Unit (FRU) Information.

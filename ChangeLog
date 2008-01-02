@@ -5,16 +5,18 @@
 	* libfreeipmi/src/api/ipmi-lan-session-common.c: Remove left over
 	debug statement.
 
-	* bmc-info/bmc-info.8.pre.in, ipmi-chassis/ipmi-chassis.8.pre.in,
-	ipmi-locate/ipmi-locate.8, ipmi-sel/ipmi-sel.8.pre.in,
-	ipmi-sensors/ipmi-sensors.8.pre.in: Update/tweak descriptions. 
-
 	* ipmi-locate/ipmi-locate.8: Rename to ipmi-locate.8.pre.in.  Use
 	common/doc manpages.  Remove unsupported options.
 
 	* ipmi-locate/Makefile.am, configure.ac; Support
 	ipmi-locate.8.pre.in appropriately.
 	
+	* bmc-info/bmc-info.8.pre.in, ipmi-chassis/ipmi-chassis.8.pre.in,
+	ipmi-fru/ipmi-fru.8.pre.in, ipmi-raw/ipmi-raw.8.pre.in,
+	bmc-config/bmc-config.8.pre.in, pef-config/pef-config.8.pre.in,
+	ipmi-locate/ipmi-locate.8.pre.in, ipmi-sel/ipmi-sel.8.pre.in,
+	ipmi-sensors/ipmi-sensors.8.pre.in: Update/tweak names and descriptions.
+
 2007-12-31  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-workaround-heading-text.man: Fix typo.

@@ -1,6 +1,6 @@
 .TH PEF-CONFIG 8 "@ISODATE@" "pef-config @PACKAGE_VERSION@" "System Commands"
 .SH NAME
-pef-config \- manual page for pef-config.  PEF Config version @PACKAGE_VERSION@
+pef-config \- configure PEF values
 .SH DESCRIPTION
 .B Pef-config
 is a Platform Event Filtering (PEF) configuration utility.

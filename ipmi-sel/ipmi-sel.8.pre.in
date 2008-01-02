@@ -1,6 +1,6 @@
 .TH IPMI-SEL 8 "@ISODATE@" "ipmi-sel @PACKAGE_VERSION@" "System Commands"
 .SH NAME
-ipmi-sel \- manual page for ipmi-sel.  IPMI System Event Logger version @PACKAGE_VERSION@
+ipmi-sel \- display SEL entries
 .SH DESCRIPTION
 .B Ipmi-sel
 is used to view and manage System Event Log (SEL) entries.  Although
