@@ -141,7 +141,7 @@ the lifetime of FreeIPMI.
 There are multiple implementations, APIs, interfaces, end user
 requirements, etc. that one can choose when developing IPMI drivers,
 libraries, and tools.  FreeIPMI has taken some different
-approaches towards development than other open-source projects.
+approaches than other open-source projects.
 
 @node What is special about FreeIPMI, SSIF Driver Configuration, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, Top
 @section What is special about FreeIPMI compared to other open source IPMI projects?
