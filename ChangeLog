@@ -4,6 +4,10 @@
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c: Remove left over
 	debug statement.
+
+	* bmc-info/bmc-info.8.pre.in, ipmi-chassis/ipmi-chassis.8.pre.in,
+	ipmi-locate/ipmi-locate.8, ipmi-sel/ipmi-sel.8.pre.in,
+	ipmi-sensors/ipmi-sensors.8.pre.in: Update/tweak descriptions. 
 	
 2007-12-31  Albert Chu <chu11@llnl.gov>
 

@@ -2,7 +2,10 @@
 .SH NAME
 ipmi-chassis \- manual page for ipmi-chassis.  IPMI Chassis @PACKAGE_VERSION@
 .SH DESCRIPTION
-IPMI Chassis \- Control an IPMI Chassis. 
+.B Ipmi-chassis
+manages an IPMI chassis, such as chassis power, indentification, and
+status.  See OPTIONS below for all chassis management options
+available.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
