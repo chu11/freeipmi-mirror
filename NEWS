@@ -24,7 +24,8 @@ o Updated SDR output under verbose and very verbose output modes with:
   o Fix incorrect OEM data output.
   o Support more SDR record types for output.
   o Output more SDR record information in general.
-o Various other minor bug fixes, documentation fixes, and enhancements.
+o Various other minor bug fixes, documentation fixes, and
+  enhancements.
 
 For Developers
 --------------
