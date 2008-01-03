@@ -16,7 +16,7 @@ o Modified SDR caching output messages in ipmi-sensors,
   ipmi-sel, ipmi-fru, and ipmimonitoring to provide more useful information.
 o Updated SDR output under verbose and very verbose output modes with:
   o More IPMI compliant field names.  For example, 'Sensor Name' has
-    been replaced with 'Sensor ID String'.
+    been replaced with 'ID String'.
   o More correct output.  For example, 'NA' will be output instead of
     '0.0' when a value is not truly available.  Fields that don't exist
     will not have a default output.

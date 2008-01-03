@@ -5,6 +5,9 @@
 
 	* ipmi-locate/ipmi-locate.8.pre.in,
 	ipmi-chassis/ipmi-chassis.8.pre.in: Update description.
+
+	* ipmi-sensors/src/: Change "Sensor ID String" output to just "ID
+	String" for consistency to IPMI spec.
 	
 2008-01-02  Albert Chu <chu11@llnl.gov>
 
