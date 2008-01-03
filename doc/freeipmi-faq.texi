@@ -229,9 +229,9 @@ input by eliminating those nodes in the cluster that have been
 temporarily removed for servicing.
 
 Ipmimonitoring is used for host monitoring IPMI based sensors on a
-cluster.  It is currently supported by Skummee
-(@uref{https://sourceforge.net/projects/skummee}) on LLNL clusters up
-to 1152 nodes in size.
+cluster.  Skummee
+(@uref{https://sourceforge.net/projects/skummee}) 
+uses libipmimonitoring on LLNL clusters up to 1152 nodes in size.
 
 The bmc-config configuration file and command-line interface are used
 to easily copy the BMC configuration from one node to every other node
