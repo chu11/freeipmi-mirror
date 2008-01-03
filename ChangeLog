@@ -8,6 +8,8 @@
 
 	* ipmi-sensors/src/: Change "Sensor ID String" output to just "ID
 	String" for consistency to IPMI spec.
+
+	* freeipmi.spec.in: Update for sdr-cache dir.
 	
 2008-01-02  Albert Chu <chu11@llnl.gov>
 
