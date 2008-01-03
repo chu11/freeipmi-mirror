@@ -3,7 +3,8 @@
 	* libfreeipmi/src/sdr-cache/: Use macros instead of hard coded
 	index numbers.
 
-	* ipmi-chassis/ipmi-chassis.8.pre.in: Update description.
+	* ipmi-locate/ipmi-locate.8.pre.in,
+	ipmi-chassis/ipmi-chassis.8.pre.in: Update description.
 	
 2008-01-02  Albert Chu <chu11@llnl.gov>
 

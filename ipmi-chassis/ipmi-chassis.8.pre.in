@@ -3,8 +3,9 @@
 ipmi-chassis \- IPMI chassis management utility
 .SH DESCRIPTION
 .B Ipmi-chassis
-manages an IPMI chassis, such as chassis power, indentification, and
-status.  See OPTIONS below for all chassis management options
+is used for managing/monitoring an IPMI chassis, such as chassis
+power, indentification, and status.  See OPTIONS below for all chassis
+management options
 available.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
