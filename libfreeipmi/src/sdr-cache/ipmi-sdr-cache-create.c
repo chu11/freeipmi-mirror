@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.6 2007-12-30 07:11:03 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.7 2008-01-03 17:08:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -357,16 +357,14 @@ _sdr_cache_record_write(ipmi_sdr_cache_ctx_t ctx,
   assert(buflen);
   
   /* Record header bytes are 5 bytes */
-  if (buflen < 5)
+  if (buflen < IPMI_SDR_CACHE_SDR_RECORD_HEADER_LENGTH)
     {
       SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_CACHE_CREATE_INVALID_RECORD_LENGTH);
       return -1;
     }
 
-  /* Record Length is stored in byte #5.  That plus the header bytes
-   * should match buflen.
-   */
-  if ((((uint8_t)buf[4]) + 5) != buflen)
+  /* Record Length plus the header bytes should match buflen. */
+  if ((((uint8_t)buf[IPMI_SDR_CACHE_SDR_RECORD_LENGTH_INDEX]) + IPMI_SDR_CACHE_SDR_RECORD_HEADER_LENGTH) != buflen)
     {
       SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_CACHE_CREATE_INVALID_RECORD_LENGTH);
       return -1;
@@ -378,8 +376,8 @@ _sdr_cache_record_write(ipmi_sdr_cache_ctx_t ctx,
       int i;
 
       /* Record ID stored little endian */
-      record_id = ((uint16_t)buf[0] & 0xFF);
-      record_id |= ((uint16_t)buf[1] & 0xFF) << 8;
+      record_id = ((uint16_t)buf[IPMI_SDR_CACHE_SDR_RECORD_ID_INDEX_LS] & 0xFF);
+      record_id |= ((uint16_t)buf[IPMI_SDR_CACHE_SDR_RECORD_ID_INDEX_MS] & 0xFF) << 8;
       
       for (i = 0; i < *record_ids_count; i++)
 	{
@@ -397,14 +395,14 @@ _sdr_cache_record_write(ipmi_sdr_cache_ctx_t ctx,
    * SDR record type
    */
   if (sensor_numbers
-      && (buf[3] == 0x01	/* Full Sensor Record */
-	  || buf[3] == 0x02	/* Compact Sensor Record */
-	  || buf[3] == 0x03))	/* Event-Only Record */
+      && (buf[IPMI_SDR_CACHE_SDR_RECORD_TYPE_INDEX] == IPMI_SDR_FORMAT_FULL_RECORD
+	  || buf[IPMI_SDR_CACHE_SDR_RECORD_TYPE_INDEX] == IPMI_SDR_FORMAT_COMPACT_RECORD
+	  || buf[IPMI_SDR_CACHE_SDR_RECORD_TYPE_INDEX] == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD))
     {
       uint8_t sensor_number;
       int i;
 
-      sensor_number = (uint8_t)buf[7];
+      sensor_number = (uint8_t)buf[IPMI_SDR_CACHE_SDR_RECORD_SENSOR_NUMBER_INDEX];
 
       for (i = 0; i < *sensor_numbers_count; i++)
 	{

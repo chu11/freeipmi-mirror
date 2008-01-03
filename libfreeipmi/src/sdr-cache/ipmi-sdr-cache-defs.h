@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-defs.h,v 1.3 2007-12-29 21:11:34 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-defs.h,v 1.4 2008-01-03 17:08:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -37,6 +37,17 @@
 #endif /* MAXPATHLEN */
 
 #define IPMI_SDR_CACHE_MAGIC        0xABCD9876
+
+/* Why use indexes instead of fiid templates?  B/c that's how it was
+ * written before libipmimonitoring's libipmisdrcache was written before
+ * it was included in freeipmi.
+ */
+#define IPMI_SDR_CACHE_SDR_RECORD_HEADER_LENGTH       5
+#define IPMI_SDR_CACHE_SDR_RECORD_LENGTH_INDEX        4
+#define IPMI_SDR_CACHE_SDR_RECORD_ID_INDEX_LS         0
+#define IPMI_SDR_CACHE_SDR_RECORD_ID_INDEX_MS         1
+#define IPMI_SDR_CACHE_SDR_RECORD_TYPE_INDEX          3
+#define IPMI_SDR_CACHE_SDR_RECORD_SENSOR_NUMBER_INDEX 7
 
 #if 0
 /* Original - sdr cache version 1.0 - keep for documentation history */

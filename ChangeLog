@@ -1,3 +1,8 @@
+2007-01-03  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sdr-cache/: Use macros instead of hard coded
+	index numbers.
+	
 2008-01-02  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Fix some english.
