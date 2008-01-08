@@ -387,7 +387,8 @@ D) Easier to deal with variable length fields (set whatever length you
 want, on a read the api can identify the length of the field).
 E) Templates describe the packets exactly.
 F) Easy to do large packet dumps (fields and values easily output and identified).
-G) Significantly reduce the amount of unmarshalling/debug code needed.
+G) Significantly reduce the amount of marshalling/unmarshalling/debug
+code needed.
 
 Cons:
 
@@ -403,11 +404,11 @@ traditional methods.
 
 A) The IPMI specification is very large, so reducing code size weighed
 in as an important factor for the authors.  This allowed there to be
-fewer unmarshalling/debug functions.  By one authors counting in the
-specification, there are 304 different payloads in the IPMI
-specification.  (This doesn't count bitmask mapping, per packet unique
-completion codes, header/trailer packet construction, authentication,
-encryption, and all that other good stuff.)
+fewer marshalling/unmarshalling/debug functions.  By one authors
+counting in the specification, there are 304 different payloads in the
+IPMI specification.  (This doesn't count bitmask mapping, per packet
+unique completion codes, header/trailer packet construction,
+authentication, encryption, and all that other good stuff.)
 
 B) Although IPMI has a specification, the lack of IPMI compliance from
 vendors is a well known problem in the open-source community.  The
