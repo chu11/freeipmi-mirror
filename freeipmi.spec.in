@@ -21,6 +21,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libgcrypt-devel texinfo
 Requires(post): info
 Requires(preun): info
+Obsoletes: freeipmi-ipmimonitoring
 # Necessary as only those archs implement iopl and friends (#368541)
 ExclusiveArch: %{ix86} x86_64 ia64 alpha
 Summary: FreeIPMI
@@ -284,6 +285,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Wed Jan 9 2008 Albert Chu <chu11@llnl.gov> 0.5.4
+- Obsolete old subpackage freeipmi-ipmimonitoring.
+
 * Tue Dec 18 2007 Albert Chu <chu11@llnl.gov> 0.5.2
 - Use %{version} instead of @VERSION@ for substituation in paths.
 
