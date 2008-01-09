@@ -1,4 +1,9 @@
-2007-01-03  Albert Chu <chu11@llnl.gov>
+2008-01-09  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Obsolete older freeipmi-ipmimonitoring
+	subpackage.
+	
+2008-01-03  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sdr-cache/: Use macros instead of hard coded
 	index numbers.
