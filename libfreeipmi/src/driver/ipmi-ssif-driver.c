@@ -118,7 +118,7 @@ struct ipmi_i2c_smbus_ioctl_data
 /* END: copied from <linux/i2c.h> and <linux/i2c-dev.h>, */
 /*      and prefixed IPMI.                               */
 
-static inline int 
+static int 
 _ipmi_i2c_smbus_access (int dev_fd, 
                         char read_write, 
                         uint8_t command, 
@@ -136,7 +136,7 @@ _ipmi_i2c_smbus_access (int dev_fd,
   return rv;
 }
 
-static inline ssize_t 
+static ssize_t 
 _ipmi_ssif_single_part_write (int dev_fd, 
                               uint8_t *buf, 
                               size_t buf_len)
@@ -155,7 +155,7 @@ _ipmi_ssif_single_part_write (int dev_fd,
                                   &data));
 }
 
-static inline ssize_t 
+static ssize_t 
 _ipmi_ssif_multi_part_write (int dev_fd, 
                              uint8_t *buf, 
                              size_t buf_len)
@@ -218,7 +218,7 @@ _ipmi_ssif_multi_part_write (int dev_fd,
                                   &data));
 }
 
-static inline ssize_t 
+static ssize_t 
 _ipmi_ssif_read (int dev_fd, 
 		 uint8_t *buf, 
 		 size_t buf_len)
