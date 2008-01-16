@@ -1,3 +1,7 @@
+2008-01-16  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/driver/ipmi-ssif-driver.c: Add more debugging.
+	
 2008-01-09  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Obsolete older freeipmi-ipmimonitoring

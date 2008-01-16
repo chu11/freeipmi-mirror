@@ -125,13 +125,15 @@ _ipmi_i2c_smbus_access (int dev_fd,
                         union ipmi_i2c_smbus_data *data)
 {
   struct ipmi_i2c_smbus_ioctl_data args;
-  
+  int rv;
+
   args.read_write = read_write;
   args.command = command;
   args.size = IPMI_I2C_SMBUS_BLOCK_DATA;
   args.data = data;
   
-  return (ioctl (dev_fd, IPMI_I2C_SMBUS, &args));
+  ERR(!((rv = ioctl (dev_fd, IPMI_I2C_SMBUS, &args)) < 0));
+  return rv;
 }
 
 static inline ssize_t 
@@ -145,9 +147,7 @@ _ipmi_ssif_single_part_write (int dev_fd,
   
   data.block[0] = buf_len;
   for (i = 0; i < buf_len; i++)
-    {
-      data.block[i + 1] = buf[i];
-    }
+    data.block[i + 1] = buf[i];
   
   return (_ipmi_i2c_smbus_access (dev_fd, 
                                   IPMI_I2C_SMBUS_WRITE, 
