@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.c,v 1.10 2007-10-18 00:33:12 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.c,v 1.10.4.1 2008-01-22 22:07:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -58,7 +58,7 @@ static char *ipmi_sdr_cache_errmsgs[] =
     "success",
     "context null",
     "context invalid",
-    "invalid parmaeters",
+    "invalid parameters",
     "out of memory",
     "filename invalid",
     "file system error",
