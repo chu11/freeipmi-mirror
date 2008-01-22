@@ -1,3 +1,8 @@
+0.5.4
+-----
+o Output addresses in hex in ipmi-locate.
+o Clarify device addresses in manpages.
+
 0.5.3
 -----
 o Fix minor ipmimonitoring command line option combination bugs.

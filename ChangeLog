@@ -1,5 +1,16 @@
 2008-01-22  Albert Chu <chu11@llnl.gov>
 
+        * common/doc/manpage-common-inband.man: Tweak english.
+	
+2008-01-22  A Balamurugan  <bala@zresearch.com>
+
+        * common/doc/manpage-common-inband.man: updated.
+
+        * ipmi-locate/src/ipmi-locate.c: displays device-address with hex
+        prefix.
+	
+2008-01-22  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/libipmisdrcache/ipmi-sdr-cache.c: Fix
 	"parmaeters" typo.
 	
