@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.34 2007-12-29 21:11:34 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.35 2008-01-22 23:29:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -119,7 +119,8 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
 {
   struct ipmimonitoring_arguments *args;
   unsigned int sensor_reading_flags;
-  int i, num;
+  char sdr_cache_dir[MAXPATHLEN+1];
+  int i, num, errnum;
   
   assert(state_data);
 
@@ -161,6 +162,43 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   ipmi_ctx_destroy(state_data->ipmi_ctx);
   state_data->ipmi_ctx = NULL;
 
+  /* Force use of same directory used for other FreeIPMI tools.
+   * Technically we should do this before we create the context.  So
+   * sue me, I know I'm being safe with it :-)
+   *
+   * Note that we do this right after we called
+   * sdr_cache_create_and_load().  The reason being that we don't know
+   * the 'sdr-cache-dir' has been created yet.
+   */
+
+  if (sdr_cache_get_cache_directory(state_data->pstate,
+                                    args->sdr.sdr_cache_dir_wanted ? args->sdr.sdr_cache_dir : NULL,
+                                    sdr_cache_dir,
+                                    MAXPATHLEN) < 0)
+    return -1;
+
+  if (ipmi_monitoring_sdr_cache_directory(sdr_cache_dir, &errnum) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr, 
+                      "ipmi_monitoring_sdr_cache_directory: %s\n", 
+                      ipmi_monitoring_ctx_strerror(errnum));
+      return -1;
+    }
+  
+  /* Force use of same filename format used for other FreeIPMI tools.
+   * Technically we should do this before we create the context.  So
+   * sue me, I know I'm being safe with it :-)
+   */
+  if (ipmi_monitoring_sdr_cache_filenames("sdr-cache-%L.%H", &errnum) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr, 
+                      "ipmi_monitoring_sdr_cache_filename: %s\n", 
+                      ipmi_monitoring_ctx_strerror(errnum));
+      return -1;
+    }
+  
   sensor_reading_flags = IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS;
   if (args->regenerate_sdr_cache_wanted)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;
@@ -644,7 +682,6 @@ main(int argc, char **argv)
 {
   ipmimonitoring_prog_data_t prog_data;
   struct ipmimonitoring_arguments cmd_args;
-  char sdr_cache_dir[MAXPATHLEN+1];
   int exit_code;
   int hosts_count;
   int rv;
@@ -663,29 +700,7 @@ main(int argc, char **argv)
       fprintf(stderr, "ipmi_monitoring_init: %s\n", ipmi_monitoring_ctx_strerror(errnum));
       goto cleanup;
     }
-
-  if (sdr_cache_get_cache_directory(NULL,
-                                    prog_data.args->sdr.sdr_cache_dir_wanted ? prog_data.args->sdr.sdr_cache_dir : NULL,
-                                    sdr_cache_dir,
-                                    MAXPATHLEN) < 0)
-    goto cleanup;
-
-  /* Force use of same directory used for other FreeIPMI tools */
-  if (ipmi_monitoring_sdr_cache_directory(sdr_cache_dir, &errnum) < 0)
-    {
-      fprintf(stderr, "ipmi_monitoring_sdr_cache_directory: %s\n", 
-              ipmi_monitoring_ctx_strerror(errnum));
-      goto cleanup;
-    }
-
-  /* Force use of same filename format used for other FreeIPMI tools */
-  if (ipmi_monitoring_sdr_cache_filenames("sdr-cache-%L.%H", &errnum) < 0)
-    {
-      fprintf(stderr, "ipmi_monitoring_sdr_cache_filename: %s\n", 
-              ipmi_monitoring_ctx_strerror(errnum));
-      goto cleanup;
-    }
-  
+ 
   if ((hosts_count = pstdout_setup(&(prog_data.args->common.hostname),
                                    prog_data.args->hostrange.buffer_hostrange_output,
                                    prog_data.args->hostrange.consolidate_hostrange_output,
