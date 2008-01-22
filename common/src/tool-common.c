@@ -168,10 +168,11 @@ ipmi_open(const char *progname,
         {
           struct ipmi_locate_info locate_info;
 
-          /* Determine if KCS or SSIF is found.  If one is found, we
-           * try that one first.  If neither is found (perhaps b/c the
-           * vendor just assumes default values), then we just try a
-           * bunch in a random order.
+          /* If one of KCS or SSIF is found, we try that one first.
+           * We don't want to hang on one or another if one is bad.
+           * If neither is found (perhaps b/c the vendor just assumes
+           * default values), then there's not much we can do, we can
+           * only guess.
            */
           
           if (!ipmi_locate_discover_device_info (IPMI_INTERFACE_KCS, &locate_info))
