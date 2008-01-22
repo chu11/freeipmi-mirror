@@ -1,5 +1,10 @@
 2008-01-22  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_inband): Remove legacy
+	requirement for required SSIF driver path.
+	
+2008-01-22  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache.c
 	(ipmi_sdr_cache_create): Accept SDR version 0h.
 	

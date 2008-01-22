@@ -3,6 +3,7 @@
 o Output addresses in hex in ipmi-locate.
 o Clarify device addresses in manpages.
 o Minor SDR caching bug fixes.
+o Various SSIF corner case fixes.
 
 0.5.3
 -----
