@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.c,v 1.10.4.1 2008-01-22 22:07:19 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.c,v 1.10.4.2 2008-01-22 22:47:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -230,13 +230,14 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
   if (!c || c->magic != IPMI_SDR_CACHE_MAGIC)
     return -1;
 
-  /* Version cannot be 0h according to the IPMI spec */
+  /* Version cannot be 0h according to the IPMI spec, but we will
+   * accept a 0h anyways since it doesn't hurt the code.
+   */
   if (!filename
       || strlen(filename) > MAXPATHLEN
       || (create_flags != IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT
 	  && create_flags != IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE)
       || (validation_flags & ~(IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_RECORD_ID | IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_SENSOR_NUMBER))
-      || !version
       || !record_count)
     {
       c->errnum = IPMI_SDR_CACHE_ERR_PARAMETERS;

@@ -1,5 +1,10 @@
 2008-01-22  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache.c
+	(ipmi_sdr_cache_create): Accept SDR version 0h.
+	
+2008-01-22  Albert Chu <chu11@llnl.gov>
+
         * common/doc/manpage-common-inband.man: Tweak english.
 	
 2008-01-22  A Balamurugan  <bala@zresearch.com>
