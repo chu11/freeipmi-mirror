@@ -1,3 +1,14 @@
+2007-01-22  Albert Chu <chu11@llnl.gov>
+
+	* common/src/tool-common.c (ipmi_open): Try devices more intelligently.
+
+	* libfreeipmi/include/freeipmi/locate/ipmi-locate.h,
+	libfreeipmi/src/locate/ipmi-locate.c
+	(ipmi_locate_discover_device_info): New function.
+
+	* libfreeipmi/src/locate/ipmi-locate.c
+	(_ipmi_locate_get_device_info): Add flag to try/not-try defaults.
+
 2008-01-22  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_inband): Remove

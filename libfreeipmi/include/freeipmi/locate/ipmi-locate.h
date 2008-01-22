@@ -95,6 +95,13 @@ int ipmi_locate_get_device_info (ipmi_interface_type_t type,
                                  struct ipmi_locate_info *info);
 
 /* Returns 0 on success, errnum on error */
+/* Identical to ipmi_locate_get_device_info() but will return
+ * defaults if no device info is found.
+ */
+int ipmi_locate_discover_device_info (ipmi_interface_type_t type,
+                                      struct ipmi_locate_info *info);
+
+/* Returns 0 on success, errnum on error */
 int ipmi_locate_smbios_get_device_info (ipmi_interface_type_t type,
                                         struct ipmi_locate_info *info);
 

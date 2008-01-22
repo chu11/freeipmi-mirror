@@ -62,7 +62,8 @@ ipmi_locate_strerror(int32_t errnum)
 static int 
 _ipmi_locate_get_device_info (int *locate_errnum,
                               ipmi_interface_type_t type,
-                              struct ipmi_locate_info *info)
+                              struct ipmi_locate_info *info,
+                              int try_defaults)
 {
   static ipmi_locate_func things_to_try[] =
     {
@@ -73,14 +74,20 @@ _ipmi_locate_get_device_info (int *locate_errnum,
       ipmi_locate_defaults_get_device_info,
       NULL
     };
+  unsigned int things_to_try_len;
   struct ipmi_locate_info linfo;
   int i, rv;
 
   assert(locate_errnum);
 
   LOCATE_ERR_PARAMETERS(IPMI_INTERFACE_TYPE_VALID(type) && info);
+
+  if (try_defaults)
+    things_to_try_len = 5;
+  else
+    things_to_try_len = 4;
   
-  for (i = 0; things_to_try[i] != NULL; i++)
+  for (i = 0; i < things_to_try_len; i++)
     {
       memset (&linfo, 0, sizeof (struct ipmi_locate_info));
       rv = (*things_to_try[i])(type, &linfo);
@@ -103,7 +110,18 @@ ipmi_locate_get_device_info (ipmi_interface_type_t type,
 {
   int locate_errnum = 0;
 
-  if (_ipmi_locate_get_device_info(&locate_errnum, type, info) < 0)
+  if (_ipmi_locate_get_device_info(&locate_errnum, type, info, 1) < 0)
+    return locate_errnum;
+  return 0;
+}
+
+int
+ipmi_locate_discover_device_info (ipmi_interface_type_t type,
+                                  struct ipmi_locate_info *info)
+{
+  int locate_errnum = 0;
+
+  if (_ipmi_locate_get_device_info(&locate_errnum, type, info, 0) < 0)
     return locate_errnum;
   return 0;
 }

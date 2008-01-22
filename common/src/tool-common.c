@@ -20,6 +20,7 @@
 #include "tool-common.h"
 
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
+#include "freeipmi/locate/ipmi-locate.h"
 
 #include "freeipmi-portability.h"
 
@@ -165,6 +166,40 @@ ipmi_open(const char *progname,
 
       if (cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
         {
+          struct ipmi_locate_info locate_info;
+
+          /* Determine if KCS or SSIF is found.  If one is found, we
+           * try that one first.  If neither is found (perhaps b/c the
+           * vendor just assumes default values), then we just try a
+           * bunch in a random order.
+           */
+          
+          if (!ipmi_locate_discover_device_info (IPMI_INTERFACE_KCS, &locate_info))
+            {
+              if (!(ipmi_ctx_open_inband (ipmi_ctx,
+                                          IPMI_DEVICE_KCS,
+                                          cmd_args->disable_auto_probe,
+                                          cmd_args->driver_address,
+                                          cmd_args->register_spacing,
+                                          cmd_args->driver_device,
+                                          cmd_args->workaround_flags,
+                                          cmd_args->flags) < 0))
+                goto out;
+            }
+
+          if (!ipmi_locate_discover_device_info (IPMI_INTERFACE_SSIF, &locate_info))
+            {
+              if (!(ipmi_ctx_open_inband (ipmi_ctx,
+                                          IPMI_DEVICE_SSIF,
+                                          cmd_args->disable_auto_probe,
+                                          cmd_args->driver_address,
+                                          cmd_args->register_spacing,
+                                          cmd_args->driver_device,
+                                          cmd_args->workaround_flags,
+                                          cmd_args->flags) < 0))
+                goto out;
+            }
+
           if (ipmi_ctx_open_inband (ipmi_ctx,
                                     IPMI_DEVICE_OPENIPMI,
                                     cmd_args->disable_auto_probe,
@@ -221,6 +256,7 @@ ipmi_open(const char *progname,
         }
     }
 
+ out:
   return ipmi_ctx;
 
  cleanup:
