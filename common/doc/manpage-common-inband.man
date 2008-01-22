@@ -4,8 +4,8 @@ Do not probe IPMI devices for default settings.
 .TP
 \fB\-\-driver\-address\fR=\fIDRIVER-ADDRESS\fR
 Specify the in-band driver address to be used instead of the probed
-value.  \fIDRIVER-ADDRESS\fR should be prefixed with "0x" for hex 
-value and '0' for octal value.
+value.  \fIDRIVER-ADDRESS\fR should be prefixed with "0x" for a hex 
+value and '0' for an octal value.
 .TP
 \fB\-\-driver\-device\fR=\fIDEVICE\fR 
 Specify the in-band driver device path to be used instead of the
