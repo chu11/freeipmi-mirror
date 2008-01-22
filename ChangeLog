@@ -1,5 +1,11 @@
 2008-01-22  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_ipmi_communication.c
+	(_inband_init): Include "IPMI_ERR_DEVICE_NOT_FOUND" as a system
+	error.
+	
+2008-01-22  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_inband): Remove legacy
 	requirement for required SSIF driver path.
 	

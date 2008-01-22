@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.14 2007-10-18 16:18:50 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.14.4.1 2008-01-22 23:17:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -184,7 +184,8 @@ _inband_init(ipmi_monitoring_ctx_t c,
             c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
           else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_OUT_OF_MEMORY)
             c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-          else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SYSTEM_ERROR)
+          else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SYSTEM_ERROR
+		   || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_DEVICE_NOT_FOUND)
             c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
           else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_DRIVER_PATH_REQUIRED)
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
