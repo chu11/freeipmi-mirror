@@ -500,9 +500,6 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
   /* No workaround flags currently supported */
   API_ERR_PARAMETERS(!(workaround_flags));
 
-  API_ERR_DRIVER_PATH_REQUIRED(!(driver_type == IPMI_DEVICE_SSIF
-                                 && !driver_device));
-
   ctx->io.inband.kcs_ctx = NULL;
   ctx->io.inband.ssif_ctx = NULL;
   ctx->io.inband.openipmi_ctx = NULL;

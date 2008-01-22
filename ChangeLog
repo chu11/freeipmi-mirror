@@ -1,5 +1,10 @@
 2008-01-22  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_inband): Remove
+	legacy requirement for required SSIF driver path.
+	
+2008-01-22  Albert Chu <chu11@llnl.gov>
+
         * common/doc/manpage-common-inband.man: Tweak english.
 	
 2008-01-22  Albert Chu <chu11@llnl.gov>
