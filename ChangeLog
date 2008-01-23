@@ -1,5 +1,10 @@
 2008-01-22  Albert Chu <chu11@llnl.gov>
 
+	* common/src/tool-common.c (ipmi_open): Try devices more
+	intelligently.
+
+2008-01-22  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_ipmi_communication.c
 	(_inband_init): Include "IPMI_ERR_DEVICE_NOT_FOUND" as a system
 	error.

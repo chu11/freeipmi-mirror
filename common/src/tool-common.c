@@ -21,6 +21,7 @@
 #include "freeipmi-portability.h"
 
 #include "freeipmi/ipmi-messaging-support-cmds.h"
+#include "freeipmi/ipmi-locate.h"
 
 int
 ipmi_is_root ()
@@ -165,6 +166,47 @@ ipmi_device_open(const char *progname,
 
       if (cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
         {
+          struct ipmi_locate_info locate_info;
+          
+          /* If one of KCS or SSIF is found, we try that one first.
+           * We don't want to hang on one or another if one is bad.
+           * If neither is found (perhaps b/c the vendor just assumes
+           * default values), then there's not much we can do, we can
+           * only guess.
+           */
+
+          if (!ipmi_locate_smbios_get_dev_info(IPMI_INTERFACE_KCS, &locate_info)
+              || !ipmi_locate_pci_get_dev_info(IPMI_INTERFACE_KCS, &locate_info)
+              || !ipmi_locate_acpi_spmi_get_dev_info(IPMI_INTERFACE_KCS, &locate_info)
+              || !ipmi_locate_dmidecode_get_dev_info(IPMI_INTERFACE_KCS, &locate_info))
+            {
+              if (!(ipmi_open_inband (dev,
+                                      IPMI_DEVICE_KCS,
+                                      cmd_args->disable_auto_probe,
+                                      cmd_args->driver_address,
+                                      cmd_args->register_spacing,
+                                      cmd_args->driver_device,
+                                      cmd_args->workaround_flags,
+                                      cmd_args->flags) < 0))
+                goto out;
+            }
+
+          if (!ipmi_locate_smbios_get_dev_info(IPMI_INTERFACE_SSIF, &locate_info)
+              || !ipmi_locate_pci_get_dev_info(IPMI_INTERFACE_SSIF, &locate_info)
+              || !ipmi_locate_acpi_spmi_get_dev_info(IPMI_INTERFACE_SSIF, &locate_info)
+              || !ipmi_locate_dmidecode_get_dev_info(IPMI_INTERFACE_SSIF, &locate_info))
+            {
+              if (!(ipmi_open_inband (dev,
+                                      IPMI_DEVICE_SSIF,
+                                      cmd_args->disable_auto_probe,
+                                      cmd_args->driver_address,
+                                      cmd_args->register_spacing,
+                                      cmd_args->driver_device,
+                                      cmd_args->workaround_flags,
+                                      cmd_args->flags) < 0))
+                goto out;
+            }
+          
           if (ipmi_open_inband (dev,
                                 IPMI_DEVICE_OPENIPMI,
                                 cmd_args->disable_auto_probe,
@@ -221,6 +263,7 @@ ipmi_device_open(const char *progname,
         }
     }
 
+out:
   return dev;
 
  cleanup:
