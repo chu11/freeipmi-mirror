@@ -168,11 +168,17 @@ ipmi_open(const char *progname,
         {
           struct ipmi_locate_info locate_info;
 
-          /* If one of KCS or SSIF is found, we try that one first.
+          /* achu: 
+           * 
+           * If one of KCS or SSIF is found, we try that one first.
            * We don't want to hang on one or another if one is bad.
+           *
            * If neither is found (perhaps b/c the vendor just assumes
            * default values), then there's not much we can do, we can
            * only guess.
+           *
+           * This does mean in-band communication is slower (doing
+           * excessive early probing).  It's a justified cost to me.
            */
           
           if (!ipmi_locate_discover_device_info (IPMI_INTERFACE_KCS, &locate_info))
