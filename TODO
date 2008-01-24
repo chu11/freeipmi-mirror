@@ -18,11 +18,6 @@ ipmipower
 ---------
 fanout/something mechanism to limit parallelism
   
-bmc-config:
------------
-Missing Serial Config
-Chassis Config?
-
 pef-config
 -----------
 * conf.5 manpage
@@ -31,13 +26,6 @@ pef-config
 general
 -------
 event handling
-tool-common - detect if you have one driver vs another and try that one first?
-
-ipmi-chassis
-------------
-move set power cycle interval to bmc-config?
-remove set power restore policy b/c its in bmc-config?
-put boot options into bmc-config?
 
 ipmiconsole
 -----------
@@ -49,7 +37,6 @@ ipmi-sdr
 duplicate ipmi-sensors duty?
 - need to move some sdr common code to common/src
 have file based input/output like pef-config/bmc-config
-
 
 ASUS issues to resolve
 ----------------------
