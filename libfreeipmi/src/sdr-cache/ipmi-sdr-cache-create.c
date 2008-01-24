@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.8 2008-01-22 22:48:19 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.9 2008-01-24 15:28:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -508,6 +508,12 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx,
                           &most_recent_addition_timestamp,
                           &most_recent_erase_timestamp) < 0)
     goto cleanup; 
+
+  if (!record_count)
+    {
+      SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_CACHE_CREATE_INVALID_RECORD_COUNT);
+      goto cleanup;
+    }
 
   if (_sdr_cache_header_write(ctx,
                               ipmi_ctx,
