@@ -67,18 +67,18 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     /* maintain "regenerate-sdr-cache" for backwards compatability */
     {"regenerate-sdr-cache", REGENERATE_SDR_CACHE_KEY, 0, OPTION_HIDDEN,
-     "Regenerate the SDR cache.", 25},
+     "Regenerate the SDR cache.", 30},
     /* maintain "cache-dir" for backwards compatability */
     {"cache-dir", CACHE_DIR_KEY, "DIRECTORY", OPTION_HIDDEN,
-     "Specify an alternate directory to read and write SDR caches..", 26},
+     "Specify an alternate directory to read and write SDR caches..", 31},
     {"quiet-readings", QUIET_READINGS_KEY,  0, 0,
-     "Do not output sensor readings, only states.", 27},
+     "Do not output sensor readings, only states.", 32},
     {"list-groups",    LIST_GROUPS_KEY,    0, 0, 
-     "List sensor groups.", 28}, 
+     "List sensor groups.", 33}, 
     {"groups",         GROUPS_KEY,       "GROUP-NAME", 0, 
-     "Show sensors belonging to a specific group.", 30}, 
+     "Show sensors belonging to a specific group.", 34}, 
     {"sensors",        SENSORS_LIST_KEY, "SENSORS-LIST", 0, 
-     "Show sensors by record id.  Accepts space or comma separated lists", 31}, 
+     "Show sensors by record id.  Accepts space or comma separated lists", 35}, 
     { 0 }
   };
 

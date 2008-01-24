@@ -339,14 +339,17 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
       }
   }
   
-  sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
-  if ((sdr_record_found = _find_sdr_record(state_data, 
-                                           sensor_number,
-                                           sdr_record,
-                                           &sdr_record_len,
-                                           &sdr_record_type,
-                                           &sdr_event_reading_type_code)) < 0)
-    goto cleanup;
+  if (!state_data->prog_data->args->sdr.ignore_sdr_cache_wanted)
+    {
+      sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+      if ((sdr_record_found = _find_sdr_record(state_data, 
+                                               sensor_number,
+                                               sdr_record,
+                                               &sdr_record_len,
+                                               &sdr_record_type,
+                                               &sdr_event_reading_type_code)) < 0)
+        goto cleanup;
+    }
 
   if (sdr_record_found)
     {

@@ -1,3 +1,14 @@
+2007-01-23  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/manpage-common-ignore-sdr-cache.man: New file.
+
+	* common/src/tool-cmdline-common.h,
+	common/src/tool-cmdline-common.c: Add --ignore-sdr-cache support.
+
+	* ipmi-fru/, ipmi-sel/: Support --ignore-sdr-cache option.
+
+	* Adjust argp option groups in all tools.
+
 2007-01-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/: Various consistency to other tools fixes.

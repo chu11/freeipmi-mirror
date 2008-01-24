@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.30 2007-12-14 19:16:23 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.31 2008-01-24 01:06:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -77,20 +77,20 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     {"config-file", IPMICONSOLE_CONFIG_FILE_KEY, "FILE", 0,
-     "Specify an alternate configuration file.", 24},
+     "Specify an alternate configuration file.", 30},
     {"dont-steal", IPMICONSOLE_DONT_STEAL_KEY, 0, 0,
-     "Do not steal an SOL session if one is already detected as being in use.", 25},
+     "Do not steal an SOL session if one is already detected as being in use.", 31},
     {"deactivate", IPMICONSOLE_DEACTIVATE_KEY, 0, 0,
-     "Deactivate a SOL session if one is detected as being in use and exit.", 26},
+     "Deactivate a SOL session if one is detected as being in use and exit.", 32},
     {"lock-memory", IPMICONSOLE_LOCK_MEMORY_KEY, 0, 0,
-     "Lock sensitive information (such as usernames and passwords) in memory.", 27},
+     "Lock sensitive information (such as usernames and passwords) in memory.", 33},
     {"debug", IPMICONSOLE_DEBUG_KEY, 0, 0,
-     "Turn on debugging.", 28},
+     "Turn on debugging.", 34},
 #ifndef NDEBUG
     {"debugfile", IPMICONSOLE_DEBUGFILE_KEY, 0, 0,
-     "Output debugging to the debugfile rather than to standard output.", 29},
+     "Output debugging to the debugfile rather than to standard output.", 35},
     {"noraw", IPMICONSOLE_NORAW_KEY, 0, 0,
-     "Don't enter terminal raw mode.", 31},
+     "Don't enter terminal raw mode.", 36},
 #endif
     { 0 }
   };

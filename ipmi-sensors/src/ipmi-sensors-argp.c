@@ -67,20 +67,20 @@ static struct argp_option options[] =
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     {"verbose",        VERBOSE_KEY,        0, 0, 
-     "Increase verbosity in output.  May be specified multiple times.", 25}, 
+     "Increase verbosity in output.  May be specified multiple times.", 30}, 
     {"quiet-readings", QUIET_READINGS_KEY,  0, 0,
-     "Do not output sensor readings or thresholds on simple output.", 26},
+     "Do not output sensor readings or thresholds on simple output.", 31},
     {"sdr-info",       SDR_INFO_KEY,       0, 0, 
-     "Show sendor data repository (SDR) information.", 27}, 
+     "Show sendor data repository (SDR) information.", 32}, 
     {"list-groups",    LIST_GROUPS_KEY,    0, 0, 
-     "List sensor groups.", 28}, 
+     "List sensor groups.", 33}, 
     /* maintain "group" for backwards compatability */
     {"group",          GROUP_KEY,        "GROUP-NAME", OPTION_HIDDEN, 
-     "Show sensors belonging to a specific group.", 29}, 
+     "Show sensors belonging to a specific group.", 34}, 
     {"groups",         GROUPS_KEY,       "GROUP-NAME", 0, 
-     "Show sensors belonging to a specific group.", 30}, 
+     "Show sensors belonging to a specific group.", 35}, 
     {"sensors",        SENSORS_LIST_KEY, "SENSORS-LIST", 0, 
-     "Show sensors by record id.  Accepts space or comma separated lists", 31}, 
+     "Show sensors by record id.  Accepts space or comma separated lists", 36}, 
     { 0 }
   };
 

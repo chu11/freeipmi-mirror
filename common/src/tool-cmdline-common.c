@@ -617,7 +617,9 @@ sdr_parse_opt (int key,
           argp_usage (state);
         }
       break;
-
+    case ARGP_IGNORE_SDR_CACHE_KEY:
+      cmd_args->ignore_sdr_cache_wanted = 1;
+      break;
     default:
       return ARGP_ERR_UNKNOWN;
     }
@@ -743,6 +745,7 @@ init_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
   cmd_args->quiet_cache_wanted = 0;
   cmd_args->sdr_cache_dir_wanted = 0;
   cmd_args->sdr_cache_dir = NULL;
+  cmd_args->ignore_sdr_cache_wanted = 0;
 }
 
 void 

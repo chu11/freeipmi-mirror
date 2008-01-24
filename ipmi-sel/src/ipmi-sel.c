@@ -434,13 +434,16 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (sdr_cache_create_and_load (state_data->ipmi_sdr_cache_ctx,
-                                 state_data->pstate,
-                                 state_data->ipmi_ctx,
-                                 args->sdr.quiet_cache_wanted,
-                                 state_data->hostname,
-                                 args->sdr.sdr_cache_dir_wanted ? args->sdr.sdr_cache_dir : NULL) < 0)
-    return -1;
+  if (!args->sdr.ignore_sdr_cache_wanted)
+    {
+      if (sdr_cache_create_and_load (state_data->ipmi_sdr_cache_ctx,
+                                     state_data->pstate,
+                                     state_data->ipmi_ctx,
+                                     args->sdr.quiet_cache_wanted,
+                                     state_data->hostname,
+                                     args->sdr.sdr_cache_dir_wanted ? args->sdr.sdr_cache_dir : NULL) < 0)
+        return -1;
+    }
 
   for (record_id = IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY;
        record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;

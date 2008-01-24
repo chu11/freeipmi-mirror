@@ -59,7 +59,7 @@ static struct argp_option options[] =
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     {"file", CMD_FILE_KEY, "CMD-FILE", 0, 
-     "Specify a file to read command requests from.", 25}, 
+     "Specify a file to read command requests from.", 30}, 
     { 0 }
   };
 

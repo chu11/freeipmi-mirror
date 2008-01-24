@@ -38,6 +38,7 @@ Delete record ids from START to END in the SEL.
 \fB\-x [FILE]\fR, \fB\-\-hex-dump[=FILE]\fR
 Hex-dump SEL entries optionally into a FILE.
 #include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-ignore-sdr-cache.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
