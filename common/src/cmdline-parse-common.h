@@ -56,12 +56,13 @@ enum argp_common_option_keys
     ARGP_FLUSH_CACHE_KEY = 'f',
     ARGP_QUIET_CACHE_KEY = 'Q',
     ARGP_SDR_CACHE_DIR_KEY = 141,
+    ARGP_IGNORE_SDR_CACHE_KEY = 142,
     ARGP_BUFFER_OUTPUT_KEY = 'B',
     ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
     ARGP_ELIMINATE_KEY = 'E',
     ARGP_WORKAROUND_FLAGS_KEY = 'W',
-    ARGP_DEBUG_KEY = 142
+    ARGP_DEBUG_KEY = 143
   };
 
 /*
@@ -251,6 +252,10 @@ enum argp_common_option_keys
     {"sdr-cache-directory", ARGP_SDR_CACHE_DIR_KEY, "DIRECTORY", 0,                                                  \
      "Specify an alternate directory for sensor data repository (SDR) caches to be stored or read from.", 19} 
 
+#define ARGP_COMMON_IGNORE_SDR_OPTIONS                                                                               \
+    {"ignore-sdr-cache", ARGP_IGNORE_SDR_CACHE_KEY, 0, 0,                                                            \
+     "Ignore all SDR cache related processing.", 19}
+
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                     \
     ARGP_COMMON_HOSTRANGED_BUFFER_OUTPUT,                                  \
     ARGP_COMMON_HOSTRANGED_CONSOLIDATE_OUTPUT,                             \
@@ -304,6 +309,7 @@ struct sdr_cmd_args
   int quiet_cache_wanted;
   int sdr_cache_dir_wanted;
   char *sdr_cache_dir;
+  int ignore_sdr_cache_wanted;
 };
 
 struct hostrange_cmd_args

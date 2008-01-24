@@ -320,22 +320,25 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
       return 0;
     }
   
-  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
-                                 state_data->dev,
-                                 state_data->hostname,
-                                 args->sdr.sdr_cache_dir,
-                                 (args->sdr.quiet_cache_wanted) ? 0 : 1,
-                                 (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
-                                 &(state_data->sdr_record_list),
-                                 &(state_data->sdr_record_count),
-                                 errmsg,
-                                 IPMI_SDR_CACHE_ERRMSGLEN) < 0)
+  if (!args->sdr.ignore_sdr_cache_wanted)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s\n",
-                       errmsg);
-      goto cleanup;
+      if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+                                     state_data->dev,
+                                     state_data->hostname,
+                                     args->sdr.sdr_cache_dir,
+                                     (args->sdr.quiet_cache_wanted) ? 0 : 1,
+                                     (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
+                                     &(state_data->sdr_record_list),
+                                     &(state_data->sdr_record_count),
+                                     errmsg,
+                                     IPMI_SDR_CACHE_ERRMSGLEN) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s\n",
+                           errmsg);
+          goto cleanup;
+        }
     }
 
   if (display_sel_records (state_data) < 0)

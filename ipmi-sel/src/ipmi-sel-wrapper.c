@@ -288,7 +288,8 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 
   sel_record->sensor_info = NULL;
 
-  sdr_record = _find_sdr_record(state_data, sensor_number);
+  if (!state_data->prog_data->args->sdr.ignore_sdr_cache_wanted)
+    sdr_record = _find_sdr_record(state_data, sensor_number);
 
   if (sdr_record)
     {
@@ -432,7 +433,8 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 	switch (event_data3_flag)
 	  {
 	  case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
-	    if (state_data->sdr_record_list 
+	    if (!state_data->prog_data->args->sdr.ignore_sdr_cache_wanted
+                && state_data->sdr_record_list 
 		&& state_data->sdr_record_count
 		&& (sdr_record = _find_sdr_record(state_data, sensor_number))
 		&& sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.7 2007-10-18 16:18:45 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.7.4.1 2008-01-24 03:27:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -291,22 +291,33 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
       return 0;
     }
 
-  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
-                                 state_data->dev,
-                                 state_data->hostname,
-                                 args->sdr.sdr_cache_dir,
-                                 (args->sdr.quiet_cache_wanted) ? 0 : 1,
-                                 (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
-                                 &(state_data->sdr_record_list),
-                                 &(state_data->sdr_record_count),
-                                 errmsg,
-                                 IPMI_SDR_CACHE_ERRMSGLEN) < 0)
+  if (args->sdr.ignore_sdr_cache_wanted)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s\n",
-                       errmsg);
-      goto cleanup;
+      /* no SDR?  This is all you get :-) */
+      if (output_fru(state_data, IPMI_FRU_DEVICE_ID_DEFAULT) != FRU_ERR_SUCCESS)
+        goto cleanup;
+      goto out;
+    }
+
+  if (!args->sdr.ignore_sdr_cache_wanted)
+    {
+      if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+                                     state_data->dev,
+                                     state_data->hostname,
+                                     args->sdr.sdr_cache_dir,
+                                     (args->sdr.quiet_cache_wanted) ? 0 : 1,
+                                     (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
+                                     &(state_data->sdr_record_list),
+                                     &(state_data->sdr_record_count),
+                                     errmsg,
+                                     IPMI_SDR_CACHE_ERRMSGLEN) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s\n",
+                           errmsg);
+          goto cleanup;
+        }
     }
 
   if (args->device_id_wanted)
@@ -375,6 +386,8 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
         }
     }
 
+ out:
+  rv = 0;
  cleanup:
   if (state_data->sdr_record_list)
     {
