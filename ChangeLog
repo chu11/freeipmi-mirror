@@ -6,7 +6,7 @@
 	* pef-config/src/: Adjust files appropriately.
 
 	* pef-config/src/pef-config.c, bmc-config/src/bmc-config.c: Make
-	function state.
+	function static.
 	
 2008-01-24  Albert Chu <chu11@llnl.gov>
 
