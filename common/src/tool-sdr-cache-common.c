@@ -540,12 +540,12 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
                         stderr,
                         "Cannot make cache directory: %s: %s\n",
                         configbuf,
-                        errno);
+                        strerror(errno));
       else
         fprintf(stderr,
                 "Cannot make cache directory: %s: %s\n",
                 configbuf,
-                errno);
+                strerror(errno));
       return -1;
     }
 
@@ -564,12 +564,12 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
                         stderr,
                         "Cannot make cache directory: %s: %s\n",
                         cachebuf,
-                        errno);
+                        strerror(errno));
       else
         fprintf(stderr,
                 "Cannot make cache directory: %s: %s\n",
                 cachebuf,
-                errno);
+                strerror(errno));
       return -1;
     }
   
