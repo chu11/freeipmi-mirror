@@ -3,7 +3,9 @@
 pef-config \- configure PEF values
 .SH DESCRIPTION
 .B Pef-config
-is a Platform Event Filtering (PEF) configuration utility.
+is a Platform Event Filtering (PEF) configuration utility.  Platform
+Event Filtering is a relatively advanced configuration most IPMI users
+may wish to skip.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>

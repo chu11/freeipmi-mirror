@@ -1,3 +1,7 @@
+2008-01-25  Albert Chu <chu11@llnl.gov>
+
+	* pef-config/pef-config.8.pre.in: Add general text.
+	
 2008-01-24  Albert Chu <chu11@llnl.gov>
 
 	* pef-config/src/pef-config-wrapper.h,
