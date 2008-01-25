@@ -4,6 +4,8 @@
 	some typos.
 
 	* bmc-config/bmc-config.8.pre.in: Fix some typos.
+
+	* pef-config/src/pef-config-argp.c: Fix doc typo.
 	
 2007-01-24  Albert Chu <chu11@llnl.gov>
 

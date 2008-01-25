@@ -51,7 +51,7 @@ const char *argp_program_version =
 
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
-static char doc[] = "IPMI PEF - PEF configuration utility.";
+static char doc[] = "PEF-CONFIG - PEF configuration utility.";
 
 static char args_doc[] = "";
 
