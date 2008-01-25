@@ -18,6 +18,10 @@ ipmipower
 ---------
 fanout/something mechanism to limit parallelism
   
+bmc-config
+----------
+power cycle interval
+
 pef-config
 -----------
 * conf.5 manpage
