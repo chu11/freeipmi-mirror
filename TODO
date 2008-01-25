@@ -22,6 +22,7 @@ bmc-config
 ----------
 remaining serial config
 power cycle interval
+chassis boot params
 
 pef-config
 -----------
