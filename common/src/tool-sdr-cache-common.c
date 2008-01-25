@@ -38,6 +38,8 @@
 #include <assert.h>
 #include <errno.h>
 
+#include "pstdout.h"
+
 #define SDR_CACHE_DIR                     "sdr-cache"
 #define SDR_CACHE_FILENAME_PREFIX         "sdr-cache"
 #define FREEIPMI_CONFIG_DIRECTORY_MODE    0700
