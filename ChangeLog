@@ -4,6 +4,9 @@
 	pef-config/src/pef-config-wrapper.c: Remove useless files.
 
 	* pef-config/src/: Adjust files appropriately.
+
+	* pef-config/src/pef-config.c, bmc-config/src/bmc-config.c: Make
+	function state.
 	
 2008-01-24  Albert Chu <chu11@llnl.gov>
 

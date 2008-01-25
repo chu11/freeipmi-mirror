@@ -39,7 +39,7 @@
 #include "tool-cmdline-common.h"
 #include "freeipmi-portability.h"
 
-void
+static void
 _bmc_config_state_data_init(bmc_config_state_data_t *state_data)
 {
   assert (state_data);

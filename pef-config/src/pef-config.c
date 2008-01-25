@@ -39,7 +39,7 @@
 #include "pef-config-info.h"
 #include "pef-config-sections.h"
 
-void
+static void
 _pef_config_state_data_init(pef_config_state_data_t *state_data)
 {
   assert (state_data);
