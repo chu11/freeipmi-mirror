@@ -13,8 +13,7 @@ pef_config_SOURCES = \
 	pef-config-map.c \
 	pef-config-sections.c \
 	pef-config-utils.c \
-	pef-config-validate.c \
-	pef-config-wrapper.c
+	pef-config-validate.c
  
 pef_config_LDADD = ../../common/src/libtoolcommon.la \
 		   ../../libfreeipmi/src/libfreeipmi.la \
@@ -34,8 +33,7 @@ noinst_HEADERS = \
 	pef-config-map.h \
 	pef-config-sections.h \
 	pef-config-utils.h \
-	pef-config-validate.h \
-	pef-config-wrapper.h
+	pef-config-validate.h
  
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \

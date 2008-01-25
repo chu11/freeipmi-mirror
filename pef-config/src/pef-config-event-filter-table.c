@@ -13,7 +13,6 @@
 #include "pef-config-map.h"
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
-#include "pef-config-wrapper.h"
 
 /* convenience struct */
 struct event_filter_table {

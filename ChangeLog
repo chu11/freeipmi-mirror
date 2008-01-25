@@ -1,5 +1,12 @@
 2008-01-24  Albert Chu <chu11@llnl.gov>
 
+	* pef-config/src/pef-config-wrapper.h,
+	pef-config/src/pef-config-wrapper.c: Remove useless files.
+
+	* pef-config/src/: Adjust files appropriately.
+	
+2008-01-24  Albert Chu <chu11@llnl.gov>
+
 	* pef-config/pef-config.8.pre.in: Add "GENERAL USE" section.  Fix
 	some typos.
 
@@ -7,12 +14,12 @@
 
 	* pef-config/src/pef-config-argp.c: Fix doc typo.
 	
-2007-01-24  Albert Chu <chu11@llnl.gov>
+2008-01-24  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-create.c
 	(ipmi_sdr_cache_create): Fix record count corner case.
 	
-2007-01-23  Albert Chu <chu11@llnl.gov>
+2008-01-23  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-ignore-sdr-cache.man: New file.
 
@@ -23,11 +30,11 @@
 
 	* Adjust argp option groups in all tools.
 
-2007-01-22  Albert Chu <chu11@llnl.gov>
+2008-01-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/: Various consistency to other tools fixes.
 	
-2007-01-22  Albert Chu <chu11@llnl.gov>
+2008-01-22  Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-common.c (ipmi_open): Try devices more intelligently.
 

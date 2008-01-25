@@ -10,7 +10,6 @@
 
 #include "pef-config.h"
 #include "pef-config-map.h"
-#include "pef-config-wrapper.h"
 #include "pef-config-utils.h"
 
 static config_err_t
