@@ -8,7 +8,8 @@
 	* pef-config/src/pef-config.c, bmc-config/src/bmc-config.c: Make
 	function static.
 
-	* common/src/tool-sdr-cache-common.c: Fix compile issue.
+	* common/src/tool-sdr-cache-common.c: Fix compile issue.  Re-work
+	to work with NULL pstate.
 	
 2008-01-24  Albert Chu <chu11@llnl.gov>
 

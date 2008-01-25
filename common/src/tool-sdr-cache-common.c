@@ -465,7 +465,6 @@ sdr_cache_get_cache_filename (pstdout_state_t pstate,
   char *ptr;
   int ret;
 
-  assert(pstate);
   assert(buf);
   assert(buflen);
 
@@ -492,15 +491,22 @@ sdr_cache_get_cache_filename (pstdout_state_t pstate,
                       hostname ? hostname : "localhost")) < 0)
     
     {
-      pstdout_perror(pstate, "snprintf");
+      if (pstate)
+        pstdout_perror(pstate, "snprintf");
+      else
+        perror("snprintf");
       return -1;
     }
   
   if (ret >= buflen)
     {
-      pstdout_fprintf(pstate, 
-                      stderr,
-                      "snprintf invalid bytes written\n");
+      if (pstate)
+        pstdout_fprintf(pstate, 
+                        stderr,
+                        "snprintf invalid bytes written\n");
+      else
+        fprintf(stderr,
+                "snprintf invalid bytes written\n");
       return -1;
     }
 
@@ -516,8 +522,6 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
   char cachebuf[MAXPATHLEN+1];
   int ret;
   
-  assert(pstate);
-
   memset(configbuf, '\0', MAXPATHLEN+1);
   memset(cachebuf, '\0', MAXPATHLEN+1);
 
@@ -531,11 +535,17 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
   ret = mkdir (configbuf, FREEIPMI_CONFIG_DIRECTORY_MODE);
   if (ret < 0 && errno != EEXIST)
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "Cannot make cache directory: %s: %s\n",
-                      configbuf,
-                      errno);
+      if (pstate)
+        pstdout_fprintf(pstate,
+                        stderr,
+                        "Cannot make cache directory: %s: %s\n",
+                        configbuf,
+                        errno);
+      else
+        fprintf(stderr,
+                "Cannot make cache directory: %s: %s\n",
+                configbuf,
+                errno);
       return -1;
     }
 
@@ -549,11 +559,17 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
   ret = mkdir (cachebuf, FREEIPMI_CONFIG_DIRECTORY_MODE);
   if (ret < 0 && errno != EEXIST)
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "Cannot make cache directory: %s: %s\n",
-                      cachebuf,
-                      errno);
+      if (pstate)
+        pstdout_fprintf(pstate,
+                        stderr,
+                        "Cannot make cache directory: %s: %s\n",
+                        cachebuf,
+                        errno);
+      else
+        fprintf(stderr,
+                "Cannot make cache directory: %s: %s\n",
+                cachebuf,
+                errno);
       return -1;
     }
   
@@ -603,7 +619,6 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(pstate);
   assert(ipmi_ctx);
   
   if (sdr_cache_get_cache_directory (pstate,
@@ -645,10 +660,15 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                             quiet_cache ? NULL : _sdr_cache_create_callback,
                             quiet_cache ? NULL : (void *)&count) < 0)
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "ipmi_sdr_cache_create: %s\n",
-                      ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+      if (pstate)
+        pstdout_fprintf(pstate,
+                        stderr,
+                        "ipmi_sdr_cache_create: %s\n",
+                        ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+      else
+        fprintf(stderr,
+                "ipmi_sdr_cache_create: %s\n",
+                ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
       goto cleanup;
     }
 
@@ -674,7 +694,6 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(pstate);
 
   memset(cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (sdr_cache_get_cache_filename(pstate,
@@ -692,28 +711,44 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
         {
           if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_INVALID)
             {
-              pstdout_fprintf(pstate,
-                              stderr,
-                              "SDR Cache '%s' invalid: Please flush the cache and regenerate it\n",
-                              cachefilenamebuf);
+              if (pstate)
+                pstdout_fprintf(pstate,
+                                stderr,
+                                "SDR Cache '%s' invalid: Please flush the cache and regenerate it\n",
+                                cachefilenamebuf);
+              else
+                fprintf(stderr,
+                        "SDR Cache '%s' invalid: Please flush the cache and regenerate it\n",
+                        cachefilenamebuf);
               goto cleanup;
             }
           else if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE)
             {
-              pstdout_fprintf(pstate,
-                              stderr,
-                              "SDR Cache '%s' out of date: Please flush the cache and regenerate it\n",
-                              cachefilenamebuf);
+              if (pstate)
+                pstdout_fprintf(pstate,
+                                stderr,
+                                "SDR Cache '%s' out of date: Please flush the cache and regenerate it\n",
+                                cachefilenamebuf);
+              else
+                fprintf(stderr,
+                        "SDR Cache '%s' out of date: Please flush the cache and regenerate it\n",
+                        cachefilenamebuf);
               goto cleanup;
               
             }
           else
             {
-              pstdout_fprintf(pstate,
-                              stderr,
-                              "ipmi_sdr_cache_open: %s: %s\n",
-                              cachefilenamebuf,
-                              ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+              if (pstate)
+                pstdout_fprintf(pstate,
+                                stderr,
+                                "ipmi_sdr_cache_open: %s: %s\n",
+                                cachefilenamebuf,
+                                ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+              else
+                fprintf(stderr,
+                        "ipmi_sdr_cache_open: %s: %s\n",
+                        cachefilenamebuf,
+                        ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
               goto cleanup;
             }
         }
@@ -733,11 +768,17 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                               ipmi_ctx,
                               cachefilenamebuf) < 0)
         {
-          pstdout_fprintf(pstate,
-                          stderr,
-                          "ipmi_sdr_cache_open: %s: %s\n",
-                          cachefilenamebuf,
-                          ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+          if (pstate)
+            pstdout_fprintf(pstate,
+                            stderr,
+                            "ipmi_sdr_cache_open: %s: %s\n",
+                            cachefilenamebuf,
+                            ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+          else
+            fprintf(stderr,
+                    "ipmi_sdr_cache_open: %s: %s\n",
+                    cachefilenamebuf,
+                    ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
           goto cleanup;
         }
     }
@@ -757,7 +798,6 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(pstate);
 
   memset(cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (sdr_cache_get_cache_filename(pstate,
@@ -767,14 +807,22 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
                                    MAXPATHLEN) < 0)
     goto cleanup;
   
-  pstdout_printf (pstate, "Flushing cache: %s\n", cachefilenamebuf);
+  if (pstate)
+    pstdout_printf (pstate, "Flushing cache: %s\n", cachefilenamebuf);
+  else
+    printf ("Flushing cache: %s\n", cachefilenamebuf);
 
   if (ipmi_sdr_cache_delete(ctx, cachefilenamebuf) < 0)
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "ipmi_sdr_cache_delete: %s\n",
-                      ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+      if (pstate)
+        pstdout_fprintf(pstate,
+                        stderr,
+                        "ipmi_sdr_cache_delete: %s\n",
+                        ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+      else
+        fprintf(stderr,
+                "ipmi_sdr_cache_delete: %s\n",
+                ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
       goto cleanup;
     }
 
@@ -795,7 +843,6 @@ sdr_cache_get_record_id_and_type (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
 
@@ -803,10 +850,15 @@ sdr_cache_get_record_id_and_type (pstdout_state_t pstate,
 
   if (sdr_record_len < sdr_record_header_len)
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "sdr_record invalid len: %d\n",
-                      sdr_record_len);
+      if (pstate)
+        pstdout_fprintf(pstate,
+                        stderr,
+                        "sdr_record invalid len: %d\n",
+                        sdr_record_len);
+      else
+        fprintf(stderr,
+                "sdr_record invalid len: %d\n",
+                sdr_record_len);
       goto cleanup;
     }
 
@@ -843,7 +895,6 @@ _sdr_cache_get_common(pstdout_state_t pstate,
   fiid_obj_t obj_sdr_record = NULL;
   uint8_t record_type;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(acceptable_record_types);
@@ -880,11 +931,17 @@ _sdr_cache_get_common(pstdout_state_t pstate,
             && record_type == IPMI_SDR_FORMAT_OEM_RECORD)
         ))
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "Invalid record type passed in: %X, %X\n",
-                      record_type,
-                      acceptable_record_types);
+      if (pstate)
+        pstdout_fprintf(pstate,
+                        stderr,
+                        "Invalid record type passed in: %X, %X\n",
+                        record_type,
+                        acceptable_record_types);
+      else
+        fprintf(stderr,
+                "Invalid record type passed in: %X, %X\n",
+                record_type,
+                acceptable_record_types);
       goto cleanup;
     }
 
@@ -934,7 +991,6 @@ sdr_cache_get_sensor_owner_id (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
 
@@ -977,7 +1033,6 @@ sdr_cache_get_sensor_number (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(sensor_number);
@@ -1012,7 +1067,6 @@ sdr_cache_get_sensor_type (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(sensor_type);
@@ -1031,10 +1085,15 @@ sdr_cache_get_sensor_type (pstdout_state_t pstate,
                    "sensor_type",
                    &val) < 0)
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
+      if (pstate)
+        pstdout_fprintf(pstate,
+                        stderr,
+                        "fiid_obj_get: %s\n",
+                        fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
+      else
+        fprintf(stderr,
+                "fiid_obj_get: %s\n",
+                fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
       goto cleanup;
     }
   *sensor_type = val;
@@ -1056,7 +1115,6 @@ sdr_cache_get_event_reading_type_code (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(event_reading_type_code);
@@ -1075,10 +1133,15 @@ sdr_cache_get_event_reading_type_code (pstdout_state_t pstate,
                    "event_reading_type_code",
                    &val) < 0)
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
+      if (pstate)
+        pstdout_fprintf(pstate,
+                        stderr,
+                        "fiid_obj_get: %s\n",
+                        fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
+      else
+        fprintf(stderr,
+                "fiid_obj_get: %s\n",
+                fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
       goto cleanup;
     }
   *event_reading_type_code = val;
@@ -1100,7 +1163,6 @@ sdr_cache_get_sensor_unit (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(sensor_unit);
@@ -1118,10 +1180,15 @@ sdr_cache_get_sensor_unit (pstdout_state_t pstate,
                    "sensor_unit2.base_unit",
                    &val) < 0)
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
+      if (pstate)
+        pstdout_fprintf(pstate,
+                        stderr,
+                        "fiid_obj_get: %s\n",
+                        fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
+      else
+        fprintf(stderr,
+                "fiid_obj_get: %s\n",
+                fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
       goto cleanup;
     }
   
@@ -1147,7 +1214,6 @@ sdr_cache_get_id_string (pstdout_state_t pstate,
   uint32_t acceptable_record_types;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(id_string);
@@ -1185,7 +1251,6 @@ sdr_cache_get_device_id_string (pstdout_state_t pstate,
   uint32_t acceptable_record_types;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(device_id_string);
@@ -1228,7 +1293,6 @@ sdr_cache_get_sensor_decoding_data (pstdout_state_t pstate,
   uint64_t val, val1, val2;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(r_exponent);
@@ -1306,7 +1370,6 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
   double reading;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
 
@@ -1376,16 +1439,24 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
                                     val,
                                     &reading) < 0)
         {
-          pstdout_fprintf (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
+          if (pstate)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sensor_decode_value: %s\n",
+                             strerror(errno));
+          else
+            fprintf (stderr,
+                     "ipmi_sensor_decode_value: %s\n",
+                     strerror(errno));
           goto cleanup;
         }
 
       if (!(tmp_nominal_reading = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(pstate, "malloc");
+          if (pstate)
+            pstdout_perror(pstate, "malloc");
+          else
+            perror("malloc");
           goto cleanup;
         }
       *tmp_nominal_reading = reading;
@@ -1405,16 +1476,24 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
                                     val,
                                     &reading) < 0)
         {
-          pstdout_fprintf (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
+          if (pstate)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sensor_decode_value: %s\n",
+                             strerror(errno));
+          else
+            fprintf (stderr,
+                     "ipmi_sensor_decode_value: %s\n",
+                     strerror(errno));
           goto cleanup;
         }
 
       if (!(tmp_normal_maximum = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(pstate, "malloc");
+          if (pstate)
+            pstdout_perror(pstate, "malloc");
+          else
+            perror("malloc");
           goto cleanup;
         }
       *tmp_normal_maximum = reading;
@@ -1434,16 +1513,24 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
                                     val,
                                     &reading) < 0)
         {
-          pstdout_fprintf (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
+          if (pstate)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sensor_decode_value: %s\n",
+                             strerror(errno));
+          else
+            fprintf (stderr,
+                     "ipmi_sensor_decode_value: %s\n",
+                     strerror(errno));
           goto cleanup;
         }
 
       if (!(tmp_normal_minimum = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(pstate, "malloc");
+          if (pstate)
+            pstdout_perror(pstate, "malloc");
+          else
+            perror("malloc");
           goto cleanup;
         }
       *tmp_normal_minimum = reading;
@@ -1463,16 +1550,24 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
                                     val,
                                     &reading) < 0)
         {
-          pstdout_fprintf (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
+          if (pstate)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sensor_decode_value: %s\n",
+                             strerror(errno));
+          else
+            fprintf (stderr,
+                     "ipmi_sensor_decode_value: %s\n",
+                     strerror(errno));
           goto cleanup;
         }
 
       if (!(tmp_sensor_maximum_reading = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(pstate, "malloc");
+          if (pstate)
+            pstdout_perror(pstate, "malloc");
+          else
+            perror("malloc");
           goto cleanup;
         }
       *tmp_sensor_maximum_reading = reading;
@@ -1492,16 +1587,24 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
                                     val,
                                     &reading) < 0)
         {
-          pstdout_fprintf (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
+          if (pstate)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sensor_decode_value: %s\n",
+                             strerror(errno));
+          else
+            fprintf (stderr,
+                     "ipmi_sensor_decode_value: %s\n",
+                     strerror(errno));
           goto cleanup;
         }
 
       if (!(tmp_sensor_minimum_reading = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(pstate, "malloc");
+          if (pstate)
+            pstdout_perror(pstate, "malloc");
+          else
+            perror("malloc");
           goto cleanup;
         }
       *tmp_sensor_minimum_reading = reading;
@@ -1619,16 +1722,24 @@ sdr_cache_get_hysteresis_real (pstdout_state_t pstate,
                                     val,
                                     &hysteresis) < 0)
         {
-          pstdout_fprintf (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
+          if (pstate)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sensor_decode_value: %s\n",
+                             strerror(errno));
+          else
+            fprintf (stderr,
+                     "ipmi_sensor_decode_value: %s\n",
+                     strerror(errno));
           goto cleanup;
         }
 
       if (!(tmp_positive_going_threshold_hysteresis = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(pstate, "malloc");
+          if (pstate)
+            pstdout_perror(pstate, "malloc");
+          else
+            perror("malloc");
           goto cleanup;
         }
       *tmp_positive_going_threshold_hysteresis = hysteresis;
@@ -1648,16 +1759,24 @@ sdr_cache_get_hysteresis_real (pstdout_state_t pstate,
                                     val,
                                     &hysteresis) < 0)
         {
-          pstdout_fprintf (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
+          if (pstate)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sensor_decode_value: %s\n",
+                             strerror(errno));
+          else
+            fprintf (stderr,
+                     "ipmi_sensor_decode_value: %s\n",
+                     strerror(errno));
           goto cleanup;
         }
 
       if (!(tmp_negative_going_threshold_hysteresis = (double *)malloc(sizeof(double))))
         {
-          pstdout_perror(pstate, "malloc");
+          if (pstate)
+            pstdout_perror(pstate, "malloc");
+          else
+            perror("malloc");
           goto cleanup;
         }
       *tmp_negative_going_threshold_hysteresis = hysteresis;
