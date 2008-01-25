@@ -20,6 +20,7 @@ fanout/something mechanism to limit parallelism
   
 bmc-config
 ----------
+remaining serial config
 power cycle interval
 
 pef-config
