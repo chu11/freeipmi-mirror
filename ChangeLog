@@ -1,3 +1,10 @@
+2008-01-24  Albert Chu <chu11@llnl.gov>
+
+	* pef-config/pef-config.8.pre.in: Add "GENERAL USE" section.  Fix
+	some typos.
+
+	* bmc-config/bmc-config.8.pre.in: Fix some typos.
+	
 2007-01-24  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-create.c

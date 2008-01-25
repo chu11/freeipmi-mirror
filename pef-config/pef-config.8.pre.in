@@ -47,6 +47,21 @@ List available sections for checkout.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Print additional detailed information.
+.SH "GENERAL USE"
+Most users of
+.B pef-config
+will want to:
+.LP
+A) Run
+.B pef-config
+with --checkout to get a copy of the current BMC configuration and
+store it in a file.  The standard output can be redirected to a file
+or a file can be specified with the --filename option.
+.LP
+B) Edit the configuration file with an editor.
+.LP
+C) Commit the configuration back using the --commit option and specifying
+the configuration file with the --filename option.
 .SH "EDITING THE CHECKOUT FILE"
 Options for editing fields in the checkout file are usually listed in
 a comment above the field.  When there are to many options to make it
@@ -82,7 +97,7 @@ Show all difference between the current BMC configuration and the pef-data2.conf
 .PP
 .B # pef-config --commit -f pef-data1.conf
 .PP
-Commit all configuration values from pef-data1.conf file to the BMC.
+Commit all configuration values from the pef-data1.conf file to the BMC.
 .PP
 .SH "SEE ALSO"
 bmc-config(8)

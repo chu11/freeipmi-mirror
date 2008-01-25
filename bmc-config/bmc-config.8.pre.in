@@ -109,7 +109,7 @@ Show difference with the current BMC and the 'lan_conf_misc:gratuitous_arp_inter
 .PP
 .B # bmc-config --commit -f bmc-data1.conf
 .PP
-Commit all configuration values from bmc-data1.conf file to the BMC.
+Commit all configuration values from the bmc-data1.conf file to the BMC.
 .PP
 .B # bmc-config --commit --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
 .PP
