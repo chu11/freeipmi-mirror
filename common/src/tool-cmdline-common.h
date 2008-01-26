@@ -216,6 +216,17 @@ enum argp_common_option_keys
      "Defaults to USER if not specified.", 15}     
 
 /* priv-level is maintained for backwards compatability */
+#define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR                                                \
+    {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
+     "Specify the privilege level to be used. "		                                            \
+     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
+     "Defaults to OPERATOR if not specified.", 15},                                                 \
+    {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
+     "Specify the privilege level to be used. "		                                            \
+     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
+     "Defaults to OPERATOR if not specified.", 15}     
+
+/* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN                                                   \
     {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
      "Specify the privilege level to be used. "		                                            \
@@ -228,6 +239,13 @@ enum argp_common_option_keys
 #else
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER                                                    \
+    {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
+     "Specify the privilege level to be used.", 15},                                                \
+    {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
+     "Specify the privilege level to be used.", 15}     
+
+/* priv-level is maintained for backwards compatability */
+#define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR                                                \
     {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
      "Specify the privilege level to be used.", 15},                                                \
     {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \

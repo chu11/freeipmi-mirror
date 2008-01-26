@@ -34,32 +34,26 @@
 #include "freeipmi-portability.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
-#include "pef-config.h"
-#include "pef-config-argp.h"
-#include "pef-config-info.h"
-#include "pef-config-sections.h"
+#include "tool-sdr-cache-common.h"
+#include "ipmi-sensors-config.h"
+#include "ipmi-sensors-config-argp.h"
+#include "ipmi-sensors-config-sections.h"
 
 static void
-_pef_config_state_data_init(pef_config_state_data_t *state_data)
+_ipmi_sensors_config_state_data_init(ipmi_sensors_config_state_data_t *state_data)
 {
   assert (state_data);
 
-  memset(state_data, '\0', sizeof(pef_config_state_data_t));
+  memset(state_data, '\0', sizeof(ipmi_sensors_config_state_data_t));
   state_data->prog_data = NULL;
   state_data->ipmi_ctx = NULL;
-
-  state_data->lan_channel_number_initialized = 0;
-  state_data->number_of_lan_alert_destinations_initialized = 0;
-  state_data->number_of_alert_strings_initialized = 0;
-  state_data->number_of_alert_policy_entries_initialized = 0;
-  state_data->number_of_event_filters_initialized = 0;
 }
 
 static int 
-_pef_config (void *arg)
+_ipmi_sensors_config (void *arg)
 {
-  pef_config_state_data_t state_data;
-  pef_config_prog_data_t *prog_data;
+  ipmi_sensors_config_state_data_t state_data;
+  ipmi_sensors_config_prog_data_t *prog_data;
   char errmsg[IPMI_OPEN_ERRMSGLEN];
   struct config_section *sections = NULL;
   int exit_code = -1;
@@ -67,23 +61,67 @@ _pef_config (void *arg)
   int file_opened = 0;
   FILE *fp;
 
-  prog_data = (pef_config_prog_data_t *) arg;
+  prog_data = (ipmi_sensors_config_prog_data_t *) arg;
   
-  _pef_config_state_data_init (&state_data);
+  _ipmi_sensors_config_state_data_init (&state_data);
   state_data.prog_data = prog_data;
 
-  if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
-                                        prog_data->args->config_args.common.hostname,
-                                        &(prog_data->args->config_args.common),
-                                        errmsg,
-                                        IPMI_OPEN_ERRMSGLEN)))
+  /* Special case, just flush, don't do an IPMI connection */
+  if (!prog_data->args->sdr.flush_cache_wanted)
     {
-      fprintf(stderr, "%s\n", errmsg);
+      if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
+                                            prog_data->args->config_args.common.hostname,
+                                            &(prog_data->args->config_args.common),
+                                            errmsg,
+                                            IPMI_OPEN_ERRMSGLEN)))
+        {
+          fprintf(stderr, "%s\n", errmsg);
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+    }
+
+  if (!(state_data.ipmi_sdr_cache_ctx = ipmi_sdr_cache_ctx_create()))
+    {
+      perror ("ipmi_sdr_cache_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
 
-  if (!(sections = pef_config_sections_create (&state_data)))
+  if (state_data.prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+    {
+      /* Don't error out, if this fails we can still continue */
+      if (ipmi_sdr_cache_ctx_set_flags(state_data.ipmi_sdr_cache_ctx,
+                                       IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+        fprintf (stderr,
+                 "ipmi_sdr_cache_ctx_set_flags: %s\n",
+                 ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+    }  
+
+  if (prog_data->args->sdr.flush_cache_wanted)
+    {
+      if (sdr_cache_flush_cache(state_data.ipmi_sdr_cache_ctx,
+                                NULL,
+                                state_data.prog_data->args->config_args.common.hostname,
+                                state_data.prog_data->args->sdr.sdr_cache_dir_wanted ? state_data.prog_data->args->sdr.sdr_cache_dir : NULL) < 0)
+        {
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+    }
+
+  if (sdr_cache_create_and_load (state_data.ipmi_sdr_cache_ctx,
+                                 NULL,
+                                 state_data.ipmi_ctx,
+                                 prog_data->args->sdr.quiet_cache_wanted,
+                                 prog_data->args->config_args.common.hostname,
+                                 prog_data->args->sdr.sdr_cache_dir_wanted ? prog_data->args->sdr.sdr_cache_dir : NULL) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  if (!(sections = ipmi_sensors_config_sections_create (&state_data)))
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -206,9 +244,6 @@ _pef_config (void *arg)
 
 
   switch (prog_data->args->config_args.action) {
-  case CONFIG_ACTION_INFO:
-    ret = pef_info (&state_data);
-    break;
   case CONFIG_ACTION_CHECKOUT:
     if (prog_data->args->config_args.section_strs)
       {
@@ -272,6 +307,9 @@ _pef_config (void *arg)
   case CONFIG_ACTION_LIST_SECTIONS:
     ret = config_output_sections_list (sections);
     break;
+  case CONFIG_ACTION_INFO:
+    /* shutup gcc warning */
+    ;
   }
 
   if (ret == CONFIG_ERR_FATAL_ERROR || ret == CONFIG_ERR_NON_FATAL_ERROR)
@@ -282,6 +320,8 @@ _pef_config (void *arg)
   
   exit_code = 0;
  cleanup:
+  if (state_data.ipmi_sdr_cache_ctx)
+    ipmi_sdr_cache_ctx_destroy(state_data.ipmi_sdr_cache_ctx);
   if (state_data.ipmi_ctx)
     {
       ipmi_ctx_close (state_data.ipmi_ctx);
@@ -297,21 +337,21 @@ _pef_config (void *arg)
 int 
 main (int argc, char **argv)
 {
-  pef_config_prog_data_t prog_data;
-  struct pef_config_arguments cmd_args;
+  ipmi_sensors_config_prog_data_t prog_data;
+  struct ipmi_sensors_config_arguments cmd_args;
   int exit_code;
   
   ipmi_disable_coredump();
 
   prog_data.progname = argv[0];
-  pef_config_argp_parse (argc, argv, &cmd_args);
+  ipmi_sensors_config_argp_parse (argc, argv, &cmd_args);
 
-  if (pef_config_args_validate (&cmd_args) < 0)
+  if (ipmi_sensors_config_args_validate (&cmd_args) < 0)
     return (EXIT_FAILURE);
 
   prog_data.args = &cmd_args;
 
-  exit_code = _pef_config (&prog_data);
+  exit_code = _ipmi_sensors_config (&prog_data);
   
   return exit_code;
 }

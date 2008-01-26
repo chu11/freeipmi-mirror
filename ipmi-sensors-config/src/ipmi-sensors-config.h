@@ -16,8 +16,8 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _PEF_CONFIG_H
-#define _PEF_CONFIG_H
+#ifndef _IPMI_SENSORS_CONFIG_H
+#define _IPMI_SENSORS_CONFIG_H
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
@@ -37,7 +37,6 @@
 
 enum argp_option_keys
   { 
-    INFO_KEY = 'i', 
     CHECKOUT_KEY = 'o', 
     COMMIT_KEY = 'c', 
     DIFF_KEY = 'd',
@@ -48,33 +47,23 @@ enum argp_option_keys
     VERBOSE_KEY = 'v',
   };
 
-struct pef_config_arguments
+struct ipmi_sensors_config_arguments
 {
   struct config_arguments config_args;
+  struct sdr_cmd_args sdr;
 };
 
-typedef struct pef_config_prog_data
+typedef struct ipmi_sensors_config_prog_data
 { 
   char *progname;
-  struct pef_config_arguments *args;
-} pef_config_prog_data_t;
+  struct ipmi_sensors_config_arguments *args;
+} ipmi_sensors_config_prog_data_t;
 
-typedef struct pef_config_state_data
+typedef struct ipmi_sensors_config_state_data
 { 
-  pef_config_prog_data_t *prog_data;
+  ipmi_sensors_config_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
-
-  /* achu: caching to make pef-config work more quickly */
-  int lan_channel_number_initialized;
-  int8_t lan_channel_number;
-  int number_of_lan_alert_destinations_initialized;
-  int8_t number_of_lan_alert_destinations;
-  int number_of_alert_strings_initialized;
-  int8_t number_of_alert_strings;
-  int number_of_alert_policy_entries_initialized;
-  int8_t number_of_alert_policy_entries;
-  int number_of_event_filters_initialized;
-  int8_t number_of_event_filters;
-} pef_config_state_data_t;
+  ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx;
+} ipmi_sensors_config_state_data_t;
 
 #endif

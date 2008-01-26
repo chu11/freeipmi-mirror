@@ -1,3 +1,19 @@
+2008-XX-XX  Albert Chu <chu11@llnl.gov>
+
+        * ipmi-sensors-config/: New tool.
+
+        * common/doc/manpage-common-outofband-username-operator.man,
+        common/doc/manpage-common-privilege-level-operator.man: New files.
+
+	* common/src/tool-cmdline-common.h,
+	common/src/tool-cmdline-common.c: Support operator privilege
+	defaults.
+
+        * bmc-config/src/, pef-config/src/: Adjust architecture for common
+        config code.
+
+        * Makefile.am, configure.ac: Adjust for new tool.
+
 2008-01-25  Albert Chu <chu11@llnl.gov>
 
 	* pef-config/pef-config.8.pre.in: Add general text.

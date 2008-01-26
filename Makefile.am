@@ -1,4 +1,4 @@
-SUBDIRS = doc libfreeipmi common bmc-watchdog ipmipower ipmi-fru ipmi-raw ipmi-sel ipmi-sensors ipmi-locate bmc-info ipmiping rmcpping bmc-config pef-config ipmiconsole ipmimonitoring ipmi-chassis ipmidetect
+SUBDIRS = doc libfreeipmi common bmc-watchdog ipmipower ipmi-fru ipmi-raw ipmi-sel ipmi-sensors ipmi-locate bmc-info ipmiping rmcpping bmc-config pef-config ipmiconsole ipmimonitoring ipmi-chassis ipmidetect ipmi-sensors-config
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@

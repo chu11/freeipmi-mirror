@@ -1,16 +1,16 @@
 /* 
-   Copyright (C) 2006 FreeIPMI Core Team
-
+   Copyright (C) 2005 FreeIPMI Core Team
+   
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
    any later version.
-
+   
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-
+   
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
@@ -20,121 +20,106 @@
 #include "config.h"
 #endif
 
-#include <argp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#ifdef HAVE_SYS_IO_H
-#include <sys/io.h>
-#endif
-#include <syslog.h>
-#include <assert.h>
-#include <stdarg.h>
+#include <argp.h>
+#include <ctype.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #if HAVE_FCNTL_H
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
-#if HAVE_GETOPT_H
-#include <getopt.h>
-#endif
-#include <stdint.h>
-#include <sys/stat.h>
-#include <sys/select.h>
-#if TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#include <time.h>
-#else  /* !TIME_WITH_SYS_TIME */
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#else  /* !HAVE_SYS_TIME_H */
-#include <time.h>
-#endif /* !HAVE_SYS_TIME_H */
-#endif /* !TIME_WITH_SYS_TIME */
 
 #include "tool-cmdline-common.h"
-
-#include "bmc-config.h"
-#include "bmc-config-argp.h"
-
-const char *argp_program_version = PACKAGE_VERSION;
-const char *argp_program_bug_address = "<" PACKAGE_BUGREPORT ">";
-/* Program documentation. */
-static char doc[] =  "GNU FreeIPMI (bmc-config) -- BMC config tool";
-/* A description of the arguments we accept. */
-static char args_doc[] = "";
-
-/* The options we understand. */
-static struct argp_option options[] = {
-  ARGP_COMMON_OPTIONS_DRIVER,
-  ARGP_COMMON_OPTIONS_INBAND,
-  ARGP_COMMON_OPTIONS_OUTOFBAND,
-  ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
-  ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
-  ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
-  ARGP_COMMON_OPTIONS_DEBUG,
-  {"checkout", CHECKOUT_KEY, 0, 0, 
-   "Fetch configuration information from the BMC.", 30},
-  {"commit", COMMIT_KEY, 0, 0, 
-   "Update configuration information to the BMC from a config file or key pairs.", 31},
-  {"diff", DIFF_KEY, 0, 0, 
-   "Show differences between the BMC and a config file or key pairs.", 32},
-  {"filename", FILENAME_KEY, "FILENAME", 0, 
-   "Specify a BMC config file for BMC checkout/commit/diff.", 33},
-  {"key-pair", KEYPAIR_KEY, "KEY-PAIR", 0, 
-   "Specify KEY=VALUE pairs for checkout/commit/diff.", 34},
-  {"section", SECTIONS_KEY, "SECTION", 0,
-   "Specify a SECTION for checkout.", 35},
-  {"listsections", LIST_SECTIONS_KEY, 0, 0,
-   "List available sections for checkout.", 36},
-  {"verbose", VERBOSE_KEY, 0, 0,  
-   "Print additional detailed information.", 37},
-  { 0, }
-};
+#include "ipmi-sensors-config.h"
+#include "ipmi-sensors-config-argp.h"
 
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
-/* Our argp parser. */
-static struct argp argp = { options, parse_opt, args_doc, doc};
+const char *argp_program_version = 
+"IPMI PEF [ipmi-sensors-config-" PACKAGE_VERSION "]\n"
+"Copyright (C) 2003-2005 FreeIPMI Core Team\n"
+"This program is free software; you may redistribute it under the terms of\n"
+"the GNU General Public License.  This program has absolutely no warranty.";
 
-/* Parse a single option. */
-static error_t
+const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
+
+static char doc[] = "IPMI-SENSORS-CONFIG - sensor configuration utility.";
+
+static char args_doc[] = "";
+
+static struct argp_option options[] = 
+  {
+    ARGP_COMMON_OPTIONS_DRIVER,
+    ARGP_COMMON_OPTIONS_INBAND,
+    ARGP_COMMON_OPTIONS_OUTOFBAND,
+    ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR,
+    ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
+    ARGP_COMMON_SDR_OPTIONS,
+    ARGP_COMMON_OPTIONS_DEBUG,
+    {"checkout",   CHECKOUT_KEY,   0, 0,
+     "Fetch configuration information from the BMC.", 31},
+    {"commit",     COMMIT_KEY,     0, 0,
+     "Update configuration information to the BMC from a config file or key pairs.", 32},
+    {"diff",       DIFF_KEY,       0, 0,
+     "Show differences between the BMC and a config file.", 33},
+    {"filename", FILENAME_KEY, "FILENAME", 0,
+     "Specify a PEF config file for PEF checkout/commit/diff.", 34},
+    {"key-pair", KEYPAIR_KEY, "KEY-PAIR", 0,
+     "Specify KEY=VALUE pairs for checkout/commit/diff.", 35},
+    {"section", SECTIONS_KEY, "SECTION", 0,
+     "Specify a SECTION for checkout.", 36},
+    {"listsections", LIST_SECTIONS_KEY, 0, 0,
+     "List available sections for checkout.", 37},
+    {"verbose", VERBOSE_KEY, 0, 0,  
+     "Print additional detailed information.", 38},
+    { 0 }
+  };
+
+static struct argp argp = { options, parse_opt, args_doc, doc };
+
+static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  struct bmc_config_arguments *cmd_args = state->input;
+  struct ipmi_sensors_config_arguments *cmd_args = state->input;
   struct config_keypair *kp = NULL;
   struct config_section_str *sstr = NULL;
   char *section_name = NULL;
   char *key_name = NULL;
   char *value = NULL;
-
+  error_t ret;
+  
   switch (key)
     {
     case CHECKOUT_KEY:
       if (!cmd_args->config_args.action)
-	cmd_args->config_args.action = CONFIG_ACTION_CHECKOUT;
+        cmd_args->config_args.action = CONFIG_ACTION_CHECKOUT;
       else
-	cmd_args->config_args.action = -1;
+        cmd_args->config_args.action = -1;
       break;
     case COMMIT_KEY:
       if (!cmd_args->config_args.action)
-	cmd_args->config_args.action = CONFIG_ACTION_COMMIT;
+        cmd_args->config_args.action = CONFIG_ACTION_COMMIT;
       else
-	cmd_args->config_args.action = -1;
+        cmd_args->config_args.action = -1;
       break;
     case DIFF_KEY:
       if (!cmd_args->config_args.action)
-	cmd_args->config_args.action = CONFIG_ACTION_DIFF;
+        cmd_args->config_args.action = CONFIG_ACTION_DIFF;
       else
-	cmd_args->config_args.action = -1;
+        cmd_args->config_args.action = -1;
       break;
     case FILENAME_KEY:
       if (cmd_args->config_args.filename) /* If specified more than once */
-	free (cmd_args->config_args.filename);
+        free (cmd_args->config_args.filename);
       if (!(cmd_args->config_args.filename = strdup (arg)))
         {
           perror("strdup");
@@ -192,59 +177,67 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case LIST_SECTIONS_KEY:
       if (!cmd_args->config_args.action)
-	cmd_args->config_args.action = CONFIG_ACTION_LIST_SECTIONS;
+        cmd_args->config_args.action = CONFIG_ACTION_LIST_SECTIONS;
       else
-	cmd_args->config_args.action = -1;
+        cmd_args->config_args.action = -1;
       break;
     case VERBOSE_KEY:
       cmd_args->config_args.verbose = 1;
       break;
     case ARGP_KEY_ARG:
+      /* Too many arguments. */
       argp_usage (state);
       break;
+    case ARGP_KEY_END:
+      break;
     default:
-      return common_parse_opt (key, arg, state, &cmd_args->config_args.common);
+      ret = common_parse_opt (key, arg, state, &(cmd_args->config_args.common));
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = sdr_parse_opt (key, arg, state, &(cmd_args->sdr));
+      return ret;
     }
+  
   return 0;
 }
 
-void
-bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_args)
+void 
+ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_config_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->config_args.common));
+  init_sdr_cmd_args (&(cmd_args->sdr));
   cmd_args->config_args.action = 0;
   cmd_args->config_args.verbose = 0;
   cmd_args->config_args.filename = NULL;
   cmd_args->config_args.keypairs = NULL;
   cmd_args->config_args.section_strs = NULL;
 
-  /* ADMIN is minimum for bmc-config b/c its needed for many of the
+  /* OPERATOR is minimum for ipmi-sensors-config b/c its needed for many of the
    * ipmi cmds used
    */
-  cmd_args->config_args.common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
-  
+  cmd_args->config_args.common.privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_sdr_cmd_args (&(cmd_args->sdr));
   verify_common_cmd_args (&(cmd_args->config_args.common));
 }
 
 int
-bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
+ipmi_sensors_config_args_validate (struct ipmi_sensors_config_arguments *cmd_args)
 {
   int ret = 0;
 
   // action is non 0 and -1
-  if (! cmd_args->config_args.action || cmd_args->config_args.action == -1) 
+  if (! cmd_args->config_args.action || cmd_args->config_args.action == -1)
     {
-      fprintf (stderr, 
+      fprintf (stderr,
                "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
       return -1;
     }
-
-  // filename and keypair both given for  diff
-  if (cmd_args->config_args.filename && cmd_args->config_args.keypairs 
+  
+  // filename and keypair both given for checkout or diff
+  if (cmd_args->config_args.filename && cmd_args->config_args.keypairs
       && cmd_args->config_args.action == CONFIG_ACTION_DIFF)
     {
-      fprintf (stderr, 
+      fprintf (stderr,
                "Both --filename or --keypair cannot be used\n");
       return -1;
     }
@@ -253,43 +246,41 @@ bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
   if (cmd_args->config_args.action == CONFIG_ACTION_CHECKOUT
       && (cmd_args->config_args.keypairs && cmd_args->config_args.section_strs))
     {
-      fprintf (stderr, 
+      fprintf (stderr,
                "Only one of --filename, --keypair, and --section can be used\n");
       return -1;
     }
 
-  // filename is readable if commit, writable/creatable if checkout
-
-  if (cmd_args->config_args.filename) 
+  if (cmd_args->config_args.filename)
     {
-      switch (cmd_args->config_args.action) 
+      switch (cmd_args->config_args.action)
         {
         case CONFIG_ACTION_COMMIT: case CONFIG_ACTION_DIFF:
-          if (access (cmd_args->config_args.filename, R_OK) != 0) 
+          if (access (cmd_args->config_args.filename, R_OK) != 0)
             {
               perror (cmd_args->config_args.filename);
               return -1;
             }
           break;
         case CONFIG_ACTION_CHECKOUT:
-          if (access (cmd_args->config_args.filename, F_OK) == 0) 
+          if (access (cmd_args->config_args.filename, F_OK) == 0)
             {
-              if (access (cmd_args->config_args.filename, W_OK) != 0) 
+              if (access (cmd_args->config_args.filename, W_OK) != 0)
                 {
                   perror (cmd_args->config_args.filename);
                   return -1;
                 }
-            } 
-          else 
+            }
+          else
             {
               int fd;
               fd = open (cmd_args->config_args.filename, O_CREAT, 0644);
-              if (fd == -1) 
+              if (fd == -1)
                 {
                   perror (cmd_args->config_args.filename);
                   return -1;
-                } 
-              else 
+                }
+              else
                 {
                   close (fd);
                   unlink (cmd_args->config_args.filename);
@@ -302,6 +293,7 @@ bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
           break;
         }
     }
-  
+
   return ret;
 }
+

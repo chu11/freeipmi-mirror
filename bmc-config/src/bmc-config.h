@@ -50,10 +50,15 @@ enum argp_option_keys
     VERBOSE_KEY = 'v',
   };
 
+struct bmc_config_arguments
+{
+  struct config_arguments config_args;
+};
+
 typedef struct bmc_config_prog_data
 {
   char *progname;
-  struct config_arguments *args;
+  struct bmc_config_arguments *args;
 } bmc_config_prog_data_t;
 
 typedef struct bmc_config_state_data

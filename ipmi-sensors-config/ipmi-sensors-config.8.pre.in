@@ -1,38 +1,44 @@
-.TH PEF-CONFIG 8 "@ISODATE@" "pef-config @PACKAGE_VERSION@" "System Commands"
+.TH IPMI-SENSORS-CONFIG 8 "@ISODATE@" "ipmi-sensors-config @PACKAGE_VERSION@" "System Commands"
 .SH NAME
-pef-config \- configure PEF values
+ipmi-sensors-config \- configure sensors
 .SH DESCRIPTION
-.B Pef-config
-is a Platform Event Filtering (PEF) configuration utility.
+.B Ipmi-sensors-config
+is used to get and set sensor configuration parameters, such as 
+thresholds and events.
+
+The majority of
+configuration operations require OPERATOR privilege when using
+.B ipmi-sensors-config
+out-of-band.
+.LP
+See GENERAL USE below for a description on how most will want to use
+.B Bmc-config.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-username-admin.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-username-operator.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-timeout.man>
 #include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
-#include <@top_srcdir@/common/doc/manpage-common-privilege-level-admin.man>
+#include <@top_srcdir@/common/doc/manpage-common-privilege-level-operator.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .TP
-\fB\-i\fR, \fB\-\-info\fR
-Show general information about PEF configuration.
-.TP
 \fB\-o\fR, \fB\-\-checkout\fR
-Fetch configuration information from the BMC.
+Fetch configuration information.
 .TP
 \fB\-c\fR, \fB\-\-commit\fR
-Update configuration information to the BMC from a config file or key pairs.
+Update configuration information from a config file or key pairs.
 .TP
 \fB\-d\fR, \fB\-\-diff\fR
-Show differences between the BMC and a config file.
+Show differences between from a config file or key pairs.
 .TP
 \fB\-f\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
-Specify a PEF config file for PEF checkout/commit/diff.
+Specify a config file for checkout/commit/diff.
 .TP
 \fB\-e\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
 Specify KEY=VALUE pairs for checkout/commit/diff.  This option can be
@@ -48,62 +54,45 @@ List available sections for checkout.
 \fB\-v\fR, \fB\-\-verbose\fR
 Print additional detailed information.
 .SH "GENERAL USE"
-Most users of
-.B pef-config
+Most users of 
+.B ipmi-sensors-config
 will want to:
 .LP
-A) Run
-.B pef-config
+A) Run 
+.B ipmi-sensors-config
 with --checkout to get a copy of the current BMC configuration and
 store it in a file.  The standard output can be redirected to a file
 or a file can be specified with the --filename option.
 .LP
-B) Edit the configuration file with an editor.
+B) Edit the configuration file with an editor.  
 .LP
 C) Commit the configuration back using the --commit option and specifying
 the configuration file with the --filename option.
-.SH "EDITING THE CHECKOUT FILE"
-Options for editing fields in the checkout file are usually listed in
-a comment above the field.  When there are to many options to make it
-practical, they are listed here in the MAN page.
-.TP
-\fB\ Sensor_Type Options\fR 
-Reserved, Temperature, Voltage, Current, Fan,
-Platform_Chassis_Intrusion, Platform_Security_Violation, Processor,
-Power_Supply, Power_Unit, Cooling_Device, FRU_Sensor, Memory,
-Drive_Slot, Post_Memory_Resize, System_Firmware,
-Event_Logging_Disabled, Watchdog1, System_Event, Critical_Interrupt,
-Button, Module_Board, Microcontroller, Add_In_Card, Chassis, Chip_Set,
-Other_FRU, Cable_Interconnect, Terminator, System_Boot_Initiated,
-Boot_Error, OS_Boot, OS_Critical_Stop, Slot_Connector,
-ACPI_Power_State, Watchdog2, Platform_Alert, Entity_Presence,
-Monitor_Asic, Lan, Management_Subsystem_Health, Battery,
-Session_Audit, Version_Change, FRU_State, and Any
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
 .SH "EXAMPLES"
-.B # pef-config --checkout
+.B # ipmi-sensors-config --checkout 
 .PP
-Output all BMC configuration information to the console.
+Output all configuration information to the console.
 .PP
-.B # pef-config --checkout --filename=pef-data1.conf
+.B # ipmi-sensors-config --checkout --filename=sensor-data1.conf
 .PP
-Store all BMC configuration information in pef-data1.conf.
+Store all BMC configuration information in sensor-data1.conf.
 .PP
-.B # pef-config --diff -f pef-data2.conf
+.B # ipmi-sensors-config --diff -f sensor-data2.conf
 .PP
-Show all difference between the current BMC configuration and the pef-data2.conf file.
+Show all difference between the current configuration and the sensor-data2.conf file.
 .PP
-.B # pef-config --commit -f pef-data1.conf
+.B # ipmi-sensors-config --commit -f sensor-data1.conf
 .PP
-Commit all configuration values from the pef-data1.conf file to the BMC.
+Commit all configuration values from the sensor-data1.conf file.
 .PP
-.SH "SEE ALSO"
-bmc-config(8)
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT
 Copyright \(co 2003,04,05 FreeIPMI Core Team.  
 This program is free software; you may redistribute it under the terms of
 the GNU General Public License.  This program has absolutely no warranty.
+.SH "SEE ALSO"
+ipmi-sensors(8)
