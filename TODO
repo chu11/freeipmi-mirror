@@ -23,11 +23,13 @@ bmc-config
 remaining serial config
 power cycle interval
 chassis boot params
+advanced option
 
 pef-config
 -----------
 * conf.5 manpage
 * how to specify event reading type codes easily
+advanced option
 
 general
 -------
