@@ -56,8 +56,8 @@ extern "C" {
 #define IPMI_SDR_MODIFIER_UNIT_MULTIPLY       2
 
 #define IPMI_SDR_MODIFIER_UNIT_VALID(__sensor_modifier_unit) \
-   (((__sensor_modifier_unit)=>= IPMI_SDR_MODIFIER_UNIT_NONE \
-     || (__sensor_modifier_unit)=>= IPMI_SDR_MODIFIER_UNIT_DIVIDE \
+   (((__sensor_modifier_unit) == IPMI_SDR_MODIFIER_UNIT_NONE \
+     || (__sensor_modifier_unit) == IPMI_SDR_MODIFIER_UNIT_DIVIDE \
      || (__sensor_modifier_unit) == IPMI_SDR_MODIFIER_UNIT_MULTIPLY) ? 1 : 0)
 
 #define IPMI_SDR_LINEARIZATION_LINEAR   0
@@ -78,7 +78,6 @@ extern "C" {
    ((((__sensor_linearization) + 1) >= IPMI_SDR_LINEARIZATION_LN \
      && ((__sensor_linearization) - 1) <= IPMI_SDR_LINEARIZATION_SQRT) ? 1 : 0)
 
-/* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(__sensor_linearization) \
    (((__sensor_linearization) >= 0x70 \
      && (__sensor_linearization) <= 0x7F) ? 1 : 0)

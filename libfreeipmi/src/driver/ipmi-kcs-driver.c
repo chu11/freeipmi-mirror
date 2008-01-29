@@ -686,7 +686,7 @@ static int8_t
 _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx, 
 		   fiid_obj_t obj_cmd_rs)
 {
-  uint8_t *pkt;
+  uint8_t *pkt = NULL;
   uint32_t pkt_len;
   int32_t hdr_len, cmd_len;
   int32_t read_len;

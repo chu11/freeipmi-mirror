@@ -3,6 +3,9 @@
 	* common/src/hostlist.h, common/src/hostlist.c: Update to newest
 	library to fix warnings.
 
+	* Variety of code cleanup and minor bug fixes based static code
+	analyzer.
+
 2008-01-28  Albert Chu <chu11@llnl.gov>
 
 	* Minor bug fixes throughout.

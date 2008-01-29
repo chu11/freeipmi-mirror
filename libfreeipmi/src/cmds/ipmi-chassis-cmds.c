@@ -353,7 +353,9 @@ int8_t
 fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq)
 { 
   ERR_EINVAL (fiid_obj_valid (obj_cmd_rq));
+
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_chassis_capabilities_rq);
+
   FIID_OBJ_CLEAR (obj_cmd_rq);
  
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHASSIS_CAPABILITIES);
@@ -364,7 +366,9 @@ int8_t
 fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq)
 { 
   ERR_EINVAL (fiid_obj_valid (obj_cmd_rq));
+
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_chassis_status_rq);
+
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHASSIS_STATUS);
   return 0; 
@@ -396,6 +400,7 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
               && fiid_obj_valid (obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_chassis_identify_rq);
+
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CHASSIS_IDENTIFY);
@@ -438,7 +443,9 @@ fill_cmd_set_power_cycle_interval (uint8_t interval,
                                    fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid (obj_cmd_rq));
+
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_power_cycle_interval_rq);
+
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_POWER_CYCLE_INTERVAL);
@@ -450,7 +457,9 @@ int8_t
 fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid (obj_cmd_rq));
+
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_system_restart_cause_rq);
+
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_RESTART_CAUSE);
@@ -463,10 +472,11 @@ fill_cmd_set_system_boot_options (uint8_t parameter_selector,
                                   uint8_t data_len,
                                   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid (obj_cmd_rq) 
-              && IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector) 
+  ERR_EINVAL (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector) 
               && configuration_parameter_data != NULL 
-              && data_len > 0);
+              && data_len > 0
+              && fiid_obj_valid (obj_cmd_rq));
+
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_rq);
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
@@ -482,10 +492,11 @@ int8_t
 fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
                                                  fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid (obj_cmd_rq) 
-              && IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS_VALID (value));
+  ERR_EINVAL (IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS_VALID (value)
+              && fiid_obj_valid (obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_set_in_progress_rq);
+
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
@@ -507,8 +518,7 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_ha
                                                         uint8_t *oem_handled_boot_info,
                                                         fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid (obj_cmd_rq) 
-              && (!bios_or_post_handled_boot_info 
+  ERR_EINVAL ((!bios_or_post_handled_boot_info 
                   || IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*bios_or_post_handled_boot_info))
               && (!os_loader_handled_boot_info 
                   || IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*os_loader_handled_boot_info))
@@ -517,9 +527,11 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_ha
               && (!sms_handled_boot_info 
                   || IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*sms_handled_boot_info))
               && (!oem_handled_boot_info 
-                  || IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*oem_handled_boot_info)));
+                  || IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*oem_handled_boot_info))
+              && fiid_obj_valid (obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq);
+
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
@@ -607,8 +619,7 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
                                              uint8_t bios_shared_mode_override,
                                              fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid (obj_cmd_rq) 
-              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_valid)
+  ERR_EINVAL (IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_valid)
               && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_persistent)
               && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (clear_cmos)
               && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BIOS_BOOT_TYPE_VALID (bios_boot_type)
@@ -623,11 +634,12 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
               && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_sleep_button)
               && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (console_redirection)
               && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (bios_shared_mode_override)
-              && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_BIOS_MUX_CONTROL_OVERRIDE_VALID (bios_mux_control_override));
+              && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_BIOS_MUX_CONTROL_OVERRIDE_VALID (bios_mux_control_override)
+              && fiid_obj_valid (obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_flags_rq);
-  FIID_OBJ_CLEAR (obj_cmd_rq);
 
+  FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
   FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_FLAGS);
   FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
@@ -660,14 +672,12 @@ fill_cmd_get_system_boot_options (uint8_t parameter_selector,
                                  uint8_t block_selector,
                                  fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid (obj_cmd_rq) 
-              && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_SET_SELECTOR_VALID (set_selector) 
-              && IPMI_CHASSIS_BOOT_OPTIONS_BLOCK_SELECTOR_VALID (block_selector)
-              && IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector));
+  ERR_EINVAL (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
+              && fiid_obj_valid (obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_system_boot_options_rq);
-  FIID_OBJ_CLEAR (obj_cmd_rq);
 
+  FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_BOOT_OPTIONS);
   FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
   FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
@@ -680,7 +690,9 @@ int8_t
 fill_cmd_get_power_on_hours_counter (fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid (obj_cmd_rq));
+
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_power_on_hours_counter_rq);
+
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_POWER_ON_HOURS_COUNTER);

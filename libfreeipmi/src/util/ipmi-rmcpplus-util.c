@@ -1015,11 +1015,11 @@ ipmi_rmcpplus_check_packet_session_authentication_code(int8_t integrity_algorith
 {
   int32_t rmcp_header_len;
   int hash_algorithm, hash_flags, crypt_digest_len;
-  unsigned int expected_digest_len, compare_digest_len, hash_data_len, integrity_digest_len;
+  unsigned int expected_digest_len, compare_digest_len, hash_data_len;
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t integrity_digest[IPMI_MAX_INTEGRITY_DATA_LENGTH];
   uint8_t authentication_code[IPMI_MAX_INTEGRITY_DATA_LENGTH];
-  int32_t authentication_code_len;
+  int32_t authentication_code_len, integrity_digest_len;
   uint8_t pwbuf[IPMI_2_0_MAX_PASSWORD_LENGTH];
   int8_t rv = -1;
 

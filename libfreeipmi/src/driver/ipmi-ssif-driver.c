@@ -605,7 +605,7 @@ static int8_t
 _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx, 
 		    fiid_obj_t obj_cmd_rs)
 {
-  uint8_t *pkt;
+  uint8_t *pkt = NULL;
   uint32_t pkt_len;
   int32_t hdr_len, cmd_len;
   int32_t read_len;
@@ -622,7 +622,7 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
 
   SSIF_FIID_TEMPLATE_LEN_BYTES_CLEANUP(cmd_len, tmpl);
 
-  SSIF_FIID_OBJ_CREATE(obj_hdr, tmpl_hdr_kcs);
+  SSIF_FIID_OBJ_CREATE_CLEANUP(obj_hdr, tmpl_hdr_kcs);
 
   pkt_len = hdr_len + cmd_len;
   
