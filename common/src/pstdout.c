@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.8 2008-01-29 05:21:31 chu11 Exp $
+ *  $Id: pstdout.c,v 1.9 2008-01-29 06:05:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -132,6 +132,7 @@ _pstdout_consolidated_data_create(const char *hostname, const char *output)
       pstdout_errnum = PSTDOUT_ERR_OUTMEM;
       goto cleanup;
     }
+  memset(cdata, '\0', sizeof(struct pstdout_consolidated_data));
 
   if (!(cdata->h = hostlist_create(hostname)))
     {
