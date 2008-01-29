@@ -122,7 +122,13 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	char *tail = NULL;
 	
 	range_str = strdupa (arg);
-	start_ptr = strchr (range_str, '-');
+	if (!(start_ptr = strchr (range_str, '-')))
+          {
+            /* invalid input */
+	    fprintf (stderr, "invalid delete range\n");
+	    argp_usage (state);
+	    break;
+          }
 	range2_str = strdupa (start_ptr + 1);
 	*start_ptr = '\0';
 	range1_str = range_str;

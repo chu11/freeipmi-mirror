@@ -295,10 +295,11 @@ run_cmd_args (ipmi_raw_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (args->cmd && args->cmd_length)
+  if (args->cmd_length)
     {
       if (ipmi_raw_cmdline(state_data) < 0)
         goto cleanup;
+      return 0;
     }
 
   if (args->cmd_file)
@@ -310,17 +311,11 @@ run_cmd_args (ipmi_raw_state_data_t *state_data)
         }
     }
   else 
-    {
-      if (args->cmd_length == 0)
-	infile = stdin;
-    }
+    infile = stdin;
 
-  if (infile)
-    {
-      if (ipmi_raw_stream (state_data, infile) < 0)
-        goto cleanup;
-    }
-
+  if (ipmi_raw_stream (state_data, infile) < 0)
+    goto cleanup;
+  
   rv = 0;
  cleanup:
   if (infile && infile != stdin)

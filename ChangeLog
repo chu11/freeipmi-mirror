@@ -1,3 +1,7 @@
+2008-01-28  Albert Chu <chu11@llnl.gov>
+
+	* Minor bug fixes throughout.
+	
 2008-01-25  Albert Chu <chu11@llnl.gov>
 
 	* pef-config/pef-config.8.pre.in: Add general text.

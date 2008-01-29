@@ -78,7 +78,7 @@ fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr)
 int32_t
 assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_t pkt_len)
 {
-  uint32_t obj_cmd_len, obj_rmcp_hdr_len;
+  int32_t obj_cmd_len, obj_rmcp_hdr_len;
 
   ERR_EINVAL (fiid_obj_valid(obj_rmcp_hdr) 
 	      && fiid_obj_valid(obj_cmd)

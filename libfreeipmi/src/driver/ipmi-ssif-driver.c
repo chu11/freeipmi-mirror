@@ -546,7 +546,8 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
   rv = count;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
  cleanup:
-  ipmi_mutex_unlock (ctx->semid);
+  if (ctx)
+    ipmi_mutex_unlock (ctx->semid);
   return (rv);
 }
 
@@ -643,6 +644,8 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
  cleanup:
   SSIF_FIID_TEMPLATE_FREE(tmpl);
   SSIF_FIID_OBJ_DESTROY(obj_hdr);
+  if (pkt)
+    free(pkt);
   return rv;
 }
 

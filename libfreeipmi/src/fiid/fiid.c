@@ -574,6 +574,8 @@ fiid_obj_create (fiid_template_t tmpl)
 {
   fiid_obj_t obj = NULL;
   uint32_t max_pkt_len = 0;
+  int32_t data_len;
+
   int i;
   
   if (!tmpl)
@@ -592,9 +594,10 @@ fiid_obj_create (fiid_template_t tmpl)
   memset(obj, '\0', sizeof(struct fiid_obj));
   obj->magic = FIID_OBJ_MAGIC;
   
-  if ((obj->data_len = _fiid_template_len_bytes (tmpl, 
-                                                 &obj->field_data_len)) < 0)
+  if ((data_len = _fiid_template_len_bytes (tmpl, 
+                                            &obj->field_data_len)) < 0)
     goto cleanup;
+  obj->data_len = data_len;
 
   if (!obj->field_data_len)
     {

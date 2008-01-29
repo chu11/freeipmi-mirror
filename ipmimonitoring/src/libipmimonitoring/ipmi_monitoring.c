@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.20 2007-12-29 17:20:32 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.21 2008-01-29 05:21:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -758,7 +758,7 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
                                char *buffer,
                                unsigned int buflen)
 {
-  unsigned int offset;
+  unsigned int offset = 0;
   int i;
 
   if (!c || c->magic != IPMI_MONITORING_MAGIC)

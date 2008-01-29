@@ -627,7 +627,8 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
     ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   rv = count;
  cleanup:
-  ipmi_mutex_unlock (ctx->semid);
+  if (ctx)
+    ipmi_mutex_unlock (ctx->semid);
   return (rv);
 }
 
@@ -723,6 +724,8 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
  cleanup:
   KCS_FIID_TEMPLATE_FREE(tmpl);
   KCS_FIID_OBJ_DESTROY(obj_hdr);
+  if (pkt)
+    free(pkt);
   return rv;
 }
 

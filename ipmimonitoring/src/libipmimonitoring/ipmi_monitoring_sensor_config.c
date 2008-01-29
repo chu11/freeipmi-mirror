@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.8 2007-10-18 16:18:50 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.9 2008-01-29 05:21:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1737,7 +1737,10 @@ ipmi_monitoring_sensor_config(int *errnum)
 
       /* Its not an error if the default configuration file doesn't exist */
       if (conffile_errnum(cf) == CONFFILE_ERR_EXIST)
-        return 0;
+        {
+          rv = 0;
+          goto cleanup;
+        }
 
       if (CONFFILE_IS_PARSE_ERR(conffile_errnum(cf)))
         {

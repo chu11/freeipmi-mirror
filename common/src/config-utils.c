@@ -104,7 +104,7 @@ config_keypair_parse_string(char *str,
   char *value_tok = NULL;
   char *ptr;
   char *buf;
-  int rv;
+  int rv = -1;
 
   assert(str);
   assert(section_name);

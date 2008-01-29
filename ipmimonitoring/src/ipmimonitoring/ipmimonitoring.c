@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.35 2008-01-22 23:29:38 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.36 2008-01-29 05:21:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -698,6 +698,7 @@ main(int argc, char **argv)
   if (ipmi_monitoring_init(prog_data.args->ipmimonitoring_flags, &errnum) < 0)
     {
       fprintf(stderr, "ipmi_monitoring_init: %s\n", ipmi_monitoring_ctx_strerror(errnum));
+      exit_code = EXIT_FAILURE;
       goto cleanup;
     }
  

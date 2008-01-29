@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostrange.c,v 1.3 2007-08-02 20:50:11 chu11 Exp $
+ *  $Id: hostrange.c,v 1.4 2008-01-29 05:21:31 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -126,6 +126,8 @@ eliminate_nodes(char **hosts)
     hostlist_iterator_destroy(hitr);
   if (hl)
     hostlist_destroy(hl);
+  if (hlnew)
+    hostlist_destroy(hlnew);
   if (host)
     free(host);
   return rv;

@@ -19,9 +19,8 @@ config_parse (struct config_section *sections,
 { 
   char buf[CONFIG_PARSE_BUFLEN];
   int line_num = 0;
-  struct config_section *section;
+  struct config_section *section = NULL;
   struct config_key *key;
-  struct config_keyvalue *kv;
   char *str, *tok;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
@@ -113,7 +112,7 @@ config_parse (struct config_section *sections,
                 key->key_name,
                 tok);
 
-      if ((kv = config_find_keyvalue(section, key->key_name)))
+      if (config_find_keyvalue(section, key->key_name))
         {
           fprintf(stderr,
                   "Key '%s' specified twice in section '%s'\n",

@@ -219,8 +219,9 @@ alert_string_checkout (const char *section_name,
 
   for (i = 0; i < blocks; i++)
     {
-      Fiid_obj_clear(obj_cmd_rs);
       int j;
+
+      Fiid_obj_clear(obj_cmd_rs);
 
       if (ipmi_cmd_get_pef_configuration_parameters_alert_string (state_data->ipmi_ctx,
                                                                   IPMI_GET_PEF_PARAMETER,
