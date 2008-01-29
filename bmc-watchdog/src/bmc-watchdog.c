@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.76 2008-01-29 05:21:31 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.77 2008-01-29 18:56:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1528,9 +1528,12 @@ _cmdline_parse(int argc, char **argv)
           cinfo.reset_period_val = (uint8_t)strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
             _err_exit("reset period value invalid");
+	  /* 
+	   * To avoid gcc warning
+	   *
+           * cinfo.reset_period_val < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS
+           */
           if (cinfo.reset_period_val == 0
-              /* remove warnings via math tricks*/
-              || (cinfo.reset_period_val+1) < (IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS+1)
               || cinfo.reset_period_val > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
             _err_exit("reset period value out of range");
           break;
