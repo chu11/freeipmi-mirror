@@ -1,3 +1,10 @@
+2008-02-01  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-ssif-api.c, libfreeipmi/src/ipmi-kcs-api.c:
+	Fix mem-leak.
+
+	* libfreeipmi/src/udm/ipmi-lan-session-util.c: Fix corner case.
+	
 2008-01-23  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-ignore-sdr-cache.man: New file.

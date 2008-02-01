@@ -749,7 +749,7 @@ static int8_t
 _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx, 
 		    fiid_obj_t obj_cmd_rs)
 {
-  uint8_t *pkt;
+  uint8_t *pkt = NULL;
   uint32_t pkt_len;
   int32_t hdr_len, cmd_len;
   int32_t read_len;
@@ -816,6 +816,8 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
     fiid_template_free(tmpl);
   if (obj_hdr)
     fiid_obj_destroy(obj_hdr);
+  if (pkt)
+    free(pkt);
   return rv;
 }
 
