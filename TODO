@@ -45,6 +45,7 @@ ipmi-sdr
 duplicate ipmi-sensors duty?
 - need to move some sdr common code to common/src
 have file based input/output like pef-config/bmc-config
+- cache.localhost name needs a .hostname on the end for sensors-config purposes
 
 ASUS issues to resolve
 ----------------------
