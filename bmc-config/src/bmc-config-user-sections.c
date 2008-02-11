@@ -1275,7 +1275,7 @@ struct config_section *
 bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
 {
   struct config_section *user_section = NULL;
-  char section_name[64];
+  char section_name[CONFIG_MAX_SECTION_NAME_LEN];
   char *section_comment = 
     "In the following User sections, users should configure usernames, "
     "passwords, and access rights for IPMI over LAN communication.  "
@@ -1308,7 +1308,7 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
       return NULL;
     }
 
-  snprintf(section_name, 64, "User%d", userid);
+  snprintf(section_name, CONFIG_MAX_SECTION_NAME_LEN, "User%d", userid);
 
   if (userid == 1)
     {

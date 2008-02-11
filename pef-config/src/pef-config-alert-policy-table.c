@@ -427,7 +427,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
   uint8_t lan_channel_number;
   char *strp = NULL;
   config_err_t ret;
-  char buf[64];
+  char buf[CONFIG_MAX_SECTION_NAME_LEN];
 
   if (num <= 0)
     {
@@ -435,7 +435,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
       return NULL;
     }
 
-  snprintf(buf, 64, "Alert_Policy_%d", num);
+  snprintf(buf, CONFIG_MAX_SECTION_NAME_LEN, "Alert_Policy_%d", num);
 
   if (!(section = config_section_create (buf, 
                                          NULL, 
