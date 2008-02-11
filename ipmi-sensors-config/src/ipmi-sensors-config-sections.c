@@ -12,6 +12,7 @@
 
 #include "ipmi-sensors-config.h"
 #include "ipmi-sensors-config-sections.h"
+#include "ipmi-sensors-config-threshold-section.h"
 
 #include "tool-sdr-cache-common.h"
 
@@ -35,6 +36,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
     {
       uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
       uint8_t record_type;
+      uint8_t event_reading_type_code;
       int sdr_record_len;
 
       memset(sdr_record, '\0', IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH);
@@ -54,14 +56,27 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
                                             NULL,
                                             &record_type) < 0)
         goto cleanup;
-    }
+      
+      if (record_type != IPMI_SDR_FORMAT_FULL_RECORD)
+        continue;
 
-#if 0
-  if (!(section = ipmi_sensors_config_threshold_get (state_data)))
-    goto cleanup;
-#endif
-  if (config_section_append (&sections, section) < 0)
-    goto cleanup;
+      if (sdr_cache_get_event_reading_type_code (NULL,
+                                                 sdr_record,
+                                                 sdr_record_len,
+                                                 &event_reading_type_code) < 0)
+        goto cleanup;
+
+      if (!IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
+        continue;
+
+      if (!(section = ipmi_sensors_config_threshold_section (state_data,
+                                                             sdr_record,
+                                                             sdr_record_len)))
+        goto cleanup;
+
+      if (config_section_append (&sections, section) < 0)
+        goto cleanup;
+    }
 
   return sections;
 

@@ -21,6 +21,11 @@
 	* common/src/tool-sdr-cache-common.c: Remove pstate asserts.  Support
 	NULL pstate input to all functions.
 
+	* common/src/config-common.h: Create macro for max section name length.
+
+	* bmc-config/, pef-config/: use new macro for max section name
+	length.
+
         * ipmi-sensors-config/: New tool.
 
         * Makefile.am, configure.ac: Adjust for new tool.

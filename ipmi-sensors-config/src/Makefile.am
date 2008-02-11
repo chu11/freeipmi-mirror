@@ -3,7 +3,9 @@ sbin_PROGRAMS = ipmi-sensors-config
 ipmi_sensors_config_SOURCES = \
 	ipmi-sensors-config.c \
 	ipmi-sensors-config-argp.c \
-	ipmi-sensors-config-sections.c
+	ipmi-sensors-config-sections.c \
+	ipmi-sensors-config-threshold-section.c \
+	ipmi-sensors-config-utils.c
 
 # ipmi_sensors_config doesn't use hostrange, but
 # we need pstdout for linking reasons
@@ -20,7 +22,9 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src -D_GNU_SOURCE \
 
 noinst_HEADERS = ipmi-sensors-config.h \
 		 ipmi-sensors-config-argp.h \
-		 ipmi-sensors-config-sections.h 
+		 ipmi-sensors-config-sections.h \
+		 ipmi-sensors-config-threshold-section.h \
+		 ipmi-sensors-config-utils.h
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
