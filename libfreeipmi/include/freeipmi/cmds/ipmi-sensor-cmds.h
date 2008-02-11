@@ -52,6 +52,9 @@ extern "C" {
 #define IPMI_SENSOR_READING_STATE_UNAVAILABLE 0x1
 #define IPMI_SENSOR_READING_STATE_AVAILABLE 0x0
 
+#define IPMI_SENSOR_THRESHOLD_SET     0x1
+#define IPMI_SENSOR_THRESHOLD_NOT_SET 0x0
+
 extern fiid_template_t tmpl_cmd_get_device_sdr_info_rq;
 extern fiid_template_t tmpl_cmd_get_device_sdr_info_rs;
   
@@ -107,6 +110,15 @@ extern fiid_template_t tmpl_cmd_get_sensor_type_rq;
 extern fiid_template_t tmpl_cmd_get_sensor_type_rs;
 
 int8_t fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
+                                       uint8_t *lower_non_critical_threshold,
+                                       uint8_t *lower_critical_threshold,
+                                       uint8_t *lower_non_recoverable_threshold,
+                                       uint8_t *upper_non_critical_threshold,
+                                       uint8_t *upper_critical_threshold,
+                                       uint8_t *upper_non_recoverable_threshold,
+                                       fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_cmd_rq);
 

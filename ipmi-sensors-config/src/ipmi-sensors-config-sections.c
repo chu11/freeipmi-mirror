@@ -13,14 +13,51 @@
 #include "ipmi-sensors-config.h"
 #include "ipmi-sensors-config-sections.h"
 
+#include "tool-sdr-cache-common.h"
+
 struct config_section *
 ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_data)
 {
   struct config_section *sections = NULL;
   struct config_section *section = NULL;
+  uint16_t record_count;
+  int i;
+
+  if (ipmi_sdr_cache_record_count(state_data->ipmi_sdr_cache_ctx, &record_count) < 0)
+    {
+      fprintf(stderr,
+              "ipmi_sdr_cache_record_count: %s\n",
+              ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
+      goto cleanup;
+    }
+
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next(state_data->ipmi_sdr_cache_ctx))
+    {
+      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      uint8_t record_type;
+      int sdr_record_len;
+
+      memset(sdr_record, '\0', IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH);
+      if ((sdr_record_len = ipmi_sdr_cache_record_read(state_data->ipmi_sdr_cache_ctx,
+                                                       sdr_record,
+                                                       IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+        {
+          fprintf(stderr,
+                  "ipmi_sdr_cache_record_read: %s\n",
+                  ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
+          goto cleanup;
+        }
+
+      if (sdr_cache_get_record_id_and_type (NULL,
+                                            sdr_record,
+                                            sdr_record_len,
+                                            NULL,
+                                            &record_type) < 0)
+        goto cleanup;
+    }
 
 #if 0
-  if (!(section = ipmi_sensors_config_community_string_section_get (state_data)))
+  if (!(section = ipmi_sensors_config_threshold_get (state_data)))
     goto cleanup;
 #endif
   if (config_section_append (&sections, section) < 0)

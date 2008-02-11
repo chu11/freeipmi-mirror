@@ -87,8 +87,11 @@
   do {                                                                   \
     if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)              \
       {                                                                  \
-        pstdout_perror(pstate,                                           \
-                       "fiid_template_len_bytes");                       \
+	if (pstate)                                                      \
+          pstdout_perror(pstate,                                         \
+                         "fiid_template_len_bytes");                     \
+	else                                                             \
+	  perror("fiid_template_len_bytes");                             \
         goto cleanup;                                                    \
       }                                                                  \
   } while (0)
@@ -97,8 +100,11 @@
   do {                                                                   \
     if (!((__obj) = fiid_obj_create ((__tmpl))))                         \
       {                                                                  \
-        pstdout_perror(pstate,                                           \
-                       "fiid_obj_create");                               \
+	if (pstate)                                                      \
+          pstdout_perror(pstate,                                         \
+                         "fiid_obj_create");                             \
+	else                                                             \
+	  perror("fiid_obj_create");                                     \
         goto cleanup;                                                    \
       }                                                                  \
   } while (0)
@@ -109,10 +115,15 @@
     __val_ptr = (__val);                                                 \
     if (fiid_obj_get ((__obj), (__field), &__tmp_val) < 0)               \
       {                                                                  \
-        pstdout_fprintf(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_get: %s\n",                            \
-                        fiid_strerror(fiid_obj_errnum((__obj))));        \
+        if (pstate)                                                      \
+          pstdout_fprintf(pstate,                                        \
+                          stderr,                                        \
+                          "fiid_obj_get: %s\n",                          \
+                          fiid_strerror(fiid_obj_errnum((__obj))));      \
+	else                                                             \
+	  fprintf(stderr,                                                \
+		  "fiid_obj_get: %s\n",					 \
+		  fiid_strerror(fiid_obj_errnum((__obj))));		\
         goto cleanup;                                                    \
       }                                                                  \
     *__val_ptr = __tmp_val;                                              \
@@ -125,10 +136,15 @@
                            (__data),                                     \
                            (__datalen)) < 0)                             \
       {                                                                  \
-        pstdout_fprintf(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_get_data: %s\n",                       \
-                        fiid_strerror(fiid_obj_errnum((__obj))));        \
+	if (pstate)                                                      \
+          pstdout_fprintf(pstate,                                        \
+                          stderr,                                        \
+                          "fiid_obj_get_data: %s\n",                     \
+                          fiid_strerror(fiid_obj_errnum((__obj))));      \
+	else                                                             \
+          fprintf(stderr,                                                \
+                  "fiid_obj_get_data: %s\n",                             \
+                  fiid_strerror(fiid_obj_errnum((__obj))));              \
         goto cleanup;                                                    \
       }                                                                  \
   } while (0)
@@ -140,10 +156,15 @@
                                       (__data),                              \
                                       (__datalen))) < 0)                     \
       {                                                                      \
-        pstdout_fprintf(pstate,                                              \
-                        stderr,                                              \
-                        "fiid_obj_get_data: %s\n",                           \
-                        fiid_strerror(fiid_obj_errnum((__obj))));            \
+	if (pstate)                                                          \
+          pstdout_fprintf(pstate,                                            \
+                          stderr,                                            \
+                          "fiid_obj_get_data: %s\n",                         \
+                          fiid_strerror(fiid_obj_errnum((__obj))));          \
+	else                                                                 \
+          fprintf(stderr,                                                    \
+                  "fiid_obj_get_data: %s\n",                                 \
+                  fiid_strerror(fiid_obj_errnum((__obj))));                  \
         goto cleanup;                                                        \
       }                                                                      \
   } while (0)
@@ -154,10 +175,15 @@
                           (__data),                                      \
                           (__datalen)) < 0)                              \
       {                                                                  \
-        pstdout_fprintf(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_set_all: %s\n",                        \
-                        fiid_strerror(fiid_obj_errnum((__obj))));        \
+	if (pstate)                                                      \
+	  pstdout_fprintf(pstate,					 \
+                          stderr,                                        \
+                          "fiid_obj_set_all: %s\n",                      \
+                          fiid_strerror(fiid_obj_errnum((__obj))));      \
+	else                                                             \
+	  fprintf(stderr,                                                \
+                  "fiid_obj_set_all: %s\n",                              \
+                  fiid_strerror(fiid_obj_errnum((__obj))));              \
         goto cleanup;                                                    \
       }                                                                  \
   } while (0)
@@ -1658,7 +1684,6 @@ sdr_cache_get_hysteresis_real (pstdout_state_t pstate,
   double hysteresis;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
 
@@ -1812,7 +1837,6 @@ sdr_cache_get_hysteresis_integer (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
 
@@ -1857,7 +1881,6 @@ sdr_cache_get_container_entity (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
 
@@ -1903,7 +1926,6 @@ sdr_cache_get_general_device_parameters (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
 
@@ -1959,7 +1981,6 @@ sdr_cache_get_logical_fru_info (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
   
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   
@@ -2001,7 +2022,6 @@ sdr_cache_get_device_type (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
 
@@ -2043,7 +2063,6 @@ sdr_cache_get_entity_id (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
 
@@ -2085,7 +2104,6 @@ sdr_cache_get_manufacturer_id (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(manufacturer_id);
@@ -2119,7 +2137,6 @@ sdr_cache_get_product_id (pstdout_state_t pstate,
   uint64_t val;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(product_id);
@@ -2153,7 +2170,6 @@ sdr_cache_get_oem_data (pstdout_state_t pstate,
   int32_t len;
   int rv = -1;
 
-  assert(pstate);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(!oem_data || oem_data_len);

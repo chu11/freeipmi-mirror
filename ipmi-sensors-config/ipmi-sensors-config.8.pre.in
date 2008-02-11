@@ -4,7 +4,7 @@ ipmi-sensors-config \- configure sensors
 .SH DESCRIPTION
 .B Ipmi-sensors-config
 is used to get and set sensor configuration parameters, such as 
-thresholds and events.
+thresholds.
 
 The majority of
 configuration operations require OPERATOR privilege when using

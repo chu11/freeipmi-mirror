@@ -1,7 +1,5 @@
 2008-XX-XX  Albert Chu <chu11@llnl.gov>
 
-        * ipmi-sensors-config/: New tool.
-
         * common/doc/manpage-common-outofband-username-operator.man,
         common/doc/manpage-common-privilege-level-operator.man: New files.
 
@@ -11,6 +9,19 @@
 
         * bmc-config/src/, pef-config/src/: Adjust architecture for common
         config code.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-sensor-cmds.h,
+	libfreeipmi/src/cmds/ipmi-sensor-cmds.c
+	(fill_cmd_set_sensor_thresholds): New function.
+
+	* libfreeipmi/include/freeipmi/api/ipmi-sensor-cmds-api.h,
+	libfreeipmi/src/api/ipmi-sensor-cmds-api.c
+	(ipmi_cmd_set_sensor_thresholds): New function.
+
+	* common/src/tool-sdr-cache-common.c: Remove pstate asserts.  Support
+	NULL pstate input to all functions.
+
+        * ipmi-sensors-config/: New tool.
 
         * Makefile.am, configure.ac: Adjust for new tool.
 
