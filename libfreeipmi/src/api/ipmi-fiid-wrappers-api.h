@@ -41,6 +41,8 @@ extern "C" {
 do {                                               \
   if (errno == 0)                                  \
     ctx->errnum = IPMI_ERR_SUCCESS;                \
+  else if (errno == EINVAL)                        \
+    ctx->errnum = IPMI_ERR_PARAMETERS;             \
   else if (errno == ENOMEM)                        \
     ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
   else                                             \
@@ -362,8 +364,9 @@ do {                                                                 \
     if (!__ret)                                                      \
       {                                                              \
 	errno = EINVAL;                                              \
-         __FIID_OBJ_TRACE((__obj));                                  \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                         \
+        __FIID_OBJ_TRACE((__obj));                                   \
+	/* set via errno */                                          \
+	__FIID_ERRNO_SET_API_ERRNUM;                                 \
 	return (-1);                                                 \
       }                                                              \
 } while (0)
@@ -380,8 +383,9 @@ do {                                                                 \
     if (!__ret)                                                      \
       {                                                              \
 	errno = EINVAL;                                              \
-         __FIID_OBJ_TRACE((__obj));                                  \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                         \
+        __FIID_OBJ_TRACE((__obj));                                   \
+	/* set via errno */                                          \
+	__FIID_ERRNO_SET_API_ERRNUM;                                 \
 	goto cleanup;                                                \
       }                                                              \
 } while (0)
