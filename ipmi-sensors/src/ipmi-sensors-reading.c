@@ -382,7 +382,6 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   if (sensor_class == SENSOR_CLASS_THRESHOLD)
     {
       _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_threshold_rs);
-      _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_threshold_rs);
 
       if (ipmi_cmd_get_sensor_reading_threshold (state_data->ipmi_ctx, 
                                                  sensor_number, 
@@ -395,13 +394,10 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           goto cleanup;
         }
 
-      _FIID_OBJ_GET_ALL_LEN(len,
-                            obj_cmd_rs,
-                            buf,
-                            IPMI_SENSORS_BUFLEN);
-
-      _FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
-      
+      _FIID_OBJ_COPY(l_obj_cmd_rs,
+                     obj_cmd_rs,
+                     l_tmpl_cmd_get_sensor_reading_threshold_rs);
+     
       _FIID_OBJ_GET (l_obj_cmd_rs, "sensor_reading", &val);
 
       if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
@@ -506,12 +502,9 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           goto cleanup;
         }
       
-      _FIID_OBJ_GET_ALL_LEN(len,
-                            obj_cmd_rs,
-                            buf,
-                            IPMI_SENSORS_BUFLEN);
-
-      _FIID_OBJ_SET_ALL (l_obj_cmd_rs, buf, len);
+      _FIID_OBJ_COPY(l_obj_cmd_rs,
+                     obj_cmd_rs,
+                     l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
       _FIID_OBJ_GET (l_obj_cmd_rs, 
                      "sensor_state", 
