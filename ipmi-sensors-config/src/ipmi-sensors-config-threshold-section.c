@@ -10,28 +10,274 @@
 #include <assert.h>
 
 #include "ipmi-sensors-config.h"
-#if 0
-#include "ipmi-sensors-config-map.h"
-#include "ipmi-sensors-config-validate.h"
-#endif
 #include "ipmi-sensors-config-utils.h"
 
 #include "tool-sdr-cache-common.h"
+
+static config_err_t
+_get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
+                 const char *section_name,
+                 uint8_t *sdr_record,
+                 unsigned int *sdr_record_len)
+{
+  uint16_t record_id;
+  char *str = NULL;
+  char *ptr;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  int len;
+
+  assert(state_data);
+  assert(section_name);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  if (!(str = strdup(section_name)))
+    {
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        perror("strdup");
+      goto cleanup;
+    }
+
+  if (!(ptr = strchr(str, '_')))
+    {
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "Invalid section_name: %s\n",
+                section_name);
+      goto cleanup;
+    }
+
+  *ptr = '\0';
+
+  record_id = strtoul(str, &ptr,0);
+  if (*ptr != '\0')
+    {
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "Invalid section_name: %s\n",
+                section_name);
+      goto cleanup;
+    }
+    
+  if (ipmi_sdr_cache_search_record_id(state_data->ipmi_sdr_cache_ctx,
+                                      record_id) < 0)
+    {
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "Record_id not found: %u\n",
+                record_id);
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if ((len = ipmi_sdr_cache_record_read(state_data->ipmi_sdr_cache_ctx,
+                                        sdr_record,
+                                        *sdr_record_len)) < 0)
+    {
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_sdr_cache_record_read: %s\n",
+                ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  *sdr_record_len = len;
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  if (str)
+    free(str);
+  return rv;
+}
+
+static config_err_t
+_calculate_threshold(ipmi_sensors_config_state_data_t *state_data,
+                     uint8_t *sdr_record,
+                     unsigned int sdr_record_len,
+                     uint64_t threshold_value,
+                     double *threshold_calc)
+{
+  int8_t r_exponent, b_exponent;
+  int16_t m, b;
+  uint8_t linearization, analog_data_format;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+  assert(threshold_calc);
+
+  if (sdr_cache_get_sensor_decoding_data(NULL,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &r_exponent,
+                                         &b_exponent,
+                                         &m,
+                                         &b,
+                                         &linearization,
+                                         &analog_data_format) < 0)
+    goto cleanup;
+
+  /* if the sensor is not analog, this is most likely a bug in the
+   * SDR, since we shouldn't be decoding a non-threshold sensor.
+   */
+  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
+    {
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "Attempting to decode non-analog threshold\n");
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  /* if the sensor is non-linear, I just don't know what to do */
+  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
+    {
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "Cannot decode non-linear threshold\n");
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (ipmi_sensor_decode_value (r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                threshold_value,
+                                threshold_calc) < 0)
+    {
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf (stderr,
+                 "ipmi_sensor_decode_value: %s\n",
+                 strerror(errno));
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  return rv;
+}
 
 static config_err_t
 threshold_checkout (const char *section_name,
                     struct config_keyvalue *kv,
                     void *arg)
 {
-#if 0
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
-#endif
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  char *readable_str;
+  char *threshold_str;
+  uint64_t readable_val;
+  uint64_t threshold_val;
+  double threshold_calc;
+  uint8_t sensor_number;
+
+  if ((ret = _get_sdr_record(state_data,
+                             section_name,
+                             sdr_record,
+                             &sdr_record_len)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (sdr_cache_get_sensor_number(NULL,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  &sensor_number) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sensor_thresholds_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_sensor_reading_threshold (state_data->ipmi_ctx,
+                                             sensor_number,
+                                             obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_sensor_reading_threshold: %s\n",
+                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (!strcasecmp(kv->key->key_name, "Lower_Non_Critical_Threshold"))
+    {
+      readable_str = "readable_thresholds.lower_non_critical_threshold";
+      threshold_str = "lower_non_critical_threshold";
+    }
+  else if (!strcasecmp(kv->key->key_name, "Lower_Critical_Threshold"))
+    {
+      readable_str = "readable_thresholds.lower_critical_threshold";
+      threshold_str = "lower_critical_threshold";
+    }
+  else if (!strcasecmp(kv->key->key_name, "Lower_Non_Recoverable_Threshold"))
+    {
+      readable_str = "readable_thresholds.lower_non_recoverable_threshold";
+      threshold_str = "lower_non_recoverable_threshold";
+    }
+  else if (!strcasecmp(kv->key->key_name, "Upper_Non_Critical_Threshold"))
+    {
+      readable_str = "readable_thresholds.upper_non_critical_threshold";
+      threshold_str = "upper_non_critical_threshold";
+    }
+  else if (!strcasecmp(kv->key->key_name, "Upper_Critical_Threshold"))
+    {
+      readable_str = "readable_thresholds.upper_critical_threshold";
+      threshold_str = "upper_critical_threshold";
+    }
+  else if (!strcasecmp(kv->key->key_name, "Upper_Non_Recoverable_Threshold"))
+    {
+      readable_str = "readable_thresholds.upper_non_recoverable_threshold";
+      threshold_str = "upper_non_recoverable_threshold";
+    }
+  else
+    /* unknown key_name - fatal error */
+    goto cleanup;
+
+  if (Fiid_obj_get (obj_cmd_rs, readable_str, &readable_val) < 0)
+    goto cleanup;
+
+  if (!readable_val)
+    {
+      /* Inconsistency w/ the SDR, should be readable */
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "%s:%s - threshold not readable\n",
+                section_name,
+                kv->key->key_name);
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (Fiid_obj_get (obj_cmd_rs, threshold_str, &threshold_val) < 0)
+    goto cleanup;
+
+  if ((ret = _calculate_threshold(state_data,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  threshold_val,
+                                  &threshold_calc)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (config_section_update_keyvalue_output_double(kv, threshold_calc) < 0)
+    goto cleanup;
 
   rv = CONFIG_ERR_SUCCESS;
-#if 0
  cleanup:
-#endif
+  Fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
@@ -263,6 +509,66 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
 
       if (config_section_add_key (section,
                                   "Lower_Non_Recoverable_Threshold",
+                                  desc,
+                                  flags,
+                                  threshold_checkout,
+                                  threshold_commit,
+                                  threshold_validate) < 0)
+        goto cleanup;
+    }
+
+  if (upper_non_critical_threshold_readable)
+    {
+      flags = 0;
+
+      if (!upper_non_critical_threshold_settable)
+        {
+          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+          flags |= CONFIG_READABLE_ONLY;
+        }
+
+      if (config_section_add_key (section,
+                                  "Upper_Non_Critical_Threshold",
+                                  desc,
+                                  flags,
+                                  threshold_checkout,
+                                  threshold_commit,
+                                  threshold_validate) < 0)
+        goto cleanup;
+    }
+
+  if (upper_critical_threshold_readable)
+    {
+      flags = 0;
+
+      if (!upper_critical_threshold_settable)
+        {
+          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+          flags |= CONFIG_READABLE_ONLY;
+        }
+
+      if (config_section_add_key (section,
+                                  "Upper_Critical_Threshold",
+                                  desc,
+                                  flags,
+                                  threshold_checkout,
+                                  threshold_commit,
+                                  threshold_validate) < 0)
+        goto cleanup;
+    }
+
+  if (upper_non_recoverable_threshold_readable)
+    {
+      flags = 0;
+
+      if (!upper_non_recoverable_threshold_settable)
+        {
+          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+          flags |= CONFIG_READABLE_ONLY;
+        }
+
+      if (config_section_add_key (section,
+                                  "Upper_Non_Recoverable_Threshold",
                                   desc,
                                   flags,
                                   threshold_checkout,
