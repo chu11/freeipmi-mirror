@@ -44,6 +44,9 @@
 	* common/src/config-common.h, common/src/config-commit.c: Support
 	new CONFIG_READABLE_ONLY flag.
 
+	* common/src/config-section.h, common/src/config-section.c
+	(config_section_update_keyvalue_output_double): New function.
+
         * ipmi-sensors-config/: New tool.
 
         * Makefile.am, configure.ac: Adjust for new tool.

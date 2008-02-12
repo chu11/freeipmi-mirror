@@ -327,6 +327,26 @@ config_section_update_keyvalue_output_int(struct config_keyvalue *keyvalue,
 }
 
 int
+config_section_update_keyvalue_output_double(struct config_keyvalue *keyvalue,
+                                             double value_output)
+{
+  char buf[CONFIG_PARSE_BUFLEN];
+
+  assert(keyvalue);
+  assert(!keyvalue->value_output);
+
+  snprintf(buf, CONFIG_PARSE_BUFLEN, "%.2f", value_output);
+  
+  if (!(keyvalue->value_output = strdup(buf)))
+    {
+      perror("strdup");
+      return -1;
+    }
+
+  return 0;
+}
+
+int
 config_sections_validate_keyvalue_inputs(struct config_section *sections,
                                          int value_input_required)
 {

@@ -39,6 +39,9 @@ int config_section_update_keyvalue_output(struct config_keyvalue *keyvalue,
 int config_section_update_keyvalue_output_int(struct config_keyvalue *keyvalue,
                                               unsigned int value_output);
 
+int config_section_update_keyvalue_output_double(struct config_keyvalue *keyvalue,
+                                                 double value_output);
+
 /* returns -1 on error, number of non-valid values otherwise */
 int config_sections_validate_keyvalue_inputs(struct config_section *sections,
                                              int value_input_required);
