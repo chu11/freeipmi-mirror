@@ -18,19 +18,29 @@
 
 #include "tool-sdr-cache-common.h"
 
-struct config_section *
+config_err_t
 ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_data,
                                        uint8_t *sdr_record,
-                                       unsigned int sdr_record_len)
+                                       unsigned int sdr_record_len,
+                                       struct config_section **section_ptr)
 {
   struct config_section *section = NULL;
   char section_name[CONFIG_MAX_SECTION_NAME_LEN];
   char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
   uint16_t record_id;
+  uint8_t lower_non_critical_threshold = 0;
+  uint8_t lower_critical_threshold = 0;
+  uint8_t lower_non_recoverable_threshold = 0;
+  uint8_t upper_non_critical_threshold = 0;
+  uint8_t upper_critical_threshold = 0;
+  uint8_t upper_non_recoverable_threshold = 0;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
 
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
+  assert(section_ptr);
 
   if (sdr_cache_get_record_id_and_type (NULL,
                                         sdr_record,
@@ -48,12 +58,13 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
     goto cleanup;
 
-  if (convert_id_string (state_data, id_string) != CONFIG_ERR_SUCCESS)
+  if ((ret = convert_id_string (state_data, id_string)) != CONFIG_ERR_SUCCESS)
     {
       if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr, 
                 "convert_id_string: %s\n",
                 strerror(errno));
+      rv = ret;
       goto cleanup;
     }
 
@@ -85,6 +96,8 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                          NULL,
                                          0)))
     goto cleanup;
+
+  
 
 #if 0
 
@@ -144,10 +157,11 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
 
 #endif
 
-  return section;
+  *section_ptr = section;
+  return CONFIG_ERR_SUCCESS;
 
  cleanup:
   if (section)
     config_section_destroy(section);
-  return NULL;
+  return rv;
 }

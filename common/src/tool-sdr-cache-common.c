@@ -70,6 +70,7 @@
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
 
 #include "tool-sdr-cache-common.h"
@@ -2193,4 +2194,128 @@ sdr_cache_get_oem_data (pstdout_state_t pstate,
  cleanup:
   _FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
+}
+
+int 
+sdr_cache_get_threshold_settable (pstdout_state_t pstate,
+                                  uint8_t *sdr_record,
+                                  unsigned int sdr_record_len,
+                                  uint8_t *lower_non_critical_threshold,
+                                  uint8_t *lower_critical_threshold,
+                                  uint8_t *lower_non_recoverable_threshold,
+                                  uint8_t *upper_non_critical_threshold,
+                                  uint8_t *upper_critical_threshold,
+                                  uint8_t *upper_non_recoverable_threshold)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  fiid_obj_t obj_sdr_record_threshold = NULL;
+  uint32_t acceptable_record_types;
+  uint8_t event_reading_type_code;
+  uint64_t val;
+  int rv = -1;
+
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  /* achu:
+   *
+   * Technically, the IPMI spec lists that compact record formats
+   * also support thresholds.  However, since compact records
+   * don't contain any information for interpreting threshold
+   * sensors (i.e. R exponent) I don't know how they could be of
+   * any use.  No vendor that I know of supports threshold sensors
+   * via a compact record (excluding possible OEM ones).
+   *
+   * There's a part of me that believes the readable/setting
+   * threshold masks for compact sensor records is a cut and paste
+   * typo.  It shouldn't be there.
+   */
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  /* We don't want the generic sdr full record, we need the special
+   * threshold one.
+   */
+
+  if (sdr_cache_get_event_reading_type_code (pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
+    goto cleanup;
+
+  if (!IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
+    {
+      if (pstate)
+        pstdout_fprintf(pstate,
+                        stderr,
+                        "Invalid event reading type code passed in: %X\n",
+                        event_reading_type_code);
+      else
+        fprintf(stderr,
+                "Invalid event reading type code passed in: %X\n",
+                event_reading_type_code);
+      goto cleanup;
+    }
+
+  /* XXX: Still need to copy stuff */
+
+  if (lower_non_critical_threshold)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "settable_threshold_mask.lower_non_critical_threshold_is_settable",
+                        &val);
+      *lower_non_critical_threshold = val;
+    }
+
+  if (lower_critical_threshold)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "settable_threshold_mask.lower_critical_threshold_is_settable",
+                        &val);
+      *lower_critical_threshold = val;
+    }
+
+  if (lower_non_recoverable_threshold)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "settable_threshold_mask.lower_non_recoverable_threshold_is_settable",
+                        &val);
+      *lower_non_recoverable_threshold = val;
+    }
+
+  if (upper_non_critical_threshold)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "settable_threshold_mask.upper_non_critical_threshold_is_settable",
+                        &val);
+      *upper_non_critical_threshold = val;
+    }
+
+  if (upper_critical_threshold)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "settable_threshold_mask.upper_critical_threshold_is_settable",
+                        &val);
+      *upper_critical_threshold = val;
+    }
+
+  if (upper_non_recoverable_threshold)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "settable_threshold_mask.upper_non_recoverable_threshold_is_settable",
+                        &val);
+      *upper_non_recoverable_threshold = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record_threshold);
+  return rv; 
 }

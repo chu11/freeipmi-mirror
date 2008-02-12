@@ -31,4 +31,3 @@ convert_id_string (ipmi_sensors_config_state_data_t *state_data,
 
   return CONFIG_ERR_SUCCESS;
 }
-

@@ -34,6 +34,10 @@
 	tmpl_sdr_full_sensor_record_non_threshold_based_sensors and
 	tmpl_sdr_full_sensor_record_threshold_based_sensors.
 
+	* common/src/tool-sdr-cache-common.h,
+	common/src/tool-sdr-cache-common.c
+	(sdr_cache_get_threshold_settable): New function.
+
         * ipmi-sensors-config/: New tool.
 
         * Makefile.am, configure.ac: Adjust for new tool.

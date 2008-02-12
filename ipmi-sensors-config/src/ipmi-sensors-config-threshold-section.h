@@ -23,9 +23,10 @@
 #include "ipmi-sensors-config.h"
 #include "ipmi-sensors-config-sections.h"
 
-struct config_section * ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_data,
-                                                               uint8_t *sdr_record,
-                                                               unsigned int sdr_record_len);
-
+config_err_t
+ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_data,
+                                       uint8_t *sdr_record,
+                                       unsigned int sdr_record_len,
+                                       struct config_section **section_ptr);
 
 #endif /* _IPMI_SENSORS_CONFIG_THRESHOLD_SECTION_H_ */

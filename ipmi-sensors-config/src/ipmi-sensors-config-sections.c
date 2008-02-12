@@ -20,7 +20,6 @@ struct config_section *
 ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_data)
 {
   struct config_section *sections = NULL;
-  struct config_section *section = NULL;
   uint16_t record_count;
   int i;
 
@@ -34,11 +33,13 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
 
   for (i = 0; i < record_count; i++, ipmi_sdr_cache_next(state_data->ipmi_sdr_cache_ctx))
     {
+      struct config_section *section = NULL;
       uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
       uint8_t record_type;
       uint8_t event_reading_type_code;
       int sdr_record_len;
-
+      config_err_t ret;
+  
       memset(sdr_record, '\0', IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH);
       if ((sdr_record_len = ipmi_sdr_cache_record_read(state_data->ipmi_sdr_cache_ctx,
                                                        sdr_record,
@@ -72,7 +73,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
        */
 
        if (record_type != IPMI_SDR_FORMAT_FULL_RECORD) 
-       continue;
+         continue;
 
       if (sdr_cache_get_event_reading_type_code (NULL,
                                                  sdr_record,
@@ -83,10 +84,15 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
       if (!IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
         continue;
 
-      if (!(section = ipmi_sensors_config_threshold_section (state_data,
-                                                             sdr_record,
-                                                             sdr_record_len)))
-        goto cleanup;
+      if ((ret = ipmi_sensors_config_threshold_section (state_data,
+                                                        sdr_record,
+                                                        sdr_record_len,
+                                                        &section)) != CONFIG_ERR_SUCCESS)
+        {
+          if (ret == CONFIG_ERR_FATAL_ERROR)
+            goto cleanup;
+          continue;
+        }
 
       if (config_section_append (&sections, section) < 0)
         goto cleanup;
