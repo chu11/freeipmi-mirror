@@ -41,6 +41,9 @@
 	common/src/tool-sdr-cache-common.c
 	(sdr_cache_get_threshold_settable): New function.
 
+	* common/src/config-common.h, common/src/config-commit.c: Support
+	new CONFIG_READABLE_ONLY flag.
+
         * ipmi-sensors-config/: New tool.
 
         * Makefile.am, configure.ac: Adjust for new tool.

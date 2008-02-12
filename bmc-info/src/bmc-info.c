@@ -58,8 +58,6 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 {
   uint64_t bc_maj, bc_min, pia_maj, pia_min;
   fiid_obj_t intel_rs = NULL;
-  uint8_t buf[1024];
-  int32_t len;
   int rv = -1;
 
   assert(state_data);

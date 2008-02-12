@@ -314,9 +314,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   int sensor_class;
   fiid_obj_t obj_cmd_rs = NULL;  
   fiid_obj_t l_obj_cmd_rs = NULL;
-  uint8_t buf[IPMI_SENSORS_BUFLEN];
   double *tmp_reading = NULL;
-  int32_t len;
   uint64_t val;
   int rv = -1;
 

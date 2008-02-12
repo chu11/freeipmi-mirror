@@ -187,6 +187,16 @@ int sdr_cache_get_oem_data (pstdout_state_t pstate,
                             uint8_t *oem_data,
                             unsigned int *oem_data_len);
 
+int sdr_cache_get_threshold_readable (pstdout_state_t pstate,
+                                      uint8_t *sdr_record,
+                                      unsigned int sdr_record_len,
+                                      uint8_t *lower_non_critical_threshold,
+                                      uint8_t *lower_critical_threshold,
+                                      uint8_t *lower_non_recoverable_threshold,
+                                      uint8_t *upper_non_critical_threshold,
+                                      uint8_t *upper_critical_threshold,
+                                      uint8_t *upper_non_recoverable_threshold);
+
 int sdr_cache_get_threshold_settable (pstdout_state_t pstate,
                                       uint8_t *sdr_record,
                                       unsigned int sdr_record_len,
@@ -195,6 +205,5 @@ int sdr_cache_get_threshold_settable (pstdout_state_t pstate,
                                       uint8_t *lower_non_recoverable_threshold,
                                       uint8_t *upper_non_critical_threshold,
                                       uint8_t *upper_critical_threshold,
-                                      uint8_t *upper_non_recoverable_threshold);                                     
-
+                                      uint8_t *upper_non_recoverable_threshold);
 #endif

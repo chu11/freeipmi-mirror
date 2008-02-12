@@ -32,17 +32,23 @@ config_commit_section(struct config_section *section,
     {
       assert(kv->value_input);
 
-      if ((ret = kv->key->commit (section->section_name,
-                                  kv,
-                                  arg)) == CONFIG_ERR_FATAL_ERROR)
-        goto cleanup;
-      
-      if (ret == CONFIG_ERR_NON_FATAL_ERROR)
+      if (!(kv->key->flags & CONFIG_READABLE_ONLY))
         {
-          fprintf (stderr, "ERROR: Failed to commit `%s:%s'\n", 
-                   section->section_name, kv->key->key_name);
-          ret = CONFIG_ERR_NON_FATAL_ERROR;
+          if ((ret = kv->key->commit (section->section_name,
+                                      kv,
+                                      arg)) == CONFIG_ERR_FATAL_ERROR)
+            goto cleanup;
+          
+          if (ret == CONFIG_ERR_NON_FATAL_ERROR)
+            {
+              fprintf (stderr, "ERROR: Failed to commit `%s:%s'\n", 
+                       section->section_name, kv->key->key_name);
+              ret = CONFIG_ERR_NON_FATAL_ERROR;
+            }
         }
+      else
+        fprintf (stderr, "ERROR: `%s:%s' is readable only\n", 
+                 section->section_name, kv->key->key_name);
       
       kv = kv->next;
     }

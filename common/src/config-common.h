@@ -8,6 +8,7 @@
 #define CONFIG_CHECKOUT_KEY_COMMENTED_OUT                  0x01
 #define CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x02
 #define CONFIG_DO_NOT_CHECKOUT                             0x04
+#define CONFIG_READABLE_ONLY                               0x08
 
 #define CONFIG_CHECKOUT_LINE_LEN                           45
 
