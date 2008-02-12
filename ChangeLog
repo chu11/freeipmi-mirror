@@ -1,5 +1,7 @@
 2008-XX-XX  Albert Chu <chu11@llnl.gov>
 
+	Merge contents from sensors_config_branch.
+
         * common/doc/manpage-common-outofband-username-operator.man,
         common/doc/manpage-common-privilege-level-operator.man: New files.
 
@@ -25,6 +27,12 @@
 
 	* bmc-config/, pef-config/: use new macro for max section name
 	length.
+
+	* libfreeipmi/include/freeipmi/record-format/ipmi-sdr-record-format.h,
+	libfreeipmi/src/record-format/ipmi-sdr-record-format.c: Add two
+	new templates,
+	tmpl_sdr_full_sensor_record_non_threshold_based_sensors and
+	tmpl_sdr_full_sensor_record_threshold_based_sensors.
 
         * ipmi-sensors-config/: New tool.
 
