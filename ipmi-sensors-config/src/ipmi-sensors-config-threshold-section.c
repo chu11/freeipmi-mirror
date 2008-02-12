@@ -121,9 +121,9 @@ threshold_checkout (const char *section_name,
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sensor_thresholds_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_sensor_reading_threshold (state_data->ipmi_ctx,
-                                             sensor_number,
-                                             obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_sensor_thresholds (state_data->ipmi_ctx,
+                                      sensor_number,
+                                      obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
