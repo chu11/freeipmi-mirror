@@ -85,6 +85,8 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   unsigned int flags;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint8_t sensor_type, sensor_unit;
+  char *desc;
 
   assert(state_data);
   assert(sdr_record);
@@ -146,7 +148,6 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                          0)))
     goto cleanup;
 
-  
   if (sdr_cache_get_threshold_settable (NULL,
                                         sdr_record,
                                         sdr_record_len,
@@ -169,6 +170,43 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                         &upper_non_recoverable_threshold_settable) < 0)
     goto cleanup;
 
+  if (sdr_cache_get_sensor_type (NULL,
+                                 sdr_record,
+                                 sdr_record_len,
+                                 &sensor_type) < 0)
+    goto cleanup;
+
+  if (sdr_cache_get_sensor_unit (NULL,
+                                 sdr_record,
+                                 sdr_record_len,
+                                 &sensor_unit) < 0)
+    goto cleanup;
+
+  /* achu: I'm not handling every possibility, will update as needed */
+  if (sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE)
+    {
+      if (sensor_unit == IPMI_SENSOR_UNIT_DEGREES_C)
+        desc = "Give a valid temperature (in Celsius)";
+      else if (sensor_unit == IPMI_SENSOR_UNIT_DEGREES_F)
+        desc = "Give a valid temperature (in Fahrenheit)";
+      else
+        desc = "Unknown units";
+    }
+  else if (sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
+    {
+      if (sensor_unit == IPMI_SENSOR_UNIT_VOLTS)
+        desc = "Give a valid voltage";
+      else
+        desc = "Unknown units";
+    }
+  else if (sensor_type == IPMI_SENSOR_TYPE_FAN)
+    {
+      if (sensor_unit == IPMI_SENSOR_UNIT_RPM)
+        desc = "Give a valid RPM";
+      else
+        desc = "Unknown units";
+    }
+
   /* If a threshold is not-readable, it isn't up for consideration, so
    * don't "register" it.
    */
@@ -185,7 +223,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
 
       if (config_section_add_key (section,
                                   "Lower_Non_Critical_Threshold",
-                                  "",
+                                  desc,
                                   flags,
                                   threshold_checkout,
                                   threshold_commit,
@@ -193,11 +231,11 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
         goto cleanup;
     }
 
-  if (lower_non_critical_threshold_readable)
+  if (lower_critical_threshold_readable)
     {
       flags = 0;
 
-      if (!lower_non_critical_threshold_settable)
+      if (!lower_critical_threshold_settable)
         {
           flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
           flags |= CONFIG_READABLE_ONLY;
@@ -205,7 +243,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
 
       if (config_section_add_key (section,
                                   "Lower_Critical_Threshold",
-                                  "",
+                                  desc,
                                   flags,
                                   threshold_checkout,
                                   threshold_commit,
@@ -213,11 +251,11 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
         goto cleanup;
     }
 
-  if (lower_non_critical_threshold_readable)
+  if (lower_non_recoverable_threshold_readable)
     {
       flags = 0;
 
-      if (!lower_non_critical_threshold_settable)
+      if (!lower_non_recoverable_threshold_settable)
         {
           flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
           flags |= CONFIG_READABLE_ONLY;
@@ -225,7 +263,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
 
       if (config_section_add_key (section,
                                   "Lower_Non_Recoverable_Threshold",
-                                  "",
+                                  desc,
                                   flags,
                                   threshold_checkout,
                                   threshold_commit,
