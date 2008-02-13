@@ -123,3 +123,79 @@ ipmi_sensor_decode_value (int8_t r_exponent,
   *value = dval;
   return (0);
 }
+
+int
+ipmi_sensor_decode_raw_value (int8_t r_exponent, 
+                              int8_t b_exponent, 
+                              int16_t m, 
+                              int16_t b, 
+                              uint8_t linearization, 
+                              uint8_t analog_data_format, 
+                              double value,
+                              uint8_t *raw_data)
+{
+  double dval;
+  uint8_t rval;
+
+  ERR_EINVAL (value 
+	      && IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format)
+              && IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization));
+    
+  dval = value;
+  
+  /* achu:
+   *
+   * b/c I always forget:
+   *
+   * y = log_b(x) == x = b^y
+   *
+   * log_b(x) = log_k(x)/log(k(b)
+   */
+  /* achu: the macros M_E or M_El for 'e' is questionably portable.
+   * Folks online suggest just using exp(1.0) in its place.  Sounds
+   * good to me.
+   */
+  if (linearization == IPMI_SDR_LINEARIZATION_LN)
+    dval = exp(dval);
+  else if (linearization == IPMI_SDR_LINEARIZATION_LOG10)
+    dval = exp10(dval);
+  else if (linearization == IPMI_SDR_LINEARIZATION_LOG2)
+    dval = exp2(dval);
+  else if (linearization == IPMI_SDR_LINEARIZATION_E)
+    dval = (log(dval)/log(exp(1.0)));
+  else if (linearization == IPMI_SDR_LINEARIZATION_EXP10)
+    dval = (log(dval)/log(10));
+  else if (linearization == IPMI_SDR_LINEARIZATION_EXP2)
+    dval = (log(dval)/log(2));
+  else if (linearization == IPMI_SDR_LINEARIZATION_INVERSE)
+    {
+      if (dval != 0.0)
+        dval = 1.0 / dval;
+    }
+  else if (linearization == IPMI_SDR_LINEARIZATION_SQR)
+    dval = sqrt(dval);
+  else if (linearization == IPMI_SDR_LINEARIZATION_CUBE)
+    dval = cbrt(dval);
+  else if (linearization == IPMI_SDR_LINEARIZATION_SQRT)
+    dval = pow(dval, 2.0);
+  else if (linearization == IPMI_SDR_LINEARIZATION_CUBERT)
+    dval = pow(dval, 3.0);
+
+  dval = (dval / pow (10, r_exponent));
+  dval = (dval - (b * pow (10, b_exponent)));
+  dval = (dval / m);
+
+  if (analog_data_format == IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED)
+    rval = (uint8_t) dval;
+  else if (analog_data_format == IPMI_SDR_ANALOG_DATA_FORMAT_1S_COMPLEMENT)
+    {
+      rval = (char)dval;
+      if (rval & 0x80)
+        rval--;
+    }
+  else /* analog_data_format == IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT */
+    rval = (char)dval;
+    
+  *raw_data = rval;
+  return (0);
+}

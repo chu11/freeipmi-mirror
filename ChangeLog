@@ -41,11 +41,22 @@
 	common/src/tool-sdr-cache-common.c
 	(sdr_cache_get_threshold_settable): New function.
 
+	* libfreeipmi/include/freeipmi/util/ipmi-sensor-util.h,
+	libfreeipmi/src/util/ipmi-sensor-util.c
+	(ipmi_sensor_decode_raw_value): New function.
+
 	* common/src/config-common.h, common/src/config-commit.c: Support
 	new CONFIG_READABLE_ONLY flag.
 
 	* common/src/config-section.h, common/src/config-section.c
 	(config_section_update_keyvalue_output_double): New function.
+
+	* bmc-config/, pef-config/: Change -f to -n option.  Support -f
+	legacy.
+
+	* libfreeipmi/include/freeipmi/util/ipmi-sensor-util.h,
+	libfreeipmi/src/util/ipmi-sensor-util.c
+	(ipmi_sensor_decode_raw_value): New function.
 
         * ipmi-sensors-config/: New tool.
 
