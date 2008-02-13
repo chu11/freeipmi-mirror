@@ -427,6 +427,10 @@ address and MAC address.  So the parallelism that the hostrange input
 gives you effectively cannot be used when trying to use bmc-config's
 --commit option to configure a cluster using one config file.
 
+The architecture of bmc-config was subsequently used in pef-config and
+ipmi-sensors-config, which is why those tools do not support
+hostranges as well.
+
 An alternate hostrange output model is supported in ipmipower.  This
 is due partly to legacy but mostly due to technical reasons.
 Ipmipower was developed with a different architecture than bmc-info,
