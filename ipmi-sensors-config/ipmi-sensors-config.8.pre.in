@@ -12,7 +12,7 @@ configuration operations require OPERATOR privilege when using
 out-of-band.
 .LP
 See GENERAL USE below for a description on how most will want to use
-.B Bmc-config.
+.B Ipmi-sensors-config.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
@@ -35,7 +35,7 @@ Fetch configuration information.
 Update configuration information from a config file or key pairs.
 .TP
 \fB\-d\fR, \fB\-\-diff\fR
-Show differences between from a config file or key pairs.
+Show differences between stored information and a config file or key pairs.
 .TP
 \fB\-f\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
 Specify a config file for checkout/commit/diff.
@@ -60,7 +60,7 @@ will want to:
 .LP
 A) Run 
 .B ipmi-sensors-config
-with --checkout to get a copy of the current BMC configuration and
+with --checkout to get a copy of the current configuration and
 store it in a file.  The standard output can be redirected to a file
 or a file can be specified with the --filename option.
 .LP

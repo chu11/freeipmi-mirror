@@ -32,16 +32,16 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .TP
 \fB\-o\fR, \fB\-\-checkout\fR
-Fetch configuration information from the BMC.
+Fetch configuration information.
 .TP
 \fB\-c\fR, \fB\-\-commit\fR
-Update configuration information to the BMC from a config file or key pairs.
+Update configuration information from a config file or key pairs.
 .TP
 \fB\-d\fR, \fB\-\-diff\fR
-Show differences between the BMC and a config file or key pairs.
+Show differences between stored information and a config file or key pairs.
 .TP
 \fB\-f\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
-Specify a BMC config file for BMC checkout/commit/diff.
+Specify a config file for checkout/commit/diff.
 .TP
 \fB\-e\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
 Specify KEY=VALUE pairs for checkout/commit/diff.  This option can be
@@ -63,7 +63,7 @@ will want to:
 .LP
 A) Run 
 .B bmc-config
-with --checkout to get a copy of the current BMC configuration and
+with --checkout to get a copy of the current configuration and
 store it in a file.  The standard output can be redirected to a file
 or a file can be specified with the --filename option.
 .LP
@@ -73,7 +73,7 @@ The
 .B bmc-config.conf(5)
 provides additional information on the meaning of different fields.
 .LP
-C) Commit the configuration back to the BMC using the --commit option and specifying
+C) Commit the configuration back using the --commit option and specifying
 the configuration file with the --filename option.
 .LP
 For users with large clusters or sets of nodes, you may wish to use
@@ -93,31 +93,31 @@ determine the correct IP address and MAC address to use.
 .SH "EXAMPLES"
 .B # bmc-config --checkout 
 .PP
-Output all BMC configuration information to the console.
+Output all configuration information to the console.
 .PP
 .B # bmc-config --checkout --filename=bmc-data1.conf
 .PP
-Store all BMC configuration information in bmc-data1.conf.
+Store all configuration information in bmc-data1.conf.
 .PP
 .B # bmc-config --diff -f bmc-data2.conf
 .PP
-Show all difference between the current BMC configuration and the bmc-data2.conf file.
+Show all difference between the current configuration and the bmc-data2.conf file.
 .PP
 .B # bmc-config --diff --key-pair="lan_conf_misc:gratuitous_arp_interval=8"
 .PP
-Show difference with the current BMC and the 'lan_conf_misc:gratuitous_arp_interval' of value '8'.
+Show difference with the current configuration and the 'lan_conf_misc:gratuitous_arp_interval' of value '8'.
 .PP
 .B # bmc-config --commit -f bmc-data1.conf
 .PP
-Commit all configuration values from the bmc-data1.conf file to the BMC.
+Commit all configuration values from the bmc-data1.conf file.
 .PP
 .B # bmc-config --commit --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
 .PP
-Commit key 'lan_conf_misc:gratuitous_arp_interval' of value '4' to the BMC.
+Commit key 'lan_conf_misc:gratuitous_arp_interval' of value '4'.
 .PP
 .B # bmc-config --commit -f bmc-data-updt.conf --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
 .PP
-Commit all configuration values from bmc-data-updt.conf and key 'lan_conf_misc:gratuitous_arp_interval' of value '4' to the BMC.
+Commit all configuration values from bmc-data-updt.conf and key 'lan_conf_misc:gratuitous_arp_interval' of value '4'.
 .PP
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.

@@ -23,16 +23,16 @@ is a Platform Event Filtering (PEF) configuration utility.
 Show general information about PEF configuration.
 .TP
 \fB\-o\fR, \fB\-\-checkout\fR
-Fetch configuration information from the BMC.
+Fetch configuration information.
 .TP
 \fB\-c\fR, \fB\-\-commit\fR
-Update configuration information to the BMC from a config file or key pairs.
+Update configuration information from a config file or key pairs.
 .TP
 \fB\-d\fR, \fB\-\-diff\fR
-Show differences between the BMC and a config file.
+Show differences between stored information and a config file or key pairs.
 .TP
 \fB\-f\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
-Specify a PEF config file for PEF checkout/commit/diff.
+Specify a config file for checkout/commit/diff.
 .TP
 \fB\-e\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
 Specify KEY=VALUE pairs for checkout/commit/diff.  This option can be
@@ -54,7 +54,7 @@ will want to:
 .LP
 A) Run
 .B pef-config
-with --checkout to get a copy of the current BMC configuration and
+with --checkout to get a copy of the current configuration and
 store it in a file.  The standard output can be redirected to a file
 or a file can be specified with the --filename option.
 .LP
@@ -85,19 +85,19 @@ Session_Audit, Version_Change, FRU_State, and Any
 .SH "EXAMPLES"
 .B # pef-config --checkout
 .PP
-Output all BMC configuration information to the console.
+Output all configuration information to the console.
 .PP
 .B # pef-config --checkout --filename=pef-data1.conf
 .PP
-Store all BMC configuration information in pef-data1.conf.
+Store all configuration information in pef-data1.conf.
 .PP
 .B # pef-config --diff -f pef-data2.conf
 .PP
-Show all difference between the current BMC configuration and the pef-data2.conf file.
+Show all difference between the current configuration and the pef-data2.conf file.
 .PP
 .B # pef-config --commit -f pef-data1.conf
 .PP
-Commit all configuration values from the pef-data1.conf file to the BMC.
+Commit all configuration values from the pef-data1.conf file.
 .PP
 .SH "SEE ALSO"
 bmc-config(8)
