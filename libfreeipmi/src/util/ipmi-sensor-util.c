@@ -90,7 +90,7 @@ ipmi_sensor_decode_value (int8_t r_exponent,
   else /* analog_data_format == IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT */
     dval = (double) ((char) raw_data);
     
-  dval *= (double) m;
+  dval *= (double) m; 
   dval += (b * pow (10, b_exponent));
   dval *= pow (10, r_exponent);
 
@@ -183,7 +183,8 @@ ipmi_sensor_decode_raw_value (int8_t r_exponent,
 
   dval = (dval / pow (10, r_exponent));
   dval = (dval - (b * pow (10, b_exponent)));
-  dval = (dval / m);
+  if (m)
+    dval = (dval / m);
 
   if (analog_data_format == IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED)
     rval = (uint8_t) dval;
