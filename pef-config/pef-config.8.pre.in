@@ -31,7 +31,7 @@ Update configuration information from a config file or key pairs.
 \fB\-d\fR, \fB\-\-diff\fR
 Show differences between stored information and a config file or key pairs.
 .TP
-\fB\-f\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
+\fB\-n\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
 Specify a config file for checkout/commit/diff.
 .TP
 \fB\-e\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
@@ -91,11 +91,11 @@ Output all configuration information to the console.
 .PP
 Store all configuration information in pef-data1.conf.
 .PP
-.B # pef-config --diff -f pef-data2.conf
+.B # pef-config --diff --filename=pef-data2.conf
 .PP
 Show all difference between the current configuration and the pef-data2.conf file.
 .PP
-.B # pef-config --commit -f pef-data1.conf
+.B # pef-config --commit --filename=pef-data1.conf
 .PP
 Commit all configuration values from the pef-data1.conf file.
 .PP

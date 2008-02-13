@@ -2,6 +2,7 @@
 -----
 For Users
 ---------
+o Add new tool ipmi-sensors-config.
 o Support --groups (plural) for multiple groups listing in
   ipmi-sensors.  Older --group (non-plural) option maintained for
   backwards compatability.
@@ -9,6 +10,9 @@ o Support --list-groups and --flush in ipmimonitoring for consistency
   to ipmi-sensors.
 o Change --cache-dir to --sdr-cache-dir in ipmimonitoring for consistency
   to ipmi-sensors.
+o Change short option -f option to -n in pef-config and bmc-config for
+  consistency to ipmi-sensors-config.  The -f option is maintained for
+  legacy purposes.
 o Support shared SDR caches for ipmi-sensors, ipmi-fru, ipmi-sel, and
   ipmimonitoring.  (libipmimonitoring will still use a different
   default cache directory.)

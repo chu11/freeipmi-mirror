@@ -73,15 +73,18 @@ static struct argp_option options[] =
     {"diff", DIFF_KEY, 0, 0,
      "Show differences between stored information and a config file or key pairs.", 33},
     {"filename", FILENAME_KEY, "FILENAME", 0,
-     "Specify a config file for checkout/commit/diff.", 34},
+     "Specify a config file for checkout/commit/diff.", 34},   
+    /* legacy short-option */
+    {"foobar", FILENAME_KEY_LEGACY, "FILENAME", OPTION_HIDDEN,
+     "Specify a config file for checkout/commit/diff.", 35},
     {"key-pair", KEYPAIR_KEY, "KEY-PAIR", 0,
-     "Specify KEY=VALUE pairs for checkout/commit/diff.", 35},
+     "Specify KEY=VALUE pairs for checkout/commit/diff.", 36},
     {"section", SECTIONS_KEY, "SECTION", 0,
-     "Specify a SECTION for checkout.", 36},
+     "Specify a SECTION for checkout.", 37},
     {"listsections", LIST_SECTIONS_KEY, 0, 0,
-     "List available sections for checkout.", 37},
+     "List available sections for checkout.", 38},
     {"verbose", VERBOSE_KEY, 0, 0,
-     "Print additional detailed information.", 38},
+     "Print additional detailed information.", 39},
     { 0 }
   };
 
@@ -124,6 +127,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
         cmd_args->config_args.action = -1;
       break;
     case FILENAME_KEY:
+    case FILENAME_KEY_LEGACY:
       if (cmd_args->config_args.filename) /* If specified more than once */
         free (cmd_args->config_args.filename);
       if (!(cmd_args->config_args.filename = strdup (arg)))

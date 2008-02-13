@@ -40,7 +40,7 @@ Update configuration information from a config file or key pairs.
 \fB\-d\fR, \fB\-\-diff\fR
 Show differences between stored information and a config file or key pairs.
 .TP
-\fB\-f\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
+\fB\-n\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
 Specify a config file for checkout/commit/diff.
 .TP
 \fB\-e\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
@@ -99,7 +99,7 @@ Output all configuration information to the console.
 .PP
 Store all configuration information in bmc-data1.conf.
 .PP
-.B # bmc-config --diff -f bmc-data2.conf
+.B # bmc-config --diff --filename=bmc-data2.conf
 .PP
 Show all difference between the current configuration and the bmc-data2.conf file.
 .PP
@@ -107,7 +107,7 @@ Show all difference between the current configuration and the bmc-data2.conf fil
 .PP
 Show difference with the current configuration and the 'lan_conf_misc:gratuitous_arp_interval' of value '8'.
 .PP
-.B # bmc-config --commit -f bmc-data1.conf
+.B # bmc-config --commit --filename=bmc-data1.conf
 .PP
 Commit all configuration values from the bmc-data1.conf file.
 .PP
@@ -115,7 +115,7 @@ Commit all configuration values from the bmc-data1.conf file.
 .PP
 Commit key 'lan_conf_misc:gratuitous_arp_interval' of value '4'.
 .PP
-.B # bmc-config --commit -f bmc-data-updt.conf --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
+.B # bmc-config --commit --filename=bmc-data-updt.conf --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
 .PP
 Commit all configuration values from bmc-data-updt.conf and key 'lan_conf_misc:gratuitous_arp_interval' of value '4'.
 .PP
