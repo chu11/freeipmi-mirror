@@ -221,7 +221,6 @@ _ipmi_sensors_config (void *arg)
         }
     }
   
-
   if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT
       && prog_data->args->config_args.section_strs)
     {

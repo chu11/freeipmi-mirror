@@ -49,7 +49,7 @@ Update configuration information from a config file or key pairs.
 \fB\-d\fR, \fB\-\-diff\fR
 Show differences between stored information and a config file or key pairs.
 .TP
-\fB\-f\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
+\fB\-n\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
 Specify a config file for checkout/commit/diff.
 .TP
 \fB\-e\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
@@ -92,11 +92,11 @@ Output all configuration information to the console.
 .PP
 Store all BMC configuration information in sensor-data1.conf.
 .PP
-.B # ipmi-sensors-config --diff -f sensor-data2.conf
+.B # ipmi-sensors-config --diff --filename=sensor-data2.conf
 .PP
 Show all difference between the current configuration and the sensor-data2.conf file.
 .PP
-.B # ipmi-sensors-config --commit -f sensor-data1.conf
+.B # ipmi-sensors-config --commit --filename=sensor-data1.conf
 .PP
 Commit all configuration values from the sensor-data1.conf file.
 .PP

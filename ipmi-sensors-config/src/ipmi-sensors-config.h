@@ -40,7 +40,7 @@ enum argp_option_keys
     CHECKOUT_KEY = 'o', 
     COMMIT_KEY = 'c', 
     DIFF_KEY = 'd',
-    FILENAME_KEY = 'f',
+    FILENAME_KEY = 'n',
     KEYPAIR_KEY = 'e',
     SECTIONS_KEY = 'S',
     LIST_SECTIONS_KEY = 'L',
