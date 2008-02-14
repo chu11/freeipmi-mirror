@@ -773,12 +773,6 @@ fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl)
   if ((data_len = fiid_obj_get_all (src_obj, databuf, src_obj->data_len)) < 0)
     goto cleanup;
   
-  if (data_len != src_obj->data_len)
-    {
-      src_obj->errnum = FIID_ERR_INTERNAL_ERROR;
-      goto cleanup;
-    }
-
   if (fiid_obj_set_all (dest_obj, databuf, data_len) < 0)
     goto cleanup;
 
