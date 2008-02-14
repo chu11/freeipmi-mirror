@@ -572,6 +572,8 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
       else
         desc = "Unknown units";
     }
+  else
+    desc = "Unknown sensor type";
 
   /* If a threshold is not-readable, it isn't up for consideration, so
    * don't "register" it.
