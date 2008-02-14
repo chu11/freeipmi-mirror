@@ -124,9 +124,6 @@ _calculate_threshold(ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  printf("##threshold raw: %X\n",
-         threshold_raw);
-
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   return rv;
@@ -313,9 +310,6 @@ _calculate_threshold_raw(ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  printf("##threshold raw: %X\n",
-         *threshold_raw);
-         
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   return rv;
@@ -383,10 +377,10 @@ threshold_commit (const char *section_name,
     /* unknown key_name - fatal error */
     goto cleanup;
 
-#if 0
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_sensor_thresholds_rs)))
     goto cleanup;
 
+#if 0
   if (ipmi_cmd_set_sensor_thresholds (state_data->ipmi_ctx,
                                       sensor_number,
                                       lower_non_critical_threshold_ptr,
