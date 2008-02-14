@@ -13,6 +13,7 @@
 #include "ipmi-sensors-config-utils.h"
 
 #include "tool-sdr-cache-common.h"
+#include "tool-sensor-common.h"
 
 static config_err_t
 _get_sdr_decoding_data(ipmi_sensors_config_state_data_t *state_data,
@@ -547,7 +548,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
            CONFIG_MAX_DESCRIPTION_LEN,
            "Give valid input for sensor type = %s; units = %s",
            sensor_group (sensor_type),
-           ipmi_sensor_units_abbreviated[sensor_unit]);
+           ipmi_sensor_units[sensor_unit]);
 
   /* If a threshold is not-readable, it isn't up for consideration, so
    * don't "register" it.
