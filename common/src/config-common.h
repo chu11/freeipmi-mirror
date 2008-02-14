@@ -15,6 +15,7 @@
 #define CONFIG_PARSE_BUFLEN                                4096
 
 #define CONFIG_MAX_SECTION_NAME_LEN                        128
+#define CONFIG_MAX_DESCRIPTION_LEN                         1024
 
 #define SET_SELECTOR      0x0
 #define BLOCK_SELECTOR    0x0

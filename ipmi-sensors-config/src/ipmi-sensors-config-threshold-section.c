@@ -446,7 +446,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t sensor_type, sensor_unit;
-  char *desc;
+  char desc[CONFIG_MAX_DESCRIPTION_LEN];
 
   assert(state_data);
   assert(sdr_record);
@@ -542,32 +542,12 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                  &sensor_unit) < 0)
     goto cleanup;
 
-  /* achu: I'm not handling every possibility, will update as needed */
-  if (sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE)
-    {
-      if (sensor_unit == IPMI_SENSOR_UNIT_DEGREES_C)
-        desc = "Give a valid temperature (in Celsius)";
-      else if (sensor_unit == IPMI_SENSOR_UNIT_DEGREES_F)
-        desc = "Give a valid temperature (in Fahrenheit)";
-      else
-        desc = "Unknown units";
-    }
-  else if (sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
-    {
-      if (sensor_unit == IPMI_SENSOR_UNIT_VOLTS)
-        desc = "Give a valid voltage";
-      else
-        desc = "Unknown units";
-    }
-  else if (sensor_type == IPMI_SENSOR_TYPE_FAN)
-    {
-      if (sensor_unit == IPMI_SENSOR_UNIT_RPM)
-        desc = "Give a valid RPM";
-      else
-        desc = "Unknown units";
-    }
-  else
-    desc = "Unknown sensor type";
+  memset(desc, '\0', CONFIG_MAX_DESCRIPTION_LEN);
+  snprintf(desc, 
+           CONFIG_MAX_DESCRIPTION_LEN,
+           "Give valid input for sensor type = %s; units = %s",
+           sensor_group (sensor_type),
+           ipmi_sensor_units_abbreviated[sensor_unit]);
 
   /* If a threshold is not-readable, it isn't up for consideration, so
    * don't "register" it.
