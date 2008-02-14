@@ -22,6 +22,12 @@ the SDR cache and determining what sensors are available for
 configuration.  There is no guarantee that configurable sections will
 have unique names.  Therefore, section names are identified by their
 SDR record id followed by the sensor id string.
+
+Since many fields in
+.B ipmi-sensors-config
+involve decimal numbers, rounding may occur when changing thresholds
+that may not be immediately apparent to the user.
+
 .LP
 See GENERAL USE below for a description on how most will want to use
 .B Ipmi-sensors-config.
