@@ -186,6 +186,15 @@ ipmi_sensor_decode_raw_value (int8_t r_exponent,
   if (m)
     dval = (dval / m);
 
+  /* Floating point arithmetic cannot guarantee us a perfect
+   * conversion of raw to value and back to raw.  This can
+   * fix things.
+   */
+  if ((dval - (int)dval) >= 0.5)
+    dval = ceil(dval);
+  else
+    dval = floor(dval);
+ 
   if (analog_data_format == IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED)
     rval = (uint8_t) dval;
   else if (analog_data_format == IPMI_SDR_ANALOG_DATA_FORMAT_1S_COMPLEMENT)

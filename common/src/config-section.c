@@ -335,7 +335,7 @@ config_section_update_keyvalue_output_double(struct config_keyvalue *keyvalue,
   assert(keyvalue);
   assert(!keyvalue->value_output);
 
-  snprintf(buf, CONFIG_PARSE_BUFLEN, "%.2f", value_output);
+  snprintf(buf, CONFIG_PARSE_BUFLEN, "%f", value_output);
   
   if (!(keyvalue->value_output = strdup(buf)))
     {

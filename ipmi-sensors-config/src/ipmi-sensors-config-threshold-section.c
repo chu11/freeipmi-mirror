@@ -124,21 +124,7 @@ _calculate_threshold(ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  printf("##r_exponent: %d\n"
-         "##b_exponent: %d\n"
-         "##m: %d\n"
-         "##b: %d\n"
-         "##linearization: %X\n"
-         "##analog_data_format: %X\n"
-         "##threshold : %f\n"
-         "##threshold raw: %X\n",
-         r_exponent,
-         b_exponent,
-         m,
-         b,
-         linearization,
-         analog_data_format,
-         *threshold_calc,
+  printf("##threshold raw: %X\n",
          threshold_raw);
 
   rv = CONFIG_ERR_SUCCESS;
@@ -327,22 +313,8 @@ _calculate_threshold_raw(ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  printf("##r_exponent: %d\n"
-         "##b_exponent: %d\n"
-         "##m: %d\n"
-         "##b: %d\n"
-         "##linearization: %X\n"
-         "##analog_data_format: %X\n"
-         "##threshold value: %f\n"
-         "##threshold raw: %X\n",
-         r_exponent,
-         b_exponent,
-         m,
-         b,
-         linearization,
-         analog_data_format,
-         threshold_value,
-         threshold_raw);
+  printf("##threshold raw: %X\n",
+         *threshold_raw);
          
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -368,8 +340,6 @@ threshold_commit (const char *section_name,
   uint8_t *upper_non_recoverable_threshold_ptr = NULL;
   uint8_t threshold_raw;
   uint8_t sensor_number;
-
-  printf("##section %s\n", section_name);
 
   if ((ret = get_sdr_record(state_data,
                             section_name,
