@@ -41,6 +41,10 @@
 	common/src/tool-sdr-cache-common.c
 	(sdr_cache_get_threshold_settable): New function.
 
+	* common/src/config-validate.h, common/src/config-validate.c
+	(config_floating_point, config_floating_point_positive): New
+	functions.
+
 	* libfreeipmi/include/freeipmi/util/ipmi-sensor-util.h,
 	libfreeipmi/src/util/ipmi-sensor-util.c
 	(ipmi_sensor_decode_raw_value): New function.

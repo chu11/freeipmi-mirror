@@ -174,3 +174,42 @@ config_mac_address_validate(const char *section_name,
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
+config_validate_t 
+config_floating_point(const char *section_name, 
+                      const char *key_name,
+                      const char *value)
+{
+  double conv;
+  char *endptr;
+
+  assert(value);
+
+  conv = strtod(value, &endptr);
+
+  if (*endptr)
+    return CONFIG_VALIDATE_INVALID_VALUE;
+
+  return CONFIG_VALIDATE_VALID_VALUE;
+}
+
+config_validate_t 
+config_floating_point_positive(const char *section_name, 
+                               const char *key_name,
+                               const char *value)
+{
+  double conv;
+  char *endptr;
+
+  assert(value);
+
+  conv = strtod(value, &endptr);
+
+  if (*endptr)
+    return CONFIG_VALIDATE_INVALID_VALUE;
+
+  if (conv < 0.0)
+    return CONFIG_VALIDATE_INVALID_VALUE;
+
+  return CONFIG_VALIDATE_VALID_VALUE;
+}
+

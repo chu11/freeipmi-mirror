@@ -49,4 +49,12 @@ config_validate_t config_mac_address_validate(const char *section_name,
                                               const char *key_name,
                                               const char *value);
 
+config_validate_t config_floating_point(const char *section_name, 
+                                        const char *key_name,
+                                        const char *value);
+
+config_validate_t config_floating_point_positive(const char *section_name, 
+                                                 const char *key_name,
+                                                 const char *value);
+
 #endif /* _CONFIG_VALIDATE_H_ */
