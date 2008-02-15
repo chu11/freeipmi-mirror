@@ -8,6 +8,9 @@
 	* libfreeipmi/src/driver/ipmi-openipmi-driver.c: Remove semaphore
 	unused code code.
 
+	* ipmimonitoring/src/libipmimonitoring/: Classify driver timeout
+	as a system error.
+
 2008-02-15  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/src/bmc-info.c (display_get_device_id): Fix version
