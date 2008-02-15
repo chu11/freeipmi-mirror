@@ -631,6 +631,6 @@ ipmi_lan_recvfrom (int s,
   ERR (!((bytes_recvd = recvfrom (s, recv_buf, recv_buf_len, flags, from, fromlen)) < 0));
   
   memcpy (buf, recv_buf, bytes_recvd);
-  return (recv_buf_len);
+  return (bytes_recvd);
 }
 
