@@ -1,3 +1,8 @@
+ 2008-02-15  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/src/bmc-info.c (display_get_device_id): Fix version
+	output.
+
 2008-02-07  Albert Chu <chu11@llnl.gov>
 
         * configure.ac: Update version for release.
