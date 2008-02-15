@@ -39,6 +39,17 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif  /* !TIME_WITH_SYS_TIME */
+#include <sys/select.h>
 #include <sys/ioctl.h>
 #include <errno.h>
 #include <assert.h>
@@ -101,6 +112,8 @@
 #define IPMI_I2C_SMBUS_READ          1
 #define IPMI_I2C_SMBUS_WRITE         0
 
+#define IPMI_SSIF_TIMEOUT     60
+
 union ipmi_i2c_smbus_data
 {
   uint8_t  byte;
@@ -125,7 +138,32 @@ _ipmi_i2c_smbus_access (int dev_fd,
                         union ipmi_i2c_smbus_data *data)
 {
   struct ipmi_i2c_smbus_ioctl_data args;
+  fd_set read_fds;
+  struct timeval tv;
+  int n;
   int rv;
+
+  if (read_write == IPMI_I2C_SMBUS_READ)
+    {
+      FD_ZERO(&read_fds);
+      FD_SET(dev_fd, &read_fds);
+      
+      tv.tv_sec = IPMI_SSIF_TIMEOUT;
+      tv.tv_usec = 0;
+
+      ERR(!((n = select(dev_fd + 1,
+                        &read_fds,
+                        NULL,
+                        NULL,
+                        &tv)) < 0));
+      
+      if (!n)
+        {
+          /* Could be due to a different error, but we assume a timeout */
+          ERR_LOG(errno = ETIMEDOUT);
+          return (-1);
+        }
+    }
 
   args.read_write = read_write;
   args.command = command;
@@ -304,6 +342,7 @@ static char * ipmi_ssif_ctx_errmsg[] =
     "BMC busy",
     "out of memory",
     "device not found",
+    "driver timeout",
     "internal system error",
     "internal error",
     "errnum out of range",
@@ -546,7 +585,7 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
   rv = count;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
  cleanup:
-  if (ctx)
+  if (ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC)
     ipmi_mutex_unlock (ctx->semid);
   return (rv);
 }

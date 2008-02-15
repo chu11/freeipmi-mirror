@@ -150,6 +150,7 @@ static char * ipmi_kcs_ctx_errmsg[] =
     "BMC busy",
     "out of memory",
     "device not found",
+    "driver timeout",
     "internal system error",
     "internal error",
     "errnum out of range",
@@ -518,13 +519,13 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
     KCS_ERR_CLEANUP(!(ipmi_mutex_lock_interruptible(ctx->semid) < 0));
   lock_flag++;
   
-  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
+  KCS_ERR_DRIVER_TIMEOUT_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
 
   _ipmi_kcs_clear_obf (ctx);
 
   _ipmi_kcs_start_write (ctx);
 
-  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
+  KCS_ERR_DRIVER_TIMEOUT_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
 
   KCS_ERR_BUSY_CLEANUP(_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE));
 
@@ -536,7 +537,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
     {
       _ipmi_kcs_write_byte (ctx, *p);
 
-      KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
+      KCS_ERR_DRIVER_TIMEOUT_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
 
       KCS_ERR_BUSY_CLEANUP(_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE));
 
@@ -546,7 +547,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
     }
   _ipmi_kcs_end_write (ctx);
 
-  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
+  KCS_ERR_DRIVER_TIMEOUT_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
 
   KCS_ERR_BUSY_CLEANUP(_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE));
 
@@ -591,14 +592,14 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   
   KCS_ERR_IO_NOT_INITIALIZED_CLEANUP(ctx->io_init);
 
-  KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
+  KCS_ERR_DRIVER_TIMEOUT_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
 
   KCS_ERR_BUSY_CLEANUP(_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ));
 
   while (_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ))
     {
       char c;
-      KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_obf_set (ctx) < 0));
+      KCS_ERR_DRIVER_TIMEOUT_CLEANUP(!(_ipmi_kcs_wait_for_obf_set (ctx) < 0));
       c = _ipmi_kcs_read_byte (ctx);
       if (count < buf_len)
 	{
@@ -606,18 +607,18 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
 	  count++;
 	}
       _ipmi_kcs_read_next (ctx);
-      KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
+      KCS_ERR_DRIVER_TIMEOUT_CLEANUP(!(_ipmi_kcs_wait_for_ibf_clear (ctx) < 0));
     }
 
   if (_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_IDLE))
     {
       /* Clean up */
-      KCS_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_kcs_wait_for_obf_set (ctx) < 0));
+      KCS_ERR_DRIVER_TIMEOUT_CLEANUP(!(_ipmi_kcs_wait_for_obf_set (ctx) < 0));
       _ipmi_kcs_read_byte (ctx); /* toss it, ACK */
     }
   else
     {
-      KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_BUSY);
+      KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT);
       goto cleanup;
     }
 
@@ -627,7 +628,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
     ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   rv = count;
  cleanup:
-  if (ctx)
+  if (ctx && ctx->magic == IPMI_KCS_CTX_MAGIC)
     ipmi_mutex_unlock (ctx->semid);
   return (rv);
 }

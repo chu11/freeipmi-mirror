@@ -410,6 +410,10 @@ do {                                                              \
     ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                         \
   else if (__errnum == IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND)         \
     ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                      \
+  else if (__errnum == IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT)           \
+    ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;                        \
+  else if (__errnum == IPMI_KCS_CTX_ERR_BUSY)                     \
+    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                          \
   else if (__errnum == IPMI_KCS_CTX_ERR_SYSTEM_ERROR)             \
     ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                          \
   else                                                            \
@@ -449,6 +453,12 @@ do {                                                                \
     ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                           \
   else if (__errnum == IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND)          \
     ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                        \
+  else if (__errnum == IPMI_SSIF_CTX_ERR_DRIVER_TIMEOUT)            \
+    ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;                          \
+  else if (__errnum == IPMI_SSIF_CTX_ERR_BUSY)                      \
+    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                            \
+  else if (__errnum == IPMI_SSIF_CTX_ERR_SYSTEM_ERROR)              \
+    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                            \
   else                                                              \
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                          \
 } while (0)
@@ -482,10 +492,12 @@ do {                                                                        \
     ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;                                   \
   else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PERMISSION)                    \
     ctx->errnum = IPMI_ERR_PERMISSION;                                      \
-  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND)              \
-    ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                                \
   else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)                    \
     ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                                   \
+  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND)              \
+    ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                                \
+  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_DRIVER_TIMEOUT)                \
+    ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;                                  \
   else if (__errnum == IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR)                  \
     ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                                    \
   else                                                                      \

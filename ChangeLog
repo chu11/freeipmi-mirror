@@ -1,5 +1,20 @@
 2008-02-15  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/driver/ipmi-ssif-driver.c
+	(_ipmi_i2c_smbus_access): Support SSIF driver timeout.
+
+	* libfreeipmi/src/driver/: Support driver timeout error codes.
+
+	* libfreeipmi/src/driver/ipmi-openipmi-driver.c: Remove semaphore
+	unused code code.
+
+2008-02-15  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/src/bmc-info.c (display_get_device_id): Fix version
+	output.
+	
+2008-02-15  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/interface/ipmi-lan-interface.c
 	(ipmi_lan_recvfrom): Fix bug.
 	
