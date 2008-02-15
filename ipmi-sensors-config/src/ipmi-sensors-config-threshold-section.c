@@ -407,20 +407,6 @@ threshold_commit (const char *section_name,
   return (rv);
 }
 
-static config_validate_t
-threshold_validate (const char *section_name,
-                    const char *key_name,
-                    const char *value)
-{
-  double val;
-  char *ptr;
-  
-  val = strtod(value, &ptr);
-  if (*ptr != '\0')
-    return CONFIG_VALIDATE_INVALID_VALUE;
-  return CONFIG_VALIDATE_VALID_VALUE;
-}
-
 config_err_t
 ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_data,
                                        uint8_t *sdr_record,
@@ -448,6 +434,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   config_err_t ret;
   uint8_t sensor_type, sensor_unit;
   char desc[CONFIG_MAX_DESCRIPTION_LEN];
+  Key_Validate validate_ptr = NULL;
 
   assert(state_data);
   assert(sdr_record);
@@ -550,6 +537,16 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
            sensor_group (sensor_type),
            ipmi_sensor_units[sensor_unit]);
 
+  /* We will adjust this list as necessary later on.  Many
+   * measurements could technically be negative (i.e. temperature)
+   * even though its unrealistic for IPMI's sake.  Others, I'm just
+   * not sure about.
+   */
+  if (sensor_unit == IPMI_SENSOR_UNIT_RPM)
+    validate_ptr = config_floating_point_positive;
+  else
+    validate_ptr = config_floating_point;
+
   /* If a threshold is not-readable, it isn't up for consideration, so
    * don't "register" it.
    */
@@ -570,7 +567,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                   flags,
                                   threshold_checkout,
                                   threshold_commit,
-                                  threshold_validate) < 0)
+                                  validate_ptr) < 0)
         goto cleanup;
     }
 
@@ -590,7 +587,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                   flags,
                                   threshold_checkout,
                                   threshold_commit,
-                                  threshold_validate) < 0)
+                                  validate_ptr) < 0)
         goto cleanup;
     }
 
@@ -610,7 +607,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                   flags,
                                   threshold_checkout,
                                   threshold_commit,
-                                  threshold_validate) < 0)
+                                  validate_ptr) < 0)
         goto cleanup;
     }
 
@@ -630,7 +627,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                   flags,
                                   threshold_checkout,
                                   threshold_commit,
-                                  threshold_validate) < 0)
+                                  validate_ptr) < 0)
         goto cleanup;
     }
 
@@ -650,7 +647,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                   flags,
                                   threshold_checkout,
                                   threshold_commit,
-                                  threshold_validate) < 0)
+                                  validate_ptr) < 0)
         goto cleanup;
     }
 
@@ -670,7 +667,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                   flags,
                                   threshold_checkout,
                                   threshold_commit,
-                                  threshold_validate) < 0)
+                                  validate_ptr) < 0)
         goto cleanup;
     }
 
