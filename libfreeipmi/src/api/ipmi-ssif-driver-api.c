@@ -97,6 +97,9 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 
     API_ERR_SSIF_CLEANUP (!((read_len = ipmi_ssif_read (ctx->io.inband.ssif_ctx, pkt, pkt_len)) < 0));
 
+    if (!read_len)
+      API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_SYSTEM_ERROR);
+
     API_ERR_CLEANUP (!(unassemble_ipmi_kcs_pkt (pkt,
 						read_len,
 						ctx->io.inband.rs.obj_hdr,
@@ -154,6 +157,13 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
   /* Response Block */
   API_ERR_SSIF ((bytes_read = ipmi_ssif_read (ctx->io.inband.ssif_ctx,
 					      readbuf, buf_rs_len)) != -1);
+
+  if (!bytes_read)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+      return -1;
+    }
+
   if ((bytes_read - hdr_len) > 0)
     {
       memcpy(buf_rs, readbuf + hdr_len, bytes_read - hdr_len);

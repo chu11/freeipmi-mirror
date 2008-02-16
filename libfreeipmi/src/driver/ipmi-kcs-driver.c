@@ -716,6 +716,9 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
                                  pkt_len)) < 0)
     goto cleanup;
 
+  if (!read_len)
+    KCS_ERRNUM_SET_CLEANUP(IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
+
   KCS_ERR_INTERNAL_ERROR_CLEANUP(!(unassemble_ipmi_kcs_pkt (pkt,
                                                             read_len,
                                                             obj_hdr,

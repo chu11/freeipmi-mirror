@@ -11,6 +11,9 @@
 	* ipmimonitoring/src/libipmimonitoring/: Classify driver timeout
 	as a system error.
 
+	* libfreeipmi/: Fix corner cases when inband drivers read 0 bytes
+	of data.
+
 2008-02-15  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/src/bmc-info.c (display_get_device_id): Fix version

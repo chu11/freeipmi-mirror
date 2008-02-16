@@ -88,7 +88,12 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
     API_ERR_CLEANUP ((pkt = alloca (pkt_len)));
     memset (pkt, 0, pkt_len);
 
-    API_ERR_KCS_CLEANUP (!((read_len = ipmi_kcs_read (ctx->io.inband.kcs_ctx, pkt, pkt_len)) < 0));
+    API_ERR_KCS_CLEANUP (!((read_len = ipmi_kcs_read (ctx->io.inband.kcs_ctx, 
+                                                      pkt, 
+                                                      pkt_len)) < 0));
+
+    if (!read_len)
+      API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_SYSTEM_ERROR);
 
     API_ERR_CLEANUP (!(unassemble_ipmi_kcs_pkt (pkt,
 						read_len,
@@ -145,6 +150,12 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
 
   /* Response Block */
   API_ERR_KCS ((bytes_read = ipmi_kcs_read (ctx->io.inband.kcs_ctx, readbuf, buf_rs_len)) != -1);
+
+  if (!bytes_read)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+      return -1;
+    }
 
   if ((bytes_read - hdr_len) > 0)
     {

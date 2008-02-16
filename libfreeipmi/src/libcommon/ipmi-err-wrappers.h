@@ -290,6 +290,13 @@ do {                                                                    \
     __KCS_TRACE;                                                        \
   } while (0)
 
+#define KCS_ERRNUM_SET_CLEANUP(__errnum)                                \
+  do {                                                                  \
+    ctx->errnum = (__errnum);                                           \
+    __KCS_TRACE;                                                        \
+    goto cleanup;                                                       \
+  } while (0)
+
 #define KCS_ERR_PARAMETERS(expr)                                        \
   do {                                                                  \
     if (!(expr))                                                        \
@@ -476,6 +483,19 @@ do {                                                                    \
         __SSIF_TRACE;                                                   \
         goto cleanup;                                                   \
       }                                                                 \
+  } while (0)
+
+#define SSIF_ERRNUM_SET(__errnum)                                       \
+  do {                                                                  \
+    ctx->errnum = (__errnum);                                           \
+    __KCS_TRACE;                                                        \
+  } while (0)
+
+#define SSIF_ERRNUM_SET_CLEANUP(__errnum)                               \
+  do {                                                                  \
+    ctx->errnum = (__errnum);                                           \
+    __SSIF_TRACE;                                                       \
+    goto cleanup;                                                       \
   } while (0)
 
 #define SSIF_ERR_PARAMETERS(expr)                                       \
