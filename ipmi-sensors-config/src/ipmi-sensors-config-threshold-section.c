@@ -172,7 +172,7 @@ threshold_checkout (const char *section_name,
     {
       if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
-                "ipmi_cmd_get_sensor_reading_thresholds: %s\n",
+                "ipmi_cmd_get_sensor_thresholds: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
@@ -381,7 +381,6 @@ threshold_commit (const char *section_name,
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_sensor_thresholds_rs)))
     goto cleanup;
 
-#if 0
   if (ipmi_cmd_set_sensor_thresholds (state_data->ipmi_ctx,
                                       sensor_number,
                                       lower_non_critical_threshold_ptr,
@@ -394,12 +393,11 @@ threshold_commit (const char *section_name,
     {
       if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
-                "ipmi_cmd_set_sensor_reading_thresholds: %s\n",
+                "ipmi_cmd_set_sensor_thresholds: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-#endif
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:

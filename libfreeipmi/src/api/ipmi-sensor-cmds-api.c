@@ -149,7 +149,7 @@ ipmi_cmd_set_sensor_thresholds (ipmi_ctx_t ctx,
 
   API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
   
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sensor_thresholds_rs);
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_sensor_thresholds_rs);
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sensor_thresholds_rq);
 
