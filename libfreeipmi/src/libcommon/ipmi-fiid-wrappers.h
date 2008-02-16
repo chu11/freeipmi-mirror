@@ -261,6 +261,26 @@ do {                                                    \
        }                                                \
 } while (0)
 
+#define FIID_OBJ_COPY(__obj_dest, __obj_src, __alt_tmpl)            \
+do {                                                                \
+    if (!((__obj_dest) = fiid_obj_copy((__obj_src),(__alt_tmpl))))  \
+       {                                                            \
+         __FIID_OBJ_TRACE((__obj_src));                             \
+         __FIID_OBJ_SET_ERRNO((__obj_src));                         \
+         return (-1);                                               \
+       }                                                            \
+} while (0)
+
+#define FIID_OBJ_COPY_CLEANUP(__obj_dest, __obj_src, __alt_tmpl)    \
+do {                                                                \
+    if (!((__obj_dest) = fiid_obj_copy((__obj_src), (__alt_tmpl)))) \
+       {                                                            \
+         __FIID_OBJ_TRACE((__obj_src));                             \
+         __FIID_OBJ_SET_ERRNO((__obj_src));                         \
+         goto cleanup;                                              \
+       }                                                            \
+} while (0)
+
 #define FIID_OBJ_LEN(__len, __obj)                       \
 do {                                                     \
     if (((__len) = fiid_obj_len ((__obj))) < 0)          \
