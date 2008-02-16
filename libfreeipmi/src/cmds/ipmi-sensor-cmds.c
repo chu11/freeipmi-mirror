@@ -749,6 +749,7 @@ fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_THRESHOLDS);   
   FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
   if (lower_non_critical_threshold)
     {
