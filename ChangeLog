@@ -34,6 +34,9 @@
 	tmpl_sdr_full_sensor_record_non_threshold_based_sensors and
 	tmpl_sdr_full_sensor_record_threshold_based_sensors.
 
+	* libfreeipmi/src/debug/ipmi-debug-sdr.c (ipmi_dump_sdr_record):
+	Support more detailed templates.
+
 	* libfreeipmi/include/fiid/fiid.h, libfreeipmi/src/fiid/fiid.c
 	(fiid_obj_copy): New function.
 

@@ -30,6 +30,7 @@
 
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 
 #include "ipmi-debug-common.h"
 
@@ -59,9 +60,9 @@ ipmi_dump_sdr_record (int fd, const char *prefix, const char *hdr, const char *t
 
   FIID_OBJ_CREATE(obj_sdr_record_header, tmpl_sdr_record_header);
   
-  FIID_OBJ_SET_ALL(obj_sdr_record_header,
-                   sdr_record,
-                   sdr_record_len);
+  FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record_header,
+                           sdr_record,
+                           sdr_record_len);
   
   /* Not enough for a real SDR record, just dump whatever we have */
   if (sdr_record_len <= sdr_record_header_len)
@@ -75,38 +76,65 @@ ipmi_dump_sdr_record (int fd, const char *prefix, const char *hdr, const char *t
       goto cleanup;
     }
   
-  FIID_OBJ_GET(obj_sdr_record_header, "record_type", &val);
+  FIID_OBJ_GET_CLEANUP(obj_sdr_record_header, "record_type", &val);
   record_type = val;
 
   if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
-    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_full_sensor_record);
+    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_full_sensor_record);
   else if (record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
-    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_compact_sensor_record);
+    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_compact_sensor_record);
   else if (record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
-    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_event_only_record);
+    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_event_only_record);
   else if (record_type == IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD)
-    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_entity_association_record);
+    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_entity_association_record);
   else if (record_type == IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD)
-    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_device_relative_entity_association_record);
+    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_device_relative_entity_association_record);
   else if (record_type == IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
-    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_generic_device_locator_record);
+    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_generic_device_locator_record);
   else if (record_type == IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
-      FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_fru_device_locator_record);
+      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_fru_device_locator_record);
   else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
-      FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_management_controller_device_locator_record);
+      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_management_controller_device_locator_record);
   else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
-      FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_management_controller_confirmation_record);
+      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_management_controller_confirmation_record);
   else if (record_type == IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD)
-      FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_bmc_message_channel_info_record);
+      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_bmc_message_channel_info_record);
   else if (record_type == IPMI_SDR_FORMAT_OEM_RECORD)
-      FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_oem_record);
+      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_oem_record);
   else
     /* I don't know this record_type, maybe its in a newer spec?? */
-    FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_record_header);
+    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_record_header);
   
-  FIID_OBJ_SET_ALL(obj_sdr_record,
-                   sdr_record,
-                   sdr_record_len);
+  FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record,
+                           sdr_record,
+                           sdr_record_len);
+
+  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+    {
+      uint8_t event_reading_type_code;
+      fiid_obj_t obj_temp = NULL;
+
+      FIID_OBJ_GET_CLEANUP(obj_sdr_record, 
+                           "event_reading_type_code",
+                           &val);
+      event_reading_type_code = val;
+
+      if ((IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code)))
+        FIID_OBJ_COPY_CLEANUP(obj_temp,
+                              obj_sdr_record,
+                              tmpl_sdr_full_sensor_record_threshold_based_sensors);
+      else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code)
+               || IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
+        FIID_OBJ_COPY_CLEANUP(obj_temp,
+                              obj_sdr_record,
+                              tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
+
+      if (obj_temp)
+        {
+          FIID_OBJ_DESTROY(obj_sdr_record);
+          obj_sdr_record = obj_temp;
+        }
+    }
 
   ERR_CLEANUP (!(ipmi_obj_dump(fd, 
                                prefix, 
