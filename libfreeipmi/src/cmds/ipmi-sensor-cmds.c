@@ -747,7 +747,7 @@ fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sensor_thresholds_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_THRESHOLDS);   
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_THRESHOLDS);   
   FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
@@ -765,7 +765,7 @@ fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
   if (lower_critical_threshold)
     {
       FIID_OBJ_SET (obj_cmd_rq, "set_lower_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "lower_non_critical_threshold", *lower_critical_threshold);
+      FIID_OBJ_SET (obj_cmd_rq, "lower_critical_threshold", *lower_critical_threshold);
     }
   else
     {
@@ -776,7 +776,7 @@ fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
   if (lower_non_recoverable_threshold)
     {
       FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "lower_non_critical_threshold", *lower_non_recoverable_threshold);
+      FIID_OBJ_SET (obj_cmd_rq, "lower_non_recoverable_threshold", *lower_non_recoverable_threshold);
     }
   else
     {
@@ -798,7 +798,7 @@ fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
   if (upper_critical_threshold)
     {
       FIID_OBJ_SET (obj_cmd_rq, "set_upper_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "upper_non_critical_threshold", *upper_critical_threshold);
+      FIID_OBJ_SET (obj_cmd_rq, "upper_critical_threshold", *upper_critical_threshold);
     }
   else
     {
@@ -809,7 +809,7 @@ fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
   if (upper_non_recoverable_threshold)
     {
       FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "upper_non_critical_threshold", *upper_non_recoverable_threshold);
+      FIID_OBJ_SET (obj_cmd_rq, "upper_non_recoverable_threshold", *upper_non_recoverable_threshold);
     }
   else
     {
