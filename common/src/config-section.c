@@ -348,7 +348,8 @@ config_section_update_keyvalue_output_double(struct config_keyvalue *keyvalue,
 
 int
 config_sections_validate_keyvalue_inputs(struct config_section *sections,
-                                         int value_input_required)
+                                         int value_input_required,
+                                         void *arg)
 {
   struct config_section *s;
   int nonvalid_count = 0;
@@ -380,7 +381,8 @@ config_sections_validate_keyvalue_inputs(struct config_section *sections,
 
               if ((v = kv->key->validate(s->section_name,
                                          kv->key->key_name,
-                                         kv->value_input)) == CONFIG_VALIDATE_FATAL_ERROR)
+                                         kv->value_input,
+                                         arg)) == CONFIG_VALIDATE_FATAL_ERROR)
                 goto cleanup;
 
               if (v == CONFIG_VALIDATE_INVALID_VALUE)

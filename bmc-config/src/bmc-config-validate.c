@@ -21,7 +21,8 @@
 config_validate_t 
 channel_access_mode_validate (const char *section_name,
                               const char *key_name,
-                              const char *value)
+                              const char *value,
+                              void *arg)
 {
   if (channel_access_mode (value) >= 0)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -31,7 +32,8 @@ channel_access_mode_validate (const char *section_name,
 config_validate_t 
 get_privilege_limit_number_validate (const char *section_name,
                                      const char *key_name,
-                                     const char *value)
+                                     const char *value,
+                                     void *arg)
 {
   if (get_privilege_limit_number (value) > 0)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -41,7 +43,8 @@ get_privilege_limit_number_validate (const char *section_name,
 config_validate_t 
 privilege_level_number_validate (const char *section_name,
                                  const char *key_name,
-                                 const char *value)
+                                 const char *value,
+                                 void *arg)
 {
   if (privilege_level_number (value) > 0)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -51,7 +54,8 @@ privilege_level_number_validate (const char *section_name,
 config_validate_t 
 rmcpplus_priv_number_validate (const char *section_name,
                                const char *key_name,
-                               const char *value)
+                               const char *value,
+                               void *arg)
 {
   if (rmcpplus_priv_number (value) >= 0)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -61,7 +65,8 @@ rmcpplus_priv_number_validate (const char *section_name,
 config_validate_t 
 ip_address_source_number_validate (const char *section_name,
                                    const char *key_name,
-                                   const char *value)
+                                   const char *value,
+                                   void *arg)
 {
   if (ip_address_source_number (value) >= 0)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -71,7 +76,8 @@ ip_address_source_number_validate (const char *section_name,
 config_validate_t 
 power_restore_policy_number_validate (const char *section_name,
                                       const char *key_name,
-                                      const char *value)
+                                      const char *value,
+                                      void *arg)
 {
   if (power_restore_policy_number (value) != -1)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -81,7 +87,8 @@ power_restore_policy_number_validate (const char *section_name,
 config_validate_t 
 connect_mode_number_validate (const char *section_name,
                               const char *key_name,
-                              const char *value)
+                              const char *value,
+                              void *arg)
 {
   if (connect_mode_number (value) != -1)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -91,7 +98,8 @@ connect_mode_number_validate (const char *section_name,
 config_validate_t 
 flow_control_number_validate (const char *section_name,
                               const char *key_name,
-                              const char *value)
+                              const char *value,
+                              void *arg)
 {
   if (flow_control_number (value) > -1)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -101,7 +109,8 @@ flow_control_number_validate (const char *section_name,
 config_validate_t 
 bit_rate_number_validate (const char *section_name,
                           const char *key_name,
-                          const char *value)
+                          const char *value,
+                          void *arg)
 {
   if (bit_rate_number (value) > -1)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -111,7 +120,8 @@ bit_rate_number_validate (const char *section_name,
 config_validate_t 
 sol_bit_rate_number_validate (const char *section_name,
                               const char *key_name,
-                              const char *value)
+                              const char *value,
+                              void *arg)
 {
   if (sol_bit_rate_number (value) != -1)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -121,7 +131,8 @@ sol_bit_rate_number_validate (const char *section_name,
 config_validate_t 
 alert_destination_type_number_validate (const char *section_name,
                                         const char *key_name,
-                                        const char *value)
+                                        const char *value,
+                                        void *arg)
 {
   if (alert_destination_type_number (value) != -1)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -131,7 +142,8 @@ alert_destination_type_number_validate (const char *section_name,
 config_validate_t 
 alert_gateway_number_validate (const char *section_name,
                                const char *key_name,
-                               const char *value)
+                               const char *value,
+                               void *arg)
 {
   if (alert_gateway_number (value) != -1)
     return CONFIG_VALIDATE_VALID_VALUE;

@@ -280,7 +280,8 @@ username_commit (const char *section_name,
 static config_validate_t
 username_validate (const char *section_name,
                    const char *key_name,
-		   const char *value)
+		   const char *value,
+                   void *arg)
 {
   uint8_t userid;
   userid = atoi (section_name + strlen ("User"));
@@ -570,7 +571,8 @@ password_commit (const char *section_name,
 static config_validate_t
 password_validate (const char *section_name,
                    const char *key_name,
-		   const char *value)
+		   const char *value,
+                   void *arg)
 {
   if (strlen (value) <= IPMI_1_5_MAX_PASSWORD_LENGTH)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -714,7 +716,8 @@ password20_commit (const char *section_name,
 static config_validate_t
 password20_validate (const char *section_name,
                      const char *key_name,
-		     const char *value)
+		     const char *value,
+                     void *arg)
 {
   if (strlen (value) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
     return CONFIG_VALIDATE_VALID_VALUE;

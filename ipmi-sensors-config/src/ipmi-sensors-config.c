@@ -206,7 +206,8 @@ _ipmi_sensors_config (void *arg)
         value_input_required = 1;
 
       if ((num = config_sections_validate_keyvalue_inputs(sections,
-                                                          value_input_required)) < 0)
+                                                          value_input_required,
+                                                          &state_data)) < 0)
         {
           /* errors printed in function call */
           exit_code = EXIT_FAILURE;

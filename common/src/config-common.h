@@ -91,7 +91,8 @@ typedef config_err_t (*Key_Commit) (const char *section_name,
 /* Determines if an inputted value is valid */
 typedef config_validate_t (*Key_Validate) (const char *section_name,
                                            const char *key_name,
-                                           const char *value);
+                                           const char *value,
+                                           void *arg);
 
 struct config_key {
   char *key_name;

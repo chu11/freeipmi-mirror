@@ -19,7 +19,8 @@
 config_validate_t 
 config_yes_no_validate(const char *section_name, 
                        const char *key_name,
-                       const char *value)
+                       const char *value,
+                       void *arg)
 {
   assert(section_name);
   assert(key_name);
@@ -54,7 +55,8 @@ config_check_number_range(const char *value,
 config_validate_t 
 config_number_range_three_bits(const char *section_name, 
                                const char *key_name,
-                               const char *value)
+                               const char *value,
+                               void *arg)
 {
   assert(section_name);
   assert(key_name);
@@ -66,7 +68,8 @@ config_number_range_three_bits(const char *section_name,
 config_validate_t 
 config_number_range_four_bits(const char *section_name, 
                               const char *key_name,
-                              const char *value)
+                              const char *value,
+                              void *arg)
 {
   assert(section_name);
   assert(key_name);
@@ -78,7 +81,8 @@ config_number_range_four_bits(const char *section_name,
 config_validate_t 
 config_number_range_seven_bits(const char *section_name, 
                                const char *key_name,
-                               const char *value)
+                               const char *value,
+                               void *arg)
 {
   assert(section_name);
   assert(key_name);
@@ -90,7 +94,8 @@ config_number_range_seven_bits(const char *section_name,
 config_validate_t 
 config_number_range_twelve_bits(const char *section_name, 
                                 const char *key_name,
-                                const char *value)
+                                const char *value,
+                                void *arg)
 {
   assert(section_name);
   assert(key_name);
@@ -102,7 +107,8 @@ config_number_range_twelve_bits(const char *section_name,
 config_validate_t 
 config_number_range_one_byte(const char *section_name, 
                              const char *key_name,
-                             const char *value)
+                             const char *value,
+                             void *arg)
 {
   assert(section_name);
   assert(key_name);
@@ -114,7 +120,8 @@ config_number_range_one_byte(const char *section_name,
 config_validate_t 
 config_number_range_one_byte_non_zero(const char *section_name, 
                                       const char *key_name,
-                                      const char *value)
+                                      const char *value,
+                                      void *arg)
 {
   assert(section_name);
   assert(key_name);
@@ -126,7 +133,8 @@ config_number_range_one_byte_non_zero(const char *section_name,
 config_validate_t 
 config_number_range_two_bytes(const char *section_name, 
                               const char *key_name,
-                              const char *value)
+                              const char *value,
+                              void *arg)
 {
   assert(section_name);
   assert(key_name);
@@ -138,7 +146,8 @@ config_number_range_two_bytes(const char *section_name,
 config_validate_t 
 config_ip_address_validate(const char *section_name, 
                            const char *key_name,
-                           const char *value)
+                           const char *value,
+                           void *arg)
 {
   struct in_addr a;
 
@@ -154,7 +163,8 @@ config_ip_address_validate(const char *section_name,
 config_validate_t 
 config_mac_address_validate(const char *section_name, 
                             const char *key_name,
-                            const char *value)
+                            const char *value,
+                            void *arg)
 {
   unsigned int foo;
 
@@ -174,42 +184,4 @@ config_mac_address_validate(const char *section_name,
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-config_validate_t 
-config_floating_point(const char *section_name, 
-                      const char *key_name,
-                      const char *value)
-{
-  double conv;
-  char *endptr;
-
-  assert(value);
-
-  conv = strtod(value, &endptr);
-
-  if (*endptr)
-    return CONFIG_VALIDATE_INVALID_VALUE;
-
-  return CONFIG_VALIDATE_VALID_VALUE;
-}
-
-config_validate_t 
-config_floating_point_positive(const char *section_name, 
-                               const char *key_name,
-                               const char *value)
-{
-  double conv;
-  char *endptr;
-
-  assert(value);
-
-  conv = strtod(value, &endptr);
-
-  if (*endptr)
-    return CONFIG_VALIDATE_INVALID_VALUE;
-
-  if (conv < 0.0)
-    return CONFIG_VALIDATE_INVALID_VALUE;
-
-  return CONFIG_VALIDATE_VALID_VALUE;
-}
 

@@ -405,6 +405,64 @@ threshold_commit (const char *section_name,
   return (rv);
 }
 
+/* achu:
+ *
+ * The range of potential inputs is limited by:
+ *
+ * A) the threshold raw data is a 1 byte field (which may be signed or
+ * unsigned)
+ *
+ * B) the sensor decoding values.
+ *
+ * There is really no way to determine if the raw data that is
+ * calculated by ipmi_sensor_decode_raw_value() is within range at the
+ * end.  So the way that we'll check for input is to get the raw
+ * value, then convert is back to a calculated value.  If we get a
+ * value that is reasonably close, we'll consider the input from the
+ * user legit.
+ */
+
+config_validate_t 
+threshold_floating_point(const char *section_name, 
+                         const char *key_name,
+                         const char *value,
+                         void *arg)
+{
+  double conv;
+  char *endptr;
+
+  assert(value);
+
+  conv = strtod(value, &endptr);
+
+  if (*endptr)
+    return CONFIG_VALIDATE_INVALID_VALUE;
+
+  return CONFIG_VALIDATE_VALID_VALUE;
+}
+
+config_validate_t 
+threshold_floating_point_positive(const char *section_name, 
+                                  const char *key_name,
+                                  const char *value,
+                                  void *arg)
+{
+  double conv;
+  char *endptr;
+
+  assert(value);
+
+  conv = strtod(value, &endptr);
+
+  if (*endptr)
+    return CONFIG_VALIDATE_INVALID_VALUE;
+
+  if (conv < 0.0)
+    return CONFIG_VALIDATE_INVALID_VALUE;
+
+  return CONFIG_VALIDATE_VALID_VALUE;
+}
+
 config_err_t
 ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_data,
                                        uint8_t *sdr_record,
@@ -541,9 +599,9 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
    * not sure about.
    */
   if (sensor_unit == IPMI_SENSOR_UNIT_RPM)
-    validate_ptr = config_floating_point_positive;
+    validate_ptr = threshold_floating_point_positive;
   else
-    validate_ptr = config_floating_point;
+    validate_ptr = threshold_floating_point;
 
   /* If a threshold is not-readable, it isn't up for consideration, so
    * don't "register" it.

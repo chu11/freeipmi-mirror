@@ -44,10 +44,6 @@
 	common/src/tool-sdr-cache-common.c
 	(sdr_cache_get_threshold_settable): New function.
 
-	* common/src/config-validate.h, common/src/config-validate.c
-	(config_floating_point, config_floating_point_positive): New
-	functions.
-
 	* libfreeipmi/include/freeipmi/util/ipmi-sensor-util.h,
 	libfreeipmi/src/util/ipmi-sensor-util.c
 	(ipmi_sensor_decode_raw_value): New function.
@@ -57,6 +53,12 @@
 
 	* common/src/config-section.h, common/src/config-section.c
 	(config_section_update_keyvalue_output_double): New function.
+
+	* common/src/config-common.h: Change validate callback to take a
+	void *arg.
+
+	* common/src/config-section.h, common/src/config-section.c,
+	bmc-config/, pef-config/: Adjust for validate callback change.
 
 	* bmc-config/, pef-config/: Change -f to -n option.  Support -f
 	legacy.
