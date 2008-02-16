@@ -35,4 +35,10 @@ noinst_HEADERS = ipmi-sensors-config.h \
 ../../common/src/libconfigcommon.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
+../../common/src/libhostrange.la : force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libmiscutils.la : force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
 force-dependency-check:
