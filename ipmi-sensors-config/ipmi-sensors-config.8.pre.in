@@ -25,8 +25,9 @@ SDR record id followed by the sensor id string.
 
 Since many fields in
 .B ipmi-sensors-config
-involve decimal numbers, rounding may occur when changing thresholds
-that may not be immediately apparent to the user.
+involve decimal numbers, precision/floating point inaccuracies may occur 
+when configuring new thresholds.  The inaccuracies may not be
+apparent immediately.
 
 .LP
 See GENERAL USE below for a description on how most will want to use
