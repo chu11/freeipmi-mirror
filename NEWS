@@ -21,6 +21,7 @@ o Store SDR with different format for ipmi-sensors, ipmi-fru,
   new cache generation for these tools.
 o Modified SDR caching output messages in ipmi-sensors,
   ipmi-sel, ipmi-fru, and ipmimonitoring to provide more useful information.
+o Provide more detailed error messages in config tools.
 o Updated SDR output under verbose and very verbose output modes with:
   o More IPMI compliant field names.  For example, 'Sensor Name' has
     been replaced with 'ID String'.
