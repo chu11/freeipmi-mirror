@@ -427,6 +427,7 @@ static config_validate_t
 _threshold_in_range(const char *section_name, 
                     const char *key_name,
                     const char *value,
+                    double threshold_input,
                     void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
@@ -480,12 +481,12 @@ _threshold_in_range(const char *section_name,
   threshold_range_min = threshold_calc * THRESHOLD_RANGE_MIN_MULTIPLIER;
   threshold_range_max = threshold_calc * THRESHOLD_RANGE_MAX_MULTIPLIER;
 
-  if ((threshold_calc >= 0.0
-       && (threshold_calc < threshold_range_min
-           || threshold_calc > threshold_range_max))
-      || (threshold_calc < 0.0
-          && (threshold_calc > threshold_range_min
-              || threshold_calc < threshold_range_max)))
+  if ((threshold_input >= 0.0
+       && (threshold_input < threshold_range_min
+           || threshold_input > threshold_range_max))
+      || (threshold_input < 0.0
+          && (threshold_input > threshold_range_min
+              || threshold_input < threshold_range_max)))
     rv = CONFIG_VALIDATE_OUT_OF_RANGE_VALUE;
   else
     rv = CONFIG_VALIDATE_VALID_VALUE;
@@ -513,6 +514,7 @@ threshold_floating_point(const char *section_name,
   return _threshold_in_range(section_name,
                              key_name,
                              value,
+                             conv,
                              arg);
 }
 
@@ -538,6 +540,7 @@ threshold_floating_point_positive(const char *section_name,
   return _threshold_in_range(section_name,
                              key_name,
                              value,
+                             conv,
                              arg);
 }
 
