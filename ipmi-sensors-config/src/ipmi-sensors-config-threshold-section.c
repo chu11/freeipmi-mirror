@@ -415,13 +415,13 @@ threshold_commit (const char *section_name,
  * value into.  Also, the threshold raw data is a 1 byte field, which
  * may be signed or unsigned.
  *
- * Outside of some crazy math I currently don't want to think about,
- * there is really no way to determine if the raw data that is
- * calculated by ipmi_sensor_decode_raw_value() is within range at the
- * end.  So the way that we'll check for valid input is to get the raw
+ * Outside of some math I currently don't want to think about, there
+ * is really no way to determine if the raw data that is calculated by
+ * ipmi_sensor_decode_raw_value() is within range at the end.  So the
+ * way that we'll check for a valid input range is to get the raw
  * value, then convert is back to a calculated value.  If we get a
- * value that is reasonably close, we'll consider the input from the
- * user legit.
+ * value that is reasonably close to what the user input, we'll
+ * consider the input from the user legit.
  */
 static config_validate_t
 _threshold_in_range(const char *section_name, 
@@ -481,6 +481,9 @@ _threshold_in_range(const char *section_name,
   threshold_range_min = threshold_calc * THRESHOLD_RANGE_MIN_MULTIPLIER;
   threshold_range_max = threshold_calc * THRESHOLD_RANGE_MAX_MULTIPLIER;
 
+  /* achu: technically shouldn't compare doubles to constants, but I
+   * think its ok here.
+   */
   if ((threshold_input >= 0.0
        && (threshold_input < threshold_range_min
            || threshold_input > threshold_range_max))
