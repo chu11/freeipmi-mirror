@@ -47,7 +47,7 @@ config_check_number_range(const char *value,
     return CONFIG_VALIDATE_INVALID_VALUE;
 
   if (conv < min || conv > max)
-    return CONFIG_VALIDATE_OUT_OF_RANGE;
+    return CONFIG_VALIDATE_OUT_OF_RANGE_VALUE;
 
   return CONFIG_VALIDATE_VALID_VALUE;
 }

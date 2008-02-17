@@ -15,6 +15,10 @@
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
+/* 3% range is what we'll go with right now */
+#define THRESHOLD_RANGE_MIN_MULTIPLIER 0.97
+#define THRESHOLD_RANGE_MAX_MULTIPLIER 1.03
+
 static config_err_t
 _get_sdr_decoding_data(ipmi_sensors_config_state_data_t *state_data,
                        uint8_t *sdr_record,
@@ -75,7 +79,6 @@ _get_sdr_decoding_data(ipmi_sensors_config_state_data_t *state_data,
  cleanup:
   return rv;
 }
-
                        
 static config_err_t
 _calculate_threshold(ipmi_sensors_config_state_data_t *state_data,
@@ -253,7 +256,7 @@ static config_err_t
 _calculate_threshold_raw(ipmi_sensors_config_state_data_t *state_data,
                          uint8_t *sdr_record,
                          unsigned int sdr_record_len,
-                         char *threshold_input,
+                         const char *threshold_input,
                          uint8_t *threshold_raw)
 {
   int8_t r_exponent, b_exponent;
@@ -407,20 +410,85 @@ threshold_commit (const char *section_name,
 
 /* achu:
  *
- * The range of potential inputs is limited by:
+ * The range of potential inputs is limited by the sensor decoding
+ * values and the "range" of values it can convert the threshold-raw
+ * value into.  Also, the threshold raw data is a 1 byte field, which
+ * may be signed or unsigned.
  *
- * A) the threshold raw data is a 1 byte field (which may be signed or
- * unsigned)
- *
- * B) the sensor decoding values.
- *
- * Outside of some crazy match, there is really no way to determine if
- * the raw data that is calculated by ipmi_sensor_decode_raw_value()
- * is within range at the end.  So the way that we'll check for input
- * is to get the raw value, then convert is back to a calculated
- * value.  If we get a value that is reasonably close, we'll consider
- * the input from the user legit.
+ * Outside of some crazy math I currently don't want to think about,
+ * there is really no way to determine if the raw data that is
+ * calculated by ipmi_sensor_decode_raw_value() is within range at the
+ * end.  So the way that we'll check for valid input is to get the raw
+ * value, then convert is back to a calculated value.  If we get a
+ * value that is reasonably close, we'll consider the input from the
+ * user legit.
  */
+static config_validate_t
+_threshold_in_range(const char *section_name, 
+                    const char *key_name,
+                    const char *value,
+                    void *arg)
+{
+  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  config_validate_t rv = CONFIG_VALIDATE_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t threshold_raw;
+  uint8_t sensor_number;
+  double threshold_calc;
+  double threshold_range_min, threshold_range_max;
+
+  if ((ret = get_sdr_record(state_data,
+                            section_name,
+                            sdr_record,
+                            &sdr_record_len)) != CONFIG_ERR_SUCCESS)
+    {
+      if (ret == CONFIG_ERR_NON_FATAL_ERROR)
+        rv = CONFIG_VALIDATE_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (sdr_cache_get_sensor_number(NULL,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  &sensor_number) < 0)
+    goto cleanup;
+
+  if ((ret = _calculate_threshold_raw(state_data,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      value,
+                                      &threshold_raw)) != CONFIG_ERR_SUCCESS)
+    {
+      if (ret == CONFIG_ERR_NON_FATAL_ERROR)
+        rv = CONFIG_VALIDATE_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if ((ret = _calculate_threshold(state_data,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  threshold_raw,
+                                  &threshold_calc)) != CONFIG_ERR_SUCCESS)
+    {
+      if (ret == CONFIG_ERR_NON_FATAL_ERROR)
+        rv = CONFIG_VALIDATE_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  threshold_range_min = threshold_calc * THRESHOLD_RANGE_MIN_MULTIPLIER;
+  threshold_range_max = threshold_calc * THRESHOLD_RANGE_MAX_MULTIPLIER;
+
+  if (threshold_calc < threshold_range_min
+      || threshold_calc > threshold_range_max)
+    rv = CONFIG_VALIDATE_OUT_OF_RANGE_VALUE;
+  else
+    rv = CONFIG_VALIDATE_VALID_VALUE;
+  
+ cleanup:
+  return rv;
+}
 
 config_validate_t 
 threshold_floating_point(const char *section_name, 
@@ -438,7 +506,10 @@ threshold_floating_point(const char *section_name,
   if (*endptr)
     return CONFIG_VALIDATE_INVALID_VALUE;
 
-  return CONFIG_VALIDATE_VALID_VALUE;
+  return _threshold_in_range(section_name,
+                             key_name,
+                             value,
+                             arg);
 }
 
 config_validate_t 
@@ -458,9 +529,12 @@ threshold_floating_point_positive(const char *section_name,
     return CONFIG_VALIDATE_INVALID_VALUE;
 
   if (conv < 0.0)
-    return CONFIG_VALIDATE_INVALID_VALUE;
+    return CONFIG_VALIDATE_OUT_OF_RANGE_VALUE;
 
-  return CONFIG_VALIDATE_VALID_VALUE;
+  return _threshold_in_range(section_name,
+                             key_name,
+                             value,
+                             arg);
 }
 
 config_err_t

@@ -385,10 +385,19 @@ config_sections_validate_keyvalue_inputs(struct config_section *sections,
                                          arg)) == CONFIG_VALIDATE_FATAL_ERROR)
                 goto cleanup;
 
-              if (v == CONFIG_VALIDATE_OUT_OF_RANGE)
+              if (v == CONFIG_VALIDATE_NON_FATAL_ERROR)
                 {
                   fprintf(stderr,
-                          "Out of Range Value '%s' for key '%s' in section '%s'\n",
+                          "Error validating value '%s' for key '%s' in section '%s'\n",
+                          kv->value_input,
+                          kv->key->key_name,
+                          s->section_name);
+                  nonvalid_count++;
+                }
+              if (v == CONFIG_VALIDATE_OUT_OF_RANGE_VALUE)
+                {
+                  fprintf(stderr,
+                          "Out of Range value '%s' for key '%s' in section '%s'\n",
                           kv->value_input,
                           kv->key->key_name,
                           s->section_name);
