@@ -40,7 +40,8 @@ typedef enum
 
 typedef enum
   {
-    CONFIG_VALIDATE_FATAL_ERROR = -2,
+    CONFIG_VALIDATE_FATAL_ERROR = -3,
+    CONFIG_VALIDATE_OUT_OF_RANGE = -2,
     CONFIG_VALIDATE_INVALID_VALUE = -1,
     CONFIG_VALIDATE_VALID_VALUE = 0,
   } config_validate_t;

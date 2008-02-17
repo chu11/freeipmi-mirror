@@ -414,12 +414,12 @@ threshold_commit (const char *section_name,
  *
  * B) the sensor decoding values.
  *
- * There is really no way to determine if the raw data that is
- * calculated by ipmi_sensor_decode_raw_value() is within range at the
- * end.  So the way that we'll check for input is to get the raw
- * value, then convert is back to a calculated value.  If we get a
- * value that is reasonably close, we'll consider the input from the
- * user legit.
+ * Outside of some crazy match, there is really no way to determine if
+ * the raw data that is calculated by ipmi_sensor_decode_raw_value()
+ * is within range at the end.  So the way that we'll check for input
+ * is to get the raw value, then convert is back to a calculated
+ * value.  If we get a value that is reasonably close, we'll consider
+ * the input from the user legit.
  */
 
 config_validate_t 
