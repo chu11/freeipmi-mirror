@@ -483,8 +483,9 @@ _threshold_in_range(const char *section_name,
   if ((threshold_calc >= 0.0
        && (threshold_calc < threshold_range_min
            || threshold_calc > threshold_range_max))
-      || (threshold_calc > threshold_range_min
-          || threshold_calc < threshold_range_max))
+      || (threshold_calc < 0.0
+          && (threshold_calc > threshold_range_min
+              || threshold_calc < threshold_range_max)))
     rv = CONFIG_VALIDATE_OUT_OF_RANGE_VALUE;
   else
     rv = CONFIG_VALIDATE_VALID_VALUE;
