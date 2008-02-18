@@ -21,7 +21,7 @@
 
 #include "pef-config.h"
 
-void pef_config_argp_parse (int argc, char **argv, struct config_arguments *cmd_args);
-int pef_config_args_validate (struct config_arguments *args);
+void pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_args);
+int pef_config_args_validate (struct pef_config_arguments *args);
 
 #endif

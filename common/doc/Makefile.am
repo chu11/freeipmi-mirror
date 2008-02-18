@@ -4,6 +4,7 @@ EXTRA_DIST = \
 	manpage-common-outofband-hostname.man \
 	manpage-common-outofband-hostname-hostranged.man \
 	manpage-common-outofband-username-user.man \
+	manpage-common-outofband-username-operator.man \
 	manpage-common-outofband-username-admin.man \
 	manpage-common-outofband-password.man \
 	manpage-common-outofband-k-g.man \
@@ -11,6 +12,7 @@ EXTRA_DIST = \
 	manpage-common-authentication-type.man \
 	manpage-common-cipher-suite-id.man \
 	manpage-common-privilege-level-user.man \
+	manpage-common-privilege-level-operator.man \
 	manpage-common-privilege-level-admin.man \
 	manpage-common-workaround-flags.man \
 	manpage-common-workaround-heading-text.man \

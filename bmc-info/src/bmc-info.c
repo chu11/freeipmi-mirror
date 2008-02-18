@@ -58,18 +58,14 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 {
   uint64_t bc_maj, bc_min, pia_maj, pia_min;
   fiid_obj_t intel_rs = NULL;
-  uint8_t buf[1024];
-  int32_t len;
   int rv = -1;
 
   assert(state_data);
 
-  _FIID_OBJ_CREATE(intel_rs, tmpl_cmd_get_device_id_sr870bn4_rs);
+  _FIID_OBJ_COPY(intel_rs,
+		 device_id_rs,
+		 tmpl_cmd_get_device_id_sr870bn4_rs);
 
-  _FIID_OBJ_GET_ALL_LEN(len, device_id_rs, buf, 1024);
-
-  _FIID_OBJ_SET_ALL(intel_rs, buf, len);
-  
   _FIID_OBJ_GET (intel_rs,
                  "auxiliary_firmware_revision_info.boot_code.major",
                  &bc_maj);

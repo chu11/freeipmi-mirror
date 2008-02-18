@@ -71,7 +71,7 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
 									     BLOCK_SELECTOR, 
 									     obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -235,7 +235,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
                                                                              al->oem_level_oem_proprietary,
                                                                              obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));

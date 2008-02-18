@@ -37,6 +37,15 @@ int ipmi_sensor_decode_value (int8_t r_exponent,
 			      uint8_t raw_data,
 			      double *value);
 
+int ipmi_sensor_decode_raw_value (int8_t r_exponent, 
+                                  int8_t b_exponent, 
+                                  int16_t m, 
+                                  int16_t b, 
+                                  uint8_t linearization, 
+                                  uint8_t analog_data_format, 
+                                  double value,
+                                  uint8_t *raw_data);
+
 #ifdef __cplusplus
 }
 #endif

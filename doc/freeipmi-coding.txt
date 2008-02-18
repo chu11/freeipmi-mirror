@@ -552,9 +552,9 @@ could change this viewpoint later.
 9) Bmc-Config/Pef-config callback design
 ----------------------------------------
 
-Bmc-config and Pef-config (henceforce together just called Bmc-config)
-are coded with a archicture that reads/writes each configurable field
-in the BMC separately.  
+Bmc-config, Pef-config, and Ipmi-sensors-config (henceforce together
+just called Bmc-config) are coded with a archicture that reads/writes
+each configurable field in the BMC separately.
 
 As an example, suppose we have the following BMC configuration file
 we'd like to commit.
@@ -599,12 +599,12 @@ IPMI protocol to know what field was configured incorrectly and why.
 
 In the future, functionality could be added to retry each field
 separately if there was such a failure, however that would add another
-piece of complexity into the code we currently don't have time for.
+piece of complexity into the code we currently don't have time to add.
 
 B) There are several (and possibly more future) vendor compliance
 problems that can be (or will need to be) worked around.  By using
 this architecture each specific field can be worked around
-independetly depending on the vendor.
+independently depending on the vendor.
 
 C) In the beginning of Bmc-config's development, 'FieldA' type fields
 were a bit more common than 'FieldB' type fields.  Currently, it's

@@ -49,7 +49,7 @@ _get_key(bmc_config_state_data_t *state_data,
                                           0,
                                           obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_channel_security_keys: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -104,7 +104,7 @@ _set_key(bmc_config_state_data_t *state_data,
                                           key_len,
                                           obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_channel_security_keys: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -189,7 +189,7 @@ k_g_checkout (const char *section_name,
    * same.
    */
 
-  if (state_data->prog_data->args->action == CONFIG_ACTION_DIFF)
+  if (state_data->prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
     {
       uint8_t kv_k_g[IPMI_MAX_K_G_LENGTH+1];
 

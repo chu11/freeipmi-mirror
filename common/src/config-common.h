@@ -8,10 +8,14 @@
 #define CONFIG_CHECKOUT_KEY_COMMENTED_OUT                  0x01
 #define CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x02
 #define CONFIG_DO_NOT_CHECKOUT                             0x04
+#define CONFIG_READABLE_ONLY                               0x08
 
 #define CONFIG_CHECKOUT_LINE_LEN                           45
 
 #define CONFIG_PARSE_BUFLEN                                4096
+
+#define CONFIG_MAX_SECTION_NAME_LEN                        128
+#define CONFIG_MAX_DESCRIPTION_LEN                         1024
 
 #define SET_SELECTOR      0x0
 #define BLOCK_SELECTOR    0x0
@@ -36,7 +40,9 @@ typedef enum
 
 typedef enum
   {
-    CONFIG_VALIDATE_FATAL_ERROR = -2,
+    CONFIG_VALIDATE_FATAL_ERROR = -4,
+    CONFIG_VALIDATE_NON_FATAL_ERROR = -3,
+    CONFIG_VALIDATE_OUT_OF_RANGE_VALUE = -2,
     CONFIG_VALIDATE_INVALID_VALUE = -1,
     CONFIG_VALIDATE_VALID_VALUE = 0,
   } config_validate_t;
@@ -87,7 +93,8 @@ typedef config_err_t (*Key_Commit) (const char *section_name,
 /* Determines if an inputted value is valid */
 typedef config_validate_t (*Key_Validate) (const char *section_name,
                                            const char *key_name,
-                                           const char *value);
+                                           const char *value,
+                                           void *arg);
 
 struct config_key {
   char *key_name;

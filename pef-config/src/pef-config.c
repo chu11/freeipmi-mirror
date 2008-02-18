@@ -73,8 +73,8 @@ _pef_config (void *arg)
   state_data.prog_data = prog_data;
 
   if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
-                                        prog_data->args->common.hostname,
-                                        &(prog_data->args->common),
+                                        prog_data->args->config_args.common.hostname,
+                                        &(prog_data->args->config_args.common),
                                         errmsg,
                                         IPMI_OPEN_ERRMSGLEN)))
     {
@@ -89,11 +89,11 @@ _pef_config (void *arg)
       goto cleanup;
     }
 
-  if (prog_data->args->action == CONFIG_ACTION_CHECKOUT)
+  if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT)
     {
-      if (prog_data->args->filename)
+      if (prog_data->args->config_args.filename)
         {
-          if (!(fp = fopen (prog_data->args->filename, "w")))
+          if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
               perror("fopen");
               goto cleanup;
@@ -103,12 +103,12 @@ _pef_config (void *arg)
       else
         fp = stdout;
     }
-  else if (prog_data->args->action == CONFIG_ACTION_COMMIT
-           || prog_data->args->action == CONFIG_ACTION_DIFF)
+  else if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
+           || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
     {
-      if (prog_data->args->filename && strcmp (prog_data->args->filename, "-"))
+      if (prog_data->args->config_args.filename && strcmp (prog_data->args->config_args.filename, "-"))
         {
-          if (!(fp = fopen (prog_data->args->filename, "r")))
+          if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
               perror("fopen");
               goto cleanup;
@@ -120,19 +120,19 @@ _pef_config (void *arg)
     }
 
   /* parse if there is an input file or no pairs at all */
-  if ((prog_data->args->action == CONFIG_ACTION_COMMIT
-       && prog_data->args->filename)
-      || (prog_data->args->action == CONFIG_ACTION_COMMIT
-          && !prog_data->args->filename
-          && !prog_data->args->keypairs)
-      || (prog_data->args->action == CONFIG_ACTION_DIFF
-          && prog_data->args->filename)
-      || (prog_data->args->action == CONFIG_ACTION_DIFF
-          && !prog_data->args->filename
-          && !prog_data->args->keypairs))
+  if ((prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
+       && prog_data->args->config_args.filename)
+      || (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
+          && !prog_data->args->config_args.filename
+          && !prog_data->args->config_args.keypairs)
+      || (prog_data->args->config_args.action == CONFIG_ACTION_DIFF
+          && prog_data->args->config_args.filename)
+      || (prog_data->args->config_args.action == CONFIG_ACTION_DIFF
+          && !prog_data->args->config_args.filename
+          && !prog_data->args->config_args.keypairs))
     {
       if (config_parse(sections,
-                       prog_data->args,
+                       &(prog_data->args->config_args),
                        fp) < 0)
         {
           /* errors printed in function call */
@@ -143,13 +143,13 @@ _pef_config (void *arg)
   /* note: argp validation catches if user specified keypair and
      filename for a diff
   */
-  if ((prog_data->args->action == CONFIG_ACTION_CHECKOUT
-       || prog_data->args->action == CONFIG_ACTION_COMMIT
-       || prog_data->args->action == CONFIG_ACTION_DIFF)
-      && prog_data->args->keypairs)
+  if ((prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT
+       || prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
+       || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
+      && prog_data->args->config_args.keypairs)
     {
       if (config_sections_insert_keyvalues(sections,
-                                           prog_data->args->keypairs) < 0)
+                                           prog_data->args->config_args.keypairs) < 0)
         {
           /* errors printed in function call */
           exit_code = EXIT_FAILURE;
@@ -157,18 +157,19 @@ _pef_config (void *arg)
         }
     }
 
-  if (prog_data->args->action == CONFIG_ACTION_CHECKOUT
-      || prog_data->args->action == CONFIG_ACTION_COMMIT
-      || prog_data->args->action == CONFIG_ACTION_DIFF)
+  if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT
+      || prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
+      || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
     {
       int num;
       int value_input_required = 0;
 
-      if (prog_data->args->action != CONFIG_ACTION_CHECKOUT)
+      if (prog_data->args->config_args.action != CONFIG_ACTION_CHECKOUT)
         value_input_required = 1;
 
       if ((num = config_sections_validate_keyvalue_inputs(sections,
-                                                          value_input_required)) < 0)
+                                                          value_input_required,
+                                                          &state_data)) < 0)
         {
           /* errors printed in function call */
           exit_code = EXIT_FAILURE;
@@ -184,12 +185,12 @@ _pef_config (void *arg)
     }
   
 
-  if (prog_data->args->action == CONFIG_ACTION_CHECKOUT
-      && prog_data->args->section_strs)
+  if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT
+      && prog_data->args->config_args.section_strs)
     {
       struct config_section_str *sstr;
 
-      sstr = prog_data->args->section_strs;
+      sstr = prog_data->args->config_args.section_strs;
       while (sstr)
         {
           if (!config_find_section(sections,
@@ -205,12 +206,12 @@ _pef_config (void *arg)
     }
 
 
-  switch (prog_data->args->action) {
+  switch (prog_data->args->config_args.action) {
   case CONFIG_ACTION_INFO:
     ret = pef_info (&state_data);
     break;
   case CONFIG_ACTION_CHECKOUT:
-    if (prog_data->args->section_strs)
+    if (prog_data->args->config_args.section_strs)
       {
         struct config_section_str *sstr;
 
@@ -218,7 +219,7 @@ _pef_config (void *arg)
          * and --keypair, so all_keys_if_none_specified should be '1'.
          */
 
-        sstr = prog_data->args->section_strs;
+        sstr = prog_data->args->config_args.section_strs;
         while (sstr)
           {
 	    struct config_section *s;
@@ -232,7 +233,7 @@ _pef_config (void *arg)
               }
 
             this_ret = config_checkout_section(s,
-                                               prog_data->args,
+                                               &(prog_data->args->config_args),
                                                1,
                                                fp,
                                                &state_data);
@@ -248,11 +249,11 @@ _pef_config (void *arg)
       {
         int all_keys_if_none_specified = 0;
 
-        if (!prog_data->args->keypairs)
+        if (!prog_data->args->config_args.keypairs)
           all_keys_if_none_specified++;
 
         ret = config_checkout (sections,
-                               prog_data->args,
+                               &(prog_data->args->config_args),
                                all_keys_if_none_specified,
                                fp,
                                &state_data);
@@ -260,13 +261,13 @@ _pef_config (void *arg)
     break;
   case CONFIG_ACTION_COMMIT:
     ret = config_commit (sections,
-                         prog_data->args,
+                         &(prog_data->args->config_args),
                          fp,
                          &state_data);
     break;
   case CONFIG_ACTION_DIFF:
     ret = config_diff (sections,
-                       prog_data->args,
+                       &(prog_data->args->config_args),
                        &state_data);
     break;
   case CONFIG_ACTION_LIST_SECTIONS:
@@ -298,7 +299,7 @@ int
 main (int argc, char **argv)
 {
   pef_config_prog_data_t prog_data;
-  struct config_arguments cmd_args;
+  struct pef_config_arguments cmd_args;
   int exit_code;
   
   ipmi_disable_coredump();

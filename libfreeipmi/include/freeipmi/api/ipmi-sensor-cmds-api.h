@@ -40,6 +40,16 @@ int8_t ipmi_cmd_get_sensor_reading_discrete (ipmi_ctx_t ctx,
 					     uint8_t sensor_number, 
 					     fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_set_sensor_thresholds (ipmi_ctx_t ctx,
+                                       uint8_t sensor_number,
+                                       uint8_t *lower_non_critical_threshold,
+                                       uint8_t *lower_critical_threshold,
+                                       uint8_t *lower_non_recoverable_threshold,
+                                       uint8_t *upper_non_critical_threshold,
+                                       uint8_t *upper_critical_threshold,
+                                       uint8_t *upper_non_recoverable_threshold,
+                                       fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_sensor_thresholds (ipmi_ctx_t ctx, 
 				       uint8_t sensor_number, 
 				       fiid_obj_t obj_cmd_rs);

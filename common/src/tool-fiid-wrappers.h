@@ -39,7 +39,7 @@
 
 #define _FIID_OBJ_CREATE(__obj, __tmpl)                   \
 do {                                                      \
-  if (!((__obj) = fiid_obj_create(__tmpl)))               \
+  if (!((__obj) = fiid_obj_create((__tmpl))))             \
     {                                                     \
       pstdout_fprintf(state_data->pstate,                 \
                       stderr,                             \
@@ -47,6 +47,18 @@ do {                                                      \
                       strerror(errno));                   \
       goto cleanup;                                       \
     }                                                     \
+} while (0)
+
+#define _FIID_OBJ_COPY(__obj_dest, __obj_src, __alt_tmpl)            \
+do {                                                                 \
+  if (!((__obj_dest) = fiid_obj_copy((__obj_src), (__alt_tmpl))))    \
+    {                                                                \
+      pstdout_fprintf(state_data->pstate,                            \
+                      stderr,                                        \
+                      "fiid_obj_copy: %s\n",                         \
+                      fiid_strerror(fiid_obj_errnum((__obj_src))));  \
+      goto cleanup;                                                  \
+    }                                                                \
 } while (0)
 
 #define _FIID_OBJ_GET(__obj, __field, __val)                    \
@@ -59,7 +71,7 @@ do {                                                            \
                         stderr,                                 \
                         "fiid_obj_get: %s: %s\n",               \
                         __field,                                \
-                        fiid_strerror(fiid_obj_errnum(__obj))); \
+                        fiid_strerror(fiid_obj_errnum((__obj)))); \
          goto cleanup;                                          \
       }                                                         \
     *__localval_ptr = __localval;                               \
@@ -75,7 +87,7 @@ do {                                                            \
                         stderr,                                         \
                         "fiid_obj_get: %s: %s\n",                       \
                         __field,                                        \
-                        fiid_strerror(fiid_obj_errnum(__obj)));         \
+                        fiid_strerror(fiid_obj_errnum((__obj))));       \
          goto cleanup;                                                  \
       }                                                                 \
     *__localval_ptr = __localval;                                       \
@@ -102,24 +114,12 @@ do {                                                                            
     if (((__len) = fiid_obj_get_data ((__obj), (__field), (__data), (__data_len))) < 0) \
       {                                                                                 \
          pstdout_fprintf(state_data->pstate,                                            \
-                        stderr,                                                         \
-                        "fiid_obj_get_data: %s: %s\n",                                  \
-                        __field,                                                        \
-                        fiid_strerror(fiid_obj_errnum(__obj)));                         \
+                         stderr,                                                        \
+                         "fiid_obj_get_data: %s: %s\n",                                 \
+                         __field,                                                       \
+                         fiid_strerror(fiid_obj_errnum((__obj))));                      \
          goto cleanup;                                                                  \
       }                                                                                 \
-} while (0)
-
-#define _FIID_OBJ_GET_ALL_LEN(__len, __obj, __data, __data_len)               \
-do {                                                                          \
-    if (((__len) = fiid_obj_get_all ((__obj), (__data), (__data_len))) < 0)   \
-      {                                                                       \
-         pstdout_fprintf(state_data->pstate,                                  \
-                        stderr,                                               \
-                        "fiid_obj_get_all: %s\n",                             \
-                        fiid_strerror(fiid_obj_errnum(__obj)));               \
-         goto cleanup;                                                        \
-      }                                                                       \
 } while (0)
 
 #define _FIID_OBJ_SET_ALL(__obj, __data, __data_len)                        \
@@ -127,9 +127,9 @@ do {                                                                        \
     if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)             \
       {                                                                     \
          pstdout_fprintf(state_data->pstate,                                \
-                        stderr,                                             \
-                        "fiid_obj_set_all: %s\n",                           \
-                        fiid_strerror(fiid_obj_errnum(__obj)));             \
+                         stderr,                                            \
+                         "fiid_obj_set_all: %s\n",                          \
+                         fiid_strerror(fiid_obj_errnum((__obj))));          \
          goto cleanup;                                                      \
       }                                                                     \
 } while (0)

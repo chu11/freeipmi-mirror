@@ -2,6 +2,7 @@
 -----
 For Users
 ---------
+o Add new tool ipmi-sensors-config.
 o Support --groups (plural) for multiple groups listing in
   ipmi-sensors.  Older --group (non-plural) option maintained for
   backwards compatability.
@@ -9,14 +10,16 @@ o Support --list-groups and --flush in ipmimonitoring for consistency
   to ipmi-sensors.
 o Change --cache-dir to --sdr-cache-dir in ipmimonitoring for consistency
   to ipmi-sensors.
+o Change short option -f option to -n in pef-config and bmc-config for
+  consistency to ipmi-sensors-config.  The -f option is maintained for
+  backwards compatability.
 o Support shared SDR caches for ipmi-sensors, ipmi-fru, ipmi-sel, and
   ipmimonitoring.  (libipmimonitoring will still use a different
-  default cache directory.)
-o Store SDR with different format for ipmi-sensors, ipmi-fru,
-  ipmi-sel, and ipmimonitoring/libipmimonitoring.  This will require a
-  new cache generation for these tools.
+  default cache directory.)  This will require a new cache generation
+  for these tools.
 o Modified SDR caching output messages in ipmi-sensors,
   ipmi-sel, ipmi-fru, and ipmimonitoring to provide more useful information.
+o Provide more detailed error messages in config tools.
 o Updated SDR output under verbose and very verbose output modes with:
   o More IPMI compliant field names.  For example, 'Sensor Name' has
     been replaced with 'ID String'.
@@ -43,6 +46,9 @@ o Many libfreeipmi API changes.  Not counting specific tool changes
   o New header files for more ipmi spec subsections added.
 o Support new 'ipmi_monitoring_sdr_cache_filenames' function in
   libipmimonitoring.
+o Store SDR with different format for ipmi-sensors, ipmi-fru,
+  ipmi-sel, and ipmimonitoring/libipmimonitoring for easier future
+  extensibility.  
 o Packet names added to IPMI dump outputs in all tools for easier
   packet identification in debugging.
 o Support driver timeout error codes in all drivers and APIs.

@@ -21,7 +21,8 @@
 config_validate_t 
 alert_destination_type_validate (const char *section_name,
                                  const char *key_name,
-                                 const char *value)
+                                 const char *value,
+                                 void *arg)
 {
   if (alert_destination_type_number (value) != -1)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -31,7 +32,8 @@ alert_destination_type_validate (const char *section_name,
 config_validate_t 
 alert_gateway_validate (const char *section_name,
                         const char *key_name,
-                        const char *value)
+                        const char *value,
+                        void *arg)
 {
   if (alert_gateway_number (value) != -1)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -41,7 +43,8 @@ alert_gateway_validate (const char *section_name,
 config_validate_t
 policy_type_validate (const char *section_name,
                       const char *key_name,
-                      const char *value)
+                      const char *value,
+                      void *arg)
 {
   if (policy_type_number (value) != -1)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -51,7 +54,8 @@ policy_type_validate (const char *section_name,
 config_validate_t 
 filter_type_validate (const char *section_name,
                       const char *key_name,
-                      const char *value)
+                      const char *value,
+                      void *arg)
 {
   if (filter_type_number (value) != -1)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -61,7 +65,8 @@ filter_type_validate (const char *section_name,
 config_validate_t 
 event_severity_validate (const char *section_name,
                          const char *key_name,
-                         const char *value)
+                         const char *value,
+                         void *arg)
 {
   if (event_severity_number (value) != -1)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -71,7 +76,8 @@ event_severity_validate (const char *section_name,
 config_validate_t 
 sensor_type_validate (const char *section_name,
                       const char *key_name,
-                      const char *value) 
+                      const char *value,
+                      void *arg)
 {
   if (sensor_type_number (value) != -1)
     return CONFIG_VALIDATE_VALID_VALUE;

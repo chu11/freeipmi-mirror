@@ -19,7 +19,7 @@ _enable_pef_checkout (const char *section_name,
                       void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_pef_checkout(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_pef_checkout(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -28,7 +28,7 @@ _enable_pef_commit (const char *section_name,
                     void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_pef_commit(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_pef_commit(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -37,7 +37,7 @@ _enable_pef_event_messages_checkout (const char *section_name,
                                      void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_pef_event_messages_checkout(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_pef_event_messages_checkout(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -46,7 +46,7 @@ _enable_pef_event_messages_commit (const char *section_name,
                                    void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_pef_event_messages_commit(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_pef_event_messages_commit(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -55,7 +55,7 @@ _enable_pef_startup_delay_checkout (const char *section_name,
                                     void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_pef_startup_delay_checkout(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_pef_startup_delay_checkout(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -64,7 +64,7 @@ _enable_pef_startup_delay_commit (const char *section_name,
                                   void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_pef_startup_delay_commit(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_pef_startup_delay_commit(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -73,7 +73,7 @@ _enable_pef_alert_startup_delay_checkout (const char *section_name,
                                           void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_pef_alert_startup_delay_checkout(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_pef_alert_startup_delay_checkout(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -82,7 +82,7 @@ _enable_pef_alert_startup_delay_commit (const char *section_name,
                                         void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_pef_alert_startup_delay_commit(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_pef_alert_startup_delay_commit(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -91,7 +91,7 @@ _enable_alert_action_checkout (const char *section_name,
                                void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_alert_action_checkout(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_alert_action_checkout(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -100,7 +100,7 @@ _enable_alert_action_commit (const char *section_name,
                              void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_alert_action_commit(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_alert_action_commit(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -109,7 +109,7 @@ _enable_power_down_action_checkout (const char *section_name,
                                     void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_power_down_action_checkout(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_power_down_action_checkout(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -118,7 +118,7 @@ _enable_power_down_action_commit (const char *section_name,
                                   void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_power_down_action_commit(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_power_down_action_commit(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -127,7 +127,7 @@ _enable_reset_action_checkout (const char *section_name,
                                void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_reset_action_checkout(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_reset_action_checkout(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -136,7 +136,7 @@ _enable_reset_action_commit (const char *section_name,
                              void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_reset_action_commit(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_reset_action_commit(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -145,7 +145,7 @@ _enable_power_cycle_action_checkout (const char *section_name,
                                      void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_power_cycle_action_checkout(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_power_cycle_action_checkout(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -154,7 +154,7 @@ _enable_power_cycle_action_commit (const char *section_name,
                                    void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_power_cycle_action_commit(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_power_cycle_action_commit(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -163,7 +163,7 @@ _enable_oem_action_checkout (const char *section_name,
                              void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_oem_action_checkout(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_oem_action_checkout(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -172,7 +172,7 @@ _enable_oem_action_commit (const char *section_name,
                            void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_oem_action_commit(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_oem_action_commit(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -181,7 +181,7 @@ _enable_diagnostic_interrupt_checkout (const char *section_name,
                                        void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_diagnostic_interrupt_checkout(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_diagnostic_interrupt_checkout(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -190,7 +190,7 @@ _enable_diagnostic_interrupt_commit (const char *section_name,
                                      void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return enable_diagnostic_interrupt_commit(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return enable_diagnostic_interrupt_commit(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -199,7 +199,7 @@ _pef_startup_delay_checkout (const char *section_name,
                              void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return pef_startup_delay_checkout(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return pef_startup_delay_checkout(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -208,7 +208,7 @@ _pef_startup_delay_commit (const char *section_name,
                            void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return pef_startup_delay_commit(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return pef_startup_delay_commit(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -217,7 +217,7 @@ _pef_alert_startup_delay_checkout (const char *section_name,
                                    void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return pef_alert_startup_delay_checkout(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return pef_alert_startup_delay_checkout(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 static config_err_t
@@ -226,7 +226,7 @@ _pef_alert_startup_delay_commit (const char *section_name,
                                  void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  return pef_alert_startup_delay_commit(kv, state_data->ipmi_ctx, state_data->prog_data->args);
+  return pef_alert_startup_delay_commit(kv, state_data->ipmi_ctx, &(state_data->prog_data->args->config_args));
 }
 
 struct config_section *

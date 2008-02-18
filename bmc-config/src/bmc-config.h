@@ -43,17 +43,23 @@ enum argp_option_keys
     CHECKOUT_KEY = 'o', 
     COMMIT_KEY = 'c', 
     DIFF_KEY = 'd',
-    FILENAME_KEY = 'f',
+    FILENAME_KEY = 'n',
+    FILENAME_KEY_LEGACY = 'f',
     KEYPAIR_KEY = 'e',
     SECTIONS_KEY = 'S',
     LIST_SECTIONS_KEY = 'L',
     VERBOSE_KEY = 'v',
   };
 
+struct bmc_config_arguments
+{
+  struct config_arguments config_args;
+};
+
 typedef struct bmc_config_prog_data
 {
   char *progname;
-  struct config_arguments *args;
+  struct bmc_config_arguments *args;
 } bmc_config_prog_data_t;
 
 typedef struct bmc_config_state_data

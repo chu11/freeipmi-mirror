@@ -184,6 +184,8 @@ extern "C" {
 
 extern fiid_template_t tmpl_sdr_record_header;
 extern fiid_template_t tmpl_sdr_full_sensor_record;
+extern fiid_template_t tmpl_sdr_full_sensor_record_non_threshold_based_sensors;
+extern fiid_template_t tmpl_sdr_full_sensor_record_threshold_based_sensors;
 extern fiid_template_t tmpl_sdr_compact_sensor_record;
 extern fiid_template_t tmpl_sdr_event_only_record;
 extern fiid_template_t tmpl_sdr_entity_association_record;

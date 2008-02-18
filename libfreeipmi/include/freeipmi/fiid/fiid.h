@@ -312,6 +312,16 @@ void fiid_obj_destroy (fiid_obj_t obj);
  */
 fiid_obj_t fiid_obj_dup (fiid_obj_t src_obj);
 
+/*
+ * fiid_obj_copy
+ *
+ * Create and return a duplicate object from the one specified, but
+ * base the new object on the alternate template specified.  Template
+ * length of the original and alternate template must be the same.
+ * Returns NULL on error.
+ */
+fiid_obj_t fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl);
+
 /* 
  * fiid_obj_valid
  *
@@ -518,7 +528,7 @@ int8_t fiid_obj_set_block (fiid_obj_t obj,
                            uint32_t data_len);
 
 /* 
- * fiid_obj_get_all
+ * fiid_obj_get_block
  *
  * Get a block of data in the object, beginning with 'field_start' and
  * ending with 'field_end'.  Returns length of data read on success,

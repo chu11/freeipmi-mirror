@@ -50,7 +50,7 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
                                                                    BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_configuration_parameters_alert_string_keys: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -96,7 +96,7 @@ _set_alert_string_keys (pef_config_state_data_t *state_data,
                                                                    ask->alert_string_set,
                                                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_pef_configuration_parameters_alert_string_keys: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -229,7 +229,7 @@ alert_string_checkout (const char *section_name,
                                                                   i + 1,
                                                                   obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf(stderr,
                     "ipmi_cmd_get_pef_configuration_parameters_alert_string: %s\n",
                     ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -322,7 +322,7 @@ alert_string_commit (const char *section_name,
                                                                    len_to_write,
                                                                    obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf(stderr,
                     "ipmi_cmd_set_pef_configuration_parameters_alert_strings: %s\n",
                     ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -354,7 +354,7 @@ struct config_section *
 pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int num)
 {
   struct config_section *section = NULL;
-  char buf[64];
+  char buf[CONFIG_MAX_SECTION_NAME_LEN];
 
   if (num <= 0)
     {
@@ -362,7 +362,7 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
       return NULL;
     }
 
-  snprintf(buf, 64, "Alert_String_%d", num);
+  snprintf(buf, CONFIG_MAX_SECTION_NAME_LEN, "Alert_String_%d", num);
 
   if (!(section = config_section_create (buf, 
                                          NULL, 

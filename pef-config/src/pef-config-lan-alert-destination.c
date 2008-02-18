@@ -67,7 +67,7 @@ _get_destination_type(pef_config_state_data_t *state_data,
                                                                   BLOCK_SELECTOR,
                                                                   obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_destination_type: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -132,7 +132,7 @@ _set_destination_type(pef_config_state_data_t *state_data,
                                                                   dt->alert_retries,
                                                                   obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_destination_type: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -354,7 +354,7 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
                                                                        BLOCK_SELECTOR,
                                                                        obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_destination_addresses: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -446,7 +446,7 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
                                                                        alert_mac_address_val,
                                                                        obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_destination_addresses: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -589,7 +589,7 @@ struct config_section *
 pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_data, int num)
 {
   struct config_section *section = NULL;
-  char buf[64];
+  char buf[CONFIG_MAX_SECTION_NAME_LEN];
 
   if (num <= 0)
     {
@@ -597,7 +597,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
       return NULL;
     }
 
-  snprintf(buf, 64, "Lan_Alert_Destination_%d", num);
+  snprintf(buf, CONFIG_MAX_SECTION_NAME_LEN, "Lan_Alert_Destination_%d", num);
 
   if (!(section = config_section_create (buf, 
                                          NULL, 

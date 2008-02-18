@@ -82,7 +82,7 @@ _get_event_filter_table (struct pef_config_state_data *state_data,
 								    BLOCK_SELECTOR,
 								    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_configuration_parameters_event_filter_table: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -231,7 +231,7 @@ _set_event_filter_table (struct pef_config_state_data *state_data,
 								    eft->event_data3_compare2, 
 								    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
         fprintf(stderr,
                 "ipmi_cmd_set_pef_configuration_parameters_event_filter_table: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -1357,7 +1357,7 @@ struct config_section *
 pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, int num)
 {
   struct config_section *section = NULL;
-  char buf[64];
+  char buf[CONFIG_MAX_SECTION_NAME_LEN];
 
   if (num <= 0)
     {
@@ -1365,7 +1365,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
       return NULL;
     }
 
-  snprintf(buf, 64, "Event_Filter_%d", num);
+  snprintf(buf, CONFIG_MAX_SECTION_NAME_LEN, "Event_Filter_%d", num);
 
   if (!(section = config_section_create (buf, 
                                          NULL, 

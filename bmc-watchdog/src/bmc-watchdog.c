@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.77 2008-01-29 18:56:47 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.78 2008-02-18 17:09:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

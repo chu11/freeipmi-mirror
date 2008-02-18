@@ -742,6 +742,51 @@ fiid_obj_dup (fiid_obj_t src_obj)
   return NULL;
 }
 
+fiid_obj_t
+fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl)
+{
+  fiid_obj_t dest_obj = NULL;
+  int32_t data_len;
+  unsigned int field_data_len = 0;
+  uint8_t *databuf = NULL;
+
+  if (!(src_obj && src_obj->magic == FIID_OBJ_MAGIC))
+    goto cleanup;
+
+  if ((data_len = _fiid_template_len_bytes (alt_tmpl, &field_data_len)) < 0)
+    goto cleanup;
+
+  if (src_obj->data_len != data_len)
+    {
+      src_obj->errnum = FIID_ERR_PARAMETERS;
+      goto cleanup;
+    }
+
+  if (!(dest_obj = fiid_obj_create(alt_tmpl)))
+    goto cleanup;
+
+  if (!(databuf = (uint8_t *)malloc(src_obj->data_len)))
+    {
+      src_obj->errnum = FIID_ERR_OUT_OF_MEMORY;
+      goto cleanup;
+    }
+  
+  if ((data_len = fiid_obj_get_all (src_obj, databuf, src_obj->data_len)) < 0)
+    goto cleanup;
+  
+  if (fiid_obj_set_all (dest_obj, databuf, data_len) < 0)
+    goto cleanup;
+
+  return dest_obj;
+
+ cleanup:
+  if (dest_obj)
+    fiid_obj_destroy(dest_obj);
+  if (databuf)
+    free(databuf);
+  return NULL;
+}
+
 int8_t 
 fiid_obj_valid(fiid_obj_t obj)
 {

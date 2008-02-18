@@ -1,0 +1,118 @@
+.TH IPMI-SENSORS-CONFIG 8 "@ISODATE@" "ipmi-sensors-config @PACKAGE_VERSION@" "System Commands"
+.SH NAME
+ipmi-sensors-config \- configure sensors
+.SH DESCRIPTION
+.B Ipmi-sensors-config
+is used to get and set sensor configuration parameters, such as 
+thresholds.
+
+The majority of
+configuration operations require OPERATOR privilege when using
+.B ipmi-sensors-config
+out-of-band.
+
+Unlike 
+.B bmc-config
+and 
+.B pef-config,
+configurable sections in 
+.B ipmi-sensors-config
+will not be known ahead of time.  They are determined after loading
+the SDR cache and determining what sensors are available for
+configuration.  There is no guarantee that configurable sections will
+have unique names.  Therefore, section names are identified by their
+SDR record id followed by the sensor id string.
+
+Since many fields in
+.B ipmi-sensors-config
+involve decimal numbers, precision/floating point inaccuracies may occur 
+when configuring new thresholds.  The inaccuracies may not be
+apparent immediately.  It is recommend users verify their changes
+after configuring new thresholds.
+
+.LP
+See GENERAL USE below for a description on how most will want to use
+.B Ipmi-sensors-config.
+.SH OPTIONS
+#include <@top_srcdir@/common/doc/manpage-common-driver.man>
+#include <@top_srcdir@/common/doc/manpage-common-inband.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-username-operator.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
+#include <@top_srcdir@/common/doc/manpage-common-privilege-level-operator.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/common/doc/manpage-common-debug.man>
+#include <@top_srcdir@/common/doc/manpage-common-misc.man>
+.TP
+\fB\-o\fR, \fB\-\-checkout\fR
+Fetch configuration information.
+.TP
+\fB\-c\fR, \fB\-\-commit\fR
+Update configuration information from a config file or key pairs.
+.TP
+\fB\-d\fR, \fB\-\-diff\fR
+Show differences between stored information and a config file or key pairs.
+.TP
+\fB\-n\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
+Specify a config file for checkout/commit/diff.
+.TP
+\fB\-e\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
+Specify KEY=VALUE pairs for checkout/commit/diff.  This option can be
+used multiple times.  On commit, any KEY=VALUE pairs will overwrite
+any pairs specified in a file with \fB\-\-filename\fR.
+.TP
+\fB\-S\fR "SECTION", \fB\-\-section=\fR"SECTION"
+Specify a SECTION for checkout.  This option can be used multiple times.
+.TP
+\fB\-L\fR, \fB\-\-listsections\fR
+List available sections for checkout.
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print additional detailed information.
+.SH "GENERAL USE"
+Most users of 
+.B ipmi-sensors-config
+will want to:
+.LP
+A) Run 
+.B ipmi-sensors-config
+with --checkout to get a copy of the current configuration and
+store it in a file.  The standard output can be redirected to a file
+or a file can be specified with the --filename option.
+.LP
+B) Edit the configuration file with an editor.  
+.LP
+C) Commit the configuration back using the --commit option and specifying
+the configuration file with the --filename option.
+#include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
+.SH "EXAMPLES"
+.B # ipmi-sensors-config --checkout 
+.PP
+Output all configuration information to the console.
+.PP
+.B # ipmi-sensors-config --checkout --filename=sensor-data1.conf
+.PP
+Store all BMC configuration information in sensor-data1.conf.
+.PP
+.B # ipmi-sensors-config --diff --filename=sensor-data2.conf
+.PP
+Show all difference between the current configuration and the sensor-data2.conf file.
+.PP
+.B # ipmi-sensors-config --commit --filename=sensor-data1.conf
+.PP
+Commit all configuration values from the sensor-data1.conf file.
+.PP
+.SH "REPORTING BUGS"
+Report bugs to <@PACKAGE_BUGREPORT@>.
+.SH COPYRIGHT
+Copyright \(co 2003,04,05 FreeIPMI Core Team.  
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License.  This program has absolutely no warranty.
+.SH "SEE ALSO"
+ipmi-sensors(8)

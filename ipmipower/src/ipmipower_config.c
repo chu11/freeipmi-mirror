@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.72 2008-01-29 05:21:33 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.73 2008-02-18 17:09:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.

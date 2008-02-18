@@ -45,7 +45,7 @@ do {                                                                 \
   memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                \
   strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);     \
   fprintf (stderr,                                                   \
-           "%s: %d: %s: errno %s (%d)",                              \
+           "%s: %d: %s: errno %s (%d)\n",                            \
            __FILE__, __LINE__, __PRETTY_FUNCTION__,                  \
            __errnostr, __save_errno);                                \
   fflush (stderr);                                                   \
@@ -55,7 +55,7 @@ do {                                                                 \
 #define __FIID_ERRNUM_TRACE(___errnum)                             \
 do {                                                               \
   fprintf (stderr,                                                 \
-	   "%s: %d: %s: error = %s (%d)",                          \
+	   "%s: %d: %s: error = %s (%d)\n",                        \
            __FILE__, __LINE__, __PRETTY_FUNCTION__,                \
 	   fiid_strerror(___errnum),                               \
            ___errnum);                                             \
@@ -259,6 +259,26 @@ do {                                                    \
          __FIID_OBJ_SET_ERRNO((__obj_src));             \
          goto cleanup;                                  \
        }                                                \
+} while (0)
+
+#define FIID_OBJ_COPY(__obj_dest, __obj_src, __alt_tmpl)            \
+do {                                                                \
+    if (!((__obj_dest) = fiid_obj_copy((__obj_src),(__alt_tmpl))))  \
+       {                                                            \
+         __FIID_OBJ_TRACE((__obj_src));                             \
+         __FIID_OBJ_SET_ERRNO((__obj_src));                         \
+         return (-1);                                               \
+       }                                                            \
+} while (0)
+
+#define FIID_OBJ_COPY_CLEANUP(__obj_dest, __obj_src, __alt_tmpl)    \
+do {                                                                \
+    if (!((__obj_dest) = fiid_obj_copy((__obj_src), (__alt_tmpl)))) \
+       {                                                            \
+         __FIID_OBJ_TRACE((__obj_src));                             \
+         __FIID_OBJ_SET_ERRNO((__obj_src));                         \
+         goto cleanup;                                              \
+       }                                                            \
 } while (0)
 
 #define FIID_OBJ_LEN(__len, __obj)                       \
