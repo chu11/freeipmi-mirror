@@ -636,7 +636,7 @@ _dump_rmcpplus_session_trlr(int fd,
                             uint8_t *pkt,
                             uint32_t pkt_len)
 {
-  int32_t pad_length_field_len, next_header_field_len, pad_length, authentication_code_len;
+  int32_t pad_length_field_len, next_header_field_len, pad_length, authentication_code_len = 0;
   fiid_obj_t obj_rmcpplus_session_trlr = NULL;
   unsigned int indx = 0;
   int32_t rv = -1;
@@ -646,19 +646,17 @@ _dump_rmcpplus_session_trlr(int fd,
   if (!session_id || payload_authenticated == IPMI_PAYLOAD_FLAG_UNAUTHENTICATED)
     return (0);
 
-  if (payload_authenticated)
-    {
-      if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
-	authentication_code_len = 0;
-      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
-	authentication_code_len = IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH;
-      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
-	authentication_code_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
-      else /* integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128 */
-	authentication_code_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
-    }
-  else
+  /* payload should be authenticated */
+  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
     authentication_code_len = 0;
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
+    authentication_code_len = IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH;
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
+    authentication_code_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+    authentication_code_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
+  else
+    authentication_code_len = 0; /* just in case IPMI implementation is bogus */
 
   FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
 

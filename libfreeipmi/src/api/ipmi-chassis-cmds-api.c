@@ -258,8 +258,8 @@ ipmi_cmd_get_system_restart_cause (ipmi_ctx_t ctx,
 
 int8_t 
 ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
-                                  uint8_t param_selector,
-                                  uint8_t *configuration_param_data,
+                                  uint8_t parameter_selector,
+                                  uint8_t *configuration_parameter_data,
                                   uint8_t data_len,
                                   fiid_obj_t obj_cmd_rs)
 {
@@ -273,8 +273,8 @@ ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
   API_FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_rq);
 
-  API_ERR_CLEANUP (!fill_cmd_set_system_boot_options (param_selector,
-                                                      configuration_param_data,
+  API_ERR_CLEANUP (!fill_cmd_set_system_boot_options (parameter_selector,
+                                                      configuration_parameter_data,
                                                       data_len,  
                                                       obj_cmd_rq) < 0);
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
@@ -444,7 +444,7 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
 
 int8_t 
 ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
-                                  uint8_t param_selector,
+                                  uint8_t parameter_selector,
                                   uint8_t set_selector,
                                   uint8_t block_selector,
                                   fiid_obj_t obj_cmd_rs)
@@ -460,7 +460,7 @@ ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_boot_options_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_system_boot_options (param_selector, 
+  API_ERR_CLEANUP (!(fill_cmd_get_system_boot_options (parameter_selector, 
                                                        set_selector, 
                                                        block_selector, 
                                                        obj_cmd_rq) < 0));

@@ -863,7 +863,8 @@ fill_cmd_get_pef_configuration_parameters (uint8_t parameter_selector,
                                            uint8_t block_selector,
                                            fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
+  ERR_EINVAL (IPMI_PEF_PARAMETER_VALID(parameter_selector)
+              && IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
               && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq);

@@ -16,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.2 2007-12-14 19:16:35 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.2.4.1 2008-02-18 06:28:08 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H
@@ -244,7 +244,7 @@ extern "C" {
 /* To avoid gcc warnings, added +1 in comparison */
 #define IPMI_STRING_SELECTOR_VALID(__val) \
         (((__val+1) >= (IPMI_STRING_SELECTOR_MIN + 1) \
-          && (__val) <= IPMI_STRING_SELECTOR_MAX) ? 1 : 0)
+          && (__val-1) <= IPMI_STRING_SELECTOR_MAX - 1) ? 1 : 0)
 
 #define IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_BY_SOFTWARE 0x0
 #define IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_BY_BMC      0x1

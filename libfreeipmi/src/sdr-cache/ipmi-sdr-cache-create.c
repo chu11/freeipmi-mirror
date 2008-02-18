@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.9 2008-01-24 15:28:36 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.9.2.1 2008-02-18 06:28:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -546,7 +546,7 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx,
   if (_sdr_cache_reservation_id(ctx,
                                 ipmi_ctx,
                                 &reservation_id) < 0)
-    return -1;
+    goto cleanup;
 
   next_record_id = IPMI_SDR_RECORD_ID_FIRST;
   while (next_record_id != IPMI_SDR_RECORD_ID_LAST)
@@ -557,7 +557,7 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx,
       if (record_count_written >= ctx->record_count)
         {
           SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_CACHE_CREATE_INVALID_RECORD_COUNT);
-          return -1;
+          goto cleanup;
         }
 
       record_id = next_record_id;

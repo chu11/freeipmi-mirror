@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.7 2007-10-18 16:18:44 chu11 Exp $
+ *  $Id: pstdout.c,v 1.7.8.1 2008-02-18 06:28:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -122,7 +122,7 @@ typedef void (*sighandler_t)(int);
 static struct pstdout_consolidated_data *
 _pstdout_consolidated_data_create(const char *hostname, const char *output)
 {
-  struct pstdout_consolidated_data *cdata;
+  struct pstdout_consolidated_data *cdata = NULL;
 
   assert(hostname);
   assert(output);
@@ -132,6 +132,7 @@ _pstdout_consolidated_data_create(const char *hostname, const char *output)
       pstdout_errnum = PSTDOUT_ERR_OUTMEM;
       goto cleanup;
     }
+  memset(cdata, '\0', sizeof(struct pstdout_consolidated_data));
 
   if (!(cdata->h = hostlist_create(hostname)))
     {
@@ -1085,7 +1086,7 @@ _pstdout_output_consolidated(FILE *stream,
   struct pstdout_consolidated_data *cdata;
   ListIterator itr = NULL;
   int mutex_locked = 0;
-  int rc, rv;
+  int rc, rv = -1;
 
   assert(stream);
   assert(stream == stdout || stream == stderr);
@@ -1261,7 +1262,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
   char *host = NULL;
   int exit_code = -1;
   sighandler_t sighandler_save;
-  int sighandler_set;
+  int sighandler_set = 0;
   int rc;
   int i;
 

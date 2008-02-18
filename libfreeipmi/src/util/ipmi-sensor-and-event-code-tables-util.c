@@ -1100,7 +1100,7 @@ _get_12_event_data2_message_offset_04(int offset, uint8_t event_data2, char *buf
   FIID_OBJ_GET_CLEANUP (obj, "diagnostic_interrupt", &val);
   diagnostic_interrupt = val;
 
-  memset(buf, '0', buflen);
+  memset(buf, '\0', buflen);
 
   ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, alert, str_len, 0)) < 0));
 

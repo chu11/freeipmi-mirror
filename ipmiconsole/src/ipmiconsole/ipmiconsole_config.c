@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.31 2008-01-24 01:06:35 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.31.2.1 2008-02-18 06:28:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -139,6 +139,7 @@ cmdline_parse (int key,
   char *ptr;
   int rv;
   int tmp;
+  int n;
 
   assert(conf);
 
@@ -155,24 +156,16 @@ cmdline_parse (int key,
         err_exit("Command Line Error: username too long");
       strcpy(conf->username, arg);
       conf->username_set_on_cmdline++;
-      if (arg)
-        {
-          int n;
-          n = strlen(arg);
-          secure_memset(arg, '\0', n);
-        }
+      n = strlen(arg);
+      secure_memset(arg, '\0', n);
       break;
     case ARGP_PASSWORD_KEY:       /* --password */
       if (strlen(arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         err_exit("Command Line Error: password too long");
       strcpy(conf->password, arg);
       conf->password_set_on_cmdline++;
-      if (arg)
-        {
-          int n;
-          n = strlen(arg);
-          secure_memset(arg, '\0', n);
-        }
+      n = strlen(arg);
+      secure_memset(arg, '\0', n);
       break;
     case ARGP_PASSWORD_PROMPT_KEY:       /* --password-prompt */
       if (!(pw = getpass("Password: ")))
@@ -192,12 +185,8 @@ cmdline_parse (int key,
           conf->k_g_len = rv;
           conf->k_g_set_on_cmdline++;
         }
-      if (arg)
-        {
-          int n;
-          n = strlen(arg);
-          secure_memset(arg, '\0', n);
-        }
+      n = strlen(arg);
+      secure_memset(arg, '\0', n);
       break;
     case ARGP_K_G_PROMPT_KEY:       /* --k-g-prompt */
       if (!(kg = getpass("K_g: ")))

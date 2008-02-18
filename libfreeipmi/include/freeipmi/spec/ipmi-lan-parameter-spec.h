@@ -52,7 +52,7 @@ extern "C" {
 /* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_LAN_PARAMETER_VALID(__lan_parameter) \
         (((__lan_parameter+1) >= IPMI_LAN_PARAMETER_AUTHENTICATION_TYPE_SUPPORT \
-          && (__lan_parameter-1) <= IPMI_LAN_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS) ? 1 : 0)
+          && (__lan_parameter-1) <= (IPMI_LAN_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS-1)) ? 1 : 0)
 
 #ifdef __cplusplus
 }

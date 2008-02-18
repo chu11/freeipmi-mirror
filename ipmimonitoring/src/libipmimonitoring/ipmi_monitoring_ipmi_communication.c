@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.16 2007-12-29 17:20:32 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.16.2.1 2008-02-18 06:28:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -147,6 +147,8 @@ _inband_init(ipmi_monitoring_ctx_t c,
                     c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
                   else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_DRIVER_PATH_REQUIRED)
                     c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+                  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_DRIVER_TIMEOUT)
+                    c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
                   else
                     c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
                   return -1;

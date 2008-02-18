@@ -136,6 +136,7 @@ static char * ipmi_openipmi_ctx_errmsg[] =
     "device not found", 
     "io not initialized",
     "out of memory",
+    "driver timeout",
     "internal system error"
     "internal error",
     "errnum out of range",
@@ -153,7 +154,6 @@ struct ipmi_openipmi_ctx {
   char *driver_device;
   int device_fd;
   int io_init;
-  int semid;
 };
 
 ipmi_openipmi_ctx_t
@@ -170,7 +170,6 @@ ipmi_openipmi_ctx_create(void)
   ctx->device_fd = -1;
   ctx->io_init = 0;
 
-  ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init ()) < 0));
   ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;
   return ctx;
 
@@ -393,7 +392,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   if (!n)
     {
       /* Could be due to a different error, but we assume a timeout */
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR);
+      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_DRIVER_TIMEOUT);
       return (-1);
     }
 

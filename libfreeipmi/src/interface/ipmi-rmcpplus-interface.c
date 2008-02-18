@@ -631,7 +631,7 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
   int32_t iv_len;
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t pad_len;
-  uint32_t payload_len;
+  int32_t payload_len;
   int cipher_keylen, cipher_blocklen, encrypt_len;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
@@ -877,10 +877,10 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
                                             uint32_t authentication_code_buf_len)
 {
   int hash_algorithm, hash_flags, crypt_digest_len;
-  unsigned int expected_digest_len, copy_digest_len, hash_data_len, integrity_digest_len;
+  unsigned int expected_digest_len, copy_digest_len, hash_data_len;
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t integrity_digest[IPMI_MAX_INTEGRITY_DATA_LENGTH];
-  int32_t len, authentication_code_len;
+  int32_t len, authentication_code_len, integrity_digest_len;
   uint8_t pwbuf[IPMI_2_0_MAX_PASSWORD_LENGTH];
   int32_t rv = -1;
 

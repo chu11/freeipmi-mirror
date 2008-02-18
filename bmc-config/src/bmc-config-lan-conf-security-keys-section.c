@@ -24,7 +24,7 @@ _get_key(bmc_config_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t buf[CONFIG_PARSE_BUFLEN];
-  uint32_t buf_len;
+  int32_t buf_len;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;

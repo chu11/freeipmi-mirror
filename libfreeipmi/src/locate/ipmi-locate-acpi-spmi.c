@@ -940,8 +940,8 @@ _ipmi_acpi_get_table (int *locate_errnum,
   
   fiid_obj_t obj_acpi_table_hdr = NULL;
   uint8_t *acpi_table_buf;
-  uint32_t acpi_table_hdr_length;
   uint32_t table_length = 0;
+  int32_t acpi_table_hdr_length;
   uint8_t *table;
   int32_t len;
   int rv = -1;
@@ -1193,7 +1193,7 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
   
   memcpy (obj_acpi_table_hdr, acpi_table, acpi_table_hdr_length);
   *sign_table_data_length = acpi_table_length - acpi_table_hdr_length;
-  *sign_table_data = malloc (*sign_table_data_length);
+  LOCATE_ERR_OUT_OF_MEMORY_CLEANUP((*sign_table_data = malloc (*sign_table_data_length)));
   memcpy (*sign_table_data, 
           (acpi_table + acpi_table_hdr_length), 
           *sign_table_data_length);

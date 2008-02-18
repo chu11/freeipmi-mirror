@@ -2413,7 +2413,12 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                 obj_cmd_rq,
                                 obj_cmd_rs) < 0)
     goto cleanup;
-
+  
+  API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs,
+                            "rmcpplus_status_code",
+                            &val);
+  rmcpplus_status_code = val;
+  
   if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
     {
       if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION

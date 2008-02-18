@@ -202,6 +202,7 @@ common_parse_opt (int key,
 		  struct common_cmd_args *cmd_args)
 {
   int tmp;
+  int n;
 
   switch (key)
     {
@@ -325,15 +326,11 @@ common_parse_opt (int key,
               exit(1);
             }
 	}
-      if (arg)
-        {
-          int n;
-          n = strlen(arg);
-          __secure_memset(arg, '\0', n);
-        }
+      n = strlen(arg);
+      __secure_memset(arg, '\0', n);
       break;
     case ARGP_PASSWORD_KEY:
-      if (arg && strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+      if (strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         {
           fprintf (stderr, "password too long\n");
           argp_usage (state);
@@ -348,12 +345,8 @@ common_parse_opt (int key,
               exit(1);
             }
 	}
-      if (arg)
-        {
-          int n;
-          n = strlen(arg);
-          __secure_memset(arg, '\0', n);
-        }
+      n = strlen(arg);
+      __secure_memset(arg, '\0', n);
       break;
     case ARGP_PASSWORD_PROMPT_KEY:
       if (cmd_args->password != NULL)
@@ -393,12 +386,8 @@ common_parse_opt (int key,
           }
         if (rv > 0)
           cmd_args->k_g_len = rv;
-        if (arg)
-          {
-            int n;
-            n = strlen(arg);
-            __secure_memset(arg, '\0', n);
-          }
+        n = strlen(arg);
+        __secure_memset(arg, '\0', n);
       }
       break;
     case ARGP_K_G_PROMPT_KEY:

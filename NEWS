@@ -30,8 +30,8 @@ o Updated SDR output under verbose and very verbose output modes with:
   o Fix incorrect OEM data output.
   o Support more SDR record types for output.
   o Output more SDR record information in general.
-o Various other minor bug fixes, documentation fixes, and
-  enhancements.
+o SSIF Inband driver will timeout after a certain period of time.
+o Various other bug fixes, documentation fixes, and enhancements.
 
 For Developers
 --------------
@@ -51,7 +51,9 @@ o Store SDR with different format for ipmi-sensors, ipmi-fru,
   extensibility.  
 o Packet names added to IPMI dump outputs in all tools for easier
   packet identification in debugging.
+o Support driver timeout error codes in all drivers and APIs.
 o SDR record dumping added into all tools.
+o Various other bug fixes and enhancements.
 
 0.5.3
 -----

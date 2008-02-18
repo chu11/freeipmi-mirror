@@ -223,7 +223,7 @@ int8_t
 fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq);
 
 int8_t 
-fill_cmd_set_system_boot_options (uint8_t param_selector,
+fill_cmd_set_system_boot_options (uint8_t parameter_selector,
                                   uint8_t *configuration_parameter_data,
                                   uint8_t data_len,
                                   fiid_obj_t obj_cmd_rq);
@@ -260,7 +260,7 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
                                              fiid_obj_t obj_cmd_rq);
 
 int8_t 
-fill_cmd_get_system_boot_options (uint8_t param_selector,
+fill_cmd_get_system_boot_options (uint8_t parameter_selector,
                                   uint8_t set_selector,
                                   uint8_t block_selector,
                                   fiid_obj_t obj_cmd_rq);

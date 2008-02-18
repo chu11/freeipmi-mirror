@@ -472,7 +472,8 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
 {
   uint64_t authentication_type;
   uint32_t indx;
-  uint32_t obj_cmd_len, obj_lan_msg_trlr_len;
+  uint32_t obj_cmd_len;
+  int32_t obj_lan_msg_trlr_len;
   int32_t len;
 
   ERR_EINVAL (pkt
@@ -601,12 +602,9 @@ ipmi_lan_sendto (int s,
   memset (_buf, 0, _len);
   memcpy (_buf, buf, len);
   
-  bytes_sent = sendto (s, _buf, _len, flags, to, tolen);
+  ERR (!((bytes_sent = sendto (s, _buf, _len, flags, to, tolen)) < 0));
 
-  if (bytes_sent == -1)
-    return -1;
-  else
-    return (bytes_sent - pad_len);
+  return (bytes_sent - pad_len);
 }
 
 ssize_t 
@@ -620,7 +618,6 @@ ipmi_lan_recvfrom (int s,
   ssize_t bytes_recvd = 0;
   void *recv_buf;
   size_t recv_buf_len;
-  size_t pad_len = 0;
 
   ERR_EINVAL (buf && len);
 
@@ -629,28 +626,11 @@ ipmi_lan_recvfrom (int s,
   else
     recv_buf_len = len;
   
-  /* See comment in ipmi_lan_sendto */
-  /* WILL LET THIS CHECK GO SOON --ab@gnu.org.in */
-  if (recv_buf_len == 56  ||
-      recv_buf_len == 84  ||
-      recv_buf_len == 112 ||
-      recv_buf_len == 128 ||
-      recv_buf_len == 156)
-    pad_len = IPMI_LAN_PKT_PAD_SIZE;
-
-  recv_buf_len += pad_len;
   recv_buf = alloca (recv_buf_len);
   
-  bytes_recvd = recvfrom (s, recv_buf, recv_buf_len, flags, from, fromlen);
-  if (bytes_recvd == -1)
-    {
-      /*  if (recv_buf) free (recv_buf); */
-      return -1;
-    }
+  ERR (!((bytes_recvd = recvfrom (s, recv_buf, recv_buf_len, flags, from, fromlen)) < 0));
   
-  recv_buf_len = pad_len ? (bytes_recvd - pad_len) : bytes_recvd;
-  memcpy (buf, recv_buf, recv_buf_len);
-  /* if (recv_buf) free (recv_buf); */
-  return (recv_buf_len);
+  memcpy (buf, recv_buf, bytes_recvd);
+  return (bytes_recvd);
 }
 

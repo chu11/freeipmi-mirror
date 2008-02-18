@@ -23,11 +23,13 @@ bmc-config
 remaining serial config
 power cycle interval
 chassis boot params
+advanced option
 
 pef-config
 -----------
 * conf.5 manpage
 * how to specify event reading type codes easily
+advanced option
 
 general
 -------
@@ -43,6 +45,7 @@ ipmi-sdr
 duplicate ipmi-sensors duty?
 - need to move some sdr common code to common/src
 have file based input/output like pef-config/bmc-config
+- cache.localhost name needs a .hostname on the end for sensors-config purposes
 
 ASUS issues to resolve
 ----------------------

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.70 2007-12-14 19:16:24 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.70.4.1 2008-02-18 06:28:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -600,14 +600,17 @@ _asynccomm(ipmiconsole_ctx_t c)
     {
       if (!(c->session.break_requested))
 	{
+          int bytes_before_break;
+
 	  c->session.break_requested++;
 
-	  if ((c->session.console_remote_console_to_bmc_bytes_before_break = scbuf_used(c->connection.console_remote_console_to_bmc)) < 0)
+	  if ((bytes_before_break = scbuf_used(c->connection.console_remote_console_to_bmc)) < 0)
 	    {
 	      IPMICONSOLE_CTX_DEBUG(c, ("scbuf_used: %s", strerror(errno)));
 	      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
 	      return -1;
 	    }
+          c->session.console_remote_console_to_bmc_bytes_before_break = bytes_before_break;
 	}
     }
 

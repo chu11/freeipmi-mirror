@@ -486,11 +486,19 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                    "Give a valid number (LAN = %u)", 
                    lan_channel_number) < 0)
         {
-          if (!(strp = "Give a valid number\n"))
+          if (!strp)
             {
               perror("asprintf");
               goto cleanup;
             }
+        }
+    }
+  else
+    {
+      if (!(strp = strdup("Give a valid number")))
+        {
+          perror("strdup");
+          goto cleanup;
         }
     }
 

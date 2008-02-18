@@ -575,6 +575,7 @@ fiid_obj_create (fiid_template_t tmpl)
   fiid_obj_t obj = NULL;
   uint32_t max_pkt_len = 0;
   int32_t data_len;
+
   int i;
   
   if (!tmpl)

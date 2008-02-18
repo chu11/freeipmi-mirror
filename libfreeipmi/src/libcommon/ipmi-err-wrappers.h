@@ -258,6 +258,8 @@ do {                                                                    \
     ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                       \
   else if (errno == EINVAL)                                             \
     ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                      \
+  else if (errno == ETIMEDOUT)                                          \
+    ctx->errnum = IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT;                      \
   else                                                                  \
     ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR;                        \
 } while (0)
@@ -286,6 +288,13 @@ do {                                                                    \
   do {                                                                  \
     ctx->errnum = (__errnum);                                           \
     __KCS_TRACE;                                                        \
+  } while (0)
+
+#define KCS_ERRNUM_SET_CLEANUP(__errnum)                                \
+  do {                                                                  \
+    ctx->errnum = (__errnum);                                           \
+    __KCS_TRACE;                                                        \
+    goto cleanup;                                                       \
   } while (0)
 
 #define KCS_ERR_PARAMETERS(expr)                                        \
@@ -368,6 +377,26 @@ do {                                                                    \
       }                                                                 \
   } while (0)
 
+#define KCS_ERR_DRIVER_TIMEOUT(expr)                                    \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT;                  \
+        __KCS_TRACE;                                                    \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_DRIVER_TIMEOUT_CLEANUP(expr)                            \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT;                  \
+        __KCS_TRACE;                                                    \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
 #define KCS_ERR_SYSTEM_ERROR(expr)                                      \
   do {                                                                  \
     if (!(expr))                                                        \
@@ -430,6 +459,8 @@ do {                                                                    \
     ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                      \
   else if (errno == EINVAL)                                             \
     ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                     \
+  else if (errno == ETIMEDOUT)                                          \
+    ctx->errnum = IPMI_SSIF_CTX_ERR_DRIVER_TIMEOUT;                     \
   else                                                                  \
     ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR;                       \
 } while (0)
@@ -452,6 +483,19 @@ do {                                                                    \
         __SSIF_TRACE;                                                   \
         goto cleanup;                                                   \
       }                                                                 \
+  } while (0)
+
+#define SSIF_ERRNUM_SET(__errnum)                                       \
+  do {                                                                  \
+    ctx->errnum = (__errnum);                                           \
+    __KCS_TRACE;                                                        \
+  } while (0)
+
+#define SSIF_ERRNUM_SET_CLEANUP(__errnum)                               \
+  do {                                                                  \
+    ctx->errnum = (__errnum);                                           \
+    __SSIF_TRACE;                                                       \
+    goto cleanup;                                                       \
   } while (0)
 
 #define SSIF_ERR_PARAMETERS(expr)                                       \
@@ -548,6 +592,8 @@ do {                                                                    \
     ctx->errnum = IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY;                  \
   else if (errno == EINVAL)                                             \
     ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR;                 \
+  else if (errno == ETIMEDOUT)                                          \
+    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DRIVER_TIMEOUT;                 \
   else                                                                  \
     ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR;                   \
 } while (0)
