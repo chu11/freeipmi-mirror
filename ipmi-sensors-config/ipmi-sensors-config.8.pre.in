@@ -27,7 +27,8 @@ Since many fields in
 .B ipmi-sensors-config
 involve decimal numbers, precision/floating point inaccuracies may occur 
 when configuring new thresholds.  The inaccuracies may not be
-apparent immediately.
+apparent immediately.  It is recommend users verify their changes
+after configuring new thresholds.
 
 .LP
 See GENERAL USE below for a description on how most will want to use
