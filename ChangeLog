@@ -1,5 +1,9 @@
 2008-02-18  Albert Chu <chu11@llnl.gov>
 
+	* freeipmi.spec.in: Add ipmi-sensors-config.
+	
+2008-02-18  Albert Chu <chu11@llnl.gov>
+
 	Merge contents from sensors_config_branch.
 
         * common/doc/manpage-common-outofband-username-operator.man,

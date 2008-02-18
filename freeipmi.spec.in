@@ -221,6 +221,7 @@ fi
 %{_sbindir}/ipmi-raw
 %{_sbindir}/ipmi-sel
 %{_sbindir}/ipmi-sensors
+%{_sbindir}/ipmi-sensors-config
 %{_sbindir}/ipmiping
 %{_sbindir}/ipmipower
 %{_sbindir}/rmcpping
@@ -237,6 +238,7 @@ fi
 %{_mandir}/man8/ipmi-raw.8*
 %{_mandir}/man8/ipmi-sel.8*
 %{_mandir}/man8/ipmi-sensors.8*
+%{_mandir}/man8/ipmi-sensors-config.8*
 %{_mandir}/man8/ipmiping.8*
 %{_mandir}/man8/ipmipower.8*
 %{_mandir}/man5/ipmipower.conf.5*
@@ -305,6 +307,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Mon Feb 18 2008 Albert Chu <chu11@llnl.gov> 0.6.0
+- Add ipmi-sensors-config tool and manpage.
+
 * Wed Jan 9 2008 Albert Chu <chu11@llnl.gov> 0.6.0
 - Obsolete old subpackage freeipmi-ipmimonitoring.
 
