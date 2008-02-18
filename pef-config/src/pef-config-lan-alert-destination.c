@@ -313,7 +313,8 @@ alert_retries_commit (const char *section_name,
 config_validate_t
 alert_retries_validate (const char *section_name,
                         const char *key_name,
-                        const char *value)
+                        const char *value,
+                        void *arg)
 {
   return config_check_number_range(value, 0, IPMI_ALERT_RETRIES_MAX);
 }

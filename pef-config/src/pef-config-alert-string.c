@@ -343,7 +343,8 @@ alert_string_commit (const char *section_name,
 static config_validate_t
 alert_string_validate (const char *section_name,
                        const char *key_name,
-                       const char *value)
+                       const char *value,
+                       void *arg)
 {
   if (strlen (value) <= PEF_ALERT_STRING_MAX_LEN)
     return CONFIG_VALIDATE_VALID_VALUE;

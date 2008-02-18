@@ -978,7 +978,8 @@ vlan_id_commit (const char *section_name,
 static config_validate_t
 vlan_id_validate (const char *section_name,
                   const char *key_name,
-		  const char *value)
+		  const char *value,
+                  void *arg)
 {
   return config_check_number_range(value, 0, 4095);
 }

@@ -107,7 +107,8 @@ community_string_commit (const char *section_name,
 static config_validate_t
 community_string_validate (const char *section_name,
                            const char *key_name,
-                           const char *value)
+                           const char *value,
+                           void *arg)
 {
   if (!value || strlen (value) > IPMI_MAX_COMMUNITY_STRING_LENGTH)
     return CONFIG_VALIDATE_INVALID_VALUE;

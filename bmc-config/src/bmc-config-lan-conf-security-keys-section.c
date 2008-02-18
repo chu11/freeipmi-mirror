@@ -159,7 +159,8 @@ k_r_commit (const char *section_name,
 static config_validate_t
 k_r_validate (const char *section_name,
               const char *key_name,
-	      const char *value)
+	      const char *value,
+              void *arg)
 {
   if (strlen (value) <= IPMI_MAX_K_R_LENGTH)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -240,7 +241,8 @@ k_g_commit (const char *section_name,
 static config_validate_t
 k_g_validate (const char *section_name,
               const char *key_name,
-	      const char *value)
+	      const char *value,
+              void *arg)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
 
