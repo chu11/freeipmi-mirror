@@ -777,6 +777,7 @@ fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl)
   if (fiid_obj_set_all (dest_obj, databuf, data_len) < 0)
     goto cleanup;
 
+  free(databuf);
   return dest_obj;
 
  cleanup:
