@@ -21,7 +21,7 @@ config_commit_section(struct config_section *section,
 {
   struct config_keyvalue *kv;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret = CONFIG_ERR_SUCCESS;
 
   assert(section);
   assert(cmd_args);
