@@ -34,6 +34,7 @@ advanced option
 general
 -------
 event handling
+try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 
 ipmiconsole
 -----------
