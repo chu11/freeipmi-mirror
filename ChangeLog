@@ -1,7 +1,10 @@
- 2008-02-21  Albert Chu <chu11@llnl.gov>
+2008-02-21  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-workaround-text.man: Add forgotten Sun
  	Fire 4100 workaround.
+
+	* libfreeipmi/src/udm/ipmi-lan-session-util.c
+	(ipmi_lan_open_session): Fix sun workaround issue.
 
 2008-02-15  Albert Chu <chu11@llnl.gov>
 

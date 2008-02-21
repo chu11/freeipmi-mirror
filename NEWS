@@ -1,6 +1,7 @@
 0.5.5
 -----
 o Fix bmc-info firmware and IPMI version output.
+o Fix Sun endian bug workaround.
 o Fix workaround documenation.
 
 0.5.4
