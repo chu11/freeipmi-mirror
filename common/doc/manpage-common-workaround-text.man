@@ -33,6 +33,10 @@ capabilities and or K_g status, leading to invalid username or K_g
 errors.  In order to work around this issue, the "authcap" workaround
 must be specified.
 .LP
+Sun Fire 4100 with ILOM: The session sequence numbers returned for
+IPMI 1.5 sessions are the wrong endian.  In order to work around this
+issue, the "endianseq" workaround must be specified.
+.LP
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): There are a number of Intel IPMI 2.0 bugs which can be
 worked around by specifying the "intel20" workaround.  The
@@ -46,6 +50,7 @@ Supermicro IPMI 2.0 bugs on early firmware revisions which can be
 worked around using the "supermicro20" workaround.  These compliance
 bugs are confirmed to be fixed on newer firmware.
 .LP
-Sun Fire 4100: There are several IPMI 2.0 bugs which can be worked
-around by specifying the "sun20" workaround.  The workarounds include
-handling invalid lengthed hash keys and invalid cipher suite records.
+Sun Fire 4100 with ILOM: There are several IPMI 2.0 bugs which can be
+worked around by specifying the "sun20" workaround.  The workarounds
+include handling invalid lengthed hash keys and invalid cipher suite
+records.

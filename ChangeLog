@@ -1,4 +1,9 @@
- 2008-02-15  Albert Chu <chu11@llnl.gov>
+ 2008-02-21  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/manpage-common-workaround-text.man: Add forgotten Sun
+ 	Fire 4100 workaround.
+
+2008-02-15  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/src/bmc-info.c (display_get_device_id): Fix version
 	output.
