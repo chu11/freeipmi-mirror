@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.120 2007-10-31 17:22:28 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.121 2008-02-21 22:24:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -224,8 +224,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   ip->session_inbound_count = 0;
 
-  /* ip->highest_received_sequence_number is determined
-   * after the ipmi_version is determined.
+  /* initial ip->highest_received_sequence_number is determined after
+   * the ipmi_version is determined.
    */
   ip->previously_received_list = 0xFF;
 
