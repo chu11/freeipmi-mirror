@@ -1,3 +1,8 @@
+2008-02-21  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/manpage-common-workaround-text.man: Add forgotten Sun
+	Fire 4100 workaround.
+	
 2008-02-19  Albert Chu <chu11@llnl.gov>
 
 	* common/src/config-commit.c (config_commit_section): Fix bug.
