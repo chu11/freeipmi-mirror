@@ -1035,6 +1035,24 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             &val);
   ctx->io.outofband.highest_received_sequence_number = val;
   
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Sun Fire 4100.
+   *
+   * The session sequence numbers for IPMI 1.5 are the wrong endian.
+   * So we have to flip the bits to workaround it.
+   */
+  if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+    {
+      uint32_t tmp_session_sequence_number = ctx->io.outofband.highest_received_sequence_number;
+
+      ctx->io.outofband.highest_received_sequence_number =
+        ((tmp_session_sequence_number & 0xFF000000) >> 24)
+        | ((tmp_session_sequence_number & 0x00FF0000) >> 8)
+        | ((tmp_session_sequence_number & 0x0000FF00) << 8)
+        | ((tmp_session_sequence_number & 0x000000FF) << 24);
+    }
+
   API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
 			    "initial_inbound_sequence_number", 
 			    &session_sequence_number);

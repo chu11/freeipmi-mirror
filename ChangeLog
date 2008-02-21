@@ -2,6 +2,11 @@
 
 	* common/doc/manpage-common-workaround-text.man: Add forgotten Sun
 	Fire 4100 workaround.
+
+	* doc/freeipmi-coding.txt: Add chunk on workarounds implemenation.
+
+	* libfreeipmi/src/api/ipmi-lan-session-common.c
+	(ipmi_lan_open_session): Fix sun workaround bug.
 	
 2008-02-19  Albert Chu <chu11@llnl.gov>
 
