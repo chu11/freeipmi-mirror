@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.8 2007-12-29 17:20:30 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.9 2008-02-22 16:56:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -300,7 +300,7 @@ _sixbitascii_to_ascii(ipmi_fru_state_data_t *state_data,
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
-                      "  FRU Bytes not module 3\n");
+                      "  FRU Bytes not modulo 3\n");
       goto cleanup;
     }
   
