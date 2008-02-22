@@ -1,6 +1,11 @@
 2008-02-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/ipmi-fru.8.pre.in: Fix typos.
+
+	* ipmi-fru/src/ipmi-fru-util.c: Fix typo.
+
+	* ipmi-fru/src/ipmi-fru-util.c (_sixbitascii_to_ascii): Fix
+	conversion corner cas.
 	
 2008-02-21  Albert Chu <chu11@llnl.gov>
 
