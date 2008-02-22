@@ -1,3 +1,7 @@
+2008-02-22  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-fru/ipmi-fru.8.pre.in: Fix typos.
+	
 2008-02-21  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-workaround-text.man: Add forgotten Sun
