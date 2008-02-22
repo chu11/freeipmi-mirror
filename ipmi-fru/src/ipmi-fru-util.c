@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.6 2007-10-18 16:18:45 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.6.4.1 2008-02-22 22:00:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -298,15 +298,6 @@ _sixbitascii_to_ascii(ipmi_fru_state_data_t *state_data,
   assert(typestr);
   assert(typestrlen);
   
-  /* achu: I think this has to be true?? */
-  if (typebuf_bytes % 3)
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "  FRU Bytes not module 3\n");
-      goto cleanup;
-    }
-  
   /* six bit ascii packs 4 chars in 3 bytes - see spec */
   if (typestrlen < ((typebuf_bytes/3 + 1))*4)
     {
@@ -321,10 +312,18 @@ _sixbitascii_to_ascii(ipmi_fru_state_data_t *state_data,
   for (i = 0; i < typebuf_bytes; i+=3)
     {
       typestr[c] = (typebuf[i] & 0x3F) + ' ';
-      typestr[c+1] = (((typebuf[i+1] & 0x0F) << 2) | ((typebuf[i] & 0xC0) >> 6)) + ' ';
-      typestr[c+2] = ((typebuf[i+1] & 0xF0 >> 4) | ((typebuf[i+2] & 0x03) << 4)) + ' ';
-      typestr[c+3] = ((typebuf[i+2] & 0xFC) >> 2) + ' ';
-      c+=4;
+      c++;
+      if (typebuf_bytes > (i+1))
+        {
+          typestr[c] = (((typebuf[i+1] & 0x0F) << 2) | ((typebuf[i] & 0xC0) >> 6)) + ' ';
+          c++;
+        }
+      if (typebuf_bytes > (i+2))
+        {
+          typestr[c] = (((typebuf[i+1] & 0xF0) >> 4) | ((typebuf[i+2] & 0x03) << 4)) + ' ';
+          typestr[c+1] = ((typebuf[i+2] & 0xFC) >> 2) + ' ';
+          c+=2;
+        }
     }
 
   rv = FRU_ERR_SUCCESS;

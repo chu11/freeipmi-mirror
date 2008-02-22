@@ -1,3 +1,8 @@
+2008-02-22  Albert Chu <chu11@llnl.gov>
+
+        * ipmi-fru/src/ipmi-fru-util.c (_sixbitascii_to_ascii): Fix
+        conversion corner cas.
+	
 2008-02-21  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-workaround-text.man: Add forgotten Sun
