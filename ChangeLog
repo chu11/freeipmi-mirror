@@ -1,5 +1,9 @@
 2008-02-22  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/src/ipmi-fru-util.c: Fix bad return types.
+	
+2008-02-22  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru.8.pre.in: Fix typos.
 
 	* ipmi-fru/src/ipmi-fru-util.c: Fix typo.

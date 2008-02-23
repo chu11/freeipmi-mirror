@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.10 2008-02-22 21:51:31 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.11 2008-02-23 02:54:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -278,7 +278,7 @@ _get_type_length_bytes(ipmi_fru_state_data_t *state_data,
   return rv;
 }
 
-static int
+static fru_err_t
 _sixbitascii_to_ascii(ipmi_fru_state_data_t *state_data,
                       uint8_t *typebuf,
                       unsigned int typebuf_bytes,
@@ -328,7 +328,7 @@ _sixbitascii_to_ascii(ipmi_fru_state_data_t *state_data,
   return rv;
 }
 
-static int
+static fru_err_t
 _bcd_to_ascii(ipmi_fru_state_data_t *state_data,
               uint8_t *typebuf,
               unsigned int typebuf_bytes,
@@ -380,7 +380,7 @@ _bcd_to_ascii(ipmi_fru_state_data_t *state_data,
   return rv;
 }
 
-int
+fru_err_t
 ipmi_fru_output_type_length_field(ipmi_fru_state_data_t *state_data,
                                   uint8_t *frubuf,
                                   unsigned int frusize,
@@ -528,7 +528,7 @@ ipmi_fru_output_type_length_field(ipmi_fru_state_data_t *state_data,
   return rv;
 }
 
-int
+fru_err_t
 ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
                               uint8_t *frubuf,
                               unsigned int frusize,
@@ -618,7 +618,7 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
   return (rv);
 }
 
-int
+fru_err_t
 ipmi_fru_dump_hex(ipmi_fru_state_data_t *state_data,
                   uint8_t *frubuf,
                   unsigned int frusize,
@@ -662,7 +662,7 @@ ipmi_fru_dump_hex(ipmi_fru_state_data_t *state_data,
   return FRU_ERR_SUCCESS;
 }
 
-int
+fru_err_t
 ipmi_fru_check_checksum(ipmi_fru_state_data_t *state_data,
                         uint8_t *frubuf,
                         unsigned int frusize,
