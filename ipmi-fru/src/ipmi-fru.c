@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.12.4.1 2008-02-23 03:46:55 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.12.4.2 2008-02-23 06:59:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -83,7 +83,6 @@ _output_fru(ipmi_fru_state_data_t *state_data,
   uint64_t product_info_area_starting_offset;
   uint64_t multirecord_area_starting_offset;
   int32_t len;
-  unsigned int frusize;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
   fru_err_t ret;
 
@@ -103,7 +102,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
-                      "ipmi_cmd_get_fru_inventory_area_info: %s\n",
+                      "  FRU Get FRU Inventory Area Failure: %s\n",
                       ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
@@ -126,45 +125,32 @@ _output_fru(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  memset(frubuf, '\0', IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1);
-
-  if ((ret = ipmi_fru_get_fru_inventory_area (state_data,
-                                              device_id,
-                                              frubuf,
-                                              IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
-                                              &frusize)) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-  
   _FIID_TEMPLATE_LEN_BYTES(common_header_len, tmpl_fru_common_header);
 
-  if (frusize < common_header_len)
+  memset(frubuf, '\0', IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1);
+
+  if ((ret = ipmi_fru_read_fru_data (state_data,
+                                     device_id,
+                                     frubuf,
+                                     IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                     0,
+                                     common_header_len)) != FRU_ERR_SUCCESS)
     {
-      if (state_data->prog_data->args->verbose_count)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "  FRU Inventory Area size too small\n");
-      rv = FRU_ERR_NON_FATAL_ERROR;
+      rv = ret;
       goto cleanup;
     }
 
   if ((ret = ipmi_fru_dump_hex(state_data,
                                frubuf,
-                               frusize,
-                               0,
                                common_header_len,
                                "Common Header")) != FRU_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-
+  
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
-                                     frusize,
-                                     0,
                                      common_header_len,
                                      0,
                                      "Common Header")) != FRU_ERR_SUCCESS)
@@ -175,7 +161,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(fru_common_header, tmpl_fru_common_header);
 
-  _FIID_OBJ_SET_ALL_LEN(len, fru_common_header, frubuf, frusize);
+  _FIID_OBJ_SET_ALL_LEN(len, fru_common_header, frubuf, common_header_len);
 
   _FIID_OBJ_GET (fru_common_header,
                  "format_version",
@@ -240,8 +226,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
   if (chassis_info_area_starting_offset)
     {
       ret = ipmi_fru_output_chassis_info_area(state_data,
-                                              frubuf,
-                                              frusize,
+                                              device_id,
                                               chassis_info_area_starting_offset);
       if (ret == FRU_ERR_FATAL_ERROR)
         {
@@ -255,8 +240,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
   if (board_info_area_starting_offset)
     {
       ret = ipmi_fru_output_board_info_area(state_data,
-                                            frubuf,
-                                            frusize,
+                                            device_id,
                                             board_info_area_starting_offset);
       if (ret == FRU_ERR_FATAL_ERROR)
         {
@@ -270,8 +254,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
   if (product_info_area_starting_offset)
     {
       ret = ipmi_fru_output_product_info_area(state_data,
-                                              frubuf,
-                                              frusize,
+                                              device_id,
                                               product_info_area_starting_offset);
       if (ret == FRU_ERR_FATAL_ERROR)
         {
@@ -284,8 +267,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
   if (multirecord_area_starting_offset)
     {
       ret = ipmi_fru_output_multirecord_info_area(state_data,
-                                                  frubuf,
-                                                  frusize,
+                                                  device_id,
                                                   multirecord_area_starting_offset);
       if (ret == FRU_ERR_FATAL_ERROR)
         {

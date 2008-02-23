@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.11.2.1 2008-02-23 03:46:55 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.11.2.2 2008-02-23 06:59:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -45,33 +45,35 @@
 #define FRU_COUNT_TO_READ_BLOCK_SIZE  16
 
 fru_err_t
-ipmi_fru_get_fru_inventory_area (ipmi_fru_state_data_t *state_data,
-                                 uint8_t device_id,
-                                 uint8_t *frubuf,
-                                 unsigned int frubuflen,
-                                 unsigned int *frusize)
+ipmi_fru_read_fru_data (ipmi_fru_state_data_t *state_data,
+                        uint8_t device_id,
+                        uint8_t *frubuf,
+                        unsigned int frubuflen,
+                        unsigned int offset_in_bytes,
+                        unsigned int fru_read_bytes)
 {
   fiid_obj_t fru_read_data_rs = NULL;
-  uint32_t fru_inventory_area_read = 0;
+  uint32_t num_bytes_read = 0;
   int32_t len = 0;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
 
   assert(state_data);
   assert(frubuf);
   assert(frubuflen);
-  assert(frusize);
+  assert(fru_read_bytes <= frubuflen);
 
   _FIID_OBJ_CREATE(fru_read_data_rs, tmpl_cmd_read_fru_data_rs);
 
-  if (frubuflen < state_data->fru_inventory_area_size) 
+  if ((offset_in_bytes + fru_read_bytes) > state_data->fru_inventory_area_size)
     {
       pstdout_printf(state_data->pstate, 
-                     "short frubuflen: %d\n", 
-                     frubuflen);
+                     "invalid read range: %u %u\n", 
+                     offset_in_bytes,
+                     fru_read_bytes);
       goto cleanup;
     }
 
-  while (fru_inventory_area_read < state_data->fru_inventory_area_size)
+  while (num_bytes_read < fru_read_bytes)
     {
       uint8_t buf[FRU_BUF_LEN+1];
       uint8_t count_to_read;
@@ -81,8 +83,8 @@ ipmi_fru_get_fru_inventory_area (ipmi_fru_state_data_t *state_data,
 
       _FIID_OBJ_CLEAR(fru_read_data_rs);
 
-      if ((state_data->fru_inventory_area_size - fru_inventory_area_read) < FRU_COUNT_TO_READ_BLOCK_SIZE)
-        count_to_read = state_data->fru_inventory_area_size - fru_inventory_area_read;
+      if ((fru_read_bytes - num_bytes_read) < FRU_COUNT_TO_READ_BLOCK_SIZE)
+        count_to_read = fru_read_bytes - num_bytes_read;
       else
         count_to_read = FRU_COUNT_TO_READ_BLOCK_SIZE;
       
@@ -91,7 +93,7 @@ ipmi_fru_get_fru_inventory_area (ipmi_fru_state_data_t *state_data,
        */
       if (ipmi_cmd_read_fru_data (state_data->ipmi_ctx,
                                   device_id,
-                                  fru_inventory_area_read,
+                                  offset_in_bytes + num_bytes_read,
                                   count_to_read,
                                   fru_read_data_rs) < 0)
         {
@@ -134,13 +136,12 @@ ipmi_fru_get_fru_inventory_area (ipmi_fru_state_data_t *state_data,
           goto cleanup;
         }
 
-      memcpy(frubuf + fru_inventory_area_read,
+      memcpy(frubuf + num_bytes_read,
              buf,
              count_returned);
-      fru_inventory_area_read += count_returned;
+      num_bytes_read += count_returned;
     }
 
-  *frusize = fru_inventory_area_read;
   rv = FRU_ERR_SUCCESS;
  cleanup:
   _FIID_OBJ_DESTROY(fru_read_data_rs);
@@ -150,10 +151,9 @@ ipmi_fru_get_fru_inventory_area (ipmi_fru_state_data_t *state_data,
 static fru_err_t
 _get_type_length_bytes(ipmi_fru_state_data_t *state_data,
                        uint8_t *frubuf,
-                       unsigned int frusize,
+                       unsigned int frubuflen,
                        uint8_t type_length,
                        unsigned int offset_to_bytes,
-                       unsigned int max_offset,
                        unsigned int *len_parsed,
                        uint8_t type_code,
                        uint8_t *typebuf,
@@ -166,10 +166,8 @@ _get_type_length_bytes(ipmi_fru_state_data_t *state_data,
 
   assert(state_data);
   assert(frubuf);
-  assert(frusize);
+  assert(frubuflen);
   assert(offset_to_bytes);
-  assert(max_offset);
-  assert(max_offset <= frusize);
   assert(len_parsed);
   assert(typebuf);
   assert(typebuflen);
@@ -185,8 +183,7 @@ _get_type_length_bytes(ipmi_fru_state_data_t *state_data,
       && number_of_data_bytes == 0x01)
     {
       while (bytes_parsed < typebuflen
-             && (offset_to_bytes + bytes_parsed) < frusize
-             && (offset_to_bytes + bytes_parsed) < max_offset
+             && (offset_to_bytes + bytes_parsed) < frubuflen
              && typebuf[offset_to_bytes] != IPMI_FRU_SENTINEL_VALUE)
         {
           typebuf[bytes_parsed] = frubuf[offset_to_bytes + bytes_parsed];
@@ -202,8 +199,7 @@ _get_type_length_bytes(ipmi_fru_state_data_t *state_data,
           goto cleanup;
         }
 
-      if ((offset_to_bytes + bytes_parsed) >= frusize
-          || (offset_to_bytes + bytes_parsed) >= max_offset)
+      if ((offset_to_bytes + bytes_parsed) >= frubuflen)
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,
@@ -214,7 +210,7 @@ _get_type_length_bytes(ipmi_fru_state_data_t *state_data,
     }
   else
     {
-      if (frusize < (offset_to_bytes + number_of_data_bytes))
+      if (frubuflen < (offset_to_bytes + number_of_data_bytes))
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,
@@ -349,9 +345,8 @@ _bcd_to_ascii(ipmi_fru_state_data_t *state_data,
 fru_err_t
 ipmi_fru_output_type_length_field(ipmi_fru_state_data_t *state_data,
                                   uint8_t *frubuf,
-                                  unsigned int frusize,
+                                  unsigned int frubuflen,
                                   unsigned int offset_in_bytes,
-                                  unsigned int max_offset,
                                   uint8_t *language_code,
                                   unsigned int *len_parsed,
                                   char *str)
@@ -368,10 +363,8 @@ ipmi_fru_output_type_length_field(ipmi_fru_state_data_t *state_data,
 
   assert(state_data);
   assert(frubuf);
-  assert(frusize);
+  assert(frubuflen);
   assert(offset_in_bytes);
-  assert(max_offset);
-  assert(max_offset <= frusize);
   assert(len_parsed);
   assert(str);
 
@@ -396,10 +389,9 @@ ipmi_fru_output_type_length_field(ipmi_fru_state_data_t *state_data,
 
   if ((ret = _get_type_length_bytes(state_data,
                                     frubuf,
-                                    frusize,
+                                    frubuflen,
                                     type_length,
                                     offset_in_bytes + 1,
-                                    max_offset,
                                     &bytes_parsed,
                                     type_code,
                                     typebuf,
@@ -496,29 +488,27 @@ ipmi_fru_output_type_length_field(ipmi_fru_state_data_t *state_data,
 
 fru_err_t
 ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
-                              uint8_t *frubuf,
-                              unsigned int frusize,
-                              unsigned int offset,
+                              uint8_t device_id,
+                              unsigned int offset_in_bytes,
                               char *str,
                               uint64_t *info_area_length)
 {
+  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   fiid_obj_t fru_info_area_header = NULL;
   int32_t len;
   int32_t info_area_header_len;
   uint64_t format_version;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
+  fru_err_t ret;
 
   assert(state_data);
-  assert(frubuf);
-  assert(frusize);
-  assert(offset);
+  assert(offset_in_bytes);
   assert(str);
   assert(info_area_length);
-
+  
   _FIID_TEMPLATE_LEN_BYTES(info_area_header_len, tmpl_fru_info_area_header);
   
-  /* Offset is in multiples of 8 */
-  if (frusize < (offset*8 + info_area_header_len))
+  if ((offset_in_bytes + info_area_header_len) > state_data->fru_inventory_area_size)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -528,20 +518,32 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
+  if ((ret = ipmi_fru_read_fru_data (state_data,
+                                     device_id,
+                                     frubuf,
+                                     IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                     offset_in_bytes,
+                                     info_area_header_len)) != FRU_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
   _FIID_OBJ_CREATE(fru_info_area_header, tmpl_fru_info_area_header);
 
   _FIID_OBJ_SET_ALL_LEN(len, 
                         fru_info_area_header, 
-                        frubuf + offset*8, 
-                        frusize - offset*8);
+                        frubuf,
+                        info_area_header_len);
 
   _FIID_OBJ_GET (fru_info_area_header,
                  "format_version",
                  &format_version);
+
   _FIID_OBJ_GET (fru_info_area_header, 
                  "info_area_length", 
                  info_area_length);
-
+  
   if (state_data->prog_data->args->verbose_count >= 2)
     {
       pstdout_printf(state_data->pstate, 
@@ -566,9 +568,12 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
     }
 
   if (!(*info_area_length))
-    return 0;
+    {
+      rv = FRU_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
-  if (frusize < (offset*8 + (*info_area_length)*8))
+  if (state_data->fru_inventory_area_size < (offset_in_bytes + (*info_area_length)*8))
     {
       pstdout_fprintf(state_data->pstate, 
                       stderr,
@@ -587,14 +592,11 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
 fru_err_t
 ipmi_fru_dump_hex(ipmi_fru_state_data_t *state_data,
                   uint8_t *frubuf,
-                  unsigned int frusize,
-                  unsigned int offset_in_bytes,
                   uint64_t length_in_bytes,
                   char *str)
 {
   assert(state_data);
   assert(frubuf);
-  assert(frusize);
   assert(length_in_bytes);
   assert(str);
 
@@ -618,7 +620,7 @@ ipmi_fru_dump_hex(ipmi_fru_state_data_t *state_data,
           pstdout_fprintf(state_data->pstate,
                           stderr,
                           "0x%02X ",
-                          frubuf[offset_in_bytes + i]);
+                          frubuf[i]);
         }
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -631,15 +633,12 @@ ipmi_fru_dump_hex(ipmi_fru_state_data_t *state_data,
 fru_err_t
 ipmi_fru_check_checksum(ipmi_fru_state_data_t *state_data,
                         uint8_t *frubuf,
-                        unsigned int frusize,
-                        unsigned int offset_in_bytes,
                         uint64_t length_in_bytes,
                         uint8_t checksum_init,
                         char *str)
 {
   assert(state_data);
   assert(frubuf);
-  assert(frusize);
   assert(length_in_bytes);
   assert(str);
 
@@ -649,7 +648,7 @@ ipmi_fru_check_checksum(ipmi_fru_state_data_t *state_data,
       int i;
 
       for (i = 0; i < length_in_bytes; i++)
-        checksum += frubuf[offset_in_bytes + i];
+        checksum += frubuf[i];
       
       if (checksum)
         {

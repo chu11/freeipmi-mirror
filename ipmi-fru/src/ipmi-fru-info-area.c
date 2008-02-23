@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.8 2007-12-29 17:20:29 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.8.4.1 2008-02-23 06:59:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -56,45 +56,46 @@
 
 fru_err_t
 ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
-                                  uint8_t *frubuf,
-                                  unsigned int frusize,
+                                  uint8_t device_id,
                                   unsigned int offset)
 {
+  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   uint64_t chassis_info_area_length;
+  uint64_t chassis_info_area_length_bytes;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
   fru_err_t ret;
   uint8_t chassis_type;
   uint32_t chassis_offset = 0;
-  uint32_t chassis_max_offset = 0;
   unsigned int len_parsed;
 
   assert(state_data);
-  assert(frubuf);
-  assert(frusize);
   assert(offset);
 
   if ((ret = ipmi_fru_get_info_area_length(state_data,
-                                           frubuf,
-                                           frusize,
-                                           offset,
+                                           device_id,
+                                           offset*8,
                                            "Chassis",
                                            &chassis_info_area_length)) != FRU_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
+  chassis_info_area_length_bytes = chassis_info_area_length*8;
 
-  if (!chassis_info_area_length)
+  if ((ret = ipmi_fru_read_fru_data(state_data,
+                                    device_id,
+                                    frubuf,
+                                    IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                    offset*8,
+                                    chassis_info_area_length*8)) != FRU_ERR_SUCCESS)
     {
-      rv = FRU_ERR_NON_FATAL_ERROR;
+      rv = ret;
       goto cleanup;
     }
 
   if ((ret = ipmi_fru_dump_hex(state_data,
                                frubuf,
-                               frusize,
-                               offset*8,
-                               chassis_info_area_length*8,
+                               chassis_info_area_length_bytes,
                                "Chassis Info Area")) != FRU_ERR_SUCCESS)
     {
       rv = ret;
@@ -103,9 +104,7 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
-                                     frusize,
-                                     offset*8,
-                                     chassis_info_area_length*8,
+                                     chassis_info_area_length_bytes,
                                      0,
                                      "Chassis Info Header")) != FRU_ERR_SUCCESS)
     {
@@ -113,9 +112,7 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  chassis_max_offset = offset*8 + chassis_info_area_length*8;
-
-  chassis_offset = offset*8 + 2;
+  chassis_offset = 2; /* 2 = version + length fields */
   chassis_type = frubuf[chassis_offset];
 
   if (!IPMI_FRU_CHASSIS_TYPE_VALID(chassis_type))
@@ -136,9 +133,8 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               chassis_info_area_length_bytes,
                                                chassis_offset,
-                                               chassis_max_offset,
                                                NULL,
                                                &len_parsed,
                                                "Chassis Part Number")) != FRU_ERR_SUCCESS)
@@ -154,9 +150,8 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               chassis_info_area_length_bytes,
                                                chassis_offset,
-                                               chassis_max_offset,
                                                NULL,
                                                &len_parsed,
                                                "Chassis Serial Number")) != FRU_ERR_SUCCESS)
@@ -172,15 +167,13 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
 
   if (state_data->prog_data->args->verbose_count)
     {
-      while (chassis_offset < frusize
-             && chassis_offset < chassis_max_offset
+      while (chassis_offset < chassis_info_area_length_bytes
              && frubuf[chassis_offset] != IPMI_FRU_SENTINEL_VALUE)
         {
           if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                        frubuf,
-                                                       frusize,
+                                                       chassis_info_area_length_bytes,
                                                        chassis_offset,
-                                                       chassis_max_offset,
                                                        NULL,
                                                        &len_parsed,
                                                        "Chassis Custom Info")) != FRU_ERR_SUCCESS)
@@ -196,8 +189,7 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
         }
       
       if (state_data->prog_data->args->verbose_count >= 2
-          && (chassis_offset >= frusize
-              || chassis_offset >= chassis_max_offset))
+          && chassis_offset >= chassis_info_area_length_bytes)
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,
@@ -214,11 +206,12 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
                          
 fru_err_t
 ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
-                                uint8_t *frubuf,
-                                unsigned int frusize,
+                                uint8_t device_id,
                                 unsigned int offset)
 {
+  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   uint64_t board_info_area_length;
+  uint64_t board_info_area_length_bytes;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
   fru_err_t ret;
   uint8_t language_code;
@@ -227,36 +220,36 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
   struct tm mfg_date_time_tm;
   char mfg_date_time_buf[FRU_BUF_LEN+1];
   uint32_t board_offset = 0;
-  uint32_t board_max_offset = 0;
   unsigned int len_parsed;
 
   assert(state_data);
-  assert(frubuf);
-  assert(frusize);
   assert(offset);
 
   if ((ret = ipmi_fru_get_info_area_length(state_data,
-                                           frubuf,
-                                           frusize,
-                                           offset,
+                                           device_id,
+                                           offset*8,
                                            "Board",
                                            &board_info_area_length)) != FRU_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
+  board_info_area_length_bytes = board_info_area_length*8;
 
-  if (!board_info_area_length)
+  if ((ret = ipmi_fru_read_fru_data(state_data,
+                                    device_id,
+                                    frubuf,
+                                    IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                    offset*8,
+                                    board_info_area_length_bytes)) != FRU_ERR_SUCCESS)
     {
-      rv = FRU_ERR_NON_FATAL_ERROR;
+      rv = ret;
       goto cleanup;
     }
 
   if ((ret = ipmi_fru_dump_hex(state_data,
                                frubuf,
-                               frusize,
-                               offset*8,
-                               board_info_area_length*8,
+                               board_info_area_length_bytes,
                                "Board Info Area")) != FRU_ERR_SUCCESS)
     {
       rv = ret;
@@ -265,9 +258,7 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
-                                     frusize,
-                                     offset*8,
-                                     board_info_area_length*8,
+                                     board_info_area_length_bytes,
                                      0,
                                      "Board Info Header")) != FRU_ERR_SUCCESS)
     {
@@ -275,9 +266,7 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  board_max_offset = offset*8 + board_info_area_length*8;
-
-  board_offset = offset*8 + 2;
+  board_offset = 2; /* 2 = version + length fields */
   language_code = frubuf[board_offset];
 
   if (state_data->prog_data->args->verbose_count >= 2)
@@ -287,15 +276,17 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
                      language_code);
     }
 
+  board_offset++;
+
   if (state_data->prog_data->args->verbose_count)
     {
       /* mfg_date_time is little endian - see spec */
-      board_offset++;
       mfg_date_time |= frubuf[board_offset];
       board_offset++;
       mfg_date_time |= (frubuf[board_offset] << 8);
       board_offset++;
       mfg_date_time |= (frubuf[board_offset] << 16);
+      board_offset++;
       
       /* Here, epoch is 0:00 hrs 1/1/96 
        *
@@ -323,12 +314,10 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
   else
     board_offset += 3;
 
-  board_offset++;
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               board_info_area_length_bytes,
                                                board_offset,
-                                               board_max_offset,
                                                &language_code,
                                                &len_parsed,
                                                "Board Manufacturer")) != FRU_ERR_SUCCESS)
@@ -344,9 +333,8 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               board_info_area_length_bytes,
                                                board_offset,
-                                               board_max_offset,
                                                &language_code,
                                                &len_parsed,
                                                "Board Product Name")) != FRU_ERR_SUCCESS)
@@ -362,9 +350,8 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               board_info_area_length_bytes,
                                                board_offset,
-                                               board_max_offset,
                                                &language_code,
                                                &len_parsed,
                                                "Board Serial Number")) != FRU_ERR_SUCCESS)
@@ -380,9 +367,8 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               board_info_area_length_bytes,
                                                board_offset,
-                                               board_max_offset,
                                                &language_code,
                                                &len_parsed,
                                                "Board Part Number")) != FRU_ERR_SUCCESS)
@@ -398,9 +384,8 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               board_info_area_length_bytes,
                                                board_offset,
-                                               board_max_offset,
                                                &language_code,
                                                &len_parsed,
                                                "Board FRU File ID")) != FRU_ERR_SUCCESS)
@@ -416,15 +401,13 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
 
   if (state_data->prog_data->args->verbose_count)
     {
-      while (board_offset < frusize
-             && board_offset < board_max_offset
+      while (board_offset < board_info_area_length_bytes
              && frubuf[board_offset] != IPMI_FRU_SENTINEL_VALUE)
         {
           if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                        frubuf,
-                                                       frusize,
+                                                       board_info_area_length_bytes,
                                                        board_offset,
-                                                       board_max_offset,
                                                        &language_code,
                                                        &len_parsed,
                                                        "Board Custom Info")) != FRU_ERR_SUCCESS)
@@ -440,8 +423,7 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
         }
       
       if (state_data->prog_data->args->verbose_count >= 2
-          && (board_offset >= frusize
-              || board_offset >= board_max_offset))
+          && board_offset >= board_info_area_length_bytes)
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,
@@ -458,45 +440,46 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
 
 fru_err_t
 ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
-                                  uint8_t *frubuf,
-                                  unsigned int frusize,
+                                  uint8_t device_id,
                                   unsigned int offset)
 {
+  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   uint64_t product_info_area_length;
+  uint64_t product_info_area_length_bytes;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
   fru_err_t ret;
   uint8_t language_code;
   uint32_t product_offset = 0;
-  uint32_t product_max_offset = 0;
   unsigned int len_parsed;
 
   assert(state_data);
-  assert(frubuf);
-  assert(frusize);
   assert(offset);
 
   if ((ret = ipmi_fru_get_info_area_length(state_data,
-                                           frubuf,
-                                           frusize,
-                                           offset,
+                                           device_id,
+                                           offset*8,
                                            "Product",
                                            &product_info_area_length)) != FRU_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-  
-  if (!product_info_area_length)
+  product_info_area_length_bytes = product_info_area_length*8;
+
+  if ((ret = ipmi_fru_read_fru_data(state_data,
+                                    device_id,
+                                    frubuf,
+                                    IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                    offset*8,
+                                    product_info_area_length_bytes)) != FRU_ERR_SUCCESS)
     {
-      rv = FRU_ERR_NON_FATAL_ERROR;
+      rv = ret;
       goto cleanup;
     }
 
   if ((ret = ipmi_fru_dump_hex(state_data,
                                frubuf,
-                               frusize,
-                               offset*8,
-                               product_info_area_length*8,
+                               product_info_area_length_bytes,
                                "Product Info Area")) != FRU_ERR_SUCCESS)
     {
       rv = ret;
@@ -505,9 +488,7 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
-                                     frusize,
-                                     offset*8,
-                                     product_info_area_length*8,
+                                     product_info_area_length_bytes,
                                      0,
                                      "Product Info Header")) != FRU_ERR_SUCCESS)
     {
@@ -515,9 +496,7 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  product_max_offset = offset*8 + product_info_area_length*8;
-
-  product_offset = offset*8 + 2;
+  product_offset = 2; /* 2 = version + length fields */
   language_code = frubuf[product_offset];
 
   if (state_data->prog_data->args->verbose_count >= 2)
@@ -530,9 +509,8 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
   product_offset++;
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               product_info_area_length_bytes,
                                                product_offset,
-                                               product_max_offset,
                                                &language_code,
                                                &len_parsed,
                                                "Product Manufacturer Name")) != FRU_ERR_SUCCESS)
@@ -548,9 +526,8 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               product_info_area_length_bytes,
                                                product_offset,
-                                               product_max_offset,
                                                &language_code,
                                                &len_parsed,
                                                "Product Product Name")) != FRU_ERR_SUCCESS)
@@ -566,9 +543,8 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               product_info_area_length_bytes,
                                                product_offset,
-                                               product_max_offset,
                                                &language_code,
                                                &len_parsed,
                                                "Product Part/Model Number")) != FRU_ERR_SUCCESS)
@@ -584,9 +560,8 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               product_info_area_length_bytes,
                                                product_offset,
-                                               product_max_offset,
                                                &language_code,
                                                &len_parsed,
                                                "Product Version Type")) != FRU_ERR_SUCCESS)
@@ -602,9 +577,8 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               product_info_area_length_bytes,
                                                product_offset,
-                                               product_max_offset,
                                                &language_code,
                                                &len_parsed,
                                                "Product Serial Number")) != FRU_ERR_SUCCESS)
@@ -620,9 +594,8 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               product_info_area_length_bytes,
                                                product_offset,
-                                               product_max_offset,
                                                &language_code,
                                                &len_parsed,
                                                "Product Asset Tag")) != FRU_ERR_SUCCESS)
@@ -638,9 +611,8 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
-                                               frusize,
+                                               product_info_area_length_bytes,
                                                product_offset,
-                                               product_max_offset,
                                                &language_code,
                                                &len_parsed,
                                                "Product FRU File ID")) != FRU_ERR_SUCCESS)
@@ -656,15 +628,13 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
 
   if (state_data->prog_data->args->verbose_count)
     {
-      while (product_offset < frusize
-             && product_offset < product_max_offset
+      while (product_offset < product_info_area_length_bytes
              && frubuf[product_offset] != IPMI_FRU_SENTINEL_VALUE)
         {
           if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                        frubuf,
-                                                       frusize,
+                                                       product_info_area_length_bytes,
                                                        product_offset,
-                                                       product_max_offset,
                                                        &language_code,
                                                        &len_parsed,
                                                        "Product Custom Info")) != FRU_ERR_SUCCESS)
@@ -680,8 +650,7 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
         }
       
       if (state_data->prog_data->args->verbose_count >= 2
-          && (product_offset >= frusize
-              || product_offset >= product_max_offset))
+          && product_offset >= product_info_area_length_bytes)
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,

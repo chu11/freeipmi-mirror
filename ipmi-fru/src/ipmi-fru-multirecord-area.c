@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.6 2007-12-29 17:20:29 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.6.4.1 2008-02-23 06:59:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -60,8 +60,6 @@ voltage_str(uint8_t voltage)
 static fru_err_t
 output_power_supply_information(ipmi_fru_state_data_t *state_data,
                                 uint8_t *frubuf,
-                                unsigned int frusize,
-                                unsigned int record_offset,
                                 uint8_t record_length,
                                 uint8_t record_checksum)
 {
@@ -95,14 +93,10 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
 
   assert(state_data);
   assert(frubuf);
-  assert(frusize);
-  assert(record_offset);
   assert(record_length);
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
-                                     frusize,
-                                     record_offset,
                                      record_length,
                                      record_checksum,
                                      "Power Supply Multirecord")) != FRU_ERR_SUCCESS)
@@ -127,7 +121,7 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_SET_ALL_LEN(len, 
                         obj_record, 
-                        &frubuf[record_offset], 
+                        frubuf, 
                         record_length);
 
   _FIID_OBJ_GET(obj_record,
@@ -292,8 +286,6 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
 static fru_err_t
 output_dc_output(ipmi_fru_state_data_t *state_data,
                  uint8_t *frubuf,
-                 unsigned int frusize,
-                 unsigned int record_offset,
                  uint8_t record_length,
                  uint8_t record_checksum)
 {
@@ -313,14 +305,10 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
 
   assert(state_data);
   assert(frubuf);
-  assert(frusize);
-  assert(record_offset);
   assert(record_length);
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
-                                     frusize,
-                                     record_offset,
                                      record_length,
                                      record_checksum,
                                      "DC Output Multirecord")) != FRU_ERR_SUCCESS)
@@ -345,7 +333,7 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_SET_ALL_LEN(len, 
                         obj_record, 
-                        &frubuf[record_offset], 
+                        frubuf, 
                         record_length);
 
   _FIID_OBJ_GET(obj_record,
@@ -413,8 +401,6 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
 static fru_err_t
 output_dc_load(ipmi_fru_state_data_t *state_data,
                uint8_t *frubuf,
-               unsigned int frusize,
-               unsigned int record_offset,
                uint8_t record_length,
                uint8_t record_checksum)
 {
@@ -433,14 +419,10 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
 
   assert(state_data);
   assert(frubuf);
-  assert(frusize);
-  assert(record_offset);
   assert(record_length);
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
-                                     frusize,
-                                     record_offset,
                                      record_length,
                                      record_checksum,
                                      "DC Load Multirecord")) != FRU_ERR_SUCCESS)
@@ -465,7 +447,7 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_SET_ALL_LEN(len, 
                         obj_record, 
-                        &frubuf[record_offset], 
+                        frubuf, 
                         record_length);
 
   _FIID_OBJ_GET(obj_record,
@@ -528,8 +510,6 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
 static fru_err_t
 output_management_access_record(ipmi_fru_state_data_t *state_data,
                                 uint8_t *frubuf,
-                                unsigned int frusize,
-                                unsigned int record_offset,
                                 uint8_t record_length,
                                 uint8_t record_checksum)
 {
@@ -544,16 +524,12 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
 
   assert(state_data);
   assert(frubuf);
-  assert(frusize);
-  assert(record_offset);
   assert(record_length);
 
   memset(managementaccessbuf, '\0', FRU_BUF_LEN+1);
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
-                                     frusize,
-                                     record_offset,
                                      record_length,
                                      record_checksum,
                                      "Management Access Multirecord")) != FRU_ERR_SUCCESS)
@@ -581,7 +557,7 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_SET_ALL_LEN(len, 
                         obj_record, 
-                        &frubuf[record_offset], 
+                        frubuf, 
                         record_length);
 
   _FIID_OBJ_GET(obj_record,
@@ -684,8 +660,6 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
 static fru_err_t
 output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
                                  uint8_t *frubuf,
-                                 unsigned int frusize,
-                                 unsigned int record_offset,
                                  uint8_t record_length,
                                  uint8_t record_checksum)
 { 
@@ -702,16 +676,12 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
 
   assert(state_data);
   assert(frubuf);
-  assert(frusize);
-  assert(record_offset);
   assert(record_length);
 
   memset(codemaskbuf, '\0', FRU_BUF_LEN+1);
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
-                                     frusize,
-                                     record_offset,
                                      record_length,
                                      record_checksum,
                                      "Base Compatibility Multirecord")) != FRU_ERR_SUCCESS)
@@ -739,7 +709,7 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_SET_ALL_LEN(len, 
                         obj_record, 
-                        &frubuf[record_offset], 
+                        frubuf, 
                         record_length);
 
   _FIID_OBJ_GET(obj_record,
@@ -808,8 +778,6 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
 static fru_err_t
 output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
                                      uint8_t *frubuf,
-                                     unsigned int frusize,
-                                     unsigned int record_offset,
                                      uint8_t record_length,
                                      uint8_t record_checksum)
 { 
@@ -826,16 +794,12 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
 
   assert(state_data);
   assert(frubuf);
-  assert(frusize);
-  assert(record_offset);
   assert(record_length);
 
   memset(codemaskbuf, '\0', FRU_BUF_LEN+1);
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
-                                     frusize,
-                                     record_offset,
                                      record_length,
                                      record_checksum,
                                      "Extended Compatibility Multirecord")) != FRU_ERR_SUCCESS)
@@ -863,7 +827,7 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_SET_ALL_LEN(len, 
                         obj_record, 
-                        &frubuf[record_offset], 
+                        frubuf, 
                         record_length);
 
   _FIID_OBJ_GET(obj_record,
@@ -933,8 +897,6 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
 static fru_err_t
 output_oem_record(ipmi_fru_state_data_t *state_data,
                   uint8_t *frubuf,
-                  unsigned int frusize,
-                  unsigned int record_offset,
                   uint8_t record_length,
                   uint8_t record_checksum)
 { 
@@ -948,16 +910,12 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
 
   assert(state_data);
   assert(frubuf);
-  assert(frusize);
-  assert(record_offset);
   assert(record_length);
 
   memset(oemdatabuf, '\0', FRU_BUF_LEN+1);
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
-                                     frusize,
-                                     record_offset,
                                      record_length,
                                      record_checksum,
                                      "OEM Multirecord")) != FRU_ERR_SUCCESS)
@@ -985,7 +943,7 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
 
   _FIID_OBJ_SET_ALL_LEN(len,
                         obj_record, 
-                        &frubuf[record_offset], 
+                        frubuf, 
                         record_length);
 
   _FIID_OBJ_GET(obj_record,
@@ -1032,10 +990,10 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
 
 fru_err_t
 ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
-                                      uint8_t *frubuf,
-                                      unsigned int frusize,
+                                      uint8_t device_id,
                                       unsigned int offset)
 {
+  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   fiid_obj_t fru_multirecord_header = NULL;
   int32_t record_header_length;
   uint64_t record_type_id;
@@ -1049,31 +1007,69 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
   uint32_t multirecord_offset = 0;
 
   assert(state_data);
-  assert(frubuf);
-  assert(frusize);
   assert(offset);
 
   _FIID_TEMPLATE_LEN_BYTES(record_header_length, tmpl_fru_multirecord_area_header);
-  
-  /* Offset is in multiples of 8 */
-  if (frusize < (offset*8 + record_header_length))
+
+  if ((offset*8 + record_header_length) > state_data->fru_inventory_area_size)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
-                      "  FRU MultirecordInfo Area size too small\n");
+                      "  FRU MultirecordInfo Info Area size too small\n");
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-
+  
+  if ((ret = ipmi_fru_read_fru_data(state_data,
+                                    device_id,
+                                    frubuf,
+                                    IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                    offset*8,
+                                    record_header_length)) != FRU_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+  
   _FIID_OBJ_CREATE(fru_multirecord_header, tmpl_fru_multirecord_area_header);
 
   multirecord_offset = offset*8;
-  while (multirecord_offset < frusize)
+  while (multirecord_offset < state_data->fru_inventory_area_size)
     {
+      if ((ret = ipmi_fru_read_fru_data (state_data,
+                                         device_id,
+                                         frubuf,
+                                         IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                         multirecord_offset,
+                                         record_header_length)) != FRU_ERR_SUCCESS)
+        {
+          rv = ret;
+          goto cleanup;
+        }
+
+      if ((ret = ipmi_fru_dump_hex(state_data,
+                                   frubuf,
+                                   record_header_length,
+                                   "MultiRecord Record Header")) != FRU_ERR_SUCCESS)
+        {
+          rv = ret;
+          goto cleanup;
+        }
+
+      if ((ret = ipmi_fru_check_checksum(state_data,
+                                         frubuf,
+                                         record_header_length,
+                                         0,
+                                         "Multirecord Record Header")) != FRU_ERR_SUCCESS)
+        {
+          rv = ret;
+          goto cleanup;
+        }
+      
       _FIID_OBJ_SET_ALL_LEN(len, 
                             fru_multirecord_header, 
-                            &frubuf[multirecord_offset], 
-                            frusize - multirecord_offset);
+                            frubuf,
+                            record_header_length);
       
       _FIID_OBJ_GET (fru_multirecord_header,
                      "record_type_id",
@@ -1126,7 +1122,7 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
         }
       
       /* Note: Unlike Info Areas, record_length is in bytes */
-      if (frusize < (multirecord_offset + record_length))
+      if (state_data->fru_inventory_area_size < (multirecord_offset + record_header_length + record_length))
         {
           pstdout_fprintf(state_data->pstate, 
                           stderr,
@@ -1135,47 +1131,32 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
           goto cleanup;
         }
 
+      multirecord_offset += record_header_length;
+
+      if ((ret = ipmi_fru_read_fru_data (state_data,
+                                         device_id,
+                                         frubuf,
+                                         IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                         multirecord_offset,
+                                         record_length)) != FRU_ERR_SUCCESS)
+        {
+          rv = ret;
+          goto cleanup;
+        }
+
       if ((ret = ipmi_fru_dump_hex(state_data,
                                    frubuf,
-                                   frusize,
-                                   multirecord_offset,
-                                   record_header_length + record_length,
+                                   record_length,
                                    "MultiRecord")) != FRU_ERR_SUCCESS)
         {
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          multirecord_offset += record_header_length;
-          continue;
+          rv = ret;
+          goto cleanup;
         }
-
-      if ((ret = ipmi_fru_check_checksum(state_data,
-                                         frubuf,
-                                         frusize,
-                                         multirecord_offset,
-                                         record_header_length,
-                                         0,
-                                         "Multirecord Record Header")) != FRU_ERR_SUCCESS)
-        {
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          multirecord_offset += record_header_length;
-          continue;
-        }
-
-      multirecord_offset += record_header_length;
 
       if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION)
         {
           ret = output_power_supply_information(state_data,
                                                 frubuf,
-                                                frusize,
-                                                multirecord_offset,
                                                 record_length,
                                                 record_checksum);
           if (ret == FRU_ERR_FATAL_ERROR)
@@ -1190,8 +1171,6 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
         {
           ret = output_dc_output(state_data,
                                  frubuf,
-                                 frusize,
-                                 multirecord_offset,
                                  record_length,
                                  record_checksum);
           if (ret == FRU_ERR_FATAL_ERROR)
@@ -1206,8 +1185,6 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
         {
           ret = output_dc_load(state_data,
                                frubuf,
-                               frusize,
-                               multirecord_offset,
                                record_length,
                                record_checksum);
           if (ret == FRU_ERR_FATAL_ERROR)
@@ -1222,8 +1199,6 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
         {
           ret = output_management_access_record(state_data,
                                                 frubuf,
-                                                frusize,
-                                                multirecord_offset,
                                                 record_length,
                                                 record_checksum);
           if (ret == FRU_ERR_FATAL_ERROR)
@@ -1238,8 +1213,6 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
         {
           ret = output_base_compatibility_record(state_data,
                                                  frubuf,
-                                                 frusize,
-                                                 multirecord_offset,
                                                  record_length,
                                                  record_checksum);
           if (ret == FRU_ERR_FATAL_ERROR)
@@ -1254,8 +1227,6 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
         {
           ret = output_extended_compatibility_record(state_data,
                                                      frubuf,
-                                                     frusize,
-                                                     multirecord_offset,
                                                      record_length,
                                                      record_checksum);
           if (ret == FRU_ERR_FATAL_ERROR)
@@ -1270,8 +1241,6 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
         {
           ret = output_oem_record(state_data,
                                   frubuf,
-                                  frusize,
-                                  multirecord_offset,
                                   record_length,
                                   record_checksum);
           if (ret == FRU_ERR_FATAL_ERROR)
