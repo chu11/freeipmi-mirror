@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.12 2008-01-24 01:06:35 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.12.4.1 2008-02-23 03:46:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -73,6 +73,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
             uint8_t device_id)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
+  fiid_obj_t fru_get_inventory_rs = NULL;
   fiid_obj_t fru_common_header = NULL;
   int32_t common_header_len;
   uint64_t format_version;
@@ -93,6 +94,37 @@ _output_fru(ipmi_fru_state_data_t *state_data,
     pstdout_printf(state_data->pstate, 
                    "FRU Inventory Device ID: 0x%02X\n",
                    device_id);
+
+  _FIID_OBJ_CREATE(fru_get_inventory_rs, tmpl_cmd_get_fru_inventory_area_info_rs);
+
+  if (ipmi_cmd_get_fru_inventory_area_info (state_data->ipmi_ctx,
+                                            device_id,
+                                            fru_get_inventory_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_fru_inventory_area_info: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      rv = FRU_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET (fru_get_inventory_rs,
+                 "fru_inventory_area_size",
+                 &state_data->fru_inventory_area_size);
+
+  if (state_data->prog_data->args->verbose_count >= 2)
+    pstdout_printf(state_data->pstate,
+                   "  FRU Inventory Area Size: %u bytes\n",
+                   (unsigned int) state_data->fru_inventory_area_size);
+
+  if (!state_data->fru_inventory_area_size)
+    {
+      pstdout_printf(state_data->pstate,
+                     "  FRU Inventory Area Size Empty\n");
+      rv = FRU_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
   memset(frubuf, '\0', IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1);
 
@@ -266,6 +298,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
+  _FIID_OBJ_DESTROY(fru_get_inventory_rs);
   _FIID_OBJ_DESTROY(fru_common_header);
   return (rv);
 }

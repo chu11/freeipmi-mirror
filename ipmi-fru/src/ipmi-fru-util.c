@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.11 2008-02-23 02:54:58 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.11.2.1 2008-02-23 03:46:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -51,52 +51,19 @@ ipmi_fru_get_fru_inventory_area (ipmi_fru_state_data_t *state_data,
                                  unsigned int frubuflen,
                                  unsigned int *frusize)
 {
-  fiid_obj_t fru_get_inventory_rs = NULL;
   fiid_obj_t fru_read_data_rs = NULL;
-  uint64_t fru_inventory_area_size = 0;
   uint32_t fru_inventory_area_read = 0;
   int32_t len = 0;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
 
   assert(state_data);
   assert(frubuf);
   assert(frubuflen);
   assert(frusize);
 
-  _FIID_OBJ_CREATE(fru_get_inventory_rs, tmpl_cmd_get_fru_inventory_area_info_rs);
-
   _FIID_OBJ_CREATE(fru_read_data_rs, tmpl_cmd_read_fru_data_rs);
 
-  if ((ret = ipmi_cmd_get_fru_inventory_area_info (state_data->ipmi_ctx, 
-                                                   device_id,
-                                                   fru_get_inventory_rs)) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf(state_data->pstate, 
-                      stderr,
-                      "  FRU Get FRU Inventory Area Failure: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = ret;
-      goto cleanup;
-    }
-  
-  _FIID_OBJ_GET (fru_get_inventory_rs, 
-                 "fru_inventory_area_size", 
-                 &fru_inventory_area_size);
-  if (state_data->prog_data->args->verbose_count >= 2)
-    pstdout_printf(state_data->pstate, 
-                   "  FRU Inventory Area Size: %u bytes\n", 
-                   (unsigned int) fru_inventory_area_size);
-
-  if (!fru_inventory_area_size)
-    {
-      pstdout_printf(state_data->pstate, 
-                     "  FRU Inventory Area Size Empty\n");
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  if (frubuflen < fru_inventory_area_size) 
+  if (frubuflen < state_data->fru_inventory_area_size) 
     {
       pstdout_printf(state_data->pstate, 
                      "short frubuflen: %d\n", 
@@ -104,7 +71,7 @@ ipmi_fru_get_fru_inventory_area (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  while (fru_inventory_area_read < fru_inventory_area_size)
+  while (fru_inventory_area_read < state_data->fru_inventory_area_size)
     {
       uint8_t buf[FRU_BUF_LEN+1];
       uint8_t count_to_read;
@@ -114,8 +81,8 @@ ipmi_fru_get_fru_inventory_area (ipmi_fru_state_data_t *state_data,
 
       _FIID_OBJ_CLEAR(fru_read_data_rs);
 
-      if ((fru_inventory_area_size - fru_inventory_area_read) < FRU_COUNT_TO_READ_BLOCK_SIZE)
-        count_to_read = fru_inventory_area_size - fru_inventory_area_read;
+      if ((state_data->fru_inventory_area_size - fru_inventory_area_read) < FRU_COUNT_TO_READ_BLOCK_SIZE)
+        count_to_read = state_data->fru_inventory_area_size - fru_inventory_area_read;
       else
         count_to_read = FRU_COUNT_TO_READ_BLOCK_SIZE;
       
@@ -176,7 +143,6 @@ ipmi_fru_get_fru_inventory_area (ipmi_fru_state_data_t *state_data,
   *frusize = fru_inventory_area_read;
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(fru_get_inventory_rs);
   _FIID_OBJ_DESTROY(fru_read_data_rs);
   return rv;
 }

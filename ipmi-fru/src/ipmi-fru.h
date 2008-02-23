@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.h,v 1.7 2007-12-29 17:20:30 chu11 Exp $
+ *  $Id: ipmi-fru.h,v 1.7.4.1 2008-02-23 03:46:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -73,6 +73,7 @@ typedef struct ipmi_fru_state_data
   pstdout_state_t pstate;
   char *hostname;
   ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx;
+  uint64_t fru_inventory_area_size;
 } ipmi_fru_state_data_t;
 
 #endif
