@@ -57,6 +57,13 @@ o Support driver timeout error codes in all drivers and APIs.
 o SDR record dumping added into all tools.
 o Various other bug fixes and enhancements.
 
+0.5.5
+-----
+o Fix bmc-info firmware and IPMI version output.
+o Fix Sun endian bug workaround.
+o Fix FRU data output corner cases.
+o Fix workaround documentation.
+
 0.5.4
 -----
 o Output addresses in hex in ipmi-locate.
