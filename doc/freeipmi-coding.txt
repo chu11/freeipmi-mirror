@@ -623,13 +623,12 @@ options on the command line.
 On the other hand, a number of these workarounds are due to vendor
 compliance problems.  In some cases, the workarounds are so intrusive
 (i.e. using a different hashing algorithm for keys) they must require
-a workaround on the command line.  However, some could be handled
-seemlessly, but would require altered behavior to handle the "common
-case".
+a workaround on the command line b/c there is really no other way to
+handle it.  However, some could be handled seemlessly, but would
+require altered behavior to handle the "common case".
 
 The general rule that I've come to is that if the workaround changes
-some behavior that is non-optimal, it must require a specific
-workaround on the command line.  Although it may/will be annoying to a
-number of users, I feel it is better for the long term.  It can
-hopefully pressure vendors into their fixing the implementations down
-the road.
+some "normal" behavior, it must require a specific workaround on the
+command line.  Although it may/will be annoying to a number of users,
+I feel it is better for the long term.  It can hopefully pressure
+vendors into their fixing the implementations down the road.
