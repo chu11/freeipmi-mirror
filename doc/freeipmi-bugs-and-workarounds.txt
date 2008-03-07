@@ -1,0 +1,211 @@
+FreeIPMI Bugs and Workarounds
+
+by 
+
+Albert Chu
+chu11@llnl.gov
+
+These are some short descriptions of the bugs and (if possible)
+workarounds implemented in FreeIPMI.  When it was documented (or I
+remember them), the motherboards these issues were found on are also
+documented.
+
+This is mostly to document the compliance issue.  When I talk to
+vendors and they say, "IPMI is 100% compliant, we don't know what
+you're talking about.", well, here's this document :-)
+
+Naturally those motherboards I have much more access to and am capable
+of working on will probably have more issues discovered.
+
+I have worked on extensively on:
+
+Intel SR870BN4
+Supermicro H8QME with SIMSO daughter card
+
+I have had some short lived access to:
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition)
+Sun Fire 4100 with ILOM
+Tyan S4811 with SMDC daughter card
+Supermicro X6-DHR-1G with BMC2.0 daughter card
+
+The remaining motherboards (and subsequent bugs/workarounds) listed
+below are from interaction with users in the community and I have
+never personally accessed.
+
+For the record, I have nothing against the companies and these issues.
+I am just as prone to programming bugs as they are.  I'm sure many of
+the motherboard manufacturers don't even write the firmware in house,
+they are from third parties.  This is more documentation for
+historical purposes, people searching for information, and to document
+the difficulty of developing against IPMI.
+
+Authentication Workarounds
+--------------------------
+
+Intel SR870BN4: BMCs would not respond to retransmissions of a Get
+Session Challenge Request if a previous Get Session Challenge response
+was lost.  Resolved by sending retransmitted Get Session Challenge
+requests from a different source port.
+
+Supermicro H8QME with SIMSO daughter card: The IPMI 2.0 packet
+responses for RAKP 2 have payload lengths that are off by 1.  Resolved
+with a workaround to adjust this length.
+
+Asus P5M2/P5MT-R: Username capabilities and/or K_g status are not
+reported properly by the Get Authentication Capabilities response.
+Resolved with a workaround ignoring those flags.
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition): The IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL flag does not work in
+the Open Session phase of IPMI 2.0 connections.  The Open Session
+response seems to simply return the privilege level passed in the
+request.  Resolved with a workaround to look for this situation.
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition): The username field is incorrectly padded during IPMI 2.0
+authentication.  Resolved with a workaround to adjust the
+username field.
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition): When the authentication algorithm is HMAC-MD5-128 and the
+password is greater than 16 bytes, the Intel BMC truncates the
+password to 16 bytes when generating keys, hashes, etc.  Resolved with
+a workaround to adjust the hash data.
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition): During the RAKP4 response, the integrity check value is
+incorrectly calculated based on the integrity algorithm instead of the
+authentication algorithm.  Resolved with a workaround
+to adjust the hash calculation.
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition): During the RAKP3 request, the name_only_lookup field must be
+disabled.  Resolved with a workaround to adjust the hash calculation.
+
+Sun Fire 4100 with ILOM: During a RAKP2 response, the key exchange
+authentication code is the wrong length.  Resolved with a workaround
+to adjust this length.
+
+Session Workarounds
+-------------------
+
+Intel SR870BN4: There is no response from the IPMI close command if a
+RESET is executed.  Resolved by closing the session early.
+
+Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
+packet responses return empty session IDs to the client.  Resolved
+with a workaround allowing empty session IDs to be accepted by the client.
+This problem is apparently fixed in later firmware releases.
+
+Dell PowerEdge 2850,SC1425: When Per-Message Authentication is
+disabled, packet responses contain non-null authentication data (when
+it should in fact be null).  Resolved with a workaround allowing
+unexpected non-null authcodes to be checked as though they were
+expected. This bug is confirmed to be fixed on newer
+firmware.
+
+IBM eServer 325: The remote BMC will advertise that Per Message
+Authentication is disabled, but actually require it for the protocol.
+Resolved with a workaround to force Per Message Authentication to be
+used no matter what is advertised by the remote BMC.
+
+Supermicro H8QME with SIMSO daughter card: The remote BMC will
+advertise that Per Message Authentication is disabled, but actually
+require it for the protocol.  Resolved by noticing this condition and
+re-enabling Per Message Authentication.  This bug is confirmed to be
+fixed on newer firmware.
+
+Sun Fire 4100 with ILOM: Returns session sequence numbers with the
+wrong endian during IPMI 1.5 sessions.  Resolved with a workaround
+that switches the endian of the received session sequence number.
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition): The initial outbound sequence number on an Activate Session
+response is off by one.  Resolved automatically because session
+sequence number is within range.
+
+Tool Workarounds
+---------------
+
+ipmipower
+---------
+
+Forgotten/Undocumented Motherboard(s): The maximum privilege level
+assigned to a cipher suite ID required authentication with that
+specific privilege level, rather than a privilege level less than or
+equal to it.
+
+Sun Fire 4100 with ILOM: The tag bits for some of the cipher records
+are wrong.  Resolved with a workaround to parse cipher
+records.
+
+ipmiconsole/libipmiconsole
+--------------------------
+Asus P5M2/P5MT-R: SOL payload sizes are reported incorrectly.
+Resolved with a workaround to skip payload size checks.
+
+Asus P5M2/P5MT-R: A non-default SOL port is specified but not
+functional.  Resolved with a workaround to ignore this port and use
+the default SOL port anyways.
+
+Sun Fire 4100 with ILOM: The Get Channel Payload Support command is
+not supported.  Resolved with a workaround to skip this point in the
+state machine (and praying things still work).
+
+Supermicro H8QME with SIMSO daughter card: SOL sessions are not
+deactivated after a Deactivate Payload request, despite the response
+indicating success.  This could lead to a looping state machine that
+continually believes a SOL session is active, tries to deactivate it,
+believes it is deactivated, then checks again if it is active.
+Resolved by exiting after a number of failed deactivations.  This
+bug is confirmed to be fixed on newer firmware.
+
+bmc-config
+----------
+
+Forgotten/Undocumented Motherboard(s): Some BMCs require that a
+password must be passed to the Set User Password command even if you
+are just trying to enable/disable a user.  Resolved by retrying a
+failed Set User Password command with a dummy password.
+
+Supermicro H8QME with SIMSO daughter card: Users cannot be
+enabled/disabled via Set User Password.  No workaround in FreeIPMI
+implemented.  Worked with vendor to implement fix in firmware.
+
+Supermicro H8QME with SIMSO daughter card: Test passwords
+via Set User Password not supported.  No workaround in FreeIPMI
+implemented.  Worked with vendor to implement fix in firmware.
+
+Supermicro H8QME with SIMSO daughter card: SOL privilege level,
+Character_Send_Threshold, SOL_Retry_Count, and SOL_Retry_interval
+cannot be modified.  No workaround in FreeIPMI
+implemented.  Worked with vendor to implement fix in firmware.
+
+Supermicro H8QME with SIMSO daughter card: User
+access parameters Enable_IPMI_Msgs and Privilege_Limit are not
+changeable via Set User Access.  No workaround in FreeIPMI
+implemented.  Worked with vendor to implement fix in firmware.
+
+Tyan S4811 with SMDC daughter card: The ability to authenticate under
+IPMI 1.5 is tied to it being supported as an OEM authentication type.
+Resolved via different configuration w/ bmc-config.
+
+ipmi-fru
+--------
+
+Forgotten/Undocumented Motherboard(s): Some FRU data has invalid
+checksums.  Resolved with workaround to ignore the checksum (pray for
+the best).
+
+Misc
+----
+
+Supermicro X6-DHR-1G with BMC2.0 daughter card: The record ID returned
+from a Get SDR Record command would be different from the record ID
+passed in. No resolution in FreeIPMI required.  Resolved in IPMItool
+with workaround to detect issue and use input record ID instead of
+output record ID.
+
+

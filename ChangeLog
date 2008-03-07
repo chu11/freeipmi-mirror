@@ -1,3 +1,9 @@
+2008-03-06  Albert Chu <chu11@llnl.gov>
+
+	* common/doc: Minor updates.
+
+	* doc/freeipmi-bugs-and-workarounds.txt: New doc.
+	
 2008-02-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/: Re-work to avoid excessive IPMI transactions.

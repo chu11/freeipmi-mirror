@@ -1,6 +1,6 @@
 .LP
 Asus P5M2/P5MT-R: The motherboard does not properly report username
-capabilities and or K_g status, leading to invalid username or K_g
+capabilities and/or K_g status, leading to invalid username or K_g
 errors.  In order to work around this issue, the "authcap" workaround
 must be specified.
 .LP
