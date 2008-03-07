@@ -249,12 +249,6 @@ Likewise, by implementing everything in userspace libraries and tools,
 portability to multiple operating systems and architectures should be
 easier.
 
-4) Additional features
-
-By ``splitting'' various IPMI features into multiple tools, each tool
-is capable of providing the user with options and features, which may
-not be easily understood or capable in a ``all in one'' tool.
-
 @node SSIF Driver Configuration, x86-64 Compilation, What is special about FreeIPMI, Top
 @section SSIF Driver Configuration
 
