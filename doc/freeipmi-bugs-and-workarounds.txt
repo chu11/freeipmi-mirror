@@ -22,7 +22,7 @@ I have worked on extensively on:
 Intel SR870BN4
 Supermicro H8QME with SIMSO daughter card
 
-I have had some short lived access to:
+I have had some temporary access to:
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition)
