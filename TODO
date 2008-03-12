@@ -37,6 +37,11 @@ general
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 
+config
+------
+config file - support workarounds/etc. for heterogenous cluster?
+- not for 0.6.X, delay to 0.7.X
+
 ipmiconsole
 -----------
 retry under a different port
