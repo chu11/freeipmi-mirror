@@ -17,7 +17,7 @@ what you're talking about.", well, here's this document :-)
 Naturally those motherboards I have much more access to and am capable
 of working on will probably have more issues discovered.
 
-I have worked on extensively on:
+I have worked extensively on:
 
 Intel SR870BN4
 Supermicro H8QME with SIMSO daughter card
