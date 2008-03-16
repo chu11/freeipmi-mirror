@@ -10,9 +10,9 @@ workarounds implemented in FreeIPMI.  When it was documented (or I
 remember them), the motherboards these issues were found on are also
 documented.
 
-This is mostly to document the compliance issue.  When I talk to
-vendors and they say, "IPMI is 100% compliant, we don't know what
-you're talking about.", well, here's this document :-)
+This is mostly to document compliance issues I've discovered.  When I
+talk to vendors and they say, "IPMI is 100% compliant, we don't know
+what you're talking about.", well, here's this document :-)
 
 Naturally those motherboards I have much more access to and am capable
 of working on will probably have more issues discovered.
