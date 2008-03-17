@@ -51,7 +51,8 @@ requests from a different source port.
 
 Supermicro H8QME with SIMSO daughter card: The IPMI 2.0 packet
 responses for RAKP 2 have payload lengths that are off by 1.  Resolved
-with a workaround to adjust this length.
+with a workaround to adjust this length.  This bug is confirmed to be
+fixed on newer firmware.
 
 Asus P5M2/P5MT-R: Username capabilities and/or K_g status are not
 reported properly by the Get Authentication Capabilities response.
