@@ -6,9 +6,9 @@ Albert Chu
 chu11@llnl.gov
 
 These are some short descriptions of the bugs and (if possible)
-workarounds implemented in FreeIPMI.  When it was documented (or I
-remember them), the motherboards these issues were found on are also
-documented.
+workarounds I've found and discovered in IPMI.  When it was documented
+(or I remember them), the motherboards these issues were found on are
+also documented.
 
 This is mostly to document compliance issues I've discovered.  When I
 talk to vendors and they say, "IPMI is 100% compliant, we don't know
