@@ -4,6 +4,8 @@
 
 	* bmc-watchdog/src/bmc-watchdog.c (_cmd): Fix openipmi corner case.
 
+	* configure.ac: Update for beta release.
+
 2008-02-25  Albert Chu <chu11@llnl.gov>
 
         * configure.ac: Update version for release.
