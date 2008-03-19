@@ -41,8 +41,8 @@ they are from third parties.  This is more documentation for
 historical purposes, people searching for information, and to document
 the difficulty of developing against IPMI.
 
-Authentication Workarounds
---------------------------
+Authentication Issues
+---------------------
 
 Intel SR870BN4: BMCs would not respond to retransmissions of a Get
 Session Challenge Request if a previous Get Session Challenge response
@@ -89,8 +89,8 @@ Sun Fire 4100 with ILOM: During a RAKP2 response, the key exchange
 authentication code is the wrong length.  Resolved with a workaround
 to adjust this length.
 
-Session Workarounds
--------------------
+Session Issues
+--------------
 
 Intel SR870BN4: There is no response from the IPMI close command if a
 RESET is executed.  Resolved by closing the session early.
@@ -127,8 +127,11 @@ Edition): The initial outbound sequence number on an Activate Session
 response is off by one.  Resolved automatically because session
 sequence number is within range.
 
-Tool Workarounds
----------------
+HP Proliant DL 145 server: IPMI 1.5 sessions are not supported, only
+IPMI 2.0 sessions are supported.
+
+Tool Issues
+-----------
 
 ipmipower
 ---------
