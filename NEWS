@@ -1,3 +1,8 @@
+0.5.6
+-----
+o Fix bmc-watchdog probing corner case.
+o Fix bmc-watchdog openipmi corner case.
+
 0.5.5
 -----
 o Fix bmc-info firmware and IPMI version output.

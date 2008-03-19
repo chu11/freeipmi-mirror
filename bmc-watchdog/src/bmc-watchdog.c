@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.73 2007-10-18 00:33:08 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.73.4.1 2008-03-19 17:56:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -475,6 +475,39 @@ _init_ipmi(void)
     }
   else
     {
+      struct ipmi_locate_info locate_info;
+
+      /* If one of KCS or SSIF is found, we try that one first.
+       * We don't want to hang on one or another if one is bad.
+       * If neither is found (perhaps b/c the vendor just assumes
+       * default values), then there's not much we can do, we can
+       * only guess.
+       */
+
+      if (!ipmi_locate_smbios_get_dev_info(IPMI_INTERFACE_KCS, &locate_info)
+          || !ipmi_locate_pci_get_dev_info(IPMI_INTERFACE_KCS, &locate_info)
+          || !ipmi_locate_acpi_spmi_get_dev_info(IPMI_INTERFACE_KCS, &locate_info)
+          || !ipmi_locate_dmidecode_get_dev_info(IPMI_INTERFACE_KCS, &locate_info))
+        {
+          if (!_init_kcs_ipmi())
+            {
+              driver_type_used = DRIVER_TYPE_KCS;
+              goto out;
+            }
+        }
+      
+      if (!ipmi_locate_smbios_get_dev_info(IPMI_INTERFACE_SSIF, &locate_info)
+          || !ipmi_locate_pci_get_dev_info(IPMI_INTERFACE_SSIF, &locate_info)
+          || !ipmi_locate_acpi_spmi_get_dev_info(IPMI_INTERFACE_SSIF, &locate_info)
+          || !ipmi_locate_dmidecode_get_dev_info(IPMI_INTERFACE_SSIF, &locate_info))
+        {
+          if (!_init_ssif_ipmi())
+            {
+              driver_type_used = DRIVER_TYPE_SSIF;
+              goto out;
+            }
+        }
+
       if (_init_openipmi_ipmi() < 0)
         {
           if (_init_kcs_ipmi() < 0)
@@ -491,6 +524,7 @@ _init_ipmi(void)
         driver_type_used = DRIVER_TYPE_OPENIPMI;
     }
 
+ out:
   return 0;
 }
 
@@ -629,6 +663,30 @@ _cmd(char *str,
 		}
 	    }
 	}
+      else if (driver_type_used == DRIVER_TYPE_OPENIPMI)
+	{
+	  if ((ret = ipmi_openipmi_cmd (openipmi_ctx,
+					IPMI_BMC_IPMB_LUN_BMC, 
+					netfn, 
+					cmd_rq, 
+					cmd_rs)) < 0)
+	    {
+              _bmclog("%s: ipmi_openipmi_cmd: %s", 
+                      str,
+                      ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
+              if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)
+                errno = EINVAL;
+              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_PERMISSION)
+                errno = EPERM;
+              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY)
+                errno = ENOMEM;
+              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED)
+                errno = EIO;
+              else
+                errno = EINVAL;
+              return -1;
+	    }
+	}
       else
 	{
 	  if ((ret = ipmi_ssif_cmd (ssif_ctx,
@@ -673,8 +731,8 @@ _cmd(char *str,
 
 	  if (cinfo.debug)
 	    {
-	      fprintf(stderr, "%s: ipmi_kcs_cmd_interruptible: BMC busy\n", str);
-	      _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC busy", str);
+	      fprintf(stderr, "%s: BMC busy\n", str);
+	      _bmclog("%s: BMC busy", str);
 	    }
 
 	  _sleep(retry_wait_time);
