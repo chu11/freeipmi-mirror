@@ -54,9 +54,9 @@ responses for RAKP 2 have payload lengths that are off by 1.  Resolved
 with a workaround to adjust this length.  This bug is confirmed to be
 fixed on newer firmware.
 
-Asus P5M2/P5MT-R: Username capabilities and/or K_g status are not
-reported properly by the Get Authentication Capabilities response.
-Resolved with a workaround ignoring those flags.
+Asus P5M2/P5MT-R/S162-E4/RX4: Username capabilities and/or K_g status
+are not reported properly by the Get Authentication Capabilities
+response.  Resolved with a workaround ignoring those flags.
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): The IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL flag does not work in
@@ -147,8 +147,8 @@ records.
 
 ipmiconsole/libipmiconsole
 --------------------------
-Asus P5M2/P5MT-R: SOL payload sizes are reported incorrectly.
-Resolved with a workaround to skip payload size checks.
+Asus P5M2/P5MT-R/S162-E4/RX4: SOL payload sizes are reported
+incorrectly.  Resolved with a workaround to skip payload size checks.
 
 Asus P5M2/P5MT-R: A non-default SOL port is specified but not
 functional.  Resolved with a workaround to ignore this port and use

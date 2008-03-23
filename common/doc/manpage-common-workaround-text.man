@@ -28,10 +28,10 @@ Supermicro H8QME with SIMSO daughter card: The remote BMC will
 advertise that Per Message Authentication is disabled, but actually
 require it for the protocol. Automatically handled.
 .LP
-Asus P5M2/P5MT-R: The motherboard does not properly report username
-capabilities and/or K_g status, leading to invalid username or K_g
-errors.  In order to work around this issue, the "authcap" workaround
-must be specified.
+Asus P5M2/P5MT-R/RS162-E4/RX4: The motherboard does not properly
+report username capabilities and/or K_g status, leading to invalid
+username or K_g errors.  In order to work around this issue, the
+"authcap" workaround must be specified.
 .LP
 Sun Fire 4100 with ILOM: The session sequence numbers returned for
 IPMI 1.5 sessions are the wrong endian.  In order to work around this

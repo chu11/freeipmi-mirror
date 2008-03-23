@@ -1,3 +1,10 @@
+2008-03-23  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/manpage-common-workaround-text.man,
+	common/doc/manpage-common-workaround-text.man,
+	doc/freeipmi-bugs-and-workarounds.txt: Add new motherboard for
+	asus workarounds.
+	
 2008-03-19  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_init_ipmi): Fix probing issue.

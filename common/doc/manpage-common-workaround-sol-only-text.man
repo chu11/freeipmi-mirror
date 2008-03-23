@@ -1,8 +1,8 @@
 .LP
-Asus P5M2/P5MT-R: The motherboard does not properly report username
-capabilities and/or K_g status, leading to invalid username or K_g
-errors.  In order to work around this issue, the "authcap" workaround
-must be specified.
+Asus P5M2/P5MT-R/RS162-E4/RX4: The motherboard does not properly
+report username capabilities and/or K_g status, leading to invalid
+username or K_g errors.  In order to work around this issue, the
+"authcap" workaround must be specified.
 .LP
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): There are a number of Intel IPMI 2.0 bugs which can be
@@ -21,8 +21,8 @@ Sun Fire 4100: There are several IPMI 2.0 bugs which can be worked
 around by specifying the "sun20" workaround.  The workarounds include
 handling invalid lengthed hash keys and invalid cipher suite records.
 .LP
-Asus P5M2: An incorrect IPMI 2.0 SOL payload size can be ignored using
-the "solpayloadsize" workaround.
+Asus P5M2/RS162-E4/RX4: An incorrect IPMI 2.0 SOL payload size can be
+ignored using the "solpayloadsize" workaround.
 .LP
 Asus P5MT-R: An invalid IPMI 2.0 SOL port can be ignored (and the
 default port used) by using the "solport" workaround.
