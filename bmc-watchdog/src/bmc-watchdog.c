@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.79 2008-03-19 17:45:32 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.80 2008-03-27 18:23:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -678,25 +678,20 @@ _cmd(char *str,
 					cmd_rq, 
 					cmd_rs)) < 0)
 	    {
-	      if (ipmi_openipmi_ctx_errnum(openipmi_ctx) != IPMI_OPENIPMI_CTX_ERR_BUSY)
-		{
-		  _bmclog("%s: ipmi_openipmi_cmd: %s", 
-			  str,
-                          ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
-		  if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)
-		    errno = EINVAL;
-		  else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_PERMISSION)
-		    errno = EPERM;
-		  else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY)
-		    errno = ENOMEM;
-		  else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED)
-		    errno = EIO;
-		  else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_OVERFLOW)
-		    errno = ENOSPC;
-		  else
-		    errno = EINVAL;
-		  return -1;
-		}
+              _bmclog("%s: ipmi_openipmi_cmd: %s", 
+                      str,
+                      ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
+              if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)
+                errno = EINVAL;
+              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_PERMISSION)
+                errno = EPERM;
+              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY)
+                errno = ENOMEM;
+              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED)
+                errno = EIO;
+              else
+                errno = EINVAL;
+              return -1;
 	    }
 	}
       else
