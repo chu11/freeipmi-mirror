@@ -58,6 +58,11 @@ o Support driver timeout error codes in all drivers and APIs.
 o SDR record dumping added into all tools.
 o Various other bug fixes and enhancements.
 
+0.5.6
+-----
+o Fix bmc-watchdog probing corner case.
+o Fix bmc-watchdog openipmi corner case.
+
 0.5.5
 -----
 o Fix bmc-info firmware and IPMI version output.
