@@ -3,6 +3,7 @@
 For Users
 ---------
 o Add new tool ipmi-sensors-config.
+o Add new tool ipmi-oem.
 o Support --groups (plural) for multiple groups listing in
   ipmi-sensors.  Older --group (non-plural) option maintained for
   backwards compatability.

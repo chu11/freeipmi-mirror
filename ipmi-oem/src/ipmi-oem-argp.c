@@ -28,24 +28,24 @@
 #include <argp.h>
 
 #include "tool-cmdline-common.h"
-#include "ipmi-raw.h"
-#include "ipmi-raw-argp.h"
+#include "ipmi-oem.h"
+#include "ipmi-oem-argp.h"
 
 #include "freeipmi-portability.h"
 
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 const char *argp_program_version = 
-"FreeIPMI Raw [ipmi-raw-" PACKAGE_VERSION "]\n"
+"FreeIPMI Oem [ipmi-oem-" PACKAGE_VERSION "]\n"
 "Copyright (C) 2003-2005 FreeIPMI Core Team\n"
 "This program is free software; you may redistribute it under the terms of\n"
 "the GNU General Public License.  This program has absolutely no warranty.";
 
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
-static char doc[] = "IPMI Raw - executes IPMI commands by hex values.";
+static char doc[] = "IPMI OEM - executes OEM specific IPMI commands.";
 
-static char args_doc[] = "[COMMAND-HEX-BYTES]";
+static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
@@ -58,8 +58,6 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    {"file", CMD_FILE_KEY, "CMD-FILE", 0, 
-     "Specify a file to read command requests from.", 30}, 
     { 0 }
   };
 
@@ -68,56 +66,44 @@ static struct argp argp = { options, parse_opt, args_doc, doc };
 static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  struct ipmi_raw_arguments *cmd_args = state->input;
+  struct ipmi_oem_arguments *cmd_args = state->input;
   error_t ret;
   
   switch (key)
     {
-    case CMD_FILE_KEY:
-      if (!(cmd_args->cmd_file = strdup (arg)))
-        {
-          perror("strdup");
-          exit(1);
-        }
-      break;
     case ARGP_KEY_ARG:
       {
-	int i;
-	long value;
-	
-	if (strlen(arg) >= 2)
-	  {
-	    if (strncmp(arg, "0x", 2) == 0)
-	      arg+=2;
-	  }
-
-        if (*arg == '\0')
+        if (!cmd_args->oem_id)
           {
-            fprintf (stderr, "invalid hex byte argument\n");
-            argp_usage (state);
-            return (-1);
+            if (!(cmd_args->oem_id = strdup(arg)))
+              {
+                perror("strdup");
+                exit(1);
+              }
+            break;
           }
-
-	for (i = 0; arg[i] != (char) NULL; i++)
-	  {
-	    if (i >= 2)
-	      {
-		fprintf (stderr, "invalid hex byte argument\n");
-		argp_usage (state);
-		return (-1);
-	      }
-	    
-	    if (isxdigit (arg[i]) == 0)
-	      {
-		fprintf (stderr, "invalid hex byte argument\n");
-		argp_usage (state);
-		return (-1);
-	      }
-	  }
-	
-	value = strtol (arg, (char **) NULL, 16);
-	cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
-	
+        else if (!cmd_args->oem_cmd)
+          {
+            if (!(cmd_args->oem_cmd = strdup(arg)))
+              {
+                perror("strdup");
+                exit(1);
+              }
+            break;
+          }
+        else 
+          {
+            if (cmd_args->oem_options_count < ARG_MAX)
+              {
+                if (!(cmd_args->oem_options[cmd_args->oem_options_count] = strdup(arg)))
+                  {
+                    perror("strdup");
+                    exit(1);
+                  }
+                cmd_args->oem_options_count++;
+                break;
+              }
+          }
 	break;
       }
     case ARGP_KEY_END:
@@ -133,14 +119,15 @@ parse_opt (int key, char *arg, struct argp_state *state)
 }
 
 void 
-ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
+ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
-  cmd_args->cmd_file = NULL;
-  memset (cmd_args->cmd, 0, sizeof(cmd_args->cmd));
-  cmd_args->cmd_length = 0;
+  cmd_args->oem_id = NULL;
+  cmd_args->oem_cmd = NULL;
+  memset (cmd_args->oem_options, 0, sizeof(cmd_args->oem_options));
+  cmd_args->oem_options_count = 0;
 
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));

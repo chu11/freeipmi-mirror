@@ -1,6 +1,12 @@
 2008-03-27  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Add ipmi-oem command.
+
+2008-03-27  Albert Chu <chu11@llnl.gov>
+
 	* bmc-watchdog/src/bmc-watchdog.c: Fix compile bugs.
+
+	* ipmi-raw/src/ipmi-raw-argp.c: Fix error check corner case.
 	
 2008-03-23  Albert Chu <chu11@llnl.gov>
 
