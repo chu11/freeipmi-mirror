@@ -1,3 +1,7 @@
+2008-03-XX  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Add ipmi-oem command.
+	
 2008-03-23  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-workaround-text.man,

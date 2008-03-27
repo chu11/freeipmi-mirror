@@ -218,6 +218,7 @@ fi
 %{_sbindir}/ipmi-fru
 %{_sbindir}/ipmi-locate
 %{_sbindir}/pef-config
+%{_sbindir}/ipmi-oem
 %{_sbindir}/ipmi-raw
 %{_sbindir}/ipmi-sel
 %{_sbindir}/ipmi-sensors
@@ -235,6 +236,7 @@ fi
 %{_mandir}/man8/ipmi-fru.8*
 %{_mandir}/man8/ipmi-locate.8*
 %{_mandir}/man8/pef-config.8*
+%{_mandir}/man8/ipmi-oem.8*
 %{_mandir}/man8/ipmi-raw.8*
 %{_mandir}/man8/ipmi-sel.8*
 %{_mandir}/man8/ipmi-sensors.8*
