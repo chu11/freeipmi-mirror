@@ -41,8 +41,8 @@ required user privilege will depend on the oem commands executed.
 The currently supported OEM Ids and commands are:
 .TP
 none currently supported
-.RS
-none currently supported
+\.".RS
+\."none currently supported
 .RS
 .SH "REPORTING BUGS"
 Report bugs to <freeipmi\-devel@gnu.org>.
