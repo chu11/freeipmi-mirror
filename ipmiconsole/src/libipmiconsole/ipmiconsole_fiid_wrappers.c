@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.c,v 1.10 2007-12-14 19:16:24 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.c,v 1.11 2008-03-28 00:14:40 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

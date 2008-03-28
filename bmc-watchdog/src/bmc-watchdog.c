@@ -1,6 +1,7 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.80 2008-03-27 18:23:00 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.81 2008-03-28 00:14:30 chu11 Exp $
  *****************************************************************************
+ *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

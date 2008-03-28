@@ -1,5 +1,5 @@
 /* 
-   Copyright (C) 2005 FreeIPMI Core Team
+   Copyright (C) 2003-2008 FreeIPMI Core Team
 
    Based on ipmitool.c provided by Amitoj Singh <amitoj@fnal.gov> and 
    Don Holmgren <djholm@fnal.gov>

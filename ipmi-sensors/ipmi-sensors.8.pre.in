@@ -94,7 +94,7 @@ bmc-config(8), ipmimonitoring(8)
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT
-Copyright \(co 2003,04,05 FreeIPMI Core Team.  
+Copyright \(co 2003-2008 FreeIPMI Core Team.  
 This program is free software; you may redistribute it under the terms of
 the GNU General Public License.  This program has absolutely no warranty.
 .SH "AUTHORS"

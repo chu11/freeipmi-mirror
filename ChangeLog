@@ -2,6 +2,9 @@
 
 	* ipmi-oem/: Add ipmi-oem command.
 
+	* Tons of copyright changes/fixes/updates/header additions
+	everywhere.
+
 2008-03-27  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c: Fix compile bugs.

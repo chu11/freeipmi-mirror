@@ -1,5 +1,5 @@
 /* 
-   Copyright (C) 2005 FreeIPMI Core Team
+   Copyright (C) 2005-2008 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 const char *argp_program_version = 
 "FreeIPMI Raw [ipmi-raw-" PACKAGE_VERSION "]\n"
-"Copyright (C) 2003-2005 FreeIPMI Core Team\n"
+"Copyright (C) 2005-2008 FreeIPMI Core Team\n"
 "This program is free software; you may redistribute it under the terms of\n"
 "the GNU General Public License.  This program has absolutely no warranty.";
 

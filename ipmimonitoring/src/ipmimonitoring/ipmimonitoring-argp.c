@@ -43,7 +43,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 const char *argp_program_version = 
 "Ipmimonitoring [ipmimonitoring-" PACKAGE_VERSION "]\n"
-"Copyright (C) 2007 Lawrence Livermore National Security, LLC.\n"
+"Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.\n"
 "This program is free software; you may redistribute it under the terms of\n"
 "the GNU General Public License.  This program has absolutely no warranty.";
 

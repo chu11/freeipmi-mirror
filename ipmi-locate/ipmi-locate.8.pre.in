@@ -13,6 +13,6 @@ such as device addresses.
 .SH "REPORTING BUGS"
 Report bugs to <freeipmi\-devel@gnu.org>.
 .SH COPYRIGHT
-Copyright \(co 2003-2005 FreeIPMI Core Team
+Copyright \(co 2003-2008 FreeIPMI Core Team
 This program is free software; you may redistribute it under the terms of
 the GNU General Public License.  This program has absolutely no warranty.

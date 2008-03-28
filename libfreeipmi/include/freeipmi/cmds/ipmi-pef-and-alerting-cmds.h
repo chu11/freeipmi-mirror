@@ -1,5 +1,5 @@
 /* 
-   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
+   Copyright (C) 2003-2008 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.4 2008-02-18 17:09:03 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.5 2008-03-28 00:14:51 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H

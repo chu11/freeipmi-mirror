@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2003 FreeIPMI Core Team
+# Copyright (c) 2003-2008 FreeIPMI Core Team
 #
 
 %define name @PACKAGE@
