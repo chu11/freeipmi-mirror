@@ -28,6 +28,13 @@ required user privilege will depend on the oem commands executed.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
+.SH "SUPPORTED OEM"
+The currently supported OEM Ids and commands are:
+.TP
+none currently supported
+\.".RS
+\."none currently supported
+.RS
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
@@ -37,13 +44,6 @@ required user privilege will depend on the oem commands executed.
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
-.SH "SUPPORTED OEM"
-The currently supported OEM Ids and commands are:
-.TP
-none currently supported
-\.".RS
-\."none currently supported
-.RS
 .SH "REPORTING BUGS"
 Report bugs to <freeipmi\-devel@gnu.org>.
 .SH COPYRIGHT
