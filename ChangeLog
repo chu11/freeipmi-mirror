@@ -2,6 +2,11 @@
 
 	* Fix nroff syntax in many manpages.
 	
+	* More copyright changes/fixes/updates/header additions
+	everywhere.
+
+	* ipmi-oem/: Minor cleanup.
+
 2008-03-27  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Add ipmi-oem command.

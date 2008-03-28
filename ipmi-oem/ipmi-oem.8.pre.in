@@ -28,6 +28,10 @@ required user privilege will depend on the oem commands executed.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
 .SH "SUPPORTED OEM"
 The currently supported OEM Ids and commands are:
 .TP
@@ -35,10 +39,6 @@ none currently supported
 \.".RS
 \."none currently supported
 .RS
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
