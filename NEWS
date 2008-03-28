@@ -1,5 +1,5 @@
-0.6.1
------
+0.6.1 - 00/00/00
+----------------
 For Users
 ---------
 o Add new tool ipmi-sensors-config.
@@ -59,20 +59,20 @@ o Support driver timeout error codes in all drivers and APIs.
 o SDR record dumping added into all tools.
 o Various other bug fixes and enhancements.
 
-0.5.6
------
+0.5.6 - 03/27/08
+----------------
 o Fix bmc-watchdog probing corner case.
 o Fix bmc-watchdog openipmi corner case.
 
-0.5.5
------
+0.5.5 - 02/25/08
+----------------
 o Fix bmc-info firmware and IPMI version output.
 o Fix Sun endian bug workaround.
 o Fix FRU data output corner cases.
 o Fix workaround documentation.
 
-0.5.4
------
+0.5.4 - 02/07/08
+----------------
 o Output addresses in hex in ipmi-locate.
 o Clarify device addresses in manpages.
 o Support --ignore-sdr-cache option in ipmi-sel and ipmi-fru.
@@ -80,8 +80,8 @@ o Minor SDR caching bug fixes.
 o Minor ipmimonitoring corner case fixes.
 o Various SSIF corner case fixes.
 
-0.5.3
------
+0.5.3 - 01/02/08
+----------------
 o Fix minor ipmimonitoring command line option combination bugs.
 o Fix several minor corner cases in ipmi-sel, ipmi-sensors, and
 ipmimonitoring.
@@ -89,14 +89,14 @@ o Fix corner case in all tools by recognizing 127.0.0.1 as the same as
 localhost.
 o Fix documentation/manpage text/typos.
 
-0.5.2
------
+0.5.2 - 12/21/07
+----------------
 o Clarify "Password Verification Timeout" troubleshooting information.
 o Fix ipmipower cmdline parse bug.
 o Support suffixes in hostrange inputs.
 
-0.5.1
------
+0.5.1 - 12/07/07
+----------------
 For Users
 ---------
 o Added previously missing IPMI 2.0 (-D LAN_2_0) support into
@@ -176,24 +176,24 @@ o Fix various library variable names and macros for consistency.
      has been updated appropriately.
 o Various bug fixes and enhancements.
      
-0.4.6
------
+0.4.6 - 10/11/07
+----------------
 o Fix sdr cache corruption bug.
 
-0.4.5
------
+0.4.5 - 10/02/07
+----------------
 o Fix command line parse issue in ipmidetect.
 o Fix rpm daemon install scripts for ipmidetectd.
 
-0.4.4
------
+0.4.4 - 09/19/07
+----------------
 o Alter userncame-capabilities workaround to
 authentication-capabilities workaronds to cover more situations.
 o Fix libipmiconsole new console port corner case.
 o Fix manpage typos.
 
-0.4.3
------
+0.4.3 - 08/14/07
+----------------
 o Add ASUS P5M2 workarounds in ipmipower, ipmiconsole, and ipmimonitoring.
 o Fix bad input assert corner cases.
 o Fix non-default install bug.
@@ -206,13 +206,13 @@ o Fix error output messages in bmc-config.
 o Fix legacy config option issues.
 o Fix usage help in ipmiconsole.
 
-0.4.2
------
+0.4.2 - 08/02/07
+----------------
 o ipmimonitoring: Fixed free bug that can cause segfaults.
 o Fix SLES packaging issue.
 
-0.4.1
------
+0.4.1 - 07/26/07
+----------------
 
 For Users
 ---------
@@ -245,8 +245,8 @@ o Additional IPMI sub section support in libfreeipmi.
 o Re-architected UDM for more descriptive error codes.
 o Various bug fixes/performance fixes to libipmiconsole, libfreeipmi.
 
-0.3.3
------
+0.3.3 - 05/05/07
+----------------
 o Support per-msg-auth in LAN udm and majority of FreeIPMI tools.
 o Support hex k-g input/output.
 o Fix ipmipower per-msg-auth.
@@ -256,8 +256,8 @@ o Fix OpenIPMI driver build bug.
 o Fix strdup corner case in bmc-config.
 o Allow OEM network functions.
 
-0.3.2
------
+0.3.2 - 03/29/07
+----------------
 o -N option added to ipmiconsole.
 o -L option added to ipmiconsole.
 o -K option added to ipmipower and ipmiconsole.
@@ -267,8 +267,8 @@ o Fix seg-fault in ipmiconsole.
 o Fix various bugs in in libipmiconsole and ipmiconsole.
 o Fix secure malloc bug.
 
-0.3.1
------
+0.3.1 - 12/18/06
+----------------
 
 o FreeBSD Support
 o libfreeipmi: Header file include/C++ fixes.
@@ -276,8 +276,8 @@ o ipmi-sensors, ipmi-sel: Fix SDR cache creation bug for /tmp.
 o ipmi-sensors: Fix SDR parsing corner case bugs.
 o ipmipower, ipmiconsole: Fix mem-leak possibility.
 
-0.3.0
------
+0.3.0 - 11/13/06
+----------------
 
 For Users
 ---------
