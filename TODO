@@ -18,6 +18,7 @@ ipmipower
 ---------
 - fanout/something mechanism to limit parallelism??
 - redo to utilize newer api?
+- specify escape sequence char
   
 bmc-config
 ----------
