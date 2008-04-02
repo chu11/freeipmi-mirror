@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.19 2008-04-02 00:12:56 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.20 2008-04-02 13:38:16 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -147,8 +147,10 @@ Don't enter terminal raw mode.
 .LP
 
 .SH "ESCAPE CHARACTERS"
-The following escape sequences are supported.  The currently supported
-escape character is '&'.
+The following escape sequences are supported.  The default supported
+escape character is '&', but can be changed with the 
+\fB\-e\fR
+option.
 .TP
 .I &?
 Display a list of currently available escape sequences.

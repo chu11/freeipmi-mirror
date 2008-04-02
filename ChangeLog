@@ -1,3 +1,8 @@
+2008-04-02  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/ipmiconsole.8.pre.in: Modify escape sequence
+	main text to mention -e option.
+	
 2008-04-01  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/: Support adjustable escape char option in
