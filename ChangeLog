@@ -2,6 +2,8 @@
 
 	* ipmiconsole/ipmiconsole.8.pre.in: Modify escape sequence
 	main text to mention -e option.
+
+	* freeipmi.spec.in: Update ChangeLog
 	
 2008-04-01  Albert Chu <chu11@llnl.gov>
 

@@ -309,6 +309,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Mon Mar 27 2008 Albert Chu <chu11@llnl.gov> 0.6.0
+- Add ipmi-oem tool and manpage.
+
 * Mon Feb 18 2008 Albert Chu <chu11@llnl.gov> 0.6.0
 - Add ipmi-sensors-config tool and manpage.
 
