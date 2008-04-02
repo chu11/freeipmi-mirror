@@ -705,129 +705,111 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   else
     validate_ptr = threshold_floating_point;
 
-  /* If a threshold is not-readable, it isn't up for consideration, so
-   * don't "register" it.
+  /* If a threshold is not-readable, we will output an undefined value
+   * so the user knows it is undefined.
    */
 
-  if (lower_non_critical_threshold_readable)
+  flags = 0;
+  if (!lower_non_critical_threshold_readable)
+    flags |= CONFIG_UNDEFINED;
+  if (!lower_non_critical_threshold_settable)
     {
-      flags = 0;
-
-      if (!lower_non_critical_threshold_settable)
-        {
-          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
-          flags |= CONFIG_READABLE_ONLY;
-        }
-
-      if (config_section_add_key (section,
-                                  "Lower_Non_Critical_Threshold",
-                                  desc,
-                                  flags,
-                                  threshold_checkout,
-                                  threshold_commit,
-                                  validate_ptr) < 0)
-        goto cleanup;
+      flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+      flags |= CONFIG_READABLE_ONLY;
     }
+  if (config_section_add_key (section,
+                              "Lower_Non_Critical_Threshold",
+                              desc,
+                              flags,
+                              threshold_checkout,
+                              threshold_commit,
+                              validate_ptr) < 0)
+    goto cleanup;
 
-  if (lower_critical_threshold_readable)
+  flags = 0;
+  if (!lower_critical_threshold_readable)
+    flags |= CONFIG_UNDEFINED;
+  if (!lower_critical_threshold_settable)
     {
-      flags = 0;
-
-      if (!lower_critical_threshold_settable)
-        {
-          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
-          flags |= CONFIG_READABLE_ONLY;
-        }
-
-      if (config_section_add_key (section,
-                                  "Lower_Critical_Threshold",
-                                  desc,
-                                  flags,
-                                  threshold_checkout,
-                                  threshold_commit,
-                                  validate_ptr) < 0)
-        goto cleanup;
+      flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+      flags |= CONFIG_READABLE_ONLY;
     }
+  if (config_section_add_key (section,
+                              "Lower_Critical_Threshold",
+                              desc,
+                              flags,
+                              threshold_checkout,
+                              threshold_commit,
+                              validate_ptr) < 0)
+    goto cleanup;
 
-  if (lower_non_recoverable_threshold_readable)
+  flags = 0;
+  if (!lower_non_recoverable_threshold_readable)
+    flags |= CONFIG_UNDEFINED;
+  if (!lower_non_recoverable_threshold_settable)
     {
-      flags = 0;
-
-      if (!lower_non_recoverable_threshold_settable)
-        {
-          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
-          flags |= CONFIG_READABLE_ONLY;
-        }
-
-      if (config_section_add_key (section,
-                                  "Lower_Non_Recoverable_Threshold",
-                                  desc,
-                                  flags,
-                                  threshold_checkout,
-                                  threshold_commit,
-                                  validate_ptr) < 0)
-        goto cleanup;
+      flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+      flags |= CONFIG_READABLE_ONLY;
     }
+  if (config_section_add_key (section,
+                              "Lower_Non_Recoverable_Threshold",
+                              desc,
+                              flags,
+                              threshold_checkout,
+                              threshold_commit,
+                              validate_ptr) < 0)
+    goto cleanup;
 
-  if (upper_non_critical_threshold_readable)
+  flags = 0;
+  if (!upper_non_critical_threshold_readable)
+    flags |= CONFIG_UNDEFINED;
+  if (!upper_non_critical_threshold_settable)
     {
-      flags = 0;
-
-      if (!upper_non_critical_threshold_settable)
-        {
-          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
-          flags |= CONFIG_READABLE_ONLY;
-        }
-
-      if (config_section_add_key (section,
-                                  "Upper_Non_Critical_Threshold",
-                                  desc,
-                                  flags,
-                                  threshold_checkout,
-                                  threshold_commit,
-                                  validate_ptr) < 0)
-        goto cleanup;
+      flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+      flags |= CONFIG_READABLE_ONLY;
     }
+  if (config_section_add_key (section,
+                              "Upper_Non_Critical_Threshold",
+                              desc,
+                              flags,
+                              threshold_checkout,
+                              threshold_commit,
+                              validate_ptr) < 0)
+    goto cleanup;
 
-  if (upper_critical_threshold_readable)
+  flags = 0;
+  if (!upper_critical_threshold_readable)
+    flags |= CONFIG_UNDEFINED;
+  if (!upper_critical_threshold_settable)
     {
-      flags = 0;
-
-      if (!upper_critical_threshold_settable)
-        {
-          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
-          flags |= CONFIG_READABLE_ONLY;
-        }
-
-      if (config_section_add_key (section,
-                                  "Upper_Critical_Threshold",
-                                  desc,
-                                  flags,
-                                  threshold_checkout,
-                                  threshold_commit,
-                                  validate_ptr) < 0)
-        goto cleanup;
+      flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+      flags |= CONFIG_READABLE_ONLY;
     }
+  if (config_section_add_key (section,
+                              "Upper_Critical_Threshold",
+                              desc,
+                              flags,
+                              threshold_checkout,
+                              threshold_commit,
+                              validate_ptr) < 0)
+    goto cleanup;
 
-  if (upper_non_recoverable_threshold_readable)
+  flags = 0;
+  if (!upper_non_recoverable_threshold_readable)
+    flags |= CONFIG_UNDEFINED;
+  if (!upper_non_recoverable_threshold_settable)
     {
-      flags = 0;
-
-      if (!upper_non_recoverable_threshold_settable)
-        {
-          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
-          flags |= CONFIG_READABLE_ONLY;
-        }
-
-      if (config_section_add_key (section,
-                                  "Upper_Non_Recoverable_Threshold",
-                                  desc,
-                                  flags,
-                                  threshold_checkout,
-                                  threshold_commit,
-                                  validate_ptr) < 0)
-        goto cleanup;
+      flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+      flags |= CONFIG_READABLE_ONLY;
     }
+  if (config_section_add_key (section,
+                              "Upper_Non_Recoverable_Threshold",
+                              desc,
+                              flags,
+                              threshold_checkout,
+                              threshold_commit,
+                              validate_ptr) < 0)
+    goto cleanup;
 
   *section_ptr = section;
   return CONFIG_ERR_SUCCESS;

@@ -99,10 +99,18 @@ config_checkout_section(struct config_section *section,
     {
       int key_len = 0;
 
-      if ((this_ret = kv->key->checkout (section->section_name,
-                                         kv,
-                                         arg)) == CONFIG_ERR_FATAL_ERROR)
-        goto cleanup;
+      if (kv->key->flags & CONFIG_UNDEFINED)
+        {
+          if (config_section_update_keyvalue_output(kv, "Undefined") < 0)
+            this_ret = CONFIG_ERR_FATAL_ERROR;
+        }
+      else
+        {
+          if ((this_ret = kv->key->checkout (section->section_name,
+                                             kv,
+                                             arg)) == CONFIG_ERR_FATAL_ERROR)
+            goto cleanup;
+        }
 
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
         {
@@ -128,7 +136,8 @@ config_checkout_section(struct config_section *section,
            * Some other keys may or may not have a value, depending on
            * the IPMI version or the implementation.
            */
-          if (kv->key->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT)
+          if (kv->key->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT
+              || kv->key->flags & CONFIG_UNDEFINED)
             key_len = fprintf(fp, "\t## %s", kv->key->key_name);
           else if (kv->key->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY)
             {

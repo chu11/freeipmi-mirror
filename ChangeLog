@@ -6,6 +6,12 @@
 	* freeipmi.spec.in: Update w/ missing files.
 
 	* bmc-watchdog/Makefile.am: Fix install bug.
+
+	* common/src/config-common.h, common/src/config-checkout.c,
+	common/src/config-commit.c: Suppoert new CONFIG_UNDEFINED flag.
+
+	* ipmi-sensors-config/src/ipmi-sensors-config-threshold-section.c:
+	Unreadable thresholds are now output as being undefined.
 	
 2008-04-01  Albert Chu <chu11@llnl.gov>
 

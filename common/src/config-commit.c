@@ -50,7 +50,8 @@ config_commit_section(struct config_section *section,
     {
       assert(kv->value_input);
 
-      if (!(kv->key->flags & CONFIG_READABLE_ONLY))
+      if (!(kv->key->flags & CONFIG_READABLE_ONLY)
+          && !(kv->key->flags & CONFIG_UNDEFINED))
         {
           if ((ret = kv->key->commit (section->section_name,
                                       kv,
@@ -65,7 +66,7 @@ config_commit_section(struct config_section *section,
             }
         }
       else
-        fprintf (stderr, "ERROR: `%s:%s' is readable only\n", 
+        fprintf (stderr, "ERROR: `%s:%s' is not writeable\n", 
                  section->section_name, kv->key->key_name);
       
       kv = kv->next;
