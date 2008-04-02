@@ -307,7 +307,6 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                 unsigned int *event_message_list_len)
 { 
   uint8_t record_type;
-  uint8_t sensor_owner_id;
   uint8_t sensor_number;
   uint8_t sensor_type;
   uint8_t event_reading_type_code;
@@ -343,20 +342,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   if (record_type != IPMI_SDR_FORMAT_FULL_RECORD
       && record_type != IPMI_SDR_FORMAT_COMPACT_RECORD)
     return 0;
-
-  if (sdr_cache_get_sensor_owner_id(state_data->pstate,
-                                    sdr_record,
-                                    sdr_record_len,
-                                    NULL,
-                                    &sensor_owner_id) < 0)
-    return -1;
-
-  /* don't bother with this sensor if its an OEM sensor, again don't
-   * output an error, let the tool output something as it sees fit.
-   */
-  if (IPMI_SYSTEM_SOFTWARE_TYPE_IS_RESERVED(sensor_owner_id))
-    return 0;
-  
+ 
   if (sdr_cache_get_sensor_number (state_data->pstate,
                                    sdr_record,
                                    sdr_record_len,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.12 2008-03-28 00:14:44 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.13 2008-04-02 22:02:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -272,6 +272,8 @@ _get_digital_sensor_state(ipmi_monitoring_ctx_t c,
     config = ipmi_module_board_device_install_config;
   else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
     config = ipmi_power_unit_redundancy_config;
+  else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
+    config = ipmi_drive_slot_device_install_config;
   else
     {
       IPMI_MONITORING_DEBUG(("event_reading_type_code '0x%X' and sensor_type '0x%X' not supported", event_reading_type_code, sensor_type));
@@ -793,39 +795,6 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
 }
 
 static int
-_check_sensor_owner_id(ipmi_monitoring_ctx_t c,
-                       unsigned int sensor_reading_flags,
-                       uint16_t record_id,
-                       fiid_obj_t obj_sdr_record)
-{
-  uint8_t sensor_owner_id;
-  uint64_t val;
-
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(fiid_obj_valid(obj_sdr_record));
-
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "sensor_owner_id",
-                   &val) < 0)
-    return -1;
-  sensor_owner_id = val;
-
-  /* +1 to avoid gcc warnings */
-  if (!((sensor_owner_id + 1) >= 0x01
-        && sensor_owner_id <= 0x47))
-    {
-      IPMI_MONITORING_DEBUG(("sensor_owner_id '0x%X' not supported", sensor_owner_id));
-      if (_store_unreadable_sensor_reading(c, sensor_reading_flags, record_id) < 0)
-        return -1;
-      return 0;
-    }
-
-  return 1;
-}
-
-static int
 _get_sensor_group(ipmi_monitoring_ctx_t c,
                   uint8_t sensor_type)
 {
@@ -887,7 +856,7 @@ _full_record_sensor_reading(ipmi_monitoring_ctx_t c,
   uint8_t sensor_type;
   int sensor_group;
   uint64_t val;
-  int ret, rv = -1;
+  int rv = -1;
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
@@ -904,15 +873,6 @@ _full_record_sensor_reading(ipmi_monitoring_ctx_t c,
                        sdr_record,
                        sdr_record_len) < 0)
     goto cleanup;
-
-  if ((ret = _check_sensor_owner_id(c, 
-                                    sensor_reading_flags, 
-                                    record_id,
-                                    obj_sdr_record)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    goto out;
 
   if (Fiid_obj_get(c,
                    obj_sdr_record,
@@ -1010,7 +970,7 @@ _compact_record_sensor_reading(ipmi_monitoring_ctx_t c,
   uint8_t sensor_type;
   int sensor_group;
   uint64_t val;
-  int ret, rv = -1;
+  int rv = -1;
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
@@ -1027,15 +987,6 @@ _compact_record_sensor_reading(ipmi_monitoring_ctx_t c,
                        sdr_record,
                        sdr_record_len) < 0)
     goto cleanup;
-
-  if ((ret = _check_sensor_owner_id(c, 
-                                    sensor_reading_flags, 
-                                    record_id,
-                                    obj_sdr_record)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    goto out;
 
   if (Fiid_obj_get(c,
                    obj_sdr_record,

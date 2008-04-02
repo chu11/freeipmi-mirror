@@ -12,6 +12,12 @@
 
 	* ipmi-sensors-config/src/ipmi-sensors-config-threshold-section.c:
 	Unreadable thresholds are now output as being undefined.
+
+	* ipmi-sensors/, ipmimonitoring/: Support reading of sensors with
+	sensor_owner_id not reserved.
+
+	* ipmimonitoring/: Support drive slot device install
+	interpretation.
 	
 2008-04-01  Albert Chu <chu11@llnl.gov>
 
