@@ -37,11 +37,12 @@ general
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts
-map hostname -> IP config
 
 config
 ------
 config file - support workarounds/etc. for heterogenous cluster?
+map hostname -> IP config
+consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
 - not for 0.6.X, delay to 0.7.X
 
 ipmiconsole
