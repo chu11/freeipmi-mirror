@@ -16,15 +16,15 @@ o Change short option -f option to -n in pef-config and bmc-config for
   backwards compatability.
 o Support -e (--escape-char) for alternate escape character in
   ipmiconsole.
+o Enhanced speed of ipmi-fru, by skipping unnecessary FRU data reads.
+o Provide more detailed error messages in config tools.
 o Support shared SDR caches for ipmi-sensors, ipmi-fru, ipmi-sel,
   ipmi-sensors-config, and ipmimonitoring.  (libipmimonitoring will
   still use a different default cache directory.)  This will require a
   new cache generation for these tools.
-o Enhanced speed of ipmi-fru, by skipping unnecessary FRU data reads.
 o Modified SDR caching output messages in ipmi-sensors, ipmi-sel,
   ipmi-fru, ipmi-sensors-config and ipmimonitoring to provide more
   useful information.
-o Provide more detailed error messages in config tools.
 o In ipmi-sensors, updated SDR output under verbose and very verbose
   output modes with:
   o More IPMI compliant field names.  For example, 'Sensor Name' has
