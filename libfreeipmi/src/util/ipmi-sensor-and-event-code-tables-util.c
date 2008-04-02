@@ -291,6 +291,7 @@ static char * ipmi_sensor_type_code_0C_desc[] =
   };
 static int ipmi_sensor_type_code_0C_desc_max = 0x0A;
 
+/* achu: defined in errata */
 static char * ipmi_sensor_type_code_0D_desc[] =
   {
     "Drive Presence",
