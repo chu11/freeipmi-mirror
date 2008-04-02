@@ -207,6 +207,7 @@ fi
 %doc %{_datadir}/doc/%{name}/freeipmi-coding.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-hostrange.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-libraries.txt
+%doc %{_datadir}/doc/%{name}/freeipmi-bugs-and-workarounds.txt
 %dir %{_datadir}/doc/%{name}
 %{_libdir}/libipmiconsole*so.*
 %{_libdir}/libfreeipmi*so.*
@@ -309,7 +310,10 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
-* Mon Mar 27 2008 Albert Chu <chu11@llnl.gov> 0.6.0
+* Wed Apr 2 2008 Albert Chu <chu11@llnl.gov> 0.6.0
+- Add freeipmi-bugs-and-workarounds.txt.
+
+* Tue Mar 27 2008 Albert Chu <chu11@llnl.gov> 0.6.0
 - Add ipmi-oem tool and manpage.
 
 * Mon Feb 18 2008 Albert Chu <chu11@llnl.gov> 0.6.0
