@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.h,v 1.17 2008-03-28 00:14:39 chu11 Exp $
+ *  $Id: ipmiconsole_config.h,v 1.18 2008-04-02 00:12:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -56,6 +56,7 @@ struct ipmiconsole_config
   unsigned int k_g_len;
   int privilege;
   int cipher_suite_id;
+  char escape_char;
   int dont_steal;
   int deactivate;
   int lock_memory;
@@ -67,6 +68,7 @@ struct ipmiconsole_config
   int k_g_set_on_cmdline;
   int privilege_set_on_cmdline;
   int cipher_suite_id_set_on_cmdline;
+  int escape_char_set_on_cmdline;
   int dont_steal_set_on_cmdline;
   int deactivate_set_on_cmdline;
   int lock_memory_set_on_cmdline;

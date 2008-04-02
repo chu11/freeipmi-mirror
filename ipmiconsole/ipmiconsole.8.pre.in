@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.18 2008-03-28 16:52:54 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.19 2008-04-02 00:12:56 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -111,6 +111,9 @@ cipher suite ids are currently supported:
 .\" 14 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-40
 
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
+.TP
+\fB\-e\fR, \fB\-\-escape-char\fR
+Specify an alternate escape character (default char '&').
 .TP
 \fB\-N\fR, \fB\-\-dont-steal\fR
 Do not steal an SOL session if one is already detected as being in

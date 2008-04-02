@@ -14,6 +14,8 @@ o Change --cache-dir to --sdr-cache-dir in ipmimonitoring for consistency
 o Change short option -f option to -n in pef-config and bmc-config for
   consistency to ipmi-sensors-config.  The -f option is maintained for
   backwards compatability.
+o Support -e (--escape-char) for alternate escape character in
+  ipmiconsole.
 o Support shared SDR caches for ipmi-sensors, ipmi-fru, ipmi-sel,
   ipmi-sensors-config, and ipmimonitoring.  (libipmimonitoring will
   still use a different default cache directory.)  This will require a

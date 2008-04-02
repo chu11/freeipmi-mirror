@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.34 2008-03-28 00:14:38 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.35 2008-04-02 00:12:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -59,6 +59,7 @@
 #define IPMICONSOLE_DONT_STEAL_KEY  'N'
 #define IPMICONSOLE_DEACTIVATE_KEY  'T'
 #define IPMICONSOLE_LOCK_MEMORY_KEY 'L'
+#define IPMICONSOLE_ESCAPE_CHAR     'e'
 
 #define IPMICONSOLE_DEBUG_KEY       160
 #define IPMICONSOLE_DEBUGFILE_KEY   161
@@ -78,19 +79,21 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     {"config-file", IPMICONSOLE_CONFIG_FILE_KEY, "FILE", 0,
      "Specify an alternate configuration file.", 30},
+    {"escape-char", IPMICONSOLE_ESCAPE_CHAR, "CHAR", 0,
+     "Specify an alternate escape character (default char '&')", 31},
     {"dont-steal", IPMICONSOLE_DONT_STEAL_KEY, 0, 0,
-     "Do not steal an SOL session if one is already detected as being in use.", 31},
+     "Do not steal an SOL session if one is already detected as being in use.", 32},
     {"deactivate", IPMICONSOLE_DEACTIVATE_KEY, 0, 0,
-     "Deactivate a SOL session if one is detected as being in use and exit.", 32},
+     "Deactivate a SOL session if one is detected as being in use and exit.", 33},
     {"lock-memory", IPMICONSOLE_LOCK_MEMORY_KEY, 0, 0,
-     "Lock sensitive information (such as usernames and passwords) in memory.", 33},
+     "Lock sensitive information (such as usernames and passwords) in memory.", 34},
     {"debug", IPMICONSOLE_DEBUG_KEY, 0, 0,
-     "Turn on debugging.", 34},
+     "Turn on debugging.", 35},
 #ifndef NDEBUG
     {"debugfile", IPMICONSOLE_DEBUGFILE_KEY, 0, 0,
-     "Output debugging to the debugfile rather than to standard output.", 35},
+     "Output debugging to the debugfile rather than to standard output.", 36},
     {"noraw", IPMICONSOLE_NORAW_KEY, 0, 0,
-     "Don't enter terminal raw mode.", 36},
+     "Don't enter terminal raw mode.", 37},
 #endif
     { 0 }
   };
@@ -125,6 +128,8 @@ _config_default(void)
   conf->privilege = -1;
   conf->cipher_suite_id = -1;
 
+  conf->escape_char = '&';
+  
   memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
   conf->k_g_len = 0;
 }
@@ -229,6 +234,10 @@ cmdline_parse (int key,
     case IPMICONSOLE_CONFIG_FILE_KEY:	/* --config-file */
       if (!(conf->config_file = strdup(arg)))
         err_exit("strdup: %s", strerror(errno));
+      break;
+    case IPMICONSOLE_ESCAPE_CHAR:          /* --escape-char */
+      conf->escape_char = *arg;
+      conf->escape_char_set_on_cmdline++;
       break;
     case IPMICONSOLE_DONT_STEAL_KEY:       /* --dont-steal */
       conf->dont_steal++;
@@ -410,6 +419,23 @@ _cb_cipher_suite_id(conffile_t cf,
 }
 
 static int
+_cb_escape_char(conffile_t cf, 
+                struct conffile_data *data,
+                char *optionname,
+                int option_type,
+                void *option_ptr,
+                int option_data, 
+                void *app_ptr, 
+                int app_data)
+{
+  if (conf->escape_char_set_on_cmdline)
+    return 0;
+
+  conf->escape_char = data->string[0];
+  return 0;
+}
+
+static int
 _cb_bool(conffile_t cf, 
          struct conffile_data *data,
          char *optionname,
@@ -470,13 +496,14 @@ _config_file_parse(void)
     privilege_flag, 
     privilege_level_flag, 
     cipher_suite_id_flag,
+    escape_char_flag,
     dont_steal_flag,
     lock_memory_flag,
     workaround_flags_flag;
   
   /* Notes:
    *
-   * -T/--deactivate option is not useful for config fils.  It is
+   * -T/--deactivate option is not useful for config files.  It is
    * excluded here.
    */
 
@@ -558,6 +585,17 @@ _config_file_parse(void)
         0, 
         &cipher_suite_id_flag,
         NULL, 
+        0
+      },
+      {
+        "escape-char",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_escape_char,
+        1,
+        0,
+        &escape_char_flag,
+        NULL,
         0
       },
       {

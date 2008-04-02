@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.44 2008-03-28 00:14:38 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.45 2008-04-02 00:12:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -206,15 +206,15 @@ _stdin(ipmiconsole_ctx_t c,
 		 delete, they send some other funky crap. */
 	      tbuf[tbuflen++] = 0x7F;
 	    }
-	  else if (buf[i] == '&')
-	    tbuf[tbuflen++] = '&';
+	  else if (buf[i] == conf->escape_char)
+	    tbuf[tbuflen++] = conf->escape_char;
 	  else
 	    {
-	      tbuf[tbuflen++] = '&';
+	      tbuf[tbuflen++] = conf->escape_char;
 	      tbuf[tbuflen++] = buf[i];
 	    }
 	}
-      else if (buf[i] == '&')
+      else if (buf[i] == conf->escape_char)
         last_char_escape = 1;
       else
 	tbuf[tbuflen++] = buf[i];

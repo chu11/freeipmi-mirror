@@ -1,3 +1,8 @@
+2008-04-01  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/: Support adjustable escape char option in
+	ipmiconsole.
+	
 2008-03-28  Albert Chu <chu11@llnl.gov>
 
 	* Fix nroff syntax in many manpages.
