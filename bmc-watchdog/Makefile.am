@@ -24,8 +24,8 @@ install-data-local: $(INSTALL_INIT_SCRIPTS) $(INSTALL_LOGROTATE_CONFIG) \
 install-init-scripts:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/init.d
 	$(INSTALL) -m 755 $(srcdir)/freeipmi-bmc-watchdog.init $(DESTDIR)$(sysconfdir)/init.d/freeipmi-bmc-watchdog
-	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)/$(sysconfdir)/sysconfig
-	$(top_srcdir)/install-sh -m 444 $(srcdir)/freeipmi-bmc-watchdog.sysconfig $(DESTDIR)$(sysconfdir)/sysconfig/freeipmi-bmc-watchdog
+	$(INSTALL) -m 755 -d $(DESTDIR)/$(sysconfdir)/sysconfig
+	$(INSTALL) -m 444 $(srcdir)/freeipmi-bmc-watchdog.sysconfig $(DESTDIR)$(sysconfdir)/sysconfig/freeipmi-bmc-watchdog
 
 install-logrotate-config:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/logrotate.d
