@@ -67,8 +67,7 @@ _output_very_verbose_header (ipmi_sensors_state_data_t *state_data,
   uint8_t sensor_number;
   uint8_t sensor_type;
   uint8_t event_reading_type_code;
-  uint8_t sensor_owner_id_type;
-  uint8_t sensor_owner_id;
+  uint8_t sensor_owner_id_type, sensor_owner_id;
 
   assert(state_data);
   assert(sdr_record);
@@ -125,12 +124,14 @@ _output_very_verbose_header (ipmi_sensors_state_data_t *state_data,
   pstdout_printf (state_data->pstate, 
                   "Event/Reading Type Code: %Xh\n", 
                   event_reading_type_code);
-  pstdout_printf (state_data->pstate, 
-                  "Slave Address/System Software ID Type: %d\n", 
-                  sensor_owner_id_type);
-  pstdout_printf (state_data->pstate, 
-                  "Slave Address/System Software ID: %Xh\n", 
-                  sensor_owner_id);
+  if (sensor_owner_id_type)
+    pstdout_printf (state_data->pstate,
+                    "System Software ID: %Xh\n",
+                    sensor_owner_id);
+  else
+    pstdout_printf (state_data->pstate,
+                    "IPMB Slave Address: %Xh\n",
+                    sensor_owner_id);
 
   return 0;
 }

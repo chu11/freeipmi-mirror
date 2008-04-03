@@ -1,3 +1,10 @@
+2008-04-03  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-very-verbose-display.c
+	(_output_very_verbose_header),
+	ipmi-sensors/src/ipmi-sensors-verbose-display.c
+	(_output_verbose_header): Output sensor owner ids as needed.
+	
 2008-04-02  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/ipmiconsole.8.pre.in: Modify escape sequence
