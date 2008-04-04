@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.20 2008-04-02 13:38:16 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.21 2008-04-04 17:58:15 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -225,16 +225,7 @@ Please try to reconnect.
 .PP
 Establish a console sesssion with a remote host.
 .PP
-.SH "KNOWN ISSUES"
-On certain operating systems, if you input your username and password
-on the command line, the username and password may be discovered by
-other users when using the
-.B ps(1) 
-command or looking in the /proc file system.  The most secure solution
-is to leave the username and password in the 
-.B Ipmiconsole
-configuration file.  Passwords and K_g keys can
-also be inputted via a prompt via the -P and -K options.
+#include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
 
 .if @WITH_DEBUG@ \{
 

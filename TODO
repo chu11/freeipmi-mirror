@@ -44,7 +44,7 @@ config file - support workarounds/etc. for heterogenous cluster?
 map hostname -> IP config
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
 - not for 0.6.X, delay to 0.7.X
-- after this, add "known issue" info to each IPMI tool manpage.
+- after this, tweak "known issue" info
 
 ipmiconsole
 -----------
