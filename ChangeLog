@@ -2,6 +2,8 @@
 
 	* ipmi-sensors-config/ipmi-sensors-config.8.pre.in: Add notes
 	about ipmi-sensors and ipmimonitoring.
+
+	* bmc-config/: Fix some comments.
 	
 2008-04-03  Albert Chu <chu11@llnl.gov>
 

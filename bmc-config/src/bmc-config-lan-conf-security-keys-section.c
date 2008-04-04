@@ -277,7 +277,7 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), a "
     "K_g BMC key may be configurable.  The K_g key is an optional key that "
     "can be set for two key authentication in IPMI 2.0.  It is optionally "
-    "configured.  Most users will may to set this to zero (or blank).";
+    "configured.  Most users will want to set this to zero (or blank).";
 
   if (!(lan_conf_security_keys_section = config_section_create ("Lan_Conf_Security_Keys",
                                                                 "Lan_Conf_Security_Keys",
