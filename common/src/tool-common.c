@@ -42,7 +42,6 @@
 
 #include "freeipmi-portability.h"
 
-
 int
 ipmi_is_root ()
 {
