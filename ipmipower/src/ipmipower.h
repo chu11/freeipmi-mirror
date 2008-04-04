@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.85 2008-03-28 00:14:45 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.86 2008-04-04 23:52:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -573,6 +573,10 @@ struct ipmipower_config
   ipmipower_bool_t         wait_until_on;
   ipmipower_bool_t         wait_until_off;
   ipmipower_bool_t         power_command_completed; /* for use with wait_until_X */
+  /* buffer_output not implemented in ipmipower
+   * added only for consistency to other tools.
+   */
+  ipmipower_bool_t         buffer_output;
   ipmipower_bool_t         consolidate_output;
   ipmipower_bool_t         eliminate;
   uint32_t                 workaround_flags;
@@ -606,6 +610,7 @@ struct ipmipower_config
   ipmipower_bool_t         wait_until_on_set_on_cmdline;
   ipmipower_bool_t         wait_until_off_set_on_cmdline;
   ipmipower_bool_t         workaround_flags_set_on_cmdline;
+  ipmipower_bool_t         buffer_output_set_on_cmdline;
   ipmipower_bool_t         consolidate_output_set_on_cmdline;
   ipmipower_bool_t         eliminate_set_on_cmdline;
   ipmipower_bool_t         session_timeout_len_set_on_cmdline;

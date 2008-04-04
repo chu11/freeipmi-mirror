@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.74 2008-03-28 00:14:46 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.75 2008-04-04 23:52:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -78,7 +78,7 @@ const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 #define IPMIPOWER_IPMI_VERSION_KEY             'R'
 #define IPMIPOWER_ON_IF_OFF_KEY                'g'
 #define IPMIPOWER_WAIT_UNTIL_OFF_KEY           'A'
-#define IPMIPOWER_WAIT_UNTIL_ON_KEY            'B'
+#define IPMIPOWER_WAIT_UNTIL_ON_KEY            'G'
 
 #define IPMIPOWER_RETRY_TIMEOUT_KEY            160
 #define IPMIPOWER_RETRANSMISSION_TIMEOUT_KEY   'y'
@@ -145,7 +145,9 @@ static struct argp_option cmdline_options[] =
      "Specify the privilege level to be used.", 15},
 #endif
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
+    ARGP_COMMON_HOSTRANGED_BUFFER_OUTPUT,
     ARGP_COMMON_HOSTRANGED_CONSOLIDATE_OUTPUT,
+    ARGP_COMMON_HOSTRANGED_FANOUT,
     ARGP_COMMON_HOSTRANGED_ELIMINATE,
     {"on", IPMIPOWER_ON_KEY, 0, 0,
      "Power on the target hosts.", 30},
@@ -272,6 +274,7 @@ ipmipower_config_setup(void)
   conf->on_if_off = IPMIPOWER_FALSE;
   conf->wait_until_on = IPMIPOWER_FALSE;
   conf->wait_until_off = IPMIPOWER_FALSE;
+  conf->buffer_output = IPMIPOWER_FALSE;
   conf->consolidate_output = IPMIPOWER_FALSE;
   conf->eliminate = IPMIPOWER_FALSE;
   conf->workaround_flags = 0;
@@ -304,6 +307,7 @@ ipmipower_config_setup(void)
   conf->on_if_off_set_on_cmdline = IPMIPOWER_FALSE;
   conf->wait_until_on_set_on_cmdline = IPMIPOWER_FALSE;
   conf->wait_until_off_set_on_cmdline = IPMIPOWER_FALSE;
+  conf->buffer_output_set_on_cmdline = IPMIPOWER_FALSE;
   conf->consolidate_output_set_on_cmdline = IPMIPOWER_FALSE;
   conf->eliminate_set_on_cmdline = IPMIPOWER_FALSE;
   conf->workaround_flags_set_on_cmdline = IPMIPOWER_FALSE;
@@ -512,6 +516,10 @@ cmdline_parse (int key,
     case IPMIPOWER_WAIT_UNTIL_ON_KEY:       /* --wait-until-off */
       conf->wait_until_off = !conf->wait_until_off;
       conf->wait_until_off_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case ARGP_BUFFER_OUTPUT_KEY:       /* --buffer-output */
+      conf->buffer_output = IPMIPOWER_TRUE;
+      conf->buffer_output_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case ARGP_CONSOLIDATE_OUTPUT_KEY:       /* --consolidate-output */
       conf->consolidate_output = IPMIPOWER_TRUE;
@@ -812,7 +820,8 @@ ipmipower_config_conffile_parse(char *configfile)
   int hostname_flag, hostnames_flag, username_flag, password_flag, k_g_flag, 
     authentication_type_flag, privilege_flag, privilege_level_flag, cipher_suite_id_backwards_flag, 
     cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, wait_until_on_flag, wait_until_off_flag, 
-    consolidate_output_flag, eliminate_flag, workaround_flags_flag, timeout_flag, session_timeout_flag, 
+    buffer_output_flag, consolidate_output_flag, eliminate_flag, 
+    workaround_flags_flag, timeout_flag, session_timeout_flag, 
     retry_timeout_flag, retransmission_timeout_flag, retry_wait_timeout_flag, 
     retransmission_wait_timeout_flag, retry_backoff_count_flag, retransmission_backoff_count_flag, 
     ping_interval_flag, ping_timeout_flag, ping_packet_count_flag, ping_percent_flag, 
@@ -854,6 +863,8 @@ ipmipower_config_conffile_parse(char *configfile)
       {"wait-until-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &wait_until_off_flag, &(conf->wait_until_off), 
        conf->wait_until_off_set_on_cmdline},
+      {"buffer-output", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &buffer_output_flag, NULL, 0},
       {"consolidate-output", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &consolidate_output_flag, NULL, 0},
       {"eliminate", CONFFILE_OPTION_BOOL, -1, _cb_bool,

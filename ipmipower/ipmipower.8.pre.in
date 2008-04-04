@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.13 2008-04-04 17:58:16 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.14 2008-04-04 23:52:31 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -179,12 +179,13 @@ power on actually taking place.  This option will force
 to regularly query the remote BMC and return only after the machine
 has powered on.
 .TP
-\fR\-B\fR, \fB\-\-wait\-until\-off\fR
+\fR\-G\fR, \fB\-\-wait\-until\-off\fR
 The IPMI specification allows power off commands to return prior the
 power off actually taking place.  This option will force
 .B ipmipower 
 to regularly query the remote BMC and return only after the machine
 has powered off.
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>

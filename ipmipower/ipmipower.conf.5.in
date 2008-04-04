@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.conf.5.in,v 1.44 2008-03-28 16:52:55 chu11 Exp $
+.\"$Id: ipmipower.conf.5.in,v 1.45 2008-04-04 23:52:31 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -116,6 +116,9 @@ Specify if wait-until-on functionality is enabled or disabled by default.
 .TP
 \fBwait-until-off\fR \fIENABLE|DISABLE\fR
 Specify if wait-until-off functionality is enabled or disabled by default.
+.TP
+\fBbuffer-output\fR \fIENABLE|DISABLE\fR
+Specify if buffer-output functionality is enabled or disabled by default.
 .TP
 \fBconsolidate-output\fR \fIENABLE|DISABLE\fR
 Specify if consolidate-output functionality is enabled or disabled by default.
