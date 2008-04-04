@@ -11,6 +11,10 @@
 
 	* Update numerous webpages with new known-issues info.
 	
+	* configure.ac: Prepare for beta release.
+
+	* Tagged Release-0_6_0_beta0.
+
 2008-04-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/src/ipmi-sensors-very-verbose-display.c
