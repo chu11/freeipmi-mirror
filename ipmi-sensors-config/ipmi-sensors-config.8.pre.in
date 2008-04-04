@@ -112,6 +112,7 @@ Show all difference between the current configuration and the sensor-data2.conf 
 .PP
 Commit all configuration values from the sensor-data1.conf file.
 .PP
+#include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT
@@ -119,4 +120,4 @@ Copyright \(co 2007-2008 FreeIPMI Core Team.
 This program is free software; you may redistribute it under the terms of
 the GNU General Public License.  This program has absolutely no warranty.
 .SH "SEE ALSO"
-ipmi-sensors(8), ipmimonitoring(8)
+bmc-config(8), pef-config(8), ipmi-sensors(8), ipmimonitoring(8)

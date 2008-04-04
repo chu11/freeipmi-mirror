@@ -1,0 +1,12 @@
+.SH "KNOWN ISSUES"
+On certain operating systems, if you input your username and password
+on the command line, the username and password may be discovered by
+other users when using the
+.B ps(1)
+command or looking in the /proc file system.  It is generally more
+secure to input this information with the -P or -K options.
+.LP
+In order to prevent brute force attacks, some BMCs will temporarily
+"lock up" after a number of remote authentication errors.  You may
+need to wait awhile in order to this temporary "lock up" to pass
+before you may authenticate again.

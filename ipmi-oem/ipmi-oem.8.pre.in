@@ -44,6 +44,7 @@ none currently supported
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
 .SH "REPORTING BUGS"
 Report bugs to <freeipmi\-devel@gnu.org>.
 .SH COPYRIGHT

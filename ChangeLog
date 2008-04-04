@@ -4,6 +4,12 @@
 	about ipmi-sensors and ipmimonitoring.
 
 	* bmc-config/: Fix some comments.
+
+	* common/doc/manpage-common-known-issues.man: New file.
+
+	* common/doc/Makefile.am: Update for new file.
+
+	* Update numerous webpages with new known-issues info.
 	
 2008-04-03  Albert Chu <chu11@llnl.gov>
 
