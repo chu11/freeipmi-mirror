@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: rmcpping.8.in,v 1.17 2008-03-28 16:52:55 chu11 Exp $
+.\"$Id: rmcpping.8.in,v 1.18 2008-04-04 17:51:35 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -83,9 +83,9 @@ cannot be used to ping a local network device (i.e. 127.0.0.1).
 It has been observed that some remote BMCs can get "confused" and
 delay packet responses if duplicate packets are sent in succession
 very quickly.  For example, this could happen if the user repeatedly
-executes "rmcpping -c 1 -s X destination" very quickly.  There is no known
-way to cleanly deal with a "confused" BMC.  The best option is to
-simply wait "awhile".
+executes "ipmiping -c 1 -s X destination" very quickly.  There is no
+known way to cleanly deal with a "confused" BMC other than the wait
+awhile.
 .SH "ORIGIN"
 Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
 This software is open source and distributed under the terms of the
