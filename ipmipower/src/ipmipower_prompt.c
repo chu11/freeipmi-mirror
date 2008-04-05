@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.57 2008-03-28 00:14:48 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.58 2008-04-05 12:43:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -58,6 +58,7 @@
 #include "ipmipower_wrappers.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 #include "tool-common.h"
 
 extern cbuf_t ttyout;
@@ -105,7 +106,9 @@ _cmd_advanced(void)
               "on-if-off [on|off]                      - Toggle on-if-off functionality.\n"
               "wait-until-on [on|off]                  - Toggle wait-until-on functionality.\n"
               "wait-until-off [on|off]                 - Toggle wait-until-off functionality.\n"
+	      "buffer-output [on|off]                  - Toggle buffer-output functionality\n"
               "consolidate-output [on|off]             - Toggle consolidate-output functionality.\n"
+	      "fanout COUNT                            - Specify a fanout.\n"
               "workaround-flags WORKAROUNDS            - Specify workaround flags.\n"
               "debug [on|off]                          - Toggle debug to stderr.\n");
 #ifndef NDEBUG
@@ -680,8 +683,12 @@ _cmd_config(void)
               (conf->wait_until_on) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Wait-Until-Off:               %s\n",
               (conf->wait_until_off) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Buffer-Output:           %s\n",
+              (conf->buffer_output) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Consolidate-Output:           %s\n",
               (conf->consolidate_output) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Fanout:                       %d\n",
+	      conf->fanout);
   cbuf_printf(ttyout, "WorkaroundFlags:              %s\n",
               ipmipower_workarounds_string(conf->workaround_flags));
 #ifndef NDEBUG
@@ -886,10 +893,21 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_set_flag(argv,
                               &conf->wait_until_off,
                               "wait-until-off");
+	      else if (strcmp(argv[0], "buffer-output") == 0)
+		_cmd_set_flag(argv,
+			      &conf->buffer_output,
+			      "buffer-output");
               else if (strcmp(argv[0], "consolidate-output") == 0)
                 _cmd_set_flag(argv, 
                               &conf->consolidate_output, 
                               "consolidate-output");
+	      else if (strcmp(argv[0], "fanout") == 0)
+                _cmd_set_int(argv, 
+                             &conf->fanout, 
+                             "fanout",
+                             0, 
+                             PSTDOUT_FANOUT_MIN, 
+                             PSTDOUT_FANOUT_MAX);
               else if (strcmp(argv[0], "workaround-flags") == 0)
                 _cmd_workaround_flags(argv);
               else if (strcmp(argv[0], "debug") == 0) 

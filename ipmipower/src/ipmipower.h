@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.86 2008-04-04 23:52:31 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.87 2008-04-05 12:43:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -578,6 +578,7 @@ struct ipmipower_config
    */
   ipmipower_bool_t         buffer_output;
   ipmipower_bool_t         consolidate_output;
+  unsigned int             fanout;
   ipmipower_bool_t         eliminate;
   uint32_t                 workaround_flags;
   ipmipower_bool_t         debug;
@@ -612,6 +613,7 @@ struct ipmipower_config
   ipmipower_bool_t         workaround_flags_set_on_cmdline;
   ipmipower_bool_t         buffer_output_set_on_cmdline;
   ipmipower_bool_t         consolidate_output_set_on_cmdline;
+  ipmipower_bool_t         fanout_set_on_cmdline;
   ipmipower_bool_t         eliminate_set_on_cmdline;
   ipmipower_bool_t         session_timeout_len_set_on_cmdline;
   ipmipower_bool_t         retransmission_timeout_len_set_on_cmdline;

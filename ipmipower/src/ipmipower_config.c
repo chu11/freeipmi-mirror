@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.75 2008-04-04 23:52:31 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.76 2008-04-05 12:43:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -57,6 +57,7 @@
 
 #include "secure.h"
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 #include "tool-common.h"
       
 extern struct ipmipower_config *conf;
@@ -145,10 +146,7 @@ static struct argp_option cmdline_options[] =
      "Specify the privilege level to be used.", 15},
 #endif
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
-    ARGP_COMMON_HOSTRANGED_BUFFER_OUTPUT,
-    ARGP_COMMON_HOSTRANGED_CONSOLIDATE_OUTPUT,
-    ARGP_COMMON_HOSTRANGED_FANOUT,
-    ARGP_COMMON_HOSTRANGED_ELIMINATE,
+    ARGP_COMMON_HOSTRANGED_OPTIONS,
     {"on", IPMIPOWER_ON_KEY, 0, 0,
      "Power on the target hosts.", 30},
     {"off", IPMIPOWER_OFF_KEY, 0, 0,
@@ -276,6 +274,7 @@ ipmipower_config_setup(void)
   conf->wait_until_off = IPMIPOWER_FALSE;
   conf->buffer_output = IPMIPOWER_FALSE;
   conf->consolidate_output = IPMIPOWER_FALSE;
+  conf->fanout = 0;
   conf->eliminate = IPMIPOWER_FALSE;
   conf->workaround_flags = 0;
 #ifndef NDEBUG
@@ -309,6 +308,7 @@ ipmipower_config_setup(void)
   conf->wait_until_off_set_on_cmdline = IPMIPOWER_FALSE;
   conf->buffer_output_set_on_cmdline = IPMIPOWER_FALSE;
   conf->consolidate_output_set_on_cmdline = IPMIPOWER_FALSE;
+  conf->fanout_set_on_cmdline = IPMIPOWER_FALSE;
   conf->eliminate_set_on_cmdline = IPMIPOWER_FALSE;
   conf->workaround_flags_set_on_cmdline = IPMIPOWER_FALSE;
   conf->session_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
@@ -524,6 +524,10 @@ cmdline_parse (int key,
     case ARGP_CONSOLIDATE_OUTPUT_KEY:       /* --consolidate-output */
       conf->consolidate_output = IPMIPOWER_TRUE;
       conf->consolidate_output_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case ARGP_FANOUT_KEY:	   /* --fanout */
+      conf->fanout = IPMIPOWER_TRUE;
+      conf->fanout_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case ARGP_ELIMINATE_KEY:       /* --eliminate */
       conf->eliminate = IPMIPOWER_TRUE;
@@ -820,7 +824,7 @@ ipmipower_config_conffile_parse(char *configfile)
   int hostname_flag, hostnames_flag, username_flag, password_flag, k_g_flag, 
     authentication_type_flag, privilege_flag, privilege_level_flag, cipher_suite_id_backwards_flag, 
     cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, wait_until_on_flag, wait_until_off_flag, 
-    buffer_output_flag, consolidate_output_flag, eliminate_flag, 
+    buffer_output_flag, consolidate_output_flag, fanout_flag, eliminate_flag, 
     workaround_flags_flag, timeout_flag, session_timeout_flag, 
     retry_timeout_flag, retransmission_timeout_flag, retry_wait_timeout_flag, 
     retransmission_wait_timeout_flag, retry_backoff_count_flag, retransmission_backoff_count_flag, 
@@ -867,6 +871,9 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &buffer_output_flag, NULL, 0},
       {"consolidate-output", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &consolidate_output_flag, NULL, 0},
+      {"fanout", CONFFILE_OPTION_INT, -1, _cb_int,
+       1, 0, &fanout_flag, &(conf->fanout),
+       conf->fanout_set_on_cmdline},
       {"eliminate", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &eliminate_flag, NULL, 0},
       {"workaround-flags", CONFFILE_OPTION_STRING, -1, _cb_workaround_flags,
@@ -974,4 +981,8 @@ ipmipower_config_check_values(void)
   if (conf->ipmi_version == IPMI_VERSION_1_5
       && strlen(conf->password) >= IPMI_1_5_MAX_PASSWORD_LENGTH)
     err_exit("Error: password too long");
+
+  if (conf->fanout < PSTDOUT_FANOUT_MIN
+      || conf->fanout > PSTDOUT_FANOUT_MAX)
+    err_exit("Error: fanout invalid");
 }

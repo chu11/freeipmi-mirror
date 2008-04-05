@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.16 2008-04-05 05:07:44 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.17 2008-04-05 12:43:53 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -187,6 +187,10 @@ to regularly query the remote BMC and return only after the machine
 has powered off.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+.TP
+\fB\-F\fR, \fB\-\-fanout\fR
+Specify multiple host fanout.  Indicates the maximum number of power
+control operations that can be executed in parallel.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 .TP
@@ -382,8 +386,11 @@ Toggle wait-until-on functionality.
 \fBwait-until-off\fR \fI[on|off]\fR
 Toggle wait-until-off functionality.
 .TP
+\fBbuffer-output\fR \fI[on|off]\fR
+Toggle buffer-output functionality.
+.TP
 \fBconsolidate-output\fR \fI[on|off]\fR
-Toggle consolidate-output functionality
+Toggle consolidate-output functionality.
 .TP
 \fBworkaround-flags\fR \fIWORKAROUNDS\fR
 Specify workaround flags.

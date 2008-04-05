@@ -1,3 +1,11 @@
+2008-04-05  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/: Finish -B support.
+
+	* ipmipower/: Add -F support.
+
+	* doc/freeipmi-hostranged.txt: Update appropriately.
+	
 2008-04-04  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Support -B option for consistency to other tools,

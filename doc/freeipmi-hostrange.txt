@@ -435,8 +435,7 @@ An alternate hostrange output model is supported in ipmipower.  This
 is due partly to legacy but mostly due to technical reasons.
 Ipmipower was developed with a different architecture than bmc-info,
 ipmi-sensors, ipmi-sel, etc. because of need for it to interact with
-Powerman.  So it cannot use the parallel stdout libraries developed.
-It effectively emulates the --consolidate-output functionality of the
-other tools.  A buffered output option would not make any technical
-sense since every output from ipmipower is 1 line long.
+Powerman, so it cannot use the parallel stdout libraries developed.
+It effectively emulates the --buffer-output, --consolidate-output, and
+--fanout functionality of the other tools.
 

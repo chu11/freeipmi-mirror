@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.122 2008-03-28 00:14:47 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.123 2008-04-05 12:43:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -62,6 +62,9 @@ extern struct ipmipower_config *conf;
 
 /* Queue of all pending power commands */
 static List pending = NULL;
+
+/* Count of currently executing power commands for fanout */
+static unsigned int executing_count = 0;
 
 /* The following are the ranking of Cipher Suite IDs we will consider to
  * be from most to least secure.  This was determined by the following 
@@ -1877,6 +1880,13 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
   assert(ip != NULL);
   assert(PROTOCOL_STATE_VALID(ip->protocol_state));
 
+  /* Don't execute if fanout turned on */
+  if (conf->fanout)
+    {
+      if (executing_count >= conf->fanout)
+	goto done;
+    }
+
   /* if timeout, give up */
   if (_has_timed_out(ip))
     return -1;
@@ -1896,6 +1906,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
       else
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
+
+      executing_count++;
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
     {
@@ -2350,6 +2362,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
   return (int)timeout;
 }
 
+
+
 int 
 ipmipower_powercmd_process_pending(int *timeout)
 {
@@ -2365,6 +2379,9 @@ ipmipower_powercmd_process_pending(int *timeout)
   if (list_is_empty(pending))
     return 0;
 
+  /* If we have a fanout, powercmds should be executed "in order" on
+   * this list.  So no need to iterate through this list twice.
+   */
   itr = list_iterator_create(pending);
   while ((ip = (ipmipower_powercmd_t)list_next(itr))) 
     {
@@ -2374,6 +2391,7 @@ ipmipower_powercmd_process_pending(int *timeout)
         {
           if (list_delete(itr) == 0)
             err_exit("ipmipower_powercmd_process_pending: list_delete");
+	  executing_count--;
           continue;
         }
 
@@ -2384,7 +2402,7 @@ ipmipower_powercmd_process_pending(int *timeout)
 
   if ((num_pending = list_count(pending)) == 0) 
     ipmipower_output_finish();
-  
+
   /* If the last pending power control command finished, the timeout
    * is 0 to get the primary poll loop to "re-init" at the start of
    * the loop.
