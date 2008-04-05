@@ -2,6 +2,15 @@
 
 	* ipmipower/: Support -B option for consistency to other tools,
 	although -B does nothing.  Change original -B option to -G.
+
+	* common/doc/manpage-common-hostranged-text-options.man: Move
+	option text into manpage-common-hostranged-text-main.man.
+
+	* common/doc/manpage-common-hostranged-text-options.man: Rename to
+	manpage-common-hostranged-text-localhost.man and only mention
+	localhost information.
+
+	* Update manpages appropriately.
 	
 2008-04-04  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.17 2008-04-04 17:58:15 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.18 2008-04-05 05:07:44 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -77,7 +77,7 @@ separated by commas or spaces.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
 .SH "IPMIMONITORING TROUBLESHOOTING"
 The following are common issues for given error messages specifically

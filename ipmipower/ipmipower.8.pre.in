@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.15 2008-04-04 23:55:14 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.16 2008-04-05 05:07:44 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -435,7 +435,6 @@ Specify a new ping percent.
 \fBping-consec-count\fR \fICOUNT\fR
 Specify a new ping consec count.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
 .SH "EXAMPLES"
 .LP
 Determine the power status of foo[0-2] with null username and password

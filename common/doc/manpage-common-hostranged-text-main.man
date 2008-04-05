@@ -23,3 +23,10 @@ Some examples of range usage follow:
 As a reminder to the reader, some shells will interpret brackets ([
 and ]) for pattern matching.  Depending on your shell, it may be
 necessary to enclose ranged lists within quotes.
+.LP
+By default, standard output from each node specified will be output
+with the hostname prepended to each line.  Although this output is
+readable in many situations, it may be difficult to read in other
+situations. For example, output from multiple nodes may be mixed
+together.  The \fB\-B\fR and \fB\-C\fR options can be used to change
+this default.  
