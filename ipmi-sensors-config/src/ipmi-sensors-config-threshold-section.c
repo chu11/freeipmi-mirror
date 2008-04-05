@@ -705,13 +705,13 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   else
     validate_ptr = threshold_floating_point;
 
-  /* If a threshold is not-readable, it isn't up for consideration, so
-   * don't "register" it.
-   */
-
-  if (lower_non_critical_threshold_readable)
+  if (lower_non_critical_threshold_readable
+      || state_data->prog_data->args->config_args.verbose)
     {
       flags = 0;
+
+      if (!lower_non_critical_threshold_readable)
+        flags |= CONFIG_UNDEFINED;
 
       if (!lower_non_critical_threshold_settable)
         {
@@ -729,9 +729,13 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
         goto cleanup;
     }
 
-  if (lower_critical_threshold_readable)
+  if (lower_critical_threshold_readable
+      || state_data->prog_data->args->config_args.verbose)
     {
       flags = 0;
+
+      if (!lower_critical_threshold_readable)
+        flags |= CONFIG_UNDEFINED;
 
       if (!lower_critical_threshold_settable)
         {
@@ -749,9 +753,13 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
         goto cleanup;
     }
 
-  if (lower_non_recoverable_threshold_readable)
+  if (lower_non_recoverable_threshold_readable
+      || state_data->prog_data->args->config_args.verbose)
     {
       flags = 0;
+
+      if (!lower_non_recoverable_threshold_readable)
+        flags |= CONFIG_UNDEFINED;
 
       if (!lower_non_recoverable_threshold_settable)
         {
@@ -769,9 +777,13 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
         goto cleanup;
     }
 
-  if (upper_non_critical_threshold_readable)
+  if (upper_non_critical_threshold_readable
+      || state_data->prog_data->args->config_args.verbose)
     {
       flags = 0;
+
+      if (!upper_non_critical_threshold_readable)
+        flags |= CONFIG_UNDEFINED;
 
       if (!upper_non_critical_threshold_settable)
         {
@@ -789,9 +801,13 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
         goto cleanup;
     }
 
-  if (upper_critical_threshold_readable)
+  if (upper_critical_threshold_readable
+      || state_data->prog_data->args->config_args.verbose)
     {
       flags = 0;
+
+      if (!upper_critical_threshold_readable)
+        flags |= CONFIG_UNDEFINED;
 
       if (!upper_critical_threshold_settable)
         {
@@ -809,9 +825,13 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
         goto cleanup;
     }
 
-  if (upper_non_recoverable_threshold_readable)
+  if (upper_non_recoverable_threshold_readable
+      || state_data->prog_data->args->config_args.verbose)
     {
       flags = 0;
+
+      if (!upper_non_recoverable_threshold_readable)
+        flags |= CONFIG_UNDEFINED;
 
       if (!upper_non_recoverable_threshold_settable)
         {

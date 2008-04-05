@@ -6,7 +6,8 @@
 
 	* doc/freeipmi-hostranged.txt: Update appropriately.
 
-	* ipmi-sensors-config/: Reverse undefined threshold support.
+	* ipmi-sensors-config/: Put undefined threshold support in verbose
+	output only.
 	
 2008-04-04  Albert Chu <chu11@llnl.gov>
 
