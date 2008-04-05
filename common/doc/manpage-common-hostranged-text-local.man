@@ -1,0 +1,4 @@
+.LP
+In-band IPMI Communication will be used when the host "localhost" is
+specified.  This allows the user to add the localhost into the
+hostranged output.
