@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.123 2008-04-05 12:43:53 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.124 2008-04-05 12:57:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -213,7 +213,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   /*
    * Protocol State Machine Variables
    */
-  Gettimeofday(&(ip->time_begin), NULL);
+  /* Initial when protocol really begins.  Necessary b/c of fanout support */
+  /* Gettimeofday(&(ip->time_begin), NULL); */
   ip->retransmission_count = 0;
   ip->close_timeout = 0;
 
@@ -769,6 +770,10 @@ _has_timed_out(ipmipower_powercmd_t ip)
 {
   struct timeval cur_time, result;
   unsigned int session_timeout_len;
+
+  /* If we haven't started yet */
+  if (ip->protocol_state == PROTOCOL_STATE_START)
+    return 0;
     
   Gettimeofday(&cur_time, NULL);
   timeval_sub(&cur_time, &(ip->time_begin), &result);
@@ -1880,13 +1885,6 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
   assert(ip != NULL);
   assert(PROTOCOL_STATE_VALID(ip->protocol_state));
 
-  /* Don't execute if fanout turned on */
-  if (conf->fanout)
-    {
-      if (executing_count >= conf->fanout)
-	goto done;
-    }
-
   /* if timeout, give up */
   if (_has_timed_out(ip))
     return -1;
@@ -1901,12 +1899,20 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
   if (ip->protocol_state == PROTOCOL_STATE_START)
     {
+      /* Don't execute if fanout turned on and we're in the middle of too
+       * many power commands.
+       */
+      if (conf->fanout
+          && (executing_count >= conf->fanout))
+        return conf->session_timeout_len;
+
       if (conf->ipmi_version == IPMI_VERSION_AUTO
           || conf->ipmi_version == IPMI_VERSION_2_0)
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
       else
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
 
+      Gettimeofday(&(ip->time_begin), NULL);
       executing_count++;
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)

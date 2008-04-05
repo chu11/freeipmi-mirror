@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.58 2008-04-05 12:43:53 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.59 2008-04-05 12:57:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -905,7 +905,7 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_set_int(argv, 
                              &conf->fanout, 
                              "fanout",
-                             0, 
+                             1, 
                              PSTDOUT_FANOUT_MIN, 
                              PSTDOUT_FANOUT_MAX);
               else if (strcmp(argv[0], "workaround-flags") == 0)

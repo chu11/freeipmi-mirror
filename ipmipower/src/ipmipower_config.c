@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.76 2008-04-05 12:43:53 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.77 2008-04-05 12:57:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -525,8 +525,10 @@ cmdline_parse (int key,
       conf->consolidate_output = IPMIPOWER_TRUE;
       conf->consolidate_output_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    case ARGP_FANOUT_KEY:	   /* --fanout */
-      conf->fanout = IPMIPOWER_TRUE;
+    case ARGP_FANOUT_KEY:          /* --fanout */
+      conf->fanout = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg)))
+        err_exit("Command Line Error: fanout invalid\n");
       conf->fanout_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case ARGP_ELIMINATE_KEY:       /* --eliminate */
@@ -982,7 +984,8 @@ ipmipower_config_check_values(void)
       && strlen(conf->password) >= IPMI_1_5_MAX_PASSWORD_LENGTH)
     err_exit("Error: password too long");
 
-  if (conf->fanout < PSTDOUT_FANOUT_MIN
-      || conf->fanout > PSTDOUT_FANOUT_MAX)
+  if (conf->fanout
+      && (conf->fanout < PSTDOUT_FANOUT_MIN
+          || conf->fanout > PSTDOUT_FANOUT_MAX))
     err_exit("Error: fanout invalid");
 }
