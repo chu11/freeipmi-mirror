@@ -5,6 +5,8 @@
 	* ipmipower/: Add -F support.
 
 	* doc/freeipmi-hostranged.txt: Update appropriately.
+
+	* ipmi-sensors-config/: Reverse undefined threshold support.
 	
 2008-04-04  Albert Chu <chu11@llnl.gov>
 
