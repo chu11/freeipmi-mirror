@@ -654,7 +654,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                          0)))
     goto cleanup;
 
-  if (sdr_cache_get_threshold_settable (NULL,
+  if (sdr_cache_get_threshold_readable (NULL,
                                         sdr_record,
                                         sdr_record_len,
                                         &lower_non_critical_threshold_readable,

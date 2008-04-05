@@ -8,6 +8,8 @@
 
 	* ipmi-sensors-config/: Put undefined threshold support in verbose
 	output only.
+
+	* ipmi-sensors-config/: Fix readable sensors corner case.
 	
 2008-04-04  Albert Chu <chu11@llnl.gov>
 
