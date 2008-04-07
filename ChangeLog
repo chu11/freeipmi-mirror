@@ -13,6 +13,8 @@
 	* ipmi-sensors/ipmi-sensors.8.pre.in: Add ipmimonitoring note.
 
 	* ipmi-sel/ipmi-sel.8.pre.in: Add some text on SEL records.
+
+	* README: Update as generic info, not just a GPL notice.
 	
 2008-04-05  Albert Chu <chu11@llnl.gov>
 
