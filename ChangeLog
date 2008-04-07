@@ -30,6 +30,8 @@
 
 	* Various manpage and doc fixes.
 
+	* Fix compiler warnings.
+
 2008-04-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Finish -B support.
