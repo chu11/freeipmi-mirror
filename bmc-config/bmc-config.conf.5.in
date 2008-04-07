@@ -36,7 +36,7 @@ Future versions of this manpage will try to include more information.
 .LP
      Section User1
      	## Give username
-     	## Username                                  Anonymous
+     	## Username                                  NULL
      	## Possible values: Yes/No or blank to not set
      	Enable_User                                  Yes
      	## Give password or leave it blank to clear password
