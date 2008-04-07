@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.24 2008-04-07 20:49:55 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.25 2008-04-07 20:56:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -782,6 +782,11 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
       && bitmask_type <= IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_STATE)
     {
       uint8_t event_reading_type_code;
+
+      /* achu: there are no "names" associated with
+       * event_reading_type_codes in the spec (table 42-2), so there are
+       * no macros.  We just gotta hard code numbers.
+       */
 
       switch (bitmask_type)
         {

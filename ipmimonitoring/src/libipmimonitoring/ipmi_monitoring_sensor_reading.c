@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.15 2008-04-07 20:49:56 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.16 2008-04-07 20:56:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -262,7 +262,12 @@ _get_digital_sensor_state(ipmi_monitoring_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(event_reading_type_code >= 0x02 && event_reading_type_code <= 0x0C);
+  assert(IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code));
+
+  /* achu: there are no "names" associated with
+   * event_reading_type_codes in the spec (table 42-2), so there are
+   * no macros.  We just gotta hard code numbers.
+   */
 
   if (event_reading_type_code == 0x06 && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
     config = ipmi_voltage_performance_config;
@@ -613,6 +618,11 @@ _get_digital_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
   assert(c->sensor_readings);
   assert(IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code));
 
+  /* achu: there are no "names" associated with
+   * event_reading_type_codes in the spec (table 42-2), so there are
+   * no macros.  We just gotta hard code numbers.
+   */
+
   if (event_reading_type_code == 0x02)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION;
   else if (event_reading_type_code == 0x03)
@@ -663,7 +673,7 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->sensor_readings);
-  assert(event_reading_type_code >= 0x02 && event_reading_type_code <= 0x0C);
+  assert(IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code));
   assert(IPMI_MONITORING_SENSOR_GROUP_VALID(sensor_group));
   assert(fiid_obj_valid(obj_sdr_record));
 
