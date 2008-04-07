@@ -3,6 +3,16 @@
 	* ipmimonitoring/: Support WATTS sensor unit type.
 
 	* bmc-config/bmc-config.8.pre.in: Fix options in example.
+
+	* bmc-config/bmc-config.conf.5.in: Anonymous -> NULL.
+
+	* ipmimonitoring/: Support entity presence, management subsystem,
+	battery, and fru state sensor interpretations.  General code
+	cleanup.
+
+	* ipmi-sensors/ipmi-sensors.8.pre.in: Add ipmimonitoring note.
+
+	* ipmi-sel/ipmi-sel.8.pre.in: Add some text on SEL records.
 	
 2008-04-05  Albert Chu <chu11@llnl.gov>
 

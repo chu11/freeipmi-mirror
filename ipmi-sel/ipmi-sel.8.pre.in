@@ -3,10 +3,11 @@
 ipmi-sel \- display SEL entries
 .SH DESCRIPTION
 .B Ipmi-sel
-is used to view and manage System Event Log (SEL) entries.  Although
-output may vary dependent on individual SEL events, most entries will
-display the SEL record id, date of event, time of event, sensor group,
-sensor name, and the sensor event occurrence.
+is used to view and manage System Event Log (SEL) entries.  SEL
+records store system event information and may be useful for debugging
+problems. Although output may vary dependent on individual SEL events,
+most entries will display the SEL record id, date of event, time of
+event, sensor group, sensor name, and the sensor event occurrence.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
