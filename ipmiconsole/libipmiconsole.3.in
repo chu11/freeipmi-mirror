@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: libipmiconsole.3.in,v 1.8 2008-03-28 16:52:54 chu11 Exp $
+.\"$Id: libipmiconsole.3.in,v 1.9 2008-04-07 23:08:58 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -49,9 +49,13 @@ libipmiconsole \- IPMI SOL library
 .sp
 .br
 .SH "DESCRIPTION"
-.B libipmiconsole
-is a Serial-over-Lan (SOL) console library.  It can be used to
-establish and manage multiple IPMI 2.0 SOL sessions.
+.B Libipmiconsole
+implements a high level serial-over-lan (SOL) API for remote console
+access.  It can be used to establish and manage multiple IPMI 2.0 SOL
+sessions.  The goal of this library is to abstract away all of the
+underlying IPMI/SOL details away from the user into a relatively
+simple file descriptor interface.
+
 
 .SH "FILES"
 /usr/include/ipmiconsole.h

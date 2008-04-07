@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: libipmidetect.3.in,v 1.5 2008-03-28 16:52:55 chu11 Exp $
+.\"$Id: libipmidetect.3.in,v 1.6 2008-04-07 23:08:58 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -54,12 +54,14 @@ or undetected
 .BI "int ipmidetect_is_node_undetected(ipmidetect_t handle, const char *node);"
 .br
 .SH DESCRIPTION
-The ipmidetect library functions are a set of functions that interacts
-with the
+.B Libipmidetect 
+implements a high level API for determing which nodes in
+a cluster do or do-not support IPMI.  This library is primarily useful
+for detecting whe nodes are removed from a cluster for servicing, so
+that IPMI applications can avoid unnecessary timeouts.
+The library interacts with the 
 .B ipmidetectd(8)
-daemon to determine if IPMI nodes in the cluster are detected or not.
-It can be used to determine which nodes are worth communicating with, 
-to avoid IPMI timeouts.
+daemon.
 
 .SH FILES
 /usr/include/ipmidetect.h

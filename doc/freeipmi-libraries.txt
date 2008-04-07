@@ -75,27 +75,30 @@ within various subdirectories.
 Libipmiconsole
 --------------
 
-This library implements a high level serial-over-lan (SOL) API for
-remote console access.  The goal of this library is to abstract away
-all of the underlying IPMI/SOL details away from the user into a
-relatively simple file descriptor interface.
+Libipmiconsole implements a high level serial-over-lan (SOL) API for
+remote console access.  It can be used to establish and manage
+multiple IPMI 2.0 SOL sessions.  The goal of this library is to
+abstract away all of the underlying IPMI/SOL details away from the
+user into a relatively simple file descriptor interface.
 
 Libipmimonitoring
 -----------------
 
-This library implements a high level sensor monitoring API for IPMI
-sensors.  The goal of this library is to abstract away all of the
+Libipmimonitoring implements a high level sensor monitoring API for
+IPMI sensors.  The goal of this library is to abstract away all of the
 underlying IPMI details away from the user and map IPMI sensor
-readings in 'Nominal', 'Warning' and 'Critical' states for easy
-analysis.  An iterator interface is provided that allows the user to
-iterate through sensor values, groups, units, and states.
+readings into NOMINAL, WARNING, or CRITICAL states so that monitoring
+software may take appropriate actions dependent on sensor readings.
+An iterator interface is provided that allows the user to iterate
+through sensor values, groups, units, and states.
 
 Libipmidetect
 -------------
 
-This library implements a high level API for determing which nodes in
+Libipmidetect implements a high level API for determing which nodes in
 a cluster do or do-not support IPMI.  This library is primarily useful
 for detecting whe nodes are removed from a cluster for servicing, so
-that IPMI applications will not timeout needlessly.
+that IPMI applications can avoid unnecessary timeouts.  The library
+interacts with the ipmidetectd(8) daemon.
 
 

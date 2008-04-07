@@ -25,7 +25,7 @@
 
 	* Add freeipmi(7) to "SEE ALSO" on all appropriate manpages.
 
-	* Various manpage minor fixes.
+	* Various manpage and doc fixes.
 	
 2008-04-05  Albert Chu <chu11@llnl.gov>
 

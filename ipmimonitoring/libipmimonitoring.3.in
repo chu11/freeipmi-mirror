@@ -1,5 +1,5 @@
 .\"############################################################################
-.\"  $Id: libipmimonitoring.3.in,v 1.13 2008-03-28 16:52:55 chu11 Exp $
+.\"  $Id: libipmimonitoring.3.in,v 1.14 2008-04-07 23:08:58 chu11 Exp $
 .\"############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -67,11 +67,16 @@ libipmimonitoring \- a library for IPMI sensor monitoring
 .sp
 .br
 .SH DESCRIPTION
-The ipmimonitoring library allows users to get IPMI sensor readings
-both in-band and out-of-band via a high level iterator interface.  In
-addition, the sensor readings are interpreted into NOMINAL, WARNING,
-or CRITICAL states, so that monitoring software may take appropriate
-actions dependent on the sensor readings.
+The 
+.B Libipmimonitoring 
+implements a high level sensor monitoring API for IPMI sensors.  The
+goal of this library is to abstract away all of the underlying IPMI
+details away from the user and map IPMI sensor readings into NOMINAL,
+WARNING, or CRITICAL states so that monitoring software may take
+appropriate actions dependent on sensor readings.  An iterator
+interface is provided that allows the user to iterate through sensor
+values, groups, units, and states.
+
 .LP
 In order to improve efficiency, SDR data will be cached on the host.
 By default it is cached in @IPMI_MONITORING_SDR_CACHE_DIR@.
