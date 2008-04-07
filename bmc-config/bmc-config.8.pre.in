@@ -86,7 +86,7 @@ following example could be used in a script to configure each node in
 a cluster with the same BMC config file.  The script only needs to
 determine the correct IP address and MAC address to use.
 .LP
-.B # bmc-config --commit -k "Lan_Conf:Ip_Address=$MY_IP" -k "Lan_Conf:Mac_Address=$MY_MAC" -f my_bmc.conf
+.B # bmc-config --commit -k "Lan_Conf:Ip_Address=$MY_IP" -k "Lan_Conf:Mac_Address=$MY_MAC" -n my_bmc.conf
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
