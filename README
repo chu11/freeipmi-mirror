@@ -132,7 +132,8 @@ bmc-config.conf(5) manpage.  Some vendors may pre-configure their
 motherboards with default values so that 'bmc-config' can be used
 remotely to configure the machine.  However, most of the time,
 'bmc-config' must be configured in-band before out-of-band access can
-be allowed.
+be allowed (for example, the IP address and MAC address must be
+minimally configured first).
 
 In order to remotely connect to a machine, you typically must specify
 the host, username, and password for the tool in order to connect.
