@@ -1,6 +1,8 @@
 #  build and install the .info pages
 info_TEXINFOS =  freeipmi-faq.texi
 
+man7_MANS = freeipmi.7
+
 EXTRA_DIST = \
 	freeipmi-coding.txt \
 	freeipmi-hostrange.txt \

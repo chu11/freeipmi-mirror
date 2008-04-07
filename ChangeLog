@@ -15,6 +15,13 @@
 	* ipmi-sel/ipmi-sel.8.pre.in: Add some text on SEL records.
 
 	* README: Update as generic info, not just a GPL notice.
+
+	* doc/freeipmi.7.in: New generic overview manpage.
+
+	* doc/Makefile.am, freeipmi.spec.in, configure.ac: Update for new
+	manpage.
+
+	* common/doc: Fix make dist bug.
 	
 2008-04-05  Albert Chu <chu11@llnl.gov>
 

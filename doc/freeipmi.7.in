@@ -1,0 +1,168 @@
+.TH FREEIPMI 7 "@ISODATE" "FreeIPMI @PACKAGE_VERSION@" "System Commands"
+.SH NAME
+FreeIPMI - FreeIPMI overview
+.SH Introduction
+FreeIPMI provides in-band and out-of-band IPMI software based on the
+IPMI v1.5/2.0 specification.
+.SH Project Libraries and Tools
+.B Libfreeipmi
+.PP
+A C library that includes KCS, SSIF, and OpenIPMI drivers, IPMI
+1.5 and IPMI 2.0 LAN communication interfaces, IPMI packet building
+utilities, IPMI command utilities, and utilities for
+reading/interpreting/managing IPMI.
+.PP
+.B Bmc-info
+.PP
+A tool to read information about the local BMC such as version
+information and device support.
+.PP
+.B Bmc-config
+.PP
+A tool to configure usernames, passwords, networking information,
+security, and other relevant IPMI configuration fields.
+.PP
+.B Bmc-watchdog
+.PP
+A tool/daemon to manage a BMC Watchdog. This tool is typically used
+for system timeout management and automatic system restarts in the
+event of a system crash.
+.PP
+.B Ipmi-chassis
+.PP
+A tool to manage/monitor a chassis, such as chassis power,
+identification, and status.
+.PP
+.B Ipmi-fru
+.PP
+A tool to read field replaceable unit (FRU) information from a
+motherboard/machine.
+.PP
+.B Ipmi-sel
+.PP
+A tool to read and manage IPMI System Event Log (SEL) records.  SEL
+records store system event information and may be useful for debugging
+problems.
+.PP
+.B Ipmi-sensors
+.PP
+A tool to read IPMI sensor readings and sensor data repository (SDR)
+information.
+.PP
+.B Ipmipower
+.PP
+A tool for remote power control.
+.PP
+.B Ipmiconsole/Libipmiconsole
+.PP
+A tool and library for Serial-over-Lan (SOL) console access.
+.PP
+.B Ipmi-raw
+.PP
+A tool that provides hex input/output of IPMI commands.
+.PP
+.B Ipmi-locate
+.PP
+A tool that can probe for information about the location of a BMC
+device, such as device addresses.
+.PP
+.B Ipmimonitoring/Libipmimonitoring
+.PP
+A tool and library for used for sensor interpretation/monitoring. The
+tool is similar to ipmi-sensors, but sensor readings are analyzed and
+mapped into Nominal, Warning, and Critical states.
+.PP
+.B Pef-config
+.PP
+A tool to configure IPMI Platform Event Filtering (PEF) configuration.
+.PP
+.B Ipmi-sensors-config
+.PP
+A tool to configure IPMI Sensors.
+.PP
+.B Ipmiping
+.PP
+An IPMI ping tool for debugging.
+.PP
+.B Rmcpping
+.PP
+A RMCP ping tool for debugging.
+.PP
+.B Ipmi-oem
+.PP
+An IPMI tool for OEM specific commands.
+.PP
+.B Ipmidetect/Ipmidetectd/libipmidetect
+.PP
+A tool, daemon, and library for IPMI node detection.
+.PP
+.SH Getting Started with IPMI
+IPMI can be used in-band (i.e. running on a machine locally) or
+out-of-band (i.e. connecting remotely).
+.PP
+Most FreeIPMI tools can operate in-band by using one of the in-band
+drivers included.  These in-band drivers include a direct KCS
+interface driver, a SSIF driver through the SSIF device
+(i.e. /dev/i2c-0), and the Linux OpenIPMI kernel driver
+(i.e. /dev/ipmi0).  If your system requires the use of either of the
+drivers, those appropriate modules must be installed ahead of time.
+However, most systems should automatically load these drivers when
+appropriate.
+.PP
+Under most scenarios, the FreeIPMI tools should automatically discover
+which in-band interface to use and the proper settings to use.
+However, some motherboards may require you to determine driver type,
+addresses, paths, etc. on your own and pass them as command line
+options to the tools.  You may use 
+.B ipmi-locate(8) 
+to help determine
+this information.  Other tools such as 
+.B dmidecode(8)
+may also provide
+this information.
+.PP
+To use IPMI out-of-band, the remote machine must first be configured
+for out of band communication.  Typically, this involves setting a
+username, password, IP address, MAC address, and a few other
+parameters.  This can be done using the tool 
+.B bmc-config(8).  
+
+Additional information on how to configure w/ bmc-config can be found
+in the
+.B bmc-config.conf(5) 
+manpage.  Some vendors may pre-configure their motherboards with
+default values so that 
+.B bmc-config(8)
+can be used remotely to configure the machine.  However, most of the
+time,
+.B bmc-config(8) 
+must be configured in-band before out-of-band access can be allowed
+(for example, the IP address and MAC address must be minimally
+configured first).
+
+.PP
+In order to remotely connect to a machine, you typically must specify
+the host, username, and password for the tool in order to connect.
+Depending on configuration settings, a K_g key, privilege level,
+authentication type, cipher suite id, or protocol version may need to
+be specified.  Some vendors may have not implemented IPMI properly and
+a vendor specific workaround may also be necessary.  See tool manpages
+for more information and general trouble-shooting information.
+
+.SH HPC Support
+Much of FreeIPMI was written with HPC support in mind.  The
+configuration tools 
+.B bmc-config(8), 
+.B pef-config(8), 
+and
+.B ipmi-sensors-config(8) come with file input/output support so that
+configuration can be copied and verified across nodes in a cluster.
+Most tools come with hostrange support so multiple hosts can be
+specified on the command line at the same time.  See tool manpages for
+more information.  Also see the document freeipmi-hostrange.txt for
+detailed usage and explanation.
+
+.SH COPYRIGHT
+Copyright \(co 2003-2008 FreeIPMI Core Team.  
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License.  This program has absolutely no warranty.
