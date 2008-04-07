@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.18 2008-04-05 05:07:44 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.19 2008-04-07 22:55:29 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -146,4 +146,4 @@ Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
 This software is open source and distributed under the terms of the
 Gnu GPL.
 .SH "SEE ALSO"
-ipmi-sensors(8), libipmimonitoring(3)
+libipmimonitoring(3), freeipmi(7), ipmi-sensors(8)

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.16 2008-04-05 05:07:43 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.17 2008-04-07 22:55:29 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -90,4 +90,4 @@ Get FRU information across a cluster using IPMI over LAN.
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH "SEE ALSO"
-bmc-config(8)
+freeipmi(7), bmc-config(8)

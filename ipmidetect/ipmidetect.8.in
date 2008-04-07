@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmidetect.8.in,v 1.9 2008-03-28 16:52:54 chu11 Exp $
+.\"$Id: ipmidetect.8.in,v 1.10 2008-04-07 22:55:29 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -115,9 +115,9 @@ tcsh, the above two examples should be executed as:
 
 .SH FILES
 /usr/bin/ipmidetect
-.SH SEE ALSO
-libipmidetect(3), ipmidetect.conf(5), ipmidetectd(8)
 .SH ORIGIN
 Developed by Albert Chu <chu11@llnl.gov> on LLNL's Linux clusters.
 This software is open source and distributed under the terms of the
 Gnu GPL.
+.SH SEE ALSO
+libipmidetect(3), ipmidetect.conf(5), ipmidetectd(8)

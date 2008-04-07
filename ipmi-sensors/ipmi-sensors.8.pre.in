@@ -108,5 +108,5 @@ Albert Chu <chu11@llnl.gov>, Anand Babu <ab@gnu.org.in>, Balamurugan
 <bala.a@californiadigital.com>, Ian Zimmerman
 <itz@californiadigital.com>, Jim Garlick <garlick@llnl.gov>
 .SH "SEE ALSO"
-bmc-config(8), ipmimonitoring(8)
+freeipmi(7), bmc-config(8), ipmimonitoring(8)
 

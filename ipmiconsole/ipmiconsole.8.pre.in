@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.21 2008-04-04 17:58:15 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.22 2008-04-07 22:55:29 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -250,4 +250,4 @@ Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
 This software is open source and distributed under the terms of the
 Gnu GPL.
 .SH "SEE ALSO"
-bmc-config(8), ipmiconsole.conf(5)
+ipmiconsole.conf(5), freeipmi(7), bmc-config(8)

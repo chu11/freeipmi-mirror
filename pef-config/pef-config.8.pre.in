@@ -107,4 +107,4 @@ Copyright \(co 2007-2008 FreeIPMI Core Team.
 This program is free software; you may redistribute it under the terms of
 the GNU General Public License.  This program has absolutely no warranty.
 .SH "SEE ALSO"
-bmc-config(8), ipmi-sensors-config(8)
+freeipmi(7), bmc-config(8), ipmi-sensors-config(8)
