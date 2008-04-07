@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.39 2008-04-07 15:54:43 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.40 2008-04-07 20:49:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -97,6 +97,11 @@ _list_groups(ipmimonitoring_state_data_t *state_data)
   pstdout_printf (state_data->pstate, "%s\n", "module_board");
   pstdout_printf (state_data->pstate, "%s\n", "slot_connector");
   pstdout_printf (state_data->pstate, "%s\n", "watchdog2");
+  pstdout_printf (state_data->pstate, "%s\n", "entity_presence");
+  pstdout_printf (state_data->pstate, "%s\n", "management_subsystem_health");
+  pstdout_printf (state_data->pstate, "%s\n", "battery");
+  pstdout_printf (state_data->pstate, "%s\n", "fru_state");
+
   return 0;
 }
 
@@ -354,6 +359,14 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
         sensor_group_str = "Slot Connector";
       else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2)
         sensor_group_str = "Watchdog2";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_ENTITY_PRESENCE)
+        sensor_group_str = "Entity Presence";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_MANAGEMENT_SUBSYSTEM_HEALTH)
+        sensor_group_str = "Management Subsystem Health";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_BATTERY)
+        sensor_group_str = "Battery";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_FRU_STATE)
+        sensor_group_str = "FRU State";
       else 
         sensor_group_str = "N/A";
 
@@ -670,7 +683,20 @@ _grab_ipmimonitoring_options(struct ipmimonitoring_arguments *cmd_args)
         n = IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR;
       else if (!strcasecmp(cmd_args->groups_list[i], "watchdog2"))
         n = IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2;
-
+      else if (!strcasecmp(cmd_args->groups_list[i], "entity_presence"))
+        n = IPMI_MONITORING_SENSOR_GROUP_ENTITY_PRESENCE;
+      else if (!strcasecmp(cmd_args->groups_list[i], "management_subsystem_health"))
+        n = IPMI_MONITORING_SENSOR_GROUP_MANAGEMENT_SUBSYSTEM_HEALTH;
+      else if (!strcasecmp(cmd_args->groups_list[i], "battery"))
+        n = IPMI_MONITORING_SENSOR_GROUP_BATTERY;
+      else if (!strcasecmp(cmd_args->groups_list[i], "fru_state"))
+        n = IPMI_MONITORING_SENSOR_GROUP_FRU_STATE;
+      else
+        {
+          fprintf(stderr, "invalid sensor group '%s'\n", cmd_args->groups_list[i]);
+          exit(1);
+        }
+      
       if (n >= 0)
         {
           cmd_args->ipmimonitoring_groups[cmd_args->ipmimonitoring_groups_length] = n;

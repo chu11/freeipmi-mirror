@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.12 2008-04-02 22:02:44 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.13 2008-04-07 20:49:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -277,6 +277,46 @@ struct ipmi_sensor_config ipmi_watchdog2_config[] =
     {NULL, -1},
   };
 
+struct ipmi_sensor_config ipmi_entity_presence_config[] =
+  {
+    {"IPMI_Entity_Presence_Entity_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Entity_Presence_Entity_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Entity_Presence_Entity_Disabled", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {NULL, -1},   
+  };
+
+struct ipmi_sensor_config ipmi_management_subsystem_health_config[] =
+  {
+    {"IPMI_Management_Subsystem_Health_Sensor_Access_Degraded_Or_Unavailable", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Management_Subsystem_Health_Controller_Access_Degraded_Or_Unavailable", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Management_Subsystem_Health_Management_Controller_Off_Line", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Management_Subsystem_Health_Management_Controller_Unavailable", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Management_Subsystem_Health_Sensor_Failure", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Management_Subsystem_Health_FRU_Failure", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {NULL, -1},   
+  };
+
+struct ipmi_sensor_config ipmi_battery_config[] =
+  {
+    {"IPMI_Battery_Battery_Low", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_Battery_Battery_Failed", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Battery_Battery_Presence_Detected", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {NULL, -1},   
+  };
+
+struct ipmi_sensor_config ipmi_fru_state_config[] =
+  {
+    {"IPMI_FRU_State_FRU_Not_Installed", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_FRU_State_FRU_Inactive", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_FRU_State_FRU_Activation_Requested", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_FRU_State_FRU_Activation_In_Progress", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_FRU_State_FRU_Active", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_FRU_State_FRU_Deactivation_Requested", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_FRU_State_FRU_Deactivation_In_Progress", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_FRU_State_FRU_Communication_Lost", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {NULL, -1},   
+  };
+
 static int _ipmi_monitoring_sensor_config_loaded = 0;
 
 static int
@@ -386,6 +426,13 @@ ipmi_monitoring_sensor_config(int *errnum)
   int watchdog2_flag0, watchdog2_flag1, watchdog2_flag2, watchdog2_flag3, 
     watchdog2_flag4, watchdog2_flag5, watchdog2_flag6, watchdog2_flag7, 
     watchdog2_flag8;
+  int entity_presence_flag0, entity_presence_flag1, entity_presence_flag2;
+  int management_subsystem_health_flag0, management_subsystem_health_flag1,
+    management_subsystem_health_flag2, management_subsystem_health_flag3,
+    management_subsystem_health_flag4, management_subsystem_health_flag5;
+  int battery_flag0, battery_flag1, battery_flag2;
+  int fru_state_flag0, fru_state_flag1, fru_state_flag2, fru_state_flag3,
+    fru_state_flag4, fru_state_flag5, fru_state_flag6, fru_state_flag7;
   conffile_t cf = NULL;
   int num;
   int rv = -1;
@@ -1744,6 +1791,218 @@ ipmi_monitoring_sensor_config(int *errnum)
        0,
        &watchdog2_flag8,
        ipmi_watchdog2_config,
+       0
+      },
+      /* 
+       * IPMI_Entity_Presence
+       */
+      {ipmi_entity_presence_config[0].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &entity_presence_flag0,
+       ipmi_entity_presence_config,
+       0
+      },
+      {ipmi_entity_presence_config[1].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &entity_presence_flag1,
+       ipmi_entity_presence_config,
+       0
+      },
+      {ipmi_entity_presence_config[2].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &entity_presence_flag2,
+       ipmi_entity_presence_config,
+       0
+      },
+      /* 
+       * IPMI_Management_Subsystem_Health
+       */
+      {ipmi_management_subsystem_health_config[0].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &management_subsystem_health_flag0,
+       ipmi_management_subsystem_health_config,
+       0
+      },
+      {ipmi_management_subsystem_health_config[1].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &management_subsystem_health_flag1,
+       ipmi_management_subsystem_health_config,
+       0
+      },
+      {ipmi_management_subsystem_health_config[2].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &management_subsystem_health_flag2,
+       ipmi_management_subsystem_health_config,
+       0
+      },
+      {ipmi_management_subsystem_health_config[3].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &management_subsystem_health_flag3,
+       ipmi_management_subsystem_health_config,
+       0
+      },
+      {ipmi_management_subsystem_health_config[4].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &management_subsystem_health_flag4,
+       ipmi_management_subsystem_health_config,
+       0
+      },
+      {ipmi_management_subsystem_health_config[5].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &management_subsystem_health_flag5,
+       ipmi_management_subsystem_health_config,
+       0
+      },
+      /* 
+       * IPMI_Battery
+       */
+      {ipmi_battery_config[0].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &battery_flag0,
+       ipmi_battery_config,
+       0
+      },
+      {ipmi_battery_config[1].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &battery_flag1,
+       ipmi_battery_config,
+       0
+      },
+      {ipmi_battery_config[2].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &battery_flag2,
+       ipmi_battery_config,
+       0
+      },
+      /* 
+       * IPMI_FRU_State
+       */
+      {ipmi_fru_state_config[0].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &fru_state_flag0,
+       ipmi_fru_state_config,
+       0
+      },
+      {ipmi_fru_state_config[1].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &fru_state_flag1,
+       ipmi_fru_state_config,
+       0
+      },
+      {ipmi_fru_state_config[2].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &fru_state_flag2,
+       ipmi_fru_state_config,
+       0
+      },
+      {ipmi_fru_state_config[3].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &fru_state_flag3,
+       ipmi_fru_state_config,
+       0
+      },
+      {ipmi_fru_state_config[4].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &fru_state_flag4,
+       ipmi_fru_state_config,
+       0
+      },
+      {ipmi_fru_state_config[5].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &fru_state_flag5,
+       ipmi_fru_state_config,
+       0
+      },
+      {ipmi_fru_state_config[6].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &fru_state_flag6,
+       ipmi_fru_state_config,
+       0
+      },
+      {ipmi_fru_state_config[7].option_str,
+       CONFFILE_OPTION_STRING,
+       -1,
+       _cb_sensor_state_parse,
+       1,
+       0,
+       &fru_state_flag7,
+       ipmi_fru_state_config,
        0
       },
     };
