@@ -12,9 +12,9 @@ verbose options specified below.
 
 .B Ipmi-sensors
 does not inform the user if a problem exists with a particular sensor
-because sensor reasons are not analyzed.  Users may wish to consider
+because sensor readings are not analyzed.  Users may wish to consider
 .B ipmimonitoring(8)
-for those purposes.
+for sensor analysis.
 
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
