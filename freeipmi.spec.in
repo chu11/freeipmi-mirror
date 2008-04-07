@@ -250,7 +250,6 @@ fi
 %{_mandir}/man5/ipmiconsole.conf.5*
 %{_mandir}/man8/ipmimonitoring.8*
 %{_mandir}/man8/ipmi-chassis.8*
-%{_mandir}/man3/libipmidetect.3*
 %{_mandir}/man8/ipmidetect.8*
 %{_mandir}/man5/ipmidetect.conf.5*
 %{_mandir}/man7/freeipmi.7*
@@ -312,7 +311,7 @@ fi
 
 %changelog
 * Mon Apr 7 2008 Albert Chu <chu11@llnl.gov> 0.6.0
-- Add freeipmi.7 manpage.
+- Add freeipmi.7 and libfreeipmi.3 manpage.
 
 * Wed Apr 2 2008 Albert Chu <chu11@llnl.gov> 0.6.0
 - Add freeipmi-bugs-and-workarounds.txt.

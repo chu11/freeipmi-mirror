@@ -11,9 +11,8 @@ use in FreeIPMI.
 Libfreeipmi
 -----------
 
-This is the primary library that most of the FreeIPMI tools are based
-upon.  The following describe the sub-sections of the library stored
-within various subdirectories.
+Libfreeipmi is the primary library that most of the FreeIPMI tools are based
+upon.  The following describe the sub-sections of the library.
 
    api - Provides the highest level API provided by libfreeipmi.  It
    abstracts away the details of inband and outofband protocols from

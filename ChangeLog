@@ -18,15 +18,18 @@
 
 	* doc/freeipmi.7.in: New generic overview manpage.
 
-	* doc/Makefile.am, freeipmi.spec.in, configure.ac: Update for new
+	* libfreeipmi/libfreeipmi.3.in: New generic library overview
 	manpage.
+
+	* doc/Makefile.am, freeipmi.spec.in, configure.ac: Update for new
+	manpages.
 
 	* common/doc: Fix make dist bug.
 
 	* Add freeipmi(7) to "SEE ALSO" on all appropriate manpages.
 
 	* Various manpage and doc fixes.
-	
+
 2008-04-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Finish -B support.

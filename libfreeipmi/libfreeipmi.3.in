@@ -1,0 +1,82 @@
+.TH LIBFREEIPMI 3 "@ISODATE" "libfreeipmi @PACKAGE_VERSION@" "LIBFREEIPMI"
+.SH NAME
+libfreeipmi - FreeIPMI library
+.SH Introduction
+Libfreeipmi is the primary library that most of the FreeIPMI tools are based
+upon.  The following describe the sub-sections of the library.
+.TP
+.B api
+Provides the highest level API provided by libfreeipmi.  It
+abstracts away the details of inband and outofband protocols from
+the user.  It also provides useful error codes for the user to
+easily interpret.  'api' is used by most FreeIPMI tools and
+libraries, such as bmc-info, ipmi-sensors, and libipmimonitoring.
+.TP
+.B cmds
+Provides fiid templates and 'fill' functions for IPMI
+commands.  Also provides macros definining common parameters for
+IPMI commands.  The cmds are used by most other portions of
+libfreeipmi including the 'api' sub-section and tools such as
+ipmipower and ipmiconsole.
+.TP
+.B debug
+Provides various packet/record dumping utility functions.
+Utilized by the 'api' subsection and by tools such as ipmipower and
+ipmiconsole.
+.TP
+.B driver
+Provides APIs for in-band IPMI communication.  Currently
+supported drivers are KCS, SSIF, and OpenIPMI.  The 'driver'
+subsction is used by tools such as bmc-watchdog and the 'api'
+sub-section.
+.TP
+.B fiid
+The "FreeIPMI Interface Definition" provides an API used for
+the construction/deconstruction of packets in libfreeipmi.  The API
+works around fiid-templates, which are then used to create
+fiid-objects.  Fiid-templates are used to describe packets through
+a string-name to bit-field mapping.  The API allows users to
+read/write fields in an object using the string to bit-field
+mapping.  Marshalling, packing, endian, and various other network
+issues are handled within 'fiid'.  Fiid objects are used throughout
+libfreeipmi, including the 'api' sub-section, 'cmds' sub-sections,
+and various tools.
+.TP
+.B interface
+Provides 'assemble' and 'disassemble' functions for building packets
+for individual in-band or out-of-band protocols.  Also provides all
+necessary fiid templates, 'fill' functions, and other utility
+functions necessary to communicate on an IPMI interface.  Utilized by
+the 'api' sub-section and tools such as ipmipower and ipmiconsole.
+.TP
+.B locate
+Provides an API to probe several standards to find default values for
+in-band IPMI communication.  Utilized by the 'api' sub-section and the
+ipmi-locate tool.
+.TP
+.B record-format
+Provides macros, fiid-templates, and information on records used in
+IPMI.  Utilized by the 'sdr-cache' subsection and tools like ipmi-sel.
+.TP
+.B sdr-cache
+Provides and API for creating, caching, reading, and parsing a sensor
+data repository (SDR).  Utilized by tools such as ipmi-sensors and
+ipmimonitoring.
+.TP
+.B spec
+Provides macros and arrays for various other definitions and tables in
+IPMI.  Utilized by tools such as ipmi-sensors.
+.TP
+.B util
+Provides various utility functions for the calculation of keys, sensor
+readings, etc.  Utilized by most of the rest of FreeIPMI.
+
+.SH "FILES"
+/usr/include/freeipmi.h
+.PP
+/usr/include/freeipmi/
+
+.SH COPYRIGHT
+Copyright \(co 2003-2008 FreeIPMI Core Team.  
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License.  This program has absolutely no warranty.

@@ -7,5 +7,7 @@ DISTCLEANFILES = .deps/*.P
 Ipckeydir     = $(localstatedir)/lib/$(PACKAGE_NAME)
 Ipckey_DATA   = ipckey
 
+man3_MANS = libfreeipmi.3
+
 EXTRA_DIST = ipckey
 
