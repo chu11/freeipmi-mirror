@@ -1851,7 +1851,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   uint32_t username_len;
   char *password;
   uint32_t password_len;
-  uint8_t authentication_algorithm;
+  uint8_t authentication_algorithm = 0; /* init to 0 to remove gcc warning */
   uint8_t requested_maximum_privilege;
   uint8_t assume_rakp_4_success = 0;
   uint8_t name_only_lookup;

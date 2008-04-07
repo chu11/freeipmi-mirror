@@ -262,8 +262,8 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 {
   uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
   unsigned int sdr_record_len;
-  uint8_t sdr_record_type;
-  uint8_t sdr_event_reading_type_code;
+  uint8_t sdr_record_type = 0;  /* init 0 to remove warnings */
+  uint8_t sdr_event_reading_type_code = 0; /* init 0 to remove warnings */
   uint16_t record_id;
   uint32_t timestamp_val;
   uint8_t generator_id_type;

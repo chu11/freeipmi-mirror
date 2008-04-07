@@ -65,7 +65,7 @@ _pef_config (void *arg)
   int exit_code = -1;
   config_err_t ret = 0;
   int file_opened = 0;
-  FILE *fp;
+  FILE *fp = NULL;              /* init NULL to remove warnings */
 
   prog_data = (pef_config_prog_data_t *) arg;
   
