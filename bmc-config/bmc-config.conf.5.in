@@ -269,12 +269,12 @@ connect with Serial-Over-LAN (SOL).  This should be set to "Yes"R
 to allow this username to use SOL.
 .LP
 The example configuration above disables "User2" but enables the
-default "Anonymous" (or NULL) user.  Many IPMI tools (both open-source
-and vendor) do not allow the user to input a username and assume the
-NULL username by default.  If the tools you are interested in using
-allow usernames to be input, then it is recommended that one of the
-non-NULL usernames be enabled and the NULL username disabled for
-security reasons.  It is recommeneded that you disable the NULL
+default "NULL" (i.e. anonymous) user.  Many IPMI tools (both
+open-source and vendor) do not allow the user to input a username and
+assume the NULL username by default.  If the tools you are interested
+in using allow usernames to be input, then it is recommended that one
+of the non-NULL usernames be enabled and the NULL username disabled
+for security reasons.  It is recommeneded that you disable the NULL
 username in section User1, so that users are required to specify a
 username for IPMI over LAN communication.
 
