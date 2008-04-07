@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.38 2008-03-28 00:14:42 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.39 2008-04-07 15:54:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -385,6 +385,8 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
             sensor_units_str = "A";
           else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_RPM)
             sensor_units_str = "RPM";
+          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_WATTS)
+            sensor_units_str = "W";
           else
             sensor_units_str = "N/A";
 

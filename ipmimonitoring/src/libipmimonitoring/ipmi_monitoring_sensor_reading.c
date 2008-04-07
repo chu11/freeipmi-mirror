@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.13 2008-04-02 22:02:44 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.14 2008-04-07 15:54:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -209,6 +209,8 @@ _get_sensor_units(ipmi_monitoring_ctx_t c,
     return IPMI_MONITORING_SENSOR_UNITS_AMPS;
   else if (sensor_base_unit == IPMI_SENSOR_UNIT_RPM)
     return IPMI_MONITORING_SENSOR_UNITS_RPM;
+  else if (sensor_base_unit = IPMI_SENSOR_UNIT_WATTS)
+    return IPMI_MONITORING_SENSOR_UNITS_WATTS;
 
   IPMI_MONITORING_DEBUG(("sensor_base_unit '0x%X' not supported", sensor_base_unit));
   return IPMI_MONITORING_SENSOR_UNITS_UNKNOWN;

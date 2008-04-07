@@ -56,6 +56,8 @@ o Many libfreeipmi API changes.  Not counting specific tool changes
   o Code re-organized into subdirectories.
   o New header files for more ipmi spec subsections added.
 o Support new 'ipmi_monitoring_sdr_cache_filenames' function in
+  libipmimonitoring.  
+o Support IPMI_MONITORING_SENSOR_UNITS_WATTS sensor units in
   libipmimonitoring.
 o Store SDR with different format for ipmi-sensors, ipmi-fru,
   ipmi-sel, and ipmi-sensors-config, ipmimonitoring/libipmimonitoring

@@ -1,3 +1,7 @@
+2008-04-07  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/: Support WATTS sensor unit type.
+	
 2008-04-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Finish -B support.
