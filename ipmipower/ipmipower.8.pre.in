@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.19 2008-04-08 18:06:36 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.20 2008-04-08 18:26:47 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -524,9 +524,10 @@ Before placing ipmipower in a production system, it is recommended
 that the program be compiled with debugging turned off.
 \}
 #include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
-.SH "ORIGIN"
-Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
-This software is open source and distributed under the terms of the
-Gnu GPL.
+.SH COPYRIGHT
+Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
+.br
+Copyright (C) 2003-2007 The Regents of the University of California.
+#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 ipmipower.conf(5), freeipmi(7), bmc-config(8)

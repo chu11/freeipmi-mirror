@@ -30,4 +30,7 @@ EXTRA_DIST = \
 	manpage-common-ignore-sdr-cache.man \
 	manpage-common-troubleshooting.man \
 	manpage-common-known-issues.man \
-	manpage-common-reporting-bugs.man
+	manpage-common-known-issues-ping.man \
+	manpage-common-reporting-bugs.man \
+	manpage-common-gpl-library-text.man \
+	manpage-common-gpl-program-text.man

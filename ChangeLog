@@ -10,9 +10,14 @@
 	ipmiconsole/, ipmiping/, rmcpping/, doc/, configure.ac: Use
 	.pre.in instead of just .in for manpages for consistency.
 
-	* common/doc/manpage-common-reporting-bugs.man: New file.
+	* common/doc/manpage-common-reporting-bugs.man,
+	common/doc/manpage-common-gpl-library-text.man,
+	common/doc/manpage-common-gpl-program-text.man: New files.
 
-	* Update manpages appropriately for report-bugs common manpage.
+	* Update manpages appropriately for report-bugs common manpage and
+	gpl info.
+	
+	* Add copyrights to all manpages appropriately.
 	
 2008-04-07  Albert Chu <chu11@llnl.gov>
 
