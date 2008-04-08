@@ -3,6 +3,8 @@
 	* doc/: More minor updates.
 
 	* Various manpage cleanup and extra documentation.
+
+	* ipmi-oem/: Change "cmd" to "command" everywhere.
 	
 2008-04-07  Albert Chu <chu11@llnl.gov>
 

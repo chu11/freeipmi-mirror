@@ -3,12 +3,14 @@
 ipmi-oem \- IPMI OEM utility
 .SH "SYNOPSIS"
 .B ipmi-oem
-[\fIOPTION\fR...] <OEMID> <OEMCMD> [OEMOPTION]
+[\fIOPTION\fR...] <OEMID> <OEMCOMMAND> [OEMOPTION]
 .SH "DESCRIPTION"
 .B Ipmi-oem
-is used to execute OEM specific IPMI commands.
+is used to execute OEM specific IPMI commands.  It is intended to provide
+a better user interface for OEM specific support IPMI commands better than
+.B ipmi-raw(8).
 
-See SUPPORTED OEM below for currently supported OEM Ids.
+See SUPPORTED OEM below for currently supported OEM IDs and COMMANDs.
 
 .SH "OPTIONS"
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
@@ -33,7 +35,7 @@ required user privilege will depend on the oem commands executed.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
 .SH "SUPPORTED OEM"
-The currently supported OEM Ids and commands are:
+The currently supported OEM IDs and COMMANDs are:
 .TP
 none currently supported
 \.".RS

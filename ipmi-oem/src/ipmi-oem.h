@@ -30,7 +30,7 @@ struct ipmi_oem_arguments
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
   char *oem_id;
-  char *oem_cmd;
+  char *oem_command;
   char *oem_options[ARG_MAX];
   unsigned int oem_options_count;
 };

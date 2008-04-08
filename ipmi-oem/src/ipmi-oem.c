@@ -57,7 +57,7 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (!args->oem_cmd)
+  if (!args->oem_command)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -73,7 +73,7 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
   pstdout_fprintf (state_data->pstate,
                    stderr,
                    "OEM Command '%s' unknown\n",
-                   args->oem_cmd);
+                   args->oem_command);
  
   rv = 0;
  cleanup:

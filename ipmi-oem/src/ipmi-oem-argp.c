@@ -82,9 +82,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
               }
             break;
           }
-        else if (!cmd_args->oem_cmd)
+        else if (!cmd_args->oem_command)
           {
-            if (!(cmd_args->oem_cmd = strdup(arg)))
+            if (!(cmd_args->oem_command = strdup(arg)))
               {
                 perror("strdup");
                 exit(1);
@@ -125,7 +125,7 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->oem_id = NULL;
-  cmd_args->oem_cmd = NULL;
+  cmd_args->oem_command = NULL;
   memset (cmd_args->oem_options, 0, sizeof(cmd_args->oem_options));
   cmd_args->oem_options_count = 0;
 
