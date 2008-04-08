@@ -1,6 +1,14 @@
 SUBDIRS = src
 
-dist_man_MANS = ipmidetect.8 ipmidetect.conf.5 ipmidetectd.8 ipmidetectd.conf.5 libipmidetect.3
+MANS_CPP = ipmidetect.8 ipmidetect.conf.5 ipmidetectd.8 ipmidetectd.conf.5 libipmidetect.3
+
+$(MANS_CPP): $(MANS_CPP:%=%.pre)
+	cpp -P -I. -x c $@.pre -o $@
+
+dist_man_MANS = $(MANS_CPP)
+
+CLEANFILES = $(MANS_CPP) *~
+DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
 EXTRA_DIST = freeipmi-ipmidetectd.init
 
@@ -12,6 +20,3 @@ install-init-scripts:
 
 uninstall-local:
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/freeipmi-ipmidetectd
-
-CLEANFILES = *~
-DISTCLEANFILES = .deps/*.P

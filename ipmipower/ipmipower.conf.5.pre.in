@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.conf.5.in,v 1.46 2008-04-05 12:43:53 chu11 Exp $
+.\"$Id: ipmipower.conf.5.pre.in,v 1.1 2008-04-08 17:55:53 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.

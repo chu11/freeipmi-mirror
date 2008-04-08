@@ -1,7 +1,15 @@
 #  build and install the .info pages
 info_TEXINFOS =  freeipmi-faq.texi
 
-man7_MANS = freeipmi.7
+MANS_CPP = freeipmi.7
+
+$(MANS_CPP): $(MANS_CPP:%=%.pre)
+	cpp -P -I. -x c $@.pre -o $@
+
+dist_man_MANS = $(MANS_CPP)
+
+CLEANFILES = $(MANS_CPP) *~
+DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
 EXTRA_DIST = \
 	freeipmi-coding.txt \

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmidetectd.conf.5.in,v 1.8 2008-03-28 16:52:55 chu11 Exp $
+.\"$Id: ipmidetectd.8.pre.in,v 1.1 2008-04-08 17:55:52 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -23,43 +23,53 @@
 .\"  You should have received a copy of the GNU General Public License along
 .\"  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
 .\"#############################################################################
-.TH ipmidetectd.conf 5 "May 2005" "ipmidetectd.conf @VERSION@" "ipmidetectd.conf"
+.TH ipmidetectd 8 "February 2007" "ipmidetectd @VERSION@" ipmidetectd
 .SH "NAME"
-ipmidetectd.conf \- ipmidetectd configuration file
+ipmidetectd \- IPMI node detection monitoring daemon
+.SH "SYNOPSIS"
+.B ipmidetectd [OPTIONS]
+.br
 .SH "DESCRIPTION"
+The
+.B ipmidetectd
+daemon regularly sends out IPMI pings to determine if nodes have
+functioning IPMI interfaces or not.  It is primarily used to determine
+those nodes in the cluster that are not functioning properly, allowing
+IPMI commands to be executed across the cluster faster by skipping those
+nodes that would automatically timeout.
+.LP
 The 
 .B ipmidetectd
-configuration file configures the 
-.B ipmidetectd
-daemon.
+daemon must be configured using the 
+.B ipmidetectd 
+configuration file.  Until
+hosts to be pinged are configured, 
+.B ipmidetectd 
+will not function properly.
 .LP
-The default configuration file loaded is @IPMIDETECTD_CONFIG_FILE_DEFAULT@. 
-.LP
-The configuration options that can be specified in the configuration
-file are listed below.  Each configuration option must be listed on a
-separate line.  Arguments for an option are separated by any amount of
-whitespace.  Multiple arguments are also separated by whitespace.
-Comments can be marked by using the pound sign ("#") character, and
-lines can be continued on the next using backslash ("\\").
+See the
+.BR ipmidetectd.conf(5)
+manpage for additional information.
 
-.SH "IPMIDETECTD CONFIGURATION OPTIONS"
+.SH "OPTIONS"
 .TP
+.B  -h, --help
+Output help
 .TP
-.I ipmiping_period num
-Specify the period time in milliseconds that IPMI pings should be
-regularly sent out.  Default is 15000.
-.TP 
-.I ipmidetectd_server_port port
-Specify the alternate default port the ipmidetectd server should listen
-for requests off of.  Default is 9225.
-.TP 
-.I host string
-Specify a host or IP address the ipmidetectd daemon whould send IPMI
-pings to.  Can be specified as many times as necessary.  Can except hostranges
-as input.  See 
-.B ipmidetect(8)
-for information on hostranges.
+.B  -v, --version
+Output version
+.if @WITH_DEBUG@ \{
+.TP
+.B  -c, --config-file
+Specify alternate configuration file
+.TP
+.B  -d, --debug
+Turn on debugging and run daemon in foreground
+\}
+
 .SH "FILES"
 @IPMIDETECTD_CONFIG_FILE_DEFAULT@
+.SH "ORIGIN"
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's Linux clusters.
 .SH "SEE ALSO"
-ipmidetectd(8), ipmidetect(8)
+ipmidetectd.conf(5)

@@ -5,6 +5,10 @@
 	* Various manpage cleanup and extra documentation.
 
 	* ipmi-oem/: Change "cmd" to "command" everywhere.
+
+	* libfreeipmi/, ipmidetect/, ipmimonitoring, ipmipower/,
+	ipmiconsole/, ipmiping/, rmcpping/, doc/, configure.ac: Use
+	.pre.in instead of just .in for manpages for consistency.
 	
 2008-04-07  Albert Chu <chu11@llnl.gov>
 

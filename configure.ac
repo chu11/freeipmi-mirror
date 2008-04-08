@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.6.0.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.110 2008-04-07 23:17:07 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.111 2008-04-08 17:55:50 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -18,12 +18,12 @@ AM_CONFIG_HEADER([config/config.h])
 dnl define output files
 AC_CONFIG_FILES([
         Makefile doc/Makefile 
-        doc/freeipmi.7
+        doc/freeipmi.7.pre
 	common/Makefile 
         common/doc/Makefile 
         common/src/Makefile
         libfreeipmi/Makefile 
-        libfreeipmi/libfreeipmi.3
+        libfreeipmi/libfreeipmi.3.pre
         libfreeipmi/include/Makefile 
 	libfreeipmi/src/Makefile 
         libfreeipmi/src/api/Makefile
@@ -43,27 +43,27 @@ AC_CONFIG_FILES([
         bmc-watchdog/src/Makefile
         ipmipower/Makefile 
         ipmipower/ipmipower.8.pre
-        ipmipower/ipmipower.conf.5
+        ipmipower/ipmipower.conf.5.pre
         ipmipower/src/Makefile
 	ipmiconsole/Makefile 
 	ipmiconsole/ipmiconsole.8.pre
-        ipmiconsole/ipmiconsole.conf.5
-        ipmiconsole/libipmiconsole.3
+        ipmiconsole/ipmiconsole.conf.5.pre
+        ipmiconsole/libipmiconsole.3.pre
         ipmiconsole/src/Makefile
 	ipmiconsole/src/libipmiconsole/Makefile
         ipmiconsole/src/ipmiconsole/Makefile
 	ipmimonitoring/Makefile
         ipmimonitoring/src/Makefile
 	ipmimonitoring/ipmimonitoring.8.pre
-        ipmimonitoring/libipmimonitoring.3
+        ipmimonitoring/libipmimonitoring.3.pre
         ipmimonitoring/src/libipmimonitoring/Makefile 
         ipmimonitoring/src/ipmimonitoring/Makefile
         ipmidetect/Makefile
-        ipmidetect/ipmidetect.8
-        ipmidetect/ipmidetect.conf.5
-        ipmidetect/ipmidetectd.8
-        ipmidetect/ipmidetectd.conf.5
-        ipmidetect/libipmidetect.3
+        ipmidetect/ipmidetect.8.pre
+        ipmidetect/ipmidetect.conf.5.pre
+        ipmidetect/ipmidetectd.8.pre
+        ipmidetect/ipmidetectd.conf.5.pre
+        ipmidetect/libipmidetect.3.pre
         ipmidetect/src/Makefile
         ipmidetect/src/ipmidetect/Makefile
         ipmidetect/src/ipmidetectd/Makefile
@@ -96,10 +96,10 @@ AC_CONFIG_FILES([
 	ipmi-fru/ipmi-fru.8.pre
         ipmi-fru/src/Makefile
         ipmiping/Makefile 
-        ipmiping/ipmiping.8 
+        ipmiping/ipmiping.8.pre
         ipmiping/src/Makefile
         rmcpping/Makefile 
-        rmcpping/rmcpping.8
+        rmcpping/rmcpping.8.pre
         rmcpping/src/Makefile
 	bmc-config/Makefile 
  	bmc-config/bmc-config.8.pre 

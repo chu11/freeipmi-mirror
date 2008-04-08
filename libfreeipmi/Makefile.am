@@ -1,13 +1,18 @@
 SUBDIRS = include src 
 
-CLEANFILES = 
-DISTCLEANFILES = .deps/*.P
+MANS_CPP = libfreeipmi.3
+
+$(MANS_CPP): $(MANS_CPP:%=%.pre)
+	cpp -P -I. -x c $@.pre -o $@
+
+dist_man_MANS = $(MANS_CPP)
+
+CLEANFILES = $(MANS_CPP) *~
+DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
 # Semaphore IPC Key file for ftok:
 Ipckeydir     = $(localstatedir)/lib/$(PACKAGE_NAME)
 Ipckey_DATA   = ipckey
-
-man3_MANS = libfreeipmi.3
 
 EXTRA_DIST = ipckey
 
