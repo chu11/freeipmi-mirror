@@ -17,8 +17,8 @@ o Change short option -f option to -n in pef-config and bmc-config for
 o Support -e (--escape-char) for alternate escape character in
   ipmiconsole.
 o Change --wait-until-off short option from -B to -G.
-o Support -B in ipmipower for consistency to other tools, although -B offers
-  no purpose in ipmipower.
+o Support -B in ipmipower for consistency to other tools, although -B
+  offers no purpose in ipmipower.
 o Support -F in ipmipower for consistency to other tools.
 o Enhanced speed of ipmi-fru, by skipping unnecessary FRU data reads.
 o SSIF Inband driver will timeout after a certain period of time.
