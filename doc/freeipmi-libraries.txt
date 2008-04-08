@@ -24,15 +24,15 @@ cmds - Provides fiid templates and 'fill' functions for IPMI
 commands.  Also provides macros definining common parameters for
 IPMI commands.  The cmds are used by most other portions of
 libfreeipmi including the 'api' sub-section and tools such as
-ipmipower and ipmiconsole.
+ipmipower(8) and ipmiconsole(8).
 
 debug - Provides various packet/record dumping utility functions.
-Utilized by the 'api' subsection and by tools such as ipmipower and
-ipmiconsole.
+Utilized by the 'api' subsection and by tools such as ipmipower(8) and
+ipmiconsole(8).
 
 driver - Provides APIs for in-band IPMI communication.  Currently
 supported drivers are KCS, SSIF, and OpenIPMI.  The 'driver'
-subsction is used by tools such as bmc-watchdog and the 'api'
+subsction is used by tools such as bmc-watchdog(8) and the 'api'
 sub-section.
 
 fiid - The "FreeIPMI Interface Definition" provides an API used for
@@ -51,22 +51,22 @@ building packets for individual in-band or out-of-band protocols.
 Also provides all necessary fiid templates, 'fill' functions, and
 other utility functions necessary to communicate on an IPMI
 interface.  Utilized by the 'api' sub-section and tools such as
-ipmipower and ipmiconsole.
+ipmipower(8) and ipmiconsole(8).
 
 locate - Provides an API to probe several standards to find default
 values for in-band IPMI communication.  Utilized by the 'api'
-sub-section and the ipmi-locate tool.
+sub-section and the ipmi-locate(8) tool.
 
 record-format - Provides macros, fiid-templates, and information on
 records used in IPMI.  Utilized by the 'sdr-cache' subsection and
-tools like ipmi-sel.
+tools like ipmi-sensors(8).
 
 sdr-cache - Provides and API for creating, caching, reading, and
 parsing a sensor data repository (SDR).  Utilized by tools such as
-ipmi-sensors and ipmimonitoring.
+ipmi-sensors(8) and ipmimonitoring(8).
 
 spec - Provides macros and arrays for various other definitions and
-tables in IPMI.  Utilized by tools such as ipmi-sensors.
+tables in IPMI.  Utilized by tools such as ipmi-sensors(8).
 
 util - Provides various utility functions for the calculation of keys,
 sensor readings, etc.  Utilized by most of the rest of FreeIPMI.
