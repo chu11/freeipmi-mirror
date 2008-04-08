@@ -1,7 +1,7 @@
 .TH FREEIPMI 7 "@ISODATE" "FreeIPMI @PACKAGE_VERSION@" "Overview"
 .SH "NAME"
 FreeIPMI - FreeIPMI overview
-.SH Introduction
+.SH "Introduction"
 FreeIPMI provides in-band and out-of-band IPMI software based on the
 IPMI v1.5/2.0 specification.
 .SH "Project Libraries and Tools"
