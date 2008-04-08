@@ -116,7 +116,6 @@ Commit all configuration values from the sensor-data1.conf file.
 #include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2007-2008 FreeIPMI Core Team.  
-This program is free software; you may redistribute it under the terms of
-the GNU General Public License.  This program has absolutely no warranty.
+#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), pef-config(8), ipmi-sensors(8), ipmimonitoring(8)

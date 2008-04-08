@@ -78,7 +78,6 @@ Delete SEL entries in the range 12 to 42 on the local machine.
 #include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2003-2008 FreeIPMI Core Team.  
-This program is free software; you may redistribute it under the terms of
-the GNU General Public License.  This program has absolutely no warranty.
+#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8)

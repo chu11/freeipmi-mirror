@@ -90,8 +90,7 @@ readings, etc.  Utilized by most of the rest of FreeIPMI.
 
 .SH "COPYRIGHT"
 Copyright \(co 2003-2008 FreeIPMI Core Team.  
-This program is free software; you may redistribute it under the terms of
-the GNU General Public License.  This program has absolutely no warranty.
+#include <@top_srcdir@/common/doc/manpage-common-gpl-library-text.man>
 
 .SH "SEE ALSO"
 libipmiconsole(3), libipmidetect(3), libipmimonitoring(3),

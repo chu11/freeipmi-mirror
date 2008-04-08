@@ -123,7 +123,6 @@ Commit all configuration values from bmc-data-updt.conf and key 'lan_conf_misc:g
 #include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2003-2008 FreeIPMI Core Team.  
-This program is free software; you may redistribute it under the terms of
-the GNU General Public License.  This program has absolutely no warranty.
+#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 bmc-config.conf(5), freeipmi(7), pef-config(8), ipmi-sensors-config(8)
