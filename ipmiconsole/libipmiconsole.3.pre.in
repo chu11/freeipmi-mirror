@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: libipmiconsole.3.pre.in,v 1.1 2008-04-08 17:55:51 chu11 Exp $
+.\"$Id: libipmiconsole.3.pre.in,v 1.2 2008-04-08 18:06:35 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -60,6 +60,7 @@ simple file descriptor interface.
 .SH "FILES"
 /usr/include/ipmiconsole.h
 
+#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 .SH "ORIGIN"
 Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
 This software is open source and distributed under the terms of the

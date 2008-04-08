@@ -143,8 +143,7 @@ Get the chassis status across a cluster using IPMI over LAN.
 Power on a remote machine using IPMI over LAN.
 .PP
 #include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
-.SH "REPORTING BUGS"
-Report bugs to <@PACKAGE_BUGREPORT@>.
+#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2007-2008 FreeIPMI Core Team
 This program is free software; you may redistribute it under the terms of

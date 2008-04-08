@@ -29,4 +29,5 @@ EXTRA_DIST = \
 	manpage-common-sdr-options.man \
 	manpage-common-ignore-sdr-cache.man \
 	manpage-common-troubleshooting.man \
-	manpage-common-known-issues.man
+	manpage-common-known-issues.man \
+	manpage-common-reporting-bugs.man

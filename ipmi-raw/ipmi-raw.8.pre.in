@@ -63,8 +63,7 @@ Read LUN/FN, command and request data from given file instead of standard input.
 Read LUN, NETFN, command and request data from file as standard input.
 .PP
 #include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
-.SH "REPORTING BUGS"
-Report bugs to <freeipmi\-devel@gnu.org>.
+#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2005-2008 FreeIPMI Core Team
 This program is free software; you may redistribute it under the terms of

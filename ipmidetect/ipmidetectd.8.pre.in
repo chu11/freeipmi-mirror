@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmidetectd.8.pre.in,v 1.1 2008-04-08 17:55:52 chu11 Exp $
+.\"$Id: ipmidetectd.8.pre.in,v 1.2 2008-04-08 18:06:35 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -69,6 +69,7 @@ Turn on debugging and run daemon in foreground
 
 .SH "FILES"
 @IPMIDETECTD_CONFIG_FILE_DEFAULT@
+#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 .SH "ORIGIN"
 Developed by Albert Chu <chu11@llnl.gov> on LLNL's Linux clusters.
 .SH "SEE ALSO"

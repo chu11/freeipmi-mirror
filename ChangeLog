@@ -9,6 +9,10 @@
 	* libfreeipmi/, ipmidetect/, ipmimonitoring, ipmipower/,
 	ipmiconsole/, ipmiping/, rmcpping/, doc/, configure.ac: Use
 	.pre.in instead of just .in for manpages for consistency.
+
+	* common/doc/manpage-common-reporting-bugs.man: New file.
+
+	* Update manpages appropriately for report-bugs common manpage.
 	
 2008-04-07  Albert Chu <chu11@llnl.gov>
 

@@ -113,8 +113,7 @@ Show all difference between the current configuration and the sensor-data2.conf 
 Commit all configuration values from the sensor-data1.conf file.
 .PP
 #include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
-.SH "REPORTING BUGS"
-Report bugs to <@PACKAGE_BUGREPORT@>.
+#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2007-2008 FreeIPMI Core Team.  
 This program is free software; you may redistribute it under the terms of

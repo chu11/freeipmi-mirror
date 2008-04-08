@@ -47,8 +47,7 @@ none currently supported
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
-.SH "REPORTING BUGS"
-Report bugs to <freeipmi\-devel@gnu.org>.
+#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2008 FreeIPMI Core Team
 This program is free software; you may redistribute it under the terms of

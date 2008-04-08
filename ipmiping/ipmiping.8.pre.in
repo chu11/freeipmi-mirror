@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiping.8.pre.in,v 1.1 2008-04-08 17:55:53 chu11 Exp $
+.\"$Id: ipmiping.8.pre.in,v 1.2 2008-04-08 18:06:36 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -90,6 +90,7 @@ very quickly.  For example, this could happen if the user repeatedly
 executes "ipmiping -c 1 -s X destination" very quickly.  There is no
 known way to cleanly deal with a "confused" BMC other than the wait
 awhile.
+#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 .SH "ORIGIN"
 Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
 This software is open source and distributed under the terms of the

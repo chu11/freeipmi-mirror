@@ -1,0 +1,2 @@
+.SH "REPORTING BUGS"
+Report bugs to <freeipmi\-users@gnu.org> or <freeipmi\-devel@gnu.org>.
