@@ -17,18 +17,23 @@ Provides fiid templates and 'fill' functions for IPMI
 commands.  Also provides macros definining common parameters for
 IPMI commands.  The cmds are used by most other portions of
 libfreeipmi including the 'api' sub-section and tools such as
-ipmipower and ipmiconsole.
+.B ipmipower(8) 
+and 
+.B ipmiconsole(8).
 .TP
 .B debug
 Provides various packet/record dumping utility functions.
-Utilized by the 'api' subsection and by tools such as ipmipower and
-ipmiconsole.
+Utilized by the 'api' subsection and by tools such as 
+.B ipmipower(8) 
+and
+.B ipmiconsole(8).
 .TP
 .B driver
 Provides APIs for in-band IPMI communication.  Currently
 supported drivers are KCS, SSIF, and OpenIPMI.  The 'driver'
-subsction is used by tools such as bmc-watchdog and the 'api'
-sub-section.
+subsction is used by tools such as 
+.B bmc-watchdog(8) 
+and the 'api' sub-section.
 .TP
 .B fiid
 The "FreeIPMI Interface Definition" provides an API used for
@@ -47,25 +52,32 @@ Provides 'assemble' and 'disassemble' functions for building packets
 for individual in-band or out-of-band protocols.  Also provides all
 necessary fiid templates, 'fill' functions, and other utility
 functions necessary to communicate on an IPMI interface.  Utilized by
-the 'api' sub-section and tools such as ipmipower and ipmiconsole.
+the 'api' sub-section and tools such as 
+.B ipmipower(8) and 
+.B ipmiconsole(8).
 .TP
 .B locate
 Provides an API to probe several standards to find default values for
 in-band IPMI communication.  Utilized by the 'api' sub-section and the
-ipmi-locate tool.
+.B ipmi-locate(8) 
+tool.
 .TP
 .B record-format
 Provides macros, fiid-templates, and information on records used in
-IPMI.  Utilized by the 'sdr-cache' subsection and tools like ipmi-sel.
+IPMI.  Utilized by the 'sdr-cache' subsection and tools like 
+.B ipmi-sensors(8).
 .TP
 .B sdr-cache
 Provides and API for creating, caching, reading, and parsing a sensor
-data repository (SDR).  Utilized by tools such as ipmi-sensors and
-ipmimonitoring.
+data repository (SDR).  Utilized by tools such as
+.B ipmi-sensors(8),
+and 
+.B ipmimonitoring(8).
 .TP
 .B spec
 Provides macros and arrays for various other definitions and tables in
-IPMI.  Utilized by tools such as ipmi-sensors.
+IPMI.  Utilized by tools such as 
+.B ipmi-sensors(8).
 .TP
 .B util
 Provides various utility functions for the calculation of keys, sensor
@@ -76,7 +88,7 @@ readings, etc.  Utilized by most of the rest of FreeIPMI.
 .PP
 /usr/include/freeipmi/
 
-.SH COPYRIGHT
+.SH "COPYRIGHT"
 Copyright \(co 2003-2008 FreeIPMI Core Team.  
 This program is free software; you may redistribute it under the terms of
 the GNU General Public License.  This program has absolutely no warranty.

@@ -30,7 +30,7 @@ pef-config
 -----------
 * conf.5 manpage
 * how to specify event reading type codes easily
-advanced option??
+- advanced option??
 
 general
 -------
@@ -43,22 +43,12 @@ config
 config file - support workarounds/etc. for heterogenous cluster?
 map hostname -> IP config
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
-- not for 0.6.X, delay to 0.7.X
 - after this, tweak "known issue" info
 
 ipmiconsole
 -----------
 retry under a different port
 - has never been tested, does any manufacturer do this?
-
-ASUS issues to resolve
-----------------------
-K_g status from get channel authentication capabilities incorrect (P5MT-R)
-SOL report incorrect port (P5MT-R)
-duplicate seq number (P5M2)
-SOL config read (P5M2, P5MT-R)
-get/st payload access (P5M2, P5MT-R)
-invalid RAKP2 err code (P5MT-R)
 
 RELEASE TODOS - Do on every release
 -----------------------------------
