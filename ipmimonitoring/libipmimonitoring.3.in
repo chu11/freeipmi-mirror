@@ -1,5 +1,5 @@
 .\"############################################################################
-.\"  $Id: libipmimonitoring.3.in,v 1.15 2008-04-08 16:58:37 chu11 Exp $
+.\"  $Id: libipmimonitoring.3.in,v 1.16 2008-04-08 17:03:11 chu11 Exp $
 .\"############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -26,7 +26,7 @@
 .TH LIBIPMIMONITORING 3 "December 2006" "LLNL" "LIBIPMIMONITORING"
 .SH "NAME"
 libipmimonitoring \- a library for IPMI sensor monitoring
-.SH SYNOPSIS
+.SH "SYNOPSIS"
 .B #include <ipmi_monitoring.h>
 .sp
 .BI "int ipmi_monitoring_init(unsigned int debug_flags, int *errnum);"
@@ -85,7 +85,7 @@ Interpretation rules have not been written for all sensors
 permutations and types.  If sensor interpretation rules are needed,
 please contact the author listed below.
 
-.SH STATE CONFIGURATION 
+.SH "STATE CONFIGURATION" 
 The interpretation of sensors is configurable via the configuration
 file stored at @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  Various
 states returnable by IPMI based sensors can be assigned NOMINAL,
@@ -93,7 +93,7 @@ WARNING, or CRITICAL states to be returned by the libipmimonitoring
 library.  If multiple states are triggered on a sensor reading, the
 more severe state is returned to the user.
 
-.SH FILES
+.SH "FILES"
 @IPMI_MONITORING_SDR_CACHE_DIR@
 
 @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
@@ -102,3 +102,6 @@ more severe state is returned to the user.
 Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
 This software is open source and distributed under the terms of the
 Gnu GPL.
+
+.SH "SEE ALSO"
+ipmimonitoring(8)

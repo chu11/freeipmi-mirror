@@ -4,7 +4,7 @@ FreeIPMI - FreeIPMI overview
 .SH Introduction
 FreeIPMI provides in-band and out-of-band IPMI software based on the
 IPMI v1.5/2.0 specification.
-.SH Project Libraries and Tools
+.SH "Project Libraries and Tools"
 .B Libfreeipmi
 .PP
 A C library that includes KCS, SSIF, and OpenIPMI drivers, IPMI
@@ -96,7 +96,7 @@ An IPMI tool for OEM specific commands.
 .PP
 A tool, daemon, and library for IPMI node detection.
 .PP
-.SH Getting Started with IPMI
+.SH "Getting Started with IPMI"
 IPMI can be used in-band (i.e. running on a machine locally) or
 out-of-band (i.e. connecting remotely).
 .PP
@@ -149,7 +149,7 @@ be specified.  Some vendors may have not implemented IPMI properly and
 a vendor specific workaround may also be necessary.  See tool manpages
 for more information and general trouble-shooting information.
 
-.SH HPC Support
+.SH "HPC Support"
 Much of FreeIPMI was written with HPC support in mind.  The
 configuration tools 
 .B bmc-config(8), 

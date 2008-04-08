@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmidetect.conf.5.in,v 1.10 2008-04-08 17:03:10 chu11 Exp $
+.\"$Id: ipmidetect.conf.5.in,v 1.11 2008-04-08 17:05:46 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -35,7 +35,7 @@ API function.
 .LP
 The configuration file is stored at @IPMIDETECT_CONFIG_FILE_DEFAULT@.
 
-.SH CONFIGURATION OPTIONS
+.SH "CONFIGURATION OPTIONS"
 The following are a list of configuration options that can be
 specified in the configuration file.  Each configuration option must
 be listed on a separate line.  Arguments for an option are separated
@@ -56,5 +56,5 @@ Specify the port.
 Specify the timeout length in seconds.
 .SH "FILES"
 @IPMIDETECT_CONFIG_FILE_DEFAULT@
-.SH SEE ALSO
+.SH "SEE ALSO"
 libipmidetect(3), ipmidetect(8)

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.19 2008-04-07 22:55:29 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.20 2008-04-08 17:03:11 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -138,7 +138,7 @@ Core dumps are enabled.
 Before placing ipmimonitoring in a production system, it is recommended
 that the program be compiled with debugging turned off.
 \}
-.SH FILES
+.SH "FILES"
 @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
 
 .SH "ORIGIN"

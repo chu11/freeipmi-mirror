@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: libipmidetect.3.in,v 1.8 2008-04-08 17:03:11 chu11 Exp $
+.\"$Id: libipmidetect.3.in,v 1.9 2008-04-08 17:05:46 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -65,5 +65,5 @@ daemon.
 
 .SH "FILES"
 /usr/include/ipmidetect.h
-.SH SEE ALSO
+.SH "SEE ALSO"
 ipmidetect(8), ipmidetectd(8)
