@@ -18,6 +18,8 @@
 	gpl info.
 	
 	* Add copyrights to all manpages appropriately.
+
+	* Remove "ORIGIN" and "AUTHORS" from most manpages.
 	
 2008-04-07  Albert Chu <chu11@llnl.gov>
 
