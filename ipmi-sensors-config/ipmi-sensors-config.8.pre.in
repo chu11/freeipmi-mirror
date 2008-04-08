@@ -1,7 +1,7 @@
 .TH IPMI-SENSORS-CONFIG 8 "@ISODATE@" "ipmi-sensors-config @PACKAGE_VERSION@" "System Commands"
-.SH NAME
+.SH "NAME"
 ipmi-sensors-config \- configure sensors
-.SH DESCRIPTION
+.SH "DESCRIPTION"
 .B Ipmi-sensors-config
 is used to get and set sensor configuration parameters, such as
 thresholds.  For more general sensor reading and/or monitoring, it is
@@ -37,7 +37,7 @@ after configuring new thresholds.
 .LP
 See GENERAL USE below for a description on how most will want to use
 .B Ipmi-sensors-config.
-.SH OPTIONS
+.SH "OPTIONS"
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname.man>
@@ -115,7 +115,7 @@ Commit all configuration values from the sensor-data1.conf file.
 #include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
-.SH COPYRIGHT
+.SH "COPYRIGHT"
 Copyright \(co 2007-2008 FreeIPMI Core Team.  
 This program is free software; you may redistribute it under the terms of
 the GNU General Public License.  This program has absolutely no warranty.

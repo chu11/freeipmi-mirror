@@ -1,5 +1,5 @@
 .TH FREEIPMI 7 "@ISODATE" "FreeIPMI @PACKAGE_VERSION@" "Overview"
-.SH NAME
+.SH "NAME"
 FreeIPMI - FreeIPMI overview
 .SH Introduction
 FreeIPMI provides in-band and out-of-band IPMI software based on the
@@ -162,7 +162,7 @@ specified on the command line at the same time.  See tool manpages for
 more information.  Also see the document freeipmi-hostrange.txt for
 detailed usage and explanation.
 
-.SH COPYRIGHT
+.SH "COPYRIGHT"
 Copyright \(co 2003-2008 FreeIPMI Core Team.  
 This program is free software; you may redistribute it under the terms of
 the GNU General Public License.  This program has absolutely no warranty.

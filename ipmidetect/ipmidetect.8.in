@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmidetect.8.in,v 1.10 2008-04-07 22:55:29 chu11 Exp $
+.\"$Id: ipmidetect.8.in,v 1.11 2008-04-08 16:58:37 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -24,13 +24,13 @@
 .\"  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
 .\"############################################################################
 .TH Ipmidetect 8 "February 2007" "Ipmidetect @VERSION@" "Ipmidetect"
-.SH NAME
+.SH "NAME"
 ipmidetect \- list detected and/or undetected IPMI interfaces in a cluster
 .SH SYNOPSIS
 .B ipmidetect
 [\fIOPTION\fR]... [\fINODES\fR]...
 .br
-.SH DESCRIPTION
+.SH "DESCRIPTION"
 .B ipmidetect
 lists which IPMI nodes have been detected or undetected in a cluster.
 This information is provided by the
@@ -50,7 +50,7 @@ separated lists.  See the section below on HOST RANGES for
 instructions on how to list hosts in hostrange format.  The hostnames
 listed must be the shortened names of hostnames.
 
-.SH OPTIONS
+.SH "OPTIONS"
 .TP
 .B "-h, --help"
 Print help and exit

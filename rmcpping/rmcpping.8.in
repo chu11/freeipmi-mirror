@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: rmcpping.8.in,v 1.19 2008-04-07 22:55:30 chu11 Exp $
+.\"$Id: rmcpping.8.in,v 1.20 2008-04-08 16:58:37 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -24,7 +24,7 @@
 .\"  with Ipmiping.  If not, see <http://www.gnu.org/licenses/>.
 .\"############################################################################
 .TH RMCPING 8 "@ISODATE@" "rmcpping @PACKAGE_VERSION@" "System Manager Commands"
-.SH NAME
+.SH "NAME"
 rmcpping \- send RMCP Ping to network hosts
 .SH "SYNOPSIS"
 .B rmcpping [OPTIONS] destination
@@ -38,7 +38,7 @@ be randomized.
 .B rmcpping
 will return 0 to the environment if it receives atleast 1 response
 from the remote host.  Otherwise, it exits with a value of 1.
-.SH OPTIONS
+.SH "OPTIONS"
 The following options are available 
 .TP
 .I "-h"

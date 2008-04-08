@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmidetect.conf.5.in,v 1.8 2008-03-28 16:52:54 chu11 Exp $
+.\"$Id: ipmidetect.conf.5.in,v 1.9 2008-04-08 16:58:37 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -25,9 +25,9 @@
 .\"############################################################################
 
 .TH IPMIDETECT.CONF 5 "February 2007" "LLNL" "LIBIPMIDETECT"
-.SH NAME
+.SH "NAME"
 ipmidetect.conf \- specify alternate default values for the ipmidetect library
-.SH DESCRIPTION
+.SH "DESCRIPTION"
 Through a configuration file, system administrators may override the
 default values used in the 
 .BR ipmidetect_load_data(3)

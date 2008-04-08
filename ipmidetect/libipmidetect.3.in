@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: libipmidetect.3.in,v 1.6 2008-04-07 23:08:58 chu11 Exp $
+.\"$Id: libipmidetect.3.in,v 1.7 2008-04-08 16:58:37 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -25,7 +25,7 @@
 .\"############################################################################
 .\"
 .TH LIBIPMIDETECT 3 "February 2007" "LIBIPMIDETECT @VERSION@" "LIBIPMIDETECT"
-.SH NAME
+.SH "NAME"
 libipmidetect \- a library of functions to determine if a node is detected
 or undetected
 .SH SYNOPSIS
@@ -53,7 +53,7 @@ or undetected
 .sp
 .BI "int ipmidetect_is_node_undetected(ipmidetect_t handle, const char *node);"
 .br
-.SH DESCRIPTION
+.SH "DESCRIPTION"
 .B Libipmidetect 
 implements a high level API for determing which nodes in
 a cluster do or do-not support IPMI.  This library is primarily useful

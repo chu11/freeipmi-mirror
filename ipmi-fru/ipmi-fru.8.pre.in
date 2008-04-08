@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.17 2008-04-07 22:55:29 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.18 2008-04-08 16:58:36 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -25,12 +25,12 @@
 .\"  with Ipmi-fru.  If not, see <http://www.gnu.org/licenses/>.
 .\"#############################################################################
 .TH IPMI-FRU 8 "@ISODATE@" "ipmi-fru @PACKAGE_VERSION@" "System Commands"
-.SH NAME
+.SH "NAME"
 ipmi-fru \- display FRU information
-.SH DESCRIPTION
+.SH "DESCRIPTION"
 .B Ipmi-fru
 displays Field Replaceable Unit (FRU) Information.
-.SH OPTIONS
+.SH "OPTIONS"
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>

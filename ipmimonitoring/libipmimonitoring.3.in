@@ -1,5 +1,5 @@
 .\"############################################################################
-.\"  $Id: libipmimonitoring.3.in,v 1.14 2008-04-07 23:08:58 chu11 Exp $
+.\"  $Id: libipmimonitoring.3.in,v 1.15 2008-04-08 16:58:37 chu11 Exp $
 .\"############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -24,7 +24,7 @@
 .\"  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 .\"############################################################################
 .TH LIBIPMIMONITORING 3 "December 2006" "LLNL" "LIBIPMIMONITORING"
-.SH NAME
+.SH "NAME"
 libipmimonitoring \- a library for IPMI sensor monitoring
 .SH SYNOPSIS
 .B #include <ipmi_monitoring.h>
@@ -66,7 +66,7 @@ libipmimonitoring \- a library for IPMI sensor monitoring
 .BI "void ipmi_monitoring_iterator_destroy(ipmi_monitoring_ctx_t c);"
 .sp
 .br
-.SH DESCRIPTION
+.SH "DESCRIPTION"
 The 
 .B Libipmimonitoring 
 implements a high level sensor monitoring API for IPMI sensors.  The

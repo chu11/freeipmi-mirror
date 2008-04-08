@@ -1,5 +1,5 @@
 .TH LIBFREEIPMI 3 "@ISODATE" "libfreeipmi @PACKAGE_VERSION@" "LIBFREEIPMI"
-.SH NAME
+.SH "NAME"
 libfreeipmi - FreeIPMI library
 .SH Introduction
 Libfreeipmi is the primary library that most of the FreeIPMI tools are based
