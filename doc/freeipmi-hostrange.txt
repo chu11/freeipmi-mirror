@@ -431,11 +431,9 @@ The architecture of bmc-config was subsequently used in pef-config and
 ipmi-sensors-config, which is why those tools do not support
 hostranges as well.
 
-An alternate hostrange output model is supported in ipmipower.  This
-is due partly to legacy but mostly due to technical reasons.
-Ipmipower was developed with a different architecture than bmc-info,
+Ipmipower was written with a different architecture than bmc-info,
 ipmi-sensors, ipmi-sel, etc. because of need for it to interact with
 Powerman, so it cannot use the parallel stdout libraries developed.
-It effectively emulates the --buffer-output, --consolidate-output, and
+It instead emulates the --buffer-output, --consolidate-output, and
 --fanout functionality of the other tools.
 
