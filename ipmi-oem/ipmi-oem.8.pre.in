@@ -1,7 +1,7 @@
 .TH IPMI-OEM 8 "@ISODATE@" "IPMI OEM version @PACKAGE_VERSION@" "User Commands"
 .SH "NAME"
 ipmi-oem \- IPMI OEM utility
-.SH SYNOPSIS
+.SH "SYNOPSIS"
 .B ipmi-oem
 [\fIOPTION\fR...] <OEMID> <OEMCMD> [OEMOPTION]
 .SH "DESCRIPTION"

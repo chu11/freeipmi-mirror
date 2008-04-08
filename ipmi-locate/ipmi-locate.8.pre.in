@@ -1,7 +1,7 @@
 .TH IPMI-LOCATE 8 "@ISODATE@" "IPMI Locate version @PACKAGE_VERSION@" "User Commands"
 .SH "NAME"
 IPMI \- IPMI probing utility
-.SH SYNOPSIS
+.SH "SYNOPSIS"
 .B ipmi-locate
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"

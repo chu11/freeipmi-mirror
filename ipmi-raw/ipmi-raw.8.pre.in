@@ -1,7 +1,7 @@
 .TH IPMI-RAW 8 "@ISODATE@" "IPMI Raw version @PACKAGE_VERSION@" "User Commands"
 .SH "NAME"
 ipmi-raw \- IPMI raw communication utility
-.SH SYNOPSIS
+.SH "SYNOPSIS"
 .B ipmi-raw
 [\fIOPTION\fR...] <lun> <netfn> [\fICOMMAND-HEX-BYTES\fR]
 .SH "DESCRIPTION"
