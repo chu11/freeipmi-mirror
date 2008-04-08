@@ -28,6 +28,8 @@ EXTRA_DIST = \
 	manpage-common-hostranged-text-localhost.man \
 	manpage-common-sdr-options.man \
 	manpage-common-ignore-sdr-cache.man \
+	manpage-common-config-tool-options.man \
+	manpage-common-config-tool-general-use.man \
 	manpage-common-troubleshooting.man \
 	manpage-common-known-issues.man \
 	manpage-common-known-issues-ping.man \

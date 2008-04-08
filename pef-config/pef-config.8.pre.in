@@ -21,47 +21,8 @@ is a Platform Event Filtering (PEF) configuration utility.
 .TP
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about PEF configuration.
-.TP
-\fB\-o\fR, \fB\-\-checkout\fR
-Fetch configuration information.
-.TP
-\fB\-c\fR, \fB\-\-commit\fR
-Update configuration information from a config file or key pairs.
-.TP
-\fB\-d\fR, \fB\-\-diff\fR
-Show differences between stored information and a config file or key pairs.
-.TP
-\fB\-n\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
-Specify a config file for checkout/commit/diff.
-.TP
-\fB\-e\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
-Specify KEY=VALUE pairs for checkout/commit/diff.  This option can be
-used multiple times.  On commit, any KEY=VALUE pairs will overwrite
-any pairs specified in a file with \fB\-\-filename\fR.
-.TP
-\fB\-S\fR "SECTION", \fB\-\-section=\fR"SECTION"
-Specify a SECTION for checkout.  This option can be used multiple times.
-.TP
-\fB\-L\fR, \fB\-\-listsections\fR
-List available sections for checkout.
-.TP
-\fB\-v\fR, \fB\-\-verbose\fR
-Print additional detailed information.
-.SH "GENERAL USE"
-Most users of
-.B pef-config
-will want to:
-.LP
-A) Run
-.B pef-config
-with --checkout to get a copy of the current configuration and
-store it in a file.  The standard output can be redirected to a file
-or a file can be specified with the --filename option.
-.LP
-B) Edit the configuration file with an editor.
-.LP
-C) Commit the configuration back using the --commit option and specifying
-the configuration file with the --filename option.
+#include <@top_srcdir@/common/doc/manpage-common-config-tool-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-config-tool-general-use.man>
 .SH "EDITING THE CHECKOUT FILE"
 Options for editing fields in the checkout file are usually listed in
 a comment above the field.  When there are to many options to make it

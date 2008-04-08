@@ -20,6 +20,12 @@
 	* Add copyrights to all manpages appropriately.
 
 	* Remove "ORIGIN" and "AUTHORS" from most manpages.
+
+	* common/doc/manpage-common-config-tool-general-use.man,
+	common/doc/manpage-common-config-tool-options.man: New files.
+
+	* bmc-config/, pef-config/, ipmi-sensors-config/: Use new common
+	config-tool manpage text.
 	
 2008-04-07  Albert Chu <chu11@llnl.gov>
 

@@ -51,47 +51,8 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
-.TP
-\fB\-o\fR, \fB\-\-checkout\fR
-Fetch configuration information.
-.TP
-\fB\-c\fR, \fB\-\-commit\fR
-Update configuration information from a config file or key pairs.
-.TP
-\fB\-d\fR, \fB\-\-diff\fR
-Show differences between stored information and a config file or key pairs.
-.TP
-\fB\-n\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
-Specify a config file for checkout/commit/diff.
-.TP
-\fB\-e\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
-Specify KEY=VALUE pairs for checkout/commit/diff.  This option can be
-used multiple times.  On commit, any KEY=VALUE pairs will overwrite
-any pairs specified in a file with \fB\-\-filename\fR.
-.TP
-\fB\-S\fR "SECTION", \fB\-\-section=\fR"SECTION"
-Specify a SECTION for checkout.  This option can be used multiple times.
-.TP
-\fB\-L\fR, \fB\-\-listsections\fR
-List available sections for checkout.
-.TP
-\fB\-v\fR, \fB\-\-verbose\fR
-Print additional detailed information.
-.SH "GENERAL USE"
-Most users of 
-.B ipmi-sensors-config
-will want to:
-.LP
-A) Run 
-.B ipmi-sensors-config
-with --checkout to get a copy of the current configuration and
-store it in a file.  The standard output can be redirected to a file
-or a file can be specified with the --filename option.
-.LP
-B) Edit the configuration file with an editor.  
-.LP
-C) Commit the configuration back using the --commit option and specifying
-the configuration file with the --filename option.
+#include <@top_srcdir@/common/doc/manpage-common-config-tool-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-config-tool-general-use.man>
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
