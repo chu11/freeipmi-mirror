@@ -16,7 +16,6 @@ libfreeipmi:
 
 ipmipower
 ---------
-- fanout/something mechanism to limit parallelism??
 - redo to utilize newer api?
   
 bmc-config
@@ -30,13 +29,12 @@ pef-config
 -----------
 * conf.5 manpage
 * how to specify event reading type codes easily
-- advanced option??
 
 general
 -------
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
--x option for excluding hosts
+-x option for excluding hosts??
 
 config
 ------
