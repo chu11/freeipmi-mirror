@@ -1,3 +1,9 @@
+2008-04-09  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Prepare for beta release.
+
+	* Tagged Release-0_6_0_beta1.
+	
 2008-04-08  Albert Chu <chu11@llnl.gov>
 
 	* doc/: More minor updates.
