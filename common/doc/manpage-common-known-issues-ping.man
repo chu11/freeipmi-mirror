@@ -1,0 +1,10 @@
+.SH "KNOWN ISSUES"
+It has been observed that some remote BMCs can get "confused" and
+delay packet responses if duplicate packets (with duplicate sequence
+numbers) are sent in succession very quickly.  There is no known way
+to cleanly deal with a "confused" BMC other than the wait awhile.
+.PP
+Unlike
+.B ping(8),
+local network devicess (i.e. 127.0.0.1) cannot be "pinged".
+

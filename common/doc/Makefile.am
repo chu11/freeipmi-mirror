@@ -35,4 +35,6 @@ EXTRA_DIST = \
 	manpage-common-known-issues-ping.man \
 	manpage-common-reporting-bugs.man \
 	manpage-common-gpl-library-text.man \
-	manpage-common-gpl-program-text.man
+	manpage-common-gpl-program-text.man \
+	manpage-common-ping-options.man \
+	manpage-common-ping-origin.man

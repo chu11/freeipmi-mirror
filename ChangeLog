@@ -26,6 +26,12 @@
 
 	* bmc-config/, pef-config/, ipmi-sensors-config/: Use new common
 	config-tool manpage text.
+
+	* common/doc/manpage-common-known-issues-ping.man,
+	common/doc/manpage-common-ping-options.man,
+	common/doc/manpage-common-ping-origin.man: New files.
+
+	* ipmiping/, rmcpping/: Use new common manpage text.
 	
 2008-04-07  Albert Chu <chu11@llnl.gov>
 
