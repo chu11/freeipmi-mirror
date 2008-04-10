@@ -123,7 +123,7 @@ options to the tools.  You may use ipmi-locate(8) to help determine
 this information.  Other tools such as dmidecode(8) may also provide
 this information.   
 
-To use IPMI out-of-band, the remote machine must first be configured
+To use IPMI out-of-band, the remote machine's BMC must first be configured
 for out of band communication.  Typically, this involves setting a
 username, password, IP address, MAC address, and a few other
 parameters.  This can be done using the tool bmc-config(8).  Additional

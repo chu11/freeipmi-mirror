@@ -121,24 +121,24 @@ this information.  Other tools such as
 may also provide
 this information.
 .PP
-To use IPMI out-of-band, the remote machine must first be configured
-for out of band communication.  Typically, this involves setting a
-username, password, IP address, MAC address, and a few other
-parameters.  This can be done using the tool 
+To use IPMI out-of-band, the remote machine's BMC must first be
+configured for out of band communication.  Typically, this involves
+setting a username, password, IP address, MAC address, and a few other
+parameters.  This can be done using the tool
 .B bmc-config(8).  
 
-Additional information on how to configure w/ bmc-config can be found
+Additional information on how to configure wit 
+.B bmc-config(8) 
+can be found
 in the
 .B bmc-config.conf(5) 
 manpage.  Some vendors may pre-configure their motherboards with
 default values so that 
 .B bmc-config(8)
 can be used remotely to configure the machine.  However, most of the
-time,
-.B bmc-config(8) 
-must be configured in-band before out-of-band access can be allowed
-(for example, the IP address and MAC address must be minimally
-configured first).
+time, the BMC must be configured in-band before out-of-band access can
+be allowed (for example, the IP address and MAC address must atleast
+be configured).
 
 .PP
 In order to remotely connect to a machine, you typically must specify
