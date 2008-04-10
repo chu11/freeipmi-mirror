@@ -160,7 +160,8 @@ Development
 
 For information on the libraries that can be used to program IPMI
 applications with, please see, please see libfreeipmi(3),
-libipmiconsole(3), libipmimonitoring(3), and libipmidetect(3).
+libipmiconsole(3), libipmimonitoring(3), and libipmidetect(3).  Or
+see the document freeipmi-libraries.txt.
 
 Help, Questions, etc.
 ---------------------

@@ -172,6 +172,7 @@ applications with, please see
 .B libipmiconsole(3),
 .B libipmimonitoring(3), 
 and libipmidetect(3).
+Or see the document freeipmi-libraries.txt.
 
 .SH "COPYRIGHT"
 Copyright \(co 2003-2008 FreeIPMI Core Team.  
