@@ -164,6 +164,15 @@ detailed usage and explanation.
 
 #include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 
+.SH "Development"
+
+For information on the libraries that can be used to program IPMI
+applications with, please see 
+.B libfreeipmi(3), 
+.B libipmiconsole(3),
+.B libipmimonitoring(3), 
+and libipmidetect(3).
+
 .SH "COPYRIGHT"
 Copyright \(co 2003-2008 FreeIPMI Core Team.  
 

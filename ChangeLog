@@ -1,3 +1,7 @@
+2008-04-10  Albert Chu <chu11@llnl.gov>
+
+	* README, doc/freeipmi.7.pre.in: Add info on libraries.
+	
 2008-04-09  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Prepare for beta release.

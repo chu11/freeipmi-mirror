@@ -155,6 +155,13 @@ specified on the command line at the same time.  See tool manpages for
 more information.  Also see the document freeipmi-hostrange.txt for
 detailed usage and explanation.
 
+Development
+-----------
+
+For information on the libraries that can be used to program IPMI
+applications with, please see, please see libfreeipmi(3),
+libipmiconsole(3), libipmimonitoring(3), and libipmidetect(3).
+
 Help, Questions, etc.
 ---------------------
 
