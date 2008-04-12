@@ -8,11 +8,14 @@ noinst_HEADERS = \
 	ipmi-ping.h \
 	cbuf.h \
 	conffile.h \
+	error.h \
 	fd.h \
+	hash.h \
 	hostlist.h \
 	list.h \
 	secure.h \
 	timeval.h \
+	thread.h \
 	pstdout.h \
 	hostrange.h \
 	config-common.h \
@@ -54,10 +57,13 @@ libipmiping_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 libmiscutils_la_SOURCES = \
 	cbuf.c \
 	conffile.c \
+	error.c \
 	fd.c \
+	hash.c \
 	hostlist.c \
 	list.c \
 	secure.c \
+	thread.c \
 	timeval.c
 
 libhostrange_la_SOURCES = pstdout.c hostrange.c

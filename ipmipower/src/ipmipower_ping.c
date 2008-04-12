@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.23 2008-03-28 00:14:47 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.24 2008-04-12 00:05:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -122,18 +122,18 @@ ipmipower_ping_process_pings(int *timeout)
 	  rmcp_ping = Fiid_obj_create(tmpl_cmd_asf_presence_ping);
           
           if (fill_rmcp_hdr_asf(rmcp_hdr) < 0)
-            err_exit("fill_rmcp_hdr_asf: %s", strerror(errno));
+            ierr_exit("fill_rmcp_hdr_asf: %s", strerror(errno));
 
           if (fill_cmd_asf_presence_ping((ics[i].ping_sequence_number_counter % 
                                           (RMCP_ASF_MESSAGE_TAG_MAX + 1)), 
                                          rmcp_ping) < 0)
-            err_exit("fill_cmd_asf_presence_ping: %s", strerror(errno));
+            ierr_exit("fill_cmd_asf_presence_ping: %s", strerror(errno));
             
           if ((len = assemble_rmcp_pkt(rmcp_hdr,
 				       rmcp_ping, 
                                        (uint8_t *)buffer, 
 				       RMCP_PACKET_BUFLEN)) < 0)
-            err_exit("assemble_rmcp_pkt: %s", strerror(errno));
+            ierr_exit("assemble_rmcp_pkt: %s", strerror(errno));
           
 #ifndef NDEBUG
           if (conf->rmcpdump) 
@@ -197,7 +197,7 @@ ipmipower_ping_process_pings(int *timeout)
 				  len, 
                                   rmcp_hdr, 
 				  rmcp_pong) < 0)
-            err_exit("unassemble_rmcp_pkt: %s", strerror(errno));
+            ierr_exit("unassemble_rmcp_pkt: %s", strerror(errno));
           
           /* achu: check for ipmi_support and pong type, but don't
            * check for message tag.  On occassion, I have witnessed

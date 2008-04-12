@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.69 2008-03-28 00:14:45 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.70 2008-04-12 00:05:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -64,13 +64,13 @@ ipmipower_check_checksum(ipmipower_powercmd_t ip, packet_type_t pkt)
   if ((rv = ipmi_lan_check_checksum(ip->obj_lan_msg_hdr_res,
 				    obj_cmd,
 				    ip->obj_lan_msg_trlr_res)) < 0)
-    err_exit("ipmipower_check_checksum(%s:%d): "
-	     "ipmi_lan_check_checksum: %s",
-	     ip->ic->hostname, ip->protocol_state, strerror(errno));
+    ierr_exit("ipmipower_check_checksum(%s:%d): "
+              "ipmi_lan_check_checksum: %s",
+              ip->ic->hostname, ip->protocol_state, strerror(errno));
 
   if (!rv)
-    dbg("ipmipower_check_checksum(%s:%d): checksum check failed",
-        ip->ic->hostname, ip->protocol_state);
+    ierr_dbg("ipmipower_check_checksum(%s:%d): checksum check failed",
+             ip->ic->hostname, ip->protocol_state);
 
   return (int)rv;
 }
@@ -148,9 +148,9 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 								  authentication_type,
 								  (uint8_t *)password,
 								  strlen(conf->password))) < 0)
-	err_exit("ipmipower_check_authentication_code(%s:%d): "
-		 "ipmi_lan_check_packet_session_authentication_code: %s",
-		 ip->ic->hostname, ip->protocol_state, strerror(errno));
+	ierr_exit("ipmipower_check_authentication_code(%s:%d): "
+                  "ipmi_lan_check_packet_session_authentication_code: %s",
+                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
       /* IPMI Workaround (achu)
        *
@@ -167,8 +167,8 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	  && !rv
 	  && check_authcode_retry_flag)
 	{
-	  dbg("ipmipower_check_authentication_code(%s:%d): retry authcode check",
-	      ip->ic->hostname, ip->protocol_state, strerror(errno));
+	  ierr_dbg("ipmipower_check_authentication_code(%s:%d): retry authcode check",
+                   ip->ic->hostname, ip->protocol_state, strerror(errno));
 	  
 	  authentication_type = ip->authentication_type;
 	  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
@@ -186,23 +186,23 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 								      authentication_type,
 								      (uint8_t *)password,
 								      strlen(conf->password))) < 0)
-	    err_exit("ipmipower_check_authentication_code(%s:%d): "
-		     "ipmi_lan_check_session_authentication_code: %s",
-		     ip->ic->hostname, ip->protocol_state, strerror(errno));
+	    ierr_exit("ipmipower_check_authentication_code(%s:%d): "
+                      "ipmi_lan_check_session_authentication_code: %s",
+                      ip->ic->hostname, ip->protocol_state, strerror(errno));
 	  
 	  if (rv)
-	    dbg("ipmipower_check_authentication_code(%s:%d): "
-		"permsgauth authcode re-check passed",
-		ip->ic->hostname, ip->protocol_state);
+	    ierr_dbg("ipmipower_check_authentication_code(%s:%d): "
+                     "permsgauth authcode re-check passed",
+                     ip->ic->hostname, ip->protocol_state);
 	}
     }      
   else	/* 
            (pkt == GET_CHANNEL_CIPHER_SUITES_RES 
-	    || (ip->ipmi_version == IPMI_VERSION_2_0
-	        && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-		    || pkt == GET_CHASSIS_STATUS_RES
-		    || pkt == CHASSIS_CONTROL_RES
-		    || pkt == CLOSE_SESSION_RES)))
+           || (ip->ipmi_version == IPMI_VERSION_2_0
+           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+           || pkt == GET_CHASSIS_STATUS_RES
+           || pkt == CHASSIS_CONTROL_RES
+           || pkt == CLOSE_SESSION_RES)))
 	*/
     {
       /* IPMI 2.0 Checks */
@@ -226,15 +226,15 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 								       (uint8_t *)password,
 								       (password) ? strlen(password) : 0,
 								       ip->obj_rmcpplus_session_trlr_res)) < 0)
-	err_exit("ipmipower_check_authentication_code(%s:%d): "
-		 "ipmi_rmcpplus_check_session_authentication_code: %s",
-		 ip->ic->hostname, ip->protocol_state, strerror(errno));
+	ierr_exit("ipmipower_check_authentication_code(%s:%d): "
+                  "ipmi_rmcpplus_check_session_authentication_code: %s",
+                  ip->ic->hostname, ip->protocol_state, strerror(errno));
     }
 
   if (!rv)
-    dbg("ipmipower_check_authentication_code(%s:%d): "
-	"authentication code check failed",
-	ip->ic->hostname, ip->protocol_state);
+    ierr_dbg("ipmipower_check_authentication_code(%s:%d): "
+             "authentication code check failed",
+             ip->ic->hostname, ip->protocol_state);
   
   return (int)rv;
 }
@@ -282,10 +282,10 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
   else /* 
 	  pkt == ACTIVATE_SESSION_RES  
 	  || (ip->ipmi_version == IPMI_VERSION_1_5
-	      && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-	      || pkt == GET_CHASSIS_STATUS_RES
-	      || pkt == CHASSIS_CONTROL_RES
-	      || pkt == CLOSE_SESSION_RES))
+          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+          || pkt == GET_CHASSIS_STATUS_RES
+          || pkt == CHASSIS_CONTROL_RES
+          || pkt == CLOSE_SESSION_RES))
        */
     Fiid_obj_get(ip->obj_lan_session_hdr_res,
 		 "session_sequence_number", 
@@ -435,9 +435,9 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
 
  out:
   if (!rv)
-    dbg("ipmipower_check_outbound_sequence_number(%s:%d): seq_num: %u, high: %u",
-        ip->ic->hostname, ip->protocol_state, (unsigned int)seq_num, 
-	ip->highest_received_sequence_number);
+    ierr_dbg("ipmipower_check_outbound_sequence_number(%s:%d): seq_num: %u, high: %u",
+             ip->ic->hostname, ip->protocol_state, (unsigned int)seq_num, 
+             ip->highest_received_sequence_number);
   
   return rv;
 }
@@ -496,9 +496,9 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   
   if (session_id != expected_session_id)
-    dbg("ipmipower_check_session_id(%s:%d): session id: %x expected: %x",
-        ip->ic->hostname, ip->protocol_state, (unsigned int)session_id, 
-        (unsigned int)expected_session_id);
+    ierr_dbg("ipmipower_check_session_id(%s:%d): session id: %x expected: %x",
+             ip->ic->hostname, ip->protocol_state, (unsigned int)session_id, 
+             (unsigned int)expected_session_id);
   
   /* IPMI Workaround (achu)
    *
@@ -537,8 +537,8 @@ ipmipower_check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_netfn = IPMI_NET_FN_APP_RS;
   
   if (netfn != expected_netfn)
-    dbg("ipmipower_check_network_function(%s:%d): netfn: %x, expected: %x", 
-        ip->ic->hostname, ip->protocol_state, (unsigned int)netfn, expected_netfn);
+    ierr_dbg("ipmipower_check_network_function(%s:%d): netfn: %x, expected: %x", 
+             ip->ic->hostname, ip->protocol_state, (unsigned int)netfn, expected_netfn);
 
   return ((netfn == expected_netfn) ? 1 : 0);
 }
@@ -580,9 +580,9 @@ ipmipower_check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_cmd = IPMI_CMD_CLOSE_SESSION;
   
   if (cmd != expected_cmd)
-    dbg("ipmipower_check_command(%s:%d): cmd: %x, expected: %x", 
-        ip->ic->hostname, ip->protocol_state, 
-	(unsigned int)cmd, (unsigned int)expected_cmd);
+    ierr_dbg("ipmipower_check_command(%s:%d): cmd: %x, expected: %x", 
+             ip->ic->hostname, ip->protocol_state, 
+             (unsigned int)cmd, (unsigned int)expected_cmd);
   
   return ((cmd == expected_cmd) ? 1 : 0);
 }
@@ -605,9 +605,9 @@ ipmipower_check_requester_sequence_number(ipmipower_powercmd_t ip, packet_type_t
   Fiid_obj_get(ip->obj_lan_msg_hdr_res, "rq_seq", &req_seq);
 
   if (req_seq != expected_req_seq)
-    dbg("ipmipower_check_requester_sequence_number(%s:%d): req_seq: %x, expected: %x",
-        ip->ic->hostname, ip->protocol_state, 
-	(unsigned int)req_seq, (unsigned int)expected_req_seq);
+    ierr_dbg("ipmipower_check_requester_sequence_number(%s:%d): req_seq: %x, expected: %x",
+             ip->ic->hostname, ip->protocol_state, 
+             (unsigned int)req_seq, (unsigned int)expected_req_seq);
   
   return ((req_seq == expected_req_seq) ? 1 : 0);
 }
@@ -630,8 +630,8 @@ ipmipower_check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt)
   Fiid_obj_get(obj_cmd, "comp_code", &comp_code);
   
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
-    dbg("ipmipower_check_completion_code(%s:%d): comp_code: %x", 
-        ip->ic->hostname, ip->protocol_state, (unsigned int)comp_code);
+    ierr_dbg("ipmipower_check_completion_code(%s:%d): comp_code: %x", 
+             ip->ic->hostname, ip->protocol_state, (unsigned int)comp_code);
   
   return ((comp_code == IPMI_COMP_CODE_COMMAND_SUCCESS) ? 1 : 0);
 }
@@ -668,10 +668,10 @@ ipmipower_check_payload_type(ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_payload_type = IPMI_PAYLOAD_TYPE_IPMI;
 
   if (payload_type != expected_payload_type)
-    dbg("ipmipower_check_payload_type(%s:%d): "
-	"payload_type: %x, expected: %x",
-        ip->ic->hostname, ip->protocol_state, 
-	(unsigned int)payload_type, (unsigned int)expected_payload_type);
+    ierr_dbg("ipmipower_check_payload_type(%s:%d): "
+             "payload_type: %x, expected: %x",
+             ip->ic->hostname, ip->protocol_state, 
+             (unsigned int)payload_type, (unsigned int)expected_payload_type);
 
   return ((payload_type == expected_payload_type) ? 1 : 0);
 }
@@ -698,11 +698,11 @@ ipmipower_check_message_tag(ipmipower_powercmd_t ip, packet_type_t pkt)
   expected_message_tag = ip->initial_message_tag + ip->message_tag_count;
 
   if (message_tag != expected_message_tag)
-    dbg("ipmipower_check_message_tag(%s:%d): "
-	"message_tag: %x, expected: %x",
-        ip->ic->hostname, ip->protocol_state, 
-	(unsigned int)message_tag, 
-	(unsigned int)expected_message_tag);
+    ierr_dbg("ipmipower_check_message_tag(%s:%d): "
+             "message_tag: %x, expected: %x",
+             ip->ic->hostname, ip->protocol_state, 
+             (unsigned int)message_tag, 
+             (unsigned int)expected_message_tag);
 
   return ((message_tag == expected_message_tag) ? 1 : 0);
 }
@@ -726,10 +726,10 @@ ipmipower_check_rmcpplus_status_code(ipmipower_powercmd_t ip, packet_type_t pkt)
 	       &rmcpplus_status_code);
 
   if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
-    dbg("ipmipower_check_rmcpplus_status_code(%s:%d): "
-	"rmcpplus_status_code: %x",
-        ip->ic->hostname, ip->protocol_state, 
-	(unsigned int)rmcpplus_status_code);
+    ierr_dbg("ipmipower_check_rmcpplus_status_code(%s:%d): "
+             "rmcpplus_status_code: %x",
+             ip->ic->hostname, ip->protocol_state, 
+             (unsigned int)rmcpplus_status_code);
 
   return ((rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS) ? 1 : 0);
 }
@@ -775,7 +775,7 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
 	       && (val == IPMI_PRIVILEGE_LEVEL_OPERATOR
 		   || val == IPMI_PRIVILEGE_LEVEL_ADMIN
 		   || val == IPMI_PRIVILEGE_LEVEL_OEM))
-     rv = 1;
+        rv = 1;
       else if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
 	       && (val == IPMI_PRIVILEGE_LEVEL_ADMIN
 		   || val == IPMI_PRIVILEGE_LEVEL_OEM))
@@ -785,11 +785,11 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
     }
 
   if (!rv)
-    dbg("ipmipower_check_open_session_response_privilege(%s:%d): "
-        "invalid privilege: %x, expected: %x",
-        ip->ic->hostname, ip->protocol_state,
-        (unsigned int)val,
-        (unsigned int)ip->requested_maximum_privilege_level);
+    ierr_dbg("ipmipower_check_open_session_response_privilege(%s:%d): "
+             "invalid privilege: %x, expected: %x",
+             ip->ic->hostname, ip->protocol_state,
+             (unsigned int)val,
+             (unsigned int)ip->requested_maximum_privilege_level);
   
   return (rv);
 }
@@ -861,7 +861,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
       if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
 	  && keybuf_len == 1) 
 	Fiid_obj_clear_field(ip->obj_rakp_message_2_res, "key_exchange_authentication_code");
-       else if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+      else if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
 	       && keybuf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
 	Fiid_obj_set_data(ip->obj_rakp_message_2_res,
 			  "key_exchange_authentication_code",
@@ -959,14 +959,14 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
                                                                         username,
                                                                         username_len,
                                                                         ip->obj_rakp_message_2_res)) < 0)
-    err_exit("ipmipower_check_rakp_2_key_exchange_authentication_code(%s:%d): "
-	     "ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code: %s",
-	     ip->ic->hostname, ip->protocol_state, strerror(errno));
+    ierr_exit("ipmipower_check_rakp_2_key_exchange_authentication_code(%s:%d): "
+              "ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code: %s",
+              ip->ic->hostname, ip->protocol_state, strerror(errno));
 
   if (!rv)
-    dbg("ipmipower_check_rakp_2_key_exchange_authentication_code(%s:%d): "
-	"rakp 2 check failed",
-        ip->ic->hostname, ip->protocol_state);
+    ierr_dbg("ipmipower_check_rakp_2_key_exchange_authentication_code(%s:%d): "
+             "rakp 2 check failed",
+             ip->ic->hostname, ip->protocol_state);
 
   return (int)rv;
 }
@@ -1035,14 +1035,14 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
                                                              managed_system_guid,
                                                              managed_system_guid_len,
                                                              ip->obj_rakp_message_4_res)) < 0)
-    err_exit("ipmipower_check_rakp_4_integrity_check_value(%s:%d): "
-	     "ipmipower_check_rakp_4_integrity_check_value: %s",
-	     ip->ic->hostname, ip->protocol_state, strerror(errno));
+    ierr_exit("ipmipower_check_rakp_4_integrity_check_value(%s:%d): "
+              "ipmipower_check_rakp_4_integrity_check_value: %s",
+              ip->ic->hostname, ip->protocol_state, strerror(errno));
 
   if (!rv)
-    dbg("ipmipower_check_rakp_4_integrity_check_value(%s:%d): "
-	"rakp 4 check failed",
-        ip->ic->hostname, ip->protocol_state);
+    ierr_dbg("ipmipower_check_rakp_4_integrity_check_value(%s:%d): "
+             "rakp 4 check failed",
+             ip->ic->hostname, ip->protocol_state);
 
   return (int)rv;
 }
@@ -1069,14 +1069,14 @@ ipmipower_check_payload_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   if ((rv = ipmi_rmcpplus_check_payload_pad(confidentiality_algorithm,
 					    ip->obj_rmcpplus_payload_res)) < 0)
-    err_exit("ipmipower_check_payload_pad(%s:%d): "
-	     "ipmi_rmcpplus_check_payload_pad: %s",
-	     ip->ic->hostname, ip->protocol_state, strerror(errno));
+    ierr_exit("ipmipower_check_payload_pad(%s:%d): "
+              "ipmi_rmcpplus_check_payload_pad: %s",
+              ip->ic->hostname, ip->protocol_state, strerror(errno));
 
   if (!rv)
-    dbg("ipmipower_check_payload_pad(%s:%d): "
-	"payload pad check failed",
-        ip->ic->hostname, ip->protocol_state);
+    ierr_dbg("ipmipower_check_payload_pad(%s:%d): "
+             "payload pad check failed",
+             ip->ic->hostname, ip->protocol_state);
 
   return (int)rv;
 }
@@ -1096,14 +1096,14 @@ ipmipower_check_integrity_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
                  || pkt == CLOSE_SESSION_RES)));
 
   if ((rv = ipmi_rmcpplus_check_integrity_pad(ip->obj_rmcpplus_session_trlr_res)) < 0)
-    err_exit("ipmipower_check_integrity_pad(%s:%d): "
-	     "ipmi_rmcpplus_check_integrity_pad: %s",
-	     ip->ic->hostname, ip->protocol_state, strerror(errno));
+    ierr_exit("ipmipower_check_integrity_pad(%s:%d): "
+              "ipmi_rmcpplus_check_integrity_pad: %s",
+              ip->ic->hostname, ip->protocol_state, strerror(errno));
 
   if (!rv)
-    dbg("ipmipower_check_integrity_pad(%s:%d): "
-	"integrity pad check failed",
-        ip->ic->hostname, ip->protocol_state);
+    ierr_dbg("ipmipower_check_integrity_pad(%s:%d): "
+             "integrity pad check failed",
+             ip->ic->hostname, ip->protocol_state);
 
   return (int)rv;
 }

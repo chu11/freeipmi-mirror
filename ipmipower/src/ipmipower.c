@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.43 2008-03-28 00:14:45 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.44 2008-04-12 00:05:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -91,14 +91,14 @@ _security_initialization(void)
   struct rlimit rlim;
 
   if (getrlimit(RLIMIT_CORE, &rlim) < 0)
-    err_exit("getrlimit: %s", strerror(errno));
+    ierr_exit("getrlimit: %s", strerror(errno));
 
   rlim.rlim_cur = 0;
   if (setrlimit(RLIMIT_CORE,&rlim) < 0)
-    err_exit("setrlimit: %s", strerror(errno));
+    ierr_exit("setrlimit: %s", strerror(errno));
 #endif /* NDEBUG */
   if (ipmi_rmcpplus_init() < 0)
-    err_exit("ipmi_rmcpplus_init");
+    ierr_exit("ipmi_rmcpplus_init");
 }
 
 /* _setup
@@ -137,11 +137,11 @@ _setup(void)
   for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++) 
     {
       if ((output_hostrange[i] = hostlist_create(NULL)) == NULL)
-        err_exit("hostlist_create() error");
+        ierr_exit("hostlist_create() error");
     }
   
   /* errors should always go to atleast the syslog */
-  err_syslog(1);
+  ierr_syslog(1);
 
 #ifndef NDEBUG
   if (strlen(conf->logfile)) 
@@ -149,18 +149,18 @@ _setup(void)
       conf->logfile_fd = open(conf->logfile, O_WRONLY | O_CREAT | O_APPEND,
                               S_IRUSR | S_IWUSR);
       if (conf->logfile_fd < 0)
-        err_exit("error opening log file %s: %s", conf->logfile, strerror(errno));
+        ierr_exit("error opening log file %s: %s", conf->logfile, strerror(errno));
     }
 
   /* if debug set, send debug info to stderr too */
-  err_cbuf(conf->debug, ttyerr);
+  ierr_cbuf(conf->debug, ttyerr);
 
-  /* on err_exit() dump cbuf data to appropriate places too */
-  err_cbuf_dump_file_stream(conf->debug, stderr);
-  err_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
+  /* on ierr_exit() dump cbuf data to appropriate places too */
+  ierr_cbuf_dump_file_stream(conf->debug, stderr);
+  ierr_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
 
 #else  /* !NDEBUG */
-  err_cbuf(0, 0);
+  ierr_cbuf(0, 0);
 #endif /* !NDEBUG */
 }
 
@@ -213,20 +213,20 @@ _sendto(cbuf_t buf, int fd, struct sockaddr_in *destaddr)
   char buffer[IPMI_PACKET_BUFLEN];
 
   if ((n = cbuf_read(buf, buffer, IPMI_PACKET_BUFLEN)) < 0)
-    err_exit("_sendto(%d): cbuf_read: %s", fd, strerror(errno));
+    ierr_exit("_sendto(%d): cbuf_read: %s", fd, strerror(errno));
   if (n == IPMI_PACKET_BUFLEN)
-    err_exit("_sendto: Buffer full");
+    ierr_exit("_sendto: Buffer full");
     
   rv = ipmi_lan_sendto(fd, buffer, n, 0, (struct sockaddr *)destaddr,
                        sizeof(struct sockaddr_in));
   if (rv < 0)
-    err_exit("_sendto: ipmi_lan_sendto %s", strerror(errno));
+    ierr_exit("_sendto: ipmi_lan_sendto %s", strerror(errno));
   if (rv != n)
-    err_exit("_sendto: ipmi_lan_sendto rv=%d n=%d", rv, n);
+    ierr_exit("_sendto: ipmi_lan_sendto rv=%d n=%d", rv, n);
   
   /* cbuf should be empty now */
   if (!cbuf_is_empty(buf))
-    err_exit("_sendto: cbuf not empty");
+    ierr_exit("_sendto: cbuf not empty");
 }
 
 static void 
@@ -240,9 +240,9 @@ _recvfrom(cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
   rv = ipmi_lan_recvfrom(fd, buffer, IPMI_PACKET_BUFLEN, 0, 
 			 (struct sockaddr *)&from, &fromlen);
   if (rv < 0)
-    err_exit("_recvfrom: ipmi_lan_recvfrom: %s", strerror(errno));
+    ierr_exit("_recvfrom: ipmi_lan_recvfrom: %s", strerror(errno));
   if (rv == 0)
-    err_exit("_recvfrom: ipmi_lan_recvfrom: EOF");
+    ierr_exit("_recvfrom: ipmi_lan_recvfrom: EOF");
   
   /* Don't store if this is packet is strange for some reason */
   if (from.sin_family != AF_INET 
@@ -252,20 +252,20 @@ _recvfrom(cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
   /* cbuf should be empty, but if it isn't, empty it */
   if (!cbuf_is_empty(buf)) 
     {
-      err_output("_recvfrom: cbuf not empty, draining");
+      ierr_output("_recvfrom: cbuf not empty, draining");
       do {
         char tempbuf[IPMI_PACKET_BUFLEN];
         if (cbuf_read(buf, tempbuf, IPMI_PACKET_BUFLEN) < 0)
-            err_exit("_recvfrom: cbuf_read: %s", strerror(errno));
+            ierr_exit("_recvfrom: cbuf_read: %s", strerror(errno));
       } while(!cbuf_is_empty(buf));
     }
 
   if ((n = cbuf_write(buf, buffer, rv, &dropped)) < 0)
-    err_exit("_recvfrom(%d): cbuf_write: %s", fd, strerror(errno));
+    ierr_exit("_recvfrom(%d): cbuf_write: %s", fd, strerror(errno));
   if (n != rv)
-    err_exit("_recvfrom: rv=%d n=%d", rv, n);
+    ierr_exit("_recvfrom: rv=%d n=%d", rv, n);
   if (dropped != 0)
-    err_output("_recvfrom: read dropped %d bytes", dropped);
+    ierr_output("_recvfrom: read dropped %d bytes", dropped);
 }
 
 /* _poll_loop
@@ -370,8 +370,8 @@ _poll_loop(int non_interactive)
         {
           if (pfds[i*2].revents & POLLERR) 
             {
-              err_output("_poll_loop: IPMI POLLERR, %s, %d", ics[i].hostname, 
-                         ics[i].ipmi_fd);
+              ierr_output("_poll_loop: IPMI POLLERR, %s, %d", ics[i].hostname, 
+                          ics[i].ipmi_fd);
               continue;
             }
           if (pfds[i*2].revents & POLLIN) 
@@ -384,8 +384,8 @@ _poll_loop(int non_interactive)
           
           if (pfds[i*2+1].revents & POLLERR) 
             {
-              err_output("_poll_loop: PING POLLERR, %s, %d", ics[i].hostname, 
-                         ics[i].ipmi_fd);
+              ierr_output("_poll_loop: PING POLLERR, %s, %d", ics[i].hostname, 
+                          ics[i].ipmi_fd);
               continue;
             }
           if (pfds[i*2+1].revents & POLLIN) 
@@ -433,7 +433,7 @@ _eliminate_nodes(void)
       char *host = NULL;
 
       if (!(id = ipmidetect_handle_create()))
-        err_exit("ipmidetect_handle_create");
+        ierr_exit("ipmidetect_handle_create");
       
       if (ipmidetect_load_data(id,
                                NULL,
@@ -442,12 +442,12 @@ _eliminate_nodes(void)
         {
           if (ipmidetect_errnum(id) == IPMIDETECT_ERR_CONNECT
               || ipmidetect_errnum(id) == IPMIDETECT_ERR_CONNECT_TIMEOUT)
-            err_exit("Error connecting to ipmidetect daemon");
-          err_exit("ipmidetect_load_data: %s\n", ipmidetect_errormsg(id));
+            ierr_exit("Error connecting to ipmidetect daemon");
+          ierr_exit("ipmidetect_load_data: %s\n", ipmidetect_errormsg(id));
         }
       
       if (!(itr = hostlist_iterator_create(conf->hosts)))
-        err_exit("hostlist_iterator_create: %s", strerror(errno));
+        ierr_exit("hostlist_iterator_create: %s", strerror(errno));
       
       while ((host = hostlist_next(itr)))
         {
@@ -456,8 +456,8 @@ _eliminate_nodes(void)
           if ((ret = ipmidetect_is_node_detected(id, host)) < 0)
             {
               if (ipmidetect_errnum(id) == IPMIDETECT_ERR_NOTFOUND)
-                err_exit("Node '%s' unrecognized by ipmidetect\n", host);
-              err_exit("ipmidetect_is_node_detected: %s\n", ipmidetect_errormsg(id));
+                ierr_exit("Node '%s' unrecognized by ipmidetect\n", host);
+              ierr_exit("ipmidetect_is_node_detected: %s\n", ipmidetect_errormsg(id));
             }
           
           if (!ret)
@@ -475,8 +475,8 @@ int
 main(int argc, char *argv[]) 
 {
   /* Call before anything else */
-  err_init(argv[0]);
-  err_file_descriptor(1, STDERR_FILENO); /* initially errors goto stderr */
+  ierr_init(argv[0]);
+  ierr_file_descriptor(1, STDERR_FILENO); /* initially errors goto stderr */
   
   _security_initialization();
 
@@ -505,7 +505,7 @@ main(int argc, char *argv[])
       if (conf->privilege_level_set_on_cmdline
           && conf->privilege_level == PRIVILEGE_LEVEL_USER 
           && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(conf->powercmd))
-        err_exit("power operation requires atleast operator privilege");
+        ierr_exit("power operation requires atleast operator privilege");
 
       _eliminate_nodes();
 
@@ -516,7 +516,7 @@ main(int argc, char *argv[])
         }
     }
   
-  err_file_descriptor(0, 0); /* now errors are done through the ttyerr */
+  ierr_file_descriptor(0, 0); /* now errors are done through the ttyerr */
 
   /* immediately send out discovery messages upon startup */
   ipmipower_ping_force_discovery_sweep();

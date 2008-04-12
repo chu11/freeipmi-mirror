@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.77 2008-04-05 12:57:22 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.78 2008-04-12 00:05:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -239,7 +239,7 @@ ipmipower_config_default_logfile(char *buf, int buflen)
   pid = getpid();
   snprintf(buffer, MAXPATHLEN, IPMIPOWER_DEFAULT_LOGFILE, pid);
   if (strlen(buffer) > buflen - 1)
-    err_exit("ipmipower_config_default_logfile: internal buffer too small\n");
+    ierr_exit("ipmipower_config_default_logfile: internal buffer too small\n");
   strcpy(buf, buffer);
 }
 
@@ -250,10 +250,10 @@ ipmipower_config_setup(void)
 
 #ifdef NDEBUG
   if (!(conf = (struct ipmipower_config *)secure_malloc(sizeof(struct ipmipower_config))))
-    err_exit("secure_malloc: %s", strerror(errno));
+    ierr_exit("secure_malloc: %s", strerror(errno));
 #else  /* !NDEBUG */
   if (!(conf = (struct ipmipower_config *)malloc(sizeof(struct ipmipower_config))))
-    err_exit("malloc: %s", strerror(errno));
+    ierr_exit("malloc: %s", strerror(errno));
 #endif /* !NDEBUG */
 
   conf->hosts = NULL;
@@ -330,63 +330,63 @@ _config_common_checks(char *str)
   if (conf->hosts != NULL 
       && (conf->hosts_count < IPMIPOWER_MINNODES 
           || conf->hosts_count > IPMIPOWER_MAXNODES))
-    err_exit("%s: invalid number of hostnames", str);
+    ierr_exit("%s: invalid number of hostnames", str);
     
   if (conf->authentication_type == AUTHENTICATION_TYPE_INVALID) 
-    err_exit("%s: invalid authentication_type", str);
+    ierr_exit("%s: invalid authentication_type", str);
 
   if (conf->privilege_level == PRIVILEGE_LEVEL_INVALID)
-    err_exit("%s: invalid privilege level", str);
+    ierr_exit("%s: invalid privilege level", str);
 
   if (conf->ipmi_version == IPMI_VERSION_INVALID)
-    err_exit("%s: invalid ipmi version", str);
+    ierr_exit("%s: invalid ipmi version", str);
 
   if (conf->cipher_suite_id == CIPHER_SUITE_ID_INVALID)
-    err_exit("%s: invalid cipher suite id", str);
+    ierr_exit("%s: invalid cipher suite id", str);
 
   if (conf->session_timeout_len < IPMIPOWER_SESSION_TIMEOUT_MIN 
       || conf->session_timeout_len > IPMIPOWER_SESSION_TIMEOUT_MAX)
-    err_exit("%s: timeout out of range", str);
+    ierr_exit("%s: timeout out of range", str);
   
   if (conf->retransmission_timeout_len != 0 
       && (conf->retransmission_timeout_len < IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN 
           || conf->retransmission_timeout_len > IPMIPOWER_RETRANSMISSION_TIMEOUT_MAX))
-    err_exit("%s: retransmission timeout out of range", str);
+    ierr_exit("%s: retransmission timeout out of range", str);
 
   if (conf->retransmission_wait_timeout_len != 0 
       && (conf->retransmission_wait_timeout_len < IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN 
           || conf->retransmission_wait_timeout_len > IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MAX))
-    err_exit("%s: retransmission wait timeout out of range", str);
+    ierr_exit("%s: retransmission wait timeout out of range", str);
   
   if (conf->retransmission_backoff_count != 0 
       && (conf->retransmission_backoff_count < IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MIN 
           || conf->retransmission_backoff_count > IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MAX))
-    err_exit("%s: retransmission backoff count out of range", str);
+    ierr_exit("%s: retransmission backoff count out of range", str);
 
   if (conf->ping_interval_len != 0 
       && (conf->ping_interval_len < IPMIPOWER_PING_INTERVAL_MIN 
           || conf->ping_interval_len > IPMIPOWER_PING_INTERVAL_MAX))
-    err_exit("%s: ping interval out of range", str);
+    ierr_exit("%s: ping interval out of range", str);
   
   if (conf->ping_timeout_len != 0 
       && (conf->ping_timeout_len < IPMIPOWER_PING_TIMEOUT_MIN 
           || conf->ping_timeout_len > IPMIPOWER_PING_TIMEOUT_MAX))
-    err_exit("%s: ping timeout out of range", str);
+    ierr_exit("%s: ping timeout out of range", str);
 
   if (conf->ping_packet_count != 0
       && (conf->ping_packet_count < IPMIPOWER_PING_PACKET_COUNT_MIN
           || conf->ping_packet_count > IPMIPOWER_PING_PACKET_COUNT_MAX))
-    err_exit("%s: ping packet out of range", str);
+    ierr_exit("%s: ping packet out of range", str);
 
   if (conf->ping_percent != 0
       && (conf->ping_percent < IPMIPOWER_PING_PERCENT_MIN
           || conf->ping_percent > IPMIPOWER_PING_PERCENT_MAX))
-    err_exit("%s: ping percent out of range", str);
+    ierr_exit("%s: ping percent out of range", str);
   
   if (conf->ping_consec_count != 0
       && (conf->ping_consec_count < IPMIPOWER_PING_CONSEC_COUNT_MIN
           || conf->ping_consec_count > IPMIPOWER_PING_CONSEC_COUNT_MAX))
-    err_exit("%s: ping consec out of range", str);
+    ierr_exit("%s: ping consec out of range", str);
 }
 
 static error_t
@@ -405,14 +405,14 @@ cmdline_parse (int key,
     {
     case ARGP_HOSTNAME_KEY:       /* --hostname */
       if ((conf->hosts = hostlist_create(arg)) == NULL)
-        err_exit("Error: Hostname(s) incorrectly formatted");
+        ierr_exit("Error: Hostname(s) incorrectly formatted");
       hostlist_uniq(conf->hosts);
       conf->hosts_count = hostlist_count(conf->hosts);
       conf->hosts_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case ARGP_USERNAME_KEY:       /* --username */
       if (strlen(arg) > IPMI_MAX_USER_NAME_LENGTH)
-        err_exit("Command Line Error: username too long");
+        ierr_exit("Command Line Error: username too long");
       strcpy(conf->username, arg);
       conf->username_set_on_cmdline = IPMIPOWER_TRUE;
       n = strlen(arg);
@@ -420,7 +420,7 @@ cmdline_parse (int key,
       break;
     case ARGP_PASSWORD_KEY:       /* --password */
       if (strlen(arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
-        err_exit("Command Line Error: password too long");
+        ierr_exit("Command Line Error: password too long");
       strcpy(conf->password, arg);
       conf->password_set_on_cmdline = IPMIPOWER_TRUE;
       n = strlen(arg);
@@ -428,17 +428,17 @@ cmdline_parse (int key,
       break;
     case ARGP_PASSWORD_PROMPT_KEY:       /* --password-prompt */
       if (!(pw = getpass("Password: ")))
-        err_exit("getpass: %s", strerror(errno));
+        ierr_exit("getpass: %s", strerror(errno));
       if (strlen(pw) > IPMI_2_0_MAX_PASSWORD_LENGTH)
-        err_exit("password too long");
+        ierr_exit("password too long");
       strcpy(conf->password, pw);
       conf->password_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case ARGP_K_G_KEY:       /* --k-g */
       if ((rv = check_kg_len(arg)) < 0)
-        err_exit("Command Line Error: k_g too long");
+        ierr_exit("Command Line Error: k_g too long");
       if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
-        err_exit("Command Line Error: k_g input formatted incorrectly");
+        ierr_exit("Command Line Error: k_g input formatted incorrectly");
       if (rv > 0)
         {
           conf->k_g_len = rv;
@@ -449,11 +449,11 @@ cmdline_parse (int key,
       break;
     case ARGP_K_G_PROMPT_KEY:       /* --k-g-prompt */
       if (!(kg = getpass("K_g: ")))
-        err_exit("getpass: %s", strerror(errno));
+        ierr_exit("getpass: %s", strerror(errno));
       if ((rv = check_kg_len(kg)) < 0)
-        err_exit("Command Line Error: k_g too long");
+        ierr_exit("Command Line Error: k_g too long");
       if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH + 1, kg)) < 0)
-        err_exit("Command Line Error: k_g input formatted incorrectly");
+        ierr_exit("Command Line Error: k_g input formatted incorrectly");
       if (rv > 0)
         {
           conf->k_g_len = rv;
@@ -484,7 +484,7 @@ cmdline_parse (int key,
 #ifndef NDEBUG
     case IPMIPOWER_CONFIG_KEY:         /* --config */
       if (strlen(arg) > MAXPATHLEN)
-        err_exit("Command Line Error: configuration file pathname too long");
+        ierr_exit("Command Line Error: configuration file pathname too long");
       strcpy(conf->configfile, arg);
       break;
 #endif /* !NDEBUG */
@@ -492,7 +492,7 @@ cmdline_parse (int key,
       conf->authentication_type = ipmipower_authentication_type_index(arg);
       conf->authentication_type_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    /* ARGP_PRIVILEGE_KEY for backwards compatability */
+      /* ARGP_PRIVILEGE_KEY for backwards compatability */
     case ARGP_PRIVILEGE_KEY:
     case ARGP_PRIVILEGE_LEVEL_KEY:       /* --privilege-level */
       conf->privilege_level = ipmipower_privilege_level_index(arg);
@@ -528,7 +528,7 @@ cmdline_parse (int key,
     case ARGP_FANOUT_KEY:          /* --fanout */
       conf->fanout = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        err_exit("Command Line Error: fanout invalid\n");
+        ierr_exit("Command Line Error: fanout invalid\n");
       conf->fanout_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case ARGP_ELIMINATE_KEY:       /* --eliminate */
@@ -537,7 +537,7 @@ cmdline_parse (int key,
       break;
     case ARGP_WORKAROUND_FLAGS_KEY:       /* --workaround-flags */
       if (ipmipower_workarounds_parse(arg, &flags) < 0)
-        err_exit("Command Line Error: invalid workaround specified");
+        ierr_exit("Command Line Error: invalid workaround specified");
       conf->workaround_flags = flags;
       conf->workaround_flags_set_on_cmdline = IPMIPOWER_TRUE;
       break;
@@ -553,7 +553,7 @@ cmdline_parse (int key,
       break;
     case IPMIPOWER_LOGFILE_KEY:        /* --logfile */
       if (strlen(arg) > MAXPATHLEN)
-        err_exit("Command Line Error: log file pathname too long");
+        ierr_exit("Command Line Error: log file pathname too long");
       memset(conf->logfile, '\0', MAXPATHLEN+1);
       strcpy(conf->logfile, arg);
       break;
@@ -561,59 +561,59 @@ cmdline_parse (int key,
     case IPMIPOWER_SESSION_TIMEOUT_KEY:       /* --session-timeout */
       conf->session_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        err_exit("Command Line Error: session timeout length invalid\n");
+        ierr_exit("Command Line Error: session timeout length invalid\n");
       conf->session_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case IPMIPOWER_RETRANSMISSION_TIMEOUT_KEY:       /* --retransmission-timeout */
       conf->retransmission_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        err_exit("Command Line Error: retransmission timeout length invalid\n");
+        ierr_exit("Command Line Error: retransmission timeout length invalid\n");
       conf->retransmission_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    /* IPMIPOWER_RETRY_WAIT_TIMEOUT for backwards compatability */
+      /* IPMIPOWER_RETRY_WAIT_TIMEOUT for backwards compatability */
     case IPMIPOWER_RETRY_WAIT_TIMEOUT:
     case IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT:       /* --retransmission-wait-timeout */
       conf->retransmission_wait_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        err_exit("Command Line Error: retransmission wait timeout length invalid\n");
+        ierr_exit("Command Line Error: retransmission wait timeout length invalid\n");
       conf->retransmission_wait_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    /* IPMIPOWER_RETRY_BACKOFF_COUNT for backwards compatability */
+      /* IPMIPOWER_RETRY_BACKOFF_COUNT for backwards compatability */
     case IPMIPOWER_RETRY_BACKOFF_COUNT:
     case IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT:       /* --retransmission-backoff-count */
       conf->retransmission_backoff_count = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        err_exit("Command Line Error: retransmission backoff count invalid\n");
+        ierr_exit("Command Line Error: retransmission backoff count invalid\n");
       conf->retransmission_backoff_count_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case IPMIPOWER_PING_INTERVAL:       /* --ping-interval */
       conf->ping_interval_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        err_exit("Command Line Error: ping interval length invalid\n");
+        ierr_exit("Command Line Error: ping interval length invalid\n");
       conf->ping_interval_len_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case IPMIPOWER_PING_TIMEOUT:       /* --ping-timeout */
       conf->ping_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        err_exit("Command Line Error: ping timeout length invalid\n");
+        ierr_exit("Command Line Error: ping timeout length invalid\n");
       conf->ping_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case IPMIPOWER_PING_PACKET_COUNT:       /* --ping-packet-count */
       conf->ping_packet_count = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        err_exit("Command Line Error: ping packet count invalid\n");
+        ierr_exit("Command Line Error: ping packet count invalid\n");
       conf->ping_packet_count_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case IPMIPOWER_PING_PERCENT:       /* --ping-percent */
       conf->ping_percent = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        err_exit("Command Line Error: ping percent invalid\n");
+        ierr_exit("Command Line Error: ping percent invalid\n");
       conf->ping_percent_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case IPMIPOWER_PING_CONSEC_COUNT:       /* --ping-consec-count */
       conf->ping_consec_count = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        err_exit("Command Line Error: ping consec count invalid\n");
+        ierr_exit("Command Line Error: ping consec count invalid\n");
       conf->ping_consec_count_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case '?':
@@ -655,12 +655,12 @@ _cb_hostname(conffile_t cf, struct conffile_data *data,
     return 0;
   
   if ((conf->hosts = hostlist_create(NULL)) == NULL)
-    err_exit("Config File Error: Hostname(s) incorrectly formatted");
+    ierr_exit("Config File Error: Hostname(s) incorrectly formatted");
   
   for (i = 0; i < data->stringlist_len; i++) 
     {
       if (hostlist_push(conf->hosts, data->stringlist[i]) == 0)
-        err_exit("Config File Error: Hostname(s) incorrectly formatted");
+        ierr_exit("Config File Error: Hostname(s) incorrectly formatted");
     }
   
   hostlist_uniq(conf->hosts);
@@ -676,7 +676,7 @@ _cb_authentication_type(conffile_t cf, struct conffile_data *data,
 			int option_data, void *app_ptr, int app_data) 
 {
   if (conf->authentication_type_set_on_cmdline == IPMIPOWER_TRUE)
-      return 0;
+    return 0;
 
   /* Incorrect authentication_type checked in _config_common_checks */
   conf->authentication_type = ipmipower_authentication_type_index(data->string);
@@ -761,7 +761,7 @@ _cb_username(conffile_t cf, struct conffile_data *data,
     return 0;
 
   if (strlen(data->string) > IPMI_MAX_USER_NAME_LENGTH)
-    err_exit("Config File Error: username too long");
+    ierr_exit("Config File Error: username too long");
 
   strcpy(conf->username, data->string);
   return 0;
@@ -776,7 +776,7 @@ _cb_password(conffile_t cf, struct conffile_data *data,
     return 0;
 
   if (strlen(data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
-    err_exit("Config File Error: password too long");
+    ierr_exit("Config File Error: password too long");
 
   strcpy(conf->password, data->string);
   return 0;
@@ -793,10 +793,10 @@ _cb_k_g(conffile_t cf, struct conffile_data *data,
     return 0;
 
   if ((rv = check_kg_len(data->string)) < 0)
-    err_exit("Command Line Error: k_g too long");
+    ierr_exit("Command Line Error: k_g too long");
 
   if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
-    err_exit("Config File Error: k_g input formatted incorrectly");
+    ierr_exit("Config File Error: k_g input formatted incorrectly");
 
   if (rv > 0)
     conf->k_g_len = rv;
@@ -815,7 +815,7 @@ _cb_workaround_flags(conffile_t cf, struct conffile_data *data,
     return 0;
 
   if (ipmipower_workarounds_parse(data->string, &flags) < 0)
-    err_exit("Config File Error: invalid workaround specified");
+    ierr_exit("Config File Error: invalid workaround specified");
   conf->workaround_flags = flags;
   return 0;
 }
@@ -929,7 +929,7 @@ ipmipower_config_conffile_parse(char *configfile)
   int num;
 
   if ((cf = conffile_handle_create()) == NULL)
-    err_exit("Config File Error: cannot create conffile handle");
+    ierr_exit("Config File Error: cannot create conffile handle");
 
   conffile = (strlen(configfile)) ? configfile : IPMIPOWER_CONFIG_FILE_DEFAULT;
   num = sizeof(options)/sizeof(struct conffile_option);
@@ -942,9 +942,9 @@ ipmipower_config_conffile_parse(char *configfile)
         goto done;
       
       if (conffile_errmsg(cf, errbuf, CONFFILE_MAX_ERRMSGLEN) < 0)
-        err_exit("Config File Error: Cannot retrieve conffile error message");
+        ierr_exit("Config File Error: Cannot retrieve conffile error message");
       
-      err_exit("Config File Error: %s", errbuf);
+      ierr_exit("Config File Error: %s", errbuf);
     }
 
   _config_common_checks("Config File Error");
@@ -958,34 +958,34 @@ void
 ipmipower_config_check_values(void) 
 {
   if (conf->retransmission_timeout_len > conf->session_timeout_len)
-    err_exit("Error: Session timeout length must be longer than retransmission  timeout length");
+    ierr_exit("Error: Session timeout length must be longer than retransmission  timeout length");
   
   if (conf->ping_interval_len > conf->ping_timeout_len)
-    err_exit("Error: Ping timeout interval length must be "
-             "longer than ping interval length");
+    ierr_exit("Error: Ping timeout interval length must be "
+              "longer than ping interval length");
 
   if (conf->ping_consec_count > conf->ping_packet_count)
-    err_exit("Error: Ping consec count must be larger than ping packet count");
+    ierr_exit("Error: Ping consec count must be larger than ping packet count");
 
   if (conf->powercmd != POWER_CMD_NONE && conf->hosts == NULL)
-    err_exit("Error: Must specify target hostname(s) in non-interactive mode");
+    ierr_exit("Error: Must specify target hostname(s) in non-interactive mode");
 
   if (conf->authentication_type == AUTHENTICATION_TYPE_NONE 
       && strlen(conf->password) > 0)
-    err_exit("Error: password cannot be set for authentication type \"%s\"",
-             ipmipower_authentication_type_string(conf->authentication_type));
+    ierr_exit("Error: password cannot be set for authentication type \"%s\"",
+              ipmipower_authentication_type_string(conf->authentication_type));
 
   if (conf->ipmi_version != IPMI_VERSION_AUTO
       && conf->ipmi_version != IPMI_VERSION_2_0
       && conf->k_g_len)
-    err_exit("Error: k_g is only used for IPMI 2.0");
+    ierr_exit("Error: k_g is only used for IPMI 2.0");
 
   if (conf->ipmi_version == IPMI_VERSION_1_5
       && strlen(conf->password) >= IPMI_1_5_MAX_PASSWORD_LENGTH)
-    err_exit("Error: password too long");
+    ierr_exit("Error: password too long");
 
   if (conf->fanout
       && (conf->fanout < PSTDOUT_FANOUT_MIN
           || conf->fanout > PSTDOUT_FANOUT_MAX))
-    err_exit("Error: fanout invalid");
+    ierr_exit("Error: fanout invalid");
 }

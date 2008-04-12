@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.124 2008-04-05 12:57:22 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.125 2008-04-12 00:05:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -166,7 +166,7 @@ ipmipower_powercmd_setup()
     
   pending = list_create((ListDelF)_destroy_ipmipower_powercmd);
   if (pending == NULL)
-    err_exit("list_create() error");
+    ierr_exit("list_create() error");
 }
 
 void 
@@ -191,8 +191,8 @@ _init_ipmi_2_0_randomized_data(ipmipower_powercmd_t ip)
   /* Even if this fails, we'll just live with it */
   if (ipmi_get_random(ip->remote_console_random_number, 
                       IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
-    err_output("ipmipower_powercmd_queue: ipmi_get_random: %s ",
-               strerror(errno));
+    ierr_output("ipmipower_powercmd_queue: ipmi_get_random: %s ",
+                strerror(errno));
 }
 
 void 
@@ -275,9 +275,9 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
                                                  &(ip->authentication_algorithm),
                                                  &(ip->integrity_algorithm),
                                                  &(ip->confidentiality_algorithm)) < 0)
-            err_exit("ipmipower_powercmd_queue: ipmi_cipher_suite_id_to_algorithms: ",
-                     "conf->cipher_suite_id: %d; cipher_suite_id: %d; %s",
-                     conf->cipher_suite_id, ip->cipher_suite_id, strerror(errno));
+            ierr_exit("ipmipower_powercmd_queue: ipmi_cipher_suite_id_to_algorithms: ",
+                      "conf->cipher_suite_id: %d; cipher_suite_id: %d; %s",
+                      conf->cipher_suite_id, ip->cipher_suite_id, strerror(errno));
         }     
       /* IPMI Workaround (achu)
        *
@@ -356,7 +356,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_close_session_res = Fiid_obj_create(tmpl_cmd_close_session_rs); 
 
   if ((ip->sockets_to_close = list_create(NULL)) == NULL)
-    err_exit("list_create() error");
+    ierr_exit("list_create() error");
 
   list_append(pending, ip);
 }
@@ -573,16 +573,16 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   else /* IPMI 2.0 Packet Checks
           
-          (pkt == GET_CHANNEL_CIPHER_SUITES_RES
-           || pkt == OPEN_SESSION_RES
-           || pkt == RAKP_MESSAGE_2_RES
-           || pkt == RAKP_MESSAGE_4_RES
-           || (ip->ipmi_version == IPMI_VERSION_2_0
-               && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-	           || pkt == GET_CHASSIS_STATUS_RES
-                   || pkt == CHASSIS_CONTROL_RES
-                   || pkt == CLOSE_SESSION_RES)))
-        */
+       (pkt == GET_CHANNEL_CIPHER_SUITES_RES
+       || pkt == OPEN_SESSION_RES
+       || pkt == RAKP_MESSAGE_2_RES
+       || pkt == RAKP_MESSAGE_4_RES
+       || (ip->ipmi_version == IPMI_VERSION_2_0
+       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+       || pkt == GET_CHASSIS_STATUS_RES
+       || pkt == CHASSIS_CONTROL_RES
+       || pkt == CLOSE_SESSION_RES)))
+       */
     {
       if (ipmipower_packet_store(ip, pkt, recv_buf, recv_len) < 0)
 	{
@@ -657,10 +657,10 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	}
       else /* (pkt == pkt == GET_CHANNEL_CIPHER_SUITES_RES
               || (ip->ipmi_version == IPMI_VERSION_2_0
-                  && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-                      || pkt == GET_CHASSIS_STATUS_RES
-                      || pkt == CHASSIS_CONTROL_RES
-                      || pkt == CLOSE_SESSION_RES))) */
+              && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+              || pkt == GET_CHASSIS_STATUS_RES
+              || pkt == CHASSIS_CONTROL_RES
+              || pkt == CLOSE_SESSION_RES))) */
 	{
 	  if (!ipmipower_check_payload_type(ip, pkt))
 	    {
@@ -844,8 +844,8 @@ _retry_packets(ipmipower_powercmd_t ip)
     return 0;
 
   ip->retransmission_count++;
-  dbg("_retry_packets(%s:%d): Sending retry, retry count=%d",
-      ip->ic->hostname, ip->protocol_state, ip->retransmission_count);
+  ierr_dbg("_retry_packets(%s:%d): Sending retry, retry count=%d",
+           ip->ic->hostname, ip->protocol_state, ip->retransmission_count);
 
   if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
     _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
@@ -1104,8 +1104,8 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
       else if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR)
 	ip->privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
       else
-	err_exit("_check_authentication_privileges: invalid privilege state: %d", 
-		 ip->privilege_level);
+	ierr_exit("_check_authentication_privileges: invalid privilege state: %d", 
+                  ip->privilege_level);
 
       return 1;
     }
@@ -1227,9 +1227,9 @@ _check_ipmi_2_0_authentication_capabilities_error(ipmipower_powercmd_t ip)
                    "comp_code", 
                    &comp_code);
       
-      dbg("_check_ipmi_2_0_authentication_capabilities_error(%s:%d): "
-          "bad comp_code in authentication capabilities 2.0: %x", 
-          ip->ic->hostname, ip->protocol_state, comp_code);
+      ierr_dbg("_check_ipmi_2_0_authentication_capabilities_error(%s:%d): "
+               "bad comp_code in authentication capabilities 2.0: %x", 
+               ip->ic->hostname, ip->protocol_state, comp_code);
       
       if (comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
         {
@@ -1336,8 +1336,8 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
     {
       if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
         {
-          dbg("_process_ipmi_packets(%s:%d): not none authentcation",
-              ip->ic->hostname, ip->protocol_state);
+          ierr_dbg("_process_ipmi_packets(%s:%d): not none authentcation",
+                   ip->ic->hostname, ip->protocol_state);
           ip->permsgauth_enabled = IPMIPOWER_TRUE;
         }
     }
@@ -1346,8 +1346,8 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
     {
       if (authentication_type != ip->authentication_type)
         {
-          dbg("_process_ipmi_packets(%s:%d): authentication_type mismatch",
-              ip->ic->hostname, ip->protocol_state);
+          ierr_dbg("_process_ipmi_packets(%s:%d): authentication_type mismatch",
+                   ip->ic->hostname, ip->protocol_state);
           ipmipower_output(MSG_TYPE_BMC_ERROR, ip->ic->hostname);
           
           ip->retransmission_count = 0;  /* important to reset */
@@ -1380,9 +1380,9 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
 
   if (!ip->cipher_suite_record_data_bytes)
     {
-      dbg("_calculate_cipher_suite_ids(%s:%d): "
-          "No cipher suite data records retrieved",
-          ip->ic->hostname, ip->protocol_state);
+      ierr_dbg("_calculate_cipher_suite_ids(%s:%d): "
+               "No cipher suite data records retrieved",
+               ip->ic->hostname, ip->protocol_state);
       goto cleanup;
     }
   
@@ -1411,9 +1411,9 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
 
       if (tag_bits != IPMI_CIPHER_SUITE_TAG_BITS_RECORD)
         {
-          dbg("_calculate_cipher_suite_ids(%s:%d): "
-              "invalid tag bits: %x",
-              ip->ic->hostname, ip->protocol_state, (uint8_t)tag_bits);
+          ierr_dbg("_calculate_cipher_suite_ids(%s:%d): "
+                   "invalid tag bits: %x",
+                   ip->ic->hostname, ip->protocol_state, (uint8_t)tag_bits);
 
           /* IPMI Workaround (achu)
            *
@@ -1432,9 +1432,9 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
 
       if (!IPMI_CIPHER_SUITE_RECORD_FORMAT_VALID(record_format))
         {
-          dbg("_calculate_cipher_suite_ids(%s:%d): "
-              "invalid record format: %x",
-              ip->ic->hostname, ip->protocol_state, (uint8_t)record_format);
+          ierr_dbg("_calculate_cipher_suite_ids(%s:%d): "
+                   "invalid record format: %x",
+                   ip->ic->hostname, ip->protocol_state, (uint8_t)record_format);
           ipmipower_output(MSG_TYPE_BMC_ERROR, ip->ic->hostname);
           goto cleanup;
         }
@@ -1564,9 +1564,9 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
       
       if (!cipher_suite_found)
         {
-          dbg("_determine_cipher_suite_id_to_use(%s:%d): "
-              " cipher suite not found: %x",
-              ip->ic->hostname, ip->protocol_state, ip->cipher_suite_id);
+          ierr_dbg("_determine_cipher_suite_id_to_use(%s:%d): "
+                   " cipher suite not found: %x",
+                   ip->ic->hostname, ip->protocol_state, ip->cipher_suite_id);
           ipmipower_output(MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE, ip->ic->hostname); 
           return -1;
         }
@@ -1595,9 +1595,9 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
       
       if (!cipher_suite_found)
         {
-          dbg("_determine_cipher_suite_id_to_use(%s:%d): "
-              " can't find usable cipher suite",
-              ip->ic->hostname, ip->protocol_state);
+          ierr_dbg("_determine_cipher_suite_id_to_use(%s:%d): "
+                   " can't find usable cipher suite",
+                   ip->ic->hostname, ip->protocol_state);
           ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
           return -1;
         }
@@ -1605,12 +1605,12 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
       ip->cipher_suite_id = cipher_suite_id_ranking[i];
       ip->cipher_suite_id_ranking_index = i;
       if (ipmi_cipher_suite_id_to_algorithms(ip->cipher_suite_id,
-                                                 &(ip->authentication_algorithm),
+                                             &(ip->authentication_algorithm),
                                              &(ip->integrity_algorithm),
                                              &(ip->confidentiality_algorithm)) < 0)
-        err_exit("_determine_cipher_suite_id_to_use: ipmi_cipher_suite_id_to_algorithms: ",
-                 "cipher_suite_id: %d; %s",
-                 ip->cipher_suite_id, strerror(errno));
+        ierr_exit("_determine_cipher_suite_id_to_use: ipmi_cipher_suite_id_to_algorithms: ",
+                  "cipher_suite_id: %d; %s",
+                  ip->cipher_suite_id, strerror(errno));
     }
 
   return 0;
@@ -1749,9 +1749,9 @@ _check_open_session_error(ipmipower_powercmd_t ip)
                                                      &(ip->authentication_algorithm),
                                                      &(ip->integrity_algorithm),
                                                      &(ip->confidentiality_algorithm)) < 0)
-                err_exit("_check_open_session_error: ipmi_cipher_suite_id_to_algorithms: ",
-                         "cipher_suite_id: %d; %s",
-                         ip->cipher_suite_id, strerror(errno));
+                ierr_exit("_check_open_session_error: ipmi_cipher_suite_id_to_algorithms: ",
+                          "cipher_suite_id: %d; %s",
+                          ip->cipher_suite_id, strerror(errno));
               
               return 0;
             }
@@ -1863,8 +1863,8 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
                                            &(ip->integrity_key_len),
                                            &(ip->confidentiality_key_ptr),
                                            &(ip->confidentiality_key_len)) < 0)
-    err_exit("_calculate_cipher_keys(%s:%d): ipmi_calculate_rmcpplus_session_keys: %s",
-             ip->ic->hostname, ip->protocol_state, strerror(errno));
+    ierr_exit("_calculate_cipher_keys(%s:%d): ipmi_calculate_rmcpplus_session_keys: %s",
+              ip->ic->hostname, ip->protocol_state, strerror(errno));
 
   return 0;
 }
@@ -2266,7 +2266,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           _send_packet(ip, CLOSE_SESSION_REQ);
         }
       else if (conf->on_if_off && (ip->cmd == POWER_CMD_POWER_CYCLE
-                                  || ip->cmd == POWER_CMD_POWER_RESET)) 
+                                   || ip->cmd == POWER_CMD_POWER_RESET)) 
         {
           if (!power_state) 
             {
@@ -2276,7 +2276,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           _send_packet(ip, CHASSIS_CONTROL_REQ);
         }
       else
-        err_exit("_process_ipmi_packets: invalid command state: %d", ip->cmd);
+        ierr_exit("_process_ipmi_packets: invalid command state: %d", ip->cmd);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_CONTROL_SENT) 
     {
@@ -2329,7 +2329,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
        */
       if (ip->close_timeout)
         {
-          dbg("_process_ipmi_packets: close session timeout, skip retransmission");
+          ierr_dbg("_process_ipmi_packets: close session timeout, skip retransmission");
           goto finish_up;
         }
 
@@ -2342,7 +2342,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       return -1; /* don't goto done and calculate timeout */
     }
   else
-    err_exit("_process_ipmi_packets: invalid state: %d", ip->protocol_state);
+    ierr_exit("_process_ipmi_packets: invalid state: %d", ip->protocol_state);
 
  done:
   Gettimeofday(&cur_time, NULL);
@@ -2396,7 +2396,7 @@ ipmipower_powercmd_process_pending(int *timeout)
       if ((tmp_timeout = _process_ipmi_packets(ip)) < 0) 
         {
           if (list_delete(itr) == 0)
-            err_exit("ipmipower_powercmd_process_pending: list_delete");
+            ierr_exit("ipmipower_powercmd_process_pending: list_delete");
 	  executing_count--;
           continue;
         }

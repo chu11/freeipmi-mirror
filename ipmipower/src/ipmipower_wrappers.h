@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.26 2008-03-28 00:14:49 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.27 2008-04-12 00:05:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -28,6 +28,7 @@
 #define _IPMIPOWER_WRAPPERS_H
 
 #include "argv.h"
+#include "ierror.h"
 #include "fd.h"
 #include "list.h"
 #include "cbuf.h"
@@ -35,7 +36,6 @@
 #include "secure.h"
 #include "timeval.h"
 #include "wrappers.h"
-#include "error.h"
 #include "conffile.h"
 
 #include <freeipmi/freeipmi.h>

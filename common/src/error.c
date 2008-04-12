@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: error.h,v 1.2 2007-09-05 20:13:30 chu11 Exp $
+ *  $Id: error.c,v 1.1 2008-04-12 00:05:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -25,65 +25,96 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
-#ifndef _ERROR_H
-#define _ERROR_H
-
 #if HAVE_CONFIG_H
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-#include <stdio.h>
-#include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#include <stdarg.h>
 #endif /* STDC_HEADERS */
+#include <syslog.h>
+#include <assert.h>
+#include <errno.h>
 
-#define ERROR_STDOUT 0x0001
-#define ERROR_STDERR 0x0002
-#define ERROR_SYSLOG 0x0004
+#include "error.h"
 
-/*  
- * err_init
- *
- * Initialize error lib with program name.  This is usually the first
- * thing called from main, and is simply passed argv[0].
- */
-void err_init(char *prog);
+static char *err_prog = NULL;  
+static int err_flags = 0;
 
-/* 
- * err_get_flags
- *
- * Returns the currently set flags
- */
-int err_get_flags(void);
+#define ERROR_BUFLEN   1024
 
-/* 
- * err_set_flags
- *
- * Sets the error lib flags to 'flags'.
- */
-void err_set_flags(int flags);
+void 
+err_init(char *prog)
+{
+  char *p = strrchr(prog, '/');
+  err_prog = p ? p + 1 : prog;
+}
 
-/* 
- * err_debug
- *
- * Output a debug message
- */
-void err_debug(const char *fmt, ...);
+int 
+err_get_flags(void)
+{
+  assert(err_prog);
 
-/*  
- * err_output
- *
- * Output an error message
- */
-void err_output(const char *fmt, ...);
+  return err_flags;
+}
 
-/* 
- * err_exit
- *
- * Output an error message and exit
- */
-void err_exit(const char *fmt, ...);
+void 
+err_set_flags(int flags)
+{
+  assert(err_prog);
 
-#endif /* _ERROR_H */
+  err_flags = flags;
+}
+
+static void 
+_err(int syslog_level, const char *fmt, va_list ap)
+{
+  char buf[ERROR_BUFLEN];
+
+  assert(err_prog);
+
+  vsnprintf(buf, ERROR_BUFLEN, fmt, ap);
+  if (err_flags & ERROR_STDOUT)
+    fprintf(stdout, "%s: %s\n", err_prog, buf);
+  if (err_flags & ERROR_STDERR)
+    fprintf(stderr, "%s: %s\n", err_prog, buf);
+  if (err_flags & ERROR_SYSLOG)
+    syslog(syslog_level, "%s", buf);
+}
+
+void
+err_debug(const char *fmt, ...)
+{
+  va_list ap;
+
+  assert(err_prog);
+
+  va_start(ap, fmt);
+  _err(LOG_DEBUG, fmt, ap);
+  va_end(ap);
+}
+
+void 
+err_output(const char *fmt, ...)
+{
+  va_list ap;
+
+  assert(err_prog);
+
+  va_start(ap, fmt);
+  _err(LOG_ERR, fmt, ap);
+  va_end(ap);
+}
+
+void
+err_exit(const char *fmt, ...)
+{
+  va_list ap;
+
+  assert(err_prog);
+
+  va_start(ap, fmt);
+  _err(LOG_ERR, fmt, ap);
+  va_end(ap);
+  exit(1);
+}

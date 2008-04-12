@@ -1,3 +1,27 @@
+2008-04-11  Albert Chu <chu11@llnl.gov>
+
+	* ipmidetect/src/ipmidetectd/hash.h,
+	ipmidetect/src/ipmidetectd/hash.c,
+	ipmidetect/src/ipmidetectd/thread.h,
+	ipmidetect/src/ipmidetectd/thread.c: Move to common/src and into
+	the miscutils library.
+
+	* ipmidetect/src/ipmidetectd/Makefile.am, common/src/Makefile.am:
+	Update appropriately.
+
+	* ipmidetect/src/ipmidetect, ipmidetect/src/ipmidetectd/,
+	ipmiconsole/src/ipmiconsole: Move common error.h and error.c into
+	common/src.
+
+	* ipmidetect/src/ipmidetectd/Makefile.am,
+	ipmidetect/src/ipmidetect/Makefile.am,
+	ipmiconsole/src/ipmiconsole/Makefile.am, common/src/Makefile.am:
+	Adjust appropriately.
+
+	* ipmipower/src/error.h, ipmipower/src/error.c: Rename to ierror.h
+	and ierror.c to differentiate itself from the common error.h and
+	error.c.  Adjust all function names accordingly.
+	
 2008-04-10  Albert Chu <chu11@llnl.gov>
 
 	* README, doc/freeipmi.7.pre.in: Add info on libraries.

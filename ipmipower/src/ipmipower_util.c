@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.c,v 1.19 2008-03-28 00:14:48 chu11 Exp $
+ *  $Id: ipmipower_util.c,v 1.20 2008-04-12 00:05:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -38,7 +38,7 @@
 
 #include "ipmipower_util.h"
 
-#include "error.h"
+#include "ierror.h"
 
 uint32_t
 get_rand(void)

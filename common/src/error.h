@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: error.h,v 1.2 2007-09-05 20:13:30 chu11 Exp $
+ *  $Id: error.h,v 1.1 2008-04-12 00:05:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.26 2008-03-28 00:14:49 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.27 2008-04-12 00:05:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -46,7 +46,7 @@ Cbuf_create(int minsize, int maxsize)
 {
   cbuf_t c;
   if ((c = cbuf_create(minsize, maxsize)) == NULL)
-    err_exit("Cbuf_create: %s", strerror(errno));
+    ierr_exit("Cbuf_create: %s", strerror(errno));
   cbuf_opt_set(c, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
   return c;
 }
@@ -56,7 +56,7 @@ Cbuf_drop_all(cbuf_t buf)
 { 
   assert(buf != NULL);
   if (cbuf_drop(buf, -1) < 0)
-    err_exit("Cbuf_drop: %s", strerror(errno));
+    ierr_exit("Cbuf_drop: %s", strerror(errno));
 }
 
 void 
@@ -64,7 +64,7 @@ Cbuf_read_to_fd(cbuf_t buf, int fd)
 {
   assert(buf != NULL);
   if (cbuf_read_to_fd(buf, fd, -1) < 0)
-    err_exit("Cbuf_read_to_fd(%d): %s", fd, strerror(errno));
+    ierr_exit("Cbuf_read_to_fd(%d): %s", fd, strerror(errno));
 }
 
 void 
@@ -75,7 +75,7 @@ Cbuf_write_from_fd(cbuf_t buf, int fd)
   assert(buf != NULL);
 
   if ((n = cbuf_write_from_fd(buf, fd, -1, &dropped)) < 0)
-    err_exit("Cbuf_write_from_fd(%d): %s", fd, strerror(errno));
+    ierr_exit("Cbuf_write_from_fd(%d): %s", fd, strerror(errno));
   
   /* achu: If you are running ipmipower in co-process mode with
    * powerman, this error condition will probably be hit with the file
@@ -90,7 +90,7 @@ Cbuf_write_from_fd(cbuf_t buf, int fd)
       if (fd == STDIN_FILENO)
         exit(1);
       else
-        err_exit("Cbuf_write_from_fd(%d): EOF", fd);
+        ierr_exit("Cbuf_write_from_fd(%d): EOF", fd);
     }
   if (dropped != 0)
     err_output("Cbuf_write_from_fd: read dropped %d bytes", dropped);
@@ -106,10 +106,10 @@ Cbuf_write(cbuf_t buf, void *buffer, int len)
   assert(len > 0);
 
   if ((rv = cbuf_write(buf, buffer, len, &dropped)) < 0)
-    err_exit("Cbuf_write: %s", strerror(errno));
+    ierr_exit("Cbuf_write: %s", strerror(errno));
 
   if (rv != len)
-    err_exit("Cbuf_write: incorrect bytes written %d", rv);
+    ierr_exit("Cbuf_write: incorrect bytes written %d", rv);
 
   if (dropped != 0)
     err_output("Cbuf_write: dropped %d bytes", dropped);
@@ -125,20 +125,20 @@ Cbuf_peek_and_drop(cbuf_t buf, void *buffer, int len)
   assert(len > 0);
 
   if ((r_len = cbuf_peek(buf, buffer, len)) < 0)
-    err_exit("Cbuf_peek: %s", strerror(errno));
+    ierr_exit("Cbuf_peek: %s", strerror(errno));
     
   /* Nothing there */
   if (!r_len)
     return 0;
 
   if ((dropped = cbuf_drop(buf, len)) < 0)
-    err_exit("Cbuf_peek: cbuf_drop: %s", strerror(errno));
+    ierr_exit("Cbuf_peek: cbuf_drop: %s", strerror(errno));
 
   if (dropped != r_len)
-    err_exit("Cbuf_peek: dropped incorrect bytes: %d", dropped);
+    ierr_exit("Cbuf_peek: dropped incorrect bytes: %d", dropped);
 
   if ((rv = cbuf_drop(buf, -1)) < 0)
-    err_exit("Cbuf_peek: cbuf_drop: %s", strerror(errno));
+    ierr_exit("Cbuf_peek: cbuf_drop: %s", strerror(errno));
 
   if (rv > 0)
     err_output("Cbuf_peek: cbuf_drop dropped data: %d", rv);
@@ -155,7 +155,7 @@ Cbuf_peek_to_fd(cbuf_t src, int dstfd, int len)
   assert(dstfd > 2);
 
   if ((ret = cbuf_peek_to_fd(src, dstfd, len)) < 0)
-    err_exit("Cbuf_peek_to_fd: %s", strerror(errno));
+    ierr_exit("Cbuf_peek_to_fd: %s", strerror(errno));
 
   return ret;
 }
@@ -168,7 +168,7 @@ Fiid_obj_create(fiid_template_t tmpl)
   assert(tmpl != NULL);
 
   if ((obj = fiid_obj_create(tmpl)) == NULL)
-    err_exit("Fiid_obj_create: %s", strerror(errno));
+    ierr_exit("Fiid_obj_create: %s", strerror(errno));
   return obj;
 }
 
@@ -188,7 +188,7 @@ Fiid_obj_clear(fiid_obj_t obj)
   assert(fiid_obj_valid(obj));
 
   if ((rv = fiid_obj_clear(obj)) < 0)
-    err_exit("Fiid_obj_clear: %s", strerror(errno)); 
+    ierr_exit("Fiid_obj_clear: %s", strerror(errno)); 
 }
 
 void
@@ -199,7 +199,7 @@ Fiid_obj_clear_field(fiid_obj_t obj, char *field)
   assert(fiid_obj_valid(obj) && field);
 
   if ((rv = fiid_obj_clear_field(obj, field)) < 0)
-    err_exit("Fiid_obj_clear_field: %s", strerror(errno)); 
+    ierr_exit("Fiid_obj_clear_field: %s", strerror(errno)); 
 }
 
 void
@@ -210,10 +210,10 @@ Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
   assert(fiid_obj_valid(obj) && field && val);
 
   if ((rv = fiid_obj_get(obj, field, val)) < 0)
-    err_exit("Fiid_obj_get: field=%s: %s", field, fiid_strerror(fiid_obj_errnum(obj)));
+    ierr_exit("Fiid_obj_get: field=%s: %s", field, fiid_strerror(fiid_obj_errnum(obj)));
 
   if (!rv)
-    err_exit("Fiid_obj_get: field=%s: No data set", field);
+    ierr_exit("Fiid_obj_get: field=%s: No data set", field);
   
   return;
 }
@@ -226,7 +226,7 @@ Fiid_obj_get_data(fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len)
   assert(fiid_obj_valid(obj) && field && data && data_len);
 
   if ((rv = fiid_obj_get_data(obj, field, data, data_len)) < 0)
-    err_exit("Fiid_obj_get_data: field=%s: %s", field, fiid_strerror(fiid_obj_errnum(obj)));
+    ierr_exit("Fiid_obj_get_data: field=%s: %s", field, fiid_strerror(fiid_obj_errnum(obj)));
 
   return rv;
 }
@@ -239,7 +239,7 @@ Fiid_obj_set_data(fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len)
   assert(fiid_obj_valid(obj) && field && data && data_len);
   
   if ((rv = fiid_obj_set_data(obj, field, data, data_len)) < 0)
-    err_exit("Fiid_obj_set_data: field=%s: %s", field, fiid_strerror(fiid_obj_errnum(obj)));
+    ierr_exit("Fiid_obj_set_data: field=%s: %s", field, fiid_strerror(fiid_obj_errnum(obj)));
   
   return rv;
 }
@@ -252,7 +252,7 @@ Fiid_obj_set_all(fiid_obj_t obj, uint8_t *data, uint32_t data_len)
   assert(fiid_obj_valid(obj) && data && data_len);
 
   if ((rv = fiid_obj_set_all(obj, data, data_len)) < 0)
-    err_exit("Fiid_obj_set_all: %s", fiid_strerror(fiid_obj_errnum(obj)));
+    ierr_exit("Fiid_obj_set_all: %s", fiid_strerror(fiid_obj_errnum(obj)));
 
   return rv;
 }
@@ -279,7 +279,7 @@ Ipmi_dump_lan_packet(int fd,
                            pkt_len,
                            tmpl_lan_msg_hdr,
                            tmpl_cmd) < 0)
-    dbg("Ipmi_dump_lan_packet: %s", strerror(errno));
+    ierr_dbg("Ipmi_dump_lan_packet: %s", strerror(errno));
 }
 
 void 
@@ -294,7 +294,7 @@ Ipmi_dump_rmcp_packet(int fd,
   assert(pkt != NULL && tmpl_cmd != NULL);
 
   if (ipmi_dump_rmcp_packet(fd, prefix, hdr, trlr, pkt, pkt_len, tmpl_cmd) < 0)
-    dbg("Ipmi_dump_rmcp_packet: %s", strerror(errno));
+    ierr_dbg("Ipmi_dump_rmcp_packet: %s", strerror(errno));
 }
 
 void 
@@ -331,5 +331,5 @@ Ipmi_dump_rmcpplus_packet (int fd,
                                 pkt_len,
                                 tmpl_lan_msg_hdr,
                                 tmpl_cmd) < 0)
-    dbg("Ipmi_dump_rmcp_packet: %s", strerror(errno));
+    ierr_dbg("Ipmi_dump_rmcp_packet: %s", strerror(errno));
 }

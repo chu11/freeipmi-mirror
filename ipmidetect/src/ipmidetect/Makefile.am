@@ -1,14 +1,12 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.3 2007-12-14 19:16:25 chu11 Exp $
+## $Id: Makefile.am,v 1.4 2008-04-12 00:05:21 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
 
 sbin_PROGRAMS       = ipmidetect
 
-noinst_HEADERS      = error.h 
-
-ipmidetect_SOURCES  = ipmidetect.c error.c
+ipmidetect_SOURCES  = ipmidetect.c
 
 ipmidetect_CPPFLAGS   = -I $(srcdir)/../libipmidetect \
 		      -I $(srcdir)/../../../common/src

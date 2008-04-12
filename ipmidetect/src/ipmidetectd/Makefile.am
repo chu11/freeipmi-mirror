@@ -1,14 +1,11 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.3 2007-12-14 19:16:25 chu11 Exp $
+## $Id: Makefile.am,v 1.4 2008-04-12 00:05:21 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
 
 noinst_HEADERS = \
 	debug.h \
-	error.h \
-	hash.h \
-	thread.h \
 	ipmidetectd.h \
 	ipmidetectd_config.h \
 	ipmidetectd_loop.h
@@ -17,9 +14,6 @@ sbin_PROGRAMS = ipmidetectd
 
 ipmidetectd_SOURCES = \
 	debug.c \
-	error.c \
-	hash.c \
-	thread.c \
 	ipmidetectd.c \
 	ipmidetectd_config.c \
 	ipmidetectd_loop.c

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ipmi_version.c,v 1.7 2008-03-28 00:14:46 chu11 Exp $
+ *  $Id: ipmipower_ipmi_version.c,v 1.8 2008-04-12 00:05:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -73,7 +73,7 @@ ipmipower_ipmi_version_string(ipmi_version_t ipmi_version)
       return "2.0";
       break;
     default:
-      err_exit("ipmipower_ipmi_version_string: Invalid Ipmi Version Type: %d\n", ipmi_version);
+      ierr_exit("ipmipower_ipmi_version_string: Invalid Ipmi Version Type: %d\n", ipmi_version);
     }
   
   return NULL;                  /* NOT_REACHED */

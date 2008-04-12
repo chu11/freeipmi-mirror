@@ -1,19 +1,16 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.9 2007-12-14 19:16:23 chu11 Exp $
+## $Id: Makefile.am,v 1.10 2008-04-12 00:05:21 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
 
-noinst_HEADERS = \
-	ipmiconsole_config.h \
-	error.h
+noinst_HEADERS = ipmiconsole_config.h
 
 sbin_PROGRAMS = ipmiconsole
 
 ipmiconsole_SOURCES = \
 	ipmiconsole.c \
-	ipmiconsole_config.c \
-	error.c
+	ipmiconsole_config.c
 
 ipmiconsole_CPPFLAGS = -I$(srcdir)/../libipmiconsole \
 		       -I$(srcdir)/../../../common/src \

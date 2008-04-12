@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.59 2008-04-05 12:57:22 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.60 2008-04-12 00:05:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -266,7 +266,7 @@ _cmd_power(char **argv, power_cmd_t cmd)
         }
 
       if (!(itr = hostlist_iterator_create(h)))
-        err_exit("hostlist_iterator_create() error");
+        ierr_exit("hostlist_iterator_create() error");
 
       while ((node = hostlist_next(itr)))
         {
@@ -514,7 +514,7 @@ _cmd_log(char **argv)
   
   if (conf->log && conf->logfile_fd == -1)
     {
-      /* Don't use Open wrapper, we don't want to err_exit on failure */
+      /* Don't use Open wrapper, we don't want to ierr_exit on failure */
       if ((conf->logfile_fd = open(conf->logfile, 
                                    O_WRONLY | O_CREAT | O_APPEND, 
                                    S_IRUSR | S_IWUSR)) < 0)
@@ -532,7 +532,7 @@ _cmd_log(char **argv)
       conf->logfile_fd = -1;
     }
 
-  err_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
+  ierr_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
   cbuf_printf(ttyout, "logging is now %s\n", (conf->log) ? "on" : "off");
 }
 
@@ -562,7 +562,7 @@ _cmd_logfile(char **argv)
 
   if (conf->log)
     {
-      /* Don't use Open wrapper, we don't want to err_exit on failure */
+      /* Don't use Open wrapper, we don't want to ierr_exit on failure */
       if ((fd = open(file, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR)) < 0)
         { 
           cbuf_printf(ttyout, "error opening log file %s: %s\n", 
@@ -575,7 +575,7 @@ _cmd_logfile(char **argv)
   memset(conf->logfile, '\0', MAXPATHLEN+1);
   strcpy(conf->logfile, file);
   conf->logfile_fd = fd;
-  err_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
+  ierr_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
   
   cbuf_printf(ttyout, "log file set to %s\n", conf->logfile);
 }
@@ -786,7 +786,7 @@ _readcmd(char *buf, int maxlen)
   if ((bytes_peeked = cbuf_peek(ttyin, buf, maxlen)) <= 0) 
     {
       if (bytes_peeked < 0)
-        err_exit("_readcmd: cbuf_peek returned %d", bytes_peeked);
+        ierr_exit("_readcmd: cbuf_peek returned %d", bytes_peeked);
       return;
     }
 
@@ -915,8 +915,8 @@ ipmipower_prompt_process_cmdline(void)
                   _cmd_set_flag(argv,
                                 &conf->debug, 
                                 "debugging");
-                  err_cbuf(conf->debug, ttyerr);
-                  err_cbuf_dump_file_stream(conf->debug, stderr);
+                  ierr_cbuf(conf->debug, ttyerr);
+                  ierr_cbuf_dump_file_stream(conf->debug, stderr);
                 }
 #ifndef NDEBUG
               else if (strcmp(argv[0], "rmcpdump") == 0)

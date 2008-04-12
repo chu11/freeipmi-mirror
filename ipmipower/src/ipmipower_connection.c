@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.20 2008-03-28 00:14:46 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.21 2008-04-12 00:05:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -82,7 +82,7 @@ _clean_fd(int fd)
       else 
         break;
       
-      dbg("_clean_fd: removed packet: %d", rv);
+      ierr_dbg("_clean_fd: removed packet: %d", rv);
     }
 }
 
@@ -192,7 +192,7 @@ ipmipower_connection_array_create(hostlist_t hl, int hl_count)
   assert(hl != NULL); 
 
   if ((itr = hostlist_iterator_create(hl)) == NULL)
-    err_exit("hostlist_iterator_create() error"); 
+    ierr_exit("hostlist_iterator_create() error"); 
 
   ics = (struct ipmipower_connection *)Malloc(size * hl_count);
   memset(ics, '\0', (size * hl_count));
@@ -267,6 +267,6 @@ ipmipower_connection_hostname_index(struct ipmipower_connection *ics,
         return i;
     }
 
-  dbg("ipmipower_connection_hostname_index: %s not found", hostname); 
+  ierr_dbg("ipmipower_connection_hostname_index: %s not found", hostname); 
   return -1;
 }
