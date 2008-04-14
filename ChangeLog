@@ -1,3 +1,7 @@
+2008-04-14  Albert Chu <chu11@llnl.gov>
+
+	* General documentation manpage audit/updates.
+	
 2008-04-11  Albert Chu <chu11@llnl.gov>
 
 	* ipmidetect/src/ipmidetectd/hash.h,

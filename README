@@ -123,17 +123,18 @@ options to the tools.  You may use ipmi-locate(8) to help determine
 this information.  Other tools such as dmidecode(8) may also provide
 this information.   
 
-To use IPMI out-of-band, the remote machine's BMC must first be configured
-for out of band communication.  Typically, this involves setting a
+To use IPMI out-of-band with tools such as ipmipower(8) or
+ipmi-sensors(8), the remote machine's BMC must first be configured for
+out of band communication.  Typically, this involves setting a
 username, password, IP address, MAC address, and a few other
-parameters.  This can be done using the tool bmc-config(8).  Additional
-information on how to configure with bmc-config(8) can be found in the
-bmc-config.conf(5) manpage.  Some vendors may pre-configure their
-motherboards with default values so that bmc-config(8) can be used
-remotely to configure the machine.  However, most of the time,
-the BMC must be configured in-band before out-of-band access can
-be allowed (for example, the IP address and MAC address must atleast
-be configured).
+parameters.  This can be done using the tool bmc-config(8).
+Additional information on how to configure with bmc-config(8) can be
+found in the bmc-config.conf(5) manpage.  Some vendors may
+pre-configure their motherboards with default values so that
+bmc-config(8) can be used remotely to configure the machine.  However,
+most of the time, the BMC must be configured in-band before
+out-of-band access can be allowed (for example, the IP address and MAC
+address must atleast be configured).
 
 In order to remotely connect to a machine, you typically must specify
 the host, username, and password for the tool in order to connect.
