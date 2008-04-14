@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.78 2008-04-12 00:05:23 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.79 2008-04-14 20:44:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -113,8 +113,8 @@ static struct argp_option cmdline_options[] =
      * argp usage help output.  I'll keep alot of the original text in #if
      * 0's around for the future (or just documentation).
      *
-     * b/c of the text shortening, we could use the cmdline-parse-common.h
-     * macros.  But for now, we'll still use our own coded one.
+     * b/c of the text shortening, we could use the common macros.
+     * But for now, we'll still use our own coded one.
      */
 #if 0
     {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0,                 
