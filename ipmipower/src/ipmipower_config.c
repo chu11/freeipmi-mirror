@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.79 2008-04-14 20:44:38 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.80 2008-04-14 21:08:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -105,46 +105,13 @@ const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED_NO_TIMEOUT,
-    /*
-     * achu:
-     *
-     * argp's help/usage layout has various bugs when the description
-     * buffer gets to 150 characters in length.  So we're going to shorten
-     * argp usage help output.  I'll keep alot of the original text in #if
-     * 0's around for the future (or just documentation).
-     *
-     * b/c of the text shortening, we could use the common macros.
-     * But for now, we'll still use our own coded one.
-     */
-#if 0
-    {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0,                 
-     "Specify the IPMI 1.5 authentication type to use. "                                            
-     "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " 
-     "Defaults to MD5 if not specified", 12},
-    {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER-SUITE-ID", 0,                         
-     "Specify the IPMI 2.0 cipher suite ID to use. "                                                
-     "The currently supported cipher suite ids are: AUTO, 0, 1, 2, 3, 6, 7, 8, 11, 12. "            
-     "Defaults to AUTO if not specified.", 13},
-    /* maintain "privilege" for backwards compatability */
-    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            
-     "Specify the privilege level to be used. "                                                     
-     "The currently available privilege levels are AUTO, USER, OPERATOR, and ADMIN. "               
-     "Defaults to AUTO if not specified.", 14},
-    {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,                            
-     "Specify the privilege level to be used. "                                                     
-     "The currently available privilege levels are AUTO, USER, OPERATOR, and ADMIN. "                
-     "Defaults to AUTO if not specified.", 14},
-#else
-    {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0,                 
-     "Specify the IPMI 1.5 authentication type to use.", 13},
-    {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER-SUITE-ID", 0,                         
-     "Specify the IPMI 2.0 cipher suite ID to use.", 14},
+    ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     /* maintain "privilege" for backwards compatability */
     {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            
      "Specify the privilege level to be used.", 15},
-    {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,                            
+    {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,
      "Specify the privilege level to be used.", 15},
-#endif
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     {"on", IPMIPOWER_ON_KEY, 0, 0,
