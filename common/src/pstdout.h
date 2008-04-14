@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.h,v 1.6 2008-03-28 00:14:32 chu11 Exp $
+ *  $Id: pstdout.h,v 1.7 2008-04-14 20:56:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -39,6 +39,15 @@
  * not be directly used for all projects, thus this library was
  * developed to emulate its functionality. Some of the same basic
  * code/algorithms from pdsh have been re-used here.
+ *
+ * The general code structure using this library is as follows:
+ *
+ * call pstdout_init()
+ * call pstdout_set_output_flags() if non-defaults needed
+ * call pstdout_set_fanout() if non-defaults needed
+ * call pstdout_lauch() to launch parallel threads
+ * - within callback functions replace printf/fprintf/perror calls
+ *   with pstdout equivalent calls.
  */
 
 #include <stdio.h>
