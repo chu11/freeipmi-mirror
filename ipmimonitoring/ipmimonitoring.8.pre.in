@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.23 2008-04-15 00:30:37 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.24 2008-04-15 16:57:25 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -34,11 +34,13 @@ ipmimonitoring \- IPMI monitoring utility
 is an IPMI sensor monitoring tool that utilizes the 
 .B libipmimonitoring(3)
 library to interpret sensor readings rather than just report them.
-The tool will output if sensors are in Nominal, Warning, or Critical
+The tool will output if sensors are in NOMINAL, WARNING, or CRITICAL
 states.  The state interpretations are determined by the configuration
 file @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  The library and
-tool are primarily used for host monitoring activities.  For more
-general sensor reading use, it is recommended that users use
+tool are primarily used for host monitoring activities.  By mapping
+sensor readings into NOMINAL, WARNING, or CRITICAL states, it makes
+monitoring easier across large numbers of nodes.  For more general
+sensor reading use, it is recommended that users use
 .B ipmi-sensors(8).
 .SH "OPTIONS"
 .TP
@@ -56,8 +58,8 @@ general sensor reading use, it is recommended that users use
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .TP
 \fB\-q\fR, \fB\-\-quiet-readings\fR
-Do not output sensor reading values, only Nominal, Warning, or
-Critical states.  This option is particularly useful if you want to
+Do not output sensor reading values, only NOMINAL, WARNING, or
+CRITICAL states.  This option is particularly useful if you want to
 use hostranged output across a cluster and want to consolidate the
 output.
 .TP

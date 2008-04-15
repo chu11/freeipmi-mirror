@@ -1,5 +1,5 @@
 .\"############################################################################
-.\"  $Id: libipmimonitoring.3.pre.in,v 1.4 2008-04-10 22:40:55 chu11 Exp $
+.\"  $Id: libipmimonitoring.3.pre.in,v 1.5 2008-04-15 16:57:25 chu11 Exp $
 .\"############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -74,10 +74,11 @@ The
 implements a high level sensor monitoring API for IPMI sensors.  The
 goal of this library is to abstract away all of the underlying IPMI
 details away from the user and map IPMI sensor readings into NOMINAL,
-WARNING, or CRITICAL states so that monitoring software may take
-appropriate actions dependent on sensor readings.  An iterator
-interface is provided that allows the user to iterate through sensor
-values, groups, units, and states.
+WARNING, or CRITICAL states.  By mapping sensor readings into NOMINAL,
+WARNING, or CRITICAL states, it makes monitoring sensors easier across
+large numbers of nodes.  An iterator interface is also provided that
+allows the user to iterate through sensor values, groups, units, and
+states.
 
 .LP
 In order to improve efficiency, SDR data will be cached on the host.
@@ -85,7 +86,7 @@ By default it is cached in @IPMI_MONITORING_SDR_CACHE_DIR@.
 .LP
 Interpretation rules have not been written for all sensors
 permutations and types.  If sensor interpretation rules are needed,
-please contact the author listed below.
+please contact the developers as listed below.
 
 .SH "STATE CONFIGURATION" 
 The interpretation of sensors is configurable via the configuration
