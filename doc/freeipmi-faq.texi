@@ -229,8 +229,11 @@ Ipmidetect can be used to enhance the efficiency of the hostranged
 input by eliminating those nodes in the cluster that have been
 temporarily removed for servicing.
 
-Ipmimonitoring is used for host monitoring IPMI based sensors on a
-cluster.  Skummee
+Ipmimonitoring interprets sensor readings as well as just reporting
+them.  It can be used for host monitoring IPMI on a cluster.  By
+mapping sensor readings into NOMINAL, WARNING, or CRITICAL states, it
+makes monitoring sensors easier across large numbers of nodes.
+Skummee
 (@uref{https://sourceforge.net/projects/skummee}) 
 uses libipmimonitoring on LLNL clusters up to 1152 nodes in size.
 
