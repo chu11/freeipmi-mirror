@@ -141,8 +141,8 @@ default values so that
 .B bmc-config(8)
 can be used remotely to configure the machine.  However, most of the
 time, the BMC must be configured in-band before out-of-band access can
-be allowed (for example, the IP address and MAC address must atleast
-be configured).
+be allowed (for example, atleast the correct IP address and MAC
+address must be configured).
 
 .PP
 In order to remotely connect to a machine, you typically must specify
