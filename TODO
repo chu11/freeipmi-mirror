@@ -57,6 +57,11 @@ ipmi-sensors-config
 - sensor enable/disable??
 - sensor event enable/disable??
 
+other tools support
+-------------------
+monitoring in cerebro
+monitoring in ganglia
+monitoring in nagios
 
 RELEASE TODOS - Do on every release
 -----------------------------------
