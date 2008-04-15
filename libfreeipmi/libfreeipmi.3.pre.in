@@ -6,11 +6,14 @@ Libfreeipmi is the primary library that most of the FreeIPMI tools are based
 upon.  The following describe the sub-sections of the library.
 .TP
 .B api
-Provides the highest level API provided by libfreeipmi.  It
-abstracts away the details of inband and outofband protocols from
-the user.  It also provides useful error codes for the user to
-easily interpret.  'api' is used by most FreeIPMI tools and
-libraries, such as bmc-info, ipmi-sensors, and libipmimonitoring.
+The highest level API provided by libfreeipmi.  It abstracts away the
+details of inband and outofband protocols from the user.  It also
+provides useful error codes for the user to easily interpret IPMI
+problems.  'api' is used by most FreeIPMI tools and libraries, such as
+.B bmc-info(8),
+.B ipmi-sensors(8), 
+and 
+.B libipmimonitoring(3).
 .TP
 .B cmds
 Provides fiid templates and 'fill' functions for IPMI

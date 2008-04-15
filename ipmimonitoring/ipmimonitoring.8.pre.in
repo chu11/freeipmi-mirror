@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.22 2008-04-08 18:26:47 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.23 2008-04-15 00:30:37 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -31,7 +31,8 @@ ipmimonitoring \- IPMI monitoring utility
 .I "[OPTIONS]"
 .SH "DESCRIPTION"
 .B ipmimonitoring
-is an IPMI sensor monitoring tool that utilizes the libipmimonitoring
+is an IPMI sensor monitoring tool that utilizes the 
+.B libipmimonitoring(3)
 library to interpret sensor readings rather than just report them.
 The tool will output if sensors are in Nominal, Warning, or Critical
 states.  The state interpretations are determined by the configuration
