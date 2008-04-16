@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.42 2008-03-28 00:14:44 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.43 2008-04-16 23:45:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -145,9 +145,26 @@ createpacket(char *buffer,
 
   if (debug)
     {
+      char hdrbuf[1024];
+      char *fmt =
+        "================================================\n"
+        "%s %s Request\n"
+        "================================================";
+      char *str_version = NULL;
+      const char *str_cmd = NULL;
+      
+      if (version == IPMI_PING_VERSION_1_5)
+        str_version = "IPMI 1.5";
+      else
+        str_version = "IPMI 2.0";
+      
+      str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+
+      snprintf(hdrbuf, 1024, fmt, str_version, str_cmd);
+
       if (ipmi_dump_lan_packet(STDERR_FILENO, 
-                               "Request", 
-                               NULL, 
+                               NULL,
+                               hdrbuf, 
                                NULL,
                                (uint8_t *)buffer, 
                                len, 
@@ -207,9 +224,26 @@ parsepacket(char *buffer,
 
   if (debug)
     {
+      char hdrbuf[1024];
+      char *fmt =
+        "================================================\n"
+        "%s %s Response\n"
+        "================================================";
+      char *str_version = NULL;
+      const char *str_cmd = NULL;
+      
+      if (version == IPMI_PING_VERSION_1_5)
+        str_version = "IPMI 1.5";
+      else
+        str_version = "IPMI 2.0";
+      
+      str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+
+      snprintf(hdrbuf, 1024, fmt, str_version, str_cmd);
+
       if (ipmi_dump_lan_packet(STDERR_FILENO, 
-                               "Response", 
-                               NULL, 
+                               NULL,
+                               hdrbuf,
                                NULL,
                                (uint8_t *)buffer, 
                                buflen, 

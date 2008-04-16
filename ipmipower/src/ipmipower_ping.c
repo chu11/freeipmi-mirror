@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.24 2008-04-12 00:05:23 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.25 2008-04-16 23:45:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -140,10 +140,10 @@ ipmipower_ping_process_pings(int *timeout)
             {
               char *hdr = 
                 "============================================\n"
-                "= RMCP Ping                                =\n"
+                "RMCP Ping\n"
                 "============================================";
               Ipmi_dump_rmcp_packet(STDERR_FILENO, 
-                                    ics[i].hostname, 
+                                    (conf->hosts_count > 1) ? ics[i].hostname : NULL,
                                     hdr, 
                                     NULL,
                                     (uint8_t *)buffer, 
@@ -181,10 +181,10 @@ ipmipower_ping_process_pings(int *timeout)
             {
               char *hdr = 
                 "============================================\n"
-                "= RMCP Pong                                =\n"
+                "RMCP Pong\n"
                 "============================================";
               Ipmi_dump_rmcp_packet(STDERR_FILENO, 
-                                    ics[i].hostname, 
+                                    (conf->hosts_count > 1) ? ics[i].hostname : NULL,
                                     hdr, 
                                     NULL,
                                     (uint8_t *)buffer, 

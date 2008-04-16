@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.27 2008-03-28 00:15:08 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.28 2008-04-16 23:45:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -108,9 +108,14 @@ createpacket(char *buffer,
   
   if (debug)
     {
+      char *hdr =         
+        "================================================\n"
+        "RMCP Ping\n"
+        "================================================";
+
       if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
-                                "Ping", 
-                                NULL, 
+                                NULL,
+                                hdr, 
                                 NULL, 
                                 (uint8_t *)buffer, 
                                 (uint32_t)len, 
@@ -147,9 +152,14 @@ parsepacket(char *buffer,
 
   if (debug)
     {
+      char *hdr =         
+        "================================================\n"
+        "RMCP Pong\n"
+        "================================================";
+
       if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
-                                "Pong", 
                                 NULL,
+                                hdr,
                                 NULL,
                                 (uint8_t *)buffer,
                                 (uint32_t)buflen, 
