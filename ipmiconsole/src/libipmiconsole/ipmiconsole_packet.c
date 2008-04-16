@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.17 2008-03-28 00:14:40 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.18 2008-04-16 23:19:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -188,9 +188,15 @@ _packet_dump_hdr(ipmiconsole_ctx_t c,
 {
   char *fmt =
     "================================================\n"
-    "%s\n"
+    "%s %s %s\n"
     "================================================";
-  char *str;
+  char *fmt_sol =
+    "================================================\n"
+    "%s %s\n"
+    "================================================";
+  char *str_version = NULL;
+  const char *str_cmd = NULL;
+  char *str_type = NULL;
   int len;
 
   assert(c);
@@ -199,66 +205,82 @@ _packet_dump_hdr(ipmiconsole_ctx_t c,
   assert(hdr);
   assert(hdrlen);
 
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ)
-    str = "= Get Authentication Capabilities V20 Request  =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
-    str = "= Get Authentication Capabilities V20 Response =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST)
-    str = "= Open Session Request                         =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE)
-    str = "= Open Session Response                        =";
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
+      || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
+    str_version = "IPMI 1.5";
+  else
+    str_version = "IPMI 2.0";
+
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
+      || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
+    str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+  else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST
+           || p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE)
+    str_cmd = "Open Session";
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1)
-    str = "= Rakp Message 1 Request                       =";
+    str_cmd = "RAKP Message 1";
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2)
-    str = "= Rakp Message 2 Response                      =";
+    str_cmd = "RAKP Message 2";
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3)
-    str = "= Rakp Message 3 Request                       =";
+    str_cmd = "RAKP Message 3";
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4)
-    str = "= Rakp Message 4 Response                      =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ)
-    str = "= Set Session Privilege Level Request          =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS)
-    str = "= Set Session Privilege Level Response         =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ)
-    str = "= Get Channel Payload Support Request          =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS)
-    str = "= Get Channel Payload Support Response         =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ)
-    str = "= Get Payload Activation Status Request        =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS)
-    str = "= Get Payload Activation Status Response       =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ)
-    str = "= Activate Payload Request                     =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS)
-    str = "= Activate Payload Response                    =";
+    str_cmd = "RAKP Message 4";
+  else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ
+           || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS)
+    str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
+  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ
+           || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS)
+    str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_PAYLOAD_SUPPORT);
+  else if (p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ
+           || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS)
+    str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_PAYLOAD_ACTIVATION_STATUS);
+  else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ
+           || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS)
+    str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_ACTIVATE_PAYLOAD);
   else if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ)
-    str = "= SOL Remote Console to BMC                    =";
+    str_cmd = "SOL Remote Console to BMC";
   else if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS)
-    str = "= SOL BMC to Remote Console                    =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ)
-    str = "= Get Channel Payload Version Request          =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS)
-    str = "= Get Channel Payload Version Response         =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ)
-    str = "= Deactivate Payload Request                   =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS)
-    str = "= Deactivate Payload Response                  =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ)
-    str = "= Close Session Request                        =";
-  else if (p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS)
-    str = "= Close Session Response                       =";
+    str_cmd = "SOL BMC to Remote Console";
+  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ
+           || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS)
+    str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION);
+  else if (p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ
+           || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS)
+    str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_DEACTIVATE_PAYLOAD);
+  else if (p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ
+           || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS)
+    str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_CLOSE_SESSION);
   else
     {
       IPMICONSOLE_CTX_DEBUG(c, ("invalid packet type: %d", p));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
+
+  if (IPMICONSOLE_PACKET_TYPE_REQUEST(p))
+    str_type = "Request";
+  else 
+    str_type = "Response";
   
-  if ((len = snprintf(hdr, hdrlen, fmt, str)) < 0)
+  /* special case: there is no "Request/Response" with SOL data */
+  if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ
+      || p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("snprintf: p = %d", p));
-      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      if ((len = snprintf(hdr, hdrlen, fmt_sol, str_version, str_cmd)) < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG(c, ("snprintf: p = %d", p));
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+          return -1;
+        }
+    }
+  else
+    {
+      if ((len = snprintf(hdr, hdrlen, fmt, str_version, str_cmd, str_type)) < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG(c, ("snprintf: p = %d", p));
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+          return -1;
+        }
     }
   
   if (len >= hdrlen)
@@ -306,6 +328,15 @@ ipmiconsole_packet_dump(ipmiconsole_ctx_t c,
 
   if (_packet_dump_hdr(c, p, hdr, IPMICONSOLE_MAX_PACKET_DUMP_HDR_LEN) < 0)
     return -1;
+
+  /* achu:
+   *
+   * In most of FreeIPMI, we output debug prefixes only when the user
+   * has specified > 1 host.  But in this library, calculating that is
+   * a tad more cumbersome b/c of multiple threads, non-even consoles
+   * per thread, etc.  I'm going to ignore that here and output a
+   * prefix under all conditions.
+   */
 
   /* IPMI 1.5 Style Packets */
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ

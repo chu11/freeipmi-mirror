@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.75 2008-04-16 22:58:48 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.76 2008-04-16 23:19:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -180,7 +180,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
       char hdrbuf[1024];
       char *fmt = 
         "================================================\n"
-        "= %s %s %s\n"
+        "%s %s %s\n"
         "================================================";
       char *str_version = NULL;
       const char *str_cmd = NULL;

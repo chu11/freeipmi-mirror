@@ -1,8 +1,9 @@
 2008-04-16  Albert Chu <chu11@llnl.gov>
 
-	* ipmipower/src/: Make debug dump output consistent to other tools
-	by calling ipmi_cmd_str appropriately, outputing "request" vs
-	"response" and "ipmi 1.5" vs. "ipmi 2.0".
+	* ipmipower/src/, ipmiconsole/src/libipmiconsole/: Make debug dump
+	output consistent to other tools by calling ipmi_cmd_str
+	appropriately, outputing "request" vs "response" and "ipmi 1.5"
+	vs. "ipmi 2.0".
 
 	* libfreeipmi/src/api/: Adjust debug output for consistency.
 
