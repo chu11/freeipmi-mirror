@@ -38,6 +38,9 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 prefix ipmi-dump output in all tools?
 - requires code/flags in api, sdr-cache, ipmimonitoring
 - ctx in all must save/hold hostname too
+- consistency in ipmipower?
+- consistency in ipmiping/rmcpping?
+- consistency in bmc-watchdog?
 
 config
 ------
