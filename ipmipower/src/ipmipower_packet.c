@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.74 2008-04-12 00:05:23 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.75 2008-04-16 22:58:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -42,6 +42,7 @@
 #include "ipmipower_wrappers.h"
 
 extern struct ipmipower_config *conf;
+extern int queued_count;
 
 fiid_field_t *
 ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
@@ -179,66 +180,76 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
       char hdrbuf[1024];
       char *fmt = 
         "================================================\n"
-        "%s\n"
+        "= %s %s %s\n"
         "================================================";
-      char *str;
+      char *str_version = NULL;
+      const char *str_cmd = NULL;
+      char *str_type = NULL;
       
-      if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
-        str = "= Get Authentication Capabilities V20 Request  =";
-      else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES)
-        str = "= Get Authentication Capabilities V20 Response =";
-      else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
-        str = "= Get Authentication Capabilities Request      =";
-      else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
-        str = "= Get Authentication Capabilities Response     =";
-      else if (pkt == GET_SESSION_CHALLENGE_REQ)
-        str = "= Get Session Challenge Request                =";
-      else if (pkt == GET_SESSION_CHALLENGE_RES)
-        str = "= Get Session Challenge Response               =";
-      else if (pkt == ACTIVATE_SESSION_REQ)
-        str = "= Activate Session Request                     =";
-      else if (pkt == ACTIVATE_SESSION_RES)
-        str = "= Activate Session Response                    =";
-      else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
-        str = "= Get Channel Cipher Suites Request            =";
-      else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
-        str = "= Get Channel Cipher Suites Response           =";
-      else if (pkt == OPEN_SESSION_REQ)
-        str = "= Open Session Request                         =";
-      else if (pkt == OPEN_SESSION_RES)
-        str = "= Open Session Response                        =";
+      if (ip->ipmi_version == IPMI_VERSION_1_5)
+        str_version = "IPMI 1.5";
+      else
+        str_version = "IPMI 2.0";
+      
+      if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ
+          || pkt == AUTHENTICATION_CAPABILITIES_V20_RES
+          || pkt == AUTHENTICATION_CAPABILITIES_REQ
+          || pkt == AUTHENTICATION_CAPABILITIES_RES)
+        str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+      else if (pkt == GET_SESSION_CHALLENGE_REQ
+               || pkt == GET_SESSION_CHALLENGE_RES)
+        str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_SESSION_CHALLENGE);
+      else if (pkt == ACTIVATE_SESSION_REQ
+               || pkt == ACTIVATE_SESSION_RES)
+        str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_ACTIVATE_SESSION);
+      else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
+               || pkt == GET_CHANNEL_CIPHER_SUITES_RES)
+        str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_CIPHER_SUITES);
+      else if (pkt == OPEN_SESSION_REQ
+               || pkt == OPEN_SESSION_RES)
+        str_cmd = "Open Session";
       else if (pkt == RAKP_MESSAGE_1_REQ)
-        str = "= Rakp Message 1 Request                       =";
+        str_cmd = "RAKP Message 1";
       else if (pkt == RAKP_MESSAGE_2_RES)
-        str = "= Rakp Message 2 Response                      =";
+        str_cmd = "RAKP Message 2";
       else if (pkt == RAKP_MESSAGE_3_REQ)
-        str = "= Rakp Message 3 Request                       =";
+        str_cmd = "RAKP Message 3";
       else if (pkt == RAKP_MESSAGE_4_RES)
-        str = "= Rakp Message 4 Response                      =";
-      else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ)
-        str = "= Set Session Privilege Level Request          =";
-      else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES)
-        str = "= Set Session Privilege Level Response         =";
-      else if (pkt == GET_CHASSIS_STATUS_REQ)
-        str = "= Get Chassis Status Request                   =";
-      else if (pkt == GET_CHASSIS_STATUS_RES)
-        str = "= Get Chassis Status Response                  =";
-      else if (pkt == CHASSIS_CONTROL_REQ)
-        str = "= Chassis Control Request                      =";
-      else if (pkt == CHASSIS_CONTROL_RES)
-        str = "= Chassis Control Response                     =";
-      else if (pkt == CLOSE_SESSION_REQ)
-        str = "= Close Session Request                        =";
-      else if (pkt == CLOSE_SESSION_RES)
-        str = "= Close Session Response                       =";
-      
-      snprintf(hdrbuf, 1024, fmt, str);
+        str_cmd = "RAKP Message 4";
+      else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
+               || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES)
+        str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
+      else if (pkt == GET_CHASSIS_STATUS_REQ
+               || pkt == GET_CHASSIS_STATUS_RES)
+        str_cmd = ipmi_cmd_str(IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_GET_CHASSIS_STATUS);
+      else if (pkt == CHASSIS_CONTROL_REQ
+               || pkt == CHASSIS_CONTROL_RES)
+        str_cmd = ipmi_cmd_str(IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_CHASSIS_CONTROL);
+      else if (pkt == CLOSE_SESSION_REQ
+               || pkt == CLOSE_SESSION_RES)
+        str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_CLOSE_SESSION);
+        
+      if (pkt & PACKET_TYPE_REQ_MASK)
+        str_type = "Request";
+      else
+        str_type = "Response";
+
+      snprintf(hdrbuf, 1024, fmt, str_version, str_cmd, str_type);
 
       if (pkt & PACKET_TYPE_REQ_MASK)
         tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rq[0];
       else
         tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rs[0];
         
+      /* achu: 
+       * 
+       * we use queued_count to determine if we prefix the hostname to the
+       * debug output so that the debug output is consistent between tools.
+       *
+       * i.e. if the user wants debug output > 1 host, prefix.
+       * Otherwise, don't prefix.
+       */
+
       if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
           || pkt == GET_CHANNEL_CIPHER_SUITES_RES
           || pkt == OPEN_SESSION_REQ
@@ -248,7 +259,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
           || pkt == RAKP_MESSAGE_3_REQ
           || pkt == RAKP_MESSAGE_4_RES)
         Ipmi_dump_rmcpplus_packet(STDERR_FILENO,
-                                  ip->ic->hostname,
+                                  (queued_count > 1) ? ip->ic->hostname : NULL,
                                   hdrbuf,
                                   NULL,
                                   IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
@@ -272,7 +283,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                    || pkt == CLOSE_SESSION_REQ
                    || pkt == CLOSE_SESSION_RES))
         Ipmi_dump_rmcpplus_packet(STDERR_FILENO,
-                                  ip->ic->hostname,
+                                  (queued_count > 1) ? ip->ic->hostname : NULL,
                                   hdrbuf,
                                   NULL,
                                   ip->authentication_algorithm,
@@ -288,7 +299,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                                   ipmipower_packet_cmd_template(ip, pkt));
       else /* IPMI 1.5 pkt */
         Ipmi_dump_lan_packet(STDERR_FILENO, 
-                             ip->ic->hostname, 
+                             (queued_count > 1) ? ip->ic->hostname : NULL,
                              hdrbuf, 
                              NULL,
                              (uint8_t *)buffer, 

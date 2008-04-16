@@ -177,7 +177,7 @@ _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
         {
           char *hdr_format =
             "================================================\n"
-            "IPMI 1.5 %s Request\n"
+            "= IPMI 1.5 %s Request\n"
             "================================================";
           char hdrbuf[1024];
               
@@ -226,7 +226,7 @@ _ipmi_lan_dump_rs (ipmi_ctx_t ctx,
         {
           char *hdr_format =
             "================================================\n"
-            "IPMI 1.5 %s Response\n"
+            "= IPMI 1.5 %s Response\n"
             "================================================";
           char hdrbuf[1024];
 	  
@@ -1178,7 +1178,7 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
         {
           char *hdr_format =
             "================================================\n"
-            "IPMI 2.0 %s Request\n"
+            "= IPMI 2.0 %s Request\n"
             "================================================";
           char hdrbuf[1024];
 
@@ -1252,7 +1252,7 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
         {
           char *hdr_format =
             "================================================\n"
-            "IPMI 2.0 %s Response\n"
+            "= IPMI 2.0 %s Response\n"
             "================================================";
           char hdrbuf[1024];
           

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.125 2008-04-12 00:05:23 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.126 2008-04-16 22:58:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -62,6 +62,11 @@ extern struct ipmipower_config *conf;
 
 /* Queue of all pending power commands */
 static List pending = NULL;
+
+/* Number of power commands queued from the start of the current power
+ * command cycle 
+ */
+int queued_count = 0;
 
 /* Count of currently executing power commands for fanout */
 static unsigned int executing_count = 0;
@@ -222,9 +227,11 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
    * Protocol Maintenance Variables
    */
 
-  /* ip->ipmi_version is set after Get Authentication Capabilities
-   * Response stage.
+  /* The real ip->ipmi_version is set after Get Authentication
+   * Capabilities Response stage.  We init to IPMI_VERSION_1_5 b/c the
+   * Get Authentication Capabilities is always sent IPMI 1.5.
    */
+  ip->ipmi_version = IPMI_VERSION_1_5;
 
   ip->session_inbound_count = 0;
 
@@ -2368,8 +2375,6 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
   return (int)timeout;
 }
 
-
-
 int 
 ipmipower_powercmd_process_pending(int *timeout)
 {
@@ -2383,7 +2388,16 @@ ipmipower_powercmd_process_pending(int *timeout)
 
   /* if there are no pending jobs, don't edit the timeout */
   if (list_is_empty(pending))
-    return 0;
+    {
+      queued_count = 0;
+      return 0;
+    }
+  
+  /* queued count hasn't been set for the current cycle of power
+   * commands, set it
+   */
+  if (!queued_count)
+    queued_count = list_count(pending);
 
   /* If we have a fanout, powercmds should be executed "in order" on
    * this list.  So no need to iterate through this list twice.
