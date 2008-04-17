@@ -257,10 +257,6 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
 #error Additional threadsafe gethostbyname support needed
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
 
-  strncpy(ctx->io.outofband.hostname,
-          hostname,
-          MAXHOSTNAMELEN);
-
   ctx->io.outofband.remote_host.sin_family = AF_INET;
   ctx->io.outofband.remote_host.sin_port = htons(RMCP_AUX_BUS_SHUNT);
   ctx->io.outofband.remote_host.sin_addr = *(struct in_addr *) hptr->h_addr;
@@ -386,10 +382,6 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
 #else  /* !HAVE_FUNC_GETHOSTBYNAME_R */
 #error Additional threadsafe gethostbyname support needed
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
-
-  strncpy(ctx->io.outofband.hostname,
-          hostname,
-          MAXHOSTNAMELEN);
 
   ctx->io.outofband.remote_host.sin_family = AF_INET;
   ctx->io.outofband.remote_host.sin_port = htons(RMCP_AUX_BUS_SHUNT);

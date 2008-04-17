@@ -4,7 +4,6 @@
 #include <sys/time.h>
 #include <stdint.h>
 #include <netinet/in.h>
-#include <sys/param.h>
 
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/fiid/fiid.h"
@@ -20,10 +19,6 @@
 #define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH  64
 
 #define IPMI_CTX_MAGIC 0xfafab0b0
-
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
-#endif
 
 struct ipmi_ctx
 {
@@ -59,8 +54,6 @@ struct ipmi_ctx
     struct
     {
       int                sockfd;
-
-      char               hostname[MAXHOSTNAMELEN+1];
 
       struct sockaddr_in remote_host;
 
