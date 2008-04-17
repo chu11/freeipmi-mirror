@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_privilege_level.c,v 1.8 2008-03-28 00:14:48 chu11 Exp $
+ *  $Id: ipmipower_privilege_level.c,v 1.9 2008-04-17 23:14:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -89,7 +89,7 @@ ipmipower_privilege_level_string(privilege_level_t priv)
       return IPMI_PRIVILEGE_LEVEL_ADMIN_STR;
       break;
     default:
-      err_exit("ipmipower_privilege_string: Invalid Privilege Type: %d\n", priv);
+      ierr_exit("ipmipower_privilege_string: Invalid Privilege Type: %d\n", priv);
     }
   
   return NULL;                  /* NOT_REACHED */
@@ -126,7 +126,7 @@ ipmipower_ipmi_privilege_level(privilege_level_t priv)
       return IPMI_PRIVILEGE_LEVEL_ADMIN;
       break;
     default:
-      err_exit("ipmipower_ipmi_privilege_level: Invalid Privilege Type: %d\n", priv);
+      ierr_exit("ipmipower_ipmi_privilege_level: Invalid Privilege Type: %d\n", priv);
     }
   
   return 0;                  /* NOT_REACHED */

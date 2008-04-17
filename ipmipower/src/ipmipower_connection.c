@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.21 2008-04-12 00:05:23 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.22 2008-04-17 23:14:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -112,7 +112,7 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
       if (errno != EMFILE)
         lsd_fatal_error(__FILE__, __LINE__, "socket");
       else
-        err_output("socket error(): %s", strerror(errno));
+        ierr_output("socket error(): %s", strerror(errno));
       return -1;
     }
 
@@ -121,7 +121,7 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
       if (errno != EMFILE)
         lsd_fatal_error(__FILE__, __LINE__, "socket");
       else
-        err_output("socket error(): %s", strerror(errno));
+        ierr_output("socket error(): %s", strerror(errno));
       return -1;
     }
 
@@ -170,9 +170,9 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
   if ((result = gethostbyname(ic->hostname)) == NULL) 
     {
       if (errno == EMFILE)
-        err_output("gethostbyname() error: Too many open files");
+        ierr_output("gethostbyname() error: Too many open files");
       else
-        err_output("gethostbyname() error %s: %s", ic->hostname, hstrerror(h_errno));
+        ierr_output("gethostbyname() error %s: %s", ic->hostname, hstrerror(h_errno));
       return -1;
     }
   ic->destaddr.sin_addr = *((struct in_addr *)result->h_addr);

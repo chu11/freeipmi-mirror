@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_authentication_type.c,v 1.8 2008-03-28 00:14:45 chu11 Exp $
+ *  $Id: ipmipower_authentication_type.c,v 1.9 2008-04-17 23:14:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -94,7 +94,7 @@ ipmipower_authentication_type_string(authentication_type_t at)
       return IPMI_AUTHENTICATION_TYPE_MD5_STR;
       break;
     default:
-      err_exit("ipmipower_authentication_type_string: Invalid Authentication Type: %d\n", at);
+      ierr_exit("ipmipower_authentication_type_string: Invalid Authentication Type: %d\n", at);
     }
   
   return NULL;                  /* NOT_REACHED */
@@ -135,7 +135,7 @@ ipmipower_ipmi_authentication_type(authentication_type_t at)
       return IPMI_AUTHENTICATION_TYPE_MD5;
       break;
     default:
-      err_exit("ipmipower_ipmi_authentication_type: Invalid Authentication Type: %d\n", at);
+      ierr_exit("ipmipower_ipmi_authentication_type: Invalid Authentication Type: %d\n", at);
     }
   
   return 0;                  /* NOT_REACHED */

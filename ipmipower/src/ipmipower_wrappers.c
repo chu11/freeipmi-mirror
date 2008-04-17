@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.27 2008-04-12 00:05:24 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.28 2008-04-17 23:14:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -93,7 +93,7 @@ Cbuf_write_from_fd(cbuf_t buf, int fd)
         ierr_exit("Cbuf_write_from_fd(%d): EOF", fd);
     }
   if (dropped != 0)
-    err_output("Cbuf_write_from_fd: read dropped %d bytes", dropped);
+    ierr_output("Cbuf_write_from_fd: read dropped %d bytes", dropped);
 }
 
 void 
@@ -112,7 +112,7 @@ Cbuf_write(cbuf_t buf, void *buffer, int len)
     ierr_exit("Cbuf_write: incorrect bytes written %d", rv);
 
   if (dropped != 0)
-    err_output("Cbuf_write: dropped %d bytes", dropped);
+    ierr_output("Cbuf_write: dropped %d bytes", dropped);
 }
 
 int 
@@ -141,7 +141,7 @@ Cbuf_peek_and_drop(cbuf_t buf, void *buffer, int len)
     ierr_exit("Cbuf_peek: cbuf_drop: %s", strerror(errno));
 
   if (rv > 0)
-    err_output("Cbuf_peek: cbuf_drop dropped data: %d", rv);
+    ierr_output("Cbuf_peek: cbuf_drop dropped data: %d", rv);
 
   return r_len;
 }

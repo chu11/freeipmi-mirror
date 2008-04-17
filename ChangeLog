@@ -34,6 +34,8 @@
 	* ipmipower/, ipmiping/, rmcpping/, bmc-watchdog/, ipmiconsole/,
 	libfreeipmi/: Use debug common functions to generate consistent
 	headers for all tools.
+
+	* ipmipower/: Convert all err_* calls to ierr_* calls.
 	
 2008-04-16  Albert Chu <chu11@llnl.gov>
 
