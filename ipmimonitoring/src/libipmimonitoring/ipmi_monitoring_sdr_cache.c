@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.14 2008-03-28 00:14:44 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.15 2008-04-17 18:11:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -60,7 +60,7 @@ int sdr_cache_filename_format_set = 0;
 extern uint32_t _ipmi_monitoring_flags;
 
 static int
-_ipmi_monitoring_sdr_cache_ctx_init(ipmi_monitoring_ctx_t c)
+_ipmi_monitoring_sdr_cache_ctx_init(ipmi_monitoring_ctx_t c, const char *hostname)
 {
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
@@ -82,6 +82,13 @@ _ipmi_monitoring_sdr_cache_ctx_init(ipmi_monitoring_ctx_t c)
           /* Don't error out, if this fails we can still continue */
           if (ipmi_sdr_cache_ctx_set_flags(c->sc, IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
             IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_ctx_set_flags: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+
+          if (hostname)
+            {
+              if (ipmi_sdr_cache_ctx_set_debug_prefix(c->sc, hostname) < 0)
+                IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_ctx_set_debug_prefix: %s",
+                                       ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+            }
         }
     } 
 
@@ -271,7 +278,7 @@ ipmi_monitoring_sdr_cache_load(ipmi_monitoring_ctx_t c,
   if (_ipmi_monitoring_sdr_cache_filename(c, hostname, filename, MAXPATHLEN + 1) < 0)
     goto cleanup;
 
-  if (_ipmi_monitoring_sdr_cache_ctx_init(c) < 0)
+  if (_ipmi_monitoring_sdr_cache_ctx_init(c, hostname) < 0)
     goto cleanup;
 
   if (ipmi_sdr_cache_open(c->sc, 
@@ -373,7 +380,7 @@ ipmi_monitoring_sdr_cache_flush(ipmi_monitoring_ctx_t c,
   if (_ipmi_monitoring_sdr_cache_filename(c, hostname, filename, MAXPATHLEN + 1) < 0)
     goto cleanup;
 
-  if (_ipmi_monitoring_sdr_cache_ctx_init(c) < 0)
+  if (_ipmi_monitoring_sdr_cache_ctx_init(c, hostname) < 0)
     goto cleanup;
 
   if (_ipmi_monitoring_sdr_cache_delete(c, hostname, filename) < 0)

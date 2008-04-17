@@ -21,8 +21,8 @@
 	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-read.c: Use new debug
 	prefix in debug outputs.
 
-	* ipmi-sensors/, ipmi-sel/, ipmi-fru/, ipmi-sensors-config/: Set
-	debug prefix appropriately.
+	* ipmimonitoring/, ipmi-sensors/, ipmi-sel/, ipmi-fru/,
+	ipmi-sensors-config/: Set debug prefix appropriately.
 
 	* common/src/ipmi-ping.h, common/src/ipmi-ping.c: Pass destination
 	to create and parse functions.
