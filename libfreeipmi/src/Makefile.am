@@ -45,7 +45,8 @@ libfreeipmi_la_LIBADD = \
 	spec/libspec.la \
 	util/libutil.la \
 	../../common/src/libfreeipmiportability.la \
-	../../common/src/libmiscutils.la
+	../../common/src/libmiscutils.la \
+	../../common/src/libdebugcommon.la
 
 api/libapi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
@@ -87,6 +88,9 @@ util/libutil.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libmiscutils.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libdebugcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 EXTRA_DIST = freeipmi.map

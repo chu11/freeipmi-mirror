@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.19 2008-04-17 15:39:50 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.20 2008-04-17 23:10:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -44,6 +44,7 @@
 #include "ipmiconsole_defs.h"
 
 #include "cbuf.h"
+#include "debug-common.h"
 #include "secure.h"
 #include "ipmiconsole_packet.h"
 #include "ipmiconsole_ctx.h"
@@ -186,18 +187,9 @@ _packet_dump_hdr(ipmiconsole_ctx_t c,
                  char *hdr,
                  unsigned int hdrlen)
 {
-  char *fmt =
-    "================================================\n"
-    "%s %s %s\n"
-    "================================================";
-  char *fmt_sol =
-    "================================================\n"
-    "%s %s\n"
-    "================================================";
-  char *str_version = NULL;
+  uint8_t packet_type;
+  uint8_t packet_direction;
   const char *str_cmd = NULL;
-  char *str_type = NULL;
-  int len;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -207,24 +199,24 @@ _packet_dump_hdr(ipmiconsole_ctx_t c,
 
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
       || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
-    str_version = "IPMI 1.5";
+    packet_type = DEBUG_COMMON_TYPE_IPMI_1_5;
   else
-    str_version = "IPMI 2.0";
+    packet_type = DEBUG_COMMON_TYPE_IPMI_2_0;
 
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
       || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
     str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
   else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST
            || p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE)
-    str_cmd = "Open Session";
+    str_cmd = DEBUG_COMMON_OPEN_SESSION_STR;
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1)
-    str_cmd = "RAKP Message 1";
+    str_cmd = DEBUG_COMMON_RAKP_1_STR;
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2)
-    str_cmd = "RAKP Message 2";
+    str_cmd = DEBUG_COMMON_RAKP_2_STR;
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3)
-    str_cmd = "RAKP Message 3";
+    str_cmd = DEBUG_COMMON_RAKP_3_STR;
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4)
-    str_cmd = "RAKP Message 4";
+    str_cmd = DEBUG_COMMON_RAKP_4_STR;
   else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ
            || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS)
     str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
@@ -257,40 +249,27 @@ _packet_dump_hdr(ipmiconsole_ctx_t c,
       return -1;
     }
 
-  if (IPMICONSOLE_PACKET_TYPE_REQUEST(p))
-    str_type = "Request";
-  else 
-    str_type = "Response";
-  
   /* special case: there is no "Request/Response" with SOL data */
   if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ
       || p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS)
-    {
-      if ((len = snprintf(hdr, hdrlen, fmt_sol, str_version, str_cmd)) < 0)
-        {
-          IPMICONSOLE_CTX_DEBUG(c, ("snprintf: p = %d", p));
-          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
-        }
-    }
-  else
-    {
-      if ((len = snprintf(hdr, hdrlen, fmt, str_version, str_cmd, str_type)) < 0)
-        {
-          IPMICONSOLE_CTX_DEBUG(c, ("snprintf: p = %d", p));
-          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
-        }
-    }
+    packet_direction = DEBUG_COMMON_DIRECTION_NONE;
+  else if (IPMICONSOLE_PACKET_TYPE_REQUEST(p))
+    packet_direction = DEBUG_COMMON_DIRECTION_REQUEST;
+  else 
+    packet_direction = DEBUG_COMMON_DIRECTION_RESPONSE;
   
-  if (len >= hdrlen)
+  if (debug_hdr_str(packet_type,
+                    packet_direction,
+                    str_cmd,
+                    hdr,
+                    hdrlen) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("snprintf truncation: p = %d; len = %d", p, len));
+      IPMICONSOLE_CTX_DEBUG(c, ("debug_hdr_str: p = %d", p));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
-  return (len);
+  return 0;
 }
 
 int

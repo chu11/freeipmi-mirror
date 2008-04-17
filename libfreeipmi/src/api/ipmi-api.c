@@ -74,6 +74,7 @@
 #include "libcommon/ipmi-crypt.h"
 
 #include "freeipmi-portability.h"
+#include "debug-common.h"
 #include "secure.h"
 
 #define IPMI_SESSION_TIMEOUT         20000
@@ -696,30 +697,23 @@ ipmi_cmd (ipmi_ctx_t ctx,
       if (ctx->type != IPMI_DEVICE_LAN
           && ctx->type != IPMI_DEVICE_LAN_2_0)
         {
-          const char *cmd_str;
+          char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
           uint64_t cmd = 0;
 
           API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
 
-          if ((cmd_str = ipmi_cmd_str (ctx->net_fn, cmd)))
-            {
-              char *hdr_format =
-                "================================================\n"
-                "%s Request\n"
-                "================================================";
-              char hdrbuf[1024];
+          debug_hdr_cmd(DEBUG_COMMON_TYPE_INBAND,
+                        DEBUG_COMMON_DIRECTION_REQUEST,
+                        ctx->net_fn,
+                        cmd,
+                        hdrbuf,
+                        DEBUG_COMMON_HDR_BUFLEN);
 
-              snprintf(hdrbuf,
-                       1024,
-                       hdr_format,
-                       cmd_str);
-              
-              ipmi_obj_dump (STDERR_FILENO, 
-                             NULL,
-                             hdrbuf, 
-                             NULL, 
-                             obj_cmd_rq);
-            }
+          ipmi_obj_dump (STDERR_FILENO, 
+                         NULL,
+                         hdrbuf, 
+                         NULL, 
+                         obj_cmd_rq);
         }
     }
 
@@ -740,31 +734,24 @@ ipmi_cmd (ipmi_ctx_t ctx,
       if (ctx->type != IPMI_DEVICE_LAN
           && ctx->type != IPMI_DEVICE_LAN_2_0)
         {
-          const char *cmd_str;
+          char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
           uint64_t cmd = 0;
-
-          API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rs, "cmd", &cmd);
+          
+          API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
 
 	  /* its ok to use the "request" net_fn */
-          if ((cmd_str = ipmi_cmd_str (ctx->net_fn, cmd)))
-            {
-              char *hdr_format =
-                "================================================\n"
-                "%s Response\n"
-                "================================================";
-              char hdrbuf[1024];
-              
-              snprintf(hdrbuf,
-                       1024,
-                       hdr_format,
-                       cmd_str);
-              
-              ipmi_obj_dump (STDERR_FILENO, 
-                             NULL,
-                             hdrbuf, 
-                             NULL, 
-                             obj_cmd_rs);
-            }
+          debug_hdr_cmd(DEBUG_COMMON_TYPE_INBAND,
+                        DEBUG_COMMON_DIRECTION_RESPONSE,
+                        ctx->net_fn,
+                        cmd,
+                        hdrbuf,
+                        DEBUG_COMMON_HDR_BUFLEN);
+          
+          ipmi_obj_dump (STDERR_FILENO, 
+                         NULL,
+                         hdrbuf, 
+                         NULL, 
+                         obj_cmd_rs);
         }
     }
 

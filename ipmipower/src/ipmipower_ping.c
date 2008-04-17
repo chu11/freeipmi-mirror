@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.25 2008-04-16 23:45:36 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.26 2008-04-17 23:10:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -39,6 +39,8 @@
 #include "ipmipower_ping.h"
 #include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
+
+#include "debug-common.h"
 
 extern struct ipmipower_config *conf;
 extern struct ipmipower_connection *ics;
@@ -138,13 +140,17 @@ ipmipower_ping_process_pings(int *timeout)
 #ifndef NDEBUG
           if (conf->rmcpdump) 
             {
-              char *hdr = 
-                "============================================\n"
-                "RMCP Ping\n"
-                "============================================";
+              char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+
+              debug_hdr_str(DEBUG_COMMON_TYPE_NONE,
+                            DEBUG_COMMON_DIRECTION_NONE,
+                            DEBUG_COMMON_RMCPPING_STR,
+                            hdrbuf,
+                            DEBUG_COMMON_HDR_BUFLEN);
+
               Ipmi_dump_rmcp_packet(STDERR_FILENO, 
                                     (conf->hosts_count > 1) ? ics[i].hostname : NULL,
-                                    hdr, 
+                                    hdrbuf, 
                                     NULL,
                                     (uint8_t *)buffer, 
                                     (uint32_t)len, 
@@ -179,13 +185,17 @@ ipmipower_ping_process_pings(int *timeout)
 #ifndef NDEBUG
           if (conf->rmcpdump) 
             {
-              char *hdr = 
-                "============================================\n"
-                "RMCP Pong\n"
-                "============================================";
+              char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+
+              debug_hdr_str(DEBUG_COMMON_TYPE_NONE,
+                            DEBUG_COMMON_DIRECTION_NONE,
+                            DEBUG_COMMON_RMCPPING_STR,
+                            hdrbuf,
+                            DEBUG_COMMON_HDR_BUFLEN);
+
               Ipmi_dump_rmcp_packet(STDERR_FILENO, 
                                     (conf->hosts_count > 1) ? ics[i].hostname : NULL,
-                                    hdr, 
+                                    hdrbuf, 
                                     NULL,
                                     (uint8_t *)buffer, 
                                     (uint32_t)len, 

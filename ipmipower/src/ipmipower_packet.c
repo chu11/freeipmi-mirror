@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.77 2008-04-17 15:39:51 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.78 2008-04-17 23:10:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -40,6 +40,8 @@
 #include "ipmipower_packet.h"
 #include "ipmipower_authentication_type.h"
 #include "ipmipower_wrappers.h"
+
+#include "debug-common.h"
 
 extern struct ipmipower_config *conf;
 
@@ -176,19 +178,15 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
   if (conf->debug)
     {
       fiid_field_t *tmpl_lan_msg_hdr;
-      char hdrbuf[1024];
-      char *fmt = 
-        "================================================\n"
-        "%s %s %s\n"
-        "================================================";
-      char *str_version = NULL;
+      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+      uint8_t packet_type;
+      uint8_t packet_direction;
       const char *str_cmd = NULL;
-      char *str_type = NULL;
       
       if (ip->ipmi_version == IPMI_VERSION_1_5)
-        str_version = "IPMI 1.5";
+        packet_type = DEBUG_COMMON_TYPE_IPMI_1_5;
       else
-        str_version = "IPMI 2.0";
+        packet_type = DEBUG_COMMON_TYPE_IPMI_2_0;
       
       if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ
           || pkt == AUTHENTICATION_CAPABILITIES_V20_RES
@@ -206,15 +204,15 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
         str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_CIPHER_SUITES);
       else if (pkt == OPEN_SESSION_REQ
                || pkt == OPEN_SESSION_RES)
-        str_cmd = "Open Session";
+        str_cmd = DEBUG_COMMON_OPEN_SESSION_STR;
       else if (pkt == RAKP_MESSAGE_1_REQ)
-        str_cmd = "RAKP Message 1";
+        str_cmd = DEBUG_COMMON_RAKP_1_STR;
       else if (pkt == RAKP_MESSAGE_2_RES)
-        str_cmd = "RAKP Message 2";
+        str_cmd = DEBUG_COMMON_RAKP_2_STR;
       else if (pkt == RAKP_MESSAGE_3_REQ)
-        str_cmd = "RAKP Message 3";
+        str_cmd = DEBUG_COMMON_RAKP_3_STR;
       else if (pkt == RAKP_MESSAGE_4_RES)
-        str_cmd = "RAKP Message 4";
+        str_cmd = DEBUG_COMMON_RAKP_4_STR;
       else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES)
         str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
@@ -229,11 +227,15 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
         str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_CLOSE_SESSION);
         
       if (pkt & PACKET_TYPE_REQ_MASK)
-        str_type = "Request";
+        packet_direction = DEBUG_COMMON_DIRECTION_REQUEST;
       else
-        str_type = "Response";
+        packet_direction = DEBUG_COMMON_DIRECTION_RESPONSE;
 
-      snprintf(hdrbuf, 1024, fmt, str_version, str_cmd, str_type);
+      debug_hdr_str(packet_type,
+                    packet_direction,
+                    str_cmd,
+                    hdrbuf,
+                    DEBUG_COMMON_HDR_BUFLEN);
 
       if (pkt & PACKET_TYPE_REQ_MASK)
         tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rq[0];

@@ -24,7 +24,8 @@ ipmipower_LDADD = \
 	../../common/src/libmiscutils.la \
 	../../common/src/libtoolcommon.la \
 	../../ipmidetect/src/libipmidetect/libipmidetect.la \
-	../../libfreeipmi/src/libfreeipmi.la
+	../../libfreeipmi/src/libfreeipmi.la \
+	../../common/src/libdebugcommon.la
  
 ipmipower_CPPFLAGS = \
 	-I$(srcdir)/../../common/src \
@@ -64,6 +65,9 @@ noinst_HEADERS= \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../ipmidetect/src/libipmidetect/libipmidetect.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libdebugcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
  
 force-dependency-check:

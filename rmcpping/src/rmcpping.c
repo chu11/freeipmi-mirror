@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.29 2008-04-17 18:06:27 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.30 2008-04-17 23:10:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -41,6 +41,7 @@
 
 #include <freeipmi/freeipmi.h>
 
+#include "debug-common.h"
 #include "ipmi-ping.h"
 
 #define _supported(x)   (x) ? "supported" : "not-supported"
@@ -110,14 +111,17 @@ createpacket(char *destination,
   
   if (debug)
     {
-      char *hdr =         
-        "================================================\n"
-        "RMCP Ping\n"
-        "================================================";
+      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+      
+      debug_hdr_str(DEBUG_COMMON_TYPE_NONE,
+                    DEBUG_COMMON_DIRECTION_NONE,
+                    DEBUG_COMMON_RMCPPING_STR,
+                    hdrbuf,
+                    DEBUG_COMMON_HDR_BUFLEN);
 
       if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
                                 destination,
-                                hdr, 
+                                hdrbuf, 
                                 NULL, 
                                 (uint8_t *)buffer, 
                                 (uint32_t)len, 
@@ -156,14 +160,17 @@ parsepacket(char * destination,
 
   if (debug)
     {
-      char *hdr =         
-        "================================================\n"
-        "RMCP Pong\n"
-        "================================================";
+      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+      
+      debug_hdr_str(DEBUG_COMMON_TYPE_NONE,
+                    DEBUG_COMMON_DIRECTION_NONE,
+                    DEBUG_COMMON_RMCPPONG_STR,
+                    hdrbuf,
+                    DEBUG_COMMON_HDR_BUFLEN);
 
       if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
                                 destination,
-                                hdr,
+                                hdrbuf,
                                 NULL,
                                 (uint8_t *)buffer,
                                 (uint32_t)buflen, 

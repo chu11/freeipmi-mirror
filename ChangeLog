@@ -28,6 +28,12 @@
 	to create and parse functions.
 
 	* ipmiping/, rmcpping/: Prefix debug output appropriately.
+
+	* common/src/debug-common.h, common/src/debug-common.c: New files.
+
+	* ipmipower/, ipmiping/, rmcpping/, bmc-watchdog/, ipmiconsole/,
+	libfreeipmi/: Use debug common functions to generate consistent
+	headers for all tools.
 	
 2008-04-16  Albert Chu <chu11@llnl.gov>
 

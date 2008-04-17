@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.13 2008-04-17 17:58:32 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.14 2008-04-17 23:10:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -58,6 +58,7 @@
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
+#include "debug-common.h"
 #include "fd.h"
 
 #define IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH    1024
@@ -582,17 +583,14 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx,
                                                                record_buf,
                                                                record_len)))
                 {
-                  char *hdr_format =
-                    "================================================\n"
-                    "%s\n"
-                    "================================================";
                   char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
 
-                  snprintf(hdrbuf, 
-                           IPMI_SDR_CACHE_DEBUG_BUFLEN,
-                           hdr_format,
-                           record_str);
-                  
+                  debug_hdr_str(DEBUG_COMMON_TYPE_NONE,
+                                DEBUG_COMMON_DIRECTION_NONE,
+                                record_str,
+                                hdrbuf,
+                                IPMI_SDR_CACHE_DEBUG_BUFLEN);
+
                   ipmi_dump_sdr_record (STDERR_FILENO,
                                         ctx->debug_prefix,
                                         hdrbuf,

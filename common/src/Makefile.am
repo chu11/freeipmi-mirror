@@ -28,7 +28,8 @@ noinst_HEADERS = \
 	config-pef-conf-section.h \
 	config-section.h \
 	config-utils.h \
-	config-validate.h
+	config-validate.h \
+	debug-common.h
 
 noinst_LTLIBRARIES = \
 	libfreeipmiportability.la \
@@ -36,7 +37,8 @@ noinst_LTLIBRARIES = \
 	libipmiping.la \
 	libmiscutils.la \
 	libhostrange.la \
-	libconfigcommon.la
+	libconfigcommon.la \
+	libdebugcommon.la
 
 libfreeipmiportability_la_SOURCES = freeipmi-portability.c
 libfreeipmiportability_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
@@ -49,6 +51,11 @@ libtoolcommon_la_SOURCES = \
 libtoolcommon_la_CPPFLAGS = \
 	-D_GNU_SOURCE \
 	-D_REENTRANT \
+	-I$(srcdir)/../../libfreeipmi/include 
+
+libdebugcommon_la_SOURCES = \
+	debug-common.c
+libdebugcommon_la_CPPFLAGS = \
 	-I$(srcdir)/../../libfreeipmi/include 
 
 libipmiping_la_SOURCES = ipmi-ping.c

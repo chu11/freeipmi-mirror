@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.10 2008-04-17 17:58:32 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.11 2008-04-17 23:10:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -54,6 +54,8 @@
 #include "ipmi-sdr-cache-defs.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
+
+#include "debug-common.h"
 
 int 
 ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t ctx, 
@@ -426,16 +428,13 @@ ipmi_sdr_cache_record_read(ipmi_sdr_cache_ctx_t ctx,
 						       ctx->sdr_cache + ctx->current_offset,
 						       record_length + IPMI_SDR_CACHE_SDR_RECORD_HEADER_LENGTH)))
         {
-          char *hdr_format =
-            "================================================\n"
-            "%s\n"
-            "================================================";
           char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
 
-          snprintf(hdrbuf, 
-                   IPMI_SDR_CACHE_DEBUG_BUFLEN,
-                   hdr_format,
-                   record_str);
+          debug_hdr_str(DEBUG_COMMON_TYPE_NONE,
+                        DEBUG_COMMON_DIRECTION_NONE,
+                        record_str,
+                        hdrbuf,
+                        IPMI_SDR_CACHE_DEBUG_BUFLEN);
 
           ipmi_dump_sdr_record (STDERR_FILENO,
                                 ctx->debug_prefix,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.44 2008-04-17 18:06:27 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.45 2008-04-17 23:10:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -41,6 +41,7 @@
 
 #include <freeipmi/freeipmi.h>
 
+#include "debug-common.h"
 #include "ipmi-ping.h"
 
 #define _setstr(x)   (x) ? "set" : "clear"
@@ -147,22 +148,14 @@ createpacket(char *destination,
 
   if (debug)
     {
-      char hdrbuf[1024];
-      char *fmt =
-        "================================================\n"
-        "%s %s Request\n"
-        "================================================";
-      char *str_version = NULL;
-      const char *str_cmd = NULL;
-      
-      if (version == IPMI_PING_VERSION_1_5)
-        str_version = "IPMI 1.5";
-      else
-        str_version = "IPMI 2.0";
-      
-      str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
 
-      snprintf(hdrbuf, 1024, fmt, str_version, str_cmd);
+      debug_hdr_cmd((version == IPMI_PING_VERSION_1_5) ? DEBUG_COMMON_TYPE_IPMI_1_5 : DEBUG_COMMON_TYPE_IPMI_2_0,
+                    DEBUG_COMMON_DIRECTION_REQUEST,
+                    IPMI_NET_FN_APP_RQ,
+                    IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES,
+                    hdrbuf,
+                    DEBUG_COMMON_HDR_BUFLEN);
 
       if (ipmi_dump_lan_packet(STDERR_FILENO, 
                                destination,
@@ -228,23 +221,15 @@ parsepacket(char *destination,
 
   if (debug)
     {
-      char hdrbuf[1024];
-      char *fmt =
-        "================================================\n"
-        "%s %s Response\n"
-        "================================================";
-      char *str_version = NULL;
-      const char *str_cmd = NULL;
+      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
       
-      if (version == IPMI_PING_VERSION_1_5)
-        str_version = "IPMI 1.5";
-      else
-        str_version = "IPMI 2.0";
+      debug_hdr_cmd((version == IPMI_PING_VERSION_1_5) ? DEBUG_COMMON_TYPE_IPMI_1_5 : DEBUG_COMMON_TYPE_IPMI_2_0,
+                    DEBUG_COMMON_DIRECTION_RESPONSE,
+                    IPMI_NET_FN_APP_RQ,
+                    IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES,
+                    hdrbuf,
+                    DEBUG_COMMON_HDR_BUFLEN);
       
-      str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
-
-      snprintf(hdrbuf, 1024, fmt, str_version, str_cmd);
-
       if (ipmi_dump_lan_packet(STDERR_FILENO, 
                                destination,
                                hdrbuf,
