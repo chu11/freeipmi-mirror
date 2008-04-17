@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.81 2008-03-28 00:14:30 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.82 2008-04-17 00:10:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -620,6 +620,7 @@ _cmd(char *str,
      int retry_wait_time, 
      int retry_attempt, 
      uint8_t netfn,
+     uint8_t cmd,
      fiid_obj_t cmd_rq,
      fiid_obj_t cmd_rs)
 {
@@ -636,7 +637,18 @@ _cmd(char *str,
 
   if (cinfo.debug)
     {
-      if (ipmi_obj_dump(STDERR_FILENO, str, NULL, NULL, cmd_rq) < 0)
+      char hdrbuf[1024];
+      char *fmt =
+        "================================================\n"
+        "%s Request\n"
+        "================================================";
+      const char *str_cmd = NULL;
+
+      str_cmd = ipmi_cmd_str(netfn, cmd);
+      
+      snprintf(hdrbuf, 1024, fmt, str_cmd);
+
+      if (ipmi_obj_dump(STDERR_FILENO, NULL, hdrbuf, NULL, cmd_rq) < 0)
         _bmclog("%s: ipmi_obj_dump: %s", str, strerror(errno));
     }
 
@@ -752,7 +764,18 @@ _cmd(char *str,
 
   if (cinfo.debug)
     {
-      if (ipmi_obj_dump(STDERR_FILENO, str, NULL, NULL, cmd_rs) < 0)
+      char hdrbuf[1024];
+      char *fmt =
+        "================================================\n"
+        "%s Response\n"
+        "================================================";
+      const char *str_cmd = NULL;
+
+      str_cmd = ipmi_cmd_str(netfn, cmd);
+      
+      snprintf(hdrbuf, 1024, fmt, str_cmd);
+
+      if (ipmi_obj_dump(STDERR_FILENO, NULL, hdrbuf, NULL, cmd_rs) < 0)
         _bmclog("%s: ipmi_obj_dump: %s", str, strerror(errno));
     }
 
@@ -799,6 +822,7 @@ _reset_watchdog_timer_cmd(int retry_wait_time, int retry_attempt)
 		retry_wait_time, 
 		retry_attempt, 
                 IPMI_NET_FN_APP_RQ,
+                IPMI_CMD_RESET_WATCHDOG_TIMER,
                 cmd_rq,
                 cmd_rs);
 
@@ -869,6 +893,7 @@ _set_watchdog_timer_cmd(int retry_wait_time,
 		retry_wait_time,
 		retry_attempt, 
                 IPMI_NET_FN_APP_RQ,
+                IPMI_CMD_SET_WATCHDOG_TIMER,
                 cmd_rq,
                 cmd_rs);
 
@@ -925,6 +950,7 @@ _get_watchdog_timer_cmd(int retry_wait_time,
 		     retry_wait_time,
 		     retry_attempt, 
 		     IPMI_NET_FN_APP_RQ,
+                     IPMI_CMD_GET_WATCHDOG_TIMER,
 		     cmd_rq, 
 		     cmd_rs)) != 0)
     goto cleanup;
@@ -1054,6 +1080,7 @@ _get_channel_number(int retry_wait_time, int retry_attempt)
 		  retry_wait_time, 
 		  retry_attempt,
 		  IPMI_NET_FN_APP_RQ,
+                  IPMI_CMD_GET_DEVICE_ID,
 		  dev_id_cmd_rq, 
 		  dev_id_cmd_rs)) != 0)
     _ipmi_err_exit(IPMI_CMD_GET_DEVICE_ID, 
@@ -1107,6 +1134,7 @@ _get_channel_number(int retry_wait_time, int retry_attempt)
 	       retry_wait_time, 
 	       retry_attempt,
 	       IPMI_NET_FN_APP_RQ,
+               IPMI_CMD_GET_CHANNEL_INFO_COMMAND,
 	       channel_info_cmd_rq, 
 	       channel_info_cmd_rs) != 0)
 	continue;
@@ -1183,6 +1211,7 @@ _suspend_bmc_arps_cmd(int retry_wait_time,
 		retry_wait_time, 
 		retry_attempt,
                 IPMI_NET_FN_TRANSPORT_RQ,
+                IPMI_CMD_SUSPEND_BMC_ARPS,
                 cmd_rq, 
                 cmd_rs);
 

@@ -1,6 +1,6 @@
 2008-04-16  Albert Chu <chu11@llnl.gov>
 
-	* rmcpping/src/, ipmiping/src/, ipmipower/src/,
+	* bmc-watchdog/, rmcpping/src/, ipmiping/src/, ipmipower/src/,
 	ipmiconsole/src/libipmiconsole/: Make debug dump output consistent
 	to other tools by calling ipmi_cmd_str appropriately, outputing
 	"request" vs "response", "ipmi 1.5" vs. "ipmi 2.0", output w/
