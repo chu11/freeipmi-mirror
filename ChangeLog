@@ -6,6 +6,8 @@
 	"request" vs "response", "ipmi 1.5" vs. "ipmi 2.0", output w/
 	headers, etc.
 
+	* libfreeipmi/src/api: Store hostname to ctx.
+	
 2008-04-15  Albert Chu <chu11@llnl.gov>
 	
 	* General documentation manpage audit/updates.
