@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.76 2008-04-16 23:19:16 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.77 2008-04-17 15:39:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -42,7 +42,6 @@
 #include "ipmipower_wrappers.h"
 
 extern struct ipmipower_config *conf;
-extern int queued_count;
 
 fiid_field_t *
 ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
@@ -241,15 +240,6 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
       else
         tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rs[0];
         
-      /* achu: 
-       * 
-       * we use queued_count to determine if we prefix the hostname to the
-       * debug output so that the debug output is consistent between tools.
-       *
-       * i.e. if the user wants debug output > 1 host, prefix.
-       * Otherwise, don't prefix.
-       */
-
       if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
           || pkt == GET_CHANNEL_CIPHER_SUITES_RES
           || pkt == OPEN_SESSION_REQ
@@ -259,7 +249,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
           || pkt == RAKP_MESSAGE_3_REQ
           || pkt == RAKP_MESSAGE_4_RES)
         Ipmi_dump_rmcpplus_packet(STDERR_FILENO,
-                                  (queued_count > 1) ? ip->ic->hostname : NULL,
+                                  ip->ic->hostname,
                                   hdrbuf,
                                   NULL,
                                   IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
@@ -283,7 +273,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                    || pkt == CLOSE_SESSION_REQ
                    || pkt == CLOSE_SESSION_RES))
         Ipmi_dump_rmcpplus_packet(STDERR_FILENO,
-                                  (queued_count > 1) ? ip->ic->hostname : NULL,
+                                  ip->ic->hostname,
                                   hdrbuf,
                                   NULL,
                                   ip->authentication_algorithm,
@@ -299,7 +289,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                                   ipmipower_packet_cmd_template(ip, pkt));
       else /* IPMI 1.5 pkt */
         Ipmi_dump_lan_packet(STDERR_FILENO, 
-                             (queued_count > 1) ? ip->ic->hostname : NULL,
+                             ip->ic->hostname,
                              hdrbuf, 
                              NULL,
                              (uint8_t *)buffer, 

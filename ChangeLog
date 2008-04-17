@@ -1,3 +1,11 @@
+2008-04-17  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/api: Make debug dump output consistent to other
+	tools w/ hostname prefix on lan debug output.
+
+	* ipmipower/, ipmiconsole/: Revert change with no-prefix when
+	doing lan debug output to only one host.
+	
 2008-04-16  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/, rmcpping/src/, ipmiping/src/, ipmipower/src/,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.18 2008-04-16 23:19:16 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.19 2008-04-17 15:39:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -328,15 +328,6 @@ ipmiconsole_packet_dump(ipmiconsole_ctx_t c,
 
   if (_packet_dump_hdr(c, p, hdr, IPMICONSOLE_MAX_PACKET_DUMP_HDR_LEN) < 0)
     return -1;
-
-  /* achu:
-   *
-   * In most of FreeIPMI, we output debug prefixes only when the user
-   * has specified > 1 host.  But in this library, calculating that is
-   * a tad more cumbersome b/c of multiple threads, non-even consoles
-   * per thread, etc.  I'm going to ignore that here and output a
-   * prefix under all conditions.
-   */
 
   /* IPMI 1.5 Style Packets */
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ

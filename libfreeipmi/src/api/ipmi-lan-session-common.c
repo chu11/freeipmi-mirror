@@ -187,7 +187,7 @@ _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
                    cmd_str);
           
           ipmi_dump_lan_packet (STDERR_FILENO,
-                                NULL,
+                                ctx->io.outofband.hostname,
                                 hdrbuf,
                                 NULL,
                                 pkt,
@@ -236,7 +236,7 @@ _ipmi_lan_dump_rs (ipmi_ctx_t ctx,
                    cmd_str);
           
           ipmi_dump_lan_packet (STDERR_FILENO,
-                                NULL,
+                                ctx->io.outofband.hostname,
                                 hdrbuf,
                                 NULL,
                                 pkt,
@@ -1196,7 +1196,7 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
                    cmd_str);
           
           ipmi_dump_rmcpplus_packet (STDERR_FILENO,
-                                     NULL,
+                                     ctx->io.outofband.hostname,
                                      hdrbuf,
                                      NULL,
                                      authentication_algorithm,
@@ -1270,7 +1270,7 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
                    cmd_str);
           
           ipmi_dump_rmcpplus_packet (STDERR_FILENO,
-                                     NULL,
+                                     ctx->io.outofband.hostname,
                                      hdrbuf,
                                      NULL,
                                      authentication_algorithm,
