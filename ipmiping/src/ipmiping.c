@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.43 2008-04-16 23:45:36 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.44 2008-04-17 18:06:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -72,7 +72,8 @@ _fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
 }
 
 int 
-createpacket(char *buffer, 
+createpacket(char *destination,
+             char *buffer, 
              int buflen, 
              unsigned int sequence_number,
              int version,
@@ -85,6 +86,7 @@ createpacket(char *buffer,
   fiid_field_t *tmpl_cmd_get_channel_authentication_capabilities_ptr = NULL;
   int len;
 
+  assert(destination != NULL);
   assert(buffer != NULL);
   assert(version == IPMI_PING_VERSION_1_5 || version == IPMI_PING_VERSION_2_0);
 
@@ -163,7 +165,7 @@ createpacket(char *buffer,
       snprintf(hdrbuf, 1024, fmt, str_version, str_cmd);
 
       if (ipmi_dump_lan_packet(STDERR_FILENO, 
-                               NULL,
+                               destination,
                                hdrbuf, 
                                NULL,
                                (uint8_t *)buffer, 
@@ -182,7 +184,8 @@ createpacket(char *buffer,
 }
 
 int 
-parsepacket(char *buffer, 
+parsepacket(char *destination,
+            char *buffer, 
             int buflen, 
             const char *from,
             unsigned int sequence_number, 
@@ -202,6 +205,7 @@ parsepacket(char *buffer,
   fiid_field_t *tmpl_cmd_get_channel_authentication_capabilities_ptr = NULL;
   int ret, retval = -1;
 
+  assert(destination != NULL);
   assert(buffer != NULL && from != NULL);
   assert(version == IPMI_PING_VERSION_1_5 || version == IPMI_PING_VERSION_2_0);
 
@@ -242,7 +246,7 @@ parsepacket(char *buffer,
       snprintf(hdrbuf, 1024, fmt, str_version, str_cmd);
 
       if (ipmi_dump_lan_packet(STDERR_FILENO, 
-                               NULL,
+                               destination,
                                hdrbuf,
                                NULL,
                                (uint8_t *)buffer, 

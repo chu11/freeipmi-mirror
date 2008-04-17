@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.28 2008-04-16 23:45:36 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.29 2008-04-17 18:06:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -69,7 +69,8 @@ _fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
 }
 
 int 
-createpacket(char *buffer, 
+createpacket(char *destination,
+             char *buffer, 
              int buflen, 
              unsigned int sequence_number, 
              int version,
@@ -79,6 +80,7 @@ createpacket(char *buffer,
   fiid_obj_t obj_rmcp_cmd = NULL;
   int len;
 
+  assert(destination != NULL);
   assert(buffer != NULL);
     
   if (buflen < 0)
@@ -114,7 +116,7 @@ createpacket(char *buffer,
         "================================================";
 
       if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
-                                NULL,
+                                destination,
                                 hdr, 
                                 NULL, 
                                 (uint8_t *)buffer, 
@@ -129,7 +131,8 @@ createpacket(char *buffer,
 }
 
 int 
-parsepacket(char *buffer, 
+parsepacket(char * destination,
+            char *buffer, 
             int buflen, 
             const char *from, 
             unsigned int sequence_number, 
@@ -142,6 +145,7 @@ parsepacket(char *buffer,
   uint64_t message_type, ipmi_supported, message_tag;
   int retval = -1;
 
+  assert(destination != NULL);
   assert(buffer != NULL && from != NULL);
   
   if (buflen == 0)
@@ -158,7 +162,7 @@ parsepacket(char *buffer,
         "================================================";
 
       if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
-                                NULL,
+                                destination,
                                 hdr,
                                 NULL,
                                 (uint8_t *)buffer,

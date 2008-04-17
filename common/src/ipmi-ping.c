@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.18 2008-03-28 00:14:32 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.19 2008-04-17 18:06:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -411,7 +411,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
             continue;
         }
       
-      if ((len = _create((char *)buffer, IPMI_PING_MAX_PKT_LEN, 
+      if ((len = _create(_dest, (char *)buffer, IPMI_PING_MAX_PKT_LEN, 
                          sequence_number, _version, _debug)) < 0)
         ipmi_ping_err_exit("_create failed: %s", strerror(errno));
         
@@ -452,7 +452,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
               if (len < 0)
                 ipmi_ping_err_exit("ipmi_recvfrom: %s", strerror(errno));
               
-              if ((rv = _parse((char *)buffer, len, inet_ntoa(from.sin_addr), 
+              if ((rv = _parse(_dest, (char *)buffer, len, inet_ntoa(from.sin_addr), 
                                sequence_number, _verbose, _version, _debug)) < 0)
                 ipmi_ping_err_exit("_parse failed: %s", strerror(errno));
 

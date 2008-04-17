@@ -23,6 +23,11 @@
 
 	* ipmi-sensors/, ipmi-sel/, ipmi-fru/, ipmi-sensors-config/: Set
 	debug prefix appropriately.
+
+	* common/src/ipmi-ping.h, common/src/ipmi-ping.c: Pass destination
+	to create and parse functions.
+
+	* ipmiping/, rmcpping/: Prefix debug output appropriately.
 	
 2008-04-16  Albert Chu <chu11@llnl.gov>
 
