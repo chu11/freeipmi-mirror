@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.12 2008-03-28 00:15:05 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.13 2008-04-17 17:58:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -54,6 +54,7 @@
 #include "ipmi-sdr-cache-common.h"
 #include "ipmi-sdr-cache-defs.h"
 
+#include "api/ipmi-ctx.h"
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
@@ -591,9 +592,9 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx,
                            IPMI_SDR_CACHE_DEBUG_BUFLEN,
                            hdr_format,
                            record_str);
-                           
+                  
                   ipmi_dump_sdr_record (STDERR_FILENO,
-                                        NULL,
+                                        ctx->debug_prefix,
                                         hdrbuf,
                                         NULL,
                                         record_buf,

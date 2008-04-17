@@ -930,7 +930,6 @@ do {                                                                      \
       }                                                                 \
   } while (0)
 
-  /* ??? */
 #define SDR_CACHE_ERR_OUT_OF_MEMORY(expr)                               \
   do {                                                                  \
     if (!(expr))                                                        \

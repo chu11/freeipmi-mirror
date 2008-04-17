@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.9 2008-03-28 00:15:05 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.10 2008-04-17 17:58:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -431,14 +431,14 @@ ipmi_sdr_cache_record_read(ipmi_sdr_cache_ctx_t ctx,
             "%s\n"
             "================================================";
           char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
-          
+
           snprintf(hdrbuf, 
                    IPMI_SDR_CACHE_DEBUG_BUFLEN,
                    hdr_format,
                    record_str);
-          
+
           ipmi_dump_sdr_record (STDERR_FILENO,
-                                NULL,
+                                ctx->debug_prefix,
                                 hdrbuf,
                                 NULL,
                                 ctx->sdr_cache + ctx->current_offset,

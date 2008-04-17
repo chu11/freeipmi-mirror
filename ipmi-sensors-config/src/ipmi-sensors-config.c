@@ -96,6 +96,15 @@ _ipmi_sensors_config (void *arg)
         fprintf (stderr,
                  "ipmi_sdr_cache_ctx_set_flags: %s\n",
                  ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+
+      if (prog_data->args->config_args.common.hostname)
+        {
+          if (ipmi_sdr_cache_ctx_set_debug_prefix(state_data.ipmi_sdr_cache_ctx,
+                                                  prog_data->args->config_args.common.hostname) < 0)
+            fprintf (stderr,
+                     "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
+                     ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+        }
     }  
 
   if (prog_data->args->sdr.flush_cache_wanted)

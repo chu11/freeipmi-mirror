@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.14 2008-03-28 00:14:35 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.15 2008-04-17 17:58:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -503,6 +503,16 @@ _ipmi_fru(pstdout_state_t pstate,
                          stderr,
                          "ipmi_sdr_cache_ctx_set_flags: %s\n",
                          ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+
+      if (hostname)
+        {
+          if (ipmi_sdr_cache_ctx_set_debug_prefix(state_data.ipmi_sdr_cache_ctx,
+                                                  hostname) < 0)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
+                             ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+        }
     }
 
   if (run_cmd_args (&state_data) < 0)

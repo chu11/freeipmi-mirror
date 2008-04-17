@@ -5,6 +5,24 @@
 
 	* ipmipower/, ipmiconsole/: Revert change with no-prefix when
 	doing lan debug output to only one host.
+
+	* libfreeipmi/include/freeipmi/sdr-cache/ipmi-sdr-cache.h,
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache.c
+	(ipmi_sdr_cache_ctx_get_debug_prefix,
+	ipmi_sdr_cache_ctx_set_debug_prefix): New functions.
+
+	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-defs.h: Add
+	debug_prefix into ctx.
+
+	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache.c: Init and cleanup
+	debug_prefix appropriately.
+
+	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-create.c,
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-read.c: Use new debug
+	prefix in debug outputs.
+
+	* ipmi-sensors/, ipmi-sel/, ipmi-fru/, ipmi-sensors-config/: Set
+	debug prefix appropriately.
 	
 2008-04-16  Albert Chu <chu11@llnl.gov>
 
