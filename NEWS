@@ -64,6 +64,7 @@ o Store SDR with different format for ipmi-sensors, ipmi-fru,
   for easier future extensibility.  
 o Packet names added to IPMI dump outputs in all tools for easier
   packet identification in debugging.
+o Make IPMI dump outputs consistent across all tools.
 o Support driver timeout error codes in all drivers and APIs.
 o SDR record dumping added into all tools.
 o Various other bug fixes and enhancements.
