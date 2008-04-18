@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.74 2008-04-18 01:12:17 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.75 2008-04-18 01:30:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -202,7 +202,7 @@ ipmiconsole_engine_setup(unsigned int thread_count)
 
   for (i = 0; i < IPMICONSOLE_THREAD_COUNT_MAX; i++)
     {
-      if (!(console_engine_ctxs[i] = list_create((ListDelF)ipmiconsole_ctx_connection_cleanup)))
+      if (!(console_engine_ctxs[i] = list_create((ListDelF)ipmiconsole_ctx_connection_cleanup_session_submitted)))
         {
           IPMICONSOLE_DEBUG(("list_create: %s", strerror(errno)));
           goto cleanup;
@@ -1209,16 +1209,12 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_unlock(&console_engine_ctxs_mutex[index])))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup_thread_count;
     }
   
  cleanup_thread_count:
   if ((perr = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
-    {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-      return -1;
-    }
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
   return ret;
 }

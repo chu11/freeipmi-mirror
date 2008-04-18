@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.h,v 1.12 2008-03-28 00:14:39 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.h,v 1.13 2008-04-18 01:30:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -62,7 +62,9 @@ void ipmiconsole_ctx_blocking_cleanup(ipmiconsole_ctx_t c);
 
 int ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c);
 
-void ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c);
+void ipmiconsole_ctx_connection_cleanup_session_submitted(ipmiconsole_ctx_t c);
+
+void ipmiconsole_ctx_connection_cleanup_session_not_submitted(ipmiconsole_ctx_t c);
 
 int ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c);
 

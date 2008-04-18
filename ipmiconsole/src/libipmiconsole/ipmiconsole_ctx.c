@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.30 2008-04-18 01:12:17 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.31 2008-04-18 01:30:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -622,8 +622,8 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
   return -1;
 }
 
-void
-ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
+static void
+__ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c, int session_submitted)
 {
   int blocking_requested = 0;
   int status_initial = 0;
@@ -787,16 +787,23 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
   
   _ipmiconsole_ctx_connection_init(c);
 
+  /* If the session was never submitted (i.e. error in API land), don't
+   * move this around.
+   */
+
+  if (!session_submitted)
+    return;
+
   /* Be careful, if the user requested to destroy the context, we can
    * destroy it here.  But if we destroy it, there is no mutex to
    * unlock.
    */
 
-  /* Note: the code in ipmiconsole_ctx_connection_cleanup() and
+  /* Note: the code in __ipmiconsole_ctx_connection_cleanup() and
    * ipmiconsole_garbage_collector() may look like it may race and
    * could deadlock.  (ABBA and BAAB deadlock situation).  However,
    * the context mutex c->signal.destroyed_mutex is accessed in
-   * ipmiconsole_ctx_connection_cleanup() when trying to add this item
+   * __ipmiconsole_ctx_connection_cleanup() when trying to add this item
    * to the console_engine_ctxs_to_destroy list.  It is accessed in
    * ipmiconsole_garbage_collector() only on the items already in the
    * console_engine_ctxs_to_destroy list.  So the
@@ -839,6 +846,18 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
       if ((perr = pthread_mutex_unlock(&(c->signal.destroyed_mutex))) != 0)
         IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
     }
+}
+
+void
+ipmiconsole_ctx_connection_cleanup_session_submitted(ipmiconsole_ctx_t c)
+{
+  __ipmiconsole_ctx_connection_cleanup(c, 1);
+}
+
+void
+ipmiconsole_ctx_connection_cleanup_session_not_submitted(ipmiconsole_ctx_t c)
+{
+  __ipmiconsole_ctx_connection_cleanup(c, 0);
 }
 
 int

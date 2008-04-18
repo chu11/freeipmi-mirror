@@ -40,7 +40,25 @@
 	* ipmiping/ipmiping.8.pre.in: Clarify ipmi version option.
 
 	* ipmiconsole/: Various cleanup.
-	
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.h
+	(ipmiconsole_ctx_connection_cleanup): Rename to
+	__ipmiconsole_ctx_connection_cleanup.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.h
+	(ipmiconsole_ctx_connection_cleanup_session_submitted,
+	ipmiconsole_ctx_connection_cleanup_session_not_submitted): New
+	functions.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c: Update
+	appropriately for function name changes.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_engine_submit, ipmiconsole_engine_submit_block): Fix
+	assert corner case.
+
 2008-04-16  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/, rmcpping/src/, ipmiping/src/, ipmipower/src/,
