@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.27 2008-03-28 00:14:39 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.28 2008-04-18 00:18:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -792,12 +792,16 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
    * unlock.
    */
 
-  /* Note: the code in _ipmiconsole_ctx_connection_cleanup() and
+  /* Note: the code in ipmiconsole_ctx_connection_cleanup() and
    * ipmiconsole_garbage_collector() may look like it may race and
    * could deadlock.  (ABBA and BAAB deadlock situation).  However,
-   * the context mutexes c->destroyed_mutex are accessed from two
-   * different lists.  So the c->destroyed_mutex context can never be
-   * raced against in these two functions.
+   * the context mutexes c->signal.destroyed_mutex is accessed in
+   * ipmiconsole_ctx_connection_cleanup() when trying to add this item
+   * to the console_engine_ctxs_to_destroy list.  It is accessed in
+   * ipmiconsole_garbage_collector() only on the items already in the
+   * console_engine_ctxs_to_destroy list.  So the
+   * c->signal.destroyed_mutex can never be raced against in these two
+   * functions.
    */
   if ((perr = pthread_mutex_lock(&(c->signal.destroyed_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
