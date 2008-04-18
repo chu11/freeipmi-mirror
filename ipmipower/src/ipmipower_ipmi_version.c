@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ipmi_version.c,v 1.8 2008-04-12 00:05:23 chu11 Exp $
+ *  $Id: ipmipower_ipmi_version.c,v 1.9 2008-04-18 16:34:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -41,6 +41,8 @@
 #include "ipmipower_ipmi_version.h"
 #include "ipmipower_wrappers.h"
 
+#include "tool-cmdline-common.h"
+
 ipmi_version_t 
 ipmipower_ipmi_version_index(char *str) 
 {
@@ -53,7 +55,17 @@ ipmipower_ipmi_version_index(char *str)
   else if (!strcasecmp(str, "2.0"))
     return IPMI_VERSION_2_0;
   else 
-    return IPMI_VERSION_INVALID;
+    {
+      int driver_type;
+
+      driver_type = parse_outofband_driver_type(str);
+
+      if (driver_type == IPMI_DEVICE_LAN)
+        return IPMI_VERSION_1_5;
+      else if (driver_type == IPMI_DEVICE_LAN_2_0)
+        return IPMI_VERSION_2_0;
+      return IPMI_VERSION_INVALID;
+    }
 }
 
 char *

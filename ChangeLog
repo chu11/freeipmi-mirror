@@ -1,3 +1,9 @@
+2004-04-18  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_ipmi_version.c
+	(ipmipower_ipmi_version_index): Support "driver type" input like
+	'lan', 'lan_2_0'.
+	
 2008-04-17  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api: Make debug dump output consistent to other
