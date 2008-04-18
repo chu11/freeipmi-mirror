@@ -4,6 +4,12 @@
 	(ipmipower_ipmi_version_index): Support "driver type" input like
 	'lan', 'lan_2_0'.
 	
+	* ipmiping/ipmiping.8.pre.in: Clarify ipmi version option more.
+
+	* configure.ac: Prepare for beta release.
+
+	* Tagged Release-0_6_0_beta2.
+
 2008-04-17  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api: Make debug dump output consistent to other
