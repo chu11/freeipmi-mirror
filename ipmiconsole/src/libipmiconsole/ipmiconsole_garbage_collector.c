@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_garbage_collector.c,v 1.14 2008-04-18 00:18:51 chu11 Exp $
+ *  $Id: ipmiconsole_garbage_collector.c,v 1.15 2008-04-18 00:19:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -103,7 +103,7 @@ ipmiconsole_garbage_collector(void *arg)
       /* Note: the code in ipmiconsole_ctx_connection_cleanup() and
        * ipmiconsole_garbage_collector() may look like it may race and
        * could deadlock.  (ABBA and BAAB deadlock situation).  However,
-       * the context mutexes c->signal.destroyed_mutex is accessed in
+       * the context mutex c->signal.destroyed_mutex is accessed in
        * ipmiconsole_ctx_connection_cleanup() when trying to add this item
        * to the console_engine_ctxs_to_destroy list.  It is accessed in
        * ipmiconsole_garbage_collector() only on the items already in the
