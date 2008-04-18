@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.80 2008-03-28 00:14:39 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.81 2008-04-18 01:12:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -199,7 +199,10 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      goto cleanup;
+      /* don't go to cleanup, b/c the engine will call
+       * ipmiconsole_ctx_connection_cleanup().
+       */
+      goto cleanup_ctx_fds_only;
     }
   
   /* Check for NOT_SUBMITTED, conceivably SOL_ERROR or SOL_ESTABLISHED
@@ -212,7 +215,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      goto cleanup;
+      goto cleanup_ctx_fds_only;
     }
 
   c->session_submitted++;
@@ -221,6 +224,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
 
  cleanup:
   ipmiconsole_ctx_connection_cleanup(c);
+ cleanup_ctx_fds_only:
   /* fds are the API responsibility, even though we didn't create them */
   ipmiconsole_ctx_fds_cleanup(c);
   return -1;
@@ -414,7 +418,7 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
   if (_ipmiconsole_block(c) < 0)
     {
       /* don't go to cleanup, b/c the engine will call
-       * _ipmiconsole_ctx_connection_cleanup().
+       * ipmiconsole_ctx_connection_cleanup().
        */
       goto cleanup_ctx_fds_only;
     }
@@ -449,6 +453,7 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
   ipmiconsole_ctx_connection_cleanup(c);
  cleanup_ctx_fds_only:
   _ipmiconsole_blocking_notification_cleanup(c);
+  /* fds are the API responsibility, even though we didn't create them */
   ipmiconsole_ctx_fds_cleanup(c);
   return -1;
 }

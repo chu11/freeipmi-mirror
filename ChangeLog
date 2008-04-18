@@ -38,6 +38,8 @@
 	* ipmipower/: Convert all err_* calls to ierr_* calls.
 
 	* ipmiping/ipmiping.8.pre.in: Clarify ipmi version option.
+
+	* ipmiconsole/: Various cleanup.
 	
 2008-04-16  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.29 2008-04-18 00:19:37 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.30 2008-04-18 01:12:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -615,8 +615,8 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
   return 0;
 
  cleanup:
-  ipmiconsole_ctx_connection_cleanup(c);
   /* Previously called here, but this is now supposed to be handled in API land */
+  /* ipmiconsole_ctx_connection_cleanup(c) */
   /* _ipmiconsole_ctx_fds_cleanup(c); */
   /* _ipmiconsole_ctx_fds_setup(c); */
   return -1;
@@ -629,7 +629,7 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
   int status_initial = 0;
   int secure_malloc_flag;
   int perr;
-
+  
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   

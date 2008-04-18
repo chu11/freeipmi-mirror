@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.73 2008-03-28 00:14:39 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.74 2008-04-18 01:12:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1195,7 +1195,9 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
 
   /* achu:
    *
-   * Ok to set the flag here b/c we are in the 'console_engine_ctxs_mutex'
+   * Necessary to set this here b/c at this point in time, the context
+   * is submitted, so the engine will be doing its own cleanup
+   * (garbage collector, etc.).
    */
   c->session_submitted++;
 
