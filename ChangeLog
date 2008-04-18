@@ -1,4 +1,4 @@
-2008-04-18  Tiziano Muller <>
+2008-04-18  Tiziano Muller <???@???>
 
 	* ipmimonitoring/src/ipmimonitoring/Makefile.am: Fix compile issue
 	when specifying LDFLAGS="-Wl,--as-needed".
