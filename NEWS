@@ -28,6 +28,7 @@ o Support shared SDR caches for ipmi-sensors, ipmi-fru, ipmi-sel,
   ipmi-sensors-config, and ipmimonitoring.  (libipmimonitoring will
   still use a different default cache directory.)  This will require a
   new cache generation for these tools.
+o Support driver-type options for ipmipower ipmi version option.
 o Modified SDR caching output messages in ipmi-sensors, ipmi-sel,
   ipmi-fru, ipmi-sensors-config and ipmimonitoring to provide more
   useful information.
