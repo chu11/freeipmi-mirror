@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.7 2007-12-29 17:20:31 chu11 Exp $
+## $Id: Makefile.am,v 1.8 2008-04-18 18:21:22 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -22,8 +22,8 @@ ipmimonitoring_CPPFLAGS = \
 ipmimonitoring_LDADD = \
 	../../../common/src/libmiscutils.la \
 	../libipmimonitoring/libipmimonitoring.la \
-	../../../ipmidetect/src/libipmidetect/libipmidetect.la \
 	../../../common/src/libhostrange.la \
+	../../../ipmidetect/src/libipmidetect/libipmidetect.la \
 	../../../common/src/libtoolcommon.la
 
 ../../../common/src/libmiscutils.la: force-dependency-check

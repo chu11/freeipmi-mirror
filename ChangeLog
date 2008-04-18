@@ -1,3 +1,8 @@
+2004-04-18  Tiziano Muller <>
+
+	* ipmimonitoring/src/ipmimonitoring/Makefile.am: Fix compile issue
+	when specifying LDFLAGS="-Wl,--as-needed".
+	
 2004-04-18  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_ipmi_version.c
