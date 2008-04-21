@@ -57,6 +57,10 @@ ipmi-sensors-config
 - sensor enable/disable??
 - sensor event enable/disable??
 
+ipmi-sel
+--------
+get/set sel time
+
 other tools support
 -------------------
 monitoring in cerebro
