@@ -24,6 +24,7 @@ remaining serial config
 power cycle interval
 chassis boot params
 advanced option??
+acpi power state get/set??
 
 pef-config
 -----------
