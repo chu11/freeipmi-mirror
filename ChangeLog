@@ -1,3 +1,8 @@
+2008-04-21  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring.c: Fix
+	error message typo.
+	
 2008-04-18  Tiziano Muller <???@???>
 
 	* ipmimonitoring/src/ipmimonitoring/Makefile.am: Fix compile issue

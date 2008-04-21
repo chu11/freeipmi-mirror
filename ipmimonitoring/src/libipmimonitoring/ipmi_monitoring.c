@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.25 2008-04-07 20:56:28 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.26 2008-04-21 18:13:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -56,7 +56,7 @@ static char *ipmi_monitoring_errmsgs[] =
     "success",
     "ctx null",
     "ctx invalid",
-    "invalid parmaeters",
+    "invalid parameters",
     "permission denied",
     "library uninitialized",
     "config file parse error",
