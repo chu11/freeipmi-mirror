@@ -23,6 +23,7 @@ bmc-config
 remaining serial config
 power cycle interval
 chassis boot params
+- new chassis config tool?
 advanced option??
 acpi power state get/set??
 
@@ -45,6 +46,7 @@ config file - support workarounds/etc. for heterogenous cluster?
 map hostname -> IP config
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
 - after this, tweak "known issue" info about ps(1), put info in conf file, etc.
+support hostranged commit/checkout in all config tools except bmc-config??
 
 ipmiconsole
 -----------
@@ -53,6 +55,7 @@ retry under a different port
 
 ipmi-sensors-config
 -------------------
+* conf.5 manpage
 35.10/35.11
 - sensor enable/disable??
 - sensor event enable/disable??
