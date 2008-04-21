@@ -61,6 +61,16 @@ ipmi-sel
 --------
 get/set sel time
 
+ipmimonitoring
+--------------
+output non-known sensors too
+
+bmc-info
+--------
+also output guid info
+warm/cold reset
+- remake as "bmc-device" and make bmc-info a pointer back?
+
 other tools support
 -------------------
 monitoring in cerebro
