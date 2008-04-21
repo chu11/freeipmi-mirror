@@ -35,6 +35,8 @@ general
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
+firmware firewall support?
+- new config tool??
 
 config
 ------
@@ -61,8 +63,8 @@ get/set sel time
 bmc-info
 --------
 also output guid info
-warm/cold reset
-- remake as "bmc-device" and make bmc-info a pointer back?
+warm/cold reset??
+- new tool "bmc-device", make bmc-info a link that points back to it?
 
 other tools support
 -------------------
