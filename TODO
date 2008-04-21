@@ -43,7 +43,7 @@ config
 config file - support workarounds/etc. for heterogenous cluster?
 map hostname -> IP config
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
-- after this, tweak "known issue" info
+- after this, tweak "known issue" info about ps(1), put info in conf file, etc.
 
 ipmiconsole
 -----------
