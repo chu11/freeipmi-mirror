@@ -24,6 +24,7 @@ remaining serial config
 power cycle interval
 chassis boot params
 - new chassis config tool?
+- move power restore polcy over
 advanced option??
 acpi power state get/set??
 
