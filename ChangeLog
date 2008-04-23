@@ -1,8 +1,11 @@
 2008-04-23  Albert Chu <chu11@llnl.gov>
 
+	* common/doc/manpage-common-homepage.man: New file.
+
 	* Add webpage to all manpages and documentation.
 
-	* bmc-config/bmc-config.conf.5.in: Rename to bmc-config.conf.5.pre.in.
+	* bmc-config/bmc-config.conf.5.in: Rename to
+	bmc-config.conf.5.pre.in.  Minor doc tweaks.
 
 	* configure.ac: Adjust bmc-config.conf.5 manpage appropriately.
 

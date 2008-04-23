@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.21 2008-04-23 23:06:31 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.22 2008-04-23 23:17:00 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -95,5 +95,4 @@ Copyright (C) 2007 The Regents of the University of California.
 #include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8)
-.PP
-\fBhttp://www.gnu.org/software/freeipmi/\fR
+#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
