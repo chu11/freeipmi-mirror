@@ -515,4 +515,6 @@ machine ("Off_State_AC_Apply"), or return the power to the state that
 existed before the power loss ("Restore_State_AC_Apply").
 
 .SH "SEE ALSO"
-bmc-config(1), bmc-watchdog(8), agetty(8)	
+freeipmi(7), bmc-config(8), bmc-watchdog(8), agetty(8)	
+.PP
+\fBhttp://www.gnu.org/software/freeipmi/\fR

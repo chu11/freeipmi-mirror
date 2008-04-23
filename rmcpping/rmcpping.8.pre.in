@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: rmcpping.8.pre.in,v 1.4 2008-04-09 00:34:10 chu11 Exp $
+.\"$Id: rmcpping.8.pre.in,v 1.5 2008-04-23 23:06:32 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -51,3 +51,5 @@ Command and manpage based off
 .B ping(8).
 .SH "SEE ALSO"
 freeipmi(7), ping(8), ipmiping(8)
+.PP
+\fBhttp://www.gnu.org/software/freeipmi/\fR

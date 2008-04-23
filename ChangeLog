@@ -1,3 +1,7 @@
+2008-04-23  Albert Chu <chu11@llnl.gov>
+
+	* Add webpage to all manpages and documentation.
+	
 2008-04-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring.c: Fix
