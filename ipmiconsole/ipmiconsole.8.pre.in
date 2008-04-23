@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.26 2008-04-23 23:17:04 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.27 2008-04-23 23:46:48 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -253,4 +253,5 @@ Copyright (C) 2006-2007 The Regents of the University of California.
 #include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 ipmiconsole.conf(5), freeipmi(7), bmc-config(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+.PP
+http://www.gnu.org/software/freeipmi/

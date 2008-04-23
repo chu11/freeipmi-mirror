@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.conf.5.pre.in,v 1.4 2008-04-23 23:31:04 chu11 Exp $
+.\"$Id: ipmipower.conf.5.pre.in,v 1.5 2008-04-23 23:46:49 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -168,4 +168,5 @@ Specify the default ping consecutive count value.
 @IPMIPOWER_CONFIG_FILE_DEFAULT@
 .SH "SEE ALSO"
 ipmipower(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+.PP
+http://www.gnu.org/software/freeipmi/

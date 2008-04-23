@@ -1,3 +1,0 @@
-.PP
-http://www.gnu.org/software/freeipmi/
-

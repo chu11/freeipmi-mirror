@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiping.8.pre.in,v 1.8 2008-04-23 23:17:06 chu11 Exp $
+.\"$Id: ipmiping.8.pre.in,v 1.9 2008-04-23 23:46:49 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -57,4 +57,5 @@ Copyright (C) 2003-2007 The Regents of the University of California.
 #include <@top_srcdir@/common/doc/manpage-common-ping-origin.man>
 .SH "SEE ALSO"
 freeipmi(7), ping(8), rmcpping(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+.PP
+http://www.gnu.org/software/freeipmi/

@@ -68,4 +68,4 @@ Copyright \(co 2007-2008 FreeIPMI Core Team.
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), ipmi-sensors-config(8)
 .PP
-\fBhttp://www.gnu.org/software/freeipmi/\fR
+http://www.gnu.org/software/freeipmi/

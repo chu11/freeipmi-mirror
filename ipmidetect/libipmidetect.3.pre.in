@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: libipmidetect.3.pre.in,v 1.5 2008-04-23 23:17:06 chu11 Exp $
+.\"$Id: libipmidetect.3.pre.in,v 1.6 2008-04-23 23:46:49 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -73,4 +73,5 @@ Copyright (C) 2007 The Regents of the University of California.
 #include <@top_srcdir@/common/doc/manpage-common-gpl-library-text.man>
 .SH "SEE ALSO"
 ipmidetect(8), ipmidetectd(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+.PP
+http://www.gnu.org/software/freeipmi/
