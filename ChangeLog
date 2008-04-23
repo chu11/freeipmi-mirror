@@ -1,6 +1,12 @@
 2008-04-23  Albert Chu <chu11@llnl.gov>
 
 	* Add webpage to all manpages and documentation.
+
+	* bmc-config/bmc-config.conf.5.in: Rename to bmc-config.conf.5.pre.in.
+
+	* configure.ac: Adjust bmc-config.conf.5 manpage appropriately.
+
+	* Globally change "User Commands" to "System Commands" as needed.
 	
 2008-04-21  Albert Chu <chu11@llnl.gov>
 

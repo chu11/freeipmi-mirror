@@ -1,4 +1,4 @@
-.TH IPMI-RAW 8 "@ISODATE@" "IPMI Raw version @PACKAGE_VERSION@" "User Commands"
+.TH IPMI-RAW 8 "@ISODATE@" "IPMI Raw version @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 ipmi-raw \- IPMI raw communication utility
 .SH "SYNOPSIS"
