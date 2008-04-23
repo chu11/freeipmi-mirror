@@ -40,6 +40,8 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
+add headers to manpage to separate "general options" from "tool options" from "hostranged options" to make
+manpage easiers to read??
 
 config
 ------
