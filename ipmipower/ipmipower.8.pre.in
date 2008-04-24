@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.27 2008-04-24 05:46:46 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.28 2008-04-24 17:14:00 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -145,10 +145,10 @@ required for the power control operation selected.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
-.if @WITH_DEBUG@ \{
 .TP
 \fB\-\-config file\fR
 Specify an alternate configuration file.
+.if @WITH_DEBUG@ \{
 .TP
 \fB\-\-rmcpdump\fR
 Turn on RMCP packet dump output.  Warning, the dump output can get 
@@ -319,6 +319,41 @@ Specify a new password.  No input for null password.
 Specify a new K_g BMC Key.  No input for null key.  Prefix with '0x'
 to enter a key in hexadecimal
 .TP
+\fBipmi-version\fR \fIIPMIVERSION\fR
+Specify the ipmi version to use.
+.TP
+\fBsession-timeout\fR \fIMILLISECONDS\fR
+Specify a new session timeout length.
+.TP
+\fBretransmission-timeout\fR \fIMILLISECONDS\fR
+Specify a new retransmiision timeout length.
+.TP
+\fBauthentication-type\fR \fIAUTHENTICATION-TYPE\fR
+Specify the authentication type to use.
+.TP
+\fBcipher-suite-id\fR \fICIPHER-SUITE-ID\fR
+Specify the cipher suite id to use.
+.TP
+\fBprivilege-level\fR \fIPRIVILEGE-LEVEL\fR
+Specify the privilege level to use.
+.TP
+\fBworkaround-flags\fR \fIWORKAROUNDS\fR
+Specify workaround flags.
+.TP
+\fBdebug\fR \fI[on|off]\fR
+Toggle debug output.
+.if @WITH_DEBUG@ \{
+.TP
+\fBrmcpdump\fR \fI[on|off]\fR
+Toggle RMCP dump output.
+.TP
+\fBlog\fR \fI[on|off]\fR
+Toggle logging output.
+.TP
+\fBlogfile\fR \fI[FILE]\fR
+Specify a new log file.  No input for default.
+\}
+.TP
 \fBon\fR \fI[IPMIHOST(s)]\fR
 Turn on all configured hosts or specified hosts.
 .TP
@@ -340,31 +375,6 @@ Pulse diagnostic interrupt all configured hosts or specified hosts.
 \fBsoft\fR \fI[IPMIHOST(s)]\fR
 Initiate a soft-shutdown for all configured hosts or specified hosts. 
 .TP
-\fBhelp\fR
-Output help menu.
-.TP
-\fBadvanced\fR
-Output advanced help menu.
-.TP
-\fBnetwork\fR
-Output network help menu.
-.TP
-\fBquit\fR
-Quit program.
-.B ipmipower.
-.TP
-\fBauthentication-type\fR \fIAUTHENTICATION-TYPE\fR
-Specify the authentication type to use.
-.TP
-\fBprivilege-level\fR \fIPRIVILEGE-LEVEL\fR
-Specify the privilege level to use.
-.TP
-\fBipmi-version\fR \fIIPMIVERSION\fR
-Specify the ipmi version to use.
-.TP
-\fBcipher-suite-id\fR \fICIPHER-SUITE-ID\fR
-Specify the cipher suite id to use.
-.TP
 \fBon-if-off\fR \fI[on|off]\fR
 Toggle on-if-off functionality.
 .TP
@@ -373,41 +383,6 @@ Toggle wait-until-on functionality.
 .TP
 \fBwait-until-off\fR \fI[on|off]\fR
 Toggle wait-until-off functionality.
-.TP
-\fBbuffer-output\fR \fI[on|off]\fR
-Toggle buffer-output functionality.
-.TP
-\fBconsolidate-output\fR \fI[on|off]\fR
-Toggle consolidate-output functionality.
-.TP
-\fBworkaround-flags\fR \fIWORKAROUNDS\fR
-Specify workaround flags.
-.if @WITH_DEBUG@ \{
-.TP
-\fBdebug\fR \fI[on|off]\fR
-Toggle debug output.
-.TP
-\fBipmidump\fR \fI[on|off]\fR
-Toggle IPMI dump output.
-.TP
-\fBrmcpdump\fR \fI[on|off]\fR
-Toggle RMCP dump output.
-.TP
-\fBlog\fR \fI[on|off]\fR
-Toggle logging output.
-.TP
-\fBlogfile\fR \fI[FILE]\fR
-Specify a new log file.  No input for default.
-\}
-.TP
-\fBconfig\fR
-Output the current configuration.
-.TP
-\fBsession-timeout\fR \fIMILLISECONDS\fR
-Specify a new session timeout length.
-.TP
-\fBretransmission-timeout\fR \fIMILLISECONDS\fR
-Specify a new retransmiision timeout length.
 .TP
 \fBretransmission-wait-timeout\fR \fIMILLISECONDS\fR
 Specify a new retransmission wait timeout length.
@@ -429,6 +404,28 @@ Specify a new ping percent.
 .TP
 \fBping-consec-count\fR \fICOUNT\fR
 Specify a new ping consec count.
+.TP
+\fBbuffer-output\fR \fI[on|off]\fR
+Toggle buffer-output functionality.
+.TP
+\fBconsolidate-output\fR \fI[on|off]\fR
+Toggle consolidate-output functionality.
+.TP
+\fBfanout\fR \fICOUNT\fR
+Specify a fanout.
+.TP
+\fBhelp\fR
+Output help menu.
+.TP
+\fBversion\fR
+Output version.
+.TP
+\fBconfig\fR
+Output the current configuration.
+.TP
+\fBquit\fR
+Quit program.
+.B ipmipower.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
 .SH "EXAMPLES"
 .LP

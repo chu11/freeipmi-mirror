@@ -1,3 +1,7 @@
+2008-04-24  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/: Interactive command order cleanup.
+	
 2008-04-23  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-general-options-header.man,

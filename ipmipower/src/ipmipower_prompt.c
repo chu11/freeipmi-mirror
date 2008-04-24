@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.61 2008-04-17 23:14:29 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.62 2008-04-24 17:14:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -74,75 +74,6 @@ extern struct ipmipower_connection *ics;
  */
 
 static void 
-_cmd_help(void) 
-{
-  cbuf_printf(ttyout, 
-              "hostname [IPMIHOST]             - Specify a new set of hosts.  No input to unconfigure all hosts.\n"
-              "username [USERNAME]             - Specify a new username.  No input for null username.\n"
-              "password [PASSWORD]             - Specify a new password.  No input for null password.\n"
-              "k_g [K_G]                       - Specify a new K_g BMC Key.  No input for null key.\n"
-              "on [IPMIHOST(s)]                - Turn on all configured hosts or specified hosts.\n"
-              "off [IPMIHOST(s)]               - Turn off all configured hosts or specified hosts.\n"
-              "cycle [IPMIHOST(s)]             - Power cycle all configured hosts or specified hosts.\n"
-              "reset [IPMIHOST(s)]             - Reset all configured hosts or specified hosts.\n"
-              "stat [IPMIHOST(s)]              - Query power status for all configured hosts or specified hosts.\n"
-              "pulse [IPMIHOST(s)]             - Pulse diagnostic interrupt all configured hosts or specified hosts.\n"
-              "soft [IPMIHOST(s)]              - Initiate a soft-shutdown for all configured hosts or specified hosts.\n"
-              "help                            - Output help menu.\n"
-              "advanced                        - Output advanced help menu.\n"
-              "network                         - Output network help menu.\n"
-              "version                         - Quit program.\n"
-              "quit                            - Quit program.\n");
-}
-
-static void 
-_cmd_advanced(void) 
-{
-  cbuf_printf(ttyout, 
-              "authentication-type AUTHENTICATION-TYPE - Specify the authentication type to use.\n"
-              "privilege-level PRIVILEGE-LEVEL         - Specify the privilege level to use.\n"
-	      "ipmi-version IPMIVERSION                - Specify the ipmi version to use.\n"
-              "cipher-suite-id CIPHER-SUITE-ID         - Specify the cipher suite id to use.\n"
-              "on-if-off [on|off]                      - Toggle on-if-off functionality.\n"
-              "wait-until-on [on|off]                  - Toggle wait-until-on functionality.\n"
-              "wait-until-off [on|off]                 - Toggle wait-until-off functionality.\n"
-	      "buffer-output [on|off]                  - Toggle buffer-output functionality\n"
-              "consolidate-output [on|off]             - Toggle consolidate-output functionality.\n"
-	      "fanout COUNT                            - Specify a fanout.\n"
-              "workaround-flags WORKAROUNDS            - Specify workaround flags.\n"
-              "debug [on|off]                          - Toggle debug to stderr.\n");
-#ifndef NDEBUG
-  cbuf_printf(ttyout,
-              "rmcpdump [on|off]                       - Toggle RMCP dump output.\n"
-	      "log [on|off]                            - Toggle logging output.\n"
-	      "logfile [FILE]                          - Specify a new log file.  No input for default.\n");
-#endif /* NDEBUG */
-  cbuf_printf(ttyout,
-              "config                                  - Output current configuration.\n");
-} 
-
-static void
-_cmd_network(void)
-{
-  cbuf_printf(ttyout, 
-              "session-timeout MILLISECONDS               - Specify a new session timeout length.\n"
-              "retransmission-timeout MILLISECONDS        - Specify a new retransmission timeout length.\n"
-              "retransmission-wait-timeout MILLISECONDS   - Specify a new retransmission timeout length.\n"
-              "retransmission-backoff-count COUNT         - Specify a new retransmission backoff count.\n"
-              "ping-interval MILLISECONDS                 - Specify a new ping interval length.\n"
-              "ping-timeout MILLISECONDS                  - Specify a new ping timeout length.\n"
-              "ping-packet-count COUNT                    - Specify a new ping packet count.\n"
-              "ping-percent COUNT                         - Specify a new ping percent number.\n"
-              "ping-consec-count COUNT                    - Specify a new ping consec count.\n");
-}
-
-static void 
-_cmd_version(void) 
-{
-  cbuf_printf(ttyout, "ipmipower %s\n", VERSION);
-}
-
-static void 
 _cmd_hostname(char **argv) 
 {
   hostlist_t hl; 
@@ -204,96 +135,6 @@ _cmd_hostname(char **argv)
                     "buffer\n");
       if (rv > 0)
         cbuf_printf(ttyout, "hostname: %s\n", buffer);
-    }
-}
-
-static void 
-_cmd_power(char **argv, power_cmd_t cmd) 
-{
-  int i;
-
-  assert(argv != NULL && POWER_CMD_VALID(cmd));
-
-  if (conf->hosts == NULL) 
-    {
-      cbuf_printf(ttyout, "no hostname(s) configured\n");
-      return;
-    }
-
-  /* Check for correct privilege type */
-  if (conf->privilege_level == PRIVILEGE_LEVEL_USER 
-      && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(cmd))
-    {
-      cbuf_printf(ttyout, "power operation requires atleast operator privilege");
-      return;
-    }
-
-  if (argv[1] == NULL)  /* all nodes */
-    { 
-      int nodes_queued = 0;
-      
-      for (i = 0; i <  conf->hosts_count; i++) 
-        {
-          if (conf->ping_interval_len 
-              && ics[i].discover_state == STATE_UNDISCOVERED)
-            ipmipower_output(MSG_TYPE_NOTDISCOVERED, ics[i].hostname);
-          else if (conf->ping_interval_len 
-                   && conf->ping_packet_count 
-                   && conf->ping_percent 
-                   && ics[i].discover_state == STATE_BADCONNECTION)
-            ipmipower_output(MSG_TYPE_BADCONNECTION, ics[i].hostname);
-          else {
-            ipmipower_connection_clear(&ics[i]);
-            ipmipower_powercmd_queue(cmd, &ics[i]);
-            nodes_queued++;
-          }
-        }
-
-      /* Special corner case when no nodes are discovered */
-      if (nodes_queued == 0)
-        ipmipower_output_finish();
-    } 
-  else 
-    {
-      hostlist_t h;
-      hostlist_iterator_t itr;
-      char *node;
-
-      if (!(h = hostlist_create(argv[1]))) 
-        {
-          cbuf_printf(ttyout, "invalid hostname(s) specified");
-          return;
-        }
-
-      if (!(itr = hostlist_iterator_create(h)))
-        ierr_exit("hostlist_iterator_create() error");
-
-      while ((node = hostlist_next(itr)))
-        {
-          i = ipmipower_connection_hostname_index(ics, 
-                                                  conf->hosts_count, 
-                                                  node);
-
-          if (i < 0)
-            ipmipower_output(MSG_TYPE_UNKNOWNNODE, node);
-          else if (conf->ping_interval_len 
-                   && ics[i].discover_state == STATE_UNDISCOVERED)
-            ipmipower_output(MSG_TYPE_NOTDISCOVERED, ics[i].hostname);
-          else if (conf->ping_interval_len 
-                   && conf->ping_packet_count 
-                   && conf->ping_percent 
-                   && ics[i].discover_state == STATE_BADCONNECTION)
-            ipmipower_output(MSG_TYPE_BADCONNECTION, ics[i].hostname);
-          else 
-            {
-              ipmipower_connection_clear(&ics[i]);
-              ipmipower_powercmd_queue(cmd, &ics[i]);
-            }
-          free(node);
-        }
-
-      hostlist_iterator_destroy(itr);
-      hostlist_destroy(h);
     }
 }
 
@@ -382,6 +223,27 @@ _cmd_k_g(char **argv)
 }
 
 static void 
+_cmd_ipmi_version(char **argv) 
+{
+  assert(argv != NULL);
+
+  if (argv[1] != NULL) 
+    {
+      ipmi_version_t ipmi_version = ipmipower_ipmi_version_index(argv[1]);
+      if (ipmi_version == IPMI_VERSION_INVALID)
+        cbuf_printf(ttyout, "%s invalid ipmi version\n", argv[1]);
+      else 
+        {
+          conf->ipmi_version = ipmi_version;
+          cbuf_printf(ttyout, "ipmi version is now %s\n", argv[1]);
+        }
+    }
+  else
+    cbuf_printf(ttyout, "ipmi_version must be specified: %s\n",
+                ipmipower_ipmi_version_list());
+}
+
+static void 
 _cmd_authentication_type(char **argv) 
 {
   assert(argv != NULL);
@@ -407,48 +269,6 @@ _cmd_authentication_type(char **argv)
 }
 
 static void 
-_cmd_privilege_level(char **argv) 
-{
-  assert(argv != NULL);
-
-  if (argv[1] != NULL) 
-    {
-      privilege_level_t priv = ipmipower_privilege_level_index(argv[1]);
-      if (priv == PRIVILEGE_LEVEL_INVALID)
-        cbuf_printf(ttyout, "%s invalid privilege\n", argv[1]);
-      else 
-        {
-          conf->privilege_level = priv;
-          cbuf_printf(ttyout, "privilege is now %s\n", argv[1]);
-        }
-    }
-  else
-    cbuf_printf(ttyout, "privilege must be specified: %s\n",
-                ipmipower_privilege_level_list());
-}
-
-static void 
-_cmd_ipmi_version(char **argv) 
-{
-  assert(argv != NULL);
-
-  if (argv[1] != NULL) 
-    {
-      ipmi_version_t ipmi_version = ipmipower_ipmi_version_index(argv[1]);
-      if (ipmi_version == IPMI_VERSION_INVALID)
-        cbuf_printf(ttyout, "%s invalid ipmi version\n", argv[1]);
-      else 
-        {
-          conf->ipmi_version = ipmi_version;
-          cbuf_printf(ttyout, "ipmi version is now %s\n", argv[1]);
-        }
-    }
-  else
-    cbuf_printf(ttyout, "ipmi_version must be specified: %s\n",
-                ipmipower_ipmi_version_list());
-}
-
-static void 
 _cmd_cipher_suite_id(char **argv) 
 {
   assert(argv != NULL);
@@ -467,6 +287,27 @@ _cmd_cipher_suite_id(char **argv)
   else
     cbuf_printf(ttyout, "cipher_suite_id must be specified: %s\n",
                 ipmipower_cipher_suite_id_list());
+}
+
+static void 
+_cmd_privilege_level(char **argv) 
+{
+  assert(argv != NULL);
+
+  if (argv[1] != NULL) 
+    {
+      privilege_level_t priv = ipmipower_privilege_level_index(argv[1]);
+      if (priv == PRIVILEGE_LEVEL_INVALID)
+        cbuf_printf(ttyout, "%s invalid privilege\n", argv[1]);
+      else 
+        {
+          conf->privilege_level = priv;
+          cbuf_printf(ttyout, "privilege is now %s\n", argv[1]);
+        }
+    }
+  else
+    cbuf_printf(ttyout, "privilege must be specified: %s\n",
+                ipmipower_privilege_level_list());
 }
 
 static void
@@ -580,6 +421,151 @@ _cmd_logfile(char **argv)
   cbuf_printf(ttyout, "log file set to %s\n", conf->logfile);
 }
 #endif /* NDEBUG */
+
+static void 
+_cmd_power(char **argv, power_cmd_t cmd) 
+{
+  int i;
+
+  assert(argv != NULL && POWER_CMD_VALID(cmd));
+
+  if (conf->hosts == NULL) 
+    {
+      cbuf_printf(ttyout, "no hostname(s) configured\n");
+      return;
+    }
+
+  /* Check for correct privilege type */
+  if (conf->privilege_level == PRIVILEGE_LEVEL_USER 
+      && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(cmd))
+    {
+      cbuf_printf(ttyout, "power operation requires atleast operator privilege");
+      return;
+    }
+
+  if (argv[1] == NULL)  /* all nodes */
+    { 
+      int nodes_queued = 0;
+      
+      for (i = 0; i <  conf->hosts_count; i++) 
+        {
+          if (conf->ping_interval_len 
+              && ics[i].discover_state == STATE_UNDISCOVERED)
+            ipmipower_output(MSG_TYPE_NOTDISCOVERED, ics[i].hostname);
+          else if (conf->ping_interval_len 
+                   && conf->ping_packet_count 
+                   && conf->ping_percent 
+                   && ics[i].discover_state == STATE_BADCONNECTION)
+            ipmipower_output(MSG_TYPE_BADCONNECTION, ics[i].hostname);
+          else {
+            ipmipower_connection_clear(&ics[i]);
+            ipmipower_powercmd_queue(cmd, &ics[i]);
+            nodes_queued++;
+          }
+        }
+
+      /* Special corner case when no nodes are discovered */
+      if (nodes_queued == 0)
+        ipmipower_output_finish();
+    } 
+  else 
+    {
+      hostlist_t h;
+      hostlist_iterator_t itr;
+      char *node;
+
+      if (!(h = hostlist_create(argv[1]))) 
+        {
+          cbuf_printf(ttyout, "invalid hostname(s) specified");
+          return;
+        }
+
+      if (!(itr = hostlist_iterator_create(h)))
+        ierr_exit("hostlist_iterator_create() error");
+
+      while ((node = hostlist_next(itr)))
+        {
+          i = ipmipower_connection_hostname_index(ics, 
+                                                  conf->hosts_count, 
+                                                  node);
+
+          if (i < 0)
+            ipmipower_output(MSG_TYPE_UNKNOWNNODE, node);
+          else if (conf->ping_interval_len 
+                   && ics[i].discover_state == STATE_UNDISCOVERED)
+            ipmipower_output(MSG_TYPE_NOTDISCOVERED, ics[i].hostname);
+          else if (conf->ping_interval_len 
+                   && conf->ping_packet_count 
+                   && conf->ping_percent 
+                   && ics[i].discover_state == STATE_BADCONNECTION)
+            ipmipower_output(MSG_TYPE_BADCONNECTION, ics[i].hostname);
+          else 
+            {
+              ipmipower_connection_clear(&ics[i]);
+              ipmipower_powercmd_queue(cmd, &ics[i]);
+            }
+          free(node);
+        }
+
+      hostlist_iterator_destroy(itr);
+      hostlist_destroy(h);
+    }
+}
+
+static void 
+_cmd_help(void) 
+{
+  cbuf_printf(ttyout, 
+              "hostname [IPMIHOST]                      - Specify a new set of hosts.  No input to unconfigure all hosts.\n"
+              "username [USERNAME]                      - Specify a new username.  No input for null username.\n"
+              "password [PASSWORD]                      - Specify a new password.  No input for null password.\n"
+              "k_g [K_G]                                - Specify a new K_g BMC Key.  No input for null key.\n"
+	      "ipmi-version IPMIVERSION                 - Specify the ipmi version to use.\n"
+              "session-timeout MILLISECONDS             - Specify a new session timeout length.\n"
+              "retransmission-timeout MILLISECONDS      - Specify a new retransmission timeout length.\n"
+              "authentication-type AUTHENTICATION-TYPE  - Specify the authentication type to use.\n"
+              "cipher-suite-id CIPHER-SUITE-ID          - Specify the cipher suite id to use.\n"
+              "privilege-level PRIVILEGE-LEVEL          - Specify the privilege level to use.\n"
+              "workaround-flags WORKAROUNDS             - Specify workaround flags.\n"
+              "debug [on|off]                           - Toggle debug to stderr.\n");
+#ifndef NDEBUG
+  cbuf_printf(ttyout,
+              "rmcpdump [on|off]                        - Toggle RMCP dump output.\n"
+	      "log [on|off]                             - Toggle logging output.\n"
+	      "logfile [FILE]                           - Specify a new log file.  No input for default.\n");
+#endif /* NDEBUG */
+  cbuf_printf(ttyout,
+              "on [IPMIHOST(s)]                         - Turn on all configured hosts or specified hosts.\n"
+              "off [IPMIHOST(s)]                        - Turn off all configured hosts or specified hosts.\n"
+              "cycle [IPMIHOST(s)]                      - Power cycle all configured hosts or specified hosts.\n"
+              "reset [IPMIHOST(s)]                      - Reset all configured hosts or specified hosts.\n"
+              "stat [IPMIHOST(s)]                       - Query power status for all configured hosts or specified hosts.\n"
+              "pulse [IPMIHOST(s)]                      - Pulse diagnostic interrupt all configured hosts or specified hosts.\n"
+              "soft [IPMIHOST(s)]                       - Initiate a soft-shutdown for all configured hosts or specified hosts.\n"
+              "on-if-off [on|off]                       - Toggle on-if-off functionality.\n"
+              "wait-until-on [on|off]                   - Toggle wait-until-on functionality.\n"
+              "wait-until-off [on|off]                  - Toggle wait-until-off functionality.\n"
+              "retransmission-wait-timeout MILLISECONDS - Specify a new retransmission timeout length.\n"
+              "retransmission-backoff-count COUNT       - Specify a new retransmission backoff count.\n"
+              "ping-interval MILLISECONDS               - Specify a new ping interval length.\n"
+              "ping-timeout MILLISECONDS                - Specify a new ping timeout length.\n"
+              "ping-packet-count COUNT                  - Specify a new ping packet count.\n"
+              "ping-percent COUNT                       - Specify a new ping percent number.\n"
+              "ping-consec-count COUNT                  - Specify a new ping consec count.\n");
+	      "buffer-output [on|off]                   - Toggle buffer-output functionality\n"
+              "consolidate-output [on|off]              - Toggle consolidate-output functionality.\n"
+	      "fanout COUNT                             - Specify a fanout.\n"
+              "help                                     - Output help menu.\n"
+              "version                                  - Output version.\n"
+              "config                                   - Output current configuration.\n"
+              "quit                                     - Quit program.\n");
+}
+
+static void 
+_cmd_version(void) 
+{
+  cbuf_printf(ttyout, "ipmipower %s\n", VERSION);
+}
 
 static void 
 _cmd_config(void) 
@@ -840,74 +826,39 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_password(argv);
               else if (strcmp(argv[0], "k_g") == 0)
                 _cmd_k_g(argv);
-              else if (strcmp(argv[0], "on") == 0)
-                _cmd_power(argv, POWER_CMD_POWER_ON);
-              else if (strcmp(argv[0], "off") == 0)
-                _cmd_power(argv, POWER_CMD_POWER_OFF);
-              else if (strcmp(argv[0], "cycle") == 0)
-                _cmd_power(argv, POWER_CMD_POWER_CYCLE);
-              else if (strcmp(argv[0], "reset") == 0)
-                _cmd_power(argv, POWER_CMD_POWER_RESET);
-              else if (strcmp(argv[0], "stat") == 0)
-                _cmd_power(argv, POWER_CMD_POWER_STATUS);
-              else if (strcmp(argv[0], "pulse") == 0)
-                _cmd_power(argv, POWER_CMD_PULSE_DIAG_INTR);
-              else if (strcmp(argv[0], "soft") == 0)
-                _cmd_power(argv, POWER_CMD_SOFT_SHUTDOWN_OS);
-              else if (strcmp(argv[0], "help") == 0 
-                       || strcmp(argv[0], "?") == 0)
-                _cmd_help();
-              else if (strcmp(argv[0], "advanced") == 0)
-                _cmd_advanced();
-              else if (strcmp(argv[0], "network") == 0)
-                _cmd_network();
-              else if (strcmp(argv[0], "version") == 0)
-                _cmd_version();
-              else if (strcmp(argv[0], "quit") == 0)
-                quit = 1;
-              /* support underscored version for backwards compatability */
-              else if (strcmp(argv[0], "authentication_type") == 0
-                       || strcmp(argv[0], "authentication-type") == 0)
-                _cmd_authentication_type(argv);
-              /* support "privilege" command for backwards compatability */
-              else if (strcmp(argv[0], "privilege") == 0
-                       || strcmp(argv[0], "privilege-level") == 0)
-                _cmd_privilege_level(argv);
               /* support underscored version for backwards compatability */
               else if (strcmp(argv[0], "ipmi_version") == 0
                        || strcmp(argv[0], "ipmi-version") == 0)
                 _cmd_ipmi_version(argv);
+              /* support "timeout" for backwards compatability */
+              else if (strcmp(argv[0], "timeout") == 0
+                       || strcmp(argv[0], "session-timeout") == 0)
+                _cmd_set_int(argv, 
+                             &conf->session_timeout_len, 
+                             "timeout",
+                             0, 
+                             IPMIPOWER_SESSION_TIMEOUT_MIN, 
+                             IPMIPOWER_SESSION_TIMEOUT_MAX);
+              /* support "retry-timeout" for backwards compatability */
+              else if (strcmp(argv[0], "retry-timeout") == 0
+                       || strcmp(argv[0], "retransmission-timeout") == 0)
+                _cmd_set_int(argv, 
+                             &conf->retransmission_timeout_len, 
+                             "retransmission-timeout", 1,
+                             IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN, 
+                             conf->session_timeout_len);
+              /* support underscored version for backwards compatability */
+              else if (strcmp(argv[0], "authentication_type") == 0
+                       || strcmp(argv[0], "authentication-type") == 0)
+                _cmd_authentication_type(argv);
               /* support underscored version for backwards compatability */
               else if (strcmp(argv[0], "cipher_suite_id") == 0
                        || strcmp(argv[0], "cipher-suite-id") == 0)
                 _cmd_cipher_suite_id(argv);
-              else if (strcmp(argv[0], "on-if-off") == 0)
-                _cmd_set_flag(argv,
-                              &conf->on_if_off, 
-                              "on-if-off");
-              else if (strcmp(argv[0], "wait-until-on") == 0)
-                _cmd_set_flag(argv,
-                              &conf->wait_until_on, 
-                              "wait-until-on");
-              else if (strcmp(argv[0], "wait-until-off") == 0)
-                _cmd_set_flag(argv,
-                              &conf->wait_until_off,
-                              "wait-until-off");
-	      else if (strcmp(argv[0], "buffer-output") == 0)
-		_cmd_set_flag(argv,
-			      &conf->buffer_output,
-			      "buffer-output");
-              else if (strcmp(argv[0], "consolidate-output") == 0)
-                _cmd_set_flag(argv, 
-                              &conf->consolidate_output, 
-                              "consolidate-output");
-	      else if (strcmp(argv[0], "fanout") == 0)
-                _cmd_set_int(argv, 
-                             &conf->fanout, 
-                             "fanout",
-                             1, 
-                             PSTDOUT_FANOUT_MIN, 
-                             PSTDOUT_FANOUT_MAX);
+              /* support "privilege" command for backwards compatability */
+              else if (strcmp(argv[0], "privilege") == 0
+                       || strcmp(argv[0], "privilege-level") == 0)
+                _cmd_privilege_level(argv);
               else if (strcmp(argv[0], "workaround-flags") == 0)
                 _cmd_workaround_flags(argv);
               else if (strcmp(argv[0], "debug") == 0) 
@@ -930,25 +881,32 @@ ipmipower_prompt_process_cmdline(void)
 #endif /* NDEBUG */
               else if (strcmp(argv[0], "happyeaster") == 0)
                 cbuf_printf(ttyout, "by Albert Chu <chu11@llnl.gov>\n");
-              else if (strcmp(argv[0], "config") == 0)
-                _cmd_config();
-              /* support "timeout" for backwards compatability */
-              else if (strcmp(argv[0], "timeout") == 0
-                       || strcmp(argv[0], "session-timeout") == 0)
-                _cmd_set_int(argv, 
-                             &conf->session_timeout_len, 
-                             "timeout",
-                             0, 
-                             IPMIPOWER_SESSION_TIMEOUT_MIN, 
-                             IPMIPOWER_SESSION_TIMEOUT_MAX);
-              /* support "retry-timeout" for backwards compatability */
-              else if (strcmp(argv[0], "retry-timeout") == 0
-                       || strcmp(argv[0], "retransmission-timeout") == 0)
-                _cmd_set_int(argv, 
-                             &conf->retransmission_timeout_len, 
-                             "retransmission-timeout", 1,
-                             IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN, 
-                             conf->session_timeout_len);
+              else if (strcmp(argv[0], "on") == 0)
+                _cmd_power(argv, POWER_CMD_POWER_ON);
+              else if (strcmp(argv[0], "off") == 0)
+                _cmd_power(argv, POWER_CMD_POWER_OFF);
+              else if (strcmp(argv[0], "cycle") == 0)
+                _cmd_power(argv, POWER_CMD_POWER_CYCLE);
+              else if (strcmp(argv[0], "reset") == 0)
+                _cmd_power(argv, POWER_CMD_POWER_RESET);
+              else if (strcmp(argv[0], "stat") == 0)
+                _cmd_power(argv, POWER_CMD_POWER_STATUS);
+              else if (strcmp(argv[0], "pulse") == 0)
+                _cmd_power(argv, POWER_CMD_PULSE_DIAG_INTR);
+              else if (strcmp(argv[0], "soft") == 0)
+                _cmd_power(argv, POWER_CMD_SOFT_SHUTDOWN_OS);
+              else if (strcmp(argv[0], "on-if-off") == 0)
+                _cmd_set_flag(argv,
+                              &conf->on_if_off, 
+                              "on-if-off");
+              else if (strcmp(argv[0], "wait-until-on") == 0)
+                _cmd_set_flag(argv,
+                              &conf->wait_until_on, 
+                              "wait-until-on");
+              else if (strcmp(argv[0], "wait-until-off") == 0)
+                _cmd_set_flag(argv,
+                              &conf->wait_until_off,
+                              "wait-until-off");
               /* support "retry-wait-timeout" for backwards compatability */
               else if (strcmp(argv[0], "retry-wait-timeout") == 0
                        || strcmp(argv[0], "retransmission-wait-timeout") == 0)
@@ -1002,6 +960,32 @@ ipmipower_prompt_process_cmdline(void)
                              1, 
                              IPMIPOWER_PING_CONSEC_COUNT_MIN, 
                              conf->ping_packet_count);
+	      else if (strcmp(argv[0], "buffer-output") == 0)
+		_cmd_set_flag(argv,
+			      &conf->buffer_output,
+			      "buffer-output");
+              else if (strcmp(argv[0], "consolidate-output") == 0)
+                _cmd_set_flag(argv, 
+                              &conf->consolidate_output, 
+                              "consolidate-output");
+	      else if (strcmp(argv[0], "fanout") == 0)
+                _cmd_set_int(argv, 
+                             &conf->fanout, 
+                             "fanout",
+                             1, 
+                             PSTDOUT_FANOUT_MIN, 
+                             PSTDOUT_FANOUT_MAX);
+              else if (strcmp(argv[0], "help") == 0 
+                       || strcmp(argv[0], "?") == 0
+		       || strcmp(argv[0], "advanced") == 0 /* legacy */
+		       || strcmp(argv[0], "network") == 0) /* legacy */
+                _cmd_help();
+              else if (strcmp(argv[0], "version") == 0)
+                _cmd_version();
+              else if (strcmp(argv[0], "config") == 0)
+                _cmd_config();
+              else if (strcmp(argv[0], "quit") == 0)
+                quit = 1;
               else
                 cbuf_printf(ttyout, "unknown command - type \"help\"\n");
             }
