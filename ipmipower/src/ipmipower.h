@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.88 2008-04-07 23:43:35 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.89 2008-04-24 06:00:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -562,17 +562,21 @@ struct ipmipower_config
    * indicate what the real length of the field is.
    */
   unsigned int             k_g_len;
-  power_cmd_t              powercmd;
-  char                     configfile[MAXPATHLEN+1];
-
-  authentication_type_t    authentication_type;
-  privilege_level_t        privilege_level;
   ipmi_version_t           ipmi_version;
+  int                      session_timeout_len;
+  int                      retransmission_timeout_len;
+  authentication_type_t    authentication_type;
   cipher_suite_id_t        cipher_suite_id;
-  ipmipower_bool_t         on_if_off;
-  ipmipower_bool_t         wait_until_on;
-  ipmipower_bool_t         wait_until_off;
-  ipmipower_bool_t         power_command_completed; /* for use with wait_until_X */
+  privilege_level_t        privilege_level;
+  uint32_t                 workaround_flags;
+  ipmipower_bool_t         debug;
+  char                     configfile[MAXPATHLEN+1];
+#ifndef NDEBUG
+  ipmipower_bool_t         rmcpdump;
+  ipmipower_bool_t         log;
+  char                     logfile[MAXPATHLEN+1];
+  int                      logfile_fd;
+#endif /* NDEBUG */
   /* buffer_output not implemented in ipmipower
    * added only for consistency to other tools.
    */
@@ -580,16 +584,12 @@ struct ipmipower_config
   ipmipower_bool_t         consolidate_output;
   int                      fanout;
   ipmipower_bool_t         eliminate;
-  uint32_t                 workaround_flags;
-  ipmipower_bool_t         debug;
-#ifndef NDEBUG
-  ipmipower_bool_t         rmcpdump;
-  ipmipower_bool_t         log;
-  char                     logfile[MAXPATHLEN+1];
-  int                      logfile_fd;
-#endif /* NDEBUG */
-  int                      session_timeout_len;
-  int                      retransmission_timeout_len;
+
+  power_cmd_t              powercmd;
+  ipmipower_bool_t         on_if_off;
+  ipmipower_bool_t         wait_until_on;
+  ipmipower_bool_t         wait_until_off;
+  ipmipower_bool_t         power_command_completed; /* for use with wait_until_X */
   int                      retransmission_wait_timeout_len;
   int                      retransmission_backoff_count; 
   int                      ping_interval_len;
@@ -603,20 +603,20 @@ struct ipmipower_config
   ipmipower_bool_t         username_set_on_cmdline;
   ipmipower_bool_t         password_set_on_cmdline;
   ipmipower_bool_t         k_g_set_on_cmdline;
-  ipmipower_bool_t         authentication_type_set_on_cmdline;
-  ipmipower_bool_t         privilege_level_set_on_cmdline;
   ipmipower_bool_t         ipmi_version_set_on_cmdline;
+  ipmipower_bool_t         session_timeout_len_set_on_cmdline;
+  ipmipower_bool_t         retransmission_timeout_len_set_on_cmdline;
+  ipmipower_bool_t         authentication_type_set_on_cmdline;
   ipmipower_bool_t         cipher_suite_id_set_on_cmdline;
-  ipmipower_bool_t         on_if_off_set_on_cmdline;
-  ipmipower_bool_t         wait_until_on_set_on_cmdline;
-  ipmipower_bool_t         wait_until_off_set_on_cmdline;
+  ipmipower_bool_t         privilege_level_set_on_cmdline;
   ipmipower_bool_t         workaround_flags_set_on_cmdline;
   ipmipower_bool_t         buffer_output_set_on_cmdline;
   ipmipower_bool_t         consolidate_output_set_on_cmdline;
   ipmipower_bool_t         fanout_set_on_cmdline;
   ipmipower_bool_t         eliminate_set_on_cmdline;
-  ipmipower_bool_t         session_timeout_len_set_on_cmdline;
-  ipmipower_bool_t         retransmission_timeout_len_set_on_cmdline;
+  ipmipower_bool_t         on_if_off_set_on_cmdline;
+  ipmipower_bool_t         wait_until_on_set_on_cmdline;
+  ipmipower_bool_t         wait_until_off_set_on_cmdline;
   ipmipower_bool_t         retransmission_wait_timeout_len_set_on_cmdline;
   ipmipower_bool_t         retransmission_backoff_count_set_on_cmdline;
   ipmipower_bool_t         ping_interval_len_set_on_cmdline;
