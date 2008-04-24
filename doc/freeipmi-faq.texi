@@ -223,7 +223,8 @@ Channel Information:
 @end example
 
 In the above example, its clear to see that pwopr[2-4] have different
-firmware than pwopr[0-1,5].
+firmware than pwopr[0-1,5].  More information about hostrange support
+can be found in the document freeipmi-hostrange.txt.
 
 Ipmidetect can be used to enhance the efficiency of the hostranged
 input by eliminating those nodes in the cluster that have been
