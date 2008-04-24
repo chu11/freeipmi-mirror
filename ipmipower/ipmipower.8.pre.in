@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.25 2008-04-24 04:19:29 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.26 2008-04-24 05:00:36 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -28,7 +28,7 @@
 ipmipower \- IPMI power control utility
 .SH "SYNOPSIS"
 .B ipmipower
-.I "[OPTIONS]"
+[\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B ipmipower
 allows users to remotely power on, off, cycle, hard reset, get a power

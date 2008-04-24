@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmidetectd.8.pre.in,v 1.7 2008-04-24 00:00:29 chu11 Exp $
+.\"$Id: ipmidetectd.8.pre.in,v 1.8 2008-04-24 05:00:35 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -27,7 +27,8 @@
 .SH "NAME"
 ipmidetectd \- IPMI node detection monitoring daemon
 .SH "SYNOPSIS"
-.B ipmidetectd [OPTIONS]
+.B ipmidetectd 
+[\fIOPTION\fR...]
 .br
 .SH "DESCRIPTION"
 The

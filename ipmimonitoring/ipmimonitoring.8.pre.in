@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.29 2008-04-24 04:19:29 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.30 2008-04-24 05:00:35 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -28,7 +28,7 @@
 ipmimonitoring \- IPMI monitoring utility
 .SH "SYNOPSIS"
 .B ipmimonitoring
-.I "[OPTIONS]"
+[\fIOPTION\fR...]"
 .SH "DESCRIPTION"
 .B ipmimonitoring
 is an IPMI sensor monitoring tool that utilizes the 

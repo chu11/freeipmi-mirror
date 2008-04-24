@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.29 2008-04-24 04:19:29 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.30 2008-04-24 05:00:35 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -28,7 +28,7 @@
 ipmiconsole \- IPMI console utility
 .SH "SYNOPSIS"
 .B ipmiconsole
-.I "[OPTIONS]"
+[\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B ipmiconsole
 is a Serial-over-LAN (SOL) console utility.  It can be used to establish

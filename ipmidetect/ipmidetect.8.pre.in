@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmidetect.8.pre.in,v 1.7 2008-04-24 00:00:29 chu11 Exp $
+.\"$Id: ipmidetect.8.pre.in,v 1.8 2008-04-24 05:00:35 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -28,7 +28,7 @@
 ipmidetect \- list detected and/or undetected IPMI interfaces in a cluster
 .SH "SYNOPSIS"
 .B ipmidetect
-[\fIOPTION\fR]... [\fINODES\fR]...
+[\fIOPTION\fR...] [\fINODES\fR...]
 .br
 .SH "DESCRIPTION"
 .B ipmidetect
