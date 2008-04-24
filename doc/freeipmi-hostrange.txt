@@ -190,14 +190,15 @@ the remote node.  This can disrupt the CPU of running jobs on the
 cluster and removes the advantage that IPMI over LAN does not
 interrupt a CPU.
 
-Starting with FreeIPMI 0.4.0, hostrange support has been added into
+Starting with FreeIPMI 0.4.1, hostrange support has been added into
 ipmi-chassis, ipmi-fru, ipmi-raw, ipmi-sensors, ipmi-sel, bmc-info,
-and ipmimonitoring (it has existed in ipmipower since 0.1.0).  More
-than one node at a time can be specified on the command line using the
-hostrange format similar in pdsh.  Using a threaded model similar to
-pdsh, each of the tools will create a sliding-window of threads, each
-executing out-of-band IPMI in parallel.  The number of threads in the
-window can be increased or decreased using the fanout -F option.
+and ipmimonitoring (it has existed in ipmipower since 0.1.0.  In later
+releases it has been extended to other tools).  More than one node at
+a time can be specified on the command line using the hostrange format
+similar in pdsh.  Using a threaded model similar to pdsh, each of the
+tools will create a sliding-window of threads, each executing
+out-of-band IPMI in parallel.  The number of threads in the window can
+be increased or decreased using the fanout -F option.
 
 The tools now have similar functionality to pdsh, but all of the IPMI
 communication is done out-of-band.  Ipmipower, which supported
