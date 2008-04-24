@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.26 2008-04-24 05:00:36 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.27 2008-04-24 05:46:46 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -34,7 +34,6 @@ ipmipower \- IPMI power control utility
 allows users to remotely power on, off, cycle, hard reset, get a power
 status query, perform a pulse diagnostic interrupt, or initiate a
 soft-shutdown of the OS via ACPI through the IPMI over LAN protocol.
-See IPMI over LAN below for more information on IPMI.
 .LP
 When a power command (--on, --off, --cycle, --reset, --stat, --pulse,
 or --soft) is specified on the command line,
@@ -52,8 +51,6 @@ INTERACTIVE COMMANDS.
 See EXAMPLES below for examples of how ipmipower is commonly used.
 
 #include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
-The following options are the most common options used with  
-.B ipmipower.
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
 .TP
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
@@ -66,60 +63,36 @@ power status of the machine through --stat.
 #include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
 .TP
-\fB\-n\fR, \fB\-\-on\fR
-Power on the target hosts.
+\fB\-R\fR, \fB\-\-ipmi\-version\fR=\fIIPMIVERSION\fR
+Specify the IPMI protocol version to use.  Set the IPMI protocol
+version to use.  The currently available versions are AUTO, 1.5, and
+2.0.  Defaults to AUTO to automatically select a suitable protocol
+version.
 .TP
-\fB\-f\fR, \fB\-\-off\fR
-Power off the target hosts.
+\fB\-t\fR, \fB\-\-session\-timeout\fR=\fBMILLISECONDS\fR
+Specify the session timeout length in milliseconds.  The session
+timeout value is used to determine when to give up on a power control
+command.  Defaults to 20000 milliseconds (20 seconds).
 .TP
-\fB\-c\fR, \fB\-\-cycle\fR
-Power cycle the target hosts.
-.TP
-\fB\-r\fR, \fB\-\-reset\fR
-Reset the target hosts.
-.TP
-\fB\-s\fR, \fB\-\-stat\fR
-Get power status of the target hosts.
-.TP
-\fB\-j\fR, \fB\-\-pulse\fR
-Send power diagnostic interrupt to target hosts.
-.TP
-\fB\-m\fR, \fB\-\-soft\fR
-Initiate a soft-shutdown of the OS via ACPI.
-.TP
-\fB\-H\fR, \fB\-\-help\fR
-Output help menu and exit.
-.TP
-\fB\-V\fR, \fB\-\-version\fR
-Output version and exit.
-.if @WITH_DEBUG@ \{
-.TP
-\fB\-\-config file\fR
-Specify an alternate configuration file.
-\}
-.LP
-.SH "ADVANCED OPTIONS"
-The following advanced options are used to change the default behavior
-of 
-.B ipmipower.
+\fB\-y\fR, \fB\-\-retransmission\-timeout\fR=\fBMILLISECONDS\fR
+Specify the retransmission timeout length in milliseconds.  The
+retransmission timeout value is used to determine when to retransmit a
+packet with the series of packets IPMI over LAN must transmit.
+Defaults to 400 milliseconds (0.4 seconds).  The value must be length
+than the session timeout.  Packet retransmissions can be disabled by
+setting this value to 0.
+
+Note how this option differs from the session timeout specified above.
+The session timeout refers to the entire amount of time the IPMI
+protocol has to complete a power control operation.  The
+retransmission timeout refers to an individual packet within the IPMI
+protocol.
 .TP
 \fB\-a\fR, \fB\-\-authentication\-type\fR=\fIAUTHENTICATION-TYPE\fR
 Specify the IPMI 1.5 authentication type to use.  The currently
 available authentication types are AUTO, NONE, STRAIGHT_PASSWORD_KEY,
 MD2, and MD5.  Defaults to AUTO to automatically select the 
 most secure authentication mechanism available.
-.TP
-\fB\-l\fR, \fB\-\-privilege\-level\fR=\fIPRIVILEGE\-LEVEL\fR
-Specify the privilege level to be used.  The currently available
-privilege levels are AUTO, USER, OPERATOR, and ADMIN.
-Defaults to AUTO to automatically select the minimal privilege
-required for the power control operation selected.
-.TP
-\fB\-R\fR, \fB\-\-ipmi\-version\fR=\fIIPMIVERSION\fR
-Specify the IPMI protocol version to use.  Set the IPMI protocol
-version to use.  The currently available versions are AUTO, 1.5, and
-2.0.  Defaults to AUTO to automatically select a suitable protocol
-version.
 .TP
 \fB\-I\fR, \fB\-\-cipher\-suite-id\fR=\fICIPHER-SUITE-ID\fR
 Specify the IPMI 2.0 cipher suite ID to use.  The Cipher Suite ID
@@ -164,40 +137,18 @@ AUTO - Select the most secure cipher suite available from the remote machine
 .\" .sp
 .\" 14 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-40
 .TP
-\fR\-g\fR, \fB\-\-on\-if\-off\fR
-The IPMI specification does not require the power cycle or hard reset
-commands to turn on a machine that is currently powered off.  This
-option will force
-.B ipmipower 
-to issue a power on command instead of a power cycle or hard reset
-command if the remote machine's power is currently off.
-.TP
-\fR\-A\fR, \fB\-\-wait\-until\-on\fR
-The IPMI specification allows power on commands to return prior to the
-power on actually taking place.  This option will force
-.B ipmipower 
-to regularly query the remote BMC and return only after the machine
-has powered on.
-.TP
-\fR\-G\fR, \fB\-\-wait\-until\-off\fR
-The IPMI specification allows power off commands to return prior the
-power off actually taking place.  This option will force
-.B ipmipower 
-to regularly query the remote BMC and return only after the machine
-has powered off.
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
-.TP
-\fB\-F\fR, \fB\-\-fanout\fR
-Specify multiple host fanout.  Indicates the maximum number of power
-control operations that can be executed in parallel.
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+\fB\-l\fR, \fB\-\-privilege\-level\fR=\fIPRIVILEGE\-LEVEL\fR
+Specify the privilege level to be used.  The currently available
+privilege levels are AUTO, USER, OPERATOR, and ADMIN.
+Defaults to AUTO to automatically select the minimal privilege
+required for the power control operation selected.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
-.TP
-\fB\-\-debug\fR
-Turn on debugging output.
+#include <@top_srcdir@/common/doc/manpage-common-debug.man>
+#include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .if @WITH_DEBUG@ \{
+.TP
+\fB\-\-config file\fR
+Specify an alternate configuration file.
 .TP
 \fB\-\-rmcpdump\fR
 Turn on RMCP packet dump output.  Warning, the dump output can get 
@@ -210,30 +161,57 @@ the current process id.
 \fB\-\-logfile\fR=\fFILE\fR
 Specify an alternate logfile.
 \}
-.LP
-.SH "NETWORK OPTIONS"
-The following options are used to change the behavior of
-.B ipmipower's 
-network behavior.
-.TP
-\fB\-t\fR, \fB\-\-session\-timeout\fR=\fBMILLISECONDS\fR
-Specify the session timeout length in milliseconds.  The session
-timeout value is used to determine when to give up on a power control
-command.  Defaults to 20000 milliseconds (20 seconds).
-.TP
-\fB\-y\fR, \fB\-\-retransmission\-timeout\fR=\fBMILLISECONDS\fR
-Specify the retransmission timeout length in milliseconds.  The
-retransmission timeout value is used to determine when to retransmit a
-packet with the series of packets IPMI over LAN must transmit.
-Defaults to 400 milliseconds (0.4 seconds).  The value must be length
-than the session timeout.  Packet retransmissions can be disabled by
-setting this value to 0.
 
-Note how this option differs from the session timeout specified above.
-The session timeout refers to the entire amount of time the IPMI
-protocol has to complete a power control operation.  The
-retransmission timeout refers to an individual packet within the IPMI
-protocol.
+.SH "IPMIPOWER OPTIONS"
+The following options are specific to
+.B ipmipower.
+.TP
+\fB\-n\fR, \fB\-\-on\fR
+Power on the target hosts.
+.TP
+\fB\-f\fR, \fB\-\-off\fR
+Power off the target hosts.
+.TP
+\fB\-c\fR, \fB\-\-cycle\fR
+Power cycle the target hosts.
+.TP
+\fB\-r\fR, \fB\-\-reset\fR
+Reset the target hosts.
+.TP
+\fB\-s\fR, \fB\-\-stat\fR
+Get power status of the target hosts.
+.TP
+\fB\-j\fR, \fB\-\-pulse\fR
+Send power diagnostic interrupt to target hosts.
+.TP
+\fB\-m\fR, \fB\-\-soft\fR
+Initiate a soft-shutdown of the OS via ACPI.
+.TP
+\fB\-g\fR, \fB\-\-on\-if\-off\fR
+The IPMI specification does not require the power cycle or hard reset
+commands to turn on a machine that is currently powered off.  This
+option will force
+.B ipmipower 
+to issue a power on command instead of a power cycle or hard reset
+command if the remote machine's power is currently off.
+.TP
+\fB\-A\fR, \fB\-\-wait\-until\-on\fR
+The IPMI specification allows power on commands to return prior to the
+power on actually taking place.  This option will force
+.B ipmipower 
+to regularly query the remote BMC and return only after the machine
+has powered on.
+.TP
+\fB\-G\fR, \fB\-\-wait\-until\-off\fR
+The IPMI specification allows power off commands to return prior the
+power off actually taking place.  This option will force
+.B ipmipower 
+to regularly query the remote BMC and return only after the machine
+has powered off.
+
+.SH "IPMIPOWER ADVANCED NETWORK OPTIONS"
+The following options are used to change the networking behavior of
+.B ipmipower.
 .TP
 \fB\-q\fR, \fB\-\-retransmission\-wait\-timeout\fR=\fBMILLISECONDS\fR
 Specify the retransmission wait timeout length in milliseconds.  The
@@ -308,6 +286,15 @@ the last COUNT ping packets, a node will be considered discovered,
 regardless of other heuristics listed above.  Defaults to 5.  This
 heuristic can be disabled by setting this value to 0.  This feature is
 not used if other ping features described above are disabled.
+.LP
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+.TP
+\fB\-F\fR, \fB\-\-fanout\fR
+Specify multiple host fanout.  Indicates the maximum number of power
+control operations that can be executed in parallel.
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
 .LP
 .SH "INTERACTIVE COMMANDS"
 .B ipmipower

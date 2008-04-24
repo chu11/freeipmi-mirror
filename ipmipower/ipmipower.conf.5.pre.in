@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.conf.5.pre.in,v 1.6 2008-04-24 00:00:30 chu11 Exp $
+.\"$Id: ipmipower.conf.5.pre.in,v 1.7 2008-04-24 05:46:46 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -91,22 +91,34 @@ Specify the default password to use.
 Specify the default BMC key (K_g) to use.  To input the key in
 hexadecimal form, prefix the string with '0x'.
 .TP
+\fBipmi-version\fR \fIIPMIVERSION\fR
+Specify the default IPMI protocol version to use.  The currently
+available versions are AUTO, 1.5, and 2.0.
+.TP
+\fBsession-timeout\fR \fIMILLISECONDS\fR
+Specify the default session timeout length in milliseconds.
+.TP
+\fBretry-timeout\fR \fIMILLISECONDS\fR
+Specify the default retransmission timeout length in milliseconds.
+.TP
 \fBauthentication-type\fR \fIAUTHTYPE\fR
 Specify the default IPMI 1.5 authentication type to use.  The
 currently available authentication types are NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
+\fBcipher-suite-id\fR \fICIPHER_SUITE_ID\fR
+Specify the default cipher suite ID to use.  The currently supported
+cipher suite IDs are AUTO, 0, 1, 2, 3, 6, 7, 8, 11, 12.
+.TP
 \fBprivilege-level\fR \fIPRIVILEGE-LEVEL\fR
 Specify the default privilege type to use.  The currently available
 privilege levels are AUTO, USER, OPERATOR, and ADMIN.
 .TP
-\fBipmi-version\fR \fIIPMIVERSION\fR
-Specify the default IPMI protocol version to use.  The currently
-available versions are AUTO, 1.5, and 2.0.
-.TP
-\fBcipher-suite-id\fR \fICIPHER_SUITE_ID\fR
-Specify the default cipher suite ID to use.  The currently supported
-cipher suite IDs are AUTO, 0, 1, 2, 3, 6, 7, 8, 11, 12.
+\fBworkaround-flags\fR \fIWORKAROUNDS\fR
+Specify the default workaround to vendor compliance issues.  See 
+WORKAROUNDS in
+.B ipmipower(8)
+for a list of available workarounds.
 .TP
 \fBon-if-off\fR \fIENABLE|DISABLE\fR
 Specify if on-if-off functionality is enabled or disabled by default.
@@ -128,18 +140,6 @@ Specify a fanout.
 .TP
 \fBeliminate\fR \fIENABLE|DISABLE\fR
 Specify if eliminate functionality is enabled or disabled by default.
-.TP
-\fBworkaround-flags\fR \fIWORKAROUNDS\fR
-Specify the default workaround to vendor compliance issues.  See 
-WORKAROUNDS in
-.B ipmipower(8)
-for a list of available workarounds.
-.TP
-\fBsession-timeout\fR \fIMILLISECONDS\fR
-Specify the default session timeout length in milliseconds.
-.TP
-\fBretry-timeout\fR \fIMILLISECONDS\fR
-Specify the default retransmission timeout length in milliseconds.
 .TP
 \fBretry-wait-timeout\fR \fIMILLISECONDS\fR
 Specify the default retransmission wait timeout length in milliseconds.

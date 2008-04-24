@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.30 2008-04-24 05:00:35 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.31 2008-04-24 05:46:45 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -61,12 +61,6 @@ SOL session abilities.
 #include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
 .TP
-\fB\-l\fR, \fB\-\-privilege-level\fR=\fIPRIVILEGE\-LEVEL\fR
-Specify the privilege level to be used.  The currently available
-privilege levels are USER, OPERATOR, and ADMIN.  Defaults to ADMIN if
-not specified.  The privilege must be atleast the minimum required by
-the remote host to establish a SOL session.
-.TP
 \fB\-I\fR, \fB\-\-cipher\-suite-id\fR=\fICIPHER-SUITE-ID\fR
 Specify the IPMI 2.0 cipher suite ID to use. The Cipher Suite ID
 identifies a set of authentication, integrity, and confidentiality
@@ -109,8 +103,26 @@ cipher suite ids are currently supported:
 .\" 13 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-128
 .\" .sp
 .\" 14 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-40
-
+.TP
+\fB\-l\fR, \fB\-\-privilege-level\fR=\fIPRIVILEGE\-LEVEL\fR
+Specify the privilege level to be used.  The currently available
+privilege levels are USER, OPERATOR, and ADMIN.  Defaults to ADMIN if
+not specified.  The privilege must be atleast the minimum required by
+the remote host to establish a SOL session.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/common/doc/manpage-common-debug.man>
+#include <@top_srcdir@/common/doc/manpage-common-misc.man>
+.if @WITH_DEBUG@ \{
+.TP
+\fB\-\-debugfile\fR
+Output debugging to the debugfile rather than to standard output.
+.TP
+\fB\-\-noraw\fR
+Don't enter terminal raw mode.
+\}
+.SH "IPMICONSOLE OPTIONS"
+The following options are specific to
+.B Ipmiconsole.
 .TP
 \fB\-e\fR, \fB\-\-escape-char\fR
 Specify an alternate escape character (default char '&').
@@ -132,18 +144,6 @@ memory.
 .TP
 \fB\-C\fR, \fB\-\-config file\fR=\fIFILE\fR
 Specify an alternate configuration file.
-#include <@top_srcdir@/common/doc/manpage-common-misc.man>
-.TP
-\fB\-\-debug\fR
-Turn on debugging.
-.if @WITH_DEBUG@ \{
-.TP
-\fB\-\-debugfile\fR
-Output debugging to the debugfile rather than to standard output.
-.TP
-\fB\-\-noraw\fR
-Don't enter terminal raw mode.
-\}
 .LP
 
 .SH "ESCAPE CHARACTERS"

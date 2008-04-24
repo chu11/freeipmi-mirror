@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.35 2008-04-02 00:12:57 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.36 2008-04-24 05:46:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -493,9 +493,9 @@ _config_file_parse(void)
     username_flag,
     password_flag, 
     k_g_flag,
+    cipher_suite_id_flag,
     privilege_flag, 
     privilege_level_flag, 
-    cipher_suite_id_flag,
     escape_char_flag,
     dont_steal_flag,
     lock_memory_flag,
@@ -566,17 +566,6 @@ _config_file_parse(void)
         0
       },
       {
-        "privilege-level", 
-        CONFFILE_OPTION_STRING, 
-        -1,
-        _cb_privilege_level,
-        1, 
-        0, 
-        &privilege_level_flag,
-        NULL, 
-        0
-      },
-      {
         "cipher-suite-id", 
         CONFFILE_OPTION_INT, 
         -1, 
@@ -584,6 +573,17 @@ _config_file_parse(void)
         1,
         0, 
         &cipher_suite_id_flag,
+        NULL, 
+        0
+      },
+      {
+        "privilege-level", 
+        CONFFILE_OPTION_STRING, 
+        -1,
+        _cb_privilege_level,
+        1, 
+        0, 
+        &privilege_level_flag,
         NULL, 
         0
       },
