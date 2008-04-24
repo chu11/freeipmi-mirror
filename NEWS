@@ -43,6 +43,7 @@ o In ipmi-sensors, updated SDR output under verbose and very verbose
   o Fix incorrect OEM data output.
   o Support more SDR record types for output.
   o Output more SDR record information in general.
+o Added new freeipmi(7) and libfreeipmi(3) manpages.
 o Various other bug fixes, documentation fixes, and enhancements.
 
 For Developers
