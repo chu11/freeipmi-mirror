@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.28 2008-04-24 00:00:29 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.29 2008-04-24 04:19:29 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -50,7 +50,7 @@ Often (although not always), console redirection must be also
 be configured properly in the BIOS and/or operating system.  Both must
 be configured to redirect console traffic out the appropriate COM port.
 
-.SH "OPTIONS"
+#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname.man>
 .TP
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR

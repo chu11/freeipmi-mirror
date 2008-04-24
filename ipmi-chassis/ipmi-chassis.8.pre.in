@@ -7,7 +7,7 @@ is used for managing/monitoring an IPMI chassis, such as chassis
 power, indentification, and status.  See OPTIONS below for all chassis
 management options
 available.
-.SH "OPTIONS"
+#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
@@ -116,6 +116,7 @@ chassis behaves when AC power returns after an AC power loss.
 Supported values: LIST\-SUPPORTED\-POLICIES, ALWAYS\-ON, RESTORE,
 ALWAYS\-OFF.  See current power restore policy via the
 \fB\-\-get\-status\fR option.
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>

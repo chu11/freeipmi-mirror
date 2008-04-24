@@ -8,7 +8,7 @@ records store system event information and may be useful for debugging
 problems. Although output may vary dependent on individual SEL events,
 most entries will display the SEL record id, date of event, time of
 event, sensor group, sensor name, and the sensor event occurrence.
-.SH "OPTIONS"
+#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
@@ -40,6 +40,7 @@ Delete record ids from START to END in the SEL.
 Hex-dump SEL entries optionally into a FILE.
 #include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-ignore-sdr-cache.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>

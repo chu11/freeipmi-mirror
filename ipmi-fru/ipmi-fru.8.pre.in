@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.24 2008-04-24 00:00:28 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.25 2008-04-24 04:19:27 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -30,7 +30,7 @@ ipmi-fru \- display FRU information
 .SH "DESCRIPTION"
 .B Ipmi-fru
 displays Field Replaceable Unit (FRU) Information.
-.SH "OPTIONS"
+#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
@@ -60,6 +60,7 @@ FRU data is correct.  Use this option to skip the checks checksum.
 Output may be unknown, pray for the best.
 #include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-ignore-sdr-cache.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>

@@ -16,7 +16,7 @@ options will not be retrieved or set.
 .LP
 See GENERAL USE below for a description on how most will want to use
 .B Bmc-config.
-.SH "OPTIONS"
+#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname.man>

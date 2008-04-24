@@ -16,7 +16,7 @@ because sensor readings are not analyzed.  Users may wish to consider
 .B ipmimonitoring(8)
 for sensor analysis.
 
-.SH "OPTIONS"
+#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
@@ -62,6 +62,7 @@ Specify sensors to show by record id.  Multiple record ids can be
 separated by commas or spaces.
 
 #include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>

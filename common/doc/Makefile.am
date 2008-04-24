@@ -1,4 +1,5 @@
 EXTRA_DIST = \
+	manpage-common-general-options-header.man \
 	manpage-common-driver.man \
 	manpage-common-inband.man \
 	manpage-common-outofband-hostname.man \
@@ -20,6 +21,7 @@ EXTRA_DIST = \
 	manpage-common-workaround-sol-only-text.man \
 	manpage-common-debug.man \
 	manpage-common-misc.man \
+	manpage-common-hostranged-options-header.man \
 	manpage-common-hostranged-buffer.man \
 	manpage-common-hostranged-consolidate.man \
 	manpage-common-hostranged-fanout.man \

@@ -1,3 +1,6 @@
+.SH "CONFIG OPTIONS"
+The following options are used to read, write, and find differences
+in configuration values.
 .TP
 \fB\-o\fR, \fB\-\-checkout\fR
 Fetch configuration information.

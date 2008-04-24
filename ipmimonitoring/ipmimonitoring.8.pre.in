@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.28 2008-04-24 00:00:29 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.29 2008-04-24 04:19:29 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -42,8 +42,7 @@ sensor readings into NOMINAL, WARNING, or CRITICAL states, it makes
 monitoring easier across large numbers of nodes.  For more general
 sensor reading use, it is recommended that users use
 .B ipmi-sensors(8).
-.SH "OPTIONS"
-.TP
+#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
@@ -75,6 +74,7 @@ be separated by commas or spaces.
 Specify sensors to monitor by record id.  Multiple record ids can be
 separated by commas or spaces.
 #include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>

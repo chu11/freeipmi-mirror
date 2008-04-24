@@ -1,0 +1,3 @@
+.SH "HOSTRANGED OPTIONS"
+The following options manipulate hostranged output.  See HOSTRANGED
+SUPPORT below for additional information on hostranges.

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.24 2008-04-24 00:00:30 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.25 2008-04-24 04:19:29 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -51,7 +51,7 @@ INTERACTIVE COMMANDS.
 .LP
 See EXAMPLES below for examples of how ipmipower is commonly used.
 
-.SH "BASIC OPTIONS"
+#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 The following options are the most common options used with  
 .B ipmipower.
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
@@ -185,6 +185,7 @@ power off actually taking place.  This option will force
 .B ipmipower 
 to regularly query the remote BMC and return only after the machine
 has powered off.
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 .TP

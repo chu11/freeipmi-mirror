@@ -12,7 +12,7 @@ a better user interface for OEM specific support IPMI commands better than
 
 See SUPPORTED OEM below for currently supported OEM IDs and COMMANDs.
 
-.SH "OPTIONS"
+#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
@@ -30,6 +30,7 @@ required user privilege will depend on the oem commands executed.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>

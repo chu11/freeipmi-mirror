@@ -1,5 +1,17 @@
 2008-04-23  Albert Chu <chu11@llnl.gov>
 
+	* common/doc/manpage-common-general-options-header.man,
+	common/doc/manpage-common-hostranged-options-header.man: New
+	files.
+
+	* common/doc/manpage-common-config-tool-options.man: Add
+	option-section text.
+
+	* For better readability, sub-divide options into sections in most
+	manpages.
+	
+2008-04-23  Albert Chu <chu11@llnl.gov>
+
 	* common/doc/manpage-common-homepage.man: New file.
 
 	* Add webpage to all manpages and documentation.
