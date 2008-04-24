@@ -504,15 +504,15 @@ defaults_display (void)
 int 
 main (int argc, char **argv)
 {
+  ipmi_disable_coredump();
+
+  ipmi_locate_argp_parse (argc, argv);
+
   if (!ipmi_is_root())
     {
       fprintf(stderr, "%s: Permission Denied\n", argv[0]);
       exit(1);
     }
-
-  ipmi_disable_coredump();
-
-  ipmi_locate_argp_parse (argc, argv);
 
   dmidecode_probe_display ();
   smbios_probe_display ();

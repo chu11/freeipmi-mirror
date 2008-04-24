@@ -4,11 +4,14 @@
 	common/doc/manpage-common-hostranged-options-header.man: New
 	files.
 
-	* common/doc/manpage-common-config-tool-options.man: Add
+	* common/doc/manpage-common-sdr-options.man,
+	common/doc/manpage-common-config-tool-options.man: Add
 	option-section text.
 
 	* For better readability, sub-divide options into sections in most
 	manpages.
+
+	* ipmi-locate/src/ipmi-locate.c: Check for root after parsing args.
 	
 2008-04-23  Albert Chu <chu11@llnl.gov>
 
