@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.62 2008-04-24 17:14:01 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.63 2008-04-24 17:22:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -551,10 +551,10 @@ _cmd_help(void)
               "ping-timeout MILLISECONDS                - Specify a new ping timeout length.\n"
               "ping-packet-count COUNT                  - Specify a new ping packet count.\n"
               "ping-percent COUNT                       - Specify a new ping percent number.\n"
-              "ping-consec-count COUNT                  - Specify a new ping consec count.\n");
+              "ping-consec-count COUNT                  - Specify a new ping consec count.\n"
 	      "buffer-output [on|off]                   - Toggle buffer-output functionality\n"
               "consolidate-output [on|off]              - Toggle consolidate-output functionality.\n"
-	      "fanout COUNT                             - Specify a fanout.\n"
+              "fanout COUNT                             - Specify a fanout.\n"
               "help                                     - Output help menu.\n"
               "version                                  - Output version.\n"
               "config                                   - Output current configuration.\n"
