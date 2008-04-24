@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.79 2008-04-24 17:14:01 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.80 2008-04-24 17:33:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -242,9 +242,6 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
       else
         tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rs[0];
         
-      if (!ip->retransmission_count)
-	return;
-
       if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
           || pkt == GET_CHANNEL_CIPHER_SUITES_RES
           || pkt == OPEN_SESSION_REQ

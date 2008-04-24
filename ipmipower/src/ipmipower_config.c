@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.82 2008-04-24 06:00:31 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.83 2008-04-24 17:33:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -128,13 +128,15 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     {"debug", IPMIPOWER_DEBUG_KEY, 0, 0,
      "Turn on debugging.", 25},
+    {"config", IPMIPOWER_CONFIG_KEY, "FILE", 0,
+     "Specify an alternate configuration file.", 26},
 #ifndef NDEBUG
     {"rmcpdump", IPMIPOWER_RMCPDUMP_KEY, 0, 0,
-     "Turn on RMCP packet dump output.", 26},
+     "Turn on RMCP packet dump output.", 27},
     {"log", IPMIPOWER_LOG_KEY, 0, 0,
-     "Turn on logging.", 27},
+     "Turn on logging.", 28},
     {"logfile", IPMIPOWER_LOGFILE_KEY, "FILE", 0,
-     "Specify an alternate logfile.", 28},
+     "Specify an alternate logfile.", 29},
 #endif
     {"on", IPMIPOWER_ON_KEY, 0, 0,
      "Power on the target hosts.", 30},
@@ -150,8 +152,6 @@ static struct argp_option cmdline_options[] =
      "Send power diagnostic interrupt to target hosts.", 35},
     {"soft", IPMIPOWER_SOFT_KEY, 0, 0,
      "Initiate a soft-shutdown of the OS via ACPI.", 36},
-    {"config", IPMIPOWER_CONFIG_KEY, "FILE", 0,
-     "Specify an alternate configuration file.", 37},
     {"on-if-off", IPMIPOWER_ON_IF_OFF_KEY, 0, 0,
      "Issue a power on command instead of a power cycle or hard reset "
      "command if the remote machine's power is currently off.", 38},
@@ -465,12 +465,12 @@ cmdline_parse (int key,
     case IPMIPOWER_DEBUG_KEY:          /* --debug */
       conf->debug = !conf->debug;
       break;
-#ifndef NDEBUG
     case IPMIPOWER_CONFIG_KEY:         /* --config */
       if (strlen(arg) > MAXPATHLEN)
         ierr_exit("Command Line Error: configuration file pathname too long");
       strcpy(conf->configfile, arg);
       break;
+#ifndef NDEBUG
     case IPMIPOWER_RMCPDUMP_KEY:       /* --rmcpdump */
       conf->rmcpdump = !conf->rmcpdump;
       break;
