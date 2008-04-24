@@ -3,7 +3,7 @@ SUBDIRS = src
 MANS_CPP = ipmidetect.8 ipmidetect.conf.5 ipmidetectd.8 ipmidetectd.conf.5 libipmidetect.3
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
-	cpp -P -I. -x c $@.pre -o $@
+	cpp -C -P -I. -x c $@.pre -o $@
 
 dist_man_MANS = $(MANS_CPP)
 

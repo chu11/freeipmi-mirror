@@ -3,7 +3,7 @@ SUBDIRS = src
 MANS_CPP = ipmi-fru.8
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
-	cpp -P -I. -x c $@.pre -o $@
+	cpp -C -P -I. -x c $@.pre -o $@
 
 dist_man_MANS = $(MANS_CPP)
 
