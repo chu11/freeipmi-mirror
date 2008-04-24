@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.63 2008-04-24 17:22:36 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.64 2008-04-24 23:02:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -669,7 +669,7 @@ _cmd_config(void)
               (conf->wait_until_on) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Wait-Until-Off:               %s\n",
               (conf->wait_until_off) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Buffer-Output:           %s\n",
+  cbuf_printf(ttyout, "Buffer-Output:                %s\n",
               (conf->buffer_output) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Consolidate-Output:           %s\n",
               (conf->consolidate_output) ? "enabled" : "disabled");
