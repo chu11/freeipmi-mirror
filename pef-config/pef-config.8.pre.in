@@ -7,6 +7,10 @@ pef-config \- configure PEF values
 .SH "DESCRIPTION"
 .B Pef-config
 is a Platform Event Filtering (PEF) configuration utility.
+
+.LP
+See GENERAL USE below for a description on how most will want to use
+.B Pef-config.
 #include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
