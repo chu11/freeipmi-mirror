@@ -12,6 +12,8 @@
 	manpages.
 
 	* ipmi-locate/src/ipmi-locate.c: Check for root after parsing args.
+
+	* Add and fix synopsis in all manpages appropriately.
 	
 2008-04-23  Albert Chu <chu11@llnl.gov>
 

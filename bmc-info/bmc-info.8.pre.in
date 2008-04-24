@@ -1,6 +1,9 @@
 .TH BMC-INFO 8 "@ISODATE@" "bmc-info @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 bmc-info \- display BMC information
+.SH "SYNOPSIS"
+.B bmc-info
+[\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Bmc-info 
 displays local BMC information, such as version information and device

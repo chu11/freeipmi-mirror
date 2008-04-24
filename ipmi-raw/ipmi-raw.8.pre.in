@@ -3,7 +3,7 @@
 ipmi-raw \- IPMI raw communication utility
 .SH "SYNOPSIS"
 .B ipmi-raw
-[\fIOPTION\fR...] <lun> <netfn> [\fICOMMAND-HEX-BYTES\fR]
+[\fIOPTION\fR...] <lun> <netfn> [\fICOMMAND-HEX-BYTES\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-raw
 is used to execute IPMI commands by hex values.
@@ -25,6 +25,9 @@ required user privilege will depend on the raw commands executed.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
+.SH "IPMI-RAW OPTIONS"
+The following options are specific to
+.B Ipmi-raw.
 .TP
 \fB\-f\fR, \fB\-\-file\fR=\fICMD\-FILE\fR
 Specify a file to read command requests from.

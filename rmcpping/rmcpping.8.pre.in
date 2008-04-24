@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: rmcpping.8.pre.in,v 1.8 2008-04-24 00:00:30 chu11 Exp $
+.\"$Id: rmcpping.8.pre.in,v 1.9 2008-04-24 04:52:55 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -27,7 +27,7 @@
 .SH "NAME"
 rmcpping \- send RMCP Ping to network hosts
 .SH "SYNOPSIS"
-.B rmcpping [OPTIONS] destination
+.B rmcpping [\fIOPTION\fR...] destination
 .SH "DESCRIPTION"
 .B rmcpping
 uses the RMCP Ping request datagram to elicit an RMCP Pong response

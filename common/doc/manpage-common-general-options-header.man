@@ -1,4 +1,3 @@
 .SH "GENERAL OPTIONS"
-The following options are general commands for configuring
-IPMI communication to use, IPMI authentication, and general
-tool commands.
+The following options are general options for configuring IPMI
+communication and executing general tool commands.

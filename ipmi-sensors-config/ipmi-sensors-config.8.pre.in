@@ -1,6 +1,9 @@
 .TH IPMI-SENSORS-CONFIG 8 "@ISODATE@" "ipmi-sensors-config @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 ipmi-sensors-config \- configure sensors
+.SH "SYNOPSIS"
+.B ipmi-sensors-config
+[\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-sensors-config
 is used to get and set sensor configuration parameters, such as

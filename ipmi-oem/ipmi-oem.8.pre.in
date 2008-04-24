@@ -3,7 +3,7 @@
 ipmi-oem \- IPMI OEM utility
 .SH "SYNOPSIS"
 .B ipmi-oem
-[\fIOPTION\fR...] <OEMID> <OEMCOMMAND> [OEMOPTION]
+[\fIOPTION\fR...] <\fIOEMID\fR> <\fIOEMCOMMAND\fR> [\fIOEMOPTION\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-oem
 is used to execute OEM specific IPMI commands.  It is intended to provide

@@ -1,6 +1,9 @@
 .TH PEF-CONFIG 8 "@ISODATE@" "pef-config @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 pef-config \- configure PEF values
+.SH "SYNOPSIS"
+.B pef-config
+[\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Pef-config
 is a Platform Event Filtering (PEF) configuration utility.
@@ -18,6 +21,9 @@ is a Platform Event Filtering (PEF) configuration utility.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
+.SH "PEF-CONFIG OPTIONS"
+The following options are specific to
+.B Pef-config.
 .TP
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about PEF configuration.

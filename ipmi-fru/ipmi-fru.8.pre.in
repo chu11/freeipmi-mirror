@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.25 2008-04-24 04:19:27 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.26 2008-04-24 04:52:54 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -27,6 +27,9 @@
 .TH IPMI-FRU 8 "@ISODATE@" "ipmi-fru @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 ipmi-fru \- display FRU information
+.SH "SYNOPSIS"
+.B ipmi-fru
+[\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-fru
 displays Field Replaceable Unit (FRU) Information.
@@ -44,6 +47,9 @@ displays Field Replaceable Unit (FRU) Information.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
+.SH "IPMI-FRU OPTIONS"
+The following options are specific to
+.B Ipmi-fru.
 .TP
 \fB\-e\fR, \fB\-\-device-id\fR
 Specify a specific FRU device ID.

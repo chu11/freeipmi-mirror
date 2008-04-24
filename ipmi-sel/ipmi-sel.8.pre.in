@@ -1,6 +1,9 @@
 .TH IPMI-SEL 8 "@ISODATE@" "ipmi-sel @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 ipmi-sel \- display SEL entries
+.SH "SYNOPSIS"
+.B ipmi-sel
+[\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-sel
 is used to view and manage System Event Log (SEL) entries.  SEL
@@ -22,6 +25,9 @@ event, sensor group, sensor name, and the sensor event occurrence.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
+.SH "IPMI-SEL OPTIONS"
+The following options are specific to
+.B Ipmi-sel.
 .TP
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about the SEL.

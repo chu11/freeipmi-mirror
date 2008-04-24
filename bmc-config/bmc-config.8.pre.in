@@ -1,6 +1,9 @@
 .TH BMC-CONFIG 8 "@ISODATE@" "bmc-config @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 bmc-config \- configure BMC values
+.SH "SYNOPSIS"
+.B bmc-config
+[\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Bmc-config
 is used to get and set BMC configuration parameters, such as the IP

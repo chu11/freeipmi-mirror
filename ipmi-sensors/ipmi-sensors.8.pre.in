@@ -1,6 +1,9 @@
 .TH IPMI-SENSORS 8 "@ISODATE@" "IPMI Sensors version @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 ipmi-sensors \- display IPMI sensor information
+.SH "SYNOPSIS"
+.B ipmi-sensors
+[\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-sensors
 displays current readings of sensors and sensor data repository (SDR)
@@ -30,6 +33,9 @@ for sensor analysis.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
+.SH "IPMI-SENSORS OPTIONS"
+The following options are specific to
+.B Ipmi-sensors.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Output verbose sensor output.  This option will output additional
