@@ -168,8 +168,9 @@ and
 ) come with hostrange support so multiple hosts can be specified on
 the command line at the same time and IPMI can be executed against
 the hosts in parallel .  See tool manpages for more information.
-Also see the document freeipmi-hostrange.txt for detailed usage and
-explanation.  The 
+Also see the document 
+\fIfreeipmi-hostrange.txt\fR 
+for detailed usage and explanation.  The 
 .B ipmimonitoring(8) 
 tool interprets sensor readings as well as just reporting them.  By
 mapping sensor readings into NOMINAL, WARNING, or CRITICAL states, it
@@ -183,7 +184,8 @@ applications with, please see
 .B libipmiconsole(3),
 .B libipmimonitoring(3), 
 .B and libipmidetect(3).
-Or see the document freeipmi-libraries.txt.
+Or see the document 
+\fIfreeipmi-libraries.txt\fR.
 
 #include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 
