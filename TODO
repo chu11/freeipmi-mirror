@@ -77,6 +77,7 @@ monitoring in cerebro
 monitoring in ganglia
 monitoring in nagios
 - need a "--always-prefix" option to make parsing easier?
+- so you can parse localhost too
 
 RELEASE TODOS - Do on every release
 -----------------------------------
