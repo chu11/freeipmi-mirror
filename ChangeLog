@@ -1,4 +1,8 @@
 2008-04-27  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/Makefile.am: Fix make dist.
+	
+2008-04-27  Albert Chu <chu11@llnl.gov>
 	
 	* Tagged Release-0_6_0_base.
 
