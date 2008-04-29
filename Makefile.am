@@ -11,7 +11,7 @@ SUBDIRS = \
 	ipmi-raw \
 	ipmi-sel \
 	ipmi-sensors \
-	ipmi-sensors-config
+	ipmi-sensors-config \
 	ipmi-locate \
 	ipmiconsole \
 	ipmidetect \

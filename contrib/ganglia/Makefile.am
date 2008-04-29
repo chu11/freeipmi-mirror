@@ -1,7 +1,7 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.1 2008-04-29 22:31:54 chu11 Exp $
+## $Id: Makefile.am,v 1.2 2008-04-29 23:31:02 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
 
-EXTRA_DIST = README ganglia_ipmi_sensors.sh
+EXTRA_DIST = README ganglia_ipmi_sensors.pl
