@@ -19,7 +19,8 @@ SUBDIRS = \
 	ipmiping \
 	ipmipower \
 	pef-config \
-	rmcpping
+	rmcpping \
+	contrib
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
