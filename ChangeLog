@@ -9,6 +9,13 @@
 	* bmc-info/, ipmi-chassis/, ipmi-fru/, ipmi-oem/, ipmi-raw/,
 	ipmi-sel/, ipmi-sensors/, ipmimonitoring/, ipmipower/: Support
 	--always-prefix option.
+
+	* contrib/, contrib/Makefile.am, contrib/ganglia/,
+	contrib/ganglia/Makefile.am, contrib/ganglia/README
+	contrib/ganglia/ganglia_ipmi_sensors.pl: New files and
+	directories.
+
+	* Makefile.am, configure.ac: Updated appropriately.
 	
 2008-04-27  Albert Chu <chu11@llnl.gov>
 
