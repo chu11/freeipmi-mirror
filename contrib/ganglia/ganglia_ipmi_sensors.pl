@@ -6,7 +6,8 @@
 # This script can be used to monitor IPMI sensors in ganglia via
 # FreeIPMI's ipmi-sensors utility.
 #
-# Currently only temperature, fan, and voltage sensors are monitored.
+# Currently only temperature, fan, and voltage sensor readings are
+# monitored.
 #
 # Options:
 #
