@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostrange.c,v 1.7 2008-04-04 17:19:23 chu11 Exp $
+ *  $Id: hostrange.c,v 1.8 2008-04-29 21:58:41 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -138,8 +138,10 @@ pstdout_setup(char **hosts,
               int buffer_hostrange_output,
               int consolidate_hostrange_output,
               int fanout,
-              int eliminate)
+              int eliminate,
+              int always_prefix)
 {
+  unsigned int output_flags = 0;
   int hosts_count = 0;
 
   assert(hosts);
@@ -162,37 +164,66 @@ pstdout_setup(char **hosts,
           goto cleanup;
         }
 
-      if (hosts_count > 1)
+      if (!hosts_count)
         {
-          unsigned int output_flags;
-
-          if (buffer_hostrange_output)
-            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-          else if (consolidate_hostrange_output)
-            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-          else
-            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-
-          if (pstdout_set_output_flags(output_flags) < 0)
+          fprintf(stderr,
+                  "invalid number of hosts specified\n");
+          goto cleanup;
+        }
+    }
+  else /* inband communication, hosts_count = 1 */
+    {
+      hosts_count = 1;
+     
+      /* if always prefix - turn hostname into "localhost" for prefixing */
+      if (always_prefix)
+        {
+          free(*hosts);
+          if (!(*hosts = strdup("localhost")))
             {
-              fprintf(stderr,
-                      "pstdout_set_output_flags: %s\n",
-                      pstdout_strerror(pstdout_errnum));
+              fprintf(stderr, "strdup: %s\n", strerror(errno));
               goto cleanup;
             }
+        }
+    }
 
-          if (fanout)
+  /* if hosts_count > 1 it is always prefixed, so ignore always_prefixed flag */
+  if (hosts_count > 1)
+    {
+      if (buffer_hostrange_output)
+        output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+      else if (consolidate_hostrange_output)
+        output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+      else
+        output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+    }
+  else if (hosts_count == 1 && always_prefix)
+    output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+
+  if (output_flags)
+    {
+      if (pstdout_set_output_flags(output_flags) < 0)
+        {
+          fprintf(stderr,
+                  "pstdout_set_output_flags: %s\n",
+                  pstdout_strerror(pstdout_errnum));
+          goto cleanup;
+        }
+    }
+
+  if (hosts_count > 1)
+    {
+      if (fanout)
+        {
+          if (pstdout_set_fanout(fanout) < 0)
             {
-              if (pstdout_set_fanout(fanout) < 0)
-                {
-                  fprintf(stderr,
-                          "pstdout_set_fanout: %s\n",
-                          pstdout_strerror(pstdout_errnum));
-                  goto cleanup;
-                }
+          fprintf(stderr,
+                  "pstdout_set_fanout: %s\n",
+                  pstdout_strerror(pstdout_errnum));
+          goto cleanup;
             }
         }
-
+      
       if (eliminate)
         {
           if (eliminate_nodes(hosts) < 0)

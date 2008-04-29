@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.conf.5.pre.in,v 1.8 2008-04-24 06:00:30 chu11 Exp $
+.\"$Id: ipmipower.conf.5.pre.in,v 1.9 2008-04-29 21:58:42 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -131,6 +131,9 @@ Specify a fanout.
 .TP
 \fBeliminate\fR \fIENABLE|DISABLE\fR
 Specify if eliminate functionality is enabled or disabled by default.
+.TP
+\fBalways-prefix\fR \fIENABLE|DISABLE\fR
+Specify if always-prefix functionality is enabled or disabled by default.
 .TP
 \fBon-if-off\fR \fIENABLE|DISABLE\fR
 Specify if on-if-off functionality is enabled or disabled by default.

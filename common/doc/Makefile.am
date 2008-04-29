@@ -26,6 +26,7 @@ EXTRA_DIST = \
 	manpage-common-hostranged-consolidate.man \
 	manpage-common-hostranged-fanout.man \
 	manpage-common-hostranged-eliminate.man \
+	manpage-common-hostranged-always-prefix.man \
 	manpage-common-hostranged-text-main.man \
 	manpage-common-hostranged-text-localhost.man \
 	manpage-common-sdr-options.man \

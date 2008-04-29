@@ -646,7 +646,9 @@ hostrange_parse_opt (int key,
     case ARGP_ELIMINATE_KEY:
       cmd_args->eliminate = 1;
       break;
-
+    case ARGP_ALWAYS_PREFIX_KEY:
+      cmd_args->always_prefix = 1;
+      break;
     default:
       return ARGP_ERR_UNKNOWN;
     }
@@ -760,6 +762,7 @@ init_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
   cmd_args->consolidate_hostrange_output = 0;
   cmd_args->fanout = 0;
   cmd_args->eliminate = 0;
+  cmd_args->always_prefix = 0;
 }
 
 void 

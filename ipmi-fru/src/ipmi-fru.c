@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.15 2008-04-17 17:58:31 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.16 2008-04-29 21:58:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -552,7 +552,8 @@ main (int argc, char **argv)
                                    prog_data.args->hostrange.buffer_hostrange_output,
                                    prog_data.args->hostrange.consolidate_hostrange_output,
                                    prog_data.args->hostrange.fanout,
-                                   prog_data.args->hostrange.eliminate)) < 0)
+                                   prog_data.args->hostrange.eliminate,
+                                   prog_data.args->hostrange.always_prefix)) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.83 2008-04-24 17:33:52 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.84 2008-04-29 21:58:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -66,7 +66,6 @@ extern struct ipmipower_connection *ics;
 const char *argp_program_version = "ipmipower " VERSION "\n";
 
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
-
 
 #define IPMIPOWER_RETRY_TIMEOUT_KEY            160
 #define IPMIPOWER_RETRANSMISSION_TIMEOUT_KEY   'y'
@@ -248,6 +247,7 @@ ipmipower_config_setup(void)
   conf->consolidate_output = IPMIPOWER_FALSE;
   conf->fanout = 0;
   conf->eliminate = IPMIPOWER_FALSE;
+  conf->always_prefix = IPMIPOWER_FALSE;
 
   conf->powercmd = POWER_CMD_NONE;
   conf->on_if_off = IPMIPOWER_FALSE;
@@ -276,6 +276,7 @@ ipmipower_config_setup(void)
   conf->consolidate_output_set_on_cmdline = IPMIPOWER_FALSE;
   conf->fanout_set_on_cmdline = IPMIPOWER_FALSE;
   conf->eliminate_set_on_cmdline = IPMIPOWER_FALSE;
+  conf->always_prefix_set_on_cmdline = IPMIPOWER_FALSE;
   conf->on_if_off_set_on_cmdline = IPMIPOWER_FALSE;
   conf->wait_until_on_set_on_cmdline = IPMIPOWER_FALSE;
   conf->wait_until_off_set_on_cmdline = IPMIPOWER_FALSE;
@@ -501,6 +502,10 @@ cmdline_parse (int key,
     case ARGP_ELIMINATE_KEY:       /* --eliminate */
       conf->eliminate = IPMIPOWER_TRUE;
       conf->eliminate_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case ARGP_ALWAYS_PREFIX_KEY: /* --always-prefix */
+      conf->always_prefix = IPMIPOWER_TRUE;
+      conf->always_prefix_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case IPMIPOWER_ON_KEY:       /* --on */ 
       conf->powercmd = POWER_CMD_POWER_ON;
@@ -804,6 +809,7 @@ ipmipower_config_conffile_parse(char *configfile)
     consolidate_output_flag,
     fanout_flag,
     eliminate_flag, 
+    always_prefix_flag,
     on_if_off_flag, 
     wait_until_on_flag,
     wait_until_off_flag, 
@@ -869,6 +875,8 @@ ipmipower_config_conffile_parse(char *configfile)
        conf->fanout_set_on_cmdline},
       {"eliminate", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &eliminate_flag, NULL, 0},
+      {"always_prefix", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &always_prefix_flag, NULL, 0},
       {"on-if-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &on_if_off_flag, &(conf->on_if_off), 
        conf->on_if_off_set_on_cmdline},

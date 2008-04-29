@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.89 2008-04-24 06:00:30 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.90 2008-04-29 21:58:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -577,13 +577,14 @@ struct ipmipower_config
   char                     logfile[MAXPATHLEN+1];
   int                      logfile_fd;
 #endif /* NDEBUG */
-  /* buffer_output not implemented in ipmipower
+  /* buffer_output and always_prefix not implemented in ipmipower
    * added only for consistency to other tools.
    */
   ipmipower_bool_t         buffer_output;
   ipmipower_bool_t         consolidate_output;
   int                      fanout;
   ipmipower_bool_t         eliminate;
+  ipmipower_bool_t         always_prefix;
 
   power_cmd_t              powercmd;
   ipmipower_bool_t         on_if_off;
@@ -614,6 +615,7 @@ struct ipmipower_config
   ipmipower_bool_t         consolidate_output_set_on_cmdline;
   ipmipower_bool_t         fanout_set_on_cmdline;
   ipmipower_bool_t         eliminate_set_on_cmdline;
+  ipmipower_bool_t         always_prefix_set_on_cmdline;
   ipmipower_bool_t         on_if_off_set_on_cmdline;
   ipmipower_bool_t         wait_until_on_set_on_cmdline;
   ipmipower_bool_t         wait_until_off_set_on_cmdline;

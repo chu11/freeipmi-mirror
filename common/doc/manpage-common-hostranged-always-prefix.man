@@ -1,0 +1,6 @@
+.TP
+\fB\-\-always\-prefix\fR
+Always prefix output, even if only one host is specified or
+communicating in-band.  This option is primarily useful for
+scripting purposes.  Option will be ignored if specified with
+the \fB\-C\fR option.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.11 2008-03-28 00:14:32 chu11 Exp $
+ *  $Id: pstdout.c,v 1.12 2008-04-29 21:58:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -791,7 +791,7 @@ pstdout_perror(pstdout_state_t pstate, const char *s)
 }
 
 static int
-_pstdout_state_init(pstdout_state_t pstate, char *hostname)
+_pstdout_state_init(pstdout_state_t pstate, const char *hostname)
 {
   int rc;
 
@@ -799,7 +799,7 @@ _pstdout_state_init(pstdout_state_t pstate, char *hostname)
 
   memset(pstate, '\0', sizeof(struct pstdout_state));
   pstate->magic = PSTDOUT_STATE_MAGIC;
-  pstate->hostname = hostname;
+  pstate->hostname = (char *)hostname;
 
   if (!(pstate->stdout = cbuf_create(PSTDOUT_STATE_CBUF_MIN, PSTDOUT_STATE_CBUF_MAX)))
     {
@@ -1256,6 +1256,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
 {
   struct pstdout_thread_data **tdata = NULL;
   struct pstdout_state pstate;
+  unsigned int pstate_init = 0;
   hostlist_iterator_t hitr = NULL;
   hostlist_t h = NULL;
   int h_count = 0;
@@ -1278,9 +1279,6 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
       return -1;
     }
   
-  if (_pstdout_state_init(&pstate, NULL) < 0)
-    return -1;
-
   if ((rc = pthread_mutex_lock(&pstdout_launch_mutex)))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
@@ -1292,6 +1290,10 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
   /* Special case */
   if (!hostnames)
     {
+      if (_pstdout_state_init(&pstate, NULL) < 0)
+        goto cleanup;
+      pstate_init++;
+
       exit_code = pstdout_func(&pstate, NULL, arg);
       pstdout_errnum = PSTDOUT_ERR_SUCCESS;
       goto cleanup;
@@ -1316,6 +1318,10 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
   /* Special case */
   if (h_count == 1)
     {
+      if (_pstdout_state_init(&pstate, hostnames) < 0)
+        goto cleanup;
+      pstate_init++;
+
       exit_code = pstdout_func(&pstate, hostnames, arg);
       pstdout_errnum = PSTDOUT_ERR_SUCCESS;
       goto cleanup;
@@ -1468,7 +1474,8 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
   /* Cannot pass NULL for key, so just pass dummy key */
   list_delete_all(pstdout_consolidated_stdout, _pstdout_consolidated_data_delete_all, "");
   list_delete_all(pstdout_consolidated_stderr, _pstdout_consolidated_data_delete_all, "");
-  _pstdout_state_cleanup(&pstate);
+  if (pstate_init)
+    _pstdout_state_cleanup(&pstate);
   if (tdata)
     {
       for (i = 0; i < h_count; i++)

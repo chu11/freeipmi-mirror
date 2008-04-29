@@ -17,6 +17,8 @@ libfreeipmi:
 ipmipower
 ---------
 - redo to utilize newer api?
+- use generic argp - not unique .h
+- no prefix if on-cmdline and only 1 host?
   
 bmc-config
 ----------

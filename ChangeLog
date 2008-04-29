@@ -1,3 +1,15 @@
+2008-04-29  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/manpage-common-hostranged-always-prefix.man: New file.
+
+	* common/src/pstdout.c, common/src/hostrange.h,
+	common/src/hostrange.c, common/src/tool-cmdline-common.h,
+	common/src/tool-cmdline-common.c: Support --always-prefix option.
+
+	* bmc-info/, ipmi-chassis/, ipmi-fru/, ipmi-oem/, ipmi-raw/,
+	ipmi-sel/, ipmi-sensors/, ipmimonitoring/, ipmipower/: Support
+	--always-prefix option.
+	
 2008-04-27  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Update from 0.6.0 to 0.7.0.

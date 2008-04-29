@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.28 2008-04-24 17:14:00 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.29 2008-04-29 21:58:42 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -295,6 +295,7 @@ not used if other ping features described above are disabled.
 Specify multiple host fanout.  Indicates the maximum number of power
 control operations that can be executed in parallel.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-always-prefix.man>
 .LP
 .SH "INTERACTIVE COMMANDS"
 .B ipmipower
@@ -413,6 +414,9 @@ Toggle consolidate-output functionality.
 .TP
 \fBfanout\fR \fICOUNT\fR
 Specify a fanout.
+.TP
+\fBalways-prefix\fR \fI[on|off]\fR
+Toggle always-prefix functionality.
 .TP
 \fBhelp\fR
 Output help menu.

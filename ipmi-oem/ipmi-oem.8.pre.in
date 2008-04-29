@@ -35,6 +35,7 @@ required user privilege will depend on the oem commands executed.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-always-prefix.man>
 .SH "SUPPORTED OEM"
 The currently supported OEM IDs and COMMANDs are:
 .TP

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostrange.h,v 1.3 2008-04-04 17:19:23 chu11 Exp $
+ *  $Id: hostrange.h,v 1.4 2008-04-29 21:58:41 chu11 Exp $
 \*****************************************************************************/
 
 #ifndef _HOSTRANGE_H
@@ -10,6 +10,7 @@ int pstdout_setup(char **hosts,
                   int buffer_hostrange_output,
                   int consolidate_hostrange_output,
                   int fanout,
-                  int eliminate);
+                  int eliminate,
+                  int always_prefix);
 
 #endif /* _HOSTRANGE_H */

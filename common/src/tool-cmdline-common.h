@@ -60,8 +60,9 @@ enum argp_common_option_keys
     ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
     ARGP_ELIMINATE_KEY = 'E',
+    ARGP_ALWAYS_PREFIX_KEY = 143,
     ARGP_WORKAROUND_FLAGS_KEY = 'W',
-    ARGP_DEBUG_KEY = 143
+    ARGP_DEBUG_KEY = 144
   };
 
 /*
@@ -279,7 +280,8 @@ enum argp_common_option_keys
     ARGP_COMMON_HOSTRANGED_BUFFER_OUTPUT,                                  \
     ARGP_COMMON_HOSTRANGED_CONSOLIDATE_OUTPUT,                             \
     ARGP_COMMON_HOSTRANGED_FANOUT,                                         \
-    ARGP_COMMON_HOSTRANGED_ELIMINATE
+    ARGP_COMMON_HOSTRANGED_ELIMINATE,                                      \
+    ARGP_COMMON_HOSTRANGED_ALWAYS_PREFIX
 
 #define ARGP_COMMON_HOSTRANGED_BUFFER_OUTPUT                               \
     {"buffer-output", ARGP_BUFFER_OUTPUT_KEY, 0, 0,                        \
@@ -297,9 +299,13 @@ enum argp_common_option_keys
     {"eliminate", ARGP_ELIMINATE_KEY, 0, 0,                                \
      "Eliminate undetected nodes.", 24}
 
+#define ARGP_COMMON_HOSTRANGED_ALWAYS_PREFIX                               \
+    {"always-prefix", ARGP_ALWAYS_PREFIX_KEY, 0, 0,                        \
+     "Always prefix output.", 25}
+
 #define ARGP_COMMON_OPTIONS_DEBUG                                          \
     {"debug",     ARGP_DEBUG_KEY, 0, 0, 	                           \
-     "Turn on debugging.", 25}                                             
+     "Turn on debugging.", 26}                                             
 
 struct common_cmd_args 
 {
@@ -337,6 +343,7 @@ struct hostrange_cmd_args
   int consolidate_hostrange_output;
   int fanout;
   int eliminate;
+  int always_prefix;
 };
 
 #define IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR      "idzero"

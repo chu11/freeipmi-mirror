@@ -127,6 +127,7 @@ ALWAYS\-OFF.  See current power restore policy via the
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-always-prefix.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.64 2008-04-24 23:02:29 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.65 2008-04-29 21:58:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -554,6 +554,7 @@ _cmd_help(void)
               "ping-consec-count COUNT                  - Specify a new ping consec count.\n"
 	      "buffer-output [on|off]                   - Toggle buffer-output functionality\n"
               "consolidate-output [on|off]              - Toggle consolidate-output functionality.\n"
+              "always-prefix [on|off]                   - Toggle always-prefix functionality.\n"
               "fanout COUNT                             - Specify a fanout.\n"
               "help                                     - Output help menu.\n"
               "version                                  - Output version.\n"
@@ -673,6 +674,8 @@ _cmd_config(void)
               (conf->buffer_output) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Consolidate-Output:           %s\n",
               (conf->consolidate_output) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Always-Prefix:                %s\n",
+              (conf->always_prefix) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Fanout:                       %d\n",
 	      conf->fanout);
   cbuf_printf(ttyout, "WorkaroundFlags:              %s\n",
@@ -968,6 +971,10 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_set_flag(argv, 
                               &conf->consolidate_output, 
                               "consolidate-output");
+              else if (strcmp(argv[0], "always-prefix") == 0)
+                _cmd_set_flag(argv, 
+                              &conf->always_prefix, 
+                              "always-prefix");
 	      else if (strcmp(argv[0], "fanout") == 0)
                 _cmd_set_int(argv, 
                              &conf->fanout, 
