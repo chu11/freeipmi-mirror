@@ -16,6 +16,9 @@
 # -s - specify additional ipmi-sensors arguments
 # -G - specify an alternate gmetric location
 # -g - specify additional gmetric arguments
+# -d - print debug info
+# -D - do not send sensor data to ganglia (useful during debugging)
+# -H - output help
 #
 # Environment Variables:
 #
@@ -49,7 +52,8 @@
 # argument or IPMI_SENSORS_ARGS environment variable.  Typically, this
 # option is necessary for non-default communication information or
 # authentication information (i.e. driver path, driver type, username,
-# password, etc.).
+# password, etc.).  If you also wish to limit the sensors being monitored,
+# you can also specify which record-ids are to be monitored (-s option).
 #
 # In order to specify a non-defaults for gmetric, use the -g argument
 # or GMETRIC_ARGS environment variable.  Typically, this option is
@@ -68,6 +72,7 @@ use Getopt::Std;
 use Socket;
 
 my $debug = 0;
+my $no_ganglia = 0;
 
 my $IPMI_HOSTS = undef;
 my $IPMI_SENSORS_PATH = "/usr/sbin/ipmi-sensors";
@@ -84,17 +89,24 @@ my $cmd;
 sub usage
 {
     my $prog = $0;
-    print "Usage: $prog -h <hostname(s)> -S <path> -s <sensors arguments> -G <path> -g <arguments> -d\n";
+    print "Usage: $prog -h <hostname(s)> -S <path> -s <sensors arguments> -G <path> -g <arguments> -d -H\n";
     print "  -h specify hostname(s) to remotely access\n";
     print "  -S specify an alternate ipmi-sensors path\n";
     print "  -s specify additional ipmi-sensors arguments\n";
     print "  -G specify an alternate gmetric path\n";
     print "  -g specify additional gmetric arguments\n";
     print "  -d print debug info\n";
+    print "  -D do not send sensor data to ganglia (useful during debugging)\n";
+    print "  -H output help\n";
     exit 0;
 }
 
-if (!getopts("h:S:s:G:g:d"))
+if (!getopts("h:S:s:G:g:dDH"))
+{
+    usage();
+}
+
+if (defined($main::opt_H))
 {
     usage();
 }
@@ -127,6 +139,11 @@ if (defined($main::opt_g))
 if (defined($main::opt_d))
 {
     $debug = 1;
+}
+
+if (defined($main::opt_D))
+{
+    $no_ganglia = 1;
 }
 
 if ($ENV{"IPMI_HOSTS"})
@@ -169,10 +186,13 @@ if (!(-x $IPMI_SENSORS_PATH))
     exit(1);
 }
 
-if (!(-x $GMETRIC_PATH))
+if (!$no_ganglia)
 {
-    print "$GMETRIC_PATH cannot be executed\n";
-    exit(1);
+    if (!(-x $GMETRIC_PATH))
+    {
+        print "$GMETRIC_PATH cannot be executed\n";
+        exit(1);
+    }
 }
 
 if ($IPMI_HOSTS)
@@ -200,6 +220,18 @@ if ($? != 0)
 
 foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
 {
+    my $hostname;
+    my $record_id;
+    my $id_string;
+    my $group;
+    my $reading;
+    my $unit;
+    my $threshold_low;
+    my $threshold_high;
+    my $state;
+
+    my $ip_address;
+
     if ($debug)
     {
         print "Parsing: $line\n";
@@ -209,16 +241,6 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
         || $line =~ /Voltage/
         || $line =~ /Fan/)
     {
-        my $hostname;
-        my $record_id;
-        my $id_string;
-        my $group;
-        my $reading;
-        my $unit;
-        my $threshold_low;
-        my $threshold_high;
-        my $state;
-
         if ($line =~ /(.+)\: (\d+)\: (.+) \((.+)\)\: (.+) (.+) \((.+)\/(.+)\)\: \[(.+)\]/)
         {
             $hostname = $1;
@@ -231,32 +253,19 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
             $threshold_high = $8;
             $state = $9;
         }
-        elsif ($line =~ /(\d+)\: (.+) \((.+)\)\: (.+) (.+) \((.+)\/(.+)\)\: \[(.+)\]/)
-        {
-            $hostname = undef;
-            $record_id = $1;
-            $id_string = $2;
-            $group = $3;
-            $reading = $4;
-            $unit = $5;
-            $threshold_low = $6;
-            $threshold_high = $7;
-            $state = $8;
-        }
         else
         {
             print "Line not parsable\n";
             next;
         }
 
-        $id_string =~ s/ /_/;
-        $id_string =~ s/\//_/;
+        $id_string =~ s/ /_/g;
+        $id_string =~ s/\//_/g;
 
-        if ($hostname)
+        if ($hostname ne "localhost" && $hostname ne "127.0.0.1")
         {
             my $packet_ip = gethostbyname($hostname);
-            my $ip_address;
-
+            
             if (defined($packet_ip))
             {
                 $ip_address = inet_ntoa($packet_ip);
@@ -266,32 +275,31 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
                 print "Cannot resolve ip: $hostname\n";
                 next;
             }
-
-            if ($hostname eq "localhost" || $hostname eq "127.0.0.1")
-            {
-                $cmd = "$GMETRIC_PATH $GMETRIC_ARGS -n $id_string -v $reading -t double -u $unit";
-            }
-            else
-            {
-                $cmd = "$GMETRIC_PATH $GMETRIC_ARGS -n $id_string -v $reading -t double -u $unit -S $ip_address:$hostname";
-            }
+        }
+        
+        if ($hostname ne "localhost" && $hostname ne "127.0.0.1")
+        {
+            $cmd = "$GMETRIC_PATH $GMETRIC_ARGS -n $id_string -v $reading -t double -u $unit -S $ip_address:$hostname";
         }
         else
         {
             $cmd = "$GMETRIC_PATH $GMETRIC_ARGS -n $id_string -v $reading -t double -u $unit";
         }
-
+        
         if ($debug)
         {
             print "gmetric command = $cmd\n";
         }
-
-        `$cmd`;
-        if ($? != 0)
+        
+        if (!$no_ganglia)
         {
-            print "\"$cmd\": failed\n";
-            exit(1);
-        }        
+            `$cmd`;
+            if ($? != 0)
+            {
+                print "\"$cmd\": failed\n";
+                exit(1);
+            }        
+        }
     }
 }
 
