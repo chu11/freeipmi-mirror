@@ -1,5 +1,9 @@
 2008-04-30  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/ipmimonitoring.8.pre.in: Add missing options.
+	
+2008-04-30  Albert Chu <chu11@llnl.gov>
+
 	* contrib/ganglia/ganglia_ipmi_sensors.pl: Additional options
 	added.  Fix code.
 
