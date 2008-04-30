@@ -63,6 +63,10 @@
 # Most users will want to set this script to execute in cron(8).
 # Using cron you may monitor at whatever interval you wish.
 #
+# Help:
+# 
+# Report bugs to freeipmi-users@gnu.org or freeipmi-devel@gnu.org.
+#
 #############################################################################
 
 use strict;
