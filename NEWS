@@ -8,6 +8,9 @@ o Support --always-prefix option in many tools.
 For Developers
 --------------
 
+Contributions
+-------------
+o Ganglia plugin scripts ganglia_ipmi_sensors.pl and ganglia_ipmimonitoring.pl.
 
 0.6.1 - 04/27/08
 ----------------
