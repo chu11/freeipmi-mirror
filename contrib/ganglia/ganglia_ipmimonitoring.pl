@@ -76,7 +76,9 @@
 # /myspecial/gmond.conf).
 #
 # Most users will want to set this script to execute in cron(8).
-# Using cron you may monitor at whatever interval you wish.
+# Using cron you may monitor at whatever interval you wish.  The
+# recommended interval should be atleast longer than 20 seconds, since
+# that is the default session timeout length.  
 #
 # Help:
 # 
