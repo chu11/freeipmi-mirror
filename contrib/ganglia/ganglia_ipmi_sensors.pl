@@ -3,6 +3,12 @@
 #
 # ganglia_ipmi_sensors.sh
 #
+# Author: 
+#
+# Albert Chu <chu11 at llnl dot gov>
+#
+# Description:
+#
 # This script can be used to monitor IPMI sensors in ganglia via
 # FreeIPMI's ipmi-sensors utility.
 #
