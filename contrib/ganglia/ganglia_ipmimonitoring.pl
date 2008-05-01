@@ -70,7 +70,7 @@
 # password, etc.).  If you also wish to limit the sensors being monitored,
 # you can also specify which record-ids are to be monitored (-s option).
 #
-# In order to specify a non-defaults for gmetric, use the -g argument
+# In order to specify non-defaults for gmetric, use the -g argument
 # or GMETRIC_ARGS environment variable.  Typically, this option is
 # necessary for non-default gmond.conf paths (i.e. -c
 # /myspecial/gmond.conf).
