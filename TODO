@@ -73,6 +73,10 @@ also output guid info
 warm/cold reset??
 - new tool "bmc-device", make bmc-info a link that points back to it?
 
+0.7.0
+-----
+add contributions (ganglia/nagios) to webpage
+
 RELEASE TODOS - Do on every release
 -----------------------------------
 Email freeipmi-users && freeipmi-devel
