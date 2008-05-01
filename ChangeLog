@@ -1,3 +1,10 @@
+2008-05-01  Albert Chu <chu11@llnl.gov>
+
+	* contrib/ganglia/Makefile.am: Fix make dist.
+
+	* contrib/nagios/Makefile.am, contrib/nagios/README,
+	contrib/nagios/nagios_ipmimonitoring.pl: New files.
+	
 2008-04-30  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/ipmimonitoring.8.pre.in: Add missing options.

@@ -48,6 +48,7 @@ config file - support workarounds/etc. for heterogenous cluster?
 map hostname -> IP config
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
 - after this, tweak "known issue" info about ps(1), put info in conf file, etc.
+- also update comments in contrib ganglia/nagios.
 support hostranged commit/checkout in all config tools except bmc-config??
 
 ipmiconsole
@@ -71,17 +72,6 @@ bmc-info
 also output guid info
 warm/cold reset??
 - new tool "bmc-device", make bmc-info a link that points back to it?
-
-other tools support
--------------------
-monitoring in nagios
-- doesn't really support monitoring like ganglia.  Each script reports
-a single ok vs. warning vs. critical.  Cannot monitor individual
-sensors unless they are separate scripts.  Parallelism w/ ipmi-sensors
-or ipmimonitoring is lost b/c they would be reported back to nagios in
-only 1 sensor reading (probably not what you want).  Could support script that
-does only 1 host??  But all this will report is ok vs. warning vs. critical
-for *all* ipmi on that machine.  Worth it??
 
 RELEASE TODOS - Do on every release
 -----------------------------------

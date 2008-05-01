@@ -1,0 +1,13 @@
+The nagios scripts can be used to monitor IPMI sensors in nagios via
+FreeIPMI.  Please see instructions found at the top of each script for
+instructions.
+
+nagios_ipmimonitoring.pl
+-------------------------
+
+Monitor via FreeIPMI's ipmimonitoring.  
+
+Albert Chu
+chu11 at llnl dot gov
+
+
