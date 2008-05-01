@@ -70,6 +70,10 @@
 #    check_command       nagios_ipmimonitoring!foohost
 # }
 #
+# The default session timeout length in ipmimonitoring is 20 seconds.
+# We would recommend that IPMI not be monitored more frequently than
+# that.
+#
 # Help:
 # 
 # Report bugs to freeipmi-users@gnu.org or freeipmi-devel@gnu.org.
