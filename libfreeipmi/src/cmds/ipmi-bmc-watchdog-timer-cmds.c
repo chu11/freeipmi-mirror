@@ -65,7 +65,7 @@ fiid_template_t tmpl_cmd_set_watchdog_timer_rq =
     {1, "timer_use_expiration_flag.oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {16, "initial_countdown_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {16, "initial_countdown_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, // LS byte first
     {0, "", 0}
   };
 
@@ -103,8 +103,8 @@ fiid_template_t tmpl_cmd_get_watchdog_timer_rs =
     {1, "timer_use_expiration_flag.oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {16, "initial_countdown_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {16, "present_countdown_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {16, "initial_countdown_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, // LS byte first
+    {16, "present_countdown_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, // LS byte first
     {0, "", 0}
   };
 
