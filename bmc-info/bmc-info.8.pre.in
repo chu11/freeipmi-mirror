@@ -6,8 +6,8 @@ bmc-info \- display BMC information
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Bmc-info 
-displays local BMC information, such as version information and device
-support.
+displays BMC information, such as device version numbers, device
+support, and global IDs.
 #include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
@@ -22,6 +22,12 @@ support.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
+.SH "BMC-INFO OPTIONS"
+The following options are specific to
+.B Bmc-info.
+.TP
+\fB\-g\fR, \fB\-\-guid\fR
+Display device guid.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>

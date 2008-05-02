@@ -782,6 +782,56 @@ do {                                                                 \
       }                                                              \
 } while (0)
 
+#define FIID_OBJ_TEMPLATE_COMPARE2(__obj, __tmpl1, __tmpl2)            \
+do {                                                                   \
+    int __ret1;                                                        \
+    int __ret2;                                                        \
+    if ((__ret1 = fiid_obj_template_compare ((__obj), (__tmpl1))) < 0) \
+      {                                                                \
+         __FIID_OBJ_TRACE((__obj));                                    \
+         __FIID_OBJ_SET_ERRNO((__obj));                                \
+         return (-1);                                                  \
+      }                                                                \
+    if ((__ret2 = fiid_obj_template_compare ((__obj), (__tmpl2))) < 0) \
+      {                                                                \
+         __FIID_OBJ_TRACE((__obj));                                    \
+         __FIID_OBJ_SET_ERRNO((__obj));                                \
+         return (-1);                                                  \
+      }                                                                \
+    if (!__ret1 && !__ret2)                                            \
+      {                                                                \
+	errno = EINVAL;                                                \
+         __FIID_OBJ_TRACE((__obj));                                    \
+         __FIID_OBJ_SET_ERRNO((__obj));                                \
+	return (-1);                                                   \
+      }                                                                \
+} while (0)
+
+#define FIID_OBJ_TEMPLATE_COMPARE2_CLEANUP(__obj, __tmpl1, __tmpl2)    \
+do {                                                                   \
+    int __ret1;                                                        \
+    int __ret2;                                                        \
+    if ((__ret1 = fiid_obj_template_compare ((__obj), (__tmpl1))) < 0) \
+      {                                                                \
+         __FIID_OBJ_TRACE((__obj));                                    \
+         __FIID_OBJ_SET_ERRNO((__obj));                                \
+         goto cleanup;                                                 \
+      }                                                                \
+    if ((__ret2 = fiid_obj_template_compare ((__obj), (__tmpl2))) < 0) \
+      {                                                                \
+         __FIID_OBJ_TRACE((__obj));                                    \
+         __FIID_OBJ_SET_ERRNO((__obj));                                \
+         goto cleanup;                                                 \
+      }                                                                \
+    if (!__ret1 && !__ret2)                                            \
+      {                                                                \
+	errno = EINVAL;                                                \
+         __FIID_OBJ_TRACE((__obj));                                    \
+         __FIID_OBJ_SET_ERRNO((__obj));                                \
+	goto cleanup;                                                  \
+      }                                                                \
+} while (0)
+
 #define FIID_ITERATOR_CREATE(__iter, __obj)                          \
 do {                                                                 \
   if (!((__iter) = fiid_iterator_create((__obj))))                   \

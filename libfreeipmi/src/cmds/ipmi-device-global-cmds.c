@@ -97,6 +97,41 @@ fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs =
   {0,  "", 0}
 };
 
+fiid_template_t tmpl_cmd_get_device_guid_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_device_guid_rs =
+{
+  {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {128, "guid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {0, "", 0}
+};
+
+/* achu: format in IPMI spec differs from the format in the "Wired for
+   Management Baseline" 2.0 document.  In the IPMI spec there is a 2 byte
+   field called "clock_seq_and_reserved", and in "Wired for Management
+   Baseline" there is a 1 byte field called
+   "clock_seq_hi_and_reserved" and a 1 byte field called
+   "clock_seq_low".  I am going with the "Wired for Management
+   Baseline" format under the assumption the IPMI spec has a typo.
+ */
+fiid_template_t tmpl_cmd_get_device_guid_format_rs =
+{
+  {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {48,  "node", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* LS byte first */
+  {8,   "clock_seq_low", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {8,   "clock_seq_hi_and_reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {16,  "time_high_and_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* LS byte first */
+  {16,  "time_mid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* LS byte first */
+  {32,  "time_low", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* LS byte first */
+  {0, "", 0}
+};
+
 int8_t 
 fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq)
 { 
@@ -109,3 +144,16 @@ fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
+int8_t
+fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE2(obj_cmd_rq, 
+                             tmpl_cmd_get_device_guid_rq,
+                             tmpl_cmd_get_device_guid_format_rs);
+
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_DEVICE_GUID);
+  return (0);
+}

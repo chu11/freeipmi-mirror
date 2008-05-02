@@ -56,6 +56,8 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
+    {"guid", CMD_GUID_KEY, NULL, 0,
+     "Display device guid.", 30},
     { 0 }
   };
 
@@ -69,6 +71,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
+    case CMD_GUID_KEY:
+      cmd_args->guid_wanted++;
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -90,6 +95,8 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
+
+  cmd_args->guid_wanted = 0;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));

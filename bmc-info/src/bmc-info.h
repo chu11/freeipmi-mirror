@@ -24,10 +24,16 @@
 #include "tool-cmdline-common.h"
 #include "pstdout.h"
 
+enum bmc_info_argp_option_keys
+  {
+    CMD_GUID_KEY = 'g',
+  };
+
 struct bmc_info_arguments
 {
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
+  int guid_wanted;
 };
 
 typedef struct bmc_info_prog_data

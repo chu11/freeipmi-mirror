@@ -1,3 +1,16 @@
+2008-05-02  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-device-global-cmds.h,
+	libfreeipmi/src/cmds/ipmi-device-global-cmds.c,
+	libfreeipmi/include/freeipmi/api/ipmi-device-global-cmds-api.h,
+	libfreeipmi/src/api/ipmi-device-global-cmds-api.c: Support get
+	device guid command.
+
+	* bmc-info/: Add support for --guid.
+
+	* README, doc/freeipmi.7.in, bmc-info/bmc-info.8.pre.in: Update
+	bmc-info tool description.
+	
 2008-05-01  Albert Chu <chu11@llnl.gov>
 
 	* contrib/ganglia/Makefile.am: Fix make dist.

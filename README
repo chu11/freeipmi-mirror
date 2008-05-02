@@ -18,8 +18,8 @@ reading/interpreting/managing IPMI.
 
 Bmc-info
 
-A tool to read information about the local BMC such as version
-information and device support.
+A tool to read information about a BMC such as device version numbers,
+device support, and global IDs.
 
 Bmc-config
 

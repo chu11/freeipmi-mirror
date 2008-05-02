@@ -3,9 +3,11 @@
 For Users
 ---------
 o Support --always-prefix option in many tools.
+o Support --guid option in bmc-info.
 
 For Developers
 --------------
+o Additional IPMI commands added into libfreeipmi.
 
 Contributions
 -------------

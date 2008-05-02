@@ -53,6 +53,61 @@ typedef struct channel_info
 
 #define NUM_CHANNELS 8
 
+static int 
+display_get_device_guid (bmc_info_state_data_t *state_data)
+{
+  uint8_t guidbuf[1024];
+  fiid_obj_t cmd_rs = NULL;
+  int32_t guid_len;
+  int rv = -1;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_device_guid_rs);
+
+  if (ipmi_cmd_get_device_guid (state_data->ipmi_ctx, cmd_rs) != 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_device_guid: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+  
+  _FIID_OBJ_GET_DATA (guid_len, cmd_rs, "guid", guidbuf, 1024);
+
+  /* IPMI transfers the guid in least significant bit order and the
+   * fields are reverse from the "Wired for Management
+   * Specification".
+   *
+   * For output format details see Appendix 1 "String Representation
+   * of UUIDs" in the above document.  Note that the output is
+   * supposed to be output in most significant byte order.
+   */
+  pstdout_printf(state_data->pstate, 
+                 "GUID: %02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X\n", 
+                 guidbuf[15],   /* time low */
+                 guidbuf[14],
+                 guidbuf[13],
+                 guidbuf[12],
+                 guidbuf[11],   /* time mid */
+                 guidbuf[10],
+                 guidbuf[9],    /* time high and version */
+                 guidbuf[8],
+                 guidbuf[6],    /* clock seq high and reserved - comes before clock seq low */
+                 guidbuf[7],    /* clock seq low */
+                 guidbuf[5],    /* node */
+                 guidbuf[4],
+                 guidbuf[3],
+                 guidbuf[2],
+                 guidbuf[1],
+                 guidbuf[0]);
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return rv;
+}
+
 static int
 display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 {
@@ -375,13 +430,19 @@ display_channel_info (bmc_info_state_data_t *state_data)
 int
 run_cmd_args (bmc_info_state_data_t *state_data)
 {
+  struct bmc_info_arguments *args;
   int rv = -1;
 
   assert(state_data);
   
+  args = state_data->prog_data->args;
+
+  if (args->guid_wanted)
+    return display_get_device_guid (state_data);
+
   if (display_get_device_id (state_data) < 0)
     goto cleanup;
-  
+ 
   if (display_channel_info (state_data) < 0)
     goto cleanup;
 

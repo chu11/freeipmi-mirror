@@ -41,6 +41,8 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
+audit ls/ms byte usage
+- fiid internally stores ls byte first, so if spec says ms byte first, need to fix
 
 config
 ------
@@ -50,6 +52,10 @@ consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf
 - after this, tweak "known issue" info about ps(1), put info in conf file, etc.
 - also update comments in contrib ganglia/nagios.
 support hostranged commit/checkout in all config tools except bmc-config??
+
+pef-config
+----------
+bcd enconded info
 
 ipmiconsole
 -----------
@@ -66,16 +72,17 @@ ipmi-sensors-config
 ipmi-sel
 --------
 get/set sel time
+sel info bcd output
 
 bmc-info
 --------
-also output guid info
 warm/cold reset??
 - new tool "bmc-device", make bmc-info a link that points back to it?
 
 0.7.0
 -----
-add contributions (ganglia/nagios) to webpage
+add contributions (ganglia/nagios) to webpage downloads
+update index w/ new bmc-info text.
 
 other monitoring
 ----------------
