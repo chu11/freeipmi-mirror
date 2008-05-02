@@ -94,6 +94,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   
   _FIID_OBJ_GET (obj_cmd_rs, "sel_version_minor", &val2);
 
+  /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
   pstdout_printf (state_data->pstate, 
                   "SEL version:                                      %d.%d\n", 
                   val1,

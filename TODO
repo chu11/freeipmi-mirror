@@ -53,10 +53,6 @@ consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf
 - also update comments in contrib ganglia/nagios.
 support hostranged commit/checkout in all config tools except bmc-config??
 
-pef-config
-----------
-bcd enconded info
-
 ipmiconsole
 -----------
 retry under a different port
@@ -72,7 +68,6 @@ ipmi-sensors-config
 ipmi-sel
 --------
 get/set sel time
-sel info bcd output
 
 bmc-info
 --------

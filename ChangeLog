@@ -10,6 +10,13 @@
 
 	* README, doc/freeipmi.7.in, bmc-info/bmc-info.8.pre.in: Update
 	bmc-info tool description.
+
+	* libfreeipmi/src/cmds/ipmi-device-global-cmds.c
+	(tmpl_cmd_get_device_id_rs): Rename ipmi_version field names to be
+	consistent to rest of freeipmi.
+
+	* bmc-info/, pef-config/, ipmi-sel/: Only output bcd encoded
+	fields w/ %x if the field is > 4 bits.  Otherise %d is fine.
 	
 2008-05-01  Albert Chu <chu11@llnl.gov>
 

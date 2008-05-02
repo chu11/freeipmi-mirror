@@ -183,7 +183,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     uint64_t maj, min;
     _FIID_OBJ_GET (cmd_rs, "firmware_revision1.major_revision", &maj);
     _FIID_OBJ_GET (cmd_rs, "firmware_revision2.minor_revision", &min);
-    /* achu: minor revision is BCD encoded, output w/ %x */
+    /* achu: minor revision is BCD encoded and is > 4 bits, output w/ %x */
     pstdout_printf(state_data->pstate, 
                    "Firmware Revision: %d.%x\n", 
                    (unsigned int) maj, 
@@ -205,14 +205,14 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     }
   
   {
-    uint64_t ms, ls;
-    _FIID_OBJ_GET (cmd_rs, "ipmi_version.ms_bits", &ms);
-    _FIID_OBJ_GET (cmd_rs, "ipmi_version.ls_bits", &ls);
-    /* achu: ipmi version is BCD encoded, output w/ %x */
+    uint64_t maj, min;
+    _FIID_OBJ_GET (cmd_rs, "ipmi_version_major", &maj);
+    _FIID_OBJ_GET (cmd_rs, "ipmi_version_minor", &min);
+    /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
     pstdout_printf(state_data->pstate, 
-                   "IPMI Version:      %x.%x\n",
-                   (unsigned int) ms, 
-                   (unsigned int) ls);
+                   "IPMI Version:      %d.%d\n",
+                   (unsigned int) maj, 
+                   (unsigned int) min);
   }
   
   pstdout_printf(state_data->pstate, 

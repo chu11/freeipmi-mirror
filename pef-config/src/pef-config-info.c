@@ -57,6 +57,7 @@ pef_info (pef_config_state_data_t *state_data)
     goto cleanup;
   if (Fiid_obj_get (obj_cmd_rs, "pef_version_minor", &val2) < 0)
     goto cleanup;
+  /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
   printf ("PEF version:                            %d.%d\n", 
 	  (int)val1, 
 	  (int)val2);
