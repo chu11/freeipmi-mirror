@@ -1,3 +1,16 @@
+2008-05-03  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-device-global-cmds.h,
+	libfreeipmi/src/cmds/ipmi-device-global-cmds.c,
+	libfreeipmi/include/freeipmi/api/ipmi-device-global-cmds-api.h,
+	libfreeipmi/src/api/ipmi-device-global-cmds-api.c: Support cold
+	and warm reset.
+
+	* bmc-device/: New tool.
+
+	* configure.ac, Makefile.am, freeipmi.spec.in, doc/freeipmi.7.in,
+	README: Update appropriately for new tool.
+	
 2008-05-02  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/cmds/ipmi-device-global-cmds.h,

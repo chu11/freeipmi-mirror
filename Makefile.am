@@ -4,6 +4,7 @@ SUBDIRS = \
 	libfreeipmi \
 	bmc-config \
 	bmc-info \
+	bmc-device \
 	bmc-watchdog \
 	ipmi-chassis \
 	ipmi-fru \

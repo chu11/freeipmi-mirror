@@ -70,15 +70,12 @@ ipmi-sel
 --------
 get/set sel time
 
-bmc-info
---------
-warm/cold reset??
-- new tool "bmc-device", make bmc-info a link that points back to it?
-
 0.7.0
 -----
 add contributions (ganglia/nagios) to webpage downloads
 update index w/ new bmc-info text.
+update w/ bmc-device index.htp
+update w/ bmc-device manpage
 
 other monitoring
 ----------------

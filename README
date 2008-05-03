@@ -84,6 +84,10 @@ Ipmi-sensors-config
 
 A tool to configure IPMI Sensors.
 
+Bmc-device
+
+A tool to perform BMC device commands.
+
 Ipmiping
 
 An IPMI ping tool for debugging. 

@@ -79,6 +79,9 @@ A tool to configure IPMI Platform Event Filtering (PEF) configuration.
 .B Ipmi-sensors-config
 .PP
 A tool to configure IPMI Sensors.
+.B Bmc-device
+.PP
+A tool to perform BMC device commands.
 .PP
 .B Ipmiping
 .PP

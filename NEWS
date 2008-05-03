@@ -2,6 +2,7 @@
 ----------------
 For Users
 ---------
+o Add new tool bmc-device.
 o Support --always-prefix option in many tools.
 o Support --guid option in bmc-info.
 o Various minor bug fixes.

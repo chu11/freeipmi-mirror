@@ -1,0 +1,58 @@
+.TH BMC-DEVICE 8 "@ISODATE@" "bmc-device @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+bmc-device \- perform BMC device commands
+.SH "SYNOPSIS"
+.B bmc-device
+[\fIOPTION\fR...]
+.SH "DESCRIPTION"
+.B bmc-device 
+performs several BMC device commands.  This tool is primarily used for
+development or for BMCs to recover under error conditions.  It is not
+recommended for general use.
+#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
+#include <@top_srcdir@/common/doc/manpage-common-driver.man>
+#include <@top_srcdir@/common/doc/manpage-common-inband.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
+#include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/common/doc/manpage-common-debug.man>
+#include <@top_srcdir@/common/doc/manpage-common-misc.man>
+.SH "BMC-DEVICE OPTIONS"
+The following options are specific to
+.B bmc-device.
+.TP
+\fB\-\-cold\-reset\fR
+Perform a cold reset.
+.TP
+\fB\-\-warm-reset\fR
+Perform a warm reset.
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
+.SH "EXAMPLES"
+.B # bmc-device --cold-reset
+.PP
+Perform a cold reset.
+.PP
+#include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
+#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
+.SH "COPYRIGHT"
+Copyright \(co 2008 FreeIPMI Core Team.  
+#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
+.SH "SEE ALSO"
+freeipmi(7)
+#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
