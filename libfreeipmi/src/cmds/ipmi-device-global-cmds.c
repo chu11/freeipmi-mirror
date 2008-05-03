@@ -97,6 +97,32 @@ fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs =
   {0,  "", 0}
 };
 
+fiid_template_t tmpl_cmd_cold_reset_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_cold_reset_rs =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_warm_reset_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_warm_reset_rs =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_device_guid_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -132,32 +158,6 @@ fiid_template_t tmpl_cmd_get_device_guid_format_rs =
   {0, "", 0}
 };
 
-fiid_template_t tmpl_cmd_cold_reset_rq =
-  {
-    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, "", 0}
-  };
-
-fiid_template_t tmpl_cmd_cold_reset_rs =
-  {
-    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, "", 0}
-  };
-
-fiid_template_t tmpl_cmd_warm_reset_rq =
-  {
-    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, "", 0}
-  };
-
-fiid_template_t tmpl_cmd_warm_reset_rs =
-  {
-    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, "", 0}
-  };
-
 int8_t 
 fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq)
 { 
@@ -167,20 +167,6 @@ fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq)
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_DEVICE_ID);
-  return (0);
-}
-
-int8_t
-fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq)
-{
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
-
-  FIID_OBJ_TEMPLATE_COMPARE2(obj_cmd_rq, 
-                             tmpl_cmd_get_device_guid_rq,
-                             tmpl_cmd_get_device_guid_format_rs);
-
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_DEVICE_GUID);
   return (0);
 }
 
@@ -205,5 +191,19 @@ fill_cmd_warm_reset (fiid_obj_t obj_cmd_rq)
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_WARM_RESET);
+  return (0);
+}
+
+int8_t
+fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE2(obj_cmd_rq, 
+                             tmpl_cmd_get_device_guid_rq,
+                             tmpl_cmd_get_device_guid_format_rs);
+
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_DEVICE_GUID);
   return (0);
 }

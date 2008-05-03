@@ -41,20 +41,20 @@ extern fiid_template_t tmpl_cmd_get_device_id_rq;
 extern fiid_template_t tmpl_cmd_get_device_id_rs;
 extern fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs;
 
-extern fiid_template_t tmpl_cmd_get_device_guid_rq;
-extern fiid_template_t tmpl_cmd_get_device_guid_rs;
-extern fiid_template_t tmpl_cmd_get_device_guid_format_rs;
-
 extern fiid_template_t tmpl_cmd_cold_reset_rq;
 extern fiid_template_t tmpl_cmd_cold_reset_rs;
 
 extern fiid_template_t tmpl_cmd_warm_reset_rq;
 extern fiid_template_t tmpl_cmd_warm_reset_rs;
 
+extern fiid_template_t tmpl_cmd_get_device_guid_rq;
+extern fiid_template_t tmpl_cmd_get_device_guid_rs;
+extern fiid_template_t tmpl_cmd_get_device_guid_format_rs;
+
 int8_t fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq);
-int8_t fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq);
 int8_t fill_cmd_cold_reset (fiid_obj_t obj_cmd_rq);
 int8_t fill_cmd_warm_reset (fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }
