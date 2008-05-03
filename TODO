@@ -28,6 +28,7 @@ chassis boot params
 - move power restore polcy over
 advanced option??
 acpi power state get/set??
+only output lan-conf-auth sections is supported via supported field
 
 pef-config
 -----------
