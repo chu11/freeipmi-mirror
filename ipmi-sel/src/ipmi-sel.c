@@ -76,20 +76,6 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
       goto cleanup;
     }
 
-  {
-    uint8_t buf[1024];
-    int i;
-    int l;
-    l = fiid_obj_get_all(obj_cmd_rs, buf, 1024);
-    for (i= 0; i < l; i++)
-      {
-        if (i % 8 == 0)
-          printf("\n");
-        printf("%X ", buf[i]);
-      }
-          printf("\n");
-  }
-  
   _FIID_OBJ_GET (obj_cmd_rs, "sel_version_major", &val1);
   
   _FIID_OBJ_GET (obj_cmd_rs, "sel_version_minor", &val2);
@@ -101,7 +87,6 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
                   val2);
 
   _FIID_OBJ_GET (obj_cmd_rs, "entries", &val);
-  printf("%X\n", val);
   
   pstdout_printf (state_data->pstate, 
                   "Number of log entries:                            %d\n", 
