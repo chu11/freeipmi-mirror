@@ -53,6 +53,13 @@ int8_t ipmi_cmd_clear_sel (ipmi_ctx_t ctx,
 			   uint8_t operation, 
 			   fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_get_sel_time (ipmi_ctx_t ctx, 
+                              fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_set_sel_time (ipmi_ctx_t ctx, 
+                              uint32_t time,
+                              fiid_obj_t obj_cmd_rs);
+
 #ifdef __cplusplus
 }
 #endif

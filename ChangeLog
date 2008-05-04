@@ -1,3 +1,11 @@
+2008-05-04  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-sel-cmds.h,
+	libfreeipmi/src/cmds/ipmi-sel-cmds.c,
+	libfreeipmi/include/freeipmi/api/ipmi-sel-cmds-api.h,
+	libfreeipmi/src/api/ipmi-sel-cmds-api.c: Support get and set sel
+	time.
+	
 2008-05-03  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/cmds/ipmi-device-global-cmds.h,

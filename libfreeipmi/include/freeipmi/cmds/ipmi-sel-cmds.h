@@ -59,6 +59,12 @@ extern fiid_template_t tmpl_cmd_delete_sel_entry_rs;
 extern fiid_template_t tmpl_cmd_clear_sel_rq;
 extern fiid_template_t tmpl_cmd_clear_sel_rs;
 
+extern fiid_template_t tmpl_cmd_get_sel_time_rq;
+extern fiid_template_t tmpl_cmd_get_sel_time_rs;
+
+extern fiid_template_t tmpl_cmd_set_sel_time_rq;
+extern fiid_template_t tmpl_cmd_set_sel_time_rs;
+
 int8_t fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq);
@@ -78,6 +84,11 @@ int8_t fill_cmd_delete_sel_entry (uint16_t reservation_id,
 int8_t fill_cmd_clear_sel (uint16_t reservation_id, 
                            uint8_t operation, 
                            fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_sel_time (fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_sel_time (uint32_t time, fiid_obj_t obj_cmd_rq);
+
 
 #ifdef __cplusplus
 }

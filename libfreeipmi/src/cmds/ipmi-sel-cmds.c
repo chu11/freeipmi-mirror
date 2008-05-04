@@ -160,6 +160,34 @@ fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
   return 0;
 }
 
+fiid_template_t tmpl_cmd_get_sel_time_rq =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_sel_time_rs =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {32, "time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, // LS byte first
+    {0,   "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_sel_time_rq =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {32, "time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, // LS byte first
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_sel_time_rs =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0,   "", 0}
+  };
+
 int8_t 
 fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq)
 {
@@ -232,13 +260,41 @@ fill_cmd_clear_sel (uint16_t reservation_id,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_clear_sel_rq);
 
+  /* achu: the "CLR" is exactly from the spec.  I know it looks dumb */
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CLEAR_SEL);  
   FIID_OBJ_SET (obj_cmd_rq, "reservation_id", reservation_id);
-  FIID_OBJ_SET (obj_cmd_rq, "C", 'C');
+  FIID_OBJ_SET (obj_cmd_rq, "C", 'C'); 
   FIID_OBJ_SET (obj_cmd_rq, "L", 'L');
   FIID_OBJ_SET (obj_cmd_rq, "R", 'R');
   FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
+  
+  return 0;
+}
+
+int8_t 
+fill_cmd_get_sel_time (fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sel_time_rq);
+
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_TIME); 
+  
+  return 0;
+}
+
+int8_t 
+fill_cmd_set_sel_time (uint32_t time, fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sel_time_rq);
+
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SEL_TIME); 
+  FIID_OBJ_SET (obj_cmd_rq, "time", time);
   
   return 0;
 }
