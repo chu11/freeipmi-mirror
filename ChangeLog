@@ -1,3 +1,7 @@
+2008-05-05  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/: Support --get-time and --set-time options.
+	
 2008-05-04  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/cmds/ipmi-sel-cmds.h,

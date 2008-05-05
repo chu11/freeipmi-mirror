@@ -66,10 +66,6 @@ ipmi-sensors-config
 - sensor enable/disable??
 - sensor event enable/disable??
 
-ipmi-sel
---------
-get/set sel time
-
 0.7.0
 -----
 add contributions (ganglia/nagios) to webpage downloads

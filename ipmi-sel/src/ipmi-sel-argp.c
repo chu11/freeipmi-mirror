@@ -68,14 +68,18 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     {"info",       INFO_KEY,       0, 0, 
      "Show general information about the SEL.", 30},
+    {"get-time",   GET_TIME_KEY,   0, 0,
+     "Get SEL time.", 31},
+    {"set-time",   SET_TIME_KEY,   "TIME", 0,
+     "Set SEL time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 32},
     {"delete",     DELETE_KEY,     "REC-LIST", 0, 
-     "Delete SEL records by record ids.", 31},
+     "Delete SEL records by record ids.", 33},
     {"delete-all", DELETE_ALL_KEY, 0, 0, 
-     "Delete all SEL records.", 32},
+     "Delete all SEL records.", 34},
     {"delete-range", DELETE_RANGE_KEY, "START-END", 0, 
-     "Delete record ids from START to END in the SEL.", 33},
+     "Delete record ids from START to END in the SEL.", 35},
     {"hex-dump",   HEX_DUMP_KEY,   "FILE", OPTION_ARG_OPTIONAL, 
-     "Hex-dump SEL records optionally into a FILE.", 34},
+     "Hex-dump SEL records optionally into a FILE.", 36},
     { 0 }
   };
 
@@ -93,6 +97,13 @@ parse_opt (int key, char *arg, struct argp_state *state)
     {
     case INFO_KEY:
       cmd_args->info_wanted = 1;
+      break;
+    case GET_TIME_KEY:
+      cmd_args->get_time_wanted = 1;
+      break;
+    case SET_TIME_KEY:
+      cmd_args->set_time_wanted = 1;
+      cmd_args->set_time_arg = arg;
       break;
     case DELETE_ALL_KEY:
       cmd_args->delete_all_wanted = 1;
@@ -239,6 +250,9 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->info_wanted = 0;
+  cmd_args->get_time_wanted = 0;
+  cmd_args->set_time_wanted = 0;
+  cmd_args->set_time_arg = NULL;
   cmd_args->delete_all_wanted = 0;
   cmd_args->delete_wanted = 0;
   memset(cmd_args->delete_record_list,

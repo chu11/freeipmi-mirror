@@ -61,7 +61,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   char str[512];
   int rv = -1;
   time_t t;
-  struct tm tmp;
+  struct tm tm;
   
   assert(state_data);
 
@@ -101,8 +101,8 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   _FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val);
   
   t = val;
-  localtime_r (&t, &tmp);
-  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tmp);
+  localtime_r (&t, &tm);
+  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
   pstdout_printf (state_data->pstate, 
                   "Recent addition timestamp:                        %s\n", 
                   str);
@@ -110,8 +110,8 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   _FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val);
 
   t = val;
-  localtime_r (&t, &tmp);
-  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tmp);
+  localtime_r (&t, &tm);
+  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
   pstdout_printf (state_data->pstate, 
                   "Recent erase timestamp:                           %s\n", 
                   str);
@@ -146,6 +146,95 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
                   "Events drop due to lack of space in SEL:          %s\n", 
                   (val ? "Yes" : "No"));
   
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  return (rv);
+}
+
+static int 
+_get_time (ipmi_sel_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  char str[512];
+  int rv = -1;
+  time_t t;
+  struct tm tm;
+  
+  assert(state_data);
+
+  _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_time_rs);
+
+  if (ipmi_cmd_get_sel_time (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_sel_time: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET (obj_cmd_rs, "time", &val);
+  
+  t = val;
+  localtime_r (&t, &tm);
+  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
+  pstdout_printf (state_data->pstate, 
+                  "SEL Time: %s\n", 
+                  str);
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  return (rv);
+}
+
+static int 
+_set_time (ipmi_sel_state_data_t *state_data)
+{
+  struct ipmi_sel_arguments *args;
+  fiid_obj_t obj_cmd_rs = NULL;
+  int rv = -1;
+  time_t t;
+  struct tm tm;
+  
+  assert(state_data);
+
+  args = state_data->prog_data->args;
+
+  if (!strcasecmp(args->set_time_arg, "now"))
+    t = time(NULL);
+  else
+    {
+      if (!strptime(args->set_time_arg, "%m/%d/%Y - %H:%M:%S", &tm))
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "Invalid time specification '%s'.\n",
+                          args->set_time_arg);
+          goto cleanup;
+        }
+      if ((t = mktime(&tm)) == (time_t)-1)
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "Time specification '%s' cannot be represented.\n",
+                          args->set_time_arg);
+          goto cleanup;
+        }
+    }
+
+  _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_set_sel_time_rs);
+
+  if (ipmi_cmd_set_sel_time (state_data->ipmi_ctx, t, obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_set_sel_time: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   _FIID_OBJ_DESTROY(obj_cmd_rs);
@@ -523,6 +612,12 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
   
   if (args->info_wanted)
     return _display_sel_info (state_data);
+
+  if (args->get_time_wanted)
+    return _get_time (state_data);
+
+  if (args->set_time_wanted)
+    return _set_time (state_data);
   
   if (args->sdr.flush_cache_wanted)
     return _flush_cache (state_data);
