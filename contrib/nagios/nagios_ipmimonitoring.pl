@@ -34,15 +34,15 @@
 #
 # Specify the remote hosts you wish to access IPMI information from
 # via the -h option or IPMI_HOSTS environment variable.  If you wish
-# only to monitor the local node, do not specify an ipmi host.  Most
-# will probably want to monitoring just one host (get the IPMI status
-# for each individual machine being monitored), however more than one
-# host can be analyzed for the subsequent result.  The input to the -h
-# option is passed directly to ipmimonitoring.  So you may specify
-# anything the ipmimonitoring tool accepts including hostranged
-# (i.e. foo[0-127]) or comma separated (i.e. foo0,foo1,foo2,foo3)
-# inputs.  If you wish to monitor both remote and local system,
-# remember to specify one of the hosts as "localhost".
+# only to monitor the local node, do not specify an ipmi host.  The
+# input to the -h option is passed directly to ipmimonitoring.  So you
+# may specify anything the ipmimonitoring tool accepts including
+# hostranged (i.e. foo[0-127]) or comma separated
+# (i.e. foo0,foo1,foo2,foo3) inputs.  If you wish to monitor both
+# remote and local system, remember to specify one of the hosts as
+# "localhost".  Most will probably want to monitor just one host (get
+# the IPMI status for each individual machine being monitored),
+# however more than one host can be analyzed for a collective result.
 #
 # If stored in a non-default location the -M option or
 # IPMIMONITORING_PATH environment variable must be specified to
