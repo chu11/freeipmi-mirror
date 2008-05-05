@@ -148,18 +148,6 @@ fiid_template_t tmpl_cmd_clear_sel_rs =
     {0, "", 0}
   };
 
-int8_t 
-fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
-{
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
-
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sel_info_rq);
-
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_INFO);
-  return 0;
-}
-
 fiid_template_t tmpl_cmd_get_sel_time_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -187,6 +175,18 @@ fiid_template_t tmpl_cmd_set_sel_time_rs =
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,   "", 0}
   };
+
+int8_t 
+fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sel_info_rq);
+
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_INFO);
+  return 0;
+}
 
 int8_t 
 fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq)
