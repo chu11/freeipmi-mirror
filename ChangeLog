@@ -1,6 +1,17 @@
 2008-05-06  Albert Chu <chu11@llnl.gov>
 
 	* ipmidetect/: Fix manpage dates.
+
+	* common/doc/manpage-common-hostranged-text-shell.man,
+	common/doc/manpage-common-hostranged-text-options.man: New files.
+
+	* common/doc/manpage-common-hostranged-text-main.man: Adjust with
+	more generic text.
+
+	* common/doc/Makefile.am: Update for new files.
+
+	* Adjust manpages appropriately for new common hostranged manpage
+	info.
 	
 2008-05-05  Albert Chu <chu11@llnl.gov>
 
