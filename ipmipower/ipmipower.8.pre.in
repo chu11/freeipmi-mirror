@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.29.2.1 2008-05-06 22:15:26 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.29.2.2 2008-05-06 23:46:40 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -431,6 +431,8 @@ Output the current configuration.
 Quit program.
 .B ipmipower.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
 .SH "EXAMPLES"
 .LP
 Determine the power status of foo[0-2] with null username and password

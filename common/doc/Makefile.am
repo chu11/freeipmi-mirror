@@ -28,6 +28,8 @@ EXTRA_DIST = \
 	manpage-common-hostranged-eliminate.man \
 	manpage-common-hostranged-always-prefix.man \
 	manpage-common-hostranged-text-main.man \
+	manpage-common-hostranged-text-shell.man \
+	manpage-common-hostranged-text-options.man \
 	manpage-common-hostranged-text-localhost.man \
 	manpage-common-sdr-options.man \
 	manpage-common-ignore-sdr-cache.man \

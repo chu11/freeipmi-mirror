@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmidetect.conf.5.pre.in,v 1.7 2008-04-24 00:00:29 chu11 Exp $
+.\"$Id: ipmidetect.conf.5.pre.in,v 1.7.4.1 2008-05-06 23:46:38 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -23,8 +23,7 @@
 .\"  You should have received a copy of the GNU General Public License along
 .\"  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
 .\"############################################################################
-
-.TH IPMIDETECT.CONF 5 "February 2007" "LLNL" "LIBIPMIDETECT"
+.TH IPMIDETECT.CONF 5 "@ISODATE@" "LLNL" "LIBIPMIDETECT"
 .SH "NAME"
 ipmidetect.conf \- specify alternate default values for the ipmidetect library
 .SH "DESCRIPTION"
