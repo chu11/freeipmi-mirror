@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: libipmidetect.3.pre.in,v 1.7 2008-04-24 00:00:29 chu11 Exp $
+.\"$Id: libipmidetect.3.pre.in,v 1.8 2008-05-06 21:46:35 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -23,8 +23,7 @@
 .\"  You should have received a copy of the GNU General Public License along
 .\"  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
 .\"############################################################################
-.\"
-.TH LIBIPMIDETECT 3 "February 2007" "LIBIPMIDETECT @VERSION@" "LIBIPMIDETECT"
+.TH LIBIPMIDETECT 3 "@ISODATE@" "LIBIPMIDETECT @VERSION@" "LIBIPMIDETECT"
 .SH "NAME"
 libipmidetect \- a library of functions to determine if a node is detected
 or undetected
