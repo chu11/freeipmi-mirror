@@ -1,3 +1,15 @@
+2008-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	Suppot FreeIPMI hostmap configuration.
+
+	* config/ac_freeipmi_hostmap_file.m4: New file.
+
+	* doc/freeipmi.hostmap.5.pre.in: New file.
+
+	* configure.ac: Add AC_FREEIPMI_HOSTMAP_FILE check.  Add new manpage.
+
+	* Adjust manpages and documentation appropriately to mention hostmap.
+	
 2008-05-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Support --get-time and --set-time options.

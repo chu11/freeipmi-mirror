@@ -54,5 +54,5 @@ none currently supported
 Copyright \(co 2008 FreeIPMI Core Team
 #include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8), ipmi-raw(8)
+freeipmi.hostmap(5), freeipmi(7), bmc-config(8), ipmi-raw(8)
 #include <@top_srcdir@/common/doc/manpage-common-homepage.man>

@@ -165,7 +165,6 @@ reporting them.  By mapping sensor readings into NOMINAL, WARNING, or
 CRITICAL states, it makes monitoring sensors easier across large
 numbers of nodes.
 
-
 Development
 -----------
 
@@ -173,6 +172,16 @@ For information on the libraries that can be used to program IPMI
 applications with, please see, please see libfreeipmi(3),
 libipmiconsole(3), libipmimonitoring(3), and libipmidetect(3).  Or
 see the document freeipmi-libraries.txt.
+
+Configuration
+-------------
+
+Many times, users wish to configure the IPMI IP address different than
+the IP address of the actual machine.  It may become difficult to
+remember the alternate IP addresses or hostnames.  In order to
+alleviate this issue, FreeIPMI supports a hostmap configuration, which
+allows an input IP address/hostname to be mapped to an alternate IP
+address/hostname.  See freeipmi.hostmap(5) for more information.
 
 Help, Questions, etc.
 ---------------------

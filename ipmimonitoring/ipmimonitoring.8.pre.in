@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.32 2008-04-30 20:37:47 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.32.2.1 2008-05-06 22:15:25 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -155,5 +155,5 @@ Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 Copyright (C) 2006-2007 The Regents of the University of California.
 #include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-libipmimonitoring(3), freeipmi(7), ipmi-sensors(8)
+freeipmi.hostmap(5), libipmimonitoring(3), freeipmi(7), ipmi-sensors(8)
 #include <@top_srcdir@/common/doc/manpage-common-homepage.man>

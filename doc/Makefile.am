@@ -1,7 +1,9 @@
 #  build and install the .info pages
 info_TEXINFOS =  freeipmi-faq.texi
 
-MANS_CPP = freeipmi.7
+MANS_CPP = \
+	freeipmi.hostmap.5 \
+	freeipmi.7
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
 	cpp -C -P -I. -x c $@.pre -o $@

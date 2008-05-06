@@ -190,6 +190,17 @@ applications with, please see
 Or see the document 
 \fIfreeipmi-libraries.txt\fR.
 
+.SH "Configuration"
+
+Many times, users wish to configure the IPMI IP address different than
+the IP address of the actual machine.  It may become difficult to
+remember the alternate IP addresses or hostnames.  In order to
+alleviate this issue, FreeIPMI supports a hostmap configuration, which
+allows an input IP address/hostname to be mapped to an alternate IP
+address/hostname.  See 
+.B freeipmi.hostmap(5) 
+for more information.
+
 #include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 
 .SH "COPYRIGHT"
@@ -201,7 +212,7 @@ the Free Software Foundation; either version 2 of the License, or (at
 your option) any later version.
 
 .SH "SEE ALSO"
-libfreeipmi(3), libipmiconsole(3), libipmidetect(3),
+freeipmi.hostmap(5), libfreeipmi(3), libipmiconsole(3), libipmidetect(3),
 libipmimonitoring(3), bmc-config(8), bmc-device(8),
 bmc-info(8), bmc-watchdog(8),
 ipmi-chassis(8), ipmi-fru(8), ipmi-locate(8), ipmi-oem(8),

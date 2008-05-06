@@ -516,5 +516,6 @@ existed before the power loss ("Restore_State_AC_Apply").
 
 #include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8), bmc-watchdog(8), agetty(8)	
+freeipmi.hostmap(5), freeipmi(7), bmc-config(8), bmc-watchdog(8),
+agetty(8)
 #include <@top_srcdir@/common/doc/manpage-common-homepage.man>

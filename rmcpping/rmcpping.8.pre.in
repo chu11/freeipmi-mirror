@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: rmcpping.8.pre.in,v 1.10 2008-04-24 05:00:36 chu11 Exp $
+.\"$Id: rmcpping.8.pre.in,v 1.10.4.1 2008-05-06 22:15:27 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -51,5 +51,5 @@ Copyright (C) 2003-2007 The Regents of the University of California.
 Command and manpage based off 
 .B ping(8).
 .SH "SEE ALSO"
-freeipmi(7), ping(8), ipmiping(8)
+freeipmi.hostmap(5), freeipmi(7), ping(8), ipmiping(8)
 #include <@top_srcdir@/common/doc/manpage-common-homepage.man>
