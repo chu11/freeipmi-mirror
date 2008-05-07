@@ -21,16 +21,35 @@ confusing.  In that case, setting up the
 may make things easier.
 
 .SH "HOSTMAP FORMAT"
-Each line of the hostmap shall specify two strings separated by
-whitespace.  The alternate hostname/IP is listed first and the IPMI
-hostname/IP is listed second.  Each string may list multiple hostnames/IPs using a comma
-separated format or a ranged format.
+Each line of the hostmap file shall specify two strings indicating
+hostname(s) or IP address(es) separated by whitespace.  The alternate
+hostname/IP is listed first and the IPMI hostname/IP is listed second.
+Each string may list multiple hostnames/IPs using a comma separated
+format or ranged format.  If multiple hosts are specified, an equal
+number of hosts must be specified for the alternate and IPMI
+hostnames.  See HOSTRANGED SUPPORT below for more information on
+ranged formats.  Comments can be marked by using the pound sign ("#")
+character.
 
-Comments can be marked by using the
-pound sign ("#") character.
+Please take note that the alternate hostname/IP is converted via a
+direct string comparison.  Therefore, a host "foobar" will be
+converted differently than "foobar.mydomain.com".
 
+.SH "EXAMPLE"
+The example below is an example of a small cluster with a management node
+called foomgmt, 2 login nodes called foologin1 and foologin2, and 15 nodes
+called foo0 to foo15.  The IPMI IP address is mapped to the hostnames
+pfoomgmt, pfoologin1, pfoologin2, and pfoo[0-15] respectively.
+.PP
+.nf
+.in +2
+foomgmt             pfoomgmt
+foologin1,foologin2 pfoologin1,pfoologin2
+foo[0-15]           pfoo[0-15]
+.in -2
+.fi
 
-
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
 .SH "FILES"
 @FREEIPMI_HOSTMAP_FILE_DEFAULT@
