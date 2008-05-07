@@ -176,12 +176,13 @@ see the document freeipmi-libraries.txt.
 Configuration
 -------------
 
-Many times, users wish to configure the IPMI IP address different than
-the IP address of the actual host.  It may become difficult to
-remember the alternate IP addresses or hostnames.  In order to
-alleviate this issue, FreeIPMI supports a hostmap configuration, which
-allows an input IP address/hostname to be mapped to an alternate IP
-address/hostname.  See freeipmi.hostmap(5) for more information.
+Sometimes, administrators wish to configure the IPMI IP address
+different than the IP address of the actual host.  It may become
+difficult to remember the alternate IP addresses or hostnames.  In
+order to alleviate this issue, FreeIPMI supports a hostmap
+configuration, which allows an input IP address/hostname to be mapped
+to an alternate IP address/hostname.  See freeipmi.hostmap(5) for more
+information.
 
 Help, Questions, etc.
 ---------------------

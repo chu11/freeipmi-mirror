@@ -192,7 +192,7 @@ Or see the document
 
 .SH "Configuration"
 
-Many times, users wish to configure the IPMI IP address different than
+Sometimes, users wish to configure the IPMI IP address different than
 the IP address of the actual host.  It may become difficult to
 remember the alternate IP addresses or hostnames.  In order to
 alleviate this issue, FreeIPMI supports a hostmap configuration, which
