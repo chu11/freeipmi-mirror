@@ -21,6 +21,7 @@
 
 #include "freeipmi/api/ipmi-api.h"
 #include "tool-cmdline-common.h"
+#include "tool-hostmap-common.h"
 
 #define IPMI_OPEN_ERRMSGLEN 1024
 
@@ -30,6 +31,7 @@ void ipmi_disable_coredump(void);
 
 ipmi_ctx_t ipmi_open(const char *progname,
                      const char *hostname,
+                     hostmap_t hmap,
                      struct common_cmd_args *cmd_args,
                      char *errmsg,
                      unsigned int errmsglen);

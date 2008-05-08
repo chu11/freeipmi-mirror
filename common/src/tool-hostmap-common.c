@@ -49,8 +49,11 @@
 static char *hostmap_errmsg[] =
   {
     "success",
+    "file not found",
+    "out of memory",
     "invalid parameters",
     "parse error",
+    "duplicate entry",
     "host not found",
     "internal system error",
     "internal error",
@@ -373,10 +376,14 @@ _hostmap_data_insert(hostmap_t hmap,
   if (!hash_insert(hmap->h_althost_keyed, hd->althost, hd))
     {
       _hostmap_data_free(hd);
-      hmap->errnum = HOSTMAP_ERR_SYSTEM_ERROR;
+      if (errno == EEXIST)
+        hmap->errnum = HOSTMAP_ERR_DUPLICATE_ENTRY;
+      else
+        hmap->errnum = HOSTMAP_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
 
+  /* XXX duplicates deal with */
   if (!hash_insert(hmap->h_ipmihost_keyed, hd->ipmihost, hd))
     {
       _hostmap_data_free(hd);
@@ -448,12 +455,13 @@ _hostmap_multiple_data_insert(hostmap_t hmap,
   while ((althostptr = hostlist_next(hl_althost_itr))
          && (ipmihostptr = hostlist_next(hl_ipmihost_itr)))
     {
-      if (_hostmap_data_insert (hmap, althost, ipmihost) < 0)
+      if (_hostmap_data_insert (hmap, althostptr, ipmihostptr) < 0)
         goto cleanup;
-      
       free(althostptr);
       free(ipmihostptr);
     }
+  althostptr = NULL;
+  ipmihostptr = NULL;
 
   rv = 0;
  cleanup:
@@ -512,7 +520,8 @@ hostmap_parse(hostmap_t hmap, const char *filename)
 
       if (len < 0)
         {
-          if (hmap->errnum == HOSTMAP_ERR_PARSE)
+          if (hmap->errnum == HOSTMAP_ERR_PARSE
+              || hmap->errnum == HOSTMAP_ERR_DUPLICATE_ENTRY)
             hmap->line = line;
           goto cleanup;
         }
@@ -522,14 +531,16 @@ hostmap_parse(hostmap_t hmap, const char *filename)
 
       if (len < 0)
         {
-          if (hmap->errnum == HOSTMAP_ERR_PARSE)
+          if (hmap->errnum == HOSTMAP_ERR_PARSE
+              || hmap->errnum == HOSTMAP_ERR_DUPLICATE_ENTRY)
             hmap->line = line;
           goto cleanup;
         }
 
       if (!(strptr = _move_past_whitespace(hmap, buf)))
         {
-          if (hmap->errnum == HOSTMAP_ERR_PARSE)
+          if (hmap->errnum == HOSTMAP_ERR_PARSE
+              || hmap->errnum == HOSTMAP_ERR_DUPLICATE_ENTRY)
             hmap->line = line;
           goto cleanup;
         }
@@ -578,7 +589,8 @@ hostmap_parse(hostmap_t hmap, const char *filename)
         {
           if (_hostmap_multiple_data_insert (hmap, althost, ipmihost) < 0)
             {
-              if (hmap->errnum == HOSTMAP_ERR_PARSE)
+              if (hmap->errnum == HOSTMAP_ERR_PARSE
+                  || hmap->errnum == HOSTMAP_ERR_DUPLICATE_ENTRY)
                 hmap->line = line;
               goto cleanup;
             }
@@ -588,7 +600,8 @@ hostmap_parse(hostmap_t hmap, const char *filename)
           /* single hosts listed */
           if (_hostmap_data_insert (hmap, althost, ipmihost) < 0)
             {
-              if (hmap->errnum == HOSTMAP_ERR_PARSE)
+              if (hmap->errnum == HOSTMAP_ERR_PARSE
+                  || hmap->errnum == HOSTMAP_ERR_DUPLICATE_ENTRY)
                 hmap->line = line;
               goto cleanup;
             }
@@ -598,9 +611,12 @@ hostmap_parse(hostmap_t hmap, const char *filename)
   rv = 0;
   hmap->errnum = HOSTMAP_ERR_SUCCESS;
  cleanup:
-  hash_delete_if(hmap->h_althost_keyed, _all_hash_items, NULL);
-  hash_delete_if(hmap->h_ipmihost_keyed, _all_hash_items, NULL);
-  list_delete_all(hmap->l, _all_list_items, NULL);
+  if (rv != 0)
+    {
+      hash_delete_if(hmap->h_althost_keyed, _all_hash_items, "foo");
+      hash_delete_if(hmap->h_ipmihost_keyed, _all_hash_items, "foo");
+      list_delete_all(hmap->l, _all_list_items, "foo");
+    }
   close(fd);
   return rv;
 }
@@ -610,7 +626,8 @@ hostmap_line(hostmap_t hmap)
 {
   assert(hmap && hmap->magic == HOSTMAP_MAGIC);
 
-  if (hmap->errnum == HOSTMAP_ERR_PARSE)
+  if (hmap->errnum == HOSTMAP_ERR_PARSE 
+      || hmap->errnum == HOSTMAP_ERR_DUPLICATE_ENTRY)
     return hmap->line;
   else
     return -1;
@@ -628,7 +645,7 @@ hostmap_map_althost(hostmap_t hmap, const char *althost)
       hmap->errnum = HOSTMAP_ERR_HOST_NOT_FOUND;
       return NULL;
     }
-  
+
   hmap->errnum = HOSTMAP_ERR_SUCCESS;
   return hd->ipmihost;
 }
@@ -686,7 +703,6 @@ int
 hostmap_open(hostmap_t *ptrhmap, const char *filename)
 {
   hostmap_t hmap = NULL;
-  int rv = -1;
 
   assert(ptrhmap);
 
@@ -708,11 +724,8 @@ hostmap_open(hostmap_t *ptrhmap, const char *filename)
               goto cleanup;
             }
           else
-            {
-              /* if default doesn't exist, it's not an error */
-              rv = 0;
-              goto cleanup;
-            }
+            /* if default doesn't exist, it's not an error */
+            goto out;
         }
       else if (hostmap_errnum(hmap) == HOSTMAP_ERR_PARSE)
         {
@@ -723,16 +736,26 @@ hostmap_open(hostmap_t *ptrhmap, const char *filename)
                   hostmap_line(hmap));
           goto cleanup;
         }
+      else if (hostmap_errnum(hmap) == HOSTMAP_ERR_DUPLICATE_ENTRY)
+        {
+          /* FREEIPMI_HOSTMAP_FILE_DEFAULT configured via autoconf */
+          fprintf(stderr,
+                  "hostmap file '%s' duplicate entry on line %d\n",
+                  (filename) ? filename : FREEIPMI_HOSTMAP_FILE_DEFAULT,
+                  hostmap_line(hmap));
+          goto cleanup;
+        }
       else
         {
           fprintf(stderr,
-                  "hostmap error: %s\n", 
+                  "hostmap file error: %s\n", 
                   hostmap_strerror(hostmap_errnum(hmap)));
           goto cleanup;
         }
     }
 
   *ptrhmap = hmap;
+ out:
   return 0;
 
  cleanup:

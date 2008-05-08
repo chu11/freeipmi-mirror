@@ -26,6 +26,7 @@ enum hostmap_errnum
     HOSTMAP_ERR_OUT_OF_MEMORY = 2,
     HOSTMAP_ERR_PARAMETERS = 3,
     HOSTMAP_ERR_PARSE = 4,
+    HOSTMAP_ERR_DUPLICATE_ENTRY = 5,
     HOSTMAP_ERR_HOST_NOT_FOUND = 5,
     HOSTMAP_ERR_SYSTEM_ERROR = 6,
     HOSTMAP_ERR_INTERNAL_ERROR = 7,
@@ -47,7 +48,7 @@ char *hostmap_strerror(int errnum);
 
 int hostmap_parse(hostmap_t hmap, const char *filename);
 
-/* if error HOSTMAP_ERR_PARSE, get line of error */
+/* if error HOSTMAP_ERR_PARSE or HOSTMAP_ERR_DUPLICATE_ENTRY get line of error */
 int hostmap_line(hostmap_t hmap);
 
 char *hostmap_map_althost(hostmap_t hmap, const char *althost);

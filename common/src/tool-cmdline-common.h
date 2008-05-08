@@ -62,7 +62,8 @@ enum argp_common_option_keys
     ARGP_ELIMINATE_KEY = 'E',
     ARGP_ALWAYS_PREFIX_KEY = 143,
     ARGP_WORKAROUND_FLAGS_KEY = 'W',
-    ARGP_DEBUG_KEY = 144
+    ARGP_DEBUG_KEY = 144,
+    ARGP_CONFIG_FILE_KEY = 145
   };
 
 /*
@@ -285,7 +286,7 @@ enum argp_common_option_keys
 
 #define ARGP_COMMON_HOSTRANGED_BUFFER_OUTPUT                               \
     {"buffer-output", ARGP_BUFFER_OUTPUT_KEY, 0, 0,                        \
-      "Buffer hostranged output.", 21}
+     "Buffer hostranged output.", 21}
 
 #define ARGP_COMMON_HOSTRANGED_CONSOLIDATE_OUTPUT                          \
     {"consolidate-output", ARGP_CONSOLIDATE_OUTPUT_KEY, 0, 0,              \
@@ -307,6 +308,10 @@ enum argp_common_option_keys
     {"debug",     ARGP_DEBUG_KEY, 0, 0, 	                           \
      "Turn on debugging.", 26}                                             
 
+#define ARGP_COMMON_CONFIG_OPTIONS                                         \
+    {"hostmap-file", ARGP_CONFIG_FILE_KEY, "PATH", 0,                      \
+     "Specify alternate hostmap file.", 27}
+
 struct common_cmd_args 
 {
   ipmi_driver_type_t driver_type;
@@ -326,6 +331,7 @@ struct common_cmd_args
   int privilege_level;
   unsigned int workaround_flags;
   unsigned int flags;
+  char *hostmap_file;
 };
 
 struct sdr_cmd_args

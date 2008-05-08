@@ -72,6 +72,7 @@ ipmi_disable_coredump(void)
 ipmi_ctx_t
 ipmi_open(const char *progname,
           const char *hostname,
+          hostmap_t hmap,
           struct common_cmd_args *cmd_args,
           char *errmsg,
           unsigned int errmsglen)
@@ -91,10 +92,28 @@ ipmi_open(const char *progname,
       && strcasecmp(hostname, "localhost") != 0
       && strcmp(hostname, "127.0.0.1") != 0)
     {
+      char *ipmihost;
+
+      if (hmap)
+        {
+          char *str;
+          
+          if ((str = hostmap_map_althost(hmap, hostname)))
+            {
+              if (cmd_args->flags & IPMI_FLAGS_DEBUG_DUMP)
+                fprintf(stderr, "hostmap '%s' -> '%s'\n", hostname, str);
+              ipmihost = str;
+            }
+          else
+            ipmihost = (char *)hostname;
+        }
+      else
+        ipmihost = (char *)hostname;
+
       if (cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
         {
           if (ipmi_ctx_open_outofband_2_0 (ipmi_ctx,
-                                           hostname,
+                                           ipmihost,
                                            cmd_args->username,
                                            cmd_args->password,
                                            (cmd_args->k_g_len) ? cmd_args->k_g : NULL,
@@ -135,7 +154,7 @@ ipmi_open(const char *progname,
       else
         {
           if (ipmi_ctx_open_outofband (ipmi_ctx,
-                                       hostname,
+                                       ipmihost,
                                        cmd_args->username,
                                        cmd_args->password,
                                        cmd_args->authentication_type,

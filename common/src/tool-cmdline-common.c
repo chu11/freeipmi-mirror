@@ -571,6 +571,15 @@ common_parse_opt (int key,
     case ARGP_DEBUG_KEY:
       cmd_args->flags |= IPMI_FLAGS_DEBUG_DUMP;
       break;
+    case ARGP_CONFIG_FILE_KEY:
+      if (cmd_args->hostmap_file != NULL)
+	free (cmd_args->hostmap_file);
+      if (!(cmd_args->hostmap_file = strdup (arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
+      break;
     default:
       return ARGP_ERR_UNKNOWN;
     }
@@ -676,6 +685,7 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
   cmd_args->workaround_flags = 0;
   cmd_args->flags = IPMI_FLAGS_DEFAULT;
+  cmd_args->hostmap_file = NULL;
 }
 
 void 
