@@ -35,7 +35,7 @@ Please take note that the alternate hostname/IP is converted via a
 direct string comparison.  Therefore, a host "foobar" will be
 converted differently than "foobar.mydomain.com".
 
-Please take note that if multiple hosts are specified, the hosts will
+Also note that if multiple hosts are specified, the hosts will
 be sorted prior to mapping.  For example, in the following:
 .PP
 .nf
@@ -47,6 +47,9 @@ a_node,b_node  d_node,c_node
 The host 'a_node' will be mapped to 'c_node' and 'b_node' will be
 mapped to 'd_node' because the IPMI hosts on the right are sorted
 first.
+
+The strings "localhost" and "127.0.0.1" cannot be mapped.  Those
+strings are reserved for in-band communication.
 
 .SH "EXAMPLE"
 The example below is an example of a small cluster with a management node
