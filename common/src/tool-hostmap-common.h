@@ -19,6 +19,27 @@
 #ifndef _TOOL_HOSTMAP_COMMON_H
 #define _TOOL_HOSTMAP_COMMON_H
 
+enum hostmap_errnum
+  {
+    HOSTMAP_ERR_SUCCESS = 0,
+    HOSTMAP_ERR_FILE_NOT_FOUND = 1,
+    HOSTMAP_ERR_OUT_OF_MEMORY = 2,
+    HOSTMAP_ERR_PARAMETERS = 3,
+    HOSTMAP_ERR_PARSE = 4,
+    HOSTMAP_ERR_SYSTEM_ERROR = 5,
+    HOSTMAP_ERR_INTERNAL_ERROR = 6,
+    HOSTMAP_ERR_OUTOFRANGE = 7,
+  };
+
 typedef struct hostmap *hostmap_t;
+
+hostmap_t hostmap_create(void);
+
+void hostmap_destroy(hostmap_t hm);
+
+int hostmap_parse(hostmap_t hm, const char *filename);
+
+/* if error HOSTMAP_ERR_PARSE, get line of error */
+int hostmap_line(hostmap_t hm);
 
 #endif
