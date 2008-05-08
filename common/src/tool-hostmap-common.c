@@ -42,14 +42,16 @@
 #include "fd.h"
 #include "hash.h"
 #include "hostlist.h"
+#include "list.h"
 
 #include "tool-hostmap-common.h"
 
-static char *ipmi_errmsg[] =
+static char *hostmap_errmsg[] =
   {
     "success",
     "invalid parameters",
     "parse error",
+    "host not found",
     "internal system error",
     "internal error",
     "errnum out of range",
@@ -61,6 +63,7 @@ struct hostmap
   int errnum;
   int line;
   hash_t h;
+  List l;
 };
 
 #define HOSTMAP_MAGIC 0xFF33D00D
@@ -106,6 +109,10 @@ hostmap_create(void)
                             (hash_del_f)_hostmap_data_free)))
     goto cleanup;
 
+  /* points to same info in hash_create, let hash deal w/ freeing memory */
+  if (!(hm->l = list_create(NULL)))
+    goto cleanup;
+
   hm->errnum = HOSTMAP_ERR_SUCCESS;
   return hm;
 
@@ -114,6 +121,8 @@ hostmap_create(void)
     {
       if (hm->h)
         hash_destroy(hm->h);
+      if (hm->l)
+        list_destroy(hm->l);
     }
   return NULL;
 }
@@ -121,12 +130,37 @@ hostmap_create(void)
 void
 hostmap_destroy(hostmap_t hm)
 {
-  assert(hm->magic == HOSTMAP_MAGIC);
+  assert(hm && hm->magic == HOSTMAP_MAGIC);
 
   hm->magic = ~HOSTMAP_MAGIC;
   hm->errnum = HOSTMAP_ERR_SUCCESS;
   hash_destroy(hm->h);
+  list_destroy(hm->l);
   free(hm);
+}
+
+int
+hostmap_errnum(hostmap_t hm)
+{
+  assert(hm && hm->magic == HOSTMAP_MAGIC);
+
+  return hm->errnum;
+}
+
+char *
+hostmap_strerror(int errnum)
+{
+  if (errnum >= HOSTMAP_ERR_SUCCESS && errnum <= HOSTMAP_ERR_ERRNUMRANGE)
+    return hostmap_errmsg[errnum];
+  else
+    return hostmap_errmsg[HOSTMAP_ERR_ERRNUMRANGE];
+}
+
+/* for hash callback to delete all items */
+static int
+_all_items (void *data, const void *key, void *arg)
+{
+  return 1;
 }
 
 /* achu: Some of this parsing code was lifted out of Cerebro.
@@ -306,11 +340,111 @@ _hostmap_data_create(hostmap_t hm,
   return NULL;
 }
 
-/* for hash to delete all items */
 static int
-_all_items (void *data, const void *key, void *arg)
+_hostmap_data_insert(hostmap_t hm,
+                     const char *althost, 
+                     const char *ipmihost)
 {
-  return 1;
+  struct hostmap_data *hd = NULL;
+
+  assert(hm && hm->magic == HOSTMAP_MAGIC && althost && ipmihost);
+  
+  if (!(hd = _hostmap_data_create(hm, althost, ipmihost)))
+    goto cleanup;
+
+  if (!hash_insert(hm->h, hd->althost, hd))
+    {
+      _hostmap_data_free(hd);
+      hm->errnum = HOSTMAP_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+
+  if (!list_append(hm->l, hd))
+    {
+      hm->errnum = HOSTMAP_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+
+  return 0;
+
+ cleanup:
+  return -1;
+}
+
+static int
+_hostmap_multiple_data_insert(hostmap_t hm,
+                              const char *althost, 
+                              const char *ipmihost)
+{
+  char *althostptr = NULL;
+  char *ipmihostptr = NULL;
+  hostlist_t hl_althost = NULL;
+  hostlist_t hl_ipmihost = NULL;
+  hostlist_iterator_t hl_althost_itr = NULL;
+  hostlist_iterator_t hl_ipmihost_itr = NULL;
+  int rv = -1;
+
+  if (!(hl_althost = hostlist_create(althost)))
+    {
+      hm->errnum = HOSTMAP_ERR_PARSE;
+      goto cleanup;
+    }
+
+  if (!(hl_ipmihost = hostlist_create(ipmihost)))
+    {
+      hm->errnum = HOSTMAP_ERR_PARSE;
+      goto cleanup;
+    }
+
+  hostlist_uniq(hl_althost);
+  hostlist_uniq(hl_ipmihost);
+  hostlist_sort(hl_althost);
+  hostlist_sort(hl_ipmihost);
+
+  /* ensure same number of hosts listed for both */
+  if (hostlist_count(hl_althost) != hostlist_count(hl_ipmihost))
+    {
+      hm->errnum = HOSTMAP_ERR_PARSE;
+      goto cleanup;
+    }
+
+  if (!(hl_althost_itr = hostlist_iterator_create(hl_althost)))
+    {
+      hm->errnum = HOSTMAP_ERR_OUT_OF_MEMORY;
+      goto cleanup;
+    }
+
+  if (!(hl_ipmihost_itr = hostlist_iterator_create(hl_ipmihost)))
+    {
+      hm->errnum = HOSTMAP_ERR_OUT_OF_MEMORY;
+      goto cleanup;
+    }
+
+  while ((althostptr = hostlist_next(hl_althost_itr))
+         && (ipmihostptr = hostlist_next(hl_ipmihost_itr)))
+    {
+      if (_hostmap_data_insert (hm, althost, ipmihost) < 0)
+        goto cleanup;
+      
+      free(althostptr);
+      free(ipmihostptr);
+    }
+
+  rv = 0;
+ cleanup:
+  if (hl_althost_itr)
+    hostlist_iterator_destroy(hl_althost_itr);
+  if (hl_ipmihost_itr)
+    hostlist_iterator_destroy(hl_ipmihost_itr);
+  if (hl_althost)
+    hostlist_destroy(hl_althost);
+  if (hl_ipmihost)
+    hostlist_destroy(hl_ipmihost);
+  if (althostptr)
+    free(althostptr);
+  if (ipmihostptr)
+    free(ipmihostptr);
+  return rv;
 }
 
 int
@@ -320,13 +454,6 @@ hostmap_parse(hostmap_t hm, const char *filename)
   int fd = -1;
   int len;
   int line = 0;
-  char *althostptr = NULL;
-  char *ipmihostptr = NULL;
-  hostlist_t hl_althost = NULL;
-  hostlist_t hl_ipmihost = NULL;
-  hostlist_iterator_t hl_althost_itr = NULL;
-  hostlist_iterator_t hl_ipmihost_itr = NULL;
-  struct hostmap_data *hd = NULL;
   char buf[HOSTMAP_BUFLEN];
 
   assert(hm && hm->magic == HOSTMAP_MAGIC);
@@ -424,99 +551,28 @@ hostmap_parse(hostmap_t hm, const char *filename)
           || strchr(ipmihost, '[')
           || strchr(ipmihost, ']'))
         {
-          if (!(hl_althost = hostlist_create(althost)))
+          if (_hostmap_multiple_data_insert (hm, althost, ipmihost) < 0)
             {
-              hm->errnum = HOSTMAP_ERR_PARSE;
-              hm->line = line;
+              if (hm->errnum == HOSTMAP_ERR_PARSE)
+                hm->line = line;
               goto cleanup;
             }
-
-          if (!(hl_ipmihost = hostlist_create(ipmihost)))
-            {
-              hm->errnum = HOSTMAP_ERR_PARSE;
-              hm->line = line;
-              goto cleanup;
-            }
-
-          /* ensure same number of hosts listed for both */
-          if (hostlist_count(hl_althost) != hostlist_count(hl_ipmihost))
-            {
-              hm->errnum = HOSTMAP_ERR_PARSE;
-              hm->line = line;
-              goto cleanup;
-            }
-
-          if (!(hl_althost_itr = hostlist_iterator_create(hl_althost)))
-            {
-              hm->errnum = HOSTMAP_ERR_OUT_OF_MEMORY;
-              goto cleanup;
-            }
-
-          if (!(hl_ipmihost_itr = hostlist_iterator_create(hl_ipmihost)))
-            {
-              hm->errnum = HOSTMAP_ERR_OUT_OF_MEMORY;
-              goto cleanup;
-            }
-
-          while ((althostptr = hostlist_next(hl_althost_itr))
-                 && (ipmihostptr = hostlist_next(hl_ipmihost_itr)))
-            {
-              if (!(hd = _hostmap_data_create(hm, althostptr, ipmihostptr)))
-                goto cleanup;
-              
-              if (!hash_insert(hm->h, hd->althost, hd))
-                {
-                  hm->errnum = HOSTMAP_ERR_SYSTEM_ERROR;
-                  goto cleanup;
-                }
-              
-              free(althostptr);
-              free(ipmihostptr);
-              hd = NULL;
-            }
-
-          hostlist_iterator_destroy(hl_althost_itr);
-          hostlist_iterator_destroy(hl_ipmihost_itr);
-          hostlist_destroy(hl_althost);
-          hostlist_destroy(hl_ipmihost);
-          hl_althost_itr = NULL;
-          hl_ipmihost_itr = NULL;
-          hl_althost = NULL;
-          hl_ipmihost = NULL;
         }
       else
         {
           /* single hosts listed */
-          if (!(hd = _hostmap_data_create(hm, althost, ipmihost)))
-            goto cleanup;
-
-          if (!hash_insert(hm->h, hd->althost, hd))
+          if (_hostmap_data_insert (hm, althost, ipmihost) < 0)
             {
-              hm->errnum = HOSTMAP_ERR_SYSTEM_ERROR;
+              if (hm->errnum == HOSTMAP_ERR_PARSE)
+                hm->line = line;
               goto cleanup;
             }
-          
-          hd = NULL;
         }
     }
 
   rv = 0;
   hm->errnum = HOSTMAP_ERR_SUCCESS;
  cleanup:
-  if (hl_althost_itr)
-    hostlist_iterator_destroy(hl_althost_itr);
-  if (hl_ipmihost_itr)
-    hostlist_iterator_destroy(hl_ipmihost_itr);
-  if (hl_althost)
-    hostlist_destroy(hl_althost);
-  if (hl_ipmihost)
-    hostlist_destroy(hl_ipmihost);
-  if (althostptr)
-    free(althostptr);
-  if (ipmihostptr)
-    free(ipmihostptr);
-  if (hd)
-    _hostmap_data_free(hd);
   hash_delete_if(hm->h, _all_items, NULL);
   close(fd);
   return rv;
@@ -531,4 +587,53 @@ hostmap_line(hostmap_t hm)
     return hm->line;
   else
     return -1;
+}
+
+char *
+hostmap_map_althost(hostmap_t hm, const char *althost)
+{
+  struct hostmap_data *hd;
+
+  assert(hm && hm->magic == HOSTMAP_MAGIC);
+  
+  if (!(hd = hash_find(hm->h, althost)))
+    {
+      hm->errnum = HOSTMAP_ERR_HOST_NOT_FOUND;
+      return NULL;
+    }
+  
+  hm->errnum = HOSTMAP_ERR_SUCCESS;
+  return hd->ipmihost;
+}
+
+int
+hostmap_for_each(hostmap_t hm, hostmap_for_each_f f, void *arg)
+{
+  struct hostmap_data *hd;
+  ListIterator itr = NULL;
+  int rv = -1;
+
+  assert(hm && hm->magic == HOSTMAP_MAGIC && f);
+
+  if (!(itr = list_iterator_create(hm->l)))
+    {
+      hm->errnum = HOSTMAP_ERR_OUT_OF_MEMORY;
+      goto cleanup;
+    }
+
+  while ((hd = list_next(itr)))
+    {
+      if (f(hd->althost, hd->ipmihost, arg) < 0)
+        {
+          hm->errnum = HOSTMAP_ERR_SYSTEM_ERROR;
+          goto cleanup;
+        }
+    }
+  
+  hm->errnum = HOSTMAP_ERR_SUCCESS;
+  rv = 0;
+ cleanup:
+  if (itr)
+    list_iterator_destroy(itr);
+  return rv;
 }

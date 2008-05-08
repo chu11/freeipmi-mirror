@@ -26,20 +26,31 @@ enum hostmap_errnum
     HOSTMAP_ERR_OUT_OF_MEMORY = 2,
     HOSTMAP_ERR_PARAMETERS = 3,
     HOSTMAP_ERR_PARSE = 4,
-    HOSTMAP_ERR_SYSTEM_ERROR = 5,
-    HOSTMAP_ERR_INTERNAL_ERROR = 6,
-    HOSTMAP_ERR_OUTOFRANGE = 7,
+    HOSTMAP_ERR_HOST_NOT_FOUND = 5,
+    HOSTMAP_ERR_SYSTEM_ERROR = 6,
+    HOSTMAP_ERR_INTERNAL_ERROR = 7,
+    HOSTMAP_ERR_ERRNUMRANGE = 8,
   };
 
 typedef struct hostmap *hostmap_t;
 
+/* return 0 success, -1 error */
+typedef int (*hostmap_for_each_f)(const char *althost, const char *ipmihost, void *arg);
+
 hostmap_t hostmap_create(void);
 
 void hostmap_destroy(hostmap_t hm);
+
+int hostmap_errnum(hostmap_t hm);
+
+char *hostmap_strerror(int errnum);
 
 int hostmap_parse(hostmap_t hm, const char *filename);
 
 /* if error HOSTMAP_ERR_PARSE, get line of error */
 int hostmap_line(hostmap_t hm);
 
+char *hostmap_map_althost(hostmap_t hm, const char *althost);
+
+int hostmap_for_each(hostmap_t hm, hostmap_for_each_f f, void *arg);
 #endif
