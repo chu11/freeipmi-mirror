@@ -104,7 +104,11 @@ parse_opt (int key, char *arg, struct argp_state *state)
         {
           unsigned int n = strtoul(tok, &ptr, 10);
           if (ptr != (tok + strlen(tok)))
-            fprintf (stderr, "invalid delete record number");
+            {
+              fprintf (stderr, "invalid delete record number\n");
+              argp_usage (state);
+              break;
+            }
           cmd_args->delete_record_list[cmd_args->delete_record_list_length] = n;
           cmd_args->delete_record_list_length++;
           tok = strtok(NULL, " ,");

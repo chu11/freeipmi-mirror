@@ -1,3 +1,8 @@
+2008-05-08  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/, ipmi-sensors/, ipmimonitoring/: Fix invalid input
+	corner cases.
+
 2008-04-30  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/ipmimonitoring.8.pre.in: Add missing options.
