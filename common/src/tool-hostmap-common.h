@@ -39,18 +39,22 @@ typedef int (*hostmap_for_each_f)(const char *althost, const char *ipmihost, voi
 
 hostmap_t hostmap_create(void);
 
-void hostmap_destroy(hostmap_t hm);
+void hostmap_destroy(hostmap_t hmap);
 
-int hostmap_errnum(hostmap_t hm);
+int hostmap_errnum(hostmap_t hmap);
 
 char *hostmap_strerror(int errnum);
 
-int hostmap_parse(hostmap_t hm, const char *filename);
+int hostmap_parse(hostmap_t hmap, const char *filename);
 
 /* if error HOSTMAP_ERR_PARSE, get line of error */
-int hostmap_line(hostmap_t hm);
+int hostmap_line(hostmap_t hmap);
 
-char *hostmap_map_althost(hostmap_t hm, const char *althost);
+char *hostmap_map_althost(hostmap_t hmap, const char *althost);
 
-int hostmap_for_each(hostmap_t hm, hostmap_for_each_f f, void *arg);
+char *hostmap_map_ipmihost(hostmap_t hmap, const char *ipmihost);
+
+int hostmap_for_each(hostmap_t hmap, hostmap_for_each_f f, void *arg);
+
+int hostmap_open(hostmap_t *hmapptr, const char *filename);
 #endif
