@@ -589,6 +589,7 @@ main (int argc, char **argv)
   
   ipmi_disable_coredump();
   
+  memset(&prog_data, '\0', sizeof(ipmi_sensors_prog_data_t));
   prog_data.progname = argv[0];
   ipmi_sensors_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;

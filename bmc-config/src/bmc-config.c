@@ -303,6 +303,7 @@ main (int argc, char *argv[])
 
   ipmi_disable_coredump();
 
+  memset(&prog_data, '\0', sizeof(bmc_config_prog_data_t));
   prog_data.progname = argv[0];
   bmc_config_argp_parse (argc, argv, &cmd_args);
 
