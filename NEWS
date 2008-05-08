@@ -1,7 +1,8 @@
 0.6.2 - 00/00/00
 ----------------
 o Fix missing manpage option listings.
-o Fix minor command line parsing issues.
+o Fix minor command line parsing error messages.
+o Fix minor error output message corner cases.
 
 0.6.1 - 04/27/08
 ----------------

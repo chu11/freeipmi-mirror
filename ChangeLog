@@ -3,6 +3,8 @@
 	* ipmi-sel/, ipmi-sensors/, ipmimonitoring/: Fix invalid input
 	corner cases.
 
+	* common/src/hostlist.c: Remove internal lib error messages.
+
 2008-04-30  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/ipmimonitoring.8.pre.in: Add missing options.
@@ -3390,7 +3392,7 @@
 
 	* bmc-config/: Add alert config to bmc-config and fix various
 	corner cases.
-	
+
 2007-04-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-lan-cmds.h,
