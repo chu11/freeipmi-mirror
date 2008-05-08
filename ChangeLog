@@ -1,3 +1,8 @@
+2008-05-08  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Change IPMI_ERR_OUTOFRANGE to IPMI_ERR_ERRNUMRANGE
+	for consistency to other libraries.
+	
 2008-05-06  Albert Chu <chu11@llnl.gov>
 
 	* ipmidetect/: Fix manpage dates.

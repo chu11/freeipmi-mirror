@@ -62,7 +62,7 @@ enum ipmi_errnum
     IPMI_ERR_SYSTEM_ERROR = 30,
     IPMI_ERR_LIBRARY_ERROR = 31,
     IPMI_ERR_INTERNAL_ERROR = 32,
-    IPMI_ERR_OUTOFRANGE = 33,
+    IPMI_ERR_ERRNUMRANGE = 33,
   };
 typedef enum ipmi_errnum ipmi_errnum_type_t;
 

@@ -149,10 +149,10 @@ ipmi_ctx_create(void)
 char *
 ipmi_ctx_strerror(int errnum)
 {
-  if (errnum >= IPMI_ERR_SUCCESS && errnum <= IPMI_ERR_OUTOFRANGE)
+  if (errnum >= IPMI_ERR_SUCCESS && errnum <= IPMI_ERR_ERRNUMRANGE)
     return ipmi_errmsg[errnum];
   else
-    return ipmi_errmsg[IPMI_ERR_OUTOFRANGE];
+    return ipmi_errmsg[IPMI_ERR_ERRNUMRANGE];
 }
 
 int
