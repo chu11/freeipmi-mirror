@@ -13,6 +13,8 @@
 
 	* common/src/Makefile.am: Update for new lib files.
 
+	* Adjust all tools appropriately for hostmap support.
+
 	* Adjust manpages and documentation appropriately to mention hostmap.
 	
 2008-05-06  Albert Chu <chu11@llnl.gov>
