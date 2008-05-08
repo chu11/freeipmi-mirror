@@ -50,6 +50,7 @@ config
 config file - support workarounds/etc. for heterogenous cluster?
 map hostname -> IP config
 - first deal w/ tools
+  - prefix debug output correctly
 - second deal w/ -E options
 - third deal w/ ipmidetect
 - 4 how deal w/ invalid hostname errors
