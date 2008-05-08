@@ -469,6 +469,7 @@ _bmc_info(pstdout_state_t pstate,
   
   if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
                                         hostname,
+                                        prog_data->hmap,
                                         &(prog_data->args->common),
                                         errmsg,
                                         IPMI_OPEN_ERRMSGLEN)))
@@ -512,8 +513,7 @@ main (int argc, char **argv)
   bmc_info_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
-  /* XXX: option later */
-  if (hostmap_open(&prog_data.hmap, NULL) < 0)
+  if (hostmap_open(&prog_data.hmap, cmd_args.common.hostmap_file) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
