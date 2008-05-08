@@ -22,6 +22,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-hostmap-common.h"
 #include "pstdout.h"
 
 enum bmc_info_argp_option_keys
@@ -40,6 +41,7 @@ typedef struct bmc_info_prog_data
 {
   char *progname;
   struct bmc_info_arguments *args;
+  hostmap_t hmap;
 } bmc_info_prog_data_t;
 
 typedef struct bmc_info_state_data

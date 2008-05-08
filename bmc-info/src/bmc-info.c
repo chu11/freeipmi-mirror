@@ -507,10 +507,19 @@ main (int argc, char **argv)
   
   ipmi_disable_coredump();
   
+  memset(&prog_data, '\0', sizeof(bmc_info_prog_data_t));
   prog_data.progname = argv[0];
   bmc_info_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
+  /* XXX: option later */
+  if (hostmap_open(&prog_data.hmap, NULL) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  /* XXX: deal w/ later */
   if (pstdout_setup(&(prog_data.args->common.hostname),
                     prog_data.args->hostrange.buffer_hostrange_output,
                     prog_data.args->hostrange.consolidate_hostrange_output,
