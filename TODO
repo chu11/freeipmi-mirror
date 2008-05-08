@@ -54,6 +54,8 @@ map hostname -> IP config
 - third deal w/ ipmidetect
 - 4 how deal w/ invalid hostname errors
 - 5 deal w/ alternate hostmap file option in tools
+   - how output error
+- 6 - give user debug ability w/ hostmap?  in tools along w/ --debug?
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
 - after this, tweak "known issue" info about ps(1), put info in conf file, etc.
 - also update comments in contrib ganglia/nagios.
