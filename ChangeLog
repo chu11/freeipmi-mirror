@@ -2,6 +2,8 @@
 
 	* ipmi-sel/, ipmi-sensors/, ipmimonitoring/: Fix invalid input
 	corner cases.
+
+	* common/src/hostlist.c: Remove internal lib error messages.
 	
 2008-05-08  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostlist.c,v 1.6 2008-02-18 17:09:00 chu11 Exp $
+ *  $Id: hostlist.c,v 1.7 2008-05-08 23:35:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -56,11 +56,7 @@
    extern void lsd_fatal_error(char *file, int line, char *mesg);
 #else /* !WITH_LSD_FATAL_ERROR_FUNC */
 #  ifndef lsd_fatal_error
-#    define lsd_fatal_error(file, line, mesg)                                \
-       do {                                                                  \
-           fprintf(stderr, "ERROR: [%s:%d] %s: %s\n",                        \
-           file, line, mesg, strerror(errno));                               \
-       } while (0)
+#    define lsd_fatal_error(file, line, mesg)                                
 #  endif /* !lsd_fatal_error */
 #endif /* !WITH_LSD_FATAL_ERROR_FUNC */
 
