@@ -1,5 +1,10 @@
 2008-05-08  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/, ipmi-sensors/, ipmimonitoring/: Fix invalid input
+	corner cases.
+	
+2008-05-08  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/: Change IPMI_ERR_OUTOFRANGE to IPMI_ERR_ERRNUMRANGE
 	for consistency to other libraries.
 	
