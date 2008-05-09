@@ -21,7 +21,8 @@
 
 #include "freeipmi/api/ipmi-api.h"
 #include "tool-cmdline-common.h"
-#include "tool-hostmap-common.h"
+
+#include "hostmap.h"
 
 #define IPMI_OPEN_ERRMSGLEN 1024
 

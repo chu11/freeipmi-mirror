@@ -66,6 +66,7 @@ map hostname -> IP config
 X - 7 prefix debug output correctly
 - cleanup code
  - split hostmap off?  b/c not needed in bmc-watchdog and ipmi-locate
+ - merge all util libs into one big one?
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
 - after this, tweak "known issue" info about ps(1), put info in conf file, etc.
 - also update comments in contrib ganglia/nagios.

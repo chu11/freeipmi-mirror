@@ -23,7 +23,7 @@
 #include <limits.h>	/* ARG_MAX */
 
 #include "tool-cmdline-common.h"
-#include "tool-hostmap-common.h"
+#include "hostmap.h"
 #include "pstdout.h"
 
 enum ipmi_raw_argp_option_keys

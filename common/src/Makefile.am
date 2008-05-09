@@ -3,7 +3,6 @@ noinst_HEADERS = \
 	tool-common.h \
 	tool-cmdline-common.h \
 	tool-fiid-wrappers.h \
-	tool-hostmap-common.h \
 	tool-sdr-cache-common.h \
 	tool-sensor-common.h \
 	ipmi-ping.h \
@@ -19,6 +18,7 @@ noinst_HEADERS = \
 	thread.h \
 	pstdout.h \
 	hostrange.h \
+	hostmap.h \
 	config-common.h \
 	config-comment.h \
 	config-checkout.h \
@@ -39,7 +39,8 @@ noinst_LTLIBRARIES = \
 	libmiscutils.la \
 	libhostrange.la \
 	libconfigcommon.la \
-	libdebugcommon.la
+	libdebugcommon.la \
+	libhostmap.la
 
 libfreeipmiportability_la_SOURCES = freeipmi-portability.c
 libfreeipmiportability_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
@@ -47,7 +48,6 @@ libfreeipmiportability_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 libtoolcommon_la_SOURCES = \
 	tool-common.c \
 	tool-cmdline-common.c \
-	tool-hostmap-common.c \
 	tool-sdr-cache-common.c \
 	tool-sensor-common.c
 libtoolcommon_la_CPPFLAGS = \
@@ -80,6 +80,9 @@ libhostrange_la_LDFLAGS = $(PTHREAD_LIBS)
 libhostrange_la_CPPFLAGS = \
 	-D_REENTRANT \
 	-I$(srcdir)/../../ipmidetect/src/libipmidetect/
+
+libhostmap_la_SOURCES = hostmap.c
+libhostmap_la_CPPFLAGS = -D_REENTRANT
 
 libconfigcommon_la_SOURCES = \
 	config-comment.c \

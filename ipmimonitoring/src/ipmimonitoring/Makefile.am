@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.8 2008-04-18 18:21:22 chu11 Exp $
+## $Id: Makefile.am,v 1.8.4.1 2008-05-09 21:12:08 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -20,11 +20,12 @@ ipmimonitoring_CPPFLAGS = \
 	-I$(srcdir)/../../../libfreeipmi/include
 
 ipmimonitoring_LDADD = \
+	../../../common/src/libhostmap.la \
+	../../../common/src/libtoolcommon.la \
 	../../../common/src/libmiscutils.la \
 	../libipmimonitoring/libipmimonitoring.la \
 	../../../common/src/libhostrange.la \
-	../../../ipmidetect/src/libipmidetect/libipmidetect.la \
-	../../../common/src/libtoolcommon.la
+	../../../ipmidetect/src/libipmidetect/libipmidetect.la
 
 ../../../common/src/libmiscutils.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
@@ -39,6 +40,9 @@ ipmimonitoring_LDADD = \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../../common/src/libtoolcommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libhostmap.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

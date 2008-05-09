@@ -23,8 +23,8 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
-#include "tool-hostmap-common.h"
 #include "tool-sdr-cache-common.h"
+#include "hostmap.h"
 
 #include "config-common.h"
 #include "config-comment.h"

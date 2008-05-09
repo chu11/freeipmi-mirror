@@ -22,7 +22,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
-#include "tool-hostmap-common.h"
+#include "hostmap.h"
 #include "pstdout.h"
 
 enum bmc_device_argp_option_keys

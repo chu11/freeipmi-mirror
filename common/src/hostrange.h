@@ -1,11 +1,11 @@
 /*****************************************************************************\
- *  $Id: hostrange.h,v 1.4.2.1 2008-05-09 16:33:19 chu11 Exp $
+ *  $Id: hostrange.h,v 1.4.2.2 2008-05-09 21:12:05 chu11 Exp $
 \*****************************************************************************/
 
 #ifndef _HOSTRANGE_H
 #define _HOSTRANGE_H
 
-#include "tool-hostmap-common.h"
+#include "hostmap.h"
 
 /* Returns number of hosts setup for, -1 on error */
 int pstdout_setup(char **hosts,

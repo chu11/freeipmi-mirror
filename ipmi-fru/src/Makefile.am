@@ -6,6 +6,7 @@ ipmi_fru_SOURCES = ipmi-fru.c \
 		   ipmi-fru-util.c
 ipmi_fru_LDADD = ../../common/src/libtoolcommon.la \
 		 ../../common/src/libhostrange.la \
+		 ../../common/src/libhostmap.la \
 		 ../../common/src/libmiscutils.la \
                  ../../ipmidetect/src/libipmidetect/libipmidetect.la \
 	         ../../libfreeipmi/src/libfreeipmi.la \
@@ -39,6 +40,9 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libhostmap.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

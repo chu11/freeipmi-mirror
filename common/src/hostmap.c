@@ -45,7 +45,7 @@
 #include "hostlist.h"
 #include "list.h"
 
-#include "tool-hostmap-common.h"
+#include "hostmap.h"
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64

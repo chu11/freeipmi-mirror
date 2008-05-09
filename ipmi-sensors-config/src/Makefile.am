@@ -12,6 +12,7 @@ ipmi_sensors_config_SOURCES = \
 # we need miscutils for hostlist lib in pstdout too
 ipmi_sensors_config_LDADD = ../../common/src/libtoolcommon.la \
 			    ../../common/src/libhostrange.la \
+			    ../../common/src/libhostmap.la \
 			    ../../common/src/libmiscutils.la \
 			    ../../libfreeipmi/src/libfreeipmi.la \
 			    ../../common/src/libconfigcommon.la
@@ -39,6 +40,9 @@ noinst_HEADERS = ipmi-sensors-config.h \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libmiscutils.la : force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libhostmap.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

@@ -16,8 +16,8 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _TOOL_HOSTMAP_COMMON_H
-#define _TOOL_HOSTMAP_COMMON_H
+#ifndef _HOSTMAP_H
+#define _HOSTMAP_H
 
 enum hostmap_errnum
   {

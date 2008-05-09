@@ -18,6 +18,7 @@ pef_config_SOURCES = \
 pef_config_LDADD = ../../common/src/libtoolcommon.la \
 		   ../../libfreeipmi/src/libfreeipmi.la \
 		   ../../common/src/libfreeipmiportability.la \
+		   ../../common/src/libhostmap.la \
 		   ../../common/src/libconfigcommon.la \
 		   ../../common/src/libmiscutils.la
  
@@ -54,6 +55,9 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libmiscutils.la : force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libhostmap.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

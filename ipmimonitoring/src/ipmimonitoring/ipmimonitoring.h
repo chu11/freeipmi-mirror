@@ -24,8 +24,8 @@
 #include "ipmi_monitoring.h"
 
 #include "tool-cmdline-common.h"
-#include "tool-hostmap-common.h"
 #include "tool-sdr-cache-common.h"
+#include "hostmap.h"
 #include "pstdout.h"
 
 #define IPMIMONITORING_MAX_RECORD_IDS           256

@@ -22,8 +22,8 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
-#include "tool-hostmap-common.h"
 #include "tool-sdr-cache-common.h"
+#include "hostmap.h"
 #include "pstdout.h"
 
 #define IPMI_SENSORS_MAX_RECORD_IDS           256

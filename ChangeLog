@@ -8,8 +8,7 @@
 
 	* configure.ac: Add AC_FREEIPMI_HOSTMAP_FILE check.  Add new manpage.
 
-	* common/src/tool-hostmap-common.h,
-	common/src/tool-hostmap-common.c: New files.
+	* common/src/hostmap.h, common/src/hostmap.c: New files.
 
 	* common/doc/manpage-common-config-file-options.man: New file.
 

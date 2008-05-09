@@ -5,7 +5,9 @@ bmc_watchdog_SOURCES = bmc-watchdog.c
 bmc_watchdog_LDADD = \
 	../../libfreeipmi/src/libfreeipmi.la \
 	../../common/src/libtoolcommon.la \
-	../../common/src/libdebugcommon.la
+	../../common/src/libdebugcommon.la \
+	../../common/src/libhostmap.la \
+	../../common/src/libmiscutils.la
 
 bmc_watchdog_CPPFLAGS = \
 	-I$(srcdir)/../../libfreeipmi/include \
@@ -19,6 +21,12 @@ bmc_watchdog_CPPFLAGS = \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libdebugcommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libmiscutils.la : force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libhostmap.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:
