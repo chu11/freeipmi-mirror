@@ -44,11 +44,35 @@ firmware firewall support?
 - new config tool??
 audit ls/ms byte usage
 - fiid internally stores ls byte first, so if spec says ms byte first, need to fix
+code cleanup
+- merge many util libs into one?
 
 config
 ------
 config file - support workarounds/etc. for heterogenous cluster?
 map hostname -> IP config
+map hostname -> IP config
+- 1) deal w/ tools
+  - core tools
+  - config tools
+  - ipmiconsole
+  - ipmipower
+  - rmcpping
+  - ipmiping
+- 2) -E options
+- 3) ipmidetect
+  - how deal w/ duplicate althost point to same ipmihost?
+- 4) invalid hostname errors
+- 5) alternate hostmap file option in tools
+- 6) output debug along w/ --debug
+- 7) prefix debug output correctly
+- in branch hostmap_branch?  Abandon?
+  - complicates functionality of freeipmi
+    - how support in rmcpping/ipmiping? w/ debug abilities?
+    - how support in ipmidetect?
+      - ipmidetect can only work off ipmi ip addresses.
+      - would it output mapped or ipmi ip addresses?
+    - seems not worth effort
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
 - after this, tweak "known issue" info about ps(1), put info in conf file, etc.
 - also update comments in contrib ganglia/nagios.
