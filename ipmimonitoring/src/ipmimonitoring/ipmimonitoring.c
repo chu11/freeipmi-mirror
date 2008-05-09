@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.41 2008-04-29 21:58:42 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.42 2008-05-09 22:03:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -717,6 +717,7 @@ main(int argc, char **argv)
 
   ipmi_disable_coredump();
 
+  memset(&prog_data, '\0', sizeof(ipmimonitoring_prog_data_t));
   prog_data.progname = argv[0];
   ipmimonitoring_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.16 2008-04-29 21:58:42 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.17 2008-05-09 22:03:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -544,6 +544,7 @@ main (int argc, char **argv)
   
   ipmi_disable_coredump();
   
+  memset(&prog_data, '\0', sizeof(ipmi_fru_prog_data_t));
   prog_data.progname = argv[0];
   ipmi_fru_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
