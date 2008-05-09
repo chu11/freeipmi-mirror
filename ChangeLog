@@ -1,3 +1,8 @@
+2008-05-09  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/ipmiconsole/ipmiconsole_config.c
+	(_cb_workaround_flags): Fix parse corner case.
+	
 2008-05-08  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/, ipmi-sensors/, ipmimonitoring/: Fix invalid input

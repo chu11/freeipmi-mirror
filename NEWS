@@ -3,6 +3,7 @@
 o Fix missing manpage option listings.
 o Fix minor command line parsing error messages.
 o Fix minor error output message corner cases.
+o Fix minor config file parsing corner case.
 
 0.6.1 - 04/27/08
 ----------------

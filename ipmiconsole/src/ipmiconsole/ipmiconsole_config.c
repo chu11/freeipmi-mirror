@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.36 2008-04-24 05:46:46 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.36.2.1 2008-05-09 23:47:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -479,9 +479,9 @@ _cb_workaround_flags(conffile_t cf,
     conf->workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE;
   if (tmp & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION;
-  else if (tmp & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+  if (tmp & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION;
-  else if (tmp & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+  if (tmp & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
     conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION;
   return 0;
 }
