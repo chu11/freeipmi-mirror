@@ -43,7 +43,6 @@
 #include "fd.h"
 #include "hash.h"
 #include "hostlist.h"
-#include "list.h"
 
 #include "hostmap.h"
 
@@ -73,8 +72,6 @@ struct hostmap
   int errnum;
   int line;
   hash_t h_althost_keyed;
-  hash_t h_ipmihost_keyed;
-  List l;
 };
 
 #define HOSTMAP_MAGIC       0xFF33D00D
@@ -120,17 +117,6 @@ hostmap_create(void)
                                             (hash_del_f)_hostmap_data_free)))
     goto cleanup;
 
-  /* points to same info in h_althost_keyed, let hash deal w/ freeing memory */
-  if (!(hmap->h_ipmihost_keyed = hash_create(HOSTMAP_HASH_SIZE,
-                                             (hash_key_f)hash_key_string,
-                                             (hash_cmp_f)strcmp,
-                                             (hash_del_f)NULL)))
-    goto cleanup;
-
-  /* points to same info in h_althost_keyed, let hash deal w/ freeing memory */
-  if (!(hmap->l = list_create(NULL)))
-    goto cleanup;
-
   hmap->errnum = HOSTMAP_ERR_SUCCESS;
   return hmap;
 
@@ -139,10 +125,6 @@ hostmap_create(void)
     {
       if (hmap->h_althost_keyed)
         hash_destroy(hmap->h_althost_keyed);
-      if (hmap->h_ipmihost_keyed)
-        hash_destroy(hmap->h_ipmihost_keyed);
-      if (hmap->l)
-        list_destroy(hmap->l);
     }
   return NULL;
 }
@@ -155,8 +137,6 @@ hostmap_destroy(hostmap_t hmap)
   hmap->magic = ~HOSTMAP_MAGIC;
   hmap->errnum = HOSTMAP_ERR_SUCCESS;
   hash_destroy(hmap->h_althost_keyed);
-  hash_destroy(hmap->h_ipmihost_keyed);
-  list_destroy(hmap->l);
   free(hmap);
 }
 
@@ -180,13 +160,6 @@ hostmap_strerror(int errnum)
 /* for hash callback to delete all items */
 static int
 _all_hash_items (void *data, const void *key, void *arg)
-{
-  return 1;
-}
-
-/* for list callback to delete all items */
-static int
-_all_list_items (void *x, void *key)
 {
   return 1;
 }
@@ -394,20 +367,6 @@ _hostmap_data_insert(hostmap_t hmap,
         hmap->errnum = HOSTMAP_ERR_DUPLICATE_ENTRY;
       else
         hmap->errnum = HOSTMAP_ERR_SYSTEM_ERROR;
-      goto cleanup;
-    }
-
-  /* XXX duplicates deal with */
-  if (!hash_insert(hmap->h_ipmihost_keyed, hd->ipmihost, hd))
-    {
-      _hostmap_data_free(hd);
-      hmap->errnum = HOSTMAP_ERR_SYSTEM_ERROR;
-      goto cleanup;
-    }
-
-  if (!list_append(hmap->l, hd))
-    {
-      hmap->errnum = HOSTMAP_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
 
@@ -636,11 +595,7 @@ hostmap_parse(hostmap_t hmap, const char *filename)
   hmap->errnum = HOSTMAP_ERR_SUCCESS;
  cleanup:
   if (rv != 0)
-    {
-      hash_delete_if(hmap->h_althost_keyed, _all_hash_items, "foo");
-      hash_delete_if(hmap->h_ipmihost_keyed, _all_hash_items, "foo");
-      list_delete_all(hmap->l, _all_list_items, "foo");
-    }
+    hash_delete_if(hmap->h_althost_keyed, _all_hash_items, "foo");
   close(fd);
   return rv;
 }
@@ -674,55 +629,6 @@ hostmap_map_althost(hostmap_t hmap, const char *althost)
 
   hmap->errnum = HOSTMAP_ERR_SUCCESS;
   return hd->ipmihost;
-}
-
-char *
-hostmap_map_ipmihost(hostmap_t hmap, const char *ipmihost)
-{
-  struct hostmap_data *hd;
-
-  assert(hmap && hmap->magic == HOSTMAP_MAGIC);
-  
-  if (!(hd = hash_find(hmap->h_ipmihost_keyed, ipmihost)))
-    {
-      hmap->errnum = HOSTMAP_ERR_HOST_NOT_FOUND;
-      return NULL;
-    }
-  
-  hmap->errnum = HOSTMAP_ERR_SUCCESS;
-  return hd->althost;
-}
-
-int
-hostmap_for_each(hostmap_t hmap, hostmap_for_each_f f, void *arg)
-{
-  struct hostmap_data *hd;
-  ListIterator itr = NULL;
-  int rv = -1;
-
-  assert(hmap && hmap->magic == HOSTMAP_MAGIC && f);
-
-  if (!(itr = list_iterator_create(hmap->l)))
-    {
-      hmap->errnum = HOSTMAP_ERR_OUT_OF_MEMORY;
-      goto cleanup;
-    }
-
-  while ((hd = list_next(itr)))
-    {
-      if (f(hd->althost, hd->ipmihost, arg) < 0)
-        {
-          hmap->errnum = HOSTMAP_ERR_SYSTEM_ERROR;
-          goto cleanup;
-        }
-    }
-  
-  hmap->errnum = HOSTMAP_ERR_SUCCESS;
-  rv = 0;
- cleanup:
-  if (itr)
-    list_iterator_destroy(itr);
-  return rv;
 }
 
 int 

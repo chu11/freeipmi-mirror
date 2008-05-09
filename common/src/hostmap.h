@@ -55,10 +55,6 @@ int hostmap_line(hostmap_t hmap);
 
 char *hostmap_map_althost(hostmap_t hmap, const char *althost);
 
-char *hostmap_map_ipmihost(hostmap_t hmap, const char *ipmihost);
-
-int hostmap_for_each(hostmap_t hmap, hostmap_for_each_f f, void *arg);
-
 int hostmap_open(hostmap_t *hmapptr, const char *filename);
 
 #endif
