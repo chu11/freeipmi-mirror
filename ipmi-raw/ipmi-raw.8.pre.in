@@ -37,6 +37,7 @@ Specify a file to read command requests from.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/common/doc/manpage-common-config-file-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-shell.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>

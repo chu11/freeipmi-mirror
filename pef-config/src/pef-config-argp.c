@@ -64,6 +64,7 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_OPTIONS_DEBUG,
+    ARGP_COMMON_CONFIG_OPTIONS,
     {"info",       INFO_KEY,       0, 0, 
      "Show general information about PEF configuration.", 30},
     {"checkout", CHECKOUT_KEY, 0, 0,

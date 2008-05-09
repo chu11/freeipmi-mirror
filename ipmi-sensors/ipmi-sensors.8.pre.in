@@ -66,7 +66,6 @@ separated by commas or spaces.
 \fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"
 Specify sensors to show by record id.  Multiple record ids can be
 separated by commas or spaces.
-
 #include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
@@ -74,6 +73,7 @@ separated by commas or spaces.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/common/doc/manpage-common-config-file-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-shell.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>

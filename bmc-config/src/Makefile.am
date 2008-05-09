@@ -23,7 +23,8 @@ bmc_config_SOURCES = \
 
 bmc_config_LDADD = ../../common/src/libtoolcommon.la \
                    ../../libfreeipmi/src/libfreeipmi.la \
-		   ../../common/src/libconfigcommon.la
+		   ../../common/src/libconfigcommon.la \
+		   ../../common/src/libmiscutils.la
 
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src -D_GNU_SOURCE \
@@ -56,6 +57,9 @@ noinst_HEADERS = bmc-config.h \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libconfigcommon.la : force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libmiscutils.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

@@ -65,6 +65,7 @@ static struct argp_option options[] =
     ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
+    ARGP_COMMON_CONFIG_OPTIONS,
     /* maintain "regenerate-sdr-cache" for backwards compatability */
     {"regenerate-sdr-cache", REGENERATE_SDR_CACHE_KEY, 0, OPTION_HIDDEN,
      "Regenerate the SDR cache.", 30},

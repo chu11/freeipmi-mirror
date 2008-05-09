@@ -22,6 +22,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-hostmap-common.h"
 #include "pstdout.h"
 
 enum ipmi_chassis_keys
@@ -80,6 +81,7 @@ typedef struct ipmi_chassis_prog_data
 {
   char *progname;
   struct ipmi_chassis_arguments *args;
+  hostmap_t hmap;
 } ipmi_chassis_prog_data_t;
 
 typedef struct ipmi_chassis_state_data

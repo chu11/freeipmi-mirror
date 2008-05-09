@@ -23,6 +23,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-hostmap-common.h"
 
 #include "config-common.h"
 #include "config-comment.h"
@@ -58,6 +59,7 @@ typedef struct pef_config_prog_data
 { 
   char *progname;
   struct pef_config_arguments *args;
+  hostmap_t hmap;
 } pef_config_prog_data_t;
 
 typedef struct pef_config_state_data

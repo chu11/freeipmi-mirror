@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.16.2.1 2008-05-08 21:24:30 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.16.2.2 2008-05-09 20:02:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -474,6 +474,7 @@ _ipmi_fru(pstdout_state_t pstate,
     {
       if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
                                             hostname,
+                                            prog_data->hmap,
                                             &(prog_data->args->common),
                                             errmsg,
                                             IPMI_OPEN_ERRMSGLEN)))
@@ -549,7 +550,14 @@ main (int argc, char **argv)
   ipmi_fru_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
+  if (hostmap_open(&prog_data.hmap, cmd_args.common.hostmap_file) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
   if ((hosts_count = pstdout_setup(&(prog_data.args->common.hostname),
+                                   prog_data.hmap,
                                    prog_data.args->hostrange.buffer_hostrange_output,
                                    prog_data.args->hostrange.consolidate_hostrange_output,
                                    prog_data.args->hostrange.fanout,

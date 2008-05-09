@@ -22,6 +22,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-hostmap-common.h"
 #include "tool-sdr-cache-common.h"
 #include "pstdout.h"
 
@@ -62,6 +63,7 @@ typedef struct ipmi_sel_prog_data
 {
   char *progname;
   struct ipmi_sel_arguments *args;
+  hostmap_t hmap;
 } ipmi_sel_prog_data_t;
 
 typedef struct ipmi_sel_state_data

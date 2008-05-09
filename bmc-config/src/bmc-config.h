@@ -24,6 +24,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-hostmap-common.h"
 
 #include "config-common.h"
 #include "config-comment.h"
@@ -60,6 +61,7 @@ typedef struct bmc_config_prog_data
 {
   char *progname;
   struct bmc_config_arguments *args;
+  hostmap_t hmap;
 } bmc_config_prog_data_t;
 
 typedef struct bmc_config_state_data

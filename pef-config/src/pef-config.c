@@ -74,6 +74,7 @@ _pef_config (void *arg)
 
   if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
                                         prog_data->args->config_args.common.hostname,
+                                        prog_data->hmap,
                                         &(prog_data->args->config_args.common),
                                         errmsg,
                                         IPMI_OPEN_ERRMSGLEN)))
@@ -307,11 +308,13 @@ main (int argc, char **argv)
   memset(&prog_data, '\0', sizeof(pef_config_prog_data_t));
   prog_data.progname = argv[0];
   pef_config_argp_parse (argc, argv, &cmd_args);
+  prog_data.args = &cmd_args;
 
   if (pef_config_args_validate (&cmd_args) < 0)
     return (EXIT_FAILURE);
 
-  prog_data.args = &cmd_args;
+  if (hostmap_open(&prog_data.hmap, cmd_args.config_args.common.hostmap_file) < 0)
+    return (EXIT_FAILURE);
 
   exit_code = _pef_config (&prog_data);
   

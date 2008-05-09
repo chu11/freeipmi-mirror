@@ -77,6 +77,7 @@ static struct argp_option options[] = {
   ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
   ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
   ARGP_COMMON_OPTIONS_DEBUG,
+  ARGP_COMMON_CONFIG_OPTIONS,
   {"checkout", CHECKOUT_KEY, 0, 0, 
    "Fetch configuration information.", 30},
   {"commit", COMMIT_KEY, 0, 0, 

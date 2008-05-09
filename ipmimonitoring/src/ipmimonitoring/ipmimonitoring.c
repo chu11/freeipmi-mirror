@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.41.2.1 2008-05-08 21:25:10 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.41.2.2 2008-05-09 20:02:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -496,6 +496,7 @@ _ipmimonitoring(pstdout_state_t pstate,
     {
       if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
                                             hostname,
+                                            prog_data->hmap,
                                             &(prog_data->args->common),
                                             errmsg,
                                             IPMI_OPEN_ERRMSGLEN)))
@@ -731,7 +732,14 @@ main(int argc, char **argv)
       goto cleanup;
     }
  
+  if (hostmap_open(&prog_data.hmap, cmd_args.common.hostmap_file) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
   if ((hosts_count = pstdout_setup(&(prog_data.args->common.hostname),
+                                   prog_data.hmap,
                                    prog_data.args->hostrange.buffer_hostrange_output,
                                    prog_data.args->hostrange.consolidate_hostrange_output,
                                    prog_data.args->hostrange.fanout,

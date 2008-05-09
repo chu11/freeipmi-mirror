@@ -23,6 +23,8 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-hostmap-common.h"
+#include "tool-sdr-cache-common.h"
 
 #include "config-common.h"
 #include "config-comment.h"
@@ -57,6 +59,7 @@ typedef struct ipmi_sensors_config_prog_data
 { 
   char *progname;
   struct ipmi_sensors_config_arguments *args;
+  hostmap_t hmap;
 } ipmi_sensors_config_prog_data_t;
 
 typedef struct ipmi_sensors_config_state_data

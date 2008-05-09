@@ -32,6 +32,7 @@ The following options are specific to
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about PEF configuration.
 #include <@top_srcdir@/common/doc/manpage-common-config-tool-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-config-file-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-config-tool-general-use.man>
 .SH "EDITING THE CHECKOUT FILE"
 Options for editing fields in the checkout file are usually listed in

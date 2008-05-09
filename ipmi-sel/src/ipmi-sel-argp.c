@@ -66,6 +66,7 @@ static struct argp_option options[] =
     ARGP_COMMON_IGNORE_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
+    ARGP_COMMON_CONFIG_OPTIONS,
     {"info",       INFO_KEY,       0, 0, 
      "Show general information about the SEL.", 30},
     {"get-time",   GET_TIME_KEY,   0, 0,

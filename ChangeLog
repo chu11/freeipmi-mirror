@@ -11,6 +11,8 @@
 	* common/src/tool-hostmap-common.h,
 	common/src/tool-hostmap-common.c: New files.
 
+	* common/doc/manpage-common-config-file-options.man: New file.
+
 	* common/src/Makefile.am: Update for new lib files.
 
 	* libfreeipmi/include/freeipmi/api/, libfreeipmi/src/api/: Support
@@ -20,6 +22,8 @@
 	* Adjust all tools appropriately for hostmap support.
 
 	* Adjust manpages and documentation appropriately to mention hostmap.
+
+	* Variety of general code cleanup.
 	
 2008-05-09  Albert Chu <chu11@llnl.gov>
 

@@ -133,6 +133,7 @@ _bmc_device(pstdout_state_t pstate,
   
   if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
                                         hostname,
+                                        prog_data->hmap,
                                         &(prog_data->args->common),
                                         errmsg,
                                         IPMI_OPEN_ERRMSGLEN)))
@@ -182,7 +183,14 @@ main (int argc, char **argv)
       goto cleanup;
     }
 
+  if (hostmap_open(&prog_data.hmap, cmd_args.common.hostmap_file) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
   if (pstdout_setup(&(prog_data.args->common.hostname),
+                    prog_data.hmap,
                     prog_data.args->hostrange.buffer_hostrange_output,
                     prog_data.args->hostrange.consolidate_hostrange_output,
                     prog_data.args->hostrange.fanout,

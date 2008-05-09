@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.8 2008-03-28 00:14:34 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.8.4.1 2008-05-09 20:02:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -67,6 +67,7 @@ static struct argp_option options[] =
     ARGP_COMMON_IGNORE_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
+    ARGP_COMMON_CONFIG_OPTIONS,
     {"device-id", DEVICE_ID_KEY, "DEVICE_ID", 0,
      "Specify a specific FRU device ID.", 30},
     {"verbose", VERBOSE_KEY, 0, 0,

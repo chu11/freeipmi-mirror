@@ -66,6 +66,7 @@ static struct argp_option options[] =
     ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
+    ARGP_COMMON_CONFIG_OPTIONS,
     {"verbose",        VERBOSE_KEY,        0, 0, 
      "Increase verbosity in output.  May be specified multiple times.", 30}, 
     {"quiet-readings", QUIET_READINGS_KEY,  0, 0,

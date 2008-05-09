@@ -1,0 +1,6 @@
+.SH "CONFIG FILE OPTIONS"
+The following options are for configuring configuration files.
+.TP
+\fB\-\-hostmap\-file\fR==\fIPATH\fR
+Specify an alternate hostmap file.
+

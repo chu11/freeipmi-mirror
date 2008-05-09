@@ -60,6 +60,7 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
+    ARGP_COMMON_CONFIG_OPTIONS,
     {"get-capabilities", 'c', NULL, 0, 
      "Get chassis capabilities.", 30},
     {"get-status", 's', NULL, 0, 

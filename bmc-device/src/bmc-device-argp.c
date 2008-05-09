@@ -56,6 +56,7 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
+    ARGP_COMMON_CONFIG_OPTIONS,
     {"cold-reset", CMD_COLD_RESET_KEY, NULL, 0,
      "Perform a cold reset.", 30},
     {"warm-reset", CMD_WARM_RESET_KEY, NULL, 0,

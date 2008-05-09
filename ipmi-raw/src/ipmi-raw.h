@@ -23,6 +23,7 @@
 #include <limits.h>	/* ARG_MAX */
 
 #include "tool-cmdline-common.h"
+#include "tool-hostmap-common.h"
 #include "pstdout.h"
 
 enum ipmi_raw_argp_option_keys
@@ -43,6 +44,7 @@ typedef struct ipmi_raw_prog_data
 {
   char *progname;
   struct ipmi_raw_arguments *args;
+  hostmap_t hmap;
 } ipmi_raw_prog_data_t;
 
 typedef struct ipmi_raw_state_data

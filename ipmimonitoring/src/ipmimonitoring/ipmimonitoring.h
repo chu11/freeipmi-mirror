@@ -24,6 +24,8 @@
 #include "ipmi_monitoring.h"
 
 #include "tool-cmdline-common.h"
+#include "tool-hostmap-common.h"
+#include "tool-sdr-cache-common.h"
 #include "pstdout.h"
 
 #define IPMIMONITORING_MAX_RECORD_IDS           256
@@ -67,6 +69,7 @@ typedef struct ipmimonitoring_prog_data
 {
   char *progname;
   struct ipmimonitoring_arguments *args;
+  hostmap_t hmap;
 } ipmimonitoring_prog_data_t;
 
 typedef struct ipmimonitoring_state_data

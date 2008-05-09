@@ -51,6 +51,7 @@ config file - support workarounds/etc. for heterogenous cluster?
 map hostname -> IP config
 - first deal w/ tools
   - core tools
+  - config tools
   - ipmiconsole
   - ipmipower
   - rmcpping
@@ -62,8 +63,9 @@ map hostname -> IP config
 - 5 deal w/ alternate hostmap file option in tools
    - how output error
 - 6 - give user debug ability w/ hostmap?  in tools along w/ --debug?
-- 7 prefix debug output correctly
+X - 7 prefix debug output correctly
 - cleanup code
+ - split hostmap off?  b/c not needed in bmc-watchdog and ipmi-locate
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
 - after this, tweak "known issue" info about ps(1), put info in conf file, etc.
 - also update comments in contrib ganglia/nagios.

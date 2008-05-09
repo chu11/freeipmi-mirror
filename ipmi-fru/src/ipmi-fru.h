@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.h,v 1.9 2008-03-28 00:14:35 chu11 Exp $
+ *  $Id: ipmi-fru.h,v 1.9.4.1 2008-05-09 20:02:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -31,6 +31,8 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-hostmap-common.h"
+#include "tool-sdr-cache-common.h"
 #include "pstdout.h"
 
 #define FRU_BUF_LEN 2048
@@ -64,6 +66,7 @@ typedef struct ipmi_fru_prog_data
 {
   char *progname;
   struct ipmi_fru_arguments *args;
+  hostmap_t hmap;
 } ipmi_fru_prog_data_t;
 
 typedef struct ipmi_fru_state_data

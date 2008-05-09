@@ -23,6 +23,7 @@
 #include <limits.h>	/* ARG_MAX */
 
 #include "tool-cmdline-common.h"
+#include "tool-hostmap-common.h"
 #include "pstdout.h"
 
 struct ipmi_oem_arguments
@@ -39,6 +40,7 @@ typedef struct ipmi_oem_prog_data
 {
   char *progname;
   struct ipmi_oem_arguments *args;
+  hostmap_t hmap;
 } ipmi_oem_prog_data_t;
 
 typedef struct ipmi_oem_state_data

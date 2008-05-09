@@ -34,6 +34,7 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
 #include <@top_srcdir@/common/doc/manpage-common-config-tool-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-config-file-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-config-tool-general-use.man>
 .LP
 Comments throughout the checked out file will give instructions on how
