@@ -1,9 +1,9 @@
 0.6.2 - 00/00/00
 ----------------
+o Fix ipmiconsole config file parsing corner case.
 o Fix missing manpage option listings.
-o Fix minor command line parsing error messages.
-o Fix minor error output message corner cases.
-o Fix minor config file parsing corner case.
+o Fix command line parsing error messages.
+o Fix error output message corner cases.
 
 0.6.1 - 04/27/08
 ----------------
