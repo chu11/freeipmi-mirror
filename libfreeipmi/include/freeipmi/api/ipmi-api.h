@@ -62,7 +62,7 @@ enum ipmi_errnum
     IPMI_ERR_SYSTEM_ERROR = 30,
     IPMI_ERR_LIBRARY_ERROR = 31,
     IPMI_ERR_INTERNAL_ERROR = 32,
-    IPMI_ERR_OUTOFRANGE = 33,
+    IPMI_ERR_ERRNUMRANGE = 33,
   };
 typedef enum ipmi_errnum ipmi_errnum_type_t;
 
@@ -155,6 +155,9 @@ int ipmi_cmd_raw (ipmi_ctx_t ctx,
 int ipmi_ctx_close (ipmi_ctx_t ctx);
 
 void ipmi_ctx_destroy (ipmi_ctx_t ctx);
+
+/* change default debug prefix, normally is hostname for out of band */
+int ipmi_ctx_set_debug_prefix (ipmi_ctx_t ctx, const char *prefix);
 
 #ifdef __cplusplus
 }

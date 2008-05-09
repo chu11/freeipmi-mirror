@@ -136,7 +136,11 @@ parse_opt (int key, char *arg, struct argp_state *state)
         {
           unsigned int n = strtoul(tok, &ptr, 10);
           if (ptr != (tok + strlen(tok)))
-            fprintf (stderr, "invalid sensor record id");
+            {
+              fprintf (stderr, "invalid sensor record id\n");
+              argp_usage (state);
+              break;
+            }
           cmd_args->sensors_list[cmd_args->sensors_list_length] = n;
           cmd_args->sensors_list_length++;
           tok = strtok(NULL, " ,");

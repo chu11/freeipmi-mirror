@@ -521,6 +521,7 @@ main (int argc, char **argv)
 
   /* XXX: deal w/ later */
   if (pstdout_setup(&(prog_data.args->common.hostname),
+                    prog_data.hmap,
                     prog_data.args->hostrange.buffer_hostrange_output,
                     prog_data.args->hostrange.consolidate_hostrange_output,
                     prog_data.args->hostrange.fanout,

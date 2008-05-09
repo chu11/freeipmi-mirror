@@ -34,6 +34,7 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
+#include <sys/param.h>
 #include <errno.h>
 #include <assert.h>
 
@@ -46,6 +47,10 @@
 
 #include "tool-hostmap-common.h"
 
+#ifndef MAXHOSTNAMELEN
+#define MAXHOSTNAMELEN 64
+#endif
+
 static char *hostmap_errmsg[] =
   {
     "success",
@@ -53,6 +58,8 @@ static char *hostmap_errmsg[] =
     "out of memory",
     "invalid parameters",
     "parse error",
+    "invalid hostname",
+    "invalid hostname count",
     "duplicate entry",
     "host not found",
     "internal system error",
@@ -370,6 +377,13 @@ _hostmap_data_insert(hostmap_t hmap,
 
   assert(hmap && hmap->magic == HOSTMAP_MAGIC && althost && ipmihost);
   
+  if (strlen(althost) > MAXHOSTNAMELEN
+      || strlen(ipmihost) > MAXHOSTNAMELEN)
+    {
+      hmap->errnum = HOSTMAP_ERR_HOSTNAME_INVALID;
+      goto cleanup;
+    }
+
   if (!(hd = _hostmap_data_create(hmap, althost, ipmihost)))
     goto cleanup;
 
@@ -436,7 +450,7 @@ _hostmap_multiple_data_insert(hostmap_t hmap,
   /* ensure same number of hosts listed for both */
   if (hostlist_count(hl_althost) != hostlist_count(hl_ipmihost))
     {
-      hmap->errnum = HOSTMAP_ERR_PARSE;
+      hmap->errnum = HOSTMAP_ERR_HOSTNAME_COUNT_INVALID;
       goto cleanup;
     }
 
@@ -521,6 +535,8 @@ hostmap_parse(hostmap_t hmap, const char *filename)
       if (len < 0)
         {
           if (hmap->errnum == HOSTMAP_ERR_PARSE
+              || hmap->errnum == HOSTMAP_ERR_HOSTNAME_INVALID
+              || hmap->errnum == HOSTMAP_ERR_HOSTNAME_COUNT_INVALID
               || hmap->errnum == HOSTMAP_ERR_DUPLICATE_ENTRY)
             hmap->line = line;
           goto cleanup;
@@ -532,6 +548,8 @@ hostmap_parse(hostmap_t hmap, const char *filename)
       if (len < 0)
         {
           if (hmap->errnum == HOSTMAP_ERR_PARSE
+              || hmap->errnum == HOSTMAP_ERR_HOSTNAME_INVALID
+              || hmap->errnum == HOSTMAP_ERR_HOSTNAME_COUNT_INVALID
               || hmap->errnum == HOSTMAP_ERR_DUPLICATE_ENTRY)
             hmap->line = line;
           goto cleanup;
@@ -540,6 +558,8 @@ hostmap_parse(hostmap_t hmap, const char *filename)
       if (!(strptr = _move_past_whitespace(hmap, buf)))
         {
           if (hmap->errnum == HOSTMAP_ERR_PARSE
+              || hmap->errnum == HOSTMAP_ERR_HOSTNAME_INVALID
+              || hmap->errnum == HOSTMAP_ERR_HOSTNAME_COUNT_INVALID
               || hmap->errnum == HOSTMAP_ERR_DUPLICATE_ENTRY)
             hmap->line = line;
           goto cleanup;
@@ -590,6 +610,8 @@ hostmap_parse(hostmap_t hmap, const char *filename)
           if (_hostmap_multiple_data_insert (hmap, althost, ipmihost) < 0)
             {
               if (hmap->errnum == HOSTMAP_ERR_PARSE
+                  || hmap->errnum == HOSTMAP_ERR_HOSTNAME_INVALID
+                  || hmap->errnum == HOSTMAP_ERR_HOSTNAME_COUNT_INVALID
                   || hmap->errnum == HOSTMAP_ERR_DUPLICATE_ENTRY)
                 hmap->line = line;
               goto cleanup;
@@ -601,6 +623,8 @@ hostmap_parse(hostmap_t hmap, const char *filename)
           if (_hostmap_data_insert (hmap, althost, ipmihost) < 0)
             {
               if (hmap->errnum == HOSTMAP_ERR_PARSE
+                  || hmap->errnum == HOSTMAP_ERR_HOSTNAME_INVALID
+                  || hmap->errnum == HOSTMAP_ERR_HOSTNAME_COUNT_INVALID
                   || hmap->errnum == HOSTMAP_ERR_DUPLICATE_ENTRY)
                 hmap->line = line;
               goto cleanup;
@@ -627,6 +651,8 @@ hostmap_line(hostmap_t hmap)
   assert(hmap && hmap->magic == HOSTMAP_MAGIC);
 
   if (hmap->errnum == HOSTMAP_ERR_PARSE 
+      || hmap->errnum == HOSTMAP_ERR_HOSTNAME_INVALID
+      || hmap->errnum == HOSTMAP_ERR_HOSTNAME_COUNT_INVALID
       || hmap->errnum == HOSTMAP_ERR_DUPLICATE_ENTRY)
     return hmap->line;
   else
@@ -727,21 +753,17 @@ hostmap_open(hostmap_t *ptrhmap, const char *filename)
             /* if default doesn't exist, it's not an error */
             goto out;
         }
-      else if (hostmap_errnum(hmap) == HOSTMAP_ERR_PARSE)
+      else if (hostmap_errnum(hmap) == HOSTMAP_ERR_PARSE
+               || hostmap_errnum(hmap) == HOSTMAP_ERR_HOSTNAME_INVALID
+               || hostmap_errnum(hmap) == HOSTMAP_ERR_HOSTNAME_COUNT_INVALID
+               || hostmap_errnum(hmap) == HOSTMAP_ERR_DUPLICATE_ENTRY)
+        
         {
           /* FREEIPMI_HOSTMAP_FILE_DEFAULT configured via autoconf */
           fprintf(stderr,
-                  "hostmap file '%s' parse error on line %d\n",
+                  "hostmap file '%s' %s on line %d\n",
                   (filename) ? filename : FREEIPMI_HOSTMAP_FILE_DEFAULT,
-                  hostmap_line(hmap));
-          goto cleanup;
-        }
-      else if (hostmap_errnum(hmap) == HOSTMAP_ERR_DUPLICATE_ENTRY)
-        {
-          /* FREEIPMI_HOSTMAP_FILE_DEFAULT configured via autoconf */
-          fprintf(stderr,
-                  "hostmap file '%s' duplicate entry on line %d\n",
-                  (filename) ? filename : FREEIPMI_HOSTMAP_FILE_DEFAULT,
+                  hostmap_strerror(hostmap_errnum(hmap)),
                   hostmap_line(hmap));
           goto cleanup;
         }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostrange.c,v 1.8 2008-04-29 21:58:41 chu11 Exp $
+ *  $Id: hostrange.c,v 1.8.2.1 2008-05-09 16:33:18 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -23,7 +23,7 @@
 #define HOSTLIST_BUFLEN 1024
 
 static int
-eliminate_nodes(char **hosts)
+eliminate_nodes(char **hosts, hostmap_t hmap)
 {
   hostlist_t hl = NULL;
   hostlist_t hlnew = NULL;
@@ -82,11 +82,22 @@ eliminate_nodes(char **hosts)
       goto cleanup;
     }
 
+  /* achu: ipmidetect works off ipmi hosts */
   while ((host = hostlist_next(hitr)))
     {
+      char *ipmihost = NULL;
       int ret;
 
+      if (hmap)
+        ipmihost = hostmap_map_althost(hmap, host);
+
       if ((ret = ipmidetect_is_node_detected(id, host)) < 0)
+        {
+          if (ipmidetect_errnum(id) == IPMIDETECT_ERR_NOTFOUND && ipmihost)
+            ret = ipmidetect_is_node_detected(id, ipmihost);
+        }
+
+      if (ret < 0)
         {
           if (ipmidetect_errnum(id) == IPMIDETECT_ERR_NOTFOUND)
             fprintf(stderr,
@@ -135,6 +146,7 @@ eliminate_nodes(char **hosts)
 
 int 
 pstdout_setup(char **hosts,
+              hostmap_t hmap,
               int buffer_hostrange_output,
               int consolidate_hostrange_output,
               int fanout,
@@ -226,7 +238,7 @@ pstdout_setup(char **hosts,
       
       if (eliminate)
         {
-          if (eliminate_nodes(hosts) < 0)
+          if (eliminate_nodes(hosts, hmap) < 0)
             goto cleanup;
         }
     }

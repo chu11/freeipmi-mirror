@@ -93,6 +93,7 @@ ipmi_open(const char *progname,
       && strcmp(hostname, "127.0.0.1") != 0)
     {
       char *ipmihost;
+      int ipmihost_flag = 0;
 
       if (hmap)
         {
@@ -103,6 +104,7 @@ ipmi_open(const char *progname,
               if (cmd_args->flags & IPMI_FLAGS_DEBUG_DUMP)
                 fprintf(stderr, "hostmap '%s' -> '%s'\n", hostname, str);
               ipmihost = str;
+              ipmihost_flag++;
             }
           else
             ipmihost = (char *)hostname;
@@ -184,6 +186,18 @@ ipmi_open(const char *progname,
                            "ipmi_ctx_open_outofband: %s",
                            ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
                 }
+              goto cleanup;
+            }
+        }
+
+      if (ipmihost_flag)
+        {
+          if (ipmi_ctx_set_debug_prefix(ipmi_ctx, hostname) < 0)
+            {
+              snprintf(errmsg,
+                       errmsglen,
+                       "ipmi_ctx_set_debug_prefix: %s",
+                       ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
               goto cleanup;
             }
         }

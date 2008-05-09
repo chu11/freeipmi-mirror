@@ -13,9 +13,30 @@
 
 	* common/src/Makefile.am: Update for new lib files.
 
+	* libfreeipmi/include/freeipmi/api/, libfreeipmi/src/api/: Support
+	new ipmi_ctx_set_debug_prefix function.  Support ability to output
+	alternate debug prefix.
+
 	* Adjust all tools appropriately for hostmap support.
 
 	* Adjust manpages and documentation appropriately to mention hostmap.
+	
+2008-05-09  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_outofband,
+	ipmi_ctx_open_outofband_2_0): Add checks for hostname length.
+	
+2008-05-08  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/, ipmi-sensors/, ipmimonitoring/: Fix invalid input
+	corner cases.
+
+	* common/src/hostlist.c: Remove internal lib error messages.
+	
+2008-05-08  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Change IPMI_ERR_OUTOFRANGE to IPMI_ERR_ERRNUMRANGE
+	for consistency to other libraries.
 	
 2008-05-06  Albert Chu <chu11@llnl.gov>
 

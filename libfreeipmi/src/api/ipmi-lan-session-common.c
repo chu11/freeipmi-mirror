@@ -182,7 +182,7 @@ _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
                     DEBUG_COMMON_HDR_BUFLEN);
 
       ipmi_dump_lan_packet (STDERR_FILENO,
-                            ctx->io.outofband.hostname,
+                            (ctx->debug_prefix_set) ? ctx->debug_prefix : ctx->io.outofband.hostname,
                             hdrbuf,
                             NULL,
                             pkt,
@@ -224,7 +224,7 @@ _ipmi_lan_dump_rs (ipmi_ctx_t ctx,
                     DEBUG_COMMON_HDR_BUFLEN);
 
       ipmi_dump_lan_packet (STDERR_FILENO,
-                            ctx->io.outofband.hostname,
+                            (ctx->debug_prefix_set) ? ctx->debug_prefix : ctx->io.outofband.hostname,
                             hdrbuf,
                             NULL,
                             pkt,
@@ -1180,7 +1180,7 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
                         DEBUG_COMMON_HDR_BUFLEN);
           
           ipmi_dump_rmcpplus_packet (STDERR_FILENO,
-                                     ctx->io.outofband.hostname,
+                                     (ctx->debug_prefix_set) ? ctx->debug_prefix : ctx->io.outofband.hostname,
                                      hdrbuf,
                                      NULL,
                                      authentication_algorithm,
@@ -1251,7 +1251,7 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
                         DEBUG_COMMON_HDR_BUFLEN);
 
           ipmi_dump_rmcpplus_packet (STDERR_FILENO,
-                                     ctx->io.outofband.hostname,
+                                     (ctx->debug_prefix_set) ? ctx->debug_prefix : ctx->io.outofband.hostname,
                                      hdrbuf,
                                      NULL,
                                      authentication_algorithm,

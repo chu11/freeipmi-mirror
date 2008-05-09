@@ -149,10 +149,10 @@ ipmi_ctx_create(void)
 char *
 ipmi_ctx_strerror(int errnum)
 {
-  if (errnum >= IPMI_ERR_SUCCESS && errnum <= IPMI_ERR_OUTOFRANGE)
+  if (errnum >= IPMI_ERR_SUCCESS && errnum <= IPMI_ERR_ERRNUMRANGE)
     return ipmi_errmsg[errnum];
   else
-    return ipmi_errmsg[IPMI_ERR_OUTOFRANGE];
+    return ipmi_errmsg[IPMI_ERR_ERRNUMRANGE];
 }
 
 int
@@ -238,6 +238,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                      && !(password && strlen (password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
                      && IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type)
                      && IPMI_PRIVILEGE_LEVEL_VALID (privilege_level));
+
+  API_ERR_PARAMETERS(!(strlen(hostname) > MAXHOSTNAMELEN));
    
   API_ERR_PARAMETERS(!(workaround_flags & ~flags_mask));
 
@@ -367,6 +369,8 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                      && IPMI_PRIVILEGE_LEVEL_VALID (privilege_level)
                      && IPMI_CIPHER_SUITE_ID_SUPPORTED(cipher_suite_id));
    
+  API_ERR_PARAMETERS(!(strlen(hostname) > MAXHOSTNAMELEN));
+
   API_ERR_PARAMETERS(!(workaround_flags & ~flags_mask));
 
   API_ERR_CLEANUP (!(ipmi_rmcpplus_init() < 0));
@@ -884,4 +888,25 @@ ipmi_ctx_destroy (ipmi_ctx_t ctx)
 
   secure_memset(ctx, '\0', sizeof(ipmi_ctx_t));
   free(ctx);
+}
+
+int 
+ipmi_ctx_set_debug_prefix (ipmi_ctx_t ctx, const char *prefix)
+{
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS(!(strlen(prefix) > MAXHOSTNAMELEN));
+
+  if (prefix)
+    {
+      strncpy(ctx->debug_prefix, prefix, MAXHOSTNAMELEN);
+      ctx->debug_prefix_set = 1;
+    }
+  else
+    {
+      memset(ctx->debug_prefix, '\0', MAXHOSTNAMELEN+1);
+      ctx->debug_prefix_set = 0;
+    }
+
+  return 0;
 }

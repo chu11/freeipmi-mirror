@@ -50,13 +50,20 @@ config
 config file - support workarounds/etc. for heterogenous cluster?
 map hostname -> IP config
 - first deal w/ tools
-  - prefix debug output correctly
+  - core tools
+  - ipmiconsole
+  - ipmipower
+  - rmcpping
+  - ipmiping
 - second deal w/ -E options
 - third deal w/ ipmidetect
+  - deal w/ duplicate althost anc point to ipmihost, but not other way
 - 4 how deal w/ invalid hostname errors
 - 5 deal w/ alternate hostmap file option in tools
    - how output error
 - 6 - give user debug ability w/ hostmap?  in tools along w/ --debug?
+- 7 prefix debug output correctly
+- cleanup code
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
 - after this, tweak "known issue" info about ps(1), put info in conf file, etc.
 - also update comments in contrib ganglia/nagios.

@@ -37,6 +37,9 @@ struct ipmi_ctx
   uint8_t            net_fn;
   ipmi_errnum_type_t errnum;
 
+  char               debug_prefix[MAXHOSTNAMELEN+1];
+  int                debug_prefix_set;
+
   union
   {
     struct
