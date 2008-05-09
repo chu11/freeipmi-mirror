@@ -2,6 +2,11 @@
 
 	* ipmimonitoring/: Add missing option.
 
+	* ipmipower/: Remove unused code.
+
+	* ipmi-locate/src/ipmi-locate.c: Make error output message
+	consistent to others.
+
 2008-05-09  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_outofband,

@@ -510,7 +510,7 @@ main (int argc, char **argv)
 
   if (!ipmi_is_root())
     {
-      fprintf(stderr, "%s: Permission Denied\n", argv[0]);
+      fprintf(stderr, "%s: permission denied\n", argv[0]);
       exit(1);
     }
 
