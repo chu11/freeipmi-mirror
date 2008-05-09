@@ -2,6 +2,7 @@ EXTRA_DIST = \
 	manpage-common-general-options-header.man \
 	manpage-common-driver.man \
 	manpage-common-inband.man \
+	manpage-common-config-options.man \
 	manpage-common-outofband-hostname.man \
 	manpage-common-outofband-hostname-hostranged.man \
 	manpage-common-outofband-username-user.man \
