@@ -72,6 +72,7 @@ map hostname -> IP config
     - how support in ipmidetect?
       - ipmidetect can only work off ipmi ip addresses.
       - would it output mapped or ipmi ip addresses?
+    - support in some tools but not others?
     - seems not worth effort
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
 - after this, tweak "known issue" info about ps(1), put info in conf file, etc.
