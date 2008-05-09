@@ -1,3 +1,8 @@
+2008-05-09  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_outofband,
+	ipmi_ctx_open_outofband_2_0): Add checks for hostname length.
+	
 2008-05-08  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/, ipmi-sensors/, ipmimonitoring/: Fix invalid input

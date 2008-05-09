@@ -238,6 +238,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                      && !(password && strlen (password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
                      && IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type)
                      && IPMI_PRIVILEGE_LEVEL_VALID (privilege_level));
+
+  API_ERR_PARAMETERS(!(strlen(hostname) > MAXHOSTNAMELEN));
    
   API_ERR_PARAMETERS(!(workaround_flags & ~flags_mask));
 
@@ -367,6 +369,8 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                      && IPMI_PRIVILEGE_LEVEL_VALID (privilege_level)
                      && IPMI_CIPHER_SUITE_ID_SUPPORTED(cipher_suite_id));
    
+  API_ERR_PARAMETERS(!(strlen(hostname) > MAXHOSTNAMELEN));
+
   API_ERR_PARAMETERS(!(workaround_flags & ~flags_mask));
 
   API_ERR_CLEANUP (!(ipmi_rmcpplus_init() < 0));
