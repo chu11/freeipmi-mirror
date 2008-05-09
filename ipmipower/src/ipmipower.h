@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.90 2008-04-29 21:58:42 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.91 2008-05-09 21:54:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -590,7 +590,6 @@ struct ipmipower_config
   ipmipower_bool_t         on_if_off;
   ipmipower_bool_t         wait_until_on;
   ipmipower_bool_t         wait_until_off;
-  ipmipower_bool_t         power_command_completed; /* for use with wait_until_X */
   int                      retransmission_wait_timeout_len;
   int                      retransmission_backoff_count; 
   int                      ping_interval_len;
