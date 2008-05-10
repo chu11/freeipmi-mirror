@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.36.2.1 2008-05-09 23:47:57 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.36.2.2 2008-05-10 00:27:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -298,7 +298,7 @@ _cb_hostname(conffile_t cf,
   if (conf->hostname_set_on_cmdline)
     return 0;
 
-  if (strlen(data->string) > IPMI_MAX_USER_NAME_LENGTH)
+  if (strlen(data->string) > MAXHOSTNAMELEN)
     err_exit("Config File Error: hostname too long");
 
   strcpy(conf->hostname, data->string);

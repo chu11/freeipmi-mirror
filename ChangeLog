@@ -2,7 +2,10 @@
 
 	* ipmiconsole/src/ipmiconsole/ipmiconsole_config.c
 	(_cb_workaround_flags): Fix parse corner case.
-	
+
+	* ipmiconsole/src/ipmiconsole/ipmiconsole_config.c
+	(_cb_hostname): Fix length check.
+
 2008-05-08  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/, ipmi-sensors/, ipmimonitoring/: Fix invalid input
