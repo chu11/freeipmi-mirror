@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.1 2008-05-10 01:02:10 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.2 2008-05-10 02:32:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -374,7 +374,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
    * excluded here.
    */
 
-  struct conffile_option foo_options[] =
+  struct conffile_option config_file_options[] =
     {
       {
         "hostname", 
@@ -508,8 +508,8 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
       goto cleanup;
     }
 
-  num = sizeof(foo_options)/sizeof(struct conffile_option);
-  if (conffile_parse(cf, cmd_args->config_file, foo_options, num, cmd_args, 0, 0) < 0)
+  num = sizeof(config_file_options)/sizeof(struct conffile_option);
+  if (conffile_parse(cf, cmd_args->config_file, config_file_options, num, cmd_args, 0, 0) < 0)
     {
       char buf[CONFFILE_MAX_ERRMSGLEN];
 
