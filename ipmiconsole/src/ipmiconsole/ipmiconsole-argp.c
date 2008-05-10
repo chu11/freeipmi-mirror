@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.2 2008-05-10 02:32:52 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.3 2008-05-10 02:41:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -62,6 +62,7 @@
 #endif
 
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
+static error_t parse_opt_conf (int key, char *arg, struct argp_state *state);
 
 const char *argp_program_version =
 "Ipmiconsole [ipmiconsole-" PACKAGE_VERSION "]\n"
@@ -106,6 +107,32 @@ static struct argp_option options[] =
   };
 
 static struct argp argp = { options, parse_opt, args_doc, doc };
+
+static struct argp argp_conf = { options, parse_opt_conf, args_doc, doc };
+
+static error_t
+parse_opt_conf (int key, char *arg, struct argp_state *state)
+{
+  struct ipmiconsole_arguments *cmd_args = state->input;
+
+  switch (key)
+    {
+    case CONFIG_FILE_KEY:	/* --config-file */
+      if (!(cmd_args->config_file = strdup(arg)))
+        err_exit("strdup: %s", strerror(errno));
+      break;
+    case ARGP_KEY_ARG:
+      /* Too many arguments. */
+      argp_usage (state);
+      break;
+    case ARGP_KEY_END:
+      break;
+    default:
+      break;
+    }
+
+  return 0;
+}
 
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
@@ -262,7 +289,6 @@ _cb_privilege_level(conffile_t cf,
 		    int app_data)
 {
   struct ipmiconsole_arguments *cmd_args;
-  int tmp;
 
   cmd_args = (struct ipmiconsole_arguments *)app_ptr;
 
@@ -546,12 +572,12 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   /* alternate default for ipmiconsole ADMIN */
   cmd_args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
 
-  /* change defaults to whatever is configured */
-  /* XXX need to stop doing this */
+  argp_parse (&argp_conf, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  /* change defaults to whatever is configured, run 2nd b/c
+   * user may have specified config file on the command line.
+   */
   _config_file_parse(cmd_args);
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
-  /* XXX need to stop doing this */
-  _config_file_parse(cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
 }
 
