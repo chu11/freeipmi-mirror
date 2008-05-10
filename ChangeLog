@@ -1,5 +1,13 @@
 2008-05-09  Albert Chu <chu11@llnl.gov>
 
+        * ipmiconsole/src/ipmiconsole/ipmiconsole_config.c
+        (_cb_hostname): Fix length check.
+
+	* ipmiconsole/src/ipmiconsole/: Re-arch to make config and
+	argument parsing like other tools.
+	
+2008-05-09  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/: Add missing option.
 
 	* ipmipower/: Remove unused code.

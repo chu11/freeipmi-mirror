@@ -46,10 +46,12 @@ audit ls/ms byte usage
 - fiid internally stores ls byte first, so if spec says ms byte first, need to fix
 code cleanup
 - merge many util libs into one?
+different priv config for tools
 
 config
 ------
 config file - support workarounds/etc. for heterogenous cluster?
+- re-work ipmiconsole to allow command line option to work
 map hostname -> IP config
 map hostname -> IP config
 - 1) deal w/ tools
@@ -83,6 +85,7 @@ ipmiconsole
 -----------
 retry under a different port
 - has never been tested, does any manufacturer do this?
+use argp 
 
 ipmi-sensors-config
 -------------------

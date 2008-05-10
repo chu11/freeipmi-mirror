@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.45 2008-04-02 00:12:57 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.46 2008-05-10 01:02:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -55,13 +55,12 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmiconsole.h"
-#include "ipmiconsole_config.h"
+#include <ipmiconsole.h>        /* lib ipmiconsole.h */
+#include "ipmiconsole_.h"       /* tool ipmiconsole.h */
+#include "ipmiconsole-argp.h"
 
 #include "error.h"
 #include "secure.h"
-
-struct ipmiconsole_config *conf = NULL;
 
 static struct termios saved_tty;
 static int raw_mode_set = 0;
@@ -116,6 +115,7 @@ _reset_mode(void)
 
 static int
 _stdin(ipmiconsole_ctx_t c,
+       char escape_char,
        int fd, 
        char *buf,
        unsigned int buflen)
@@ -206,15 +206,15 @@ _stdin(ipmiconsole_ctx_t c,
 		 delete, they send some other funky crap. */
 	      tbuf[tbuflen++] = 0x7F;
 	    }
-	  else if (buf[i] == conf->escape_char)
-	    tbuf[tbuflen++] = conf->escape_char;
+	  else if (buf[i] == escape_char)
+	    tbuf[tbuflen++] = escape_char;
 	  else
 	    {
-	      tbuf[tbuflen++] = conf->escape_char;
+	      tbuf[tbuflen++] = escape_char;
 	      tbuf[tbuflen++] = buf[i];
 	    }
 	}
-      else if (buf[i] == conf->escape_char)
+      else if (buf[i] == escape_char)
         last_char_escape = 1;
       else
 	tbuf[tbuflen++] = buf[i];
@@ -253,59 +253,29 @@ _stdin(ipmiconsole_ctx_t c,
   return 0;
 }
 
-static void
-_secure_initialization(void)
-{
-#ifdef NDEBUG
-  struct rlimit rlim;
-
-  if (getrlimit(RLIMIT_CORE, &rlim) < 0)
-    {
-      perror("getrlimit");
-      exit(1);
-    }
-
-  rlim.rlim_cur = 0;
-  if (setrlimit(RLIMIT_CORE, &rlim) < 0)
-    {
-      perror("setrlimit");
-      exit(1);
-    }
-
-  if (!(conf = (struct ipmiconsole_config *)secure_malloc(sizeof(struct ipmiconsole_config))))
-    {
-      perror("malloc");
-      exit(1);
-    }
-#else  /* !NDEBUG */
-  if (!(conf = (struct ipmiconsole_config *)malloc(sizeof(struct ipmiconsole_config))))
-    {
-      perror("malloc");
-      exit(1);
-    }
-#endif /* !NDEBUG */
-}
-
 int
 main(int argc, char **argv)
 {
-  ipmiconsole_ctx_t c = NULL;
+  struct ipmiconsole_arguments cmd_args;
   struct ipmiconsole_ipmi_config ipmi_config;
   struct ipmiconsole_protocol_config protocol_config;
   struct ipmiconsole_engine_config engine_config;
+  ipmiconsole_ctx_t c = NULL;
   int debug_flags = 0;
   int fd = -1;
 
   err_init(argv[0]);
   err_set_flags(ERROR_STDOUT);
 
-  _secure_initialization();
-  ipmiconsole_config_setup(argc, argv);
+  ipmiconsole_argp_parse(argc, argv, &cmd_args);
 
-  if (conf->debug)
+  if (ipmiconsole_args_validate (&cmd_args) < 0)
+    exit(1);
+
+  if (cmd_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
     {
 #ifndef NDEBUG
-      if (conf->debugfile)
+      if (cmd_args.debugfile)
 	debug_flags |= IPMICONSOLE_DEBUG_FILE;
       else
 	debug_flags |= IPMICONSOLE_DEBUG_STDERR;
@@ -328,15 +298,37 @@ main(int argc, char **argv)
       exit(1);
     }
 
-  ipmi_config.username = strlen(conf->username) ? conf->username : NULL;
-  ipmi_config.password = strlen(conf->password) ? conf->password : NULL;
-  ipmi_config.k_g = conf->k_g_len ? conf->k_g : NULL;
-  if (ipmi_config.k_g)
-    ipmi_config.k_g_len = conf->k_g_len;
-  ipmi_config.privilege_level = conf->privilege;
-  ipmi_config.cipher_suite_id = conf->cipher_suite_id;
-  ipmi_config.workaround_flags = conf->workaround_flags;
+  /* convert config information to ipmiconsole configuration */
 
+  memset(&ipmi_config, '\0', sizeof(struct ipmiconsole_ipmi_config));
+  ipmi_config.username = cmd_args.common.username;
+  ipmi_config.password = cmd_args.common.password;
+  ipmi_config.k_g = cmd_args.common.k_g;
+  ipmi_config.k_g_len = cmd_args.common.k_g_len;
+
+  if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER)
+    ipmi_config.privilege_level = IPMICONSOLE_PRIVILEGE_USER;
+  else if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR)
+    ipmi_config.privilege_level = IPMICONSOLE_PRIVILEGE_OPERATOR;
+  else if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
+    ipmi_config.privilege_level = IPMICONSOLE_PRIVILEGE_ADMIN;
+  else
+    err_exit("Config Error: Invalid privilege level");
+
+  ipmi_config.cipher_suite_id = cmd_args.common.cipher_suite_id;
+
+  if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES;
+  if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE)
+    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE;
+  if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION;
+  if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION;
+  if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION;
+
+  memset(&protocol_config, '\0', sizeof(struct ipmiconsole_protocol_config));
   protocol_config.session_timeout_len = -1; 
   protocol_config.retransmission_timeout_len = -1; 
   protocol_config.retransmission_backoff_count = -1; 
@@ -345,17 +337,18 @@ main(int argc, char **argv)
   protocol_config.acceptable_packet_errors_count = -1; 
   protocol_config.maximum_retransmission_count = -1; 
 
+  memset(&engine_config, '\0', sizeof(struct ipmiconsole_engine_config));
   engine_config.engine_flags = 0;
-  if (conf->lock_memory)
+  if (cmd_args.lock_memory)
     engine_config.engine_flags |= IPMICONSOLE_ENGINE_LOCK_MEMORY;
   engine_config.behavior_flags = 0;
-  if (conf->dont_steal)
+  if (cmd_args.dont_steal)
     engine_config.behavior_flags |= IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE;
-  if (conf->deactivate)
+  if (cmd_args.deactivate)
     engine_config.behavior_flags |= IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY;
   engine_config.debug_flags = debug_flags;
 
-  if (!(c = ipmiconsole_ctx_create(conf->hostname,
+  if (!(c = ipmiconsole_ctx_create(cmd_args.common.hostname,
 				   &ipmi_config,
 				   &protocol_config,
                                    &engine_config)))
@@ -389,7 +382,7 @@ main(int argc, char **argv)
       goto cleanup;
     }
 
-  if (conf->deactivate)
+  if (cmd_args.deactivate)
     goto cleanup;
 
   if ((fd = ipmiconsole_ctx_fd(c)) < 0)
@@ -399,7 +392,7 @@ main(int argc, char **argv)
     }
 
 #ifndef NDEBUG
-   if (!conf->noraw)
+  if (!cmd_args.noraw)
     {
       if (_set_mode_raw() < 0)
 	goto cleanup;
@@ -442,7 +435,11 @@ main(int argc, char **argv)
 	  if (!n)
 	    goto cleanup;
 
-	  if (_stdin(c, fd, buf, n) < 0)
+	  if (_stdin(c, 
+                     cmd_args.escape_char,
+                     fd, 
+                     buf,
+                     n) < 0)
 	    goto cleanup;
 	}
 
@@ -490,20 +487,11 @@ main(int argc, char **argv)
   ipmiconsole_engine_teardown(1);
 
 #ifndef NDEBUG
-  if (!conf->noraw)
+  if (!cmd_args.noraw)
     _reset_mode();
 #else /* !NDEBUG */
   _reset_mode();
 #endif /* !NDEBUG */
-
-  if (conf)
-    {
-#ifdef NDEBUG
-      secure_free(conf, sizeof(struct ipmiconsole_config));
-#else  /* !NDEBUG */
-      free(conf);
-#endif /* !NDEBUG */
-    }
 
   return 0;
 }

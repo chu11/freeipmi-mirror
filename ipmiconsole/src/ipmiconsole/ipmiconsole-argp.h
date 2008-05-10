@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.h,v 1.18 2008-04-02 00:12:57 chu11 Exp $
+ *  $Id: ipmiconsole-argp.h,v 1.1 2008-05-10 01:02:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -24,57 +24,11 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMICONSOLE_CONFIG_H
-#define _IPMICONSOLE_CONFIG_H
+#ifndef _IPMICONSOLE_ARGP_H
+#define _IPMICONSOLE_ARGP_H
 
-#if HAVE_CONFIG_H
-#include "config.h"
-#endif /* HAVE_CONFIG_H */
+void ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd_args);
 
-#include <sys/param.h>
-#include <freeipmi/freeipmi.h>
+int ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args);
 
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
-#endif /* MAXHOSTNAMELEN */
-
-#define IPMICONSOLE_CONFIG_FILE_DEFAULT "/etc/ipmiconsole.conf"
-
-struct ipmiconsole_config
-{
-  int debug;
-#ifndef NDEBUG
-  int debugfile;
-  int noraw;
-#endif /* NDEBUG */
-  char *config_file;
-
-  char hostname[MAXHOSTNAMELEN+1];
-  char username[IPMI_MAX_USER_NAME_LENGTH+1];
-  char password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
-  unsigned char k_g[IPMI_MAX_K_G_LENGTH+1];
-  unsigned int k_g_len;
-  int privilege;
-  int cipher_suite_id;
-  char escape_char;
-  int dont_steal;
-  int deactivate;
-  int lock_memory;
-  unsigned int workaround_flags;
-
-  int hostname_set_on_cmdline;
-  int username_set_on_cmdline;
-  int password_set_on_cmdline;
-  int k_g_set_on_cmdline;
-  int privilege_set_on_cmdline;
-  int cipher_suite_id_set_on_cmdline;
-  int escape_char_set_on_cmdline;
-  int dont_steal_set_on_cmdline;
-  int deactivate_set_on_cmdline;
-  int lock_memory_set_on_cmdline;
-  int workaround_flags_set_on_cmdline;
-};
-
-void ipmiconsole_config_setup(int argc, char **argv);
-
-#endif /* _IPMICONSOLE_CONFIG_H */
+#endif /* _IPMICONSOLE_ARGP_H */
