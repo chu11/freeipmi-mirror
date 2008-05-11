@@ -78,6 +78,7 @@ map hostname -> IP config
     - support in some tools but not others?
     - seems not worth effort - this is something upper level software
       should handle.  Not something that should be handled in FreeIPMI.
+    - if revisit, put in freeipmi.conf?
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
 - after this, tweak "known issue" info about ps(1), put info in conf file, etc.
 - also update comments in contrib ganglia/nagios.
