@@ -47,6 +47,7 @@ audit ls/ms byte usage
 code cleanup
 - merge many util libs into one?
 different priv config for tools
+fix poort variable naming in argp for all tools
 
 config
 ------
@@ -75,7 +76,8 @@ map hostname -> IP config
       - ipmidetect can only work off ipmi ip addresses.
       - would it output mapped or ipmi ip addresses?
     - support in some tools but not others?
-    - seems not worth effort
+    - seems not worth effort - this is something upper level software
+      should handle.  Not something that should be handled in FreeIPMI.
 consolidate ipmiconsole,ipmipower,ipmimonitoring config files into freeipmi.conf?
 - after this, tweak "known issue" info about ps(1), put info in conf file, etc.
 - also update comments in contrib ganglia/nagios.
