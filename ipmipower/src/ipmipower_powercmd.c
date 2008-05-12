@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.130 2008-05-12 22:30:45 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.131 2008-05-12 22:34:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -222,11 +222,6 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
    * Protocol Maintenance Variables
    */
 
-  if (conf->ipmi_version == IPMI_VERSION_1_5)
-    ip->ipmi_version = IPMI_VERSION_1_5;
-  else
-    ip->ipmi_version = IPMI_VERSION_2_0;
-
   ip->session_inbound_count = 0;
 
   if (conf->ipmi_version == IPMI_VERSION_1_5)
@@ -396,7 +391,7 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == RAKP_MESSAGE_1_REQ
       || pkt == RAKP_MESSAGE_3_REQ)
     ip->message_tag_count++;
-  else if (ip->ipmi_version == IPMI_VERSION_2_0
+  else if (conf->ipmi_version == IPMI_VERSION_2_0
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
 	       || pkt == CHASSIS_CONTROL_REQ
@@ -459,7 +454,7 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
    * since the first inbound sequence number is specified by the
    * activate session command.
    */
-  if (ip->ipmi_version == IPMI_VERSION_1_5
+  if (conf->ipmi_version == IPMI_VERSION_1_5
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ 
 	  || pkt == GET_CHASSIS_STATUS_REQ 
 	  || pkt == CHASSIS_CONTROL_REQ
@@ -495,7 +490,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == AUTHENTICATION_CAPABILITIES_RES 
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || (ip->ipmi_version == IPMI_VERSION_1_5
+      || (conf->ipmi_version == IPMI_VERSION_1_5
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	      || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
@@ -576,7 +571,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
        || pkt == OPEN_SESSION_RES
        || pkt == RAKP_MESSAGE_2_RES
        || pkt == RAKP_MESSAGE_4_RES
-       || (ip->ipmi_version == IPMI_VERSION_2_0
+       || (conf->ipmi_version == IPMI_VERSION_2_0
        && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
        || pkt == GET_CHASSIS_STATUS_RES
        || pkt == CHASSIS_CONTROL_RES
@@ -655,7 +650,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	    }
 	}
       else /* (pkt == pkt == GET_CHANNEL_CIPHER_SUITES_RES
-              || (ip->ipmi_version == IPMI_VERSION_2_0
+              || (conf->ipmi_version == IPMI_VERSION_2_0
               && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
               || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
@@ -1817,7 +1812,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           && (executing_count >= conf->fanout))
         return conf->session_timeout_len;
 
-      if (ip->ipmi_version == IPMI_VERSION_2_0)
+      if (conf->ipmi_version == IPMI_VERSION_2_0)
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
       else
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);

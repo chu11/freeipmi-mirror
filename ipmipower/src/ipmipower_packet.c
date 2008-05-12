@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.81 2008-05-12 22:06:58 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.82 2008-05-12 22:34:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -183,7 +183,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
       uint8_t packet_direction;
       const char *str_cmd = NULL;
       
-      if (ip->ipmi_version == IPMI_VERSION_1_5)
+      if (conf->ipmi_version == IPMI_VERSION_1_5)
         packet_type = DEBUG_COMMON_TYPE_IPMI_1_5;
       else
         packet_type = DEBUG_COMMON_TYPE_IPMI_2_0;
@@ -265,7 +265,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                                   (uint32_t)len,
                                   tmpl_lan_msg_hdr,
                                   ipmipower_packet_cmd_template(ip, pkt));
-      else if (ip->ipmi_version == IPMI_VERSION_2_0
+      else if (conf->ipmi_version == IPMI_VERSION_2_0
                && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 		   || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 		   || pkt == GET_CHASSIS_STATUS_REQ
@@ -319,7 +319,7 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
   Fiid_obj_clear(ip->obj_lan_session_hdr_res);
   Fiid_obj_clear(ip->obj_lan_msg_hdr_res);
   Fiid_obj_clear(ip->obj_lan_msg_trlr_res);
-  if (ip->ipmi_version == IPMI_VERSION_2_0)
+  if (conf->ipmi_version == IPMI_VERSION_2_0)
     {
       Fiid_obj_clear(ip->obj_rmcpplus_session_hdr_res);
       Fiid_obj_clear(ip->obj_rmcpplus_payload_res);
@@ -331,7 +331,7 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == AUTHENTICATION_CAPABILITIES_RES
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || ip->ipmi_version == IPMI_VERSION_1_5)
+      || conf->ipmi_version == IPMI_VERSION_1_5)
     {
       if ((rv = unassemble_ipmi_lan_pkt((uint8_t *)buffer, 
 					len, 
@@ -623,7 +623,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     Fiid_obj_get(ip->obj_get_session_challenge_res, 
                  "temp_session_id", 
                  &session_id);
-  else if (ip->ipmi_version == IPMI_VERSION_1_5
+  else if (conf->ipmi_version == IPMI_VERSION_1_5
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
 	       || pkt == CHASSIS_CONTROL_REQ
@@ -631,7 +631,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     Fiid_obj_get(ip->obj_activate_session_res, 
                  "session_id", 
                  &session_id);
-  else if (ip->ipmi_version == IPMI_VERSION_2_0
+  else if (conf->ipmi_version == IPMI_VERSION_2_0
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
@@ -643,7 +643,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     session_id = 0;
 
   /* Calculate Sequence Number */
-  if (ip->ipmi_version == IPMI_VERSION_1_5
+  if (conf->ipmi_version == IPMI_VERSION_1_5
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	  || pkt == GET_CHASSIS_STATUS_REQ
 	  || pkt == CHASSIS_CONTROL_REQ
@@ -657,7 +657,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       sequence_number = initial_inbound_sequence_number + ip->session_inbound_count;
     }
-  else if (ip->ipmi_version == IPMI_VERSION_2_0
+  else if (conf->ipmi_version == IPMI_VERSION_2_0
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
@@ -676,7 +676,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   /* Calculate Authentication Type */
   if (pkt == ACTIVATE_SESSION_REQ)
     authentication_type = ip->authentication_type;
-  else if (ip->ipmi_version == IPMI_VERSION_1_5
+  else if (conf->ipmi_version == IPMI_VERSION_1_5
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
 	       || pkt == CHASSIS_CONTROL_REQ
@@ -693,7 +693,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else
     authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
     
-  if (ip->ipmi_version == IPMI_VERSION_2_0)
+  if (conf->ipmi_version == IPMI_VERSION_2_0)
     {     
       /* Calculate Payload Type */
       if (pkt == OPEN_SESSION_REQ)
@@ -1017,7 +1017,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == AUTHENTICATION_CAPABILITIES_REQ
       || pkt == GET_SESSION_CHALLENGE_REQ
       || pkt == ACTIVATE_SESSION_REQ
-      || (ip->ipmi_version == IPMI_VERSION_1_5
+      || (conf->ipmi_version == IPMI_VERSION_1_5
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
               || pkt == GET_CHASSIS_STATUS_REQ
               || pkt == CHASSIS_CONTROL_REQ
@@ -1037,7 +1037,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
            || pkt == OPEN_SESSION_REQ
            || pkt == RAKP_MESSAGE_1_REQ
            || pkt == RAKP_MESSAGE_3_REQ
-           || (ip->ipmi_version == IPMI_VERSION_2_0
+           || (conf->ipmi_version == IPMI_VERSION_2_0
                && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                    || pkt == GET_CHASSIS_STATUS_REQ
                    || pkt == CHASSIS_CONTROL_REQ
