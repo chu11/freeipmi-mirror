@@ -1,6 +1,7 @@
 0.6.2 - 00/00/00
 ----------------
 o Fix ipmiconsole config file parsing corner case.
+o Fix max password length corner case check.
 o Fix missing manpage option listings.
 o Fix command line parsing error messages.
 o Fix error output message corner cases.
