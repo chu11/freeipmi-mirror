@@ -4,6 +4,9 @@
 	(ipmipower_config_check_values): Fix password length corner case
 	check.
 
+	* ipmipower/ipmipower.conf.5.pre.in: Add AUTO as option for
+	authentication-type.
+
 2008-05-09  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/ipmiconsole/ipmiconsole_config.c

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.conf.5.pre.in,v 1.8 2008-04-24 06:00:30 chu11 Exp $
+.\"$Id: ipmipower.conf.5.pre.in,v 1.8.2.1 2008-05-12 22:24:04 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -103,7 +103,7 @@ Specify the default retransmission timeout length in milliseconds.
 .TP
 \fBauthentication-type\fR \fIAUTHTYPE\fR
 Specify the default IPMI 1.5 authentication type to use.  The
-currently available authentication types are NONE,
+currently available authentication types are AUTO, NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
 \fBcipher-suite-id\fR \fICIPHER_SUITE_ID\fR
