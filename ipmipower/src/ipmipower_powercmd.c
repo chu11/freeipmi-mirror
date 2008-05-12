@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.128 2008-05-12 21:18:23 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.129 2008-05-12 22:06:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -222,17 +222,18 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
    * Protocol Maintenance Variables
    */
 
-  /* The real ip->ipmi_version is set after Get Authentication
-   * Capabilities Response stage.  We init to IPMI_VERSION_1_5 b/c the
-   * Get Authentication Capabilities is always sent IPMI 1.5.
-   */
-  ip->ipmi_version = IPMI_VERSION_1_5;
+  if (conf->ipmi_version == IPMI_VERSION_1_5)
+    ip->ipmi_version = IPMI_VERSION_1_5;
+  else
+    ip->ipmi_version = IPMI_VERSION_2_0;
 
   ip->session_inbound_count = 0;
 
-  /* initial ip->highest_received_sequence_number is determined after
-   * the ipmi_version is determined.
-   */
+  if (conf->ipmi_version == IPMI_VERSION_1_5)
+    ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
+  else
+    ip->highest_received_sequence_number = IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
+
   ip->previously_received_list = 0xFF;
 
   if (conf->privilege_level == PRIVILEGE_LEVEL_AUTO)
@@ -251,8 +252,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   /* IPMI 1.5 */
 
 #if 0
-  if (conf->ipmi_version == IPMI_VERSION_AUTO
-      || conf->ipmi_version == IPMI_VERSION_1_5)
+  if (conf->ipmi_version == IPMI_VERSION_1_5)
     {
       /* ip->permsgauth_enabled is set after the Get Authentication
        * Capabilities Response and/or Activate Session Response is
@@ -267,8 +267,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   /* IPMI 2.0 */
 
-  if (conf->ipmi_version == IPMI_VERSION_AUTO
-      || conf->ipmi_version == IPMI_VERSION_2_0)
+  if (conf->ipmi_version == IPMI_VERSION_2_0)
     {
       if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO)
         {
@@ -564,10 +563,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	  if (pkt == CLOSE_SESSION_RES)
 	    goto close_session_workaround;
 
-          /* Special Case: let _process_ipmi_packets deal with this
-	     packet type's output */
-          if (pkt != AUTHENTICATION_CAPABILITIES_V20_RES)
-            ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
+          ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
           
           ip->retransmission_count = 0;  /* important to reset */
           Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
@@ -1205,50 +1201,6 @@ _check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
     }
 
   return 0;
-}
-
-/* _check_ipmi_2_0_authentication_capabilities_errors
- * 
- * Check if there is a legitimate ipmi 2.0 authentication capabilities
- * response error.
- *
- * Returns  0 if IPMI 1.5 authentication capabilities should be retried,
- * Returns -1 on ipmi protocol error error
- */
-static int
-_check_ipmi_2_0_authentication_capabilities_error(ipmipower_powercmd_t ip)
-{
-  assert(ip);
-  assert(ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT);
-
-  if (conf->ipmi_version == IPMI_VERSION_AUTO
-      || conf->ipmi_version == IPMI_VERSION_2_0)
-    {
-      uint64_t comp_code;
-      
-      Fiid_obj_get(ip->obj_authentication_capabilities_v20_res, 
-                   "comp_code", 
-                   &comp_code);
-      
-      ierr_dbg("_check_ipmi_2_0_authentication_capabilities_error(%s:%d): "
-               "bad comp_code in authentication capabilities 2.0: %x", 
-               ip->ic->hostname, ip->protocol_state, comp_code);
-      
-      if (comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
-        {
-          if (conf->ipmi_version == IPMI_VERSION_AUTO)
-            return 0;
-          else
-            {
-              ipmipower_output(MSG_TYPE_IPMI_2_0_UNAVAILABLE, ip->ic->hostname); 
-              return -1;
-            }
-        }
-    }
-  
-  ipmipower_output(ipmipower_packet_errmsg(ip, AUTHENTICATION_CAPABILITIES_V20_RES), 
-                   ip->ic->hostname);
-  return -1;
 }
 
 /* _check_ipmi_version_support
@@ -1909,8 +1861,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           && (executing_count >= conf->fanout))
         return conf->session_timeout_len;
 
-      if (conf->ipmi_version == IPMI_VERSION_AUTO
-          || conf->ipmi_version == IPMI_VERSION_2_0)
+      if (ip->ipmi_version == IPMI_VERSION_2_0)
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
       else
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
@@ -1928,118 +1879,24 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if ((rv = _recv_packet(ip, AUTHENTICATION_CAPABILITIES_V20_RES)) != 1) 
         {
           if (rv < 0) 
-	    {
-              if (!_check_ipmi_2_0_authentication_capabilities_error(ip))
-                {
-                  /* Try the IPMI 1.5 version of Get Authentication Capabilities */
-                  
-                  _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
-                  goto done;
-                }
-              return -1;
-	    }
+            return -1;
           goto done;
         }
 
       if (_check_ipmi_version_support(ip, &ipmi_1_5, &ipmi_2_0) < 0)
 	return -1;
       
-      if (conf->ipmi_version == IPMI_VERSION_AUTO)
+      if (!ipmi_2_0)
         {
-          /* If we can't detect IPMI 1.5 or IPMI 2.0, assume it's an error
-           * and go with the IPMI 1.5 get authentication capabilities
-           * response.
-           */
-          if (!ipmi_1_5 && !ipmi_2_0)
-            _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
-          else if (ipmi_1_5)
-            {
-              if ((rv = _check_ipmi_1_5_authentication_capabilities(ip, AUTHENTICATION_CAPABILITIES_V20_RES)) < 0)
-                return -1;
-              
-              if (rv)
-                {
-                  /* Don't consider this a retransmission */
-                  _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
-                  goto done;
-                }
-              /* else we continue with the IPMI 1.5 protocol */
-              
-              ip->ipmi_version = IPMI_VERSION_1_5;
-	      ip->highest_received_sequence_number = IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-
-              if (strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
-                {
-                  ipmipower_output(MSG_TYPE_PASSWORD_LENGTH_INVALID, ip->ic->hostname);
-                  return -1;
-                }
-
-              _send_packet(ip, GET_SESSION_CHALLENGE_REQ);
-            }
-          else
-            {
-	      if (_check_ipmi_2_0_authentication_capabilities(ip) < 0)
-		return -1;
-
-              ip->ipmi_version = IPMI_VERSION_2_0;
-	      ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-              _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
-            }
+          ipmipower_output(MSG_TYPE_IPMI_2_0_UNAVAILABLE, ip->ic->hostname); 
+          return -1;
         }
-      else if (conf->ipmi_version == IPMI_VERSION_1_5)
-	{
-          /* achu: This else if statement block might not be
-           * accessible anymore, b/c if the user configured
-           * IPMI_VERSION_1_5, a get authentication capabilties for
-           * v20 shouldn't have been sent.  We'll leave this code here
-           * anyways.
-           */
-          if (!ipmi_1_5)
-            {
-              ipmipower_output(MSG_TYPE_IPMI_1_5_UNAVAILABLE, ip->ic->hostname); 
-              return -1;
-            }
-          /* else we continue with the IPMI 1.5 protocol */
-	  
-	  if ((rv = _check_ipmi_1_5_authentication_capabilities(ip, AUTHENTICATION_CAPABILITIES_V20_RES)) < 0)
-	    return -1;
-	  
-	  if (rv)
-	    {
-	      /* Don't consider this a retransmission */
-	      _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
-	      goto done;
-	    }
-	  /* else we continue with the IPMI 1.5 protocol */
-              
-	  ip->ipmi_version = IPMI_VERSION_1_5;
-	  ip->highest_received_sequence_number = IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-	  
-	  if (strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
-	    {
-	      ipmipower_output(MSG_TYPE_PASSWORD_LENGTH_INVALID, ip->ic->hostname);
-	      return -1;
-	    }
-	  
-	  _send_packet(ip, GET_SESSION_CHALLENGE_REQ);
-	}
-      else /* conf->ipmi_version == IPMI_VERSION_2_0 */
-        {
-          if (!ipmi_2_0)
-            {
-              ipmipower_output(MSG_TYPE_IPMI_2_0_UNAVAILABLE, ip->ic->hostname); 
-              return -1;
-            }
-          /* else we continue with the IPMI 2.0 protocol */
-
-	  if (_check_ipmi_2_0_authentication_capabilities(ip) < 0)
-	    return -1;
-
-          ip->ipmi_version = IPMI_VERSION_2_0;
-	  ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-
-          _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
-        }
+      /* else we continue with the IPMI 2.0 protocol */
+      
+      if (_check_ipmi_2_0_authentication_capabilities(ip) < 0)
+        return -1;
+           
+      _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT) 
     {
@@ -2060,15 +1917,6 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
       /* else we continue with the IPMI 1.5 protocol */
-
-      ip->ipmi_version = IPMI_VERSION_1_5;
-      ip->highest_received_sequence_number = IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-
-      if (strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
-        {
-          ipmipower_output(MSG_TYPE_PASSWORD_LENGTH_INVALID, ip->ic->hostname);
-          return -1;
-        }
 
       _send_packet(ip, GET_SESSION_CHALLENGE_REQ);
     }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.91 2008-05-09 21:54:12 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.92 2008-05-12 22:06:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -149,17 +149,12 @@
 typedef enum
   {
     IPMI_VERSION_INVALID = 0,
-    IPMI_VERSION_AUTO    = 1,
-    IPMI_VERSION_1_5     = 2,
-    IPMI_VERSION_2_0     = 3,
+    IPMI_VERSION_1_5     = 1,
+    IPMI_VERSION_2_0     = 2,
   } ipmi_version_t;
 
 #define IPMI_VERSION_VALID(__a) \
   ((__a) >= IPMI_VERSION_1_5 && \
-   (__a) <= IPMI_VERSION_2_0)
-
-#define IPMI_VERSION_VALID_OR_AUTO(__a) \
-  ((__a) >= IPMI_VERSION_AUTO && \
    (__a) <= IPMI_VERSION_2_0)
 
 /* ipmipower_bool_t

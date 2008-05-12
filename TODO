@@ -23,10 +23,15 @@ ipmipower
   - auto version
   - legacy ipmi-version command to driver type
   - auto authentication
+    - move setting of authentication type back
   - auto cipher suite
   - priv level operator by default
   - cipher suite 3 default
   - auth type md5
+  - many version/highest_received_seq_num etc. move to init
+  - to test
+    - ipmi 2.0 not found
+    - password length ipmi 1.5 nad ipmi 2.0
 - use generic argp - not unique .h
   
 bmc-config

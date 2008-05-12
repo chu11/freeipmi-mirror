@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.30 2008-05-06 23:43:54 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.31 2008-05-12 22:06:57 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -65,9 +65,8 @@ power status of the machine through --stat.
 .TP
 \fB\-R\fR, \fB\-\-ipmi\-version\fR=\fIIPMIVERSION\fR
 Specify the IPMI protocol version to use.  Set the IPMI protocol
-version to use.  The currently available versions are AUTO, 1.5, and
-2.0.  Defaults to AUTO to automatically select a suitable protocol
-version.
+version to use.  The currently available versions are 1.5 and
+2.0.  Defaults to 1.5.
 .TP
 \fB\-t\fR, \fB\-\-session\-timeout\fR=\fBMILLISECONDS\fR
 Specify the session timeout length in milliseconds.  The session

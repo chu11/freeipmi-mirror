@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ipmi_version.c,v 1.9 2008-04-18 16:34:46 chu11 Exp $
+ *  $Id: ipmipower_ipmi_version.c,v 1.10 2008-05-12 22:06:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -48,9 +48,7 @@ ipmipower_ipmi_version_index(char *str)
 {
   assert(str != NULL);
 
-  if (!strcasecmp(str, "auto"))
-    return IPMI_VERSION_AUTO;
-  else if (!strcasecmp(str, "1.5"))
+  if (!strcasecmp(str, "1.5"))
     return IPMI_VERSION_1_5;
   else if (!strcasecmp(str, "2.0"))
     return IPMI_VERSION_2_0;
@@ -71,13 +69,10 @@ ipmipower_ipmi_version_index(char *str)
 char *
 ipmipower_ipmi_version_string(ipmi_version_t ipmi_version) 
 {
-  assert(IPMI_VERSION_VALID_OR_AUTO(ipmi_version));
+  assert(IPMI_VERSION_VALID(ipmi_version));
 
   switch(ipmi_version) 
     {
-    case IPMI_VERSION_AUTO:
-      return "auto";
-      break;
     case IPMI_VERSION_1_5:
       return "1.5";
       break;
@@ -94,5 +89,5 @@ ipmipower_ipmi_version_string(ipmi_version_t ipmi_version)
 char *
 ipmipower_ipmi_version_list(void) 
 {
-  return "auto, 1.5, 2.0";
+  return "1.5, 2.0";
 }

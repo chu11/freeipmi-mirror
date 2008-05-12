@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.80 2008-04-24 17:33:52 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.81 2008-05-12 22:06:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1129,6 +1129,9 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 	ierr_exit("ipmipower_packet_errmsg(%s:%d:%d): "
                   "called with comp_code == SUCCESS",
                   ip->ic->hostname, ip->protocol_state, pkt);
+      else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
+               && comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
+        return MSG_TYPE_IPMI_2_0_UNAVAILABLE;
       else if (pkt == GET_SESSION_CHALLENGE_RES 
 	       && (comp_code == IPMI_COMP_CODE_INVALID_USERNAME 
 		   || comp_code == IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED))

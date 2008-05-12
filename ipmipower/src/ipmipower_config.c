@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.84 2008-04-29 21:58:42 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.85 2008-05-12 22:06:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -227,7 +227,7 @@ ipmipower_config_setup(void)
   memset(conf->password, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH+1);
   memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH+1);
   conf->k_g_len = 0;
-  conf->ipmi_version = IPMI_VERSION_AUTO;
+  conf->ipmi_version = IPMI_VERSION_1_5;
   conf->session_timeout_len = 20000;     /* 20 seconds */
   conf->retransmission_timeout_len = 400; /* .4 seconds  */
   conf->authentication_type = AUTHENTICATION_TYPE_AUTO;
@@ -949,8 +949,7 @@ ipmipower_config_conffile_parse(char *configfile)
 void 
 ipmipower_config_check_values(void) 
 {
-  if (conf->ipmi_version != IPMI_VERSION_AUTO
-      && conf->ipmi_version != IPMI_VERSION_2_0
+  if (conf->ipmi_version == IPMI_VERSION_1_5
       && conf->k_g_len)
     ierr_exit("Error: k_g is only used for IPMI 2.0");
 

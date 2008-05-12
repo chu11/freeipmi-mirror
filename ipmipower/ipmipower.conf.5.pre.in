@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.conf.5.pre.in,v 1.9 2008-04-29 21:58:42 chu11 Exp $
+.\"$Id: ipmipower.conf.5.pre.in,v 1.10 2008-05-12 22:06:57 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -93,7 +93,7 @@ hexadecimal form, prefix the string with '0x'.
 .TP
 \fBipmi-version\fR \fIIPMIVERSION\fR
 Specify the default IPMI protocol version to use.  The currently
-available versions are AUTO, 1.5, and 2.0.
+available versions are 1.5 and 2.0.
 .TP
 \fBsession-timeout\fR \fIMILLISECONDS\fR
 Specify the default session timeout length in milliseconds.

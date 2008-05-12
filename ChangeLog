@@ -6,6 +6,8 @@
 
 	* Update intel 2.0 workaround comments and documentation globally.
 
+	* ipmipower/: Removed ipmi-version auto discovery.
+
 2008-05-09  Albert Chu <chu11@llnl.gov>
 
         * ipmiconsole/src/ipmiconsole/ipmiconsole_config.c

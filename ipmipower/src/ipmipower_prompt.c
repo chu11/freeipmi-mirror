@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.65 2008-04-29 21:58:43 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.66 2008-05-12 22:06:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -168,8 +168,7 @@ _cmd_password(char **argv)
                 ipmipower_authentication_type_string(conf->authentication_type));
   else if (argv[1] == NULL 
            || (argv[1] 
-               && (((conf->ipmi_version == IPMI_VERSION_AUTO
-                     || conf->ipmi_version == IPMI_VERSION_2_0)
+               && ((conf->ipmi_version == IPMI_VERSION_2_0
                     && strlen(argv[1]) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
                    || (conf->ipmi_version == IPMI_VERSION_1_5
                        && strlen(argv[1]) <= IPMI_1_5_MAX_PASSWORD_LENGTH))))
@@ -197,8 +196,7 @@ _cmd_k_g(char **argv)
   char buf[IPMI_MAX_K_G_LENGTH*2+3];
   assert(argv != NULL);
 
-  if (conf->ipmi_version != IPMI_VERSION_AUTO
-      && conf->ipmi_version != IPMI_VERSION_2_0)
+  if (conf->ipmi_version == IPMI_VERSION_1_5)
     cbuf_printf(ttyout, "k_g is only used for IPMI 2.0");
   else
     {
