@@ -19,6 +19,10 @@ ipmipower
 - redo to utilize newer api?
 - use generic argp - not unique .h
   
+ipmi-chassis
+------------
+no command line input, hangs
+
 bmc-config
 ----------
 remaining serial config
