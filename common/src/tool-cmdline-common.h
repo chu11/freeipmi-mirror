@@ -205,8 +205,13 @@ enum argp_common_option_keys
 #endif
 
 #if 0 /* see achu comments near top of file */
+/* privilege is maintained for backwards compatability */
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER                                                    \
+    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            \
+     "Specify the privilege level to be used. "		                                            \
+     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
+     "Defaults to USER if not specified.", 15},                                                     \
     {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
      "Specify the privilege level to be used. "		                                            \
      "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
@@ -216,8 +221,13 @@ enum argp_common_option_keys
      "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
      "Defaults to USER if not specified.", 15}     
 
+/* privilege is maintained for backwards compatability */
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR                                                \
+    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            \
+     "Specify the privilege level to be used. "		                                            \
+     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
+     "Defaults to OPERATOR if not specified.", 15},                                                 \
     {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
      "Specify the privilege level to be used. "		                                            \
      "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
@@ -227,8 +237,13 @@ enum argp_common_option_keys
      "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
      "Defaults to OPERATOR if not specified.", 15}     
 
+/* privilege is maintained for backwards compatability */
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN                                                   \
+    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            \
+     "Specify the privilege level to be used. "		                                            \
+     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
+     "Defaults to ADMIN if not specified.", 15},                                                    \
     {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
      "Specify the privilege level to be used. "		                                            \
      "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
@@ -238,22 +253,31 @@ enum argp_common_option_keys
      "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
      "Defaults to ADMIN if not specified.", 15}     
 #else
+/* privilege is maintained for backwards compatability */
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER                                                    \
+    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            \
+     "Specify the privilege level to be used. ", 15},                                               \
     {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
      "Specify the privilege level to be used.", 15},                                                \
     {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
      "Specify the privilege level to be used.", 15}     
 
+/* privilege is maintained for backwards compatability */
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR                                                \
+    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            \
+     "Specify the privilege level to be used. ", 15},                                               \
     {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
      "Specify the privilege level to be used.", 15},                                                \
     {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
      "Specify the privilege level to be used.", 15}     
 
+/* privilege is maintained for backwards compatability */
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN                                                   \
+    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            \
+     "Specify the privilege level to be used. ", 15},                                               \
     {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
      "Specify the privilege level to be used.", 15},                                                \
     {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \

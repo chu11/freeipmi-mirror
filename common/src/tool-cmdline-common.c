@@ -550,7 +550,9 @@ common_parse_opt (int key,
         cmd_args->cipher_suite_id = value;
       }
       break;
-    /* ARGP_PRIV_LEVEL_KEY for backwards compatability */
+    /* ARGP_PRIVILEGE_KEY for backwards compatability */
+    /* ARGP_PRIV_LEVEL_KEY for backwards compatability */\
+    case ARGP_PRIVILEGE_KEY:
     case ARGP_PRIV_LEVEL_KEY:
     case ARGP_PRIVILEGE_LEVEL_KEY: 
       if ((tmp = parse_privilege_level (arg)) < 0)
