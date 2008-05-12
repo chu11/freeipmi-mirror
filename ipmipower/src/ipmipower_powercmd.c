@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.129 2008-05-12 22:06:58 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.130 2008-05-12 22:30:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1025,70 +1025,26 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
         }
     }
 
-  if (conf->authentication_type == AUTHENTICATION_TYPE_AUTO)
-    {
-      /* Choose the best authentication type available.
-       * none and null password > md5 > md2 > straight_password_key > none
-       */
-      if (!strlen(conf->password) && authentication_type_none)
-	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_NONE);
-      else if (authentication_type_md5)
-	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_MD5);
-      else if (authentication_type_md2)
-	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_MD2);
-      else if (authentication_type_straight_password_key)
-	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY);
-      else if (authentication_type_none)
-	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_NONE);
-      else if (conf->privilege_level == PRIVILEGE_LEVEL_AUTO)
-	{
-	  /* achu: It may not seem possible to get to this point
-	   * since the check for anonymous_login, null_username,
-	   * or non_null_username has passed, but there's a few
-	   * ways we can fail. That iffy OEM authentication type
-	   * could be enabled (shame on you evil vendor!!) or
-	   * authentication at this privilege level isn't allowed.
-	   */
-	  if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
-	    {
-	      /* Time to give up */
-	      ipmipower_output(MSG_TYPE_1_5_AUTO, ip->ic->hostname);
-	      return -1;
-	    }
-	  else
-	    authentication_type_try_higher_priv = 1;
-	}
-      else
-	{
-	  ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
-	  return -1;
-	}
-    }
+  /* Can we authenticate with the specified authentication type? */
+  if ((conf->authentication_type == AUTHENTICATION_TYPE_NONE
+       && authentication_type_none)
+      || (conf->authentication_type == AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY 
+          && authentication_type_straight_password_key)
+      || (conf->authentication_type == AUTHENTICATION_TYPE_MD2
+          && authentication_type_md2)
+      || (conf->authentication_type == AUTHENTICATION_TYPE_MD5
+          && authentication_type_md5))
+    ip->authentication_type = ipmipower_ipmi_authentication_type(conf->authentication_type);
   else
     {
-      /* Can we authenticate with the user specified
-       * authentication type?
-       */
-      if ((conf->authentication_type == AUTHENTICATION_TYPE_NONE
-	   && authentication_type_none)
-	  || (conf->authentication_type == AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY 
-	      && authentication_type_straight_password_key)
-	  || (conf->authentication_type == AUTHENTICATION_TYPE_MD2
-	      && authentication_type_md2)
-	  || (conf->authentication_type == AUTHENTICATION_TYPE_MD5
-	      && authentication_type_md5))
-	ip->authentication_type = ipmipower_ipmi_authentication_type(conf->authentication_type);
+      if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
+        {
+          /* Time to give up */
+          ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
+          return -1;
+        }
       else
-	{
-	  if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
-	    {
-	      /* Time to give up */
-	      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
-	      return -1;
-	    }
-	  else
-	    authentication_type_try_higher_priv = 1;
-	}
+        authentication_type_try_higher_priv = 1;
     }
          
   /* We can't authenticate with any mechanism for the current

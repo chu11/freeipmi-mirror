@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.31 2008-05-12 22:06:57 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.32 2008-05-12 22:30:43 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -89,9 +89,8 @@ protocol.
 .TP
 \fB\-a\fR, \fB\-\-authentication\-type\fR=\fIAUTHENTICATION-TYPE\fR
 Specify the IPMI 1.5 authentication type to use.  The currently
-available authentication types are AUTO, NONE, STRAIGHT_PASSWORD_KEY,
-MD2, and MD5.  Defaults to AUTO to automatically select the 
-most secure authentication mechanism available.
+available authentication types are NONE, STRAIGHT_PASSWORD_KEY,
+MD2, and MD5.  Defaults to MD5.
 .TP
 \fB\-I\fR, \fB\-\-cipher\-suite-id\fR=\fICIPHER-SUITE-ID\fR
 Specify the IPMI 2.0 cipher suite ID to use.  The Cipher Suite ID

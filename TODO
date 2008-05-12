@@ -32,6 +32,7 @@ ipmipower
   - to test
     X - ipmi 2.0 not found
     X - password length ipmi 1.5 nad ipmi 2.0
+  - use common manpage stuff now that auto is gone
 - use generic argp - not unique .h
   
 bmc-config

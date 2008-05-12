@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_authentication_type.c,v 1.9 2008-04-17 23:14:28 chu11 Exp $
+ *  $Id: ipmipower_authentication_type.c,v 1.10 2008-05-12 22:30:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -55,9 +55,6 @@ ipmipower_authentication_type_index(char *str)
 
   assert(str != NULL);
 
-  if (!strcasecmp(str, "auto"))
-    return AUTHENTICATION_TYPE_AUTO;
-
   tmp = parse_authentication_type(str);
   if (tmp == IPMI_AUTHENTICATION_TYPE_NONE)
     return AUTHENTICATION_TYPE_NONE;
@@ -74,13 +71,10 @@ ipmipower_authentication_type_index(char *str)
 char *
 ipmipower_authentication_type_string(authentication_type_t at) 
 {
-  assert(AUTHENTICATION_TYPE_VALID_OR_AUTO(at));
+  assert(AUTHENTICATION_TYPE_VALID(at));
 
   switch(at) 
     {
-    case AUTHENTICATION_TYPE_AUTO:
-      return "auto";
-      break;
     case AUTHENTICATION_TYPE_NONE:
       return IPMI_AUTHENTICATION_TYPE_NONE_STR;
       break;
@@ -107,7 +101,7 @@ ipmipower_authentication_type_list(void)
 
   snprintf(authentication_buffer, 
            IPMIPOWER_AUTHENTICATION_BUFLEN,
-           "auto, %s, %s, %s, %s",
+           "%s, %s, %s, %s",
            IPMI_AUTHENTICATION_TYPE_NONE_STR,
            IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR,
            IPMI_AUTHENTICATION_TYPE_MD2_STR,
