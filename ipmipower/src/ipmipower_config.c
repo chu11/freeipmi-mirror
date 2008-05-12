@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.89 2008-05-12 23:49:16 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.90 2008-05-12 23:53:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -67,59 +67,59 @@ const char *argp_program_version = "ipmipower " VERSION "\n";
 
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
-#define IPMIPOWER_IPMI_VERSION_KEY                 'R'
+#define IPMI_VERSION_KEY                 'R'
 
-#define IPMIPOWER_RETRY_TIMEOUT_KEY                160
-#define IPMIPOWER_RETRANSMISSION_TIMEOUT_KEY       'y'
-#define IPMIPOWER_TIMEOUT_KEY                      161
-#define IPMIPOWER_SESSION_TIMEOUT_KEY              't'
-#define IPMIPOWER_CONFIG_KEY                       164
-#define IPMIPOWER_DEBUG_KEY                        165
-#define IPMIPOWER_IPMIDUMP_KEY                     166
-#define IPMIPOWER_RMCPDUMP_KEY                     167
-#define IPMIPOWER_LOG_KEY                          168
-#define IPMIPOWER_LOGFILE_KEY                      169
+#define RETRY_TIMEOUT_KEY                160
+#define RETRANSMISSION_TIMEOUT_KEY       'y'
+#define TIMEOUT_KEY                      161
+#define SESSION_TIMEOUT_KEY              't'
+#define CONFIG_KEY                       164
+#define DEBUG_KEY                        165
+#define IPMIDUMP_KEY                     166
+#define RMCPDUMP_KEY                     167
+#define LOG_KEY                          168
+#define LOGFILE_KEY                      169
 
-#define IPMIPOWER_ON_KEY                           'n'
-#define IPMIPOWER_OFF_KEY                          'f'
-#define IPMIPOWER_CYCLE_KEY                        'c'
-#define IPMIPOWER_RESET_KEY                        'r'
-#define IPMIPOWER_STAT_KEY                         's'
-#define IPMIPOWER_PULSE_KEY                        'j'
-#define IPMIPOWER_SOFT_KEY                         'm'
-#define IPMIPOWER_ON_IF_OFF_KEY                    'g'
-#define IPMIPOWER_WAIT_UNTIL_OFF_KEY               'A'
-#define IPMIPOWER_WAIT_UNTIL_ON_KEY                'G'
+#define ON_KEY                           'n'
+#define OFF_KEY                          'f'
+#define CYCLE_KEY                        'c'
+#define RESET_KEY                        'r'
+#define STAT_KEY                         's'
+#define PULSE_KEY                        'j'
+#define SOFT_KEY                         'm'
+#define ON_IF_OFF_KEY                    'g'
+#define WAIT_UNTIL_OFF_KEY               'A'
+#define WAIT_UNTIL_ON_KEY                'G'
 
-#define IPMIPOWER_RETRY_WAIT_TIMEOUT_KEY           162
-#define IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_KEY  'q'
-#define IPMIPOWER_RETRY_BACKOFF_COUNT_KEY          163
-#define IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_KEY 'b'
-#define IPMIPOWER_PING_INTERVAL_KEY                'i'
-#define IPMIPOWER_PING_TIMEOUT_KEY                 'z'
-#define IPMIPOWER_PING_PACKET_COUNT_KEY            'v'
-#define IPMIPOWER_PING_PERCENT_KEY                 'w'
-#define IPMIPOWER_PING_CONSEC_COUNT_KEY            'x'
+#define RETRY_WAIT_TIMEOUT_KEY           162
+#define RETRANSMISSION_WAIT_TIMEOUT_KEY  'q'
+#define RETRY_BACKOFF_COUNT_KEY          163
+#define RETRANSMISSION_BACKOFF_COUNT_KEY 'b'
+#define PING_INTERVAL_KEY                'i'
+#define PING_TIMEOUT_KEY                 'z'
+#define PING_PACKET_COUNT_KEY            'v'
+#define PING_PERCENT_KEY                 'w'
+#define PING_CONSEC_COUNT_KEY            'x'
 
 static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_DRIVER,
     /* maintain "ipmi-version" for backwards compatability */
-    {"ipmi-version", IPMIPOWER_IPMI_VERSION_KEY, "IPMIVERSION", OPTION_HIDDEN,
+    {"ipmi-version", IPMI_VERSION_KEY, "IPMIVERSION", OPTION_HIDDEN,
      "Specify the IPMI protocol version to use.", 11},
     ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED_NO_TIMEOUT,
     /* maintain "retry-timeout" for backwards compatability */
-    {"retry-timeout", IPMIPOWER_RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
+    {"retry-timeout", RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
      "Specify the packet retransmission timeout in milliseconds.", 11},
     /* don't use common cmdline parsing headers for retransmission-timeout, we need to support
      * backwards compatible short options
      */
-    {"retransmission-timeout", IPMIPOWER_RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,
+    {"retransmission-timeout", RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,
      "Specify the packet retransmission timeout in milliseconds.", 11},
     /* maintain "timeout" for backwards compatability */
-    {"timeout", IPMIPOWER_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
+    {"timeout", TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
      "Specify the session timeout in milliseconds.", 12},
-    {"session-timeout", IPMIPOWER_SESSION_TIMEOUT_KEY, "MILLISECONDS", 0,
+    {"session-timeout", SESSION_TIMEOUT_KEY, "MILLISECONDS", 0,
      "Specify the session timeout in milliseconds.", 12},
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
@@ -130,58 +130,58 @@ static struct argp_option cmdline_options[] =
      "Specify the privilege level to be used.", 15},
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
-    {"debug", IPMIPOWER_DEBUG_KEY, 0, 0,
+    {"debug", DEBUG_KEY, 0, 0,
      "Turn on debugging.", 25},
-    {"config", IPMIPOWER_CONFIG_KEY, "FILE", 0,
+    {"config", CONFIG_KEY, "FILE", 0,
      "Specify an alternate configuration file.", 26},
 #ifndef NDEBUG
-    {"rmcpdump", IPMIPOWER_RMCPDUMP_KEY, 0, 0,
+    {"rmcpdump", RMCPDUMP_KEY, 0, 0,
      "Turn on RMCP packet dump output.", 27},
-    {"log", IPMIPOWER_LOG_KEY, 0, 0,
+    {"log", LOG_KEY, 0, 0,
      "Turn on logging.", 28},
-    {"logfile", IPMIPOWER_LOGFILE_KEY, "FILE", 0,
+    {"logfile", LOGFILE_KEY, "FILE", 0,
      "Specify an alternate logfile.", 29},
 #endif
-    {"on", IPMIPOWER_ON_KEY, 0, 0,
+    {"on", ON_KEY, 0, 0,
      "Power on the target hosts.", 30},
-    {"off", IPMIPOWER_OFF_KEY, 0, 0,
+    {"off", OFF_KEY, 0, 0,
      "Power off the target hosts.", 31},
-    {"cycle", IPMIPOWER_CYCLE_KEY, 0, 0,
+    {"cycle", CYCLE_KEY, 0, 0,
      "Power cycle the target hosts.", 32},
-    {"reset", IPMIPOWER_RESET_KEY, 0, 0,
+    {"reset", RESET_KEY, 0, 0,
      "Reset the target hosts.", 33},
-    {"stat", IPMIPOWER_STAT_KEY, 0, 0,
+    {"stat", STAT_KEY, 0, 0,
      "Get power status of the target hosts.", 34},
-    {"pulse", IPMIPOWER_PULSE_KEY, 0, 0,
+    {"pulse", PULSE_KEY, 0, 0,
      "Send power diagnostic interrupt to target hosts.", 35},
-    {"soft", IPMIPOWER_SOFT_KEY, 0, 0,
+    {"soft", SOFT_KEY, 0, 0,
      "Initiate a soft-shutdown of the OS via ACPI.", 36},
-    {"on-if-off", IPMIPOWER_ON_IF_OFF_KEY, 0, 0,
+    {"on-if-off", ON_IF_OFF_KEY, 0, 0,
      "Issue a power on command instead of a power cycle or hard reset "
      "command if the remote machine's power is currently off.", 38},
-    {"wait-until-off", IPMIPOWER_WAIT_UNTIL_OFF_KEY, 0, 0,
+    {"wait-until-off", WAIT_UNTIL_OFF_KEY, 0, 0,
      "Regularly query the remote BMC and return only after the machine has powered off.", 39},
-    {"wait-until-on", IPMIPOWER_WAIT_UNTIL_ON_KEY, 0, 0,
+    {"wait-until-on", WAIT_UNTIL_ON_KEY, 0, 0,
      "Regularly query the remote BMC and return only after the machine has powered on.", 40},
     /* retry-wait-timeout maintained for backwards comptability */
-    {"retry-wait-timeout", IPMIPOWER_RETRY_WAIT_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
+    {"retry-wait-timeout", RETRY_WAIT_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
      "Specify the retransmission timeout length in milliseconds.", 41},
-    {"retransmission-wait-timeout", IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_KEY, "MILLISECONDS", 0,
+    {"retransmission-wait-timeout", RETRANSMISSION_WAIT_TIMEOUT_KEY, "MILLISECONDS", 0,
      "Specify the retransmission timeout length in milliseconds.", 41},
     /* retry-backoff-count maintained for backwards comptability */
-    {"retry-backoff-count", IPMIPOWER_RETRY_BACKOFF_COUNT_KEY, "COUNT", OPTION_HIDDEN,
+    {"retry-backoff-count", RETRY_BACKOFF_COUNT_KEY, "COUNT", OPTION_HIDDEN,
      "Specify the retransmission backoff count for retransmissions.", 42},
-    {"retransmission-backoff-count", IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_KEY, "COUNT", 0,
+    {"retransmission-backoff-count", RETRANSMISSION_BACKOFF_COUNT_KEY, "COUNT", 0,
      "Specify the retransmission backoff count for retransmissions.", 42},
-    {"ping-interval", IPMIPOWER_PING_INTERVAL_KEY, "MILLISECONDS", 0,
+    {"ping-interval", PING_INTERVAL_KEY, "MILLISECONDS", 0,
      "Specify the ping interval length in milliseconds.", 43},
-    {"ping-timeout", IPMIPOWER_PING_TIMEOUT_KEY, "MILLISECONDS", 0,
+    {"ping-timeout", PING_TIMEOUT_KEY, "MILLISECONDS", 0,
      "Specify the ping timeout length in milliseconds.", 44},
-    {"ping-packet-count", IPMIPOWER_PING_PACKET_COUNT_KEY, "COUNT", 0,
+    {"ping-packet-count", PING_PACKET_COUNT_KEY, "COUNT", 0,
      "Specify the ping packet count size.", 45},
-    {"ping-percent", IPMIPOWER_PING_PERCENT_KEY, "PERCENT", 0,
+    {"ping-percent", PING_PERCENT_KEY, "PERCENT", 0,
      "Specify the ping percent value.", 46},
-    {"ping-consec-count", IPMIPOWER_PING_CONSEC_COUNT_KEY, "COUNT", 0,
+    {"ping-consec-count", PING_CONSEC_COUNT_KEY, "COUNT", 0,
      "Specify the ping consecutive count.", 47},
     { 0 }
   };
@@ -375,8 +375,8 @@ cmdline_parse (int key,
 
   switch (key) 
     {
-    /* IPMIPOWER_IPMI_VERSION_KEY for backwards compatability */
-    case IPMIPOWER_IPMI_VERSION_KEY:	/* --ipmi-version */
+    /* IPMI_VERSION_KEY for backwards compatability */
+    case IPMI_VERSION_KEY:	/* --ipmi-version */
     case ARGP_DRIVER_TYPE_KEY:      /* --driver-type */
       conf->driver_type = ipmipower_driver_type_index(arg);
       conf->driver_type_set_on_cmdline = IPMIPOWER_TRUE;
@@ -438,13 +438,13 @@ cmdline_parse (int key,
           conf->k_g_set_on_cmdline = IPMIPOWER_TRUE;
         }
       break;
-    case IPMIPOWER_SESSION_TIMEOUT_KEY:       /* --session-timeout */
+    case SESSION_TIMEOUT_KEY:       /* --session-timeout */
       conf->session_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: session timeout length invalid\n");
       conf->session_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    case IPMIPOWER_RETRANSMISSION_TIMEOUT_KEY:       /* --retransmission-timeout */
+    case RETRANSMISSION_TIMEOUT_KEY:       /* --retransmission-timeout */
       conf->retransmission_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: retransmission timeout length invalid\n");
@@ -470,22 +470,22 @@ cmdline_parse (int key,
       conf->workaround_flags = flags;
       conf->workaround_flags_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    case IPMIPOWER_DEBUG_KEY:          /* --debug */
+    case DEBUG_KEY:          /* --debug */
       conf->debug = !conf->debug;
       break;
-    case IPMIPOWER_CONFIG_KEY:         /* --config */
+    case CONFIG_KEY:         /* --config */
       if (strlen(arg) > MAXPATHLEN)
         ierr_exit("Command Line Error: configuration file pathname too long");
       strcpy(conf->configfile, arg);
       break;
 #ifndef NDEBUG
-    case IPMIPOWER_RMCPDUMP_KEY:       /* --rmcpdump */
+    case RMCPDUMP_KEY:       /* --rmcpdump */
       conf->rmcpdump = !conf->rmcpdump;
       break;
-    case IPMIPOWER_LOG_KEY:            /* --log */
+    case LOG_KEY:            /* --log */
       conf->log = !conf->log;
       break;
-    case IPMIPOWER_LOGFILE_KEY:        /* --logfile */
+    case LOGFILE_KEY:        /* --logfile */
       if (strlen(arg) > MAXPATHLEN)
         ierr_exit("Command Line Error: log file pathname too long");
       memset(conf->logfile, '\0', MAXPATHLEN+1);
@@ -514,80 +514,80 @@ cmdline_parse (int key,
       conf->always_prefix = IPMIPOWER_TRUE;
       conf->always_prefix_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    case IPMIPOWER_ON_KEY:       /* --on */ 
+    case ON_KEY:       /* --on */ 
       conf->powercmd = POWER_CMD_POWER_ON;
       break;
-    case IPMIPOWER_OFF_KEY:       /* --off */ 
+    case OFF_KEY:       /* --off */ 
       conf->powercmd = POWER_CMD_POWER_OFF;
       break;
-    case IPMIPOWER_CYCLE_KEY:       /* --cycle */ 
+    case CYCLE_KEY:       /* --cycle */ 
       conf->powercmd = POWER_CMD_POWER_CYCLE;
       break;
-    case IPMIPOWER_RESET_KEY:       /* --reset */ 
+    case RESET_KEY:       /* --reset */ 
       conf->powercmd = POWER_CMD_POWER_RESET;
       break;
-    case IPMIPOWER_STAT_KEY:       /* --stat */ 
+    case STAT_KEY:       /* --stat */ 
       conf->powercmd = POWER_CMD_POWER_STATUS;
       break;
-    case IPMIPOWER_PULSE_KEY:       /* --pulse */
+    case PULSE_KEY:       /* --pulse */
       conf->powercmd = POWER_CMD_PULSE_DIAG_INTR;
       break;
-    case IPMIPOWER_SOFT_KEY:       /* --soft */
+    case SOFT_KEY:       /* --soft */
       conf->powercmd = POWER_CMD_SOFT_SHUTDOWN_OS;
       break;
-    case IPMIPOWER_ON_IF_OFF_KEY:       /* --on-if-off */
+    case ON_IF_OFF_KEY:       /* --on-if-off */
       conf->on_if_off = !conf->on_if_off;
       conf->on_if_off_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    case IPMIPOWER_WAIT_UNTIL_OFF_KEY:       /* --wait-until-on */
+    case WAIT_UNTIL_OFF_KEY:       /* --wait-until-on */
       conf->wait_until_on = !conf->wait_until_on;
       conf->wait_until_on_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    case IPMIPOWER_WAIT_UNTIL_ON_KEY:       /* --wait-until-off */
+    case WAIT_UNTIL_ON_KEY:       /* --wait-until-off */
       conf->wait_until_off = !conf->wait_until_off;
       conf->wait_until_off_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-      /* IPMIPOWER_RETRY_WAIT_TIMEOUT for backwards compatability */
-    case IPMIPOWER_RETRY_WAIT_TIMEOUT_KEY:
-    case IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_KEY:       /* --retransmission-wait-timeout */
+      /* RETRY_WAIT_TIMEOUT for backwards compatability */
+    case RETRY_WAIT_TIMEOUT_KEY:
+    case RETRANSMISSION_WAIT_TIMEOUT_KEY:       /* --retransmission-wait-timeout */
       conf->retransmission_wait_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: retransmission wait timeout length invalid\n");
       conf->retransmission_wait_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-      /* IPMIPOWER_RETRY_BACKOFF_COUNT for backwards compatability */
-    case IPMIPOWER_RETRY_BACKOFF_COUNT_KEY:
-    case IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_KEY:       /* --retransmission-backoff-count */
+      /* RETRY_BACKOFF_COUNT for backwards compatability */
+    case RETRY_BACKOFF_COUNT_KEY:
+    case RETRANSMISSION_BACKOFF_COUNT_KEY:       /* --retransmission-backoff-count */
       conf->retransmission_backoff_count = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: retransmission backoff count invalid\n");
       conf->retransmission_backoff_count_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    case IPMIPOWER_PING_INTERVAL_KEY:       /* --ping-interval */
+    case PING_INTERVAL_KEY:       /* --ping-interval */
       conf->ping_interval_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: ping interval length invalid\n");
       conf->ping_interval_len_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    case IPMIPOWER_PING_TIMEOUT_KEY:       /* --ping-timeout */
+    case PING_TIMEOUT_KEY:       /* --ping-timeout */
       conf->ping_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: ping timeout length invalid\n");
       conf->ping_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    case IPMIPOWER_PING_PACKET_COUNT_KEY:       /* --ping-packet-count */
+    case PING_PACKET_COUNT_KEY:       /* --ping-packet-count */
       conf->ping_packet_count = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: ping packet count invalid\n");
       conf->ping_packet_count_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    case IPMIPOWER_PING_PERCENT_KEY:       /* --ping-percent */
+    case PING_PERCENT_KEY:       /* --ping-percent */
       conf->ping_percent = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: ping percent invalid\n");
       conf->ping_percent_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-    case IPMIPOWER_PING_CONSEC_COUNT_KEY:       /* --ping-consec-count */
+    case PING_CONSEC_COUNT_KEY:       /* --ping-consec-count */
       conf->ping_consec_count = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: ping consec count invalid\n");
