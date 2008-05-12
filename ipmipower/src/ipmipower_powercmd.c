@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.127 2008-04-17 15:39:51 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.128 2008-05-12 21:18:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -287,7 +287,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
        * (Professional Edition)
        *
        * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
-       * of an actual privilege.
+       * of an actual privilege, so have to pass the actual privilege
+       * we want to use.
        */
       if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
 	ip->requested_maximum_privilege_level = ip->privilege_level;

@@ -1,3 +1,11 @@
+2008-05-12  Albert Chu <chu11@llnl.gov>
+
+	* common/src/tool-cmdline-common.c,
+	common/src/tool-cmdline-common.h: Add --privilege to legacy
+	privilege options available.
+
+	* Update intel 2.0 workaround comments and documentation globally.
+
 2008-05-09  Albert Chu <chu11@llnl.gov>
 
         * ipmiconsole/src/ipmiconsole/ipmiconsole_config.c

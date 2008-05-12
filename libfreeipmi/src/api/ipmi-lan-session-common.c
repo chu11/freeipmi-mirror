@@ -1976,7 +1976,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    * (Professional Edition)
    *
    * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
-   * of an actual privilege.
+   * of an actual privilege, so have to pass the actual privilege
+   * we want to use.
    */
   if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     requested_maximum_privilege = ctx->io.outofband.privilege_level;
@@ -2043,7 +2044,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    * (Professional Edition)
    *
    * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
-   * of an actual privilege.
+   * of an actual privilege, so have to pass the actual privilege
+   * we want to use.
    */
 
   if (!((ctx->io.outofband.privilege_level == IPMI_PRIVILEGE_LEVEL_USER

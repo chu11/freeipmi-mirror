@@ -62,7 +62,9 @@ Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): The IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL flag does not work in
 the Open Session phase of IPMI 2.0 connections.  The Open Session
 response seems to simply return the privilege level passed in the
-request.  Resolved with a workaround to look for this situation.
+request (i.e. the IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL flag rather than
+the actual highest level privilege that can be used).  Resolved with a
+workaround to look for this situation.
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): The username field is incorrectly padded during IPMI 2.0
