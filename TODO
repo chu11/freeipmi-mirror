@@ -48,6 +48,8 @@ code cleanup
 - merge many util libs into one?
 different priv config for tools
 fix poort variable naming in argp for all tools
+- audit macros in tool-cmdline-common .. are all still used?
+- audit common doc manpages, all still used?
 
 config
 ------
