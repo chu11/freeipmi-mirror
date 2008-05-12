@@ -9,6 +9,8 @@ o Support --get-time and --set-time in ipmi-sel.
 o Removed many experimental features from ipmipower so it emulates other tools.
   o Removed ipmi-version auto discovery.
   o Removed authentication-type auto discovery.
+o Changed --ipmi-version option to --driver-type in ipmipower for
+consistency to other tools.  Old options maintained for backwards compatability.
 o Various minor bug fixes.
 
 For Developers

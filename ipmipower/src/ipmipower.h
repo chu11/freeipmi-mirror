@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.94 2008-05-12 22:34:54 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.95 2008-05-12 23:46:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -143,19 +143,19 @@
 
 #define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH 64
 
-/* ipmi_version_t
+/* driver_type_t
  * - holds ipmi version type
  */
 typedef enum
   {
-    IPMI_VERSION_INVALID = 0,
-    IPMI_VERSION_1_5     = 1,
-    IPMI_VERSION_2_0     = 2,
-  } ipmi_version_t;
+    DRIVER_TYPE_INVALID = 0,
+    DRIVER_TYPE_LAN     = 1,
+    DRIVER_TYPE_LAN_2_0 = 2,
+  } driver_type_t;
 
-#define IPMI_VERSION_VALID(__a) \
-  ((__a) >= IPMI_VERSION_1_5 && \
-   (__a) <= IPMI_VERSION_2_0)
+#define DRIVER_TYPE_VALID(__a) \
+  ((__a) >= DRIVER_TYPE_LAN && \
+   (__a) <= DRIVER_TYPE_LAN_2_0)
 
 /* ipmipower_bool_t
  * - boolean type
@@ -540,6 +540,7 @@ struct ipmipower_connection
  */
 struct ipmipower_config 
 {
+  ipmi_driver_type_t       driver_type;
   hostlist_t               hosts;
   int                      hosts_count;
   char                     username[IPMI_MAX_USER_NAME_LENGTH+1];
@@ -551,7 +552,6 @@ struct ipmipower_config
    * indicate what the real length of the field is.
    */
   unsigned int             k_g_len;
-  ipmi_version_t           ipmi_version;
   int                      session_timeout_len;
   int                      retransmission_timeout_len;
   authentication_type_t    authentication_type;
@@ -588,11 +588,11 @@ struct ipmipower_config
   int                      ping_consec_count;
 
   /* Flags indicating if option was set on the command line */
+  ipmipower_bool_t         driver_type_set_on_cmdline;
   ipmipower_bool_t         hosts_set_on_cmdline;
   ipmipower_bool_t         username_set_on_cmdline;
   ipmipower_bool_t         password_set_on_cmdline;
   ipmipower_bool_t         k_g_set_on_cmdline;
-  ipmipower_bool_t         ipmi_version_set_on_cmdline;
   ipmipower_bool_t         session_timeout_len_set_on_cmdline;
   ipmipower_bool_t         retransmission_timeout_len_set_on_cmdline;
   ipmipower_bool_t         authentication_type_set_on_cmdline;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.66 2008-05-12 22:06:58 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.67 2008-05-12 23:46:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -50,7 +50,7 @@
 #include "ipmipower_authentication_type.h"
 #include "ipmipower_cipher_suite_id.h"
 #include "ipmipower_connection.h"
-#include "ipmipower_ipmi_version.h"
+#include "ipmipower_driver_type.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_output.h"
 #include "ipmipower_privilege_level.h"
@@ -72,6 +72,27 @@ extern struct ipmipower_connection *ics;
  * Note: only for non-interactive mode on the command line.  Won't be 
  * anywhere in this file.
  */
+
+static void 
+_cmd_driver_type(char **argv) 
+{
+  assert(argv != NULL);
+
+  if (argv[1] != NULL) 
+    {
+      driver_type_t driver_type = ipmipower_driver_type_index(argv[1]);
+      if (driver_type == DRIVER_TYPE_INVALID)
+        cbuf_printf(ttyout, "%s invalid driver type\n", argv[1]);
+      else 
+        {
+          conf->driver_type = driver_type;
+          cbuf_printf(ttyout, "driver type is now %s\n", argv[1]);
+        }
+    }
+  else
+    cbuf_printf(ttyout, "driver_type must be specified: %s\n",
+                ipmipower_driver_type_list());
+}
 
 static void 
 _cmd_hostname(char **argv) 
@@ -168,9 +189,9 @@ _cmd_password(char **argv)
                 ipmipower_authentication_type_string(conf->authentication_type));
   else if (argv[1] == NULL 
            || (argv[1] 
-               && ((conf->ipmi_version == IPMI_VERSION_2_0
+               && ((conf->driver_type == DRIVER_TYPE_LAN_2_0
                     && strlen(argv[1]) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
-                   || (conf->ipmi_version == IPMI_VERSION_1_5
+                   || (conf->driver_type == DRIVER_TYPE_LAN
                        && strlen(argv[1]) <= IPMI_1_5_MAX_PASSWORD_LENGTH))))
     {
       memset(conf->password, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH+1);
@@ -196,7 +217,7 @@ _cmd_k_g(char **argv)
   char buf[IPMI_MAX_K_G_LENGTH*2+3];
   assert(argv != NULL);
 
-  if (conf->ipmi_version == IPMI_VERSION_1_5)
+  if (conf->driver_type == DRIVER_TYPE_LAN)
     cbuf_printf(ttyout, "k_g is only used for IPMI 2.0");
   else
     {
@@ -218,27 +239,6 @@ _cmd_k_g(char **argv)
 #endif /* !NDEBUG */
         }
     }
-}
-
-static void 
-_cmd_ipmi_version(char **argv) 
-{
-  assert(argv != NULL);
-
-  if (argv[1] != NULL) 
-    {
-      ipmi_version_t ipmi_version = ipmipower_ipmi_version_index(argv[1]);
-      if (ipmi_version == IPMI_VERSION_INVALID)
-        cbuf_printf(ttyout, "%s invalid ipmi version\n", argv[1]);
-      else 
-        {
-          conf->ipmi_version = ipmi_version;
-          cbuf_printf(ttyout, "ipmi version is now %s\n", argv[1]);
-        }
-    }
-  else
-    cbuf_printf(ttyout, "ipmi_version must be specified: %s\n",
-                ipmipower_ipmi_version_list());
 }
 
 static void 
@@ -514,11 +514,11 @@ static void
 _cmd_help(void) 
 {
   cbuf_printf(ttyout, 
+	      "driver-type IPMIDRIVER                   - Specify the ipmi driver to use.\n"
               "hostname [IPMIHOST]                      - Specify a new set of hosts.  No input to unconfigure all hosts.\n"
               "username [USERNAME]                      - Specify a new username.  No input for null username.\n"
               "password [PASSWORD]                      - Specify a new password.  No input for null password.\n"
               "k_g [K_G]                                - Specify a new K_g BMC Key.  No input for null key.\n"
-	      "ipmi-version IPMIVERSION                 - Specify the ipmi version to use.\n"
               "session-timeout MILLISECONDS             - Specify a new session timeout length.\n"
               "retransmission-timeout MILLISECONDS      - Specify a new retransmission timeout length.\n"
               "authentication-type AUTHENTICATION-TYPE  - Specify the authentication type to use.\n"
@@ -570,6 +570,9 @@ static void
 _cmd_config(void) 
 {
   char buf[IPMI_MAX_K_G_LENGTH*2+3];
+
+  cbuf_printf(ttyout, "Driver_Type:                  %s\n",
+              ipmipower_driver_type_string(conf->driver_type));
 
   if (conf->hosts != NULL) 
     {
@@ -658,8 +661,6 @@ _cmd_config(void)
               ipmipower_authentication_type_string(conf->authentication_type));
   cbuf_printf(ttyout, "Privilege_Level:              %s\n", 
               ipmipower_privilege_level_string(conf->privilege_level));
-  cbuf_printf(ttyout, "IPMI_Version:                 %s\n",
-              ipmipower_ipmi_version_string(conf->ipmi_version));
   cbuf_printf(ttyout, "Cipher Suite Id:              %s\n",
 	      ipmipower_cipher_suite_id_string(conf->cipher_suite_id));
   cbuf_printf(ttyout, "On-If-Off:                    %s\n",
@@ -817,9 +818,14 @@ ipmipower_prompt_process_cmdline(void)
 
           if (argv[0] != NULL) 
             {
+              /* support "ipmi_version" and "ipmi-version" for backwards compatability */
+              if (strcmp(argv[0], "driver-type") == 0
+                       || strcmp(argv[0], "ipmi_version") == 0
+                       || strcmp(argv[0], "ipmi-version") == 0)
+                _cmd_driver_type(argv);
               /* support hostnames (plural) for backwards compatability */
-              if (strcmp(argv[0], "hostnames") == 0
-                  || strcmp(argv[0], "hostname") == 0)
+              else if (strcmp(argv[0], "hostnames") == 0
+                       || strcmp(argv[0], "hostname") == 0)
                 _cmd_hostname(argv);
               else if (strcmp(argv[0], "username") == 0)
                 _cmd_username(argv); 
@@ -827,10 +833,6 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_password(argv);
               else if (strcmp(argv[0], "k_g") == 0)
                 _cmd_k_g(argv);
-              /* support underscored version for backwards compatability */
-              else if (strcmp(argv[0], "ipmi_version") == 0
-                       || strcmp(argv[0], "ipmi-version") == 0)
-                _cmd_ipmi_version(argv);
               /* support "timeout" for backwards compatability */
               else if (strcmp(argv[0], "timeout") == 0
                        || strcmp(argv[0], "session-timeout") == 0)

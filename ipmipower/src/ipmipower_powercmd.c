@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.131 2008-05-12 22:34:54 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.132 2008-05-12 23:46:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -224,7 +224,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   ip->session_inbound_count = 0;
 
-  if (conf->ipmi_version == IPMI_VERSION_1_5)
+  if (conf->driver_type == DRIVER_TYPE_LAN)
     ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
   else
     ip->highest_received_sequence_number = IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
@@ -247,7 +247,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   /* IPMI 1.5 */
 
 #if 0
-  if (conf->ipmi_version == IPMI_VERSION_1_5)
+  if (conf->driver_type == DRIVER_TYPE_LAN)
     {
       /* ip->permsgauth_enabled is set after the Get Authentication
        * Capabilities Response and/or Activate Session Response is
@@ -262,7 +262,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   /* IPMI 2.0 */
 
-  if (conf->ipmi_version == IPMI_VERSION_2_0)
+  if (conf->driver_type == DRIVER_TYPE_LAN_2_0)
     {
       if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO)
         {
@@ -391,7 +391,7 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == RAKP_MESSAGE_1_REQ
       || pkt == RAKP_MESSAGE_3_REQ)
     ip->message_tag_count++;
-  else if (conf->ipmi_version == IPMI_VERSION_2_0
+  else if (conf->driver_type == DRIVER_TYPE_LAN_2_0
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
 	       || pkt == CHASSIS_CONTROL_REQ
@@ -454,7 +454,7 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
    * since the first inbound sequence number is specified by the
    * activate session command.
    */
-  if (conf->ipmi_version == IPMI_VERSION_1_5
+  if (conf->driver_type == DRIVER_TYPE_LAN
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ 
 	  || pkt == GET_CHASSIS_STATUS_REQ 
 	  || pkt == CHASSIS_CONTROL_REQ
@@ -490,7 +490,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == AUTHENTICATION_CAPABILITIES_RES 
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || (conf->ipmi_version == IPMI_VERSION_1_5
+      || (conf->driver_type == DRIVER_TYPE_LAN
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	      || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
@@ -571,7 +571,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
        || pkt == OPEN_SESSION_RES
        || pkt == RAKP_MESSAGE_2_RES
        || pkt == RAKP_MESSAGE_4_RES
-       || (conf->ipmi_version == IPMI_VERSION_2_0
+       || (conf->driver_type == DRIVER_TYPE_LAN_2_0
        && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
        || pkt == GET_CHASSIS_STATUS_RES
        || pkt == CHASSIS_CONTROL_RES
@@ -650,7 +650,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	    }
 	}
       else /* (pkt == pkt == GET_CHANNEL_CIPHER_SUITES_RES
-              || (conf->ipmi_version == IPMI_VERSION_2_0
+              || (conf->driver_type == DRIVER_TYPE_LAN_2_0
               && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
               || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
@@ -1812,7 +1812,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           && (executing_count >= conf->fanout))
         return conf->session_timeout_len;
 
-      if (conf->ipmi_version == IPMI_VERSION_2_0)
+      if (conf->driver_type == DRIVER_TYPE_LAN_2_0)
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
       else
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);

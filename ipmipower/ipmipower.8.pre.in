@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.32 2008-05-12 22:30:43 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.33 2008-05-12 23:46:49 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -51,6 +51,11 @@ INTERACTIVE COMMANDS.
 See EXAMPLES below for examples of how ipmipower is commonly used.
 
 #include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
+.TP
+\fB\-D\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR
+Specify the driver type to use instead of doing an auto selection.
+The currently available outofband drivers are LAN and LAN_2_0, which
+perform IPMI 1.5 and IPMI 2.0 respectively.
 #include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
 .TP
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
@@ -62,11 +67,6 @@ commands.  The user must have atleast USER privileges to determine the
 power status of the machine through --stat.
 #include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
-.TP
-\fB\-R\fR, \fB\-\-ipmi\-version\fR=\fIIPMIVERSION\fR
-Specify the IPMI protocol version to use.  Set the IPMI protocol
-version to use.  The currently available versions are 1.5 and
-2.0.  Defaults to 1.5.
 .TP
 \fB\-t\fR, \fB\-\-session\-timeout\fR=\fBMILLISECONDS\fR
 Specify the session timeout length in milliseconds.  The session

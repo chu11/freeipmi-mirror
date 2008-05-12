@@ -9,6 +9,14 @@
 	* ipmipower/: Removed ipmi-version auto discovery.  Removed
 	authentication-type auto discovery.
 
+	* ipmipower/: Convert --ipmi-version to --driver-type.
+
+	* ipmipower/src/ipmipower_ipmi_version.h,
+	ipmipower/src/ipmipower_ipmi_version.c: Renamed to
+	ipmipower_driver_type.h and ipmipower_driver_type.c respectively.
+	Adjust code appropriately for --ipmi-version to --driver-type
+	change.
+
 	* ipmipower/src/ipmipower_config.c
 	(ipmipower_config_check_values): Fix password length corner case
 	check.

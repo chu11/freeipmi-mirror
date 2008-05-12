@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.87 2008-05-12 22:30:45 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.88 2008-05-12 23:46:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -48,7 +48,7 @@
 #include "ipmipower_config.h"
 #include "ipmipower_authentication_type.h"
 #include "ipmipower_cipher_suite_id.h"
-#include "ipmipower_ipmi_version.h"
+#include "ipmipower_driver_type.h"
 #include "ipmipower_output.h"
 #include "ipmipower_privilege_level.h"
 #include "ipmipower_util.h"
@@ -66,6 +66,8 @@ extern struct ipmipower_connection *ics;
 const char *argp_program_version = "ipmipower " VERSION "\n";
 
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
+
+#define IPMIPOWER_IPMI_VERSION_KEY             'R'
 
 #define IPMIPOWER_RETRY_TIMEOUT_KEY            160
 #define IPMIPOWER_RETRANSMISSION_TIMEOUT_KEY   'y'
@@ -85,7 +87,6 @@ const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 #define IPMIPOWER_STAT_KEY                     's'
 #define IPMIPOWER_PULSE_KEY                    'j'
 #define IPMIPOWER_SOFT_KEY                     'm'
-#define IPMIPOWER_IPMI_VERSION_KEY             'R'
 #define IPMIPOWER_ON_IF_OFF_KEY                'g'
 #define IPMIPOWER_WAIT_UNTIL_OFF_KEY           'A'
 #define IPMIPOWER_WAIT_UNTIL_ON_KEY            'G'
@@ -102,13 +103,17 @@ const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
 static struct argp_option cmdline_options[] =
   {
-    ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED_NO_TIMEOUT,
-    {"ipmi-version", IPMIPOWER_IPMI_VERSION_KEY, "IPMIVERSION", 0,
+    ARGP_COMMON_OPTIONS_DRIVER,
+    /* maintain "ipmi-version" for backwards compatability */
+    {"ipmi-version", IPMIPOWER_IPMI_VERSION_KEY, "IPMIVERSION", OPTION_HIDDEN,
      "Specify the IPMI protocol version to use.", 11},
-    /* don't use common cmdline parsing headers, we need to support backwards compatible short options */
+    ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED_NO_TIMEOUT,
     /* maintain "retry-timeout" for backwards compatability */
     {"retry-timeout", IPMIPOWER_RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
      "Specify the packet retransmission timeout in milliseconds.", 11},
+    /* don't use common cmdline parsing headers for retransmission-timeout, we need to support
+     * backwards compatible short options
+     */
     {"retransmission-timeout", IPMIPOWER_RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,
      "Specify the packet retransmission timeout in milliseconds.", 11},
     /* maintain "timeout" for backwards compatability */
@@ -221,13 +226,13 @@ ipmipower_config_setup(void)
     ierr_exit("malloc: %s", strerror(errno));
 #endif /* !NDEBUG */
 
+  conf->driver_type = DRIVER_TYPE_LAN;
   conf->hosts = NULL;
   conf->hosts_count = 0;
   memset(conf->username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
   memset(conf->password, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH+1);
   memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH+1);
   conf->k_g_len = 0;
-  conf->ipmi_version = IPMI_VERSION_1_5;
   conf->session_timeout_len = 20000;     /* 20 seconds */
   conf->retransmission_timeout_len = 400; /* .4 seconds  */
   conf->authentication_type = AUTHENTICATION_TYPE_MD5;
@@ -262,10 +267,10 @@ ipmipower_config_setup(void)
   conf->ping_consec_count = 5;
 
   /* Options not found yet, all false */
+  conf->driver_type_set_on_cmdline = IPMIPOWER_FALSE;
   conf->hosts_set_on_cmdline = IPMIPOWER_FALSE;
   conf->username_set_on_cmdline = IPMIPOWER_FALSE;
   conf->password_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->ipmi_version_set_on_cmdline = IPMIPOWER_FALSE;
   conf->session_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
   conf->retransmission_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
   conf->authentication_type_set_on_cmdline = IPMIPOWER_FALSE;
@@ -294,14 +299,14 @@ _config_common_checks(char *str)
 {
   assert (str != NULL);
 
+  if (conf->driver_type == DRIVER_TYPE_INVALID)
+    ierr_exit("%s: invalid driver type", str);
+
   if (conf->hosts != NULL 
       && (conf->hosts_count < IPMIPOWER_MINNODES 
           || conf->hosts_count > IPMIPOWER_MAXNODES))
     ierr_exit("%s: invalid number of hostnames", str);
     
-  if (conf->ipmi_version == IPMI_VERSION_INVALID)
-    ierr_exit("%s: invalid ipmi version", str);
-
   if (conf->session_timeout_len < IPMIPOWER_SESSION_TIMEOUT_MIN 
       || conf->session_timeout_len > IPMIPOWER_SESSION_TIMEOUT_MAX)
     ierr_exit("%s: timeout out of range", str);
@@ -370,6 +375,12 @@ cmdline_parse (int key,
 
   switch (key) 
     {
+    /* IPMIPOWER_IPMI_VERSION_KEY for backwards compatability */
+    case IPMIPOWER_IPMI_VERSION_KEY:	/* --ipmi-version */
+    case ARGP_DRIVER_TYPE_KEY:      /* --driver-type */
+      conf->driver_type = ipmipower_driver_type_index(arg);
+      conf->driver_type_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
     case ARGP_HOSTNAME_KEY:       /* --hostname */
       if ((conf->hosts = hostlist_create(arg)) == NULL)
         ierr_exit("Error: Hostname(s) incorrectly formatted");
@@ -426,10 +437,6 @@ cmdline_parse (int key,
           conf->k_g_len = rv;
           conf->k_g_set_on_cmdline = IPMIPOWER_TRUE;
         }
-      break;
-    case IPMIPOWER_IPMI_VERSION_KEY:	/* --ipmi-version */
-      conf->ipmi_version = ipmipower_ipmi_version_index(arg);
-      conf->ipmi_version_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case IPMIPOWER_SESSION_TIMEOUT_KEY:       /* --session-timeout */
       conf->session_timeout_len = strtol(arg, &ptr, 10);
@@ -615,6 +622,19 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
  */
     
 static int 
+_cb_driver_type(conffile_t cf, struct conffile_data *data,
+                char *optionname, int option_type, void *option_ptr, 
+                int option_data, void *app_ptr, int app_data) 
+{
+  if (conf->driver_type_set_on_cmdline == IPMIPOWER_TRUE)
+    return 0;
+  
+  /* Incorrect driver_types checked in _config_common_checks */
+  conf->driver_type = ipmipower_driver_type_index(data->string);
+  return 0;
+}
+
+static int 
 _cb_hostname(conffile_t cf, struct conffile_data *data,
              char *optionname, int option_type, void *option_ptr, 
              int option_data, void *app_ptr, int app_data) 
@@ -689,19 +709,6 @@ _cb_k_g(conffile_t cf, struct conffile_data *data,
   if (rv > 0)
     conf->k_g_len = rv;
 
-  return 0;
-}
-
-static int 
-_cb_ipmi_version(conffile_t cf, struct conffile_data *data,
-		 char *optionname, int option_type, void *option_ptr, 
-		 int option_data, void *app_ptr, int app_data) 
-{
-  if (conf->ipmi_version_set_on_cmdline == IPMIPOWER_TRUE)
-    return 0;
-
-  /* Incorrect ipmi_versions checked in _config_common_checks */
-  conf->ipmi_version = ipmipower_ipmi_version_index(data->string);
   return 0;
 }
 
@@ -793,8 +800,13 @@ _cb_int(conffile_t cf, struct conffile_data *data,
 void 
 ipmipower_config_conffile_parse(char *configfile) 
 {
-  int hostname_flag, hostnames_flag, username_flag, password_flag, k_g_flag, 
+  int driver_type_flag,
     ipmi_version_flag, 
+    hostname_flag, 
+    hostnames_flag, 
+    username_flag, 
+    password_flag, 
+    k_g_flag, 
     timeout_flag, 
     session_timeout_flag, 
     retry_timeout_flag,
@@ -825,6 +837,11 @@ ipmipower_config_conffile_parse(char *configfile)
 
   struct conffile_option options[] = 
     {
+      {"driver-type", CONFFILE_OPTION_STRING, -1, _cb_driver_type,
+       1, 0, &driver_type_flag, NULL, 0},
+      /* ipmi-version maintained for backwards compatability */
+      {"ipmi-version", CONFFILE_OPTION_STRING, -1, _cb_driver_type,
+       1, 0, &ipmi_version_flag, NULL, 0},
       /* hostnames (plural) maintained for backwards compatability */
       {"hostnames", CONFFILE_OPTION_LIST_STRING, -1, _cb_hostname, 
        1, 0, &hostnames_flag, NULL, 0},
@@ -836,8 +853,6 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &password_flag, NULL, 0},
       {"k_g", CONFFILE_OPTION_STRING, -1, _cb_k_g, 
        1, 0, &k_g_flag, NULL, 0},
-      {"ipmi-version", CONFFILE_OPTION_STRING, -1, _cb_ipmi_version,
-       1, 0, &ipmi_version_flag, NULL, 0},
       /* timeout maintained for backwards compatability */
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &timeout_flag, &(conf->session_timeout_len), 
@@ -949,11 +964,11 @@ ipmipower_config_conffile_parse(char *configfile)
 void 
 ipmipower_config_check_values(void) 
 {
-  if (conf->ipmi_version == IPMI_VERSION_1_5
+  if (conf->driver_type == DRIVER_TYPE_LAN
       && conf->k_g_len)
     ierr_exit("Error: k_g is only used for IPMI 2.0");
 
-  if (conf->ipmi_version == IPMI_VERSION_1_5
+  if (conf->driver_type == DRIVER_TYPE_LAN
       && strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
     ierr_exit("Error: password too long");
 

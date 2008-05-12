@@ -20,10 +20,10 @@ ipmipower
 - lock memory only w/ option
 - remove auto features to make consistent to other tools
   - auto privilege
-  - auto version
-  - legacy ipmi-version command to driver type
-  - auto authentication
-    - move setting of authentication type back
+  X - auto version
+    X - remove ipmi-version in ipmipower_powercmd_t
+    - legacy ipmi-version command to driver type
+  X - auto authentication
   - auto cipher suite
   - priv level operator by default
   - cipher suite 3 default
@@ -32,8 +32,10 @@ ipmipower
   - to test
     X - ipmi 2.0 not found
     X - password length ipmi 1.5 nad ipmi 2.0
-  - use common manpage stuff now that auto is gone
+    X - auth type not supported
+  - msg types all still used? audit.
 - use generic argp - not unique .h
+  - use common manpage stuff now that auto is gone
   
 bmc-config
 ----------

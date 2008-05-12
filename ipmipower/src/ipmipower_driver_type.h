@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ipmi_version.h,v 1.6 2008-03-28 00:14:47 chu11 Exp $
+ *  $Id: ipmipower_driver_type.h,v 1.1 2008-05-12 23:46:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -25,24 +25,24 @@
 \*****************************************************************************/
 
 
-#ifndef _IPMIPOWER_IPMI_VERSION_H
-#define _IPMIPOWER_IPMI_VERSION_H
+#ifndef _IPMIPOWER_DRIVER_TYPE_H
+#define _IPMIPOWER_DRIVER_TYPE_H
 
 #include "ipmipower.h"
 
-/* ipmipower_ipmi_version_index
- * - Return the index of the specified ipmi_version 
+/* ipmipower_driver_type_index
+ * - Return the index of the specified driver_type 
  */
-ipmi_version_t ipmipower_ipmi_version_index(char *str);
+driver_type_t ipmipower_driver_type_index(char *str);
 
-/* ipmipower_ipmi_version_string
- * - Return static string description of ipmi_version 
+/* ipmipower_driver_type_string
+ * - Return static string description of driver_type 
  */
-char *ipmipower_ipmi_version_string(ipmi_version_t ipmi_version);
+char *ipmipower_driver_type_string(driver_type_t driver_type);
 
-/* ipmipower_ipmi_version_list
+/* ipmipower_driver_type_list
  * - Return static string list of all available ipmi versions
  */
-char *ipmipower_ipmi_version_list(void);
+char *ipmipower_driver_type_list(void);
 
-#endif /* _IPMIPOWER_IPMI_VERSION_H */
+#endif /* _IPMIPOWER_DRIVER_TYPE_H */

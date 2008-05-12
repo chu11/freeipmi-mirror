@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ipmi_version.c,v 1.10 2008-05-12 22:06:58 chu11 Exp $
+ *  $Id: ipmipower_driver_type.c,v 1.1 2008-05-12 23:46:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -38,56 +38,61 @@
 #endif /* HAVE_UNISTD_H */
 #include <assert.h>
 
-#include "ipmipower_ipmi_version.h"
+#include "ipmipower_driver_type.h"
 #include "ipmipower_wrappers.h"
 
 #include "tool-cmdline-common.h"
 
-ipmi_version_t 
-ipmipower_ipmi_version_index(char *str) 
+driver_type_t 
+ipmipower_driver_type_index(char *str) 
 {
   assert(str != NULL);
 
+  /* accept 1.5 or 2.0 strings for backwards compatability */
+
   if (!strcasecmp(str, "1.5"))
-    return IPMI_VERSION_1_5;
+    return DRIVER_TYPE_LAN;
+  /* support "lanplus" for those that might be used to ipmitool.
+   * support typo variants to ease.
+   */
   else if (!strcasecmp(str, "2.0"))
-    return IPMI_VERSION_2_0;
+    return DRIVER_TYPE_LAN_2_0;
   else 
     {
       int driver_type;
-
+      
       driver_type = parse_outofband_driver_type(str);
-
+      
       if (driver_type == IPMI_DEVICE_LAN)
-        return IPMI_VERSION_1_5;
+        return DRIVER_TYPE_LAN;
       else if (driver_type == IPMI_DEVICE_LAN_2_0)
-        return IPMI_VERSION_2_0;
-      return IPMI_VERSION_INVALID;
+        return DRIVER_TYPE_LAN_2_0;
+      return DRIVER_TYPE_INVALID;
     }
 }
 
 char *
-ipmipower_ipmi_version_string(ipmi_version_t ipmi_version) 
+ipmipower_driver_type_string(driver_type_t driver_type) 
 {
-  assert(IPMI_VERSION_VALID(ipmi_version));
+  assert(DRIVER_TYPE_VALID(driver_type));
 
-  switch(ipmi_version) 
+  switch(driver_type) 
     {
-    case IPMI_VERSION_1_5:
-      return "1.5";
+    case DRIVER_TYPE_LAN:
+      return "lan";
       break;
-    case IPMI_VERSION_2_0:
-      return "2.0";
+    case DRIVER_TYPE_LAN_2_0:
+      return "lan_2_0";
       break;
     default:
-      ierr_exit("ipmipower_ipmi_version_string: Invalid Ipmi Version Type: %d\n", ipmi_version);
+      ierr_exit("ipmipower_driver_type_string: Invalid Ipmi Version Type: %d\n", driver_type);
     }
   
   return NULL;                  /* NOT_REACHED */
 }
 
 char *
-ipmipower_ipmi_version_list(void) 
+ipmipower_driver_type_list(void) 
 {
-  return "1.5, 2.0";
+  return "lan, lan_2_0";
 }

@@ -8,7 +8,7 @@ ipmipower_SOURCES= \
 	ipmipower_config.c \
 	ipmipower_connection.c \
 	ipmipower.c \
-	ipmipower_ipmi_version.c \
+	ipmipower_driver_type.c \
 	ipmipower_output.c \
 	ipmipower_packet.c \
 	ipmipower_ping.c \
@@ -43,7 +43,7 @@ noinst_HEADERS= \
 	ipmipower_config.h \
 	ipmipower_connection.h \
 	ipmipower.h \
-	ipmipower_ipmi_version.h \
+	ipmipower_driver_type.h \
 	ipmipower_output.h \
 	ipmipower_packet.h \
 	ipmipower_ping.h \
