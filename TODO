@@ -30,8 +30,8 @@ ipmipower
   - auth type md5
   - many version/highest_received_seq_num etc. move to init
   - to test
-    - ipmi 2.0 not found
-    - password length ipmi 1.5 nad ipmi 2.0
+    X - ipmi 2.0 not found
+    X - password length ipmi 1.5 nad ipmi 2.0
 - use generic argp - not unique .h
   
 bmc-config

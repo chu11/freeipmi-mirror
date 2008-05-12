@@ -8,6 +8,10 @@
 
 	* ipmipower/: Removed ipmi-version auto discovery.
 
+	* ipmipower/src/ipmipower_config.c
+	(ipmipower_config_check_values): Fix password length corner case
+	check.
+
 2008-05-09  Albert Chu <chu11@llnl.gov>
 
         * ipmiconsole/src/ipmiconsole/ipmiconsole_config.c

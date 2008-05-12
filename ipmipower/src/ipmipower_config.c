@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.85 2008-05-12 22:06:57 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.86 2008-05-12 22:14:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -954,7 +954,7 @@ ipmipower_config_check_values(void)
     ierr_exit("Error: k_g is only used for IPMI 2.0");
 
   if (conf->ipmi_version == IPMI_VERSION_1_5
-      && strlen(conf->password) >= IPMI_1_5_MAX_PASSWORD_LENGTH)
+      && strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
     ierr_exit("Error: password too long");
 
   if (conf->retransmission_timeout_len > conf->session_timeout_len)
