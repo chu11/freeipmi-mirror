@@ -17,6 +17,16 @@ libfreeipmi:
 ipmipower
 ---------
 - redo to utilize newer api?
+- lock memory only w/ option
+- remove auto features to make consistent to other tools
+  - auto privilege
+  - auto version
+  - legacy ipmi-version command to driver type
+  - auto authentication
+  - auto cipher suite
+  - priv level operator by default
+  - cipher suite 3 default
+  - auth type md5
 - use generic argp - not unique .h
   
 bmc-config
