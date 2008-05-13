@@ -51,6 +51,8 @@ only output lan-conf-auth sections is supported via supported field
 ipmi-chassis
 ------------
 audit
+- fiid names
+- flags
 cleanup argp parsing
 
 pef-config
