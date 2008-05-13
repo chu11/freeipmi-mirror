@@ -182,7 +182,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_BIOS;
       else
         {
-          printf ("Invalid boot device\n");
+          fprintf (stderr, "Invalid value for boot-device\n");
           argp_usage (state);
         }
 
