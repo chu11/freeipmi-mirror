@@ -60,45 +60,45 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    {"get-capabilities", 'c', NULL, 0, 
+    {"get-capabilities", GET_CAPABILITIES_KEY, NULL, 0, 
      "Get chassis capabilities.", 30},
-    {"get-status", 's', NULL, 0, 
+    {"get-status", GET_STATUS_KEY, NULL, 0, 
      "Get chassis status.", 31},
-    {"chassis-control", 'O', "CONTROL", 0, 
+    {"chassis-control", CHASSIS_CONTROL_KEY, "CONTROL", 0, 
      "Control the chassis.", 32},
-    {"chassis-identify", 'I', "IDENTIFY", 0,
+    {"chassis-identify", CHASSIS_IDENTIFY_KEY, "IDENTIFY", 0,
      "Set chassis Identification.", 33},
-    {"get-system-restart-cause", 'R', NULL, 0, 
+    {"get-system-restart-cause", GET_SYSTEM_RESTART_CAUSE_KEY, NULL, 0, 
      "Get system restart cause.", 34},
-    {"get-power-on-hours-counter", 'H', NULL, 0,
+    {"get-power-on-hours-counter", GET_POWER_ON_HOURS_COUNTER_KEY, NULL, 0,
      "Get power on hours counter.", 35},
-    {"set-power-cycle-interval", 'S', "SECONDS", 0, 
+    {"set-power-cycle-interval", SET_POWER_CYCLE_INTERVAL_KEY, "SECONDS", 0, 
      "Set Power cycle interval in seconds.", 36},
-    {"get-boot-flags", 'G', NULL, 0, 
+    {"get-boot-flags", GET_BOOT_FLAGS_KEY, NULL, 0, 
      "Get system boot-flags.", 37},
-    {"set-boot-flags", 'L', NULL, 0, 
+    {"set-boot-flags", SET_BOOT_FLAGS_KEY, NULL, 0, 
      "Set system boot flags.", 38},
-    {"boot-type", IPMI_CHASSIS_KEY_BOOT_TYPE, "BOOT_TYPE", OPTION_ARG_OPTIONAL, 
+    {"boot-type", SET_BOOT_FLAGS_BOOT_TYPE_KEY, "BOOT_TYPE", OPTION_ARG_OPTIONAL, 
      "Set BIOS boot type to BOOT_TYPE.", 39},
-    {"lock-out-reset-button", IPMI_CHASSIS_KEY_LOCK_OUT_RESET_BUTTON, "LOCK_OUT_RESET_BUTTON", OPTION_ARG_OPTIONAL, 
+    {"lock-out-reset-button", SET_BOOT_FLAGS_LOCK_OUT_RESET_BUTTON_KEY, "LOCK_OUT_RESET_BUTTON", OPTION_ARG_OPTIONAL, 
      "Modify lock out reset button support.", 40},
-    {"blank-screen", IPMI_CHASSIS_KEY_SCREEN_BLANK, "BLANK_SCREEN", OPTION_ARG_OPTIONAL, 
+    {"blank-screen", SET_BOOT_FLAGS_SCREEN_BLANK_KEY, "BLANK_SCREEN", OPTION_ARG_OPTIONAL, 
      "Modify blank screen support.", 41},
-    {"boot-device", IPMI_CHASSIS_KEY_BOOT_DEVICE_SELECTOR, "BOOT_DEVICE", OPTION_ARG_OPTIONAL, 
+    {"boot-device", SET_BOOT_FLAGS_BOOT_DEVICE_SELECTOR_KEY, "BOOT_DEVICE", OPTION_ARG_OPTIONAL, 
      "Set device to boot from to BOOT_DEVICE.", 42},
-    {"lock-keyboard", IPMI_CHASSIS_KEY_LOCK_KEYBOARD, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL, 
+    {"lock-keyboard", SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL, 
      "Modify lock keyboard support.", 43},
-    {"clear-cmos", IPMI_CHASSIS_KEY_CLEAR_CMOS, "CMOS_CLEAR", OPTION_ARG_OPTIONAL, 
+    {"clear-cmos", SET_BOOT_FLAGS_CLEAR_CMOS_KEY, "CMOS_CLEAR", OPTION_ARG_OPTIONAL, 
      "Modify clear CMOS support.", 44},
-    {"console-redirection", IPMI_CHASSIS_KEY_CONSOLE_REDIRECTION, "CONSOLE_REDIRECTION", OPTION_ARG_OPTIONAL, 
+    {"console-redirection", SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY, "CONSOLE_REDIRECTION", OPTION_ARG_OPTIONAL, 
      "Set console redirection type.", 45},
-    {"user-password-bypass", IPMI_CHASSIS_KEY_USER_PASSWORD_BYPASS, "USER_PASSWORD_BYPASS", OPTION_ARG_OPTIONAL, 
+    {"user-password-bypass", SET_BOOT_FLAGS_USER_PASSWORD_BYPASS_KEY, "USER_PASSWORD_BYPASS", OPTION_ARG_OPTIONAL, 
      "Modify user password bypass support.", 46},
-    {"force-progress-event-traps", IPMI_CHASSIS_KEY_FORCE_PROGRESS_EVENT_TRAPS, "FORCE_PROGRESS_EVENT_TRAPS", OPTION_ARG_OPTIONAL, 
+    {"force-progress-event-traps", SET_BOOT_FLAGS_FORCE_PROGRESS_EVENT_TRAPS_KEY, "FORCE_PROGRESS_EVENT_TRAPS", OPTION_ARG_OPTIONAL, 
      "Modify force progress event traps support.", 47},
-    {"firmware-bios-verbosity", IPMI_CHASSIS_KEY_FIRMWARE_BIOS_VERBOSITY, "FIRMWARE_BIOS_VERBOSITY", OPTION_ARG_OPTIONAL, 
+    {"firmware-bios-verbosity", SET_BOOT_FLAGS_FIRMWARE_BIOS_VERBOSITY_KEY, "FIRMWARE_BIOS_VERBOSITY", OPTION_ARG_OPTIONAL, 
      "Set firmware verbosity.", 48},
-    {"set-power-restore-policy", 'X', "POLICY", 0, 
+    {"set-power-restore-policy", SET_POWER_RESTORE_POLICY_KEY, "POLICY", 0, 
      "Set power restore policy.", 50},
     { 0 }
   };
@@ -119,7 +119,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-    case IPMI_CHASSIS_KEY_BOOT_TYPE:
+    case SET_BOOT_FLAGS_BOOT_TYPE_KEY:
       if (!strcasecmp(arg, "pc-compatible"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_PC_COMPATIBLE;
       else if (!strcasecmp(arg, "efi"))
@@ -133,7 +133,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.bios_boot_type = value;
       break;
 
-    case IPMI_CHASSIS_KEY_LOCK_OUT_RESET_BUTTON:
+    case SET_BOOT_FLAGS_LOCK_OUT_RESET_BUTTON_KEY:
       if (!strcasecmp(arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
       else if (!strcasecmp(arg, "no"))
@@ -147,7 +147,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.lock_out_reset_button = value;
       break;
 
-    case IPMI_CHASSIS_KEY_SCREEN_BLANK:
+    case SET_BOOT_FLAGS_SCREEN_BLANK_KEY:
       if (!strcasecmp(arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
       else if (!strcasecmp(arg, "no"))
@@ -161,7 +161,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.screen_blank = value;
       break;
 
-    case IPMI_CHASSIS_KEY_BOOT_DEVICE_SELECTOR:
+    case SET_BOOT_FLAGS_BOOT_DEVICE_SELECTOR_KEY:
       if (arg == NULL)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NONE;
       else if (!strcasecmp(arg, "none"))
@@ -189,7 +189,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.boot_device_selector = value;
       break;
 
-    case IPMI_CHASSIS_KEY_LOCK_KEYBOARD:
+    case SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY:
       if (!strcasecmp(arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
       else if (!strcasecmp(arg, "no"))
@@ -203,7 +203,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.lock_keyboard = value;
       break;
 
-    case IPMI_CHASSIS_KEY_CLEAR_CMOS:
+    case SET_BOOT_FLAGS_CLEAR_CMOS_KEY:
       if (!strcasecmp (arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
       else if (!strcasecmp (arg, "no"))
@@ -217,7 +217,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.clear_cmos = value;
       break;
 
-    case IPMI_CHASSIS_KEY_CONSOLE_REDIRECTION:
+    case SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY:
       if (!strcasecmp (arg, "default"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT;
       else if (!strcasecmp (arg, "suppress"))
@@ -233,7 +233,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.console_redirection = value;
       break;
 
-    case IPMI_CHASSIS_KEY_USER_PASSWORD_BYPASS:
+    case SET_BOOT_FLAGS_USER_PASSWORD_BYPASS_KEY:
       if (!strcasecmp(arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
       else if (!strcasecmp(arg, "no"))
@@ -247,7 +247,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.user_password_bypass = value;
       break;
 
-    case IPMI_CHASSIS_KEY_FORCE_PROGRESS_EVENT_TRAPS:
+    case SET_BOOT_FLAGS_FORCE_PROGRESS_EVENT_TRAPS_KEY:
       if (!strcasecmp(arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
       else if (!strcasecmp(arg, "no"))
@@ -261,7 +261,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.force_progress_event_traps = value;
       break;
 
-    case IPMI_CHASSIS_KEY_FIRMWARE_BIOS_VERBOSITY:
+    case SET_BOOT_FLAGS_FIRMWARE_BIOS_VERBOSITY_KEY:
       if (!strcasecmp(arg, "quiet"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_QUIET;
       else if (!strcasecmp(arg, "default"))
@@ -298,7 +298,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-    case 'c':
+    case GET_CAPABILITIES_KEY:
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Multiple commands specified\n");
@@ -307,7 +307,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->cmd = IPMI_CMD_GET_CHASSIS_CAPABILITIES;
       break;
 
-    case 's':
+    case GET_STATUS_KEY:
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Multiple commands specified\n");
@@ -316,7 +316,33 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->cmd = IPMI_CMD_GET_CHASSIS_STATUS;
       break;
 
-    case 'I':
+    case CHASSIS_CONTROL_KEY:
+      if (cmd_args->cmd != -1)
+        {
+          fprintf (stderr, "Error: Multiple commands specified\n");
+          exit(EXIT_FAILURE);
+        }
+      cmd_args->cmd = IPMI_CMD_CHASSIS_CONTROL;
+      if (!strcasecmp(arg, "power-down"))
+        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_DOWN;
+      else if (!strcasecmp(arg, "power-up"))
+        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_UP;
+      else if (!strcasecmp(arg, "power-cycle"))
+        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_CYCLE;
+      else if (!strcasecmp(arg, "hard-reset"))
+        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_HARD_RESET;
+      else if (!strcasecmp(arg, "diagnostic-interrupt"))
+        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_PULSE_DIAGNOSTIC_INTERRUPT;
+      else if (!strcasecmp(arg, "soft-shutdown"))
+        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_INITIATE_SOFT_SHUTDOWN;
+      else
+        {
+          fprintf (stderr, "Invalid value for chassis control\n");
+          argp_usage (state);
+        }
+      break;
+
+    case CHASSIS_IDENTIFY_KEY:
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Multiple commands specified\n");
@@ -355,33 +381,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
       break;
 
-    case 'O':
-      if (cmd_args->cmd != -1)
-        {
-          fprintf (stderr, "Error: Multiple commands specified\n");
-          exit(EXIT_FAILURE);
-        }
-      cmd_args->cmd = IPMI_CMD_CHASSIS_CONTROL;
-      if (!strcasecmp(arg, "power-down"))
-        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_DOWN;
-      else if (!strcasecmp(arg, "power-up"))
-        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_UP;
-      else if (!strcasecmp(arg, "power-cycle"))
-        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_CYCLE;
-      else if (!strcasecmp(arg, "hard-reset"))
-        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_HARD_RESET;
-      else if (!strcasecmp(arg, "diagnostic-interrupt"))
-        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_PULSE_DIAGNOSTIC_INTERRUPT;
-      else if (!strcasecmp(arg, "soft-shutdown"))
-        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_INITIATE_SOFT_SHUTDOWN;
-      else
-        {
-          fprintf (stderr, "Invalid value for chassis control\n");
-          argp_usage (state);
-        }
-      break;
-
-    case 'R':
+    case GET_SYSTEM_RESTART_CAUSE_KEY:
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Multiple commands specified\n");
@@ -390,7 +390,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->cmd = IPMI_CMD_GET_SYSTEM_RESTART_CAUSE;
       break;
 
-    case 'H':
+    case GET_POWER_ON_HOURS_COUNTER_KEY:
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Multiple commands specified\n");
@@ -399,7 +399,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->cmd = IPMI_CMD_GET_POWER_ON_HOURS_COUNTER;
       break;
 
-    case 'S':
+    case SET_POWER_CYCLE_INTERVAL_KEY:
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Multiple commands specified\n");
@@ -415,7 +415,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
       break;
 
-    case 'G':
+    case GET_BOOT_FLAGS_KEY:
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Multiple commands specified\n");
@@ -424,7 +424,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->cmd = IPMI_CMD_GET_SYSTEM_BOOT_OPTIONS;
       break;
 
-    case 'L':
+    case SET_BOOT_FLAGS_KEY:
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Multiple commands specified\n");
@@ -434,7 +434,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->cmd = IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS;
       break;
 
-    case 'X':
+    case SET_POWER_RESTORE_POLICY_KEY:
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Multiple commands specified\n");
