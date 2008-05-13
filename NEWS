@@ -6,6 +6,7 @@ o Add new tool bmc-device.
 o Support --always-prefix option in many tools.
 o Support --guid option in bmc-info.
 o Support --get-time and --set-time in ipmi-sel.
+o Output FRU device names along with IDs in ipmi-fru.
 o Removed many experimental features from ipmipower so it emulates other tools.
   o Removed ipmi-version auto discovery.
   o Removed authentication-type auto discovery.

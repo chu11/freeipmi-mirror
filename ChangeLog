@@ -1,5 +1,10 @@
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/src/ipmi-fru.c (_output_fru, run_cmd_args): Output FRU
+	device names along with IDs.
+
+2008-05-13  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/src/ipmi-fru-util.c (_get_type_length_bytes): Fix
 	corner case when handling binary data on type/length output.
 

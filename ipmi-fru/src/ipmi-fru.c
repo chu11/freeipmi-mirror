@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.17 2008-05-09 22:03:04 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.18 2008-05-13 17:34:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -54,6 +54,8 @@
 #include "pstdout.h"
 #include "hostrange.h"
 
+#define IPMI_FRU_DEFAULT_DEVICE_ID_STRING "Default FRU Device"
+
 static int
 _flush_cache (ipmi_fru_state_data_t *state_data)
 {
@@ -70,7 +72,8 @@ _flush_cache (ipmi_fru_state_data_t *state_data)
 
 static fru_err_t
 _output_fru(ipmi_fru_state_data_t *state_data,
-            uint8_t device_id)
+            uint8_t device_id,
+            const char *device_id_str)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   fiid_obj_t fru_get_inventory_rs = NULL;
@@ -91,7 +94,8 @@ _output_fru(ipmi_fru_state_data_t *state_data,
   /* In verbose mode, output this earlier to attach it to other error messages */
   if (state_data->prog_data->args->verbose_count)
     pstdout_printf(state_data->pstate, 
-                   "FRU Inventory Device ID: 0x%02X\n",
+                   "FRU Inventory Device: %s (ID 0x%02X)\n",
+                   device_id_str,
                    device_id);
 
   _FIID_OBJ_CREATE(fru_get_inventory_rs, tmpl_cmd_get_fru_inventory_area_info_rs);
@@ -303,7 +307,9 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
   if (args->sdr.ignore_sdr_cache_wanted)
     {
       /* no SDR?  This is all you get :-) */
-      if (_output_fru(state_data, IPMI_FRU_DEVICE_ID_DEFAULT) != FRU_ERR_SUCCESS)
+      if (_output_fru(state_data, 
+                      IPMI_FRU_DEVICE_ID_DEFAULT,
+                      IPMI_FRU_DEFAULT_DEVICE_ID_STRING) != FRU_ERR_SUCCESS)
         return -1;
       return 0;
     }
@@ -332,7 +338,9 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
     {
       if (args->device_id == IPMI_FRU_DEVICE_ID_DEFAULT)
         {
-          if (_output_fru(state_data, IPMI_FRU_DEVICE_ID_DEFAULT) != FRU_ERR_SUCCESS)
+          if (_output_fru(state_data, 
+                          IPMI_FRU_DEVICE_ID_DEFAULT,
+                          IPMI_FRU_DEFAULT_DEVICE_ID_STRING) != FRU_ERR_SUCCESS)
             return -1;
           found++;
         }
@@ -376,8 +384,21 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
               if (logical_physical_fru_device
                   && logical_fru_device_device_slave_address == args->device_id)
                 {
-                  if (_output_fru(state_data, args->device_id) != FRU_ERR_SUCCESS)
+                  char device_id_string[IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING+1];
+              
+                  memset(device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING+1);
+                  if (sdr_cache_get_device_id_string (state_data->pstate,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      device_id_string,
+                                                      IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING) < 0)
                     return -1;
+                  
+                  if (_output_fru(state_data, 
+                                  args->device_id,
+                                  device_id_string) != FRU_ERR_SUCCESS)
+                    return -1;
+                  
                   pstdout_printf(state_data->pstate, "\n");
                   found++;
                 }
@@ -396,7 +417,9 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
     {
       fru_err_t ret;
   
-      ret = _output_fru(state_data, IPMI_FRU_DEVICE_ID_DEFAULT);
+      ret = _output_fru(state_data, 
+                        IPMI_FRU_DEVICE_ID_DEFAULT,
+                        IPMI_FRU_DEFAULT_DEVICE_ID_STRING);
       if (ret == FRU_ERR_FATAL_ERROR)
         return -1;
       /* else continue on */
@@ -439,8 +462,19 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
           if (logical_physical_fru_device
               && logical_fru_device_device_slave_address != IPMI_FRU_DEVICE_ID_DEFAULT)
             {
+              char device_id_string[IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING+1];
               
-              ret = _output_fru(state_data, logical_fru_device_device_slave_address);
+              memset(device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING+1);
+              if (sdr_cache_get_device_id_string (state_data->pstate,
+                                                  sdr_record,
+                                                  sdr_record_len,
+                                                  device_id_string,
+                                                  IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING) < 0)
+                return -1;
+              
+              ret = _output_fru(state_data, 
+                                logical_fru_device_device_slave_address,
+                                device_id_string);
               if (ret == FRU_ERR_FATAL_ERROR)
                 return -1;
               /* else continue on */
