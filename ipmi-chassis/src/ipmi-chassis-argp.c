@@ -45,7 +45,7 @@ const char *argp_program_version =
 
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
-static char doc[] = "IPMI Chassis - Control IPMI Chassis. The tool executes in the default privilege level of ADMIN";
+static char doc[] = "IPMI Chassis - Management a chassis via IPMI";
 
 static char args_doc[] = "";
 
