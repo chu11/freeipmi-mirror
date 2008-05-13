@@ -217,7 +217,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
 
   rv = 0;
-cleanup:
+ cleanup:
   _FIID_OBJ_DESTROY (get_boot_flags_rs);
   _FIID_OBJ_DESTROY (boot_info_ack_cmd_rs);
   _FIID_OBJ_DESTROY (cmd_rs);
@@ -235,9 +235,9 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_system_boot_options_boot_flags_rs);
   
   if (ipmi_cmd_get_system_boot_options_boot_flags ( state_data->ipmi_ctx, 
-                                                  IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR, 
-                                                  IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
-                                                  cmd_rs) != 0)
+                                                    IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR, 
+                                                    IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
+                                                    cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -250,12 +250,13 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "BIOS boot type                : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_PC_COMPATIBLE:
-        strcat (tmp, "PC compatible boot");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_PC_COMPATIBLE:
+      strcat (tmp, "PC compatible boot");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_EFI:
-        strcat (tmp, "Extensible firmware Interface boot");
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_EFI:
+      strcat (tmp, "Extensible firmware Interface boot");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -263,13 +264,13 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "Lock out reset buttons        : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
-        strcat (tmp, "Enabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
+      strcat (tmp, "Enabled");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
-        strcat (tmp, "Disabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
+      strcat (tmp, "Disabled");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -277,13 +278,13 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "Screen blank                  : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
-        strcat (tmp, "Enabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
+      strcat (tmp, "Enabled");
+      break;
       
-      case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
-        strcat (tmp, "Disabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
+      strcat (tmp, "Disabled");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -291,37 +292,37 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "Boot device selector          : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NO_OVERRIDE:
-        strcat (tmp, "No override");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NO_OVERRIDE:
+      strcat (tmp, "No override");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_PXE:
-        strcat (tmp, "Force PXE");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_PXE:
+      strcat (tmp, "Force PXE");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_HARD_DRIVE:
-        strcat (tmp, "Force boot from default Hard drive");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_HARD_DRIVE:
+      strcat (tmp, "Force boot from default Hard drive");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_HARD_DRIVE_SAFE_MODE:
-        strcat (tmp, "Force boot from default Hard drive, request safe mode");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_HARD_DRIVE_SAFE_MODE:
+      strcat (tmp, "Force boot from default Hard drive, request safe mode");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_DIAGNOSTIC_PARTITION:
-        strcat (tmp, "Force boot from default Diagnostic partition");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_DIAGNOSTIC_PARTITION:
+      strcat (tmp, "Force boot from default Diagnostic partition");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_CD_DVD:
-        strcat (tmp, "Force boot from default CD/DVD");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_CD_DVD:
+      strcat (tmp, "Force boot from default CD/DVD");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_BIOS_SETUP:
-        strcat (tmp, "Force boot into BIOS setup");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_BIOS_SETUP:
+      strcat (tmp, "Force boot into BIOS setup");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA:
-        strcat (tmp, "Force boot from default Floppy/primary removable media");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA:
+      strcat (tmp, "Force boot from default Floppy/primary removable media");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -329,13 +330,13 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "Lock keyboard                 : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
-        strcat (tmp, "Enabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
+      strcat (tmp, "Enabled");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
-        strcat (tmp, "Disabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
+      strcat (tmp, "Disabled");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -343,13 +344,13 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "Clear CMOS                    : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
-        strcat (tmp, "Enabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
+      strcat (tmp, "Enabled");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
-        strcat (tmp, "Disabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
+      strcat (tmp, "Disabled");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -357,17 +358,17 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "Console redirection control   : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT:
-        strcat (tmp, "System default");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT:
+      strcat (tmp, "System default");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPRESS:
-        strcat (tmp, "Suppressed");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPRESS:
+      strcat (tmp, "Suppressed");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE:
-        strcat (tmp, "Enabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE:
+      strcat (tmp, "Enabled");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
   
@@ -375,13 +376,13 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "Lock out sleep button         : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
-        strcat (tmp, "Enabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
+      strcat (tmp, "Enabled");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
-        strcat (tmp, "Disabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
+      strcat (tmp, "Disabled");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -389,13 +390,13 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "User password bypass          : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
-        strcat (tmp, "Enabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
+      strcat (tmp, "Enabled");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
-        strcat (tmp, "Disabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
+      strcat (tmp, "Disabled");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -403,13 +404,13 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "Lock out reset button         : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
-        strcat (tmp, "Enabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
+      strcat (tmp, "Enabled");
+      break;
   
-      case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
-        strcat (tmp, "Disabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
+      strcat (tmp, "Disabled");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -417,13 +418,13 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "Force progress event traps    : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
-        strcat (tmp, "Enabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
+      strcat (tmp, "Enabled");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
-        strcat (tmp, "Disabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
+      strcat (tmp, "Disabled");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -431,17 +432,17 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "Firmware BIOS verbosity level : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_QUIET:
-        strcat (tmp, "Quiet");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_QUIET:
+      strcat (tmp, "Quiet");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VERBOSE:
-        strcat (tmp, "Verbose");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VERBOSE:
+      strcat (tmp, "Verbose");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_DEFAULT:
-        strcat (tmp, "Default");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_DEFAULT:
+      strcat (tmp, "Default");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -449,17 +450,17 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "Lock out via power button     : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
-        strcat (tmp, "Enabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_ENABLE:
+      strcat (tmp, "Enabled");
+      break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
-        strcat (tmp, "Disabled");
-        break;
+    case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
+      strcat (tmp, "Disabled");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp); 
   rv = 0;
-cleanup:
+ cleanup:
   _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
@@ -488,7 +489,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
     }
 
   rv = 0;
-cleanup:
+ cleanup:
   _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
@@ -539,7 +540,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
     }
 
   rv = 0;
-cleanup:
+ cleanup:
   _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
@@ -582,7 +583,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
                   min);
   rv = 0;
 
-cleanup:
+ cleanup:
   _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
@@ -609,53 +610,53 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
   _FIID_OBJ_GET (cmd_rs, "restart_cause", &val);
   switch (val)
     {
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_UNKNOWN:
-        sprintf (restart_cause,"Unknown\n");
-        break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_UNKNOWN:
+      sprintf (restart_cause,"Unknown\n");
+      break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_CHASSIS_CONTROL_COMMAND:
-        sprintf (restart_cause, "Chassis control command\n");
-        break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_CHASSIS_CONTROL_COMMAND:
+      sprintf (restart_cause, "Chassis control command\n");
+      break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_RESET_VIA_PUSHBUTTON:
-        sprintf (restart_cause, "Reset via pushbutton\n");
-        break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_RESET_VIA_PUSHBUTTON:
+      sprintf (restart_cause, "Reset via pushbutton\n");
+      break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_UP_VIA_POWER_PUSHBUTTON:
-        sprintf (restart_cause, "Power up via power pushbutton\n");
-        break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_UP_VIA_POWER_PUSHBUTTON:
+      sprintf (restart_cause, "Power up via power pushbutton\n");
+      break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_WATCHDOG_EXPIRATION:
-        sprintf (restart_cause, "Watchdog expiration\n");
-        break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_WATCHDOG_EXPIRATION:
+      sprintf (restart_cause, "Watchdog expiration\n");
+      break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_OEM:
-        sprintf (restart_cause, "OEM\n");
-        break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_OEM:
+      sprintf (restart_cause, "OEM\n");
+      break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_AUTOMATIC_POWER_UP_ALWAYS_RESTORE:
-        sprintf (restart_cause, "Automatic power-up on AC being applied due to \"always restore\" power restore policy\n");
-        break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_AUTOMATIC_POWER_UP_ALWAYS_RESTORE:
+      sprintf (restart_cause, "Automatic power-up on AC being applied due to \"always restore\" power restore policy\n");
+      break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_AUTOMATIC_POWER_UP_RESTORE_PREVIOUS:
-        sprintf (restart_cause, "Automatic power-up on AC being applied due to \"restore previous power state\" power restore policy\n");
-        break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_AUTOMATIC_POWER_UP_RESTORE_PREVIOUS:
+      sprintf (restart_cause, "Automatic power-up on AC being applied due to \"restore previous power state\" power restore policy\n");
+      break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_RESET_VIA_PEF:
-        sprintf (restart_cause, "Reset via PEF\n");
-        break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_RESET_VIA_PEF:
+      sprintf (restart_cause, "Reset via PEF\n");
+      break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_CYCLE_VIA_PEF:
-        sprintf (restart_cause, "Power cycle via PEF\n");
-        break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_CYCLE_VIA_PEF:
+      sprintf (restart_cause, "Power cycle via PEF\n");
+      break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_SOFT_RESET:
-        sprintf (restart_cause, "Soft reset\n");
-        break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_SOFT_RESET:
+      sprintf (restart_cause, "Soft reset\n");
+      break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_UP_VIA_RTC:
-        sprintf (restart_cause, "Power up via RTC\n");
-        break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_UP_VIA_RTC:
+      sprintf (restart_cause, "Power up via RTC\n");
+      break;
     }
 
   pstdout_printf (state_data->pstate, 
@@ -663,7 +664,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
                   restart_cause);
 
   rv = 0;
-cleanup:
+ cleanup:
   _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
@@ -692,7 +693,7 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
     }
 
   rv = 0;
-cleanup:
+ cleanup:
   _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
@@ -721,7 +722,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
     }
 
   rv = 0;
-cleanup:
+ cleanup:
   _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
@@ -776,21 +777,21 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   switch (val)
     {
-      case IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS: 
-        pstdout_printf (state_data->pstate, " Always off\n");
-        break;
+    case IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS: 
+      pstdout_printf (state_data->pstate, " Always off\n");
+      break;
 
-      case IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE: 
-        pstdout_printf (state_data->pstate, " Restore\n");
-        break;
+    case IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE: 
+      pstdout_printf (state_data->pstate, " Restore\n");
+      break;
   
-      case IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS:
-        pstdout_printf (state_data->pstate, " Always on\n");
-        break;
+    case IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS:
+      pstdout_printf (state_data->pstate, " Always on\n");
+      break;
 
-      case IPMI_POWER_RESTORE_POLICY_UNKNOWN: 
-        pstdout_printf (state_data->pstate, " Unknown\n");
-        break;
+    case IPMI_POWER_RESTORE_POLICY_UNKNOWN: 
+      pstdout_printf (state_data->pstate, " Unknown\n");
+      break;
     }
 
   temp_val = IPMI_LAST_POWER_EVENT_UNKNOWN;
@@ -824,35 +825,35 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   _FIID_OBJ_GET (cmd_rs, "last_power_event.power_on_entered_via_ipmi", &val);
   if (val)
-      temp_val = IPMI_LAST_POWER_EVENT_POWER_ON_VIA_IPMI;
+    temp_val = IPMI_LAST_POWER_EVENT_POWER_ON_VIA_IPMI;
 
-print:
+ print:
   pstdout_printf (state_data->pstate, "Last Power Event           : ");
   switch (temp_val)
     {
-      case IPMI_LAST_POWER_EVENT_AC_FAILED:
-        pstdout_printf (state_data->pstate, "ac failed\n");
-        break;
+    case IPMI_LAST_POWER_EVENT_AC_FAILED:
+      pstdout_printf (state_data->pstate, "ac failed\n");
+      break;
 
-      case IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_OVERLOAD:
-        pstdout_printf (state_data->pstate, "power down due to power overload\n");
-        break;
+    case IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_OVERLOAD:
+      pstdout_printf (state_data->pstate, "power down due to power overload\n");
+      break;
 
-      case IPMI_LAST_POWER_EVENT_POWER_DOWN_INTERLOCK_ACTIVATED:
-        pstdout_printf (state_data->pstate, "power down due to Activation of interlock switch\n");
-        break;
+    case IPMI_LAST_POWER_EVENT_POWER_DOWN_INTERLOCK_ACTIVATED:
+      pstdout_printf (state_data->pstate, "power down due to Activation of interlock switch\n");
+      break;
 
-      case IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_FAULT:
-        pstdout_printf (state_data->pstate, "power down due to power fault\n");
-        break;
+    case IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_FAULT:
+      pstdout_printf (state_data->pstate, "power down due to power fault\n");
+      break;
 
-      case IPMI_LAST_POWER_EVENT_POWER_ON_VIA_IPMI:
-        pstdout_printf (state_data->pstate, "power on via ipmi command\n");
-        break;
+    case IPMI_LAST_POWER_EVENT_POWER_ON_VIA_IPMI:
+      pstdout_printf (state_data->pstate, "power on via ipmi command\n");
+      break;
 
-      default:
-        pstdout_printf (state_data->pstate, "unknown power event\n");
-        break;
+    default:
+      pstdout_printf (state_data->pstate, "unknown power event\n");
+      break;
     }
 
   pstdout_printf (state_data->pstate, "Misc Chassis status        :");
@@ -912,17 +913,17 @@ print:
                       "\nChassis Identify state     : ");
       switch (val)
         {
-            case IPMI_CHASSIS_IDENTIFY_STATE_OFF: 
-                pstdout_printf (state_data->pstate, "off\n");
-                break;
+        case IPMI_CHASSIS_IDENTIFY_STATE_OFF: 
+          pstdout_printf (state_data->pstate, "off\n");
+          break;
             
-            case IPMI_CHASSIS_IDENTIFY_STATE_TEMPORARY_ON: 
-                pstdout_printf (state_data->pstate, "Timed on\n");
-                break;
+        case IPMI_CHASSIS_IDENTIFY_STATE_TEMPORARY_ON: 
+          pstdout_printf (state_data->pstate, "Timed on\n");
+          break;
         
-            case IPMI_CHASSIS_IDENTIFY_STATE_INDEFINITE_ON: 
-                pstdout_printf (state_data->pstate, "Indefinite on\n");
-                break;
+        case IPMI_CHASSIS_IDENTIFY_STATE_INDEFINITE_ON: 
+          pstdout_printf (state_data->pstate, "Indefinite on\n");
+          break;
         }
     }
   else if (misc_chassis_status)
@@ -948,8 +949,8 @@ print:
       if (val)
         {
           if (front_panel_capabilities)
-              pstdout_printf (state_data->pstate, 
-                              "\n                            ");
+            pstdout_printf (state_data->pstate, 
+                            "\n                            ");
 
           front_panel_capabilities = 1;
           pstdout_printf (state_data->pstate, 
@@ -960,8 +961,8 @@ print:
       if (val)
         {
           if (front_panel_capabilities)
-              pstdout_printf (state_data->pstate, 
-                              "\n                            ");
+            pstdout_printf (state_data->pstate, 
+                            "\n                            ");
           front_panel_capabilities = 1;
           pstdout_printf (state_data->pstate, 
                           " Diagnostic Interrupt Button disabled");
@@ -971,8 +972,8 @@ print:
       if (val)
         {
           if (front_panel_capabilities)
-              pstdout_printf (state_data->pstate, 
-                              "\n                            ");
+            pstdout_printf (state_data->pstate, 
+                            "\n                            ");
           front_panel_capabilities = 1;
           pstdout_printf (state_data->pstate, 
                           "                            Standby button disabled");
@@ -982,8 +983,8 @@ print:
       if (val)
         {
           if (front_panel_capabilities)
-              pstdout_printf (state_data->pstate, 
-                              "\n                            ");
+            pstdout_printf (state_data->pstate, 
+                            "\n                            ");
           front_panel_capabilities = 1;
           pstdout_printf (state_data->pstate, 
                           " Power off button disable allowed");
@@ -993,8 +994,8 @@ print:
       if (val)
         {
           if (front_panel_capabilities)
-              pstdout_printf (state_data->pstate, 
-                              "\n                            ");
+            pstdout_printf (state_data->pstate, 
+                            "\n                            ");
           front_panel_capabilities = 1;
           pstdout_printf (state_data->pstate, 
                           " Reset button disable allowed");
@@ -1004,8 +1005,8 @@ print:
       if (val)
         {
           if (front_panel_capabilities)
-              pstdout_printf (state_data->pstate, 
-                              "\n                            ");
+            pstdout_printf (state_data->pstate, 
+                            "\n                            ");
           front_panel_capabilities = 1;
           pstdout_printf (state_data->pstate, 
                           " Diagnostic interrupt button disable allowed");
@@ -1015,8 +1016,8 @@ print:
       if (val)
         {
           if (front_panel_capabilities)
-              pstdout_printf (state_data->pstate, 
-                              "\n                            ");
+            pstdout_printf (state_data->pstate, 
+                            "\n                            ");
           front_panel_capabilities = 1;
           pstdout_printf (state_data->pstate, 
                           " Standby button disable allowed");
@@ -1026,7 +1027,7 @@ print:
   pstdout_printf (state_data->pstate, "\n");
     
   rv = 0;
-cleanup:
+ cleanup:
   _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
@@ -1119,7 +1120,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     }
 
   rv = 0;
-cleanup:
+ cleanup:
   _FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
@@ -1133,55 +1134,55 @@ run_cmd_args (ipmi_chassis_state_data_t *state_data)
   
   switch (state_data->prog_data->args->cmd) 
     {
-      case CHASSIS_CMD_GET_CHASSIS_CAPABILITIES:
-        get_chassis_capabilities (state_data);
-        break;
+    case CHASSIS_CMD_GET_CHASSIS_CAPABILITIES:
+      get_chassis_capabilities (state_data);
+      break;
     
-      case CHASSIS_CMD_GET_CHASSIS_STATUS:
-        get_chassis_status (state_data);
-        break;
+    case CHASSIS_CMD_GET_CHASSIS_STATUS:
+      get_chassis_status (state_data);
+      break;
      
-      case CHASSIS_CMD_CHASSIS_CONTROL:
-        chassis_control (state_data);
-        break;
+    case CHASSIS_CMD_CHASSIS_CONTROL:
+      chassis_control (state_data);
+      break;
     
-      case CHASSIS_CMD_CHASSIS_IDENTIFY:
-        chassis_identify (state_data);
-        break;
+    case CHASSIS_CMD_CHASSIS_IDENTIFY:
+      chassis_identify (state_data);
+      break;
     
-      case CHASSIS_CMD_SET_POWER_RESTORE_POLICY: 
-        set_power_restore_policy (state_data);
-        break;
+    case CHASSIS_CMD_SET_POWER_RESTORE_POLICY: 
+      set_power_restore_policy (state_data);
+      break;
     
-      case CHASSIS_CMD_GET_SYSTEM_RESTART_CAUSE:
-        get_system_restart_cause (state_data);
-        break;
+    case CHASSIS_CMD_GET_SYSTEM_RESTART_CAUSE:
+      get_system_restart_cause (state_data);
+      break;
     
-      case CHASSIS_CMD_GET_POWER_ON_HOURS_COUNTER:
-        get_power_on_hours_counter (state_data);
-        break;
+    case CHASSIS_CMD_GET_POWER_ON_HOURS_COUNTER:
+      get_power_on_hours_counter (state_data);
+      break;
     
-      case CHASSIS_CMD_SET_POWER_CYCLE_INTERVAL:
-        set_power_cycle_interval (state_data);
-        break;
+    case CHASSIS_CMD_SET_POWER_CYCLE_INTERVAL:
+      set_power_cycle_interval (state_data);
+      break;
     
-      case CHASSIS_CMD_SET_SYSTEM_BOOT_OPTIONS:
-        set_boot_flags (state_data);
-        break;
+    case CHASSIS_CMD_SET_SYSTEM_BOOT_OPTIONS:
+      set_boot_flags (state_data);
+      break;
     
-      case CHASSIS_CMD_GET_SYSTEM_BOOT_OPTIONS :
-        get_boot_flags (state_data);
-        break;
+    case CHASSIS_CMD_GET_SYSTEM_BOOT_OPTIONS :
+      get_boot_flags (state_data);
+      break;
     
-      default:
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "Error: No commands given\n");
-        goto cleanup;
+    default:
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "Error: No commands given\n");
+      goto cleanup;
     }
 
   rv = 0;
-cleanup:
+ cleanup:
   return (rv);
 }
 
