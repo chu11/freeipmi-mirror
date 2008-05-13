@@ -1,5 +1,9 @@
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h: Fix boot device flags.
+
+2008-05-13  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/src/ipmi-fru.c (_output_fru, run_cmd_args): Output FRU
 	device names along with IDs.
 
