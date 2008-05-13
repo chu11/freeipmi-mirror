@@ -126,7 +126,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_EFI;
       else
         {
-          fprintf (stderr, "Invalid boot type\n");
+          fprintf (stderr, "Invalid value for boot-type\n");
           argp_usage (state);
         }
 
@@ -270,7 +270,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VERBOSE;
       else
         {
-          fprintf (stderr, "Invalid firmware verbosity level\n");
+          fprintf (stderr, "Invalid value for firmware verbosity\n");
           argp_usage (state);
         }
 
@@ -345,7 +345,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           cmd_args->args.identify_args.identify_interval = strtol (arg, &ptr, 10);
           if (*ptr != '\0')
             {
-              fprintf (stderr, "Invalid Chassis Identify value\n");
+              fprintf (stderr, "Invalid value for chassis-identify\n");
               argp_usage (state);
             }
           cmd_args->args.identify_args.force_identify_set = 1;
@@ -376,7 +376,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
         cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_INITIATE_SOFT_SHUTDOWN;
       else
         {
-          fprintf (stderr, "Invalid Chassis Control value\n");
+          fprintf (stderr, "Invalid value for chassis control\n");
           argp_usage (state);
         }
       break;
@@ -410,7 +410,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->args.power_cycle_interval = strtol (arg, &ptr, 10);
       if (*ptr != '\0')
         {
-          fprintf (stderr, "Invalid power cycle interval\n");
+          fprintf (stderr, "Invalid value for power cycle interval\n");
           argp_usage (state);
         }
       break;
@@ -452,7 +452,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
         cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_NO_CHANGE;
       else
         {
-          fprintf (stderr, "Invalid power policy\n");
+          fprintf (stderr, "Invalid value for power restore policy\n");
           argp_usage (state);
         }
       break;
