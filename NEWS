@@ -1,18 +1,24 @@
 0.7.1 - 00/00/00
 ----------------
-For Users
----------
+For Users - New Features
+------------------------
 o Add new tool bmc-device.
 o Support --always-prefix option in many tools.
 o Support --guid option in bmc-info.
 o Support --get-time and --set-time in ipmi-sel.
-o Change default privilege from user to operator in ipmi-sel.
+
+For Users - Bug Fixes/Minor Enhancements
+----------------------------------------
 o Output FRU device names along with IDs in ipmi-fru.
+o Change default privilege from user to operator in ipmi-sel.
+o Alter ipmi-chassis output to print "unknown" when field is not known.
+o Alter some ipmi-chassis output to be more consistent to IPMI spec.
 o Removed many experimental features from ipmipower so it emulates other tools.
   o Removed ipmi-version auto discovery.
   o Removed authentication-type auto discovery.
 o Changed --ipmi-version option to --driver-type in ipmipower for
-consistency to other tools.  Old options maintained for backwards compatability.
+  consistency to other tools.  Old options maintained for backwards
+  compatability.
 o Various minor bug fixes.
 
 For Developers

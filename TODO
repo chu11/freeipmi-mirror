@@ -48,14 +48,6 @@ advanced option??
 acpi power state get/set??
 only output lan-conf-auth sections is supported via supported field
 
-ipmi-chassis
-------------
-audit
-- fiid names
-- flags
-cleanup argp parsing
-- printf vs fprintf, not consistent
-
 pef-config
 -----------
 * conf.5 manpage
