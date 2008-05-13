@@ -1,7 +1,9 @@
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-chassis/src/: General cleanup.  Make error messages
-	consistent.  Use consistent code to other tools.
+	consistent.  Use consistent code to other tools.  Return exit code
+	1 as appropriate.  Re-order commands for consistency to
+	specification.
 
 	* common/src/tool-cmdline-common.h,
 	common/src/tool-cmdline-common.c (init_common_cmd_args): Remove

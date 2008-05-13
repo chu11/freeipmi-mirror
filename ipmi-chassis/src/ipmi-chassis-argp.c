@@ -38,10 +38,10 @@
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 const char *argp_program_version = 
-"IPMI Chassis [ipmi-chassis-" PACKAGE_VERSION "]\n"
-"Copyright (C) 2007-2008 FreeIPMI Core Team\n"
-"This program is free software; you may redistribute it under the terms of\n"
-"the GNU General Public License.  This program has absolutely no warranty.";
+  "IPMI Chassis [ipmi-chassis-" PACKAGE_VERSION "]\n"
+  "Copyright (C) 2007-2008 FreeIPMI Core Team\n"
+  "This program is free software; you may redistribute it under the terms of\n"
+  "the GNU General Public License.  This program has absolutely no warranty.";
 
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
@@ -68,38 +68,38 @@ static struct argp_option options[] =
      "Control the chassis.", 32},
     {"chassis-identify", CHASSIS_IDENTIFY_KEY, "IDENTIFY", 0,
      "Set chassis Identification.", 33},
-    {"get-system-restart-cause", GET_SYSTEM_RESTART_CAUSE_KEY, NULL, 0, 
-     "Get system restart cause.", 34},
-    {"get-power-on-hours-counter", GET_POWER_ON_HOURS_COUNTER_KEY, NULL, 0,
-     "Get power on hours counter.", 35},
-    {"set-power-cycle-interval", SET_POWER_CYCLE_INTERVAL_KEY, "SECONDS", 0, 
-     "Set Power cycle interval in seconds.", 36},
-    {"get-boot-flags", GET_BOOT_FLAGS_KEY, NULL, 0, 
-     "Get system boot-flags.", 37},
-    {"set-boot-flags", SET_BOOT_FLAGS_KEY, NULL, 0, 
-     "Set system boot flags.", 38},
-    {"boot-type", SET_BOOT_FLAGS_BOOT_TYPE_KEY, "BOOT_TYPE", OPTION_ARG_OPTIONAL, 
-     "Set BIOS boot type to BOOT_TYPE.", 39},
-    {"lock-out-reset-button", SET_BOOT_FLAGS_LOCK_OUT_RESET_BUTTON_KEY, "LOCK_OUT_RESET_BUTTON", OPTION_ARG_OPTIONAL, 
-     "Modify lock out reset button support.", 40},
-    {"blank-screen", SET_BOOT_FLAGS_SCREEN_BLANK_KEY, "BLANK_SCREEN", OPTION_ARG_OPTIONAL, 
-     "Modify blank screen support.", 41},
-    {"boot-device", SET_BOOT_FLAGS_BOOT_DEVICE_SELECTOR_KEY, "BOOT_DEVICE", OPTION_ARG_OPTIONAL, 
-     "Set device to boot from to BOOT_DEVICE.", 42},
-    {"lock-keyboard", SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL, 
-     "Modify lock keyboard support.", 43},
-    {"clear-cmos", SET_BOOT_FLAGS_CLEAR_CMOS_KEY, "CMOS_CLEAR", OPTION_ARG_OPTIONAL, 
-     "Modify clear CMOS support.", 44},
-    {"console-redirection", SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY, "CONSOLE_REDIRECTION", OPTION_ARG_OPTIONAL, 
-     "Set console redirection type.", 45},
-    {"user-password-bypass", SET_BOOT_FLAGS_USER_PASSWORD_BYPASS_KEY, "USER_PASSWORD_BYPASS", OPTION_ARG_OPTIONAL, 
-     "Modify user password bypass support.", 46},
-    {"force-progress-event-traps", SET_BOOT_FLAGS_FORCE_PROGRESS_EVENT_TRAPS_KEY, "FORCE_PROGRESS_EVENT_TRAPS", OPTION_ARG_OPTIONAL, 
-     "Modify force progress event traps support.", 47},
-    {"firmware-bios-verbosity", SET_BOOT_FLAGS_FIRMWARE_BIOS_VERBOSITY_KEY, "FIRMWARE_BIOS_VERBOSITY", OPTION_ARG_OPTIONAL, 
-     "Set firmware verbosity.", 48},
     {"set-power-restore-policy", SET_POWER_RESTORE_POLICY_KEY, "POLICY", 0, 
-     "Set power restore policy.", 50},
+     "Set power restore policy.", 34},
+    {"set-power-cycle-interval", SET_POWER_CYCLE_INTERVAL_KEY, "SECONDS", 0, 
+     "Set Power cycle interval in seconds.", 35},
+    {"get-system-restart-cause", GET_SYSTEM_RESTART_CAUSE_KEY, NULL, 0, 
+     "Get system restart cause.", 36},
+    {"get-power-on-hours-counter", GET_POWER_ON_HOURS_COUNTER_KEY, NULL, 0,
+     "Get power on hours counter.", 37},
+    {"get-boot-flags", GET_BOOT_FLAGS_KEY, NULL, 0, 
+     "Get system boot-flags.", 38},
+    {"set-boot-flags", SET_BOOT_FLAGS_KEY, NULL, 0, 
+     "Set system boot flags.", 39},
+    {"boot-type", SET_BOOT_FLAGS_BOOT_TYPE_KEY, "BOOT_TYPE", OPTION_ARG_OPTIONAL, 
+     "Set BIOS boot type to BOOT_TYPE.", 40},
+    {"lock-out-reset-button", SET_BOOT_FLAGS_LOCK_OUT_RESET_BUTTON_KEY, "LOCK_OUT_RESET_BUTTON", OPTION_ARG_OPTIONAL, 
+     "Modify lock out reset button support.", 41},
+    {"blank-screen", SET_BOOT_FLAGS_SCREEN_BLANK_KEY, "BLANK_SCREEN", OPTION_ARG_OPTIONAL, 
+     "Modify blank screen support.", 42},
+    {"boot-device", SET_BOOT_FLAGS_BOOT_DEVICE_SELECTOR_KEY, "BOOT_DEVICE", OPTION_ARG_OPTIONAL, 
+     "Set device to boot from to BOOT_DEVICE.", 43},
+    {"lock-keyboard", SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL, 
+     "Modify lock keyboard support.", 44},
+    {"clear-cmos", SET_BOOT_FLAGS_CLEAR_CMOS_KEY, "CMOS_CLEAR", OPTION_ARG_OPTIONAL, 
+     "Modify clear CMOS support.", 45},
+    {"console-redirection", SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY, "CONSOLE_REDIRECTION", OPTION_ARG_OPTIONAL, 
+     "Set console redirection type.", 46},
+    {"user-password-bypass", SET_BOOT_FLAGS_USER_PASSWORD_BYPASS_KEY, "USER_PASSWORD_BYPASS", OPTION_ARG_OPTIONAL, 
+     "Modify user password bypass support.", 47},
+    {"force-progress-event-traps", SET_BOOT_FLAGS_FORCE_PROGRESS_EVENT_TRAPS_KEY, "FORCE_PROGRESS_EVENT_TRAPS", OPTION_ARG_OPTIONAL, 
+     "Modify force progress event traps support.", 48},
+    {"firmware-bios-verbosity", SET_BOOT_FLAGS_FIRMWARE_BIOS_VERBOSITY_KEY, "FIRMWARE_BIOS_VERBOSITY", OPTION_ARG_OPTIONAL, 
+     "Set firmware verbosity.", 49},
     { 0 }
   };
 
