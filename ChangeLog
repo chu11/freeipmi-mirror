@@ -1,6 +1,7 @@
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
-	* ipmi-chassis/src/: Minor cleanup.
+	* ipmi-chassis/src/: General cleanup.  Make error messages
+	consistent.  Use consistent code to other tools.
 
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
