@@ -81,8 +81,8 @@ Used with the \fB\-\-set\-boot\-flags\fR option.
 .TP
 \fB\-\-boot\-device\fR[=\fIBOOT_DEVICE\fR]
 Set device to boot from to BOOT_DEVICE. Allowed
-values: PXE, DISK, DISK\-SAFE, DIAG, CD\-DVD,
-FLOPPY, BIOS. Used with the \fB\-\-set\-boot\-flags\fR option.
+values: NO-OVERRIDE, PXE, HARD-DRIVE, HARD\-DRIVE\-SAFE, DIAG, CD\-DVD,
+BIOS, FLOPPY. Used with the \fB\-\-set\-boot\-flags\fR option.
 .TP
 \fB\-\-lock\-keyboard\fR[=\fILOCK_KEYBOARD\fR]
 Modify lock keyboard support. Supported values: YES/NO. 

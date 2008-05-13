@@ -15,6 +15,12 @@
 
 	* Adjust tools to use new cmdline parse common functions.
 
+	* libfreeipmi/src/cmds/ipmi-chassis-cmds.c,
+	libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h,
+	ipmi-chassis/src/: Audit and rename many macros, fiid fields,
+	etc. for consistency to the IPMI specification.  Support legacy
+	options as needed.
+
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h: Fix boot device flags.

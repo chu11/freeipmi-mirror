@@ -162,24 +162,28 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case SET_BOOT_FLAGS_BOOT_DEVICE_SELECTOR_KEY:
+      /* achu: many legacy inputs are preserved */
       if (arg == NULL)
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NONE;
-      else if (!strcasecmp(arg, "none"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NONE;
+        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NO_OVERRIDE;
+      else if (!strcasecmp(arg, "no-override")
+               || !strcasecmp(arg, "none")) /* legacy */
+        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NO_OVERRIDE;
       else if (!strcasecmp(arg, "pxe"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_PXE;
-      else if (!strcasecmp(arg, "disk"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_DISK;
-      else if (!strcasecmp(arg, "disk-safe"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_DISK_SAFE_MODE;
+        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_PXE;
+      else if (!strcasecmp(arg, "hard-drive")
+               || !strcasecmp(arg, "disk")) /* legacy */
+        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_HARD_DRIVE;
+      else if (!strcasecmp(arg, "hard-drive-safe")
+               || !strcasecmp(arg, "disk-safe")) /* legacy */
+        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_HARD_DRIVE_SAFE_MODE;
       else if (!strcasecmp(arg, "diag"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_DIAGNOSTIC_INTERRUPT;
+        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_DIAGNOSTIC_PARTITION;
       else if (!strcasecmp(arg, "cd-dvd"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_CD_DVD;
-      else if (!strcasecmp(arg, "floppy"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FLOPPY;
+        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_CD_DVD;
       else if (!strcasecmp(arg, "bios"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_BIOS;
+        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_BIOS_SETUP;
+      else if (!strcasecmp(arg, "floppy"))
+        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA;
       else
         {
           fprintf (stderr, "Invalid value for boot-device\n");

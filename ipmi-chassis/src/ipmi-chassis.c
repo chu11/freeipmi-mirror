@@ -291,35 +291,35 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   sprintf (tmp, "Boot device selector          : ");
   switch (val)
     {
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NONE:
-        strcat (tmp, "None");
+      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NO_OVERRIDE:
+        strcat (tmp, "No override");
         break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_PXE:
+      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_PXE:
         strcat (tmp, "Force PXE");
         break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_DISK:
+      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_HARD_DRIVE:
         strcat (tmp, "Force boot from default Hard drive");
         break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_DISK_SAFE_MODE:
+      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_HARD_DRIVE_SAFE_MODE:
         strcat (tmp, "Force boot from default Hard drive, request safe mode");
         break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_BIOS:
-        strcat (tmp, "Force boot into BIOS setup");
-        break;
-
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_CD_DVD:
-        strcat (tmp, "Force boot from default CD/DVD");
-        break;
-
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_DIAGNOSTIC_INTERRUPT:
+      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_DIAGNOSTIC_PARTITION:
         strcat (tmp, "Force boot from default Diagnostic partition");
         break;
 
-      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FLOPPY:
+      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_CD_DVD:
+        strcat (tmp, "Force boot from default CD/DVD");
+        break;
+
+      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_BIOS_SETUP:
+        strcat (tmp, "Force boot into BIOS setup");
+        break;
+
+      case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA:
         strcat (tmp, "Force boot from default Floppy/primary removable media");
         break;
     }
@@ -613,19 +613,19 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
         sprintf (restart_cause,"Unknown\n");
         break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_CHASSIS_CONTROL_CMD:
+      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_CHASSIS_CONTROL_COMMAND:
         sprintf (restart_cause, "Chassis control command\n");
         break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_RESET_PUSHBUTTON:
+      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_RESET_VIA_PUSHBUTTON:
         sprintf (restart_cause, "Reset via pushbutton\n");
         break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_UP_POWER_PUSHBUTTON:
+      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_UP_VIA_POWER_PUSHBUTTON:
         sprintf (restart_cause, "Power up via power pushbutton\n");
         break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_WATCHDOG_EXPIRE:
+      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_WATCHDOG_EXPIRATION:
         sprintf (restart_cause, "Watchdog expiration\n");
         break;
   
@@ -633,11 +633,11 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
         sprintf (restart_cause, "OEM\n");
         break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_AUTO_POWER_UP_ALWAYS_RESTORE:
+      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_AUTOMATIC_POWER_UP_ALWAYS_RESTORE:
         sprintf (restart_cause, "Automatic power-up on AC being applied due to \"always restore\" power restore policy\n");
         break;
   
-      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_AUTO_POWER_UP_RESTORE_PREVIOUS:
+      case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_AUTOMATIC_POWER_UP_RESTORE_PREVIOUS:
         sprintf (restart_cause, "Automatic power-up on AC being applied due to \"restore previous power state\" power restore policy\n");
         break;
   
@@ -1050,28 +1050,28 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     }
 
   _FIID_OBJ_GET (cmd_rs,
-                 "capabilities_flags.intrusion_sensor",
+                 "capabilities_flags.provides_intrusion_sensor",
                  &val);
   pstdout_printf (state_data->pstate, 
                   "Intrusion Sensor           : %s\n",
                   (val ? "Provided" : "Not Provided"));
 
   _FIID_OBJ_GET (cmd_rs,
-                 "capabilities_flags.front_panel_lockout",
+                 "capabilities_flags.provides_front_panel_lockout",
                  &val);
   pstdout_printf (state_data->pstate, 
                   "Front Panel Lockout        : %s\n",
                   (val ? "Provided" : "Not Provided"));
 
   _FIID_OBJ_GET (cmd_rs,
-                 "capabilities_flags.diagnostic_interrupt",
+                 "capabilities_flags.provides_diagnostic_interrupt",
                  &val);
   pstdout_printf (state_data->pstate, 
                   "Diagnostic Interrupt       : %s\n",
                   (val ? "Provided" : "Not Provided"));
 
   _FIID_OBJ_GET (cmd_rs,
-                 "capabilities_flags.power_interlock",
+                 "capabilities_flags.provides_power_interlock",
                  &val);
   pstdout_printf (state_data->pstate, 
                   "Power Interlock            : %s\n",
