@@ -20,15 +20,15 @@ ipmipower
 - lock memory only w/ option
 - remove auto features to make consistent to other tools
   - auto privilege
+    - priv level operator by default
   X - auto version
     X - remove ipmi-version in ipmipower_powercmd_t
     - legacy ipmi-version command to driver type
   X - auto authentication
+    - auth type md5
   - auto cipher suite
-  - priv level operator by default
-  - cipher suite 3 default
-  - auth type md5
-  - many version/highest_received_seq_num etc. move to init
+    - cipher suite 3 default
+  X - many version/highest_received_seq_num etc. move to init
   - to test
     X - ipmi 2.0 not found
     X - password length ipmi 1.5 nad ipmi 2.0
