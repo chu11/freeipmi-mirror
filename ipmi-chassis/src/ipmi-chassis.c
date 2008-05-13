@@ -200,6 +200,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       break;
 
     case IPMI_POWER_RESTORE_POLICY_UNKNOWN: 
+    default:
       pstdout_printf (state_data->pstate, " Unknown\n");
       break;
     }
@@ -333,6 +334,10 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
         
         case IPMI_CHASSIS_IDENTIFY_STATE_INDEFINITE_ON: 
           pstdout_printf (state_data->pstate, "Indefinite on\n");
+          break;
+
+        default:
+          pstdout_printf (state_data->pstate, "Unknown\n");
           break;
         }
     }
@@ -647,6 +652,10 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
     case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_UP_VIA_RTC:
       sprintf (restart_cause, "Power up via RTC\n");
       break;
+
+    default:
+      sprintf (restart_cause, "Unknown\n");
+      break;
     }
 
   pstdout_printf (state_data->pstate, 
@@ -734,6 +743,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_EFI:
       strcat (tmp, "Extensible firmware Interface boot");
       break;
+
+    default:
+      strcat (tmp, "Unknown");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -748,6 +761,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
       strcat (tmp, "Disabled");
       break;
+
+    default:
+      strcat (tmp, "Unknown");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -761,6 +778,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       
     case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
       strcat (tmp, "Disabled");
+      break;
+
+    default:
+      strcat (tmp, "Unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -800,6 +821,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA:
       strcat (tmp, "Force boot from default Floppy/primary removable media");
       break;
+
+    default:
+      strcat (tmp, "Unknown");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -814,6 +839,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
       strcat (tmp, "Disabled");
       break;
+
+    default:
+      strcat (tmp, "Unknown");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -827,6 +856,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
 
     case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
       strcat (tmp, "Disabled");
+      break;
+
+    default:
+      strcat (tmp, "Unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -846,6 +879,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE:
       strcat (tmp, "Enabled");
       break;
+
+    default:
+      strcat (tmp, "Unknown");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
   
@@ -859,6 +896,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
 
     case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
       strcat (tmp, "Disabled");
+      break;
+
+    default:
+      strcat (tmp, "Unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -874,6 +915,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
       strcat (tmp, "Disabled");
       break;
+
+    default:
+      strcat (tmp, "Unknown");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -888,6 +933,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
       strcat (tmp, "Disabled");
       break;
+
+    default:
+      strcat (tmp, "Unknown");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -901,6 +950,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
 
     case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
       strcat (tmp, "Disabled");
+      break;
+
+    default:
+      strcat (tmp, "Unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -920,6 +973,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_DEFAULT:
       strcat (tmp, "Default");
       break;
+
+    default:
+      strcat (tmp, "Unknown");
+      break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
@@ -933,6 +990,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
 
     case IPMI_CHASSIS_BOOT_OPTIONS_DISABLE:
       strcat (tmp, "Disabled");
+      break;
+
+    default:
+      strcat (tmp, "Unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp); 
