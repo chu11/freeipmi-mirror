@@ -120,9 +120,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case IPMI_CHASSIS_KEY_BOOT_TYPE:
-      if ((strncasecmp(arg, "pc-compatible", 13) == 0) && strlen (arg) == 13)
+      if (!strcasecmp(arg, "pc-compatible"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_PC_COMPATIBLE;
-      else if ((strncasecmp(arg, "efi", 3) == 0) && strlen (arg) == 3)
+      else if (!strcasecmp(arg, "efi"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_EFI;
       else
         {
@@ -134,9 +134,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_LOCK_OUT_RESET_BUTTON:
-      if ((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
+      if (!strcasecmp(arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
-      else if ((strncasecmp(arg, "no", 2) == 0) && strlen (arg) == 2)
+      else if (!strcasecmp(arg, "no"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
@@ -148,9 +148,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_SCREEN_BLANK:
-      if ((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
+      if (!strcasecmp(arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
-      else if ((strncasecmp(arg, "no", 2) == 0) && strlen (arg) == 2)
+      else if (!strcasecmp(arg, "no"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
@@ -164,21 +164,21 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
     case IPMI_CHASSIS_KEY_BOOT_DEVICE_SELECTOR:
       if (arg == NULL)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NONE;
-      else if ((strncasecmp(arg, "none", 4) == 0) && strlen (arg) == 4)
+      else if (!strcasecmp(arg, "none"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NONE;
-      else if ((strncasecmp(arg, "pxe", 3) == 0) && strlen (arg) == 3)
+      else if (!strcasecmp(arg, "pxe"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_PXE;
-      else if ((strncasecmp(arg, "disk", 4) == 0) && strlen (arg) == 4)
+      else if (!strcasecmp(arg, "disk"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_DISK;
-      else if ((strncasecmp(arg, "disk-safe", 9) == 0) && strlen (arg) == 9)
+      else if (!strcasecmp(arg, "disk-safe"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_DISK_SAFE_MODE;
-      else if ((strncasecmp(arg, "diag", 4) == 0) && strlen (arg) == 4)
+      else if (!strcasecmp(arg, "diag"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_DIAGNOSTIC_INTERRUPT;
-      else if ((strncasecmp(arg, "cd-dvd", 6) == 0) && strlen (arg) == 6)
+      else if (!strcasecmp(arg, "cd-dvd"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_CD_DVD;
-      else if ((strncasecmp(arg, "floppy", 6) == 0) && strlen (arg) == 6)
+      else if (!strcasecmp(arg, "floppy"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FLOPPY;
-      else if ((strncasecmp(arg, "bios", 4) == 0) && strlen (arg) == 4)
+      else if (!strcasecmp(arg, "bios"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_BIOS;
       else
         {
@@ -190,9 +190,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_LOCK_KEYBOARD:
-      if ((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
+      if (!strcasecmp(arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
-      else if ((strncasecmp(arg, "no", 2) == 0) && strlen (arg) == 2)
+      else if (!strcasecmp(arg, "no"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
@@ -204,9 +204,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_CLEAR_CMOS:
-      if ((strncasecmp (arg, "yes", 3) == 0) && strlen (arg) == 3)
+      if (!strcasecmp (arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
-      else if ((strncasecmp (arg, "no", 2) == 0) && strlen (arg) == 2)
+      else if (!strcasecmp (arg, "no"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
@@ -218,11 +218,11 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_CONSOLE_REDIRECTION:
-      if ((strncasecmp (arg, "default", 7) == 0) && strlen (arg) == 7)
+      if (!strcasecmp (arg, "default"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT;
-      else if ((strncasecmp (arg, "suppress", 8) == 0) && strlen (arg) == 8)
+      else if (!strcasecmp (arg, "suppress"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPRESS;
-      else if ((strncasecmp (arg, "enable", 6) == 0) && strlen (arg) == 6)
+      else if (!strcasecmp (arg, "enable"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE;
       else
         {
@@ -234,9 +234,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_USER_PASSWORD_BYPASS:
-      if ((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
+      if (!strcasecmp(arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
-      else if ((strncasecmp(arg, "no", 2) == 0) &&  strlen (arg) == 2)
+      else if (!strcasecmp(arg, "no"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
@@ -248,9 +248,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_FORCE_PROGRESS_EVENT_TRAPS:
-      if ((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
+      if (!strcasecmp(arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
-      else if ((strncasecmp(arg, "no", 2) == 0) && strlen (arg) == 2)
+      else if (!strcasecmp(arg, "no"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
@@ -262,11 +262,11 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_FIRMWARE_BIOS_VERBOSITY:
-      if ((strncasecmp(arg, "quiet", 5) == 0) && strlen (arg) == 5)
+      if (!strcasecmp(arg, "quiet"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_QUIET;
-      else if ((strncasecmp(arg, "default", 7) == 0) && strlen (arg) == 7)
+      else if (!strcasecmp(arg, "default"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_DEFAULT;
-      else if ((strncasecmp (arg, "verbose", 7) == 0) && strlen (arg) == 7)
+      else if (!strcasecmp (arg, "verbose"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VERBOSE;
       else
         {
@@ -324,14 +324,14 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->cmd = IPMI_CMD_CHASSIS_IDENTIFY;
-      if ((strncasecmp(arg, "turn-off", 8) == 0) && strlen (arg) == 8)
+      if (!strcasecmp(arg, "turn-off"))
         {
           cmd_args->args.identify_args.identify_interval = 0;
           cmd_args->args.identify_args.identify_interval_set = 1;
 
           cmd_args->args.identify_args.force_identify_set = 0;
         }
-      else if ((strncasecmp(arg, "force", 5) == 0) && strlen (arg) == 5)
+      else if (!strcasecmp(arg, "force"))
         {
           cmd_args->args.identify_args.force_identify = IPMI_CHASSIS_FORCE_IDENTIFY_ON;
           cmd_args->args.identify_args.force_identify_set = 1;
@@ -362,17 +362,17 @@ parse_opt (int key, char *arg, struct argp_state *state)
           exit(EXIT_FAILURE);
         }
       cmd_args->cmd = IPMI_CMD_CHASSIS_CONTROL;
-      if ((strncasecmp(arg, "power-down", 10) == 0) && strlen (arg) == 10)
+      if (!strcasecmp(arg, "power-down"))
         cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_DOWN;
-      else if ((strncasecmp(arg, "power-up", 8) == 0) && strlen (arg) == 8)
+      else if (!strcasecmp(arg, "power-up"))
         cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_UP;
-      else if ((strncasecmp(arg, "power-cycle", 11) == 0) && strlen (arg) == 11)
+      else if (!strcasecmp(arg, "power-cycle"))
         cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_CYCLE;
-      else if ((strncasecmp(arg, "hard-reset", 10) == 0) && strlen (arg) == 10)
+      else if (!strcasecmp(arg, "hard-reset"))
         cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_HARD_RESET;
-      else if ((strncasecmp(arg, "diagnostic-interrupt", 20) == 0) && strlen (arg) == 20)
+      else if (!strcasecmp(arg, "diagnostic-interrupt"))
         cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_PULSE_DIAGNOSTIC_INTERRUPT;
-      else if ((strncasecmp(arg, "soft-shutdown", 13) == 0) && strlen (arg) == 13)
+      else if (!strcasecmp(arg, "soft-shutdown"))
         cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_INITIATE_SOFT_SHUTDOWN;
       else
         {
