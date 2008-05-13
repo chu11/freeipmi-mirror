@@ -1,3 +1,12 @@
+2008-05-13  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-fru/src/ipmi-fru-util.c (_get_type_length_bytes): Fix
+	corner case when handling binary data on type/length output.
+
+	*
+	libfreeipmi/include/freeipmi/record-format/ipmi-fru-information-record-format.h:
+	Fix incorrect bit mask.
+	
 2008-05-12  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_config.c
