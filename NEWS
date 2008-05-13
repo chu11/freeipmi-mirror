@@ -18,6 +18,7 @@ o Various minor bug fixes.
 For Developers
 --------------
 o Additional IPMI commands added into libfreeipmi.
+o Various naming consistency fixes to IPMI specification.
 o Various minor bug fixes.
 
 Contributions
