@@ -6,6 +6,9 @@
 	*
 	libfreeipmi/include/freeipmi/record-format/ipmi-fru-information-record-format.h:
 	Fix incorrect bit mask.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h: Fix boot
+	device flags.
 	
 2008-05-12  Albert Chu <chu11@llnl.gov>
 
