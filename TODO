@@ -117,6 +117,10 @@ ipmi-sensors-config
 - sensor enable/disable??
 - sensor event enable/disable??
 
+ipmi-fru
+--------
+output device id name from sdr?
+
 0.7.0
 -----
 add contributions (ganglia/nagios) to webpage downloads

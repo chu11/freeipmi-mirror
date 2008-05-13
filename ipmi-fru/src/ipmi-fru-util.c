@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.13 2008-03-28 00:14:34 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.14 2008-05-13 16:56:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -173,13 +173,16 @@ _get_type_length_bytes(ipmi_fru_state_data_t *state_data,
   assert(typebuflen);
 
   number_of_data_bytes = type_length & IPMI_FRU_TYPE_LENGTH_NUMBER_OF_DATA_BYTES_MASK;
-  
+
   if (!number_of_data_bytes)
     goto out;
 
-  /* Special Case */
-  if ((type_code == IPMI_FRU_TYPE_LENGTH_TYPE_CODE_BINARY
-       || type_code == IPMI_FRU_TYPE_LENGTH_TYPE_CODE_LANGUAGE_CODE)
+  /* Special Case: This shouldn't be a length of 0x01 (see type/length
+   * byte format in FRU Information Storage Definition).  I don't know
+   * what to do.  I guess we'll just copy data until we hit the
+   * sentinel value and pray for the best.
+   */
+  if (type_code == IPMI_FRU_TYPE_LENGTH_TYPE_CODE_LANGUAGE_CODE
       && number_of_data_bytes == 0x01)
     {
       while (bytes_parsed < typebuflen
@@ -411,7 +414,7 @@ ipmi_fru_output_type_length_field(ipmi_fru_state_data_t *state_data,
 
       for (i = 0; i < bytes_parsed; i++)
         {
-          if ((i % 8) == 0)
+          if (i && (i % 8) == 0)
             pstdout_printf(state_data->pstate, "\n  ");
 
           pstdout_printf(state_data->pstate,
