@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.95 2008-05-12 23:46:50 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.96 2008-05-13 00:19:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -156,15 +156,6 @@ typedef enum
 #define DRIVER_TYPE_VALID(__a) \
   ((__a) >= DRIVER_TYPE_LAN && \
    (__a) <= DRIVER_TYPE_LAN_2_0)
-
-/* ipmipower_bool_t
- * - boolean type
- */
-typedef enum 
-  { 
-    IPMIPOWER_TRUE  = 1,
-    IPMIPOWER_FALSE = 0,
-  } ipmipower_bool_t;
 
 /* power_cmd_t 
  * - power control commands 
@@ -429,7 +420,7 @@ struct ipmipower_powercmd {
   uint8_t privilege_level;
 
   /* IPMI 1.5 specific */
-  ipmipower_bool_t permsgauth_enabled;
+  int permsgauth_enabled;
   uint8_t authentication_type;
 
   /* IPMI 2.0 specific */
@@ -558,27 +549,27 @@ struct ipmipower_config
   cipher_suite_id_t        cipher_suite_id;
   privilege_level_t        privilege_level;
   uint32_t                 workaround_flags;
-  ipmipower_bool_t         debug;
+  int                      debug;
   char                     configfile[MAXPATHLEN+1];
 #ifndef NDEBUG
-  ipmipower_bool_t         rmcpdump;
-  ipmipower_bool_t         log;
+  int                      rmcpdump;
+  int                      log;
   char                     logfile[MAXPATHLEN+1];
   int                      logfile_fd;
 #endif /* NDEBUG */
   /* buffer_output and always_prefix not implemented in ipmipower
    * added only for consistency to other tools.
    */
-  ipmipower_bool_t         buffer_output;
-  ipmipower_bool_t         consolidate_output;
+  int                      buffer_output;
+  int                      consolidate_output;
   int                      fanout;
-  ipmipower_bool_t         eliminate;
-  ipmipower_bool_t         always_prefix;
+  int                      eliminate;
+  int                      always_prefix;
 
   power_cmd_t              powercmd;
-  ipmipower_bool_t         on_if_off;
-  ipmipower_bool_t         wait_until_on;
-  ipmipower_bool_t         wait_until_off;
+  int                      on_if_off;
+  int                      wait_until_on;
+  int                      wait_until_off;
   int                      retransmission_wait_timeout_len;
   int                      retransmission_backoff_count; 
   int                      ping_interval_len;
@@ -588,32 +579,32 @@ struct ipmipower_config
   int                      ping_consec_count;
 
   /* Flags indicating if option was set on the command line */
-  ipmipower_bool_t         driver_type_set_on_cmdline;
-  ipmipower_bool_t         hosts_set_on_cmdline;
-  ipmipower_bool_t         username_set_on_cmdline;
-  ipmipower_bool_t         password_set_on_cmdline;
-  ipmipower_bool_t         k_g_set_on_cmdline;
-  ipmipower_bool_t         session_timeout_len_set_on_cmdline;
-  ipmipower_bool_t         retransmission_timeout_len_set_on_cmdline;
-  ipmipower_bool_t         authentication_type_set_on_cmdline;
-  ipmipower_bool_t         cipher_suite_id_set_on_cmdline;
-  ipmipower_bool_t         privilege_level_set_on_cmdline;
-  ipmipower_bool_t         workaround_flags_set_on_cmdline;
-  ipmipower_bool_t         buffer_output_set_on_cmdline;
-  ipmipower_bool_t         consolidate_output_set_on_cmdline;
-  ipmipower_bool_t         fanout_set_on_cmdline;
-  ipmipower_bool_t         eliminate_set_on_cmdline;
-  ipmipower_bool_t         always_prefix_set_on_cmdline;
-  ipmipower_bool_t         on_if_off_set_on_cmdline;
-  ipmipower_bool_t         wait_until_on_set_on_cmdline;
-  ipmipower_bool_t         wait_until_off_set_on_cmdline;
-  ipmipower_bool_t         retransmission_wait_timeout_len_set_on_cmdline;
-  ipmipower_bool_t         retransmission_backoff_count_set_on_cmdline;
-  ipmipower_bool_t         ping_interval_len_set_on_cmdline;
-  ipmipower_bool_t         ping_timeout_len_set_on_cmdline; 
-  ipmipower_bool_t         ping_consec_count_set_on_cmdline;
-  ipmipower_bool_t         ping_packet_count_set_on_cmdline;
-  ipmipower_bool_t         ping_percent_set_on_cmdline;
+  int                      driver_type_set_on_cmdline;
+  int                      hosts_set_on_cmdline;
+  int                      username_set_on_cmdline;
+  int                      password_set_on_cmdline;
+  int                      k_g_set_on_cmdline;
+  int                      session_timeout_len_set_on_cmdline;
+  int                      retransmission_timeout_len_set_on_cmdline;
+  int                      authentication_type_set_on_cmdline;
+  int                      cipher_suite_id_set_on_cmdline;
+  int                      privilege_level_set_on_cmdline;
+  int                      workaround_flags_set_on_cmdline;
+  int                      buffer_output_set_on_cmdline;
+  int                      consolidate_output_set_on_cmdline;
+  int                      fanout_set_on_cmdline;
+  int                      eliminate_set_on_cmdline;
+  int                      always_prefix_set_on_cmdline;
+  int                      on_if_off_set_on_cmdline;
+  int                      wait_until_on_set_on_cmdline;
+  int                      wait_until_off_set_on_cmdline;
+  int                      retransmission_wait_timeout_len_set_on_cmdline;
+  int                      retransmission_backoff_count_set_on_cmdline;
+  int                      ping_interval_len_set_on_cmdline;
+  int                      ping_timeout_len_set_on_cmdline; 
+  int                      ping_consec_count_set_on_cmdline;
+  int                      ping_packet_count_set_on_cmdline;
+  int                      ping_percent_set_on_cmdline;
 };
 
 typedef struct ipmipower_powercmd *ipmipower_powercmd_t;

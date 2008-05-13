@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.90 2008-05-12 23:53:05 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.91 2008-05-13 00:19:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -239,25 +239,25 @@ ipmipower_config_setup(void)
   conf->cipher_suite_id = CIPHER_SUITE_ID_AUTO;
   conf->privilege_level = PRIVILEGE_LEVEL_AUTO;
   conf->workaround_flags = 0;
-  conf->debug = IPMIPOWER_FALSE;
+  conf->debug = 0;
   memset(conf->configfile, '\0', MAXPATHLEN+1);
 #ifndef NDEBUG
-  conf->rmcpdump = IPMIPOWER_FALSE;
-  conf->log = IPMIPOWER_FALSE;
+  conf->rmcpdump = 0;
+  conf->log = 0;
   memset(conf->logfile, '\0', MAXPATHLEN+1);
   ipmipower_config_default_logfile(conf->logfile, MAXPATHLEN);
   conf->logfile_fd = -1;
 #endif /* NDEBUG */
-  conf->buffer_output = IPMIPOWER_FALSE;
-  conf->consolidate_output = IPMIPOWER_FALSE;
+  conf->buffer_output = 0;
+  conf->consolidate_output = 0;
   conf->fanout = 0;
-  conf->eliminate = IPMIPOWER_FALSE;
-  conf->always_prefix = IPMIPOWER_FALSE;
+  conf->eliminate = 0;
+  conf->always_prefix = 0;
 
   conf->powercmd = POWER_CMD_NONE;
-  conf->on_if_off = IPMIPOWER_FALSE;
-  conf->wait_until_on = IPMIPOWER_FALSE;
-  conf->wait_until_off = IPMIPOWER_FALSE;
+  conf->on_if_off = 0;
+  conf->wait_until_on = 0;
+  conf->wait_until_off = 0;
   conf->retransmission_wait_timeout_len = 500; /* .5 seconds  */
   conf->retransmission_backoff_count = 8;
   conf->ping_interval_len = 5000; /* 5 seconds */
@@ -267,31 +267,31 @@ ipmipower_config_setup(void)
   conf->ping_consec_count = 5;
 
   /* Options not found yet, all false */
-  conf->driver_type_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->hosts_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->username_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->password_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->session_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->retransmission_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->authentication_type_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->cipher_suite_id_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->privilege_level_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->workaround_flags_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->buffer_output_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->consolidate_output_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->fanout_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->eliminate_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->always_prefix_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->on_if_off_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->wait_until_on_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->wait_until_off_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->retransmission_wait_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->retransmission_backoff_count_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->ping_interval_len_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->ping_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->ping_packet_count_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->ping_percent_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->ping_consec_count_set_on_cmdline = IPMIPOWER_FALSE;
+  conf->driver_type_set_on_cmdline = 0;
+  conf->hosts_set_on_cmdline = 0;
+  conf->username_set_on_cmdline = 0;
+  conf->password_set_on_cmdline = 0;
+  conf->session_timeout_len_set_on_cmdline = 0;
+  conf->retransmission_timeout_len_set_on_cmdline = 0;
+  conf->authentication_type_set_on_cmdline = 0;
+  conf->cipher_suite_id_set_on_cmdline = 0;
+  conf->privilege_level_set_on_cmdline = 0;
+  conf->workaround_flags_set_on_cmdline = 0;
+  conf->buffer_output_set_on_cmdline = 0;
+  conf->consolidate_output_set_on_cmdline = 0;
+  conf->fanout_set_on_cmdline = 0;
+  conf->eliminate_set_on_cmdline = 0;
+  conf->always_prefix_set_on_cmdline = 0;
+  conf->on_if_off_set_on_cmdline = 0;
+  conf->wait_until_on_set_on_cmdline = 0;
+  conf->wait_until_off_set_on_cmdline = 0;
+  conf->retransmission_wait_timeout_len_set_on_cmdline = 0;
+  conf->retransmission_backoff_count_set_on_cmdline = 0;
+  conf->ping_interval_len_set_on_cmdline = 0;
+  conf->ping_timeout_len_set_on_cmdline = 0;
+  conf->ping_packet_count_set_on_cmdline = 0;
+  conf->ping_percent_set_on_cmdline = 0;
+  conf->ping_consec_count_set_on_cmdline = 0;
 }
 
 static void 
@@ -379,20 +379,20 @@ cmdline_parse (int key,
     case IPMI_VERSION_KEY:	/* --ipmi-version */
     case ARGP_DRIVER_TYPE_KEY:      /* --driver-type */
       conf->driver_type = ipmipower_driver_type_index(arg);
-      conf->driver_type_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->driver_type_set_on_cmdline++;
       break;
     case ARGP_HOSTNAME_KEY:       /* --hostname */
       if ((conf->hosts = hostlist_create(arg)) == NULL)
         ierr_exit("Error: Hostname(s) incorrectly formatted");
       hostlist_uniq(conf->hosts);
       conf->hosts_count = hostlist_count(conf->hosts);
-      conf->hosts_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->hosts_set_on_cmdline++;
       break;
     case ARGP_USERNAME_KEY:       /* --username */
       if (strlen(arg) > IPMI_MAX_USER_NAME_LENGTH)
         ierr_exit("Command Line Error: username too long");
       strcpy(conf->username, arg);
-      conf->username_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->username_set_on_cmdline++;
       n = strlen(arg);
       secure_memset(arg, '\0', n);
       break;
@@ -400,7 +400,7 @@ cmdline_parse (int key,
       if (strlen(arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         ierr_exit("Command Line Error: password too long");
       strcpy(conf->password, arg);
-      conf->password_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->password_set_on_cmdline++;
       n = strlen(arg);
       secure_memset(arg, '\0', n);
       break;
@@ -410,7 +410,7 @@ cmdline_parse (int key,
       if (strlen(pw) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         ierr_exit("password too long");
       strcpy(conf->password, pw);
-      conf->password_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->password_set_on_cmdline++;
       break;
     case ARGP_K_G_KEY:       /* --k-g */
       if ((rv = check_kg_len(arg)) < 0)
@@ -420,7 +420,7 @@ cmdline_parse (int key,
       if (rv > 0)
         {
           conf->k_g_len = rv;
-          conf->k_g_set_on_cmdline = IPMIPOWER_TRUE;
+          conf->k_g_set_on_cmdline++;
         }
       n = strlen(arg);
       secure_memset(arg, '\0', n);
@@ -435,43 +435,43 @@ cmdline_parse (int key,
       if (rv > 0)
         {
           conf->k_g_len = rv;
-          conf->k_g_set_on_cmdline = IPMIPOWER_TRUE;
+          conf->k_g_set_on_cmdline++;
         }
       break;
     case SESSION_TIMEOUT_KEY:       /* --session-timeout */
       conf->session_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: session timeout length invalid\n");
-      conf->session_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->session_timeout_len_set_on_cmdline++;
       break;
     case RETRANSMISSION_TIMEOUT_KEY:       /* --retransmission-timeout */
       conf->retransmission_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: retransmission timeout length invalid\n");
-      conf->retransmission_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->retransmission_timeout_len_set_on_cmdline++;
       break;
     case ARGP_AUTHENTICATION_TYPE_KEY:       /* --authentication-type */
       conf->authentication_type = ipmipower_authentication_type_index(arg);
-      conf->authentication_type_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->authentication_type_set_on_cmdline++;
       break;
     case ARGP_CIPHER_SUITE_ID_KEY:       /* --cipher-suite-id */
       conf->cipher_suite_id = ipmipower_cipher_suite_id_index(arg);
-      conf->cipher_suite_id_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->cipher_suite_id_set_on_cmdline++;
       break;
       /* ARGP_PRIVILEGE_KEY for backwards compatability */
     case ARGP_PRIVILEGE_KEY:
     case ARGP_PRIVILEGE_LEVEL_KEY:       /* --privilege-level */
       conf->privilege_level = ipmipower_privilege_level_index(arg);
-      conf->privilege_level_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->privilege_level_set_on_cmdline++;
       break;
     case ARGP_WORKAROUND_FLAGS_KEY:       /* --workaround-flags */
       if (ipmipower_workarounds_parse(arg, &flags) < 0)
         ierr_exit("Command Line Error: invalid workaround specified");
       conf->workaround_flags = flags;
-      conf->workaround_flags_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->workaround_flags_set_on_cmdline++;
       break;
     case DEBUG_KEY:          /* --debug */
-      conf->debug = !conf->debug;
+      conf->debug++;
       break;
     case CONFIG_KEY:         /* --config */
       if (strlen(arg) > MAXPATHLEN)
@@ -480,10 +480,10 @@ cmdline_parse (int key,
       break;
 #ifndef NDEBUG
     case RMCPDUMP_KEY:       /* --rmcpdump */
-      conf->rmcpdump = !conf->rmcpdump;
+      conf->rmcpdump++;
       break;
     case LOG_KEY:            /* --log */
-      conf->log = !conf->log;
+      conf->log++;
       break;
     case LOGFILE_KEY:        /* --logfile */
       if (strlen(arg) > MAXPATHLEN)
@@ -493,26 +493,26 @@ cmdline_parse (int key,
       break;
 #endif /* !NDEBUG */
     case ARGP_BUFFER_OUTPUT_KEY:       /* --buffer-output */
-      conf->buffer_output = IPMIPOWER_TRUE;
-      conf->buffer_output_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->buffer_output++;
+      conf->buffer_output_set_on_cmdline++;
       break;
     case ARGP_CONSOLIDATE_OUTPUT_KEY:       /* --consolidate-output */
-      conf->consolidate_output = IPMIPOWER_TRUE;
-      conf->consolidate_output_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->consolidate_output++;
+      conf->consolidate_output_set_on_cmdline++;
       break;
     case ARGP_FANOUT_KEY:          /* --fanout */
       conf->fanout = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: fanout invalid\n");
-      conf->fanout_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->fanout_set_on_cmdline++;
       break;
     case ARGP_ELIMINATE_KEY:       /* --eliminate */
-      conf->eliminate = IPMIPOWER_TRUE;
-      conf->eliminate_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->eliminate++;
+      conf->eliminate_set_on_cmdline++;
       break;
     case ARGP_ALWAYS_PREFIX_KEY: /* --always-prefix */
-      conf->always_prefix = IPMIPOWER_TRUE;
-      conf->always_prefix_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->always_prefix++;
+      conf->always_prefix_set_on_cmdline++;
       break;
     case ON_KEY:       /* --on */ 
       conf->powercmd = POWER_CMD_POWER_ON;
@@ -536,16 +536,16 @@ cmdline_parse (int key,
       conf->powercmd = POWER_CMD_SOFT_SHUTDOWN_OS;
       break;
     case ON_IF_OFF_KEY:       /* --on-if-off */
-      conf->on_if_off = !conf->on_if_off;
-      conf->on_if_off_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->on_if_off++;
+      conf->on_if_off_set_on_cmdline++;
       break;
     case WAIT_UNTIL_OFF_KEY:       /* --wait-until-on */
-      conf->wait_until_on = !conf->wait_until_on;
-      conf->wait_until_on_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->wait_until_on++;
+      conf->wait_until_on_set_on_cmdline++;
       break;
     case WAIT_UNTIL_ON_KEY:       /* --wait-until-off */
-      conf->wait_until_off = !conf->wait_until_off;
-      conf->wait_until_off_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->wait_until_off++;
+      conf->wait_until_off_set_on_cmdline++;
       break;
       /* RETRY_WAIT_TIMEOUT for backwards compatability */
     case RETRY_WAIT_TIMEOUT_KEY:
@@ -553,7 +553,7 @@ cmdline_parse (int key,
       conf->retransmission_wait_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: retransmission wait timeout length invalid\n");
-      conf->retransmission_wait_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->retransmission_wait_timeout_len_set_on_cmdline++;
       break;
       /* RETRY_BACKOFF_COUNT for backwards compatability */
     case RETRY_BACKOFF_COUNT_KEY:
@@ -561,37 +561,37 @@ cmdline_parse (int key,
       conf->retransmission_backoff_count = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: retransmission backoff count invalid\n");
-      conf->retransmission_backoff_count_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->retransmission_backoff_count_set_on_cmdline++;
       break;
     case PING_INTERVAL_KEY:       /* --ping-interval */
       conf->ping_interval_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: ping interval length invalid\n");
-      conf->ping_interval_len_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->ping_interval_len_set_on_cmdline++;
       break;
     case PING_TIMEOUT_KEY:       /* --ping-timeout */
       conf->ping_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: ping timeout length invalid\n");
-      conf->ping_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->ping_timeout_len_set_on_cmdline++;
       break;
     case PING_PACKET_COUNT_KEY:       /* --ping-packet-count */
       conf->ping_packet_count = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: ping packet count invalid\n");
-      conf->ping_packet_count_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->ping_packet_count_set_on_cmdline++;
       break;
     case PING_PERCENT_KEY:       /* --ping-percent */
       conf->ping_percent = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: ping percent invalid\n");
-      conf->ping_percent_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->ping_percent_set_on_cmdline++;
       break;
     case PING_CONSEC_COUNT_KEY:       /* --ping-consec-count */
       conf->ping_consec_count = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         ierr_exit("Command Line Error: ping consec count invalid\n");
-      conf->ping_consec_count_set_on_cmdline = IPMIPOWER_TRUE;
+      conf->ping_consec_count_set_on_cmdline++;
       break;
     case '?':
     default:
@@ -626,7 +626,7 @@ _cb_driver_type(conffile_t cf, struct conffile_data *data,
                 char *optionname, int option_type, void *option_ptr, 
                 int option_data, void *app_ptr, int app_data) 
 {
-  if (conf->driver_type_set_on_cmdline == IPMIPOWER_TRUE)
+  if (conf->driver_type_set_on_cmdline)
     return 0;
   
   /* Incorrect driver_types checked in _config_common_checks */
@@ -641,7 +641,7 @@ _cb_hostname(conffile_t cf, struct conffile_data *data,
 {
   int i;
   
-  if (conf->hosts_set_on_cmdline == IPMIPOWER_TRUE)
+  if (conf->hosts_set_on_cmdline)
     return 0;
   
   if ((conf->hosts = hostlist_create(NULL)) == NULL)
@@ -665,7 +665,7 @@ _cb_username(conffile_t cf, struct conffile_data *data,
              char *optionname, int option_type, void *option_ptr,
              int option_data, void *app_ptr, int app_data) 
 {
-  if (conf->username_set_on_cmdline == IPMIPOWER_TRUE)
+  if (conf->username_set_on_cmdline)
     return 0;
 
   if (strlen(data->string) > IPMI_MAX_USER_NAME_LENGTH)
@@ -680,7 +680,7 @@ _cb_password(conffile_t cf, struct conffile_data *data,
              char *optionname, int option_type, void *option_ptr,
              int option_data, void *app_ptr, int app_data) 
 {
-  if (conf->password_set_on_cmdline == IPMIPOWER_TRUE)
+  if (conf->password_set_on_cmdline)
     return 0;
 
   if (strlen(data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
@@ -697,7 +697,7 @@ _cb_k_g(conffile_t cf, struct conffile_data *data,
 {
   int rv;
 
-  if (conf->k_g_set_on_cmdline == IPMIPOWER_TRUE)
+  if (conf->k_g_set_on_cmdline)
     return 0;
 
   if ((rv = check_kg_len(data->string)) < 0)
@@ -717,7 +717,7 @@ _cb_authentication_type(conffile_t cf, struct conffile_data *data,
 			char *optionname, int option_type, void *option_ptr, 
 			int option_data, void *app_ptr, int app_data) 
 {
-  if (conf->authentication_type_set_on_cmdline == IPMIPOWER_TRUE)
+  if (conf->authentication_type_set_on_cmdline)
     return 0;
 
   /* Incorrect authentication_type checked in _config_common_checks */
@@ -730,7 +730,7 @@ _cb_cipher_suite_id(conffile_t cf, struct conffile_data *data,
                     char *optionname, int option_type, void *option_ptr, 
                     int option_data, void *app_ptr, int app_data) 
 {
-  if (conf->cipher_suite_id_set_on_cmdline == IPMIPOWER_TRUE)
+  if (conf->cipher_suite_id_set_on_cmdline)
     return 0;
 
   /* Incorrect cipher_suite_ids checked in _config_common_checks */
@@ -743,7 +743,7 @@ _cb_privilege_level(conffile_t cf, struct conffile_data *data,
                     char *optionname, int option_type, void *option_ptr, 
                     int option_data, void *app_ptr, int app_data) 
 {
-  if (conf->privilege_level_set_on_cmdline == IPMIPOWER_TRUE)
+  if (conf->privilege_level_set_on_cmdline)
     return 0;
 
   /* Incorrect privilege level checked in _config_common_checks */
@@ -758,7 +758,7 @@ _cb_workaround_flags(conffile_t cf, struct conffile_data *data,
 {
   uint32_t flags;
 
-  if (conf->workaround_flags_set_on_cmdline == IPMIPOWER_TRUE)
+  if (conf->workaround_flags_set_on_cmdline)
     return 0;
 
   if (ipmipower_workarounds_parse(data->string, &flags) < 0)
@@ -772,10 +772,10 @@ _cb_bool(conffile_t cf, struct conffile_data *data,
          char *optionname, int option_type, void *option_ptr,
          int option_data, void *app_ptr, int app_data) 
 {
-  ipmipower_bool_t *boolval = (ipmipower_bool_t *)option_ptr;
-  ipmipower_bool_t cmdlineset = (ipmipower_bool_t)option_data;
+  int *boolval = (int *)option_ptr;
+  int cmdlineset = (int)option_data;
 
-  if (cmdlineset == IPMIPOWER_TRUE)
+  if (cmdlineset)
     return 0;
 
   *boolval = data->boolval;
@@ -788,9 +788,9 @@ _cb_int(conffile_t cf, struct conffile_data *data,
         int option_data, void *app_ptr, int app_data) 
 {
   int *temp = (int *)option_ptr;
-  ipmipower_bool_t cmdlineset = (ipmipower_bool_t)option_data;
+  int cmdlineset = (int)option_data;
 
-  if (cmdlineset == IPMIPOWER_TRUE)
+  if (cmdlineset)
     return 0;
 
   *temp = data->intval; 

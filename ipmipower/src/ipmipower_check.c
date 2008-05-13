@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.73 2008-05-12 23:46:50 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.74 2008-05-13 00:19:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -124,7 +124,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
               || pkt == CLOSE_SESSION_RES
 	   */
 	{
-	  if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
+	  if (!ip->permsgauth_enabled)
 	    {
 	      authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
 	      check_authcode_retry_flag++;

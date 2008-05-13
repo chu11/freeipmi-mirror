@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.67 2008-05-12 23:46:52 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.68 2008-05-13 00:19:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -341,9 +341,9 @@ _cmd_log(char **argv)
   else 
     {
       if (!strcasecmp(argv[1], "on"))
-        conf->log = IPMIPOWER_TRUE;
+        conf->log = 1;
       else if (!strcasecmp(argv[1], "off"))  
-        conf->log = IPMIPOWER_FALSE;
+        conf->log = 0;
       else 
         {
           cbuf_printf(ttyout, "invalid parameter\n");
@@ -361,7 +361,7 @@ _cmd_log(char **argv)
           cbuf_printf(ttyout, "error opening log file %s: %s\n", 
                       conf->logfile, strerror(errno));
           cbuf_printf(ttyout, "logging not enabled\n");
-          conf->log = IPMIPOWER_FALSE;
+          conf->log = 0;
           return;
         }
     }
@@ -739,7 +739,7 @@ _cmd_set_int(char **argv,
 }
 
 static void 
-_cmd_set_flag(char **argv, ipmipower_bool_t *flag, char *str) 
+_cmd_set_flag(char **argv, int *flag, char *str) 
 {
   assert(argv != NULL && flag != NULL && str != NULL);
   
@@ -748,9 +748,9 @@ _cmd_set_flag(char **argv, ipmipower_bool_t *flag, char *str)
   else 
     {
       if (!strcasecmp(argv[1], "on"))
-        *flag = IPMIPOWER_TRUE;
+        *flag = 1;
       else if (!strcasecmp(argv[1], "off"))  
-        *flag = IPMIPOWER_FALSE;
+        *flag = 0;
       else 
         {
           cbuf_printf(ttyout, "invalid parameter\n");

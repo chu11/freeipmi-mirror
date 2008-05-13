@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.83 2008-05-12 23:46:52 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.84 2008-05-13 00:19:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -682,7 +682,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 	       || pkt == CHASSIS_CONTROL_REQ
 	       || pkt == CLOSE_SESSION_REQ))
     {
-      if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
+      if (!ip->permsgauth_enabled)
         authentication_type = IPMI_AUTHENTICATION_TYPE_NONE; 
       else
         authentication_type = ip->authentication_type;

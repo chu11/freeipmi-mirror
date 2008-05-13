@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.28 2008-04-17 23:14:28 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.29 2008-05-13 00:19:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -79,7 +79,7 @@ ipmipower_output(msg_type_t num, char *hostname)
   assert(MSG_TYPE_VALID(num));
   assert(hostname != NULL);
 
-  if (conf->consolidate_output == IPMIPOWER_TRUE)
+  if (conf->consolidate_output)
     {
       if (hostlist_push_host(output_hostrange[num], hostname) == 0)
         ierr_exit("hostlist_push_host() error\n");
@@ -93,7 +93,7 @@ ipmipower_output(msg_type_t num, char *hostname)
 void
 ipmipower_output_finish(void)
 {
-  if (conf->consolidate_output == IPMIPOWER_TRUE)
+  if (conf->consolidate_output)
     {
       int i, rv;
       char buffer[IPMIPOWER_HOSTLIST_BUFLEN];

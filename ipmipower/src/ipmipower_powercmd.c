@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.132 2008-05-12 23:46:52 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.133 2008-05-13 00:19:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -807,17 +807,17 @@ _retry_packets(ipmipower_powercmd_t ip)
   /* Don't retransmit if any of the following are true */
   if (ip->protocol_state == PROTOCOL_STATE_START /* we haven't started yet */
       || conf->retransmission_timeout_len == 0             /* no retransmissions */
-      || (((conf->wait_until_on == IPMIPOWER_TRUE
+      || (((conf->wait_until_on
             && ip->cmd == POWER_CMD_POWER_ON)
-           || (conf->wait_until_off == IPMIPOWER_TRUE
+           || (conf->wait_until_off
                && ip->cmd == POWER_CMD_POWER_OFF))
 	  && conf->retransmission_wait_timeout_len == 0))
     return 0;
 
   /* Did we timeout on this packet? */
-  if ((conf->wait_until_on == IPMIPOWER_TRUE
+  if ((conf->wait_until_on
        && ip->cmd == POWER_CMD_POWER_ON)
-      || (conf->wait_until_off == IPMIPOWER_TRUE
+      || (conf->wait_until_off
           && ip->cmd == POWER_CMD_POWER_OFF))
     retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_wait_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_wait_timeout_len;
   else
@@ -1070,12 +1070,12 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
   if (!(conf->workaround_flags & WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION))
     {
       if (!authentication_status_per_message_authentication)
-	ip->permsgauth_enabled = IPMIPOWER_TRUE;
+	ip->permsgauth_enabled = 1;
       else
-	ip->permsgauth_enabled = IPMIPOWER_FALSE;
+	ip->permsgauth_enabled = 0;
     }
   else
-    ip->permsgauth_enabled = IPMIPOWER_TRUE;
+    ip->permsgauth_enabled = 1;
 
   return 0;
 }
@@ -1238,17 +1238,17 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
    * The remote BMC ignores if permsg authentiction is disabled.
    * Handle it appropriately by just not doing permsg authentication.
    */
-  if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
+  if (!ip->permsgauth_enabled)
     {
       if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
         {
           ierr_dbg("_process_ipmi_packets(%s:%d): not none authentcation",
                    ip->ic->hostname, ip->protocol_state);
-          ip->permsgauth_enabled = IPMIPOWER_TRUE;
+          ip->permsgauth_enabled = 1;
         }
     }
 
-  if (ip->permsgauth_enabled == IPMIPOWER_TRUE)
+  if (ip->permsgauth_enabled)
     {
       if (authentication_type != ip->authentication_type)
         {
@@ -2039,7 +2039,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                    "current_power_state.power_is_on",
                    &power_state);
 
-      if (conf->wait_until_on == IPMIPOWER_TRUE
+      if (conf->wait_until_on
           && ip->cmd == POWER_CMD_POWER_ON
 	  && ip->wait_until_on_state)
 	{
@@ -2050,7 +2050,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	      _send_packet(ip, CLOSE_SESSION_REQ);
 	    }
 	}
-      else if (conf->wait_until_off == IPMIPOWER_TRUE
+      else if (conf->wait_until_off
                && ip->cmd == POWER_CMD_POWER_OFF
                && ip->wait_until_off_state)
 	{
@@ -2090,9 +2090,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
         
-      if ((conf->wait_until_on == IPMIPOWER_TRUE
+      if ((conf->wait_until_on
            && ip->cmd == POWER_CMD_POWER_ON)
-          || (conf->wait_until_off == IPMIPOWER_TRUE
+          || (conf->wait_until_off
               && ip->cmd == POWER_CMD_POWER_OFF))
 	{
           if (ip->cmd == POWER_CMD_POWER_ON)
