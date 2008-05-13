@@ -163,10 +163,8 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
 
     case SET_BOOT_FLAGS_BOOT_DEVICE_SELECTOR_KEY:
       /* achu: many legacy inputs are preserved */
-      if (arg == NULL)
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NO_OVERRIDE;
-      else if (!strcasecmp(arg, "no-override")
-               || !strcasecmp(arg, "none")) /* legacy */
+      if (!strcasecmp(arg, "no-override")
+          || !strcasecmp(arg, "none")) /* legacy */
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NO_OVERRIDE;
       else if (!strcasecmp(arg, "pxe"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_PXE;
@@ -285,7 +283,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       return ARGP_ERR_UNKNOWN;
     }
 
-  if ((cmd_args->cmd != IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS))
+  if ((cmd_args->cmd != CHASSIS_CMD_SET_SYSTEM_BOOT_OPTIONS))
     {
       fprintf (stderr, "please specify set-boot-flags option\n");
       argp_usage (state);
@@ -308,7 +306,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "Error: Multiple commands specified\n");
           exit(EXIT_FAILURE);
         }
-      cmd_args->cmd = IPMI_CMD_GET_CHASSIS_CAPABILITIES;
+      cmd_args->cmd = CHASSIS_CMD_GET_CHASSIS_CAPABILITIES;
       break;
 
     case GET_STATUS_KEY:
@@ -317,7 +315,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "Error: Multiple commands specified\n");
           exit(EXIT_FAILURE);
         }
-      cmd_args->cmd = IPMI_CMD_GET_CHASSIS_STATUS;
+      cmd_args->cmd = CHASSIS_CMD_GET_CHASSIS_STATUS;
       break;
 
     case CHASSIS_CONTROL_KEY:
@@ -326,7 +324,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "Error: Multiple commands specified\n");
           exit(EXIT_FAILURE);
         }
-      cmd_args->cmd = IPMI_CMD_CHASSIS_CONTROL;
+      cmd_args->cmd = CHASSIS_CMD_CHASSIS_CONTROL;
       if (!strcasecmp(arg, "power-down"))
         cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_DOWN;
       else if (!strcasecmp(arg, "power-up"))
@@ -353,7 +351,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           exit(EXIT_FAILURE);
         }
 
-      cmd_args->cmd = IPMI_CMD_CHASSIS_IDENTIFY;
+      cmd_args->cmd = CHASSIS_CMD_CHASSIS_IDENTIFY;
       if (!strcasecmp(arg, "turn-off"))
         {
           cmd_args->args.identify_args.identify_interval = 0;
@@ -391,7 +389,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "Error: Multiple commands specified\n");
           exit(EXIT_FAILURE);
         }
-      cmd_args->cmd = IPMI_CMD_GET_SYSTEM_RESTART_CAUSE;
+      cmd_args->cmd = CHASSIS_CMD_GET_SYSTEM_RESTART_CAUSE;
       break;
 
     case GET_POWER_ON_HOURS_COUNTER_KEY:
@@ -400,7 +398,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "Error: Multiple commands specified\n");
           exit(EXIT_FAILURE);
         }
-      cmd_args->cmd = IPMI_CMD_GET_POWER_ON_HOURS_COUNTER;
+      cmd_args->cmd = CHASSIS_CMD_GET_POWER_ON_HOURS_COUNTER;
       break;
 
     case SET_POWER_CYCLE_INTERVAL_KEY:
@@ -410,7 +408,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           exit(EXIT_FAILURE);
         }
 
-      cmd_args->cmd = IPMI_CMD_SET_POWER_CYCLE_INTERVAL;
+      cmd_args->cmd = CHASSIS_CMD_SET_POWER_CYCLE_INTERVAL;
       cmd_args->args.power_cycle_interval = strtol (arg, &ptr, 10);
       if (*ptr != '\0')
         {
@@ -425,7 +423,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "Error: Multiple commands specified\n");
           exit(EXIT_FAILURE);
         }
-      cmd_args->cmd = IPMI_CMD_GET_SYSTEM_BOOT_OPTIONS;
+      cmd_args->cmd = CHASSIS_CMD_GET_SYSTEM_BOOT_OPTIONS;
       break;
 
     case SET_BOOT_FLAGS_KEY:
@@ -435,7 +433,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           exit(EXIT_FAILURE);
         }
 
-      cmd_args->cmd = IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS;
+      cmd_args->cmd = CHASSIS_CMD_SET_SYSTEM_BOOT_OPTIONS;
       break;
 
     case SET_POWER_RESTORE_POLICY_KEY:
@@ -444,7 +442,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "Error: Multiple commands specified\n");
           exit(EXIT_FAILURE);
         }
-      cmd_args->cmd = IPMI_CMD_SET_POWER_RESTORE_POLICY;
+      cmd_args->cmd = CHASSIS_CMD_SET_POWER_RESTORE_POLICY;
 
       if (!strcasecmp (arg, "always-on"))
         cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_ALWAYS_POWER_UP_AFTER_AC_IS_LOST;

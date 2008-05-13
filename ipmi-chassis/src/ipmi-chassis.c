@@ -1133,43 +1133,43 @@ run_cmd_args (ipmi_chassis_state_data_t *state_data)
   
   switch (state_data->prog_data->args->cmd) 
     {
-      case IPMI_CMD_GET_CHASSIS_CAPABILITIES:
+      case CHASSIS_CMD_GET_CHASSIS_CAPABILITIES:
         get_chassis_capabilities (state_data);
         break;
     
-      case IPMI_CMD_GET_CHASSIS_STATUS:
+      case CHASSIS_CMD_GET_CHASSIS_STATUS:
         get_chassis_status (state_data);
         break;
      
-      case IPMI_CMD_CHASSIS_CONTROL:
+      case CHASSIS_CMD_CHASSIS_CONTROL:
         chassis_control (state_data);
         break;
     
-      case IPMI_CMD_CHASSIS_IDENTIFY:
+      case CHASSIS_CMD_CHASSIS_IDENTIFY:
         chassis_identify (state_data);
         break;
     
-      case IPMI_CMD_SET_POWER_RESTORE_POLICY: 
+      case CHASSIS_CMD_SET_POWER_RESTORE_POLICY: 
         set_power_restore_policy (state_data);
         break;
     
-      case IPMI_CMD_GET_SYSTEM_RESTART_CAUSE:
+      case CHASSIS_CMD_GET_SYSTEM_RESTART_CAUSE:
         get_system_restart_cause (state_data);
         break;
     
-      case IPMI_CMD_GET_POWER_ON_HOURS_COUNTER:
+      case CHASSIS_CMD_GET_POWER_ON_HOURS_COUNTER:
         get_power_on_hours_counter (state_data);
         break;
     
-      case IPMI_CMD_SET_POWER_CYCLE_INTERVAL:
+      case CHASSIS_CMD_SET_POWER_CYCLE_INTERVAL:
         set_power_cycle_interval (state_data);
         break;
     
-      case IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS:
+      case CHASSIS_CMD_SET_SYSTEM_BOOT_OPTIONS:
         set_boot_flags (state_data);
         break;
     
-      case IPMI_CMD_GET_SYSTEM_BOOT_OPTIONS :
+      case CHASSIS_CMD_GET_SYSTEM_BOOT_OPTIONS :
         get_boot_flags (state_data);
         break;
     
