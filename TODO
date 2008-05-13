@@ -54,6 +54,7 @@ audit
 - fiid names
 - flags
 cleanup argp parsing
+- printf vs fprintf, not consistent
 
 pef-config
 -----------
