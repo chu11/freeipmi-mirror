@@ -483,7 +483,7 @@ ipmi_chassis_argp_parse (int argc,
                          char **argv,
 			 struct ipmi_chassis_arguments *cmd_args)
 {
-  init_common_cmd_args (&(cmd_args->common));
+  init_common_cmd_args_admin (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->cmd = -1;
 
@@ -503,10 +503,6 @@ ipmi_chassis_argp_parse (int argc,
   cmd_args->args.boot_option_args.force_progress_event_traps = -1;
   cmd_args->args.boot_option_args.firmware_bios_verbosity = -1;
 
-  /* ADMIN is minimum for ipmi-chassis b/c its needed for many of the
-   * ipmi cmds used
-   */
-  cmd_args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));

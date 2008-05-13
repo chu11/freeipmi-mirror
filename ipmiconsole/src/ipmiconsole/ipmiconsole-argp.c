@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.3 2008-05-10 02:41:37 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.4 2008-05-13 20:34:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -558,7 +558,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
 void
 ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd_args)
 {
-  init_common_cmd_args (&(cmd_args->common));
+  init_common_cmd_args_admin (&(cmd_args->common));
   cmd_args->escape_char = '&';
   cmd_args->dont_steal = 0;
   cmd_args->deactivate = 0;
@@ -568,9 +568,6 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->debugfile = 0;
   cmd_args->noraw = 0;
 #endif /* NDEBUG */
-
-  /* alternate default for ipmiconsole ADMIN */
-  cmd_args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
 
   argp_parse (&argp_conf, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   /* change defaults to whatever is configured, run 2nd b/c

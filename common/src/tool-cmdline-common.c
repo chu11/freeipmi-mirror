@@ -658,8 +658,8 @@ hostrange_parse_opt (int key,
   return 0;
 }
 
-void 
-init_common_cmd_args (struct common_cmd_args *cmd_args)
+static void 
+_init_common_cmd_args (struct common_cmd_args *cmd_args)
 {
   cmd_args->disable_auto_probe = 0;
   cmd_args->driver_type = IPMI_DEVICE_UNKNOWN;
@@ -675,9 +675,29 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->k_g_len = 0;
   cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
   cmd_args->cipher_suite_id = 3;
-  cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
   cmd_args->workaround_flags = 0;
   cmd_args->flags = IPMI_FLAGS_DEFAULT;
+}
+
+void 
+init_common_cmd_args_user (struct common_cmd_args *cmd_args)
+{
+  _init_common_cmd_args(cmd_args);
+  cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
+}
+
+void 
+init_common_cmd_args_operator (struct common_cmd_args *cmd_args)
+{
+  _init_common_cmd_args(cmd_args);
+  cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+}
+
+void 
+init_common_cmd_args_admin (struct common_cmd_args *cmd_args)
+{
+  _init_common_cmd_args(cmd_args);
+  cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
 }
 
 void 

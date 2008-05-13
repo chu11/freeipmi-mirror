@@ -3,6 +3,18 @@
 	* ipmi-chassis/src/: General cleanup.  Make error messages
 	consistent.  Use consistent code to other tools.
 
+	* common/src/tool-cmdline-common.h,
+	common/src/tool-cmdline-common.c (init_common_cmd_args): Remove
+	function to create new init_common_cmd_args_user,
+	init_common_cmd_args_operator, and init_common_cmd_args_admin
+	functions.
+
+	* bmc-device/: Make default privilege admin.
+
+	* ipmi-sel/: Make default privilege operator.
+
+	* Adjust tools to use new cmdline parse common functions.
+
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h: Fix boot device flags.

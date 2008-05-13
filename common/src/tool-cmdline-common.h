@@ -419,7 +419,9 @@ error_t hostrange_parse_opt (int key,
                              struct argp_state *state, 
                              struct hostrange_cmd_args *hostrange_cmd_args);
 
-void init_common_cmd_args (struct common_cmd_args *cmd_args);
+void init_common_cmd_args_user (struct common_cmd_args *cmd_args);
+void init_common_cmd_args_operator (struct common_cmd_args *cmd_args);
+void init_common_cmd_args_admin (struct common_cmd_args *cmd_args);
 void free_common_cmd_args (struct common_cmd_args *cmd_args);
 void verify_common_cmd_args (struct common_cmd_args *cmd_args);
 

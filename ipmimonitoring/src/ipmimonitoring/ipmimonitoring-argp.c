@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.6 2008-05-10 01:02:12 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.7 2008-05-13 20:34:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -175,7 +175,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
 {
   int i;
 
-  init_common_cmd_args (&(cmd_args->common));
+  init_common_cmd_args_user (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->regenerate_sdr_cache_wanted = 0;
@@ -200,7 +200,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
          '\0',
          sizeof(unsigned int)*IPMIMONITORING_MAX_GROUPS);
 
-    cmd_args->ipmimonitoring_groups_length = 0;
+  cmd_args->ipmimonitoring_groups_length = 0;
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
   verify_sdr_cmd_args (&(cmd_args->sdr));

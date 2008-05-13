@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.8 2008-03-28 00:14:34 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.9 2008-05-13 20:34:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -123,7 +123,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 void 
 ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
 {
-  init_common_cmd_args (&(cmd_args->common));
+  init_common_cmd_args_user (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->device_id_wanted = 0;

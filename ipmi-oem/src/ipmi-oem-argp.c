@@ -121,7 +121,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 void 
 ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
 {
-  init_common_cmd_args (&(cmd_args->common));
+  init_common_cmd_args_user (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->oem_id = NULL;

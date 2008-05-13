@@ -19,7 +19,7 @@ recommended for general use.
 #include <@top_srcdir@/common/doc/manpage-common-outofband-timeout.man>
 #include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
-#include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-privilege-level-admin.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>

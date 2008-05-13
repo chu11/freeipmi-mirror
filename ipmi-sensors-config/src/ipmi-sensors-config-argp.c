@@ -203,7 +203,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 void 
 ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_config_arguments *cmd_args)
 {
-  init_common_cmd_args (&(cmd_args->config_args.common));
+  init_common_cmd_args_operator (&(cmd_args->config_args.common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   cmd_args->config_args.action = 0;
   cmd_args->config_args.verbose = 0;
@@ -211,10 +211,6 @@ ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_confi
   cmd_args->config_args.keypairs = NULL;
   cmd_args->config_args.section_strs = NULL;
 
-  /* OPERATOR is minimum for ipmi-sensors-config b/c its needed for many of the
-   * ipmi cmds used
-   */
-  cmd_args->config_args.common.privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_sdr_cmd_args (&(cmd_args->sdr));
   verify_common_cmd_args (&(cmd_args->config_args.common));

@@ -211,17 +211,13 @@ parse_opt (int key, char *arg, struct argp_state *state)
 void 
 pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_args)
 {
-  init_common_cmd_args (&(cmd_args->config_args.common));
+  init_common_cmd_args_admin (&(cmd_args->config_args.common));
   cmd_args->config_args.action = 0;
   cmd_args->config_args.verbose = 0;
   cmd_args->config_args.filename = NULL;
   cmd_args->config_args.keypairs = NULL;
   cmd_args->config_args.section_strs = NULL;
 
-  /* ADMIN is minimum for pef-config b/c its needed for many of the
-   * ipmi cmds used
-   */
-  cmd_args->config_args.common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->config_args.common));
 }

@@ -98,7 +98,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 void 
 bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_args)
 {
-  init_common_cmd_args (&(cmd_args->common));
+  init_common_cmd_args_admin (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->cold_reset_wanted = 0;

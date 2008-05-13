@@ -250,7 +250,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 void 
 ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
 {
-  init_common_cmd_args (&(cmd_args->common));
+  init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->info_wanted = 0;
