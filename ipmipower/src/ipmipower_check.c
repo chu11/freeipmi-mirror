@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.74 2008-05-13 00:19:28 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.75 2008-05-14 22:45:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -54,7 +54,6 @@ ipmipower_check_checksum(ipmipower_powercmd_t ip, packet_type_t pkt)
 	  || pkt == AUTHENTICATION_CAPABILITIES_RES
 	  || pkt == GET_SESSION_CHALLENGE_RES
 	  || pkt == ACTIVATE_SESSION_RES
-	  || pkt == GET_CHANNEL_CIPHER_SUITES_RES
 	  || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES /* IPMI 1.5 or 2.0 */
 	  || pkt == GET_CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
 	  || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
@@ -90,7 +89,6 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	 || pkt == AUTHENTICATION_CAPABILITIES_RES
 	 || pkt == GET_SESSION_CHALLENGE_RES
 	 || pkt == ACTIVATE_SESSION_RES
-	 || pkt == GET_CHANNEL_CIPHER_SUITES_RES
 	 || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES /* IPMI 1.5 or 2.0 */
 	 || pkt == GET_CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
 	 || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
@@ -113,8 +111,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
       /* IPMI 1.5 Checks */
       if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
           || pkt == AUTHENTICATION_CAPABILITIES_RES
-          || pkt == GET_SESSION_CHALLENGE_RES
-	  || pkt == GET_CHANNEL_CIPHER_SUITES_RES)
+          || pkt == GET_SESSION_CHALLENGE_RES)
 	authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
       else if (pkt == ACTIVATE_SESSION_RES)
 	authentication_type = ip->authentication_type;
@@ -197,21 +194,17 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	}
     }      
   else	/* 
-           (pkt == GET_CHANNEL_CIPHER_SUITES_RES 
-           || (conf->driver_type == DRIVER_TYPE_LAN_2_0
+           (conf->driver_type == DRIVER_TYPE_LAN_2_0
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
            || pkt == GET_CHASSIS_STATUS_RES
            || pkt == CHASSIS_CONTROL_RES
-           || pkt == CLOSE_SESSION_RES)))
+           || pkt == CLOSE_SESSION_RES))
 	*/
     {
       /* IPMI 2.0 Checks */
       uint8_t integrity_algorithm;
 
-      if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
-	integrity_algorithm = IPMI_INTEGRITY_ALGORITHM_NONE;
-      else
-	integrity_algorithm = ip->integrity_algorithm;
+      integrity_algorithm = ip->integrity_algorithm;
 
       if (strlen(conf->password))
 	password = conf->password;
@@ -265,7 +258,6 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES 
       || pkt == AUTHENTICATION_CAPABILITIES_RES 
       || pkt == GET_SESSION_CHALLENGE_RES
-      || pkt == GET_CHANNEL_CIPHER_SUITES_RES
       || pkt == OPEN_SESSION_RES
       || pkt == RAKP_MESSAGE_2_RES
       || pkt == RAKP_MESSAGE_4_RES)
@@ -454,8 +446,7 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES 
       || pkt == AUTHENTICATION_CAPABILITIES_RES 
       || pkt == GET_SESSION_CHALLENGE_RES 
-      || pkt == ACTIVATE_SESSION_RES
-      || pkt == GET_CHANNEL_CIPHER_SUITES_RES)      
+      || pkt == ACTIVATE_SESSION_RES)
     return 1;
   else if (conf->driver_type == DRIVER_TYPE_LAN
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
@@ -568,8 +559,6 @@ ipmipower_check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_cmd = IPMI_CMD_GET_SESSION_CHALLENGE;
   else if (pkt == ACTIVATE_SESSION_RES) 
     expected_cmd = IPMI_CMD_ACTIVATE_SESSION;
-  else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
-    expected_cmd = IPMI_CMD_GET_CHANNEL_CIPHER_SUITES;
   else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES) 
     expected_cmd = IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL;
   else if (pkt == GET_CHASSIS_STATUS_RES) 
@@ -645,8 +634,7 @@ ipmipower_check_payload_type(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
-  assert(pkt == GET_CHANNEL_CIPHER_SUITES_RES
-         || pkt == OPEN_SESSION_RES
+  assert(pkt == OPEN_SESSION_RES
 	 || pkt == RAKP_MESSAGE_2_RES
 	 || pkt == RAKP_MESSAGE_4_RES
 	 || (conf->driver_type == DRIVER_TYPE_LAN_2_0
@@ -1056,17 +1044,13 @@ ipmipower_check_payload_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
-  assert(pkt == GET_CHANNEL_CIPHER_SUITES_RES
-         || (conf->driver_type == DRIVER_TYPE_LAN_2_0
-             && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-                 || pkt == GET_CHASSIS_STATUS_RES
-                 || pkt == CHASSIS_CONTROL_RES
-                 || pkt == CLOSE_SESSION_RES)));
+  assert(conf->driver_type == DRIVER_TYPE_LAN_2_0
+         && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+             || pkt == GET_CHASSIS_STATUS_RES
+             || pkt == CHASSIS_CONTROL_RES
+             || pkt == CLOSE_SESSION_RES));
 
-  if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
-    confidentiality_algorithm = IPMI_CONFIDENTIALITY_ALGORITHM_NONE;
-  else
-    confidentiality_algorithm = ip->confidentiality_algorithm;
+  confidentiality_algorithm = ip->confidentiality_algorithm;
 
   if ((rv = ipmi_rmcpplus_check_payload_pad(confidentiality_algorithm,
 					    ip->obj_rmcpplus_payload_res)) < 0)
@@ -1089,12 +1073,11 @@ ipmipower_check_integrity_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
-  assert(pkt == GET_CHANNEL_CIPHER_SUITES_RES
-         || (conf->driver_type == DRIVER_TYPE_LAN_2_0
-             && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-                 || pkt == GET_CHASSIS_STATUS_RES
-                 || pkt == CHASSIS_CONTROL_RES
-                 || pkt == CLOSE_SESSION_RES)));
+  assert(conf->driver_type == DRIVER_TYPE_LAN_2_0
+         && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+             || pkt == GET_CHASSIS_STATUS_RES
+             || pkt == CHASSIS_CONTROL_RES
+             || pkt == CLOSE_SESSION_RES));
 
   if ((rv = ipmi_rmcpplus_check_integrity_pad(ip->obj_rmcpplus_session_trlr_res)) < 0)
     ierr_exit("ipmipower_check_integrity_pad(%s:%d): "

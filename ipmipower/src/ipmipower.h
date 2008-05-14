@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.99 2008-05-14 00:44:49 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.100 2008-05-14 22:45:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -122,19 +122,6 @@
 
 #define IPMIPOWER_DEFAULT_LOGFILE        "/tmp/ipmipower.%d"
 
-#define IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH 128
-
-/* achu: See IPMI 2.0 spec, Table 22-18 - Cipher Suite Record Format.
- * The smallest record format is 2 bytes.  So the most records I could
- * read is the buffer length divided by 2.
- */
-#define IPMI_CIPHER_SUITE_IDS_LENGTH                (IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH/2)
-
-/* achu: See IPMI 2.0 spec, Table 22-17 - Get Channel Cipher Suites
- * Command 
- */
-#define IPMI_CIPHER_SUITE_RECORD_DATA_LENGTH 16
-
 #define IPMI_MAX_SIK_KEY_LENGTH             64
 
 #define IPMI_MAX_INTEGRITY_KEY_LENGTH       64
@@ -198,22 +185,20 @@ typedef enum
     GET_SESSION_CHALLENGE_RES           = 0x203,
     ACTIVATE_SESSION_REQ                = 0x104, 
     ACTIVATE_SESSION_RES                = 0x204,
-    GET_CHANNEL_CIPHER_SUITES_REQ       = 0x105,
-    GET_CHANNEL_CIPHER_SUITES_RES       = 0x205,
-    OPEN_SESSION_REQ                    = 0x106,
-    OPEN_SESSION_RES                    = 0x206,
-    RAKP_MESSAGE_1_REQ                  = 0x107,
-    RAKP_MESSAGE_2_RES                  = 0x207,
-    RAKP_MESSAGE_3_REQ                  = 0x108,
-    RAKP_MESSAGE_4_RES                  = 0x208,
-    SET_SESSION_PRIVILEGE_LEVEL_REQ     = 0x109, 
-    SET_SESSION_PRIVILEGE_LEVEL_RES     = 0x209, 
-    GET_CHASSIS_STATUS_REQ              = 0x10A, 
-    GET_CHASSIS_STATUS_RES              = 0x20A,
-    CHASSIS_CONTROL_REQ                 = 0x10B, 
-    CHASSIS_CONTROL_RES                 = 0x20B, 
-    CLOSE_SESSION_REQ                   = 0x10C, 
-    CLOSE_SESSION_RES                   = 0x20C,
+    OPEN_SESSION_REQ                    = 0x105,
+    OPEN_SESSION_RES                    = 0x205,
+    RAKP_MESSAGE_1_REQ                  = 0x106,
+    RAKP_MESSAGE_2_RES                  = 0x206,
+    RAKP_MESSAGE_3_REQ                  = 0x107,
+    RAKP_MESSAGE_4_RES                  = 0x207,
+    SET_SESSION_PRIVILEGE_LEVEL_REQ     = 0x108, 
+    SET_SESSION_PRIVILEGE_LEVEL_RES     = 0x208, 
+    GET_CHASSIS_STATUS_REQ              = 0x109, 
+    GET_CHASSIS_STATUS_RES              = 0x209,
+    CHASSIS_CONTROL_REQ                 = 0x10A, 
+    CHASSIS_CONTROL_RES                 = 0x20A, 
+    CLOSE_SESSION_REQ                   = 0x10B, 
+    CLOSE_SESSION_RES                   = 0x20B,
   } packet_type_t;
 
 #define PACKET_TYPE_REQ_MASK           0x100
@@ -240,15 +225,14 @@ typedef enum
     PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT     = 0x02,
     PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT           = 0x03,
     PROTOCOL_STATE_ACTIVATE_SESSION_SENT                = 0x04,
-    PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT       = 0x05,
-    PROTOCOL_STATE_OPEN_SESSION_SENT                    = 0x06,
-    PROTOCOL_STATE_RAKP_MESSAGE_1_SENT                  = 0x07,
-    PROTOCOL_STATE_RAKP_MESSAGE_3_SENT                  = 0x08,
-    PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT     = 0x09,
-    PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT              = 0x0A,
-    PROTOCOL_STATE_CHASSIS_CONTROL_SENT                 = 0x0B,
-    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x0C,
-    PROTOCOL_STATE_END                                  = 0x0D,
+    PROTOCOL_STATE_OPEN_SESSION_SENT                    = 0x05,
+    PROTOCOL_STATE_RAKP_MESSAGE_1_SENT                  = 0x06,
+    PROTOCOL_STATE_RAKP_MESSAGE_3_SENT                  = 0x07,
+    PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT     = 0x08,
+    PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT              = 0x09,
+    PROTOCOL_STATE_CHASSIS_CONTROL_SENT                 = 0x0A,
+    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x0B,
+    PROTOCOL_STATE_END                                  = 0x0C,
   } protocol_state_t;
 
 #define PROTOCOL_STATE_VALID(__s) \
@@ -411,7 +395,6 @@ struct ipmipower_powercmd {
 
   /* IPMI 2.0 specific */
   uint8_t cipher_suite_id;
-  unsigned int cipher_suite_id_ranking_index;
   uint8_t requested_maximum_privilege_level;
   uint8_t authentication_algorithm;
   uint8_t integrity_algorithm;
@@ -431,11 +414,6 @@ struct ipmipower_powercmd {
   uint8_t name_only_lookup;
   uint32_t remote_console_session_id;  
   uint8_t remote_console_random_number[IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH];
-  uint32_t cipher_suite_list_index;
-  uint8_t cipher_suite_record_data[IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH];
-  uint32_t cipher_suite_record_data_bytes;
-  uint8_t cipher_suite_ids[IPMI_CIPHER_SUITE_IDS_LENGTH];
-  uint32_t cipher_suite_ids_num;
   int wait_until_on_state;
   int wait_until_off_state;
 
@@ -462,8 +440,6 @@ struct ipmipower_powercmd {
   fiid_obj_t obj_get_session_challenge_res;
   fiid_obj_t obj_activate_session_req;
   fiid_obj_t obj_activate_session_res;
-  fiid_obj_t obj_get_channel_cipher_suites_req;
-  fiid_obj_t obj_get_channel_cipher_suites_res;
   fiid_obj_t obj_open_session_req;
   fiid_obj_t obj_open_session_res;
   fiid_obj_t obj_rakp_message_1_req;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.84 2008-05-13 00:19:29 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.85 2008-05-14 22:45:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -67,10 +67,6 @@ ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
     return &tmpl_cmd_activate_session_rq[0];
   else if (pkt == ACTIVATE_SESSION_RES)
     return &tmpl_cmd_activate_session_rs[0];
-  else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
-    return &tmpl_cmd_get_channel_cipher_suites_rq[0];
-  else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
-    return &tmpl_cmd_get_channel_cipher_suites_rs[0];
   else if (pkt == OPEN_SESSION_REQ)
     return &tmpl_rmcpplus_open_session_request[0];
   else if (pkt == OPEN_SESSION_RES)
@@ -128,10 +124,6 @@ ipmipower_packet_cmd_obj(ipmipower_powercmd_t ip, packet_type_t pkt)
     return ip->obj_activate_session_req;
   else if (pkt == ACTIVATE_SESSION_RES)
     return ip->obj_activate_session_res;
-  else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
-    return ip->obj_get_channel_cipher_suites_req;
-  else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
-    return ip->obj_get_channel_cipher_suites_res;
   else if (pkt == OPEN_SESSION_REQ)
     return ip->obj_open_session_req;
   else if (pkt == OPEN_SESSION_RES)
@@ -199,9 +191,6 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
       else if (pkt == ACTIVATE_SESSION_REQ
                || pkt == ACTIVATE_SESSION_RES)
         str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_ACTIVATE_SESSION);
-      else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
-               || pkt == GET_CHANNEL_CIPHER_SUITES_RES)
-        str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_CIPHER_SUITES);
       else if (pkt == OPEN_SESSION_REQ
                || pkt == OPEN_SESSION_RES)
         str_cmd = DEBUG_COMMON_OPEN_SESSION_STR;
@@ -242,9 +231,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
       else
         tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rs[0];
         
-      if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
-          || pkt == GET_CHANNEL_CIPHER_SUITES_RES
-          || pkt == OPEN_SESSION_REQ
+      if (pkt == OPEN_SESSION_REQ
           || pkt == OPEN_SESSION_RES
           || pkt == RAKP_MESSAGE_1_REQ
           || pkt == RAKP_MESSAGE_2_RES
@@ -344,8 +331,7 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else
     {
-      if (pkt == GET_CHANNEL_CIPHER_SUITES_RES
-          || pkt == OPEN_SESSION_RES
+      if (pkt == OPEN_SESSION_RES
           || pkt == RAKP_MESSAGE_2_RES
           || pkt == RAKP_MESSAGE_4_RES)
         {
@@ -716,8 +702,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                      &managed_system_session_id);
 
       /* Setup authentication/integrity/confidentiality keys */
-      if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
-          || pkt == OPEN_SESSION_REQ
+      if (pkt == OPEN_SESSION_REQ
           || pkt == RAKP_MESSAGE_1_REQ
           || pkt == RAKP_MESSAGE_3_REQ)
         {
@@ -741,8 +726,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         }
 
       /* Calculate Payload Authenticated */
-      if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
-          || pkt == OPEN_SESSION_REQ
+      if (pkt == OPEN_SESSION_REQ
           || pkt == RAKP_MESSAGE_1_REQ
           || pkt == RAKP_MESSAGE_3_REQ
           || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
@@ -751,8 +735,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         payload_authenticated = IPMI_PAYLOAD_FLAG_AUTHENTICATED;
       
       /* Calculate Payload Encrypted */
-      if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
-          || pkt == OPEN_SESSION_REQ
+      if (pkt == OPEN_SESSION_REQ
           || pkt == RAKP_MESSAGE_1_REQ
           || pkt == RAKP_MESSAGE_3_REQ
           || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
@@ -822,18 +805,6 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                   "fill_cmd_activate_session: %s", 
                   ip->ic->hostname, ip->protocol_state, strerror(errno));
       obj_cmd_req = ip->obj_activate_session_req;
-    }
-  else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
-    {
-      if (fill_cmd_get_channel_cipher_suites (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                              IPMI_PAYLOAD_TYPE_IPMI,
-                                              ip->cipher_suite_list_index,
-                                              IPMI_LIST_ALGORITHMS_BY_CIPHER_SUITE,
-                                              ip->obj_get_channel_cipher_suites_req) < 0)
-        ierr_exit("ipmipower_packet_create(%s: %d): "
-                  "fill_cmd_get_channel_cipher_suites: %s", 
-                  ip->ic->hostname, ip->protocol_state, strerror(errno));
-      obj_cmd_req = ip->obj_get_channel_cipher_suites_req;
     }
   else if (pkt == OPEN_SESSION_REQ)
     {
@@ -1033,8 +1004,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                   obj_cmd_req,
                                   buffer, 
                                   buflen);
-  else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
-           || pkt == OPEN_SESSION_REQ
+  else if (pkt == OPEN_SESSION_REQ
            || pkt == RAKP_MESSAGE_1_REQ
            || pkt == RAKP_MESSAGE_3_REQ
            || (conf->driver_type == DRIVER_TYPE_LAN_2_0

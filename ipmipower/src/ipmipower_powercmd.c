@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.138 2008-05-14 14:57:18 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.139 2008-05-14 22:45:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -94,8 +94,6 @@ _destroy_ipmipower_powercmd(ipmipower_powercmd_t ip)
   Fiid_obj_destroy(ip->obj_get_session_challenge_res);
   Fiid_obj_destroy(ip->obj_activate_session_req);
   Fiid_obj_destroy(ip->obj_activate_session_res);
-  Fiid_obj_destroy(ip->obj_get_channel_cipher_suites_req);
-  Fiid_obj_destroy(ip->obj_get_channel_cipher_suites_res);
   Fiid_obj_destroy(ip->obj_open_session_req);
   Fiid_obj_destroy(ip->obj_open_session_res);
   Fiid_obj_destroy(ip->obj_rakp_message_1_req);
@@ -288,11 +286,6 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
       ip->name_only_lookup = IPMI_NAME_ONLY_LOOKUP;
       _init_ipmi_2_0_randomized_data(ip);
 
-      ip->cipher_suite_list_index = 0;
-      memset(ip->cipher_suite_record_data, '\0', IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH);
-      ip->cipher_suite_record_data_bytes = 0;
-      memset(ip->cipher_suite_ids, '\0', IPMI_CIPHER_SUITE_IDS_LENGTH);
-      ip->cipher_suite_ids_num = 0;
       ip->wait_until_on_state = 0;
       ip->wait_until_off_state = 0;
     }
@@ -319,8 +312,6 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_get_session_challenge_res = Fiid_obj_create(tmpl_cmd_get_session_challenge_rs); 
   ip->obj_activate_session_req = Fiid_obj_create(tmpl_cmd_activate_session_rq); 
   ip->obj_activate_session_res = Fiid_obj_create(tmpl_cmd_activate_session_rs); 
-  ip->obj_get_channel_cipher_suites_req = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_rq); 
-  ip->obj_get_channel_cipher_suites_res = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_rs); 
   ip->obj_open_session_req = Fiid_obj_create(tmpl_rmcpplus_open_session_request); 
   ip->obj_open_session_res = Fiid_obj_create(tmpl_rmcpplus_open_session_response); 
   ip->obj_rakp_message_1_req = Fiid_obj_create(tmpl_rmcpplus_rakp_message_1); 
@@ -417,8 +408,6 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	  }
       }
     }
-  else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
-    ip->protocol_state = PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT;
   else if (pkt == OPEN_SESSION_REQ)
     ip->protocol_state = PROTOCOL_STATE_OPEN_SESSION_SENT;
   else if (pkt == RAKP_MESSAGE_1_REQ)
@@ -551,8 +540,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   else /* IPMI 2.0 Packet Checks
           
-       (pkt == GET_CHANNEL_CIPHER_SUITES_RES
-       || pkt == OPEN_SESSION_RES
+       (pkt == OPEN_SESSION_RES
        || pkt == RAKP_MESSAGE_2_RES
        || pkt == RAKP_MESSAGE_4_RES
        || (conf->driver_type == DRIVER_TYPE_LAN_2_0
@@ -637,12 +625,11 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 		}
 	    }
 	}
-      else /* (pkt == pkt == GET_CHANNEL_CIPHER_SUITES_RES
-              || (conf->driver_type == DRIVER_TYPE_LAN_2_0
+      else /* (conf->driver_type == DRIVER_TYPE_LAN_2_0
               && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
               || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
-              || pkt == CLOSE_SESSION_RES))) */
+              || pkt == CLOSE_SESSION_RES)) */
 	{
 	  if (!ipmipower_check_payload_type(ip, pkt))
 	    {
@@ -885,8 +872,6 @@ _retry_packets(ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT)
     _send_packet(ip, ACTIVATE_SESSION_REQ);
-  else if (ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT)
-    _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT)
     _send_packet(ip, OPEN_SESSION_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
@@ -1253,215 +1238,6 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
   return 0;
 }
 
-/* _calculate_cipher_suite_ids
- * 
- * Determine the cipher suite ids the remote machine supports.
- *
- * Returns  0 on success
- * Returns -1 on ipmi protocol error
- */
-static int
-_calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
-{
-  fiid_obj_t obj_cipher_suite_record_header = NULL;
-  fiid_obj_t obj_cipher_suite_record = NULL;
-  fiid_obj_t obj_oem_cipher_suite_record = NULL;
-  int bytes_parsed = 0;
-  int rv = -1;
-
-  assert(ip);
-  assert(ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT);
-
-  if (!ip->cipher_suite_record_data_bytes)
-    {
-      ierr_dbg("_calculate_cipher_suite_ids(%s:%d): "
-               "No cipher suite data records retrieved",
-               ip->ic->hostname, ip->protocol_state);
-      goto cleanup;
-    }
-  
-  obj_cipher_suite_record_header = Fiid_obj_create(tmpl_cipher_suite_record_header);
-  obj_cipher_suite_record = Fiid_obj_create(tmpl_cipher_suite_record);
-  obj_oem_cipher_suite_record = Fiid_obj_create(tmpl_oem_cipher_suite_record);
-
-  while (bytes_parsed < ip->cipher_suite_record_data_bytes)
-    {
-      uint64_t record_format, tag_bits;
-      int32_t len;
-      
-      Fiid_obj_clear(obj_cipher_suite_record_header);
-
-      len = Fiid_obj_set_all(obj_cipher_suite_record_header,
-                             ip->cipher_suite_record_data + bytes_parsed,
-                             ip->cipher_suite_record_data_bytes - bytes_parsed);
-
-      Fiid_obj_get(obj_cipher_suite_record_header,
-                   "tag_bits",
-                   &tag_bits);
-
-      Fiid_obj_get(obj_cipher_suite_record_header,
-                   "record_format",
-                   &record_format);
-
-      if (tag_bits != IPMI_CIPHER_SUITE_TAG_BITS_RECORD)
-        {
-          ierr_dbg("_calculate_cipher_suite_ids(%s:%d): "
-                   "invalid tag bits: %x",
-                   ip->ic->hostname, ip->protocol_state, (uint8_t)tag_bits);
-
-          /* IPMI Workaround (achu)
-           *
-           * Discovered on Sun Fire 4100.
-           *
-           * The tag bits for some of the cipher records are wrong, but
-           * not until the good ones have been parsed.  So just break out
-           * if we had bad ones.
-           */
-          if (conf->workaround_flags & WORKAROUND_FLAG_SUN_2_0_SESSION)
-            break;
-
-          ipmipower_output(MSG_TYPE_BMC_ERROR, ip->ic->hostname);
-          goto cleanup;
-        }
-
-      if (!IPMI_CIPHER_SUITE_RECORD_FORMAT_VALID(record_format))
-        {
-          ierr_dbg("_calculate_cipher_suite_ids(%s:%d): "
-                   "invalid record format: %x",
-                   ip->ic->hostname, ip->protocol_state, (uint8_t)record_format);
-          ipmipower_output(MSG_TYPE_BMC_ERROR, ip->ic->hostname);
-          goto cleanup;
-        }
-
-      if (record_format == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD)
-        {
-          uint64_t cipher_suite_id;
-          
-          Fiid_obj_clear(obj_cipher_suite_record);
-          len = Fiid_obj_set_all(obj_cipher_suite_record,
-                                 ip->cipher_suite_record_data + bytes_parsed,
-                                 ip->cipher_suite_record_data_bytes - bytes_parsed);
-          
-          /* If the record is short (and we're likely at the end of
-           * the buffer), this could fail, so we can't use a wrapper
-           * function
-           */
-          if (!(fiid_obj_get(obj_cipher_suite_record,
-                             "cipher_suite_id",
-                             &cipher_suite_id) < 0))
-            {
-              ip->cipher_suite_ids[ip->cipher_suite_ids_num] = (uint8_t)cipher_suite_id;
-              ip->cipher_suite_ids_num++;
-            }
-          
-          bytes_parsed += len;
-        }
-      else
-        {
-          /* achu: We currently don't support OEM ciphers, so don't
-             store any cipher ids unless we're assuming they're
-             actually non-OEM.
-          */
-          Fiid_obj_clear(obj_oem_cipher_suite_record);
-          len = Fiid_obj_set_all(obj_oem_cipher_suite_record,
-                                 ip->cipher_suite_record_data + bytes_parsed,
-                                 ip->cipher_suite_record_data_bytes - bytes_parsed);
-          bytes_parsed += len;
-        }
-    }
-
-  rv = 0;
- cleanup:
-  if (obj_cipher_suite_record_header)
-    Fiid_obj_destroy(obj_cipher_suite_record_header);
-  if (obj_cipher_suite_record)
-    Fiid_obj_destroy(obj_cipher_suite_record);
-  if (obj_oem_cipher_suite_record)
-    Fiid_obj_destroy(obj_oem_cipher_suite_record);
-  return (rv);
-}
-
-/* _store_and_calculate_cipher_suite_ids
- * 
- * Store data from a get channel cipher suite ids response and calculate
- * the cipher suite ids.
- *
- * Returns  1 if more data should be retrieved
- * Returns  0 on success and all record data received and cipher ids have been calculated
- * Returns -1 on ipmi protocol error
- */
-static int
-_store_and_calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
-{
-  int32_t record_len;
-
-  assert(ip);
-  assert(ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT);
-
-  record_len = Fiid_obj_get_data(ip->obj_get_channel_cipher_suites_res,
-                                 "cipher_suite_record_data",
-                                 ip->cipher_suite_record_data + ip->cipher_suite_record_data_bytes,
-                                 IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH - ip->cipher_suite_record_data_bytes);
-  ip->cipher_suite_record_data_bytes += record_len;
-
-  /* In the IPMI 2.0 spec, Table 22-17 - Get Channel Cipher Suites
-   * Command, if the record data returned from the BMC is == 16,
-   * then there is more data to retrieve.  So we increment the
-   * list index and get more data.
-   * 
-   * If the return is short, we resend, otherwise we got all the data
-   * we care about.
-   */
-  if (record_len == IPMI_CIPHER_SUITE_RECORD_DATA_LENGTH
-      && ip->cipher_suite_record_data_bytes < IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH)
-    return 1;
-
-  /* Else, we got all the data we care about, so lets convert the
-   * records into usable information.
-   */
-  if (_calculate_cipher_suite_ids(ip) < 0)
-    return -1;
-
-  return 0;
-}
-
-/* _determine_cipher_suite_id_to_use
- * 
- * Determine which cipher suite id to use
- *
- * Returns  0 if we found something to try
- * Returns -1 on ipmi protocol error or can't find a cipher id to try
- */
-static int
-_determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
-{
-  int i, cipher_suite_found = 0;
-  
-  assert(ip);
-  assert(ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT
-	 || ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT);
-
-  for (i = 0; i < ip->cipher_suite_ids_num; i++)
-    {
-      if (ip->cipher_suite_id == ip->cipher_suite_ids[i])
-        {
-          cipher_suite_found++;
-          break;
-        }
-    }
-  
-  if (!cipher_suite_found)
-    {
-      ierr_dbg("_determine_cipher_suite_id_to_use(%s:%d): "
-               " cipher suite not found: %x",
-               ip->ic->hostname, ip->protocol_state, ip->cipher_suite_id);
-      ipmipower_output(MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE, ip->ic->hostname); 
-      return -1;
-    }
-
-  return 0;
-}
-
 /* _calculate_cipher_keys
  * 
  * Calculate cipher keys for the remaining IPMI 2.0 protocol
@@ -1641,7 +1417,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if (_check_ipmi_2_0_authentication_capabilities(ip) < 0)
         return -1;
            
-      _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
+      _send_packet(ip, OPEN_SESSION_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT) 
     {
@@ -1702,36 +1478,6 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	_send_packet(ip, GET_CHASSIS_STATUS_REQ);
       else
         _send_packet(ip, SET_SESSION_PRIVILEGE_LEVEL_REQ);
-    }
-  else if (ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT)
-    {
-      /* achu: There is probably a lot of confusing code here,
-       * hopefully my comments will guide you through it.
-       */
-      
-      if ((rv = _recv_packet(ip, GET_CHANNEL_CIPHER_SUITES_RES)) != 1) 
-        {
-          if (rv < 0) 
-            /* XXX Session is not up, is it ok to quit here?  Or
-             * should we timeout?? */
-            return -1;
-          goto done;
-        }
-
-      if ((rv = _store_and_calculate_cipher_suite_ids(ip)) < 0)
-        return -1;
-
-      if (rv)
-        {
-          ip->cipher_suite_list_index++;
-          _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
-          goto done;
-        }
-
-      if (_determine_cipher_suite_id_to_use(ip) < 0)
-        return -1;
-     
-      _send_packet(ip, OPEN_SESSION_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT)
     {

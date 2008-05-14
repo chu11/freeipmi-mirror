@@ -3,6 +3,12 @@
 	* ipmipower/: Continue cleanup/fixes.
 
 	* tagged pre_get_channel_cipher_remove
+
+	* ipmipower/: Remove check of cipher suite id support via get
+	channel cipher suites command.  Error case now falls through to
+	open session request.
+
+	* tagged post_get_channel_cipher_remove
 	
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
