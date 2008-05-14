@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.134 2008-05-14 00:18:09 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.135 2008-05-14 00:25:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -65,37 +65,6 @@ static List pending = NULL;
 
 /* Count of currently executing power commands for fanout */
 static unsigned int executing_count = 0;
-
-/* The following are the ranking of Cipher Suite IDs we will consider to
- * be from most to least secure.  This was determined by the following 
- * critera (X > Y means we consider X more secure than Y).
- *
- * Authentication Algorithms:
- * RAKP-HMAC-SHA1 > RAKP-HMAC-MD5
- * RAKP-HMAC-MD5 > NONE
- *
- * Integrity Algorithms:
- * HMAC-SHA1-96 > HMAC-MD5-128
- * HMAC-MD5-128 > MD5-128
- * MD5-128 > NONE
- *
- * Confidentiality Algorithms: 
- * AES-CBC-128 > NONE
- *
- */
-static uint8_t cipher_suite_id_ranking[] =
-  {
-    3,                 /* RAKP-HMAC-SHA1, HMAC-SHA1-96, AES-CBC-128 */
-    8,                 /* RAKP-HMAC-MD5, HMAC-MD5-128, AES-CBC-128 */
-    12,                /* RAKP-HMAC-MD5, MD5-128, AES-CBC-128 */
-    2,                 /* RAKP-HMAC-SHA1, HMAC-SHA1-96, NONE */
-    7,                 /* RAKP-HMAC-MD5, HMAC-MD5-128, NONE */
-    11,                /* RAKP-HMAC-MD5, MD5-128, NONE */
-    1,                 /* RAKP-HMAC-SHA1, NONE, NONE */
-    6,                 /* RAKP-HMAC-MD5, NONE, NONE */
-    0,                 /* NONE, NONE, NONE */
-  };
-static unsigned int cipher_suite_id_ranking_count = 9;
 
 /* _destroy_ipmipower_powercmd
  * - cleanup/destroy an ipmipower_powercmd_t structure stored within a List
@@ -1445,7 +1414,7 @@ _store_and_calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
 static int
 _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
 {
-  int i, j, cipher_suite_found = 0;
+  int i, cipher_suite_found = 0;
   
   assert(ip);
   assert(ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.29 2008-05-13 00:19:29 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.30 2008-05-14 00:25:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -58,16 +58,13 @@ static char *ipmipower_outputs[] =
     "privilege level cannot be obtained for this user",
     "operation invalid",
     "authentication type unavailable for attempted privilege level",
-    "usable authentication type/privilege combination not found",
     "cipher suite id unavailable",
-    "usable cipher suite id not found",
     "password verification timeout",
     "session timeout",
     "not discovered",
     "bad connection",
     "unknown node name",
     "out of resources",
-    "ipmi 1.5 unavailable",
     "ipmi 2.0 unavailable",
     "BMC busy",
     "BMC error"
