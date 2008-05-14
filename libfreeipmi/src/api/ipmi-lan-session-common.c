@@ -2320,6 +2320,12 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   
   if (!ret)
     {
+      /* XXX: achu: some systems, password could be correct, but
+       * privilege is too high.  The error is b/c the privilege error
+       * is not handled properly in the open session stage (i.e. they
+       * tell me I can authenticate at a high privilege level, that in
+       * reality is not allowed).  Dunno how to deal with this.
+       */
       API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_PASSWORD_INVALID);
       API_ERR_LOG_CLEANUP(0);
     }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.137 2008-05-14 14:48:24 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.138 2008-05-14 14:57:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -616,6 +616,14 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	    {
 	      if (!ipmipower_check_rakp_2_key_exchange_authentication_code(ip, pkt))
 		{
+                  /* XXX: achu: some systems, password could be
+                   * correct, but privilege is too high.  The error is
+                   * b/c the privilege error is not handled properly
+                   * in the open session stage (i.e. they tell me I
+                   * can authenticate at a high privilege level, that
+                   * in reality is not allowed).  Dunno how to deal
+                   * with this.
+                   */
 		  ipmipower_output(MSG_TYPE_PASSWORD_INVALID, ip->ic->hostname); 
 		  goto cleanup;
 		}

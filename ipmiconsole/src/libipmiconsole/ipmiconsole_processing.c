@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.68 2008-03-28 00:14:40 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.69 2008-05-14 14:57:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -692,6 +692,13 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
           if (!ret)
             {
               _receive_packet_data_reset(c);
+              /* XXX: achu: some systems, password could be correct,
+               * but privilege is too high.  The error is b/c the
+               * privilege error is not handled properly in the open
+               * session stage (i.e. they tell me I can authenticate
+               * at a high privilege level, that in reality is not
+               * allowed).  Dunno how to deal with this.
+               */
               ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_PASSWORD_INVALID);
               goto cleanup;
 
