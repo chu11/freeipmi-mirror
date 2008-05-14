@@ -17,7 +17,6 @@ libfreeipmi:
 ipmipower
 ---------
 - redo to utilize newer api?
-- lock memory only w/ option
 - remove auto features to make consistent to other tools
   X- auto privilege
     X - priv level operator by default
@@ -27,10 +26,10 @@ ipmipower
     X - remove ipmi-version in ipmipower_powercmd_t
     X - legacy ipmi-version command to driver type
   X - auto authentication
-    - auth type md5
+  X  - auth type md5
     - use real auth types, not ipmipower auth types
-  - auto cipher suite
-    - cipher suite 3 default
+  X- auto cipher suite
+  X  - cipher suite 3 default
     - use numbers, not stupid enums
   X - many version/highest_received_seq_num etc. move to init
   - to test
