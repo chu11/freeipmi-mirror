@@ -9,6 +9,12 @@
 	open session request.
 
 	* tagged post_get_channel_cipher_remove
+
+	* ipmipower/src/: Remove need for internal driver_type_t type.
+	Adjust to use libfreeipmi device variables.
+	
+	* ipmipower/src/ipmipower_driver_type.h,
+	ipmipower/src/ipmipower_driver_type.c: Removed files.
 	
 2008-05-13  Albert Chu <chu11@llnl.gov>
 

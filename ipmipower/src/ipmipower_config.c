@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.94 2008-05-14 00:44:49 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.95 2008-05-14 23:32:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -48,7 +48,6 @@
 #include "ipmipower_config.h"
 #include "ipmipower_authentication_type.h"
 #include "ipmipower_cipher_suite_id.h"
-#include "ipmipower_driver_type.h"
 #include "ipmipower_output.h"
 #include "ipmipower_privilege_level.h"
 #include "ipmipower_util.h"
@@ -59,6 +58,7 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
       
 extern struct ipmipower_config *conf;
 extern struct ipmipower_connection *ics;
@@ -221,7 +221,7 @@ ipmipower_config_setup(void)
   if (!(conf = (struct ipmipower_config *)malloc(sizeof(struct ipmipower_config))))
     ierr_exit("malloc: %s", strerror(errno));
   
-  conf->driver_type = DRIVER_TYPE_LAN;
+  conf->driver_type = IPMI_DEVICE_LAN;
   conf->hosts = NULL;
   conf->hosts_count = 0;
   memset(conf->username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
@@ -294,9 +294,6 @@ _config_common_checks(char *str)
 {
   assert (str != NULL);
 
-  if (conf->driver_type == DRIVER_TYPE_INVALID)
-    ierr_exit("%s: invalid driver type", str);
-
   if (conf->hosts != NULL 
       && (conf->hosts_count < IPMIPOWER_MINNODES 
           || conf->hosts_count > IPMIPOWER_MAXNODES))
@@ -367,13 +364,16 @@ cmdline_parse (int key,
   int rv;
   uint32_t flags;
   int n;
+  int tmp;
 
   switch (key) 
     {
     /* IPMI_VERSION_KEY for backwards compatability */
     case IPMI_VERSION_KEY:	/* --ipmi-version */
     case ARGP_DRIVER_TYPE_KEY:      /* --driver-type */
-      conf->driver_type = ipmipower_driver_type_index(arg);
+      if ((tmp = parse_outofband_driver_type(arg)) < 0)
+        ierr_exit("invalid driver type specified\n");
+      conf->driver_type = tmp;
       conf->driver_type_set_on_cmdline++;
       break;
     case ARGP_HOSTNAME_KEY:       /* --hostname */
@@ -621,11 +621,15 @@ _cb_driver_type(conffile_t cf, struct conffile_data *data,
                 char *optionname, int option_type, void *option_ptr, 
                 int option_data, void *app_ptr, int app_data) 
 {
+  int tmp;
+
   if (conf->driver_type_set_on_cmdline)
     return 0;
-  
-  /* Incorrect driver_types checked in _config_common_checks */
-  conf->driver_type = ipmipower_driver_type_index(data->string);
+
+  if ((tmp = parse_outofband_driver_type(data->string)) < 0)
+    ierr_exit("Config File Error: invalid driver type specified\n");
+
+  conf->driver_type = tmp;
   return 0;
 }
 
@@ -959,11 +963,11 @@ ipmipower_config_conffile_parse(char *configfile)
 void 
 ipmipower_config_check_values(void) 
 {
-  if (conf->driver_type == DRIVER_TYPE_LAN
+  if (conf->driver_type == IPMI_DEVICE_LAN
       && conf->k_g_len)
     ierr_exit("Error: k_g is only used for IPMI 2.0");
 
-  if (conf->driver_type == DRIVER_TYPE_LAN
+  if (conf->driver_type == IPMI_DEVICE_LAN
       && strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
     ierr_exit("Error: password too long");
 

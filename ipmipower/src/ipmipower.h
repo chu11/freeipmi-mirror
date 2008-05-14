@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.100 2008-05-14 22:45:07 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.101 2008-05-14 23:32:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -129,20 +129,6 @@
 #define IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH 64
 
 #define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH 64
-
-/* driver_type_t
- * - holds ipmi version type
- */
-typedef enum
-  {
-    DRIVER_TYPE_INVALID = 0,
-    DRIVER_TYPE_LAN     = 1,
-    DRIVER_TYPE_LAN_2_0 = 2,
-  } driver_type_t;
-
-#define DRIVER_TYPE_VALID(__a) \
-  ((__a) >= DRIVER_TYPE_LAN && \
-   (__a) <= DRIVER_TYPE_LAN_2_0)
 
 /* power_cmd_t 
  * - power control commands 

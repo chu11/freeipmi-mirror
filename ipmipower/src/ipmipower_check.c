@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.75 2008-05-14 22:45:09 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.76 2008-05-14 23:32:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -99,7 +99,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
       || pkt == AUTHENTICATION_CAPABILITIES_RES
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || (conf->driver_type == DRIVER_TYPE_LAN
+      || (conf->driver_type == IPMI_DEVICE_LAN
 	  && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	      || pkt == GET_CHASSIS_STATUS_RES
 	      || pkt == CHASSIS_CONTROL_RES
@@ -194,7 +194,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	}
     }      
   else	/* 
-           (conf->driver_type == DRIVER_TYPE_LAN_2_0
+           (conf->driver_type == IPMI_DEVICE_LAN_2_0
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
            || pkt == GET_CHASSIS_STATUS_RES
            || pkt == CHASSIS_CONTROL_RES
@@ -263,7 +263,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
       || pkt == RAKP_MESSAGE_4_RES)
     return 1;
 
-  if (conf->driver_type == DRIVER_TYPE_LAN_2_0
+  if (conf->driver_type == IPMI_DEVICE_LAN_2_0
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	  || pkt == GET_CHASSIS_STATUS_RES
 	  || pkt == CHASSIS_CONTROL_RES
@@ -273,7 +273,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
 		 &seq_num);
   else /* 
 	  pkt == ACTIVATE_SESSION_RES  
-	  || (conf->driver_type == DRIVER_TYPE_LAN
+	  || (conf->driver_type == IPMI_DEVICE_LAN
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
           || pkt == GET_CHASSIS_STATUS_RES
           || pkt == CHASSIS_CONTROL_RES
@@ -317,7 +317,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
     goto out;
 
   /* In IPMI 2.0, sequence number 0 is special, and shouldn't happen */
-  if (conf->driver_type == DRIVER_TYPE_LAN_2_0 && seq_num == 0)
+  if (conf->driver_type == IPMI_DEVICE_LAN_2_0 && seq_num == 0)
     goto out;
 
   /* Check if sequence number is greater than highest received and is
@@ -328,7 +328,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
       wrap_val = IPMIPOWER_SEQUENCE_NUMBER_WINDOW - (IPMIPOWER_MAX_SEQUENCE_NUMBER - ip->highest_received_sequence_number) - 1;
 
       /* In IPMI 2.0, sequence number 0 isn't possible, so adjust wrap_val */
-      if (conf->driver_type == DRIVER_TYPE_LAN_2_0)
+      if (conf->driver_type == IPMI_DEVICE_LAN_2_0)
 	wrap_val++;
 
       if (seq_num > ip->highest_received_sequence_number || seq_num <= wrap_val)
@@ -337,7 +337,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
             shift_num = seq_num - ip->highest_received_sequence_number;
           else
             {
-              if (conf->driver_type == DRIVER_TYPE_LAN)
+              if (conf->driver_type == IPMI_DEVICE_LAN)
                 shift_num = seq_num + (IPMIPOWER_MAX_SEQUENCE_NUMBER - ip->highest_received_sequence_number) + 1;
               else
                 /* IPMI 2.0 Special Case b/c 0 isn't a legit sequence number */
@@ -371,14 +371,14 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
       uint32_t wrap_val = IPMIPOWER_MAX_SEQUENCE_NUMBER - (IPMIPOWER_SEQUENCE_NUMBER_WINDOW - ip->highest_received_sequence_number) + 1;
       
       /* In IPMI 2.0, sequence number 0 isn't possible, so adjust wrap_val */
-      if (conf->driver_type == DRIVER_TYPE_LAN_2_0)
+      if (conf->driver_type == IPMI_DEVICE_LAN_2_0)
 	wrap_val--;
 
       if (seq_num < ip->highest_received_sequence_number || seq_num >= wrap_val)
         {
           if (seq_num > ip->highest_received_sequence_number && seq_num <= IPMIPOWER_MAX_SEQUENCE_NUMBER)
             {
-              if (conf->driver_type == DRIVER_TYPE_LAN)
+              if (conf->driver_type == IPMI_DEVICE_LAN)
                 shift_num = ip->highest_received_sequence_number + (IPMIPOWER_MAX_SEQUENCE_NUMBER - seq_num) + 1;
               else
                 /* IPMI 2.0 Special Case b/c 0 isn't a legit sequence number */
@@ -448,7 +448,7 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == GET_SESSION_CHALLENGE_RES 
       || pkt == ACTIVATE_SESSION_RES)
     return 1;
-  else if (conf->driver_type == DRIVER_TYPE_LAN
+  else if (conf->driver_type == IPMI_DEVICE_LAN
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	       || pkt == GET_CHASSIS_STATUS_RES
 	       || pkt == CHASSIS_CONTROL_RES
@@ -461,7 +461,7 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
                    "session_id", 
 		   &expected_session_id);
     }
-  else if (conf->driver_type == DRIVER_TYPE_LAN_2_0
+  else if (conf->driver_type == IPMI_DEVICE_LAN_2_0
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	       || pkt == GET_CHASSIS_STATUS_RES
 	       || pkt == CHASSIS_CONTROL_RES
@@ -637,7 +637,7 @@ ipmipower_check_payload_type(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(pkt == OPEN_SESSION_RES
 	 || pkt == RAKP_MESSAGE_2_RES
 	 || pkt == RAKP_MESSAGE_4_RES
-	 || (conf->driver_type == DRIVER_TYPE_LAN_2_0
+	 || (conf->driver_type == IPMI_DEVICE_LAN_2_0
 	     && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 		 || pkt == GET_CHASSIS_STATUS_RES
 		 || pkt == CHASSIS_CONTROL_RES
@@ -1044,7 +1044,7 @@ ipmipower_check_payload_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
-  assert(conf->driver_type == DRIVER_TYPE_LAN_2_0
+  assert(conf->driver_type == IPMI_DEVICE_LAN_2_0
          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
              || pkt == GET_CHASSIS_STATUS_RES
              || pkt == CHASSIS_CONTROL_RES
@@ -1073,7 +1073,7 @@ ipmipower_check_integrity_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
-  assert(conf->driver_type == DRIVER_TYPE_LAN_2_0
+  assert(conf->driver_type == IPMI_DEVICE_LAN_2_0
          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
              || pkt == GET_CHASSIS_STATUS_RES
              || pkt == CHASSIS_CONTROL_RES

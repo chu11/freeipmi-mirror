@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.69 2008-05-14 00:44:50 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.70 2008-05-14 23:32:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -50,7 +50,6 @@
 #include "ipmipower_authentication_type.h"
 #include "ipmipower_cipher_suite_id.h"
 #include "ipmipower_connection.h"
-#include "ipmipower_driver_type.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_output.h"
 #include "ipmipower_privilege_level.h"
@@ -60,6 +59,7 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 
 extern cbuf_t ttyout;
 extern cbuf_t ttyin;    
@@ -80,18 +80,18 @@ _cmd_driver_type(char **argv)
 
   if (argv[1] != NULL) 
     {
-      driver_type_t driver_type = ipmipower_driver_type_index(argv[1]);
-      if (driver_type == DRIVER_TYPE_INVALID)
-        cbuf_printf(ttyout, "%s invalid driver type\n", argv[1]);
-      else 
+      int tmp;
+      
+      if ((tmp = parse_outofband_driver_type(argv[1])) < 0)
+        cbuf_printf(ttyout, "invalid driver type '%s' specified\n", argv[1]);
+      else
         {
-          conf->driver_type = driver_type;
+          conf->driver_type = tmp;
           cbuf_printf(ttyout, "driver type is now %s\n", argv[1]);
         }
     }
   else
-    cbuf_printf(ttyout, "driver_type must be specified: %s\n",
-                ipmipower_driver_type_list());
+    cbuf_printf(ttyout, "driver_type must be specified: lan, lan_2_0\n");
 }
 
 static void 
@@ -189,9 +189,9 @@ _cmd_password(char **argv)
                 ipmipower_authentication_type_string(conf->authentication_type));
   else if (argv[1] == NULL 
            || (argv[1] 
-               && ((conf->driver_type == DRIVER_TYPE_LAN_2_0
+               && ((conf->driver_type == IPMI_DEVICE_LAN_2_0
                     && strlen(argv[1]) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
-                   || (conf->driver_type == DRIVER_TYPE_LAN
+                   || (conf->driver_type == IPMI_DEVICE_LAN
                        && strlen(argv[1]) <= IPMI_1_5_MAX_PASSWORD_LENGTH))))
     {
       memset(conf->password, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH+1);
@@ -217,7 +217,7 @@ _cmd_k_g(char **argv)
   char buf[IPMI_MAX_K_G_LENGTH*2+3];
   assert(argv != NULL);
 
-  if (conf->driver_type == DRIVER_TYPE_LAN)
+  if (conf->driver_type == IPMI_DEVICE_LAN)
     cbuf_printf(ttyout, "k_g is only used for IPMI 2.0");
   else
     {
@@ -572,7 +572,7 @@ _cmd_config(void)
   char buf[IPMI_MAX_K_G_LENGTH*2+3];
 
   cbuf_printf(ttyout, "Driver_Type:                  %s\n",
-              ipmipower_driver_type_string(conf->driver_type));
+              (conf->driver_type == IPMI_DEVICE_LAN) ? "lan" : "lan_2_0");
 
   if (conf->hosts != NULL) 
     {

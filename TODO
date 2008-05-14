@@ -64,6 +64,11 @@ pef-config
 
 general
 -------
+audit error messages in command line parsing in all tools
+- ipmipower
+- bmc-watchdog
+- ipmiconsole
+- is consistent?
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??

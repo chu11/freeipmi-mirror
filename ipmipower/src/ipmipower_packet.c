@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.85 2008-05-14 22:45:11 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.86 2008-05-14 23:32:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -175,7 +175,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
       uint8_t packet_direction;
       const char *str_cmd = NULL;
       
-      if (conf->driver_type == DRIVER_TYPE_LAN)
+      if (conf->driver_type == IPMI_DEVICE_LAN)
         packet_type = DEBUG_COMMON_TYPE_IPMI_1_5;
       else
         packet_type = DEBUG_COMMON_TYPE_IPMI_2_0;
@@ -252,7 +252,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                                   (uint32_t)len,
                                   tmpl_lan_msg_hdr,
                                   ipmipower_packet_cmd_template(ip, pkt));
-      else if (conf->driver_type == DRIVER_TYPE_LAN_2_0
+      else if (conf->driver_type == IPMI_DEVICE_LAN_2_0
                && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 		   || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 		   || pkt == GET_CHASSIS_STATUS_REQ
@@ -306,7 +306,7 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
   Fiid_obj_clear(ip->obj_lan_session_hdr_res);
   Fiid_obj_clear(ip->obj_lan_msg_hdr_res);
   Fiid_obj_clear(ip->obj_lan_msg_trlr_res);
-  if (conf->driver_type == DRIVER_TYPE_LAN_2_0)
+  if (conf->driver_type == IPMI_DEVICE_LAN_2_0)
     {
       Fiid_obj_clear(ip->obj_rmcpplus_session_hdr_res);
       Fiid_obj_clear(ip->obj_rmcpplus_payload_res);
@@ -318,7 +318,7 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == AUTHENTICATION_CAPABILITIES_RES
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || conf->driver_type == DRIVER_TYPE_LAN)
+      || conf->driver_type == IPMI_DEVICE_LAN)
     {
       if ((rv = unassemble_ipmi_lan_pkt((uint8_t *)buffer, 
 					len, 
@@ -609,7 +609,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     Fiid_obj_get(ip->obj_get_session_challenge_res, 
                  "temp_session_id", 
                  &session_id);
-  else if (conf->driver_type == DRIVER_TYPE_LAN
+  else if (conf->driver_type == IPMI_DEVICE_LAN
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
 	       || pkt == CHASSIS_CONTROL_REQ
@@ -617,7 +617,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     Fiid_obj_get(ip->obj_activate_session_res, 
                  "session_id", 
                  &session_id);
-  else if (conf->driver_type == DRIVER_TYPE_LAN_2_0
+  else if (conf->driver_type == IPMI_DEVICE_LAN_2_0
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
@@ -629,7 +629,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     session_id = 0;
 
   /* Calculate Sequence Number */
-  if (conf->driver_type == DRIVER_TYPE_LAN
+  if (conf->driver_type == IPMI_DEVICE_LAN
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	  || pkt == GET_CHASSIS_STATUS_REQ
 	  || pkt == CHASSIS_CONTROL_REQ
@@ -643,7 +643,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       sequence_number = initial_inbound_sequence_number + ip->session_inbound_count;
     }
-  else if (conf->driver_type == DRIVER_TYPE_LAN_2_0
+  else if (conf->driver_type == IPMI_DEVICE_LAN_2_0
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
@@ -662,7 +662,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   /* Calculate Authentication Type */
   if (pkt == ACTIVATE_SESSION_REQ)
     authentication_type = ip->authentication_type;
-  else if (conf->driver_type == DRIVER_TYPE_LAN
+  else if (conf->driver_type == IPMI_DEVICE_LAN
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
 	       || pkt == CHASSIS_CONTROL_REQ
@@ -679,7 +679,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else
     authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
     
-  if (conf->driver_type == DRIVER_TYPE_LAN_2_0)
+  if (conf->driver_type == IPMI_DEVICE_LAN_2_0)
     {     
       /* Calculate Payload Type */
       if (pkt == OPEN_SESSION_REQ)
@@ -988,7 +988,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == AUTHENTICATION_CAPABILITIES_REQ
       || pkt == GET_SESSION_CHALLENGE_REQ
       || pkt == ACTIVATE_SESSION_REQ
-      || (conf->driver_type == DRIVER_TYPE_LAN
+      || (conf->driver_type == IPMI_DEVICE_LAN
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
               || pkt == GET_CHASSIS_STATUS_REQ
               || pkt == CHASSIS_CONTROL_REQ
@@ -1007,7 +1007,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == OPEN_SESSION_REQ
            || pkt == RAKP_MESSAGE_1_REQ
            || pkt == RAKP_MESSAGE_3_REQ
-           || (conf->driver_type == DRIVER_TYPE_LAN_2_0
+           || (conf->driver_type == IPMI_DEVICE_LAN_2_0
                && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                    || pkt == GET_CHASSIS_STATUS_REQ
                    || pkt == CHASSIS_CONTROL_REQ
