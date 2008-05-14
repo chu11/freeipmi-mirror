@@ -21,13 +21,16 @@ ipmipower
 - remove auto features to make consistent to other tools
   - auto privilege
     - priv level operator by default
+    - use real priv, not enum junk
   X - auto version
     X - remove ipmi-version in ipmipower_powercmd_t
-    - legacy ipmi-version command to driver type
+    X - legacy ipmi-version command to driver type
   X - auto authentication
     - auth type md5
+    - use real auth types, not ipmipower auth types
   - auto cipher suite
     - cipher suite 3 default
+    - use numbers, not stupid enums
   X - many version/highest_received_seq_num etc. move to init
   - to test
     X - ipmi 2.0 not found

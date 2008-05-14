@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_cipher_suite_id.c,v 1.8 2008-04-17 23:14:28 chu11 Exp $
+ *  $Id: ipmipower_cipher_suite_id.c,v 1.9 2008-05-14 00:18:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -46,9 +46,7 @@ ipmipower_cipher_suite_id_index(char *str)
 {
   assert(str != NULL);
 
-  if (!strcasecmp(str, "auto"))
-    return CIPHER_SUITE_ID_AUTO;
-  else if (!strcasecmp(str, "0"))
+  if (!strcasecmp(str, "0"))
     return CIPHER_SUITE_ID_0;
   else if (!strcasecmp(str, "1"))
     return CIPHER_SUITE_ID_1;
@@ -73,17 +71,13 @@ ipmipower_cipher_suite_id_index(char *str)
 char *
 ipmipower_cipher_suite_id_string(cipher_suite_id_t id)
 {
-  assert(CIPHER_SUITE_ID_VALID_OR_AUTO(id));
+  assert(CIPHER_SUITE_ID_VALID(id));
 
   switch(id) 
     {
-    case CIPHER_SUITE_ID_AUTO:
-      return "auto";
-      break;
     case CIPHER_SUITE_ID_0:
       return "0";
       break;
-      /* XXX */
     case CIPHER_SUITE_ID_1:
       return "1";
       break;
@@ -118,13 +112,10 @@ ipmipower_cipher_suite_id_string(cipher_suite_id_t id)
 char *
 ipmipower_cipher_suite_id_description(cipher_suite_id_t id)
 {
-  assert(CIPHER_SUITE_ID_VALID_OR_AUTO(id));
+  assert(CIPHER_SUITE_ID_VALID(id));
 
   switch(id) 
     {
-    case CIPHER_SUITE_ID_AUTO:
-      return "auto";
-      break;
     case CIPHER_SUITE_ID_0:
       return "Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None";
       break;
@@ -162,7 +153,7 @@ ipmipower_cipher_suite_id_description(cipher_suite_id_t id)
 char *
 ipmipower_cipher_suite_id_list(void)
 {
-  return "auto, 0, 1, 2, 3, 6, 7, 8, 11, 12";
+  return "0, 1, 2, 3, 6, 7, 8, 11, 12";
 }
 
 uint8_t
@@ -178,7 +169,6 @@ ipmipower_ipmi_cipher_suite_id(cipher_suite_id_t id)
     case CIPHER_SUITE_ID_1:
       return 1;
       break;
-      /* XXX */
     case CIPHER_SUITE_ID_2:
       return 2;
       break;

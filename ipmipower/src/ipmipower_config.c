@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.92 2008-05-14 00:01:43 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.93 2008-05-14 00:18:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -231,7 +231,7 @@ ipmipower_config_setup(void)
   conf->session_timeout_len = 20000;     /* 20 seconds */
   conf->retransmission_timeout_len = 400; /* .4 seconds  */
   conf->authentication_type = AUTHENTICATION_TYPE_MD5;
-  conf->cipher_suite_id = CIPHER_SUITE_ID_AUTO;
+  conf->cipher_suite_id = CIPHER_SUITE_ID_3;
   conf->privilege_level = PRIVILEGE_LEVEL_AUTO;
   conf->workaround_flags = 0;
   conf->debug = 0;

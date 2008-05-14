@@ -25,6 +25,9 @@
 
 	* ipmpower/src/: Remove pinning of memory.
 
+	* ipmipower/: Removed cipher-suite-id auto discovery.  General
+	code cleanup.
+
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h: Fix boot device flags.

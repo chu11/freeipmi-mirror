@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.133 2008-05-13 00:19:29 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.134 2008-05-14 00:18:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -264,17 +264,15 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   if (conf->driver_type == DRIVER_TYPE_LAN_2_0)
     {
-      if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO)
-        {
-          ip->cipher_suite_id = ipmipower_ipmi_cipher_suite_id(conf->cipher_suite_id);
-          if (ipmi_cipher_suite_id_to_algorithms(ip->cipher_suite_id,
-                                                 &(ip->authentication_algorithm),
-                                                 &(ip->integrity_algorithm),
-                                                 &(ip->confidentiality_algorithm)) < 0)
-            ierr_exit("ipmipower_powercmd_queue: ipmi_cipher_suite_id_to_algorithms: ",
-                      "conf->cipher_suite_id: %d; cipher_suite_id: %d; %s",
-                      conf->cipher_suite_id, ip->cipher_suite_id, strerror(errno));
-        }     
+      ip->cipher_suite_id = ipmipower_ipmi_cipher_suite_id(conf->cipher_suite_id);
+      if (ipmi_cipher_suite_id_to_algorithms(ip->cipher_suite_id,
+                                             &(ip->authentication_algorithm),
+                                             &(ip->integrity_algorithm),
+                                             &(ip->confidentiality_algorithm)) < 0)
+        ierr_exit("ipmipower_powercmd_queue: ipmi_cipher_suite_id_to_algorithms: ",
+                  "conf->cipher_suite_id: %d; cipher_suite_id: %d; %s",
+                  conf->cipher_suite_id, ip->cipher_suite_id, strerror(errno));
+
       /* IPMI Workaround (achu)
        *
        * Discovered on SE7520AF2 with Intel Server Management Module
@@ -1453,70 +1451,22 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
   assert(ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT
 	 || ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT);
 
-  /* Ok, if the cipher suite has been specified by the user, then
-   * lets make sure that the remote machine supports this cipher
-   * suite id.
-   */
-  if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO)
-    {         
-      for (i = 0; i < ip->cipher_suite_ids_num; i++)
+  for (i = 0; i < ip->cipher_suite_ids_num; i++)
+    {
+      if (ip->cipher_suite_id == ip->cipher_suite_ids[i])
         {
-          if (ip->cipher_suite_id == ip->cipher_suite_ids[i])
-            {
-              cipher_suite_found++;
-              break;
-            }
-        }
-      
-      if (!cipher_suite_found)
-        {
-          ierr_dbg("_determine_cipher_suite_id_to_use(%s:%d): "
-                   " cipher suite not found: %x",
-                   ip->ic->hostname, ip->protocol_state, ip->cipher_suite_id);
-          ipmipower_output(MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE, ip->ic->hostname); 
-          return -1;
+          cipher_suite_found++;
+          break;
         }
     }
-  else
+  
+  if (!cipher_suite_found)
     {
-      /* If the user wants us to find a cipher suite id, lets find
-       * a cipher suite we can use.  Otherwise, we report to the
-       * user that we're screwed.
-       */
-      
-      for (i = 0; i < cipher_suite_id_ranking_count; i++)
-        {
-          for (j = 0; j < ip->cipher_suite_ids_num; j++)
-            {
-              if (cipher_suite_id_ranking[i] == ip->cipher_suite_ids[j])
-                {
-                  cipher_suite_found++;
-                  break;
-                }
-            }
-          
-          if (cipher_suite_found)
-            break;
-        }
-      
-      if (!cipher_suite_found)
-        {
-          ierr_dbg("_determine_cipher_suite_id_to_use(%s:%d): "
-                   " can't find usable cipher suite",
-                   ip->ic->hostname, ip->protocol_state);
-          ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
-          return -1;
-        }
-      
-      ip->cipher_suite_id = cipher_suite_id_ranking[i];
-      ip->cipher_suite_id_ranking_index = i;
-      if (ipmi_cipher_suite_id_to_algorithms(ip->cipher_suite_id,
-                                             &(ip->authentication_algorithm),
-                                             &(ip->integrity_algorithm),
-                                             &(ip->confidentiality_algorithm)) < 0)
-        ierr_exit("_determine_cipher_suite_id_to_use: ipmi_cipher_suite_id_to_algorithms: ",
-                  "cipher_suite_id: %d; %s",
-                  ip->cipher_suite_id, strerror(errno));
+      ierr_dbg("_determine_cipher_suite_id_to_use(%s:%d): "
+               " cipher suite not found: %x",
+               ip->ic->hostname, ip->protocol_state, ip->cipher_suite_id);
+      ipmipower_output(MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE, ip->ic->hostname); 
+      return -1;
     }
 
   return 0;
@@ -1602,66 +1552,11 @@ _check_open_session_error(ipmipower_powercmd_t ip)
       else
 	priv_check = (maximum_privilege_level == ip->requested_maximum_privilege_level) ? 1 : 0;
       
-      if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO 
-	  && !priv_check)
+      if (!priv_check)
 	{
 	  ipmipower_output(MSG_TYPE_NECESSARY_PRIVILEGE_LEVEL, ip->ic->hostname);	
 	  return -1;
 	}
-    }
-
-  if (conf->cipher_suite_id == CIPHER_SUITE_ID_AUTO)
-    {
-      int i, j, cipher_suite_found = 0;
-    
-      if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS
-	  || !priv_check)
-        {
-          /* Lets try the next Cipher Suite ID if there is one */
-          if (ip->cipher_suite_id_ranking_index == (cipher_suite_id_ranking_count - 1))
-            {
-              ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname);
-              return -1;
-            }
-          else
-            {
-              /* Lets find the next cipher suite we can use.  Otherwise,
-               * we report to the user that we're screwed.
-               */
-              for (i = ip->cipher_suite_id_ranking_index + 1; i < cipher_suite_id_ranking_count; i++)
-                {
-                  for (j = 0; j < ip->cipher_suite_ids_num; j++)
-                    {
-                      if (cipher_suite_id_ranking[i] == ip->cipher_suite_ids[i])
-                        {
-                          cipher_suite_found++;
-                          break;
-                        }
-                    }
-                  
-                  if (cipher_suite_found)
-                    break;
-                }
-              
-              if (!cipher_suite_found)
-                {
-                  ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
-                  return -1;
-                }
-              
-              ip->cipher_suite_id = cipher_suite_id_ranking[i];
-              ip->cipher_suite_id_ranking_index = i;
-              if (ipmi_cipher_suite_id_to_algorithms(ip->cipher_suite_id,
-                                                     &(ip->authentication_algorithm),
-                                                     &(ip->integrity_algorithm),
-                                                     &(ip->confidentiality_algorithm)) < 0)
-                ierr_exit("_check_open_session_error: ipmi_cipher_suite_id_to_algorithms: ",
-                          "cipher_suite_id: %d; %s",
-                          ip->cipher_suite_id, strerror(errno));
-              
-              return 0;
-            }
-        }
     }
 
   ipmipower_output(ipmipower_packet_errmsg(ip, OPEN_SESSION_RES), ip->ic->hostname);
