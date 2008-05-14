@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.98 2008-05-14 00:25:58 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.99 2008-05-14 00:44:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -296,18 +296,13 @@ typedef enum
 typedef enum 
   {
     PRIVILEGE_LEVEL_INVALID   = 0x00,
-    PRIVILEGE_LEVEL_AUTO      = 0x01,
-    PRIVILEGE_LEVEL_USER      = 0x02,
-    PRIVILEGE_LEVEL_OPERATOR  = 0x03,
-    PRIVILEGE_LEVEL_ADMIN     = 0x04,
+    PRIVILEGE_LEVEL_USER      = 0x01,
+    PRIVILEGE_LEVEL_OPERATOR  = 0x02,
+    PRIVILEGE_LEVEL_ADMIN     = 0x03,
   } privilege_level_t;
 
 #define PRIVILEGE_LEVEL_VALID(__p) \
   ((__p) >= PRIVILEGE_LEVEL_USER && \
-   (__p) <= PRIVILEGE_LEVEL_ADMIN)
-
-#define PRIVILEGE_LEVEL_VALID_OR_AUTO(__p) \
-  ((__p) >= PRIVILEGE_LEVEL_AUTO && \
    (__p) <= PRIVILEGE_LEVEL_ADMIN)
 
 /* Cipher_Suite Ids */
@@ -354,20 +349,19 @@ typedef enum
     MSG_TYPE_PASSWORD_INVALID                   =  6,
     MSG_TYPE_PASSWORD_LENGTH_INVALID            =  7,
     MSG_TYPE_K_G_INVALID                        =  8,
-    MSG_TYPE_NECESSARY_PRIVILEGE_LEVEL          =  9,
-    MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED = 10,
-    MSG_TYPE_OPERATION_INVALID                  = 11,
-    MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE    = 12,
-    MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE        = 13,
-    MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT      = 14,
-    MSG_TYPE_SESSION_TIMEOUT                    = 15,
-    MSG_TYPE_NOTDISCOVERED                      = 16,
-    MSG_TYPE_BADCONNECTION                      = 17,
-    MSG_TYPE_UNKNOWNNODE                        = 18,
-    MSG_TYPE_RESOURCES                          = 19,
-    MSG_TYPE_IPMI_2_0_UNAVAILABLE               = 20,
-    MSG_TYPE_BMC_BUSY                           = 21,
-    MSG_TYPE_BMC_ERROR                          = 22,
+    MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED =  9,
+    MSG_TYPE_OPERATION_INVALID                  = 10,
+    MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE    = 11,
+    MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE        = 12,
+    MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT      = 13,
+    MSG_TYPE_SESSION_TIMEOUT                    = 14,
+    MSG_TYPE_NOTDISCOVERED                      = 15,
+    MSG_TYPE_BADCONNECTION                      = 16,
+    MSG_TYPE_UNKNOWNNODE                        = 17,
+    MSG_TYPE_RESOURCES                          = 18,
+    MSG_TYPE_IPMI_2_0_UNAVAILABLE               = 19,
+    MSG_TYPE_BMC_BUSY                           = 20,
+    MSG_TYPE_BMC_ERROR                          = 21,
   } msg_type_t;
 
 #define MSG_TYPE_VALID(__m) \

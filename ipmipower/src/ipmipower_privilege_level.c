@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_privilege_level.c,v 1.9 2008-04-17 23:14:29 chu11 Exp $
+ *  $Id: ipmipower_privilege_level.c,v 1.10 2008-05-14 00:44:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -55,9 +55,6 @@ ipmipower_privilege_level_index(char *str)
 
   assert(str != NULL);
 
-  if (!strcasecmp(str, "auto"))
-    return PRIVILEGE_LEVEL_AUTO;
-
   tmp = parse_privilege_level(str);
   if (tmp == IPMI_PRIVILEGE_LEVEL_USER)
     return PRIVILEGE_LEVEL_USER;
@@ -72,13 +69,10 @@ ipmipower_privilege_level_index(char *str)
 char *
 ipmipower_privilege_level_string(privilege_level_t priv) 
 {
-  assert(PRIVILEGE_LEVEL_VALID_OR_AUTO(priv));
+  assert(PRIVILEGE_LEVEL_VALID(priv));
 
   switch(priv) 
     {
-    case PRIVILEGE_LEVEL_AUTO:
-      return "auto";
-      break;
     case PRIVILEGE_LEVEL_USER:
       return IPMI_PRIVILEGE_LEVEL_USER_STR;
       break;
@@ -102,7 +96,7 @@ ipmipower_privilege_level_list(void)
 
   snprintf(privilege_buffer,
            IPMIPOWER_PRIVILEGE_BUFLEN,
-           "auto, %s, %s, %s",
+           "%s, %s, %s",
            IPMI_PRIVILEGE_LEVEL_USER_STR,
            IPMI_PRIVILEGE_LEVEL_OPERATOR_STR,
            IPMI_PRIVILEGE_LEVEL_ADMIN_STR);

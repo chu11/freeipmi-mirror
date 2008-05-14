@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.30 2008-05-14 00:25:58 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.31 2008-05-14 00:44:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -54,7 +54,6 @@ static char *ipmipower_outputs[] =
     "password invalid",
     "password length invalid",
     "k_g invalid",
-    "necessary privilege level for power control operation cannot be obtained",
     "privilege level cannot be obtained for this user",
     "operation invalid",
     "authentication type unavailable for attempted privilege level",

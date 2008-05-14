@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.135 2008-05-14 00:25:59 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.136 2008-05-14 00:44:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -200,18 +200,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   ip->previously_received_list = 0xFF;
 
-  if (conf->privilege_level == PRIVILEGE_LEVEL_AUTO)
-    {
-      /* Following are default minimum privileges according to the IPMI
-       * specification 
-       */
-      if (cmd == POWER_CMD_POWER_STATUS)
-        ip->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
-      else
-        ip->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
-    }
-  else
-    ip->privilege_level = ipmipower_ipmi_privilege_level(conf->privilege_level);
+  ip->privilege_level = ipmipower_ipmi_privilege_level(conf->privilege_level);
 
   /* IPMI 1.5 */
 
@@ -242,6 +231,34 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
                   "conf->cipher_suite_id: %d; cipher_suite_id: %d; %s",
                   conf->cipher_suite_id, ip->cipher_suite_id, strerror(errno));
 
+      /* 
+       * IPMI Workaround (achu)
+       *
+       * Sigh.  There are two interpretations of the IPMI 2.0 Spec.
+       *
+       * Interpretation #1:
+       *
+       * Cipher Suite IDs (and thus authentication mechanisms) are not
+       * attached to specific privilege levels.  Cipher Suite IDs are
+       * assigned a privilege level limit.  So if we cannot connect at a
+       * lower privilege, there is no need to see if we can connect at a
+       * higher privilege.
+       *
+       * Interpretation #2:
+       *
+       * Cipher Suite Ids (and thus authentication algorithms) are
+       * attached to specific privilege levels.  You can authenticate only
+       * at that privilege level.
+       *
+       * In other words, the interpretations are nearly opposite of each other.
+       * 
+       * We send the "request highest privilege" flag in the open session
+       * request.  This should be enough to work around both
+       * interpretations.
+       *
+       * Sigh ... 
+       */
+      
       /* IPMI Workaround (achu)
        *
        * Discovered on SE7520AF2 with Intel Server Management Module
@@ -575,11 +592,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	   */
 	  if (!ipmipower_check_rmcpplus_status_code(ip, pkt))
 	    {
-              /* Special Case: let _process_ipmi_packets deal with this
-                 packet type's output */
-              if (pkt != OPEN_SESSION_RES)
-                ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
-
+              ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
 	      ip->retransmission_count = 0;  /* important to reset */
 	      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
 	      goto cleanup;
@@ -593,11 +606,11 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
           if (pkt == OPEN_SESSION_RES)
             {
-	      /* achu: In this case, we need to return an error and
-	       * let the state machine use it's retry logic.
-	       */
               if (!ipmipower_check_open_session_response_privilege(ip, pkt))
-		goto cleanup;
+                {
+                  ipmipower_output(MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED, ip->ic->hostname);
+                  goto cleanup;
+                }
             }
 	  else if (pkt == RAKP_MESSAGE_2_RES)
 	    {
@@ -1441,97 +1454,6 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
   return 0;
 }
 
-/* _check_open_session_error
- * 
- * Determine if a legit error occurred, and if so which new cipher suite id to use
- *
- * Returns  0 if we found something to try, so resend
- * Returns -1 on ipmi protocol error or can't find a cipher id to try
- */
-static int
-_check_open_session_error(ipmipower_powercmd_t ip)
-{
-  uint64_t rmcpplus_status_code;
-  uint64_t maximum_privilege_level;
-  int priv_check = 0;
-
-  assert(ip);
-  assert(ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT);
-
-  /* 
-   * IPMI Workaround (achu)
-   *
-   * Sigh.  There are two interpretations of the IPMI 2.0 Spec.
-   *
-   * Interpretation #1:
-   *
-   * Cipher Suite IDs (and thus authentication mechanisms) are not
-   * attached to specific privilege levels.  Cipher Suite IDs are
-   * assigned a privilege level limit.  So if we cannot connect at a
-   * lower privilege, there is no need to see if we can connect at a
-   * higher privilege.
-   *
-   * Interpretation #2:
-   *
-   * Cipher Suite Ids (and thus authentication algorithms) are
-   * attached to specific privilege levels.  You can authenticate only
-   * at that privilege level.
-   *
-   * In other words, the interpretations are nearly opposite of each other.
-   * 
-   * Well, when the privilege is auto detected, we send the "request
-   * highest privilege" flag in the open session request.  This should
-   * be enough to work around both interpretations.
-   *
-   * Sigh ... 
-   */
-  
-  Fiid_obj_get(ip->obj_open_session_res, 
-	       "rmcpplus_status_code", 
-	       &rmcpplus_status_code);
-  
-  Fiid_obj_get(ip->obj_open_session_res,
-	       "maximum_privilege_level",
-	       &maximum_privilege_level);
-
-  /* A rmcpplus status error takes precedence over a privilege error */
-  if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS)
-    {
-      if (ip->requested_maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
-	  && conf->privilege_level == PRIVILEGE_LEVEL_AUTO)
-	{
-	  if (ip->cmd == POWER_CMD_POWER_STATUS)
-	    {
-	      if (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-		  || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
-		  || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
-		priv_check = 1;
-	      else
-		priv_check = 0;
-	    }
-	  else
-	    {
-	      if (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
-		  || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
-		priv_check = 1;
-	      else
-		priv_check = 0;
-	    }
-	}
-      else
-	priv_check = (maximum_privilege_level == ip->requested_maximum_privilege_level) ? 1 : 0;
-      
-      if (!priv_check)
-	{
-	  ipmipower_output(MSG_TYPE_NECESSARY_PRIVILEGE_LEVEL, ip->ic->hostname);	
-	  return -1;
-	}
-    }
-
-  ipmipower_output(ipmipower_packet_errmsg(ip, OPEN_SESSION_RES), ip->ic->hostname);
-  return -1;
-}
-
 /* _calculate_cipher_keys
  * 
  * Calculate cipher keys for the remaining IPMI 2.0 protocol
@@ -1808,20 +1730,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if ((rv = _recv_packet(ip, OPEN_SESSION_RES)) != 1) 
         {
           if (rv < 0) 
-            {
-              if (!_check_open_session_error(ip))
-                {
-                  /* achu: Need to re-init */
-                  _init_ipmi_2_0_randomized_data(ip);
-                  
-                  _send_packet(ip, OPEN_SESSION_REQ);
-                  goto done;
-                }
-
-              /* XXX Session is not up, is it ok to quit here?  Or
-               * should we timeout?? */
-              return -1;
-            }
+            /* XXX Session is not up, is it ok to quit here?  Or
+             * should we timeout?? */
+            return -1;
           goto done;
         }
      

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.34 2008-05-14 00:18:06 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.35 2008-05-14 00:44:49 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -88,12 +88,7 @@ retransmission timeout refers to an individual packet within the IPMI
 protocol.
 #include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
-.TP
-\fB\-l\fR, \fB\-\-privilege\-level\fR=\fIPRIVILEGE\-LEVEL\fR
-Specify the privilege level to be used.  The currently available
-privilege levels are AUTO, USER, OPERATOR, and ADMIN.
-Defaults to AUTO to automatically select the minimal privilege
-required for the power control operation selected.
+#include <@top_srcdir@/common/doc/manpage-common-privilege-level-operator.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>

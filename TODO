@@ -19,9 +19,10 @@ ipmipower
 - redo to utilize newer api?
 - lock memory only w/ option
 - remove auto features to make consistent to other tools
-  - auto privilege
-    - priv level operator by default
+  X- auto privilege
+    X - priv level operator by default
     - use real priv, not enum junk
+    - before power op, check privilege level
   X - auto version
     X - remove ipmi-version in ipmipower_powercmd_t
     X - legacy ipmi-version command to driver type
@@ -38,7 +39,7 @@ ipmipower
     X - auth type not supported
   - msg types all still used? audit.
 - use generic argp - not unique .h
-  - use common manpage stuff now that auto is gone
+  X - use common manpage stuff now that auto is gone
   
 bmc-config
 ----------

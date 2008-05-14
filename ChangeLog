@@ -25,8 +25,8 @@
 
 	* ipmpower/src/: Remove pinning of memory.
 
-	* ipmipower/: Removed cipher-suite-id auto discovery.  General
-	code cleanup.
+	* ipmipower/: Removed cipher-suite-id auto discovery.  Removed
+	privilege-level auto discovery. General code cleanup.
 
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
