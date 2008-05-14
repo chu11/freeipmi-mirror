@@ -1,3 +1,7 @@
+2008-05-14  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/: Continue cleanup/fixes.
+	
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-chassis/src/: General cleanup.  Make error messages

@@ -38,10 +38,10 @@ ipmipower
     X - password length ipmi 1.5 nad ipmi 2.0
     X - auth type not supported
     X - priv level not enough for op
-    priv level not obtainable
-     ipmi 1.5
-     ipmi 2.0
-    cipher suite ids not obtainable
+    X priv level not obtainable
+    X ipmi 1.5
+    X ipmi 2.0
+    X cipher suite ids not obtainable
   - msg types all still used? audit.
   - remove cipher suite record lookup??
 - use generic argp - not unique .h
