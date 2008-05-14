@@ -42,7 +42,7 @@ ipmipower
     X ipmi 2.0
     X cipher suite ids not obtainable
   X- msg types all still used? audit.
-   - remove cipher suite record lookup??
+  X - remove cipher suite record lookup??
 - use generic argp - not unique .h
   X - use common manpage stuff now that auto is gone
   
