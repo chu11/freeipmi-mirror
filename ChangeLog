@@ -9,6 +9,9 @@
 
 	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h: Fix boot
 	device flags.
+
+	* ipmipower/src/ipmipower_prompt.c (_cmd_power): Fix error message
+	output corner case.
 	
 2008-05-12  Albert Chu <chu11@llnl.gov>
 

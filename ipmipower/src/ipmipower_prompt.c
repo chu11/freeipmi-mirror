@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.64 2008-04-24 23:02:29 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.64.2.1 2008-05-14 00:39:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -439,7 +439,7 @@ _cmd_power(char **argv, power_cmd_t cmd)
   if (conf->privilege_level == PRIVILEGE_LEVEL_USER 
       && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(cmd))
     {
-      cbuf_printf(ttyout, "power operation requires atleast operator privilege");
+      cbuf_printf(ttyout, "power operation requires atleast operator privilege\n");
       return;
     }
 
