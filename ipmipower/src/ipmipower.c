@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.45 2008-05-13 00:19:28 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.46 2008-05-14 00:01:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -199,11 +199,7 @@ _cleanup(void)
   close(conf->logfile_fd);
 #endif /* NDEBUG */
 
-#ifdef NDEBUG
-  secure_free(conf, sizeof(struct ipmipower_config));
-#else  /* !NDEBUG */
   free(conf);
-#endif /* !NDEBUG */
 }
 
 static void 

@@ -23,6 +23,8 @@
 	etc. for consistency to the IPMI specification.  Support legacy
 	options as needed.
 
+	* ipmpower/src/: Remove pinning of memory.
+
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h: Fix boot device flags.

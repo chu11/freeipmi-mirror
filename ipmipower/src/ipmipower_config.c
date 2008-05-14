@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.91 2008-05-13 00:19:28 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.92 2008-05-14 00:01:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -218,14 +218,9 @@ ipmipower_config_setup(void)
 {
   assert(conf == NULL);         /* Already initialized */
 
-#ifdef NDEBUG
-  if (!(conf = (struct ipmipower_config *)secure_malloc(sizeof(struct ipmipower_config))))
-    ierr_exit("secure_malloc: %s", strerror(errno));
-#else  /* !NDEBUG */
   if (!(conf = (struct ipmipower_config *)malloc(sizeof(struct ipmipower_config))))
     ierr_exit("malloc: %s", strerror(errno));
-#endif /* !NDEBUG */
-
+  
   conf->driver_type = DRIVER_TYPE_LAN;
   conf->hosts = NULL;
   conf->hosts_count = 0;
