@@ -21,6 +21,12 @@
 
 	* ipmiconsole/: Use common manpages as appropriate.
 
+	* common/src/tool-cmdline-common.c (common_parse_opt): Check that session
+	timeout and retransmission timeout are not zero.
+
+	* common/src/tool-cmdline-common.c (verify_common_cmd_args): Check
+	that retransmission timeout is not larger than session timeout.
+
 2008-05-15  Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-cmdline-common.c (parse_workaround_flags): Fix

@@ -417,6 +417,44 @@ common_parse_opt (int key,
           cmd_args->k_g_len = rv;
       }
       break;
+    case ARGP_SESSION_TIMEOUT_KEY:
+      {
+	int value = 0;
+	char *str = NULL;
+	char *tail = NULL;
+	int errnum = 0;
+	
+	str = strdupa (arg);
+	errno = 0;
+	value = strtol (str, &tail, 0);
+	errnum = errno;
+	
+	if (errnum)
+	  {
+	    // overflow
+	    fprintf (stderr, "invalid packet session timeout value\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (tail[0] != '\0')
+	  {
+	    // invalid integer format
+	    fprintf (stderr, "invalid packet session timeout value\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (value <= 0)
+	  {
+	    // zero or negative number
+	    fprintf (stderr, "invalid packet session timeout value\n");
+	    argp_usage (state);
+	    break;
+	  }
+	cmd_args->session_timeout = value;
+      }
+      break;
     /* ARGP_RETRY_TIMEOUT_KEY for backwards compatability */
     case ARGP_RETRY_TIMEOUT_KEY:
     case ARGP_RETRANSMISSION_TIMEOUT_KEY:
@@ -447,52 +485,14 @@ common_parse_opt (int key,
 	    break;
 	  }
 	
-	if (value < 0)
+	if (value <= 0)
 	  {
-	    // negative number
+	    // zero or negative number
 	    fprintf (stderr, "invalid packet retransmission timeout value\n");
 	    argp_usage (state);
 	    break;
 	  }
 	cmd_args->retransmission_timeout = value;
-      }
-      break;
-    case ARGP_SESSION_TIMEOUT_KEY:
-      {
-	int value = 0;
-	char *str = NULL;
-	char *tail = NULL;
-	int errnum = 0;
-	
-	str = strdupa (arg);
-	errno = 0;
-	value = strtol (str, &tail, 0);
-	errnum = errno;
-	
-	if (errnum)
-	  {
-	    // overflow
-	    fprintf (stderr, "invalid packet session timeout value\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (tail[0] != '\0')
-	  {
-	    // invalid integer format
-	    fprintf (stderr, "invalid packet session timeout value\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (value < 0)
-	  {
-	    // negative number
-	    fprintf (stderr, "invalid packet session timeout value\n");
-	    argp_usage (state);
-	    break;
-	  }
-	cmd_args->session_timeout = value;
       }
       break;
     /* ARGP_AUTH_TYPE_KEY for backwards compatability */
@@ -748,6 +748,12 @@ verify_common_cmd_args (struct common_cmd_args *cmd_args)
           exit (1);
         }
       /* else, 2_0 password length checked in argp_parse() */
+    }
+
+  if (cmd_args->retransmission_timeout > cmd_args->session_timeout)
+    {
+      fprintf (stderr, "retransmission timeout larger than session timeout\n");
+      exit(1);
     }
 }
 
