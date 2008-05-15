@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.35 2008-05-14 00:44:49 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.36 2008-05-15 18:11:13 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -61,10 +61,10 @@ perform IPMI 1.5 and IPMI 2.0 respectively.
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Specify the username to use when authenticating with the remote host.
 If not specified, a null (i.e. anonymous) username is assumed.  The
-user must have atleast OPERATOR or ADMINISTRATOR privileges to run the
---on, --off, --reset, --cycle, --pulse, or --soft power control
-commands.  The user must have atleast USER privileges to determine the
-power status of the machine through --stat.
+user must have atleast OPERATOR privileges to run the --on, --off,
+--reset, --cycle, --pulse, or --soft power control commands.  The user
+must have atleast USER privileges to determine the power status of the
+machine through --stat.
 #include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
 .TP
