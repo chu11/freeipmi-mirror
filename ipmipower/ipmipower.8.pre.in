@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.28 2008-04-24 17:14:00 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.28.2.1 2008-05-15 22:00:28 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -78,9 +78,9 @@ command.  Defaults to 20000 milliseconds (20 seconds).
 Specify the retransmission timeout length in milliseconds.  The
 retransmission timeout value is used to determine when to retransmit a
 packet with the series of packets IPMI over LAN must transmit.
-Defaults to 400 milliseconds (0.4 seconds).  The value must be length
-than the session timeout.  Packet retransmissions can be disabled by
-setting this value to 0.
+Defaults to 400 milliseconds (0.4 seconds).  The value must be greater
+in length than the session timeout.  Packet retransmissions can be
+disabled by setting this value to 0.
 
 Note how this option differs from the session timeout specified above.
 The session timeout refers to the entire amount of time the IPMI
