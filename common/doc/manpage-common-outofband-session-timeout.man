@@ -1,0 +1,4 @@
+.TP
+\fB\-\-session-timeout\fR=\fIMILLISECONDS\fR
+Specify the session timeout in milliseconds.  Defaults to 20000
+milliseconds (20 seconds) if not specified.

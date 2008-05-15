@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.34 2008-05-09 16:59:09 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.35 2008-05-15 22:11:03 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -49,7 +49,8 @@ sensor reading use, it is recommended that users use
 #include <@top_srcdir@/common/doc/manpage-common-outofband-username-user.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-retransmission-timeout.man>
 #include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>

@@ -21,39 +21,7 @@ not output excessive \ns
 ipmipower
 ---------
 - redo to utilize newer api?
-- remove auto features to make consistent to other tools
-  X- auto privilege
-    X - priv level operator by default
-    X - use real priv, not enum junk
-    X - before power op, check privilege level
-    X - remove privilege in ipmipower_powercmd_t??
-  X - auto version
-    X - remove ipmi-version in ipmipower_powercmd_t
-    X - legacy ipmi-version command to driver type
-  X - auto authentication
-  X  - auth type md5
-    - remove authentication_type in ipmipower_powercmd_t??
-    X - use real auth types, not ipmipower auth types
-  X- auto cipher suite
-  X  - cipher suite 3 default
-   X - remove cipher in ipmipower_powercmd_t??
-    - use numbers, not stupid enums
-  X - many version/highest_received_seq_num etc. move to init
-  - to test
-    X - ipmi 2.0 not found
-    X - password length ipmi 1.5 nad ipmi 2.0
-    X - auth type not supported
-    X - priv level not enough for op
-    X priv level not obtainable
-    X ipmi 1.5
-    X ipmi 2.0
-    X cipher suite ids not obtainable
-  X- msg types all still used? audit.
-  X - remove cipher suite record lookup??
-  - use workaround flags common
-  - output in config right
 - use generic argp - not unique .h
-  X - use common manpage stuff now that auto is gone
   
 bmc-config
 ----------
@@ -133,7 +101,7 @@ ipmiconsole
 -----------
 retry under a different port
 - has never been tested, does any manufacturer do this?
-use argp 
+timeout options?
 
 ipmi-sensors-config
 -------------------

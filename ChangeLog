@@ -1,6 +1,14 @@
 2008-05-15  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-outofband-timeout.man: Fix text.
+
+	* common/doc/manpage-common-outofband-timeout.man: Split into
+	manpage-common-outofband-session-timeout.man and
+	manpage-common-outofband-retransmission-timeout.man.
+
+	* Adjust all manpages appropriately for change.
+
+	* ipmipower/: Use common manpages as appropriate.
 	
 2008-05-15  Albert Chu <chu11@llnl.gov>
 

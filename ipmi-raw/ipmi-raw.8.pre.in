@@ -18,7 +18,8 @@ If not specified, a null (i.e. anonymous) username is assumed.  The
 required user privilege will depend on the raw commands executed.
 #include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-retransmission-timeout.man>
 #include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>

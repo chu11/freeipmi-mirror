@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.37 2008-05-15 21:59:46 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.38 2008-05-15 22:11:03 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -67,25 +67,11 @@ must have atleast USER privileges to determine the power status of the
 machine through --stat.
 #include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-session-timeout.man>
 .TP
-\fB\-t\fR, \fB\-\-session\-timeout\fR=\fBMILLISECONDS\fR
-Specify the session timeout length in milliseconds.  The session
-timeout value is used to determine when to give up on a power control
-command.  Defaults to 20000 milliseconds (20 seconds).
-.TP
-\fB\-y\fR, \fB\-\-retransmission\-timeout\fR=\fBMILLISECONDS\fR
-Specify the retransmission timeout length in milliseconds.  The
-retransmission timeout value is used to determine when to retransmit a
-packet with the series of packets IPMI over LAN must transmit.
-Defaults to 400 milliseconds (0.4 seconds).  The value must be greater
-in length than the session timeout.  Packet retransmissions can be
-disabled by setting this value to 0.
-
-Note how this option differs from the session timeout specified above.
-The session timeout refers to the entire amount of time the IPMI
-protocol has to complete a power control operation.  The
-retransmission timeout refers to an individual packet within the IPMI
-protocol.
+\fB\-\-retransmission-timeout\fR=\fIMILLISECONDS\fR
+Specify the packet retransmission timeout in milliseconds.  Defaults
+to 400 milliseconds (0.4 seconds) if not specified.
 #include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-operator.man>

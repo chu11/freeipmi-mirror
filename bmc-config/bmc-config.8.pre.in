@@ -26,7 +26,8 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/common/doc/manpage-common-outofband-username-admin.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-retransmission-timeout.man>
 #include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-admin.man>

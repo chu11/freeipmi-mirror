@@ -9,7 +9,8 @@ EXTRA_DIST = \
 	manpage-common-outofband-username-admin.man \
 	manpage-common-outofband-password.man \
 	manpage-common-outofband-k-g.man \
-	manpage-common-outofband-timeout.man \
+	manpage-common-outofband-session-timeout.man \
+	manpage-common-outofband-retransmission-timeout.man \
 	manpage-common-authentication-type.man \
 	manpage-common-cipher-suite-id.man \
 	manpage-common-privilege-level-user.man \

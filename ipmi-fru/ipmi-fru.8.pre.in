@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.28 2008-05-06 23:43:53 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.29 2008-05-15 22:11:01 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -40,7 +40,8 @@ displays Field Replaceable Unit (FRU) Information.
 #include <@top_srcdir@/common/doc/manpage-common-outofband-username-user.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-retransmission-timeout.man>
 #include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
