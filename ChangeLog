@@ -1,5 +1,10 @@
 2008-05-15  Albert Chu <chu11@llnl.gov>
 
+	* common/src/tool-cmdline-common.c (parse_workaround_flags): Fix
+	parsing bug.
+	
+2008-05-15  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/src/: Remove excess newline outputs.
 
 	* ipmipower/src/ipmipower_privilege_level.h,
