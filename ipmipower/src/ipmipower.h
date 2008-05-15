@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.102 2008-05-15 00:20:24 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.103 2008-05-15 18:09:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -248,19 +248,6 @@ typedef enum
   ((__s) >= LINK_GOOD && \
    (__s) <= LINK_BAD)
 
-/* Privilege Level Types */
-typedef enum 
-  {
-    PRIVILEGE_LEVEL_INVALID   = 0x00,
-    PRIVILEGE_LEVEL_USER      = 0x01,
-    PRIVILEGE_LEVEL_OPERATOR  = 0x02,
-    PRIVILEGE_LEVEL_ADMIN     = 0x03,
-  } privilege_level_t;
-
-#define PRIVILEGE_LEVEL_VALID(__p) \
-  ((__p) >= PRIVILEGE_LEVEL_USER && \
-   (__p) <= PRIVILEGE_LEVEL_ADMIN)
-
 /* Cipher_Suite Ids */
 typedef enum 
   { 
@@ -359,7 +346,6 @@ struct ipmipower_powercmd {
   unsigned int session_inbound_count;
   uint32_t highest_received_sequence_number;
   unsigned int previously_received_list;
-  uint8_t privilege_level;
 
   /* IPMI 1.5 specific */
   int permsgauth_enabled;
@@ -479,9 +465,9 @@ struct ipmipower_config
   unsigned int             k_g_len;
   int                      session_timeout_len;
   int                      retransmission_timeout_len;
-  int                      authentication_type;
+  uint8_t                  authentication_type;
   cipher_suite_id_t        cipher_suite_id;
-  privilege_level_t        privilege_level;
+  uint8_t                  privilege_level;
   uint32_t                 workaround_flags;
   int                      debug;
   char                     configfile[MAXPATHLEN+1];

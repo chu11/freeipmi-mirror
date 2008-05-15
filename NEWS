@@ -13,7 +13,8 @@ o Output FRU device names along with IDs in ipmi-fru.
 o Change default privilege from user to operator in ipmi-sel.
 o Alter ipmi-chassis output to print "unknown" when field is not known.
 o Alter some ipmi-chassis output to be more consistent to IPMI spec.
-o Removed many experimental features from ipmipower so it emulates other tools.
+o Removed many early experimental features from ipmipower so ipmipower is more
+  like other tools.
   o Removed ipmi-version, cipher-suite-id, privilege-level, and
     authentication-type auto discovery.
 o Changed --ipmi-version option to --driver-type in ipmipower for

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.76 2008-05-14 23:32:48 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.77 2008-05-15 18:09:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -754,18 +754,18 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
     rv = (val == ip->requested_maximum_privilege_level) ? 1 : 0;
   else
     {
-      if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+      if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_USER
 	  && (val == IPMI_PRIVILEGE_LEVEL_USER
 	      || val == IPMI_PRIVILEGE_LEVEL_OPERATOR
 	      || val == IPMI_PRIVILEGE_LEVEL_ADMIN
 	      || val == IPMI_PRIVILEGE_LEVEL_OEM))
 	rv = 1;
-      else if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
+      else if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
 	       && (val == IPMI_PRIVILEGE_LEVEL_OPERATOR
 		   || val == IPMI_PRIVILEGE_LEVEL_ADMIN
 		   || val == IPMI_PRIVILEGE_LEVEL_OEM))
         rv = 1;
-      else if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
+      else if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
 	       && (val == IPMI_PRIVILEGE_LEVEL_ADMIN
 		   || val == IPMI_PRIVILEGE_LEVEL_OEM))
 	rv = 1;
@@ -944,7 +944,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
                                                                         managed_system_guid,
                                                                         managed_system_guid_len,
                                                                         ip->name_only_lookup,
-                                                                        ip->privilege_level,
+                                                                        conf->privilege_level,
                                                                         username,
                                                                         username_len,
                                                                         ip->obj_rakp_message_2_res)) < 0)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.96 2008-05-15 00:20:31 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.97 2008-05-15 18:09:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -48,7 +48,6 @@
 #include "ipmipower_config.h"
 #include "ipmipower_cipher_suite_id.h"
 #include "ipmipower_output.h"
-#include "ipmipower_privilege_level.h"
 #include "ipmipower_util.h"
 #include "ipmipower_workarounds.h"
 #include "ipmipower_wrappers.h"
@@ -231,7 +230,7 @@ ipmipower_config_setup(void)
   conf->retransmission_timeout_len = 400; /* .4 seconds  */
   conf->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
   conf->cipher_suite_id = CIPHER_SUITE_ID_3;
-  conf->privilege_level = PRIVILEGE_LEVEL_OPERATOR;
+  conf->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
   conf->workaround_flags = 0;
   conf->debug = 0;
   memset(conf->configfile, '\0', MAXPATHLEN+1);
@@ -309,9 +308,6 @@ _config_common_checks(char *str)
 
   if (conf->cipher_suite_id == CIPHER_SUITE_ID_INVALID)
     ierr_exit("%s: invalid cipher suite id", str);
-
-  if (conf->privilege_level == PRIVILEGE_LEVEL_INVALID)
-    ierr_exit("%s: invalid privilege level", str);
 
   if (conf->retransmission_wait_timeout_len != 0 
       && (conf->retransmission_wait_timeout_len < IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN 
@@ -463,7 +459,9 @@ cmdline_parse (int key,
       /* ARGP_PRIVILEGE_KEY for backwards compatability */
     case ARGP_PRIVILEGE_KEY:
     case ARGP_PRIVILEGE_LEVEL_KEY:       /* --privilege-level */
-      conf->privilege_level = ipmipower_privilege_level_index(arg);
+      if ((tmp = parse_privilege_level(arg)) < 0)
+        ierr_exit("Command Line Error: invalid privilege level specified");
+      conf->privilege_level = tmp;
       conf->privilege_level_set_on_cmdline++;
       break;
     case ARGP_WORKAROUND_FLAGS_KEY:       /* --workaround-flags */
@@ -729,7 +727,7 @@ _cb_authentication_type(conffile_t cf, struct conffile_data *data,
     return 0;
 
   if ((tmp = parse_authentication_type(data->string)) < 0)
-    ierr_exit("Command Line Error: invalid authentication type specified");
+    ierr_exit("Config File Error: invalid authentication type specified");
 
   conf->authentication_type = tmp;
   return 0;
@@ -753,11 +751,15 @@ _cb_privilege_level(conffile_t cf, struct conffile_data *data,
                     char *optionname, int option_type, void *option_ptr, 
                     int option_data, void *app_ptr, int app_data) 
 {
+  int tmp;
+  
   if (conf->privilege_level_set_on_cmdline)
     return 0;
+  
+  if ((tmp = parse_privilege_level(data->string)) < 0)
+    ierr_exit("Config File Error: invalid privilege level specified");
 
-  /* Incorrect privilege level checked in _config_common_checks */
-  conf->privilege_level = ipmipower_privilege_level_index(data->string);
+  conf->privilege_level = tmp;
   return 0;
 }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.71 2008-05-15 00:20:35 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.72 2008-05-15 18:09:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -51,7 +51,6 @@
 #include "ipmipower_connection.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_output.h"
-#include "ipmipower_privilege_level.h"
 #include "ipmipower_workarounds.h"
 #include "ipmipower_wrappers.h"
 
@@ -295,18 +294,21 @@ _cmd_privilege_level(char **argv)
 
   if (argv[1] != NULL) 
     {
-      privilege_level_t priv = ipmipower_privilege_level_index(argv[1]);
-      if (priv == PRIVILEGE_LEVEL_INVALID)
-        cbuf_printf(ttyout, "%s invalid privilege\n", argv[1]);
-      else 
+      int tmp;
+
+      if ((tmp = parse_privilege_level(argv[1])) < 0)
+        cbuf_printf(ttyout, "%s invalid privilege_level\n", argv[1]);
+      else
         {
-          conf->privilege_level = priv;
-          cbuf_printf(ttyout, "privilege is now %s\n", argv[1]);
+          conf->authentication_type = tmp;
+          cbuf_printf(ttyout, "privilege_level type is now %s\n", argv[1]);
         }
     }
   else
-    cbuf_printf(ttyout, "privilege must be specified: %s\n",
-                ipmipower_privilege_level_list());
+    cbuf_printf(ttyout, "privilege must be specified: %s, %s, %s\n",
+                IPMI_PRIVILEGE_LEVEL_USER_STR,
+                IPMI_PRIVILEGE_LEVEL_OPERATOR_STR,
+                IPMI_PRIVILEGE_LEVEL_ADMIN_STR);
 }
 
 static void
@@ -435,7 +437,7 @@ _cmd_power(char **argv, power_cmd_t cmd)
     }
 
   /* Check for correct privilege type */
-  if (conf->privilege_level == PRIVILEGE_LEVEL_USER 
+  if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_USER 
       && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(cmd))
     {
       cbuf_printf(ttyout, "power operation requires atleast operator privilege\n");
@@ -676,8 +678,16 @@ _cmd_config(void)
 
   cbuf_printf(ttyout, "Authentication_Type:          %s\n", str);
 
-  cbuf_printf(ttyout, "Privilege_Level:              %s\n", 
-              ipmipower_privilege_level_string(conf->privilege_level));
+  str = "";
+  if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_USER)
+    str = IPMI_PRIVILEGE_LEVEL_USER_STR;
+  else if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR)
+    str = IPMI_PRIVILEGE_LEVEL_OPERATOR_STR;
+  else if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
+    str = IPMI_PRIVILEGE_LEVEL_ADMIN_STR;
+
+  cbuf_printf(ttyout, "Privilege_Level:              %s\n", str);
+
   cbuf_printf(ttyout, "Cipher Suite Id:              %s\n",
 	      ipmipower_cipher_suite_id_string(conf->cipher_suite_id));
   cbuf_printf(ttyout, "On-If-Off:                    %s\n",

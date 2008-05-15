@@ -11,7 +11,6 @@ ipmipower_SOURCES= \
 	ipmipower_packet.c \
 	ipmipower_ping.c \
 	ipmipower_powercmd.c \
-	ipmipower_privilege_level.c \
 	ipmipower_prompt.c \
 	ipmipower_util.c \
 	ipmipower_workarounds.c \
@@ -44,7 +43,6 @@ noinst_HEADERS= \
 	ipmipower_packet.h \
 	ipmipower_ping.h \
 	ipmipower_powercmd.h \
-	ipmipower_privilege_level.h \
 	ipmipower_prompt.h \
 	ipmipower_util.h \
 	ipmipower_workarounds.h \

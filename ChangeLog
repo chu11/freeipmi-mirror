@@ -1,6 +1,12 @@
 2008-05-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/src/: Remove excess newline outputs.
+
+	* ipmipower/src/ipmipower_privilege_level.h,
+	ipmipower/src/ipmipower_privilege_level.c: Removed files.
+
+	* ipmipower/src/: Remove need for itnernal privilege_level_t type
+	and macros.
 	
 2008-05-15  Albert Chu <chu11@llnl.gov>
 

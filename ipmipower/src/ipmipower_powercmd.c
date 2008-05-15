@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.141 2008-05-15 00:20:34 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.142 2008-05-15 18:09:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -51,7 +51,6 @@
 #include "ipmipower_output.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_packet.h"
-#include "ipmipower_privilege_level.h"
 #include "ipmipower_check.h"
 #include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
@@ -197,10 +196,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   ip->previously_received_list = 0xFF;
 
-  ip->privilege_level = ipmipower_ipmi_privilege_level(conf->privilege_level);
-
   /* IPMI 1.5 */
-
 #if 0
   if (conf->driver_type == IPMI_DEVICE_LAN)
     {
@@ -266,7 +262,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
        * we want to use.
        */
       if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
-	ip->requested_maximum_privilege_level = ip->privilege_level;
+	ip->requested_maximum_privilege_level = conf->privilege_level;
       else
 	ip->requested_maximum_privilege_level = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
       memset(ip->sik_key, '\0', IPMI_MAX_SIK_KEY_LENGTH);
@@ -1304,7 +1300,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
                                            managed_system_random_number,
                                            managed_system_random_number_len,
                                            ip->name_only_lookup,
-                                           ip->privilege_level,
+                                           conf->privilege_level,
                                            username,
                                            username_len,
                                            &(ip->sik_key_ptr),
@@ -1444,14 +1440,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
          * should we timeout?? */
         return -1;
       
-      /* We can skip SET_SESSION_PRIVILEGE_LEVEL_REQ on a power status
-       * check, because the default IPMI session privilege level is
-       * the user privilege level
-       */
-      if (ip->cmd == POWER_CMD_POWER_STATUS)
-	_send_packet(ip, GET_CHASSIS_STATUS_REQ);
-      else
-        _send_packet(ip, SET_SESSION_PRIVILEGE_LEVEL_REQ);
+      _send_packet(ip, SET_SESSION_PRIVILEGE_LEVEL_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT)
     {
@@ -1493,14 +1482,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      /* We can skip SET_SESSION_PRIVILEGE_LEVEL_REQ on a power status
-       * check, because the default IPMI session privilege level is
-       * the user privilege level
-       */
-      if (ip->cmd == POWER_CMD_POWER_STATUS)
-	_send_packet(ip, GET_CHASSIS_STATUS_REQ);
-      else
-        _send_packet(ip, SET_SESSION_PRIVILEGE_LEVEL_REQ);
+      _send_packet(ip, SET_SESSION_PRIVILEGE_LEVEL_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT) 
     {
@@ -1512,12 +1494,6 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      /* Next packet we send depends on the power command and the
-       * options set.  The POWER_CMD_POWER_STATUS command shouldn't be
-       * possible at this point (see comments above under
-       * protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT), but
-       * we leave the code below anyway.
-       */
       if (ip->cmd == POWER_CMD_POWER_STATUS
           || (conf->on_if_off 
               && (ip->cmd == POWER_CMD_POWER_CYCLE
