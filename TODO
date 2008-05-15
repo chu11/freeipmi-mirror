@@ -36,7 +36,7 @@ ipmipower
     X - use real auth types, not ipmipower auth types
   X- auto cipher suite
   X  - cipher suite 3 default
-    - remove cipher in ipmipower_powercmd_t??
+   X - remove cipher in ipmipower_powercmd_t??
     - use numbers, not stupid enums
   X - many version/highest_received_seq_num etc. move to init
   - to test

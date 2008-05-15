@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.72 2008-05-15 18:09:57 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.73 2008-05-15 20:22:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -47,7 +47,6 @@
 #include "ipmipower_config.h"
 #include "ipmipower_prompt.h"
 #include "ipmipower_ping.h"
-#include "ipmipower_cipher_suite_id.h"
 #include "ipmipower_connection.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_output.h"
@@ -273,18 +272,21 @@ _cmd_cipher_suite_id(char **argv)
 
   if (argv[1] != NULL) 
     {
-      cipher_suite_id_t cipher_suite_id = ipmipower_cipher_suite_id_index(argv[1]);
-      if (cipher_suite_id == CIPHER_SUITE_ID_INVALID)
+      char *ptr;
+      int tmp;
+
+      tmp = strtol(argv[1], &ptr, 10);
+      if (ptr != (argv[1] + strlen(argv[1]))
+          || !IPMI_CIPHER_SUITE_ID_SUPPORTED(tmp))
         cbuf_printf(ttyout, "%s invalid cipher suite id\n", argv[1]);
-      else 
+      else
         {
-          conf->cipher_suite_id = cipher_suite_id;
+          conf->cipher_suite_id = tmp;
           cbuf_printf(ttyout, "cipher suite id is now %s\n", argv[1]);
         }
     }
   else
-    cbuf_printf(ttyout, "cipher_suite_id must be specified: %s\n",
-                ipmipower_cipher_suite_id_list());
+    cbuf_printf(ttyout, "cipher_suite_id must be specified: 0, 1, 2, 3, 6, 7, 8, 11, 12\n");
 }
 
 static void 
@@ -688,8 +690,28 @@ _cmd_config(void)
 
   cbuf_printf(ttyout, "Privilege_Level:              %s\n", str);
 
-  cbuf_printf(ttyout, "Cipher Suite Id:              %s\n",
-	      ipmipower_cipher_suite_id_string(conf->cipher_suite_id));
+  str = "";
+  if (conf->cipher_suite_id == 0)
+    str = "0";
+  else if (conf->cipher_suite_id == 1)
+   str = "1";
+  else if (conf->cipher_suite_id == 2)
+    str = "2";
+  else if (conf->cipher_suite_id == 3)
+    str = "3";
+  else if (conf->cipher_suite_id == 6)
+    str = "6";
+  else if (conf->cipher_suite_id == 7)
+    str = "7";
+  else if (conf->cipher_suite_id == 8)
+    str = "8";
+  else if (conf->cipher_suite_id == 11)
+    str = "11";
+  else if (conf->cipher_suite_id == 12)
+    str = "12";
+
+  cbuf_printf(ttyout, "Cipher Suite Id:              %s\n", str);
+
   cbuf_printf(ttyout, "On-If-Off:                    %s\n",
               (conf->on_if_off) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Wait-Until-On:                %s\n",

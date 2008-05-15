@@ -3,7 +3,6 @@ ipmipower_SOURCES= \
 	argv.c \
 	ierror.c \
 	ipmipower_check.c \
-	ipmipower_cipher_suite_id.c \
 	ipmipower_config.c \
 	ipmipower_connection.c \
 	ipmipower.c \
@@ -35,7 +34,6 @@ noinst_HEADERS= \
 	argv.h \
 	ierror.h \
 	ipmipower_check.h \
-	ipmipower_cipher_suite_id.h \
 	ipmipower_config.h \
 	ipmipower_connection.h \
 	ipmipower.h \

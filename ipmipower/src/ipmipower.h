@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.103 2008-05-15 18:09:50 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.104 2008-05-15 20:22:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -248,38 +248,6 @@ typedef enum
   ((__s) >= LINK_GOOD && \
    (__s) <= LINK_BAD)
 
-/* Cipher_Suite Ids */
-typedef enum 
-  { 
-    CIPHER_SUITE_ID_INVALID               = 0x00,
-    CIPHER_SUITE_ID_0                     = 0x01,
-    CIPHER_SUITE_ID_1                     = 0x02,
-    CIPHER_SUITE_ID_2                     = 0x03,
-    CIPHER_SUITE_ID_3                     = 0x04,
-    /* xRC4 CIPHER_SUITE_ID_4                     = 0x05, */
-    /* xRC4 CIPHER_SUITE_ID_5                     = 0x06, */
-    CIPHER_SUITE_ID_6                     = 0x07,
-    CIPHER_SUITE_ID_7                     = 0x08,
-    CIPHER_SUITE_ID_8                     = 0x09,
-    /* xRC4 CIPHER_SUITE_ID_9                     = 0x0A, */
-    /* xRC4 CIPHER_SUITE_ID_10                    = 0x0B, */
-    CIPHER_SUITE_ID_11                    = 0x0C,
-    CIPHER_SUITE_ID_12                    = 0x0D,
-    /* xRC4 CIPHER_SUITE_ID_13                    = 0x0E, */
-    /* xRC4 CIPHER_SUITE_ID_14                    = 0x0F, */
-  } cipher_suite_id_t;
-
-#define CIPHER_SUITE_ID_VALID(__c) \
-  ((__c) == CIPHER_SUITE_ID_0 \
-    || (__c) == CIPHER_SUITE_ID_1 \
-    || (__c) == CIPHER_SUITE_ID_2 \
-    || (__c) == CIPHER_SUITE_ID_3 \
-    || (__c) == CIPHER_SUITE_ID_6 \
-    || (__c) == CIPHER_SUITE_ID_7 \
-    || (__c) == CIPHER_SUITE_ID_8 \
-    || (__c) == CIPHER_SUITE_ID_11 \
-    || (__c) == CIPHER_SUITE_ID_12)
-
 /* Msg Types */
 typedef enum 
   { 
@@ -352,7 +320,6 @@ struct ipmipower_powercmd {
   uint8_t authentication_type;
 
   /* IPMI 2.0 specific */
-  uint8_t cipher_suite_id;
   uint8_t requested_maximum_privilege_level;
   uint8_t authentication_algorithm;
   uint8_t integrity_algorithm;
@@ -466,7 +433,7 @@ struct ipmipower_config
   int                      session_timeout_len;
   int                      retransmission_timeout_len;
   uint8_t                  authentication_type;
-  cipher_suite_id_t        cipher_suite_id;
+  int                      cipher_suite_id;
   uint8_t                  privilege_level;
   uint32_t                 workaround_flags;
   int                      debug;

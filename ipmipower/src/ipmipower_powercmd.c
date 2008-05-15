@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.142 2008-05-15 18:09:55 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.143 2008-05-15 20:22:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -47,7 +47,6 @@
 #endif /* !TIME_WITH_SYS_TIME */
 
 #include "ipmipower.h"
-#include "ipmipower_cipher_suite_id.h"
 #include "ipmipower_output.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_packet.h"
@@ -215,14 +214,13 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   if (conf->driver_type == IPMI_DEVICE_LAN_2_0)
     {
-      ip->cipher_suite_id = ipmipower_ipmi_cipher_suite_id(conf->cipher_suite_id);
-      if (ipmi_cipher_suite_id_to_algorithms(ip->cipher_suite_id,
+      if (ipmi_cipher_suite_id_to_algorithms(conf->cipher_suite_id,
                                              &(ip->authentication_algorithm),
                                              &(ip->integrity_algorithm),
                                              &(ip->confidentiality_algorithm)) < 0)
         ierr_exit("ipmipower_powercmd_queue: ipmi_cipher_suite_id_to_algorithms: ",
-                  "conf->cipher_suite_id: %d; cipher_suite_id: %d; %s",
-                  conf->cipher_suite_id, ip->cipher_suite_id, strerror(errno));
+                  "conf->cipher_suite_id: %d: %s",
+                  conf->cipher_suite_id, strerror(errno));
 
       /* 
        * IPMI Workaround (achu)

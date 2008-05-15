@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.97 2008-05-15 18:09:53 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.98 2008-05-15 20:22:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -46,7 +46,6 @@
 #include <argp.h>
 
 #include "ipmipower_config.h"
-#include "ipmipower_cipher_suite_id.h"
 #include "ipmipower_output.h"
 #include "ipmipower_util.h"
 #include "ipmipower_workarounds.h"
@@ -229,7 +228,7 @@ ipmipower_config_setup(void)
   conf->session_timeout_len = 20000;     /* 20 seconds */
   conf->retransmission_timeout_len = 400; /* .4 seconds  */
   conf->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
-  conf->cipher_suite_id = CIPHER_SUITE_ID_3;
+  conf->cipher_suite_id = 3;
   conf->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
   conf->workaround_flags = 0;
   conf->debug = 0;
@@ -306,7 +305,7 @@ _config_common_checks(char *str)
           || conf->retransmission_timeout_len > IPMIPOWER_RETRANSMISSION_TIMEOUT_MAX))
     ierr_exit("%s: retransmission timeout out of range", str);
 
-  if (conf->cipher_suite_id == CIPHER_SUITE_ID_INVALID)
+  if (!IPMI_CIPHER_SUITE_ID_SUPPORTED(conf->cipher_suite_id))
     ierr_exit("%s: invalid cipher suite id", str);
 
   if (conf->retransmission_wait_timeout_len != 0 
@@ -453,7 +452,9 @@ cmdline_parse (int key,
       conf->authentication_type_set_on_cmdline++;
       break;
     case ARGP_CIPHER_SUITE_ID_KEY:       /* --cipher-suite-id */
-      conf->cipher_suite_id = ipmipower_cipher_suite_id_index(arg);
+      conf->cipher_suite_id = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg)))
+        ierr_exit("Command Line Error: invalid cipher suite id");
       conf->cipher_suite_id_set_on_cmdline++;
       break;
       /* ARGP_PRIVILEGE_KEY for backwards compatability */
@@ -734,19 +735,6 @@ _cb_authentication_type(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
-_cb_cipher_suite_id(conffile_t cf, struct conffile_data *data,
-                    char *optionname, int option_type, void *option_ptr, 
-                    int option_data, void *app_ptr, int app_data) 
-{
-  if (conf->cipher_suite_id_set_on_cmdline)
-    return 0;
-
-  /* Incorrect cipher_suite_ids checked in _config_common_checks */
-  conf->cipher_suite_id = ipmipower_cipher_suite_id_index(data->string);
-  return 0;
-}
-
-static int 
 _cb_privilege_level(conffile_t cf, struct conffile_data *data,
                     char *optionname, int option_type, void *option_ptr, 
                     int option_data, void *app_ptr, int app_data) 
@@ -882,9 +870,9 @@ ipmipower_config_conffile_parse(char *configfile)
       {"authentication-type", CONFFILE_OPTION_STRING, -1, _cb_authentication_type, 
        1, 0, &authentication_type_flag, NULL, 0},
       /* cipher suite id w/ underscores maintained for backwards compatability */
-      {"cipher_suite_id", CONFFILE_OPTION_STRING, -1, _cb_cipher_suite_id,
+      {"cipher_suite_id", CONFFILE_OPTION_STRING, -1, _cb_int,
        1, 0, &cipher_suite_id_backwards_flag, NULL, 0},
-      {"cipher-suite-id", CONFFILE_OPTION_STRING, -1, _cb_cipher_suite_id,
+      {"cipher-suite-id", CONFFILE_OPTION_STRING, -1, _cb_int,
        1, 0, &cipher_suite_id_flag, NULL, 0},
       /* "privilege" maintained for backwards compatability */
       {"privilege", CONFFILE_OPTION_STRING, -1, _cb_privilege_level, 
