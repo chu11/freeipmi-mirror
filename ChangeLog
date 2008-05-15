@@ -2,6 +2,14 @@
 
 	* common/src/tool-cmdline-common.c (parse_workaround_flags): Fix
 	parsing bug.
+
+	* libfreeipmi/src/api/ipmi-lan-session-common.c,
+	libfreeipmi/src/api/ipmi-api.c,
+	libfreeipmi/include/freeipmi/api/ipmi-api.h,
+	ipmipower/src/,
+	common/src/tool-common.c,
+	common/doc/manpage-common-troubleshooting.man: Add new "connection
+	timeout" error message.
 	
 2008-05-15  Albert Chu <chu11@llnl.gov>
 

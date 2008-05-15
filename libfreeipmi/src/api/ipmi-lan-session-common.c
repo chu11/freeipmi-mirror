@@ -827,7 +827,12 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             0,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
-    goto cleanup;
+    {
+      /* at this point in the protocol, we set a connection timeout */
+      if (ctx->errnum == IPMI_ERR_SESSION_TIMEOUT)
+        API_ERR_SET_ERRNUM (IPMI_ERR_CONNECTION_TIMEOUT);
+      goto cleanup;
+    }
 
   /* IPMI Workaround (achu)
    *
@@ -1888,7 +1893,12 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                             0,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
-    goto cleanup;
+    {
+      /* at this point in the protocol, we set a connection timeout */
+      if (ctx->errnum == IPMI_ERR_SESSION_TIMEOUT)
+        API_ERR_SET_ERRNUM (IPMI_ERR_CONNECTION_TIMEOUT);
+      goto cleanup;
+    }
 
   API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs,
                             "authentication_status.anonymous_login",

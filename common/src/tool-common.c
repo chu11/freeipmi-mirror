@@ -114,7 +114,8 @@ ipmi_open(const char *progname,
                   || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE
                   || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
                   || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID
-                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_IPMI_2_0_UNAVAILABLE)
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_IPMI_2_0_UNAVAILABLE
+                  || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT)
                 {
                   snprintf(errmsg,
                            errmsglen,

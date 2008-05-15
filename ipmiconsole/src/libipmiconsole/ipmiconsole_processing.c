@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.69 2008-05-14 14:57:18 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.70 2008-05-15 21:48:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -3434,8 +3434,16 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 
   if (ret)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("closing session due to session timeout"));
-      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SESSION_TIMEOUT);
+      if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT)
+        {
+          IPMICONSOLE_CTX_DEBUG(c, ("closing connection due to connection timeout"));
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_CONNECTION_TIMEOUT);
+        }
+      else
+        {
+          IPMICONSOLE_CTX_DEBUG(c, ("closing session due to session timeout"));
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SESSION_TIMEOUT);
+        }
       goto close_session;
     }
 

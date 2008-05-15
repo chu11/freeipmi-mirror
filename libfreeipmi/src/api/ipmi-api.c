@@ -99,27 +99,28 @@ static char *ipmi_errmsg[] =
     "cipher suite id unavailable",                                    /* 10 */
     "password verification timeout",                                  /* 11 */
     "ipmi 2.0 unavailable",                                           /* 12 */
-    "session timeout",		                                      /* 13 */
-    "device already open",                                            /* 14 */
-    "device not open",		                                      /* 15 */
-    "device not supported",	                                      /* 16 */
-    "device not found",                                               /* 17 */
-    "driver timeout",                                                 /* 18 */
-    "bad completion code: node busy/out of resources",                /* 19 */
-    "bad completion code: command invalid/not supported",             /* 20 */
-    "bad completion code: request data/parameter invalid", 	      /* 21 */
-    "bad completion code",	                                      /* 22 */
-    "bad rmcpplus status code",                                       /* 23 */
-    "BMC busy",			                                      /* 24 */
-    "out of memory",		                                      /* 25 */
-    "invalid hostname",                                               /* 26 */
-    "invalid parameters",	                                      /* 27 */
-    "driver path required",                                           /* 28 */
-    "internal IPMI error",	                                      /* 29 */
-    "internal system error",	                                      /* 30 */
-    "internal library error",	                                      /* 31 */
-    "internal error",		                                      /* 32 */
-    "errnum out of range",	                                      /* 33 */
+    "connection timeout",                                             /* 13 */
+    "session timeout",		                                      /* 14 */
+    "device already open",                                            /* 15 */
+    "device not open",		                                      /* 16 */
+    "device not supported",	                                      /* 17 */
+    "device not found",                                               /* 18 */
+    "driver timeout",                                                 /* 19 */
+    "bad completion code: node busy/out of resources",                /* 20 */
+    "bad completion code: command invalid/not supported",             /* 21 */
+    "bad completion code: request data/parameter invalid", 	      /* 22 */
+    "bad completion code",	                                      /* 23 */
+    "bad rmcpplus status code",                                       /* 24 */
+    "BMC busy",			                                      /* 25 */
+    "out of memory",		                                      /* 26 */
+    "invalid hostname",                                               /* 27 */
+    "invalid parameters",	                                      /* 28 */
+    "driver path required",                                           /* 29 */
+    "internal IPMI error",	                                      /* 30 */
+    "internal system error",	                                      /* 31 */
+    "internal library error",	                                      /* 32 */
+    "internal error",		                                      /* 33 */
+    "errnum out of range",	                                      /* 34 */
   };
 
 static void

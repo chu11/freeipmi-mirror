@@ -56,6 +56,11 @@ BMC.
 "ipmi 2.0 unavailable" - IPMI 2.0 was not discovered on the remote
 machine.  Please try to use IPMI 1.5 instead.
 .LP
+"connection timeout" - Initial IPMI communication failed.  A number of
+potential errors are possible, including an invalid hostname
+specified, an IPMI IP address cannot be resolved, IPMI is not enabled
+on the remote server, etc.  Please verify configuration.
+.LP
 "session timeout" - The IPMI session has timed out.  Please reconnect.
 .LP
 If IPMI over LAN continually times out, you may wish to increase the

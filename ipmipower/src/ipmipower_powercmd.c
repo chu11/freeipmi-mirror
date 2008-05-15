@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.144 2008-05-15 20:47:59 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.145 2008-05-15 21:48:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -748,8 +748,11 @@ _has_timed_out(ipmipower_powercmd_t ip)
          control operation */
       if (ip->protocol_state != PROTOCOL_STATE_CLOSE_SESSION_SENT)
         {
-          /* Special cases: these are probably due to bad passwords */
-          if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT)
+          /* Special cases */
+          if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT
+              || ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
+            ipmipower_output(MSG_TYPE_CONNECTION_TIMEOUT, ip->ic->hostname);
+          else if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT)
             ipmipower_output(MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT, ip->ic->hostname);
           else
             ipmipower_output(MSG_TYPE_SESSION_TIMEOUT, ip->ic->hostname);
@@ -1332,7 +1335,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
   /* if timeout, give up */
   if (_has_timed_out(ip))
     return -1;
-    
+  
   /* retransmit? */ 
   if ((rv = _retry_packets(ip)) != 0) 
     { 

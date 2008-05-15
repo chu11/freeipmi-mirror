@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.82 2008-04-18 01:30:08 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.83 2008-05-15 21:48:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -97,14 +97,15 @@ static char *ipmiconsole_errmsgs[] =
     "BMC Busy",			                        /* 21 */
     "BMC Error",		                        /* 22 */
     "BMC Implementation",                               /* 23 */
-    "session timeout",		                        /* 24 */
-    "excess retransmissions sent",                      /* 25 */
-    "excess errors received",                           /* 26 */
-    "out of memory",		                        /* 27 */
-    "too many open files",                              /* 28 */
-    "internal system error",	                        /* 20 */
-    "internal error",		                        /* 30 */
-    "errnum out of range",	                        /* 31 */
+    "connection timeout",		                /* 24 */
+    "session timeout",		                        /* 25 */
+    "excess retransmissions sent",                      /* 26 */
+    "excess errors received",                           /* 27 */
+    "out of memory",		                        /* 28 */
+    "too many open files",                              /* 29 */
+    "internal system error",	                        /* 30 */
+    "internal error",		                        /* 31 */
+    "errnum out of range",	                        /* 32 */
     NULL
   };
 

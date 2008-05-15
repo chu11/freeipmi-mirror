@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.32 2008-05-15 00:20:32 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.33 2008-05-15 21:48:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -59,6 +59,7 @@ static char *ipmipower_outputs[] =
     "authentication type unavailable for attempted privilege level",
     "cipher suite id unavailable",
     "password verification timeout",
+    "connection timeout",
     "session timeout",
     "not discovered",
     "bad connection",

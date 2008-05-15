@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.73 2008-03-28 00:14:39 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.74 2008-05-15 21:48:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -61,14 +61,15 @@ extern "C" {
 #define IPMICONSOLE_ERR_BMC_BUSY                             21
 #define IPMICONSOLE_ERR_BMC_ERROR                            22
 #define IPMICONSOLE_ERR_BMC_IMPLEMENTATION                   23
-#define IPMICONSOLE_ERR_SESSION_TIMEOUT                      24
-#define IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT          25
-#define IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED               26
-#define IPMICONSOLE_ERR_OUT_OF_MEMORY                        27
-#define IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES                  28
-#define IPMICONSOLE_ERR_SYSTEM_ERROR                         29
-#define IPMICONSOLE_ERR_INTERNAL_ERROR                       30
-#define IPMICONSOLE_ERR_ERRNUMRANGE                          31
+#define IPMICONSOLE_ERR_CONNECTION_TIMEOUT                   24
+#define IPMICONSOLE_ERR_SESSION_TIMEOUT                      25
+#define IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT          26
+#define IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED               27
+#define IPMICONSOLE_ERR_OUT_OF_MEMORY                        28
+#define IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES                  29
+#define IPMICONSOLE_ERR_SYSTEM_ERROR                         30
+#define IPMICONSOLE_ERR_INTERNAL_ERROR                       31
+#define IPMICONSOLE_ERR_ERRNUMRANGE                          32
 
 /* 
  * Debug Flags

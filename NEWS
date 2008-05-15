@@ -10,6 +10,8 @@ o Support --get-time and --set-time in ipmi-sel.
 For Users - Bug Fixes/Minor Enhancements
 ----------------------------------------
 o Output FRU device names along with IDs in ipmi-fru.
+o Reduce excessive newline outputs in ipmi-fru.
+o Add additional "connection timeout" error message to tools.
 o Change default privilege from user to operator in ipmi-sel.
 o Alter ipmi-chassis output to print "unknown" when field is not known.
 o Alter some ipmi-chassis output to be more consistent to IPMI spec.
