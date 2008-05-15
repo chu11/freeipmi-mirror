@@ -3,10 +3,10 @@
 o Fix ipmi-fru output corner cases.
 o Fix ipmi-chassis boot-device configuration bug.
 o Fix ipmiconsole config file parsing corner case.
-o Fix max password length corner case check.
-o Fix missing manpage option listings.
+o Fix ipmipower max password length corner case check.
 o Fix command line parsing error messages.
-o Fix error output message corner cases.
+o Remove excess error output messages.
+o Add missing manpage option listings.
 
 0.6.1 - 04/27/08
 ----------------
