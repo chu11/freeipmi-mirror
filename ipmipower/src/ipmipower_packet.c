@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.89 2008-05-15 20:47:57 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.90 2008-05-15 21:58:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -660,7 +660,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
   /* Calculate Authentication Type */
   if (pkt == ACTIVATE_SESSION_REQ)
-    authentication_type = ip->authentication_type;
+    authentication_type = conf->authentication_type;
   else if (conf->driver_type == IPMI_DEVICE_LAN
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
@@ -670,7 +670,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if (!ip->permsgauth_enabled)
         authentication_type = IPMI_AUTHENTICATION_TYPE_NONE; 
       else
-        authentication_type = ip->authentication_type;
+        authentication_type = conf->authentication_type;
       
       if (authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
         password = NULL;
@@ -769,7 +769,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     {
       /* Note: The session_authentication_type is none, this authentication type may be different.
        */
-      if (fill_cmd_get_session_challenge(ip->authentication_type, 
+      if (fill_cmd_get_session_challenge(conf->authentication_type, 
                                          username, 
                                          username_len,
                                          ip->obj_get_session_challenge_req) < 0)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.78 2008-05-15 20:47:52 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.79 2008-05-15 21:58:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -114,7 +114,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
           || pkt == GET_SESSION_CHALLENGE_RES)
 	authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
       else if (pkt == ACTIVATE_SESSION_RES)
-	authentication_type = ip->authentication_type;
+	authentication_type = conf->authentication_type;
       else /* pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
               || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
@@ -127,7 +127,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	      check_authcode_retry_flag++;
 	    }
 	  else
-	    authentication_type = ip->authentication_type;
+	    authentication_type = conf->authentication_type;
 	}
       
       if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
@@ -167,7 +167,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	  ierr_dbg("ipmipower_check_authentication_code(%s:%d): retry authcode check",
                    ip->ic->hostname, ip->protocol_state, strerror(errno));
 	  
-	  authentication_type = ip->authentication_type;
+	  authentication_type = conf->authentication_type;
 	  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
 	    {
 	      if (strlen(conf->password))

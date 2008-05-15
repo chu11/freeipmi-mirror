@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.145 2008-05-15 21:48:03 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.146 2008-05-15 21:58:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -203,10 +203,6 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
        * Capabilities Response and/or Activate Session Response is
        * received
        */
-      
-      /* ip->authentication_type is set after Get Authentication Capabilities
-       * Response
-       */      
     }
 #endif /* 0 */
 
@@ -989,16 +985,14 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
     }
 
   /* Can we authenticate with the specified authentication type? */
-  if ((conf->authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
-       && authentication_type_none)
-      || (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
-          && authentication_type_md2)
-      || (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
-          && authentication_type_md5)
-      || (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
-          && authentication_type_straight_password_key))
-    ip->authentication_type = conf->authentication_type;
-  else
+  if (!((conf->authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
+         && authentication_type_none)
+        || (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
+            && authentication_type_md2)
+        || (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
+            && authentication_type_md5)
+        || (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
+            && authentication_type_straight_password_key)))
     {
       ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
       return -1;
@@ -1194,7 +1188,7 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
 
   if (ip->permsgauth_enabled)
     {
-      if (authentication_type != ip->authentication_type)
+      if (authentication_type != conf->authentication_type)
         {
           ierr_dbg("_process_ipmi_packets(%s:%d): authentication_type mismatch",
                    ip->ic->hostname, ip->protocol_state);

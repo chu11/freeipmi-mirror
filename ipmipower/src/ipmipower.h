@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.106 2008-05-15 21:48:03 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.107 2008-05-15 21:58:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -307,7 +307,6 @@ struct ipmipower_powercmd {
 
   /* IPMI 1.5 specific */
   int permsgauth_enabled;
-  uint8_t authentication_type;
 
   /* IPMI 2.0 specific */
   uint8_t requested_maximum_privilege_level;
