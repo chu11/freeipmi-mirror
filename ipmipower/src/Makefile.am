@@ -2,7 +2,6 @@ sbin_PROGRAMS=ipmipower
 ipmipower_SOURCES= \
 	argv.c \
 	ierror.c \
-	ipmipower_authentication_type.c \
 	ipmipower_check.c \
 	ipmipower_cipher_suite_id.c \
 	ipmipower_config.c \
@@ -36,7 +35,6 @@ ipmipower_CPPFLAGS = \
 noinst_HEADERS= \
 	argv.h \
 	ierror.h \
-	ipmipower_authentication_type.h \
 	ipmipower_check.h \
 	ipmipower_cipher_suite_id.h \
 	ipmipower_config.h \

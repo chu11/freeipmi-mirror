@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_cipher_suite_id.c,v 1.9 2008-05-14 00:18:07 chu11 Exp $
+ *  $Id: ipmipower_cipher_suite_id.c,v 1.10 2008-05-15 00:20:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -103,7 +103,7 @@ ipmipower_cipher_suite_id_string(cipher_suite_id_t id)
       return "12";
       break;
     default:
-      ierr_exit("ipmipower_cipher_suite_id_string: Invalid cipher_suite_id: %d\n", id);
+      ierr_exit("ipmipower_cipher_suite_id_string: Invalid cipher_suite_id: %d", id);
     }
   
   return NULL;                  /* NOT_REACHED */
@@ -144,7 +144,7 @@ ipmipower_cipher_suite_id_description(cipher_suite_id_t id)
       return "Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = AES-CBC-128";
       break;
     default:
-      ierr_exit("ipmipower_cipher_suite_id_description: Invalid cipher_suite_id: %d\n", id);
+      ierr_exit("ipmipower_cipher_suite_id_description: Invalid cipher_suite_id: %d", id);
     }
   
   return NULL;                  /* NOT_REACHED */
@@ -191,7 +191,7 @@ ipmipower_ipmi_cipher_suite_id(cipher_suite_id_t id)
       return 12;
       break;
     default:
-      ierr_exit("ipmipower_ipmi_cipher_suite_id: Invalid cipher_suite_id: %d\n", id);
+      ierr_exit("ipmipower_ipmi_cipher_suite_id: Invalid cipher_suite_id: %d", id);
     }
   
   return 0;                  /* NOT_REACHED */

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.46 2008-05-14 00:01:43 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.47 2008-05-15 00:20:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -439,7 +439,7 @@ _eliminate_nodes(void)
           if (ipmidetect_errnum(id) == IPMIDETECT_ERR_CONNECT
               || ipmidetect_errnum(id) == IPMIDETECT_ERR_CONNECT_TIMEOUT)
             ierr_exit("Error connecting to ipmidetect daemon");
-          ierr_exit("ipmidetect_load_data: %s\n", ipmidetect_errormsg(id));
+          ierr_exit("ipmidetect_load_data: %s", ipmidetect_errormsg(id));
         }
       
       if (!(itr = hostlist_iterator_create(conf->hosts)))
@@ -452,8 +452,8 @@ _eliminate_nodes(void)
           if ((ret = ipmidetect_is_node_detected(id, host)) < 0)
             {
               if (ipmidetect_errnum(id) == IPMIDETECT_ERR_NOTFOUND)
-                ierr_exit("Node '%s' unrecognized by ipmidetect\n", host);
-              ierr_exit("ipmidetect_is_node_detected: %s\n", ipmidetect_errormsg(id));
+                ierr_exit("Node '%s' unrecognized by ipmidetect", host);
+              ierr_exit("ipmidetect_is_node_detected: %s", ipmidetect_errormsg(id));
             }
           
           if (!ret)

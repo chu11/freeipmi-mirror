@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.70 2008-05-14 23:32:54 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.71 2008-05-15 00:20:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -47,7 +47,6 @@
 #include "ipmipower_config.h"
 #include "ipmipower_prompt.h"
 #include "ipmipower_ping.h"
-#include "ipmipower_authentication_type.h"
 #include "ipmipower_cipher_suite_id.h"
 #include "ipmipower_connection.h"
 #include "ipmipower_powercmd.h"
@@ -91,7 +90,9 @@ _cmd_driver_type(char **argv)
         }
     }
   else
-    cbuf_printf(ttyout, "driver_type must be specified: lan, lan_2_0\n");
+    cbuf_printf(ttyout, "driver_type must be specified: %s, %s\n",
+                IPMI_DEVICE_LAN_STR,
+                IPMI_DEVICE_LAN_2_0_STR);
 }
 
 static void 
@@ -184,9 +185,9 @@ _cmd_password(char **argv)
 {
   assert(argv != NULL);
 
-  if (argv[1] && conf->authentication_type == AUTHENTICATION_TYPE_NONE)
-    cbuf_printf(ttyout, "password cannot be set for authentication_type \"%s\"\n",
-                ipmipower_authentication_type_string(conf->authentication_type));
+  if (argv[1] && conf->authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
+    cbuf_printf(ttyout, "password cannot be set for authentication_type '%s'\n",
+                IPMI_AUTHENTICATION_TYPE_NONE_STR);
   else if (argv[1] == NULL 
            || (argv[1] 
                && ((conf->driver_type == IPMI_DEVICE_LAN_2_0
@@ -248,22 +249,22 @@ _cmd_authentication_type(char **argv)
 
   if (argv[1] != NULL) 
     {
-      authentication_type_t at = ipmipower_authentication_type_index(argv[1]);
-      if (at == AUTHENTICATION_TYPE_INVALID)
+      int tmp;
+
+      if ((tmp = parse_authentication_type(argv[1])) < 0)
         cbuf_printf(ttyout, "%s invalid authentication_type\n", argv[1]);
-      else if (at == AUTHENTICATION_TYPE_NONE && strlen(conf->password) > 0)
-        cbuf_printf(ttyout, 
-		    "password cannot be set for authentication type \"%s\"\n", 
-		    argv[1]);
-      else 
+      else
         {
-          conf->authentication_type = at;
+          conf->authentication_type = tmp;
           cbuf_printf(ttyout, "authentication type is now %s\n", argv[1]);
         }
     }
   else
-    cbuf_printf(ttyout, "authentication_type must be specified: %s\n",
-                ipmipower_authentication_type_list());
+    cbuf_printf(ttyout, "authentication_type must be specified: %s, %s, %s, %s\n",
+                IPMI_AUTHENTICATION_TYPE_NONE_STR,
+                IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR,
+                IPMI_AUTHENTICATION_TYPE_MD2_STR,
+                IPMI_AUTHENTICATION_TYPE_MD5_STR);
 }
 
 static void 
@@ -570,9 +571,15 @@ static void
 _cmd_config(void) 
 {
   char buf[IPMI_MAX_K_G_LENGTH*2+3];
+  char *str;
 
-  cbuf_printf(ttyout, "Driver_Type:                  %s\n",
-              (conf->driver_type == IPMI_DEVICE_LAN) ? "lan" : "lan_2_0");
+  str = "";
+  if (conf->driver_type == IPMI_DEVICE_LAN)
+    str = IPMI_DEVICE_LAN_STR;
+  else if (conf->driver_type == IPMI_DEVICE_LAN_2_0)
+    str = IPMI_DEVICE_LAN_2_0_STR;
+
+  cbuf_printf(ttyout, "Driver_Type:                  %s\n", str);
 
   if (conf->hosts != NULL) 
     {
@@ -657,8 +664,18 @@ _cmd_config(void)
   cbuf_printf(ttyout, "K_g:                          *****\n");
 #endif /* !NDEBUG */
 
-  cbuf_printf(ttyout, "Authentication_Type:          %s\n", 
-              ipmipower_authentication_type_string(conf->authentication_type));
+  str = "";
+  if (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
+    str = IPMI_AUTHENTICATION_TYPE_NONE_STR;
+  else if (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
+    str = IPMI_AUTHENTICATION_TYPE_MD2_STR;
+  else if (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
+    str = IPMI_AUTHENTICATION_TYPE_MD5_STR;
+  else if (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
+    str = IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR;
+
+  cbuf_printf(ttyout, "Authentication_Type:          %s\n", str);
+
   cbuf_printf(ttyout, "Privilege_Level:              %s\n", 
               ipmipower_privilege_level_string(conf->privilege_level));
   cbuf_printf(ttyout, "Cipher Suite Id:              %s\n",

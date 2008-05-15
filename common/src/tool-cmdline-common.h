@@ -370,6 +370,14 @@ struct hostrange_cmd_args
   int always_prefix;
 };
 
+
+#define IPMI_DEVICE_LAN_STR      "lan"
+#define IPMI_DEVICE_LAN_2_0_STR  "lan_2_0"
+#define IPMI_DEVICE_KCS_STR      "kcs"
+#define IPMI_DEVICE_SSIF_STR     "ssif"
+#define IPMI_DEVICE_OPENIPMI_STR "openipmi"
+
+
 #define IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR      "idzero"
 #define IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR "forcepermsg"
 #define IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR   "unexpectedauth"

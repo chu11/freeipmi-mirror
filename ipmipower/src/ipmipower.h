@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.101 2008-05-14 23:32:47 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.102 2008-05-15 00:20:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -248,20 +248,6 @@ typedef enum
   ((__s) >= LINK_GOOD && \
    (__s) <= LINK_BAD)
 
-/* Authentication Types */
-typedef enum 
-  { 
-    AUTHENTICATION_TYPE_INVALID               = 0x00,
-    AUTHENTICATION_TYPE_NONE                  = 0x02,
-    AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY = 0x03,
-    AUTHENTICATION_TYPE_MD2                   = 0x04,
-    AUTHENTICATION_TYPE_MD5                   = 0x05,
-  } authentication_type_t;
-
-#define AUTHENTICATION_TYPE_VALID(__a) \
-  ((__a) >= AUTHENTICATION_TYPE_NONE && \
-   (__a) <= AUTHENTICATION_TYPE_MD5)
-
 /* Privilege Level Types */
 typedef enum 
   {
@@ -493,7 +479,7 @@ struct ipmipower_config
   unsigned int             k_g_len;
   int                      session_timeout_len;
   int                      retransmission_timeout_len;
-  authentication_type_t    authentication_type;
+  int                      authentication_type;
   cipher_suite_id_t        cipher_suite_id;
   privilege_level_t        privilege_level;
   uint32_t                 workaround_flags;

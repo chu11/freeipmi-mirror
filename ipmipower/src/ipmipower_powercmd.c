@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.140 2008-05-14 23:32:54 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.141 2008-05-15 00:20:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -47,7 +47,6 @@
 #endif /* !TIME_WITH_SYS_TIME */
 
 #include "ipmipower.h"
-#include "ipmipower_authentication_type.h"
 #include "ipmipower_cipher_suite_id.h"
 #include "ipmipower_output.h"
 #include "ipmipower_powercmd.h"
@@ -922,7 +921,6 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
     authentication_status_anonymous_login, authentication_status_null_username, 
     authentication_status_non_null_username,
     authentication_status_per_message_authentication;
-  int authentication_type_try_higher_priv = 0;
   fiid_obj_t obj_authentication_capabilities_res;
 
   assert(pkt == AUTHENTICATION_CAPABILITIES_V20_RES
@@ -994,43 +992,19 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
     }
 
   /* Can we authenticate with the specified authentication type? */
-  if ((conf->authentication_type == AUTHENTICATION_TYPE_NONE
+  if ((conf->authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
        && authentication_type_none)
-      || (conf->authentication_type == AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY 
-          && authentication_type_straight_password_key)
-      || (conf->authentication_type == AUTHENTICATION_TYPE_MD2
+      || (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
           && authentication_type_md2)
-      || (conf->authentication_type == AUTHENTICATION_TYPE_MD5
-          && authentication_type_md5))
-    ip->authentication_type = ipmipower_ipmi_authentication_type(conf->authentication_type);
+      || (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
+          && authentication_type_md5)
+      || (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
+          && authentication_type_straight_password_key))
+    ip->authentication_type = conf->authentication_type;
   else
     {
-      if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
-        {
-          /* Time to give up */
-          ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
-          return -1;
-        }
-      else
-        authentication_type_try_higher_priv = 1;
-    }
-         
-  /* We can't authenticate with any mechanism for the current
-   * privilege level.  But we may able to authenticate at a higher
-   * one.  Lets up the privilege level and try again.
-   */
-  if (authentication_type_try_higher_priv)
-    {
-      /* Try a higher privilege level */
-      if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_USER)
-	ip->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
-      else if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR)
-	ip->privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
-      else
-	ierr_exit("_check_authentication_privileges: invalid privilege state: %d", 
-                  ip->privilege_level);
-
-      return 1;
+      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
+      return -1;
     }
 
   /* IPMI Workaround (achu)

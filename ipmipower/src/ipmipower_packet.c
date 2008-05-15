@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.86 2008-05-14 23:32:53 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.87 2008-05-15 00:20:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -38,7 +38,6 @@
 #include <stdint.h>
 
 #include "ipmipower_packet.h"
-#include "ipmipower_authentication_type.h"
 #include "ipmipower_wrappers.h"
 
 #include "debug-common.h"

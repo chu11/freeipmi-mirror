@@ -22,14 +22,17 @@ ipmipower
     X - priv level operator by default
     - use real priv, not enum junk
     - before power op, check privilege level
+    - remove privilege in ipmipower_powercmd_t??
   X - auto version
     X - remove ipmi-version in ipmipower_powercmd_t
     X - legacy ipmi-version command to driver type
   X - auto authentication
   X  - auth type md5
+    - remove authentication_type in ipmipower_powercmd_t??
     - use real auth types, not ipmipower auth types
   X- auto cipher suite
   X  - cipher suite 3 default
+    - remove cipher in ipmipower_powercmd_t??
     - use numbers, not stupid enums
   X - many version/highest_received_seq_num etc. move to init
   - to test

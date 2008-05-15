@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.95 2008-05-14 23:32:49 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.96 2008-05-15 00:20:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -46,7 +46,6 @@
 #include <argp.h>
 
 #include "ipmipower_config.h"
-#include "ipmipower_authentication_type.h"
 #include "ipmipower_cipher_suite_id.h"
 #include "ipmipower_output.h"
 #include "ipmipower_privilege_level.h"
@@ -209,7 +208,7 @@ ipmipower_config_default_logfile(char *buf, int buflen)
   pid = getpid();
   snprintf(buffer, MAXPATHLEN, IPMIPOWER_DEFAULT_LOGFILE, pid);
   if (strlen(buffer) > buflen - 1)
-    ierr_exit("ipmipower_config_default_logfile: internal buffer too small\n");
+    ierr_exit("ipmipower_config_default_logfile: internal buffer too small");
   strcpy(buf, buffer);
 }
 
@@ -230,7 +229,7 @@ ipmipower_config_setup(void)
   conf->k_g_len = 0;
   conf->session_timeout_len = 20000;     /* 20 seconds */
   conf->retransmission_timeout_len = 400; /* .4 seconds  */
-  conf->authentication_type = AUTHENTICATION_TYPE_MD5;
+  conf->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
   conf->cipher_suite_id = CIPHER_SUITE_ID_3;
   conf->privilege_level = PRIVILEGE_LEVEL_OPERATOR;
   conf->workaround_flags = 0;
@@ -308,9 +307,6 @@ _config_common_checks(char *str)
           || conf->retransmission_timeout_len > IPMIPOWER_RETRANSMISSION_TIMEOUT_MAX))
     ierr_exit("%s: retransmission timeout out of range", str);
 
-  if (conf->authentication_type == AUTHENTICATION_TYPE_INVALID) 
-    ierr_exit("%s: invalid authentication_type", str);
-
   if (conf->cipher_suite_id == CIPHER_SUITE_ID_INVALID)
     ierr_exit("%s: invalid cipher suite id", str);
 
@@ -370,15 +366,24 @@ cmdline_parse (int key,
     {
     /* IPMI_VERSION_KEY for backwards compatability */
     case IPMI_VERSION_KEY:	/* --ipmi-version */
+      if (!strcasecmp(arg, "1.5"))
+        tmp = IPMI_DEVICE_LAN;
+      else if (!strcasecmp(arg, "2.0"))
+        tmp = IPMI_DEVICE_LAN_2_0;
+      else
+        ierr_exit("Command Line Error: invalid driver type specified");
+      conf->driver_type = tmp;
+      conf->driver_type_set_on_cmdline++;
+      break;
     case ARGP_DRIVER_TYPE_KEY:      /* --driver-type */
       if ((tmp = parse_outofband_driver_type(arg)) < 0)
-        ierr_exit("invalid driver type specified\n");
+        ierr_exit("Command Line Error: invalid driver type specified");
       conf->driver_type = tmp;
       conf->driver_type_set_on_cmdline++;
       break;
     case ARGP_HOSTNAME_KEY:       /* --hostname */
       if ((conf->hosts = hostlist_create(arg)) == NULL)
-        ierr_exit("Error: Hostname(s) incorrectly formatted");
+        ierr_exit("Command Line Error: Hostname(s) incorrectly formatted");
       hostlist_uniq(conf->hosts);
       conf->hosts_count = hostlist_count(conf->hosts);
       conf->hosts_set_on_cmdline++;
@@ -436,17 +441,19 @@ cmdline_parse (int key,
     case SESSION_TIMEOUT_KEY:       /* --session-timeout */
       conf->session_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        ierr_exit("Command Line Error: session timeout length invalid\n");
+        ierr_exit("Command Line Error: session timeout length invalid");
       conf->session_timeout_len_set_on_cmdline++;
       break;
     case RETRANSMISSION_TIMEOUT_KEY:       /* --retransmission-timeout */
       conf->retransmission_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        ierr_exit("Command Line Error: retransmission timeout length invalid\n");
+        ierr_exit("Command Line Error: retransmission timeout length invalid");
       conf->retransmission_timeout_len_set_on_cmdline++;
       break;
     case ARGP_AUTHENTICATION_TYPE_KEY:       /* --authentication-type */
-      conf->authentication_type = ipmipower_authentication_type_index(arg);
+      if ((tmp = parse_authentication_type(arg)) < 0)
+        ierr_exit("Command Line Error: invalid authentication type specified");
+      conf->authentication_type = tmp;
       conf->authentication_type_set_on_cmdline++;
       break;
     case ARGP_CIPHER_SUITE_ID_KEY:       /* --cipher-suite-id */
@@ -498,7 +505,7 @@ cmdline_parse (int key,
     case ARGP_FANOUT_KEY:          /* --fanout */
       conf->fanout = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        ierr_exit("Command Line Error: fanout invalid\n");
+        ierr_exit("Command Line Error: fanout invalid");
       conf->fanout_set_on_cmdline++;
       break;
     case ARGP_ELIMINATE_KEY:       /* --eliminate */
@@ -547,7 +554,7 @@ cmdline_parse (int key,
     case RETRANSMISSION_WAIT_TIMEOUT_KEY:       /* --retransmission-wait-timeout */
       conf->retransmission_wait_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        ierr_exit("Command Line Error: retransmission wait timeout length invalid\n");
+        ierr_exit("Command Line Error: retransmission wait timeout length invalid");
       conf->retransmission_wait_timeout_len_set_on_cmdline++;
       break;
       /* RETRY_BACKOFF_COUNT for backwards compatability */
@@ -555,37 +562,37 @@ cmdline_parse (int key,
     case RETRANSMISSION_BACKOFF_COUNT_KEY:       /* --retransmission-backoff-count */
       conf->retransmission_backoff_count = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        ierr_exit("Command Line Error: retransmission backoff count invalid\n");
+        ierr_exit("Command Line Error: retransmission backoff count invalid");
       conf->retransmission_backoff_count_set_on_cmdline++;
       break;
     case PING_INTERVAL_KEY:       /* --ping-interval */
       conf->ping_interval_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        ierr_exit("Command Line Error: ping interval length invalid\n");
+        ierr_exit("Command Line Error: ping interval length invalid");
       conf->ping_interval_len_set_on_cmdline++;
       break;
     case PING_TIMEOUT_KEY:       /* --ping-timeout */
       conf->ping_timeout_len = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        ierr_exit("Command Line Error: ping timeout length invalid\n");
+        ierr_exit("Command Line Error: ping timeout length invalid");
       conf->ping_timeout_len_set_on_cmdline++;
       break;
     case PING_PACKET_COUNT_KEY:       /* --ping-packet-count */
       conf->ping_packet_count = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        ierr_exit("Command Line Error: ping packet count invalid\n");
+        ierr_exit("Command Line Error: ping packet count invalid");
       conf->ping_packet_count_set_on_cmdline++;
       break;
     case PING_PERCENT_KEY:       /* --ping-percent */
       conf->ping_percent = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        ierr_exit("Command Line Error: ping percent invalid\n");
+        ierr_exit("Command Line Error: ping percent invalid");
       conf->ping_percent_set_on_cmdline++;
       break;
     case PING_CONSEC_COUNT_KEY:       /* --ping-consec-count */
       conf->ping_consec_count = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
-        ierr_exit("Command Line Error: ping consec count invalid\n");
+        ierr_exit("Command Line Error: ping consec count invalid");
       conf->ping_consec_count_set_on_cmdline++;
       break;
     case '?':
@@ -627,7 +634,7 @@ _cb_driver_type(conffile_t cf, struct conffile_data *data,
     return 0;
 
   if ((tmp = parse_outofband_driver_type(data->string)) < 0)
-    ierr_exit("Config File Error: invalid driver type specified\n");
+    ierr_exit("Config File Error: invalid driver type specified");
 
   conf->driver_type = tmp;
   return 0;
@@ -716,11 +723,15 @@ _cb_authentication_type(conffile_t cf, struct conffile_data *data,
 			char *optionname, int option_type, void *option_ptr, 
 			int option_data, void *app_ptr, int app_data) 
 {
+  int tmp;
+
   if (conf->authentication_type_set_on_cmdline)
     return 0;
 
-  /* Incorrect authentication_type checked in _config_common_checks */
-  conf->authentication_type = ipmipower_authentication_type_index(data->string);
+  if ((tmp = parse_authentication_type(data->string)) < 0)
+    ierr_exit("Command Line Error: invalid authentication type specified");
+
+  conf->authentication_type = tmp;
   return 0;
 }
 
@@ -974,10 +985,10 @@ ipmipower_config_check_values(void)
   if (conf->retransmission_timeout_len > conf->session_timeout_len)
     ierr_exit("Error: Session timeout length must be longer than retransmission  timeout length");
   
-  if (conf->authentication_type == AUTHENTICATION_TYPE_NONE 
+  if (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
       && strlen(conf->password) > 0)
-    ierr_exit("Error: password cannot be set for authentication type \"%s\"",
-              ipmipower_authentication_type_string(conf->authentication_type));
+    ierr_exit("Error: password cannot be set for authentication type '%s'",
+              IPMI_AUTHENTICATION_TYPE_NONE_STR);
 
   if (conf->fanout
       && (conf->fanout < PSTDOUT_FANOUT_MIN

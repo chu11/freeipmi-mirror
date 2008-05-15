@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.31 2008-05-14 00:44:50 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.32 2008-05-15 00:20:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -78,7 +78,7 @@ ipmipower_output(msg_type_t num, char *hostname)
   if (conf->consolidate_output)
     {
       if (hostlist_push_host(output_hostrange[num], hostname) == 0)
-        ierr_exit("hostlist_push_host() error\n");
+        ierr_exit("hostlist_push_host() error");
     }
   else
     cbuf_printf(ttyout, "%s: %s\n", hostname, ipmipower_outputs[num]);

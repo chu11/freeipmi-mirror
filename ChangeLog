@@ -10,11 +10,18 @@
 
 	* tagged post_get_channel_cipher_remove
 
-	* ipmipower/src/: Remove need for internal driver_type_t type.
-	Adjust to use libfreeipmi device variables.
+	* ipmipower/src/: Remove need for internal driver_type_t and
+	authentication_type_t type.  Adjust to use libfreeipmi 
+	macros.
 	
 	* ipmipower/src/ipmipower_driver_type.h,
-	ipmipower/src/ipmipower_driver_type.c: Removed files.
+	ipmipower/src/ipmipower_driver_type.c,
+	ipmipower/src/ipmipower_authentication_type.h,
+	ipmipower/src/ipmipower_authentication_type.c: Removed files.
+
+	* ipmipower/src/: Continue general cleanup.
+
+	* common/src/tool-cmdline-common.h: Add IPMI_DEVICE strings.
 	
 2008-05-13  Albert Chu <chu11@llnl.gov>
 
