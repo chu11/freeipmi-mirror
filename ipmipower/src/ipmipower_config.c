@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.100 2008-05-15 22:42:50 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.101 2008-05-15 22:47:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -304,8 +304,12 @@ _config_common_checks(char *str)
           || conf->retransmission_timeout_len > IPMIPOWER_RETRANSMISSION_TIMEOUT_MAX))
     ierr_exit("%s: retransmission timeout out of range", str);
 
-  if (!IPMI_CIPHER_SUITE_ID_SUPPORTED(conf->cipher_suite_id))
+  if (conf->cipher_suite_id < IPMI_CIPHER_SUITE_ID_MIN
+      || conf->cipher_suite_id > IPMI_CIPHER_SUITE_ID_MAX)
     ierr_exit("%s: invalid cipher suite id", str);
+ 
+  if (!IPMI_CIPHER_SUITE_ID_SUPPORTED(conf->cipher_suite_id))
+    ierr_exit("%s: unsupported cipher suite id", str);
 
   if (conf->retransmission_wait_timeout_len != 0 
       && (conf->retransmission_wait_timeout_len < IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN 

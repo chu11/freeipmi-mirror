@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.74 2008-05-15 20:48:01 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.75 2008-05-15 22:47:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -276,8 +276,11 @@ _cmd_cipher_suite_id(char **argv)
 
       tmp = strtol(argv[1], &ptr, 10);
       if (ptr != (argv[1] + strlen(argv[1]))
-          || !IPMI_CIPHER_SUITE_ID_SUPPORTED(tmp))
+          || tmp < IPMI_CIPHER_SUITE_ID_MIN
+          || tmp > IPMI_CIPHER_SUITE_ID_MAX)
         cbuf_printf(ttyout, "%s invalid cipher suite id\n", argv[1]);
+      else if (!IPMI_CIPHER_SUITE_ID_SUPPORTED(tmp))
+        cbuf_printf(ttyout, "%s unsupported cipher suite id\n", argv[1]);
       else
         {
           conf->cipher_suite_id = tmp;
