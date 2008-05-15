@@ -21,7 +21,8 @@ event, sensor group, sensor name, and the sensor event occurrence.
 #include <@top_srcdir@/common/doc/manpage-common-outofband-session-timeout.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-retransmission-timeout.man>
 #include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
-#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
+#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-details.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-operator.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>

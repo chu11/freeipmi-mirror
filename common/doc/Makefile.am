@@ -12,7 +12,8 @@ EXTRA_DIST = \
 	manpage-common-outofband-session-timeout.man \
 	manpage-common-outofband-retransmission-timeout.man \
 	manpage-common-authentication-type.man \
-	manpage-common-cipher-suite-id.man \
+	manpage-common-cipher-suite-id-main.man \
+	manpage-common-cipher-suite-id-details.man \
 	manpage-common-privilege-level-user.man \
 	manpage-common-privilege-level-operator.man \
 	manpage-common-privilege-level-admin.man \

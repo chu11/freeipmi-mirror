@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.33 2008-05-15 22:24:00 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.34 2008-05-15 22:30:44 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -81,36 +81,7 @@ specified.  The user should be aware that only cipher suite ids 3, 8,
 and 12 encrypt console payloads.  Console information will be sent in
 the clear an alternate cipher suite id is selected.  The following
 cipher suite ids are currently supported:
-.sp
-0 - Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None
-.sp
-1 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = None; Confidentiality Algorithm = None
-.sp
-2 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None
-.sp
-3 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = AES-CBC-128
-.\" .sp
-.\" 4 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-128
-.\" .sp
-.\" 5 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-40
-.sp
-6 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = None; Confidentiality Algorithm = None
-.sp
-7 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = None
-.sp
-8 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = AES-CBC-128
-.\" .sp
-.\" 9 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-128
-.\" .sp
-.\" 10 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-40
-.sp
-11 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = None
-.sp
-12 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = AES-CBC-128
-.\" .sp
-.\" 13 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-128
-.\" .sp
-.\" 14 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-40
+#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-details.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-admin.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>

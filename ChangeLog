@@ -12,7 +12,15 @@
 
 	* ipmiconsole/src/ipmiconsole/: Support --session-timeout and
 	--retransmission-timeout options.
+
+	* common/doc/manpage-common-cipher-suite-id.man: Split into
+	manpage-common-cipher-suite-id-main.man and
+	manpage-common-cipher-suite-id-details.man.
 	
+	* Adjust all manpages appropriately for change.
+
+	* ipmiconsole/: Use common manpages as appropriate.
+
 2008-05-15  Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-cmdline-common.c (parse_workaround_flags): Fix
