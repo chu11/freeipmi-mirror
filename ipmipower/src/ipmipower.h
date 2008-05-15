@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.108 2008-05-15 22:58:10 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.109 2008-05-15 23:07:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -72,12 +72,6 @@
 
 #define IPMIPOWER_MINNODES                          1
 #define IPMIPOWER_MAXNODES                          1024
-
-#define IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN        50     /* .05 seconds */
-#define IPMIPOWER_RETRANSMISSION_TIMEOUT_MAX        120000
-
-#define IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN   50     /* .05 seconds */
-#define IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MAX   120000
 
 #define IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MIN  1
 #define IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MAX  200

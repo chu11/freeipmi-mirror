@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.76 2008-05-15 22:58:10 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.77 2008-05-15 23:07:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -981,8 +981,9 @@ ipmipower_prompt_process_cmdline(void)
                        || strcmp(argv[0], "retransmission-timeout") == 0)
                 _cmd_set_int_ranged(argv, 
                                     &conf->retransmission_timeout_len, 
-                                    "retransmission-timeout", 1,
-                                    IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN, 
+                                    "retransmission-timeout", 
+                                    0,
+                                    1, 
                                     conf->session_timeout_len);
               /* support underscored version for backwards compatability */
               else if (strcmp(argv[0], "authentication_type") == 0
@@ -1051,7 +1052,7 @@ ipmipower_prompt_process_cmdline(void)
                                     &conf->retransmission_wait_timeout_len, 
                                     "retransmission-wait-timeout", 
                                     1,
-                                    IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN, 
+                                    1, 
                                     conf->session_timeout_len);
               /* support "retry-backoff-count" for backwards compatability */
               else if (strcmp(argv[0], "retry-backoff-count") == 0

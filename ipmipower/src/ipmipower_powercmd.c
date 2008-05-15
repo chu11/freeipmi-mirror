@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.146 2008-05-15 21:58:23 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.147 2008-05-15 23:07:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -772,13 +772,7 @@ _retry_packets(ipmipower_powercmd_t ip)
   unsigned int retransmission_timeout_len;
 
   /* Don't retransmit if any of the following are true */
-  if (ip->protocol_state == PROTOCOL_STATE_START /* we haven't started yet */
-      || conf->retransmission_timeout_len == 0             /* no retransmissions */
-      || (((conf->wait_until_on
-            && ip->cmd == POWER_CMD_POWER_ON)
-           || (conf->wait_until_off
-               && ip->cmd == POWER_CMD_POWER_OFF))
-	  && conf->retransmission_wait_timeout_len == 0))
+  if (ip->protocol_state == PROTOCOL_STATE_START) /* we haven't started yet */
     return 0;
 
   /* Did we timeout on this packet? */
@@ -1627,14 +1621,14 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
   timeval_millisecond_calc(&result, &timeout);
 
   /* shorter timeout b/c of retransmission timeout */
-  if (conf->wait_until_off
-      && conf->retransmission_wait_timeout_len)
+  if ((conf->wait_until_on && ip->cmd == POWER_CMD_POWER_ON)
+      || (conf->wait_until_off && ip->cmd == POWER_CMD_POWER_OFF))
     {
-      int retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_wait_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_wait_timeout_len;
-      if (timeout > retransmission_timeout_len)
-        timeout = retransmission_timeout_len;
+      int retransmission_wait_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_wait_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_wait_timeout_len;
+      if (timeout > retransmission_wait_timeout_len)
+        timeout = retransmission_wait_timeout_len;
     }
-  else if (conf->retransmission_timeout_len) 
+  else
     {
       int retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_timeout_len;
       if (timeout > retransmission_timeout_len)

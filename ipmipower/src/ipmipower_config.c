@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.102 2008-05-15 22:58:10 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.103 2008-05-15 23:07:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -295,11 +295,6 @@ _config_common_checks(char *str)
           || conf->hosts_count > IPMIPOWER_MAXNODES))
     ierr_exit("%s: invalid number of hostnames", str);
     
-  if (conf->retransmission_timeout_len != 0 
-      && (conf->retransmission_timeout_len < IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN 
-          || conf->retransmission_timeout_len > IPMIPOWER_RETRANSMISSION_TIMEOUT_MAX))
-    ierr_exit("%s: retransmission timeout out of range", str);
-
   if (conf->cipher_suite_id < IPMI_CIPHER_SUITE_ID_MIN
       || conf->cipher_suite_id > IPMI_CIPHER_SUITE_ID_MAX)
     ierr_exit("%s: invalid cipher suite id", str);
@@ -307,11 +302,6 @@ _config_common_checks(char *str)
   if (!IPMI_CIPHER_SUITE_ID_SUPPORTED(conf->cipher_suite_id))
     ierr_exit("%s: unsupported cipher suite id", str);
 
-  if (conf->retransmission_wait_timeout_len != 0 
-      && (conf->retransmission_wait_timeout_len < IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN 
-          || conf->retransmission_wait_timeout_len > IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MAX))
-    ierr_exit("%s: retransmission wait timeout out of range", str);
-  
   if (conf->retransmission_backoff_count != 0 
       && (conf->retransmission_backoff_count < IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MIN 
           || conf->retransmission_backoff_count > IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MAX))
@@ -440,7 +430,8 @@ cmdline_parse (int key,
       break;
     case RETRANSMISSION_TIMEOUT_KEY:       /* --retransmission-timeout */
       conf->retransmission_timeout_len = strtol(arg, &ptr, 10);
-      if (ptr != (arg + strlen(arg)))
+      if (ptr != (arg + strlen(arg))
+          || conf->retransmission_timeout_len <= 0)
         ierr_exit("Command Line Error: retransmission timeout length invalid");
       conf->retransmission_timeout_len_set_on_cmdline++;
       break;
@@ -551,7 +542,8 @@ cmdline_parse (int key,
     case RETRY_WAIT_TIMEOUT_KEY:
     case RETRANSMISSION_WAIT_TIMEOUT_KEY:       /* --retransmission-wait-timeout */
       conf->retransmission_wait_timeout_len = strtol(arg, &ptr, 10);
-      if (ptr != (arg + strlen(arg)))
+      if (ptr != (arg + strlen(arg))
+          || conf->retransmission_wait_timeout_len <= 0)
         ierr_exit("Command Line Error: retransmission wait timeout length invalid");
       conf->retransmission_wait_timeout_len_set_on_cmdline++;
       break;
@@ -878,10 +870,10 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &session_timeout_flag, &(conf->session_timeout_len), 
        conf->session_timeout_len_set_on_cmdline},
       /* retry-timeout for backwards comptability */
-      {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int_non_zero, 
        1, 0, &retry_timeout_flag, &(conf->retransmission_timeout_len), 
        conf->retransmission_timeout_len_set_on_cmdline},
-      {"retransmission-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"retransmission-timeout", CONFFILE_OPTION_INT, -1, _cb_int_non_zero, 
        1, 0, &retransmission_timeout_flag, &(conf->retransmission_timeout_len), 
        conf->retransmission_timeout_len_set_on_cmdline},
       {"authentication-type", CONFFILE_OPTION_STRING, -1, _cb_authentication_type, 
@@ -919,10 +911,10 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &wait_until_off_flag, &(conf->wait_until_off), 
        conf->wait_until_off_set_on_cmdline},
       /* retry-wait-timeout for backwards comptability */
-      {"retry-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"retry-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_int_non_zero, 
        1, 0, &retry_wait_timeout_flag, &(conf->retransmission_wait_timeout_len), 
        conf->retransmission_wait_timeout_len_set_on_cmdline},
-      {"retransmission-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"retransmission-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_int_non_zero, 
        1, 0, &retransmission_wait_timeout_flag, &(conf->retransmission_wait_timeout_len), 
        conf->retransmission_wait_timeout_len_set_on_cmdline},
       /* retry-backoff-count for backwards compatability */
@@ -986,7 +978,10 @@ ipmipower_config_check_values(void)
     ierr_exit("Error: password too long");
 
   if (conf->retransmission_timeout_len > conf->session_timeout_len)
-    ierr_exit("Error: Session timeout length must be longer than retransmission  timeout length");
+    ierr_exit("Error: Session timeout length must be longer than retransmission timeout length");
+
+  if (conf->retransmission_wait_timeout_len > conf->session_timeout_len)
+    ierr_exit("Error: Session timeout length must be longer than retransmission wait timeout length");
   
   if (conf->fanout
       && (conf->fanout < PSTDOUT_FANOUT_MIN
