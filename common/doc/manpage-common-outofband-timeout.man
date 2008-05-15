@@ -1,8 +1,8 @@
 .TP
 \fB\-\-session-timeout\fR=\fIMILLISECONDS\fR
-Specify the packet retransmission timeout in milliseconds.  Defaults
-to 20000 milliseconds (20 seconds) if not specified.
+Specify the session timeout in milliseconds.  Defaults to 20000
+milliseconds (20 seconds) if not specified.
 .TP
 \fB\-\-retransmission-timeout\fR=\fIMILLISECONDS\fR
-Specify the session timeout in milliseconds.  Defaults to 1000
-milliseconds (1 second) if not specified.
+Specify the packet retransmission timeout in milliseconds.  Defaults
+to 1000 milliseconds (1 second) if not specified.
