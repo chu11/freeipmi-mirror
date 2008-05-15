@@ -8,6 +8,8 @@
 	* ipmipower/src/: Remove need for itnernal privilege_level_t type
 	and macros.
 	
+	* ipmipower/: Continue cleanup/fixes.
+
 2008-05-15  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-workaround-text.man: Add information
