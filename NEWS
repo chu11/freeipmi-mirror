@@ -1,3 +1,7 @@
+0.6.3 - 00/00/00
+----------------
+o Fix workarounds parsing bug.
+
 0.6.2 - 05/15/08
 ----------------
 o Fix ipmi-fru output corner cases.
