@@ -12,7 +12,6 @@ ipmipower_SOURCES= \
 	ipmipower_powercmd.c \
 	ipmipower_prompt.c \
 	ipmipower_util.c \
-	ipmipower_workarounds.c \
 	ipmipower_wrappers.c \
 	wrappers.c
  
@@ -43,7 +42,6 @@ noinst_HEADERS= \
 	ipmipower_powercmd.h \
 	ipmipower_prompt.h \
 	ipmipower_util.h \
-	ipmipower_workarounds.h \
 	ipmipower_wrappers.h \
 	wrappers.h
  

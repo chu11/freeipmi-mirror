@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.77 2008-05-15 18:09:52 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.78 2008-05-15 20:47:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -160,7 +160,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
        * here is our second session-authcode check attempt under these
        * circumstances.
        */
-      if ((conf->workaround_flags & WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE)
+      if ((conf->workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
 	  && !rv
 	  && check_authcode_retry_flag)
 	{
@@ -290,7 +290,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
    * The session sequence numbers for IPMI 1.5 are the wrong endian.
    * So we have to flip the bits to workaround it.
    */
-  if (conf->workaround_flags & WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER)
+  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
     {
       uint32_t tmp_seq_num = seq_num;
 
@@ -500,7 +500,7 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
    * session id is correct if it is equal to zero.
    */
 
-  if ((conf->workaround_flags & WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO)
+  if ((conf->workaround_flags & IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
       && !session_id)
     return (1);
 
@@ -750,7 +750,7 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
    * The Intel's don't work with IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL.
    * So check that we get back what we sent.
    */
-  if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
+  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     rv = (val == ip->requested_maximum_privilege_level) ? 1 : 0;
   else
     {
@@ -810,7 +810,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
    * Table 13-11 in the IPMI 2.0 spec.
    */
 
-  if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
+  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (strlen(conf->username))
@@ -827,7 +827,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
       username_len = (username) ? strlen(username) : 0;
     }
   
-  if (conf->workaround_flags & WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION)
+  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     {
       uint8_t keybuf[IPMI_PACKET_BUFLEN];
       int32_t keybuf_len;
@@ -881,7 +881,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
    * password to 16 bytes when generating keys, hashes, etc.  So we
    * have to do the same when generating keys, hashes, etc.
    */
-  if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION 
+  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION 
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
@@ -910,7 +910,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
    * Notes: Cipher suite 1,2,3 are the ones that use HMAC-SHA1 and
    * have the problem.
    */
-  if (conf->workaround_flags & WORKAROUND_FLAG_SUN_2_0_SESSION
+  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION
       && (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1))
     {
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
@@ -986,7 +986,7 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
    * one.  Would have taken me awhile to figure this one out :-)
    */
 
-  if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
+  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     {
       if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;

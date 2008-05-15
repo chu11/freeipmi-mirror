@@ -4,11 +4,13 @@
 
 	* ipmipower/src/ipmipower_privilege_level.h,
 	ipmipower/src/ipmipower_privilege_level.c,
+	ipmipower/src/ipmipower_workarounds.h,
+	ipmipower/src/ipmipower_workarounds.c,
 	ipmipower/src/ipmipower_cipher_suite_id.h,
 	ipmipower/src/ipmipower_cipher_suite_id.c: Removed files.
 
-	* ipmipower/src/: Remove need for internal privilege_level_t and
-	cipher_suite_id_t type and macros.
+	* ipmipower/src/: Remove need for internal privilege_level_t,
+	workaround flags, and cipher_suite_id_t type and macros.
 	
 	* ipmipower/: Continue cleanup/fixes.
 

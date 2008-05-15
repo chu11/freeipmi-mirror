@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.143 2008-05-15 20:22:55 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.144 2008-05-15 20:47:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -259,7 +259,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
        * of an actual privilege, so have to pass the actual privilege
        * we want to use.
        */
-      if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
+      if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
 	ip->requested_maximum_privilege_level = conf->privilege_level;
       else
 	ip->requested_maximum_privilege_level = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
@@ -966,7 +966,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
    * vs. null vs non-null username capabilities. The workaround is to
    * skip these checks.
    */
-  if (!(conf->workaround_flags & WORKAROUND_FLAG_AUTHENTICATION_CAPABILITIES))
+  if (!(conf->workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
       /* Does the remote BMC's authentication configuration support
        * our username/password combination 
@@ -1008,7 +1008,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
    * The remote BMC ignores if permsg authentiction is enabled
    * or disabled.  So we need to force it no matter what.
    */
-  if (!(conf->workaround_flags & WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION))
+  if (!(conf->workaround_flags & IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION))
     {
       if (!authentication_status_per_message_authentication)
 	ip->permsgauth_enabled = 1;
@@ -1067,7 +1067,7 @@ _check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
    *
    * K_g status is reported incorrectly too.  Again, skip the checks.
    */
-  if (!(conf->workaround_flags & WORKAROUND_FLAG_AUTHENTICATION_CAPABILITIES))
+  if (!(conf->workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
       /* Does the remote BMC's authentication configuration support
        * our username/password combination 
@@ -1166,7 +1166,7 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
                "authentication_type",
                &authentication_type);
   
-  if (conf->workaround_flags & WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION)
+  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
     return 0;
 
   /* IPMI Workaround (achu)
@@ -1237,7 +1237,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
    * allowed.  "No Null characters (00h) are allowed in the name".
    * Table 13-11 in the IPMI 2.0 spec.
    */
-  if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
+  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (strlen(conf->username))
@@ -1271,7 +1271,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
    * password to 16 bytes when generating keys, hashes, etc.  So we
    * have to do the same when generating keys, hashes, etc.
    */
-  if ((conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
+  if ((conf->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.104 2008-05-15 20:22:54 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.105 2008-05-15 20:47:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -119,6 +119,8 @@
 #define RMCP_PACKET_BUFLEN               1024
 
 #define IPMIPOWER_HOSTLIST_BUFLEN        65536
+
+#define IPMIPOWER_OUTPUT_BUFLEN          65536
 
 #define IPMIPOWER_DEFAULT_LOGFILE        "/tmp/ipmipower.%d"
 
@@ -280,19 +282,6 @@ typedef enum
    (__m) <= MSG_TYPE_BMC_ERROR)
 
 #define MSG_TYPE_NUM_ENTRIES (MSG_TYPE_BMC_ERROR+1)
-
-/* Workaround Flags */
-typedef enum 
-  {
-    WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO      = 0x00000001,
-    WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION = 0x00000002,
-    WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE   = 0x00000004,
-    WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER  = 0x00000008,
-    WORKAROUND_FLAG_AUTHENTICATION_CAPABILITIES = 0x00000010,
-    WORKAROUND_FLAG_INTEL_2_0_SESSION           = 0x00010000,
-    WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION      = 0x00020000,
-    WORKAROUND_FLAG_SUN_2_0_SESSION             = 0x00040000,
-  } workaround_flag_t;
 
 /* ipmipower_powercmd
  * - Stores all information needed to execute a power command

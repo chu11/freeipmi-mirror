@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.73 2008-05-15 20:22:55 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.74 2008-05-15 20:48:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -50,7 +50,6 @@
 #include "ipmipower_connection.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_output.h"
-#include "ipmipower_workarounds.h"
 #include "ipmipower_wrappers.h"
 
 #include "freeipmi-portability.h"
@@ -320,19 +319,26 @@ _cmd_workaround_flags(char **argv)
 
   if (argv[1] != NULL) 
     {
-      uint32_t flags;
+      int tmp;
 
-      if (ipmipower_workarounds_parse(argv[1], &flags) < 0)
-        cbuf_printf(ttyout, "%s invalid workaround specified\n", argv[1]);
+      if ((tmp = parse_workaround_flags(argv[1])) < 0)
+        cbuf_printf(ttyout, "%s invalid workaround flags specified\n", argv[1]);
       else 
         {
-          conf->workaround_flags = flags;
-          cbuf_printf(ttyout, "workaround flags is now %s\n", argv[1]);
+          conf->workaround_flags = tmp;
+          cbuf_printf(ttyout, "workaround flags are now %s\n", argv[1]);
         }
     }
   else
-    cbuf_printf(ttyout, "workaround_flags must be specified: %s\n",
-                ipmipower_workarounds_list());
+    cbuf_printf(ttyout, "workaround_flags must be specified: %s,%s,%s,%s,%s,%s,%s,%s\n",
+                IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR,
+                IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR,
+                IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR,
+                IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
+                IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES_STR,
+                IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR,
+                IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR,
+                IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR);
 }
 
 #ifndef NDEBUG
@@ -571,11 +577,27 @@ _cmd_version(void)
   cbuf_printf(ttyout, "ipmipower %s\n", VERSION);
 }
 
+static void
+_workarounds_strcat(char *strbuf, unsigned int mask, char *str, int *is_first)
+{
+  assert(strbuf && str && is_first);
+  
+  if (conf->workaround_flags & mask)
+    {
+      if ((*is_first))
+        strcat(strbuf, ",");
+      strcat(strbuf, str);
+      (*is_first)++;
+    }
+}
+
 static void 
 _cmd_config(void) 
 {
-  char buf[IPMI_MAX_K_G_LENGTH*2+3];
+  char kgbuf[IPMI_MAX_K_G_LENGTH*2+3];
+  char strbuf[IPMIPOWER_OUTPUT_BUFLEN];
   char *str;
+  int is_first = 0;
 
   str = "";
   if (conf->driver_type == IPMI_DEVICE_LAN)
@@ -662,7 +684,7 @@ _cmd_config(void)
               (strlen(conf->password)) ? conf->password : "NULL");
   cbuf_printf(ttyout, "K_g:                          %s\n", 
               (conf->k_g_len) ? 
-              format_kg(buf, IPMI_MAX_K_G_LENGTH*2+3, conf->k_g) : "NULL");
+              format_kg(kgbuf, IPMI_MAX_K_G_LENGTH*2+3, conf->k_g) : "NULL");
 #else  /* !NDEBUG */
   cbuf_printf(ttyout, "Password:                     *****\n");
   cbuf_printf(ttyout, "K_g:                          *****\n");
@@ -726,8 +748,44 @@ _cmd_config(void)
               (conf->always_prefix) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Fanout:                       %d\n",
 	      conf->fanout);
-  cbuf_printf(ttyout, "WorkaroundFlags:              %s\n",
-              ipmipower_workarounds_string(conf->workaround_flags));
+
+  memset(strbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN);
+  is_first = 0;
+  _workarounds_strcat(strbuf, 
+                      IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO,
+                      IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR,
+                      &is_first);
+  _workarounds_strcat(strbuf, 
+                      IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION,
+                      IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR,
+                      &is_first);
+  _workarounds_strcat(strbuf, 
+                      IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE,
+                      IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR,
+                      &is_first);
+  _workarounds_strcat(strbuf, 
+                      IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER,
+                      IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
+                      &is_first);
+  _workarounds_strcat(strbuf, 
+                      IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES,
+                      IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES_STR,
+                      &is_first);
+  _workarounds_strcat(strbuf, 
+                      IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION,
+                      IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR,
+                      &is_first);
+  _workarounds_strcat(strbuf, 
+                      IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION,
+                      IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR,
+                      &is_first);
+  _workarounds_strcat(strbuf, 
+                      IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION,
+                      IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR,
+                      &is_first);
+
+  cbuf_printf(ttyout, "WorkaroundFlags:              %s\n", strbuf);
+
 #ifndef NDEBUG
   cbuf_printf(ttyout, "Debug:                        %s\n", 
               (conf->debug) ? "on" : "off");

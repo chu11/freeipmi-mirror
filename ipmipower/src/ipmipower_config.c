@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.98 2008-05-15 20:22:55 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.99 2008-05-15 20:47:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -48,7 +48,6 @@
 #include "ipmipower_config.h"
 #include "ipmipower_output.h"
 #include "ipmipower_util.h"
-#include "ipmipower_workarounds.h"
 #include "ipmipower_wrappers.h"
 
 #include "secure.h"
@@ -353,7 +352,6 @@ cmdline_parse (int key,
   char *pw;
   char *kg;
   int rv;
-  uint32_t flags;
   int n;
   int tmp;
 
@@ -466,9 +464,9 @@ cmdline_parse (int key,
       conf->privilege_level_set_on_cmdline++;
       break;
     case ARGP_WORKAROUND_FLAGS_KEY:       /* --workaround-flags */
-      if (ipmipower_workarounds_parse(arg, &flags) < 0)
-        ierr_exit("Command Line Error: invalid workaround specified");
-      conf->workaround_flags = flags;
+      if ((tmp = parse_workaround_flags(arg)) < 0)
+        ierr_exit("Command Line Error: invalid workaround flags specified");
+      conf->workaround_flags = tmp;
       conf->workaround_flags_set_on_cmdline++;
       break;
     case DEBUG_KEY:          /* --debug */
@@ -756,14 +754,14 @@ _cb_workaround_flags(conffile_t cf, struct conffile_data *data,
                      char *optionname, int option_type, void *option_ptr,
                      int option_data, void *app_ptr, int app_data) 
 {
-  uint32_t flags;
+  int tmp;
 
   if (conf->workaround_flags_set_on_cmdline)
     return 0;
 
-  if (ipmipower_workarounds_parse(data->string, &flags) < 0)
-    ierr_exit("Config File Error: invalid workaround specified");
-  conf->workaround_flags = flags;
+  if ((tmp = parse_workaround_flags(data->string)) < 0)
+    ierr_exit("Config File Error: invalid workaround flags specified");
+  conf->workaround_flags = tmp;
   return 0;
 }
 
