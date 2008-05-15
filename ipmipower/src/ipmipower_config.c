@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.99 2008-05-15 20:47:55 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.100 2008-05-15 22:42:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -963,21 +963,12 @@ void
 ipmipower_config_check_values(void) 
 {
   if (conf->driver_type == IPMI_DEVICE_LAN
-      && conf->k_g_len)
-    ierr_exit("Error: k_g is only used for IPMI 2.0");
-
-  if (conf->driver_type == IPMI_DEVICE_LAN
       && strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
     ierr_exit("Error: password too long");
 
   if (conf->retransmission_timeout_len > conf->session_timeout_len)
     ierr_exit("Error: Session timeout length must be longer than retransmission  timeout length");
   
-  if (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
-      && strlen(conf->password) > 0)
-    ierr_exit("Error: password cannot be set for authentication type '%s'",
-              IPMI_AUTHENTICATION_TYPE_NONE_STR);
-
   if (conf->fanout
       && (conf->fanout < PSTDOUT_FANOUT_MIN
           || conf->fanout > PSTDOUT_FANOUT_MAX))
