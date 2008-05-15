@@ -43,6 +43,7 @@ general
 -------
 tiemout
 - can't be zero anywhere
+  - do minimum/maximum?
 - including ipmipower?
 - do generic verify checks in common tool
 audit error messages in command line parsing in all tools

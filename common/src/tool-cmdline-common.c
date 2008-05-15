@@ -432,7 +432,7 @@ common_parse_opt (int key,
 	if (errnum)
 	  {
 	    // overflow
-	    fprintf (stderr, "invalid packet session timeout value\n");
+	    fprintf (stderr, "invalid session timeout value\n");
 	    argp_usage (state);
 	    break;
 	  }
@@ -440,7 +440,7 @@ common_parse_opt (int key,
 	if (tail[0] != '\0')
 	  {
 	    // invalid integer format
-	    fprintf (stderr, "invalid packet session timeout value\n");
+	    fprintf (stderr, "invalid session timeout value\n");
 	    argp_usage (state);
 	    break;
 	  }
@@ -448,7 +448,7 @@ common_parse_opt (int key,
 	if (value <= 0)
 	  {
 	    // zero or negative number
-	    fprintf (stderr, "invalid packet session timeout value\n");
+	    fprintf (stderr, "invalid session timeout value\n");
 	    argp_usage (state);
 	    break;
 	  }

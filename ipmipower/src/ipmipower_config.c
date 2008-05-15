@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.101 2008-05-15 22:47:21 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.102 2008-05-15 22:58:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -295,10 +295,6 @@ _config_common_checks(char *str)
           || conf->hosts_count > IPMIPOWER_MAXNODES))
     ierr_exit("%s: invalid number of hostnames", str);
     
-  if (conf->session_timeout_len < IPMIPOWER_SESSION_TIMEOUT_MIN 
-      || conf->session_timeout_len > IPMIPOWER_SESSION_TIMEOUT_MAX)
-    ierr_exit("%s: timeout out of range", str);
-  
   if (conf->retransmission_timeout_len != 0 
       && (conf->retransmission_timeout_len < IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN 
           || conf->retransmission_timeout_len > IPMIPOWER_RETRANSMISSION_TIMEOUT_MAX))
@@ -437,7 +433,8 @@ cmdline_parse (int key,
       break;
     case SESSION_TIMEOUT_KEY:       /* --session-timeout */
       conf->session_timeout_len = strtol(arg, &ptr, 10);
-      if (ptr != (arg + strlen(arg)))
+      if (ptr != (arg + strlen(arg))
+          || conf->session_timeout_len <= 0)
         ierr_exit("Command Line Error: session timeout length invalid");
       conf->session_timeout_len_set_on_cmdline++;
       break;
@@ -785,6 +782,24 @@ _cb_bool(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
+_cb_int_non_zero(conffile_t cf, struct conffile_data *data,
+                 char *optionname, int option_type, void *option_ptr,
+                 int option_data, void *app_ptr, int app_data) 
+{
+  int *temp = (int *)option_ptr;
+  int cmdlineset = (int)option_data;
+
+  if (cmdlineset)
+    return 0;
+
+  if (!data->intval)
+    ierr_exit("Config File Error: %s value invalid");
+
+  *temp = data->intval; 
+  return 0;
+}
+
+static int 
 _cb_int(conffile_t cf, struct conffile_data *data,
         char *optionname, int option_type, void *option_ptr,
         int option_data, void *app_ptr, int app_data) 
@@ -856,10 +871,10 @@ ipmipower_config_conffile_parse(char *configfile)
       {"k_g", CONFFILE_OPTION_STRING, -1, _cb_k_g, 
        1, 0, &k_g_flag, NULL, 0},
       /* timeout maintained for backwards compatability */
-      {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"timeout", CONFFILE_OPTION_INT, -1, _cb_int_non_zero, 
        1, 0, &timeout_flag, &(conf->session_timeout_len), 
        conf->session_timeout_len_set_on_cmdline},
-      {"session-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"session-timeout", CONFFILE_OPTION_INT, -1, _cb_int_non_zero, 
        1, 0, &session_timeout_flag, &(conf->session_timeout_len), 
        conf->session_timeout_len_set_on_cmdline},
       /* retry-timeout for backwards comptability */

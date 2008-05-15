@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.75 2008-05-15 22:47:22 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.76 2008-05-15 22:58:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -824,9 +824,35 @@ static void
 _cmd_set_int(char **argv, 
              int *val, 
              char *str, 
-             int allow_zero,
-             int min, 
-             int max) 
+             int allow_zero)
+{
+  assert(argv != NULL && val != NULL && str != NULL);
+
+  if (argv[1] == NULL)
+    cbuf_printf(ttyout, "%s not specified\n", str);
+  else 
+    {
+      char *ptr;
+      int temp = strtol(argv[1], &ptr, 10);
+      if (ptr != (argv[1] + strlen(argv[1]))) 
+        cbuf_printf(ttyout, "invalid %s input\n", str);
+      else if (allow_zero && temp == 0)
+        {
+          *val = temp;
+          cbuf_printf(ttyout, "%s is now %d\n", str, *val);
+        }
+      else
+        cbuf_printf(ttyout, "invalid %s input\n", str);
+    }
+}
+
+static void 
+_cmd_set_int_ranged(char **argv, 
+                    int *val, 
+                    char *str, 
+                    int allow_zero,
+                    int min, 
+                    int max) 
 {
   assert(argv != NULL && val != NULL && str != NULL);
 
@@ -930,8 +956,8 @@ ipmipower_prompt_process_cmdline(void)
             {
               /* support "ipmi_version" and "ipmi-version" for backwards compatability */
               if (strcmp(argv[0], "driver-type") == 0
-                       || strcmp(argv[0], "ipmi_version") == 0
-                       || strcmp(argv[0], "ipmi-version") == 0)
+                  || strcmp(argv[0], "ipmi_version") == 0
+                  || strcmp(argv[0], "ipmi-version") == 0)
                 _cmd_driver_type(argv);
               /* support hostnames (plural) for backwards compatability */
               else if (strcmp(argv[0], "hostnames") == 0
@@ -949,17 +975,15 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_set_int(argv, 
                              &conf->session_timeout_len, 
                              "timeout",
-                             0, 
-                             IPMIPOWER_SESSION_TIMEOUT_MIN, 
-                             IPMIPOWER_SESSION_TIMEOUT_MAX);
+                             0);
               /* support "retry-timeout" for backwards compatability */
               else if (strcmp(argv[0], "retry-timeout") == 0
                        || strcmp(argv[0], "retransmission-timeout") == 0)
-                _cmd_set_int(argv, 
-                             &conf->retransmission_timeout_len, 
-                             "retransmission-timeout", 1,
-                             IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN, 
-                             conf->session_timeout_len);
+                _cmd_set_int_ranged(argv, 
+                                    &conf->retransmission_timeout_len, 
+                                    "retransmission-timeout", 1,
+                                    IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN, 
+                                    conf->session_timeout_len);
               /* support underscored version for backwards compatability */
               else if (strcmp(argv[0], "authentication_type") == 0
                        || strcmp(argv[0], "authentication-type") == 0)
@@ -1023,56 +1047,56 @@ ipmipower_prompt_process_cmdline(void)
               /* support "retry-wait-timeout" for backwards compatability */
               else if (strcmp(argv[0], "retry-wait-timeout") == 0
                        || strcmp(argv[0], "retransmission-wait-timeout") == 0)
-                _cmd_set_int(argv, 
-                             &conf->retransmission_wait_timeout_len, 
-			     "retransmission-wait-timeout", 
-                             1,
-                             IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN, 
-                             conf->session_timeout_len);
+                _cmd_set_int_ranged(argv, 
+                                    &conf->retransmission_wait_timeout_len, 
+                                    "retransmission-wait-timeout", 
+                                    1,
+                                    IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN, 
+                                    conf->session_timeout_len);
               /* support "retry-backoff-count" for backwards compatability */
               else if (strcmp(argv[0], "retry-backoff-count") == 0
                        || strcmp(argv[0], "retransmission-backoff-count") == 0)
-                _cmd_set_int(argv, 
-                             &conf->retransmission_backoff_count, 
-                             "retransmission-backoff-count", 
-                             1,
-                             IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MIN,
-                             IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MAX);
+                _cmd_set_int_ranged(argv, 
+                                    &conf->retransmission_backoff_count, 
+                                    "retransmission-backoff-count", 
+                                    1,
+                                    IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MIN,
+                                    IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MAX);
               else if (strcmp(argv[0], "ping-interval") == 0)
-                _cmd_set_int(argv,
-                             &conf->ping_interval_len, 
-                             "ping-interval", 
-                             1, 
-                             IPMIPOWER_PING_INTERVAL_MIN,
-                             conf->ping_timeout_len);
+                _cmd_set_int_ranged(argv,
+                                    &conf->ping_interval_len, 
+                                    "ping-interval", 
+                                    1, 
+                                    IPMIPOWER_PING_INTERVAL_MIN,
+                                    conf->ping_timeout_len);
               else if (strcmp(argv[0], "ping-timeout") == 0)
-                _cmd_set_int(argv, 
-                             &conf->ping_timeout_len, 
-                             "ping-timeout",
-                             1, 
-                             IPMIPOWER_PING_TIMEOUT_MIN, 
-                             IPMIPOWER_PING_TIMEOUT_MAX);
+                _cmd_set_int_ranged(argv, 
+                                    &conf->ping_timeout_len, 
+                                    "ping-timeout",
+                                    1, 
+                                    IPMIPOWER_PING_TIMEOUT_MIN, 
+                                    IPMIPOWER_PING_TIMEOUT_MAX);
               else if (strcmp(argv[0], "ping-packet-count") == 0)
-                _cmd_set_int(argv, 
-                             &conf->ping_packet_count, 
-                             "ping-packet-count",
-                             1, 
-                             IPMIPOWER_PING_PACKET_COUNT_MIN, 
-                             IPMIPOWER_PING_PACKET_COUNT_MAX);
+                _cmd_set_int_ranged(argv, 
+                                    &conf->ping_packet_count, 
+                                    "ping-packet-count",
+                                    1, 
+                                    IPMIPOWER_PING_PACKET_COUNT_MIN, 
+                                    IPMIPOWER_PING_PACKET_COUNT_MAX);
               else if (strcmp(argv[0], "ping-percent") == 0)
-                _cmd_set_int(argv,
-                             &conf->ping_percent,
-                             "ping-percent", 
-                             1, 
-                             IPMIPOWER_PING_PERCENT_MIN, 
-                             IPMIPOWER_PING_PERCENT_MAX);
+                _cmd_set_int_ranged(argv,
+                                    &conf->ping_percent,
+                                    "ping-percent", 
+                                    1, 
+                                    IPMIPOWER_PING_PERCENT_MIN, 
+                                    IPMIPOWER_PING_PERCENT_MAX);
               else if (strcmp(argv[0], "ping-consec-count") == 0)
-                _cmd_set_int(argv,
-                             &conf->ping_consec_count, 
-                             "ping-consec-count", 
-                             1, 
-                             IPMIPOWER_PING_CONSEC_COUNT_MIN, 
-                             conf->ping_packet_count);
+                _cmd_set_int_ranged(argv,
+                                    &conf->ping_consec_count, 
+                                    "ping-consec-count", 
+                                    1, 
+                                    IPMIPOWER_PING_CONSEC_COUNT_MIN, 
+                                    conf->ping_packet_count);
 	      else if (strcmp(argv[0], "buffer-output") == 0)
 		_cmd_set_flag(argv,
 			      &conf->buffer_output,
@@ -1086,12 +1110,12 @@ ipmipower_prompt_process_cmdline(void)
                               &conf->always_prefix, 
                               "always-prefix");
 	      else if (strcmp(argv[0], "fanout") == 0)
-                _cmd_set_int(argv, 
-                             &conf->fanout, 
-                             "fanout",
-                             1, 
-                             PSTDOUT_FANOUT_MIN, 
-                             PSTDOUT_FANOUT_MAX);
+                _cmd_set_int_ranged(argv, 
+                                    &conf->fanout, 
+                                    "fanout",
+                                    1, 
+                                    PSTDOUT_FANOUT_MIN, 
+                                    PSTDOUT_FANOUT_MAX);
               else if (strcmp(argv[0], "help") == 0 
                        || strcmp(argv[0], "?") == 0
 		       || strcmp(argv[0], "advanced") == 0 /* legacy */
