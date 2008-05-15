@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.8 2008-03-28 00:14:34 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.9 2008-05-15 17:34:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1005,6 +1005,7 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
   fru_err_t ret;
   uint32_t multirecord_offset = 0;
+  int output_count = 0;
 
   assert(state_data);
   assert(offset);
@@ -1155,6 +1156,9 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
 
       if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION)
         {
+          if (output_count)
+            pstdout_printf(state_data->pstate, "\n");
+          output_count++;
           ret = output_power_supply_information(state_data,
                                                 frubuf,
                                                 record_length,
@@ -1165,10 +1169,12 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
               goto cleanup;
             }
           /* else continue on */
-          pstdout_printf(state_data->pstate, "\n");
         }
       else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_DC_OUTPUT)
         {
+          if (output_count)
+            pstdout_printf(state_data->pstate, "\n");
+          output_count++;
           ret = output_dc_output(state_data,
                                  frubuf,
                                  record_length,
@@ -1179,10 +1185,12 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
               goto cleanup;
             }
           /* else continue on */
-          pstdout_printf(state_data->pstate, "\n");
         }
       else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_DC_LOAD)
         {
+          if (output_count)
+            pstdout_printf(state_data->pstate, "\n");
+          output_count++;
           ret = output_dc_load(state_data,
                                frubuf,
                                record_length,
@@ -1193,10 +1201,12 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
               goto cleanup;
             }
           /* else continue on */
-          pstdout_printf(state_data->pstate, "\n");
         }
       else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_MANAGEMENT_ACCESS_RECORD)
         {
+          if (output_count)
+            pstdout_printf(state_data->pstate, "\n");
+          output_count++;
           ret = output_management_access_record(state_data,
                                                 frubuf,
                                                 record_length,
@@ -1207,10 +1217,12 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
               goto cleanup;
             }
           /* else continue on */
-          pstdout_printf(state_data->pstate, "\n");
         }
       else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_BASE_COMPATIBILITY_RECORD)
         {
+          if (output_count)
+            pstdout_printf(state_data->pstate, "\n");
+          output_count++;
           ret = output_base_compatibility_record(state_data,
                                                  frubuf,
                                                  record_length,
@@ -1221,10 +1233,12 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
               goto cleanup;
             }
           /* else continue on */
-          pstdout_printf(state_data->pstate, "\n");
         }
       else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD)
         {
+          if (output_count)
+            pstdout_printf(state_data->pstate, "\n");
+          output_count++;
           ret = output_extended_compatibility_record(state_data,
                                                      frubuf,
                                                      record_length,
@@ -1235,10 +1249,12 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
               goto cleanup;
             }
           /* else continue on */
-          pstdout_printf(state_data->pstate, "\n");
         }
       else if (IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM(record_type_id))
         {
+          if (output_count)
+            pstdout_printf(state_data->pstate, "\n");
+          output_count++;
           ret = output_oem_record(state_data,
                                   frubuf,
                                   record_length,
@@ -1249,7 +1265,6 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
               goto cleanup;
             }
           /* else continue on */
-          pstdout_printf(state_data->pstate, "\n");
         }
       else
         pstdout_fprintf(state_data->pstate,

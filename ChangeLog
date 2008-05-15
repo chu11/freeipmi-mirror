@@ -1,5 +1,9 @@
 2008-05-15  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/src/: Remove excess newline outputs.
+	
+2008-05-15  Albert Chu <chu11@llnl.gov>
+
 	* common/doc/manpage-common-workaround-text.man: Add information
 	on types of errors users may see if their machine has an issue
 	that may be worked around with a workaround.
