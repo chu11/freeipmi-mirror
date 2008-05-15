@@ -5,14 +5,16 @@ was lost.  Resolved by sending retransmitted Get Session Challenge
 requests from a different source port.  Automatically handled.
 .LP
 Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
-packet responses return empty session IDs to the client.  In order to
-work around this issue, the "idzero" workaround must be specified.
-The option will allow empty session IDs to be accepted by the client.
-This problem is apparently fixed in later firmware releases.
+packet responses return empty session IDs to the client.  This will
+likely cause "session timeout" errors to occur.  In order to work
+around this issue, the "idzero" workaround must be specified.  The
+option will allow empty session IDs to be accepted by the client.
+This problem is reported to be fixed in later firmware releases.
 .LP
 Dell PowerEdge 2850,SC1425: When Per-Message Authentication is
 disabled, packet responses contain non-null authentication data (when
-it should in fact be null).  In order to work around this issue, the
+it should in fact be null).  This will likely cause "session timeout"
+errors to occur.  In order to work around this issue, the
 "unexpectedauth" workaround must be specified.  The option will allow
 unexpected non-null authcodes to be checked as though they were
 expected. This compliance bug is confirmed to be fixed on newer
@@ -20,8 +22,9 @@ firmware.
 .LP
 IBM eServer 325: The remote BMC will advertise that Per Message
 Authentication is disabled, but actually require it for the protocol.
-In order to work around this issue, the "forcepermsg" workaround must
-be specified.  The option will force Per Message Authentication to be
+This will likely cause "session timeout" errors to occur.  In order to
+work around this issue, the "forcepermsg" workaround must be
+specified.  The option will force Per Message Authentication to be
 used no matter what is advertised by the remote BMC.
 .LP
 Supermicro H8QME with SIMSO daughter card: The remote BMC will
@@ -29,28 +32,34 @@ advertise that Per Message Authentication is disabled, but actually
 require it for the protocol. Automatically handled.
 .LP
 Asus P5M2/P5MT-R/RS162-E4/RX4: The motherboard does not properly
-report username capabilities and/or K_g status, leading to invalid
-username or K_g errors.  In order to work around this issue, the
-"authcap" workaround must be specified.
+report username capabilities and/or K_g status.  This will likely
+cause "username invalid" or "k_g invalid" errors to occur.  In order
+to work around this issue, the "authcap" workaround must be specified.
 .LP
-Sun Fire 4100 with ILOM: The session sequence numbers returned for
-IPMI 1.5 sessions are the wrong endian.  In order to work around this
-issue, the "endianseq" workaround must be specified.
+Sun ILOM 2.0: The session sequence numbers returned for IPMI 1.5
+sessions are the wrong endian on some systems running ILOM 2.0.  The
+incorrect endian depends on the service processor endianness.  This
+will likely cause "session timeout" errors to occur.  In order to work
+around this issue, the "endianseq" workaround must be specified.  This
+problem is reported to be fixed in a later release.
 .LP
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): There are a number of Intel IPMI 2.0 bugs which can be
-worked around by specifying the "intel20" workaround.  The
-workarounds include padding of usernames, automatic acceptance of a
-RAKP 4 response integrity check when using the integrity algorithm
-MD5-128, and password truncation if the authentication algorithm is
-HMAC-MD5-128.
+worked around by specifying the "intel20" workaround.  The workarounds
+include padding of usernames, automatic acceptance of a RAKP 4
+response integrity check when using the integrity algorithm MD5-128,
+and password truncation if the authentication algorithm is
+HMAC-MD5-128.  These problems may cause "username invalid", "password
+invalid", or "k_g invalid" errors to occur.
 .LP
 Supermicro H8QME with SIMSO daughter card: There are several
 Supermicro IPMI 2.0 bugs on early firmware revisions which can be
-worked around using the "supermicro20" workaround.  These compliance
-bugs are confirmed to be fixed on newer firmware.
+worked around using the "supermicro20" workaround.  These problems may
+cause "password invalid" errors to occur.  These compliance bugs are
+confirmed to be fixed on newer firmware.
 .LP
 Sun Fire 4100 with ILOM: There are several IPMI 2.0 bugs which can be
 worked around by specifying the "sun20" workaround.  The workarounds
 include handling invalid lengthed hash keys and invalid cipher suite
-records.
+records.  These problems may cause "password invalid" or "bmc error"
+errors to occur
