@@ -41,8 +41,9 @@ pef-config
 
 general
 -------
-connection timeout
-- like session timeout but only in beginnign
+tiemout
+- can't be zero anywhere
+- including ipmipower?
 audit error messages in command line parsing in all tools
 - ipmipower
 - bmc-watchdog

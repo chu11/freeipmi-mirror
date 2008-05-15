@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.4 2008-05-13 20:34:34 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.5 2008-05-15 22:24:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -79,7 +79,7 @@ static char args_doc[] = "";
 
 static struct argp_option options[] =
   {
-    ARGP_COMMON_OPTIONS_OUTOFBAND_NO_TIMEOUT,
+    ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     /* legacy */
     {"cipher-suite-id", 'c', "CIPHER-SUITE-ID", OPTION_HIDDEN,                         
@@ -568,6 +568,10 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->debugfile = 0;
   cmd_args->noraw = 0;
 #endif /* NDEBUG */
+
+  /* special case to ipmiconsole, different timeout defaults */
+  cmd_args->common.session_timeout = 60000;
+  cmd_args->common.retransmission_timeout = 500;
 
   argp_parse (&argp_conf, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   /* change defaults to whatever is configured, run 2nd b/c

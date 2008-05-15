@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.46 2008-05-10 01:02:11 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.47 2008-05-15 22:24:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -329,8 +329,8 @@ main(int argc, char **argv)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION;
 
   memset(&protocol_config, '\0', sizeof(struct ipmiconsole_protocol_config));
-  protocol_config.session_timeout_len = -1; 
-  protocol_config.retransmission_timeout_len = -1; 
+  protocol_config.session_timeout_len = cmd_args.common.session_timeout; 
+  protocol_config.retransmission_timeout_len = cmd_args.common.retransmission_timeout; 
   protocol_config.retransmission_backoff_count = -1; 
   protocol_config.keepalive_timeout_len = -1; 
   protocol_config.retransmission_keepalive_timeout_len = -1; 
@@ -373,6 +373,7 @@ main(int argc, char **argv)
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_BMC_BUSY
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_BMC_ERROR
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CONNECTION_TIMEOUT
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SESSION_TIMEOUT
           || ipmiconsole_ctx_errnum(c) ==  IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT
           || ipmiconsole_ctx_errnum(c) ==  IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED)
