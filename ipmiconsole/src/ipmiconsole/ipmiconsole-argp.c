@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.5 2008-05-15 22:24:00 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.6 2008-05-16 21:25:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -128,6 +128,7 @@ parse_opt_conf (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
+      /* don't parse anything else, fall to return 0 */
       break;
     }
 
