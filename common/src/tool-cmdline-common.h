@@ -365,7 +365,7 @@ struct hostrange_cmd_args
 {
   int buffer_hostrange_output;
   int consolidate_hostrange_output;
-  int fanout;
+  unsigned int fanout;
   int eliminate;
   int always_prefix;
 };

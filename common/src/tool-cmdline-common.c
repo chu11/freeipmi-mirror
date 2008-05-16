@@ -625,7 +625,8 @@ hostrange_parse_opt (int key,
                      struct hostrange_cmd_args *cmd_args)
 {
   char *ptr;
-  
+  int tmp;
+
   switch (key)
     {
     case ARGP_BUFFER_OUTPUT_KEY:
@@ -635,15 +636,16 @@ hostrange_parse_opt (int key,
       cmd_args->consolidate_hostrange_output = 1;
       break;
     case ARGP_FANOUT_KEY:
-      cmd_args->fanout = strtol(arg, &ptr, 10);
+      tmp = strtol(arg, &ptr, 10);
       if ((ptr != (arg + strlen(arg)))
-          || (cmd_args->fanout < PSTDOUT_FANOUT_MIN)
-          || (cmd_args->fanout > PSTDOUT_FANOUT_MAX))
+          || (tmp < PSTDOUT_FANOUT_MIN)
+          || (tmp > PSTDOUT_FANOUT_MAX))
         {
           fprintf (stderr, "invalid fanout\n");
           argp_usage (state);
           break;
         }
+      cmd_args->fanout = tmp;
       break;
     case ARGP_ELIMINATE_KEY:
       cmd_args->eliminate = 1;
