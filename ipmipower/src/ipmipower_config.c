@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.104 2008-05-16 15:49:16 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.105 2008-05-16 16:07:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -290,11 +290,6 @@ _config_common_checks(char *str)
 {
   assert (str != NULL);
 
-  if (conf->hosts != NULL 
-      && (conf->hosts_count < IPMIPOWER_MINNODES 
-          || conf->hosts_count > IPMIPOWER_MAXNODES))
-    ierr_exit("%s: invalid number of hostnames", str);
-    
   if (conf->cipher_suite_id < IPMI_CIPHER_SUITE_ID_MIN
       || conf->cipher_suite_id > IPMI_CIPHER_SUITE_ID_MAX)
     ierr_exit("%s: invalid cipher suite id", str);

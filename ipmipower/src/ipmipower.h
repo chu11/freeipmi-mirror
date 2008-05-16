@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.110 2008-05-16 15:49:16 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.111 2008-05-16 16:07:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -69,9 +69,6 @@
 
 #define IPMIPOWER_MIN_CONNECTION_BUF                1024*2
 #define IPMIPOWER_MAX_CONNECTION_BUF                1024*4
-
-#define IPMIPOWER_MINNODES                          1
-#define IPMIPOWER_MAXNODES                          1024
 
 #define IPMIPOWER_PING_INTERVAL_MIN                 250   /* .25 seconds */
 #define IPMIPOWER_PING_INTERVAL_MAX                 120000

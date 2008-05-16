@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.78 2008-05-16 15:49:17 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.79 2008-05-16 16:07:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -121,12 +121,6 @@ _cmd_hostname(char **argv)
       hostlist_uniq(hl);
 
       hl_count = hostlist_count(hl);
-      if (hl_count < IPMIPOWER_MINNODES || hl_count > IPMIPOWER_MAXNODES) 
-        {
-          cbuf_printf(ttyout, "invalid number of hostname(s)\n");
-          hostlist_destroy(hl);
-          return;
-        }
 
       if ((icsPtr = ipmipower_connection_array_create(hl, hl_count)) == NULL) 
         {
