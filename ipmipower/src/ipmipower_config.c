@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.107 2008-05-16 17:41:13 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.108 2008-05-16 18:35:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -417,15 +417,15 @@ cmdline_parse (int key,
     case SESSION_TIMEOUT_KEY:       /* --session-timeout */
       tmp = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg))
-          || conf->session_timeout_len <= 0)
+          || tmp <= 0)
         ierr_exit("Command Line Error: session timeout length invalid");
       conf->session_timeout_len = tmp;
       conf->session_timeout_len_set_on_cmdline++;
       break;
     case RETRANSMISSION_TIMEOUT_KEY:       /* --retransmission-timeout */
-      conf->retransmission_timeout_len = strtol(arg, &ptr, 10);
+      tmp = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg))
-          || conf->retransmission_timeout_len <= 0)
+          || tmp <= 0)
         ierr_exit("Command Line Error: retransmission timeout length invalid");
       conf->retransmission_timeout_len = tmp;
       conf->retransmission_timeout_len_set_on_cmdline++;
@@ -536,48 +536,61 @@ cmdline_parse (int key,
       /* RETRY_WAIT_TIMEOUT for backwards compatability */
     case RETRY_WAIT_TIMEOUT_KEY:
     case RETRANSMISSION_WAIT_TIMEOUT_KEY:       /* --retransmission-wait-timeout */
-      conf->retransmission_wait_timeout_len = strtol(arg, &ptr, 10);
+      tmp = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg))
-          || conf->retransmission_wait_timeout_len <= 0)
+          || tmp <= 0)
         ierr_exit("Command Line Error: retransmission wait timeout length invalid");
+      conf->retransmission_wait_timeout_len = tmp;
       conf->retransmission_wait_timeout_len_set_on_cmdline++;
       break;
       /* RETRY_BACKOFF_COUNT for backwards compatability */
     case RETRY_BACKOFF_COUNT_KEY:
     case RETRANSMISSION_BACKOFF_COUNT_KEY:       /* --retransmission-backoff-count */
-      conf->retransmission_backoff_count = strtol(arg, &ptr, 10);
-      if (ptr != (arg + strlen(arg)))
+      tmp = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg))
+          || tmp <= 0)
         ierr_exit("Command Line Error: retransmission backoff count invalid");
+      conf->retransmission_backoff_count = tmp;
       conf->retransmission_backoff_count_set_on_cmdline++;
       break;
     case PING_INTERVAL_KEY:       /* --ping-interval */
-      conf->ping_interval_len = strtol(arg, &ptr, 10);
-      if (ptr != (arg + strlen(arg)))
+      tmp = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg))
+          || tmp < 0)
         ierr_exit("Command Line Error: ping interval length invalid");
+      conf->ping_interval_len = tmp;
       conf->ping_interval_len_set_on_cmdline++;
       break;
     case PING_TIMEOUT_KEY:       /* --ping-timeout */
-      conf->ping_timeout_len = strtol(arg, &ptr, 10);
-      if (ptr != (arg + strlen(arg)))
+      tmp = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg))
+          || tmp < 0)
         ierr_exit("Command Line Error: ping timeout length invalid");
+      conf->ping_timeout_len = tmp;
       conf->ping_timeout_len_set_on_cmdline++;
       break;
     case PING_PACKET_COUNT_KEY:       /* --ping-packet-count */
-      conf->ping_packet_count = strtol(arg, &ptr, 10);
-      if (ptr != (arg + strlen(arg)))
+      tmp = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg))
+          || tmp < 0)
         ierr_exit("Command Line Error: ping packet count invalid");
+      conf->ping_packet_count = tmp;
       conf->ping_packet_count_set_on_cmdline++;
       break;
     case PING_PERCENT_KEY:       /* --ping-percent */
-      conf->ping_percent = strtol(arg, &ptr, 10);
-      if (ptr != (arg + strlen(arg)))
+      tmp = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg))
+          || tmp < 0)
         ierr_exit("Command Line Error: ping percent invalid");
+      conf->ping_percent = tmp;
       conf->ping_percent_set_on_cmdline++;
       break;
     case PING_CONSEC_COUNT_KEY:       /* --ping-consec-count */
-      conf->ping_consec_count = strtol(arg, &ptr, 10);
-      if (ptr != (arg + strlen(arg)))
+      tmp = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg))
+          || tmp < 0)
         ierr_exit("Command Line Error: ping consec count invalid");
+      conf->ping_consec_count = tmp;
       conf->ping_consec_count_set_on_cmdline++;
       break;
     case '?':
@@ -941,32 +954,32 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &wait_until_off_flag, &(conf->wait_until_off), 
        conf->wait_until_off_set_on_cmdline},
       /* retry-wait-timeout for backwards comptability */
-      {"retry-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_int_non_zero, 
+      {"retry-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
        1, 0, &retry_wait_timeout_flag, &(conf->retransmission_wait_timeout_len), 
        conf->retransmission_wait_timeout_len_set_on_cmdline},
-      {"retransmission-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_int_non_zero, 
+      {"retransmission-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
        1, 0, &retransmission_wait_timeout_flag, &(conf->retransmission_wait_timeout_len), 
        conf->retransmission_wait_timeout_len_set_on_cmdline},
       /* retry-backoff-count for backwards compatability */
-      {"retry-backoff-count", CONFFILE_OPTION_INT, -1, _cb_int,
+      {"retry-backoff-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int,
        1, 0, &retry_backoff_count_flag, &(conf->retransmission_backoff_count), 
        conf->retransmission_backoff_count_set_on_cmdline},
-      {"retransmission-backoff-count", CONFFILE_OPTION_INT, -1, _cb_int,
+      {"retransmission-backoff-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int,
        1, 0, &retransmission_backoff_count_flag, &(conf->retransmission_backoff_count), 
        conf->retransmission_backoff_count_set_on_cmdline},
-      {"ping-interval", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"ping-interval", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
        1, 0, &ping_interval_flag, &(conf->ping_interval_len), 
        conf->ping_interval_len_set_on_cmdline},
-      {"ping-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"ping-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
        1, 0, &ping_timeout_flag, &(conf->ping_timeout_len), 
        conf->ping_timeout_len_set_on_cmdline},
-      {"ping-packet-count", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"ping-packet-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
        1, 0, &ping_packet_count_flag, &(conf->ping_packet_count), 
        conf->ping_packet_count_set_on_cmdline},
-      {"ping-percent", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"ping-percent", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
        1, 0, &ping_percent_flag, &(conf->ping_percent), 
        conf->ping_percent_set_on_cmdline},
-      {"ping-consec-count", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"ping-consec-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
        1, 0, &ping_consec_count_flag, &(conf->ping_consec_count), 
        conf->ping_consec_count_set_on_cmdline},
     };

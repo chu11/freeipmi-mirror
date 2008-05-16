@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.80 2008-05-16 17:41:14 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.81 2008-05-16 18:35:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -560,8 +560,8 @@ _cmd_help(void)
               "ping-consec-count COUNT                  - Specify a new ping consec count.\n"
 	      "buffer-output [on|off]                   - Toggle buffer-output functionality\n"
               "consolidate-output [on|off]              - Toggle consolidate-output functionality.\n"
-              "always-prefix [on|off]                   - Toggle always-prefix functionality.\n"
               "fanout COUNT                             - Specify a fanout.\n"
+              "always-prefix [on|off]                   - Toggle always-prefix functionality.\n"
               "help                                     - Output help menu.\n"
               "version                                  - Output version.\n"
               "config                                   - Output current configuration.\n"
@@ -687,6 +687,11 @@ _cmd_config(void)
   cbuf_printf(ttyout, "K_g:                          *****\n");
 #endif /* !NDEBUG */
 
+  cbuf_printf(ttyout, "Session Timeout:              %u ms\n", 
+              conf->session_timeout_len);
+  cbuf_printf(ttyout, "Retransmission Timeout:       %u ms\n", 
+              conf->retransmission_timeout_len);
+
   str = "";
   if (conf->authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
     str = IPMI_AUTHENTICATION_TYPE_NONE_STR;
@@ -698,16 +703,6 @@ _cmd_config(void)
     str = IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR;
 
   cbuf_printf(ttyout, "Authentication_Type:          %s\n", str);
-
-  str = "";
-  if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_USER)
-    str = IPMI_PRIVILEGE_LEVEL_USER_STR;
-  else if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR)
-    str = IPMI_PRIVILEGE_LEVEL_OPERATOR_STR;
-  else if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
-    str = IPMI_PRIVILEGE_LEVEL_ADMIN_STR;
-
-  cbuf_printf(ttyout, "Privilege_Level:              %s\n", str);
 
   str = "";
   if (conf->cipher_suite_id == 0)
@@ -731,20 +726,15 @@ _cmd_config(void)
 
   cbuf_printf(ttyout, "Cipher Suite Id:              %s\n", str);
 
-  cbuf_printf(ttyout, "On-If-Off:                    %s\n",
-              (conf->on_if_off) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Wait-Until-On:                %s\n",
-              (conf->wait_until_on) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Wait-Until-Off:               %s\n",
-              (conf->wait_until_off) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Buffer-Output:                %s\n",
-              (conf->buffer_output) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Consolidate-Output:           %s\n",
-              (conf->consolidate_output) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Always-Prefix:                %s\n",
-              (conf->always_prefix) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Fanout:                       %d\n",
-	      conf->fanout);
+  str = "";
+  if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_USER)
+    str = IPMI_PRIVILEGE_LEVEL_USER_STR;
+  else if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR)
+    str = IPMI_PRIVILEGE_LEVEL_OPERATOR_STR;
+  else if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
+    str = IPMI_PRIVILEGE_LEVEL_ADMIN_STR;
+
+  cbuf_printf(ttyout, "Privilege_Level:              %s\n", str);
 
   memset(strbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN);
   is_first = 0;
@@ -794,11 +784,14 @@ _cmd_config(void)
     cbuf_printf(ttyout, "Logfile:                      %s\n", 
                 conf->logfile);
 #endif /* NDEBUG */
-  cbuf_printf(ttyout, "Session Timeout:              %d ms\n", 
-              conf->session_timeout_len);
-  cbuf_printf(ttyout, "Retransmission Timeout:       %d ms\n", 
-              conf->retransmission_timeout_len);
-  cbuf_printf(ttyout, "Retransmission Wait Timeout:  %d ms\n", 
+
+  cbuf_printf(ttyout, "On-If-Off:                    %s\n",
+              (conf->on_if_off) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Wait-Until-On:                %s\n",
+              (conf->wait_until_on) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Wait-Until-Off:               %s\n",
+              (conf->wait_until_off) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Retransmission Wait Timeout:  %u ms\n", 
               conf->retransmission_wait_timeout_len);
   cbuf_printf(ttyout, "Retransmission Backoff Count: %d\n", 
               conf->retransmission_backoff_count);
@@ -812,6 +805,15 @@ _cmd_config(void)
               conf->ping_percent);
   cbuf_printf(ttyout, "Ping Consec Count:            %d\n", 
               conf->ping_consec_count);
+
+  cbuf_printf(ttyout, "Buffer-Output:                %s\n",
+              (conf->buffer_output) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Consolidate-Output:           %s\n",
+              (conf->consolidate_output) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Fanout:                       %d\n",
+	      conf->fanout);
+  cbuf_printf(ttyout, "Always-Prefix:                %s\n",
+              (conf->always_prefix) ? "enabled" : "disabled");
 }
 
 static void 
@@ -1096,54 +1098,54 @@ ipmipower_prompt_process_cmdline(void)
               /* support "retry-wait-timeout" for backwards compatability */
               else if (strcmp(argv[0], "retry-wait-timeout") == 0
                        || strcmp(argv[0], "retransmission-wait-timeout") == 0)
-                _cmd_set_int_ranged(argv, 
-                                    &conf->retransmission_wait_timeout_len, 
-                                    "retransmission-wait-timeout", 
-                                    1,
-                                    1, 
-                                    conf->session_timeout_len);
+                _cmd_set_unsigned_int_ranged(argv, 
+                                             &conf->retransmission_wait_timeout_len, 
+                                             "retransmission-wait-timeout", 
+                                             0,
+                                             1, 
+                                             conf->session_timeout_len);
               /* support "retry-backoff-count" for backwards compatability */
               else if (strcmp(argv[0], "retry-backoff-count") == 0
                        || strcmp(argv[0], "retransmission-backoff-count") == 0)
-                _cmd_set_int(argv, 
-                             &conf->retransmission_backoff_count, 
-                             "retransmission-backoff-count", 
-                             0);
+                _cmd_set_unsigned_int(argv, 
+                                      &conf->retransmission_backoff_count, 
+                                      "retransmission-backoff-count", 
+                                      0);
               else if (strcmp(argv[0], "ping-interval") == 0)
-                _cmd_set_int_ranged(argv,
-                                    &conf->ping_interval_len, 
-                                    "ping-interval", 
-                                    1, 
-                                    IPMIPOWER_PING_INTERVAL_MIN,
+                _cmd_set_unsigned_int_ranged(argv,
+                                             &conf->ping_interval_len, 
+                                             "ping-interval", 
+                                             1, 
+                                             IPMIPOWER_PING_INTERVAL_MIN,
                                     conf->ping_timeout_len);
               else if (strcmp(argv[0], "ping-timeout") == 0)
-                _cmd_set_int_ranged(argv, 
-                                    &conf->ping_timeout_len, 
-                                    "ping-timeout",
-                                    1, 
-                                    IPMIPOWER_PING_TIMEOUT_MIN, 
-                                    IPMIPOWER_PING_TIMEOUT_MAX);
+                _cmd_set_unsigned_int_ranged(argv, 
+                                             &conf->ping_timeout_len, 
+                                             "ping-timeout",
+                                             1, 
+                                             IPMIPOWER_PING_TIMEOUT_MIN, 
+                                             IPMIPOWER_PING_TIMEOUT_MAX);
               else if (strcmp(argv[0], "ping-packet-count") == 0)
-                _cmd_set_int_ranged(argv, 
-                                    &conf->ping_packet_count, 
-                                    "ping-packet-count",
-                                    1, 
-                                    IPMIPOWER_PING_PACKET_COUNT_MIN, 
-                                    IPMIPOWER_PING_PACKET_COUNT_MAX);
+                _cmd_set_unsigned_int_ranged(argv, 
+                                             &conf->ping_packet_count, 
+                                             "ping-packet-count",
+                                             1, 
+                                             IPMIPOWER_PING_PACKET_COUNT_MIN, 
+                                             IPMIPOWER_PING_PACKET_COUNT_MAX);
               else if (strcmp(argv[0], "ping-percent") == 0)
-                _cmd_set_int_ranged(argv,
-                                    &conf->ping_percent,
-                                    "ping-percent", 
-                                    1, 
-                                    IPMIPOWER_PING_PERCENT_MIN, 
-                                    IPMIPOWER_PING_PERCENT_MAX);
+                _cmd_set_unsigned_int_ranged(argv,
+                                             &conf->ping_percent,
+                                             "ping-percent", 
+                                             1, 
+                                             IPMIPOWER_PING_PERCENT_MIN, 
+                                             IPMIPOWER_PING_PERCENT_MAX);
               else if (strcmp(argv[0], "ping-consec-count") == 0)
-                _cmd_set_int_ranged(argv,
-                                    &conf->ping_consec_count, 
-                                    "ping-consec-count", 
-                                    1, 
-                                    IPMIPOWER_PING_CONSEC_COUNT_MIN, 
-                                    conf->ping_packet_count);
+                _cmd_set_unsigned_int_ranged(argv,
+                                             &conf->ping_consec_count, 
+                                             "ping-consec-count", 
+                                             1, 
+                                             IPMIPOWER_PING_CONSEC_COUNT_MIN, 
+                                             conf->ping_packet_count);
 	      else if (strcmp(argv[0], "buffer-output") == 0)
 		_cmd_set_flag(argv,
 			      &conf->buffer_output,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.112 2008-05-16 17:41:12 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.113 2008-05-16 18:35:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -430,13 +430,13 @@ struct ipmipower_config
   int                      on_if_off;
   int                      wait_until_on;
   int                      wait_until_off;
-  int                      retransmission_wait_timeout_len;
-  int                      retransmission_backoff_count; 
-  int                      ping_interval_len;
-  int                      ping_timeout_len;
-  int                      ping_packet_count;
-  int                      ping_percent;
-  int                      ping_consec_count;
+  unsigned int             retransmission_wait_timeout_len;
+  unsigned int             retransmission_backoff_count; 
+  unsigned int             ping_interval_len;
+  unsigned int             ping_timeout_len;
+  unsigned int             ping_packet_count;
+  unsigned int             ping_percent;
+  unsigned int             ping_consec_count;
 
   /* Flags indicating if option was set on the command line */
   int                      driver_type_set_on_cmdline;
