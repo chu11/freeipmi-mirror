@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.108 2008-05-16 18:35:04 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.109 2008-05-16 20:13:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -290,13 +290,6 @@ _config_common_checks(char *str)
 {
   assert (str != NULL);
 
-  if (conf->cipher_suite_id < IPMI_CIPHER_SUITE_ID_MIN
-      || conf->cipher_suite_id > IPMI_CIPHER_SUITE_ID_MAX)
-    ierr_exit("%s: invalid cipher suite id", str);
- 
-  if (!IPMI_CIPHER_SUITE_ID_SUPPORTED(conf->cipher_suite_id))
-    ierr_exit("%s: unsupported cipher suite id", str);
-
   if (!conf->retransmission_backoff_count)
     ierr_exit("%s: invalid retransmission backoff count", str);
 
@@ -437,9 +430,14 @@ cmdline_parse (int key,
       conf->authentication_type_set_on_cmdline++;
       break;
     case ARGP_CIPHER_SUITE_ID_KEY:       /* --cipher-suite-id */
-      conf->cipher_suite_id = strtol(arg, &ptr, 10);
-      if (ptr != (arg + strlen(arg)))
+      tmp = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg))
+          || tmp < IPMI_CIPHER_SUITE_ID_MIN
+          || tmp > IPMI_CIPHER_SUITE_ID_MAX)
         ierr_exit("Command Line Error: invalid cipher suite id");
+      if (!IPMI_CIPHER_SUITE_ID_SUPPORTED(tmp))
+        ierr_exit("Command Line Error: unsupported cipher suite id");
+      conf->cipher_suite_id = tmp;
       conf->cipher_suite_id_set_on_cmdline++;
       break;
       /* ARGP_PRIVILEGE_KEY for backwards compatability */
@@ -733,6 +731,23 @@ _cb_authentication_type(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
+_cb_cipher_suite_id(conffile_t cf, struct conffile_data *data,
+                    char *optionname, int option_type, void *option_ptr, 
+                    int option_data, void *app_ptr, int app_data) 
+{
+  if (conf->cipher_suite_id_set_on_cmdline)
+    return 0;
+
+  if (data->intval < IPMI_CIPHER_SUITE_ID_MIN
+      || data->intval > IPMI_CIPHER_SUITE_ID_MAX)
+    ierr_exit("Config File Error: invalid cipher suite id");
+  if (!IPMI_CIPHER_SUITE_ID_SUPPORTED(data->intval))
+    ierr_exit("Config File Error: unsupported cipher suite id");
+  conf->cipher_suite_id = data->intval;
+  return 0;
+}
+
+static int 
 _cb_privilege_level(conffile_t cf, struct conffile_data *data,
                     char *optionname, int option_type, void *option_ptr, 
                     int option_data, void *app_ptr, int app_data) 
@@ -922,9 +937,9 @@ ipmipower_config_conffile_parse(char *configfile)
       {"authentication-type", CONFFILE_OPTION_STRING, -1, _cb_authentication_type, 
        1, 0, &authentication_type_flag, NULL, 0},
       /* cipher suite id w/ underscores maintained for backwards compatability */
-      {"cipher_suite_id", CONFFILE_OPTION_STRING, -1, _cb_int,
+      {"cipher_suite_id", CONFFILE_OPTION_STRING, -1, _cb_cipher_suite_id,
        1, 0, &cipher_suite_id_backwards_flag, NULL, 0},
-      {"cipher-suite-id", CONFFILE_OPTION_STRING, -1, _cb_int,
+      {"cipher-suite-id", CONFFILE_OPTION_STRING, -1, _cb_cipher_suite_id,
        1, 0, &cipher_suite_id_flag, NULL, 0},
       /* "privilege" maintained for backwards compatability */
       {"privilege", CONFFILE_OPTION_STRING, -1, _cb_privilege_level, 
