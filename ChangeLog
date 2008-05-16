@@ -4,6 +4,9 @@
 	count support.  Removed various extraneous min/max checks.  Fix
 	various signed/unsigned config issues.
 
+	* common/src/tool-cmdline-common.h: Fix signed/unsigned parsing
+	issues.
+
 2008-05-15  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-outofband-timeout.man: Fix text.

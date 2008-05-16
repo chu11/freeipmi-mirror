@@ -344,7 +344,7 @@ struct common_cmd_args
   char *username;
   char *password;
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
-  int k_g_len;
+  unsigned int k_g_len;
   int authentication_type;
   int cipher_suite_id;
   int privilege_level;

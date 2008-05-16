@@ -22,6 +22,7 @@ o Removed many early experimental features from ipmipower so ipmipower is more
   like other tools.
   o Removed ipmi-version, cipher-suite-id, privilege-level, and
     authentication-type auto discovery.
+  o Removed ability to enable/disable a number of experimental features.
 o Changed --ipmi-version option to --driver-type in ipmipower for
   consistency to other tools.  Old options maintained for backwards
   compatability.
