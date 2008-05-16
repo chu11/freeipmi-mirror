@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.h,v 1.10 2008-03-28 00:14:46 chu11 Exp $
+ *  $Id: ipmipower_config.h,v 1.11 2008-05-16 21:29:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -29,29 +29,9 @@
 
 #include "ipmipower.h"
 
-/* ipmipower_config_default_logfile
- * - Create default logfile name and store in buffer
+/* ipmipower_config
+ * - parse config file and cmdline
  */
-void ipmipower_config_default_logfile(char *buf, int buflen);
-
-/* ipmipower_config_setup
- * - setup and initialization config defaults
- */ 
-void ipmipower_config_setup(void);
-
-/* ipmipower_config_cmdline_parse
- * - parse command line options
- */
-void ipmipower_config_cmdline_parse(int argc, char **argv);
-
-/* ipmipower_config_conffile_parse
- * - read and store info from config file
- */
-void ipmipower_config_conffile_parse(char *conffile);
-
-/* ipmipower_config_check_values
- * - check values stored in conf
- */
-void ipmipower_config_check_values(void);
+void ipmipower_config(int argc, char **argv);
 
 #endif /* _IPMIPOWER_CONFIG_H */

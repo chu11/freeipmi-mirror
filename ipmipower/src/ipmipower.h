@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.114 2008-05-16 20:46:21 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.115 2008-05-16 21:29:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -401,34 +401,6 @@ struct ipmipower_config
   unsigned int             ping_packet_count;
   unsigned int             ping_percent;
   unsigned int             ping_consec_count;
-
-  /* Flags indicating if option was set on the command line */
-  int                      driver_type_set_on_cmdline;
-  int                      hosts_set_on_cmdline;
-  int                      username_set_on_cmdline;
-  int                      password_set_on_cmdline;
-  int                      k_g_set_on_cmdline;
-  int                      session_timeout_len_set_on_cmdline;
-  int                      retransmission_timeout_len_set_on_cmdline;
-  int                      authentication_type_set_on_cmdline;
-  int                      cipher_suite_id_set_on_cmdline;
-  int                      privilege_level_set_on_cmdline;
-  int                      workaround_flags_set_on_cmdline;
-  int                      buffer_output_set_on_cmdline;
-  int                      consolidate_output_set_on_cmdline;
-  int                      fanout_set_on_cmdline;
-  int                      eliminate_set_on_cmdline;
-  int                      always_prefix_set_on_cmdline;
-  int                      on_if_off_set_on_cmdline;
-  int                      wait_until_on_set_on_cmdline;
-  int                      wait_until_off_set_on_cmdline;
-  int                      retransmission_wait_timeout_len_set_on_cmdline;
-  int                      retransmission_backoff_count_set_on_cmdline;
-  int                      ping_interval_len_set_on_cmdline;
-  int                      ping_timeout_len_set_on_cmdline; 
-  int                      ping_consec_count_set_on_cmdline;
-  int                      ping_packet_count_set_on_cmdline;
-  int                      ping_percent_set_on_cmdline;
 };
 
 typedef struct ipmipower_powercmd *ipmipower_powercmd_t;

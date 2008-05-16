@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.50 2008-05-16 20:46:21 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.51 2008-05-16 21:29:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -97,6 +97,7 @@ _security_initialization(void)
   if (setrlimit(RLIMIT_CORE,&rlim) < 0)
     ierr_exit("setrlimit: %s", strerror(errno));
 #endif /* NDEBUG */
+
   if (ipmi_rmcpplus_init() < 0)
     ierr_exit("ipmi_rmcpplus_init");
 }
@@ -436,14 +437,7 @@ main(int argc, char *argv[])
   
   _security_initialization();
 
-  ipmipower_config_setup();
-  assert(conf != NULL);
-
-  /* Must be called before conffile_parse b/c --config option on command line*/
-  ipmipower_config_cmdline_parse(argc, argv);
-    
-  ipmipower_config_conffile_parse(conf->configfile);
-  ipmipower_config_check_values();
+  ipmipower_config(argc, argv);
 
   _setup();
 
@@ -458,8 +452,7 @@ main(int argc, char *argv[])
       int i;
 
       /* Check for appropriate privilege first */
-      if (conf->privilege_level_set_on_cmdline
-          && conf->privilege_level == IPMI_PRIVILEGE_LEVEL_USER 
+      if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_USER 
           && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(conf->powercmd))
         ierr_exit("power operation requires atleast operator privilege");
 
