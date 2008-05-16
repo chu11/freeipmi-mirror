@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.81 2008-05-16 18:35:04 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.82 2008-05-16 20:46:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -338,96 +338,6 @@ _cmd_workaround_flags(char **argv)
                 IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR);
 }
 
-#ifndef NDEBUG
-static void
-_cmd_log(char **argv)
-{
-  assert(argv != NULL);
-  
-  if (argv[1] == NULL) 
-    conf->log = !conf->log;
-  else 
-    {
-      if (!strcasecmp(argv[1], "on"))
-        conf->log = 1;
-      else if (!strcasecmp(argv[1], "off"))  
-        conf->log = 0;
-      else 
-        {
-          cbuf_printf(ttyout, "invalid parameter\n");
-          return;
-        }
-    }
-  
-  if (conf->log && conf->logfile_fd == -1)
-    {
-      /* Don't use Open wrapper, we don't want to ierr_exit on failure */
-      if ((conf->logfile_fd = open(conf->logfile, 
-                                   O_WRONLY | O_CREAT | O_APPEND, 
-                                   S_IRUSR | S_IWUSR)) < 0)
-        { 
-          cbuf_printf(ttyout, "error opening log file %s: %s\n", 
-                      conf->logfile, strerror(errno));
-          cbuf_printf(ttyout, "logging not enabled\n");
-          conf->log = 0;
-          return;
-        }
-    }
-  else if (!conf->log && conf->logfile_fd != -1)
-    {
-      close(conf->logfile_fd);
-      conf->logfile_fd = -1;
-    }
-
-  ierr_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
-  cbuf_printf(ttyout, "logging is now %s\n", (conf->log) ? "on" : "off");
-}
-
-static void 
-_cmd_logfile(char **argv) 
-{
-  int fd = -1;
-  char *file;
-  char tempfile[MAXPATHLEN+1];
-
-  assert(argv != NULL);
-
-  if (argv[1] != NULL && strlen(argv[1]) > MAXPATHLEN)
-    {
-      cbuf_printf(ttyout, "log file pathname too long");
-      return;
-    }
-
-  if (argv[1] == NULL)
-    {
-      memset(tempfile, '\0', MAXPATHLEN+1);
-      ipmipower_config_default_logfile(tempfile, MAXPATHLEN);
-      file = tempfile;
-    }
-  else
-    file = argv[1];
-
-  if (conf->log)
-    {
-      /* Don't use Open wrapper, we don't want to ierr_exit on failure */
-      if ((fd = open(file, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR)) < 0)
-        { 
-          cbuf_printf(ttyout, "error opening log file %s: %s\n", 
-                      file, strerror(errno));
-          return;
-        }
-      close(conf->logfile_fd);
-    }
-
-  memset(conf->logfile, '\0', MAXPATHLEN+1);
-  strcpy(conf->logfile, file);
-  conf->logfile_fd = fd;
-  ierr_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
-  
-  cbuf_printf(ttyout, "log file set to %s\n", conf->logfile);
-}
-#endif /* NDEBUG */
-
 static void 
 _cmd_power(char **argv, power_cmd_t cmd) 
 {
@@ -536,9 +446,7 @@ _cmd_help(void)
               "debug [on|off]                           - Toggle debug to stderr.\n");
 #ifndef NDEBUG
   cbuf_printf(ttyout,
-              "rmcpdump [on|off]                        - Toggle RMCP dump output.\n"
-	      "log [on|off]                             - Toggle logging output.\n"
-	      "logfile [FILE]                           - Specify a new log file.  No input for default.\n");
+              "rmcpdump [on|off]                        - Toggle RMCP dump output.\n");
 #endif /* NDEBUG */
   cbuf_printf(ttyout,
               "on [IPMIHOST(s)]                         - Turn on all configured hosts or specified hosts.\n"
@@ -773,16 +681,12 @@ _cmd_config(void)
 
   cbuf_printf(ttyout, "WorkaroundFlags:              %s\n", strbuf);
 
-#ifndef NDEBUG
   cbuf_printf(ttyout, "Debug:                        %s\n", 
               (conf->debug) ? "on" : "off");
+
+#ifndef NDEBUG
   cbuf_printf(ttyout, "Rmcpdump:                     %s\n", 
               (conf->rmcpdump) ? "on" : "off");
-  cbuf_printf(ttyout, "Logging:                      %s\n",
-	      (conf->log) ? "on" : "off");
-  if (conf->log)
-    cbuf_printf(ttyout, "Logfile:                      %s\n", 
-                conf->logfile);
 #endif /* NDEBUG */
 
   cbuf_printf(ttyout, "On-If-Off:                    %s\n",
@@ -793,24 +697,24 @@ _cmd_config(void)
               (conf->wait_until_off) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Retransmission Wait Timeout:  %u ms\n", 
               conf->retransmission_wait_timeout_len);
-  cbuf_printf(ttyout, "Retransmission Backoff Count: %d\n", 
+  cbuf_printf(ttyout, "Retransmission Backoff Count: %u\n", 
               conf->retransmission_backoff_count);
-  cbuf_printf(ttyout, "Ping Interval:                %d ms\n",
+  cbuf_printf(ttyout, "Ping Interval:                %u ms\n",
               conf->ping_interval_len);
-  cbuf_printf(ttyout, "Ping Timeout:                 %d ms\n", 
+  cbuf_printf(ttyout, "Ping Timeout:                 %u ms\n", 
               conf->ping_timeout_len);
-  cbuf_printf(ttyout, "Ping Packet Count:            %d\n", 
+  cbuf_printf(ttyout, "Ping Packet Count:            %u\n", 
               conf->ping_packet_count);
-  cbuf_printf(ttyout, "Ping Percent:                 %d percent\n", 
+  cbuf_printf(ttyout, "Ping Percent:                 %u percent\n", 
               conf->ping_percent);
-  cbuf_printf(ttyout, "Ping Consec Count:            %d\n", 
+  cbuf_printf(ttyout, "Ping Consec Count:            %u\n", 
               conf->ping_consec_count);
 
   cbuf_printf(ttyout, "Buffer-Output:                %s\n",
               (conf->buffer_output) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Consolidate-Output:           %s\n",
               (conf->consolidate_output) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Fanout:                       %d\n",
+  cbuf_printf(ttyout, "Fanout:                       %u\n",
 	      conf->fanout);
   cbuf_printf(ttyout, "Always-Prefix:                %s\n",
               (conf->always_prefix) ? "enabled" : "disabled");
@@ -843,66 +747,12 @@ _cmd_set_unsigned_int(char **argv,
 }
 
 static void 
-_cmd_set_int(char **argv, 
-             int *val, 
-             char *str, 
-             int allow_zero)
-{
-  assert(argv != NULL && val != NULL && str != NULL);
-
-  if (argv[1] == NULL)
-    cbuf_printf(ttyout, "%s not specified\n", str);
-  else 
-    {
-      char *ptr;
-      int temp = strtol(argv[1], &ptr, 10);
-      if (ptr != (argv[1] + strlen(argv[1]))) 
-        cbuf_printf(ttyout, "invalid %s input\n", str);
-      else if (allow_zero && temp == 0)
-        {
-          *val = temp;
-          cbuf_printf(ttyout, "%s is now %d\n", str, *val);
-        }
-      else
-        cbuf_printf(ttyout, "invalid %s input\n", str);
-    }
-}
-
-static void 
 _cmd_set_unsigned_int_ranged(char **argv, 
                              unsigned int *val, 
                              char *str, 
                              int allow_zero,
                              int min, 
                              int max) 
-{
-  assert(argv != NULL && val != NULL && str != NULL);
-
-  if (argv[1] == NULL)
-    cbuf_printf(ttyout, "%s not specified\n", str);
-  else 
-    {
-      char *ptr;
-      int temp = strtol(argv[1], &ptr, 10);
-      if (ptr != (argv[1] + strlen(argv[1]))) 
-        cbuf_printf(ttyout, "invalid %s input\n", str);
-      else if ((allow_zero && temp == 0) || (temp <= max && temp >= min)) {
-        *val = temp;
-        cbuf_printf(ttyout, "%s is now %d\n", str, *val);
-      }
-      else
-        cbuf_printf(ttyout, "invalid %s input, range is %d <=> %d\n", 
-                    str, min, max);
-    }
-}
-
-static void 
-_cmd_set_int_ranged(char **argv, 
-                    int *val, 
-                    char *str, 
-                    int allow_zero,
-                    int min, 
-                    int max) 
 {
   assert(argv != NULL && val != NULL && str != NULL);
 
@@ -1062,10 +912,6 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_set_flag(argv, 
                               &conf->rmcpdump,
                               "rmcp dump");
-              else if (strcmp(argv[0], "log") == 0)
-                _cmd_log(argv);
-              else if (strcmp(argv[0], "logfile") == 0)
-                _cmd_logfile(argv);
 #endif /* NDEBUG */
               else if (strcmp(argv[0], "happyeaster") == 0)
                 cbuf_printf(ttyout, "by Albert Chu <chu11@llnl.gov>\n");
@@ -1116,35 +962,29 @@ ipmipower_prompt_process_cmdline(void)
                                              &conf->ping_interval_len, 
                                              "ping-interval", 
                                              1, 
-                                             IPMIPOWER_PING_INTERVAL_MIN,
-                                    conf->ping_timeout_len);
+                                             0,
+                                             conf->ping_timeout_len);
               else if (strcmp(argv[0], "ping-timeout") == 0)
-                _cmd_set_unsigned_int_ranged(argv, 
-                                             &conf->ping_timeout_len, 
-                                             "ping-timeout",
-                                             1, 
-                                             IPMIPOWER_PING_TIMEOUT_MIN, 
-                                             IPMIPOWER_PING_TIMEOUT_MAX);
+                _cmd_set_unsigned_int(argv, 
+                                      &conf->ping_timeout_len, 
+                                      "ping-timeout",
+                                      1);
               else if (strcmp(argv[0], "ping-packet-count") == 0)
-                _cmd_set_unsigned_int_ranged(argv, 
-                                             &conf->ping_packet_count, 
-                                             "ping-packet-count",
-                                             1, 
-                                             IPMIPOWER_PING_PACKET_COUNT_MIN, 
-                                             IPMIPOWER_PING_PACKET_COUNT_MAX);
+                _cmd_set_unsigned_int(argv, 
+                                      &conf->ping_packet_count, 
+                                      "ping-packet-count",
+                                      1);
               else if (strcmp(argv[0], "ping-percent") == 0)
-                _cmd_set_unsigned_int_ranged(argv,
-                                             &conf->ping_percent,
-                                             "ping-percent", 
-                                             1, 
-                                             IPMIPOWER_PING_PERCENT_MIN, 
-                                             IPMIPOWER_PING_PERCENT_MAX);
+                _cmd_set_unsigned_int(argv,
+                                      &conf->ping_percent,
+                                      "ping-percent", 
+                                      1);
               else if (strcmp(argv[0], "ping-consec-count") == 0)
                 _cmd_set_unsigned_int_ranged(argv,
                                              &conf->ping_consec_count, 
                                              "ping-consec-count", 
                                              1, 
-                                             IPMIPOWER_PING_CONSEC_COUNT_MIN, 
+                                             0, 
                                              conf->ping_packet_count);
 	      else if (strcmp(argv[0], "buffer-output") == 0)
 		_cmd_set_flag(argv,
@@ -1159,12 +999,12 @@ ipmipower_prompt_process_cmdline(void)
                               &conf->always_prefix, 
                               "always-prefix");
 	      else if (strcmp(argv[0], "fanout") == 0)
-                _cmd_set_int_ranged(argv, 
-                                    &conf->fanout, 
-                                    "fanout",
-                                    1, 
-                                    PSTDOUT_FANOUT_MIN, 
-                                    PSTDOUT_FANOUT_MAX);
+                _cmd_set_unsigned_int_ranged(argv, 
+                                             &conf->fanout, 
+                                             "fanout",
+                                             1, 
+                                             PSTDOUT_FANOUT_MIN, 
+                                             PSTDOUT_FANOUT_MAX);
               else if (strcmp(argv[0], "help") == 0 
                        || strcmp(argv[0], "?") == 0
 		       || strcmp(argv[0], "advanced") == 0 /* legacy */

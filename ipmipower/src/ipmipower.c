@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.49 2008-05-16 17:41:12 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.50 2008-05-16 20:46:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -144,21 +144,11 @@ _setup(void)
   ierr_syslog(1);
 
 #ifndef NDEBUG
-  if (strlen(conf->logfile)) 
-    {
-      conf->logfile_fd = open(conf->logfile, O_WRONLY | O_CREAT | O_APPEND,
-                              S_IRUSR | S_IWUSR);
-      if (conf->logfile_fd < 0)
-        ierr_exit("error opening log file %s: %s", conf->logfile, strerror(errno));
-    }
-
   /* if debug set, send debug info to stderr too */
   ierr_cbuf(conf->debug, ttyerr);
 
   /* on ierr_exit() dump cbuf data to appropriate places too */
   ierr_cbuf_dump_file_stream(conf->debug, stderr);
-  ierr_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
-
 #else  /* !NDEBUG */
   ierr_cbuf(0, 0);
 #endif /* !NDEBUG */
@@ -175,16 +165,8 @@ _cleanup(void)
   cbuf_destroy(ttyin);
   
   /* Flush before destroying. */
-#ifndef NDEBUG
-  if (conf->log)
-    cbuf_peek_to_fd(ttyout, conf->logfile_fd, -1);
-#endif /* NDEBUG */
   cbuf_read_to_fd(ttyout, STDOUT_FILENO, -1);
   cbuf_destroy(ttyout);
-#ifndef NDEBUG
-  if (conf->log)
-    cbuf_peek_to_fd(ttyerr, conf->logfile_fd, -1);
-#endif /* NDEBUG */
   cbuf_read_to_fd(ttyerr, STDERR_FILENO, -1);
   cbuf_destroy(ttyerr);
 
@@ -194,10 +176,6 @@ _cleanup(void)
     hostlist_destroy(output_hostrange[i]);
 
   hostlist_destroy(conf->hosts);
-
-#ifndef NDEBUG
-  close(conf->logfile_fd);
-#endif /* NDEBUG */
 
   free(conf);
 }
@@ -391,29 +369,11 @@ _poll_loop(int non_interactive)
         }
       
       if (pfds[nfds-3].revents & POLLIN)
-        {
-          Cbuf_write_from_fd(ttyin, STDIN_FILENO);
-#ifndef NDEBUG
-          if (conf->log)
-            Cbuf_peek_to_fd(ttyin, conf->logfile_fd, -1);
-#endif /* NDEBUG */
-        }
+        Cbuf_write_from_fd(ttyin, STDIN_FILENO);
       if (!cbuf_is_empty(ttyout) && (pfds[nfds-2].revents & POLLOUT))
-        {
-#ifndef NDEBUG
-          if (conf->log)
-            Cbuf_peek_to_fd(ttyout, conf->logfile_fd, -1);
-#endif /* NDEBUG */
-          Cbuf_read_to_fd(ttyout, STDOUT_FILENO);
-        }
+        Cbuf_read_to_fd(ttyout, STDOUT_FILENO);
       if (!cbuf_is_empty(ttyerr) && (pfds[nfds-1].revents & POLLOUT))
-        {
-#ifndef NDEBUG
-          if (conf->log)
-            Cbuf_peek_to_fd(ttyerr, conf->logfile_fd, -1);
-#endif /* NDEBUG */
-          Cbuf_read_to_fd(ttyerr, STDERR_FILENO);
-        }
+        Cbuf_read_to_fd(ttyerr, STDERR_FILENO);
     }
 
   Free(pfds);

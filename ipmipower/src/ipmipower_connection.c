@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.23 2008-05-16 17:41:13 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.24 2008-05-16 20:46:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -50,6 +50,9 @@
 #include "ipmipower_wrappers.h"
 
 extern int h_errno;
+
+#define IPMIPOWER_MIN_CONNECTION_BUF 1024*2
+#define IPMIPOWER_MAX_CONNECTION_BUF 1024*4
 
 /* _clean_fd 
  * - Remove any extraneous packets sitting on the fd buffer

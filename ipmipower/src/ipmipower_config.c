@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.109 2008-05-16 20:13:47 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.110 2008-05-16 20:46:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -73,8 +73,6 @@ const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 #define DEBUG_KEY                        165
 #define IPMIDUMP_KEY                     166
 #define RMCPDUMP_KEY                     167
-#define LOG_KEY                          168
-#define LOGFILE_KEY                      169
 
 #define ON_KEY                           'n'
 #define OFF_KEY                          'f'
@@ -133,10 +131,6 @@ static struct argp_option cmdline_options[] =
 #ifndef NDEBUG
     {"rmcpdump", RMCPDUMP_KEY, 0, 0,
      "Turn on RMCP packet dump output.", 27},
-    {"log", LOG_KEY, 0, 0,
-     "Turn on logging.", 28},
-    {"logfile", LOGFILE_KEY, "FILE", 0,
-     "Specify an alternate logfile.", 29},
 #endif
     {"on", ON_KEY, 0, 0,
      "Power on the target hosts.", 30},
@@ -195,21 +189,6 @@ static struct argp cmdline_argp = {cmdline_options,
 
 
 void 
-ipmipower_config_default_logfile(char *buf, int buflen)
-{
-  char buffer[MAXPATHLEN+1];
-  pid_t pid;
-
-  assert(buf != NULL && buflen > 0);
-
-  pid = getpid();
-  snprintf(buffer, MAXPATHLEN, IPMIPOWER_DEFAULT_LOGFILE, pid);
-  if (strlen(buffer) > buflen - 1)
-    ierr_exit("ipmipower_config_default_logfile: internal buffer too small");
-  strcpy(buf, buffer);
-}
-
-void 
 ipmipower_config_setup(void) 
 {
   assert(conf == NULL);         /* Already initialized */
@@ -234,10 +213,6 @@ ipmipower_config_setup(void)
   memset(conf->configfile, '\0', MAXPATHLEN+1);
 #ifndef NDEBUG
   conf->rmcpdump = 0;
-  conf->log = 0;
-  memset(conf->logfile, '\0', MAXPATHLEN+1);
-  ipmipower_config_default_logfile(conf->logfile, MAXPATHLEN);
-  conf->logfile_fd = -1;
 #endif /* NDEBUG */
   conf->buffer_output = 0;
   conf->consolidate_output = 0;
@@ -285,39 +260,6 @@ ipmipower_config_setup(void)
   conf->ping_consec_count_set_on_cmdline = 0;
 }
 
-static void 
-_config_common_checks(char *str) 
-{
-  assert (str != NULL);
-
-  if (!conf->retransmission_backoff_count)
-    ierr_exit("%s: invalid retransmission backoff count", str);
-
-  if (conf->ping_interval_len != 0 
-      && (conf->ping_interval_len < IPMIPOWER_PING_INTERVAL_MIN 
-          || conf->ping_interval_len > IPMIPOWER_PING_INTERVAL_MAX))
-    ierr_exit("%s: ping interval out of range", str);
-  
-  if (conf->ping_timeout_len != 0 
-      && (conf->ping_timeout_len < IPMIPOWER_PING_TIMEOUT_MIN 
-          || conf->ping_timeout_len > IPMIPOWER_PING_TIMEOUT_MAX))
-    ierr_exit("%s: ping timeout out of range", str);
-
-  if (conf->ping_packet_count != 0
-      && (conf->ping_packet_count < IPMIPOWER_PING_PACKET_COUNT_MIN
-          || conf->ping_packet_count > IPMIPOWER_PING_PACKET_COUNT_MAX))
-    ierr_exit("%s: ping packet out of range", str);
-
-  if (conf->ping_percent != 0
-      && (conf->ping_percent < IPMIPOWER_PING_PERCENT_MIN
-          || conf->ping_percent > IPMIPOWER_PING_PERCENT_MAX))
-    ierr_exit("%s: ping percent out of range", str);
-  
-  if (conf->ping_consec_count != 0
-      && (conf->ping_consec_count < IPMIPOWER_PING_CONSEC_COUNT_MIN
-          || conf->ping_consec_count > IPMIPOWER_PING_CONSEC_COUNT_MAX))
-    ierr_exit("%s: ping consec out of range", str);
-}
 
 static error_t
 cmdline_parse (int key,
@@ -466,15 +408,6 @@ cmdline_parse (int key,
     case RMCPDUMP_KEY:       /* --rmcpdump */
       conf->rmcpdump++;
       break;
-    case LOG_KEY:            /* --log */
-      conf->log++;
-      break;
-    case LOGFILE_KEY:        /* --logfile */
-      if (strlen(arg) > MAXPATHLEN)
-        ierr_exit("Command Line Error: log file pathname too long");
-      memset(conf->logfile, '\0', MAXPATHLEN+1);
-      strcpy(conf->logfile, arg);
-      break;
 #endif /* !NDEBUG */
     case ARGP_BUFFER_OUTPUT_KEY:       /* --buffer-output */
       conf->buffer_output++;
@@ -485,9 +418,12 @@ cmdline_parse (int key,
       conf->consolidate_output_set_on_cmdline++;
       break;
     case ARGP_FANOUT_KEY:          /* --fanout */
-      conf->fanout = strtol(arg, &ptr, 10);
-      if (ptr != (arg + strlen(arg)))
+      tmp = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg))
+          || tmp < PSTDOUT_FANOUT_MIN
+          || tmp > PSTDOUT_FANOUT_MAX)
         ierr_exit("Command Line Error: fanout invalid");
+      conf->fanout = tmp;
       conf->fanout_set_on_cmdline++;
       break;
     case ARGP_ELIMINATE_KEY:       /* --eliminate */
@@ -602,8 +538,6 @@ cmdline_parse (int key,
 static void
 post_cmdline_parse_verify(void)
 {
-  _config_common_checks("Command Line Error");
-  
   if (conf->powercmd != POWER_CMD_NONE)
     conf->ping_interval_len = 0;     /* force pings to be off */
 }
@@ -781,6 +715,21 @@ _cb_workaround_flags(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
+_cb_fanout(conffile_t cf, struct conffile_data *data,
+                    char *optionname, int option_type, void *option_ptr, 
+                    int option_data, void *app_ptr, int app_data) 
+{
+  if (conf->fanout_set_on_cmdline)
+    return 0;
+
+  if (data->intval < PSTDOUT_FANOUT_MIN
+      || data->intval > PSTDOUT_FANOUT_MAX)
+    ierr_exit("Config File Error: invalid fanout");
+  conf->fanout = data->intval;
+  return 0;
+}
+
+static int 
 _cb_bool(conffile_t cf, struct conffile_data *data,
          char *optionname, int option_type, void *option_ptr,
          int option_data, void *app_ptr, int app_data) 
@@ -814,24 +763,6 @@ _cb_unsigned_int_non_zero(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
-_cb_int_non_zero(conffile_t cf, struct conffile_data *data,
-                 char *optionname, int option_type, void *option_ptr,
-                 int option_data, void *app_ptr, int app_data) 
-{
-  int *temp = (int *)option_ptr;
-  int cmdlineset = (int)option_data;
-
-  if (cmdlineset)
-    return 0;
-
-  if (!data->intval)
-    ierr_exit("Config File Error: %s value invalid");
-
-  *temp = data->intval; 
-  return 0;
-}
-
-static int 
 _cb_unsigned_int(conffile_t cf, struct conffile_data *data,
                  char *optionname, int option_type, void *option_ptr,
                  int option_data, void *app_ptr, int app_data) 
@@ -844,21 +775,6 @@ _cb_unsigned_int(conffile_t cf, struct conffile_data *data,
 
   if (data->intval < 0)
     ierr_exit("Config File Error: %s value invalid", optionname);
-
-  *temp = data->intval; 
-  return 0;
-}
-
-static int 
-_cb_int(conffile_t cf, struct conffile_data *data,
-        char *optionname, int option_type, void *option_ptr,
-        int option_data, void *app_ptr, int app_data) 
-{
-  int *temp = (int *)option_ptr;
-  int cmdlineset = (int)option_data;
-
-  if (cmdlineset)
-    return 0;
 
   *temp = data->intval; 
   return 0;
@@ -952,7 +868,7 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &buffer_output_flag, NULL, 0},
       {"consolidate-output", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &consolidate_output_flag, NULL, 0},
-      {"fanout", CONFFILE_OPTION_INT, -1, _cb_int,
+      {"fanout", CONFFILE_OPTION_INT, -1, _cb_fanout,
        1, 0, &fanout_flag, &(conf->fanout),
        conf->fanout_set_on_cmdline},
       {"eliminate", CONFFILE_OPTION_BOOL, -1, _cb_bool,
@@ -976,10 +892,10 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &retransmission_wait_timeout_flag, &(conf->retransmission_wait_timeout_len), 
        conf->retransmission_wait_timeout_len_set_on_cmdline},
       /* retry-backoff-count for backwards compatability */
-      {"retry-backoff-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int,
+      {"retry-backoff-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero,
        1, 0, &retry_backoff_count_flag, &(conf->retransmission_backoff_count), 
        conf->retransmission_backoff_count_set_on_cmdline},
-      {"retransmission-backoff-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int,
+      {"retransmission-backoff-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero,
        1, 0, &retransmission_backoff_count_flag, &(conf->retransmission_backoff_count), 
        conf->retransmission_backoff_count_set_on_cmdline},
       {"ping-interval", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
@@ -1021,8 +937,6 @@ ipmipower_config_conffile_parse(char *configfile)
       ierr_exit("Config File Error: %s", errbuf);
     }
 
-  _config_common_checks("Config File Error");
-
  done:
   (void)conffile_handle_destroy(cf);
   return;
@@ -1041,11 +955,6 @@ ipmipower_config_check_values(void)
   if (conf->retransmission_wait_timeout_len > conf->session_timeout_len)
     ierr_exit("Error: Session timeout length must be longer than retransmission wait timeout length");
   
-  if (conf->fanout
-      && (conf->fanout < PSTDOUT_FANOUT_MIN
-          || conf->fanout > PSTDOUT_FANOUT_MAX))
-    ierr_exit("Error: fanout invalid");
-
   if (conf->powercmd != POWER_CMD_NONE && conf->hosts == NULL)
     ierr_exit("Error: Must specify target hostname(s) in non-interactive mode");
 

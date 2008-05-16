@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.40 2008-05-16 15:49:16 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.41 2008-05-16 20:46:21 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -87,13 +87,6 @@ Specify an alternate configuration file.
 \fB\-\-rmcpdump\fR
 Turn on RMCP packet dump output.  Warning, the dump output can get 
 extremely long.
-.TP
-\fB\-\-log\fR
-Turn on logging.  Default logfile is /tmp/ipmipower.PID, where PID is
-the current process id.
-.TP
-\fB\-\-logfile\fR=\fFILE\fR
-Specify an alternate logfile.
 \}
 
 .SH "IPMIPOWER OPTIONS"
@@ -175,8 +168,7 @@ interactive mode, RMCP (Remote Management Control Protocol) messages
 discovery will be sent to all configured remote hosts to confirm their
 support of IPMI. A remote host is considered undiscovered if the host
 does not respond in MILLISECONDS time.  Defaults to 30000 milliseconds
-(30 seconds).  This value must be less than the ping timeout interval
-described above.
+(30 seconds).  The ping timeout cannot be larger than the ping interval.
 .TP
 \fB\-v\fR, \fB\-\-ping\-packet\-count\fR=\fBCOUNT\fR
 Specify the ping packet count size.  Defaults to 10.  See the
@@ -202,7 +194,7 @@ problem.
 .B Ipmipower 
 will monitor RMCP ping packets in packet count chunks.  If
 .B ipmipower 
-does not receive a response to greater than ping percentof those
+does not receive a response to greater than ping percent of those
 packets,
 .B ipmipower 
 will assume the link to this node is bad and will not send power
@@ -280,12 +272,6 @@ Toggle debug output.
 .TP
 \fBrmcpdump\fR \fI[on|off]\fR
 Toggle RMCP dump output.
-.TP
-\fBlog\fR \fI[on|off]\fR
-Toggle logging output.
-.TP
-\fBlogfile\fR \fI[FILE]\fR
-Specify a new log file.  No input for default.
 \}
 .TP
 \fBon\fR \fI[IPMIHOST(s)]\fR
@@ -440,9 +426,6 @@ Core dumps are enabled.
 .IP o
 In interactive mode, commands may output sensitive information
 to stdout.
-.IP o
-Configuration info such as username and password can be output to the
-log file.
 .LP
 Before placing ipmipower in a production system, it is recommended
 that the program be compiled with debugging turned off.

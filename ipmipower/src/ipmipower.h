@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.113 2008-05-16 18:35:04 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.114 2008-05-16 20:46:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -60,57 +60,24 @@
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
 
-/* 
- * ipmipower limits 
- */
- 
-#define IPMIPOWER_MIN_TTY_BUF                       1024*4
-#define IPMIPOWER_MAX_TTY_BUF                       1024*32
-
-#define IPMIPOWER_MIN_CONNECTION_BUF                1024*2
-#define IPMIPOWER_MAX_CONNECTION_BUF                1024*4
-
-#define IPMIPOWER_PING_INTERVAL_MIN                 250   /* .25 seconds */
-#define IPMIPOWER_PING_INTERVAL_MAX                 120000
-
-#define IPMIPOWER_PING_TIMEOUT_MIN                  1000
-#define IPMIPOWER_PING_TIMEOUT_MAX                  120000
-
-#define IPMIPOWER_PING_PACKET_COUNT_MIN             2
-#define IPMIPOWER_PING_PACKET_COUNT_MAX             20
-
-#define IPMIPOWER_PING_PERCENT_MIN                  1
-#define IPMIPOWER_PING_PERCENT_MAX                  100
-
-#define IPMIPOWER_PING_CONSEC_COUNT_MIN             2
-#define IPMIPOWER_PING_CONSEC_COUNT_MAX             20
-
-/* 
- * ipmi specifics for ipmipower
- */
-
-/* IPMI allowable sequence number range window
- */
-
-#define IPMIPOWER_SEQUENCE_NUMBER_WINDOW 8
-#define IPMIPOWER_MAX_SEQUENCE_NUMBER    0xFFFFFFFF
+#define IPMIPOWER_MIN_TTY_BUF 1024*4
+#define IPMIPOWER_MAX_TTY_BUF 1024*32
 
 #define IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER       1
+
 #define IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER  0
 
-/* MISC */
+#define IPMIPOWER_PACKET_BUFLEN                          1024
 
-#define IPMIPOWER_PACKET_BUFLEN          1024
+#define IPMIPOWER_OUTPUT_BUFLEN                          65536
 
-#define IPMIPOWER_OUTPUT_BUFLEN          65536
+#define IPMIPOWER_DEFAULT_LOGFILE                        "/tmp/ipmipower.%d"
 
-#define IPMIPOWER_DEFAULT_LOGFILE        "/tmp/ipmipower.%d"
+#define IPMI_MAX_SIK_KEY_LENGTH                          64
 
-#define IPMI_MAX_SIK_KEY_LENGTH             64
+#define IPMI_MAX_INTEGRITY_KEY_LENGTH                    64
 
-#define IPMI_MAX_INTEGRITY_KEY_LENGTH       64
-
-#define IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH 64
+#define IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH              64
 
 #define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH 64
 
@@ -413,16 +380,13 @@ struct ipmipower_config
   char                     configfile[MAXPATHLEN+1];
 #ifndef NDEBUG
   int                      rmcpdump;
-  int                      log;
-  char                     logfile[MAXPATHLEN+1];
-  int                      logfile_fd;
 #endif /* NDEBUG */
   /* buffer_output and always_prefix not implemented in ipmipower
    * added only for consistency to other tools.
    */
   int                      buffer_output;
   int                      consolidate_output;
-  int                      fanout;
+  unsigned int             fanout;
   int                      eliminate;
   int                      always_prefix;
 

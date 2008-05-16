@@ -2,12 +2,18 @@
 
 	* ipmipower/src/: Fix wait time length bug.  Remove 0 backoff
 	count support.  Removed various extraneous min/max checks.  Fix
-	various signed/unsigned config issues.
+	various signed/unsigned config issues.  Remove debug logging
+	facilities.
 
 	* libfreeipmi/src/api/ipmi-ctx.h,
 	common/src/tool-cmdline-common.c,
 	common/src/tool-cmdline-common.h: Fix signed/unsigned config
 	issues.
+
+	* ipmipower/ipmipower.8.pre.in: Fix incorrect descriptions.
+
+	* common/doc/manpage-common-outofband-retransmission-timeout.man:
+	Note value cannot be larger than session timeout.
 
 2008-05-15  Albert Chu <chu11@llnl.gov>
 

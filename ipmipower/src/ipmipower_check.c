@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.80 2008-05-16 17:41:13 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.81 2008-05-16 20:46:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -41,6 +41,9 @@
 #include "ipmipower_wrappers.h"      
 
 extern struct ipmipower_config *conf;
+
+#define IPMIPOWER_SEQUENCE_NUMBER_WINDOW 8
+#define IPMIPOWER_MAX_SEQUENCE_NUMBER    0xFFFFFFFF
 
 int
 ipmipower_check_checksum(ipmipower_powercmd_t ip, packet_type_t pkt)
