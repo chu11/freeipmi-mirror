@@ -479,6 +479,16 @@ parse_opt (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+void 
+_ipmi_chassis_args_validate (struct ipmi_chassis_arguments *args)
+{
+  if (args->cmd < 0)
+    {   
+      fprintf (stderr,
+               "Error: No command specified\n");
+      exit(1);
+    }
+}
 
 void 
 ipmi_chassis_argp_parse (int argc, 
@@ -508,17 +518,6 @@ ipmi_chassis_argp_parse (int argc,
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));
+  _ipmi_chassis_args_validate (cmd_args);
 }
 
-int 
-ipmi_chassis_args_validate (struct ipmi_chassis_arguments *args)
-{
-  if (args->cmd < 0)
-    {   
-      fprintf (stderr,
-               "Error: No command specified\n");
-      return -1;
-    }
-
-  return 0;
-}

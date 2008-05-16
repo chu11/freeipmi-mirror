@@ -24,6 +24,4 @@
 
 void bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *args);
 
-int bmc_config_args_validate (struct bmc_config_arguments *args);
-
 #endif /* _BMC_ARGP_H_ */

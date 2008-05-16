@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.6 2008-05-16 21:25:34 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.7 2008-05-16 21:40:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -557,6 +557,13 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
 }
 
 void
+_ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
+{
+  if (!cmd_args->common.hostname)
+    err_exit("hostname input required");
+}
+
+void
 ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd_args)
 {
   init_common_cmd_args_admin (&(cmd_args->common));
@@ -581,13 +588,6 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   _config_file_parse(cmd_args);
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
+  _ipmiconsole_args_validate (cmd_args);
 }
 
-int
-ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
-{
-  if (!cmd_args->common.hostname)
-    err_exit("hostname input required");
-  
-  return 0;
-}

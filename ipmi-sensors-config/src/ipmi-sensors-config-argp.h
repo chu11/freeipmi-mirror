@@ -22,6 +22,5 @@
 #include "ipmi-sensors-config.h"
 
 void ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_config_arguments *cmd_args);
-int ipmi_sensors_config_args_validate (struct ipmi_sensors_config_arguments *args);
 
 #endif

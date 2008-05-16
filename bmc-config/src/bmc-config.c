@@ -307,12 +307,7 @@ main (int argc, char *argv[])
   prog_data.progname = argv[0];
   bmc_config_argp_parse (argc, argv, &cmd_args);
 
-  if (bmc_config_args_validate (&cmd_args) < 0)
-    return (EXIT_FAILURE);
-
   prog_data.args = &cmd_args;
-
   exit_code = _bmc_config(&prog_data);
-
   return (exit_code);
 }

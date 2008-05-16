@@ -1314,9 +1314,6 @@ main (int argc, char **argv)
   prog_data.progname = argv[0];
   ipmi_chassis_argp_parse (argc, argv, &cmd_args);
 
-  if (ipmi_chassis_args_validate (&cmd_args) < 0)
-    return (EXIT_FAILURE);
-
   prog_data.args = &cmd_args;
 
   if (pstdout_setup(&(prog_data.args->common.hostname),

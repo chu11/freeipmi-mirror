@@ -21,6 +21,4 @@
 
 void bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_args);
 
-int bmc_device_args_validate (struct bmc_device_arguments *cmd_args);
-
 #endif

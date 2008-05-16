@@ -212,22 +212,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
-void
-bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_args)
-{
-  init_common_cmd_args_admin (&(cmd_args->config_args.common));
-  cmd_args->config_args.action = 0;
-  cmd_args->config_args.verbose = 0;
-  cmd_args->config_args.filename = NULL;
-  cmd_args->config_args.keypairs = NULL;
-  cmd_args->config_args.section_strs = NULL;
-
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
-  verify_common_cmd_args (&(cmd_args->config_args.common));
-}
-
 int
-bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
+_bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
 {
   int ret = 0;
 
@@ -303,4 +289,19 @@ bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
     }
   
   return ret;
+}
+
+void
+bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_args)
+{
+  init_common_cmd_args_admin (&(cmd_args->config_args.common));
+  cmd_args->config_args.action = 0;
+  cmd_args->config_args.verbose = 0;
+  cmd_args->config_args.filename = NULL;
+  cmd_args->config_args.keypairs = NULL;
+  cmd_args->config_args.section_strs = NULL;
+
+  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->config_args.common));
+  _bmc_config_args_validate(cmd_args);
 }

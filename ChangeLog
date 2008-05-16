@@ -16,6 +16,9 @@
 	* common/doc/manpage-common-outofband-retransmission-timeout.man:
 	Note value cannot be larger than session timeout.
 
+	* Re-arch most tools to verify tool specific args within
+	tool_config_argp_parse instead of inside main.
+
 2008-05-15  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-outofband-timeout.man: Fix text.

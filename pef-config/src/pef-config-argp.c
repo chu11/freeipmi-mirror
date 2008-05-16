@@ -208,31 +208,15 @@ parse_opt (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
-void 
-pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_args)
+void
+_pef_config_args_validate (struct pef_config_arguments *cmd_args)
 {
-  init_common_cmd_args_admin (&(cmd_args->config_args.common));
-  cmd_args->config_args.action = 0;
-  cmd_args->config_args.verbose = 0;
-  cmd_args->config_args.filename = NULL;
-  cmd_args->config_args.keypairs = NULL;
-  cmd_args->config_args.section_strs = NULL;
-
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
-  verify_common_cmd_args (&(cmd_args->config_args.common));
-}
-
-int
-pef_config_args_validate (struct pef_config_arguments *cmd_args)
-{
-  int ret = 0;
-
   // action is non 0 and -1
   if (! cmd_args->config_args.action || cmd_args->config_args.action == -1)
     {
       fprintf (stderr,
                "Exactly one of --info, --checkout, --commit, --diff, or --listsections MUST be given\n");
-      return -1;
+      exit(1);
     }
   
   // filename and keypair both given for checkout or diff
@@ -241,7 +225,7 @@ pef_config_args_validate (struct pef_config_arguments *cmd_args)
     {
       fprintf (stderr,
                "Both --filename or --keypair cannot be used\n");
-      return -1;
+      exit(1);
     }
 
   // only one of keypairs or section can be given for checkout
@@ -250,7 +234,7 @@ pef_config_args_validate (struct pef_config_arguments *cmd_args)
     {
       fprintf (stderr,
                "Only one of --filename, --keypair, and --section can be used\n");
-      return -1;
+      exit(1);
     }
 
   if (cmd_args->config_args.filename)
@@ -261,7 +245,7 @@ pef_config_args_validate (struct pef_config_arguments *cmd_args)
           if (access (cmd_args->config_args.filename, R_OK) != 0)
             {
               perror (cmd_args->config_args.filename);
-              return -1;
+              exit(1);
             }
           break;
         case CONFIG_ACTION_CHECKOUT:
@@ -270,7 +254,7 @@ pef_config_args_validate (struct pef_config_arguments *cmd_args)
               if (access (cmd_args->config_args.filename, W_OK) != 0)
                 {
                   perror (cmd_args->config_args.filename);
-                  return -1;
+                  exit(1);
                 }
             }
           else
@@ -280,7 +264,7 @@ pef_config_args_validate (struct pef_config_arguments *cmd_args)
               if (fd == -1)
                 {
                   perror (cmd_args->config_args.filename);
-                  return -1;
+                  exit(1);
                 }
               else
                 {
@@ -295,7 +279,20 @@ pef_config_args_validate (struct pef_config_arguments *cmd_args)
           break;
         }
     }
+}
 
-  return ret;
+void 
+pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_args)
+{
+  init_common_cmd_args_admin (&(cmd_args->config_args.common));
+  cmd_args->config_args.action = 0;
+  cmd_args->config_args.verbose = 0;
+  cmd_args->config_args.filename = NULL;
+  cmd_args->config_args.keypairs = NULL;
+  cmd_args->config_args.section_strs = NULL;
+
+  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->config_args.common));
+  _pef_config_args_validate (cmd_args);
 }
 

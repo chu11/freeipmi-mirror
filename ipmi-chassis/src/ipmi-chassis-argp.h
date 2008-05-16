@@ -21,6 +21,4 @@
 
 void ipmi_chassis_argp_parse (int argc, char **argv, struct ipmi_chassis_arguments *cmd_args);
 
-int ipmi_chassis_args_validate (struct ipmi_chassis_arguments *args);
-
 #endif

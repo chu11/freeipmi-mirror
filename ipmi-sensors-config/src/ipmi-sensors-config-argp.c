@@ -200,24 +200,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
-void 
-ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_config_arguments *cmd_args)
-{
-  init_common_cmd_args_operator (&(cmd_args->config_args.common));
-  init_sdr_cmd_args (&(cmd_args->sdr));
-  cmd_args->config_args.action = 0;
-  cmd_args->config_args.verbose = 0;
-  cmd_args->config_args.filename = NULL;
-  cmd_args->config_args.keypairs = NULL;
-  cmd_args->config_args.section_strs = NULL;
-
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
-  verify_sdr_cmd_args (&(cmd_args->sdr));
-  verify_common_cmd_args (&(cmd_args->config_args.common));
-}
-
-int
-ipmi_sensors_config_args_validate (struct ipmi_sensors_config_arguments *cmd_args)
+void
+_ipmi_sensors_config_args_validate (struct ipmi_sensors_config_arguments *cmd_args)
 {
   int ret = 0;
 
@@ -226,7 +210,7 @@ ipmi_sensors_config_args_validate (struct ipmi_sensors_config_arguments *cmd_arg
     {
       fprintf (stderr,
                "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
-      return -1;
+      exit(1);
     }
   
   // filename and keypair both given for checkout or diff
@@ -235,7 +219,7 @@ ipmi_sensors_config_args_validate (struct ipmi_sensors_config_arguments *cmd_arg
     {
       fprintf (stderr,
                "Both --filename or --keypair cannot be used\n");
-      return -1;
+      exit(1);
     }
 
   // only one of keypairs or section can be given for checkout
@@ -244,7 +228,7 @@ ipmi_sensors_config_args_validate (struct ipmi_sensors_config_arguments *cmd_arg
     {
       fprintf (stderr,
                "Only one of --filename, --keypair, and --section can be used\n");
-      return -1;
+      exit(1);
     }
 
   if (cmd_args->config_args.filename)
@@ -255,7 +239,7 @@ ipmi_sensors_config_args_validate (struct ipmi_sensors_config_arguments *cmd_arg
           if (access (cmd_args->config_args.filename, R_OK) != 0)
             {
               perror (cmd_args->config_args.filename);
-              return -1;
+              exit(1);
             }
           break;
         case CONFIG_ACTION_CHECKOUT:
@@ -264,7 +248,7 @@ ipmi_sensors_config_args_validate (struct ipmi_sensors_config_arguments *cmd_arg
               if (access (cmd_args->config_args.filename, W_OK) != 0)
                 {
                   perror (cmd_args->config_args.filename);
-                  return -1;
+                  exit(1);
                 }
             }
           else
@@ -274,7 +258,7 @@ ipmi_sensors_config_args_validate (struct ipmi_sensors_config_arguments *cmd_arg
               if (fd == -1)
                 {
                   perror (cmd_args->config_args.filename);
-                  return -1;
+                  exit(1);
                 }
               else
                 {
@@ -289,7 +273,21 @@ ipmi_sensors_config_args_validate (struct ipmi_sensors_config_arguments *cmd_arg
           break;
         }
     }
-
-  return ret;
 }
 
+void 
+ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_config_arguments *cmd_args)
+{
+  init_common_cmd_args_operator (&(cmd_args->config_args.common));
+  init_sdr_cmd_args (&(cmd_args->sdr));
+  cmd_args->config_args.action = 0;
+  cmd_args->config_args.verbose = 0;
+  cmd_args->config_args.filename = NULL;
+  cmd_args->config_args.keypairs = NULL;
+  cmd_args->config_args.section_strs = NULL;
+
+  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_sdr_cmd_args (&(cmd_args->sdr));
+  verify_common_cmd_args (&(cmd_args->config_args.common));
+  _ipmi_sensors_config_args_validate (cmd_args);
+}
