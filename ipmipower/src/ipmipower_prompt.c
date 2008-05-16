@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.82 2008-05-16 20:46:22 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.83 2008-05-16 22:44:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -62,6 +62,7 @@ extern cbuf_t ttyin;
 extern cbuf_t ttyerr;
 extern struct ipmipower_config *conf;
 extern struct ipmipower_connection *ics;
+extern unsigned int ics_len;
 
 /* eliminate
  *
@@ -72,9 +73,9 @@ extern struct ipmipower_connection *ics;
 static void 
 _cmd_driver_type(char **argv) 
 {
-  assert(argv != NULL);
+  assert(argv);
 
-  if (argv[1] != NULL) 
+  if (argv[1]) 
     {
       int tmp;
       
@@ -97,20 +98,21 @@ _cmd_hostname(char **argv)
 {
   hostlist_t hl; 
 
-  assert(argv != NULL);
+  assert(argv);
 
-  if (argv[1] == NULL) 
+  if (!argv[1]) 
     {
-      ipmipower_connection_array_destroy(ics, conf->hosts_count);
-      hostlist_destroy(conf->hosts);
-
+      ipmipower_connection_array_destroy(ics, ics_len);
+      if (conf->hosts)
+        hostlist_destroy(conf->hosts);
+ 
       ics = NULL;
+      ics_len = 0;
       conf->hosts = NULL;
-      conf->hosts_count = 0;
 
       cbuf_printf(ttyout, "hostname(s) unconfigured\n");
     }
-  else if ((hl = hostlist_create(argv[1])) == NULL)
+  else if (!(hl = hostlist_create(argv[1])))
     cbuf_printf(ttyout, "hostname(s) incorrectly formatted\n");
   else 
     {
@@ -122,7 +124,7 @@ _cmd_hostname(char **argv)
 
       hl_count = hostlist_count(hl);
 
-      if ((icsPtr = ipmipower_connection_array_create(hl, hl_count)) == NULL) 
+      if (!(icsPtr = ipmipower_connection_array_create(hl))) 
         {
           if (errno == EMFILE)
             cbuf_printf(ttyout, "too many files open, file descriptor "
@@ -133,12 +135,13 @@ _cmd_hostname(char **argv)
           return;
         }
 
-      ipmipower_connection_array_destroy(ics, conf->hosts_count);
-      hostlist_destroy(conf->hosts);
+      ipmipower_connection_array_destroy(ics, ics_len);
+      if (conf->hosts)
+        hostlist_destroy(conf->hosts);
 
       ics = icsPtr;
+      ics_len = hostlist_count(hl);
       conf->hosts = hl;
-      conf->hosts_count = hl_count;
       ipmipower_ping_force_discovery_sweep();
 
       rv = hostlist_ranged_string(conf->hosts, IPMIPOWER_OUTPUT_BUFLEN, 
@@ -154,10 +157,10 @@ _cmd_hostname(char **argv)
 static void 
 _cmd_username(char **argv)
 {
-  assert(argv != NULL);
+  assert(argv);
 
-  if (argv[1] == NULL 
-           || (argv[1] && strlen(argv[1]) <= IPMI_MAX_USER_NAME_LENGTH)) 
+  if (!argv[1]
+      || (argv[1] && strlen(argv[1]) <= IPMI_MAX_USER_NAME_LENGTH)) 
     {
       memset(conf->username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
 
@@ -174,12 +177,12 @@ _cmd_username(char **argv)
 static void 
 _cmd_password(char **argv) 
 {
-  assert(argv != NULL);
+  assert(argv);
 
   if (argv[1] && conf->authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
     cbuf_printf(ttyout, "password cannot be set for authentication_type '%s'\n",
                 IPMI_AUTHENTICATION_TYPE_NONE_STR);
-  else if (argv[1] == NULL 
+  else if (!argv[1]
            || (argv[1] 
                && ((conf->driver_type == IPMI_DEVICE_LAN_2_0
                     && strlen(argv[1]) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
@@ -207,7 +210,7 @@ _cmd_k_g(char **argv)
 {
   int rv = 0;
   char buf[IPMI_MAX_K_G_LENGTH*2+3];
-  assert(argv != NULL);
+  assert(argv);
 
   if (conf->driver_type == IPMI_DEVICE_LAN)
     cbuf_printf(ttyout, "k_g is only used for IPMI 2.0");
@@ -236,9 +239,9 @@ _cmd_k_g(char **argv)
 static void 
 _cmd_authentication_type(char **argv) 
 {
-  assert(argv != NULL);
+  assert(argv);
 
-  if (argv[1] != NULL) 
+  if (argv[1]) 
     {
       int tmp;
 
@@ -261,9 +264,9 @@ _cmd_authentication_type(char **argv)
 static void 
 _cmd_cipher_suite_id(char **argv) 
 {
-  assert(argv != NULL);
+  assert(argv);
 
-  if (argv[1] != NULL) 
+  if (argv[1]) 
     {
       char *ptr;
       int tmp;
@@ -288,9 +291,9 @@ _cmd_cipher_suite_id(char **argv)
 static void 
 _cmd_privilege_level(char **argv) 
 {
-  assert(argv != NULL);
+  assert(argv);
 
-  if (argv[1] != NULL) 
+  if (argv[1]) 
     {
       int tmp;
 
@@ -312,9 +315,9 @@ _cmd_privilege_level(char **argv)
 static void
 _cmd_workaround_flags(char **argv)
 {
-  assert(argv != NULL);
+  assert(argv);
 
-  if (argv[1] != NULL) 
+  if (argv[1]) 
     {
       int tmp;
 
@@ -343,9 +346,9 @@ _cmd_power(char **argv, power_cmd_t cmd)
 {
   int i;
 
-  assert(argv != NULL && POWER_CMD_VALID(cmd));
+  assert(argv && POWER_CMD_VALID(cmd));
 
-  if (conf->hosts == NULL) 
+  if (!conf->hosts) 
     {
       cbuf_printf(ttyout, "no hostname(s) configured\n");
       return;
@@ -359,11 +362,11 @@ _cmd_power(char **argv, power_cmd_t cmd)
       return;
     }
 
-  if (argv[1] == NULL)  /* all nodes */
+  if (!argv[1])  /* all nodes */
     { 
       int nodes_queued = 0;
       
-      for (i = 0; i <  conf->hosts_count; i++) 
+      for (i = 0; i < ics_len; i++) 
         {
           if (conf->ping_interval_len 
               && ics[i].discover_state == STATE_UNDISCOVERED)
@@ -373,11 +376,12 @@ _cmd_power(char **argv, power_cmd_t cmd)
                    && conf->ping_percent 
                    && ics[i].discover_state == STATE_BADCONNECTION)
             ipmipower_output(MSG_TYPE_BADCONNECTION, ics[i].hostname);
-          else {
-            ipmipower_connection_clear(&ics[i]);
-            ipmipower_powercmd_queue(cmd, &ics[i]);
-            nodes_queued++;
-          }
+          else 
+            {
+              ipmipower_connection_clear(&ics[i]);
+              ipmipower_powercmd_queue(cmd, &ics[i]);
+              nodes_queued++;
+            }
         }
 
       /* Special corner case when no nodes are discovered */
@@ -401,9 +405,7 @@ _cmd_power(char **argv, power_cmd_t cmd)
 
       while ((node = hostlist_next(itr)))
         {
-          i = ipmipower_connection_hostname_index(ics, 
-                                                  conf->hosts_count, 
-                                                  node);
+          i = ipmipower_connection_hostname_index(ics, ics_len, node);
 
           if (i < 0)
             ipmipower_output(MSG_TYPE_UNKNOWNNODE, node);
@@ -512,7 +514,7 @@ _cmd_config(void)
 
   cbuf_printf(ttyout, "Driver_Type:                  %s\n", str);
 
-  if (conf->hosts != NULL) 
+  if (conf->hosts) 
     {
       int rv;
       char buffer[IPMIPOWER_OUTPUT_BUFLEN];
@@ -532,14 +534,14 @@ _cmd_config(void)
         cbuf_printf(ttyout, "Hostname:                     %s\n", buffer);
 
 #ifndef NDEBUG
-      if ((discovered = hostlist_create(NULL)) == NULL)
+      if (!(discovered = hostlist_create(NULL)))
         goto cleanup;
-      if ((undiscovered = hostlist_create(NULL)) == NULL)
+      if (!(undiscovered = hostlist_create(NULL)))
         goto cleanup;
-      if ((badconnection = hostlist_create(NULL)) == NULL)
+      if (!(badconnection = hostlist_create(NULL)))
         goto cleanup;
       
-      for (i = 0; i < conf->hosts_count; i++) {
+      for (i = 0; i < ics_len; i++) {
         if (ics[i].discover_state == STATE_DISCOVERED)
           rv = hostlist_push_host(discovered, ics[i].hostname);
         else if (ics[i].discover_state == STATE_UNDISCOVERED)
@@ -726,9 +728,9 @@ _cmd_set_unsigned_int(char **argv,
                       char *str, 
                       int allow_zero)
 {
-  assert(argv != NULL && val != NULL && str != NULL);
+  assert(argv && val && str);
 
-  if (argv[1] == NULL)
+  if (!argv[1])
     cbuf_printf(ttyout, "%s not specified\n", str);
   else 
     {
@@ -754,9 +756,9 @@ _cmd_set_unsigned_int_ranged(char **argv,
                              int min, 
                              int max) 
 {
-  assert(argv != NULL && val != NULL && str != NULL);
+  assert(argv && val && str);
 
-  if (argv[1] == NULL)
+  if (!argv[1])
     cbuf_printf(ttyout, "%s not specified\n", str);
   else 
     {
@@ -777,9 +779,9 @@ _cmd_set_unsigned_int_ranged(char **argv,
 static void 
 _cmd_set_flag(char **argv, int *flag, char *str) 
 {
-  assert(argv != NULL && flag != NULL && str != NULL);
+  assert(argv && flag && str);
   
-  if (argv[1] == NULL) 
+  if (!argv[1]) 
     *flag = !(*flag);
   else 
     {
@@ -852,7 +854,7 @@ ipmipower_prompt_process_cmdline(void)
           char **argv = argv_create(buf, "");
           int i;
 
-          if (argv[0] != NULL) 
+          if (argv[0]) 
             {
               /* support "ipmi_version" and "ipmi-version" for backwards compatability */
               if (strcmp(argv[0], "driver-type") == 0
@@ -1027,7 +1029,7 @@ ipmipower_prompt_process_cmdline(void)
            * safe 
            */
           i = 0;
-          while(argv[i] != NULL) 
+          while(argv[i]) 
             {
               memset(argv[i], '\0', strlen(argv[i]));
               i++;

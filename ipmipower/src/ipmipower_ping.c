@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.27 2008-05-16 17:41:13 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.28 2008-05-16 22:44:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -44,6 +44,7 @@
 
 extern struct ipmipower_config *conf;
 extern struct ipmipower_connection *ics;
+extern unsigned int ics_len;
 
 /* next_ping_sends_time, when the next round of pings should be sent */
 static struct timeval next_ping_sends_time;
@@ -80,7 +81,7 @@ ipmipower_ping_process_pings(int *timeout)
       send_pings_flag++;
     }
 
-  for (i = 0; i < conf->hosts_count; i++) 
+  for (i = 0; i < ics_len; i++) 
     {
       int len;
       char buffer[IPMIPOWER_PACKET_BUFLEN];
@@ -149,7 +150,7 @@ ipmipower_ping_process_pings(int *timeout)
                             DEBUG_COMMON_HDR_BUFLEN);
 
               Ipmi_dump_rmcp_packet(STDERR_FILENO, 
-                                    (conf->hosts_count > 1) ? ics[i].hostname : NULL,
+                                    ics[i].hostname,
                                     hdrbuf, 
                                     NULL,
                                     (uint8_t *)buffer, 
@@ -194,7 +195,7 @@ ipmipower_ping_process_pings(int *timeout)
                             DEBUG_COMMON_HDR_BUFLEN);
 
               Ipmi_dump_rmcp_packet(STDERR_FILENO, 
-                                    (conf->hosts_count > 1) ? ics[i].hostname : NULL,
+                                    ics[i].hostname,
                                     hdrbuf, 
                                     NULL,
                                     (uint8_t *)buffer, 

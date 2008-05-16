@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.24 2008-05-16 20:46:22 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.25 2008-05-16 22:44:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -184,20 +184,24 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
 }
 
 struct ipmipower_connection *
-ipmipower_connection_array_create(hostlist_t hl, int hl_count) 
+ipmipower_connection_array_create(hostlist_t hl) 
 {
   char *str = NULL;
   int index = 0;
   hostlist_iterator_t itr = NULL;
   struct ipmipower_connection *ics;
   int size = sizeof(struct ipmipower_connection);
+  int hl_count;
   
   assert(hl != NULL); 
 
   if ((itr = hostlist_iterator_create(hl)) == NULL)
     ierr_exit("hostlist_iterator_create() error"); 
 
+  hl_count = hostlist_count(hl);
+
   ics = (struct ipmipower_connection *)Malloc(size * hl_count);
+
   memset(ics, '\0', (size * hl_count));
   
   while ((str = hostlist_next(itr)) != NULL) 
@@ -237,14 +241,15 @@ ipmipower_connection_array_create(hostlist_t hl, int hl_count)
 }
 
 void 
-ipmipower_connection_array_destroy(struct ipmipower_connection *ics, int len) 
+ipmipower_connection_array_destroy(struct ipmipower_connection *ics, 
+                                   unsigned int ics_len) 
 {
   int i;
 
-  if (ics == NULL)
+  if (!ics)
     return;
  
-  for (i = 0; i < len; i++) 
+  for (i = 0; i < ics_len; i++) 
     {
       close(ics[i].ipmi_fd);
       close(ics[i].ping_fd);
@@ -258,13 +263,14 @@ ipmipower_connection_array_destroy(struct ipmipower_connection *ics, int len)
 
 int 
 ipmipower_connection_hostname_index(struct ipmipower_connection *ics, 
-                                    int len, char *hostname) 
+                                    unsigned int ics_len,
+                                    char *hostname) 
 {
   int i;
 
-  assert (ics != NULL && hostname != NULL);
+  assert (ics && ics_len && hostname != NULL);
 
-  for (i = 0; i < len; i++) 
+  for (i = 0; i < ics_len; i++) 
     {
       if (strcmp(ics[i].hostname, hostname) == 0)
         return i;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.51 2008-05-16 21:29:15 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.52 2008-05-16 22:44:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -73,6 +73,7 @@ struct ipmipower_config *conf = NULL;
 
 /* Array of all ipmi "connections" */
 struct ipmipower_connection *ics = NULL;
+unsigned int ics_len = 0;
 
 /* Array of hostlists for short output */
 int output_hostrange_flag = 0;
@@ -130,9 +131,9 @@ _setup(void)
 
   if (conf->hosts != NULL) 
     {
-      ics = ipmipower_connection_array_create(conf->hosts, conf->hosts_count);
-      if (ics == NULL)
+      if (!(ics = ipmipower_connection_array_create(conf->hosts)))
         exit(1);		/* error message output in the above call */
+      ics_len = hostlist_count(conf->hosts);
     }
 
   for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++) 
@@ -171,7 +172,7 @@ _cleanup(void)
   cbuf_read_to_fd(ttyerr, STDERR_FILENO, -1);
   cbuf_destroy(ttyerr);
 
-  ipmipower_connection_array_destroy(ics, conf->hosts_count);
+  ipmipower_connection_array_destroy(ics, ics_len);
 
   for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
     hostlist_destroy(output_hostrange[i]);
@@ -293,18 +294,18 @@ _poll_loop(int non_interactive)
        */
 
       /* Has the number of hosts changed? */
-      if (nfds != (conf->hosts_count*2) + 3)
+      if (nfds != (ics_len*2) + 3)
 	{
 	  /* The "*2" is for each host's two fds, one for ipmi
 	   * (ipmi_fd) and one for rmcp (ping_fd).  The "+3" is for
 	   * stdin, stdout, stderr.
 	   */
-	  nfds = (conf->hosts_count*2) + 3;   
+	  nfds = (ics_len*2) + 3;   
 	  Free(pfds);
 	  pfds = (struct pollfd *)Malloc(nfds * sizeof(struct pollfd));
 	}
       
-      for (i = 0; i < conf->hosts_count; i++) 
+      for (i = 0; i < ics_len; i++) 
         {
           pfds[i*2].fd = ics[i].ipmi_fd;
           pfds[i*2+1].fd = ics[i].ping_fd;
@@ -341,7 +342,7 @@ _poll_loop(int non_interactive)
 
       Poll(pfds, nfds, timeout);
       
-      for (i = 0; i < conf->hosts_count; i++) 
+      for (i = 0; i < ics_len; i++) 
         {
           if (pfds[i*2].revents & POLLERR) 
             {
@@ -418,10 +419,7 @@ _eliminate_nodes(void)
             }
           
           if (!ret)
-            {
-              hostlist_delete(conf->hosts, host);
-              conf->hosts_count--;
-            }
+            hostlist_delete(conf->hosts, host);
           
           free(host);
         }
@@ -458,7 +456,7 @@ main(int argc, char *argv[])
 
       _eliminate_nodes();
 
-      for (i = 0; i < conf->hosts_count; i++) 
+      for (i = 0; i < ics_len; i++) 
         {
           ipmipower_connection_clear(&ics[i]);
           ipmipower_powercmd_queue(conf->powercmd, &ics[i]);

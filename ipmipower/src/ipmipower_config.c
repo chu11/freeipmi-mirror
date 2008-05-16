@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.112 2008-05-16 21:53:12 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.113 2008-05-16 22:44:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -193,14 +193,13 @@ static struct argp cmdline_argp_config = {cmdline_options,
 void 
 ipmipower_config_setup(void) 
 {
-  assert(conf == NULL);         /* Already initialized */
+  assert(!conf);         /* Already initialized */
 
   if (!(conf = (struct ipmipower_config *)malloc(sizeof(struct ipmipower_config))))
     ierr_exit("malloc: %s", strerror(errno));
   
   conf->driver_type = IPMI_DEVICE_LAN;
   conf->hosts = NULL;
-  conf->hosts_count = 0;
   memset(conf->username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
   memset(conf->password, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH+1);
   memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH+1);
@@ -296,10 +295,9 @@ cmdline_parse (int key,
           hostlist_destroy(conf->hosts);
           conf->hosts = NULL;
         }
-      if ((conf->hosts = hostlist_create(arg)) == NULL)
+      if (!(conf->hosts = hostlist_create(arg)))
         ierr_exit("Command Line Error: Hostname(s) incorrectly formatted");
       hostlist_uniq(conf->hosts);
-      conf->hosts_count = hostlist_count(conf->hosts);
       break;
     case ARGP_USERNAME_KEY:       /* --username */
       if (strlen(arg) > IPMI_MAX_USER_NAME_LENGTH)
@@ -551,7 +549,7 @@ _cb_hostname(conffile_t cf, struct conffile_data *data,
 {
   int i;
   
-  if ((conf->hosts = hostlist_create(NULL)) == NULL)
+  if (!(conf->hosts = hostlist_create(NULL)))
     ierr_exit("Config File Error: Hostname(s) incorrectly formatted");
   
   for (i = 0; i < data->stringlist_len; i++) 
@@ -559,10 +557,7 @@ _cb_hostname(conffile_t cf, struct conffile_data *data,
       if (hostlist_push(conf->hosts, data->stringlist[i]) == 0)
         ierr_exit("Config File Error: Hostname(s) incorrectly formatted");
     }
-  
   hostlist_uniq(conf->hosts);
-  
-  conf->hosts_count = hostlist_count(conf->hosts);
   return 0;
 }
 
@@ -865,7 +860,7 @@ ipmipower_config_conffile_parse(char *configfile)
   char *conffile = NULL;
   int num;
 
-  if ((cf = conffile_handle_create()) == NULL)
+  if (!(cf = conffile_handle_create()))
     ierr_exit("Config File Error: cannot create conffile handle");
 
   conffile = (strlen(configfile)) ? configfile : IPMIPOWER_CONFIG_FILE_DEFAULT;
@@ -902,7 +897,7 @@ ipmipower_config_check_values(void)
   if (conf->retransmission_wait_timeout_len > conf->session_timeout_len)
     ierr_exit("Error: Session timeout length must be longer than retransmission wait timeout length");
   
-  if (conf->powercmd != POWER_CMD_NONE && conf->hosts == NULL)
+  if (conf->powercmd != POWER_CMD_NONE && !conf->hosts)
     ierr_exit("Error: Must specify target hostname(s) in non-interactive mode");
 
   if (conf->ping_interval_len > conf->ping_timeout_len)

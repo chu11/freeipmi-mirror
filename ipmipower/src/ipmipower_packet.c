@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.90 2008-05-15 21:58:22 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.91 2008-05-16 22:44:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -47,7 +47,7 @@ extern struct ipmipower_config *conf;
 fiid_field_t *
 ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_PKT(pkt));
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
@@ -104,7 +104,7 @@ ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
 fiid_obj_t
 ipmipower_packet_cmd_obj(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_PKT(pkt));
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
@@ -162,9 +162,9 @@ void
 ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                       char *buffer, int len)
 {
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_PKT(pkt));
-  assert (buffer != NULL);
+  assert (buffer);
 
   if (conf->debug)
     {
@@ -294,8 +294,8 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
   fiid_obj_t obj;
   int32_t rv = -1;
   
-  assert(ip != NULL);
-  assert(buffer != NULL);
+  assert(ip);
+  assert(buffer);
   assert(len > 0);
   assert(PACKET_TYPE_VALID_RES(pkt));
 
@@ -392,10 +392,10 @@ _ipmi_1_5_packet_create(ipmipower_powercmd_t ip,
 {
   int32_t len;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_REQ(pkt));
   assert(fiid_obj_valid(obj_cmd_req));
-  assert(buffer != NULL);
+  assert(buffer);
   assert(buflen > 0);
 
   Fiid_obj_clear(ip->obj_rmcp_hdr_req);
@@ -459,10 +459,10 @@ _ipmi_2_0_packet_create(ipmipower_powercmd_t ip,
 {
   int32_t len;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_REQ(pkt));
   assert(fiid_obj_valid(obj_cmd_req));
-  assert(buffer != NULL);
+  assert(buffer);
   assert(buflen > 0);
 
   Fiid_obj_clear(ip->obj_rmcp_hdr_req);
@@ -544,7 +544,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   fiid_obj_t obj_cmd_req = NULL;
   int32_t len = 0;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_REQ(pkt));
   assert(buffer);
   assert(buflen);
@@ -1026,7 +1026,7 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   fiid_obj_t obj_cmd;
   
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
 
   obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);

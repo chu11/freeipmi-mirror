@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.81 2008-05-16 20:46:21 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.82 2008-05-16 22:44:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -51,7 +51,7 @@ ipmipower_check_checksum(ipmipower_powercmd_t ip, packet_type_t pkt)
   fiid_obj_t obj_cmd;
   int8_t rv;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
   assert (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
 	  || pkt == AUTHENTICATION_CAPABILITIES_RES
@@ -86,7 +86,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
   char *password;
   int8_t rv = -1;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
   assert(pkt == AUTHENTICATION_CAPABILITIES_V20_RES
 	 || pkt == AUTHENTICATION_CAPABILITIES_RES
@@ -242,7 +242,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
   uint64_t seq_num = 0;
   int rv = 0;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
   
   /* achu: This algorithm is more or less from Appendix A of the IPMI
@@ -443,7 +443,7 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
   uint64_t session_id = 0;
   uint64_t expected_session_id = 0;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
     
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES 
@@ -516,7 +516,7 @@ ipmipower_check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
   uint64_t netfn = 0;
   uint64_t expected_netfn;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
@@ -544,7 +544,7 @@ ipmipower_check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
   uint64_t expected_cmd = -1;
   fiid_obj_t obj_cmd;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
@@ -585,7 +585,7 @@ ipmipower_check_requester_sequence_number(ipmipower_powercmd_t ip, packet_type_t
   uint64_t req_seq = 0;
   uint64_t expected_req_seq = 0;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
@@ -611,7 +611,7 @@ ipmipower_check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt)
   uint64_t comp_code = 0;
   fiid_obj_t obj_cmd;
   
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
@@ -635,7 +635,7 @@ ipmipower_check_payload_type(ipmipower_powercmd_t ip, packet_type_t pkt)
   uint64_t payload_type;
   uint8_t expected_payload_type;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
   assert(pkt == OPEN_SESSION_RES
 	 || pkt == RAKP_MESSAGE_2_RES
@@ -675,7 +675,7 @@ ipmipower_check_message_tag(ipmipower_powercmd_t ip, packet_type_t pkt)
   uint8_t expected_message_tag;
   fiid_obj_t obj_cmd;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
   assert(pkt == OPEN_SESSION_RES
 	 || pkt == RAKP_MESSAGE_2_RES
@@ -705,7 +705,7 @@ ipmipower_check_rmcpplus_status_code(ipmipower_powercmd_t ip, packet_type_t pkt)
   uint64_t rmcpplus_status_code;
   fiid_obj_t obj_cmd;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
   assert(pkt == OPEN_SESSION_RES
 	 || pkt == RAKP_MESSAGE_2_RES
@@ -732,7 +732,7 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
   uint64_t val;
   int rv;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(pkt == OPEN_SESSION_RES);
   
   /*
@@ -800,7 +800,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
   uint64_t managed_system_session_id;
   int8_t rv;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(pkt == RAKP_MESSAGE_2_RES);
 
   /* IPMI Workaround (achu)
@@ -973,7 +973,7 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
   uint64_t val;
   int8_t rv;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(pkt == RAKP_MESSAGE_4_RES);
 
   /* IPMI Workaround (achu)
@@ -1045,7 +1045,7 @@ ipmipower_check_payload_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
   uint8_t confidentiality_algorithm;
   int8_t rv;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
   assert(conf->driver_type == IPMI_DEVICE_LAN_2_0
          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
@@ -1074,7 +1074,7 @@ ipmipower_check_integrity_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   int8_t rv;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
   assert(conf->driver_type == IPMI_DEVICE_LAN_2_0
          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
