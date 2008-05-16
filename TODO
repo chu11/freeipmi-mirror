@@ -56,8 +56,7 @@ firmware firewall support?
 - fiid internally stores ls byte first, so if spec says ms byte first, need to fix
 code cleanup
 - merge many util libs into one?
-fix poort variable naming in argp for all tools
-- audit macros in tool-cmdline-common .. are all still used?
+fix port variable naming in argp for all tools
 - audit common doc manpages, all still used?
 
 config
@@ -113,6 +112,7 @@ add contributions (ganglia/nagios) to webpage downloads
 update index w/ new bmc-info text.
 update w/ bmc-device index.htp
 update w/ bmc-device manpage
+update all manpages and docs
 links to ganglia/nagios??
 
 other monitoring
