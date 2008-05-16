@@ -4,7 +4,9 @@
 	count support.  Removed various extraneous min/max checks.  Fix
 	various signed/unsigned config issues.
 
-	* common/src/tool-cmdline-common.h: Fix signed/unsigned parsing
+	* libfreeipmi/src/api/ipmi-ctx.h,
+	common/src/tool-cmdline-common.c,
+	common/src/tool-cmdline-common.h: Fix signed/unsigned config
 	issues.
 
 2008-05-15  Albert Chu <chu11@llnl.gov>

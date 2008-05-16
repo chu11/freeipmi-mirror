@@ -47,12 +47,12 @@ struct ipmi_ctx
 
       struct
       {
-        fiid_obj_t      obj_hdr;
+        fiid_obj_t       obj_hdr;
       } rq;
 
       struct
       {
-        fiid_obj_t      obj_hdr;
+        fiid_obj_t       obj_hdr;
       } rs;
     } inband;
 
@@ -75,13 +75,13 @@ struct ipmi_ctx
       uint8_t            authentication_type;
 
       /* Configured by User for IPMI 2.0 */
-      uint8_t           k_g[IPMI_MAX_K_G_LENGTH];
-      unsigned int      k_g_configured;
-      uint8_t           cipher_suite_id;
+      uint8_t            k_g[IPMI_MAX_K_G_LENGTH];
+      int                k_g_configured;
+      uint8_t            cipher_suite_id;
       /* Data based on Configuration Parameters */
-      uint8_t authentication_algorithm;
-      uint8_t integrity_algorithm;
-      uint8_t confidentiality_algorithm;
+      uint8_t            authentication_algorithm;
+      uint8_t            integrity_algorithm;
+      uint8_t            confidentiality_algorithm;
 
       /* Used by IPMI 1.5 and IPMI 2.0 code */
       uint32_t           session_sequence_number;
@@ -99,39 +99,39 @@ struct ipmi_ctx
        * 0 = enabled
        * 1 = disabled
        */
-      uint8_t            per_msg_auth_disabled;
+      int                per_msg_auth_disabled;
 
       /* Used by IPMI 2.0 */
-      uint32_t          remote_console_session_id;
-      uint32_t          managed_system_session_id; 
-      uint8_t           sik_key[IPMI_MAX_SIK_KEY_LENGTH]; /* not actually needed globally */
-      uint8_t           *sik_key_ptr;
-      uint32_t          sik_key_len;
-      uint8_t           integrity_key[IPMI_MAX_INTEGRITY_KEY_LENGTH];
-      uint8_t           *integrity_key_ptr;
-      uint32_t          integrity_key_len;
-      uint8_t           confidentiality_key[IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH];
-      uint8_t           *confidentiality_key_ptr;
-      uint32_t          confidentiality_key_len;
+      uint32_t           remote_console_session_id;
+      uint32_t           managed_system_session_id; 
+      uint8_t            sik_key[IPMI_MAX_SIK_KEY_LENGTH]; /* not actually needed globally */
+      uint8_t            *sik_key_ptr;
+      uint32_t           sik_key_len;
+      uint8_t            integrity_key[IPMI_MAX_INTEGRITY_KEY_LENGTH];
+      uint8_t            *integrity_key_ptr;
+      uint32_t           integrity_key_len;
+      uint8_t            confidentiality_key[IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH];
+      uint8_t            *confidentiality_key_ptr;
+      uint32_t           confidentiality_key_len;
 
       struct
       {
-        fiid_obj_t      obj_rmcp_hdr;
-        fiid_obj_t      obj_lan_session_hdr;
-        fiid_obj_t      obj_rmcpplus_session_hdr;
-        fiid_obj_t      obj_lan_msg_hdr;
-        fiid_obj_t      obj_rmcpplus_session_trlr;
+        fiid_obj_t       obj_rmcp_hdr;
+        fiid_obj_t       obj_lan_session_hdr;
+        fiid_obj_t       obj_rmcpplus_session_hdr;
+        fiid_obj_t       obj_lan_msg_hdr;
+        fiid_obj_t       obj_rmcpplus_session_trlr;
       } rq;
 
       struct
       {
-        fiid_obj_t      obj_rmcp_hdr;
-        fiid_obj_t      obj_lan_session_hdr;
-        fiid_obj_t      obj_rmcpplus_session_hdr;
-        fiid_obj_t      obj_lan_msg_hdr;
-        fiid_obj_t      obj_rmcpplus_payload;
-        fiid_obj_t      obj_lan_msg_trlr;
-        fiid_obj_t      obj_rmcpplus_session_trlr;
+        fiid_obj_t       obj_rmcp_hdr;
+        fiid_obj_t       obj_lan_session_hdr;
+        fiid_obj_t       obj_rmcpplus_session_hdr;
+        fiid_obj_t       obj_lan_msg_hdr;
+        fiid_obj_t       obj_rmcpplus_payload;
+        fiid_obj_t       obj_lan_msg_trlr;
+        fiid_obj_t       obj_rmcpplus_session_trlr;
       } rs;
     } outofband;
   } io;
