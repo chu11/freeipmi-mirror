@@ -41,6 +41,7 @@ pef-config
 
 general
 -------
+audit error message consistency in tool validate functions
 signed unsigned args in common parsing
 tiemout
 - can't be zero anywhere
