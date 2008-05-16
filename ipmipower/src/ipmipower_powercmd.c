@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.148 2008-05-16 15:49:17 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.149 2008-05-16 17:41:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -341,7 +341,7 @@ static void
 _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
   int len = 0;
-  char buffer[IPMI_PACKET_BUFLEN];
+  char buffer[IPMIPOWER_PACKET_BUFLEN];
 
   assert(PACKET_TYPE_VALID_REQ(pkt));
 
@@ -367,10 +367,10 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
         ip->session_sequence_number++;
     }
 
-  len = ipmipower_packet_create(ip, pkt, buffer, IPMI_PACKET_BUFLEN);
+  len = ipmipower_packet_create(ip, pkt, buffer, IPMIPOWER_PACKET_BUFLEN);
   ipmipower_packet_dump(ip, pkt, buffer, len);
   Cbuf_write(ip->ic->ipmi_out, buffer, len);
-  secure_memset(buffer, '\0', IPMI_PACKET_BUFLEN);
+  secure_memset(buffer, '\0', IPMIPOWER_PACKET_BUFLEN);
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
     ip->protocol_state = PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT;
@@ -435,13 +435,13 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 static int 
 _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
-  char recv_buf[IPMI_PACKET_BUFLEN];
+  char recv_buf[IPMIPOWER_PACKET_BUFLEN];
   int recv_len = 0;
   int rv = -1;
 
   assert(PACKET_TYPE_VALID_RES(pkt));
 
-  if (!(recv_len = Cbuf_peek_and_drop(ip->ic->ipmi_in, recv_buf, IPMI_PACKET_BUFLEN)))
+  if (!(recv_len = Cbuf_peek_and_drop(ip->ic->ipmi_in, recv_buf, IPMIPOWER_PACKET_BUFLEN)))
     return 0;
 
   ipmipower_packet_dump(ip, pkt, recv_buf, recv_len);
@@ -713,7 +713,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
  cleanup:
   /* Clear out data */
-  secure_memset(recv_buf, '\0', IPMI_PACKET_BUFLEN);
+  secure_memset(recv_buf, '\0', IPMIPOWER_PACKET_BUFLEN);
   Fiid_obj_clear(ip->obj_lan_session_hdr_res);
   Fiid_obj_clear(ip->obj_rmcpplus_session_trlr_res);
   return rv;

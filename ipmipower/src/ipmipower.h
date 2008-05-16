@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.111 2008-05-16 16:07:18 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.112 2008-05-16 17:41:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -100,10 +100,7 @@
 
 /* MISC */
 
-#define IPMI_PACKET_BUFLEN               1024
-#define RMCP_PACKET_BUFLEN               1024
-
-#define IPMIPOWER_HOSTLIST_BUFLEN        65536
+#define IPMIPOWER_PACKET_BUFLEN          1024
 
 #define IPMIPOWER_OUTPUT_BUFLEN          65536
 
@@ -313,6 +310,8 @@ struct ipmipower_powercmd {
   uint8_t name_only_lookup;
   uint32_t remote_console_session_id;  
   uint8_t remote_console_random_number[IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH];
+
+  /* Ipmipower variables */
   int wait_until_on_state;
   int wait_until_off_state;
 
@@ -394,7 +393,7 @@ struct ipmipower_config
 {
   ipmi_driver_type_t       driver_type;
   hostlist_t               hosts;
-  int                      hosts_count;
+  unsigned int             hosts_count;
   char                     username[IPMI_MAX_USER_NAME_LENGTH+1];
   char                     password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
   uint8_t                  k_g[IPMI_MAX_K_G_LENGTH+1];
@@ -404,8 +403,8 @@ struct ipmipower_config
    * indicate what the real length of the field is.
    */
   unsigned int             k_g_len;
-  int                      session_timeout_len;
-  int                      retransmission_timeout_len;
+  unsigned int             session_timeout_len;
+  unsigned int             retransmission_timeout_len;
   uint8_t                  authentication_type;
   int                      cipher_suite_id;
   uint8_t                  privilege_level;

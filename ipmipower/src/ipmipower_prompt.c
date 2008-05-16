@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.79 2008-05-16 16:07:18 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.80 2008-05-16 17:41:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -116,7 +116,7 @@ _cmd_hostname(char **argv)
     {
       int rv, hl_count;
       struct ipmipower_connection *icsPtr;
-      char buffer[IPMIPOWER_HOSTLIST_BUFLEN];
+      char buffer[IPMIPOWER_OUTPUT_BUFLEN];
 
       hostlist_uniq(hl);
 
@@ -141,7 +141,7 @@ _cmd_hostname(char **argv)
       conf->hosts_count = hl_count;
       ipmipower_ping_force_discovery_sweep();
 
-      rv = hostlist_ranged_string(conf->hosts, IPMIPOWER_HOSTLIST_BUFLEN, 
+      rv = hostlist_ranged_string(conf->hosts, IPMIPOWER_OUTPUT_BUFLEN, 
                                   buffer);
       if (rv < 0)
         cbuf_printf(ttyout, "hostname: can't output, overflows internal "
@@ -607,7 +607,7 @@ _cmd_config(void)
   if (conf->hosts != NULL) 
     {
       int rv;
-      char buffer[IPMIPOWER_HOSTLIST_BUFLEN];
+      char buffer[IPMIPOWER_OUTPUT_BUFLEN];
 #ifndef NDEBUG
       int i;
       hostlist_t discovered = NULL;
@@ -616,7 +616,7 @@ _cmd_config(void)
 #endif /* NDEBUG */
 
       rv = hostlist_ranged_string(conf->hosts, 
-                                  IPMIPOWER_HOSTLIST_BUFLEN, 
+                                  IPMIPOWER_OUTPUT_BUFLEN, 
                                   buffer);
       if (rv < 0)
         cbuf_printf(ttyout, "Hostname:                     can't output\n");
@@ -643,21 +643,21 @@ _cmd_config(void)
           goto cleanup;
       }
 
-      rv = hostlist_ranged_string(discovered, IPMIPOWER_HOSTLIST_BUFLEN, 
+      rv = hostlist_ranged_string(discovered, IPMIPOWER_OUTPUT_BUFLEN, 
                                   buffer);
       if (rv < 0)
         cbuf_printf(ttyout, "Discovered:                   can't output\n");
       if (rv > 0)
         cbuf_printf(ttyout, "Discovered:                   %s\n", buffer);
 
-      rv = hostlist_ranged_string(undiscovered, IPMIPOWER_HOSTLIST_BUFLEN, 
+      rv = hostlist_ranged_string(undiscovered, IPMIPOWER_OUTPUT_BUFLEN, 
                                   buffer);
       if (rv < 0)
         cbuf_printf(ttyout, "Undiscovered:                 can't output\n");
       if (rv > 0)
         cbuf_printf(ttyout, "Undiscovered:                 %s\n", buffer);
 
-      rv = hostlist_ranged_string(badconnection, IPMIPOWER_HOSTLIST_BUFLEN, 
+      rv = hostlist_ranged_string(badconnection, IPMIPOWER_OUTPUT_BUFLEN, 
                                   buffer);
       if (rv < 0) 
         cbuf_printf(ttyout, "BadConnection:                can't output\n");
@@ -815,6 +815,32 @@ _cmd_config(void)
 }
 
 static void 
+_cmd_set_unsigned_int(char **argv, 
+                      unsigned int *val, 
+                      char *str, 
+                      int allow_zero)
+{
+  assert(argv != NULL && val != NULL && str != NULL);
+
+  if (argv[1] == NULL)
+    cbuf_printf(ttyout, "%s not specified\n", str);
+  else 
+    {
+      char *ptr;
+      unsigned int temp = strtoul(argv[1], &ptr, 10);
+      if (ptr != (argv[1] + strlen(argv[1]))) 
+        cbuf_printf(ttyout, "invalid %s input\n", str);
+      else if (allow_zero && temp == 0)
+        {
+          *val = temp;
+          cbuf_printf(ttyout, "%s is now %d\n", str, *val);
+        }
+      else
+        cbuf_printf(ttyout, "invalid %s input\n", str);
+    }
+}
+
+static void 
 _cmd_set_int(char **argv, 
              int *val, 
              char *str, 
@@ -837,6 +863,34 @@ _cmd_set_int(char **argv,
         }
       else
         cbuf_printf(ttyout, "invalid %s input\n", str);
+    }
+}
+
+static void 
+_cmd_set_unsigned_int_ranged(char **argv, 
+                             unsigned int *val, 
+                             char *str, 
+                             int allow_zero,
+                             int min, 
+                             int max) 
+{
+  assert(argv != NULL && val != NULL && str != NULL);
+
+  if (argv[1] == NULL)
+    cbuf_printf(ttyout, "%s not specified\n", str);
+  else 
+    {
+      char *ptr;
+      int temp = strtol(argv[1], &ptr, 10);
+      if (ptr != (argv[1] + strlen(argv[1]))) 
+        cbuf_printf(ttyout, "invalid %s input\n", str);
+      else if ((allow_zero && temp == 0) || (temp <= max && temp >= min)) {
+        *val = temp;
+        cbuf_printf(ttyout, "%s is now %d\n", str, *val);
+      }
+      else
+        cbuf_printf(ttyout, "invalid %s input, range is %d <=> %d\n", 
+                    str, min, max);
     }
 }
 
@@ -966,19 +1020,19 @@ ipmipower_prompt_process_cmdline(void)
               /* support "timeout" for backwards compatability */
               else if (strcmp(argv[0], "timeout") == 0
                        || strcmp(argv[0], "session-timeout") == 0)
-                _cmd_set_int(argv, 
-                             &conf->session_timeout_len, 
-                             "timeout",
-                             0);
+                _cmd_set_unsigned_int(argv, 
+                                      &conf->session_timeout_len, 
+                                      "timeout",
+                                      0);
               /* support "retry-timeout" for backwards compatability */
               else if (strcmp(argv[0], "retry-timeout") == 0
                        || strcmp(argv[0], "retransmission-timeout") == 0)
-                _cmd_set_int_ranged(argv, 
-                                    &conf->retransmission_timeout_len, 
-                                    "retransmission-timeout", 
-                                    0,
-                                    1, 
-                                    conf->session_timeout_len);
+                _cmd_set_unsigned_int_ranged(argv, 
+                                             &conf->retransmission_timeout_len, 
+                                             "retransmission-timeout", 
+                                             0,
+                                             1, 
+                                             conf->session_timeout_len);
               /* support underscored version for backwards compatability */
               else if (strcmp(argv[0], "authentication_type") == 0
                        || strcmp(argv[0], "authentication-type") == 0)

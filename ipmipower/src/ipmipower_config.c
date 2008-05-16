@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.106 2008-05-16 16:08:06 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.107 2008-05-16 17:41:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -415,10 +415,11 @@ cmdline_parse (int key,
         }
       break;
     case SESSION_TIMEOUT_KEY:       /* --session-timeout */
-      conf->session_timeout_len = strtol(arg, &ptr, 10);
+      tmp = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg))
           || conf->session_timeout_len <= 0)
         ierr_exit("Command Line Error: session timeout length invalid");
+      conf->session_timeout_len = tmp;
       conf->session_timeout_len_set_on_cmdline++;
       break;
     case RETRANSMISSION_TIMEOUT_KEY:       /* --retransmission-timeout */
@@ -426,6 +427,7 @@ cmdline_parse (int key,
       if (ptr != (arg + strlen(arg))
           || conf->retransmission_timeout_len <= 0)
         ierr_exit("Command Line Error: retransmission timeout length invalid");
+      conf->retransmission_timeout_len = tmp;
       conf->retransmission_timeout_len_set_on_cmdline++;
       break;
     case ARGP_AUTHENTICATION_TYPE_KEY:       /* --authentication-type */
@@ -645,7 +647,6 @@ _cb_hostname(conffile_t cf, struct conffile_data *data,
   hostlist_uniq(conf->hosts);
   
   conf->hosts_count = hostlist_count(conf->hosts);
-  
   return 0;
 }
 
@@ -767,6 +768,24 @@ _cb_bool(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
+_cb_unsigned_int_non_zero(conffile_t cf, struct conffile_data *data,
+                          char *optionname, int option_type, void *option_ptr,
+                          int option_data, void *app_ptr, int app_data) 
+{
+  unsigned int *temp = (unsigned int *)option_ptr;
+  int cmdlineset = (int)option_data;
+
+  if (cmdlineset)
+    return 0;
+
+  if (data->intval <= 0)
+    ierr_exit("Config File Error: %s value invalid", optionname);
+
+  *temp = data->intval; 
+  return 0;
+}
+
+static int 
 _cb_int_non_zero(conffile_t cf, struct conffile_data *data,
                  char *optionname, int option_type, void *option_ptr,
                  int option_data, void *app_ptr, int app_data) 
@@ -779,6 +798,24 @@ _cb_int_non_zero(conffile_t cf, struct conffile_data *data,
 
   if (!data->intval)
     ierr_exit("Config File Error: %s value invalid");
+
+  *temp = data->intval; 
+  return 0;
+}
+
+static int 
+_cb_unsigned_int(conffile_t cf, struct conffile_data *data,
+                 char *optionname, int option_type, void *option_ptr,
+                 int option_data, void *app_ptr, int app_data) 
+{
+  unsigned int *temp = (unsigned int *)option_ptr;
+  int cmdlineset = (int)option_data;
+
+  if (cmdlineset)
+    return 0;
+
+  if (data->intval < 0)
+    ierr_exit("Config File Error: %s value invalid", optionname);
 
   *temp = data->intval; 
   return 0;
@@ -856,17 +893,17 @@ ipmipower_config_conffile_parse(char *configfile)
       {"k_g", CONFFILE_OPTION_STRING, -1, _cb_k_g, 
        1, 0, &k_g_flag, NULL, 0},
       /* timeout maintained for backwards compatability */
-      {"timeout", CONFFILE_OPTION_INT, -1, _cb_int_non_zero, 
+      {"timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
        1, 0, &timeout_flag, &(conf->session_timeout_len), 
        conf->session_timeout_len_set_on_cmdline},
-      {"session-timeout", CONFFILE_OPTION_INT, -1, _cb_int_non_zero, 
+      {"session-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
        1, 0, &session_timeout_flag, &(conf->session_timeout_len), 
        conf->session_timeout_len_set_on_cmdline},
       /* retry-timeout for backwards comptability */
-      {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int_non_zero, 
+      {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
        1, 0, &retry_timeout_flag, &(conf->retransmission_timeout_len), 
        conf->retransmission_timeout_len_set_on_cmdline},
-      {"retransmission-timeout", CONFFILE_OPTION_INT, -1, _cb_int_non_zero, 
+      {"retransmission-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
        1, 0, &retransmission_timeout_flag, &(conf->retransmission_timeout_len), 
        conf->retransmission_timeout_len_set_on_cmdline},
       {"authentication-type", CONFFILE_OPTION_STRING, -1, _cb_authentication_type, 

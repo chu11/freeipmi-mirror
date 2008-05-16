@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.79 2008-05-15 21:58:21 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.80 2008-05-16 17:41:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -829,7 +829,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
   
   if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     {
-      uint8_t keybuf[IPMI_PACKET_BUFLEN];
+      uint8_t keybuf[IPMIPOWER_PACKET_BUFLEN];
       int32_t keybuf_len;
 
       /* IPMI Workaround (achu) 
@@ -846,7 +846,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
       keybuf_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
 				     "key_exchange_authentication_code",
 				     keybuf,
-				     IPMI_PACKET_BUFLEN);
+				     IPMIPOWER_PACKET_BUFLEN);
       if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
 	  && keybuf_len == 1) 
 	Fiid_obj_clear_field(ip->obj_rakp_message_2_res, "key_exchange_authentication_code");

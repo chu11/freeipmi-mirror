@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.26 2008-04-17 23:10:15 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.27 2008-05-16 17:41:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -83,7 +83,7 @@ ipmipower_ping_process_pings(int *timeout)
   for (i = 0; i < conf->hosts_count; i++) 
     {
       int len;
-      char buffer[RMCP_PACKET_BUFLEN];
+      char buffer[IPMIPOWER_PACKET_BUFLEN];
       
       if (send_pings_flag) 
         {
@@ -91,7 +91,7 @@ ipmipower_ping_process_pings(int *timeout)
           fiid_obj_t rmcp_ping = NULL;
           int len;
           
-          memset(buffer, '\0', RMCP_PACKET_BUFLEN);
+          memset(buffer, '\0', IPMIPOWER_PACKET_BUFLEN);
 
           /* deal with packet heuristics */
           if (conf->ping_packet_count && conf->ping_percent) 
@@ -134,7 +134,7 @@ ipmipower_ping_process_pings(int *timeout)
           if ((len = assemble_rmcp_pkt(rmcp_hdr,
 				       rmcp_ping, 
                                        (uint8_t *)buffer, 
-				       RMCP_PACKET_BUFLEN)) < 0)
+				       IPMIPOWER_PACKET_BUFLEN)) < 0)
             ierr_exit("assemble_rmcp_pkt: %s", strerror(errno));
           
 #ifndef NDEBUG
@@ -171,8 +171,8 @@ ipmipower_ping_process_pings(int *timeout)
         }
       
       /* Did we receive something? */
-      memset(buffer, '\0', RMCP_PACKET_BUFLEN);
-      len = Cbuf_peek_and_drop(ics[i].ping_in, buffer, RMCP_PACKET_BUFLEN);
+      memset(buffer, '\0', IPMIPOWER_PACKET_BUFLEN);
+      len = Cbuf_peek_and_drop(ics[i].ping_in, buffer, IPMIPOWER_PACKET_BUFLEN);
       if (len > 0) 
         {
           fiid_obj_t rmcp_hdr = NULL;

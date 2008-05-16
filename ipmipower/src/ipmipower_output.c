@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.33 2008-05-15 21:48:03 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.34 2008-05-16 17:41:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -93,17 +93,17 @@ ipmipower_output_finish(void)
   if (conf->consolidate_output)
     {
       int i, rv;
-      char buffer[IPMIPOWER_HOSTLIST_BUFLEN];
+      char buffer[IPMIPOWER_OUTPUT_BUFLEN];
       
       for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++) 
         {
           if (hostlist_count(output_hostrange[i]) > 0) {
-            memset(buffer, '\0', IPMIPOWER_HOSTLIST_BUFLEN); 
+            memset(buffer, '\0', IPMIPOWER_OUTPUT_BUFLEN); 
 
             hostlist_sort(output_hostrange[i]);
                 
             rv = hostlist_ranged_string(output_hostrange[i], 
-                                        IPMIPOWER_HOSTLIST_BUFLEN, 
+                                        IPMIPOWER_OUTPUT_BUFLEN, 
                                         buffer);
             if (rv < 0) 
               {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.48 2008-05-15 18:09:49 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.49 2008-05-16 17:41:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -206,11 +206,11 @@ static void
 _sendto(cbuf_t buf, int fd, struct sockaddr_in *destaddr) 
 {
   int n, rv;
-  char buffer[IPMI_PACKET_BUFLEN];
+  char buffer[IPMIPOWER_PACKET_BUFLEN];
 
-  if ((n = cbuf_read(buf, buffer, IPMI_PACKET_BUFLEN)) < 0)
+  if ((n = cbuf_read(buf, buffer, IPMIPOWER_PACKET_BUFLEN)) < 0)
     ierr_exit("_sendto(%d): cbuf_read: %s", fd, strerror(errno));
-  if (n == IPMI_PACKET_BUFLEN)
+  if (n == IPMIPOWER_PACKET_BUFLEN)
     ierr_exit("_sendto: Buffer full");
     
   rv = ipmi_lan_sendto(fd, buffer, n, 0, (struct sockaddr *)destaddr,
@@ -229,11 +229,11 @@ static void
 _recvfrom(cbuf_t buf, int fd, struct sockaddr_in *srcaddr) 
 {
   int n, rv, dropped = 0;
-  char buffer[IPMI_PACKET_BUFLEN];
+  char buffer[IPMIPOWER_PACKET_BUFLEN];
   struct sockaddr_in from;
   unsigned int fromlen = sizeof(struct sockaddr_in);
   
-  rv = ipmi_lan_recvfrom(fd, buffer, IPMI_PACKET_BUFLEN, 0, 
+  rv = ipmi_lan_recvfrom(fd, buffer, IPMIPOWER_PACKET_BUFLEN, 0, 
 			 (struct sockaddr *)&from, &fromlen);
   if (rv < 0)
     ierr_exit("_recvfrom: ipmi_lan_recvfrom: %s", strerror(errno));
@@ -250,8 +250,8 @@ _recvfrom(cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
     {
       ierr_output("_recvfrom: cbuf not empty, draining");
       do {
-        char tempbuf[IPMI_PACKET_BUFLEN];
-        if (cbuf_read(buf, tempbuf, IPMI_PACKET_BUFLEN) < 0)
+        char tempbuf[IPMIPOWER_PACKET_BUFLEN];
+        if (cbuf_read(buf, tempbuf, IPMIPOWER_PACKET_BUFLEN) < 0)
             ierr_exit("_recvfrom: cbuf_read: %s", strerror(errno));
       } while(!cbuf_is_empty(buf));
     }

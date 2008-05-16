@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.22 2008-04-17 23:14:28 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.23 2008-05-16 17:41:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -59,7 +59,7 @@ _clean_fd(int fd)
 {
   int rv;
   struct pollfd ufds;
-  char buffer[IPMI_PACKET_BUFLEN];
+  char buffer[IPMIPOWER_PACKET_BUFLEN];
 
   while (1) 
     {
@@ -75,7 +75,7 @@ _clean_fd(int fd)
 
       if (ufds.revents & POLLIN) 
         {
-          rv = Recvfrom(fd, (uint8_t *)buffer, IPMI_PACKET_BUFLEN, 0, NULL, NULL); 
+          rv = Recvfrom(fd, (uint8_t *)buffer, IPMIPOWER_PACKET_BUFLEN, 0, NULL, NULL); 
           if (rv == 0)
             break;
         }
