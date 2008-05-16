@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.111 2008-05-16 21:29:16 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.112 2008-05-16 21:53:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -117,11 +117,7 @@ static struct argp_option cmdline_options[] =
      "Specify the session timeout in milliseconds.", 12},
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
-    /* maintain "privilege" for backwards compatability */
-    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            
-     "Specify the privilege level to be used.", 15},
-    {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,
-     "Specify the privilege level to be used.", 15},
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     {"debug", DEBUG_KEY, 0, 0,

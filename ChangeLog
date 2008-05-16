@@ -19,6 +19,9 @@
 	* Re-arch most tools to verify tool specific args within
 	tool_config_argp_parse instead of inside main.
 
+	* common/src/tool-cmdline-common.c,
+	common/src/tool-cmdline-common.h: Cleanup.  Remove unused macros.
+
 2008-05-15  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-outofband-timeout.man: Fix text.

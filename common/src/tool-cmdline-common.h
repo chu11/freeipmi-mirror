@@ -70,8 +70,7 @@ enum argp_common_option_keys
  *
  * argp's help/usage layout has various bugs when the description
  * buffer gets to 150 characters in length.  So we're going to shorten
- * argp usage help output.  I'll keep alot of the original text in #if
- * 0's around for the future (or just documentation).
+ * argp usage help output from what is in the machine.  
  */
 
 #define ARGP_COMMON_OPTIONS_DRIVER                                                           \
@@ -97,11 +96,6 @@ enum argp_common_option_keys
     ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON,                                                    \
     ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT
 
-#define ARGP_COMMON_OPTIONS_OUTOFBAND_NO_TIMEOUT                                             \
-    {"hostname",       ARGP_HOSTNAME_KEY, "IPMIHOST", 0, 			             \
-     "Specify the remote host to communicate with.", 5},		                     \
-    ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
-
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED                                             \
     {"hostname",       ARGP_HOSTNAME_KEY, "IPMIHOST", 0, 			             \
      "Specify the remote host(s) to communicate with.", 5},                                  \
@@ -113,22 +107,6 @@ enum argp_common_option_keys
      "Specify the remote host(s) to communicate with.", 5},                                  \
     ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
 
-#if 0 /* see achu comments near top of file */
-#define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                                       \
-    {"username",       ARGP_USERNAME_KEY, "USERNAME", 0, 			                   \
-     "Specify the username to use when authenticating with the remote host. "                      \
-     "If not specified, a null (i.e. anonymous) username is assumed.", 6},                         \
-    {"password",       ARGP_PASSWORD_KEY, "PASSWORD", 0,	                                   \
-     "Specify the password to use when authenticationg with the remote host. "                     \
-     "If not specified, a null password is assumed.", 7},                                          \
-    {"password-prompt", ARGP_PASSWORD_PROMPT_KEY, 0, 0,	                                           \
-     "Prompt for password to avoid possibility of listing it in process lists.", 8},               \
-    {"k-g",       ARGP_K_G_KEY, "K_G", 0,	                                                   \
-     "Specify the K_g BMC key to use when authenticating with the remote host for IPMI 2.0. "      \
-     "If not specified, a null key is assumed.", 9},                                               \
-    {"k-g-prompt", ARGP_K_G_PROMPT_KEY, 0, 0,	                                                   \
-     "Prompt for k-g to avoid possibility of listing it in process lists.", 10}
-#else
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                                       \
     {"username",       ARGP_USERNAME_KEY, "USERNAME", 0, 			                   \
      "Specify the username to use when authenticating with the remote host.", 6},                  \
@@ -140,25 +118,7 @@ enum argp_common_option_keys
      "Specify the K_g BMC key to use when authenticating with the remote host for IPMI 2.0.", 9},  \
     {"k-g-prompt", ARGP_K_G_PROMPT_KEY, 0, 0,	                                                   \
      "Prompt for k-g to avoid possibility of listing it in process lists.", 10}
-#endif
 
-#if 0 /* see achu comments near top of file */
-/* retry-timeout is maintained for backwards compatability */
-/* timeout is maintained for backwards compatability */
-#define ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT                                                      \
-    {"retry-timeout", ARGP_RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                       \
-     "Specify the packet retransmission timeout in milliseconds. "                                 \
-     "Defaults to 20000 milliseconds (20 seconds) if not specified.", 11},                         \
-    {"retransmission-timeout", ARGP_RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,                 \
-     "Specify the packet retransmission timeout in milliseconds. "                                 \
-     "Defaults to 20000 milliseconds (20 seconds) if not specified.", 11},                         \
-    {"timeout", ARGP_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                                   \
-     "Specify the session timeout in milliseconds. "                                               \
-     "Defaults to 1000 milliseconds (1 second) if not specified.", 12},                            \
-    {"session-timeout", ARGP_SESSION_TIMEOUT_KEY, "MILLISECONDS", 0,                               \
-     "Specify the session timeout in milliseconds. "                                               \
-     "Defaults to 1000 milliseconds (1 second) if not specified.", 12}
-#else
 /* retry-timeout is maintained for backwards compatability */
 /* timeout is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT                                                      \
@@ -170,89 +130,18 @@ enum argp_common_option_keys
      "Specify the session timeout in milliseconds.", 12},                                          \
     {"session-timeout", ARGP_SESSION_TIMEOUT_KEY, "MILLISECONDS", 0,                               \
      "Specify the session timeout in milliseconds.", 12}
-#endif
 
-#if 0 /* see achu comments near top of file */
-/* auth-type is maintained for backwards compatability */
-#define ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE                                                     \
-    {"auth-type", ARGP_AUTH_TYPE_KEY, "AUTHENTICATION-TYPE", OPTION_HIDDEN, 	                    \
-     "Specify the IPMI 1.5 authentication type to use. "                                            \
-     "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " \
-     "Defaults to MD5 if not specified", 13},                                                       \
-    {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0, 	            \
-     "Specify the IPMI 1.5 authentication type to use. "                                            \
-     "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " \
-     "Defaults to MD5 if not specified", 13}
-#else
 /* auth-type is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE                                                     \
     {"auth-type", ARGP_AUTH_TYPE_KEY, "AUTHENTICATION-TYPE", OPTION_HIDDEN, 	                    \
      "Specify the IPMI 1.5 authentication type to use.", 13},                                       \
     {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0, 	            \
      "Specify the IPMI 1.5 authentication type to use.", 13}
-#endif
 
-#if 0 /* see achu comments near top of file */
-#define ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID                                                         \
-    {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER-SUITE-ID", 0,                         \
-     "Specify the IPMI 2.0 cipher suite ID to use. "				                    \
-     "The currently supported cipher suite ids are: 0, 1, 2, 3, 6, 7, 8, 11, 12. "                  \
-     "Defaults to 3 if not specified.", 14}
-#else
 #define ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID                                                         \
     {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER-SUITE-ID", 0,                         \
      "Specify the IPMI 2.0 cipher suite ID to use.", 14}
-#endif
 
-#if 0 /* see achu comments near top of file */
-/* privilege is maintained for backwards compatability */
-/* priv-level is maintained for backwards compatability */
-#define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER                                                    \
-    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            \
-     "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to USER if not specified.", 15},                                                     \
-    {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
-     "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to USER if not specified.", 15},                                                     \
-    {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
-     "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to USER if not specified.", 15}     
-
-/* privilege is maintained for backwards compatability */
-/* priv-level is maintained for backwards compatability */
-#define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR                                                \
-    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            \
-     "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to OPERATOR if not specified.", 15},                                                 \
-    {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
-     "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to OPERATOR if not specified.", 15},                                                 \
-    {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
-     "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to OPERATOR if not specified.", 15}     
-
-/* privilege is maintained for backwards compatability */
-/* priv-level is maintained for backwards compatability */
-#define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN                                                   \
-    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            \
-     "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to ADMIN if not specified.", 15},                                                    \
-    {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
-     "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to ADMIN if not specified.", 15},                                                    \
-    {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
-     "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to ADMIN if not specified.", 15}     
-#else
 /* privilege is maintained for backwards compatability */
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER                                                    \
@@ -282,7 +171,6 @@ enum argp_common_option_keys
      "Specify the privilege level to be used.", 15},                                                \
     {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
      "Specify the privilege level to be used.", 15}     
-#endif
 
 #define ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS                                                        \
     {"workaround-flags",  ARGP_WORKAROUND_FLAGS_KEY, "WORKAROUNDS", 0, 	                            \
@@ -301,29 +189,14 @@ enum argp_common_option_keys
      "Ignore all SDR cache related processing.", 20} 
 
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                     \
-    ARGP_COMMON_HOSTRANGED_BUFFER_OUTPUT,                                  \
-    ARGP_COMMON_HOSTRANGED_CONSOLIDATE_OUTPUT,                             \
-    ARGP_COMMON_HOSTRANGED_FANOUT,                                         \
-    ARGP_COMMON_HOSTRANGED_ELIMINATE,                                      \
-    ARGP_COMMON_HOSTRANGED_ALWAYS_PREFIX
-
-#define ARGP_COMMON_HOSTRANGED_BUFFER_OUTPUT                               \
     {"buffer-output", ARGP_BUFFER_OUTPUT_KEY, 0, 0,                        \
-      "Buffer hostranged output.", 21}
-
-#define ARGP_COMMON_HOSTRANGED_CONSOLIDATE_OUTPUT                          \
+     "Buffer hostranged output.", 21},                                     \
     {"consolidate-output", ARGP_CONSOLIDATE_OUTPUT_KEY, 0, 0,              \
-     "Consolidate hostranged output.", 22}
-
-#define ARGP_COMMON_HOSTRANGED_FANOUT                                      \
+     "Consolidate hostranged output.", 22},                                \
     {"fanout", ARGP_FANOUT_KEY, "NUM", 0,                                  \
-     "Specify multiple host fanout.", 23}
-
-#define ARGP_COMMON_HOSTRANGED_ELIMINATE                                   \
+     "Specify multiple host fanout.", 23},                                 \
     {"eliminate", ARGP_ELIMINATE_KEY, 0, 0,                                \
-     "Eliminate undetected nodes.", 24}
-
-#define ARGP_COMMON_HOSTRANGED_ALWAYS_PREFIX                               \
+     "Eliminate undetected nodes.", 24},                                   \
     {"always-prefix", ARGP_ALWAYS_PREFIX_KEY, 0, 0,                        \
      "Always prefix output.", 25}
 

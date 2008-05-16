@@ -43,12 +43,6 @@ general
 -------
 audit error message consistency in tool validate functions
 - exit(1) vs. exit(EXIT_FAILURE)
-signed unsigned args in common parsing
-tiemout
-- can't be zero anywhere
-  - do minimum/maximum?
-- including ipmipower?
-- do generic verify checks in common tool
 audit error messages in command line parsing in all tools
 - ipmipower
 - bmc-watchdog
@@ -59,11 +53,9 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
-audit ls/ms byte usage
 - fiid internally stores ls byte first, so if spec says ms byte first, need to fix
 code cleanup
 - merge many util libs into one?
-different priv config for tools
 fix poort variable naming in argp for all tools
 - audit macros in tool-cmdline-common .. are all still used?
 - audit common doc manpages, all still used?
