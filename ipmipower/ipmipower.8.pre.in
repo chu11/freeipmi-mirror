@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.39 2008-05-15 22:30:46 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.40 2008-05-16 15:49:16 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -156,8 +156,7 @@ the \fB\-\-wait\-until\-on\fR and \fB\-\-wait\-until\-off\fR options.
 \fB\-b\fR, \fB\-\-retransmission\-backoff\-count\fR=\fBCOUNT\fR
 Specify the retransmission backoff count for retransmissions.  After
 ever COUNT retransmissions, the retransmission timeout length will be
-increased by another factor.  Defaults to 8.  Backoff count
-calculations can be disabled by setting this value to 0.
+increased by another factor.  Defaults to 8.
 .TP
 \fB\-i\fR, \fB\-\-ping\-interval\fR=\fBMILLISECONDS\fR
 Specify the ping interval length in milliseconds.  When running in

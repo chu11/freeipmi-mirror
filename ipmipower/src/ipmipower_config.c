@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.103 2008-05-15 23:07:47 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.104 2008-05-16 15:49:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -302,9 +302,7 @@ _config_common_checks(char *str)
   if (!IPMI_CIPHER_SUITE_ID_SUPPORTED(conf->cipher_suite_id))
     ierr_exit("%s: unsupported cipher suite id", str);
 
-  if (conf->retransmission_backoff_count != 0 
-      && (conf->retransmission_backoff_count < IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MIN 
-          || conf->retransmission_backoff_count > IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MAX))
+  if (!conf->retransmission_backoff_count)
     ierr_exit("%s: retransmission backoff count out of range", str);
 
   if (conf->ping_interval_len != 0 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.147 2008-05-15 23:07:48 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.148 2008-05-16 15:49:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -776,13 +776,13 @@ _retry_packets(ipmipower_powercmd_t ip)
     return 0;
 
   /* Did we timeout on this packet? */
-  if ((conf->wait_until_on
+  if ((ip->wait_until_on_state
        && ip->cmd == POWER_CMD_POWER_ON)
-      || (conf->wait_until_off
+      || (ip->wait_until_off_state
           && ip->cmd == POWER_CMD_POWER_OFF))
-    retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_wait_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_wait_timeout_len;
+    retransmission_timeout_len = conf->retransmission_wait_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count));
   else
-    retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_timeout_len;
+    retransmission_timeout_len = conf->retransmission_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count));
 
   Gettimeofday(&cur_time, NULL);
   timeval_sub(&cur_time, &(ip->ic->last_ipmi_send), &result);
@@ -1621,16 +1621,16 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
   timeval_millisecond_calc(&result, &timeout);
 
   /* shorter timeout b/c of retransmission timeout */
-  if ((conf->wait_until_on && ip->cmd == POWER_CMD_POWER_ON)
-      || (conf->wait_until_off && ip->cmd == POWER_CMD_POWER_OFF))
+  if ((ip->wait_until_on_state && ip->cmd == POWER_CMD_POWER_ON)
+      || (ip->wait_until_off_state && ip->cmd == POWER_CMD_POWER_OFF))
     {
-      int retransmission_wait_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_wait_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_wait_timeout_len;
+      int retransmission_wait_timeout_len = conf->retransmission_wait_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count));
       if (timeout > retransmission_wait_timeout_len)
         timeout = retransmission_wait_timeout_len;
     }
   else
     {
-      int retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_timeout_len;
+      int retransmission_timeout_len = conf->retransmission_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count));
       if (timeout > retransmission_timeout_len)
         timeout = retransmission_timeout_len;
     }

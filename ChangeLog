@@ -1,3 +1,8 @@
+2008-05-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/: Fix wait time length bug.  Remove 0 backoff
+	count support.
+	
 2008-05-15  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-outofband-timeout.man: Fix text.

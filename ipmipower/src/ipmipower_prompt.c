@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.77 2008-05-15 23:07:48 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.78 2008-05-16 15:49:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1057,12 +1057,10 @@ ipmipower_prompt_process_cmdline(void)
               /* support "retry-backoff-count" for backwards compatability */
               else if (strcmp(argv[0], "retry-backoff-count") == 0
                        || strcmp(argv[0], "retransmission-backoff-count") == 0)
-                _cmd_set_int_ranged(argv, 
-                                    &conf->retransmission_backoff_count, 
-                                    "retransmission-backoff-count", 
-                                    1,
-                                    IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MIN,
-                                    IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MAX);
+                _cmd_set_int(argv, 
+                             &conf->retransmission_backoff_count, 
+                             "retransmission-backoff-count", 
+                             0);
               else if (strcmp(argv[0], "ping-interval") == 0)
                 _cmd_set_int_ranged(argv,
                                     &conf->ping_interval_len, 
