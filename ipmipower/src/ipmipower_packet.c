@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.91 2008-05-16 22:44:53 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.92 2008-05-16 23:36:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -553,10 +553,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == RAKP_MESSAGE_1_REQ
       || pkt == RAKP_MESSAGE_3_REQ)
     {
-      if (strlen(conf->username))
-        username = conf->username;
-      else
-        username = NULL;
+      username = conf->username;
 
       /* IPMI Workaround (achu)
        *
@@ -594,12 +591,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == GET_CHASSIS_STATUS_REQ
       || pkt == CHASSIS_CONTROL_REQ
       || pkt == CLOSE_SESSION_REQ)
-    {
-      if (strlen(conf->password))
-        password = conf->password;
-      else
-        password = NULL;
-    }     
+    password = conf->password;
   else
     password = NULL;
     

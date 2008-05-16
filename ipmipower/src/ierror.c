@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ierror.c,v 1.1 2008-04-12 00:05:22 chu11 Exp $
+ *  $Id: ierror.c,v 1.2 2008-05-16 23:36:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -175,7 +175,7 @@ void ierr_cbuf_dump_file_descriptor(int toggle, int fd)
 void ierr_cbuf(int toggle, cbuf_t buf) 
 {
     if (toggle) {
-        assert(buf != NULL);
+        assert(buf);
         ierr_dest |= IERR_CBUF;
         ierr_cb = buf;
     }
@@ -196,24 +196,24 @@ static void _verr(int syslog_level, const char *fmt, va_list ap)
 
     len = vsnprintf(buf, IERROR_BUFLEN, fmt, ap);  /* overflow ignored */
     if (ierr_dest & IERR_SYSLOG) {
-        assert(ierr_prog != NULL);
+        assert(ierr_prog);
         syslog(syslog_level, "%s", buf);
     }
     if (ierr_dest & IERR_FILE_STREAM) {
-        assert(ierr_prog != NULL);
-        assert(ierr_fstream != NULL);
+        assert(ierr_prog);
+        assert(ierr_fstream);
         fprintf(ierr_fstream, "%s: %s\n", ierr_prog, buf);
     }
     if (ierr_dest & IERR_FILE_DESCRIPTOR) {
         char buf2[IERROR_BUFLEN];
-        assert(ierr_prog != NULL);
+        assert(ierr_prog);
         assert(ierr_fd > -1);
         len = snprintf(buf2, IERROR_BUFLEN, "%s: %s\n", ierr_prog, buf);
         fd_write_n(ierr_fd, buf2, len); /* ignore errors */
     }
     if (ierr_dest & IERR_CBUF) {
-        assert(ierr_prog != NULL);
-        assert(ierr_cb != NULL);
+        assert(ierr_prog);
+        assert(ierr_cb);
         /* may call malloc - inappropriate for out of mem errs */
         cbuf_printf(ierr_cb, "%s: %s\n", ierr_prog, buf);
     }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.28 2008-04-17 23:14:29 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.29 2008-05-16 23:36:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -45,7 +45,7 @@ cbuf_t
 Cbuf_create(int minsize, int maxsize) 
 {
   cbuf_t c;
-  if ((c = cbuf_create(minsize, maxsize)) == NULL)
+  if (!(c = cbuf_create(minsize, maxsize)))
     ierr_exit("Cbuf_create: %s", strerror(errno));
   cbuf_opt_set(c, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
   return c;
@@ -54,7 +54,7 @@ Cbuf_create(int minsize, int maxsize)
 void 
 Cbuf_drop_all(cbuf_t buf) 
 { 
-  assert(buf != NULL);
+  assert(buf);
   if (cbuf_drop(buf, -1) < 0)
     ierr_exit("Cbuf_drop: %s", strerror(errno));
 }
@@ -62,7 +62,7 @@ Cbuf_drop_all(cbuf_t buf)
 void 
 Cbuf_read_to_fd(cbuf_t buf, int fd) 
 {
-  assert(buf != NULL);
+  assert(buf);
   if (cbuf_read_to_fd(buf, fd, -1) < 0)
     ierr_exit("Cbuf_read_to_fd(%d): %s", fd, strerror(errno));
 }
@@ -72,7 +72,7 @@ Cbuf_write_from_fd(cbuf_t buf, int fd)
 {
   int n, dropped = 0;
 
-  assert(buf != NULL);
+  assert(buf);
 
   if ((n = cbuf_write_from_fd(buf, fd, -1, &dropped)) < 0)
     ierr_exit("Cbuf_write_from_fd(%d): %s", fd, strerror(errno));
@@ -85,14 +85,14 @@ Cbuf_write_from_fd(cbuf_t buf, int fd)
    * ipmipower and the call to cbuf_write_from_fd will give us an EOF
    * reading.  We'll consider this EOF an "ok" error.
    */
-  if (n == 0)
+  if (!n)
     {
       if (fd == STDIN_FILENO)
         exit(1);
       else
         ierr_exit("Cbuf_write_from_fd(%d): EOF", fd);
     }
-  if (dropped != 0)
+  if (dropped)
     ierr_output("Cbuf_write_from_fd: read dropped %d bytes", dropped);
 }
 
@@ -101,8 +101,8 @@ Cbuf_write(cbuf_t buf, void *buffer, int len)
 {
   int rv, dropped = 0;
     
-  assert(buf != NULL); 
-  assert(buffer != NULL);
+  assert(buf); 
+  assert(buffer);
   assert(len > 0);
 
   if ((rv = cbuf_write(buf, buffer, len, &dropped)) < 0)
@@ -111,7 +111,7 @@ Cbuf_write(cbuf_t buf, void *buffer, int len)
   if (rv != len)
     ierr_exit("Cbuf_write: incorrect bytes written %d", rv);
 
-  if (dropped != 0)
+  if (dropped)
     ierr_output("Cbuf_write: dropped %d bytes", dropped);
 }
 
@@ -120,8 +120,8 @@ Cbuf_peek_and_drop(cbuf_t buf, void *buffer, int len)
 {
   int rv, r_len, dropped = 0;
 
-  assert(buf != NULL); 
-  assert(buffer != NULL);
+  assert(buf); 
+  assert(buffer);
   assert(len > 0);
 
   if ((r_len = cbuf_peek(buf, buffer, len)) < 0)
@@ -151,7 +151,7 @@ Cbuf_peek_to_fd(cbuf_t src, int dstfd, int len)
 {
   int ret;
 
-  assert(src != NULL);
+  assert(src);
   assert(dstfd > 2);
 
   if ((ret = cbuf_peek_to_fd(src, dstfd, len)) < 0)
@@ -165,9 +165,9 @@ Fiid_obj_create(fiid_template_t tmpl)
 {
   fiid_obj_t obj;
 
-  assert(tmpl != NULL);
+  assert(tmpl);
 
-  if ((obj = fiid_obj_create(tmpl)) == NULL)
+  if (!(obj = fiid_obj_create(tmpl)))
     ierr_exit("Fiid_obj_create: %s", strerror(errno));
   return obj;
 }
@@ -267,9 +267,9 @@ Ipmi_dump_lan_packet(int fd,
                      fiid_template_t tmpl_lan_msg_hdr,
                      fiid_template_t tmpl_cmd) 
 {
-  assert(pkt != NULL 
-	 && tmpl_lan_msg_hdr != NULL 
-         && tmpl_cmd != NULL);
+  assert(pkt 
+	 && tmpl_lan_msg_hdr 
+         && tmpl_cmd);
 
   if (ipmi_dump_lan_packet(fd, 
                            prefix,
@@ -291,7 +291,7 @@ Ipmi_dump_rmcp_packet(int fd,
                       uint32_t pkt_len, 
                       fiid_template_t tmpl_cmd) 
 {
-  assert(pkt != NULL && tmpl_cmd != NULL);
+  assert(pkt && tmpl_cmd);
 
   if (ipmi_dump_rmcp_packet(fd, prefix, hdr, trlr, pkt, pkt_len, tmpl_cmd) < 0)
     ierr_dbg("Ipmi_dump_rmcp_packet: %s", strerror(errno));
@@ -314,7 +314,7 @@ Ipmi_dump_rmcpplus_packet (int fd,
                            fiid_template_t tmpl_lan_msg_hdr, 
                            fiid_template_t tmpl_cmd)
 {
-  assert(pkt != NULL && tmpl_lan_msg_hdr != NULL && tmpl_cmd != NULL);
+  assert(pkt && tmpl_lan_msg_hdr && tmpl_cmd);
 
   if (ipmi_dump_rmcpplus_packet(fd, 
                                 prefix, 

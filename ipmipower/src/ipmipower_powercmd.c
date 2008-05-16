@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.149 2008-05-16 17:41:13 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.150 2008-05-16 23:36:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -69,7 +69,7 @@ static unsigned int executing_count = 0;
 static void 
 _destroy_ipmipower_powercmd(ipmipower_powercmd_t ip) 
 {
-  assert(ip != NULL);
+  assert(ip);
 
   Fiid_obj_destroy(ip->obj_rmcp_hdr_req);
   Fiid_obj_destroy(ip->obj_rmcp_hdr_res);
@@ -126,17 +126,17 @@ _destroy_ipmipower_powercmd(ipmipower_powercmd_t ip)
 void 
 ipmipower_powercmd_setup() 
 {
-  assert(pending == NULL);  /* need to cleanup first! */
+  assert(!pending);  /* need to cleanup first! */
     
   pending = list_create((ListDelF)_destroy_ipmipower_powercmd);
-  if (pending == NULL)
+  if (!pending)
     ierr_exit("list_create() error");
 }
 
 void 
 ipmipower_powercmd_cleanup() 
 {
-  assert(pending != NULL);  /* did not run ipmipower_powercmd_setup() */
+  assert(pending);  /* did not run ipmipower_powercmd_setup() */
   list_destroy(pending);
   pending = NULL;
 }
@@ -164,8 +164,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 { 
   ipmipower_powercmd_t ip;
 
-  assert(pending != NULL);  /* did not run ipmipower_powercmd_setup() */
-  assert(ic != NULL);
+  assert(pending);  /* did not run ipmipower_powercmd_setup() */
+  assert(ic);
   assert(POWER_CMD_VALID(cmd));
 
   ip = (ipmipower_powercmd_t)Malloc(sizeof(struct ipmipower_powercmd));
@@ -316,7 +316,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_close_session_req = Fiid_obj_create(tmpl_cmd_close_session_rq); 
   ip->obj_close_session_res = Fiid_obj_create(tmpl_cmd_close_session_rs); 
 
-  if ((ip->sockets_to_close = list_create(NULL)) == NULL)
+  if (!(ip->sockets_to_close = list_create(NULL)))
     ierr_exit("list_create() error");
 
   list_append(pending, ip);
@@ -325,7 +325,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 int 
 ipmipower_powercmd_pending() 
 {
-  assert(pending != NULL);  /* did not run ipmipower_powercmd_setup() */
+  assert(pending);  /* did not run ipmipower_powercmd_setup() */
   return !list_is_empty(pending);
 }
 
@@ -964,13 +964,13 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
       /* Does the remote BMC's authentication configuration support
        * our username/password combination 
        */
-      if ((!strlen(conf->username) && !strlen(conf->password)
+      if ((!conf->username && !conf->password
            && !authentication_status_anonymous_login
            && !authentication_type_none)
-          || (!strlen(conf->username) 
+          || (!conf->username
               && !authentication_status_anonymous_login
               && !authentication_status_null_username)
-          || (strlen(conf->username)
+          || (conf->username
               && !authentication_status_non_null_username))
         {
           ipmipower_output(MSG_TYPE_USERNAME_INVALID, ip->ic->hostname);
@@ -1063,12 +1063,12 @@ _check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
       /* Does the remote BMC's authentication configuration support
        * our username/password combination 
        */
-      if ((!strlen(conf->username) && !strlen(conf->password)
+      if ((!conf->username && !conf->password
            && !authentication_status_anonymous_login)
-          || (!strlen(conf->username) 
+          || (!conf->username
               && !authentication_status_anonymous_login
               && !authentication_status_null_username)
-          || (strlen(conf->username)
+          || (conf->username
               && !authentication_status_non_null_username))
         {
           ipmipower_output(MSG_TYPE_USERNAME_INVALID, ip->ic->hostname); 
@@ -1238,18 +1238,11 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
     }
   else
     {
-      if (strlen(conf->username))
-	username = conf->username;
-      else
-	username = NULL;
+      username = conf->username;
       username_len = (username) ? strlen(username) : 0;
     }
   
-  if (strlen(conf->password))
-    password = conf->password;
-  else
-    password = NULL;
-
+  password = conf->password;
   password_len = (password) ? strlen(password) : 0;
 
   /* IPMI Workaround (achu)
@@ -1317,7 +1310,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
   unsigned int timeout;
   int rv;
 
-  assert(ip != NULL);
+  assert(ip);
   assert(PROTOCOL_STATE_VALID(ip->protocol_state));
 
   /* if timeout, give up */
@@ -1325,7 +1318,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     return -1;
   
   /* retransmit? */ 
-  if ((rv = _retry_packets(ip)) != 0) 
+  if ((rv = _retry_packets(ip))) 
     { 
       if (rv < 0)
         return -1;
@@ -1646,8 +1639,8 @@ ipmipower_powercmd_process_pending(int *timeout)
   int min_timeout = conf->session_timeout_len;
   int num_pending;
 
-  assert(pending != NULL);  /* did not run ipmipower_powercmd_setup() */
-  assert(timeout != NULL);
+  assert(pending);  /* did not run ipmipower_powercmd_setup() */
+  assert(timeout);
 
   /* if there are no pending jobs, don't edit the timeout */
   if (list_is_empty(pending))
@@ -1663,7 +1656,7 @@ ipmipower_powercmd_process_pending(int *timeout)
 
       if ((tmp_timeout = _process_ipmi_packets(ip)) < 0) 
         {
-          if (list_delete(itr) == 0)
+          if (!list_delete(itr))
             ierr_exit("ipmipower_powercmd_process_pending: list_delete");
 	  executing_count--;
           continue;
@@ -1674,7 +1667,7 @@ ipmipower_powercmd_process_pending(int *timeout)
     }
   list_iterator_destroy(itr);
 
-  if ((num_pending = list_count(pending)) == 0) 
+  if (!(num_pending = list_count(pending))) 
     ipmipower_output_finish();
 
   /* If the last pending power control command finished, the timeout

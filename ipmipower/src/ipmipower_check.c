@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.82 2008-05-16 22:44:51 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.83 2008-05-16 23:36:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -134,12 +134,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	}
       
       if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
-	{
-	  if (strlen(conf->password))
-	    password = conf->password;
-	  else
-	    password = NULL;
-	}
+        password = conf->password;
       else
 	password = NULL;
       
@@ -172,12 +167,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	  
 	  authentication_type = conf->authentication_type;
 	  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
-	    {
-	      if (strlen(conf->password))
-		password = conf->password;
-	      else
-		password = NULL;
-	    }
+            password = conf->password;
 	  else
 	    password = NULL;
 	  
@@ -209,10 +199,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 
       integrity_algorithm = ip->integrity_algorithm;
 
-      if (strlen(conf->password))
-	password = conf->password;
-      else
-	password = NULL;
+      password = conf->password;
 	  
       if ((rv = ipmi_rmcpplus_check_packet_session_authentication_code(integrity_algorithm,
 								       buffer,
@@ -320,7 +307,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
     goto out;
 
   /* In IPMI 2.0, sequence number 0 is special, and shouldn't happen */
-  if (conf->driver_type == IPMI_DEVICE_LAN_2_0 && seq_num == 0)
+  if (conf->driver_type == IPMI_DEVICE_LAN_2_0 && !seq_num)
     goto out;
 
   /* Check if sequence number is greater than highest received and is
@@ -816,17 +803,14 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
   if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (strlen(conf->username))
+      if (conf->username)
 	strcpy(username_buf, conf->username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
-      if (strlen(conf->username))
-	username = conf->username;
-      else
-	username = NULL;
+      username = conf->username;
       username_len = (username) ? strlen(username) : 0;
     }
   
@@ -867,11 +851,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
 			  IPMI_HMAC_MD5_DIGEST_LENGTH);
     }
 
-  if (strlen(conf->password))
-    password = conf->password;
-  else
-    password = NULL;
-
+  password = conf->password;
   password_len = (password) ? strlen(password) : 0;
 
   /* IPMI Workaround (achu)

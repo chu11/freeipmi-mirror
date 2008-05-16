@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.28 2008-05-16 22:44:53 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.29 2008-05-16 23:36:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -65,9 +65,9 @@ ipmipower_ping_process_pings(int *timeout)
   struct timeval cur_time, result;
   unsigned int ms_time;
     
-  assert(timeout != NULL);
+  assert(timeout);
 
-  if (conf->hosts == NULL)
+  if (!conf->hosts)
     return;
 
   if (!conf->ping_interval_len)
@@ -111,7 +111,7 @@ ipmipower_ping_process_pings(int *timeout)
             
           if (conf->ping_consec_count) 
             {
-              if (ics[i].ping_last_packet_recv_flag == 0)
+              if (!ics[i].ping_last_packet_recv_flag)
                 ics[i].ping_consec_count = 0;
               ics[i].ping_last_packet_recv_flag = 0;
             }
@@ -235,7 +235,7 @@ ipmipower_ping_process_pings(int *timeout)
                    * response was late, and we quickly receive two
                    * pong responses
                    */
-                  if (ics[i].ping_last_packet_recv_flag == 0)
+                  if (!ics[i].ping_last_packet_recv_flag)
                     ics[i].ping_consec_count++;
                   
                   ics[i].ping_last_packet_recv_flag++;

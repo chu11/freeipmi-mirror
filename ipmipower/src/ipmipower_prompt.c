@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.83 2008-05-16 22:44:54 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.84 2008-05-16 23:36:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -162,13 +162,23 @@ _cmd_username(char **argv)
   if (!argv[1]
       || (argv[1] && strlen(argv[1]) <= IPMI_MAX_USER_NAME_LENGTH)) 
     {
-      memset(conf->username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
+      if (conf->username)
+        {
+          free(conf->username);
+          conf->username = NULL;
+        }
 
       if (argv[1])
-        strcpy(conf->username, argv[1]);
-
+        {
+          if (!(conf->username = strdup(argv[1])))
+            {
+              cbuf_printf(ttyerr, "strdup: %s\n", strerror(errno));
+              return;
+            }
+        }
+      
       cbuf_printf(ttyout, "username: %s\n", 
-                  (strlen(conf->username)) ? conf->username : "NULL");
+                  (conf->username) ? conf->username : "NULL");
     }
   else
     cbuf_printf(ttyout, "username invalid length\n");
@@ -189,16 +199,26 @@ _cmd_password(char **argv)
                    || (conf->driver_type == IPMI_DEVICE_LAN
                        && strlen(argv[1]) <= IPMI_1_5_MAX_PASSWORD_LENGTH))))
     {
-      memset(conf->password, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH+1);
+      if (conf->password)
+        {
+          free(conf->password);
+          conf->password = NULL;
+        }
 
       if (argv[1])
-        strcpy(conf->password, argv[1]);
+        {
+          if (!(conf->password = strdup(argv[1])))
+            {
+              cbuf_printf(ttyerr, "strdup: %s\n", strerror(errno));
+              return;
+            }
+        }
 
 #ifdef NDEBUG
       cbuf_printf(ttyout, "password changed\n");
 #else  /* !NDEBUG */
       cbuf_printf(ttyout, "password: %s\n", 
-                  (strlen(conf->password)) ? conf->password : "NULL");
+                  (conf->password) ? conf->password : "NULL");
 #endif /* !NDEBUG */
     }
   else
@@ -385,7 +405,7 @@ _cmd_power(char **argv, power_cmd_t cmd)
         }
 
       /* Special corner case when no nodes are discovered */
-      if (nodes_queued == 0)
+      if (!nodes_queued)
         ipmipower_output_finish();
     } 
   else 
@@ -549,7 +569,7 @@ _cmd_config(void)
         else
           rv = hostlist_push_host(badconnection, ics[i].hostname);
         
-        if (rv == 0)
+        if (!rv)
           goto cleanup;
       }
 
@@ -584,11 +604,11 @@ _cmd_config(void)
     cbuf_printf(ttyout, "Hostname:                     NONE\n");
 
   cbuf_printf(ttyout, "Username:                     %s\n", 
-              (strlen(conf->username)) ? conf->username : "NULL");
+              (conf->username) ? conf->username : "NULL");
 
 #ifndef NDEBUG
   cbuf_printf(ttyout, "Password:                     %s\n", 
-              (strlen(conf->password)) ? conf->password : "NULL");
+              (conf->password) ? conf->password : "NULL");
   cbuf_printf(ttyout, "K_g:                          %s\n", 
               (conf->k_g_len) ? 
               format_kg(kgbuf, IPMI_MAX_K_G_LENGTH*2+3, conf->k_g) : "NULL");
@@ -738,7 +758,7 @@ _cmd_set_unsigned_int(char **argv,
       unsigned int temp = strtoul(argv[1], &ptr, 10);
       if (ptr != (argv[1] + strlen(argv[1]))) 
         cbuf_printf(ttyout, "invalid %s input\n", str);
-      else if (allow_zero && temp == 0)
+      else if (allow_zero && !temp)
         {
           *val = temp;
           cbuf_printf(ttyout, "%s is now %d\n", str, *val);
@@ -766,7 +786,7 @@ _cmd_set_unsigned_int_ranged(char **argv,
       int temp = strtol(argv[1], &ptr, 10);
       if (ptr != (argv[1] + strlen(argv[1]))) 
         cbuf_printf(ttyout, "invalid %s input\n", str);
-      else if ((allow_zero && temp == 0) || (temp <= max && temp >= min)) {
+      else if ((allow_zero && !temp) || (temp <= max && temp >= min)) {
         *val = temp;
         cbuf_printf(ttyout, "%s is now %d\n", str, *val);
       }
@@ -857,30 +877,30 @@ ipmipower_prompt_process_cmdline(void)
           if (argv[0]) 
             {
               /* support "ipmi_version" and "ipmi-version" for backwards compatability */
-              if (strcmp(argv[0], "driver-type") == 0
-                  || strcmp(argv[0], "ipmi_version") == 0
-                  || strcmp(argv[0], "ipmi-version") == 0)
+              if (!strcmp(argv[0], "driver-type")
+                  || !strcmp(argv[0], "ipmi_version")
+                  || !strcmp(argv[0], "ipmi-version"))
                 _cmd_driver_type(argv);
               /* support hostnames (plural) for backwards compatability */
-              else if (strcmp(argv[0], "hostnames") == 0
-                       || strcmp(argv[0], "hostname") == 0)
+              else if (!strcmp(argv[0], "hostnames")
+                       || !strcmp(argv[0], "hostname"))
                 _cmd_hostname(argv);
-              else if (strcmp(argv[0], "username") == 0)
+              else if (!strcmp(argv[0], "username"))
                 _cmd_username(argv); 
-              else if (strcmp(argv[0], "password") == 0)
+              else if (!strcmp(argv[0], "password"))
                 _cmd_password(argv);
-              else if (strcmp(argv[0], "k_g") == 0)
+              else if (!strcmp(argv[0], "k_g"))
                 _cmd_k_g(argv);
               /* support "timeout" for backwards compatability */
-              else if (strcmp(argv[0], "timeout") == 0
-                       || strcmp(argv[0], "session-timeout") == 0)
+              else if (!strcmp(argv[0], "timeout")
+                       || !strcmp(argv[0], "session-timeout"))
                 _cmd_set_unsigned_int(argv, 
                                       &conf->session_timeout_len, 
                                       "timeout",
                                       0);
               /* support "retry-timeout" for backwards compatability */
-              else if (strcmp(argv[0], "retry-timeout") == 0
-                       || strcmp(argv[0], "retransmission-timeout") == 0)
+              else if (!strcmp(argv[0], "retry-timeout")
+                       || !strcmp(argv[0], "retransmission-timeout"))
                 _cmd_set_unsigned_int_ranged(argv, 
                                              &conf->retransmission_timeout_len, 
                                              "retransmission-timeout", 
@@ -888,20 +908,20 @@ ipmipower_prompt_process_cmdline(void)
                                              1, 
                                              conf->session_timeout_len);
               /* support underscored version for backwards compatability */
-              else if (strcmp(argv[0], "authentication_type") == 0
-                       || strcmp(argv[0], "authentication-type") == 0)
+              else if (!strcmp(argv[0], "authentication_type")
+                       || !strcmp(argv[0], "authentication-type"))
                 _cmd_authentication_type(argv);
               /* support underscored version for backwards compatability */
-              else if (strcmp(argv[0], "cipher_suite_id") == 0
-                       || strcmp(argv[0], "cipher-suite-id") == 0)
+              else if (!strcmp(argv[0], "cipher_suite_id")
+                       || !strcmp(argv[0], "cipher-suite-id"))
                 _cmd_cipher_suite_id(argv);
               /* support "privilege" command for backwards compatability */
-              else if (strcmp(argv[0], "privilege") == 0
-                       || strcmp(argv[0], "privilege-level") == 0)
+              else if (!strcmp(argv[0], "privilege")
+                       || !strcmp(argv[0], "privilege-level"))
                 _cmd_privilege_level(argv);
-              else if (strcmp(argv[0], "workaround-flags") == 0)
+              else if (!strcmp(argv[0], "workaround-flags"))
                 _cmd_workaround_flags(argv);
-              else if (strcmp(argv[0], "debug") == 0) 
+              else if (!strcmp(argv[0], "debug")) 
                 {
                   _cmd_set_flag(argv,
                                 &conf->debug, 
@@ -910,42 +930,42 @@ ipmipower_prompt_process_cmdline(void)
                   ierr_cbuf_dump_file_stream(conf->debug, stderr);
                 }
 #ifndef NDEBUG
-              else if (strcmp(argv[0], "rmcpdump") == 0)
+              else if (!strcmp(argv[0], "rmcpdump"))
                 _cmd_set_flag(argv, 
                               &conf->rmcpdump,
                               "rmcp dump");
 #endif /* NDEBUG */
-              else if (strcmp(argv[0], "happyeaster") == 0)
+              else if (!strcmp(argv[0], "happyeaster"))
                 cbuf_printf(ttyout, "by Albert Chu <chu11@llnl.gov>\n");
-              else if (strcmp(argv[0], "on") == 0)
+              else if (!strcmp(argv[0], "on"))
                 _cmd_power(argv, POWER_CMD_POWER_ON);
-              else if (strcmp(argv[0], "off") == 0)
+              else if (!strcmp(argv[0], "off"))
                 _cmd_power(argv, POWER_CMD_POWER_OFF);
-              else if (strcmp(argv[0], "cycle") == 0)
+              else if (!strcmp(argv[0], "cycle"))
                 _cmd_power(argv, POWER_CMD_POWER_CYCLE);
-              else if (strcmp(argv[0], "reset") == 0)
+              else if (!strcmp(argv[0], "reset"))
                 _cmd_power(argv, POWER_CMD_POWER_RESET);
-              else if (strcmp(argv[0], "stat") == 0)
+              else if (!strcmp(argv[0], "stat"))
                 _cmd_power(argv, POWER_CMD_POWER_STATUS);
-              else if (strcmp(argv[0], "pulse") == 0)
+              else if (!strcmp(argv[0], "pulse"))
                 _cmd_power(argv, POWER_CMD_PULSE_DIAG_INTR);
-              else if (strcmp(argv[0], "soft") == 0)
+              else if (!strcmp(argv[0], "soft"))
                 _cmd_power(argv, POWER_CMD_SOFT_SHUTDOWN_OS);
-              else if (strcmp(argv[0], "on-if-off") == 0)
+              else if (!strcmp(argv[0], "on-if-off"))
                 _cmd_set_flag(argv,
                               &conf->on_if_off, 
                               "on-if-off");
-              else if (strcmp(argv[0], "wait-until-on") == 0)
+              else if (!strcmp(argv[0], "wait-until-on"))
                 _cmd_set_flag(argv,
                               &conf->wait_until_on, 
                               "wait-until-on");
-              else if (strcmp(argv[0], "wait-until-off") == 0)
+              else if (!strcmp(argv[0], "wait-until-off"))
                 _cmd_set_flag(argv,
                               &conf->wait_until_off,
                               "wait-until-off");
               /* support "retry-wait-timeout" for backwards compatability */
-              else if (strcmp(argv[0], "retry-wait-timeout") == 0
-                       || strcmp(argv[0], "retransmission-wait-timeout") == 0)
+              else if (!strcmp(argv[0], "retry-wait-timeout")
+                       || !strcmp(argv[0], "retransmission-wait-timeout"))
                 _cmd_set_unsigned_int_ranged(argv, 
                                              &conf->retransmission_wait_timeout_len, 
                                              "retransmission-wait-timeout", 
@@ -953,70 +973,70 @@ ipmipower_prompt_process_cmdline(void)
                                              1, 
                                              conf->session_timeout_len);
               /* support "retry-backoff-count" for backwards compatability */
-              else if (strcmp(argv[0], "retry-backoff-count") == 0
-                       || strcmp(argv[0], "retransmission-backoff-count") == 0)
+              else if (!strcmp(argv[0], "retry-backoff-count")
+                       || !strcmp(argv[0], "retransmission-backoff-count"))
                 _cmd_set_unsigned_int(argv, 
                                       &conf->retransmission_backoff_count, 
                                       "retransmission-backoff-count", 
                                       0);
-              else if (strcmp(argv[0], "ping-interval") == 0)
+              else if (!strcmp(argv[0], "ping-interval"))
                 _cmd_set_unsigned_int_ranged(argv,
                                              &conf->ping_interval_len, 
                                              "ping-interval", 
                                              1, 
                                              0,
                                              conf->ping_timeout_len);
-              else if (strcmp(argv[0], "ping-timeout") == 0)
+              else if (!strcmp(argv[0], "ping-timeout"))
                 _cmd_set_unsigned_int(argv, 
                                       &conf->ping_timeout_len, 
                                       "ping-timeout",
                                       1);
-              else if (strcmp(argv[0], "ping-packet-count") == 0)
+              else if (!strcmp(argv[0], "ping-packet-count"))
                 _cmd_set_unsigned_int(argv, 
                                       &conf->ping_packet_count, 
                                       "ping-packet-count",
                                       1);
-              else if (strcmp(argv[0], "ping-percent") == 0)
+              else if (!strcmp(argv[0], "ping-percent"))
                 _cmd_set_unsigned_int(argv,
                                       &conf->ping_percent,
                                       "ping-percent", 
                                       1);
-              else if (strcmp(argv[0], "ping-consec-count") == 0)
+              else if (!strcmp(argv[0], "ping-consec-count"))
                 _cmd_set_unsigned_int_ranged(argv,
                                              &conf->ping_consec_count, 
                                              "ping-consec-count", 
                                              1, 
                                              0, 
                                              conf->ping_packet_count);
-	      else if (strcmp(argv[0], "buffer-output") == 0)
+	      else if (!strcmp(argv[0], "buffer-output"))
 		_cmd_set_flag(argv,
 			      &conf->buffer_output,
 			      "buffer-output");
-              else if (strcmp(argv[0], "consolidate-output") == 0)
+              else if (!strcmp(argv[0], "consolidate-output"))
                 _cmd_set_flag(argv, 
                               &conf->consolidate_output, 
                               "consolidate-output");
-              else if (strcmp(argv[0], "always-prefix") == 0)
+              else if (!strcmp(argv[0], "always-prefix"))
                 _cmd_set_flag(argv, 
                               &conf->always_prefix, 
                               "always-prefix");
-	      else if (strcmp(argv[0], "fanout") == 0)
+	      else if (!strcmp(argv[0], "fanout"))
                 _cmd_set_unsigned_int_ranged(argv, 
                                              &conf->fanout, 
                                              "fanout",
                                              1, 
                                              PSTDOUT_FANOUT_MIN, 
                                              PSTDOUT_FANOUT_MAX);
-              else if (strcmp(argv[0], "help") == 0 
-                       || strcmp(argv[0], "?") == 0
-		       || strcmp(argv[0], "advanced") == 0 /* legacy */
-		       || strcmp(argv[0], "network") == 0) /* legacy */
+              else if (!strcmp(argv[0], "help") 
+                       || !strcmp(argv[0], "?")
+		       || !strcmp(argv[0], "advanced") /* legacy */
+		       || !strcmp(argv[0], "network")) /* legacy */
                 _cmd_help();
-              else if (strcmp(argv[0], "version") == 0)
+              else if (!strcmp(argv[0], "version"))
                 _cmd_version();
-              else if (strcmp(argv[0], "config") == 0)
+              else if (!strcmp(argv[0], "config"))
                 _cmd_config();
-              else if (strcmp(argv[0], "quit") == 0)
+              else if (!strcmp(argv[0], "quit"))
                 quit = 1;
               else
                 cbuf_printf(ttyout, "unknown command - type \"help\"\n");

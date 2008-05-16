@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.52 2008-05-16 22:44:51 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.53 2008-05-16 23:36:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -129,7 +129,7 @@ _setup(void)
   ttyout = Cbuf_create(IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF);
   ttyerr = Cbuf_create(IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF);
 
-  if (conf->hosts != NULL) 
+  if (conf->hosts) 
     {
       if (!(ics = ipmipower_connection_array_create(conf->hosts)))
         exit(1);		/* error message output in the above call */
@@ -138,7 +138,7 @@ _setup(void)
 
   for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++) 
     {
-      if ((output_hostrange[i] = hostlist_create(NULL)) == NULL)
+      if (!(output_hostrange[i] = hostlist_create(NULL)))
         ierr_exit("hostlist_create() error");
     }
   
@@ -217,7 +217,7 @@ _recvfrom(cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
 			 (struct sockaddr *)&from, &fromlen);
   if (rv < 0)
     ierr_exit("_recvfrom: ipmi_lan_recvfrom: %s", strerror(errno));
-  if (rv == 0)
+  if (!rv)
     ierr_exit("_recvfrom: ipmi_lan_recvfrom: EOF");
   
   /* Don't store if this is packet is strange for some reason */
@@ -240,7 +240,7 @@ _recvfrom(cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
     ierr_exit("_recvfrom(%d): cbuf_write: %s", fd, strerror(errno));
   if (n != rv)
     ierr_exit("_recvfrom: rv=%d n=%d", rv, n);
-  if (dropped != 0)
+  if (dropped)
     ierr_output("_recvfrom: read dropped %d bytes", dropped);
 }
 
@@ -263,7 +263,7 @@ _poll_loop(int non_interactive)
        * powercmd_timeout will not be set, leaving it at -1
        */
       num = ipmipower_powercmd_process_pending(&powercmd_timeout);
-      if (non_interactive && num == 0)
+      if (non_interactive && !num)
         break;
 
       /* ping timeout is always set if conf->ping_interval_len > 0 */

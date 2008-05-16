@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.113 2008-05-16 22:44:52 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.114 2008-05-16 23:36:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -200,8 +200,8 @@ ipmipower_config_setup(void)
   
   conf->driver_type = IPMI_DEVICE_LAN;
   conf->hosts = NULL;
-  memset(conf->username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-  memset(conf->password, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH+1);
+  conf->username = NULL;
+  conf->password = NULL;
   memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH+1);
   conf->k_g_len = 0;
   conf->session_timeout_len = 20000;     /* 20 seconds */
@@ -211,7 +211,7 @@ ipmipower_config_setup(void)
   conf->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
   conf->workaround_flags = 0;
   conf->debug = 0;
-  memset(conf->configfile, '\0', MAXPATHLEN+1);
+  conf->configfile = NULL;
 #ifndef NDEBUG
   conf->rmcpdump = 0;
 #endif /* NDEBUG */
@@ -244,7 +244,11 @@ cmdline_parse_config (int key,
     case CONFIG_KEY:         /* --config */
       if (strlen(arg) > MAXPATHLEN)
         ierr_exit("Command Line Error: configuration file pathname too long");
-      strcpy(conf->configfile, arg);
+      if (!(conf->configfile = strdup(arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -302,14 +306,22 @@ cmdline_parse (int key,
     case ARGP_USERNAME_KEY:       /* --username */
       if (strlen(arg) > IPMI_MAX_USER_NAME_LENGTH)
         ierr_exit("Command Line Error: username too long");
-      strcpy(conf->username, arg);
+      if (!(conf->username = strdup(arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
       n = strlen(arg);
       secure_memset(arg, '\0', n);
       break;
     case ARGP_PASSWORD_KEY:       /* --password */
       if (strlen(arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         ierr_exit("Command Line Error: password too long");
-      strcpy(conf->password, arg);
+      if (!(conf->password = strdup(arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
       n = strlen(arg);
       secure_memset(arg, '\0', n);
       break;
@@ -318,7 +330,11 @@ cmdline_parse (int key,
         ierr_exit("getpass: %s", strerror(errno));
       if (strlen(pw) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         ierr_exit("password too long");
-      strcpy(conf->password, pw);
+      if (!(conf->password = strdup(pw)))
+        {
+          perror("strdup");
+          exit(1);
+        }
       break;
     case ARGP_K_G_KEY:       /* --k-g */
       if ((rv = check_kg_len(arg)) < 0)
@@ -385,9 +401,7 @@ cmdline_parse (int key,
       conf->debug++;
       break;
     case CONFIG_KEY:         /* --config */
-      if (strlen(arg) > MAXPATHLEN)
-        ierr_exit("Command Line Error: configuration file pathname too long");
-      strcpy(conf->configfile, arg);
+      /* ignore */
       break;
 #ifndef NDEBUG
     case RMCPDUMP_KEY:       /* --rmcpdump */
@@ -554,7 +568,7 @@ _cb_hostname(conffile_t cf, struct conffile_data *data,
   
   for (i = 0; i < data->stringlist_len; i++) 
     {
-      if (hostlist_push(conf->hosts, data->stringlist[i]) == 0)
+      if (!hostlist_push(conf->hosts, data->stringlist[i]))
         ierr_exit("Config File Error: Hostname(s) incorrectly formatted");
     }
   hostlist_uniq(conf->hosts);
@@ -569,7 +583,11 @@ _cb_username(conffile_t cf, struct conffile_data *data,
   if (strlen(data->string) > IPMI_MAX_USER_NAME_LENGTH)
     ierr_exit("Config File Error: username too long");
 
-  strcpy(conf->username, data->string);
+  if (!(conf->username = strdup(data->string)))
+    {
+      perror("strdup");
+      exit(1);
+    }
   return 0;
 }
 
@@ -581,7 +599,11 @@ _cb_password(conffile_t cf, struct conffile_data *data,
   if (strlen(data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
     ierr_exit("Config File Error: password too long");
 
-  strcpy(conf->password, data->string);
+  if (!(conf->password = strdup(data->string)))
+    {
+      perror("strdup");
+      exit(1);
+    }
   return 0;
 }
 
@@ -863,14 +885,14 @@ ipmipower_config_conffile_parse(char *configfile)
   if (!(cf = conffile_handle_create()))
     ierr_exit("Config File Error: cannot create conffile handle");
 
-  conffile = (strlen(configfile)) ? configfile : IPMIPOWER_CONFIG_FILE_DEFAULT;
+  conffile = (configfile) ? configfile : IPMIPOWER_CONFIG_FILE_DEFAULT;
   num = sizeof(options)/sizeof(struct conffile_option);
   if (conffile_parse(cf, conffile, options, num, NULL, 0, 0) < 0) 
     {
       char errbuf[CONFFILE_MAX_ERRMSGLEN];
       
       /* Not an error if default file doesn't exist */ 
-      if (!strlen(configfile) && conffile_errnum(cf) == CONFFILE_ERR_EXIST)
+      if (!configfile && conffile_errnum(cf) == CONFFILE_ERR_EXIST)
         goto done;
       
       if (conffile_errmsg(cf, errbuf, CONFFILE_MAX_ERRMSGLEN) < 0)

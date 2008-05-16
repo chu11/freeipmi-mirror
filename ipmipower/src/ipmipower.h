@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.116 2008-05-16 22:44:51 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.117 2008-05-16 23:36:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -55,10 +55,6 @@
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64
 #endif /* MAXHOSTNAMELEN */
-
-#ifndef MAXPATHLEN
-#define MAXPATHLEN 4096
-#endif /* MAXPATHLEN */
 
 #define IPMIPOWER_MIN_TTY_BUF 1024*4
 #define IPMIPOWER_MAX_TTY_BUF 1024*32
@@ -360,8 +356,8 @@ struct ipmipower_config
 {
   ipmi_driver_type_t       driver_type;
   hostlist_t               hosts;
-  char                     username[IPMI_MAX_USER_NAME_LENGTH+1];
-  char                     password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
+  char *                   username;
+  char *                   password;
   uint8_t                  k_g[IPMI_MAX_K_G_LENGTH+1];
   /* The k_g_len is needed b/c the k_g field may have null
    * values as part of it's hex key.  For example, if k_g ==
@@ -376,7 +372,7 @@ struct ipmipower_config
   uint8_t                  privilege_level;
   uint32_t                 workaround_flags;
   int                      debug;
-  char                     configfile[MAXPATHLEN+1];
+  char *                   configfile;
 #ifndef NDEBUG
   int                      rmcpdump;
 #endif /* NDEBUG */

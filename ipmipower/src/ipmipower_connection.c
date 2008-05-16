@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.25 2008-05-16 22:44:52 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.26 2008-05-16 23:36:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -92,7 +92,7 @@ _clean_fd(int fd)
 void 
 ipmipower_connection_clear(struct ipmipower_connection *ic) 
 {
-  assert (ic != NULL);
+  assert (ic);
 
   _clean_fd(ic->ipmi_fd);
   Cbuf_drop_all(ic->ipmi_in);
@@ -106,7 +106,7 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
   struct sockaddr_in srcaddr;
   struct hostent *result;
 
-  assert(ic != NULL && hostname != NULL); 
+  assert(ic && hostname); 
 
   /* Don't use wrapper function, need to exit cleanly on EMFILE errno */
   
@@ -170,7 +170,7 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
   ic->destaddr.sin_port = htons(RMCP_PRIMARY_RMCP_PORT);
         
   errno = 0;
-  if ((result = gethostbyname(ic->hostname)) == NULL) 
+  if (!(result = gethostbyname(ic->hostname))) 
     {
       if (errno == EMFILE)
         ierr_output("gethostbyname() error: Too many open files");
@@ -193,9 +193,9 @@ ipmipower_connection_array_create(hostlist_t hl)
   int size = sizeof(struct ipmipower_connection);
   int hl_count;
   
-  assert(hl != NULL); 
+  assert(hl); 
 
-  if ((itr = hostlist_iterator_create(hl)) == NULL)
+  if (!(itr = hostlist_iterator_create(hl)))
     ierr_exit("hostlist_iterator_create() error"); 
 
   hl_count = hostlist_count(hl);
@@ -204,7 +204,7 @@ ipmipower_connection_array_create(hostlist_t hl)
 
   memset(ics, '\0', (size * hl_count));
   
-  while ((str = hostlist_next(itr)) != NULL) 
+  while ((str = hostlist_next(itr))) 
     {
       ics[index].ipmi_fd = -1;
       ics[index].ping_fd = -1;
@@ -268,11 +268,11 @@ ipmipower_connection_hostname_index(struct ipmipower_connection *ics,
 {
   int i;
 
-  assert (ics && ics_len && hostname != NULL);
+  assert (ics && ics_len && hostname);
 
   for (i = 0; i < ics_len; i++) 
     {
-      if (strcmp(ics[i].hostname, hostname) == 0)
+      if (!strcmp(ics[i].hostname, hostname))
         return i;
     }
 
