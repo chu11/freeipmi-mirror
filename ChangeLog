@@ -1,3 +1,7 @@
+2008-05-16  Albert Chu <chu11@llnl.gov>
+	
+	* ipmipower/ipmipower.8.pre.in: Clarify some text.
+
 2008-05-15  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-outofband-timeout.man: Fix text.
