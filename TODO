@@ -14,14 +14,12 @@ libfreeipmi:
   - sensor-cmds
 * how to support xRC4 (can we? should we? does any vendor support this?)
 
-ipmi-fru
---------
-not output excessive \ns
-
 ipmipower
 ---------
 - redo to utilize newer api?
 - use generic argp - not unique .h
+- change ics wrapper api/use
+- make sure works w/ powerman still
   
 bmc-config
 ----------
@@ -58,6 +56,12 @@ code cleanup
 - merge many util libs into one?
 fix port variable naming in argp for all tools
 - audit common doc manpages, all still used?
+do checks consistenly
+== NULL 
+> 0
+!= 0
+== 0 
+etc.
 
 config
 ------
