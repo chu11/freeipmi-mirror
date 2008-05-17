@@ -43,6 +43,7 @@ pef-config
 
 general
 -------
+perror vs. other  - be consistent in output
 audit error message consistency in tool validate functions
 - exit(1) vs. exit(EXIT_FAILURE)
 audit error messages in command line parsing in all tools
