@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.118 2008-05-17 00:51:21 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.119 2008-05-17 05:42:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -347,6 +347,9 @@ struct ipmipower_connection
   discover_state_t discover_state;
   char hostname[MAXHOSTNAMELEN+1];
   struct sockaddr_in destaddr;
+
+  /* for eliminate option */
+  int skip;
 };
 
 /* ipmipower_config

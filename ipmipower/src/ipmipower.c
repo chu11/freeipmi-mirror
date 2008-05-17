@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.54 2008-05-17 00:51:20 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.55 2008-05-17 05:42:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -395,11 +395,7 @@ _eliminate_nodes(void)
   if (conf->eliminate)
     {
       ipmidetect_t id = NULL;
-      hostlist_t hl = NULL;
-      hostlist_iterator_t itr = NULL;
-      char *host = NULL;
-      char buffer[IPMIPOWER_OUTPUT_BUFLEN];
-      int rv;
+      int i;
 
       if (!(id = ipmidetect_handle_create()))
         ierr_exit("ipmidetect_handle_create");
@@ -415,39 +411,22 @@ _eliminate_nodes(void)
           ierr_exit("ipmidetect_load_data: %s", ipmidetect_errormsg(id));
         }
       
-      if (!(hl = hostlist_create(conf->hostname)))
-        ierr_exit("hostlist_create: %s", strerror(errno));
-
-      if (!(itr = hostlist_iterator_create(hl)))
-        ierr_exit("hostlist_iterator_create: %s", strerror(errno));
-      
-      while ((host = hostlist_next(itr)))
+      for (i = 0; i < ics_len; i++)
         {
           int ret;
           
-          if ((ret = ipmidetect_is_node_detected(id, host)) < 0)
+          if ((ret = ipmidetect_is_node_detected(id, ics[i].hostname)) < 0)
             {
               if (ipmidetect_errnum(id) == IPMIDETECT_ERR_NOTFOUND)
-                ierr_exit("Node '%s' unrecognized by ipmidetect", host);
+                ierr_exit("Node '%s' unrecognized by ipmidetect", ics[i].hostname);
               ierr_exit("ipmidetect_is_node_detected: %s", ipmidetect_errormsg(id));
             }
-          
-          if (!ret)
-            hostlist_delete(hl, host);
-          
-          free(host);
-        }
 
-      memset(buffer, '\0', IPMIPOWER_OUTPUT_BUFLEN);
-      /* XXX - correct error output? */
-      if (hostlist_ranged_string(hl, IPMIPOWER_OUTPUT_BUFLEN, buffer) <= 0)
-        ierr_exit("hostlist_ranged_string: %s", strerror(errno));
+          if (!ret)
+            ics[i].skip++;
+        }
       
-      if (conf->hostname)
-        free(conf->hostname);
-      
-      if (!(conf->hostname = strdup(buffer)))
-        ierr_exit("strdup: %s", strerror(errno));
+      ipmidetect_handle_destroy(id);
     }
 }
 
@@ -483,6 +462,8 @@ main(int argc, char *argv[])
 
       for (i = 0; i < ics_len; i++) 
         {
+          if (ics[i].skip)
+            continue;
           ipmipower_connection_clear(&ics[i]);
           ipmipower_powercmd_queue(conf->powercmd, &ics[i]);
         }
