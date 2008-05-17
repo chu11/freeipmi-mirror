@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.55 2008-05-17 05:42:13 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.56 2008-05-17 05:56:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -49,7 +49,6 @@
 #endif /* !TIME_WITH_SYS_TIME */
 #include <stdint.h>
 #include <sys/stat.h>
-#include <sys/resource.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
@@ -63,6 +62,8 @@
 #include "ipmipower_ping.h"
 #include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
+
+#include "tool-common.h"
 
 cbuf_t ttyin;
 cbuf_t ttyout;
@@ -85,19 +86,7 @@ hostlist_t output_hostrange[MSG_TYPE_NUM_ENTRIES];
 static void
 _security_initialization(void)
 {
-  /* Disable core dumping when not-debugging.  Do not want username,
-   * password or other important stuff to core dump.
-   */
-#ifdef NDEBUG
-  struct rlimit rlim;
-
-  if (getrlimit(RLIMIT_CORE, &rlim) < 0)
-    ierr_exit("getrlimit: %s", strerror(errno));
-
-  rlim.rlim_cur = 0;
-  if (setrlimit(RLIMIT_CORE,&rlim) < 0)
-    ierr_exit("setrlimit: %s", strerror(errno));
-#endif /* NDEBUG */
+  ipmi_disable_coredump();
 
   if (ipmi_rmcpplus_init() < 0)
     ierr_exit("ipmi_rmcpplus_init");

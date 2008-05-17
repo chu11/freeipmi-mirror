@@ -1,6 +1,7 @@
 2008-05-16  Albert Chu <chu11@llnl.gov>
 
-	* ipmipower/src/: Fix --eliminate option.
+	* ipmipower/src/: Fix --eliminate option.  Use common
+	ipmi_disable_coredump.
 	
 2008-05-16  Albert Chu <chu11@llnl.gov>
 
