@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.56 2008-05-17 05:56:22 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.57 2008-05-17 15:26:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -79,18 +79,6 @@ unsigned int ics_len = 0;
 /* Array of hostlists for short output */
 int output_hostrange_flag = 0;
 hostlist_t output_hostrange[MSG_TYPE_NUM_ENTRIES];
-
-/* 
- * _security_initialization
- */
-static void
-_security_initialization(void)
-{
-  ipmi_disable_coredump();
-
-  if (ipmi_rmcpplus_init() < 0)
-    ierr_exit("ipmi_rmcpplus_init");
-}
 
 /* _setup
  * - Setup structures and values for the program
@@ -426,7 +414,10 @@ main(int argc, char *argv[])
   ierr_init(argv[0]);
   ierr_file_descriptor(1, STDERR_FILENO); /* initially errors goto stderr */
   
-  _security_initialization();
+  ipmi_disable_coredump();
+
+  if (ipmi_rmcpplus_init() < 0)
+    ierr_exit("ipmi_rmcpplus_init");
 
   ipmipower_config(argc, argv);
 
