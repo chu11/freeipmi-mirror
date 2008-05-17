@@ -20,9 +20,7 @@ ipmipower
 - use generic argp - not unique .h
 - change ics wrapper api/use
 - make sure works w/ powerman still
-  - make sure everystill works
-   - ipmidetect stuff too
-- original ipmidetect stuff work?  check and fix if necessary
+  - make sure everything works
 - remove coredump via common func
   
 bmc-config
