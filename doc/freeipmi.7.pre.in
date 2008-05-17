@@ -105,7 +105,7 @@ out-of-band (i.e. connecting remotely).
 .PP
 Most FreeIPMI tools can operate in-band by using one of the in-band
 drivers included.  These in-band drivers include a direct KCS
-interface driver, a SSIF driver through the SSIF device
+interface driver, a Linux SSIF driver through the SSIF device
 (i.e. /dev/i2c-0), and the Linux OpenIPMI kernel driver
 (i.e. /dev/ipmi0).  If your system requires the use of installed
 drivers, those appropriate modules must be installed ahead of time.

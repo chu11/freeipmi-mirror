@@ -1,6 +1,8 @@
 2008-05-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: More code cleanup.
+
+	* README, doc/freeipmi.7.pre.in: Note Linux SSIF driver.
 	
 2008-05-16  Albert Chu <chu11@llnl.gov>
 

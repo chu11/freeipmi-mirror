@@ -18,10 +18,8 @@ ipmipower
 ---------
 - redo to utilize newer api?
 - use generic argp - not unique .h
-- change ics wrapper api/use
 - make sure works w/ powerman still
   - make sure everything works
-- remove coredump via common func
   
 bmc-config
 ----------
