@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.57 2008-05-17 15:26:14 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.58 2008-05-17 15:27:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -49,6 +49,7 @@
 #endif /* !TIME_WITH_SYS_TIME */
 #include <stdint.h>
 #include <sys/stat.h>
+#include <sys/resource.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
