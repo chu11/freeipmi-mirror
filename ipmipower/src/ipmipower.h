@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.119 2008-05-17 05:42:13 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.120 2008-05-17 16:12:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -216,11 +216,12 @@ typedef enum
     MSG_TYPE_SESSION_TIMEOUT                    = 15,
     MSG_TYPE_NOTDISCOVERED                      = 16,
     MSG_TYPE_BADCONNECTION                      = 17,
-    MSG_TYPE_UNKNOWNNODE                        = 18,
-    MSG_TYPE_RESOURCES                          = 19,
-    MSG_TYPE_IPMI_2_0_UNAVAILABLE               = 20,
-    MSG_TYPE_BMC_BUSY                           = 21,
-    MSG_TYPE_BMC_ERROR                          = 22,
+    MSG_TYPE_HOSTNAME_INVALID                   = 18,
+    MSG_TYPE_UNKNOWNNODE                        = 19,
+    MSG_TYPE_RESOURCES                          = 20,
+    MSG_TYPE_IPMI_2_0_UNAVAILABLE               = 21,
+    MSG_TYPE_BMC_BUSY                           = 22,
+    MSG_TYPE_BMC_ERROR                          = 23,
   } msg_type_t;
 
 #define MSG_TYPE_VALID(__m) \

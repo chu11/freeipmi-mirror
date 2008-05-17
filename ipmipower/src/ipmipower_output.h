@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.h,v 1.11 2008-03-28 00:14:47 chu11 Exp $
+ *  $Id: ipmipower_output.h,v 1.12 2008-05-17 16:12:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -32,7 +32,7 @@
 /* ipmipower_output
  * - Output msg with hostname prefix to ttyout
  */
-void ipmipower_output(msg_type_t num, char *hostname); 
+void ipmipower_output(msg_type_t num, const char *hostname); 
 
 /* ipmipower_output_finish
  * - Output final results

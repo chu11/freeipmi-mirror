@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.35 2008-05-16 23:36:16 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.36 2008-05-17 16:12:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -63,6 +63,7 @@ static char *ipmipower_outputs[] =
     "session timeout",
     "not discovered",
     "bad connection",
+    "invalid hostname",
     "unknown node name",
     "out of resources",
     "ipmi 2.0 unavailable",
@@ -71,7 +72,7 @@ static char *ipmipower_outputs[] =
   };
 
 void
-ipmipower_output(msg_type_t num, char *hostname) 
+ipmipower_output(msg_type_t num, const char *hostname) 
 {
   assert(MSG_TYPE_VALID(num));
   assert(hostname);

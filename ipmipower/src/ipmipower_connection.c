@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.28 2008-05-17 05:42:13 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.29 2008-05-17 16:12:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -46,10 +46,13 @@
 #include <netdb.h>
 
 #include "ipmipower_connection.h"
+#include "ipmipower_output.h"
 #include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
 
 extern int h_errno;
+
+extern cbuf_t ttyout;
 
 #define IPMIPOWER_MIN_CONNECTION_BUF 1024*2
 #define IPMIPOWER_MAX_CONNECTION_BUF 1024*4
@@ -169,11 +172,10 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
   ic->destaddr.sin_family = AF_INET;
   ic->destaddr.sin_port = htons(RMCP_PRIMARY_RMCP_PORT);
         
-  errno = 0;
   if (!(result = gethostbyname(ic->hostname))) 
     {
-      if (errno == EMFILE)
-        ierr_output("gethostbyname() error: Too many open files");
+      if (h_errno == HOST_NOT_FOUND)
+        ipmipower_output(MSG_TYPE_HOSTNAME_INVALID, ic->hostname);
       else
         ierr_output("gethostbyname() error %s: %s", ic->hostname, hstrerror(h_errno));
       return -1;
@@ -195,13 +197,18 @@ ipmipower_connection_array_create(const char *hostname, unsigned int *len)
   struct ipmipower_connection *ics;
   int size = sizeof(struct ipmipower_connection);
   int hl_count;
-  
+  int errcount = 0;
+  int emfilecount = 0;
+
   assert(hostname && len); 
 
   *len = 0;
   
   if (!(hl = hostlist_create(hostname)))
-    return NULL;
+    {
+      ipmipower_output(MSG_TYPE_HOSTNAME_INVALID, hostname);
+      return NULL;
+    }
   
   if (!(itr = hostlist_iterator_create(hl)))
     ierr_exit("hostlist_iterator_create() error"); 
@@ -219,34 +226,45 @@ ipmipower_connection_array_create(const char *hostname, unsigned int *len)
       ics[index].ipmi_fd = -1;
       ics[index].ping_fd = -1;
       
+      /* cleanup only at the end, gather all error outputs for
+       * later 
+       */
       if (_connection_setup(&ics[index], str) < 0) 
         {
-          int i;
-          for (i = 0; i <= index; i++) 
+          if (errno == EMFILE && !emfilecount)
             {
-              close(ics[i].ipmi_fd);
-              close(ics[i].ping_fd);
-              if (ics[i].ipmi_in)
-                cbuf_destroy(ics[i].ipmi_in);
-              if (ics[i].ipmi_out)
-                cbuf_destroy(ics[i].ipmi_out);
-              if (ics[i].ping_in)
-                cbuf_destroy(ics[i].ping_in);
-              if (ics[i].ping_out)
-                cbuf_destroy(ics[i].ping_out);
+              cbuf_printf(ttyout, "file descriptor limit reached\n");
+              emfilecount++;
             }
-          free(str);
-          Free(ics);
-          ics = NULL;
-          break;
+          errcount++;
         }
-        
+       
       free(str);
       index++;
     }
 
   hostlist_iterator_destroy(itr);
   hostlist_destroy(hl);
+
+  if (errcount)
+    {
+      int i;
+      for (i = 0; i < hl_count; i++) 
+        {
+          close(ics[i].ipmi_fd);
+          close(ics[i].ping_fd);
+          if (ics[i].ipmi_in)
+            cbuf_destroy(ics[i].ipmi_in);
+          if (ics[i].ipmi_out)
+            cbuf_destroy(ics[i].ipmi_out);
+          if (ics[i].ping_in)
+            cbuf_destroy(ics[i].ping_in);
+          if (ics[i].ping_out)
+            cbuf_destroy(ics[i].ping_out);
+        }
+      Free(ics);
+      return NULL;
+    }
 
   *len = hl_count;
   return ics;

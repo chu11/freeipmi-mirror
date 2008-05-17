@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.58 2008-05-17 15:27:21 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.59 2008-05-17 16:12:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -111,7 +111,12 @@ _setup(void)
     {
       unsigned int len = 0;
       if (!(ics = ipmipower_connection_array_create(conf->hostname, &len)))
-        ierr_exit("Hostname(s) incorrectly formated");
+        {
+          /* dump error outputs here, most notably invalid hostname output */
+          if (cbuf_read_to_fd(ttyout, STDOUT_FILENO, -1) > 0)
+            exit(1);
+          ierr_exit("ipmipower_connection_array_create: %s", strerror(errno));
+        }
       ics_len = len;
     }
 

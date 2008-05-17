@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.85 2008-05-17 00:51:24 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.86 2008-05-17 16:12:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -119,15 +119,14 @@ _cmd_hostname(char **argv)
 
       if (!(icsPtr = ipmipower_connection_array_create(argv[1], &len))) 
         {
-          /* XXX - how get proper error message  - format or resolution issue*/
-          if (errno == EMFILE)
-            cbuf_printf(ttyout, "too many files open, file descriptor "
-                        "limit too small\n");
+          /* dump error outputs here, most notably invalid hostname output */
+          if (cbuf_read_to_fd(ttyout, STDOUT_FILENO, -1) > 0)
+            return;
           else
-            cbuf_printf(ttyout, "hostname(s) input invalid\n");
+            cbuf_printf(ttyout, "ipmipower_connection_array_create: %s\n", strerror(errno));
           return;
         }
-
+      
       ipmipower_connection_array_destroy(ics, ics_len);
       if (conf->hostname)
         {
