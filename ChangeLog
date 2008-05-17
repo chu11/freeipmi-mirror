@@ -1,4 +1,8 @@
 2008-05-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/: Fix --eliminate option.
+	
+2008-05-16  Albert Chu <chu11@llnl.gov>
 	
 	* ipmipower/ipmipower.8.pre.in: Clarify some text.
 

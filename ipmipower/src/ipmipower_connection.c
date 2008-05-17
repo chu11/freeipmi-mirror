@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.22 2008-04-17 23:14:28 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.22.2.1 2008-05-17 05:53:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -177,6 +177,8 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
     }
   ic->destaddr.sin_addr = *((struct in_addr *)result->h_addr);
   
+  ic->skip = 0;
+
   return 0;
 }
 

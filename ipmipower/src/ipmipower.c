@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.44 2008-04-12 00:05:23 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.44.2.1 2008-05-17 05:53:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -429,9 +429,8 @@ _eliminate_nodes(void)
   if (conf->eliminate == IPMIPOWER_TRUE)
     {
       ipmidetect_t id = NULL;
-      hostlist_iterator_t itr = NULL;
-      char *host = NULL;
-
+      int i;
+      
       if (!(id = ipmidetect_handle_create()))
         ierr_exit("ipmidetect_handle_create");
       
@@ -443,31 +442,25 @@ _eliminate_nodes(void)
           if (ipmidetect_errnum(id) == IPMIDETECT_ERR_CONNECT
               || ipmidetect_errnum(id) == IPMIDETECT_ERR_CONNECT_TIMEOUT)
             ierr_exit("Error connecting to ipmidetect daemon");
-          ierr_exit("ipmidetect_load_data: %s\n", ipmidetect_errormsg(id));
+          ierr_exit("ipmidetect_load_data: %s", ipmidetect_errormsg(id));
         }
       
-      if (!(itr = hostlist_iterator_create(conf->hosts)))
-        ierr_exit("hostlist_iterator_create: %s", strerror(errno));
-      
-      while ((host = hostlist_next(itr)))
+      for (i = 0; i < conf->hosts_count; i++)
         {
           int ret;
           
-          if ((ret = ipmidetect_is_node_detected(id, host)) < 0)
+          if ((ret = ipmidetect_is_node_detected(id, ics[i].hostname)) < 0)
             {
               if (ipmidetect_errnum(id) == IPMIDETECT_ERR_NOTFOUND)
-                ierr_exit("Node '%s' unrecognized by ipmidetect\n", host);
-              ierr_exit("ipmidetect_is_node_detected: %s\n", ipmidetect_errormsg(id));
+                ierr_exit("Node '%s' unrecognized by ipmidetect", ics[i].hostname);
+              ierr_exit("ipmidetect_is_node_detected: %s", ipmidetect_errormsg(id));
             }
           
           if (!ret)
-            {
-              hostlist_delete(conf->hosts, host);
-              conf->hosts_count--;
-            }
-          
-          free(host);
+            ics[i].skip++;
         }
+      
+      ipmidetect_handle_destroy(id);
     }
 }
 
@@ -511,6 +504,8 @@ main(int argc, char *argv[])
 
       for (i = 0; i < conf->hosts_count; i++) 
         {
+          if (ics[i].skip)
+            continue;
           ipmipower_connection_clear(&ics[i]);
           ipmipower_powercmd_queue(conf->powercmd, &ics[i]);
         }
