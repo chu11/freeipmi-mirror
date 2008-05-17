@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.26 2008-05-16 23:36:16 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.27 2008-05-17 00:51:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -184,24 +184,32 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
 }
 
 struct ipmipower_connection *
-ipmipower_connection_array_create(hostlist_t hl) 
+ipmipower_connection_array_create(const char *hostname, unsigned int *len) 
 {
   char *str = NULL;
   int index = 0;
+  hostlist_t hl = NULL;
   hostlist_iterator_t itr = NULL;
   struct ipmipower_connection *ics;
   int size = sizeof(struct ipmipower_connection);
   int hl_count;
   
-  assert(hl); 
+  assert(hostname && len); 
 
+  *len = 0;
+  
+  if (!(hl = hostlist_create(hostname)))
+    return NULL;
+  
   if (!(itr = hostlist_iterator_create(hl)))
     ierr_exit("hostlist_iterator_create() error"); 
+  
+  hostlist_uniq(hl);
 
   hl_count = hostlist_count(hl);
 
   ics = (struct ipmipower_connection *)Malloc(size * hl_count);
-
+  
   memset(ics, '\0', (size * hl_count));
   
   while ((str = hostlist_next(itr))) 
@@ -236,7 +244,9 @@ ipmipower_connection_array_create(hostlist_t hl)
     }
 
   hostlist_iterator_destroy(itr);
-  
+  hostlist_destroy(hl);
+
+  *len = hl_count;
   return ics;
 }
 

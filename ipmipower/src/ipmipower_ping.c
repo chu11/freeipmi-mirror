@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.29 2008-05-16 23:36:16 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.30 2008-05-17 00:51:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -67,7 +67,7 @@ ipmipower_ping_process_pings(int *timeout)
     
   assert(timeout);
 
-  if (!conf->hosts)
+  if (!conf->hostname)
     return;
 
   if (!conf->ping_interval_len)

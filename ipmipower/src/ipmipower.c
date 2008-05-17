@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.53 2008-05-16 23:36:14 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.54 2008-05-17 00:51:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -129,11 +129,12 @@ _setup(void)
   ttyout = Cbuf_create(IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF);
   ttyerr = Cbuf_create(IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF);
 
-  if (conf->hosts) 
+  if (conf->hostname) 
     {
-      if (!(ics = ipmipower_connection_array_create(conf->hosts)))
-        exit(1);		/* error message output in the above call */
-      ics_len = hostlist_count(conf->hosts);
+      unsigned int len = 0;
+      if (!(ics = ipmipower_connection_array_create(conf->hostname, &len)))
+        ierr_exit("Hostname(s) incorrectly formated");
+      ics_len = len;
     }
 
   for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++) 
@@ -177,7 +178,14 @@ _cleanup(void)
   for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
     hostlist_destroy(output_hostrange[i]);
 
-  hostlist_destroy(conf->hosts);
+  if (conf->hostname)
+    free(conf->hostname);
+  if (conf->username)
+    free(conf->username);
+  if (conf->password)
+    free(conf->password);
+  if (conf->configfile)
+    free(conf->configfile);
 
   free(conf);
 }
@@ -387,8 +395,11 @@ _eliminate_nodes(void)
   if (conf->eliminate)
     {
       ipmidetect_t id = NULL;
+      hostlist_t hl = NULL;
       hostlist_iterator_t itr = NULL;
       char *host = NULL;
+      char buffer[IPMIPOWER_OUTPUT_BUFLEN];
+      int rv;
 
       if (!(id = ipmidetect_handle_create()))
         ierr_exit("ipmidetect_handle_create");
@@ -404,7 +415,10 @@ _eliminate_nodes(void)
           ierr_exit("ipmidetect_load_data: %s", ipmidetect_errormsg(id));
         }
       
-      if (!(itr = hostlist_iterator_create(conf->hosts)))
+      if (!(hl = hostlist_create(conf->hostname)))
+        ierr_exit("hostlist_create: %s", strerror(errno));
+
+      if (!(itr = hostlist_iterator_create(hl)))
         ierr_exit("hostlist_iterator_create: %s", strerror(errno));
       
       while ((host = hostlist_next(itr)))
@@ -419,10 +433,21 @@ _eliminate_nodes(void)
             }
           
           if (!ret)
-            hostlist_delete(conf->hosts, host);
+            hostlist_delete(hl, host);
           
           free(host);
         }
+
+      memset(buffer, '\0', IPMIPOWER_OUTPUT_BUFLEN);
+      /* XXX - correct error output? */
+      if (hostlist_ranged_string(hl, IPMIPOWER_OUTPUT_BUFLEN, buffer) <= 0)
+        ierr_exit("hostlist_ranged_string: %s", strerror(errno));
+      
+      if (conf->hostname)
+        free(conf->hostname);
+      
+      if (!(conf->hostname = strdup(buffer)))
+        ierr_exit("strdup: %s", strerror(errno));
     }
 }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.117 2008-05-16 23:36:14 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.118 2008-05-17 00:51:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -355,7 +355,7 @@ struct ipmipower_connection
 struct ipmipower_config 
 {
   ipmi_driver_type_t       driver_type;
-  hostlist_t               hosts;
+  char *                   hostname;
   char *                   username;
   char *                   password;
   uint8_t                  k_g[IPMI_MAX_K_G_LENGTH+1];

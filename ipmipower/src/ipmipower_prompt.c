@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.84 2008-05-16 23:36:17 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.85 2008-05-17 00:51:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -96,61 +96,51 @@ _cmd_driver_type(char **argv)
 static void 
 _cmd_hostname(char **argv) 
 {
-  hostlist_t hl; 
-
   assert(argv);
 
   if (!argv[1]) 
     {
       ipmipower_connection_array_destroy(ics, ics_len);
-      if (conf->hosts)
-        hostlist_destroy(conf->hosts);
+      if (conf->hostname)
+        {
+          free(conf->hostname);
+          conf->hostname = NULL;
+        }
  
       ics = NULL;
       ics_len = 0;
-      conf->hosts = NULL;
 
       cbuf_printf(ttyout, "hostname(s) unconfigured\n");
     }
-  else if (!(hl = hostlist_create(argv[1])))
-    cbuf_printf(ttyout, "hostname(s) incorrectly formatted\n");
   else 
     {
-      int rv, hl_count;
       struct ipmipower_connection *icsPtr;
-      char buffer[IPMIPOWER_OUTPUT_BUFLEN];
+      unsigned int len = 0;
 
-      hostlist_uniq(hl);
-
-      hl_count = hostlist_count(hl);
-
-      if (!(icsPtr = ipmipower_connection_array_create(hl))) 
+      if (!(icsPtr = ipmipower_connection_array_create(argv[1], &len))) 
         {
+          /* XXX - how get proper error message  - format or resolution issue*/
           if (errno == EMFILE)
             cbuf_printf(ttyout, "too many files open, file descriptor "
                         "limit too small\n");
           else
-            cbuf_printf(ttyout, "error resolving hostname(s)\n");
-          hostlist_destroy(hl);
+            cbuf_printf(ttyout, "hostname(s) input invalid\n");
           return;
         }
 
       ipmipower_connection_array_destroy(ics, ics_len);
-      if (conf->hosts)
-        hostlist_destroy(conf->hosts);
-
+      if (conf->hostname)
+        {
+          free(conf->hostname);
+          conf->hostname = NULL;
+        }
       ics = icsPtr;
-      ics_len = hostlist_count(hl);
-      conf->hosts = hl;
+      ics_len = len;
+      if (!(conf->hostname = strdup(argv[1])))
+        ierr_exit("strdup: %s", strerror(errno));
       ipmipower_ping_force_discovery_sweep();
-
-      rv = hostlist_ranged_string(conf->hosts, IPMIPOWER_OUTPUT_BUFLEN, 
-                                  buffer);
-      if (rv < 0)
-        cbuf_printf(ttyout, "hostname: can't output, overflows internal "
-                    "buffer\n");
-      if (rv > 0)
-        cbuf_printf(ttyout, "hostname: %s\n", buffer);
+      
+      cbuf_printf(ttyout, "hostname: %s\n", conf->hostname);
     }
 }
 
@@ -171,10 +161,7 @@ _cmd_username(char **argv)
       if (argv[1])
         {
           if (!(conf->username = strdup(argv[1])))
-            {
-              cbuf_printf(ttyerr, "strdup: %s\n", strerror(errno));
-              return;
-            }
+            ierr_exit("strdup: %s", strerror(errno));
         }
       
       cbuf_printf(ttyout, "username: %s\n", 
@@ -208,10 +195,7 @@ _cmd_password(char **argv)
       if (argv[1])
         {
           if (!(conf->password = strdup(argv[1])))
-            {
-              cbuf_printf(ttyerr, "strdup: %s\n", strerror(errno));
-              return;
-            }
+            ierr_exit("strdup: %s", strerror(errno));
         }
 
 #ifdef NDEBUG
@@ -368,7 +352,7 @@ _cmd_power(char **argv, power_cmd_t cmd)
 
   assert(argv && POWER_CMD_VALID(cmd));
 
-  if (!conf->hosts) 
+  if (!conf->hostname) 
     {
       cbuf_printf(ttyout, "no hostname(s) configured\n");
       return;
@@ -534,9 +518,8 @@ _cmd_config(void)
 
   cbuf_printf(ttyout, "Driver_Type:                  %s\n", str);
 
-  if (conf->hosts) 
+  if (conf->hostname) 
     {
-      int rv;
       char buffer[IPMIPOWER_OUTPUT_BUFLEN];
 #ifndef NDEBUG
       int i;
@@ -544,14 +527,9 @@ _cmd_config(void)
       hostlist_t undiscovered = NULL;
       hostlist_t badconnection = NULL;
 #endif /* NDEBUG */
+      int rv;
 
-      rv = hostlist_ranged_string(conf->hosts, 
-                                  IPMIPOWER_OUTPUT_BUFLEN, 
-                                  buffer);
-      if (rv < 0)
-        cbuf_printf(ttyout, "Hostname:                     can't output\n");
-      if (rv > 0)
-        cbuf_printf(ttyout, "Hostname:                     %s\n", buffer);
+      cbuf_printf(ttyout, "Hostname:                     %s\n", conf->hostname);
 
 #ifndef NDEBUG
       if (!(discovered = hostlist_create(NULL)))
@@ -572,25 +550,19 @@ _cmd_config(void)
         if (!rv)
           goto cleanup;
       }
-
-      rv = hostlist_ranged_string(discovered, IPMIPOWER_OUTPUT_BUFLEN, 
-                                  buffer);
-      if (rv < 0)
-        cbuf_printf(ttyout, "Discovered:                   can't output\n");
+      
+      if ((rv = hostlist_ranged_string(discovered, IPMIPOWER_OUTPUT_BUFLEN, buffer)) < 0)
+        ierr_exit("hostlist_ranged_string: %s", strerror(errno));
       if (rv > 0)
         cbuf_printf(ttyout, "Discovered:                   %s\n", buffer);
-
-      rv = hostlist_ranged_string(undiscovered, IPMIPOWER_OUTPUT_BUFLEN, 
-                                  buffer);
-      if (rv < 0)
-        cbuf_printf(ttyout, "Undiscovered:                 can't output\n");
+      
+      if ((rv = hostlist_ranged_string(undiscovered, IPMIPOWER_OUTPUT_BUFLEN, buffer)) < 0)
+        ierr_exit("hostlist_ranged_string: %s", strerror(errno));
       if (rv > 0)
         cbuf_printf(ttyout, "Undiscovered:                 %s\n", buffer);
-
-      rv = hostlist_ranged_string(badconnection, IPMIPOWER_OUTPUT_BUFLEN, 
-                                  buffer);
-      if (rv < 0) 
-        cbuf_printf(ttyout, "BadConnection:                can't output\n");
+      
+      if ((rv = hostlist_ranged_string(badconnection, IPMIPOWER_OUTPUT_BUFLEN, buffer)) < 0)
+        ierr_exit("hostlist_ranged_string: %s", strerror(errno));
       if (rv > 0)
         cbuf_printf(ttyout, "BadConnection:                %s\n", buffer);
 

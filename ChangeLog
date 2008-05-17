@@ -4,7 +4,8 @@
 	count support.  Removed various extraneous min/max checks.  Fix
 	various signed/unsigned config issues.  Remove debug logging
 	facilities.  Re-work config file parsing to parse before cmdline
-	parsing.
+	parsing.  Re-work various code to support later move to generic
+	argp.
 
 	* libfreeipmi/src/api/ipmi-ctx.h,
 	common/src/tool-cmdline-common.c,
@@ -21,6 +22,7 @@
 
 	* common/src/tool-cmdline-common.c,
 	common/src/tool-cmdline-common.h: Cleanup.  Remove unused macros.
+	Make fixes in preparation for config file support.
 
 2008-05-15  Albert Chu <chu11@llnl.gov>
 

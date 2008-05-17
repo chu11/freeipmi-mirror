@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.7 2008-05-16 21:40:51 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.8 2008-05-17 00:51:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -161,8 +161,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->lock_memory++;
       break;
     case CONFIG_FILE_KEY:	/* --config-file */
-      if (!(cmd_args->config_file = strdup(arg)))
-        err_exit("strdup: %s", strerror(errno));
+      /* ignore */
       break;
 #ifndef NDEBUG
     case DEBUGFILE_KEY:	/* --debugfile */
