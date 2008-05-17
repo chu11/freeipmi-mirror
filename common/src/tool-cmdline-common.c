@@ -596,6 +596,8 @@ sdr_parse_opt (int key,
       break;
     case ARGP_SDR_CACHE_DIR_KEY:
       cmd_args->sdr_cache_dir_wanted = 1;
+      if (cmd_args->sdr_cache_dir)
+        free(cmd_args->sdr_cache_dir);
       if (!(cmd_args->sdr_cache_dir = strdup (arg)))
         {
           perror("strdup");
