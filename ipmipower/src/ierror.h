@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ierror.h,v 1.1 2008-04-12 00:05:22 chu11 Exp $
+ *  $Id: ierror.h,v 1.2 2008-05-18 15:41:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -73,7 +73,6 @@ void ierr_file_stream(int toggle, FILE *stream);
 void ierr_file_descriptor(int toggle, int fd);
 void ierr_cbuf(int toggle, cbuf_t buf);
 void ierr_cbuf_dump_file_stream(int toggle, FILE *stream);
-void ierr_cbuf_dump_file_descriptor(int toggle, int fd);
 
 /* Emit error message with a newline appended.  
  * If syslogging, use LOG_ERR level.

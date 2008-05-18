@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ierror.c,v 1.2 2008-05-16 23:36:14 chu11 Exp $
+ *  $Id: ierror.c,v 1.3 2008-05-18 15:41:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -80,7 +80,6 @@
 #define IERR_CBUF               0x08
 
 #define IERR_CBUF_DUMP_FILE_STREAM      0x10
-#define IERR_CBUF_DUMP_FILE_DESCRIPTOR  0x20
 
 #define IERROR_BUFLEN           4096
 
@@ -93,7 +92,6 @@ static FILE  *ierr_fstream = NULL;
 static int    ierr_fd = -1;
 static cbuf_t ierr_cb = NULL;
 static FILE  *ierr_dump_fstream = NULL;
-static int    ierr_dump_fd = -1;
 
 /* Initialize error module.  'prog' is the name of the calling program
  * and will be the prefix of each error message.  Start logging to stderr.
@@ -157,18 +155,6 @@ void ierr_cbuf_dump_file_stream(int toggle, FILE *stream)
     else {
         ierr_dest &= ~IERR_CBUF_DUMP_FILE_STREAM;
         ierr_dump_fstream = NULL;
-    }
-}
-
-void ierr_cbuf_dump_file_descriptor(int toggle, int fd) 
-{
-    if (toggle) {
-        ierr_dest |= IERR_CBUF_DUMP_FILE_DESCRIPTOR;
-        ierr_dump_fd = fd;
-    }
-    else {
-        ierr_dest &= ~IERR_CBUF_DUMP_FILE_DESCRIPTOR;
-        ierr_dump_fd = -1;
     }
 }
 
@@ -237,9 +223,6 @@ void ierr_exit(const char *fmt, ...)
         int fd = fileno(ierr_dump_fstream);
         cbuf_peek_to_fd(ierr_cb, fd, -1);
       }
-
-    if ((ierr_dest & IERR_CBUF_DUMP_FILE_DESCRIPTOR) > 0)
-      cbuf_peek_to_fd(ierr_cb, ierr_dump_fd, -1);
 
     exit(1);
 }
