@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.31 2008-05-18 15:47:40 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.32 2008-05-18 15:49:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -113,22 +113,20 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
 
   /* Don't use wrapper function, need to exit cleanly on EMFILE errno */
   
+  errno = 0;
+
   if ((ic->ipmi_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) 
     {
-      if (errno != EMFILE)
-        lsd_fatal_error(__FILE__, __LINE__, "socket");
-      else
-        cbuf_printf(ttyout, "socket() error %s", strerror(errno));
-      return -1;
+      if (errno == EMFILE)
+        return -1;
+      ierr_exit("socket() error: %s", strerror(errno));
     }
   
   if ((ic->ping_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) 
     {
-      if (errno != EMFILE)
-        lsd_fatal_error(__FILE__, __LINE__, "socket");
-      else
-        cbuf_printf(ttyout, "socket() error %s", strerror(errno));
-      return -1;
+      if (errno == EMFILE)
+        return -1;
+      ierr_exit("socket() error: %s", strerror(errno));
     }
 
   /* Secure ephemeral ports */
