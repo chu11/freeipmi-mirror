@@ -20,6 +20,7 @@ ipmipower
 - use generic argp - not unique .h
 - make sure works w/ powerman still
   - make sure everything works
+- call clear in powercmd
   
 bmc-config
 ----------
