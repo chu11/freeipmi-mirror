@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.36 2008-05-17 16:12:36 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.37 2008-05-18 04:26:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -45,11 +45,9 @@ extern hostlist_t output_hostrange[MSG_TYPE_NUM_ENTRIES];
 
 static char *ipmipower_outputs[] = 
   {
-    "success",
     "on",
     "off",
     "ok",
-    "permission denied",
     "username invalid",
     "password invalid",
     "password length invalid",

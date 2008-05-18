@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.120 2008-05-17 16:12:35 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.121 2008-05-18 04:26:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -198,34 +198,32 @@ typedef enum
 /* Msg Types */
 typedef enum 
   { 
-    MSG_TYPE_SUCCESS                            =  0,
-    MSG_TYPE_ON                                 =  1,
-    MSG_TYPE_OFF                                =  2,
-    MSG_TYPE_OK                                 =  3,
-    MSG_TYPE_PERMISSION                         =  4,
-    MSG_TYPE_USERNAME_INVALID                   =  5,
-    MSG_TYPE_PASSWORD_INVALID                   =  6,
-    MSG_TYPE_PASSWORD_LENGTH_INVALID            =  7,
-    MSG_TYPE_K_G_INVALID                        =  8,
-    MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED =  9,
-    MSG_TYPE_OPERATION_INVALID                  = 10,
-    MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE    = 11,
-    MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE        = 12,
-    MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT      = 13,
-    MSG_TYPE_CONNECTION_TIMEOUT                 = 14,
-    MSG_TYPE_SESSION_TIMEOUT                    = 15,
-    MSG_TYPE_NOTDISCOVERED                      = 16,
-    MSG_TYPE_BADCONNECTION                      = 17,
-    MSG_TYPE_HOSTNAME_INVALID                   = 18,
-    MSG_TYPE_UNKNOWNNODE                        = 19,
-    MSG_TYPE_RESOURCES                          = 20,
-    MSG_TYPE_IPMI_2_0_UNAVAILABLE               = 21,
-    MSG_TYPE_BMC_BUSY                           = 22,
-    MSG_TYPE_BMC_ERROR                          = 23,
+    MSG_TYPE_ON                                 =  0,
+    MSG_TYPE_OFF                                =  1,
+    MSG_TYPE_OK                                 =  2,
+    MSG_TYPE_USERNAME_INVALID                   =  3,
+    MSG_TYPE_PASSWORD_INVALID                   =  4,
+    MSG_TYPE_PASSWORD_LENGTH_INVALID            =  5,
+    MSG_TYPE_K_G_INVALID                        =  6,
+    MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED =  7,
+    MSG_TYPE_OPERATION_INVALID                  =  8,
+    MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE    =  9,
+    MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE        = 10,
+    MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT      = 11,
+    MSG_TYPE_CONNECTION_TIMEOUT                 = 12,
+    MSG_TYPE_SESSION_TIMEOUT                    = 13,
+    MSG_TYPE_NOTDISCOVERED                      = 14,
+    MSG_TYPE_BADCONNECTION                      = 15,
+    MSG_TYPE_HOSTNAME_INVALID                   = 16,
+    MSG_TYPE_UNKNOWNNODE                        = 17,
+    MSG_TYPE_RESOURCES                          = 18,
+    MSG_TYPE_IPMI_2_0_UNAVAILABLE               = 19,
+    MSG_TYPE_BMC_BUSY                           = 20,
+    MSG_TYPE_BMC_ERROR                          = 21,
   } msg_type_t;
 
 #define MSG_TYPE_VALID(__m) \
-  ((__m) >= MSG_TYPE_SUCCESS && \
+  ((__m) >= MSG_TYPE_ON && \
    (__m) <= MSG_TYPE_BMC_ERROR)
 
 #define MSG_TYPE_NUM_ENTRIES (MSG_TYPE_BMC_ERROR+1)
