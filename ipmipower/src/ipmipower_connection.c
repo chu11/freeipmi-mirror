@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.29 2008-05-17 16:12:36 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.30 2008-05-18 15:31:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -118,7 +118,7 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
       if (errno != EMFILE)
         lsd_fatal_error(__FILE__, __LINE__, "socket");
       else
-        ierr_output("socket error(): %s", strerror(errno));
+        ierr_dbg("socket error(): %s", strerror(errno));
       return -1;
     }
 
@@ -127,7 +127,7 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
       if (errno != EMFILE)
         lsd_fatal_error(__FILE__, __LINE__, "socket");
       else
-        ierr_output("socket error(): %s", strerror(errno));
+        ierr_dbg("socket error(): %s", strerror(errno));
       return -1;
     }
 
