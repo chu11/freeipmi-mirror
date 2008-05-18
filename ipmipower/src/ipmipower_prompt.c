@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.87 2008-05-18 15:47:40 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.88 2008-05-18 16:21:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -411,7 +411,7 @@ _cmd_power(char **argv, power_cmd_t cmd)
           i = ipmipower_connection_hostname_index(ics, ics_len, node);
 
           if (i < 0)
-            ipmipower_output(MSG_TYPE_UNKNOWNNODE, node);
+            ipmipower_output(MSG_TYPE_UNCONFIGURED_HOSTNAME, node);
           else if (conf->ping_interval_len 
                    && ics[i].discover_state == STATE_UNDISCOVERED)
             ipmipower_output(MSG_TYPE_NOTDISCOVERED, ics[i].hostname);

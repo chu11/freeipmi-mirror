@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.37 2008-05-18 04:26:20 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.38 2008-05-18 16:21:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -62,7 +62,7 @@ static char *ipmipower_outputs[] =
     "not discovered",
     "bad connection",
     "invalid hostname",
-    "unknown node name",
+    "unconfigured hostname",
     "out of resources",
     "ipmi 2.0 unavailable",
     "BMC busy",
