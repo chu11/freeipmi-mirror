@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.86 2008-05-17 16:12:37 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.87 2008-05-18 15:47:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -818,7 +818,7 @@ _readcmd(char *buf, int maxlen)
   if (len == bytes_peeked)
     return;
   if ((dropped = cbuf_drop(ttyin, ++len)) != len)
-    ierr_output("warning: _readcmd: cbuf_drop returned %d (!= %d)", dropped, len);
+    ierr_dbg("warning: _readcmd: cbuf_drop returned %d (!= %d)", dropped, len);
 }
 
 int 

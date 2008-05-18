@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.30 2008-05-18 15:31:37 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.31 2008-05-18 15:47:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -118,16 +118,16 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
       if (errno != EMFILE)
         lsd_fatal_error(__FILE__, __LINE__, "socket");
       else
-        ierr_dbg("socket error(): %s", strerror(errno));
+        cbuf_printf(ttyout, "socket() error %s", strerror(errno));
       return -1;
     }
-
+  
   if ((ic->ping_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) 
     {
       if (errno != EMFILE)
         lsd_fatal_error(__FILE__, __LINE__, "socket");
       else
-        ierr_dbg("socket error(): %s", strerror(errno));
+        cbuf_printf(ttyout, "socket() error %s", strerror(errno));
       return -1;
     }
 
@@ -177,7 +177,7 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
       if (h_errno == HOST_NOT_FOUND)
         ipmipower_output(MSG_TYPE_HOSTNAME_INVALID, ic->hostname);
       else
-        ierr_output("gethostbyname() error %s: %s", ic->hostname, hstrerror(h_errno));
+        cbuf_printf(ttyout, "gethostbyname() error %s: %s", ic->hostname, hstrerror(h_errno));
       return -1;
     }
   ic->destaddr.sin_addr = *((struct in_addr *)result->h_addr);

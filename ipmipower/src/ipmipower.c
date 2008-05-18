@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.61 2008-05-18 15:39:16 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.62 2008-05-18 15:47:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -206,7 +206,7 @@ _recvfrom(cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
   /* cbuf should be empty, but if it isn't, empty it */
   if (!cbuf_is_empty(buf)) 
     {
-      ierr_output("_recvfrom: cbuf not empty, draining");
+      ierr_dbg("_recvfrom: cbuf not empty, draining");
       do 
         {
           char tempbuf[IPMIPOWER_PACKET_BUFLEN];
@@ -220,7 +220,7 @@ _recvfrom(cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
   if (n != rv)
     ierr_exit("_recvfrom: rv=%d n=%d", rv, n);
   if (dropped)
-    ierr_output("_recvfrom: read dropped %d bytes", dropped);
+    ierr_dbg("_recvfrom: read dropped %d bytes", dropped);
 }
 
 /* _poll_loop
@@ -325,8 +325,8 @@ _poll_loop(int non_interactive)
         {
           if (pfds[i*2].revents & POLLERR) 
             {
-              ierr_output("_poll_loop: IPMI POLLERR, %s, %d", ics[i].hostname, 
-                          ics[i].ipmi_fd);
+              ierr_dbg("_poll_loop: IPMI POLLERR, %s, %d", ics[i].hostname, 
+                       ics[i].ipmi_fd);
               continue;
             }
           if (pfds[i*2].revents & POLLIN) 
@@ -339,8 +339,8 @@ _poll_loop(int non_interactive)
           
           if (pfds[i*2+1].revents & POLLERR) 
             {
-              ierr_output("_poll_loop: PING POLLERR, %s, %d", ics[i].hostname, 
-                          ics[i].ipmi_fd);
+              ierr_dbg("_poll_loop: PING POLLERR, %s, %d", ics[i].hostname, 
+                       ics[i].ipmi_fd);
               continue;
             }
           if (pfds[i*2+1].revents & POLLIN) 

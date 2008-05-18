@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.150 2008-05-16 23:36:17 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.151 2008-05-18 15:47:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -155,7 +155,7 @@ _init_ipmi_2_0_randomized_data(ipmipower_powercmd_t ip)
   /* Even if this fails, we'll just live with it */
   if (ipmi_get_random(ip->remote_console_random_number, 
                       IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
-    ierr_output("ipmipower_powercmd_queue: ipmi_get_random: %s ",
+    ierr_dbg("ipmipower_powercmd_queue: ipmi_get_random: %s ",
                 strerror(errno));
 }
 

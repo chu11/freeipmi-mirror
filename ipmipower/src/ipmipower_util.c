@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.c,v 1.21 2008-04-17 23:14:29 chu11 Exp $
+ *  $Id: ipmipower_util.c,v 1.22 2008-05-18 15:47:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -47,7 +47,7 @@ get_rand(void)
 
   if (ipmi_get_random((uint8_t *)&val, sizeof(val)) < 0)
     {
-      ierr_output("get_rand: ipmi_get_random: %s", strerror(errno));
+      ierr_dbg("get_rand: ipmi_get_random: %s", strerror(errno));
       return (uint32_t)rand();
     }
 
