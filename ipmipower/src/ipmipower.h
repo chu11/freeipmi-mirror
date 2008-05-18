@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.121 2008-05-18 04:26:20 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.122 2008-05-18 15:39:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -66,8 +66,6 @@
 #define IPMIPOWER_PACKET_BUFLEN                          1024
 
 #define IPMIPOWER_OUTPUT_BUFLEN                          65536
-
-#define IPMIPOWER_DEFAULT_LOGFILE                        "/tmp/ipmipower.%d"
 
 #define IPMI_MAX_SIK_KEY_LENGTH                          64
 

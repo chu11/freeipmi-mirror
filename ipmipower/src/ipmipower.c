@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.60 2008-05-18 04:23:08 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.61 2008-05-18 15:39:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -113,7 +113,7 @@ _setup(void)
         ierr_exit("hostlist_create() error");
     }
   
-  /* errors should always go to atleast the syslog */
+  /* in interactive mode errors should always go to atleast the syslog */
   ierr_syslog(1);
 
 #ifndef NDEBUG
@@ -207,11 +207,12 @@ _recvfrom(cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
   if (!cbuf_is_empty(buf)) 
     {
       ierr_output("_recvfrom: cbuf not empty, draining");
-      do {
-        char tempbuf[IPMIPOWER_PACKET_BUFLEN];
-        if (cbuf_read(buf, tempbuf, IPMIPOWER_PACKET_BUFLEN) < 0)
+      do 
+        {
+          char tempbuf[IPMIPOWER_PACKET_BUFLEN];
+          if (cbuf_read(buf, tempbuf, IPMIPOWER_PACKET_BUFLEN) < 0)
             ierr_exit("_recvfrom: cbuf_read: %s", strerror(errno));
-      } while(!cbuf_is_empty(buf));
+        } while(!cbuf_is_empty(buf));
     }
 
   if ((n = cbuf_write(buf, buffer, rv, &dropped)) < 0)
