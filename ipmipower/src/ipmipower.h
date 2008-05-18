@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.123 2008-05-18 16:21:51 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.124 2008-05-18 21:52:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -91,7 +91,7 @@ typedef enum
   } power_cmd_t;
 
 #define POWER_CMD_VALID(__c) \
-  ((__c) > POWER_CMD_NONE && \
+  ((__c) > POWER_CMD_OFF && \
    (__c) <= POWER_CMD_SOFT_SHUTDOWN_OS)
 
 #define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(__c) \
