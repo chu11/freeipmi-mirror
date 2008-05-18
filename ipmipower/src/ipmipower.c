@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.59 2008-05-17 16:12:34 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.60 2008-05-18 04:23:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -106,19 +106,6 @@ _setup(void)
   ttyin  = Cbuf_create(IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF);
   ttyout = Cbuf_create(IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF);
   ttyerr = Cbuf_create(IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF);
-
-  if (conf->hostname) 
-    {
-      unsigned int len = 0;
-      if (!(ics = ipmipower_connection_array_create(conf->hostname, &len)))
-        {
-          /* dump error outputs here, most notably invalid hostname output */
-          if (cbuf_read_to_fd(ttyout, STDOUT_FILENO, -1) > 0)
-            exit(1);
-          ierr_exit("ipmipower_connection_array_create: %s", strerror(errno));
-        }
-      ics_len = len;
-    }
 
   for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++) 
     {
@@ -430,6 +417,19 @@ main(int argc, char *argv[])
   _setup();
 
   ipmipower_powercmd_setup();
+  
+  if (conf->hostname) 
+    {
+      unsigned int len = 0;
+      if (!(ics = ipmipower_connection_array_create(conf->hostname, &len)))
+        {
+          /* dump error outputs here, most notably invalid hostname output */
+          if (cbuf_read_to_fd(ttyout, STDOUT_FILENO, -1) > 0)
+            exit(1);
+          ierr_exit("ipmipower_connection_array_create: %s", strerror(errno));
+        }
+      ics_len = len;
+    }
   
   /* If power command (i.e. --reset, --stat, etc.) is passed at
    * command line, put the power control commands in the pending
