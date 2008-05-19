@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.116 2008-05-19 18:44:17 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.117 2008-05-19 18:47:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -56,7 +56,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
       
-extern struct ipmipower_arguments conf;
+extern struct ipmipower_arguments args;
 extern struct ipmipower_connection *ics;
 
 const char *argp_program_version = "ipmipower " VERSION "\n";
@@ -160,7 +160,7 @@ cmdline_parse_config (int key,
     case CONFIG_KEY:         /* --config */
       if (strlen(arg) > MAXPATHLEN)
         ierr_exit("Command Line Error: configuration file pathname too long");
-      if (!(conf.configfile = strdup(arg)))
+      if (!(args.configfile = strdup(arg)))
         {
           perror("strdup");
           exit(1);
@@ -199,45 +199,45 @@ cmdline_parse (int key,
         tmp = IPMI_DEVICE_LAN_2_0;
       else
         ierr_exit("Command Line Error: invalid driver type specified");
-      conf.common.driver_type = tmp;
+      args.common.driver_type = tmp;
       break;
     case CONFIG_KEY:         /* --config */
       /* ignore */
       break;
 #ifndef NDEBUG
     case RMCPDUMP_KEY:       /* --rmcpdump */
-      conf.rmcpdump++;
+      args.rmcpdump++;
       break;
 #endif /* !NDEBUG */
     case ON_KEY:       /* --on */ 
-      conf.powercmd = POWER_CMD_POWER_ON;
+      args.powercmd = POWER_CMD_POWER_ON;
       break;
     case OFF_KEY:       /* --off */ 
-      conf.powercmd = POWER_CMD_POWER_OFF;
+      args.powercmd = POWER_CMD_POWER_OFF;
       break;
     case CYCLE_KEY:       /* --cycle */ 
-      conf.powercmd = POWER_CMD_POWER_CYCLE;
+      args.powercmd = POWER_CMD_POWER_CYCLE;
       break;
     case RESET_KEY:       /* --reset */ 
-      conf.powercmd = POWER_CMD_POWER_RESET;
+      args.powercmd = POWER_CMD_POWER_RESET;
       break;
     case STAT_KEY:       /* --stat */ 
-      conf.powercmd = POWER_CMD_POWER_STATUS;
+      args.powercmd = POWER_CMD_POWER_STATUS;
       break;
     case PULSE_KEY:       /* --pulse */
-      conf.powercmd = POWER_CMD_PULSE_DIAG_INTR;
+      args.powercmd = POWER_CMD_PULSE_DIAG_INTR;
       break;
     case SOFT_KEY:       /* --soft */
-      conf.powercmd = POWER_CMD_SOFT_SHUTDOWN_OS;
+      args.powercmd = POWER_CMD_SOFT_SHUTDOWN_OS;
       break;
     case ON_IF_OFF_KEY:       /* --on-if-off */
-      conf.on_if_off++;
+      args.on_if_off++;
       break;
     case WAIT_UNTIL_OFF_KEY:       /* --wait-until-on */
-      conf.wait_until_on++;
+      args.wait_until_on++;
       break;
     case WAIT_UNTIL_ON_KEY:       /* --wait-until-off */
-      conf.wait_until_off++;
+      args.wait_until_off++;
       break;
       /* RETRY_WAIT_TIMEOUT for backwards compatability */
     case RETRY_WAIT_TIMEOUT_KEY:
@@ -246,7 +246,7 @@ cmdline_parse (int key,
       if (ptr != (arg + strlen(arg))
           || tmp <= 0)
         ierr_exit("Command Line Error: retransmission wait timeout length invalid");
-      conf.retransmission_wait_timeout = tmp;
+      args.retransmission_wait_timeout = tmp;
       break;
       /* RETRY_BACKOFF_COUNT for backwards compatability */
     case RETRY_BACKOFF_COUNT_KEY:
@@ -255,47 +255,47 @@ cmdline_parse (int key,
       if (ptr != (arg + strlen(arg))
           || tmp <= 0)
         ierr_exit("Command Line Error: retransmission backoff count invalid");
-      conf.retransmission_backoff_count = tmp;
+      args.retransmission_backoff_count = tmp;
       break;
     case PING_INTERVAL_KEY:       /* --ping-interval */
       tmp = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg))
           || tmp < 0)
         ierr_exit("Command Line Error: ping interval length invalid");
-      conf.ping_interval = tmp;
+      args.ping_interval = tmp;
       break;
     case PING_TIMEOUT_KEY:       /* --ping-timeout */
       tmp = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg))
           || tmp < 0)
         ierr_exit("Command Line Error: ping timeout length invalid");
-      conf.ping_timeout = tmp;
+      args.ping_timeout = tmp;
       break;
     case PING_PACKET_COUNT_KEY:       /* --ping-packet-count */
       tmp = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg))
           || tmp < 0)
         ierr_exit("Command Line Error: ping packet count invalid");
-      conf.ping_packet_count = tmp;
+      args.ping_packet_count = tmp;
       break;
     case PING_PERCENT_KEY:       /* --ping-percent */
       tmp = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg))
           || tmp < 0)
         ierr_exit("Command Line Error: ping percent invalid");
-      conf.ping_percent = tmp;
+      args.ping_percent = tmp;
       break;
     case PING_CONSEC_COUNT_KEY:       /* --ping-consec-count */
       tmp = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg))
           || tmp < 0)
         ierr_exit("Command Line Error: ping consec count invalid");
-      conf.ping_consec_count = tmp;
+      args.ping_consec_count = tmp;
       break;
     default:
-      ret = common_parse_opt (key, arg, state, &(conf.common));
+      ret = common_parse_opt (key, arg, state, &(args.common));
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, state, &(conf.hostrange));
+        ret = hostrange_parse_opt (key, arg, state, &(args.hostrange));
       return ret;
     } 
 
@@ -316,7 +316,7 @@ _cb_driver_type(conffile_t cf, struct conffile_data *data,
   if ((tmp = parse_outofband_driver_type(data->string)) < 0)
     ierr_exit("Config File Error: invalid driver type specified");
 
-  conf.common.driver_type = tmp;
+  args.common.driver_type = tmp;
   return 0;
 }
 
@@ -346,7 +346,7 @@ _cb_hostname(conffile_t cf, struct conffile_data *data,
     
   if (rv > 0)
     {
-      if (!(conf.common.hostname = strdup(buffer)))
+      if (!(args.common.hostname = strdup(buffer)))
         {
           perror("strdup");
           exit(1);
@@ -366,7 +366,7 @@ _cb_username(conffile_t cf, struct conffile_data *data,
   if (strlen(data->string) > IPMI_MAX_USER_NAME_LENGTH)
     ierr_exit("Config File Error: username too long");
 
-  if (!(conf.common.username = strdup(data->string)))
+  if (!(args.common.username = strdup(data->string)))
     {
       perror("strdup");
       exit(1);
@@ -382,7 +382,7 @@ _cb_password(conffile_t cf, struct conffile_data *data,
   if (strlen(data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
     ierr_exit("Config File Error: password too long");
 
-  if (!(conf.common.password = strdup(data->string)))
+  if (!(args.common.password = strdup(data->string)))
     {
       perror("strdup");
       exit(1);
@@ -400,11 +400,11 @@ _cb_k_g(conffile_t cf, struct conffile_data *data,
   if ((rv = check_kg_len(data->string)) < 0)
     ierr_exit("Command Line Error: k_g too long");
 
-  if ((rv = parse_kg(conf.common.k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
+  if ((rv = parse_kg(args.common.k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
     ierr_exit("Config File Error: k_g input formatted incorrectly");
 
   if (rv > 0)
-    conf.common.k_g_len = rv;
+    args.common.k_g_len = rv;
 
   return 0;
 }
@@ -419,7 +419,7 @@ _cb_authentication_type(conffile_t cf, struct conffile_data *data,
   if ((tmp = parse_authentication_type(data->string)) < 0)
     ierr_exit("Config File Error: invalid authentication type specified");
 
-  conf.common.authentication_type = tmp;
+  args.common.authentication_type = tmp;
   return 0;
 }
 
@@ -433,7 +433,7 @@ _cb_cipher_suite_id(conffile_t cf, struct conffile_data *data,
     ierr_exit("Config File Error: invalid cipher suite id");
   if (!IPMI_CIPHER_SUITE_ID_SUPPORTED(data->intval))
     ierr_exit("Config File Error: unsupported cipher suite id");
-  conf.common.cipher_suite_id = data->intval;
+  args.common.cipher_suite_id = data->intval;
   return 0;
 }
 
@@ -447,7 +447,7 @@ _cb_privilege_level(conffile_t cf, struct conffile_data *data,
   if ((tmp = parse_privilege_level(data->string)) < 0)
     ierr_exit("Config File Error: invalid privilege level specified");
 
-  conf.common.privilege_level = tmp;
+  args.common.privilege_level = tmp;
   return 0;
 }
 
@@ -460,7 +460,7 @@ _cb_workaround_flags(conffile_t cf, struct conffile_data *data,
 
   if ((tmp = parse_workaround_flags(data->string)) < 0)
     ierr_exit("Config File Error: invalid workaround flags specified");
-  conf.common.workaround_flags = tmp;
+  args.common.workaround_flags = tmp;
   return 0;
 }
 
@@ -472,7 +472,7 @@ _cb_fanout(conffile_t cf, struct conffile_data *data,
   if (data->intval < PSTDOUT_FANOUT_MIN
       || data->intval > PSTDOUT_FANOUT_MAX)
     ierr_exit("Config File Error: invalid fanout");
-  conf.hostrange.fanout = data->intval;
+  args.hostrange.fanout = data->intval;
   return 0;
 }
 
@@ -585,17 +585,17 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &k_g_flag, NULL, 0},
       /* timeout maintained for backwards compatability */
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &timeout_flag, &(conf.common.session_timeout), 
+       1, 0, &timeout_flag, &(args.common.session_timeout), 
        0},
       {"session-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &session_timeout_flag, &(conf.common.session_timeout), 
+       1, 0, &session_timeout_flag, &(args.common.session_timeout), 
        0},
       /* retry-timeout for backwards comptability */
       {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &retry_timeout_flag, &(conf.common.retransmission_timeout), 
+       1, 0, &retry_timeout_flag, &(args.common.retransmission_timeout), 
        0},
       {"retransmission-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &retransmission_timeout_flag, &(conf.common.retransmission_timeout), 
+       1, 0, &retransmission_timeout_flag, &(args.common.retransmission_timeout), 
        0},
       {"authentication-type", CONFFILE_OPTION_STRING, -1, _cb_authentication_type, 
        1, 0, &authentication_type_flag, NULL, 0},
@@ -616,49 +616,49 @@ ipmipower_config_conffile_parse(char *configfile)
       {"consolidate-output", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &consolidate_output_flag, NULL, 0},
       {"fanout", CONFFILE_OPTION_INT, -1, _cb_fanout,
-       1, 0, &fanout_flag, &(conf.hostrange.fanout),
+       1, 0, &fanout_flag, &(args.hostrange.fanout),
        0},
       {"eliminate", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &eliminate_flag, NULL, 0},
       {"always_prefix", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &always_prefix_flag, NULL, 0},
       {"on-if-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &on_if_off_flag, &(conf.on_if_off), 
+       1, 0, &on_if_off_flag, &(args.on_if_off), 
        0},
       {"wait-until-on", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &wait_until_on_flag, &(conf.wait_until_on), 
+       1, 0, &wait_until_on_flag, &(args.wait_until_on), 
        0},
       {"wait-until-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &wait_until_off_flag, &(conf.wait_until_off), 
+       1, 0, &wait_until_off_flag, &(args.wait_until_off), 
        0},
       /* retry-wait-timeout for backwards comptability */
       {"retry-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &retry_wait_timeout_flag, &(conf.retransmission_wait_timeout), 
+       1, 0, &retry_wait_timeout_flag, &(args.retransmission_wait_timeout), 
        0},
       {"retransmission-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &retransmission_wait_timeout_flag, &(conf.retransmission_wait_timeout), 
+       1, 0, &retransmission_wait_timeout_flag, &(args.retransmission_wait_timeout), 
        0},
       /* retry-backoff-count for backwards compatability */
       {"retry-backoff-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero,
-       1, 0, &retry_backoff_count_flag, &(conf.retransmission_backoff_count), 
+       1, 0, &retry_backoff_count_flag, &(args.retransmission_backoff_count), 
        0},
       {"retransmission-backoff-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero,
-       1, 0, &retransmission_backoff_count_flag, &(conf.retransmission_backoff_count), 
+       1, 0, &retransmission_backoff_count_flag, &(args.retransmission_backoff_count), 
        0},
       {"ping-interval", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_interval_flag, &(conf.ping_interval), 
+       1, 0, &ping_interval_flag, &(args.ping_interval), 
        0},
       {"ping-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_timeout_flag, &(conf.ping_timeout), 
+       1, 0, &ping_timeout_flag, &(args.ping_timeout), 
        0},
       {"ping-packet-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_packet_count_flag, &(conf.ping_packet_count), 
+       1, 0, &ping_packet_count_flag, &(args.ping_packet_count), 
        0},
       {"ping-percent", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_percent_flag, &(conf.ping_percent), 
+       1, 0, &ping_percent_flag, &(args.ping_percent), 
        0},
       {"ping-consec-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_consec_count_flag, &(conf.ping_consec_count), 
+       1, 0, &ping_consec_count_flag, &(args.ping_consec_count), 
        0},
     };
   conffile_t cf = NULL;
@@ -692,66 +692,66 @@ ipmipower_config_conffile_parse(char *configfile)
 void 
 ipmipower_config_check_values(void) 
 {
-  if (conf.common.driver_type == IPMI_DEVICE_LAN
-      && conf.common.password
-      && strlen(conf.common.password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
+  if (args.common.driver_type == IPMI_DEVICE_LAN
+      && args.common.password
+      && strlen(args.common.password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
     ierr_exit("Error: password too long");
 
-  if (conf.common.retransmission_timeout > conf.common.session_timeout)
+  if (args.common.retransmission_timeout > args.common.session_timeout)
     ierr_exit("Error: Session timeout length must be longer than retransmission timeout length");
 
-  if (conf.retransmission_wait_timeout > conf.common.session_timeout)
+  if (args.retransmission_wait_timeout > args.common.session_timeout)
     ierr_exit("Error: Session timeout length must be longer than retransmission wait timeout length");
   
-  if (conf.powercmd != POWER_CMD_NONE && !conf.common.hostname)
+  if (args.powercmd != POWER_CMD_NONE && !args.common.hostname)
     ierr_exit("Error: Must specify target hostname(s) in non-interactive mode");
 
-  if (conf.ping_interval > conf.ping_timeout)
+  if (args.ping_interval > args.ping_timeout)
     ierr_exit("Error: Ping timeout interval length must be "
               "longer than ping interval length");
 
-  if (conf.ping_consec_count > conf.ping_packet_count)
+  if (args.ping_consec_count > args.ping_packet_count)
     ierr_exit("Error: Ping consec count must be larger than ping packet count");
 }
 
 void
 ipmipower_config(int argc, char **argv)
 {
-  init_common_cmd_args_operator (&(conf.common));
-  init_hostrange_cmd_args (&(conf.hostrange));
+  init_common_cmd_args_operator (&(args.common));
+  init_hostrange_cmd_args (&(args.hostrange));
 
   /* ipmipower differences */
-  conf.common.driver_type = IPMI_DEVICE_LAN;
-  conf.common.driver_type_outofband_only = 1;
-  conf.common.session_timeout = 20000; /* 20 seconds */
-  conf.common.retransmission_timeout = 400; /* .4 seconds */
+  args.common.driver_type = IPMI_DEVICE_LAN;
+  args.common.driver_type_outofband_only = 1;
+  args.common.session_timeout = 20000; /* 20 seconds */
+  args.common.retransmission_timeout = 400; /* .4 seconds */
 
-  conf.configfile = NULL;
+  args.configfile = NULL;
 #ifndef NDEBUG
-  conf.rmcpdump = 0;
+  args.rmcpdump = 0;
 #endif /* NDEBUG */
 
-  conf.powercmd = POWER_CMD_NONE;
-  conf.on_if_off = 0;
-  conf.wait_until_on = 0;
-  conf.wait_until_off = 0;
-  conf.retransmission_wait_timeout = 500; /* .5 seconds  */
-  conf.retransmission_backoff_count = 8;
-  conf.ping_interval = 5000; /* 5 seconds */
-  conf.ping_timeout = 30000; /* 30 seconds */
-  conf.ping_packet_count = 10;
-  conf.ping_percent = 50;
-  conf.ping_consec_count = 5;
+  args.powercmd = POWER_CMD_NONE;
+  args.on_if_off = 0;
+  args.wait_until_on = 0;
+  args.wait_until_off = 0;
+  args.retransmission_wait_timeout = 500; /* .5 seconds  */
+  args.retransmission_backoff_count = 8;
+  args.ping_interval = 5000; /* 5 seconds */
+  args.ping_timeout = 30000; /* 30 seconds */
+  args.ping_packet_count = 10;
+  args.ping_percent = 50;
+  args.ping_consec_count = 5;
 
   argp_parse(&cmdline_argp_config, argc, argv, ARGP_IN_ORDER, NULL, NULL);
 
-  ipmipower_config_conffile_parse(conf.configfile);
+  ipmipower_config_conffile_parse(args.configfile);
 
   argp_parse(&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
   /* achu: don't do these checks, we don't do inband, so checks aren't appropriate 
    * checks will be done in ipmipower_config_check_values().
    */
-  /* verify_common_cmd_args (&(conf.common)); */
-  verify_hostrange_cmd_args (&(conf.hostrange));
+  /* verify_common_cmd_args (&(args.common)); */
+  verify_hostrange_cmd_args (&(args.hostrange));
   ipmipower_config_check_values();
 }

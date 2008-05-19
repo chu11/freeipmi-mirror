@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.152 2008-05-19 18:44:17 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.153 2008-05-19 18:47:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -55,7 +55,7 @@
 #include "ipmipower_wrappers.h"
 
 extern cbuf_t ttyout;
-extern struct ipmipower_arguments conf;
+extern struct ipmipower_arguments args;
 
 /* Queue of all pending power commands */
 static List pending = NULL;
@@ -188,7 +188,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   ip->session_inbound_count = 0;
 
-  if (conf.common.driver_type == IPMI_DEVICE_LAN)
+  if (args.common.driver_type == IPMI_DEVICE_LAN)
     ip->highest_received_sequence_number = IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
   else
     ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
@@ -197,7 +197,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   /* IPMI 1.5 */
 #if 0
-  if (conf.common.driver_type == IPMI_DEVICE_LAN)
+  if (args.common.driver_type == IPMI_DEVICE_LAN)
     {
       /* ip->permsgauth_enabled is set after the Get Authentication
        * Capabilities Response and/or Activate Session Response is
@@ -208,15 +208,15 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   /* IPMI 2.0 */
 
-  if (conf.common.driver_type == IPMI_DEVICE_LAN_2_0)
+  if (args.common.driver_type == IPMI_DEVICE_LAN_2_0)
     {
-      if (ipmi_cipher_suite_id_to_algorithms(conf.common.cipher_suite_id,
+      if (ipmi_cipher_suite_id_to_algorithms(args.common.cipher_suite_id,
                                              &(ip->authentication_algorithm),
                                              &(ip->integrity_algorithm),
                                              &(ip->confidentiality_algorithm)) < 0)
         ierr_exit("ipmipower_powercmd_queue: ipmi_cipher_suite_id_to_algorithms: ",
-                  "conf.common.cipher_suite_id: %d: %s",
-                  conf.common.cipher_suite_id, strerror(errno));
+                  "args.common.cipher_suite_id: %d: %s",
+                  args.common.cipher_suite_id, strerror(errno));
 
       /* 
        * IPMI Workaround (achu)
@@ -255,8 +255,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
        * of an actual privilege, so have to pass the actual privilege
        * we want to use.
        */
-      if (conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-	ip->requested_maximum_privilege_level = conf.common.privilege_level;
+      if (args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+	ip->requested_maximum_privilege_level = args.common.privilege_level;
       else
 	ip->requested_maximum_privilege_level = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
       memset(ip->sik_key, '\0', IPMI_MAX_SIK_KEY_LENGTH);
@@ -355,7 +355,7 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == RAKP_MESSAGE_1_REQ
       || pkt == RAKP_MESSAGE_3_REQ)
     ip->message_tag_count++;
-  else if (conf.common.driver_type == IPMI_DEVICE_LAN_2_0
+  else if (args.common.driver_type == IPMI_DEVICE_LAN_2_0
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
 	       || pkt == CHASSIS_CONTROL_REQ
@@ -416,7 +416,7 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
    * since the first inbound sequence number is specified by the
    * activate session command.
    */
-  if (conf.common.driver_type == IPMI_DEVICE_LAN
+  if (args.common.driver_type == IPMI_DEVICE_LAN
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ 
 	  || pkt == GET_CHASSIS_STATUS_REQ 
 	  || pkt == CHASSIS_CONTROL_REQ
@@ -452,7 +452,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == AUTHENTICATION_CAPABILITIES_RES 
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || (conf.common.driver_type == IPMI_DEVICE_LAN
+      || (args.common.driver_type == IPMI_DEVICE_LAN
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	      || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
@@ -532,7 +532,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
        (pkt == OPEN_SESSION_RES
        || pkt == RAKP_MESSAGE_2_RES
        || pkt == RAKP_MESSAGE_4_RES
-       || (conf.common.driver_type == IPMI_DEVICE_LAN_2_0
+       || (args.common.driver_type == IPMI_DEVICE_LAN_2_0
        && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
        || pkt == GET_CHASSIS_STATUS_RES
        || pkt == CHASSIS_CONTROL_RES
@@ -614,7 +614,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 		}
 	    }
 	}
-      else /* (conf.common.driver_type == IPMI_DEVICE_LAN_2_0
+      else /* (args.common.driver_type == IPMI_DEVICE_LAN_2_0
               && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
               || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
@@ -738,7 +738,7 @@ _has_timed_out(ipmipower_powercmd_t ip)
   timeval_millisecond_calc(&result, &session_timeout);
 
   /* Must use >=, otherwise we could potentially spin */
-  if (session_timeout >= conf.common.session_timeout) 
+  if (session_timeout >= args.common.session_timeout) 
     {
       /* Don't bother outputting timeout if we have finished the power
          control operation */
@@ -780,9 +780,9 @@ _retry_packets(ipmipower_powercmd_t ip)
        && ip->cmd == POWER_CMD_POWER_ON)
       || (ip->wait_until_off_state
           && ip->cmd == POWER_CMD_POWER_OFF))
-    retransmission_timeout = conf.retransmission_wait_timeout * (1 + (ip->retransmission_count/conf.retransmission_backoff_count));
+    retransmission_timeout = args.retransmission_wait_timeout * (1 + (ip->retransmission_count/args.retransmission_backoff_count));
   else
-    retransmission_timeout = conf.common.retransmission_timeout * (1 + (ip->retransmission_count/conf.retransmission_backoff_count));
+    retransmission_timeout = args.common.retransmission_timeout * (1 + (ip->retransmission_count/args.retransmission_backoff_count));
 
   Gettimeofday(&cur_time, NULL);
   timeval_sub(&cur_time, &(ip->ic->last_ipmi_send), &result);
@@ -792,7 +792,7 @@ _retry_packets(ipmipower_powercmd_t ip)
     return 0;
 
   /* Do we have enough time to retransmit? */
-  timeval_add_ms(&cur_time, conf.common.session_timeout, &end_time);
+  timeval_add_ms(&cur_time, args.common.session_timeout, &end_time);
   timeval_sub(&end_time, &cur_time, &result);
   timeval_millisecond_calc(&result, &time_left);
   if (time_left < retransmission_timeout)
@@ -959,18 +959,18 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
    * vs. null vs non-null username capabilities. The workaround is to
    * skip these checks.
    */
-  if (!(conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
+  if (!(args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
       /* Does the remote BMC's authentication configuration support
        * our username/password combination 
        */
-      if ((!conf.common.username && !conf.common.password
+      if ((!args.common.username && !args.common.password
            && !authentication_status_anonymous_login
            && !authentication_type_none)
-          || (!conf.common.username
+          || (!args.common.username
               && !authentication_status_anonymous_login
               && !authentication_status_null_username)
-          || (conf.common.username
+          || (args.common.username
               && !authentication_status_non_null_username))
         {
           ipmipower_output(MSG_TYPE_USERNAME_INVALID, ip->ic->hostname);
@@ -979,13 +979,13 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
     }
 
   /* Can we authenticate with the specified authentication type? */
-  if (!((conf.common.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
+  if (!((args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
          && authentication_type_none)
-        || (conf.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
+        || (args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
             && authentication_type_md2)
-        || (conf.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
+        || (args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
             && authentication_type_md5)
-        || (conf.common.authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
+        || (args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
             && authentication_type_straight_password_key)))
     {
       ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
@@ -999,7 +999,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
    * The remote BMC ignores if permsg authentiction is enabled
    * or disabled.  So we need to force it no matter what.
    */
-  if (!(conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION))
+  if (!(args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION))
     {
       if (!authentication_status_per_message_authentication)
 	ip->permsgauth_enabled = 1;
@@ -1058,25 +1058,25 @@ _check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
    *
    * K_g status is reported incorrectly too.  Again, skip the checks.
    */
-  if (!(conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
+  if (!(args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
       /* Does the remote BMC's authentication configuration support
        * our username/password combination 
        */
-      if ((!conf.common.username && !conf.common.password
+      if ((!args.common.username && !args.common.password
            && !authentication_status_anonymous_login)
-          || (!conf.common.username
+          || (!args.common.username
               && !authentication_status_anonymous_login
               && !authentication_status_null_username)
-          || (conf.common.username
+          || (args.common.username
               && !authentication_status_non_null_username))
         {
           ipmipower_output(MSG_TYPE_USERNAME_INVALID, ip->ic->hostname); 
           return -1;
         }
       
-      if ((!conf.common.k_g_len && authentication_status_k_g)
-          || (conf.common.k_g_len && !authentication_status_k_g))
+      if ((!args.common.k_g_len && authentication_status_k_g)
+          || (args.common.k_g_len && !authentication_status_k_g))
         {
           ipmipower_output(MSG_TYPE_K_G_INVALID, ip->ic->hostname);	
           return -1;
@@ -1157,7 +1157,7 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
                "authentication_type",
                &authentication_type);
   
-  if (conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+  if (args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
     return 0;
 
   /* IPMI Workaround (achu)
@@ -1182,7 +1182,7 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
 
   if (ip->permsgauth_enabled)
     {
-      if (authentication_type != conf.common.authentication_type)
+      if (authentication_type != args.common.authentication_type)
         {
           ierr_dbg("_process_ipmi_packets(%s:%d): authentication_type mismatch",
                    ip->ic->hostname, ip->protocol_state);
@@ -1228,21 +1228,21 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
    * allowed.  "No Null characters (00h) are allowed in the name".
    * Table 13-11 in the IPMI 2.0 spec.
    */
-  if (conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (conf.common.username)
-	strcpy(username_buf, (char *)conf.common.username);
+      if (args.common.username)
+	strcpy(username_buf, (char *)args.common.username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
-      username = conf.common.username;
+      username = args.common.username;
       username_len = (username) ? strlen(username) : 0;
     }
   
-  password = conf.common.password;
+  password = args.common.password;
   password_len = (password) ? strlen(password) : 0;
 
   /* IPMI Workaround (achu)
@@ -1255,13 +1255,13 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
    * password to 16 bytes when generating keys, hashes, etc.  So we
    * have to do the same when generating keys, hashes, etc.
    */
-  if ((conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if ((args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
 
-  if (conf.common.k_g_len)
-    k_g = conf.common.k_g;
+  if (args.common.k_g_len)
+    k_g = args.common.k_g;
   else
     k_g = NULL;
   
@@ -1276,13 +1276,13 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
                                            (uint8_t *)password,
                                            password_len,
                                            k_g,
-                                           (k_g) ? conf.common.k_g_len : 0,
+                                           (k_g) ? args.common.k_g_len : 0,
                                            ip->remote_console_random_number,
                                            IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                            managed_system_random_number,
                                            managed_system_random_number_len,
                                            ip->name_only_lookup,
-                                           conf.common.privilege_level,
+                                           args.common.privilege_level,
                                            username,
                                            username_len,
                                            &(ip->sik_key_ptr),
@@ -1330,11 +1330,11 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       /* Don't execute if fanout turned on and we're in the middle of too
        * many power commands.
        */
-      if (conf.hostrange.fanout
-          && (executing_count >= conf.hostrange.fanout))
-        return conf.common.session_timeout;
+      if (args.hostrange.fanout
+          && (executing_count >= args.hostrange.fanout))
+        return args.common.session_timeout;
 
-      if (conf.common.driver_type == IPMI_DEVICE_LAN_2_0)
+      if (args.common.driver_type == IPMI_DEVICE_LAN_2_0)
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
       else
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
@@ -1477,7 +1477,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         }
 
       if (ip->cmd == POWER_CMD_POWER_STATUS
-          || (conf.on_if_off 
+          || (args.on_if_off 
               && (ip->cmd == POWER_CMD_POWER_CYCLE
                   || ip->cmd == POWER_CMD_POWER_RESET)))
         _send_packet(ip, GET_CHASSIS_STATUS_REQ);
@@ -1500,7 +1500,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                    "current_power_state.power_is_on",
                    &power_state);
 
-      if (conf.wait_until_on
+      if (args.wait_until_on
           && ip->cmd == POWER_CMD_POWER_ON
 	  && ip->wait_until_on_state)
 	{
@@ -1511,7 +1511,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	      _send_packet(ip, CLOSE_SESSION_REQ);
 	    }
 	}
-      else if (conf.wait_until_off
+      else if (args.wait_until_off
                && ip->cmd == POWER_CMD_POWER_OFF
                && ip->wait_until_off_state)
 	{
@@ -1528,7 +1528,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                            ip->ic->hostname); 
           _send_packet(ip, CLOSE_SESSION_REQ);
         }
-      else if (conf.on_if_off && (ip->cmd == POWER_CMD_POWER_CYCLE
+      else if (args.on_if_off && (ip->cmd == POWER_CMD_POWER_CYCLE
                                   || ip->cmd == POWER_CMD_POWER_RESET)) 
         {
           if (!power_state) 
@@ -1551,9 +1551,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
         
-      if ((conf.wait_until_on
+      if ((args.wait_until_on
            && ip->cmd == POWER_CMD_POWER_ON)
-          || (conf.wait_until_off
+          || (args.wait_until_off
               && ip->cmd == POWER_CMD_POWER_OFF))
 	{
           if (ip->cmd == POWER_CMD_POWER_ON)
@@ -1609,7 +1609,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
  done:
   Gettimeofday(&cur_time, NULL);
-  timeval_add_ms(&(ip->time_begin), conf.common.session_timeout, &end_time);
+  timeval_add_ms(&(ip->time_begin), args.common.session_timeout, &end_time);
   timeval_sub(&end_time, &cur_time, &result);
   timeval_millisecond_calc(&result, &timeout);
 
@@ -1617,13 +1617,13 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
   if ((ip->wait_until_on_state && ip->cmd == POWER_CMD_POWER_ON)
       || (ip->wait_until_off_state && ip->cmd == POWER_CMD_POWER_OFF))
     {
-      int retransmission_wait_timeout = conf.retransmission_wait_timeout * (1 + (ip->retransmission_count/conf.retransmission_backoff_count));
+      int retransmission_wait_timeout = args.retransmission_wait_timeout * (1 + (ip->retransmission_count/args.retransmission_backoff_count));
       if (timeout > retransmission_wait_timeout)
         timeout = retransmission_wait_timeout;
     }
   else
     {
-      int retransmission_timeout = conf.common.retransmission_timeout * (1 + (ip->retransmission_count/conf.retransmission_backoff_count));
+      int retransmission_timeout = args.common.retransmission_timeout * (1 + (ip->retransmission_count/args.retransmission_backoff_count));
       if (timeout > retransmission_timeout)
         timeout = retransmission_timeout;
     }
@@ -1636,7 +1636,7 @@ ipmipower_powercmd_process_pending(int *timeout)
 {
   ListIterator itr;
   ipmipower_powercmd_t ip;
-  int min_timeout = conf.common.session_timeout;
+  int min_timeout = args.common.session_timeout;
   int num_pending;
 
   assert(pending);  /* did not run ipmipower_powercmd_setup() */
