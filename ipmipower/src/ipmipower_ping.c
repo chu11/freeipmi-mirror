@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.30 2008-05-17 00:51:23 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.31 2008-05-19 18:44:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -42,7 +42,7 @@
 
 #include "debug-common.h"
 
-extern struct ipmipower_config *conf;
+extern struct ipmipower_arguments conf;
 extern struct ipmipower_connection *ics;
 extern unsigned int ics_len;
 
@@ -67,17 +67,17 @@ ipmipower_ping_process_pings(int *timeout)
     
   assert(timeout);
 
-  if (!conf->hostname)
+  if (!conf.common.hostname)
     return;
 
-  if (!conf->ping_interval_len)
+  if (!conf.ping_interval)
     return;
 
   Gettimeofday(&cur_time, NULL);
   if (timeval_gt(&cur_time, &next_ping_sends_time) || force_discovery_sweep) 
     {
       force_discovery_sweep = 0;
-      timeval_add_ms(&cur_time, conf->ping_interval_len, &next_ping_sends_time);
+      timeval_add_ms(&cur_time, conf.ping_interval, &next_ping_sends_time);
       send_pings_flag++;
     }
 
@@ -95,11 +95,11 @@ ipmipower_ping_process_pings(int *timeout)
           memset(buffer, '\0', IPMIPOWER_PACKET_BUFLEN);
 
           /* deal with packet heuristics */
-          if (conf->ping_packet_count && conf->ping_percent) 
+          if (conf.ping_packet_count && conf.ping_percent) 
             {
-              if (ics[i].ping_packet_count_send == conf->ping_packet_count) 
+              if (ics[i].ping_packet_count_send == conf.ping_packet_count) 
                 {
-                  if ((((double)(ics[i].ping_packet_count_send - ics[i].ping_packet_count_recv))/ics[i].ping_packet_count_send) > ((double)conf->ping_percent/100))
+                  if ((((double)(ics[i].ping_packet_count_send - ics[i].ping_packet_count_recv))/ics[i].ping_packet_count_send) > ((double)conf.ping_percent/100))
                     ics[i].link_state = LINK_BAD;
                   else
                     ics[i].link_state = LINK_GOOD;
@@ -109,7 +109,7 @@ ipmipower_ping_process_pings(int *timeout)
                 }
             }
             
-          if (conf->ping_consec_count) 
+          if (conf.ping_consec_count) 
             {
               if (!ics[i].ping_last_packet_recv_flag)
                 ics[i].ping_consec_count = 0;
@@ -139,7 +139,7 @@ ipmipower_ping_process_pings(int *timeout)
             ierr_exit("assemble_rmcp_pkt: %s", strerror(errno));
           
 #ifndef NDEBUG
-          if (conf->rmcpdump) 
+          if (conf.rmcpdump) 
             {
               char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
 
@@ -164,7 +164,7 @@ ipmipower_ping_process_pings(int *timeout)
             ics[i].last_ping_send.tv_sec = cur_time.tv_sec;
             ics[i].last_ping_send.tv_usec = cur_time.tv_usec;
             
-            if (conf->ping_packet_count && conf->ping_percent)
+            if (conf.ping_packet_count && conf.ping_percent)
               ics[i].ping_packet_count_send++;
             
             Fiid_obj_destroy(rmcp_hdr);
@@ -184,7 +184,7 @@ ipmipower_ping_process_pings(int *timeout)
           rmcp_pong = Fiid_obj_create(tmpl_cmd_asf_presence_pong);
             
 #ifndef NDEBUG
-          if (conf->rmcpdump) 
+          if (conf.rmcpdump) 
             {
               char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
 
@@ -226,10 +226,10 @@ ipmipower_ping_process_pings(int *timeout)
                       
           if (message_type == RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG && ipmi_supported) 
             {
-              if (conf->ping_packet_count && conf->ping_percent)
+              if (conf.ping_packet_count && conf.ping_percent)
                 ics[i].ping_packet_count_recv++;
               
-              if (conf->ping_consec_count) 
+              if (conf.ping_consec_count) 
                 {
                   /* Don't increment twice, its possible a previous pong
                    * response was late, and we quickly receive two
@@ -241,14 +241,14 @@ ipmipower_ping_process_pings(int *timeout)
                   ics[i].ping_last_packet_recv_flag++;
                 }
               
-              if (conf->ping_packet_count && conf->ping_percent) 
+              if (conf.ping_packet_count && conf.ping_percent) 
                 {
                   if (ics[i].link_state == LINK_GOOD)
                     ics[i].discover_state = STATE_DISCOVERED;
                   else 
                     {
-                      if (conf->ping_consec_count
-                          && ics[i].ping_consec_count >= conf->ping_consec_count)
+                      if (conf.ping_consec_count
+                          && ics[i].ping_consec_count >= conf.ping_consec_count)
                         ics[i].discover_state = STATE_DISCOVERED;
                       else
                         ics[i].discover_state = STATE_BADCONNECTION;
@@ -269,7 +269,7 @@ ipmipower_ping_process_pings(int *timeout)
       /* Is the node gone?? */
       timeval_sub(&cur_time, &ics[i].last_ping_recv, &result);
       timeval_millisecond_calc(&result, &ms_time);
-      if (ms_time >= conf->ping_timeout_len)
+      if (ms_time >= conf.ping_timeout)
         ics[i].discover_state = STATE_UNDISCOVERED;
     }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.62 2008-05-18 15:47:40 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.63 2008-05-19 18:44:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -71,7 +71,7 @@ cbuf_t ttyout;
 cbuf_t ttyerr;
 
 /* configuration for ipmipower */
-struct ipmipower_config *conf = NULL;
+struct ipmipower_arguments conf;
 
 /* Array of all ipmi "connections" */
 struct ipmipower_connection *ics = NULL;
@@ -118,10 +118,10 @@ _setup(void)
 
 #ifndef NDEBUG
   /* if debug set, send debug info to stderr too */
-  ierr_cbuf(conf->debug, ttyerr);
+  ierr_cbuf((conf.common.flags & IPMI_FLAGS_DEBUG_DUMP), ttyerr);
 
   /* on ierr_exit() dump cbuf data to appropriate places too */
-  ierr_cbuf_dump_file_stream(conf->debug, stderr);
+  ierr_cbuf_dump_file_stream((conf.common.flags & IPMI_FLAGS_DEBUG_DUMP), stderr);
 #else  /* !NDEBUG */
   ierr_cbuf(0, 0);
 #endif /* !NDEBUG */
@@ -147,17 +147,6 @@ _cleanup(void)
 
   for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
     hostlist_destroy(output_hostrange[i]);
-
-  if (conf->hostname)
-    free(conf->hostname);
-  if (conf->username)
-    free(conf->username);
-  if (conf->password)
-    free(conf->password);
-  if (conf->configfile)
-    free(conf->configfile);
-
-  free(conf);
 }
 
 static void 
@@ -245,10 +234,10 @@ _poll_loop(int non_interactive)
       if (non_interactive && !num)
         break;
 
-      /* ping timeout is always set if conf->ping_interval_len > 0 */
+      /* ping timeout is always set if conf.ping_interval > 0 */
       ipmipower_ping_process_pings(&ping_timeout);
 
-      if (conf->ping_interval_len) 
+      if (conf.ping_interval) 
         {
           if (powercmd_timeout == -1)
             timeout = ping_timeout;
@@ -295,7 +284,7 @@ _poll_loop(int non_interactive)
           if (!cbuf_is_empty(ics[i].ipmi_out))
             pfds[i*2].events |= POLLOUT;
           
-          if (!conf->ping_interval_len)
+          if (!conf.ping_interval)
             continue;
           
           pfds[i*2+1].events |= POLLIN;
@@ -334,7 +323,7 @@ _poll_loop(int non_interactive)
           if (pfds[i*2].revents & POLLOUT)
             _sendto(ics[i].ipmi_out, ics[i].ipmi_fd, &(ics[i].destaddr));
           
-          if (!conf->ping_interval_len)
+          if (!conf.ping_interval)
             continue;
           
           if (pfds[i*2+1].revents & POLLERR) 
@@ -363,7 +352,7 @@ _poll_loop(int non_interactive)
 static void
 _eliminate_nodes(void)
 {
-  if (conf->eliminate)
+  if (conf.hostrange.eliminate)
     {
       ipmidetect_t id = NULL;
       int i;
@@ -419,10 +408,10 @@ main(int argc, char *argv[])
 
   ipmipower_powercmd_setup();
   
-  if (conf->hostname) 
+  if (conf.common.hostname) 
     {
       unsigned int len = 0;
-      if (!(ics = ipmipower_connection_array_create(conf->hostname, &len)))
+      if (!(ics = ipmipower_connection_array_create(conf.common.hostname, &len)))
         {
           /* dump error outputs here, most notably invalid hostname output */
           if (cbuf_read_to_fd(ttyout, STDOUT_FILENO, -1) > 0)
@@ -436,13 +425,15 @@ main(int argc, char *argv[])
    * command line, put the power control commands in the pending
    * queue.
    */
-  if (conf->powercmd != POWER_CMD_NONE) 
+  if (conf.powercmd != POWER_CMD_NONE) 
     {
       int i;
 
+      conf.ping_interval = 0;
+
       /* Check for appropriate privilege first */
-      if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_USER 
-          && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(conf->powercmd))
+      if (conf.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER 
+          && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(conf.powercmd))
         ierr_exit("power operation requires atleast operator privilege");
 
       _eliminate_nodes();
@@ -452,7 +443,7 @@ main(int argc, char *argv[])
           if (ics[i].skip)
             continue;
           ipmipower_connection_clear(&ics[i]);
-          ipmipower_powercmd_queue(conf->powercmd, &ics[i]);
+          ipmipower_powercmd_queue(conf.powercmd, &ics[i]);
         }
     }
   
@@ -461,7 +452,7 @@ main(int argc, char *argv[])
   /* immediately send out discovery messages upon startup */
   ipmipower_ping_force_discovery_sweep();
 
-  _poll_loop((conf->powercmd != POWER_CMD_NONE) ? 1 : 0);
+  _poll_loop((conf.powercmd != POWER_CMD_NONE) ? 1 : 0);
   
   ipmipower_powercmd_cleanup();
   _cleanup();

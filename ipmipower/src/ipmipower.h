@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.124 2008-05-18 21:52:59 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.125 2008-05-19 18:44:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -49,6 +49,7 @@
 #include "hostlist.h"
 #include "cbuf.h"
 #include "list.h"
+#include "tool-cmdline-common.h"
 
 #include "ipmidetect.h"
 
@@ -91,7 +92,7 @@ typedef enum
   } power_cmd_t;
 
 #define POWER_CMD_VALID(__c) \
-  ((__c) > POWER_CMD_OFF && \
+  ((__c) > POWER_CMD_POWER_OFF && \
    (__c) <= POWER_CMD_SOFT_SHUTDOWN_OS)
 
 #define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(__c) \
@@ -349,56 +350,61 @@ struct ipmipower_connection
   int skip;
 };
 
-/* ipmipower_config
- * - store all ipmipower configuration values
- */
-struct ipmipower_config 
-{
-  ipmi_driver_type_t       driver_type;
-  char *                   hostname;
-  char *                   username;
-  char *                   password;
-  uint8_t                  k_g[IPMI_MAX_K_G_LENGTH+1];
-  /* The k_g_len is needed b/c the k_g field may have null
-   * values as part of it's hex key.  For example, if k_g ==
-   * 0x00010203, then strlen(conf->k_g) == 0.  So we need a len to
-   * indicate what the real length of the field is.
-   */
-  unsigned int             k_g_len;
-  unsigned int             session_timeout_len;
-  unsigned int             retransmission_timeout_len;
-  uint8_t                  authentication_type;
-  int                      cipher_suite_id;
-  uint8_t                  privilege_level;
-  uint32_t                 workaround_flags;
-  int                      debug;
-  char *                   configfile;
-#ifndef NDEBUG
-  int                      rmcpdump;
-#endif /* NDEBUG */
-  /* buffer_output and always_prefix not implemented in ipmipower
-   * added only for consistency to other tools.
-   */
-  int                      buffer_output;
-  int                      consolidate_output;
-  unsigned int             fanout;
-  int                      eliminate;
-  int                      always_prefix;
-
-  power_cmd_t              powercmd;
-  int                      on_if_off;
-  int                      wait_until_on;
-  int                      wait_until_off;
-  unsigned int             retransmission_wait_timeout_len;
-  unsigned int             retransmission_backoff_count; 
-  unsigned int             ping_interval_len;
-  unsigned int             ping_timeout_len;
-  unsigned int             ping_packet_count;
-  unsigned int             ping_percent;
-  unsigned int             ping_consec_count;
-};
-
 typedef struct ipmipower_powercmd *ipmipower_powercmd_t;
 typedef struct ipmipower_connection *ipmipower_connection_t;
+
+enum ipmi_sensors_argp_option_keys
+  {
+    IPMI_VERSION_KEY = 'R',     /* legacy option */
+    CONFIG_KEY = 160,
+    RMCPDUMP_KEY = 161,
+
+    ON_KEY = 'n',
+    OFF_KEY = 'f',
+    CYCLE_KEY = 'c',
+    RESET_KEY = 'r',
+    STAT_KEY = 's',
+    PULSE_KEY = 'j',
+    SOFT_KEY = 'm',
+    ON_IF_OFF_KEY = 'g',
+    WAIT_UNTIL_OFF_KEY = 'A',
+    WAIT_UNTIL_ON_KEY = 'G',
+
+    SESSION_TIMEOUT_KEY = 't',  /* legacy short option */
+    RETRANSMISSION_TIMEOUT_KEY = 'y', /* legacy short option */
+
+    RETRY_WAIT_TIMEOUT_KEY = 163,
+    RETRANSMISSION_WAIT_TIMEOUT_KEY = 'q',
+    RETRY_BACKOFF_COUNT_KEY = 164,
+    RETRANSMISSION_BACKOFF_COUNT_KEY = 'b',
+    PING_INTERVAL_KEY = 'i',
+    PING_TIMEOUT_KEY = 'z',
+    PING_PACKET_COUNT_KEY = 'v',
+    PING_PERCENT_KEY = 'w',
+    PING_CONSEC_COUNT_KEY = 'x',
+  };
+
+struct ipmipower_arguments
+{
+  struct common_cmd_args common;
+  struct hostrange_cmd_args hostrange;
+  char *configfile;
+#ifndef NDEBUG
+  int rmcpdump;
+#endif /* NDEBUG */
+
+  power_cmd_t powercmd;
+  int on_if_off;
+  int wait_until_on;
+  int wait_until_off;
+
+  unsigned int retransmission_wait_timeout;
+  unsigned int retransmission_backoff_count;
+  unsigned int ping_interval;
+  unsigned int ping_timeout;
+  unsigned int ping_packet_count;
+  unsigned int ping_percent;
+  unsigned int ping_consec_count;
+};
 
 #endif /* _IPMIPOWER_H */

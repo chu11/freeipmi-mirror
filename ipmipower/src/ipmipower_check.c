@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.83 2008-05-16 23:36:15 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.84 2008-05-19 18:44:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -40,7 +40,7 @@
 #include "ipmipower_packet.h"
 #include "ipmipower_wrappers.h"      
 
-extern struct ipmipower_config *conf;
+extern struct ipmipower_arguments conf;
 
 #define IPMIPOWER_SEQUENCE_NUMBER_WINDOW 8
 #define IPMIPOWER_MAX_SEQUENCE_NUMBER    0xFFFFFFFF
@@ -102,7 +102,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
       || pkt == AUTHENTICATION_CAPABILITIES_RES
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || (conf->driver_type == IPMI_DEVICE_LAN
+      || (conf.common.driver_type == IPMI_DEVICE_LAN
 	  && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	      || pkt == GET_CHASSIS_STATUS_RES
 	      || pkt == CHASSIS_CONTROL_RES
@@ -117,7 +117,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
           || pkt == GET_SESSION_CHALLENGE_RES)
 	authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
       else if (pkt == ACTIVATE_SESSION_RES)
-	authentication_type = conf->authentication_type;
+	authentication_type = conf.common.authentication_type;
       else /* pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
               || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
@@ -130,11 +130,11 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	      check_authcode_retry_flag++;
 	    }
 	  else
-	    authentication_type = conf->authentication_type;
+	    authentication_type = conf.common.authentication_type;
 	}
       
       if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
-        password = conf->password;
+        password = conf.common.password;
       else
 	password = NULL;
       
@@ -142,7 +142,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 								  buffer_len,
 								  authentication_type,
 								  (uint8_t *)password,
-								  strlen(conf->password))) < 0)
+								  password ? strlen(password) : 0)) < 0)
 	ierr_exit("ipmipower_check_authentication_code(%s:%d): "
                   "ipmi_lan_check_packet_session_authentication_code: %s",
                   ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -158,16 +158,16 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
        * here is our second session-authcode check attempt under these
        * circumstances.
        */
-      if ((conf->workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+      if ((conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
 	  && !rv
 	  && check_authcode_retry_flag)
 	{
 	  ierr_dbg("ipmipower_check_authentication_code(%s:%d): retry authcode check",
                    ip->ic->hostname, ip->protocol_state, strerror(errno));
 	  
-	  authentication_type = conf->authentication_type;
+	  authentication_type = conf.common.authentication_type;
 	  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
-            password = conf->password;
+            password = conf.common.password;
 	  else
 	    password = NULL;
 	  
@@ -175,7 +175,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 								      buffer_len,
 								      authentication_type,
 								      (uint8_t *)password,
-								      strlen(conf->password))) < 0)
+								      password ? strlen(password) : 0)) < 0)
 	    ierr_exit("ipmipower_check_authentication_code(%s:%d): "
                       "ipmi_lan_check_session_authentication_code: %s",
                       ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -187,7 +187,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	}
     }      
   else	/* 
-           (conf->driver_type == IPMI_DEVICE_LAN_2_0
+           (conf.common.driver_type == IPMI_DEVICE_LAN_2_0
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
            || pkt == GET_CHASSIS_STATUS_RES
            || pkt == CHASSIS_CONTROL_RES
@@ -199,7 +199,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 
       integrity_algorithm = ip->integrity_algorithm;
 
-      password = conf->password;
+      password = conf.common.password;
 	  
       if ((rv = ipmi_rmcpplus_check_packet_session_authentication_code(integrity_algorithm,
 								       buffer,
@@ -253,7 +253,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
       || pkt == RAKP_MESSAGE_4_RES)
     return 1;
 
-  if (conf->driver_type == IPMI_DEVICE_LAN_2_0
+  if (conf.common.driver_type == IPMI_DEVICE_LAN_2_0
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	  || pkt == GET_CHASSIS_STATUS_RES
 	  || pkt == CHASSIS_CONTROL_RES
@@ -263,7 +263,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
 		 &seq_num);
   else /* 
 	  pkt == ACTIVATE_SESSION_RES  
-	  || (conf->driver_type == IPMI_DEVICE_LAN
+	  || (conf.common.driver_type == IPMI_DEVICE_LAN
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
           || pkt == GET_CHASSIS_STATUS_RES
           || pkt == CHASSIS_CONTROL_RES
@@ -280,7 +280,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
    * The session sequence numbers for IPMI 1.5 are the wrong endian.
    * So we have to flip the bits to workaround it.
    */
-  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+  if (conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
     {
       uint32_t tmp_seq_num = seq_num;
 
@@ -307,7 +307,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
     goto out;
 
   /* In IPMI 2.0, sequence number 0 is special, and shouldn't happen */
-  if (conf->driver_type == IPMI_DEVICE_LAN_2_0 && !seq_num)
+  if (conf.common.driver_type == IPMI_DEVICE_LAN_2_0 && !seq_num)
     goto out;
 
   /* Check if sequence number is greater than highest received and is
@@ -318,7 +318,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
       wrap_val = IPMIPOWER_SEQUENCE_NUMBER_WINDOW - (IPMIPOWER_MAX_SEQUENCE_NUMBER - ip->highest_received_sequence_number) - 1;
 
       /* In IPMI 2.0, sequence number 0 isn't possible, so adjust wrap_val */
-      if (conf->driver_type == IPMI_DEVICE_LAN_2_0)
+      if (conf.common.driver_type == IPMI_DEVICE_LAN_2_0)
 	wrap_val++;
 
       if (seq_num > ip->highest_received_sequence_number || seq_num <= wrap_val)
@@ -327,7 +327,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
             shift_num = seq_num - ip->highest_received_sequence_number;
           else
             {
-              if (conf->driver_type == IPMI_DEVICE_LAN)
+              if (conf.common.driver_type == IPMI_DEVICE_LAN)
                 shift_num = seq_num + (IPMIPOWER_MAX_SEQUENCE_NUMBER - ip->highest_received_sequence_number) + 1;
               else
                 /* IPMI 2.0 Special Case b/c 0 isn't a legit sequence number */
@@ -361,14 +361,14 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
       uint32_t wrap_val = IPMIPOWER_MAX_SEQUENCE_NUMBER - (IPMIPOWER_SEQUENCE_NUMBER_WINDOW - ip->highest_received_sequence_number) + 1;
       
       /* In IPMI 2.0, sequence number 0 isn't possible, so adjust wrap_val */
-      if (conf->driver_type == IPMI_DEVICE_LAN_2_0)
+      if (conf.common.driver_type == IPMI_DEVICE_LAN_2_0)
 	wrap_val--;
 
       if (seq_num < ip->highest_received_sequence_number || seq_num >= wrap_val)
         {
           if (seq_num > ip->highest_received_sequence_number && seq_num <= IPMIPOWER_MAX_SEQUENCE_NUMBER)
             {
-              if (conf->driver_type == IPMI_DEVICE_LAN)
+              if (conf.common.driver_type == IPMI_DEVICE_LAN)
                 shift_num = ip->highest_received_sequence_number + (IPMIPOWER_MAX_SEQUENCE_NUMBER - seq_num) + 1;
               else
                 /* IPMI 2.0 Special Case b/c 0 isn't a legit sequence number */
@@ -438,7 +438,7 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == GET_SESSION_CHALLENGE_RES 
       || pkt == ACTIVATE_SESSION_RES)
     return 1;
-  else if (conf->driver_type == IPMI_DEVICE_LAN
+  else if (conf.common.driver_type == IPMI_DEVICE_LAN
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	       || pkt == GET_CHASSIS_STATUS_RES
 	       || pkt == CHASSIS_CONTROL_RES
@@ -451,7 +451,7 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
                    "session_id", 
 		   &expected_session_id);
     }
-  else if (conf->driver_type == IPMI_DEVICE_LAN_2_0
+  else if (conf.common.driver_type == IPMI_DEVICE_LAN_2_0
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	       || pkt == GET_CHASSIS_STATUS_RES
 	       || pkt == CHASSIS_CONTROL_RES
@@ -490,7 +490,7 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
    * session id is correct if it is equal to zero.
    */
 
-  if ((conf->workaround_flags & IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+  if ((conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
       && !session_id)
     return (1);
 
@@ -627,7 +627,7 @@ ipmipower_check_payload_type(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(pkt == OPEN_SESSION_RES
 	 || pkt == RAKP_MESSAGE_2_RES
 	 || pkt == RAKP_MESSAGE_4_RES
-	 || (conf->driver_type == IPMI_DEVICE_LAN_2_0
+	 || (conf.common.driver_type == IPMI_DEVICE_LAN_2_0
 	     && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 		 || pkt == GET_CHASSIS_STATUS_RES
 		 || pkt == CHASSIS_CONTROL_RES
@@ -740,22 +740,22 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
    * The Intel's don't work with IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL.
    * So check that we get back what we sent.
    */
-  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     rv = (val == ip->requested_maximum_privilege_level) ? 1 : 0;
   else
     {
-      if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+      if (conf.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
 	  && (val == IPMI_PRIVILEGE_LEVEL_USER
 	      || val == IPMI_PRIVILEGE_LEVEL_OPERATOR
 	      || val == IPMI_PRIVILEGE_LEVEL_ADMIN
 	      || val == IPMI_PRIVILEGE_LEVEL_OEM))
 	rv = 1;
-      else if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
+      else if (conf.common.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
 	       && (val == IPMI_PRIVILEGE_LEVEL_OPERATOR
 		   || val == IPMI_PRIVILEGE_LEVEL_ADMIN
 		   || val == IPMI_PRIVILEGE_LEVEL_OEM))
         rv = 1;
-      else if (conf->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
+      else if (conf.common.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
 	       && (val == IPMI_PRIVILEGE_LEVEL_ADMIN
 		   || val == IPMI_PRIVILEGE_LEVEL_OEM))
 	rv = 1;
@@ -800,21 +800,21 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
    * Table 13-11 in the IPMI 2.0 spec.
    */
 
-  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (conf->username)
-	strcpy(username_buf, conf->username);
+      if (conf.common.username)
+	strcpy(username_buf, conf.common.username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
-      username = conf->username;
+      username = conf.common.username;
       username_len = (username) ? strlen(username) : 0;
     }
   
-  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+  if (conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     {
       uint8_t keybuf[IPMIPOWER_PACKET_BUFLEN];
       int32_t keybuf_len;
@@ -851,7 +851,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
 			  IPMI_HMAC_MD5_DIGEST_LENGTH);
     }
 
-  password = conf->password;
+  password = conf.common.password;
   password_len = (password) ? strlen(password) : 0;
 
   /* IPMI Workaround (achu)
@@ -864,7 +864,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
    * password to 16 bytes when generating keys, hashes, etc.  So we
    * have to do the same when generating keys, hashes, etc.
    */
-  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION 
+  if (conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION 
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
@@ -893,7 +893,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
    * Notes: Cipher suite 1,2,3 are the ones that use HMAC-SHA1 and
    * have the problem.
    */
-  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION
+  if (conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION
       && (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1))
     {
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
@@ -927,7 +927,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
                                                                         managed_system_guid,
                                                                         managed_system_guid_len,
                                                                         ip->name_only_lookup,
-                                                                        conf->privilege_level,
+                                                                        conf.common.privilege_level,
                                                                         username,
                                                                         username_len,
                                                                         ip->obj_rakp_message_2_res)) < 0)
@@ -969,7 +969,7 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
    * one.  Would have taken me awhile to figure this one out :-)
    */
 
-  if (conf->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (conf.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     {
       if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
@@ -1027,7 +1027,7 @@ ipmipower_check_payload_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
-  assert(conf->driver_type == IPMI_DEVICE_LAN_2_0
+  assert(conf.common.driver_type == IPMI_DEVICE_LAN_2_0
          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
              || pkt == GET_CHASSIS_STATUS_RES
              || pkt == CHASSIS_CONTROL_RES
@@ -1056,7 +1056,7 @@ ipmipower_check_integrity_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert(ip);
   assert(PACKET_TYPE_VALID_RES(pkt));
-  assert(conf->driver_type == IPMI_DEVICE_LAN_2_0
+  assert(conf.common.driver_type == IPMI_DEVICE_LAN_2_0
          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
              || pkt == GET_CHASSIS_STATUS_RES
              || pkt == CHASSIS_CONTROL_RES
