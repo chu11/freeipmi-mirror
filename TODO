@@ -14,6 +14,11 @@ libfreeipmi:
   - sensor-cmds
 * how to support xRC4 (can we? should we? does any vendor support this?)
 
+solaris
+-------
+- builds?
+- solaris inband driver (solaris 9? solaris 10? solaris 11?)
+
 ipmipower
 ---------
 - redo to utilize newer api?
