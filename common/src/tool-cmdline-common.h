@@ -124,7 +124,7 @@ enum argp_common_option_keys
     {"retry-timeout", ARGP_RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                       \
      "Specify the packet retransmission timeout in milliseconds.", 12},                            \
     {"retransmission-timeout", ARGP_RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,                 \
-     "Specify the packet retransmission timeout in milliseconds.", 12},                            \
+     "Specify the packet retransmission timeout in milliseconds.", 12}                             \
 
 /* auth-type is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE                                                     \

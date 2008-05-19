@@ -20,41 +20,12 @@
 #include "config.h"
 #endif
 
-#include <argp.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <argp.h>
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#ifdef HAVE_SYS_IO_H
-#include <sys/io.h>
-#endif
-#include <syslog.h>
-#include <assert.h>
-#include <stdarg.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif /* HAVE_UNISTD_H */
-#if HAVE_FCNTL_H
-#include <fcntl.h>
-#endif /* HAVE_FCNTL_H */
-#include <errno.h>
-#if HAVE_GETOPT_H
-#include <getopt.h>
-#endif
-#include <stdint.h>
-#include <sys/stat.h>
-#include <sys/select.h>
-#if TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#include <time.h>
-#else  /* !TIME_WITH_SYS_TIME */
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#else  /* !HAVE_SYS_TIME_H */
-#include <time.h>
-#endif /* !HAVE_SYS_TIME_H */
-#endif /* !TIME_WITH_SYS_TIME */
 
 #include "tool-cmdline-common.h"
 
@@ -212,83 +183,18 @@ parse_opt (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
-int
+void
 _bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
 {
-  int ret = 0;
-
   // action is non 0 and -1
   if (! cmd_args->config_args.action || cmd_args->config_args.action == -1) 
     {
       fprintf (stderr, 
                "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
-      return -1;
+      exit(1);
     }
 
-  // filename and keypair both given for  diff
-  if (cmd_args->config_args.filename && cmd_args->config_args.keypairs 
-      && cmd_args->config_args.action == CONFIG_ACTION_DIFF)
-    {
-      fprintf (stderr, 
-               "Both --filename or --keypair cannot be used\n");
-      return -1;
-    }
-
-  // only one of keypairs or section can be given for checkout
-  if (cmd_args->config_args.action == CONFIG_ACTION_CHECKOUT
-      && (cmd_args->config_args.keypairs && cmd_args->config_args.section_strs))
-    {
-      fprintf (stderr, 
-               "Only one of --filename, --keypair, and --section can be used\n");
-      return -1;
-    }
-
-  // filename is readable if commit, writable/creatable if checkout
-
-  if (cmd_args->config_args.filename) 
-    {
-      switch (cmd_args->config_args.action) 
-        {
-        case CONFIG_ACTION_COMMIT: case CONFIG_ACTION_DIFF:
-          if (access (cmd_args->config_args.filename, R_OK) != 0) 
-            {
-              perror (cmd_args->config_args.filename);
-              return -1;
-            }
-          break;
-        case CONFIG_ACTION_CHECKOUT:
-          if (access (cmd_args->config_args.filename, F_OK) == 0) 
-            {
-              if (access (cmd_args->config_args.filename, W_OK) != 0) 
-                {
-                  perror (cmd_args->config_args.filename);
-                  return -1;
-                }
-            } 
-          else 
-            {
-              int fd;
-              fd = open (cmd_args->config_args.filename, O_CREAT, 0644);
-              if (fd == -1) 
-                {
-                  perror (cmd_args->config_args.filename);
-                  return -1;
-                } 
-              else 
-                {
-                  close (fd);
-                  unlink (cmd_args->config_args.filename);
-                }
-            }
-          break;
-        case CONFIG_ACTION_LIST_SECTIONS:
-        case CONFIG_ACTION_INFO:
-          /* do nothing - here to remove compile warning */
-          break;
-        }
-    }
-  
-  return ret;
+  config_args_validate(&(cmd_args->config_args));
 }
 
 void

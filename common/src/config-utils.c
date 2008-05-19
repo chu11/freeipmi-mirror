@@ -25,10 +25,95 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
+#include <sys/stat.h>
 #include <errno.h>
 #include <assert.h>
 
 #include "config-utils.h"
+
+void 
+config_args_validate (struct config_arguments *config_args)
+{
+  assert(config_args);
+
+  /* filename and keypair both given for diff */
+  if (config_args->filename && config_args->keypairs
+      && config_args->action == CONFIG_ACTION_DIFF)
+    {
+      fprintf (stderr,
+               "Both --filename or --keypair cannot be used\n");
+      exit(1);
+    }
+
+  /* only one of keypairs or section can be given for checkout */
+  if (config_args->action == CONFIG_ACTION_CHECKOUT
+      && (config_args->keypairs && config_args->section_strs))
+    {
+      fprintf (stderr,
+               "Only one of --filename, --keypair, and --section can be used\n");
+      exit(1);
+    }
+
+  /* filename is readable if commit, writable/creatable if checkout */
+  if (config_args->filename)
+    {
+      switch (config_args->action)
+        {
+        case CONFIG_ACTION_COMMIT:
+        case CONFIG_ACTION_DIFF:
+          if (access (config_args->filename, R_OK) != 0)
+            {
+              fprintf(stderr,
+                      "Cannot read '%s': %s\n",
+                      config_args->filename,
+                      strerror(errno));
+              exit(1);
+            }
+          break;
+        case CONFIG_ACTION_CHECKOUT:
+          if (access (config_args->filename, F_OK) == 0)
+            {
+              if (access (config_args->filename, W_OK) != 0)
+                {
+                  fprintf(stderr,
+                          "Cannot write to '%s': %s\n",
+                          config_args->filename,
+                          strerror(errno));
+                  exit(1);
+                }
+            }
+          else
+            {
+              int fd;
+              fd = open (config_args->filename, O_CREAT, 0644);
+              if (fd == -1)
+                {
+                  fprintf(stderr,
+                          "Cannot open '%s': %s\n",
+                          config_args->filename,
+                          strerror(errno));
+                  exit(1);
+                }
+              else
+                {
+                  close (fd);
+                  unlink (config_args->filename);
+                }
+            }
+          break;
+        case CONFIG_ACTION_LIST_SECTIONS:
+        case CONFIG_ACTION_INFO:
+          /* do nothing - here to remove compile warning */
+          break;
+        }
+    }
+}
 
 int8_t
 config_ipv4_address_string2int(char *src, uint32_t *dest)

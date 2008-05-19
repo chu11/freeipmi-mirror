@@ -25,17 +25,6 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <argp.h>
-#include <ctype.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif /* HAVE_UNISTD_H */
-#if HAVE_FCNTL_H
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#endif /* HAVE_FCNTL_H */
-#include <errno.h>
 
 #include "tool-cmdline-common.h"
 #include "pef-config.h"
@@ -219,66 +208,7 @@ _pef_config_args_validate (struct pef_config_arguments *cmd_args)
       exit(1);
     }
   
-  // filename and keypair both given for checkout or diff
-  if (cmd_args->config_args.filename && cmd_args->config_args.keypairs
-      && cmd_args->config_args.action == CONFIG_ACTION_DIFF)
-    {
-      fprintf (stderr,
-               "Both --filename or --keypair cannot be used\n");
-      exit(1);
-    }
-
-  // only one of keypairs or section can be given for checkout
-  if (cmd_args->config_args.action == CONFIG_ACTION_CHECKOUT
-      && (cmd_args->config_args.keypairs && cmd_args->config_args.section_strs))
-    {
-      fprintf (stderr,
-               "Only one of --filename, --keypair, and --section can be used\n");
-      exit(1);
-    }
-
-  if (cmd_args->config_args.filename)
-    {
-      switch (cmd_args->config_args.action)
-        {
-        case CONFIG_ACTION_COMMIT: case CONFIG_ACTION_DIFF:
-          if (access (cmd_args->config_args.filename, R_OK) != 0)
-            {
-              perror (cmd_args->config_args.filename);
-              exit(1);
-            }
-          break;
-        case CONFIG_ACTION_CHECKOUT:
-          if (access (cmd_args->config_args.filename, F_OK) == 0)
-            {
-              if (access (cmd_args->config_args.filename, W_OK) != 0)
-                {
-                  perror (cmd_args->config_args.filename);
-                  exit(1);
-                }
-            }
-          else
-            {
-              int fd;
-              fd = open (cmd_args->config_args.filename, O_CREAT, 0644);
-              if (fd == -1)
-                {
-                  perror (cmd_args->config_args.filename);
-                  exit(1);
-                }
-              else
-                {
-                  close (fd);
-                  unlink (cmd_args->config_args.filename);
-                }
-            }
-          break;
-        case CONFIG_ACTION_INFO:
-        case CONFIG_ACTION_LIST_SECTIONS:
-          /* do nothing - here to remove compile warning */
-          break;
-        }
-    }
+  config_args_validate(&(cmd_args->config_args));
 }
 
 void 
