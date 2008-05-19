@@ -202,6 +202,7 @@ enum argp_common_option_keys
 struct common_cmd_args 
 {
   ipmi_driver_type_t driver_type;
+  int driver_type_outofband_only; /* flag - set internally only */
   int disable_auto_probe;
   unsigned int driver_address;
   char *driver_device;

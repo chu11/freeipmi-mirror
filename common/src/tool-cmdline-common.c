@@ -207,10 +207,21 @@ common_parse_opt (int key,
   switch (key)
     {
     case ARGP_DRIVER_TYPE_KEY: 
-      if ((tmp = parse_driver_type (arg)) < 0)
+      if (cmd_args->driver_type_outofband_only)
         {
-          fprintf(stderr, "invalid driver type specified\n");
-          argp_usage (state);
+          if ((tmp = parse_outofband_driver_type (arg)) < 0)
+            {
+              fprintf(stderr, "invalid driver type specified\n");
+              argp_usage (state);
+            }
+        }
+      else
+        {
+          if ((tmp = parse_driver_type (arg)) < 0)
+            {
+              fprintf(stderr, "invalid driver type specified\n");
+              argp_usage (state);
+            }
         }
       cmd_args->driver_type = tmp;
       break;
@@ -669,6 +680,7 @@ _init_common_cmd_args (struct common_cmd_args *cmd_args)
 {
   cmd_args->disable_auto_probe = 0;
   cmd_args->driver_type = IPMI_DEVICE_UNKNOWN;
+  cmd_args->driver_type_outofband_only = 0;
   cmd_args->driver_address = 0;
   cmd_args->driver_device = NULL;
   cmd_args->register_spacing = 0;
