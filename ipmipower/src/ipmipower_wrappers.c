@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.30 2008-05-18 15:47:40 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.31 2008-05-19 23:27:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -255,81 +255,4 @@ Fiid_obj_set_all(fiid_obj_t obj, uint8_t *data, uint32_t data_len)
     ierr_exit("Fiid_obj_set_all: %s", fiid_strerror(fiid_obj_errnum(obj)));
 
   return rv;
-}
-
-void 
-Ipmi_dump_lan_packet(int fd, 
-                     const char *prefix, 
-                     const char *hdr,
-                     const char *trlr,
-                     uint8_t *pkt,
-                     uint32_t pkt_len, 
-                     fiid_template_t tmpl_lan_msg_hdr,
-                     fiid_template_t tmpl_cmd) 
-{
-  assert(pkt 
-	 && tmpl_lan_msg_hdr 
-         && tmpl_cmd);
-
-  if (ipmi_dump_lan_packet(fd, 
-                           prefix,
-                           hdr,
-                           trlr,
-                           pkt,
-                           pkt_len,
-                           tmpl_lan_msg_hdr,
-                           tmpl_cmd) < 0)
-    ierr_dbg("Ipmi_dump_lan_packet: %s", strerror(errno));
-}
-
-void 
-Ipmi_dump_rmcp_packet(int fd,
-                      const char *prefix, 
-                      const char *hdr,
-                      const char *trlr,
-                      uint8_t *pkt, 
-                      uint32_t pkt_len, 
-                      fiid_template_t tmpl_cmd) 
-{
-  assert(pkt && tmpl_cmd);
-
-  if (ipmi_dump_rmcp_packet(fd, prefix, hdr, trlr, pkt, pkt_len, tmpl_cmd) < 0)
-    ierr_dbg("Ipmi_dump_rmcp_packet: %s", strerror(errno));
-}
-
-void 
-Ipmi_dump_rmcpplus_packet (int fd, 
-                           const char *prefix,
-                           const char *hdr, 
-                           const char *trlr,
-                           uint8_t authentication_algorithm, 
-                           uint8_t integrity_algorithm,
-                           uint8_t confidentiality_algorithm, 
-                           uint8_t *integrity_key, 
-                           uint32_t integrity_key_len, 
-                           uint8_t *confidentiality_key,
-                           uint32_t confidentiality_key_len,
-                           uint8_t *pkt,
-                           uint32_t pkt_len,
-                           fiid_template_t tmpl_lan_msg_hdr, 
-                           fiid_template_t tmpl_cmd)
-{
-  assert(pkt && tmpl_lan_msg_hdr && tmpl_cmd);
-
-  if (ipmi_dump_rmcpplus_packet(fd, 
-                                prefix, 
-                                hdr,
-                                trlr,
-                                authentication_algorithm,
-                                integrity_algorithm,
-                                confidentiality_algorithm,
-                                integrity_key,
-                                integrity_key_len,
-                                confidentiality_key,
-                                confidentiality_key_len,
-                                pkt,
-                                pkt_len,
-                                tmpl_lan_msg_hdr,
-                                tmpl_cmd) < 0)
-    ierr_dbg("Ipmi_dump_rmcp_packet: %s", strerror(errno));
 }

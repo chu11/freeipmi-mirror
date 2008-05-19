@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.94 2008-05-19 18:47:18 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.95 2008-05-19 23:27:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -236,21 +236,24 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
           || pkt == RAKP_MESSAGE_2_RES
           || pkt == RAKP_MESSAGE_3_REQ
           || pkt == RAKP_MESSAGE_4_RES)
-        Ipmi_dump_rmcpplus_packet(STDERR_FILENO,
-                                  ip->ic->hostname,
-                                  hdrbuf,
-                                  NULL,
-                                  IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
-                                  IPMI_INTEGRITY_ALGORITHM_NONE,
-                                  IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
-                                  NULL,
-                                  0,
-                                  NULL,
-                                  0,
-                                  (uint8_t *)buffer,
-                                  (uint32_t)len,
-                                  tmpl_lan_msg_hdr,
-                                  ipmipower_packet_cmd_template(ip, pkt));
+        {
+          if (ipmi_dump_rmcpplus_packet(STDERR_FILENO,
+                                        ip->ic->hostname,
+                                        hdrbuf,
+                                        NULL,
+                                        IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
+                                        IPMI_INTEGRITY_ALGORITHM_NONE,
+                                        IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
+                                        NULL,
+                                        0,
+                                        NULL,
+                                        0,
+                                        (uint8_t *)buffer,
+                                        (uint32_t)len,
+                                        tmpl_lan_msg_hdr,
+                                        ipmipower_packet_cmd_template(ip, pkt)) < 0)
+            ierr_dbg("ipmi_dump_rmcpplus_packet: %s", strerror(errno));
+        }
       else if (args.common.driver_type == IPMI_DEVICE_LAN_2_0
                && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 		   || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
@@ -260,30 +263,36 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                    || pkt == CHASSIS_CONTROL_RES
                    || pkt == CLOSE_SESSION_REQ
                    || pkt == CLOSE_SESSION_RES))
-        Ipmi_dump_rmcpplus_packet(STDERR_FILENO,
-                                  ip->ic->hostname,
-                                  hdrbuf,
-                                  NULL,
-                                  ip->authentication_algorithm,
-                                  ip->integrity_algorithm,
-                                  ip->confidentiality_algorithm,
-                                  ip->integrity_key_ptr,
-                                  ip->integrity_key_len,
-                                  ip->confidentiality_key_ptr,
-                                  ip->confidentiality_key_len,
-                                  (uint8_t *)buffer,
-                                  (uint32_t)len,
-                                  tmpl_lan_msg_hdr,
-                                  ipmipower_packet_cmd_template(ip, pkt));
+        {
+          if (ipmi_dump_rmcpplus_packet(STDERR_FILENO,
+                                        ip->ic->hostname,
+                                        hdrbuf,
+                                        NULL,
+                                        ip->authentication_algorithm,
+                                        ip->integrity_algorithm,
+                                        ip->confidentiality_algorithm,
+                                        ip->integrity_key_ptr,
+                                        ip->integrity_key_len,
+                                        ip->confidentiality_key_ptr,
+                                        ip->confidentiality_key_len,
+                                        (uint8_t *)buffer,
+                                        (uint32_t)len,
+                                        tmpl_lan_msg_hdr,
+                                        ipmipower_packet_cmd_template(ip, pkt)) < 0)
+            ierr_dbg("ipmi_dump_rmcpplus_packet: %s", strerror(errno));
+        }
       else /* IPMI 1.5 pkt */
-        Ipmi_dump_lan_packet(STDERR_FILENO, 
-                             ip->ic->hostname,
-                             hdrbuf, 
-                             NULL,
-                             (uint8_t *)buffer, 
-                             (uint32_t)len,
-                             tmpl_lan_msg_hdr,
-                             ipmipower_packet_cmd_template(ip, pkt));
+        {
+          if (ipmi_dump_lan_packet(STDERR_FILENO, 
+                                   ip->ic->hostname,
+                                   hdrbuf, 
+                                   NULL,
+                                   (uint8_t *)buffer, 
+                                   (uint32_t)len,
+                                   tmpl_lan_msg_hdr,
+                                   ipmipower_packet_cmd_template(ip, pkt)) < 0)
+            ierr_dbg("ipmi_dump_lan_packet: %s", strerror(errno));
+        }
     }
 }
 

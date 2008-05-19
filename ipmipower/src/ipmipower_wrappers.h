@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.27 2008-04-12 00:05:24 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.28 2008-05-19 23:27:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -117,47 +117,5 @@ int32_t Fiid_obj_set_data(fiid_obj_t obj, char *field, uint8_t *data, uint32_t d
  * - Set all object data
  */
 int32_t Fiid_obj_set_all(fiid_obj_t obj, uint8_t *data, uint32_t data_len);
-
-/* Ipmi_dump_lan_packet
- * - Dump lan contents
- */
-void Ipmi_dump_lan_packet(int fd,
-                          const char *prefix,
-                          const char *hdr,
-                          const char *trlr,
-                          uint8_t *pkt,
-                          uint32_t pkt_len,
-                          fiid_template_t tmpl_lan_msg_hdr,
-                          fiid_template_t tmpl_cmd);
-
-/* Ipmi_dump_rmcp_packet
- * - Dump rmcp contents
- */
-void Ipmi_dump_rmcp_packet(int fd,
-                           const char *prefix,
-                           const char *hdr,
-                           const char *trlr,
-                           uint8_t *pkt,
-                           uint32_t pkt_len,
-                           fiid_template_t tmpl_cmd);
-
-/* Ipmi_dump_rmcpplus_packet
- * - Dump rmcp contents
- */
-void Ipmi_dump_rmcpplus_packet (int fd,
-                                const char *prefix,
-                                const char *hdr,
-                                const char *trlr,
-                                uint8_t authentication_algorithm,
-                                uint8_t integrity_algorithm,
-                                uint8_t confidentiality_algorithm,
-                                uint8_t *integrity_key,
-                                uint32_t integrity_key_len,
-                                uint8_t *confidentiality_key,
-                                uint32_t confidentiality_key_len,
-                                uint8_t *pkt,
-                                uint32_t pkt_len,
-                                fiid_template_t tmpl_lan_msg_hdr,
-                                fiid_template_t tmpl_cmd);
 
 #endif /* _IPMIPOWER_WRAPPERS_H */

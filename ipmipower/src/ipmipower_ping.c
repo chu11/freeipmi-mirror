@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.32 2008-05-19 18:47:19 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.33 2008-05-19 23:27:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -149,13 +149,14 @@ ipmipower_ping_process_pings(int *timeout)
                             hdrbuf,
                             DEBUG_COMMON_HDR_BUFLEN);
 
-              Ipmi_dump_rmcp_packet(STDERR_FILENO, 
-                                    ics[i].hostname,
-                                    hdrbuf, 
-                                    NULL,
-                                    (uint8_t *)buffer, 
-                                    (uint32_t)len, 
-                                    tmpl_cmd_asf_presence_ping);
+              if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
+                                        ics[i].hostname,
+                                        hdrbuf, 
+                                        NULL,
+                                        (uint8_t *)buffer, 
+                                        (uint32_t)len, 
+                                        tmpl_cmd_asf_presence_ping) < 0)
+                ierr_dbg("ipmi_dump_rmcp_packet: %s", strerror(errno));
             }
 #endif /* NDEBUG */
 
@@ -194,13 +195,14 @@ ipmipower_ping_process_pings(int *timeout)
                             hdrbuf,
                             DEBUG_COMMON_HDR_BUFLEN);
 
-              Ipmi_dump_rmcp_packet(STDERR_FILENO, 
-                                    ics[i].hostname,
-                                    hdrbuf, 
-                                    NULL,
-                                    (uint8_t *)buffer, 
-                                    (uint32_t)len, 
-                                    tmpl_cmd_asf_presence_pong);
+              if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
+                                        ics[i].hostname,
+                                        hdrbuf, 
+                                        NULL,
+                                        (uint8_t *)buffer, 
+                                        (uint32_t)len, 
+                                        tmpl_cmd_asf_presence_pong) < 0)
+                ierr_dbg("ipmi_dump_rmcp_packet: %s", strerror(errno));
             }
 #endif /* NDEBUG */
 

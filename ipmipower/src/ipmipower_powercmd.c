@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.154 2008-05-19 18:54:53 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.155 2008-05-19 23:27:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -142,24 +142,6 @@ ipmipower_powercmd_cleanup()
   pending = NULL;
 }
 
-static void
-_init_ipmi_2_0_randomized_data(ipmipower_powercmd_t ip)
-{
-  assert(ip);
-
-  /* In IPMI 2.0, session_ids of 0 are special */
-  do 
-    {
-      ip->remote_console_session_id = get_rand();
-    } while (!ip->remote_console_session_id);
-
-  /* Even if this fails, we'll just live with it */
-  if (ipmi_get_random(ip->remote_console_random_number, 
-                      IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
-    ierr_dbg("ipmipower_powercmd_queue: ipmi_get_random: %s ",
-             strerror(errno));
-}
-
 void 
 ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic) 
 { 
@@ -276,7 +258,18 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
       ip->message_tag_count = 0;
       ip->session_sequence_number = 0;
       ip->name_only_lookup = IPMI_NAME_ONLY_LOOKUP;
-      _init_ipmi_2_0_randomized_data(ip);
+
+      /* In IPMI 2.0, session_ids of 0 are special */
+      do 
+        {
+          ip->remote_console_session_id = get_rand();
+        } while (!ip->remote_console_session_id);
+      
+      /* Even if this fails, we'll just live with it */
+      if (ipmi_get_random(ip->remote_console_random_number, 
+                          IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
+        ierr_dbg("ipmipower_powercmd_queue: ipmi_get_random: %s ",
+                 strerror(errno));
 
       ip->wait_until_on_state = 0;
       ip->wait_until_off_state = 0;
