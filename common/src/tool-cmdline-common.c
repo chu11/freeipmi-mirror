@@ -417,6 +417,8 @@ common_parse_opt (int key,
           cmd_args->k_g_len = rv;
       }
       break;
+      /* ARGP_TIMEOUT_KEY for backwards compatability */
+    case ARGP_TIMEOUT_KEY:
     case ARGP_SESSION_TIMEOUT_KEY:
       {
 	int value = 0;

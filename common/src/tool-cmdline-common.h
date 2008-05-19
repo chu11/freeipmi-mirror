@@ -34,35 +34,35 @@ enum argp_common_option_keys
     ARGP_NO_PROBING_KEY = 130, 
     ARGP_DRIVER_ADDRESS_KEY = 131, 
     ARGP_DRIVER_DEVICE_KEY = 132, 
-    ARGP_RETRY_TIMEOUT_KEY = 133, /* for backwards compatability */
-    ARGP_RETRANSMISSION_TIMEOUT_KEY = 134, 
-    ARGP_TIMEOUT_KEY = 135,  /* for backwards compatability */
-    ARGP_SESSION_TIMEOUT_KEY = 135,
-    ARGP_REG_SPACE_KEY = 136, /* for backwards compatability */
-    ARGP_REGISTER_SPACING_KEY = 137,
+    ARGP_TIMEOUT_KEY = 133,  /* for backwards compatability */
+    ARGP_SESSION_TIMEOUT_KEY = 134,
+    ARGP_RETRY_TIMEOUT_KEY = 135, /* for backwards compatability */
+    ARGP_RETRANSMISSION_TIMEOUT_KEY = 136, 
+    ARGP_REG_SPACE_KEY = 137, /* for backwards compatability */
+    ARGP_REGISTER_SPACING_KEY = 138,
     ARGP_HOSTNAME_KEY = 'h', 
     ARGP_USERNAME_KEY = 'u', 
     ARGP_PASSWORD_KEY = 'p', 
     ARGP_PASSWORD_PROMPT_KEY = 'P',
     ARGP_K_G_KEY = 'k', 
     ARGP_K_G_PROMPT_KEY = 'K',
-    ARGP_AUTH_TYPE_KEY = 138, /* for backwards compatability */
+    ARGP_AUTH_TYPE_KEY = 139, /* for backwards compatability */
     ARGP_AUTHENTICATION_TYPE_KEY = 'a', 
     ARGP_CIPHER_SUITE_ID_KEY = 'I',
-    ARGP_PRIVILEGE_KEY = 139, /* for backwards compatability */
-    ARGP_PRIV_LEVEL_KEY = 140, /* for backwards compatability */
+    ARGP_PRIVILEGE_KEY = 140, /* for backwards compatability */
+    ARGP_PRIV_LEVEL_KEY = 141, /* for backwards compatability */
     ARGP_PRIVILEGE_LEVEL_KEY = 'l',
     ARGP_FLUSH_CACHE_KEY = 'f',
     ARGP_QUIET_CACHE_KEY = 'Q',
-    ARGP_SDR_CACHE_DIR_KEY = 141,
-    ARGP_IGNORE_SDR_CACHE_KEY = 142,
+    ARGP_SDR_CACHE_DIR_KEY = 142,
+    ARGP_IGNORE_SDR_CACHE_KEY = 143,
     ARGP_BUFFER_OUTPUT_KEY = 'B',
     ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
     ARGP_ELIMINATE_KEY = 'E',
-    ARGP_ALWAYS_PREFIX_KEY = 143,
+    ARGP_ALWAYS_PREFIX_KEY = 144,
     ARGP_WORKAROUND_FLAGS_KEY = 'W',
-    ARGP_DEBUG_KEY = 144
+    ARGP_DEBUG_KEY = 145
   };
 
 /*
@@ -102,11 +102,6 @@ enum argp_common_option_keys
     ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON,                                                    \
     ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT
 
-#define ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED_NO_TIMEOUT                                  \
-    {"hostname",       ARGP_HOSTNAME_KEY, "IPMIHOST", 0, 			             \
-     "Specify the remote host(s) to communicate with.", 5},                                  \
-    ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
-
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                                       \
     {"username",       ARGP_USERNAME_KEY, "USERNAME", 0, 			                   \
      "Specify the username to use when authenticating with the remote host.", 6},                  \
@@ -122,14 +117,14 @@ enum argp_common_option_keys
 /* retry-timeout is maintained for backwards compatability */
 /* timeout is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT                                                      \
-    {"retry-timeout", ARGP_RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                       \
-     "Specify the packet retransmission timeout in milliseconds.", 11},                            \
-    {"retransmission-timeout", ARGP_RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,                 \
-     "Specify the packet retransmission timeout in milliseconds.", 11},                            \
     {"timeout", ARGP_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                                   \
-     "Specify the session timeout in milliseconds.", 12},                                          \
+     "Specify the session timeout in milliseconds.", 11},                                          \
     {"session-timeout", ARGP_SESSION_TIMEOUT_KEY, "MILLISECONDS", 0,                               \
-     "Specify the session timeout in milliseconds.", 12}
+     "Specify the session timeout in milliseconds.", 11},                                          \
+    {"retry-timeout", ARGP_RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                       \
+     "Specify the packet retransmission timeout in milliseconds.", 12},                            \
+    {"retransmission-timeout", ARGP_RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,                 \
+     "Specify the packet retransmission timeout in milliseconds.", 12},                            \
 
 /* auth-type is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE                                                     \
