@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.40 2008-05-19 18:47:18 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.41 2008-05-19 23:37:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -40,7 +40,7 @@
 #include "ipmipower_wrappers.h"
 
 extern cbuf_t ttyout;
-extern struct ipmipower_arguments args;
+extern struct ipmipower_arguments cmd_args;
 extern hostlist_t output_hostrange[MSG_TYPE_NUM_ENTRIES];
 
 static char *ipmipower_outputs[] = 
@@ -75,7 +75,7 @@ ipmipower_output(msg_type_t num, const char *hostname)
   assert(MSG_TYPE_VALID(num));
   assert(hostname);
 
-  if (args.hostrange.consolidate_hostrange_output)
+  if (cmd_args.hostrange.consolidate_hostrange_output)
     {
       if (!hostlist_push_host(output_hostrange[num], hostname))
         ierr_exit("hostlist_push_host() error");
@@ -89,7 +89,7 @@ ipmipower_output(msg_type_t num, const char *hostname)
 void
 ipmipower_output_finish(void)
 {
-  if (args.hostrange.consolidate_hostrange_output)
+  if (cmd_args.hostrange.consolidate_hostrange_output)
     {
       int i, rv;
       char buffer[IPMIPOWER_OUTPUT_BUFLEN];

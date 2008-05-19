@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.95 2008-05-19 23:27:50 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.96 2008-05-19 23:37:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -42,7 +42,7 @@
 
 #include "debug-common.h"
 
-extern struct ipmipower_arguments args;
+extern struct ipmipower_arguments cmd_args;
 
 fiid_field_t *
 ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
@@ -166,7 +166,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
   assert(PACKET_TYPE_VALID_PKT(pkt));
   assert (buffer);
 
-  if (args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+  if (cmd_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
     {
       fiid_field_t *tmpl_lan_msg_hdr;
       char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
@@ -174,7 +174,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
       uint8_t packet_direction;
       const char *str_cmd = NULL;
       
-      if (args.common.driver_type == IPMI_DEVICE_LAN)
+      if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
         packet_type = DEBUG_COMMON_TYPE_IPMI_1_5;
       else
         packet_type = DEBUG_COMMON_TYPE_IPMI_2_0;
@@ -254,7 +254,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                                         ipmipower_packet_cmd_template(ip, pkt)) < 0)
             ierr_dbg("ipmi_dump_rmcpplus_packet: %s", strerror(errno));
         }
-      else if (args.common.driver_type == IPMI_DEVICE_LAN_2_0
+      else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
                && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 		   || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 		   || pkt == GET_CHASSIS_STATUS_REQ
@@ -314,7 +314,7 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
   Fiid_obj_clear(ip->obj_lan_session_hdr_res);
   Fiid_obj_clear(ip->obj_lan_msg_hdr_res);
   Fiid_obj_clear(ip->obj_lan_msg_trlr_res);
-  if (args.common.driver_type == IPMI_DEVICE_LAN_2_0)
+  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
     {
       Fiid_obj_clear(ip->obj_rmcpplus_session_hdr_res);
       Fiid_obj_clear(ip->obj_rmcpplus_payload_res);
@@ -326,7 +326,7 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == AUTHENTICATION_CAPABILITIES_RES
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || args.common.driver_type == IPMI_DEVICE_LAN)
+      || cmd_args.common.driver_type == IPMI_DEVICE_LAN)
     {
       if ((rv = unassemble_ipmi_lan_pkt((uint8_t *)buffer, 
 					len, 
@@ -562,7 +562,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == RAKP_MESSAGE_1_REQ
       || pkt == RAKP_MESSAGE_3_REQ)
     {
-      username = args.common.username;
+      username = cmd_args.common.username;
 
       /* IPMI Workaround (achu)
        *
@@ -574,7 +574,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
        * Table 13-11 in the IPMI 2.0 spec.
        */
       if (pkt == RAKP_MESSAGE_1_REQ 
-          && (args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION))
+          && (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION))
         {
           memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
           if (username)
@@ -600,7 +600,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == GET_CHASSIS_STATUS_REQ
       || pkt == CHASSIS_CONTROL_REQ
       || pkt == CLOSE_SESSION_REQ)
-    password = args.common.password;
+    password = cmd_args.common.password;
   else
     password = NULL;
     
@@ -609,7 +609,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     Fiid_obj_get(ip->obj_get_session_challenge_res, 
                  "temp_session_id", 
                  &session_id);
-  else if (args.common.driver_type == IPMI_DEVICE_LAN
+  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
 	       || pkt == CHASSIS_CONTROL_REQ
@@ -617,7 +617,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     Fiid_obj_get(ip->obj_activate_session_res, 
                  "session_id", 
                  &session_id);
-  else if (args.common.driver_type == IPMI_DEVICE_LAN_2_0
+  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
@@ -629,7 +629,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     session_id = 0;
 
   /* Calculate Sequence Number */
-  if (args.common.driver_type == IPMI_DEVICE_LAN
+  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	  || pkt == GET_CHASSIS_STATUS_REQ
 	  || pkt == CHASSIS_CONTROL_REQ
@@ -643,7 +643,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       sequence_number = initial_inbound_sequence_number + ip->session_inbound_count;
     }
-  else if (args.common.driver_type == IPMI_DEVICE_LAN_2_0
+  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
@@ -661,8 +661,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
   /* Calculate Authentication Type */
   if (pkt == ACTIVATE_SESSION_REQ)
-    authentication_type = args.common.authentication_type;
-  else if (args.common.driver_type == IPMI_DEVICE_LAN
+    authentication_type = cmd_args.common.authentication_type;
+  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
 	       || pkt == CHASSIS_CONTROL_REQ
@@ -671,7 +671,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if (!ip->permsgauth_enabled)
         authentication_type = IPMI_AUTHENTICATION_TYPE_NONE; 
       else
-        authentication_type = args.common.authentication_type;
+        authentication_type = cmd_args.common.authentication_type;
       
       if (authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
         password = NULL;
@@ -679,7 +679,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else
     authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
     
-  if (args.common.driver_type == IPMI_DEVICE_LAN_2_0)
+  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
     {     
       /* Calculate Payload Type */
       if (pkt == OPEN_SESSION_REQ)
@@ -748,7 +748,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
     {
       if (fill_cmd_get_channel_authentication_capabilities_v20(IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                                               args.common.privilege_level, 
+                                                               cmd_args.common.privilege_level, 
                                                                IPMI_GET_IPMI_V20_EXTENDED_DATA,
                                                                ip->obj_authentication_capabilities_v20_req) < 0)
         ierr_exit("ipmipower_packet_create(%s: %d): "
@@ -759,7 +759,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     {
       if (fill_cmd_get_channel_authentication_capabilities(IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                                           args.common.privilege_level, 
+                                                           cmd_args.common.privilege_level, 
                                                            ip->obj_authentication_capabilities_req) < 0)
         ierr_exit("ipmipower_packet_create(%s: %d): "
                   "fill_cmd_get_channel_authentication_capabilities: %s", 
@@ -770,7 +770,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     {
       /* Note: The session_authentication_type is none, this authentication type may be different.
        */
-      if (fill_cmd_get_session_challenge(args.common.authentication_type, 
+      if (fill_cmd_get_session_challenge(cmd_args.common.authentication_type, 
                                          username, 
                                          username_len,
                                          ip->obj_get_session_challenge_req) < 0)
@@ -796,7 +796,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                   ip->ic->hostname, ip->protocol_state);
       
       if (fill_cmd_activate_session(authentication_type, 
-				    args.common.privilege_level, 
+				    cmd_args.common.privilege_level, 
 				    challenge_string,
 				    challenge_string_len,
                                     IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER,
@@ -826,7 +826,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                         managed_system_session_id,
                                         ip->remote_console_random_number,
                                         IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
-                                        args.common.privilege_level,
+                                        cmd_args.common.privilege_level,
                                         ip->name_only_lookup,
                                         username,
                                         username_len,
@@ -861,7 +861,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
        * same workaround.
        */
 
-      if (args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+      if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
         name_only_lookup = IPMI_USER_NAME_PRIVILEGE_LOOKUP;
       else
         name_only_lookup = ip->name_only_lookup;
@@ -878,7 +878,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
        * password to 16 bytes when generating keys, hashes, etc.  So we
        * have to do the same when generating keys, hashes, etc.
        */
-      if ((args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION) 
+      if ((cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION) 
           && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
           && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
         password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
@@ -890,7 +890,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                                                                                          managed_system_random_number_len,
                                                                                                          ip->remote_console_session_id,
                                                                                                          name_only_lookup,
-                                                                                                         args.common.privilege_level,
+                                                                                                         cmd_args.common.privilege_level,
                                                                                                          username,
                                                                                                          username_len,
                                                                                                          key_exchange_authentication_code,
@@ -912,7 +912,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ)
     {
-      if (fill_cmd_set_session_privilege_level(args.common.privilege_level, 
+      if (fill_cmd_set_session_privilege_level(cmd_args.common.privilege_level, 
 					       ip->obj_set_session_privilege_level_req) < 0)
         ierr_exit("ipmipower_packet_create(%s: %d): "
                   "fill_cmd_set_session_privilege_level: %s", 
@@ -971,7 +971,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == AUTHENTICATION_CAPABILITIES_REQ
       || pkt == GET_SESSION_CHALLENGE_REQ
       || pkt == ACTIVATE_SESSION_REQ
-      || (args.common.driver_type == IPMI_DEVICE_LAN
+      || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
               || pkt == GET_CHASSIS_STATUS_REQ
               || pkt == CHASSIS_CONTROL_REQ
@@ -990,7 +990,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == OPEN_SESSION_REQ
            || pkt == RAKP_MESSAGE_1_REQ
            || pkt == RAKP_MESSAGE_3_REQ
-           || (args.common.driver_type == IPMI_DEVICE_LAN_2_0
+           || (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
                && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                    || pkt == GET_CHASSIS_STATUS_REQ
                    || pkt == CHASSIS_CONTROL_REQ
