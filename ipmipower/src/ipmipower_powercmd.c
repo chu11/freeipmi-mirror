@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.153 2008-05-19 18:47:19 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.154 2008-05-19 18:54:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -47,6 +47,7 @@
 #endif /* !TIME_WITH_SYS_TIME */
 
 #include "ipmipower.h"
+#include "ipmipower_connection.h"
 #include "ipmipower_output.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_packet.h"
@@ -167,6 +168,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   assert(pending);  /* did not run ipmipower_powercmd_setup() */
   assert(ic);
   assert(POWER_CMD_VALID(cmd));
+
+  ipmipower_connection_clear(ic);
 
   ip = (ipmipower_powercmd_t)Malloc(sizeof(struct ipmipower_powercmd));
   memset(ip, '\0', sizeof(struct ipmipower_powercmd));

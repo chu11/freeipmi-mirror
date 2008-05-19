@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.64 2008-05-19 18:47:18 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.65 2008-05-19 18:54:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -442,7 +442,6 @@ main(int argc, char *argv[])
         {
           if (ics[i].skip)
             continue;
-          ipmipower_connection_clear(&ics[i]);
           ipmipower_powercmd_queue(args.powercmd, &ics[i]);
         }
     }
