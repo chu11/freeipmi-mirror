@@ -31,7 +31,6 @@
 
 #include "tool-config-file-common.h"
 #include "tool-common.h"
-#include "conffile.h"
 
 #include "freeipmi/api/ipmi-api.h"
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
@@ -427,7 +426,11 @@ int
 config_file_parse(const char *filename,
                   int no_error_if_not_found,
                   struct common_cmd_args *cmd_args, 
-                  unsigned int support)
+                  unsigned int support,
+                  struct conffile_option *tool_options,
+                  unsigned int tool_options_len,
+                  void *app_ptr,
+                  int app_data)
 {
   struct conffile_option config_file_options[CONFIG_FILE_OPTIONS_MAX];
   unsigned int config_file_options_len = 0;
@@ -669,6 +672,11 @@ config_file_parse(const char *filename,
   conffile_t cf = NULL;
   int rv = -1;
 
+  assert((!support
+          || (support && cmd_args))
+         && (!tool_options
+             || (tool_options && tool_options_len)));
+
   memset(config_file_options, '\0', sizeof(struct conffile_option));
 
   /* set ignore options the tool doesn't care about */
@@ -697,6 +705,11 @@ config_file_parse(const char *filename,
          sizeof(misc_options)/sizeof(struct conffile_option));
   config_file_options_len += sizeof(misc_options)/sizeof(struct conffile_option);
 
+  memcpy(config_file_options + config_file_options_len,
+         tool_options,
+         tool_options_len);
+  config_file_options_len += tool_options_len;
+
   if (!(cf = conffile_handle_create()))
     {
       fprintf(stderr, "conffile_handle_create: %s\n", strerror(errno));
@@ -706,15 +719,15 @@ config_file_parse(const char *filename,
   /* FREEIPMI_CONFIG_FILE_DEFAULT defined in config.h */
   if (!filename)
     filename = FREEIPMI_CONFIG_FILE_DEFAULT;
+
   if (conffile_parse(cf, 
                      filename,
-                     config_file_options, 
+                     config_file_options,
                      config_file_options_len, 
-                     NULL, 
-                     0, 
+                     app_ptr, 
+                     app_data, 
                      0) < 0)
     {
-#if 0
       char buf[CONFFILE_MAX_ERRMSGLEN];
 
       if (conffile_errnum(cf) == CONFFILE_ERR_EXIST
@@ -727,10 +740,18 @@ config_file_parse(const char *filename,
         goto out;
       
       if (conffile_errmsg(cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
-        err_exit("conffile_parse: %d", conffile_errnum(cf));
+        {
+          fprintf(stderr, "conffile_parse: %d\n", conffile_errnum(cf));
+          exit(1);
+        }
       else
-        err_exit("conffile_parse: %s", buf);
-#endif
+        {
+          if (CONFFILE_IS_PARSE_ERR(conffile_errnum(cf)))
+            fprintf(stderr, "Config File Error: %s\n", buf);
+          else
+            fprintf(stderr, "conffile_parse: %s\n", buf);
+          exit(1);
+        }
     }
   
  out:

@@ -24,10 +24,20 @@
 #endif
 
 #include "tool-cmdline-common.h"
+#include "conffile.h"
 
 #define CONFIG_FILE_NONE        0x00
 #define CONFIG_FILE_INBAND      0x01
 #define CONFIG_FILE_OUTOFBAND   0x02
 #define CONFIG_FILE_MISC        0x03
    
+int config_file_parse(const char *filename,
+                      int no_error_if_not_found,
+                      struct common_cmd_args *cmd_args, 
+                      unsigned int support,
+                      struct conffile_option *tool_options,
+                      unsigned int tool_options_len,
+                      void *app_ptr,
+                      int app_data);
+
 #endif
