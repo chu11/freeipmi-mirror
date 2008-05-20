@@ -143,8 +143,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           if (ptr != (tok + strlen(tok)))
             {
               fprintf (stderr, "invalid sensor record id\n");
-              argp_usage (state);
-              break;
+              exit(1);
             }
           cmd_args->sensors_list[cmd_args->sensors_list_length] = n;
           cmd_args->sensors_list_length++;

@@ -122,8 +122,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           if (ptr != (tok + strlen(tok)))
             {
               fprintf (stderr, "invalid delete record number\n");
-              argp_usage (state);
-              break;
+              exit(1);
             }
           cmd_args->delete_record_list[cmd_args->delete_record_list_length] = n;
           cmd_args->delete_record_list_length++;
@@ -146,8 +145,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           {
             /* invalid input */
 	    fprintf (stderr, "invalid delete range\n");
-	    argp_usage (state);
-	    break;
+            exit(1);
           }
 	range2_str = strdupa (start_ptr + 1);
 	*start_ptr = '\0';
@@ -161,24 +159,21 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  {
 	    // overflow
 	    fprintf (stderr, "invalid delete range\n");
-	    argp_usage (state);
-	    break;
+            exit(1);
 	  }
 	
 	if (tail[0] != '\0')
 	  {
 	    // invalid integer format
 	    fprintf (stderr, "invalid delete range\n");
-	    argp_usage (state);
-	    break;
+            exit(1);
 	  }
 	
 	if (value < 0)
 	  {
 	    // negative number
 	    fprintf (stderr, "invalid delete range\n");
-	    argp_usage (state);
-	    break;
+            exit(1);
 	  }
 	
 	cmd_args->delete_range1 = value;
@@ -195,24 +190,21 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  {
 	    // overflow
 	    fprintf (stderr, "invalid delete range\n");
-	    argp_usage (state);
-	    break;
+            exit(1);
 	  }
 	
 	if (tail[0] != '\0')
 	  {
 	    // invalid integer format
 	    fprintf (stderr, "invalid delete range\n");
-	    argp_usage (state);
-	    break;
+            exit(1);
 	  }
 	
 	if (value < 0)
 	  {
 	    // negative number
 	    fprintf (stderr, "invalid delete range\n");
-	    argp_usage (state);
-	    break;
+            exit(1);
 	  }
 	
 	cmd_args->delete_range2 = value;
@@ -220,8 +212,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	if (cmd_args->delete_range2 < cmd_args->delete_range1)
 	  {
 	    fprintf (stderr, "invalid END range\n");
-	    argp_usage (state);
-	    break;
+            exit(1);
 	  }
       }
       break;

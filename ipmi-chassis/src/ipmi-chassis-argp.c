@@ -127,8 +127,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_EFI;
       else
         {
-          fprintf (stderr, "Invalid value for boot-type\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for boot-type\n");
+          exit(1);
         }
 
       cmd_args->args.boot_option_args.bios_boot_type = value;
@@ -141,8 +141,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
-          fprintf (stderr, "Invalid value for lock-out-reset-button\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for lock-out-reset-button\n");
+          exit(1);
         }
 
       cmd_args->args.boot_option_args.lock_out_reset_button = value;
@@ -155,8 +155,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
-          fprintf (stderr, "Invalid value for blank-screen\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for blank-screen\n");
+          exit(1);
         }
 
       cmd_args->args.boot_option_args.screen_blank = value;
@@ -185,8 +185,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA;
       else
         {
-          fprintf (stderr, "Invalid value for boot-device\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for boot-device\n");
+          exit(1);
         }
 
       cmd_args->args.boot_option_args.boot_device_selector = value;
@@ -199,8 +199,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
-          fprintf (stderr, "Invalid value for lock-keyboard\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for lock-keyboard\n");
+          exit(1);
         }
 
       cmd_args->args.boot_option_args.lock_keyboard = value;
@@ -213,8 +213,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
-          fprintf (stderr, "Invalid value for clear-cmos\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for clear-cmos\n");
+          exit(1);
         }
 
       cmd_args->args.boot_option_args.clear_cmos = value;
@@ -229,8 +229,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE;
       else
         {
-          fprintf (stderr, "Invalid value for console-redirection\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for console-redirection\n");
+          exit(1);
         }
 
       cmd_args->args.boot_option_args.console_redirection = value;
@@ -243,8 +243,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
-          fprintf (stderr, "Invalid value for user-password-bypass\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for user-password-bypass\n");
+          exit(1);
         }
 
       cmd_args->args.boot_option_args.user_password_bypass = value;
@@ -257,8 +257,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
-          fprintf (stderr, "Invalid value for force-progress-event-traps\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for force-progress-event-traps\n");
+          exit(1);
         }
 
       cmd_args->args.boot_option_args.force_progress_event_traps = value;
@@ -273,8 +273,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VERBOSE;
       else
         {
-          fprintf (stderr, "Invalid value for firmware verbosity\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for firmware verbosity\n");
+          exit(1);
         }
 
       cmd_args->args.boot_option_args.firmware_bios_verbosity = value;
@@ -287,7 +287,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
   if ((cmd_args->cmd != CHASSIS_CMD_SET_SYSTEM_BOOT_OPTIONS))
     {
       fprintf (stderr, "please specify set-boot-flags option\n");
-      argp_usage (state);
+      exit(1);
     }
   return 0;
 }
@@ -340,8 +340,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_INITIATE_SOFT_SHUTDOWN;
       else
         {
-          fprintf (stderr, "Invalid value for chassis control\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for chassis control\n");
+          exit(1);
         }
       break;
 
@@ -374,8 +374,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           cmd_args->args.identify_args.identify_interval = strtol (arg, &ptr, 10);
           if (*ptr != '\0')
             {
-              fprintf (stderr, "Invalid value for chassis-identify\n");
-              argp_usage (state);
+              fprintf (stderr, "invalid value for chassis-identify\n");
+              exit(1);
             }
           cmd_args->args.identify_args.force_identify_set = 1;
 
@@ -413,8 +413,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->args.power_cycle_interval = strtol (arg, &ptr, 10);
       if (*ptr != '\0')
         {
-          fprintf (stderr, "Invalid value for power cycle interval\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for power cycle interval\n");
+          exit(1);
         }
       break;
 
@@ -455,8 +455,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_NO_CHANGE;
       else
         {
-          fprintf (stderr, "Invalid value for power restore policy\n");
-          argp_usage (state);
+          fprintf (stderr, "invalid value for power restore policy\n");
+          exit(1);
         }
       break;
     case ARGP_KEY_ARG:

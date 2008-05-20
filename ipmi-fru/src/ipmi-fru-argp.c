@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.10 2008-05-20 03:51:39 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.11 2008-05-20 18:59:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -102,7 +102,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (ptr != (arg + strlen(arg)))
         {
           fprintf (stderr, "invalid device id\n");
-          argp_usage (state);
+          exit(1);
         }
       break;
     case VERBOSE_KEY:

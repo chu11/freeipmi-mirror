@@ -99,8 +99,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         if (*arg == '\0')
           {
             fprintf (stderr, "invalid hex byte argument\n");
-            argp_usage (state);
-            return (-1);
+            exit(1);
           }
 
 	for (i = 0; arg[i] != (char) NULL; i++)
@@ -108,15 +107,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	    if (i >= 2)
 	      {
 		fprintf (stderr, "invalid hex byte argument\n");
-		argp_usage (state);
-		return (-1);
+                exit(1);
 	      }
 	    
 	    if (isxdigit (arg[i]) == 0)
 	      {
 		fprintf (stderr, "invalid hex byte argument\n");
-		argp_usage (state);
-		return (-1);
+                exit(1);
 	      }
 	  }
 	

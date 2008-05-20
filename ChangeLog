@@ -4,6 +4,7 @@
 	(_ipmi_sensors_config): Fix flush corner case.
 
 	* common/src/tool-cmdline-common.c: Add driver_device path check.
+	Cleanup argp_usage() usage.  Cleanup integer conversion code.
 
 	* More general code cleanup.
 

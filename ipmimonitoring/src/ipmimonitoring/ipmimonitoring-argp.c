@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.8 2008-05-20 03:51:41 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.9 2008-05-20 18:59:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -149,8 +149,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           if (ptr != (tok + strlen(tok)))
             {
               fprintf (stderr, "invalid sensor record id\n");
-              argp_usage (state);
-              break;
+              exit(1);
             }
           cmd_args->sensors_list[cmd_args->sensors_list_length] = n;
           cmd_args->sensors_list_length++;
