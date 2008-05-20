@@ -1,9 +1,9 @@
 0.6.3 - 00/00/00
 ----------------
 o Fix --eliminate option in ipmipower.
+o Fix ipmi-sensors-config flush cache corner case.
 o Fix workarounds parsing bug.
 o Fix manpage timeout text.
-o Fix ipmi-sensors-config flush cache corner case.
 o Clarify text in manpages.
 
 0.6.2 - 05/15/08
