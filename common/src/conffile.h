@@ -1,27 +1,27 @@
 /*****************************************************************************\
- *  $Id: conffile.h,v 1.2 2007-09-05 20:13:23 chu11 Exp $
+ *  $Id: conffile.h,v 1.3 2008-05-20 22:49:03 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2003 The Regents of the University of California.
+ *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2003-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  UCRL-CODE-155699
- *  
+ *
  *  This file is part of Whatsup, tools and libraries for determining up and
  *  down nodes in a cluster. For details, see http://www.llnl.gov/linux/.
- *  
- *  Whatsup is free software; you can redistribute it and/or modify 
- *  it under the terms of the GNU General Public License as published by the 
- *  Free Software Foundation; either version 2 of the License, or (at your 
+ *
+ *  Whatsup is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at your
  *  option) any later version.
- *  
- *  Whatsup is distributed in the hope that it will be useful, but 
- *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+ *
+ *  Whatsup is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
  *  for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License along
- *  with Whatsup; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ *  with Whatsup.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
 #ifndef _CONFFILE_H
@@ -360,6 +360,13 @@ int conffile_errmsg(conffile_t cf, char *buf, int buflen);
  * success, -1 if errnum is out of range.
  */   
 int conffile_seterrnum(conffile_t cf, int errnum);
+
+/* conffile_line_number
+ *
+ * Returns line number currently being parsed, -1 on error.  Useful
+ * for error output messages in callback functions.
+ */
+int conffile_line_number(conffile_t cf);
 
 /* conffile_parse
  *

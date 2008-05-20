@@ -14,6 +14,12 @@
 	(run_cmd_args): Special case error message when you input bad
 	record id.
 
+	* common/src/conffile.h, common/src/conffile.c: Update lib.
+
+	* common/src/tool-config-file-common.h,
+	common/src/tool-config-file-common.c,
+	config/ac_freeipmi_config_file.m4: New files.
+
 2008-05-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/src/ipmi-sensors-config.c

@@ -1,6 +1,7 @@
 noinst_HEADERS = \
 	freeipmi-portability.h \
 	tool-common.h \
+	tool-config-file-common.h \
 	tool-cmdline-common.h \
 	tool-fiid-wrappers.h \
 	tool-sdr-cache-common.h \
@@ -46,6 +47,7 @@ libfreeipmiportability_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 
 libtoolcommon_la_SOURCES = \
 	tool-common.c \
+	tool-config-file-common.c \
 	tool-cmdline-common.c \
 	tool-sdr-cache-common.c \
 	tool-sensor-common.c

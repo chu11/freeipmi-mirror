@@ -255,7 +255,7 @@ common_parse_opt (int key,
       tmp = strtol (arg, &ptr, 0);
       if (ptr != (arg + strlen(arg))
           || errno
-          || tmp < 0)
+          || tmp <= 0)
         {
           fprintf (stderr, "invalid register spacing\n");
           exit(1);
