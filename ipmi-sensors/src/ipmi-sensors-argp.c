@@ -37,6 +37,7 @@
 
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
+#include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
 
@@ -168,6 +169,43 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+void
+_ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
+{
+  if (cmd_args->groups_list_length)
+    {
+      int i;
+
+      for (i = 0; i < cmd_args->groups_list_length; i++)
+        {
+          int j = 0;
+          int found = 0;
+          
+          while (ipmi_sensor_types[j])
+            {
+              char sdr_group_name_subst[IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH];
+              
+              strcpy(sdr_group_name_subst, ipmi_sensor_types[j]);
+              str_replace_char (sdr_group_name_subst, ' ', '_');
+              
+              if (!strcasecmp (cmd_args->groups[i], ipmi_sensor_types[j])
+                  || !strcasecmp (cmd_args->groups[i], sdr_group_name_subst))
+                {
+                  found++;
+                  break;
+                }
+            }
+
+          if (!found)
+            {
+              fprintf(stderr, "invalid sensor group '%s'\n", cmd_args->groups_list[i]);
+              exit(1);
+            }
+            
+        }
+    }
+}
+
 void 
 ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *cmd_args)
 {
@@ -197,6 +235,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   verify_common_cmd_args (&(cmd_args->common));
   verify_sdr_cmd_args (&(cmd_args->sdr));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));
+  _ipmi_sensors_args_validate (cmd_args);
 }
 
 

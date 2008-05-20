@@ -3,6 +3,17 @@
 	* ipmi-sensors-config/ipmi-sensors-config.8.pre.in: Add forgotten
 	manpage sdr options.
 
+	* ipmi-sensors/src/ipmi-sensors-util.h,
+	ipmi-sensors/src/ipmi-sensors-util.c: New files.
+
+	* ipmi-sensors/src/ipmi-sensors-argp.c
+	(_ipmi_sensors_args_validate): New function.  Check for valid
+	groups input.
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(run_cmd_args): Special case error message when you input bad
+	record id.
+
 2008-05-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/src/ipmi-sensors-config.c

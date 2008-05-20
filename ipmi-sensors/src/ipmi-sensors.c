@@ -49,6 +49,7 @@
 #include "ipmi-sensors-simple-display.h"
 #include "ipmi-sensors-verbose-display.h"
 #include "ipmi-sensors-very-verbose-display.h"
+#include "ipmi-sensors-util.h"
 
 #include "pstdout.h"
 #include "hostrange.h"
@@ -177,20 +178,6 @@ _flush_cache (ipmi_sensors_state_data_t *state_data)
   return 0;
 }
 
-static void
-_str_replace_char (char *str, char chr, char with)
-{
-  char *p = NULL;
-  char *s = NULL;
-
-  assert(str);
-
-  for (s = str;
-       (p = strchr (s, chr));
-       s = p + 1)
-    *p = with;
-}
-
 static int 
 _display_group_list (ipmi_sensors_state_data_t *state_data)
 {
@@ -209,7 +196,7 @@ _display_group_list (ipmi_sensors_state_data_t *state_data)
                            strerror(errno));
           return (-1);
         }
-      _str_replace_char (group, ' ', '_');
+      str_replace_char (group, ' ', '_');
       pstdout_printf (state_data->pstate, "%s\n", group);
     }
   if (!(group = strdupa (ipmi_oem_sensor_type)))
@@ -220,7 +207,7 @@ _display_group_list (ipmi_sensors_state_data_t *state_data)
                        strerror(errno));
       return (-1);
     }
-  _str_replace_char (group, ' ', '_');
+  str_replace_char (group, ' ', '_');
   pstdout_printf (state_data->pstate, "%s\n", group);
   
   return 0;
@@ -266,7 +253,7 @@ _sensors_group_specified(ipmi_sensors_state_data_t *state_data,
       char sdr_group_name_subst[IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH];
 
       strcpy(sdr_group_name_subst, sdr_group_name);
-      _str_replace_char (sdr_group_name_subst, ' ', '_');
+      str_replace_char (sdr_group_name_subst, ' ', '_');
       
       for (i = 0; i < state_data->prog_data->args->groups_list_length; i++)
         {

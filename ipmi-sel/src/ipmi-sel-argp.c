@@ -137,7 +137,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	char *range1_str = NULL;
 	char *range2_str = NULL;
 	int value = 0;
-	int errnum = 0;
 	char *tail = NULL;
 	
 	range_str = strdupa (arg);
@@ -153,25 +152,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	
 	errno = 0;
 	value = strtol (range1_str, &tail, 10);
-	errnum = errno;
-	
-	if (errnum)
+
+        if (errno 
+            || tail[0] != '\0'
+            || value < 0)
 	  {
-	    // overflow
-	    fprintf (stderr, "invalid delete range\n");
-            exit(1);
-	  }
-	
-	if (tail[0] != '\0')
-	  {
-	    // invalid integer format
-	    fprintf (stderr, "invalid delete range\n");
-            exit(1);
-	  }
-	
-	if (value < 0)
-	  {
-	    // negative number
 	    fprintf (stderr, "invalid delete range\n");
             exit(1);
 	  }
@@ -184,25 +169,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	
 	errno = 0;
 	value = strtol (range2_str, &tail, 10);
-	errnum = errno;
-	
-	if (errnum)
+
+        if (errno 
+            || tail[0] != '\0'
+            || value < 0)
 	  {
-	    // overflow
-	    fprintf (stderr, "invalid delete range\n");
-            exit(1);
-	  }
-	
-	if (tail[0] != '\0')
-	  {
-	    // invalid integer format
-	    fprintf (stderr, "invalid delete range\n");
-            exit(1);
-	  }
-	
-	if (value < 0)
-	  {
-	    // negative number
 	    fprintf (stderr, "invalid delete range\n");
             exit(1);
 	  }
@@ -211,7 +182,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	
 	if (cmd_args->delete_range2 < cmd_args->delete_range1)
 	  {
-	    fprintf (stderr, "invalid END range\n");
+	    fprintf (stderr, "invalid delete END range\n");
             exit(1);
 	  }
       }

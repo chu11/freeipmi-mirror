@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.44 2008-05-20 16:21:42 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.45 2008-05-20 21:04:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -233,10 +233,16 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                                               args->sensors_list,
                                                               args->sensors_list_length)) < 0)
         {
-          pstdout_fprintf(state_data->pstate,
-                          stderr,
-                          "ipmi_monitoring_sensor_readings_by_record_id: %s\n",
-                          ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+          /* special case error message */
+          if (ipmi_monitoring_ctx_errnum(state_data->ctx) == IPMI_MONITORING_ERR_SENSOR_NOT_FOUND)
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "invalid record id specified\n");
+          else
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "ipmi_monitoring_sensor_readings_by_record_id: %s\n",
+                            ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
           return -1;
         }
     }
