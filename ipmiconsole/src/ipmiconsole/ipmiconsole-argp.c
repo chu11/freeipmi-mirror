@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.9 2008-05-20 03:51:40 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.10 2008-05-20 16:06:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -56,10 +56,6 @@
 #include "tool-common.h"
 
 #define IPMICONSOLE_CONFIG_FILE_DEFAULT "/etc/ipmiconsole.conf"
-
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
-#endif
 
 const char *argp_program_version =
   "ipmiconsole - " PACKAGE_VERSION "\n"
@@ -190,29 +186,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       ret = common_parse_opt (key, arg, state, &(cmd_args->common));
       return ret;
     }
-
-  return 0;
-}
-
-static int
-_cb_hostname(conffile_t cf, 
-	     struct conffile_data *data,
-             char *optionname, 
-	     int option_type,
-	     void *option_ptr,
-             int option_data,
-	     void *app_ptr,
-	     int app_data)
-{
-  struct ipmiconsole_arguments *cmd_args;
-
-  cmd_args = (struct ipmiconsole_arguments *)app_ptr;
-
-  if (strlen(data->string) > MAXHOSTNAMELEN)
-    err_exit("Config File Error: hostname too long");
-
-  if (!(cmd_args->common.hostname = strdup(data->string)))
-    err_exit("strdup: %s", strerror(errno));
 
   return 0;
 }
@@ -391,17 +364,16 @@ _cb_bool(conffile_t cf,
 static void
 _config_file_parse(struct ipmiconsole_arguments *cmd_args)
 {
-  int hostname_flag,
-    username_flag,
-    password_flag, 
-    k_g_flag,
-    cipher_suite_id_flag,
-    privilege_flag, 
-    privilege_level_flag, 
-    escape_char_flag,
-    dont_steal_flag,
-    lock_memory_flag,
-    workaround_flags_flag;
+  int username_count = 0,
+    password_count = 0, 
+    k_g_count = 0,
+    cipher_suite_id_count = 0,
+    privilege_count = 0, 
+    privilege_level_count = 0, 
+    escape_char_count = 0,
+    dont_steal_count = 0,
+    lock_memory_count = 0,
+    workaround_flags_count = 0;
   
   /* Notes:
    *
@@ -412,24 +384,13 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
   struct conffile_option config_file_options[] =
     {
       {
-        "hostname", 
-        CONFFILE_OPTION_STRING, 
-        -1, 
-        _cb_hostname,
-        1, 
-        0, 
-        &hostname_flag,
-        NULL, 
-        0
-      },
-      {
         "username", 
         CONFFILE_OPTION_STRING, 
         -1, 
         _cb_username,
         1, 
         0, 
-        &username_flag,
+        &username_count,
         NULL, 
         0
       },
@@ -440,7 +401,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
         _cb_password,
         1, 
         0, 
-        &password_flag, 
+        &password_count, 
         NULL, 
         0
       },
@@ -451,7 +412,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
         _cb_k_g,
         1, 
         0, 
-        &k_g_flag, 
+        &k_g_count, 
         NULL, 
         0
       },
@@ -463,7 +424,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
         _cb_privilege_level,
         1, 
         0, 
-        &privilege_flag,
+        &privilege_count,
         NULL, 
         0
       },
@@ -474,7 +435,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
         _cb_cipher_suite_id,
         1,
         0, 
-        &cipher_suite_id_flag,
+        &cipher_suite_id_count,
         NULL, 
         0
       },
@@ -485,7 +446,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
         _cb_privilege_level,
         1, 
         0, 
-        &privilege_level_flag,
+        &privilege_level_count,
         NULL, 
         0
       },
@@ -496,7 +457,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
         _cb_escape_char,
         1,
         0,
-        &escape_char_flag,
+        &escape_char_count,
         NULL,
         0
       },
@@ -507,7 +468,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
         _cb_bool,
         1, 
         0, 
-        &dont_steal_flag, 
+        &dont_steal_count, 
         &(cmd_args->dont_steal),
         0,
       },
@@ -518,7 +479,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
         _cb_bool,
         1, 
         0, 
-        &lock_memory_flag, 
+        &lock_memory_count, 
         &(cmd_args->lock_memory),
         0,
       },
@@ -529,7 +490,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
         _cb_workaround_flags,
         1, 
         0, 
-        &workaround_flags_flag,
+        &workaround_flags_count,
         NULL,
         0
       },

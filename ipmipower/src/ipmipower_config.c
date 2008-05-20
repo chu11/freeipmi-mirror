@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.119 2008-05-20 03:51:41 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.120 2008-05-20 16:06:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -329,44 +329,6 @@ _cb_driver_type(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
-_cb_hostname(conffile_t cf, struct conffile_data *data,
-             char *optionname, int option_type, void *option_ptr, 
-             int option_data, void *app_ptr, int app_data) 
-{
-  char buffer[IPMIPOWER_OUTPUT_BUFLEN];
-  hostlist_t hl = NULL;
-  int rv;
-  int i;
-
-  if (!(hl = hostlist_create(NULL)))
-    ierr_exit("hostlist_create: %s", strerror(errno));
-  
-  for (i = 0; i < data->stringlist_len; i++) 
-    {
-      if (!hostlist_push(hl, data->stringlist[i]))
-        ierr_exit("Config File Error: Hostname(s) incorrectly formatted");
-    }
-
-  hostlist_uniq(hl);
-
-  if ((rv = hostlist_ranged_string(hl, IPMIPOWER_OUTPUT_BUFLEN, buffer) < 0))
-    ierr_exit("Config File Error: Hostname(s) incorrectly formatted");
-    
-  if (rv > 0)
-    {
-      if (!(cmd_args.common.hostname = strdup(buffer)))
-        {
-          perror("strdup");
-          exit(1);
-        }
-    }
-
-  if (hl)
-    hostlist_destroy(hl);
-  return 0;
-}
-
-static int 
 _cb_username(conffile_t cf, struct conffile_data *data,
              char *optionname, int option_type, void *option_ptr,
              int option_data, void *app_ptr, int app_data) 
@@ -538,135 +500,128 @@ _cb_unsigned_int(conffile_t cf, struct conffile_data *data,
 void 
 ipmipower_config_conffile_parse(char *configfile) 
 {
-  int driver_type_flag,
-    ipmi_version_flag, 
-    hostname_flag, 
-    hostnames_flag, 
-    username_flag, 
-    password_flag, 
-    k_g_flag, 
-    timeout_flag, 
-    session_timeout_flag, 
-    retry_timeout_flag,
-    retransmission_timeout_flag, 
-    authentication_type_flag, 
-    cipher_suite_id_backwards_flag, 
-    cipher_suite_id_flag, 
-    privilege_flag, 
-    privilege_level_flag, 
-    workaround_flags_flag, 
-    buffer_output_flag, 
-    consolidate_output_flag,
-    fanout_flag,
-    eliminate_flag, 
-    always_prefix_flag,
-    on_if_off_flag, 
-    wait_until_on_flag,
-    wait_until_off_flag, 
-    retry_wait_timeout_flag, 
-    retransmission_wait_timeout_flag, 
-    retry_backoff_count_flag, 
-    retransmission_backoff_count_flag, 
-    ping_interval_flag, 
-    ping_timeout_flag,
-    ping_packet_count_flag,
-    ping_percent_flag, 
-    ping_consec_count_flag;
+  int driver_type_count = 0,
+    ipmi_version_count = 0, 
+    username_count = 0, 
+    password_count = 0, 
+    k_g_count = 0, 
+    timeout_count = 0, 
+    session_timeout_count = 0, 
+    retry_timeout_count = 0,
+    retransmission_timeout_count = 0, 
+    authentication_type_count = 0, 
+    cipher_suite_id_backwards_count = 0, 
+    cipher_suite_id_count = 0, 
+    privilege_count = 0, 
+    privilege_level_count = 0, 
+    workaround_flags_count = 0, 
+    buffer_output_count = 0, 
+    consolidate_output_count = 0,
+    fanout_count = 0,
+    eliminate_count = 0, 
+    always_prefix_count = 0,
+    on_if_off_count = 0, 
+    wait_until_on_count = 0,
+    wait_until_off_count = 0, 
+    retry_wait_timeout_count = 0, 
+    retransmission_wait_timeout_count = 0, 
+    retry_backoff_count_count = 0, 
+    retransmission_backoff_count_count = 0, 
+    ping_interval_count = 0, 
+    ping_timeout_count = 0,
+    ping_packet_count_count = 0,
+    ping_percent_count = 0, 
+    ping_consec_count_count = 0;
 
   struct conffile_option options[] = 
     {
       {"driver-type", CONFFILE_OPTION_STRING, -1, _cb_driver_type,
-       1, 0, &driver_type_flag, NULL, 0},
+       1, 0, &driver_type_count, NULL, 0},
       /* ipmi-version maintained for backwards compatability */
       {"ipmi-version", CONFFILE_OPTION_STRING, -1, _cb_driver_type,
-       1, 0, &ipmi_version_flag, NULL, 0},
-      /* hostnames (plural) maintained for backwards compatability */
-      {"hostnames", CONFFILE_OPTION_LIST_STRING, -1, _cb_hostname, 
-       1, 0, &hostnames_flag, NULL, 0},
-      {"hostname", CONFFILE_OPTION_LIST_STRING, -1, _cb_hostname, 
-       1, 0, &hostname_flag, NULL, 0},
+       1, 0, &ipmi_version_count, NULL, 0},
       {"username", CONFFILE_OPTION_STRING, -1, _cb_username,
-       1, 0, &username_flag, NULL, 0},
+       1, 0, &username_count, NULL, 0},
       {"password", CONFFILE_OPTION_STRING, -1, _cb_password, 
-       1, 0, &password_flag, NULL, 0},
+       1, 0, &password_count, NULL, 0},
       {"k_g", CONFFILE_OPTION_STRING, -1, _cb_k_g, 
-       1, 0, &k_g_flag, NULL, 0},
+       1, 0, &k_g_count, NULL, 0},
       /* timeout maintained for backwards compatability */
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &timeout_flag, &(cmd_args.common.session_timeout), 
+       1, 0, &timeout_count, &(cmd_args.common.session_timeout), 
        0},
       {"session-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &session_timeout_flag, &(cmd_args.common.session_timeout), 
+       1, 0, &session_timeout_count, &(cmd_args.common.session_timeout), 
        0},
       /* retry-timeout for backwards comptability */
       {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &retry_timeout_flag, &(cmd_args.common.retransmission_timeout), 
+       1, 0, &retry_timeout_count, &(cmd_args.common.retransmission_timeout), 
        0},
       {"retransmission-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &retransmission_timeout_flag, &(cmd_args.common.retransmission_timeout), 
+       1, 0, &retransmission_timeout_count, &(cmd_args.common.retransmission_timeout), 
        0},
       {"authentication-type", CONFFILE_OPTION_STRING, -1, _cb_authentication_type, 
-       1, 0, &authentication_type_flag, NULL, 0},
+       1, 0, &authentication_type_count, NULL, 0},
       /* cipher suite id w/ underscores maintained for backwards compatability */
       {"cipher_suite_id", CONFFILE_OPTION_STRING, -1, _cb_cipher_suite_id,
-       1, 0, &cipher_suite_id_backwards_flag, NULL, 0},
+       1, 0, &cipher_suite_id_backwards_count, NULL, 0},
       {"cipher-suite-id", CONFFILE_OPTION_STRING, -1, _cb_cipher_suite_id,
-       1, 0, &cipher_suite_id_flag, NULL, 0},
+       1, 0, &cipher_suite_id_count, NULL, 0},
       /* "privilege" maintained for backwards compatability */
       {"privilege", CONFFILE_OPTION_STRING, -1, _cb_privilege_level, 
-       1, 0, &privilege_flag, NULL, 0},
+       1, 0, &privilege_count, NULL, 0},
       {"privilege-level", CONFFILE_OPTION_STRING, -1, _cb_privilege_level, 
-       1, 0, &privilege_level_flag, NULL, 0},
+       1, 0, &privilege_level_count, NULL, 0},
       {"workaround-flags", CONFFILE_OPTION_STRING, -1, _cb_workaround_flags,
-       1, 0, &workaround_flags_flag, NULL, 0},
+       1, 0, &workaround_flags_count, NULL, 0},
       {"buffer-output", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &buffer_output_flag, NULL, 0},
+       1, 0, &buffer_output_count, NULL, 0},
       {"consolidate-output", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &consolidate_output_flag, NULL, 0},
+       1, 0, &consolidate_output_count, NULL, 0},
       {"fanout", CONFFILE_OPTION_INT, -1, _cb_fanout,
-       1, 0, &fanout_flag, &(cmd_args.hostrange.fanout),
+       1, 0, &fanout_count, &(cmd_args.hostrange.fanout),
        0},
       {"eliminate", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &eliminate_flag, NULL, 0},
+       1, 0, &eliminate_count, NULL, 0},
       {"always_prefix", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &always_prefix_flag, NULL, 0},
+       1, 0, &always_prefix_count, NULL, 0},
       {"on-if-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &on_if_off_flag, &(cmd_args.on_if_off), 
+       1, 0, &on_if_off_count, &(cmd_args.on_if_off), 
        0},
       {"wait-until-on", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &wait_until_on_flag, &(cmd_args.wait_until_on), 
+       1, 0, &wait_until_on_count, &(cmd_args.wait_until_on), 
        0},
       {"wait-until-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &wait_until_off_flag, &(cmd_args.wait_until_off), 
+       1, 0, &wait_until_off_count, &(cmd_args.wait_until_off), 
        0},
       /* retry-wait-timeout for backwards comptability */
       {"retry-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &retry_wait_timeout_flag, &(cmd_args.retransmission_wait_timeout), 
+       1, 0, &retry_wait_timeout_count, &(cmd_args.retransmission_wait_timeout), 
        0},
       {"retransmission-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &retransmission_wait_timeout_flag, &(cmd_args.retransmission_wait_timeout), 
+       1, 0, &retransmission_wait_timeout_count, &(cmd_args.retransmission_wait_timeout), 
        0},
       /* retry-backoff-count for backwards compatability */
       {"retry-backoff-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero,
-       1, 0, &retry_backoff_count_flag, &(cmd_args.retransmission_backoff_count), 
+       1, 0, &retry_backoff_count_count, &(cmd_args.retransmission_backoff_count), 
        0},
       {"retransmission-backoff-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero,
-       1, 0, &retransmission_backoff_count_flag, &(cmd_args.retransmission_backoff_count), 
+       1, 0, &retransmission_backoff_count_count, &(cmd_args.retransmission_backoff_count), 
        0},
       {"ping-interval", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_interval_flag, &(cmd_args.ping_interval), 
+       1, 0, &ping_interval_count, &(cmd_args.ping_interval), 
        0},
       {"ping-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_timeout_flag, &(cmd_args.ping_timeout), 
+       1, 0, &ping_timeout_count, &(cmd_args.ping_timeout), 
        0},
       {"ping-packet-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_packet_count_flag, &(cmd_args.ping_packet_count), 
+       1, 0, &ping_packet_count_count, &(cmd_args.ping_packet_count), 
        0},
       {"ping-percent", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_percent_flag, &(cmd_args.ping_percent), 
+       1, 0, &ping_percent_count, &(cmd_args.ping_percent), 
        0},
       {"ping-consec-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_consec_count_flag, &(cmd_args.ping_consec_count), 
+       1, 0, &ping_consec_count_count, &(cmd_args.ping_consec_count), 
        0},
     };
   conffile_t cf = NULL;
