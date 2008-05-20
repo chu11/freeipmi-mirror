@@ -21,11 +21,8 @@ solaris
 
 ipmipower
 ---------
-- redo to utilize newer api?
-- use generic argp - not unique .h
 - make sure works w/ powerman still
   - make sure everything works
-- call clear in powercmd
   
 bmc-config
 ----------
@@ -45,8 +42,6 @@ pef-config
 
 general
 -------
-be consistent w/ naming of argp vars, necessary b/c we're going to be doing conf stuff later
-perror vs. other  - be consistent in output
 audit error message consistency in tool validate functions
 - exit(1) vs. exit(EXIT_FAILURE)
 audit error messages in command line parsing in all tools
@@ -59,17 +54,9 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
-- fiid internally stores ls byte first, so if spec says ms byte first, need to fix
-code cleanup
 - merge many util libs into one?
 fix port variable naming in argp for all tools
 - audit common doc manpages, all still used?
-do checks consistenly
-== NULL 
-> 0
-!= 0
-== 0 
-etc.
 
 config
 ------
