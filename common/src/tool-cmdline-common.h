@@ -70,7 +70,7 @@ enum argp_common_option_keys
  *
  * argp's help/usage layout has various bugs when the description
  * buffer gets to 150 characters in length.  So we're going to shorten
- * argp usage help output from what is in the machine.  
+ * argp usage help output from what is in the manpages. 
  */
 
 #define ARGP_COMMON_OPTIONS_DRIVER                                                           \
