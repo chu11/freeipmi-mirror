@@ -425,6 +425,7 @@ _ignore_options(struct conffile_option *options, unsigned int options_len)
 
 int
 config_file_parse(const char *filename,
+                  int no_error_if_not_found,
                   struct common_cmd_args *cmd_args, 
                   unsigned int support)
 {
@@ -702,6 +703,9 @@ config_file_parse(const char *filename,
       goto cleanup;
     }
 
+  /* FREEIPMI_CONFIG_FILE_DEFAULT defined in config.h */
+  if (!filename)
+    filename = FREEIPMI_CONFIG_FILE_DEFAULT;
   if (conffile_parse(cf, 
                      filename,
                      config_file_options, 
@@ -713,10 +717,14 @@ config_file_parse(const char *filename,
 #if 0
       char buf[CONFFILE_MAX_ERRMSGLEN];
 
+      if (conffile_errnum(cf) == CONFFILE_ERR_EXIST
+          && no_error_if_not_found)
+        goto out;
+
       /* Its not an error if the default configuration file doesn't exist */
-      if (!strcmp(filename, IPMICONSOLE_CONFIG_FILE_DEFAULT)
+      if (!strcmp(filename, FREEIPMI_CONFIG_FILE_DEFAULT)
           && conffile_errnum(cf) == CONFFILE_ERR_EXIST)
-        goto cleanup;
+        goto out;
       
       if (conffile_errmsg(cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
         err_exit("conffile_parse: %d", conffile_errnum(cf));
@@ -725,6 +733,7 @@ config_file_parse(const char *filename,
 #endif
     }
   
+ out:
   rv = 0;
  cleanup:
   if (cf)
