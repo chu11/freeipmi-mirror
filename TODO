@@ -45,6 +45,7 @@ pef-config
 
 general
 -------
+be consistent w/ naming of argp vars, necessary b/c we're going to be doing conf stuff later
 perror vs. other  - be consistent in output
 audit error message consistency in tool validate functions
 - exit(1) vs. exit(EXIT_FAILURE)
