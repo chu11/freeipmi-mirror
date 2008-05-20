@@ -201,6 +201,7 @@ common_parse_opt (int key,
 		  struct argp_state *state, 
 		  struct common_cmd_args *cmd_args)
 {
+  char *ptr;
   int tmp;
   int n;
 
@@ -211,16 +212,16 @@ common_parse_opt (int key,
         {
           if ((tmp = parse_outofband_driver_type (arg)) < 0)
             {
-              fprintf(stderr, "invalid driver type specified\n");
-              argp_usage (state);
+              fprintf(stderr, "invalid driver type\n");
+              exit(1);
             }
         }
       else
         {
           if ((tmp = parse_driver_type (arg)) < 0)
             {
-              fprintf(stderr, "invalid driver type specified\n");
-              argp_usage (state);
+              fprintf(stderr, "invalid driver type\n");
+              exit(1);
             }
         }
       cmd_args->driver_type = tmp;
@@ -229,42 +230,16 @@ common_parse_opt (int key,
       cmd_args->disable_auto_probe = 1;
       break;
     case ARGP_DRIVER_ADDRESS_KEY:
-      {
-	int value = 0;
-	char *str = NULL;
-	char *tail = NULL;
-	int errnum = 0;
-	
-	str = strdupa (arg);
-	errno = 0;
-	value = strtol (str, &tail, 0);
-	errnum = errno;
-	
-	if (errnum)
-	  {
-	    // overflow
-	    fprintf (stderr, "invalid driver address\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (tail[0] != '\0')
-	  {
-	    // invalid integer format
-	    fprintf (stderr, "invalid driver address\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (value < 0)
-	  {
-	    // negative number
-	    fprintf (stderr, "invalid driver address\n");
-	    argp_usage (state);
-	    break;
-	  }
-	cmd_args->driver_address = value;
-      }
+      errno = 0;
+      tmp = strtol (arg, &ptr, 0);
+      if (ptr != (arg + strlen(arg))
+          || errno
+          || tmp < 0)
+        {
+          fprintf (stderr, "invalid driver address\n");
+          exit(1);
+        }
+      cmd_args->driver_address = tmp;
       break;
     case ARGP_DRIVER_DEVICE_KEY:
       if (cmd_args->driver_device != NULL)
@@ -276,41 +251,16 @@ common_parse_opt (int key,
         }
       break;
     case ARGP_REGISTER_SPACING_KEY:
-      {
-        int value = 0;
-	char *str = NULL;
-	char *tail = NULL;
-	int errnum = 0;
-	
-	str = strdupa (arg);
-	value = strtol (str, &tail, 0);
-	errnum = errno;
-	
-	if (errnum)
-	  {
-	    // overflow
-	    fprintf (stderr, "invalid register spacing\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (tail[0] != '\0')
-	  {
-	    // invalid integer format
-	    fprintf (stderr, "invalid register spacing\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (value < 0)
-	  {
-	    // negative number
-	    fprintf (stderr, "invalid register spacing\n");
-	    argp_usage (state);
-	    break;
-	  }
-	cmd_args->register_spacing = value;
-      }
+      errno = 0;
+      tmp = strtol (arg, &ptr, 0);
+      if (ptr != (arg + strlen(arg))
+          || errno
+          || tmp < 0)
+        {
+          fprintf (stderr, "invalid register spacing\n");
+          exit(1);
+        }
+      cmd_args->register_spacing = tmp;
       break;
     case ARGP_HOSTNAME_KEY:
       if (cmd_args->hostname != NULL)
@@ -325,7 +275,7 @@ common_parse_opt (int key,
       if (strlen (arg) > IPMI_MAX_USER_NAME_LENGTH)
         {
           fprintf (stderr, "username too long\n");
-          argp_usage (state);
+          exit(1);
         }
       else 
 	{
@@ -344,7 +294,7 @@ common_parse_opt (int key,
       if (strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         {
           fprintf (stderr, "password too long\n");
-          argp_usage (state);
+          exit(1);
         }
       else 
 	{
@@ -366,7 +316,7 @@ common_parse_opt (int key,
       if (arg && strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         {
           fprintf (stderr, "password too long\n");
-          argp_usage (state);
+          exit(1);
         }
       if (!(cmd_args->password = strdup (arg)))
         {
@@ -387,13 +337,13 @@ common_parse_opt (int key,
         if ((rv = check_kg_len(arg)) < 0)
           {
             fprintf (stderr, "k_g too long\n");
-            argp_usage (state);
+            exit(1);
           }
 
         if ((rv = parse_kg(cmd_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
           {
             fprintf (stderr, "k_g input formatted incorrectly\n");
-            argp_usage (state);
+            exit(1);
           }
         if (rv > 0)
           cmd_args->k_g_len = rv;
@@ -416,13 +366,13 @@ common_parse_opt (int key,
         if ((rv = check_kg_len(arg)) < 0)
           {
             fprintf (stderr, "k_g too long\n");
-            argp_usage (state);
+            exit(1);
           }
 
         if ((rv = parse_kg(cmd_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
           {
             fprintf (stderr, "k_g input formatted incorrectly\n");
-            argp_usage (state);
+            exit(1);
           }
         if (rv > 0)
           cmd_args->k_g_len = rv;
@@ -431,137 +381,54 @@ common_parse_opt (int key,
       /* ARGP_TIMEOUT_KEY for backwards compatability */
     case ARGP_TIMEOUT_KEY:
     case ARGP_SESSION_TIMEOUT_KEY:
-      {
-	int value = 0;
-	char *str = NULL;
-	char *tail = NULL;
-	int errnum = 0;
-	
-	str = strdupa (arg);
-	errno = 0;
-	value = strtol (str, &tail, 0);
-	errnum = errno;
-	
-	if (errnum)
-	  {
-	    // overflow
-	    fprintf (stderr, "invalid session timeout value\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (tail[0] != '\0')
-	  {
-	    // invalid integer format
-	    fprintf (stderr, "invalid session timeout value\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (value <= 0)
-	  {
-	    // zero or negative number
-	    fprintf (stderr, "invalid session timeout value\n");
-	    argp_usage (state);
-	    break;
-	  }
-	cmd_args->session_timeout = value;
-      }
+      errno = 0;
+      tmp = strtol (arg, &ptr, 0);
+      if (ptr != (arg + strlen(arg))
+          || errno
+          || tmp <= 0)
+        {
+          fprintf (stderr, "invalid session timeout\n");
+          exit(1);
+        }
+      cmd_args->session_timeout = tmp;
       break;
     /* ARGP_RETRY_TIMEOUT_KEY for backwards compatability */
     case ARGP_RETRY_TIMEOUT_KEY:
     case ARGP_RETRANSMISSION_TIMEOUT_KEY:
-      {
-	int value = 0;
-	char *str = NULL;
-	char *tail = NULL;
-	int errnum = 0;
-	
-	str = strdupa (arg);
-	errno = 0;
-	value = strtol (str, &tail, 0);
-	errnum = errno;
-	
-	if (errnum)
-	  {
-	    // overflow
-	    fprintf (stderr, "invalid packet retransmission timeout value\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (tail[0] != '\0')
-	  {
-	    // invalid integer format
-	    fprintf (stderr, "invalid packet retransmission timeout value\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (value <= 0)
-	  {
-	    // zero or negative number
-	    fprintf (stderr, "invalid packet retransmission timeout value\n");
-	    argp_usage (state);
-	    break;
-	  }
-	cmd_args->retransmission_timeout = value;
-      }
+      errno = 0;
+      tmp = strtol (arg, &ptr, 0);
+      if (ptr != (arg + strlen(arg))
+          || errno
+          || tmp <= 0)
+        {
+          fprintf (stderr, "invalid retransmission timeout\n");
+          exit(1);
+        }
+      cmd_args->retransmission_timeout = tmp;
       break;
     /* ARGP_AUTH_TYPE_KEY for backwards compatability */
     case ARGP_AUTH_TYPE_KEY:
     case ARGP_AUTHENTICATION_TYPE_KEY: 
       if ((tmp = parse_authentication_type (arg)) < 0)
         {
-          fprintf(stderr, "invalid authentication type specified\n");
-          argp_usage (state);
+          fprintf(stderr, "invalid authentication type\n");
+          exit(1);
         }
       cmd_args->authentication_type = tmp;
       break;
     case ARGP_CIPHER_SUITE_ID_KEY: 
-      {
-	int value = 0;
-	char *str = NULL;
-	char *tail = NULL;
-	int errnum = 0;
-	
-	str = strdupa (arg);
-	errno = 0;
-	value = strtol (str, &tail, 0);
-	errnum = errno;
-	
-	if (errnum)
-	  {
-	    // overflow
-	    fprintf (stderr, "invalid cipher suite id value\n");
-	    argp_usage (state);
-	    break;
-	  }
-	
-	if (tail[0] != '\0')
-	  {
-	    // invalid integer format
-	    fprintf (stderr, "invalid cipher suite id value\n");
-	    argp_usage (state);
-	    break;
-	  }
-
-        if (value < IPMI_CIPHER_SUITE_ID_MIN
-            || value > IPMI_CIPHER_SUITE_ID_MAX)
-          {
-	    fprintf (stderr, "invalid cipher suite id value\n");
-	    argp_usage (state);
-	    break;
-          }
-
-	if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (value))
-	  {
-	    fprintf (stderr, "unsupported cipher suite id value\n");
-	    argp_usage (state);
-	    break;
-	  }
-        cmd_args->cipher_suite_id = value;
-      }
+      errno = 0;
+      tmp = strtol (arg, &ptr, 0);
+      if (ptr != (arg + strlen(arg))
+          || errno
+          || tmp < IPMI_CIPHER_SUITE_ID_MIN
+          || tmp > IPMI_CIPHER_SUITE_ID_MAX
+          || !IPMI_CIPHER_SUITE_ID_SUPPORTED (tmp))
+        {
+          fprintf (stderr, "invalid cipher suite id\n");
+          exit(1);
+        }
+      cmd_args->cipher_suite_id = tmp;
       break;
     /* ARGP_PRIVILEGE_KEY for backwards compatability */
     /* ARGP_PRIV_LEVEL_KEY for backwards compatability */\
@@ -570,16 +437,16 @@ common_parse_opt (int key,
     case ARGP_PRIVILEGE_LEVEL_KEY: 
       if ((tmp = parse_privilege_level (arg)) < 0)
         {
-          fprintf(stderr, "invalid privilege level specified\n");
-          argp_usage (state);
+          fprintf(stderr, "invalid privilege level\n");
+          exit(1);
         }
       cmd_args->privilege_level = tmp;
       break;
     case ARGP_WORKAROUND_FLAGS_KEY:
       if ((tmp = parse_workaround_flags(arg)) < 0)
         {
-          fprintf(stderr, "invalid workaround flags specified\n");
-          argp_usage (state);
+          fprintf(stderr, "invalid workaround flags\n");
+          exit(1);
         }
       cmd_args->workaround_flags |= tmp;
       break;
@@ -650,7 +517,7 @@ hostrange_parse_opt (int key,
           || (tmp > PSTDOUT_FANOUT_MAX))
         {
           fprintf (stderr, "invalid fanout\n");
-          argp_usage (state);
+          exit(1);
           break;
         }
       cmd_args->fanout = tmp;
