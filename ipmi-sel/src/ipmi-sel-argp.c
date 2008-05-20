@@ -164,7 +164,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	cmd_args->delete_range1 = value;
 	
 	value = 0;
-	errnum = 0;
 	tail = NULL;
 	
 	errno = 0;
