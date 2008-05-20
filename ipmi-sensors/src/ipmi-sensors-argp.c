@@ -188,12 +188,13 @@ _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
               strcpy(sdr_group_name_subst, ipmi_sensor_types[j]);
               str_replace_char (sdr_group_name_subst, ' ', '_');
               
-              if (!strcasecmp (cmd_args->groups[i], ipmi_sensor_types[j])
-                  || !strcasecmp (cmd_args->groups[i], sdr_group_name_subst))
+              if (!strcasecmp (cmd_args->groups_list[i], ipmi_sensor_types[j])
+                  || !strcasecmp (cmd_args->groups_list[i], sdr_group_name_subst))
                 {
                   found++;
                   break;
                 }
+              j++;
             }
 
           if (!found)
