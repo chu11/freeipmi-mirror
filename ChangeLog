@@ -1,5 +1,10 @@
 2008-05-20  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors-config/src/ipmi-sensors-config.c
+	(_ipmi_sensors_config): Fix flush corner case.
+
+2008-05-20  Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/, ipmipower/: Remove hostname config-file option.
 	Require users to always input atleast the hostname.
 

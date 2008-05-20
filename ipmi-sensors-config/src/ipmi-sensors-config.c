@@ -117,6 +117,8 @@ _ipmi_sensors_config (void *arg)
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }
+      exit_code = 0;
+      goto cleanup;
     }
 
   if (sdr_cache_create_and_load (state_data.ipmi_sdr_cache_ctx,
