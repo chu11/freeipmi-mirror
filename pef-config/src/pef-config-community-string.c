@@ -58,7 +58,7 @@ community_string_checkout (const char *section_name,
                                                                   BLOCK_SELECTOR,
                                                                   obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_get_lan_configuration_parameters_community_string: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -108,7 +108,7 @@ community_string_commit (const char *section_name,
                                                                   strlen(kv->value_input),
                                                                   obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_set_lan_configuration_parameters_community_string: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));

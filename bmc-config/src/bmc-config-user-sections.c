@@ -102,7 +102,7 @@ _get_user_access(bmc_config_state_data_t *state_data,
                                 userid,
                                 obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_get_user_access: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -176,7 +176,7 @@ _set_user_access (bmc_config_state_data_t *state_data,
                                 ua->session_limit,
                                 obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_set_user_access: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -210,7 +210,7 @@ username_checkout (const char *section_name,
                               userid,
                               obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_get_user_name: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -281,7 +281,7 @@ username_commit (const char *section_name,
                               strlen(kv->value_input),
                               obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_set_user_name: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -395,7 +395,7 @@ enable_user_commit (const char *section_name,
       if ((ret = ipmi_check_completion_code (obj_cmd_rs,
                                              IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID)) < 0)
         {
-          if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (state_data->prog_data->args->config_args.common.debug)
             fprintf(stderr,
                     "ipmi_check_completion_code: %s\n",
                     ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -405,7 +405,7 @@ enable_user_commit (const char *section_name,
 
       if (!ret)
         {
-          if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (state_data->prog_data->args->config_args.common.debug)
             fprintf(stderr,
                     "ipmi_cmd_set_user_password: %s\n",
                     ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -436,7 +436,7 @@ enable_user_commit (const char *section_name,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (state_data->prog_data->args->config_args.common.debug)
             fprintf(stderr,
                     "ipmi_cmd: %s\n",
                     ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -497,7 +497,7 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
         }
       else
         {
-          if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (state_data->prog_data->args->config_args.common.debug)
             fprintf(stderr,
                     "ipmi_cmd_set_user_password: %s\n",
                     ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -572,7 +572,7 @@ password_commit (const char *section_name,
                                   strlen(kv->value_input),
                                   obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_set_user_password: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -638,7 +638,7 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
         }
       else
         {
-          if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (state_data->prog_data->args->config_args.common.debug)
             fprintf(stderr,
                     "ipmi_cmd_set_user_password_v20: %s\n",
                     ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -716,7 +716,7 @@ password20_commit (const char *section_name,
                                       strlen(kv->value_input),
                                       obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_set_user_password_v20: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -989,7 +989,7 @@ sol_payload_access_checkout (const char *section_name,
                                         userid,
                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_get_user_payload_access: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -1058,7 +1058,7 @@ sol_payload_access_commit (const char *section_name,
                                         0,
                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_set_user_payload_access: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));

@@ -75,7 +75,7 @@ _get_pef_control (ipmi_ctx_t ipmi_ctx,
                                                              BLOCK_SELECTOR,
                                                              obj_cmd_rs) < 0)
     {
-      if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (cmd_args->common.debug)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
@@ -127,7 +127,7 @@ _set_pef_control (ipmi_ctx_t ipmi_ctx,
                                                              pc->enable_pef_alert_startup_delay,
                                                              obj_cmd_rs) < 0)
     {
-      if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (cmd_args->common.debug)
         fprintf(stderr,
                 "ipmi_cmd_set_pef_configuration_parameters_pef_control: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
@@ -296,7 +296,7 @@ _get_pef_action_global_control (ipmi_ctx_t ipmi_ctx,
                                                                            BLOCK_SELECTOR,
                                                                            obj_cmd_rs) < 0)
     {
-      if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (cmd_args->common.debug)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
@@ -358,7 +358,7 @@ _set_pef_action_global_control (ipmi_ctx_t ipmi_ctx,
                                                                            gc->enable_diagnostic_interrupt,
                                                                            obj_cmd_rs) < 0)
     {
-      if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (cmd_args->common.debug)
         fprintf(stderr,
                 "ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
@@ -592,7 +592,7 @@ pef_startup_delay_checkout (struct config_keyvalue *kv,
                                                                    BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
-      if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (cmd_args->common.debug)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
@@ -631,7 +631,7 @@ pef_startup_delay_commit (const struct config_keyvalue *kv,
                                                                    atoi (kv->value_input),
                                                                    obj_cmd_rs) < 0)
     {
-      if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (cmd_args->common.debug)
         fprintf(stderr,
                 "ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
@@ -667,7 +667,7 @@ pef_alert_startup_delay_checkout (struct config_keyvalue *kv,
                                                                          BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
-      if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (cmd_args->common.debug)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
@@ -706,7 +706,7 @@ pef_alert_startup_delay_commit (const struct config_keyvalue *kv,
                                                                          atoi (kv->value_input),
                                                                          obj_cmd_rs) < 0)
     {
-      if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (cmd_args->common.debug)
         fprintf(stderr,
                 "ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));

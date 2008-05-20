@@ -52,14 +52,14 @@ config_parse (struct config_section *sections,
       
       if (!str) 
         {
-          if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (cmd_args->common.debug)
             fprintf (stderr, "%d: empty line\n", line_num);
           continue;
         }
     
       if (str[0] == '#') 
         {
-          if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (cmd_args->common.debug)
             fprintf (stderr, "Comment on line %d\n", line_num);
           continue;
         }
@@ -79,7 +79,7 @@ config_parse (struct config_section *sections,
               goto cleanup;
             }
 
-          if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP) 
+          if (cmd_args->common.debug) 
             fprintf (stderr, "Entering section `%s'\n", section->section_name);
 
           continue;
@@ -95,7 +95,7 @@ config_parse (struct config_section *sections,
               goto cleanup;
             }
 
-          if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (cmd_args->common.debug)
             fprintf (stderr, "Leaving section `%s'\n", section->section_name);
 
           section = NULL;
@@ -123,7 +123,7 @@ config_parse (struct config_section *sections,
       if (!tok)
         tok = "";
       
-      if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (cmd_args->common.debug)
         fprintf(stderr,
                 "Parsed `%s:%s=%s'\n",
                 section->section_name,

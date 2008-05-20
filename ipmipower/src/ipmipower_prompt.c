@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.92 2008-05-19 23:37:10 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.93 2008-05-20 16:21:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -509,25 +509,20 @@ _cmd_debug(char **argv)
   assert(argv);
   
   if (!argv[1]) 
-    {
-      if (cmd_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
-        cmd_args.common.flags = cmd_args.common.flags & ~IPMI_FLAGS_DEBUG_DUMP;
-      else
-        cmd_args.common.flags = cmd_args.common.flags |= IPMI_FLAGS_DEBUG_DUMP;
-    }
+    cmd_args.common.debug = !cmd_args.common.debug;
   else 
     {
       if (!strcasecmp(argv[1], "on"))
-        cmd_args.common.flags = cmd_args.common.flags |= IPMI_FLAGS_DEBUG_DUMP;
+        cmd_args.common.debug = 1;
       else if (!strcasecmp(argv[1], "off"))  
-        cmd_args.common.flags = cmd_args.common.flags & ~IPMI_FLAGS_DEBUG_DUMP;
+        cmd_args.common.debug = 0;
       else 
         {
           cbuf_printf(ttyout, "invalid parameter\n");
           return;
         }
     }
-  cbuf_printf(ttyout, "debugging is now %s\n", (cmd_args.common.flags & IPMI_FLAGS_DEBUG_DUMP) ? "on" : "off");
+  cbuf_printf(ttyout, "debugging is now %s\n", (cmd_args.common.debug) ? "on" : "off");
 }
 
 static void 
@@ -704,7 +699,7 @@ _cmd_config(void)
   cbuf_printf(ttyout, "WorkaroundFlags:              %s\n", strbuf);
 
   cbuf_printf(ttyout, "Debug:                        %s\n", 
-              (cmd_args.common.flags & IPMI_FLAGS_DEBUG_DUMP) ? "on" : "off");
+              cmd_args.common.debug ? "on" : "off");
 
 #ifndef NDEBUG
   cbuf_printf(ttyout, "Rmcpdump:                     %s\n", 
@@ -924,8 +919,8 @@ ipmipower_prompt_process_cmdline(void)
               else if (!strcmp(argv[0], "debug")) 
                 {
                   _cmd_debug(argv);
-                  ierr_cbuf((cmd_args.common.flags & IPMI_FLAGS_DEBUG_DUMP), ttyerr);
-                  ierr_cbuf_dump_file_stream((cmd_args.common.flags & IPMI_FLAGS_DEBUG_DUMP), stderr);
+                  ierr_cbuf(cmd_args.common.debug, ttyerr);
+                  ierr_cbuf_dump_file_stream(cmd_args.common.debug, stderr);
                 }
 #ifndef NDEBUG
               else if (!strcmp(argv[0], "rmcpdump"))

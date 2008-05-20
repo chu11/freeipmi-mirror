@@ -86,7 +86,7 @@ config_checkout_section(struct config_section *section,
                                   section->section_comment,
                                   fp) < 0)
         {
-          if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (cmd_args->common.debug)
             fprintf(stderr, "## Error: Comment output error\n");
           ret = CONFIG_ERR_NON_FATAL_ERROR;
         }

@@ -88,7 +88,7 @@ _ipmi_sensors_config (void *arg)
       goto cleanup;
     }
 
-  if (state_data.prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+  if (state_data.prog_data->args->config_args.common.debug)
     {
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sdr_cache_ctx_set_flags(state_data.ipmi_sdr_cache_ctx,

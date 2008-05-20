@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.96 2008-05-19 23:37:09 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.97 2008-05-20 16:21:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -166,7 +166,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
   assert(PACKET_TYPE_VALID_PKT(pkt));
   assert (buffer);
 
-  if (cmd_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+  if (cmd_args.common.debug)
     {
       fiid_field_t *tmpl_lan_msg_hdr;
       char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];

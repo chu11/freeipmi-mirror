@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.48 2008-05-16 21:40:52 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.49 2008-05-20 16:21:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -269,7 +269,7 @@ main(int argc, char **argv)
 
   ipmiconsole_argp_parse(argc, argv, &cmd_args);
 
-  if (cmd_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+  if (cmd_args.common.debug)
     {
 #ifndef NDEBUG
       if (cmd_args.debugfile)

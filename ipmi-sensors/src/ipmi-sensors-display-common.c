@@ -161,7 +161,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
    */
   if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->common.debug)
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "Attempting to decode non-analog sensor\n");
@@ -175,7 +175,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
    */
   if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->common.debug)
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "Cannot decode non-linear sensor\n");
@@ -189,7 +189,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                       sensor_number,
                                       obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->common.debug)
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "ipmi_cmd_get_sensor_thresholds: %s\n",

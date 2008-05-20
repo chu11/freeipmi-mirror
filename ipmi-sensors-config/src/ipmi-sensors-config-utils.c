@@ -69,14 +69,14 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
 
   if (!(str = strdup(section_name)))
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         perror("strdup");
       goto cleanup;
     }
 
   if (!(ptr = strchr(str, '_')))
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "Invalid section_name: %s\n",
                 section_name);
@@ -88,7 +88,7 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
   record_id = strtoul(str, &ptr,0);
   if (*ptr != '\0')
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "Invalid section_name: %s\n",
                 section_name);
@@ -98,7 +98,7 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
   if (ipmi_sdr_cache_search_record_id(state_data->ipmi_sdr_cache_ctx,
                                       record_id) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "Record_id not found: %u\n",
                 record_id);
@@ -110,7 +110,7 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
                                         sdr_record,
                                         *sdr_record_len)) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_sdr_cache_record_read: %s\n",
                 ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));

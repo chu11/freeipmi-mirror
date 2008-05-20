@@ -40,7 +40,7 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
   if ((state_data->lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx, 
                                                                  IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr, 
                 "ipmi_get_channel_number: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -64,7 +64,7 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel
   if ((state_data->serial_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx, 
                                                                     IPMI_CHANNEL_MEDIUM_TYPE_RS232)) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr, 
                 "ipmi_get_channel_number: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -107,7 +107,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
 								     BLOCK_SELECTOR,
 								     obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr, 
                 "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -162,7 +162,7 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
                                 1, /* user_id number */
                                 obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr, 
                 "ipmi_cmd_get_user_access: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));

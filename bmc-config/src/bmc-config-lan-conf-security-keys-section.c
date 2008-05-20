@@ -67,7 +67,7 @@ _get_key(bmc_config_state_data_t *state_data,
                                           0,
                                           obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_set_channel_security_keys: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -122,7 +122,7 @@ _set_key(bmc_config_state_data_t *state_data,
                                           key_len,
                                           obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_set_channel_security_keys: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));

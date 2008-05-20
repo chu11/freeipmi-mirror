@@ -104,7 +104,7 @@ ipmi_open(const char *progname,
                                            cmd_args->session_timeout,
                                            cmd_args->retransmission_timeout,
                                            cmd_args->workaround_flags,
-                                           cmd_args->flags) < 0)
+                                           (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
               if (ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
                   || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
@@ -144,7 +144,7 @@ ipmi_open(const char *progname,
                                        cmd_args->session_timeout,
                                        cmd_args->retransmission_timeout,
                                        cmd_args->workaround_flags,
-                                       cmd_args->flags) < 0)
+                                       (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
               if (ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
                   || ipmi_ctx_errnum(ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
@@ -208,7 +208,7 @@ ipmi_open(const char *progname,
                                           cmd_args->register_spacing,
                                           cmd_args->driver_device,
                                           cmd_args->workaround_flags,
-                                          cmd_args->flags) < 0))
+                                          (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0))
                 goto out;
             }
 
@@ -221,10 +221,10 @@ ipmi_open(const char *progname,
                                           cmd_args->register_spacing,
                                           cmd_args->driver_device,
                                           cmd_args->workaround_flags,
-                                          cmd_args->flags) < 0))
+                                          (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0))
                 goto out;
             }
-
+          
           if (ipmi_ctx_open_inband (ipmi_ctx,
                                     IPMI_DEVICE_OPENIPMI,
                                     cmd_args->disable_auto_probe,
@@ -232,7 +232,7 @@ ipmi_open(const char *progname,
                                     cmd_args->register_spacing,
                                     cmd_args->driver_device,
                                     cmd_args->workaround_flags,
-                                    cmd_args->flags) < 0)
+                                    (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
               if (ipmi_ctx_open_inband (ipmi_ctx,
                                         IPMI_DEVICE_KCS,
@@ -241,7 +241,7 @@ ipmi_open(const char *progname,
                                         cmd_args->register_spacing,
                                         cmd_args->driver_device,
                                         cmd_args->workaround_flags,
-                                        cmd_args->flags) < 0)
+                                        (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
                 {
                   if (ipmi_ctx_open_inband (ipmi_ctx,
                                             IPMI_DEVICE_SSIF,
@@ -250,7 +250,7 @@ ipmi_open(const char *progname,
                                             cmd_args->register_spacing,
                                             cmd_args->driver_device,
                                             cmd_args->workaround_flags,
-                                            cmd_args->flags) < 0)
+                                            (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
                     {
                       snprintf(errmsg,
                                errmsglen,
@@ -270,7 +270,7 @@ ipmi_open(const char *progname,
                                     cmd_args->register_spacing,
                                     cmd_args->driver_device,
                                     cmd_args->workaround_flags,
-                                    cmd_args->flags) < 0)
+                                    (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
               snprintf(errmsg,
                        errmsglen,

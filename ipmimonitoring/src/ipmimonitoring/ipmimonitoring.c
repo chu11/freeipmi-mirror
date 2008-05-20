@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.43 2008-05-20 16:06:35 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.44 2008-05-20 16:21:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -516,7 +516,7 @@ _ipmimonitoring(pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (state_data.prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+  if (state_data.prog_data->args->common.debug)
     {
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sdr_cache_ctx_set_flags(state_data.ipmi_sdr_cache_ctx,
@@ -637,7 +637,7 @@ _grab_ipmimonitoring_options(struct ipmimonitoring_arguments *cmd_args)
   if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION;
 
-  if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+  if (cmd_args->common.debug)
     {
       cmd_args->ipmimonitoring_flags |= IPMI_MONITORING_FLAGS_DEBUG;
       cmd_args->ipmimonitoring_flags |= IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS;

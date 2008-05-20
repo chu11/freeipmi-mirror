@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.20 2008-05-20 16:06:35 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.21 2008-05-20 16:21:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -543,7 +543,7 @@ _ipmi_fru(pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (state_data.prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+  if (state_data.prog_data->args->common.debug)
     {
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sdr_cache_ctx_set_flags(state_data.ipmi_sdr_cache_ctx,

@@ -584,7 +584,7 @@ common_parse_opt (int key,
       cmd_args->workaround_flags |= tmp;
       break;
     case ARGP_DEBUG_KEY:
-      cmd_args->flags |= IPMI_FLAGS_DEBUG_DUMP;
+      cmd_args->debug++;
       break;
     default:
       return ARGP_ERR_UNKNOWN;
@@ -687,7 +687,7 @@ _init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
   cmd_args->cipher_suite_id = 3;
   cmd_args->workaround_flags = 0;
-  cmd_args->flags = IPMI_FLAGS_DEFAULT;
+  cmd_args->debug = 0;
 }
 
 void 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.66 2008-05-19 23:37:09 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.67 2008-05-20 16:21:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -118,10 +118,10 @@ _setup(void)
 
 #ifndef NDEBUG
   /* if debug set, send debug info to stderr too */
-  ierr_cbuf((cmd_args.common.flags & IPMI_FLAGS_DEBUG_DUMP), ttyerr);
+  ierr_cbuf(cmd_args.common.debug, ttyerr);
 
   /* on ierr_exit() dump cbuf data to appropriate places too */
-  ierr_cbuf_dump_file_stream((cmd_args.common.flags & IPMI_FLAGS_DEBUG_DUMP), stderr);
+  ierr_cbuf_dump_file_stream(cmd_args.common.debug, stderr);
 #else  /* !NDEBUG */
   ierr_cbuf(0, 0);
 #endif /* !NDEBUG */

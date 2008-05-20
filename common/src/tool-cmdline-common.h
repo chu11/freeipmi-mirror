@@ -218,7 +218,7 @@ struct common_cmd_args
   int cipher_suite_id;
   int privilege_level;
   unsigned int workaround_flags;
-  unsigned int flags;
+  int debug;
 };
 
 struct sdr_cmd_args

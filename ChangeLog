@@ -9,6 +9,14 @@
 
 	* common/src/tool-cmdline-common.c (verify_sdr_cmd_args,
 	sdr_parse_opt): Move sdr cache dir check into verify checks.
+
+	* common/src/tool-cmdline-common.c,
+	common/src/tool-cmdline-common.h: Replace common_cmd_args 'flags'
+	with 'debug' flag.
+
+	* common/src/tool-cmdline-common.c: Adjust for above change.
+
+	* Adjust all tools for use of logical debug flag.
 	
 2008-05-19  Albert Chu <chu11@llnl.gov>
 

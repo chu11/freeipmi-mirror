@@ -44,7 +44,7 @@ pef_info (pef_config_state_data_t *state_data)
   
   if (ipmi_cmd_get_pef_capabilities (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+      if (state_data->prog_data->args->config_args.common.debug)
         fprintf(stderr,
                 "ipmi_cmd_get_pef_capabilities: %s\n",
                 ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -108,7 +108,7 @@ pef_info (pef_config_state_data_t *state_data)
                                                                              BLOCK_SELECTOR,
                                                                              obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (state_data->prog_data->args->config_args.common.debug)
             fprintf(stderr,
                     "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters: %s\n",
                     ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -133,7 +133,7 @@ pef_info (pef_config_state_data_t *state_data)
                                                                                     BLOCK_SELECTOR,
                                                                                     obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (state_data->prog_data->args->config_args.common.debug)
             fprintf(stderr,
                     "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries: %s\n",
                     ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
@@ -158,7 +158,7 @@ pef_info (pef_config_state_data_t *state_data)
                                                                              BLOCK_SELECTOR,
                                                                              obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (state_data->prog_data->args->config_args.common.debug)
             fprintf(stderr,
                     "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings: %s\n",
                     ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
