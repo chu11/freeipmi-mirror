@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.83 2008-04-17 23:10:14 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.84 2008-05-20 04:36:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1439,18 +1439,6 @@ _cmdline_parse(int argc, char **argv)
     {
       switch(c) 
         {
-        case '?':
-          /* 'h' maintained for backwards compatability */
-        case 'h':
-          /* 'H" for consistency with other tools */
-        case 'H':
-          help_opt++;
-          break;
-        /* 'v' maintained for backwards compatability */
-        case 'v':
-        case 'V':
-          _version();
-          break;
         case 's':
           cinfo.set++;
           break;
@@ -1624,6 +1612,18 @@ _cmdline_parse(int argc, char **argv)
           break;
         case BMC_WATCHDOG_DEBUG_KEY:
           cinfo.debug++;
+          break;
+        case '?':
+          /* 'h' maintained for backwards compatability */
+        case 'h':
+          /* 'H" for consistency with other tools */
+        case 'H':
+          help_opt++;
+          break;
+        /* 'v' maintained for backwards compatability */
+        case 'v':
+        case 'V':
+          _version();
           break;
         default:
           _err_exit("command line option error");
