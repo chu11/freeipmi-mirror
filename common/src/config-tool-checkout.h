@@ -16,13 +16,21 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _CONFIG_PARSE_H_
-#define _CONFIG_PARSE_H_
+#ifndef _CONFIG_TOOL_CHECKOUT_H_
+#define _CONFIG_TOOL_CHECKOUT_H_
 
-#include "config-common.h"
+#include "config-tool-common.h"
 
-config_err_t config_parse (struct config_section *sections, 
-                           struct config_arguments *cmd_args,
-                           FILE *fp);
+config_err_t config_checkout_section(struct config_section *section,
+                                     struct config_arguments *cmd_args,
+                                     int all_keys_if_none_specified,
+                                     FILE *fp,
+                                     void *arg);
 
-#endif /* _CONFIG_PARSE_H_ */
+config_err_t config_checkout (struct config_section *sections,
+                              struct config_arguments *cmd_args,
+                              int all_keys_if_none_specified,
+                              FILE *fp,
+                              void *arg);
+
+#endif /* _CONFIG_TOOL_CHECKOUT_H_ */

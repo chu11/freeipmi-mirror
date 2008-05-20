@@ -26,9 +26,9 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 
-#include "config-parse.h"
-#include "config-section.h"
-#include "config-utils.h"
+#include "config-tool-parse.h"
+#include "config-tool-section.h"
+#include "config-tool-utils.h"
 
 config_err_t
 config_parse (struct config_section *sections, 

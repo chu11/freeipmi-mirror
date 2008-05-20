@@ -28,9 +28,9 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "config-checkout.h"
-#include "config-comment.h"
-#include "config-section.h"
+#include "config-tool-checkout.h"
+#include "config-tool-comment.h"
+#include "config-tool-section.h"
 
 config_err_t
 config_checkout_section(struct config_section *section,

@@ -16,10 +16,10 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _CONFIG_COMMIT_H_
-#define _CONFIG_COMMIT_H_
+#ifndef _CONFIG_TOOL_COMMIT_H_
+#define _CONFIG_TOOL_COMMIT_H_
 
-#include "config-common.h"
+#include "config-tool-common.h"
 
 config_err_t config_commit_section (struct config_section *section,
                                     struct config_arguments *cmd_args,
@@ -31,4 +31,4 @@ config_err_t config_commit (struct config_section *sections,
                             FILE *fp,
                             void *arg);
 
-#endif /* _CONFIG_COMMIT_H_ */
+#endif /* _CONFIG_TOOL_COMMIT_H_ */

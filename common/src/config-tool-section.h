@@ -16,10 +16,10 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _CONFIG_SECTION_H_
-#define _CONFIG_SECTION_H_
+#ifndef _CONFIG_TOOL_SECTION_H_
+#define _CONFIG_TOOL_SECTION_H_
 
-#include "config-common.h"
+#include "config-tool-common.h"
 
 /* no config_sections_create, responsibility of config tool to create list */
 
@@ -71,4 +71,4 @@ int config_sections_insert_keyvalues(struct config_section *sections,
 
 config_err_t config_output_sections_list (struct config_section *sections);
 
-#endif /* _CONFIG_SECTION_H_ */
+#endif /* _CONFIG_TOOL_SECTION_H_ */

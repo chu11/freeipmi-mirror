@@ -24,17 +24,17 @@
 
 #include "tool-cmdline-common.h"
 
-#include "config-argp.h"
-#include "config-common.h"
-#include "config-comment.h"
-#include "config-checkout.h"
-#include "config-commit.h"
-#include "config-diff.h"
-#include "config-fiid.h"
-#include "config-parse.h"
-#include "config-section.h"
-#include "config-utils.h"
-#include "config-validate.h"
+#include "config-tool-argp.h"
+#include "config-tool-common.h"
+#include "config-tool-comment.h"
+#include "config-tool-checkout.h"
+#include "config-tool-commit.h"
+#include "config-tool-diff.h"
+#include "config-tool-fiid.h"
+#include "config-tool-parse.h"
+#include "config-tool-section.h"
+#include "config-tool-utils.h"
+#include "config-tool-validate.h"
 
 struct ipmi_sensors_config_arguments
 {

@@ -28,7 +28,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "config-utils.h"
+#include "config-tool-utils.h"
 
 int8_t
 config_ipv4_address_string2int(char *src, uint32_t *dest)

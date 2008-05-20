@@ -16,14 +16,14 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _CONFIG_ARGP_H_
-#define _CONFIG_ARGP_H_
+#ifndef _CONFIG_TOOL_ARGP_H_
+#define _CONFIG_TOOL_ARGP_H_
 
 #include <stdio.h>
 #include <stdint.h>
 #include <argp.h>
 
-#include "config-common.h"
+#include "config-tool-common.h"
 
 enum config_argp_option_keys
   {
@@ -70,4 +70,4 @@ error_t config_parse_opt (int key,
 
 void config_args_validate (struct config_arguments *config_args);
 
-#endif /* _CONFIG_ARGP_H_ */
+#endif /* _CONFIG_TOOL_ARGP_H_ */

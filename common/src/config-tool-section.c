@@ -28,8 +28,8 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "config-section.h"
-#include "config-utils.h"
+#include "config-tool-section.h"
+#include "config-tool-utils.h"
 
 int
 config_section_append(struct config_section **sections, 

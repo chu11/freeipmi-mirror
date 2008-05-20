@@ -3,6 +3,9 @@
 	* Make all argp docs/version/naming consistent.  Make description
 	consistent between tool and manpages.
 
+	* common/src: Rename config lib to config-tool lib, to
+	differentiate from config file lib later on.
+
 2008-05-19  Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-cmdline-common.h,

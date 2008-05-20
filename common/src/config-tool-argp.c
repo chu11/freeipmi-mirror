@@ -35,8 +35,8 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "config-argp.h"
-#include "config-utils.h"
+#include "config-tool-argp.h"
+#include "config-tool-utils.h"
 
 void 
 init_config_args (struct config_arguments *config_args)

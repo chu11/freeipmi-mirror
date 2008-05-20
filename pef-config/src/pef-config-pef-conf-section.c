@@ -29,7 +29,7 @@
 #include "pef-config.h"
 #include "pef-config-validate.h"
 
-#include "config-pef-conf-section.h"
+#include "config-tool-pef-conf-section.h"
 
 static config_err_t
 _enable_pef_checkout (const char *section_name,

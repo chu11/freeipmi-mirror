@@ -28,7 +28,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "config-fiid.h"
+#include "config-tool-fiid.h"
 
 fiid_obj_t 
 Fiid_obj_create(fiid_template_t tmpl)

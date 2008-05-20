@@ -16,8 +16,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _CONFIG_COMMON_H_
-#define _CONFIG_COMMON_H_
+#ifndef _CONFIG_TOOL_COMMON_H_
+#define _CONFIG_TOOL_COMMON_H_
 
 #include <stdio.h>
 
@@ -136,4 +136,4 @@ struct config_section {
   struct config_section *next;
 };
 
-#endif /* _CONFIG_COMMON_H_ */
+#endif /* _CONFIG_TOOL_COMMON_H_ */

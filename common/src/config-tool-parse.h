@@ -16,13 +16,13 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _CONFIG_DIFF_H
-#define _CONFIG_DIFF_H
+#ifndef _CONFIG_TOOL_PARSE_H_
+#define _CONFIG_TOOL_PARSE_H_
 
-#include "config-common.h"
+#include "config-tool-common.h"
 
-config_err_t config_diff (struct config_section *sections,
-                          struct config_arguments *cmd_args,
-                          void *arg);
+config_err_t config_parse (struct config_section *sections, 
+                           struct config_arguments *cmd_args,
+                           FILE *fp);
 
-#endif  /* _CONFIG_DIFF_H */
+#endif /* _CONFIG_TOOL_PARSE_H_ */

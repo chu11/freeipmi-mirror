@@ -29,7 +29,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "config-comment.h"
+#include "config-tool-comment.h"
 
 /* achu: There must be a library out there that can do this better,
  * but I can't find one.  So here's my hacked up simple one.

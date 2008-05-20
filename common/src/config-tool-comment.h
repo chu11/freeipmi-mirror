@@ -16,30 +16,12 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _CONFIG_FIID_H_
-#define _CONFIG_FIID_H_
+#ifndef _CONFIG_TOOL_COMMENT_H
+#define _CONFIG_TOOL_COMMENT_H
 
 #include <stdio.h>
-#include <stdint.h>
 
-#include "config-common.h"
-
-fiid_obj_t Fiid_obj_create(fiid_template_t tmpl);
-
-int8_t Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val);
-
-int32_t Fiid_obj_get_data(fiid_obj_t obj,
-                          char *field,
-                          uint8_t *data,
-                          uint32_t data_len);
-
-int32_t Fiid_obj_set_data (fiid_obj_t obj,
-                           char *field,
-                           uint8_t *data,
-                           uint32_t data_len);
-
-int Fiid_obj_clear(fiid_obj_t obj);
-
-void Fiid_obj_destroy(fiid_obj_t obj);
-
-#endif /* _CONFIG_FIID_H_ */
+int config_section_comments(char *section_name,
+                            char *in,
+                            FILE *fp);
+#endif

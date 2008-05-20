@@ -28,8 +28,8 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "config-commit.h"
-#include "config-utils.h"
+#include "config-tool-commit.h"
+#include "config-tool-utils.h"
 
 config_err_t
 config_commit_section(struct config_section *section,

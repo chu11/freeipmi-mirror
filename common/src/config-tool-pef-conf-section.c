@@ -29,9 +29,9 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "config-pef-conf-section.h"
-#include "config-fiid.h"
-#include "config-section.h"
+#include "config-tool-pef-conf-section.h"
+#include "config-tool-fiid.h"
+#include "config-tool-section.h"
 
 /* convenience structs */
 

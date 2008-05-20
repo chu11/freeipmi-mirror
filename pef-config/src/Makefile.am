@@ -18,7 +18,7 @@ pef_config_SOURCES = \
 pef_config_LDADD = ../../common/src/libtoolcommon.la \
 		   ../../libfreeipmi/src/libfreeipmi.la \
 		   ../../common/src/libfreeipmiportability.la \
-		   ../../common/src/libconfigcommon.la
+		   ../../common/src/libconfigtoolcommon.la
  
 noinst_HEADERS = \
 	pef-config.h \
@@ -49,7 +49,7 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../common/src/libfreeipmiportability.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libconfigcommon.la : force-dependency-check
+../../common/src/libconfigtoolcommon.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

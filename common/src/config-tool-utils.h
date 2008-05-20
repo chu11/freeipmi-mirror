@@ -16,13 +16,13 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _CONFIG_UTIL_H_
-#define _CONFIG_UTIL_H_
+#ifndef _CONFIG_TOOL_UTIL_H_
+#define _CONFIG_TOOL_UTIL_H_
 
 #include <stdio.h>
 #include <stdint.h>
 
-#include "config-common.h"
+#include "config-tool-common.h"
 
 int8_t config_ipv4_address_string2int(char *src, uint32_t *dest);
 
@@ -64,4 +64,4 @@ struct config_key *config_find_key(struct config_section *section,
 struct config_keyvalue *config_find_keyvalue(struct config_section *section, 
                                              const char *key_name);
 
-#endif /* _CONFIG_UTIL_H_ */
+#endif /* _CONFIG_TOOL_UTIL_H_ */

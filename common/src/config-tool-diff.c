@@ -27,8 +27,8 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "config-diff.h"
-#include "config-checkout.h"
+#include "config-tool-diff.h"
+#include "config-tool-checkout.h"
 
 config_err_t
 config_diff (struct config_section *sections,

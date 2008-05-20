@@ -16,12 +16,12 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _CONFIG_PEF_CONF_SECTION_H_
-#define _CONFIG_PEF_CONF_SECTION_H_
+#ifndef _CONFIG_TOOL_PEF_CONF_SECTION_H_
+#define _CONFIG_TOOL_PEF_CONF_SECTION_H_
 
 #include <freeipmi/freeipmi.h>
 
-#include "config-common.h"
+#include "config-tool-common.h"
 
 config_err_t enable_pef_checkout (struct config_keyvalue *kv,
                                   ipmi_ctx_t ipmi_ctx,
@@ -119,4 +119,4 @@ config_err_t pef_alert_startup_delay_commit (const struct config_keyvalue *kv,
                                              ipmi_ctx_t ipmi_ctx,
                                              struct config_arguments *cmd_args);
 
-#endif /* _CONFIG_PEF_CONF_SECTION_H_ */
+#endif /* _CONFIG_TOOL_PEF_CONF_SECTION_H_ */

@@ -16,21 +16,30 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _CONFIG_CHECKOUT_H_
-#define _CONFIG_CHECKOUT_H_
+#ifndef _CONFIG_TOOL_FIID_H_
+#define _CONFIG_TOOL_FIID_H_
 
-#include "config-common.h"
+#include <stdio.h>
+#include <stdint.h>
 
-config_err_t config_checkout_section(struct config_section *section,
-                                     struct config_arguments *cmd_args,
-                                     int all_keys_if_none_specified,
-                                     FILE *fp,
-                                     void *arg);
+#include "config-tool-common.h"
 
-config_err_t config_checkout (struct config_section *sections,
-                              struct config_arguments *cmd_args,
-                              int all_keys_if_none_specified,
-                              FILE *fp,
-                              void *arg);
+fiid_obj_t Fiid_obj_create(fiid_template_t tmpl);
 
-#endif /* _CONFIG_CHECKOUT_H_ */
+int8_t Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val);
+
+int32_t Fiid_obj_get_data(fiid_obj_t obj,
+                          char *field,
+                          uint8_t *data,
+                          uint32_t data_len);
+
+int32_t Fiid_obj_set_data (fiid_obj_t obj,
+                           char *field,
+                           uint8_t *data,
+                           uint32_t data_len);
+
+int Fiid_obj_clear(fiid_obj_t obj);
+
+void Fiid_obj_destroy(fiid_obj_t obj);
+
+#endif /* _CONFIG_TOOL_FIID_H_ */

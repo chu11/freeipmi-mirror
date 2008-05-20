@@ -16,12 +16,12 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _CONFIG_VALIDATE_H_
-#define _CONFIG_VALIDATE_H_
+#ifndef _CONFIG_TOOL_VALIDATE_H_
+#define _CONFIG_TOOL_VALIDATE_H_
 
 #include <stdio.h>
 
-#include "config-common.h"
+#include "config-tool-common.h"
 
 config_validate_t config_yes_no_validate(const char *section_name, 
                                          const char *key_name,
@@ -77,4 +77,4 @@ config_validate_t config_mac_address_validate(const char *section_name,
                                               const char *value,
                                               void *arg);
 
-#endif /* _CONFIG_VALIDATE_H_ */
+#endif /* _CONFIG_TOOL_VALIDATE_H_ */

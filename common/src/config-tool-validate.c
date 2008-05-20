@@ -32,7 +32,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "config-validate.h"
+#include "config-tool-validate.h"
 
 config_validate_t 
 config_yes_no_validate(const char *section_name, 

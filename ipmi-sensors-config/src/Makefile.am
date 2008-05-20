@@ -14,7 +14,7 @@ ipmi_sensors_config_LDADD = ../../common/src/libtoolcommon.la \
 			    ../../common/src/libhostrange.la \
 			    ../../common/src/libmiscutils.la \
 			    ../../libfreeipmi/src/libfreeipmi.la \
-			    ../../common/src/libconfigcommon.la
+			    ../../common/src/libconfigtoolcommon.la
 
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src -D_GNU_SOURCE \
@@ -32,7 +32,7 @@ noinst_HEADERS = ipmi-sensors-config.h \
 ../../common/src/libtoolcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libconfigcommon.la : force-dependency-check
+../../common/src/libconfigtoolcommon.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libhostrange.la : force-dependency-check
