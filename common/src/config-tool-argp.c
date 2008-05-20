@@ -158,13 +158,6 @@ config_args_validate (struct config_arguments *config_args)
 {
   assert(config_args);
   
-  if (!config_args->action || config_args->action == -1)
-    {
-      fprintf (stderr,
-               "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
-      exit(1);
-    }
-
   /* filename and keypair both given for diff */
   if (config_args->filename && config_args->keypairs
       && config_args->action == CONFIG_ACTION_DIFF)

@@ -94,6 +94,20 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 }
 
 void
+_bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
+{
+  if (!cmd_args->config_args.action || cmd_args->config_args.action == -1)
+    {
+      fprintf (stderr,
+               "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
+      exit(1);
+    }
+
+  config_args_validate(&(cmd_args->config_args));
+}
+
+
+void
 bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_args)
 {
   init_config_args (&(cmd_args->config_args));
@@ -101,5 +115,5 @@ bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_
 
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->config_args.common));
-  config_args_validate(&(cmd_args->config_args));
+  _bmc_config_args_validate (cmd_args);
 }

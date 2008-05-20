@@ -747,6 +747,16 @@ verify_common_cmd_args (struct common_cmd_args *cmd_args)
       exit (1);
     }
 
+  if (cmd_args->driver_device)
+    {
+      if (access (cmd_args->driver_device, R_OK|W_OK|X_OK) != 0)
+        {
+          fprintf (stderr, "insufficient permission on driver device '%s'\n",
+                   cmd_args->driver_device);
+          exit(1);
+        }
+    }
+
   if (cmd_args->hostname)
     {
       /* We default to IPMI 1.5 if the user doesn't specify LAN vs. LAN_2_0 */
@@ -758,7 +768,7 @@ verify_common_cmd_args (struct common_cmd_args *cmd_args)
           fprintf (stderr, "password too long\n");
           exit (1);
         }
-      /* else, 2_0 password length checked in argp_parse() */
+      /* else, 2_0 password length was checked in argp_parse() previously */
     }
 
   if (cmd_args->retransmission_timeout > cmd_args->session_timeout)

@@ -3,6 +3,10 @@
 	* ipmi-sensors-config/src/ipmi-sensors-config.c
 	(_ipmi_sensors_config): Fix flush corner case.
 
+	* common/src/tool-cmdline-common.c: Add driver_device path check.
+
+	* More general code cleanup.
+
 2008-05-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/, ipmipower/: Remove hostname config-file option.
