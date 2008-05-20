@@ -3,6 +3,9 @@
  	* ipmi-sensors-config/src/ipmi-sensors-config.c
  	(_ipmi_sensors_config): Fix flush corner case.
 	
+ 	* ipmi-sensors-config/ipmi-sensors-config.8.pre.in: Add forgotten
+ 	manpage sdr options.
+
 2008-05-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/: Fix --eliminate option.
