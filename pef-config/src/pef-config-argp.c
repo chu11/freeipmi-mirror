@@ -84,6 +84,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case ARGP_KEY_END:
       break;
+    case CONFIG_ARGP_FILENAME_KEY_LEGACY:
+      key = CONFIG_ARGP_FILENAME_KEY;
+      /* fall through */
     default:
       ret = config_parse_opt (key, arg, state, &cmd_args->config_args);
       if (ret == ARGP_ERR_UNKNOWN)
@@ -107,7 +110,8 @@ _pef_config_args_validate (struct pef_config_arguments *cmd_args)
     }
 
   /* make dummy argument for args validate to pass */
-  cmd_args->config_args.action = 1;
+  if (!cmd_args->config_args.action)
+    cmd_args->config_args.action = 1;
   
   config_args_validate(&(cmd_args->config_args));
 }

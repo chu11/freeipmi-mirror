@@ -83,7 +83,6 @@ config_parse_opt (int key,
         config_args->action = -1;
       break;
     case CONFIG_ARGP_FILENAME_KEY:
-    case CONFIG_ARGP_FILENAME_KEY_LEGACY:
       if (config_args->filename) /* If specified more than once */
         free (config_args->filename);
       if (!(config_args->filename = strdup (arg)))

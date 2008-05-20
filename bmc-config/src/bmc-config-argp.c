@@ -81,6 +81,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case ARGP_KEY_END:
       break;
+    case CONFIG_ARGP_FILENAME_KEY_LEGACY:
+      key = CONFIG_ARGP_FILENAME_KEY;
+      /* fall through */
     default:
       ret = config_parse_opt (key, arg, state, &cmd_args->config_args);
       if (ret == ARGP_ERR_UNKNOWN)

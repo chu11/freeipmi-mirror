@@ -91,6 +91,26 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+void
+_ipmi_sensors_config_config_args_validate (struct ipmi_sensors_config_arguments *cmd_args)
+{
+  if ((!cmd_args->config_args.action && !cmd_args->sdr.flush_cache_wanted)
+      || (cmd_args->config_args.action && cmd_args->sdr.flush_cache_wanted)
+      || cmd_args->config_args.action == -1)
+    {
+      fprintf (stderr,
+               "Exactly one of --flush-cache, --checkout, --commit, --diff, or --listsections MUST be given\n");
+      exit(1);
+    }
+
+  /* make dummy argument for args validate to pass */
+  if (!cmd_args->config_args.action)
+    cmd_args->config_args.action = 1;
+
+  config_args_validate(&(cmd_args->config_args));
+}
+
+
 void 
 ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_config_arguments *cmd_args)
 {
@@ -101,5 +121,5 @@ ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_confi
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_sdr_cmd_args (&(cmd_args->sdr));
   verify_common_cmd_args (&(cmd_args->config_args.common));
-  config_args_validate(&(cmd_args->config_args));
+  _ipmi_sensors_config_config_args_validate (cmd_args);
 }
