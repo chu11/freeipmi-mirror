@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.19 2008-05-15 17:34:30 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.20 2008-05-20 16:06:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -64,7 +64,7 @@ _flush_cache (ipmi_fru_state_data_t *state_data)
   if (sdr_cache_flush_cache(state_data->ipmi_sdr_cache_ctx,
                             state_data->pstate,
                             state_data->hostname,
-                            state_data->prog_data->args->sdr.sdr_cache_dir_wanted ? state_data->prog_data->args->sdr.sdr_cache_dir : NULL) < 0)
+                            state_data->prog_data->args->sdr.sdr_cache_dir) < 0)
     return -1;
   
   return 0;
@@ -334,7 +334,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                                      state_data->ipmi_ctx,
                                      args->sdr.quiet_cache_wanted,
                                      state_data->hostname,
-                                     args->sdr.sdr_cache_dir_wanted ? args->sdr.sdr_cache_dir : NULL) < 0)
+                                     args->sdr.sdr_cache_dir) < 0)
         return -1;
   
       if (ipmi_sdr_cache_record_count(state_data->ipmi_sdr_cache_ctx, &record_count) < 0)

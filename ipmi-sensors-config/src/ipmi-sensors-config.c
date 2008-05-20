@@ -112,7 +112,7 @@ _ipmi_sensors_config (void *arg)
       if (sdr_cache_flush_cache(state_data.ipmi_sdr_cache_ctx,
                                 NULL,
                                 state_data.prog_data->args->config_args.common.hostname,
-                                state_data.prog_data->args->sdr.sdr_cache_dir_wanted ? state_data.prog_data->args->sdr.sdr_cache_dir : NULL) < 0)
+                                state_data.prog_data->args->sdr.sdr_cache_dir) < 0)
         {
           exit_code = EXIT_FAILURE;
           goto cleanup;
@@ -124,7 +124,7 @@ _ipmi_sensors_config (void *arg)
                                  state_data.ipmi_ctx,
                                  prog_data->args->sdr.quiet_cache_wanted,
                                  prog_data->args->config_args.common.hostname,
-                                 prog_data->args->sdr.sdr_cache_dir_wanted ? prog_data->args->sdr.sdr_cache_dir : NULL) < 0)
+                                 prog_data->args->sdr.sdr_cache_dir) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;

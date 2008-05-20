@@ -608,19 +608,12 @@ sdr_parse_opt (int key,
       cmd_args->quiet_cache_wanted = 1;
       break;
     case ARGP_SDR_CACHE_DIR_KEY:
-      cmd_args->sdr_cache_dir_wanted = 1;
       if (cmd_args->sdr_cache_dir)
         free(cmd_args->sdr_cache_dir);
       if (!(cmd_args->sdr_cache_dir = strdup (arg)))
         {
           perror("strdup");
           exit(1);
-        }
-      if (access (cmd_args->sdr_cache_dir, R_OK|W_OK|X_OK) != 0)
-        {
-          fprintf (stderr, "insufficient permission on sensor cache directory [%s]\n",
-                   cmd_args->sdr_cache_dir);
-          argp_usage (state);
         }
       break;
     case ARGP_IGNORE_SDR_CACHE_KEY:
@@ -780,7 +773,6 @@ init_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
 {
   cmd_args->flush_cache_wanted = 0;
   cmd_args->quiet_cache_wanted = 0;
-  cmd_args->sdr_cache_dir_wanted = 0;
   cmd_args->sdr_cache_dir = NULL;
   cmd_args->ignore_sdr_cache_wanted = 0;
 }
@@ -798,7 +790,15 @@ free_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
 void
 verify_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
 {
-  /* nothing right now */
+  if (cmd_args->sdr_cache_dir)
+    {
+      if (access (cmd_args->sdr_cache_dir, R_OK|W_OK|X_OK) != 0)
+        {
+          fprintf (stderr, "insufficient permission on sensor cache directory '%s'\n",
+                   cmd_args->sdr_cache_dir);
+          exit(1);
+        }
+    }
 }
 
 void 

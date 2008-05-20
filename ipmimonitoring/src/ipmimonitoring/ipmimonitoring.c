@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.42 2008-05-09 22:03:05 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.43 2008-05-20 16:06:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -113,7 +113,7 @@ _flush_cache (ipmimonitoring_state_data_t *state_data)
   if (sdr_cache_flush_cache(state_data->ipmi_sdr_cache_ctx,
                             state_data->pstate,
                             state_data->hostname,
-                            state_data->prog_data->args->sdr.sdr_cache_dir_wanted ? state_data->prog_data->args->sdr.sdr_cache_dir : NULL) < 0)
+                            state_data->prog_data->args->sdr.sdr_cache_dir) < 0)
     return -1;
   
   return 0;
@@ -147,7 +147,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                 state_data->ipmi_ctx,
                                 args->sdr.quiet_cache_wanted,
                                 state_data->hostname,
-                                args->sdr.sdr_cache_dir_wanted ? args->sdr.sdr_cache_dir : NULL) < 0)
+                                args->sdr.sdr_cache_dir) < 0)
     return -1;
 
   /* At this point in time we no longer need sdr_cache b/c
@@ -177,7 +177,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
    */
 
   if (sdr_cache_get_cache_directory(state_data->pstate,
-                                    args->sdr.sdr_cache_dir_wanted ? args->sdr.sdr_cache_dir : NULL,
+                                    args->sdr.sdr_cache_dir,
                                     sdr_cache_dir,
                                     MAXPATHLEN) < 0)
     return -1;

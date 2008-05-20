@@ -7,8 +7,8 @@ o Support --always-prefix option in many tools.
 o Support --guid option in bmc-info.
 o Support --get-time and --set-time in ipmi-sel.
 
-For Users - Bug Fixes/Minor Enhancements
-----------------------------------------
+For Users - Bug Fixes/Minor Enhancements/Changes
+------------------------------------------------
 o Output FRU device names along with IDs in ipmi-fru.
 o Reduce excessive newline outputs in ipmi-fru.
 o Add additional "connection timeout" error message to tools to
@@ -25,6 +25,8 @@ o Removed many early experimental features from ipmipower so ipmipower is more
   o Removed ability to enable/disable a number of experimental features.
   o Replace --ipmi-version option with --driver-type.  Backwards
     compatability maintiained.
+o Removed hostname config file option in ipmiconsole and ipmipower.
+  Require users to always input atleast hostname.
 o Changed --ipmi-version option to --driver-type in ipmipower for
   consistency to other tools.  Old options maintained for backwards
   compatability.

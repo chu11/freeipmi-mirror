@@ -1,3 +1,15 @@
+2008-05-20  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/, ipmipower/: Remove hostname config-file option.
+	Require users to always input atleast the hostname.
+
+	* common/src/, ipmi-sel/, ipmi-fru/, ipmi-sensors/,
+	ipmimonitoring/, ipmi-sensors-config/: Remove useless
+	sdr_cache_dir_wanted flag.
+
+	* common/src/tool-cmdline-common.c (verify_sdr_cmd_args,
+	sdr_parse_opt): Move sdr cache dir check into verify checks.
+	
 2008-05-19  Albert Chu <chu11@llnl.gov>
 
 	* Make all argp docs/version/naming consistent.  Make description

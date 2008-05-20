@@ -225,7 +225,6 @@ struct sdr_cmd_args
 {  
   int flush_cache_wanted;
   int quiet_cache_wanted;
-  int sdr_cache_dir_wanted;
   char *sdr_cache_dir;
   int ignore_sdr_cache_wanted;
 };
