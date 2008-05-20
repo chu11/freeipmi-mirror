@@ -24,6 +24,7 @@
 
 #include "tool-cmdline-common.h"
 
+#include "config-argp.h"
 #include "config-common.h"
 #include "config-comment.h"
 #include "config-checkout.h"
@@ -35,23 +36,15 @@
 #include "config-utils.h"
 #include "config-validate.h"
 
-enum argp_option_keys
-  { 
-    INFO_KEY = 'i', 
-    CHECKOUT_KEY = 'o', 
-    COMMIT_KEY = 'c', 
-    DIFF_KEY = 'd',
-    FILENAME_KEY = 'n',
-    FILENAME_KEY_LEGACY = 'f',
-    KEYPAIR_KEY = 'e',
-    SECTIONS_KEY = 'S',
-    LIST_SECTIONS_KEY = 'L',
-    VERBOSE_KEY = 'v',
+enum pef_config_argp_option_keys
+  {
+    INFO_KEY = 'i',
   };
 
 struct pef_config_arguments
 {
   struct config_arguments config_args;
+  int info_wanted;
 };
 
 typedef struct pef_config_prog_data

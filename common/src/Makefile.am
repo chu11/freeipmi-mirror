@@ -18,6 +18,7 @@ noinst_HEADERS = \
 	thread.h \
 	pstdout.h \
 	hostrange.h \
+	config-argp.h \
 	config-common.h \
 	config-comment.h \
 	config-checkout.h \
@@ -80,6 +81,7 @@ libhostrange_la_CPPFLAGS = \
 	-I$(srcdir)/../../ipmidetect/src/libipmidetect/
 
 libconfigcommon_la_SOURCES = \
+	config-argp.c \
 	config-comment.c \
 	config-checkout.c \
 	config-commit.c \

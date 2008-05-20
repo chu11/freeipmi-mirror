@@ -205,75 +205,76 @@ _pef_config (void *arg)
         }
     }
 
-
-  switch (prog_data->args->config_args.action) {
-  case CONFIG_ACTION_INFO:
+  if (prog_data->args->info_wanted)
     ret = pef_info (&state_data);
-    break;
-  case CONFIG_ACTION_CHECKOUT:
-    if (prog_data->args->config_args.section_strs)
-      {
-        struct config_section_str *sstr;
-
-        /* note: argp validation catches if user specified --section
-         * and --keypair, so all_keys_if_none_specified should be '1'.
-         */
-
-        sstr = prog_data->args->config_args.section_strs;
-        while (sstr)
+  else
+    {
+      switch (prog_data->args->config_args.action) {
+      case CONFIG_ACTION_CHECKOUT:
+        if (prog_data->args->config_args.section_strs)
           {
-	    struct config_section *s;
-            config_err_t this_ret;
-
-	    if (!(s = config_find_section(sections, sstr->section_name)))
+            struct config_section_str *sstr;
+            
+            /* note: argp validation catches if user specified --section
+             * and --keypair, so all_keys_if_none_specified should be '1'.
+             */
+            
+            sstr = prog_data->args->config_args.section_strs;
+            while (sstr)
               {
-                fprintf(stderr, "## FATAL: Cannot checkout section '%s'\n",
-                        sstr->section_name);
-                continue;
+                struct config_section *s;
+                config_err_t this_ret;
+                
+                if (!(s = config_find_section(sections, sstr->section_name)))
+                  {
+                    fprintf(stderr, "## FATAL: Cannot checkout section '%s'\n",
+                            sstr->section_name);
+                    continue;
+                  }
+                
+                this_ret = config_checkout_section(s,
+                                                   &(prog_data->args->config_args),
+                                                   1,
+                                                   fp,
+                                                   &state_data);
+                if (this_ret != CONFIG_ERR_SUCCESS)
+                  ret = this_ret;
+                if (ret == CONFIG_ERR_FATAL_ERROR)
+                  break;
+                
+                sstr = sstr->next;
               }
-
-            this_ret = config_checkout_section(s,
-                                               &(prog_data->args->config_args),
-                                               1,
-                                               fp,
-                                               &state_data);
-            if (this_ret != CONFIG_ERR_SUCCESS)
-              ret = this_ret;
-            if (ret == CONFIG_ERR_FATAL_ERROR)
-              break;
-
-            sstr = sstr->next;
           }
+        else
+          {
+            int all_keys_if_none_specified = 0;
+            
+            if (!prog_data->args->config_args.keypairs)
+              all_keys_if_none_specified++;
+            
+            ret = config_checkout (sections,
+                                   &(prog_data->args->config_args),
+                                   all_keys_if_none_specified,
+                                   fp,
+                                   &state_data);
+          }
+        break;
+      case CONFIG_ACTION_COMMIT:
+        ret = config_commit (sections,
+                             &(prog_data->args->config_args),
+                             fp,
+                             &state_data);
+        break;
+      case CONFIG_ACTION_DIFF:
+        ret = config_diff (sections,
+                           &(prog_data->args->config_args),
+                           &state_data);
+        break;
+      case CONFIG_ACTION_LIST_SECTIONS:
+        ret = config_output_sections_list (sections);
+        break;
       }
-    else
-      {
-        int all_keys_if_none_specified = 0;
-
-        if (!prog_data->args->config_args.keypairs)
-          all_keys_if_none_specified++;
-
-        ret = config_checkout (sections,
-                               &(prog_data->args->config_args),
-                               all_keys_if_none_specified,
-                               fp,
-                               &state_data);
-      }
-    break;
-  case CONFIG_ACTION_COMMIT:
-    ret = config_commit (sections,
-                         &(prog_data->args->config_args),
-                         fp,
-                         &state_data);
-    break;
-  case CONFIG_ACTION_DIFF:
-    ret = config_diff (sections,
-                       &(prog_data->args->config_args),
-                       &state_data);
-    break;
-  case CONFIG_ACTION_LIST_SECTIONS:
-    ret = config_output_sections_list (sections);
-    break;
-  }
+    }
 
   if (ret == CONFIG_ERR_FATAL_ERROR || ret == CONFIG_ERR_NON_FATAL_ERROR)
     {

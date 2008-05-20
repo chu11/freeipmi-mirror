@@ -316,9 +316,6 @@ _ipmi_sensors_config (void *arg)
   case CONFIG_ACTION_LIST_SECTIONS:
     ret = config_output_sections_list (sections);
     break;
-  case CONFIG_ACTION_INFO:
-    /* shutup gcc warning */
-    ;
   }
 
   if (ret == CONFIG_ERR_FATAL_ERROR || ret == CONFIG_ERR_NON_FATAL_ERROR)

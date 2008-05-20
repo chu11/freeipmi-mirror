@@ -24,6 +24,7 @@
 
 #include "tool-cmdline-common.h"
 
+#include "config-argp.h"
 #include "config-common.h"
 #include "config-comment.h"
 #include "config-checkout.h"
@@ -34,18 +35,6 @@
 #include "config-section.h"
 #include "config-utils.h"
 #include "config-validate.h"
-
-enum argp_option_keys
-  { 
-    CHECKOUT_KEY = 'o', 
-    COMMIT_KEY = 'c', 
-    DIFF_KEY = 'd',
-    FILENAME_KEY = 'n',
-    KEYPAIR_KEY = 'e',
-    SECTIONS_KEY = 'S',
-    LIST_SECTIONS_KEY = 'L',
-    VERBOSE_KEY = 'v',
-  };
 
 struct ipmi_sensors_config_arguments
 {

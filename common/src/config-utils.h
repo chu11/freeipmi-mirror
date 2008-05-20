@@ -24,8 +24,6 @@
 
 #include "config-common.h"
 
-void config_args_validate (struct config_arguments *config_args);
-
 int8_t config_ipv4_address_string2int(char *src, uint32_t *dest);
 
 int8_t config_mac_address_string2int(char *src, uint64_t *dest);

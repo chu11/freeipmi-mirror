@@ -10,11 +10,10 @@
 
 	* bmc-config/src/bmc-config-argp.h: Remove extraneous headers.
 
-	* common/src/config-util.h, common/src/config-util.c
-	(config_args_validate): New function.
-	
+	* common/src/config-argp.h, common/src/config-argp.c: New files.
+
 	* bmc-config/, pef-config/, ipmi-sensors-config/: Use common
-	config checks.
+	config argp parsing and verfication.
 
 2008-05-18  Albert Chu <chu11@llnl.gov>
 	
