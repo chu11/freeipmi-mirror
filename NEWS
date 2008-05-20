@@ -25,6 +25,8 @@ o Removed many early experimental features from ipmipower so ipmipower is more
   o Removed ability to enable/disable a number of experimental features.
   o Replace --ipmi-version option with --driver-type.  Backwards
     compatability maintiained.
+o Rename --no-probing option to --disable-auto-probe for consistency
+  in FreeIPMI.  Backwards compatability maintained.
 o Removed hostname config file option in ipmiconsole and ipmipower.
   Require users to always input atleast hostname.
 o Changed --ipmi-version option to --driver-type in ipmipower for

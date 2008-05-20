@@ -68,14 +68,14 @@ config_file_driver_type(conffile_t cf,
 }
 
 int 
-config_file_no_probing(conffile_t cf,
-                       struct conffile_data *data,
-                       char *optionname,
-                       int option_type,
-                       void *option_ptr,
-                       int option_data,
-                       void *app_ptr,
-                       int app_data)
+config_file_disable_auto_probe(conffile_t cf,
+                               struct conffile_data *data,
+                               char *optionname,
+                               int option_type,
+                               void *option_ptr,
+                               int option_data,
+                               void *app_ptr,
+                               int app_data)
 {
   struct common_cmd_args *cmd_args;
 
@@ -83,7 +83,7 @@ config_file_no_probing(conffile_t cf,
 
   cmd_args = (struct common_cmd_args *)option_ptr;
 
-  cmd_args->no_probing = data->boolval;
+  cmd_args->disable_auto_probe = data->boolval;
   return 0;
 }
 
@@ -433,7 +433,7 @@ config_file_parse(const char *filename,
   unsigned int config_file_options_len = 0;
 
   int driver_type_count = 0,
-    no_probing_count = 0,
+    disable_auto_probe_count = 0,
     driver_address_count = 0,
     driver_device_count = 0,
     register_spacing_count = 0;
@@ -467,13 +467,13 @@ config_file_parse(const char *filename,
         0
       },
       {
-        "no-probing",
+        "disable-auto-probe",
         CONFFILE_OPTION_BOOL,
         -1,
-        config_file_no_probing,
+        config_file_disable_auto_probe,
         1,
         0,
-        &no_probing_count,
+        &disable_auto_probe_count,
         cmd_args,
         0
       },

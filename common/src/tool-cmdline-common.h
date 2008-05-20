@@ -31,38 +31,39 @@
 enum argp_common_option_keys
   { 
     ARGP_DRIVER_TYPE_KEY = 'D', 
-    ARGP_NO_PROBING_KEY = 130, 
-    ARGP_DRIVER_ADDRESS_KEY = 131, 
-    ARGP_DRIVER_DEVICE_KEY = 132, 
-    ARGP_TIMEOUT_KEY = 133,  /* for backwards compatability */
-    ARGP_SESSION_TIMEOUT_KEY = 134,
-    ARGP_RETRY_TIMEOUT_KEY = 135, /* for backwards compatability */
-    ARGP_RETRANSMISSION_TIMEOUT_KEY = 136, 
-    ARGP_REG_SPACE_KEY = 137, /* for backwards compatability */
-    ARGP_REGISTER_SPACING_KEY = 138,
+    ARGP_NO_PROBING_KEY = 131,  /* for backwards compatability */
+    ARGP_DISABLE_AUTO_PROBE_KEY = 130,
+    ARGP_DRIVER_ADDRESS_KEY = 132, 
+    ARGP_DRIVER_DEVICE_KEY = 133, 
+    ARGP_TIMEOUT_KEY = 134,  /* for backwards compatability */
+    ARGP_SESSION_TIMEOUT_KEY = 135,
+    ARGP_RETRY_TIMEOUT_KEY = 136, /* for backwards compatability */
+    ARGP_RETRANSMISSION_TIMEOUT_KEY = 137, 
+    ARGP_REG_SPACE_KEY = 138, /* for backwards compatability */
+    ARGP_REGISTER_SPACING_KEY = 139,
     ARGP_HOSTNAME_KEY = 'h', 
     ARGP_USERNAME_KEY = 'u', 
     ARGP_PASSWORD_KEY = 'p', 
     ARGP_PASSWORD_PROMPT_KEY = 'P',
     ARGP_K_G_KEY = 'k', 
     ARGP_K_G_PROMPT_KEY = 'K',
-    ARGP_AUTH_TYPE_KEY = 139, /* for backwards compatability */
+    ARGP_AUTH_TYPE_KEY = 140, /* for backwards compatability */
     ARGP_AUTHENTICATION_TYPE_KEY = 'a', 
     ARGP_CIPHER_SUITE_ID_KEY = 'I',
-    ARGP_PRIVILEGE_KEY = 140, /* for backwards compatability */
-    ARGP_PRIV_LEVEL_KEY = 141, /* for backwards compatability */
+    ARGP_PRIVILEGE_KEY = 141, /* for backwards compatability */
+    ARGP_PRIV_LEVEL_KEY = 142, /* for backwards compatability */
     ARGP_PRIVILEGE_LEVEL_KEY = 'l',
     ARGP_FLUSH_CACHE_KEY = 'f',
     ARGP_QUIET_CACHE_KEY = 'Q',
-    ARGP_SDR_CACHE_DIR_KEY = 142,
-    ARGP_IGNORE_SDR_CACHE_KEY = 143,
+    ARGP_SDR_CACHE_DIR_KEY = 143,
+    ARGP_IGNORE_SDR_CACHE_KEY = 144,
     ARGP_BUFFER_OUTPUT_KEY = 'B',
     ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
     ARGP_ELIMINATE_KEY = 'E',
-    ARGP_ALWAYS_PREFIX_KEY = 144,
+    ARGP_ALWAYS_PREFIX_KEY = 145,
     ARGP_WORKAROUND_FLAGS_KEY = 'W',
-    ARGP_DEBUG_KEY = 145
+    ARGP_DEBUG_KEY = 146
   };
 
 /*
@@ -77,9 +78,12 @@ enum argp_common_option_keys
     {"driver-type",    ARGP_DRIVER_TYPE_KEY, "IPMIDRIVER", 0, 	                             \
      "Specify the driver type to use instead of doing an auto selection.", 0}
 
+/* no-probing is maintained for backwards compatability */
 /* reg-space is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_INBAND                                                           \
-    {"no-probing",     ARGP_NO_PROBING_KEY, 0, 0, 	                                     \
+    {"no-probing",     ARGP_NO_PROBING_KEY, 0, OPTION_HIDDEN,                                \
+     "Do not probe IPMI devices for default settings.", 1},                                  \
+    {"disable-auto-probe", ARGP_DISABLE_AUTO_PROBE_KEY, 0, 0, 	                             \
      "Do not probe IPMI devices for default settings.", 1},                                  \
     {"driver-address", ARGP_DRIVER_ADDRESS_KEY, "DRIVER-ADDRESS", 0,                         \
      "Specify the in-band driver address to be used instead of the probed value.", 2}, 	     \
@@ -203,7 +207,7 @@ struct common_cmd_args
 {
   ipmi_driver_type_t driver_type;
   int driver_type_outofband_only; /* flag - set internally only */
-  int no_probing;
+  int disable_auto_probe;
   unsigned int driver_address;
   char *driver_device;
   unsigned int register_spacing;

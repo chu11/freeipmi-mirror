@@ -1,5 +1,6 @@
+
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.84 2008-05-20 04:36:58 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.85 2008-05-20 23:34:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -89,11 +90,12 @@
 #define BMC_WATCHDOG_RETRY_WAIT_TIME         1
 #define BMC_WATCHDOG_RETRY_ATTEMPT           5
 
-#define BMC_WATCHDOG_NO_PROBING_KEY        128
-#define BMC_WATCHDOG_DRIVER_ADDRESS_KEY    129
-#define BMC_WATCHDOG_DRIVER_DEVICE_KEY     130
-#define BMC_WATCHDOG_REGISTER_SPACING_KEY  131
-#define BMC_WATCHDOG_DEBUG_KEY             132
+#define BMC_WATCHDOG_NO_PROBING_KEY          130 /* legacy */
+#define BMC_WATCHDOG_DISABLE_AUTO_PROBE_KEY  131
+#define BMC_WATCHDOG_DRIVER_ADDRESS_KEY      132
+#define BMC_WATCHDOG_DRIVER_DEVICE_KEY       133
+#define BMC_WATCHDOG_REGISTER_SPACING_KEY    134
+#define BMC_WATCHDOG_DEBUG_KEY               135
 
 #define _FIID_OBJ_GET(__obj, __field, __val, __func) \
   do { \
@@ -127,7 +129,7 @@ struct cmdline_info
   int daemon;
   int driver_type;
   int driver_type_val;
-  int no_probing;
+  int disable_auto_probe;
   int driver_address;
   uint32_t driver_address_val;
   int driver_device;
@@ -324,7 +326,7 @@ _init_kcs_ipmi(void)
 {
   struct ipmi_locate_info l;
   
-  if (!cinfo.no_probing)
+  if (!cinfo.disable_auto_probe)
     {
       int err;
 
@@ -348,7 +350,7 @@ _init_kcs_ipmi(void)
   if (cinfo.register_spacing)
     l.register_spacing = cinfo.register_spacing_val;
   
-  if (!cinfo.no_probing || cinfo.driver_address)
+  if (!cinfo.disable_auto_probe || cinfo.driver_address)
     {
       if (ipmi_kcs_ctx_set_driver_address(kcs_ctx, l.driver_address) < 0)
         {
@@ -358,7 +360,7 @@ _init_kcs_ipmi(void)
         }
     }
   
-  if (!cinfo.no_probing || cinfo.register_spacing)
+  if (!cinfo.disable_auto_probe || cinfo.register_spacing)
     {
       if (ipmi_kcs_ctx_set_register_spacing(kcs_ctx, l.register_spacing) < 0)
         {
@@ -390,7 +392,7 @@ _init_ssif_ipmi(void)
 {
   struct ipmi_locate_info l;
 
-  if (!cinfo.no_probing)
+  if (!cinfo.disable_auto_probe)
     {
       int err;
       if ((err = ipmi_locate_get_device_info(IPMI_INTERFACE_SSIF,
@@ -415,7 +417,7 @@ _init_ssif_ipmi(void)
       l.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
   
-  if (!cinfo.no_probing || cinfo.driver_address)
+  if (!cinfo.disable_auto_probe || cinfo.driver_address)
     {
       if (ipmi_ssif_ctx_set_driver_address(ssif_ctx, l.driver_address) < 0)
         {
@@ -425,7 +427,7 @@ _init_ssif_ipmi(void)
         }
     }
   
-  if (!cinfo.no_probing || cinfo.driver_device)
+  if (!cinfo.disable_auto_probe || cinfo.driver_device)
     {
       if (ipmi_ssif_ctx_set_driver_device(ssif_ctx, l.driver_device) < 0)
         {
@@ -1267,7 +1269,7 @@ _usage(void)
           "  -?         --help                               Output help menu.\n"
           "  -V         --version                            Output version.\n"
 	  "  -D STRING  --driver-type=IPMIDRIVER             Specify IPMI driver type.\n"
-          "             --no-probing                         Do not probe driver for default settings.\n"
+          "             --disable-auto-probe                 Do not probe driver for default settings.\n"
 	  "             --driver-address=DRIVER-ADDRESS      Specify driver address.\n"
 	  "             --driver-device=DEVICE               Specify driver device path.\n"
           "             --register-spacing=REGISTER-SPACING  Specify driver register spacing.\n"
@@ -1395,6 +1397,7 @@ _cmdline_parse(int argc, char **argv)
     {"daemon",                0, NULL, 'd'},
     {"driver-type",           1, NULL, 'D'},
     {"no-probing",            0, NULL, BMC_WATCHDOG_NO_PROBING_KEY},
+    {"disable-auto-probe",    0, NULL, BMC_WATCHDOG_DISABLE_AUTO_PROBE_KEY},
     {"driver-address",        1, NULL, BMC_WATCHDOG_DRIVER_ADDRESS_KEY},
     {"driver-device",         1, NULL, BMC_WATCHDOG_DRIVER_DEVICE_KEY},
     /* "reg-space" maintained for backwards compatability */
@@ -1472,8 +1475,10 @@ _cmdline_parse(int argc, char **argv)
           else
 	    _err_exit("driver-type value invalid");
 	  break;
+          /* BMC_WATCHDOG_NO_PROBING_KEY for backwards compatability */
         case BMC_WATCHDOG_NO_PROBING_KEY:
-          cinfo.no_probing++;
+        case BMC_WATCHDOG_DISABLE_AUTO_PROBE_KEY:
+          cinfo.disable_auto_probe++;
           break;
         case BMC_WATCHDOG_DRIVER_ADDRESS_KEY:
           cinfo.driver_address++;

@@ -20,6 +20,8 @@
 	common/src/tool-config-file-common.c,
 	config/ac_freeipmi_config_file.m4: New files.
 
+	* Adjust --no-probing to --disable-auto-probe.
+
 2008-05-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/src/ipmi-sensors-config.c

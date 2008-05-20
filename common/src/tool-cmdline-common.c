@@ -226,8 +226,10 @@ common_parse_opt (int key,
         }
       cmd_args->driver_type = tmp;
       break;
+      /* ARGP_NO_PROBING_KEY for backwards compatability */
     case ARGP_NO_PROBING_KEY:
-      cmd_args->no_probing = 1;
+    case ARGP_DISABLE_AUTO_PROBE_KEY:
+      cmd_args->disable_auto_probe = 1;
       break;
     case ARGP_DRIVER_ADDRESS_KEY:
       errno = 0;
@@ -538,7 +540,7 @@ hostrange_parse_opt (int key,
 static void 
 _init_common_cmd_args (struct common_cmd_args *cmd_args)
 {
-  cmd_args->no_probing = 0;
+  cmd_args->disable_auto_probe = 0;
   cmd_args->driver_type = IPMI_DEVICE_UNKNOWN;
   cmd_args->driver_type_outofband_only = 0;
   cmd_args->driver_address = 0;

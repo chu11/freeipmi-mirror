@@ -1,5 +1,5 @@
 .TP
-\fB\-\-no\-probing\fR
+\fB\-\-disable\-auto\-probe\fR
 Do not probe IPMI devices for default settings.
 .TP
 \fB\-\-driver\-address\fR=\fIDRIVER-ADDRESS\fR
