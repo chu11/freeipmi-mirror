@@ -83,7 +83,7 @@ config_file_no_probing(conffile_t cf,
 
   cmd_args = (struct common_cmd_args *)option_ptr;
 
-  cmd_args->disable_auto_probe = data->boolval;
+  cmd_args->no_probing = data->boolval;
   return 0;
 }
 
