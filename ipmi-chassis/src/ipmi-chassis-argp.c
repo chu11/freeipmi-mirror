@@ -35,21 +35,21 @@
 
 #include "freeipmi-portability.h"
 
-static error_t parse_opt (int key, char *arg, struct argp_state *state);
-
 const char *argp_program_version = 
-  "IPMI Chassis [ipmi-chassis-" PACKAGE_VERSION "]\n"
+  "ipmi-chassis - " PACKAGE_VERSION "\n"
   "Copyright (C) 2007-2008 FreeIPMI Core Team\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
 
-const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
+const char *argp_program_bug_address = 
+  "<" PACKAGE_BUGREPORT ">";
 
-static char doc[] = "IPMI Chassis - Management a chassis via IPMI";
+static char cmdline_doc[] = 
+  "ipmi-chassis - IPMI chassis management utility";
 
-static char args_doc[] = "";
+static char cmdline_args_doc[] = "";
 
-static struct argp_option options[] = 
+static struct argp_option cmdline_options[] = 
   {
     ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
@@ -103,16 +103,17 @@ static struct argp_option options[] =
     { 0 }
   };
 
-static char *boot_argv[];
-static error_t boot_flag_parse_opt (int, char *, struct argp_state *);
+static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
+
+static struct argp cmdline_argp = { cmdline_options,
+                                    cmdline_parse,
+                                    cmdline_args_doc,
+                                    cmdline_doc };
+
+static error_t boot_flag_parse (int key, char *arg, struct argp_state *state);
+
 static error_t
-
-parse_opt (int key, char *arg, struct argp_state *state);
-
-static struct argp argp = { options, parse_opt, args_doc, doc };
-
-static error_t
-boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
+boot_flag_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_chassis_arguments *cmd_args = state->input;
   uint8_t value = 0;
@@ -292,7 +293,7 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
 }
 
 static error_t
-parse_opt (int key, char *arg, struct argp_state *state)
+cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   error_t ret;
   char *ptr = NULL;
@@ -467,8 +468,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     default:
-      ret = boot_flag_parse_opt (key, arg, state);
-
+      ret = boot_flag_parse (key, arg, state);
       if (ret == ARGP_ERR_UNKNOWN)
         ret = common_parse_opt (key, arg, state, &(cmd_args->common));
       if (ret == ARGP_ERR_UNKNOWN)
@@ -515,7 +515,7 @@ ipmi_chassis_argp_parse (int argc,
   cmd_args->args.boot_option_args.force_progress_event_traps = -1;
   cmd_args->args.boot_option_args.firmware_bios_verbosity = -1;
 
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));
   _ipmi_chassis_args_validate (cmd_args);

@@ -31,21 +31,21 @@
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
 
-static error_t parse_opt (int key, char *arg, struct argp_state *state);
-
 const char *argp_program_version = 
-"BMC Information [bmc-info-" PACKAGE_VERSION "]\n"
-"Copyright (C) 2003-2008 FreeIPMI Core Team\n"
-"This program is free software; you may redistribute it under the terms of\n"
-"the GNU General Public License.  This program has absolutely no warranty.";
+  "bmc-info - " PACKAGE_VERSION "\n"
+  "Copyright (C) 2003-2008 FreeIPMI Core Team\n"
+  "This program is free software; you may redistribute it under the terms of\n"
+  "the GNU General Public License.  This program has absolutely no warranty.";
 
-const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
+const char *argp_program_bug_address =
+  "<" PACKAGE_BUGREPORT ">";
 
-static char doc[] = "BMC Info - display BMC information.";
+static char cmdline_doc[] = 
+  "bmc-info - display BMC information";
 
-static char args_doc[] = "";
+static char cmdline_args_doc[] = "";
 
-static struct argp_option options[] = 
+static struct argp_option cmdline_options[] = 
   {
     ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
@@ -61,10 +61,15 @@ static struct argp_option options[] =
     { 0 }
   };
 
-static struct argp argp = { options, parse_opt, args_doc, doc };
+static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
+
+static struct argp cmdline_argp = { cmdline_options,
+                                    cmdline_parse, 
+                                    cmdline_args_doc, 
+                                    cmdline_doc };
 
 static error_t 
-parse_opt (int key, char *arg, struct argp_state *state)
+cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct bmc_info_arguments *cmd_args = state->input;
   error_t ret;
@@ -98,7 +103,7 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
 
   cmd_args->guid_wanted = 0;
   
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }

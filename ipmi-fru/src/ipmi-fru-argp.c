@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.9 2008-05-13 20:34:32 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.10 2008-05-20 03:51:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -43,18 +43,22 @@
 #include "ipmi-fru.h"
 #include "ipmi-fru-argp.h"
 
-static error_t parse_opt (int key, char *arg, struct argp_state *state);
-
 const char *argp_program_version = 
-"IPMI FRU Information [ipmi-fru-" PACKAGE_VERSION "]\n";
+  "ipmi-fru - " PACKAGE_VERSION "\n"
+  "Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.\n"
+  "Copyright (C) 2007 The Regents of the University of California.\n"
+  "This program is free software; you may redistribute it under the terms of\n"
+  "the GNU General Public License.  This program has absolutely no warranty.";
 
-const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
+const char *argp_program_bug_address = 
+  "<" PACKAGE_BUGREPORT ">";
 
-static char doc[] = "IPMI FRU - display FRU information.";
+static char cmdline_doc[] =
+  "ipmi-fru - display FRU information.";
 
-static char args_doc[] = "";
+static char cmdline_args_doc[] = "";
 
-static struct argp_option options[] = 
+static struct argp_option cmdline_options[] = 
   {
     ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
@@ -76,10 +80,15 @@ static struct argp_option options[] =
     { 0 }
   };
 
-static struct argp argp = { options, parse_opt, args_doc, doc };
+static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
+
+static struct argp cmdline_argp = { cmdline_options,
+                                    cmdline_parse,
+                                    cmdline_args_doc,
+                                    cmdline_doc };
 
 static error_t 
-parse_opt (int key, char *arg, struct argp_state *state)
+cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_fru_arguments *cmd_args = state->input;
   error_t ret;
@@ -131,7 +140,7 @@ ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
   cmd_args->verbose_count = 0;
   cmd_args->skip_checks_wanted = 0;
 
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
   verify_sdr_cmd_args (&(cmd_args->sdr));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));

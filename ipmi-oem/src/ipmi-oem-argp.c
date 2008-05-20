@@ -33,21 +33,22 @@
 
 #include "freeipmi-portability.h"
 
-static error_t parse_opt (int key, char *arg, struct argp_state *state);
-
 const char *argp_program_version = 
-"FreeIPMI Oem [ipmi-oem-" PACKAGE_VERSION "]\n"
-"Copyright (C) 2008 FreeIPMI Core Team\n"
-"This program is free software; you may redistribute it under the terms of\n"
-"the GNU General Public License.  This program has absolutely no warranty.";
+  "ipmi-oem - " PACKAGE_VERSION "\n"
+  "Copyright (C) 2008 FreeIPMI Core Team\n"
+  "This program is free software; you may redistribute it under the terms of\n"
+  "the GNU General Public License.  This program has absolutely no warranty.";
 
-const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
+const char *argp_program_bug_address = 
+  "<" PACKAGE_BUGREPORT ">";
 
-static char doc[] = "IPMI OEM - executes OEM specific IPMI commands.";
+static char cmdline_doc[] = 
+  "ipmi-oem - IPMI OEM utility";
 
-static char args_doc[] = "";
+static char cmdline_args_doc[] = 
+  "<OEMID> <OEMCOMMAND> [OEMOPTION...]";
 
-static struct argp_option options[] = 
+static struct argp_option cmdline_options[] = 
   {
     ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
@@ -61,10 +62,15 @@ static struct argp_option options[] =
     { 0 }
   };
 
-static struct argp argp = { options, parse_opt, args_doc, doc };
+static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
+
+static struct argp cmdline_argp = { cmdline_options,
+                                    cmdline_parse, 
+                                    cmdline_args_doc, 
+                                    cmdline_doc };
 
 static error_t 
-parse_opt (int key, char *arg, struct argp_state *state)
+cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_oem_arguments *cmd_args = state->input;
   error_t ret;
@@ -129,7 +135,7 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
   memset (cmd_args->oem_options, 0, sizeof(cmd_args->oem_options));
   cmd_args->oem_options_count = 0;
 
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }

@@ -32,15 +32,22 @@
 #include "bmc-config.h"
 #include "bmc-config-argp.h"
 
-const char *argp_program_version = PACKAGE_VERSION;
-const char *argp_program_bug_address = "<" PACKAGE_BUGREPORT ">";
-/* Program documentation. */
-static char doc[] =  "GNU FreeIPMI (bmc-config) -- BMC config tool";
-/* A description of the arguments we accept. */
-static char args_doc[] = "";
+const char *argp_program_version = 
+  "bmc-config - " PACKAGE_VERSION "\n"
+  "Copyright (C) 2003-2008 FreeIPMI Core Team\n"
+  "This program is free software; you may redistribute it under the terms of\n"
+  "the GNU General Public License.  This program has absolutely no warranty.";
+
+const char *argp_program_bug_address = 
+  "<" PACKAGE_BUGREPORT ">";
+
+static char cmdline_doc[] =  
+  "bmc-config - configure BMC values";
+
+static char cmdline_args_doc[] = "";
 
 /* The options we understand. */
-static struct argp_option options[] = {
+static struct argp_option cmdline_options[] = {
   ARGP_COMMON_OPTIONS_DRIVER,
   ARGP_COMMON_OPTIONS_INBAND,
   ARGP_COMMON_OPTIONS_OUTOFBAND,
@@ -53,14 +60,16 @@ static struct argp_option options[] = {
   { 0, }
 };
 
-static error_t parse_opt (int key, char *arg, struct argp_state *state);
+static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
 
-/* Our argp parser. */
-static struct argp argp = { options, parse_opt, args_doc, doc};
+static struct argp cmdline_argp = { cmdline_options, 
+                                    cmdline_parse, 
+                                    cmdline_args_doc, 
+                                    cmdline_doc};
 
 /* Parse a single option. */
 static error_t
-parse_opt (int key, char *arg, struct argp_state *state)
+cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct bmc_config_arguments *cmd_args = state->input;
   error_t ret;
@@ -87,7 +96,7 @@ bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_admin (&(cmd_args->config_args.common));
 
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->config_args.common));
   config_args_validate(&(cmd_args->config_args));
 }

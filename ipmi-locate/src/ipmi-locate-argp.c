@@ -24,29 +24,34 @@
 
 #include "ipmi-locate-argp.h"
 
-static error_t parse_opt (int key, char *arg, struct argp_state *state);
-
 const char *argp_program_version = 
-"IPMI Locate [ipmi-locate-" PACKAGE_VERSION "]\n"
-"Copyright (C) 2003-2008 FreeIPMI Core Team\n"
-"This program is free software; you may redistribute it under the terms of\n"
-"the GNU General Public License.  This program has absolutely no warranty.";
+  "ipmi-locate - " PACKAGE_VERSION "\n"
+  "Copyright (C) 2003-2008 FreeIPMI Core Team\n"
+  "This program is free software; you may redistribute it under the terms of\n"
+  "the GNU General Public License.  This program has absolutely no warranty.";
 
-const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
+const char *argp_program_bug_address = 
+  "<" PACKAGE_BUGREPORT ">";
 
-static char doc[] = "IPMI Locate - Probes and displays IPMI devices.";
+static char cmdline_doc[] = 
+  "ipmi-locate - IPMI probing utility";
 
-static char args_doc[] = "";
+static char cmdline_args_doc[] = "";
 
-static struct argp_option options[] = 
+static struct argp_option cmdline_options[] = 
   {
     { 0 }
   };
 
-static struct argp argp = { options, parse_opt, args_doc, doc };
+static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
+
+static struct argp cmdline_argp = { cmdline_options,
+                                    cmdline_parse,
+                                    cmdline_args_doc,
+                                    cmdline_doc };
 
 static error_t 
-parse_opt (int key, char *arg, struct argp_state *state)
+cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   switch (key)
     {
@@ -66,6 +71,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
 void 
 ipmi_locate_argp_parse (int argc, char **argv)
 {
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
+  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
 }
 

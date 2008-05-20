@@ -1,5 +1,10 @@
 2008-05-19  Albert Chu <chu11@llnl.gov>
 
+	* Make all argp docs/version/naming consistent.  Make description
+	consistent between tool and manpages.
+
+2008-05-19  Albert Chu <chu11@llnl.gov>
+
 	* common/src/tool-cmdline-common.h,
 	common/src/tool-cmdline-common.c: Fix option ordering.  Fix
 	--timeout legacy support.  Support outofband only driver type

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.118 2008-05-19 23:37:09 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.119 2008-05-20 03:51:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -59,9 +59,20 @@
 extern struct ipmipower_arguments cmd_args;
 extern struct ipmipower_connection *ics;
 
-const char *argp_program_version = "ipmipower " VERSION "\n";
+const char *argp_program_version = 
+  "ipmipower - " PACKAGE_VERSION "\n"
+  "Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.\n"
+  "Copyright (C) 2003-2007 The Regents of the University of California.\n"
+  "This program is free software; you may redistribute it under the terms of\n"
+  "the GNU General Public License.  This program has absolutely no warranty.";
 
-const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
+const char *argp_program_bug_address = 
+  "<" PACKAGE_BUGREPORT ">";
+
+static char cmdline_doc[] = 
+  "ipmipower - IPMI power control utility";
+
+static char cmdline_args_doc[] = "";
 
 static struct argp_option cmdline_options[] =
   {
@@ -132,28 +143,25 @@ static struct argp_option cmdline_options[] =
     { 0 }
   };
 
-static error_t cmdline_parse_config (int key, char *arg, struct argp_state *state);
-
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
-
-static char cmdline_args_doc[] = "";
-
-static char cmdline_doc[] = "ipmipower - IPMI power control utility";
 
 static struct argp cmdline_argp = {cmdline_options,
                                    cmdline_parse,
                                    cmdline_args_doc,
                                    cmdline_doc};
 
-static struct argp cmdline_argp_config = {cmdline_options,
-                                          cmdline_parse_config,
-                                          cmdline_args_doc,
-                                          cmdline_doc};
+static error_t config_file_parse (int key, char *arg, struct argp_state *state);
+
+
+static struct argp config_file_argp = {cmdline_options,
+                                       config_file_parse,
+                                       cmdline_args_doc,
+                                       cmdline_doc};
 
 static error_t
-cmdline_parse_config (int key,
-                      char *arg,
-                      struct argp_state *state)
+config_file_parse (int key,
+                   char *arg,
+                   struct argp_state *state)
 {
   switch (key) 
     {
@@ -743,10 +751,10 @@ ipmipower_config(int argc, char **argv)
   cmd_args.ping_percent = 50;
   cmd_args.ping_consec_count = 5;
 
-  argp_parse(&cmdline_argp_config, argc, argv, ARGP_IN_ORDER, NULL, NULL);
-
+  argp_parse(&config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
+  
   ipmipower_config_conffile_parse(cmd_args.configfile);
-
+  
   argp_parse(&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
   /* achu: don't do these checks, we don't do inband, so checks aren't appropriate 
    * checks will be done in ipmipower_config_check_values().
