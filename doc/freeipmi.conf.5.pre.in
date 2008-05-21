@@ -45,6 +45,21 @@ and
 do not perform in-band communication, therefore all in-band communication
 options would be ignored).
 .TP
+\fBdriver-type\fR \fIIPMIDRIVER\fR
+Specify the default driver type to use.  
+.TP
+\fBdisable-auto-probe\fR
+Specify if IPMI devices should be probed for default settings.
+.TP
+\fBdriver-address\fR \fIDRIVER-ADDRESS\fR
+Specify the default in-band driver address to use.
+.TP
+\fBdriver-device\fR \fIDEVICE\fR
+Specify the default in-band driver device path to use.
+.TP
+\fBregister-spacing\fR \fIREGISTER-SPACING\fR
+Specify the default in-band driver registerspacing to use.
+.TP
 \fBusername\fR \fIUSERNAME\fR
 Specify the default username to use.
 .TP
