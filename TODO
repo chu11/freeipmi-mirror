@@ -42,7 +42,8 @@ pef-config
 
 general
 -------
---config-file manpage entry
+--config-file manpage stuffs 
+ - need freeipmi(5) too
 audit error message consistency in tool validate functions
 - exit(1) vs. exit(EXIT_FAILURE)
 audit error messages in command line parsing in all tools
