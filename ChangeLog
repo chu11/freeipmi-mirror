@@ -18,7 +18,8 @@
 	'hostrange_output' to just 'output' for consistency.  Remove
 	excessive use of "wanted" suffix in variables.
 
-	* Adjust for variable name changes appropriately.
+	* Adjust for variable name changes appropriately in all tools.
+	Remove excessive use of "wanted" suffix in variables.
 
 	* common/src/tool-cmdline-common.c (verify_hostrange_cmd_args):
 	Check that user did not specify both buffer and consolidate

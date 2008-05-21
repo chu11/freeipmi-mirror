@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.11 2008-05-20 18:59:51 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.12 2008-05-21 16:48:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -97,19 +97,19 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case DEVICE_ID_KEY:
-      cmd_args->device_id_wanted++;
       cmd_args->device_id = strtoul(arg, &ptr, 0);
       if (ptr != (arg + strlen(arg)))
         {
           fprintf (stderr, "invalid device id\n");
           exit(1);
         }
+      cmd_args->device_id_set++;
       break;
     case VERBOSE_KEY:
       cmd_args->verbose_count++;
       break;
     case SKIP_CHECKS_KEY:
-      cmd_args->skip_checks_wanted = 1;
+      cmd_args->skip_checks = 1;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -135,10 +135,10 @@ ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
   init_common_cmd_args_user (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
-  cmd_args->device_id_wanted = 0;
   cmd_args->device_id = 0;
+  cmd_args->device_id_set = 0;
   cmd_args->verbose_count = 0;
-  cmd_args->skip_checks_wanted = 0;
+  cmd_args->skip_checks = 0;
 
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));

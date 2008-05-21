@@ -34,8 +34,8 @@ struct bmc_device_arguments
 {
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
-  int cold_reset_wanted;
-  int warm_reset_wanted;
+  int cold_reset;
+  int warm_reset;
 };
 
 typedef struct bmc_device_prog_data

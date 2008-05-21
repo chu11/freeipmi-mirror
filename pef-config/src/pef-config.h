@@ -44,7 +44,7 @@ enum pef_config_argp_option_keys
 struct pef_config_arguments
 {
   struct config_arguments config_args;
-  int info_wanted;
+  int info;
 };
 
 typedef struct pef_config_prog_data

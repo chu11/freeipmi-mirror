@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.46 2008-05-21 16:40:18 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.47 2008-05-21 16:48:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -131,7 +131,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (args->list_groups_wanted)
+  if (args->list_groups)
     return _list_groups (state_data);
 
   if (args->sdr.flush_cache)
@@ -205,7 +205,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
     }
   
   sensor_reading_flags = IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS;
-  if (args->regenerate_sdr_cache_wanted)
+  if (args->regenerate_sdr_cache)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;
   
   if (!args->sensors_list_length && !args->ipmimonitoring_groups_length)
@@ -266,7 +266,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
 
   pstdout_printf(state_data->pstate, 
                  "Record_ID | Sensor Name | Sensor Group | Monitoring Status");
-  if (!args->quiet_readings_wanted)
+  if (!args->quiet_readings)
     pstdout_printf(state_data->pstate, 
                    "| Sensor Units | Sensor Reading");
   pstdout_printf(state_data->pstate, 
@@ -392,7 +392,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                      sensor_group_str,
                      sensor_state_str);
       
-      if (!args->quiet_readings_wanted && sensor_reading)
+      if (!args->quiet_readings && sensor_reading)
         {
           if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
             sensor_units_str = "C";
@@ -498,7 +498,7 @@ _ipmimonitoring(pstdout_state_t pstate,
   /* Special case, just flush, don't do an IPMI connection */
   /* Special case, just list groups, don't do an IPMI connection */
   if (!prog_data->args->sdr.flush_cache
-      && !prog_data->args->list_groups_wanted)
+      && !prog_data->args->list_groups)
     {
       if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
                                             hostname,

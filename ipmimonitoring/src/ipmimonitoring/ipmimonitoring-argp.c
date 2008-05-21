@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.10 2008-05-21 16:40:18 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.11 2008-05-21 16:48:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -110,7 +110,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     {
       /* legacy option */
     case REGENERATE_SDR_CACHE_KEY:
-      cmd_args->regenerate_sdr_cache_wanted = 1;
+      cmd_args->regenerate_sdr_cache = 1;
       break;
       /* legacy option */
     case CACHE_DIR_KEY:
@@ -120,13 +120,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                             &(cmd_args->sdr));
       break;
     case QUIET_READINGS_KEY:
-      cmd_args->quiet_readings_wanted = 1;
-      break;
-    case SDR_INFO_KEY:
-      cmd_args->sdr_info_wanted = 1;
+      cmd_args->quiet_readings = 1;
       break;
     case LIST_GROUPS_KEY:
-      cmd_args->list_groups_wanted = 1;
+      cmd_args->list_groups = 1;
       break;
     case GROUPS_KEY:
       cmd_args->groups_list_wanted = 1;
@@ -182,10 +179,9 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   init_common_cmd_args_user (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
-  cmd_args->regenerate_sdr_cache_wanted = 0;
-  cmd_args->quiet_readings_wanted = 0;
-  cmd_args->sdr_info_wanted = 0;
-  cmd_args->list_groups_wanted = 0;
+  cmd_args->regenerate_sdr_cache = 0;
+  cmd_args->quiet_readings = 0;
+  cmd_args->list_groups = 0;
   cmd_args->groups_list_wanted = 0;
   for (i = 0; i < IPMIMONITORING_MAX_GROUPS; i++)
     memset(cmd_args->groups_list[i],

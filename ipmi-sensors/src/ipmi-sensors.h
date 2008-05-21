@@ -45,11 +45,11 @@ struct ipmi_sensors_arguments
   struct common_cmd_args common;
   struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
-  int verbose_wanted;
+  int verbose;
   int verbose_count;
-  int quiet_readings_wanted;
-  int sdr_info_wanted;
-  int list_groups_wanted;
+  int quiet_readings;
+  int sdr_info;
+  int list_groups;
   int groups_list_wanted;
   char groups_list[IPMI_SENSORS_MAX_GROUPS][IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH+1];
   unsigned int groups_list_length;

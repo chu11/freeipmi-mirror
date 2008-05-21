@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.h,v 1.9 2008-03-28 00:14:35 chu11 Exp $
+ *  $Id: ipmi-fru.h,v 1.10 2008-05-21 16:48:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -54,10 +54,10 @@ struct ipmi_fru_arguments
   struct common_cmd_args common;
   struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
-  int device_id_wanted;
   int device_id;
+  int device_id_set;
   int verbose_count;
-  int skip_checks_wanted;
+  int skip_checks;
 };
 
 typedef struct ipmi_fru_prog_data

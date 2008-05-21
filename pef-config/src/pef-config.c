@@ -205,7 +205,7 @@ _pef_config (void *arg)
         }
     }
 
-  if (prog_data->args->info_wanted)
+  if (prog_data->args->info)
     ret = pef_info (&state_data);
   else
     {

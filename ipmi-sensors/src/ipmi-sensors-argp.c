@@ -103,17 +103,17 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case VERBOSE_KEY:
-      cmd_args->verbose_wanted = 1;
+      cmd_args->verbose = 1;
       cmd_args->verbose_count++;
       break;
     case QUIET_READINGS_KEY:
-      cmd_args->quiet_readings_wanted = 1;
+      cmd_args->quiet_readings = 1;
       break;
     case SDR_INFO_KEY:
-      cmd_args->sdr_info_wanted = 1;
+      cmd_args->sdr_info = 1;
       break;
     case LIST_GROUPS_KEY:
-      cmd_args->list_groups_wanted = 1;
+      cmd_args->list_groups = 1;
       break;
     /* maintain "group" for backwards compatability */
     case GROUP_KEY:
@@ -215,11 +215,11 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   init_common_cmd_args_user (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
-  cmd_args->verbose_wanted = 0;
+  cmd_args->verbose = 0;
   cmd_args->verbose_count = 0;
-  cmd_args->quiet_readings_wanted = 0;
-  cmd_args->sdr_info_wanted = 0;
-  cmd_args->list_groups_wanted = 0;
+  cmd_args->quiet_readings = 0;
+  cmd_args->sdr_info = 0;
+  cmd_args->list_groups = 0;
   cmd_args->groups_list_wanted = 0;
   for (i = 0; i < IPMI_SENSORS_MAX_GROUPS; i++)
     memset(cmd_args->groups_list[i],

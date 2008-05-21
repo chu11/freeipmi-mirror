@@ -71,7 +71,7 @@ _output_simple_header (ipmi_sensors_state_data_t *state_data,
                                IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
     return -1;
 
-  if (state_data->prog_data->args->quiet_readings_wanted)
+  if (state_data->prog_data->args->quiet_readings)
     pstdout_printf (state_data->pstate,
                     "%d: %s: ", 
                     record_id, 
@@ -129,7 +129,7 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
   switch (sensor_classify (event_reading_type_code))
     {
     case SENSOR_CLASS_THRESHOLD:
-      if (!state_data->prog_data->args->quiet_readings_wanted)
+      if (!state_data->prog_data->args->quiet_readings)
         {             
           uint8_t sensor_unit;
 

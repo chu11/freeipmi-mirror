@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.22 2008-05-21 16:40:17 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.23 2008-05-21 16:48:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -347,7 +347,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
         }
     }
 
-  if (args->device_id_wanted)
+  if (args->device_id_set)
     {
       if (args->device_id == IPMI_FRU_DEVICE_ID_DEFAULT)
         {

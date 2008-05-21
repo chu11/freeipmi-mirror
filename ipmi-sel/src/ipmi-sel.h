@@ -43,18 +43,18 @@ struct ipmi_sel_arguments
   struct common_cmd_args common;
   struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
-  int info_wanted;
-  int get_time_wanted;
-  int set_time_wanted;
+  int info;
+  int get_time;
+  int set_time;
   char *set_time_arg;
-  int delete_all_wanted;
-  int delete_wanted;
+  int delete_all;
+  int delete;
   int delete_record_list[IPMI_SEL_MAX_DELETE_RECORD];
   int delete_record_list_length;
-  int delete_range_wanted;
+  int delete_range;
   int delete_range1;
   int delete_range2;
-  int hex_dump_wanted;
+  int hex_dump;
   char *hex_dump_filename;
 };
 

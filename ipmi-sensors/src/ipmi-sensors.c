@@ -459,13 +459,13 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
 
   args = state_data->prog_data->args;
   
-  if (args->sdr_info_wanted)
+  if (args->sdr_info)
     return _sdr_repository_info (state_data);
   
   if (args->sdr.flush_cache)
     return _flush_cache (state_data);
   
-  if (args->list_groups_wanted)
+  if (args->list_groups)
     return _display_group_list (state_data);
   
   if (sdr_cache_create_and_load (state_data->ipmi_sdr_cache_ctx,
@@ -502,7 +502,7 @@ _ipmi_sensors (pstdout_state_t pstate,
   /* Special case, just flush, don't do an IPMI connection */
   /* Special case, just list groups, don't do an IPMI connection */
   if (!prog_data->args->sdr.flush_cache
-      && !prog_data->args->list_groups_wanted)
+      && !prog_data->args->list_groups)
     {
       if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
                                             hostname,

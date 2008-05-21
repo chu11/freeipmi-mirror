@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.16 2008-05-20 16:21:40 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.17 2008-05-21 16:48:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -645,7 +645,7 @@ ipmi_fru_check_checksum(ipmi_fru_state_data_t *state_data,
   assert(length_in_bytes);
   assert(str);
 
-  if (!state_data->prog_data->args->skip_checks_wanted)
+  if (!state_data->prog_data->args->skip_checks)
     {
       uint8_t checksum = checksum_init;
       int i;

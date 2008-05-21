@@ -33,7 +33,7 @@ struct bmc_info_arguments
 {
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
-  int guid_wanted;
+  int guid;
 };
 
 typedef struct bmc_info_prog_data

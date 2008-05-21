@@ -610,28 +610,28 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
 
   args = state_data->prog_data->args;
   
-  if (args->info_wanted)
+  if (args->info)
     return _display_sel_info (state_data);
 
-  if (args->get_time_wanted)
+  if (args->get_time)
     return _get_time (state_data);
 
-  if (args->set_time_wanted)
+  if (args->set_time)
     return _set_time (state_data);
   
   if (args->sdr.flush_cache)
     return _flush_cache (state_data);
    
-  if (args->delete_all_wanted)
+  if (args->delete_all)
     return _clear_entries (state_data);
 
-  if (args->delete_wanted)
+  if (args->delete)
     return _delete_records (state_data);  
  
-  if (args->delete_range_wanted)
+  if (args->delete_range)
     return _delete_range (state_data);
 
-  if (args->hex_dump_wanted)
+  if (args->hex_dump)
     return _hex_dump (state_data);
 
   /* else default to displaying records */

@@ -77,7 +77,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case CMD_GUID_KEY:
-      cmd_args->guid_wanted++;
+      cmd_args->guid++;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -101,7 +101,7 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
   init_common_cmd_args_user (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
-  cmd_args->guid_wanted = 0;
+  cmd_args->guid = 0;
   
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));

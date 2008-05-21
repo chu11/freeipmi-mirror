@@ -79,10 +79,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case CMD_COLD_RESET_KEY:
-      cmd_args->cold_reset_wanted++;
+      cmd_args->cold_reset++;
       break;
     case CMD_WARM_RESET_KEY:
-      cmd_args->warm_reset_wanted++;
+      cmd_args->warm_reset++;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -103,14 +103,14 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 void
 _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
 { 
-  if (!cmd_args->cold_reset_wanted && !cmd_args->warm_reset_wanted)
+  if (!cmd_args->cold_reset && !cmd_args->warm_reset)
     {
       fprintf (stderr, 
                "No BMC device command specified.\n");
       exit(1);
     }
 
-  if (cmd_args->cold_reset_wanted && cmd_args->warm_reset_wanted)
+  if (cmd_args->cold_reset && cmd_args->warm_reset)
     {
       fprintf (stderr, 
                "Multiple BMC device commands specified.\n");
@@ -124,8 +124,8 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   init_common_cmd_args_admin (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
-  cmd_args->cold_reset_wanted = 0;
-  cmd_args->warm_reset_wanted = 0;
+  cmd_args->cold_reset = 0;
+  cmd_args->warm_reset = 0;
   
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));

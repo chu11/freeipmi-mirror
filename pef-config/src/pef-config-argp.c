@@ -76,7 +76,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case INFO_KEY:
-      cmd_args->info_wanted++;
+      cmd_args->info++;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -100,8 +100,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 void
 _pef_config_args_validate (struct pef_config_arguments *cmd_args)
 {
-  if ((!cmd_args->config_args.action && !cmd_args->info_wanted)
-      || (cmd_args->config_args.action && cmd_args->info_wanted)
+  if ((!cmd_args->config_args.action && !cmd_args->info)
+      || (cmd_args->config_args.action && cmd_args->info)
       || cmd_args->config_args.action == -1)
     {
       fprintf (stderr,
@@ -121,7 +121,7 @@ pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_a
 {
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_admin (&(cmd_args->config_args.common));
-  cmd_args->info_wanted = 0;
+  cmd_args->info = 0;
 
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->config_args.common));

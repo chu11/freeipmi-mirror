@@ -34,7 +34,6 @@ enum ipmimonitoring_argp_option_keys
   { 
     REGENERATE_SDR_CACHE_KEY = 'r', /* legacy */
     QUIET_READINGS_KEY = 'q',
-    SDR_INFO_KEY = 'i', 
     LIST_GROUPS_KEY = 'L', 
     GROUPS_KEY = 'g', 
     SENSORS_LIST_KEY = 's', 
@@ -46,10 +45,9 @@ struct ipmimonitoring_arguments
   struct common_cmd_args common;
   struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
-  int regenerate_sdr_cache_wanted;
-  int quiet_readings_wanted;
-  int sdr_info_wanted;
-  int list_groups_wanted;
+  int regenerate_sdr_cache;
+  int quiet_readings;
+  int list_groups;
   int groups_list_wanted;
   char groups_list[IPMIMONITORING_MAX_GROUPS][IPMIMONITORING_MAX_GROUPS_STRING_LENGTH+1];
   unsigned int groups_list_length;

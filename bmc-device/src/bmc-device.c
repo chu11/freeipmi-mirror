@@ -104,10 +104,10 @@ run_cmd_args (bmc_device_state_data_t *state_data)
   
   args = state_data->prog_data->args;
 
-  if (args->cold_reset_wanted)
+  if (args->cold_reset)
     return cold_reset (state_data);
 
-  if (args->warm_reset_wanted)
+  if (args->warm_reset)
     return warm_reset (state_data);
 
   rv = 0;

@@ -101,20 +101,20 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case INFO_KEY:
-      cmd_args->info_wanted = 1;
+      cmd_args->info = 1;
       break;
     case GET_TIME_KEY:
-      cmd_args->get_time_wanted = 1;
+      cmd_args->get_time = 1;
       break;
     case SET_TIME_KEY:
-      cmd_args->set_time_wanted = 1;
+      cmd_args->set_time = 1;
       cmd_args->set_time_arg = arg;
       break;
     case DELETE_ALL_KEY:
-      cmd_args->delete_all_wanted = 1;
+      cmd_args->delete_all = 1;
       break;
     case DELETE_KEY:
-      cmd_args->delete_wanted = 1;
+      cmd_args->delete = 1;
       tok = strtok(arg, " ,");
       while (tok && cmd_args->delete_record_list_length < IPMI_SEL_MAX_DELETE_RECORD)
         {
@@ -130,7 +130,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         }
       break;
     case DELETE_RANGE_KEY:
-      cmd_args->delete_range_wanted = 1;
+      cmd_args->delete_range = 1;
       {
 	char *range_str = NULL;
 	char *start_ptr = NULL;
@@ -187,7 +187,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       }
       break;
     case HEX_DUMP_KEY:
-      cmd_args->hex_dump_wanted = 1;
+      cmd_args->hex_dump = 1;
       if (arg)
 	{
 	  if (cmd_args->hex_dump_filename)
@@ -219,20 +219,20 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
-  cmd_args->info_wanted = 0;
-  cmd_args->get_time_wanted = 0;
-  cmd_args->set_time_wanted = 0;
+  cmd_args->info = 0;
+  cmd_args->get_time = 0;
+  cmd_args->set_time = 0;
   cmd_args->set_time_arg = NULL;
-  cmd_args->delete_all_wanted = 0;
-  cmd_args->delete_wanted = 0;
+  cmd_args->delete_all = 0;
+  cmd_args->delete = 0;
   memset(cmd_args->delete_record_list,
          '\0',
          sizeof(int)*IPMI_SEL_MAX_DELETE_RECORD);
    cmd_args->delete_record_list_length = 0;
-  cmd_args->delete_range_wanted = 0;
+  cmd_args->delete_range = 0;
   cmd_args->delete_range1 = 0;
   cmd_args->delete_range2 = 0;
-  cmd_args->hex_dump_wanted = 0;
+  cmd_args->hex_dump = 0;
   cmd_args->hex_dump_filename = NULL;
   
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
