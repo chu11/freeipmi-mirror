@@ -1,6 +1,7 @@
 0.6.3 - 00/00/00
 ----------------
 o Fix --eliminate option in ipmipower.
+o Fix --quiet-cache option to work with flushing cache.
 o Fix ipmi-sensors-config flush cache corner case.
 o Fix workarounds parsing bug.
 o Fix/clarify various manpage text.

@@ -6,6 +6,13 @@
 
 	* ipmipower/ipmipower.conf.5.pre.in: Fix typos.
 	
+ 	* common/doc/manpage-common-ignore-sdr-cache.man: Fix option
+ 	description typo.
+ 
+ 	* common/src/tool-sdr-cache-common.c (sdr_cache_flush_cache),
+ 	ipmimonitoring/, ipmi-fru/, ipmi-sel/, ipmi-sensors/,
+ 	ipmi-sensors-config/: Fix --quiet-cache to work with flush option.
+
 2008-05-20  Albert Chu <chu11@llnl.gov>
   
  	* ipmi-sensors-config/src/ipmi-sensors-config.c
