@@ -35,6 +35,7 @@
 
 #define CONFIG_FILE_TOOL_NONE        0x00
 #define CONFIG_FILE_TOOL_IPMICONSOLE 0x01
+#define CONFIG_FILE_TOOL_IPMIPOWER   0x02
 
 struct config_file_data_ipmiconsole
 {
@@ -44,6 +45,31 @@ struct config_file_data_ipmiconsole
   int dont_steal_count;
   int lock_memory;
   int lock_memory_count;
+};
+
+struct config_file_data_ipmipower
+{
+  int on_if_off;
+  int on_if_off_count;
+  int wait_until_on;
+  int wait_until_on_count;
+  int wait_until_off;
+  int wait_until_off_count;
+
+  unsigned int retransmission_wait_timeout;
+  int retransmission_wait_timeout_count;
+  unsigned int retransmission_backoff_count;
+  int retransmission_backoff_count_count;
+  unsigned int ping_interval;
+  int ping_interval_count;
+  unsigned int ping_timeout;
+  int ping_timeout_count;
+  unsigned int ping_packet_count;
+  int ping_packet_count_count;
+  unsigned int ping_percent;
+  int ping_percent_count;
+  unsigned int ping_consec_count;
+  int ping_consec_count_count;
 };
 
 int config_file_parse(const char *filename,

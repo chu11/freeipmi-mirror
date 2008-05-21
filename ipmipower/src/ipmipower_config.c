@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.122 2008-05-21 02:29:33 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.123 2008-05-21 17:30:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -55,6 +55,7 @@
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
       
 #define IPMIPOWER_CONFIG_FILE_DEFAULT "/etc/ipmipower.conf"
 
@@ -285,346 +286,59 @@ cmdline_parse (int key,
   return 0;
 }
 
-/*
- * Conffile library callback functions
- */
-    
-static int 
-_cb_driver_type(conffile_t cf, struct conffile_data *data,
-                char *optionname, int option_type, void *option_ptr, 
-                int option_data, void *app_ptr, int app_data) 
-{
-  int tmp;
-
-  if ((tmp = parse_outofband_driver_type(data->string)) < 0)
-    ierr_exit("Config File Error: invalid driver type specified");
-
-  cmd_args.common.driver_type = tmp;
-  return 0;
-}
-
-static int 
-_cb_username(conffile_t cf, struct conffile_data *data,
-             char *optionname, int option_type, void *option_ptr,
-             int option_data, void *app_ptr, int app_data) 
-{
-  if (strlen(data->string) > IPMI_MAX_USER_NAME_LENGTH)
-    ierr_exit("Config File Error: username too long");
-
-  if (!(cmd_args.common.username = strdup(data->string)))
-    {
-      perror("strdup");
-      exit(1);
-    }
-  return 0;
-}
-
-static int 
-_cb_password(conffile_t cf, struct conffile_data *data,
-             char *optionname, int option_type, void *option_ptr,
-             int option_data, void *app_ptr, int app_data) 
-{
-  if (strlen(data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
-    ierr_exit("Config File Error: password too long");
-
-  if (!(cmd_args.common.password = strdup(data->string)))
-    {
-      perror("strdup");
-      exit(1);
-    }
-  return 0;
-}
-
-static int 
-_cb_k_g(conffile_t cf, struct conffile_data *data,
-        char *optionname, int option_type, void *option_ptr,
-        int option_data, void *app_ptr, int app_data) 
-{
-  int rv;
-
-  if ((rv = check_kg_len(data->string)) < 0)
-    ierr_exit("Command Line Error: k_g too long");
-
-  if ((rv = parse_kg(cmd_args.common.k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
-    ierr_exit("Config File Error: k_g input formatted incorrectly");
-
-  if (rv > 0)
-    cmd_args.common.k_g_len = rv;
-
-  return 0;
-}
-
-static int 
-_cb_authentication_type(conffile_t cf, struct conffile_data *data,
-			char *optionname, int option_type, void *option_ptr, 
-			int option_data, void *app_ptr, int app_data) 
-{
-  int tmp;
-
-  if ((tmp = parse_authentication_type(data->string)) < 0)
-    ierr_exit("Config File Error: invalid authentication type specified");
-
-  cmd_args.common.authentication_type = tmp;
-  return 0;
-}
-
-static int 
-_cb_cipher_suite_id(conffile_t cf, struct conffile_data *data,
-                    char *optionname, int option_type, void *option_ptr, 
-                    int option_data, void *app_ptr, int app_data) 
-{
-  if (data->intval < IPMI_CIPHER_SUITE_ID_MIN
-      || data->intval > IPMI_CIPHER_SUITE_ID_MAX)
-    ierr_exit("Config File Error: invalid cipher suite id");
-  if (!IPMI_CIPHER_SUITE_ID_SUPPORTED(data->intval))
-    ierr_exit("Config File Error: unsupported cipher suite id");
-  cmd_args.common.cipher_suite_id = data->intval;
-  return 0;
-}
-
-static int 
-_cb_privilege_level(conffile_t cf, struct conffile_data *data,
-                    char *optionname, int option_type, void *option_ptr, 
-                    int option_data, void *app_ptr, int app_data) 
-{
-  int tmp;
-  
-  if ((tmp = parse_privilege_level(data->string)) < 0)
-    ierr_exit("Config File Error: invalid privilege level specified");
-
-  cmd_args.common.privilege_level = tmp;
-  return 0;
-}
-
-static int 
-_cb_workaround_flags(conffile_t cf, struct conffile_data *data,
-                     char *optionname, int option_type, void *option_ptr,
-                     int option_data, void *app_ptr, int app_data) 
-{
-  int tmp;
-
-  if ((tmp = parse_workaround_flags(data->string)) < 0)
-    ierr_exit("Config File Error: invalid workaround flags specified");
-  cmd_args.common.workaround_flags = tmp;
-  return 0;
-}
-
-static int 
-_cb_fanout(conffile_t cf, struct conffile_data *data,
-                    char *optionname, int option_type, void *option_ptr, 
-                    int option_data, void *app_ptr, int app_data) 
-{
-  if (data->intval < PSTDOUT_FANOUT_MIN
-      || data->intval > PSTDOUT_FANOUT_MAX)
-    ierr_exit("Config File Error: invalid fanout");
-  cmd_args.hostrange.fanout = data->intval;
-  return 0;
-}
-
-static int 
-_cb_bool(conffile_t cf, struct conffile_data *data,
-         char *optionname, int option_type, void *option_ptr,
-         int option_data, void *app_ptr, int app_data) 
-{
-  int *boolval = (int *)option_ptr;
-  int cmdlineset = (int)option_data;
-
-  if (cmdlineset)
-    return 0;
-
-  *boolval = data->boolval;
-  return 0;
-}
-
-static int 
-_cb_unsigned_int_non_zero(conffile_t cf, struct conffile_data *data,
-                          char *optionname, int option_type, void *option_ptr,
-                          int option_data, void *app_ptr, int app_data) 
-{
-  unsigned int *temp = (unsigned int *)option_ptr;
-  int cmdlineset = (int)option_data;
-
-  if (cmdlineset)
-    return 0;
-
-  if (data->intval <= 0)
-    ierr_exit("Config File Error: %s value invalid", optionname);
-
-  *temp = data->intval; 
-  return 0;
-}
-
-static int 
-_cb_unsigned_int(conffile_t cf, struct conffile_data *data,
-                 char *optionname, int option_type, void *option_ptr,
-                 int option_data, void *app_ptr, int app_data) 
-{
-  unsigned int *temp = (unsigned int *)option_ptr;
-  int cmdlineset = (int)option_data;
-
-  if (cmdlineset)
-    return 0;
-
-  if (data->intval < 0)
-    ierr_exit("Config File Error: %s value invalid", optionname);
-
-  *temp = data->intval; 
-  return 0;
-}
-
 void 
-ipmipower_config_conffile_parse(char *config_file) 
+ipmipower_config_conffile_parse(void) 
 {
-  int driver_type_count = 0,
-    ipmi_version_count = 0, 
-    username_count = 0, 
-    password_count = 0, 
-    k_g_count = 0, 
-    timeout_count = 0, 
-    session_timeout_count = 0, 
-    retry_timeout_count = 0,
-    retransmission_timeout_count = 0, 
-    authentication_type_count = 0, 
-    cipher_suite_id_backwards_count = 0, 
-    cipher_suite_id_count = 0, 
-    privilege_count = 0, 
-    privilege_level_count = 0, 
-    workaround_flags_count = 0, 
-    buffer_output_count = 0, 
-    consolidate_output_count = 0,
-    fanout_count = 0,
-    eliminate_count = 0, 
-    always_prefix_count = 0,
-    on_if_off_count = 0, 
-    wait_until_on_count = 0,
-    wait_until_off_count = 0, 
-    retry_wait_timeout_count = 0, 
-    retransmission_wait_timeout_count = 0, 
-    retry_backoff_count_count = 0, 
-    retransmission_backoff_count_count = 0, 
-    ping_interval_count = 0, 
-    ping_timeout_count = 0,
-    ping_packet_count_count = 0,
-    ping_percent_count = 0, 
-    ping_consec_count_count = 0;
+  struct config_file_data_ipmipower config_file_data;
 
-  struct conffile_option options[] = 
+  memset(&config_file_data,
+         '\0',
+         sizeof(struct config_file_data_ipmipower));
+
+  /* try legacy file first */
+  if (config_file_parse (IPMIPOWER_CONFIG_FILE_DEFAULT,
+                         1,         /* do not exit if file not found */
+                         &(cmd_args.common),
+                         NULL,
+                         NULL,
+                         CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE | CONFIG_FILE_MISC,
+                         CONFIG_FILE_TOOL_IPMIPOWER,
+                         &config_file_data) < 0)
     {
-      {"driver-type", CONFFILE_OPTION_STRING, -1, _cb_driver_type,
-       1, 0, &driver_type_count, NULL, 0},
-      /* ipmi-version maintained for backwards compatability */
-      {"ipmi-version", CONFFILE_OPTION_STRING, -1, _cb_driver_type,
-       1, 0, &ipmi_version_count, NULL, 0},
-      {"username", CONFFILE_OPTION_STRING, -1, _cb_username,
-       1, 0, &username_count, NULL, 0},
-      {"password", CONFFILE_OPTION_STRING, -1, _cb_password, 
-       1, 0, &password_count, NULL, 0},
-      {"k_g", CONFFILE_OPTION_STRING, -1, _cb_k_g, 
-       1, 0, &k_g_count, NULL, 0},
-      /* timeout maintained for backwards compatability */
-      {"timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &timeout_count, &(cmd_args.common.session_timeout), 
-       0},
-      {"session-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &session_timeout_count, &(cmd_args.common.session_timeout), 
-       0},
-      /* retry-timeout for backwards comptability */
-      {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &retry_timeout_count, &(cmd_args.common.retransmission_timeout), 
-       0},
-      {"retransmission-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &retransmission_timeout_count, &(cmd_args.common.retransmission_timeout), 
-       0},
-      {"authentication-type", CONFFILE_OPTION_STRING, -1, _cb_authentication_type, 
-       1, 0, &authentication_type_count, NULL, 0},
-      /* cipher suite id w/ underscores maintained for backwards compatability */
-      {"cipher_suite_id", CONFFILE_OPTION_STRING, -1, _cb_cipher_suite_id,
-       1, 0, &cipher_suite_id_backwards_count, NULL, 0},
-      {"cipher-suite-id", CONFFILE_OPTION_STRING, -1, _cb_cipher_suite_id,
-       1, 0, &cipher_suite_id_count, NULL, 0},
-      /* "privilege" maintained for backwards compatability */
-      {"privilege", CONFFILE_OPTION_STRING, -1, _cb_privilege_level, 
-       1, 0, &privilege_count, NULL, 0},
-      {"privilege-level", CONFFILE_OPTION_STRING, -1, _cb_privilege_level, 
-       1, 0, &privilege_level_count, NULL, 0},
-      {"workaround-flags", CONFFILE_OPTION_STRING, -1, _cb_workaround_flags,
-       1, 0, &workaround_flags_count, NULL, 0},
-      {"buffer-output", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &buffer_output_count, NULL, 0},
-      {"consolidate-output", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &consolidate_output_count, NULL, 0},
-      {"fanout", CONFFILE_OPTION_INT, -1, _cb_fanout,
-       1, 0, &fanout_count, &(cmd_args.hostrange.fanout),
-       0},
-      {"eliminate", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &eliminate_count, NULL, 0},
-      {"always_prefix", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &always_prefix_count, NULL, 0},
-      {"on-if-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &on_if_off_count, &(cmd_args.on_if_off), 
-       0},
-      {"wait-until-on", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &wait_until_on_count, &(cmd_args.wait_until_on), 
-       0},
-      {"wait-until-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &wait_until_off_count, &(cmd_args.wait_until_off), 
-       0},
-      /* retry-wait-timeout for backwards comptability */
-      {"retry-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &retry_wait_timeout_count, &(cmd_args.retransmission_wait_timeout), 
-       0},
-      {"retransmission-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero, 
-       1, 0, &retransmission_wait_timeout_count, &(cmd_args.retransmission_wait_timeout), 
-       0},
-      /* retry-backoff-count for backwards compatability */
-      {"retry-backoff-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero,
-       1, 0, &retry_backoff_count_count, &(cmd_args.retransmission_backoff_count), 
-       0},
-      {"retransmission-backoff-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int_non_zero,
-       1, 0, &retransmission_backoff_count_count, &(cmd_args.retransmission_backoff_count), 
-       0},
-      {"ping-interval", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_interval_count, &(cmd_args.ping_interval), 
-       0},
-      {"ping-timeout", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_timeout_count, &(cmd_args.ping_timeout), 
-       0},
-      {"ping-packet-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_packet_count_count, &(cmd_args.ping_packet_count), 
-       0},
-      {"ping-percent", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_percent_count, &(cmd_args.ping_percent), 
-       0},
-      {"ping-consec-count", CONFFILE_OPTION_INT, -1, _cb_unsigned_int, 
-       1, 0, &ping_consec_count_count, &(cmd_args.ping_consec_count), 
-       0},
-    };
-  conffile_t cf = NULL;
-  char *conffile = NULL;
-  int num;
-
-  if (!(cf = conffile_handle_create()))
-    ierr_exit("Config File Error: cannot create conffile handle");
-
-  conffile = (config_file) ? config_file : IPMIPOWER_CONFIG_FILE_DEFAULT;
-  num = sizeof(options)/sizeof(struct conffile_option);
-  if (conffile_parse(cf, conffile, options, num, NULL, 0, 0) < 0) 
-    {
-      char errbuf[CONFFILE_MAX_ERRMSGLEN];
-      
-      /* Not an error if default file doesn't exist */ 
-      if (!config_file && conffile_errnum(cf) == CONFFILE_ERR_EXIST)
-        goto done;
-      
-      if (conffile_errmsg(cf, errbuf, CONFFILE_MAX_ERRMSGLEN) < 0)
-        ierr_exit("Config File Error: Cannot retrieve conffile error message");
-      
-      ierr_exit("Config File Error: %s", errbuf);
+      if (config_file_parse (cmd_args.common.config_file,
+                             0,
+                             &(cmd_args.common),
+                             NULL,
+                             NULL,
+                             CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE | CONFIG_FILE_MISC,
+                             CONFIG_FILE_TOOL_IPMIPOWER,
+                             &config_file_data) < 0)
+        {
+          fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
+          exit(1);
+        }
     }
 
- done:
-  (void)conffile_handle_destroy(cf);
-  return;
+  if (config_file_data.on_if_off_count)
+    cmd_args.on_if_off = config_file_data.on_if_off;
+  if (config_file_data.wait_until_on_count)
+    cmd_args.wait_until_on = config_file_data.wait_until_on;
+  if (config_file_data.wait_until_off_count)
+    cmd_args.wait_until_off = config_file_data.wait_until_off;
+  if (config_file_data.retransmission_wait_timeout_count)
+    cmd_args.retransmission_wait_timeout = config_file_data.retransmission_wait_timeout;
+  if (config_file_data.retransmission_backoff_count_count)
+    cmd_args.retransmission_backoff_count = config_file_data.retransmission_backoff_count;
+  if (config_file_data.ping_interval_count)
+    cmd_args.ping_interval = config_file_data.ping_interval;
+  if (config_file_data.ping_timeout_count)
+    cmd_args.ping_timeout = config_file_data.ping_timeout;
+  if (config_file_data.ping_packet_count_count)
+    cmd_args.ping_packet_count = config_file_data.ping_packet_count;
+  if (config_file_data.ping_percent_count)
+    cmd_args.ping_percent = config_file_data.ping_percent;
+  if (config_file_data.ping_consec_count_count)
+    cmd_args.ping_consec_count = config_file_data.ping_consec_count;
 }
 
 void 
@@ -682,7 +396,7 @@ ipmipower_config(int argc, char **argv)
 
   argp_parse(&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
   
-  ipmipower_config_conffile_parse(cmd_args.common.config_file);
+  ipmipower_config_conffile_parse();
   
   argp_parse(&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
 

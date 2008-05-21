@@ -16,8 +16,8 @@ ipmipower_SOURCES= \
 	wrappers.c
  
 ipmipower_LDADD = \
-	../../common/src/libmiscutils.la \
 	../../common/src/libtoolcommon.la \
+	../../common/src/libmiscutils.la \
 	../../ipmidetect/src/libipmidetect/libipmidetect.la \
 	../../libfreeipmi/src/libfreeipmi.la \
 	../../common/src/libdebugcommon.la

@@ -379,6 +379,37 @@ config_file_ipmiconsole_escape_char(conffile_t cf,
   return 0;
 }
 
+int 
+config_file_ipmipower_ipmi_version(conffile_t cf,
+                                   struct conffile_data *data,
+                                   char *optionname,
+                                   int option_type,
+                                   void *option_ptr,
+                                   int option_data,
+                                   void *app_ptr,
+                                   int app_data)
+{
+  struct common_cmd_args *cmd_args;
+  int tmp;
+
+  assert(option_ptr);
+
+  cmd_args = (struct common_cmd_args *)option_ptr;
+  
+  if (!strcasecmp(data->string, "1.5"))
+    tmp = IPMI_DEVICE_LAN;
+  else if (!strcasecmp(data->string, "2.0"))
+    tmp = IPMI_DEVICE_LAN_2_0;
+  else
+    {
+      fprintf(stderr, "Config File Error: invalid value for %s\n", optionname);
+      exit(1);
+    }
+  
+  cmd_args->driver_type = tmp;
+  return 0;
+}
+
 static void
 _ignore_options(struct conffile_option *options, unsigned int options_len)
 {
@@ -421,6 +452,9 @@ config_file_parse(const char *filename,
 
   struct config_file_data_ipmiconsole ipmiconsole_data;
   struct config_file_data_ipmiconsole *ipmiconsole_data_ptr;
+
+  struct config_file_data_ipmipower ipmipower_data;
+  struct config_file_data_ipmipower *ipmipower_data_ptr;
 
   struct conffile_option inband_options[] =
     {
@@ -726,6 +760,10 @@ config_file_parse(const char *filename,
    * Tool Config Options
    */
 
+  /* 
+   * Ipmiconsole
+   */
+
   /* Notes:
    *
    * deactivate option is not useful for config files.
@@ -804,6 +842,280 @@ config_file_parse(const char *filename,
       },
     };
 
+  /* 
+   * Ipmipower
+   */
+
+  struct conffile_option ipmipower_options[] =
+    {
+      /* ipmi-version maintained for backwards compatability */
+      {
+        "ipmi-version",
+        CONFFILE_OPTION_STRING, 
+        -1,
+        config_file_ipmipower_ipmi_version,
+        1, 
+        0,
+        &driver_type_count, 
+        cmd_args,
+        0
+      },
+      /* legacy - no ipmipower prefix */
+      {
+        "on-if-off", 
+        CONFFILE_OPTION_BOOL, 
+        -1,
+        config_file_bool,
+        1, 
+        0, 
+        &(ipmipower_data.on_if_off_count), 
+        &(ipmipower_data.on_if_off),
+        0
+      },
+      {
+        "ipmipower-on-if-off", 
+        CONFFILE_OPTION_BOOL, 
+        -1,
+        config_file_bool,
+        1, 
+        0, 
+        &(ipmipower_data.on_if_off_count), 
+        &(ipmipower_data.on_if_off),
+        0
+      },
+      /* legacy - no ipmipower prefix */
+      {
+        "wait-until-on", 
+        CONFFILE_OPTION_BOOL, 
+        -1, 
+        config_file_bool,
+        1, 
+        0, 
+        &(ipmipower_data.wait_until_on_count),
+        &(ipmipower_data.wait_until_on),
+        0
+      },
+      {
+        "ipmipower-wait-until-on", 
+        CONFFILE_OPTION_BOOL, 
+        -1, 
+        config_file_bool,
+        1, 
+        0, 
+        &(ipmipower_data.wait_until_on_count),
+        &(ipmipower_data.wait_until_on),
+        0
+      },
+      /* legacy - no ipmipower prefix */
+      {
+        "wait-until-off", 
+        CONFFILE_OPTION_BOOL, 
+        -1, 
+        config_file_bool,
+        1,
+        0, 
+        &(ipmipower_data.wait_until_off_count),
+        &(ipmipower_data.wait_until_off),
+        0
+      },
+      {
+        "ipmipower-wait-until-off", 
+        CONFFILE_OPTION_BOOL, 
+        -1, 
+        config_file_bool,
+        1,
+        0, 
+        &(ipmipower_data.wait_until_off_count),
+        &(ipmipower_data.wait_until_off),
+        0
+      },
+      /* retry-wait-timeout for backwards comptability */
+      {
+        "retry-wait-timeout", 
+        CONFFILE_OPTION_INT, 
+        -1, 
+        config_file_positive_int,
+        1,
+        0,
+        &(ipmipower_data.retransmission_wait_timeout_count), 
+        &(ipmipower_data.retransmission_wait_timeout),
+        0
+      },
+      /* legacy - no ipmipower prefix */
+      {
+        "retransmission-wait-timeout", 
+        CONFFILE_OPTION_INT, 
+        -1,
+        config_file_positive_int,
+        1, 
+        0, 
+        &(ipmipower_data.retransmission_wait_timeout_count), 
+        &(ipmipower_data.retransmission_wait_timeout),
+        0
+      },
+      {
+        "ipmipower-retransmission-wait-timeout", 
+        CONFFILE_OPTION_INT, 
+        -1,
+        config_file_positive_int,
+        1, 
+        0, 
+        &(ipmipower_data.retransmission_wait_timeout_count), 
+        &(ipmipower_data.retransmission_wait_timeout),
+        0
+      },
+      /* retry-backoff-count for backwards compatability */
+      {
+        "retry-backoff-count", 
+        CONFFILE_OPTION_INT, 
+        -1, 
+        config_file_positive_int,
+        1, 
+        0,
+        &(ipmipower_data.retransmission_backoff_count_count), 
+        &(ipmipower_data.retransmission_backoff_count),
+        0
+      },
+      /* legacy - no ipmipower prefix */
+      {
+        "retransmission-backoff-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_positive_int,
+        1, 
+        0,
+        &(ipmipower_data.retransmission_backoff_count_count), 
+        &(ipmipower_data.retransmission_backoff_count),
+        0
+      },
+      {
+        "ipmipower-retransmission-backoff-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_positive_int,
+        1, 
+        0,
+        &(ipmipower_data.retransmission_backoff_count_count), 
+        &(ipmipower_data.retransmission_backoff_count),
+        0
+      },
+      /* legacy - no ipmipower prefix */
+      {
+        "ping-interval", 
+        CONFFILE_OPTION_INT, 
+        -1,
+        config_file_non_negative_int,
+        1,
+        0, 
+        &(ipmipower_data.ping_interval_count), 
+        &(ipmipower_data.ping_interval),
+        0
+      },
+      {
+        "ipmipower-ping-interval", 
+        CONFFILE_OPTION_INT, 
+        -1,
+        config_file_non_negative_int,
+        1,
+        0, 
+        &(ipmipower_data.ping_interval_count), 
+        &(ipmipower_data.ping_interval),
+        0
+      },
+      /* legacy - no ipmipower prefix */
+      {
+        "ping-timeout", 
+        CONFFILE_OPTION_INT, 
+        -1, 
+        config_file_non_negative_int,
+        1,
+        0,
+        &(ipmipower_data.ping_timeout_count), 
+        &(ipmipower_data.ping_timeout),
+        0
+      },
+      {
+        "ipmipower-ping-timeout", 
+        CONFFILE_OPTION_INT, 
+        -1, 
+        config_file_non_negative_int,
+        1,
+        0,
+        &(ipmipower_data.ping_timeout_count), 
+        &(ipmipower_data.ping_timeout),
+        0
+      },
+      /* legacy - no ipmipower prefix */
+      {
+        "ping-packet-count",
+        CONFFILE_OPTION_INT,
+        -1, 
+        config_file_non_negative_int,
+        1, 
+        0, 
+        &(ipmipower_data.ping_packet_count_count), 
+        &(ipmipower_data.ping_packet_count),
+        0
+      },
+      {
+        "ipmipower-ping-packet-count",
+        CONFFILE_OPTION_INT,
+        -1, 
+        config_file_non_negative_int,
+        1, 
+        0, 
+        &(ipmipower_data.ping_packet_count_count), 
+        &(ipmipower_data.ping_packet_count),
+        0
+      },
+      /* legacy - no ipmipower prefix */
+      {
+        "ping-percent", 
+        CONFFILE_OPTION_INT, 
+        -1,
+        config_file_non_negative_int,
+        1, 
+        0, 
+        &(ipmipower_data.ping_percent_count), 
+        &(ipmipower_data.ping_percent),
+        0
+      },
+      {
+        "ipmipower-ping-percent", 
+        CONFFILE_OPTION_INT, 
+        -1,
+        config_file_non_negative_int,
+        1, 
+        0, 
+        &(ipmipower_data.ping_percent_count), 
+        &(ipmipower_data.ping_percent),
+        0
+      },
+      /* legacy - no ipmipower prefix */
+      {
+        "ping-consec-count", 
+        CONFFILE_OPTION_INT, 
+        -1, 
+        config_file_non_negative_int,
+        1, 
+        0, 
+        &(ipmipower_data.ping_consec_count_count), 
+        &(ipmipower_data.ping_consec_count),
+       0
+      },
+      {
+        "ipmipower-ping-consec-count", 
+        CONFFILE_OPTION_INT, 
+        -1, 
+        config_file_non_negative_int,
+        1, 
+        0, 
+        &(ipmipower_data.ping_consec_count_count), 
+        &(ipmipower_data.ping_consec_count),
+       0
+      },
+    };
+
   conffile_t cf = NULL;
   int rv = -1;
 
@@ -876,9 +1188,18 @@ config_file_parse(const char *filename,
          sizeof(ipmiconsole_options)/sizeof(struct conffile_option));
   config_file_options_len += sizeof(ipmiconsole_options)/sizeof(struct conffile_option);
 
+  if (!(tool_support & CONFIG_FILE_TOOL_IPMIPOWER))
+    _ignore_options(ipmipower_options, sizeof(ipmipower_options)/sizeof(struct conffile_option));
+
+  memcpy(config_file_options + config_file_options_len,
+         ipmipower_options,
+         sizeof(ipmipower_options)/sizeof(struct conffile_option));
+  config_file_options_len += sizeof(ipmipower_options)/sizeof(struct conffile_option);
+
   /* clear out config file data */
 
   memset(&ipmiconsole_data, '\0', sizeof(struct config_file_data_ipmiconsole));
+  memset(&ipmipower_data, '\0', sizeof(struct config_file_data_ipmipower));
 
   if (!(cf = conffile_handle_create()))
     {
@@ -925,7 +1246,7 @@ config_file_parse(const char *filename,
         }
     }
 
-  /* copy file over to tool */
+  /* copy file data over to tool */
   
   if (tool_support & CONFIG_FILE_TOOL_IPMICONSOLE)
     {
@@ -933,6 +1254,13 @@ config_file_parse(const char *filename,
       memcpy(ipmiconsole_data_ptr, 
              &ipmiconsole_data,
              sizeof(struct config_file_data_ipmiconsole));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMIPOWER)
+    {
+      ipmipower_data_ptr = (struct config_file_data_ipmipower *)data;
+      memcpy(ipmipower_data_ptr, 
+             &ipmipower_data,
+             sizeof(struct config_file_data_ipmipower));
     }
 
  out:
