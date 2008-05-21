@@ -190,10 +190,12 @@ config_file_driver_type(conffile_t cf,
       exit(1);
     }
 
-  /* don't change default we we want outofband configuration only */
-  if (!(cmd_args->driver_type_outofband_only
-        && (tmp != IPMI_DEVICE_LAN
-            && tmp != IPMI_DEVICE_LAN_2_0)))
+  /* don't change default if we want outofband configuration only */
+  if (cmd_args->driver_type_outofband_only
+      && (tmp == IPMI_DEVICE_LAN
+          || tmp == IPMI_DEVICE_LAN_2_0))
+    cmd_args->driver_type = tmp;
+  else
     cmd_args->driver_type = tmp;
 
   return 0;
