@@ -171,6 +171,7 @@ _flush_cache (ipmi_sensors_state_data_t *state_data)
 
   if (sdr_cache_flush_cache(state_data->ipmi_sdr_cache_ctx,
                             state_data->pstate,
+                            state_data->prog_data->args->sdr.quiet_cache,
                             state_data->hostname,
                             state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
     return -1;

@@ -1,5 +1,14 @@
 2008-05-21  Albert Chu <chu11@llnl.gov>
 
+	* common/doc/manpage-common-ignore-sdr-cache.man: Fix option
+	description typo.
+
+	* common/src/tool-sdr-cache-common.c (sdr_cache_flush_cache),
+	ipmimonitoring/, ipmi-fru/, ipmi-sel/, ipmi-sensors/,
+	ipmi-sensors-config/: Fix --quiet-cache to work with flush option.
+	
+2008-05-21  Albert Chu <chu11@llnl.gov>
+
 	* doc/freeipmi.conf.5.pre.in: New file.
 
 	* freeipmi.spec.in, configure.ac, doc/Makefile.am: Adjust for new manpage.
@@ -8,6 +17,8 @@
 
 	* ipmiconsole/, ipmipower/: Adjust manpages appropriately.  Fix
 	some typos along the way.
+
+	* Globally clarify that --disable-auto-probe is for in-band only.
 
 2008-05-21  Albert Chu <chu11@llnl.gov>
 

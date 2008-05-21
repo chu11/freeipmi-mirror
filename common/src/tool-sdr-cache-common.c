@@ -835,6 +835,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
 int 
 sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
                        pstdout_state_t pstate,
+                       int quiet_cache,
                        const char *hostname,
                        const char *cache_dir)
 {
@@ -851,11 +852,14 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
                                    MAXPATHLEN) < 0)
     goto cleanup;
   
-  if (pstate)
-    pstdout_printf (pstate, "Flushing cache: %s\n", cachefilenamebuf);
-  else
-    printf ("Flushing cache: %s\n", cachefilenamebuf);
-
+  if (!quiet_cache)
+    {
+      if (pstate)
+        pstdout_printf (pstate, "Flushing cache: %s\n", cachefilenamebuf);
+      else
+        printf ("Flushing cache: %s\n", cachefilenamebuf);
+    }
+      
   if (ipmi_sdr_cache_delete(ctx, cachefilenamebuf) < 0)
     {
       if (pstate)
