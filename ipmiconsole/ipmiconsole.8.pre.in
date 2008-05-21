@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.34 2008-05-15 22:30:44 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.35 2008-05-21 02:15:53 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -83,6 +83,7 @@ the clear an alternate cipher suite id is selected.  The following
 cipher suite ids are currently supported:
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-details.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-admin.man>
+#include <@top_srcdir@/common/doc/manpage-common-config-file.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
@@ -115,9 +116,6 @@ Deactivate a SOL session if one is detected as being in use and exit.
 \fB\-L\fR, \fB\-\-lock-memory\fR
 Lock sensitive information (such as usernames and passwords) in
 memory.
-.TP
-\fB\-C\fR, \fB\-\-config file\fR=\fIFILE\fR
-Specify an alternate configuration file.
 .LP
 
 .SH "ESCAPE CHARACTERS"

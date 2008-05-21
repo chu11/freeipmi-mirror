@@ -17,6 +17,7 @@ EXTRA_DIST = \
 	manpage-common-privilege-level-user.man \
 	manpage-common-privilege-level-operator.man \
 	manpage-common-privilege-level-admin.man \
+	manpage-common-config-file.man \
 	manpage-common-workaround-flags.man \
 	manpage-common-workaround-heading-text.man \
 	manpage-common-workaround-text.man \

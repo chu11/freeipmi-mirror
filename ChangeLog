@@ -30,6 +30,10 @@
 
 	* General cmdline parsing cleanup throughout.
 
+	* common/doc/manpage-common-config-file.man: New file.
+
+	* ipmipower/, ipmiconsole/: Document --config-file option.
+
 2008-05-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/src/ipmi-sensors-config.c
