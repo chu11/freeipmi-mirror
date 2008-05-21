@@ -189,8 +189,13 @@ config_file_driver_type(conffile_t cf,
       fprintf(stderr, "Config File Error: invalid value for %s\n", optionname);
       exit(1);
     }
-  
-  cmd_args->driver_type = tmp;
+
+  /* don't change default we we want outofband configuration only */
+  if (!(cmd_args->driver_type_outofband_only
+        && (tmp != IPMI_DEVICE_LAN
+            && tmp != IPMI_DEVICE_LAN_2_0)))
+    cmd_args->driver_type = tmp;
+
   return 0;
 }
 
