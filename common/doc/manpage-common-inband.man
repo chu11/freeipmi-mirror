@@ -1,6 +1,6 @@
 .TP
 \fB\-\-disable\-auto\-probe\fR
-Do not probe IPMI devices for default settings.
+Do not probe in-band IPMI devices for default settings.
 .TP
 \fB\-\-driver\-address\fR=\fIDRIVER-ADDRESS\fR
 Specify the in-band driver address to be used instead of the probed

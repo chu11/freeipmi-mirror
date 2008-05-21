@@ -84,9 +84,9 @@ enum argp_common_option_keys
 /* reg-space is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_INBAND                                                           \
     {"no-probing",     ARGP_NO_PROBING_KEY, 0, OPTION_HIDDEN,                                \
-     "Do not probe IPMI devices for default settings.", 1},                                  \
+     "Do not probe in-band IPMI devices for default settings.", 1},                          \
     {"disable-auto-probe", ARGP_DISABLE_AUTO_PROBE_KEY, 0, 0, 	                             \
-     "Do not probe IPMI devices for default settings.", 1},                                  \
+     "Do not probe in-band IPMI devices for default settings.", 1},                          \
     {"driver-address", ARGP_DRIVER_ADDRESS_KEY, "DRIVER-ADDRESS", 0,                         \
      "Specify the in-band driver address to be used instead of the probed value.", 2}, 	     \
     {"driver-device",  ARGP_DRIVER_DEVICE_KEY, "DEVICE", 0,                                  \
