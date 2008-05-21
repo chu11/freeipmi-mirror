@@ -1,3 +1,7 @@
+2008-05-21  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi.7.pre.in: Fix typo.
+	
 2008-05-20  Albert Chu <chu11@llnl.gov>
   
  	* ipmi-sensors-config/src/ipmi-sensors-config.c
