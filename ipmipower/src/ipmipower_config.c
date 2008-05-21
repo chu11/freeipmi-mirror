@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.123 2008-05-21 17:30:09 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.124 2008-05-21 18:33:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -300,7 +300,7 @@ ipmipower_config_conffile_parse(void)
                          1,         /* do not exit if file not found */
                          &(cmd_args.common),
                          NULL,
-                         NULL,
+                         &(cmd_args.hostrange),
                          CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE | CONFIG_FILE_MISC,
                          CONFIG_FILE_TOOL_IPMIPOWER,
                          &config_file_data) < 0)
@@ -309,7 +309,7 @@ ipmipower_config_conffile_parse(void)
                              0,
                              &(cmd_args.common),
                              NULL,
-                             NULL,
+                             &(cmd_args.hostrange),
                              CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE | CONFIG_FILE_MISC,
                              CONFIG_FILE_TOOL_IPMIPOWER,
                              &config_file_data) < 0)
@@ -394,7 +394,7 @@ ipmipower_config(int argc, char **argv)
   cmd_args.ping_percent = 50;
   cmd_args.ping_consec_count = 5;
 
-  argp_parse(&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
+  argp_parse(&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args.common));
   
   ipmipower_config_conffile_parse();
   

@@ -421,6 +421,31 @@ _ignore_options(struct conffile_option *options, unsigned int options_len)
     options[i].option_type = CONFFILE_OPTION_IGNORE;
 }
 
+static void
+_copy_options(struct conffile_option *to_options,
+              unsigned int to_options_len,
+              struct conffile_option *from_options,
+              unsigned int from_options_len)
+{
+  int i;
+  
+  assert(to_options && from_options && from_options_len);
+
+  /* note: can't memcpy .. sigh .. wish I did this in C++ w/ a copy constructor */
+  for (i = 0; i < from_options_len; i++)
+    {
+      to_options[to_options_len + i].optionname = from_options[i].optionname;
+      to_options[to_options_len + i].option_type = from_options[i].option_type;
+      to_options[to_options_len + i].option_type_arg = from_options[i].option_type_arg;
+      to_options[to_options_len + i].callback_func = from_options[i].callback_func;
+      to_options[to_options_len + i].max_count = from_options[i].max_count;
+      to_options[to_options_len + i].required_count = from_options[i].required_count;
+      to_options[to_options_len + i].count_ptr = from_options[i].count_ptr;
+      to_options[to_options_len + i].option_ptr = from_options[i].option_ptr;
+      to_options[to_options_len + i].option_data = from_options[i].option_data;
+    }
+}
+
 int
 config_file_parse(const char *filename,
                   int no_error_if_not_found,
@@ -1118,6 +1143,7 @@ config_file_parse(const char *filename,
 
   conffile_t cf = NULL;
   int rv = -1;
+  int options_len;
 
   assert((!support
           || (support && cmd_args))
@@ -1136,66 +1162,87 @@ config_file_parse(const char *filename,
    * general support flags 
    */
 
+  options_len = sizeof(inband_options)/sizeof(struct conffile_option);
   if (!(support & CONFIG_FILE_INBAND))
-    _ignore_options(inband_options, sizeof(inband_options)/sizeof(struct conffile_option));
+    _ignore_options(inband_options, options_len);
   
-  memcpy(config_file_options + config_file_options_len,
-         inband_options,
-         sizeof(inband_options)/sizeof(struct conffile_option));
-  config_file_options_len += sizeof(inband_options)/sizeof(struct conffile_option);
+  _copy_options(config_file_options,
+                config_file_options_len,
+                inband_options,
+                options_len);
 
+  config_file_options_len += options_len;
+
+  options_len = sizeof(outofband_options)/sizeof(struct conffile_option);
   if (!(support & CONFIG_FILE_OUTOFBAND))
-    _ignore_options(outofband_options, sizeof(outofband_options)/sizeof(struct conffile_option));
+    _ignore_options(outofband_options, options_len);
   
-  memcpy(config_file_options + config_file_options_len,
-         outofband_options,
-         sizeof(outofband_options)/sizeof(struct conffile_option));
-  config_file_options_len += sizeof(outofband_options)/sizeof(struct conffile_option);
+  _copy_options(config_file_options,
+                config_file_options_len,
+                outofband_options,
+                options_len);
 
+  config_file_options_len += options_len;
+
+  options_len = sizeof(sdr_options)/sizeof(struct conffile_option);
   if (!(support & CONFIG_FILE_SDR))
-    _ignore_options(sdr_options, sizeof(sdr_options)/sizeof(struct conffile_option));
+    _ignore_options(sdr_options, options_len);
   
-  memcpy(config_file_options + config_file_options_len,
-         sdr_options,
-         sizeof(sdr_options)/sizeof(struct conffile_option));
-  config_file_options_len += sizeof(sdr_options)/sizeof(struct conffile_option);
+  _copy_options(config_file_options,
+                config_file_options_len,
+                sdr_options,
+                options_len);
 
+  config_file_options_len += options_len;
+
+  options_len = sizeof(hostrange_options)/sizeof(struct conffile_option);
   if (!(support & CONFIG_FILE_HOSTRANGE))
-    _ignore_options(hostrange_options, sizeof(hostrange_options)/sizeof(struct conffile_option));
+    _ignore_options(hostrange_options, options_len);
   
-  memcpy(config_file_options + config_file_options_len,
-         hostrange_options,
-         sizeof(hostrange_options)/sizeof(struct conffile_option));
-  config_file_options_len += sizeof(hostrange_options)/sizeof(struct conffile_option);
+  _copy_options(config_file_options,
+                config_file_options_len,
+                hostrange_options,
+                options_len);
 
+  config_file_options_len += options_len;
+
+  options_len = sizeof(misc_options)/sizeof(struct conffile_option);
   if (!(support & CONFIG_FILE_MISC))
-    _ignore_options(misc_options, sizeof(misc_options)/sizeof(struct conffile_option));
+    _ignore_options(misc_options, options_len);
+  
+  _copy_options(config_file_options,
+                config_file_options_len,
+                misc_options,
+                options_len);
 
-  memcpy(config_file_options + config_file_options_len,
-         misc_options,
-         sizeof(misc_options)/sizeof(struct conffile_option));
-  config_file_options_len += sizeof(misc_options)/sizeof(struct conffile_option);
+  config_file_options_len += options_len;
 
   /* 
    * tool flags 
    */
 
+  options_len = sizeof(ipmiconsole_options)/sizeof(struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMICONSOLE))
-    _ignore_options(ipmiconsole_options, sizeof(ipmiconsole_options)/sizeof(struct conffile_option));
+    _ignore_options(ipmiconsole_options, options_len);
+  
+  _copy_options(config_file_options,
+                config_file_options_len,
+                ipmiconsole_options,
+                options_len);
 
-  memcpy(config_file_options + config_file_options_len,
-         ipmiconsole_options,
-         sizeof(ipmiconsole_options)/sizeof(struct conffile_option));
-  config_file_options_len += sizeof(ipmiconsole_options)/sizeof(struct conffile_option);
+  config_file_options_len += options_len;
 
+  options_len = sizeof(ipmipower_options)/sizeof(struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMIPOWER))
-    _ignore_options(ipmipower_options, sizeof(ipmipower_options)/sizeof(struct conffile_option));
+    _ignore_options(ipmipower_options, options_len);
+  
+  _copy_options(config_file_options,
+                config_file_options_len,
+                ipmipower_options,
+                options_len);
 
-  memcpy(config_file_options + config_file_options_len,
-         ipmipower_options,
-         sizeof(ipmipower_options)/sizeof(struct conffile_option));
-  config_file_options_len += sizeof(ipmipower_options)/sizeof(struct conffile_option);
-
+  config_file_options_len += options_len;
+  
   /* clear out config file data */
 
   memset(&ipmiconsole_data, '\0', sizeof(struct config_file_data_ipmiconsole));

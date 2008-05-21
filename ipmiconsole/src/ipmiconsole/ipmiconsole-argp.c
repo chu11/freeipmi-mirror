@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.13 2008-05-21 16:40:18 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.14 2008-05-21 18:33:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -243,7 +243,7 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->common.session_timeout = 60000;
   cmd_args->common.retransmission_timeout = 500;
 
-  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
   /* change defaults to whatever is configured, run 2nd b/c
    * user may have specified config file on the command line.
    */

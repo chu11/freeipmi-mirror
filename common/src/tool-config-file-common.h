@@ -29,9 +29,9 @@
 #define CONFIG_FILE_NONE        0x00
 #define CONFIG_FILE_INBAND      0x01
 #define CONFIG_FILE_OUTOFBAND   0x02
-#define CONFIG_FILE_SDR         0x03
-#define CONFIG_FILE_HOSTRANGE   0x04
-#define CONFIG_FILE_MISC        0x05
+#define CONFIG_FILE_SDR         0x04
+#define CONFIG_FILE_HOSTRANGE   0x08
+#define CONFIG_FILE_MISC        0x10
 
 #define CONFIG_FILE_TOOL_NONE        0x00
 #define CONFIG_FILE_TOOL_IPMICONSOLE 0x01
