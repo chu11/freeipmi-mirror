@@ -357,7 +357,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
       }
   }
   
-  if (!state_data->prog_data->args->sdr.ignore_sdr_cache_wanted)
+  if (!state_data->prog_data->args->sdr.ignore_sdr_cache)
     {
       sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
       if ((sdr_record_found = _find_sdr_record(state_data, 

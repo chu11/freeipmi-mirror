@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostrange.h,v 1.4 2008-04-29 21:58:41 chu11 Exp $
+ *  $Id: hostrange.h,v 1.5 2008-05-21 16:40:16 chu11 Exp $
 \*****************************************************************************/
 
 #ifndef _HOSTRANGE_H
@@ -7,8 +7,8 @@
 
 /* Returns number of hosts setup for, -1 on error */
 int pstdout_setup(char **hosts,
-                  int buffer_hostrange_output,
-                  int consolidate_hostrange_output,
+                  int buffer_output,
+                  int consolidate_output,
                   int fanout,
                   int eliminate,
                   int always_prefix);

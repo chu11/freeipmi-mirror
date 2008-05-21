@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostrange.c,v 1.8 2008-04-29 21:58:41 chu11 Exp $
+ *  $Id: hostrange.c,v 1.9 2008-05-21 16:40:16 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -135,8 +135,8 @@ eliminate_nodes(char **hosts)
 
 int 
 pstdout_setup(char **hosts,
-              int buffer_hostrange_output,
-              int consolidate_hostrange_output,
+              int buffer_output,
+              int consolidate_output,
               int fanout,
               int eliminate,
               int always_prefix)
@@ -190,9 +190,9 @@ pstdout_setup(char **hosts,
   /* if hosts_count > 1 it is always prefixed, so ignore always_prefixed flag */
   if (hosts_count > 1)
     {
-      if (buffer_hostrange_output)
+      if (buffer_output)
         output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-      else if (consolidate_hostrange_output)
+      else if (consolidate_output)
         output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
       else
         output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;

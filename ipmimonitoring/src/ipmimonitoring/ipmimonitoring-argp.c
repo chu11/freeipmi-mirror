@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.9 2008-05-20 18:59:51 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.10 2008-05-21 16:40:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -114,7 +114,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
       /* legacy option */
     case CACHE_DIR_KEY:
-      return sdr_parse_opt (ARGP_SDR_CACHE_DIR_KEY, 
+      return sdr_parse_opt (ARGP_SDR_CACHE_DIRECTORY_KEY, 
                             arg, 
                             state, 
                             &(cmd_args->sdr));

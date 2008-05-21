@@ -94,8 +94,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 void
 _ipmi_sensors_config_config_args_validate (struct ipmi_sensors_config_arguments *cmd_args)
 {
-  if ((!cmd_args->config_args.action && !cmd_args->sdr.flush_cache_wanted)
-      || (cmd_args->config_args.action && cmd_args->sdr.flush_cache_wanted)
+  if ((!cmd_args->config_args.action && !cmd_args->sdr.flush_cache)
+      || (cmd_args->config_args.action && cmd_args->sdr.flush_cache)
       || cmd_args->config_args.action == -1)
     {
       fprintf (stderr,

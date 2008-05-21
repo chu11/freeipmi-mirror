@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.93 2008-05-20 16:21:43 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.94 2008-05-21 16:40:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -728,9 +728,9 @@ _cmd_config(void)
               cmd_args.ping_consec_count);
 
   cbuf_printf(ttyout, "Buffer-Output:                %s\n",
-              (cmd_args.hostrange.buffer_hostrange_output) ? "enabled" : "disabled");
+              (cmd_args.hostrange.buffer_output) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Consolidate-Output:           %s\n",
-              (cmd_args.hostrange.consolidate_hostrange_output) ? "enabled" : "disabled");
+              (cmd_args.hostrange.consolidate_output) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Fanout:                       %u\n",
 	      cmd_args.hostrange.fanout);
   cbuf_printf(ttyout, "Always-Prefix:                %s\n",
@@ -1003,11 +1003,11 @@ ipmipower_prompt_process_cmdline(void)
                                              cmd_args.ping_packet_count);
 	      else if (!strcmp(argv[0], "buffer-output"))
 		_cmd_set_flag(argv,
-			      &cmd_args.hostrange.buffer_hostrange_output,
+			      &cmd_args.hostrange.buffer_output,
 			      "buffer-output");
               else if (!strcmp(argv[0], "consolidate-output"))
                 _cmd_set_flag(argv, 
-                              &cmd_args.hostrange.consolidate_hostrange_output, 
+                              &cmd_args.hostrange.consolidate_output, 
                               "consolidate-output");
               else if (!strcmp(argv[0], "always-prefix"))
                 _cmd_set_flag(argv, 

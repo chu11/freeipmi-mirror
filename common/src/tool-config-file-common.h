@@ -29,7 +29,9 @@
 #define CONFIG_FILE_NONE        0x00
 #define CONFIG_FILE_INBAND      0x01
 #define CONFIG_FILE_OUTOFBAND   0x02
-#define CONFIG_FILE_MISC        0x03
+#define CONFIG_FILE_SDR         0x03
+#define CONFIG_FILE_HOSTRANGE   0x04
+#define CONFIG_FILE_MISC        0x05
 
 #define CONFIG_FILE_TOOL_NONE        0x00
 #define CONFIG_FILE_TOOL_IPMICONSOLE 0x01
@@ -47,6 +49,8 @@ struct config_file_data_ipmiconsole
 int config_file_parse(const char *filename,
                       int no_error_if_not_found,
                       struct common_cmd_args *cmd_args, 
+                      struct sdr_cmd_args *sdr_args, 
+                      struct hostrange_cmd_args *hostrange_args, 
                       unsigned int support,
                       unsigned int tool_support,
                       void *data);

@@ -508,22 +508,22 @@ sdr_parse_opt (int key,
   switch (key)
     {
     case ARGP_FLUSH_CACHE_KEY:
-      cmd_args->flush_cache_wanted = 1;
+      cmd_args->flush_cache = 1;
       break;
     case ARGP_QUIET_CACHE_KEY:
-      cmd_args->quiet_cache_wanted = 1;
+      cmd_args->quiet_cache = 1;
       break;
-    case ARGP_SDR_CACHE_DIR_KEY:
-      if (cmd_args->sdr_cache_dir)
-        free(cmd_args->sdr_cache_dir);
-      if (!(cmd_args->sdr_cache_dir = strdup (arg)))
+    case ARGP_SDR_CACHE_DIRECTORY_KEY:
+      if (cmd_args->sdr_cache_directory)
+        free(cmd_args->sdr_cache_directory);
+      if (!(cmd_args->sdr_cache_directory = strdup (arg)))
         {
           perror("strdup");
           exit(1);
         }
       break;
     case ARGP_IGNORE_SDR_CACHE_KEY:
-      cmd_args->ignore_sdr_cache_wanted = 1;
+      cmd_args->ignore_sdr_cache = 1;
       break;
     default:
       return ARGP_ERR_UNKNOWN;
@@ -544,10 +544,10 @@ hostrange_parse_opt (int key,
   switch (key)
     {
     case ARGP_BUFFER_OUTPUT_KEY:
-      cmd_args->buffer_hostrange_output = 1;
+      cmd_args->buffer_output = 1;
       break;
     case ARGP_CONSOLIDATE_OUTPUT_KEY:
-      cmd_args->consolidate_hostrange_output = 1;
+      cmd_args->consolidate_output = 1;
       break;
     case ARGP_FANOUT_KEY:
       tmp = strtol(arg, &ptr, 10);
@@ -694,31 +694,31 @@ verify_common_cmd_args (struct common_cmd_args *cmd_args)
 void 
 init_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
 {
-  cmd_args->flush_cache_wanted = 0;
-  cmd_args->quiet_cache_wanted = 0;
-  cmd_args->sdr_cache_dir = NULL;
-  cmd_args->ignore_sdr_cache_wanted = 0;
+  cmd_args->flush_cache = 0;
+  cmd_args->quiet_cache = 0;
+  cmd_args->sdr_cache_directory = NULL;
+  cmd_args->ignore_sdr_cache = 0;
 }
 
 void 
 free_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
 {
-  if (cmd_args->sdr_cache_dir)
+  if (cmd_args->sdr_cache_directory)
     {
-      free (cmd_args->sdr_cache_dir);
-      cmd_args->sdr_cache_dir = NULL;
+      free (cmd_args->sdr_cache_directory);
+      cmd_args->sdr_cache_directory = NULL;
     }
 }
 
 void
 verify_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
 {
-  if (cmd_args->sdr_cache_dir)
+  if (cmd_args->sdr_cache_directory)
     {
-      if (access (cmd_args->sdr_cache_dir, R_OK|W_OK|X_OK) != 0)
+      if (access (cmd_args->sdr_cache_directory, R_OK|W_OK|X_OK) != 0)
         {
           fprintf (stderr, "insufficient permission on sensor cache directory '%s'\n",
-                   cmd_args->sdr_cache_dir);
+                   cmd_args->sdr_cache_directory);
           exit(1);
         }
     }
@@ -727,8 +727,8 @@ verify_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
 void 
 init_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
 {
-  cmd_args->buffer_hostrange_output = 0;
-  cmd_args->consolidate_hostrange_output = 0;
+  cmd_args->buffer_output = 0;
+  cmd_args->consolidate_output = 0;
   cmd_args->fanout = 0;
   cmd_args->eliminate = 0;
   cmd_args->always_prefix = 0;
@@ -743,5 +743,9 @@ free_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
 void
 verify_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
 {
-  /* nothing right now */
+  if (cmd_args->buffer_output && cmd_args->consolidate_output)
+    {
+      fprintf (stderr, "cannot buffer and consolidate hostrange output, please select only one\n");
+      exit(1);
+    }
 }

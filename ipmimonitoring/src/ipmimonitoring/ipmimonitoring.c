@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.45 2008-05-20 21:04:02 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.46 2008-05-21 16:40:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -113,7 +113,7 @@ _flush_cache (ipmimonitoring_state_data_t *state_data)
   if (sdr_cache_flush_cache(state_data->ipmi_sdr_cache_ctx,
                             state_data->pstate,
                             state_data->hostname,
-                            state_data->prog_data->args->sdr.sdr_cache_dir) < 0)
+                            state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
     return -1;
   
   return 0;
@@ -124,7 +124,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
 {
   struct ipmimonitoring_arguments *args;
   unsigned int sensor_reading_flags;
-  char sdr_cache_dir[MAXPATHLEN+1];
+  char sdr_cache_directory[MAXPATHLEN+1];
   int i, num, errnum;
   
   assert(state_data);
@@ -134,7 +134,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   if (args->list_groups_wanted)
     return _list_groups (state_data);
 
-  if (args->sdr.flush_cache_wanted)
+  if (args->sdr.flush_cache)
     return _flush_cache (state_data);
 
   /* libipmimonitoring SDR creation/loading on its own.  However we do
@@ -145,9 +145,9 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   if (sdr_cache_create_and_load(state_data->ipmi_sdr_cache_ctx,
                                 state_data->pstate,
                                 state_data->ipmi_ctx,
-                                args->sdr.quiet_cache_wanted,
+                                args->sdr.quiet_cache,
                                 state_data->hostname,
-                                args->sdr.sdr_cache_dir) < 0)
+                                args->sdr.sdr_cache_directory) < 0)
     return -1;
 
   /* At this point in time we no longer need sdr_cache b/c
@@ -177,12 +177,12 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
    */
 
   if (sdr_cache_get_cache_directory(state_data->pstate,
-                                    args->sdr.sdr_cache_dir,
-                                    sdr_cache_dir,
+                                    args->sdr.sdr_cache_directory,
+                                    sdr_cache_directory,
                                     MAXPATHLEN) < 0)
     return -1;
 
-  if (ipmi_monitoring_sdr_cache_directory(sdr_cache_dir, &errnum) < 0)
+  if (ipmi_monitoring_sdr_cache_directory(sdr_cache_directory, &errnum) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr, 
@@ -497,7 +497,7 @@ _ipmimonitoring(pstdout_state_t pstate,
 
   /* Special case, just flush, don't do an IPMI connection */
   /* Special case, just list groups, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache_wanted
+  if (!prog_data->args->sdr.flush_cache
       && !prog_data->args->list_groups_wanted)
     {
       if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
@@ -738,8 +738,8 @@ main(int argc, char **argv)
     }
  
   if ((hosts_count = pstdout_setup(&(prog_data.args->common.hostname),
-                                   prog_data.args->hostrange.buffer_hostrange_output,
-                                   prog_data.args->hostrange.consolidate_hostrange_output,
+                                   prog_data.args->hostrange.buffer_output,
+                                   prog_data.args->hostrange.consolidate_output,
                                    prog_data.args->hostrange.fanout,
                                    prog_data.args->hostrange.eliminate,
                                    prog_data.args->hostrange.always_prefix)) < 0)
@@ -750,7 +750,7 @@ main(int argc, char **argv)
 
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
-    prog_data.args->sdr.quiet_cache_wanted = 1;
+    prog_data.args->sdr.quiet_cache = 1;
 
   if ((rv = pstdout_launch(prog_data.args->common.hostname,
                            _ipmimonitoring,

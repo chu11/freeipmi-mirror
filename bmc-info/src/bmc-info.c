@@ -513,8 +513,8 @@ main (int argc, char **argv)
   prog_data.args = &cmd_args;
 
   if (pstdout_setup(&(prog_data.args->common.hostname),
-                    prog_data.args->hostrange.buffer_hostrange_output,
-                    prog_data.args->hostrange.consolidate_hostrange_output,
+                    prog_data.args->hostrange.buffer_output,
+                    prog_data.args->hostrange.consolidate_output,
                     prog_data.args->hostrange.fanout,
                     prog_data.args->hostrange.eliminate,
                     prog_data.args->hostrange.always_prefix) < 0)

@@ -31,6 +31,7 @@
 
 #include "tool-config-file-common.h"
 #include "tool-common.h"
+#include "pstdout.h"
 
 #include "freeipmi/api/ipmi-api.h"
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
@@ -305,6 +306,33 @@ config_file_privilege_level(conffile_t cf,
 }
 
 int 
+config_file_fanout(conffile_t cf,
+                   struct conffile_data *data,
+                   char *optionname,
+                   int option_type,
+                   void *option_ptr,
+                   int option_data,
+                   void *app_ptr,
+                   int app_data)
+{
+  struct hostrange_cmd_args *hostrange_args;
+  
+  assert(option_ptr);
+  
+  hostrange_args = (struct hostrange_cmd_args *)option_ptr;
+  
+  if (data->intval < PSTDOUT_FANOUT_MIN
+      || data->intval > PSTDOUT_FANOUT_MAX)
+    {
+      fprintf(stderr, "Config File Error: invalid value for %s\n", optionname);
+      exit(1);
+    }
+
+  hostrange_args->fanout = data->intval;
+  return 0;
+}
+
+int 
 config_file_workaround_flags(conffile_t cf,
                              struct conffile_data *data,
                              char *optionname,
@@ -366,6 +394,8 @@ int
 config_file_parse(const char *filename,
                   int no_error_if_not_found,
                   struct common_cmd_args *cmd_args, 
+                  struct sdr_cmd_args *sdr_args, 
+                  struct hostrange_cmd_args *hostrange_args, 
                   unsigned int support,
                   unsigned int tool_support,
                   void *data)
@@ -381,6 +411,11 @@ config_file_parse(const char *filename,
     session_timeout_count = 0, retransmission_timeout_count = 0, 
     authentication_type_count = 0, cipher_suite_id_count = 0, 
     privilege_level_count = 0;
+
+  int quiet_cache_count = 0, sdr_cache_directory_count = 0;
+
+  int buffer_output_count = 0, consolidate_output_count = 0, 
+    fanout_count = 0, eliminate_count = 0, always_prefix_count = 0;
 
   int workaround_flags_count = 0;
 
@@ -587,6 +622,91 @@ config_file_parse(const char *filename,
       },
     };
 
+  struct conffile_option sdr_options[] =
+    {
+      {
+        "quiet-cache",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &quiet_cache_count,
+        &(sdr_args->quiet_cache),
+        0
+      },
+      {
+        "sdr-cache-directory", 
+        CONFFILE_OPTION_STRING, 
+        -1,
+        config_file_string, 
+        1, 
+        0,
+        &sdr_cache_directory_count, 
+        &(sdr_args->sdr_cache_directory), 
+        0
+      },
+    };
+
+  struct conffile_option hostrange_options[] =
+    {
+      {
+        "buffer-output",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &buffer_output_count,
+        &(hostrange_args->consolidate_output),
+        0
+      },
+      {
+        "consolidate-output",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &consolidate_output_count,
+        &(hostrange_args->consolidate_output),
+        0
+      },
+      {
+        "fanout", 
+        CONFFILE_OPTION_INT, 
+        -1,
+        config_file_fanout, 
+        1, 
+        0,
+        &fanout_count, 
+        hostrange_args, 
+        0
+      },
+      {
+        "eliminate",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &eliminate_count,
+        &(hostrange_args->eliminate),
+        0
+      },
+      {
+        "always-prefix",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &always_prefix_count,
+        &(hostrange_args->always_prefix),
+        0
+      },
+    };
+
   struct conffile_option misc_options[] =
     {
       {
@@ -601,6 +721,10 @@ config_file_parse(const char *filename,
         0
       }
     };
+
+  /* 
+   * Tool Config Options
+   */
 
   /* Notes:
    *
@@ -685,6 +809,10 @@ config_file_parse(const char *filename,
 
   assert((!support
           || (support && cmd_args))
+         && (!(support & CONFIG_FILE_SDR)
+             || ((support & CONFIG_FILE_SDR) && sdr_args))
+         && (!(support & CONFIG_FILE_HOSTRANGE)
+             || ((support & CONFIG_FILE_HOSTRANGE) && hostrange_args))
          && (!tool_support
              || (tool_support && data)));
 
@@ -692,7 +820,9 @@ config_file_parse(const char *filename,
 
   /* set ignore options the tool doesn't care about */
 
-  /* support flags */
+  /* 
+   * general support flags 
+   */
 
   if (!(support & CONFIG_FILE_INBAND))
     _ignore_options(inband_options, sizeof(inband_options)/sizeof(struct conffile_option));
@@ -710,6 +840,22 @@ config_file_parse(const char *filename,
          sizeof(outofband_options)/sizeof(struct conffile_option));
   config_file_options_len += sizeof(outofband_options)/sizeof(struct conffile_option);
 
+  if (!(support & CONFIG_FILE_SDR))
+    _ignore_options(sdr_options, sizeof(sdr_options)/sizeof(struct conffile_option));
+  
+  memcpy(config_file_options + config_file_options_len,
+         sdr_options,
+         sizeof(sdr_options)/sizeof(struct conffile_option));
+  config_file_options_len += sizeof(sdr_options)/sizeof(struct conffile_option);
+
+  if (!(support & CONFIG_FILE_HOSTRANGE))
+    _ignore_options(hostrange_options, sizeof(hostrange_options)/sizeof(struct conffile_option));
+  
+  memcpy(config_file_options + config_file_options_len,
+         hostrange_options,
+         sizeof(hostrange_options)/sizeof(struct conffile_option));
+  config_file_options_len += sizeof(hostrange_options)/sizeof(struct conffile_option);
+
   if (!(support & CONFIG_FILE_MISC))
     _ignore_options(misc_options, sizeof(misc_options)/sizeof(struct conffile_option));
 
@@ -718,7 +864,9 @@ config_file_parse(const char *filename,
          sizeof(misc_options)/sizeof(struct conffile_option));
   config_file_options_len += sizeof(misc_options)/sizeof(struct conffile_option);
 
-  /* tool flags */
+  /* 
+   * tool flags 
+   */
 
   if (!(tool_support & CONFIG_FILE_TOOL_IPMICONSOLE))
     _ignore_options(ipmiconsole_options, sizeof(ipmiconsole_options)/sizeof(struct conffile_option));

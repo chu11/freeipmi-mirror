@@ -7,6 +7,22 @@
 	* ipmiconsole/: Support config file via common lib.
 
 	* common/src/conffile.c: Update lib.
+
+	* common/src/tool-config-file-common.h,
+        common/src/tool-config-file-common.c: Add SDR and
+        Hostrange configuration.
+
+	* common/src/tool-cmdline-common.h,
+	common/src/tool-cmdline-common.c: Rename 'sdr_cache_dir' to
+	'sdr_cache_directory' globally for consistency.  Rename
+	'hostrange_output' to just 'output' for consistency.  Remove
+	excessive use of "wanted" suffix in variables.
+
+	* Adjust for variable name changes appropriately.
+
+	* common/src/tool-cmdline-common.c (verify_hostrange_cmd_args):
+	Check that user did not specify both buffer and consolidate
+	options.
 	
 2008-05-20  Albert Chu <chu11@llnl.gov>
 	

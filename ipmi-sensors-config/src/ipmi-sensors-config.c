@@ -67,7 +67,7 @@ _ipmi_sensors_config (void *arg)
   state_data.prog_data = prog_data;
 
   /* Special case, just flush, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache_wanted)
+  if (!prog_data->args->sdr.flush_cache)
     {
       if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
                                             prog_data->args->config_args.common.hostname,
@@ -107,12 +107,12 @@ _ipmi_sensors_config (void *arg)
         }
     }  
 
-  if (prog_data->args->sdr.flush_cache_wanted)
+  if (prog_data->args->sdr.flush_cache)
     {
       if (sdr_cache_flush_cache(state_data.ipmi_sdr_cache_ctx,
                                 NULL,
                                 state_data.prog_data->args->config_args.common.hostname,
-                                state_data.prog_data->args->sdr.sdr_cache_dir) < 0)
+                                state_data.prog_data->args->sdr.sdr_cache_directory) < 0)
         {
           exit_code = EXIT_FAILURE;
           goto cleanup;
@@ -124,9 +124,9 @@ _ipmi_sensors_config (void *arg)
   if (sdr_cache_create_and_load (state_data.ipmi_sdr_cache_ctx,
                                  NULL,
                                  state_data.ipmi_ctx,
-                                 prog_data->args->sdr.quiet_cache_wanted,
+                                 prog_data->args->sdr.quiet_cache,
                                  prog_data->args->config_args.common.hostname,
-                                 prog_data->args->sdr.sdr_cache_dir) < 0)
+                                 prog_data->args->sdr.sdr_cache_directory) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;

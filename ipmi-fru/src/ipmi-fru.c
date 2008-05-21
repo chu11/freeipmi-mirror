@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.21 2008-05-20 16:21:40 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.22 2008-05-21 16:40:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -64,7 +64,7 @@ _flush_cache (ipmi_fru_state_data_t *state_data)
   if (sdr_cache_flush_cache(state_data->ipmi_sdr_cache_ctx,
                             state_data->pstate,
                             state_data->hostname,
-                            state_data->prog_data->args->sdr.sdr_cache_dir) < 0)
+                            state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
     return -1;
   
   return 0;
@@ -313,10 +313,10 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
   
   args = state_data->prog_data->args;
 
-  if (args->sdr.flush_cache_wanted)
+  if (args->sdr.flush_cache)
     return _flush_cache (state_data);
 
-  if (args->sdr.ignore_sdr_cache_wanted)
+  if (args->sdr.ignore_sdr_cache)
     {
       /* no SDR?  This is all you get :-) */
       if (_output_fru(state_data, 
@@ -327,14 +327,14 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
       return 0;
     }
 
-  if (!args->sdr.ignore_sdr_cache_wanted)
+  if (!args->sdr.ignore_sdr_cache)
     {
       if (sdr_cache_create_and_load (state_data->ipmi_sdr_cache_ctx,
                                      state_data->pstate,
                                      state_data->ipmi_ctx,
-                                     args->sdr.quiet_cache_wanted,
+                                     args->sdr.quiet_cache,
                                      state_data->hostname,
-                                     args->sdr.sdr_cache_dir) < 0)
+                                     args->sdr.sdr_cache_directory) < 0)
         return -1;
   
       if (ipmi_sdr_cache_record_count(state_data->ipmi_sdr_cache_ctx, &record_count) < 0)
@@ -519,7 +519,7 @@ _ipmi_fru(pstdout_state_t pstate,
   state_data.hostname = (char *)hostname;
 
   /* Special case, just flush, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache_wanted)
+  if (!prog_data->args->sdr.flush_cache)
     {
       if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
                                             hostname,
@@ -599,8 +599,8 @@ main (int argc, char **argv)
   prog_data.args = &cmd_args;
 
   if ((hosts_count = pstdout_setup(&(prog_data.args->common.hostname),
-                                   prog_data.args->hostrange.buffer_hostrange_output,
-                                   prog_data.args->hostrange.consolidate_hostrange_output,
+                                   prog_data.args->hostrange.buffer_output,
+                                   prog_data.args->hostrange.consolidate_output,
                                    prog_data.args->hostrange.fanout,
                                    prog_data.args->hostrange.eliminate,
                                    prog_data.args->hostrange.always_prefix)) < 0)
@@ -611,7 +611,7 @@ main (int argc, char **argv)
   
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
-    prog_data.args->sdr.quiet_cache_wanted = 1;
+    prog_data.args->sdr.quiet_cache = 1;
 
   if ((rv = pstdout_launch(prog_data.args->common.hostname,
                            _ipmi_fru,
