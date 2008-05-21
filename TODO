@@ -44,6 +44,8 @@ general
 -------
 --config-file manpage stuffs 
  - need freeipmi(5) too
+ - point old manpage to it
+ - remove old config path autoconf
 audit error message consistency in tool validate functions
 - exit(1) vs. exit(EXIT_FAILURE)
 audit error messages in command line parsing in all tools
