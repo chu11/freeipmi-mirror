@@ -30,7 +30,7 @@ o Removed hostname config file option in ipmiconsole and ipmipower.
 o Changed --config to --config-file in ipmipower for consistency to
   other tools.  Backwards compatability maintiained.
 o Removed -C short option in ipmiconsole for consistency to other
-  tools.  Backwards compatability maintiained.
+  tools.
 o Rename --no-probing option to --disable-auto-probe for consistency
   in FreeIPMI.  Backwards compatability maintained.
 o Changed --ipmi-version option to --driver-type in ipmipower for

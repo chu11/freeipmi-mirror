@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.11 2008-05-21 00:52:58 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.12 2008-05-21 16:02:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -48,6 +48,7 @@
 #include "ipmiconsole_.h"       /* tool ipmiconsole.h */
 #include "ipmiconsole-argp.h"
 #include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 #include "conffile.h"
 #include "error.h"
 #include "secure.h"
@@ -80,9 +81,6 @@ static struct argp_option cmdline_options[] =
     {"cipher-suite-id", 'c', "CIPHER-SUITE-ID", OPTION_HIDDEN,                         
      "Specify the IPMI 2.0 cipher suite ID to use.", 14},
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
-    /* legacy short option */
-    {"bogus-long-option1", CONFIG_FILE_KEY, "FILE", OPTION_HIDDEN,
-     "Specify alternate configure file.", 16},
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_OPTIONS_DEBUG,
@@ -154,149 +152,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       ret = common_parse_opt (ARGP_CIPHER_SUITE_ID_KEY, arg, state, &(cmd_args->common));
       return ret;
       break;
-      /* CONFIG_FILE_KEY for backwards compatability */
-    case CONFIG_FILE_KEY:
-      ret = common_parse_opt (ARGP_CONFIG_FILE_KEY, arg, state, &(cmd_args->common));
-      return ret;
-      break;
     default:
       ret = common_parse_opt (key, arg, state, &(cmd_args->common));
       return ret;
     }
 
-  return 0;
-}
-
-static int
-_cb_username(conffile_t cf, 
-	     struct conffile_data *data,
-             char *optionname, 
-	     int option_type,
-	     void *option_ptr,
-             int option_data,
-	     void *app_ptr,
-	     int app_data)
-{
-  struct ipmiconsole_arguments *cmd_args;
-
-  cmd_args = (struct ipmiconsole_arguments *)app_ptr;
-
-  if (strlen(data->string) > IPMI_MAX_USER_NAME_LENGTH)
-    err_exit("Config File Error: username too long");
-
-  if (!(cmd_args->common.username = strdup(data->string)))
-    err_exit("strdup: %s", strerror(errno));
-
-  return 0;
-}
-
-static int
-_cb_password(conffile_t cf, 
-	     struct conffile_data *data,
-             char *optionname,
-	     int option_type,
-	     void *option_ptr,
-             int option_data, 
-	     void *app_ptr,
-	     int app_data)
-{
-  struct ipmiconsole_arguments *cmd_args;
-
-  cmd_args = (struct ipmiconsole_arguments *)app_ptr;
-
-  if (strlen(data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
-    err_exit("Config File Error: password too long");
-
-  if (!(cmd_args->common.password = strdup(data->string)))
-    err_exit("strdup: %s", strerror(errno));
-
-  return 0;
-}
-
-static int
-_cb_k_g(conffile_t cf, 
-	struct conffile_data *data,
-	char *optionname, 
-	int option_type, 
-	void *option_ptr,
-	int option_data,
-	void *app_ptr,
-	int app_data)
-{
-  struct ipmiconsole_arguments *cmd_args;
-  int rv;
-
-  cmd_args = (struct ipmiconsole_arguments *)app_ptr;
-
-  if ((rv = parse_kg(cmd_args->common.k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
-    err_exit("Config File Error: K_g invalid");
-
-  if (rv > 0)
-    cmd_args->common.k_g_len = rv;
-
-  return 0;
-}
-
-static int
-_cb_privilege_level(conffile_t cf, 
-		    struct conffile_data *data,
-		    char *optionname,
-		    int option_type,
-		    void *option_ptr,
-		    int option_data, 
-		    void *app_ptr,
-		    int app_data)
-{
-  struct ipmiconsole_arguments *cmd_args;
-
-  cmd_args = (struct ipmiconsole_arguments *)app_ptr;
-
-  cmd_args->common.privilege_level = parse_privilege_level(data->string);
-
-  return 0;
-}
-
-static int
-_cb_cipher_suite_id(conffile_t cf, 
-		    struct conffile_data *data,
-                    char *optionname,
-		    int option_type,
-		    void *option_ptr,
-                    int option_data, 
-		    void *app_ptr, 
-		    int app_data)
-{
-  struct ipmiconsole_arguments *cmd_args;
-
-  cmd_args = (struct ipmiconsole_arguments *)app_ptr;
-
-  cmd_args->common.cipher_suite_id = data->intval;
-  if (cmd_args->common.cipher_suite_id < IPMI_CIPHER_SUITE_ID_MIN
-      || cmd_args->common.cipher_suite_id > IPMI_CIPHER_SUITE_ID_MAX)
-    err_exit("Config File Error: cipher suite id invalid\n");
-  if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (cmd_args->common.cipher_suite_id))
-    err_exit("Config File Error: cipher suite id unsupported\n");
-  return 0;
-}
-
-static int
-_cb_workaround_flags(conffile_t cf, 
-                     struct conffile_data *data,
-                     char *optionname,
-                     int option_type,
-                     void *option_ptr,
-                     int option_data, 
-                     void *app_ptr, 
-                     int app_data)
-{
-  struct ipmiconsole_arguments *cmd_args;
-  int tmp;
-
-  cmd_args = (struct ipmiconsole_arguments *)app_ptr;
-
-  if ((tmp = parse_workaround_flags(data->string)) < 0)
-    err_exit("Config File Error: invalid workaround flags\n");
-  cmd_args->common.workaround_flags = tmp;
   return 0;
 }
 
@@ -318,191 +178,41 @@ _cb_escape_char(conffile_t cf,
   return 0;
 }
 
-static int
-_cb_bool(conffile_t cf, 
-         struct conffile_data *data,
-         char *optionname,
-         int option_type,
-         void *option_ptr,
-         int option_data, 
-         void *app_ptr, 
-         int app_data)
-{
-  int *boolval = (int *)option_ptr;
-  int cmdlineset = option_data;
-
-  if (cmdlineset)
-    return 0;
-  
-  *boolval = data->boolval;
-  return 0;
-}
-
 static void
 _config_file_parse(struct ipmiconsole_arguments *cmd_args)
 {
-  int username_count = 0,
-    password_count = 0, 
-    k_g_count = 0,
-    cipher_suite_id_count = 0,
-    privilege_count = 0, 
-    privilege_level_count = 0, 
-    escape_char_count = 0,
-    dont_steal_count = 0,
-    lock_memory_count = 0,
-    workaround_flags_count = 0;
-  
-  /* Notes:
-   *
-   * -T/--deactivate option is not useful for config files.  It is
-   * excluded here.
-   */
+  struct config_file_data_ipmiconsole config_file_data;
 
-  struct conffile_option config_file_options[] =
-    {
-      {
-        "username", 
-        CONFFILE_OPTION_STRING, 
-        -1, 
-        _cb_username,
-        1, 
-        0, 
-        &username_count,
-        NULL, 
-        0
-      },
-      {
-        "password", 
-        CONFFILE_OPTION_STRING, 
-        -1, 
-        _cb_password,
-        1, 
-        0, 
-        &password_count, 
-        NULL, 
-        0
-      },
-      {
-        "k_g", 
-        CONFFILE_OPTION_STRING, 
-        -1, 
-        _cb_k_g,
-        1, 
-        0, 
-        &k_g_count, 
-        NULL, 
-        0
-      },
-      /* privilege maintained for backwards compatability */
-      {
-        "privilege", 
-        CONFFILE_OPTION_STRING, 
-        -1,
-        _cb_privilege_level,
-        1, 
-        0, 
-        &privilege_count,
-        NULL, 
-        0
-      },
-      {
-        "cipher-suite-id", 
-        CONFFILE_OPTION_INT, 
-        -1, 
-        _cb_cipher_suite_id,
-        1,
-        0, 
-        &cipher_suite_id_count,
-        NULL, 
-        0
-      },
-      {
-        "privilege-level", 
-        CONFFILE_OPTION_STRING, 
-        -1,
-        _cb_privilege_level,
-        1, 
-        0, 
-        &privilege_level_count,
-        NULL, 
-        0
-      },
-      {
-        "escape-char",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_escape_char,
-        1,
-        0,
-        &escape_char_count,
-        NULL,
-        0
-      },
-      {
-        "dont-steal", 
-        CONFFILE_OPTION_BOOL, 
-        -1, 
-        _cb_bool,
-        1, 
-        0, 
-        &dont_steal_count, 
-        &(cmd_args->dont_steal),
-        0,
-      },
-      {
-        "lock-memory", 
-        CONFFILE_OPTION_BOOL, 
-        -1, 
-        _cb_bool,
-        1, 
-        0, 
-        &lock_memory_count, 
-        &(cmd_args->lock_memory),
-        0,
-      },
-      {
-        "workaround-flags",
-        CONFFILE_OPTION_STRING, 
-        -1, 
-        _cb_workaround_flags,
-        1, 
-        0, 
-        &workaround_flags_count,
-        NULL,
-        0
-      },
-    };
-  conffile_t cf = NULL;
-  int num;
+  memset(&config_file_data, 
+         '\0',
+         sizeof(struct config_file_data_ipmiconsole));
 
-  if (!(cf = conffile_handle_create()))
+  /* try legacy file first */
+  if (config_file_parse (IPMICONSOLE_CONFIG_FILE_DEFAULT,
+                         1,         /* do not exit if file not found */
+                         &(cmd_args->common),
+                         CONFIG_FILE_OUTOFBAND | CONFIG_FILE_MISC,
+                         CONFIG_FILE_TOOL_IPMICONSOLE,
+                         &config_file_data) < 0)
     {
-      err_exit("conffile_handle_create");
-      goto cleanup;
+      if (config_file_parse (cmd_args->common.config_file,
+                             0,
+                             &(cmd_args->common),
+                             CONFIG_FILE_OUTOFBAND | CONFIG_FILE_MISC,
+                             CONFIG_FILE_TOOL_IPMICONSOLE,
+                             &config_file_data) < 0)
+        {
+          fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
+          exit(1);
+        }
     }
 
-  num = sizeof(config_file_options)/sizeof(struct conffile_option);
-  /* XXX come back and support legacy later */
-  if (!cmd_args->common.config_file)
-    cmd_args->common.config_file = IPMICONSOLE_CONFIG_FILE_DEFAULT;
-  if (conffile_parse(cf, cmd_args->common.config_file, config_file_options, num, cmd_args, 0, 0) < 0)
-    {
-      char buf[CONFFILE_MAX_ERRMSGLEN];
-      
-      /* Its not an error if the default configuration file doesn't exist */
-      if (!strcmp(cmd_args->common.config_file, IPMICONSOLE_CONFIG_FILE_DEFAULT)
-          && conffile_errnum(cf) == CONFFILE_ERR_EXIST)
-	goto cleanup;
-
-      if (conffile_errmsg(cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
-        err_exit("conffile_parse: %d", conffile_errnum(cf));
-      else
-        err_exit("conffile_parse: %s", buf);
-    }
-
- cleanup:
-  if (cf)
-    conffile_handle_destroy(cf);
+  if (config_file_data.escape_char_count)
+    cmd_args->escape_char = config_file_data.escape_char;
+  if (config_file_data.dont_steal_count)
+    cmd_args->dont_steal = config_file_data.dont_steal;
+  if (config_file_data.lock_memory_count)
+    cmd_args->lock_memory = config_file_data.lock_memory;
 }
 
 void

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: conffile.c,v 1.3 2008-05-20 22:49:03 chu11 Exp $
+ *  $Id: conffile.c,v 1.4 2008-05-21 16:02:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -720,19 +720,6 @@ conffile_parse(conffile_t cf,
                 && options[i].count_ptr == NULL)) {
             cf->errnum = CONFFILE_ERR_PARAMETERS;
             return -1;
-        }
-    }
-
-    /* count_ptr cannot be identical to any other count_ptr */
-    for (i = 0; i < options_len; i++) {
-        for (j = 0; j < options_len; j++) {
-            if (i != j 
-                && options[i].option_type != CONFFILE_OPTION_IGNORE
-                && options[j].option_type != CONFFILE_OPTION_IGNORE
-                && options[i].count_ptr == options[j].count_ptr) {
-                cf->errnum = CONFFILE_ERR_PARAMETERS;
-                return -1;
-            }
         }
     }
 

@@ -31,13 +31,24 @@
 #define CONFIG_FILE_OUTOFBAND   0x02
 #define CONFIG_FILE_MISC        0x03
 
+#define CONFIG_FILE_TOOL_NONE        0x00
+#define CONFIG_FILE_TOOL_IPMICONSOLE 0x01
+
+struct config_file_data_ipmiconsole
+{
+  char escape_char;
+  int escape_char_count;
+  int dont_steal;
+  int dont_steal_count;
+  int lock_memory;
+  int lock_memory_count;
+};
+
 int config_file_parse(const char *filename,
                       int no_error_if_not_found,
                       struct common_cmd_args *cmd_args, 
                       unsigned int support,
-                      struct conffile_option *tool_options,
-                      unsigned int tool_options_len,
-                      void *app_ptr,
-                      int app_data);
+                      unsigned int tool_support,
+                      void *data);
 
 #endif
