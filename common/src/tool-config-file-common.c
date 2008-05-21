@@ -1146,7 +1146,9 @@ config_file_parse(const char *filename,
   int options_len;
 
   assert((!support
-          || (support && cmd_args))
+          || (((support & CONFIG_FILE_INBAND)
+               || (support & CONFIG_FILE_OUTOFBAND))
+              && cmd_args))
          && (!(support & CONFIG_FILE_SDR)
              || ((support & CONFIG_FILE_SDR) && sdr_args))
          && (!(support & CONFIG_FILE_HOSTRANGE)
