@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.conf.5.pre.in,v 1.8.2.1 2008-05-12 22:24:04 chu11 Exp $
+.\"$Id: ipmipower.conf.5.pre.in,v 1.8.2.2 2008-05-21 22:23:12 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -98,7 +98,7 @@ available versions are AUTO, 1.5, and 2.0.
 \fBsession-timeout\fR \fIMILLISECONDS\fR
 Specify the default session timeout length in milliseconds.
 .TP
-\fBretry-timeout\fR \fIMILLISECONDS\fR
+\fBretransmission-timeout\fR \fIMILLISECONDS\fR
 Specify the default retransmission timeout length in milliseconds.
 .TP
 \fBauthentication-type\fR \fIAUTHTYPE\fR
@@ -141,10 +141,10 @@ Specify if wait-until-on functionality is enabled or disabled by default.
 \fBwait-until-off\fR \fIENABLE|DISABLE\fR
 Specify if wait-until-off functionality is enabled or disabled by default.
 .TP
-\fBretry-wait-timeout\fR \fIMILLISECONDS\fR
+\fBretransmission-wait-timeout\fR \fIMILLISECONDS\fR
 Specify the default retransmission wait timeout length in milliseconds.
 .TP
-\fBretry-backoff-count\fR \fICOUNT\fR
+\fBretransmission-backoff-count\fR \fICOUNT\fR
 Specify the default retransmission backoff count for retransmissions.
 .TP 
 \fBping-interval\fR \fIMILLISECONDS\fR

@@ -3,6 +3,8 @@
 	* doc/freeipmi.7.pre.in: Fix typo.
 
 	* ipmiconsole/ipmiconsole.conf.5.pre.in: Fix typo.
+
+	* ipmipower/ipmipower.conf.5.pre.in: Fix typos.
 	
 2008-05-20  Albert Chu <chu11@llnl.gov>
   
