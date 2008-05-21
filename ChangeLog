@@ -34,6 +34,10 @@
 
 	* ipmipower/, ipmiconsole/: Document --config-file option.
 
+	* config/ac_ipmipower_config_file.m4: Remove file.
+
+	* configure.ac: Remove ipmipower config file option.
+
 2008-05-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/src/ipmi-sensors-config.c

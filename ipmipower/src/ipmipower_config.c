@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.121 2008-05-21 00:52:59 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.122 2008-05-21 02:29:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -56,6 +56,8 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
       
+#define IPMIPOWER_CONFIG_FILE_DEFAULT "/etc/ipmipower.conf"
+
 extern struct ipmipower_arguments cmd_args;
 extern struct ipmipower_connection *ics;
 
