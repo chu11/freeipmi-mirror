@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.124 2008-05-21 18:33:36 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.125 2008-05-21 23:35:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -301,7 +301,7 @@ ipmipower_config_conffile_parse(void)
                          &(cmd_args.common),
                          NULL,
                          &(cmd_args.hostrange),
-                         CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE | CONFIG_FILE_MISC,
+                         CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMIPOWER,
                          &config_file_data) < 0)
     {
@@ -310,7 +310,7 @@ ipmipower_config_conffile_parse(void)
                              &(cmd_args.common),
                              NULL,
                              &(cmd_args.hostrange),
-                             CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE | CONFIG_FILE_MISC,
+                             CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                              CONFIG_FILE_TOOL_IPMIPOWER,
                              &config_file_data) < 0)
         {

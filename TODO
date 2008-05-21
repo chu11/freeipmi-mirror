@@ -122,6 +122,8 @@ update w/ bmc-device index.htp
 update w/ bmc-device manpage
 update all manpages and docs
 links to ganglia/nagios??
+add freeipmi.conf.5
+- remove ipmiconsole.conf.5 and ipmipower.conf.5
 
 other monitoring
 ----------------

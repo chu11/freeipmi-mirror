@@ -200,6 +200,37 @@ config_file_driver_type(conffile_t cf,
 }
 
 int 
+config_file_workaround_flags(conffile_t cf,
+                             struct conffile_data *data,
+                             char *optionname,
+                             int option_type,
+                             void *option_ptr,
+                             int option_data,
+                             void *app_ptr,
+                             int app_data)
+{
+  struct common_cmd_args *cmd_args;
+  int i, tmp;
+
+  assert(option_ptr);
+
+  cmd_args = (struct common_cmd_args *)option_ptr;
+
+  cmd_args->workaround_flags = 0;
+  
+  for (i = 0; i < data->stringlist_len; i++)
+    {
+      if ((tmp = parse_workaround_flags(data->stringlist[i])) < 0)
+        {
+          fprintf(stderr, "Config File Error: invalid value for %s\n", optionname);
+          exit(1);
+        }
+      cmd_args->workaround_flags |= tmp;
+    }
+  return 0;
+}
+
+int 
 config_file_k_g(conffile_t cf,
                 struct conffile_data *data,
                 char *optionname,
@@ -337,33 +368,6 @@ config_file_fanout(conffile_t cf,
   return 0;
 }
 
-int 
-config_file_workaround_flags(conffile_t cf,
-                             struct conffile_data *data,
-                             char *optionname,
-                             int option_type,
-                             void *option_ptr,
-                             int option_data,
-                             void *app_ptr,
-                             int app_data)
-{
-  struct common_cmd_args *cmd_args;
-  int tmp;
-
-  assert(option_ptr);
-
-  cmd_args = (struct common_cmd_args *)option_ptr;
-
-  if ((tmp = parse_workaround_flags(data->string)) < 0)
-    {
-      fprintf(stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit(1);
-    }
-
-  cmd_args->workaround_flags = tmp;
-  return 0;
-}
-
 static int
 config_file_ipmiconsole_escape_char(conffile_t cf,
                                     struct conffile_data *data,
@@ -464,7 +468,9 @@ config_file_parse(const char *filename,
   struct conffile_option config_file_options[CONFIG_FILE_OPTIONS_MAX];
   unsigned int config_file_options_len = 0;
 
-  int driver_type_count = 0, disable_auto_probe_count = 0,
+  int driver_type_count = 0, workaround_flags_count = 0;
+
+  int disable_auto_probe_count = 0,
     driver_address_count = 0, driver_device_count = 0,
     register_spacing_count = 0;
 
@@ -478,15 +484,13 @@ config_file_parse(const char *filename,
   int buffer_output_count = 0, consolidate_output_count = 0, 
     fanout_count = 0, eliminate_count = 0, always_prefix_count = 0;
 
-  int workaround_flags_count = 0;
-
   struct config_file_data_ipmiconsole ipmiconsole_data;
   struct config_file_data_ipmiconsole *ipmiconsole_data_ptr;
 
   struct config_file_data_ipmipower ipmipower_data;
   struct config_file_data_ipmipower *ipmipower_data_ptr;
 
-  struct conffile_option inband_options[] =
+  struct conffile_option inband_and_outofband_options[] =
     {
       {
         "driver-type", 
@@ -499,6 +503,21 @@ config_file_parse(const char *filename,
         cmd_args,
         0
       },
+      {
+        "workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_workaround_flags, 
+        1, 
+        0,
+        &workaround_flags_count, 
+        cmd_args, 
+        0
+      }
+    };
+
+  struct conffile_option inband_options[] =
+    {
       {
         "disable-auto-probe",
         CONFFILE_OPTION_BOOL, 
@@ -769,21 +788,6 @@ config_file_parse(const char *filename,
         &(hostrange_args->always_prefix),
         0
       },
-    };
-
-  struct conffile_option misc_options[] =
-    {
-      {
-        "workaround-flags", 
-        CONFFILE_OPTION_STRING, 
-        -1,
-        config_file_workaround_flags, 
-        1, 
-        0,
-        &workaround_flags_count, 
-        cmd_args, 
-        0
-      }
     };
 
   /* 
@@ -1169,6 +1173,19 @@ config_file_parse(const char *filename,
    * general support flags 
    */
 
+  /* driver-type is for both inband and outofband */
+  options_len = sizeof(inband_and_outofband_options)/sizeof(struct conffile_option);
+  if (!(support & CONFIG_FILE_INBAND)
+      && !(support & CONFIG_FILE_OUTOFBAND))
+    _ignore_options(inband_and_outofband_options, options_len);
+  
+  _copy_options(config_file_options,
+                config_file_options_len,
+                inband_and_outofband_options,
+                options_len);
+
+  config_file_options_len += options_len;
+
   options_len = sizeof(inband_options)/sizeof(struct conffile_option);
   if (!(support & CONFIG_FILE_INBAND))
     _ignore_options(inband_options, options_len);
@@ -1209,17 +1226,6 @@ config_file_parse(const char *filename,
   _copy_options(config_file_options,
                 config_file_options_len,
                 hostrange_options,
-                options_len);
-
-  config_file_options_len += options_len;
-
-  options_len = sizeof(misc_options)/sizeof(struct conffile_option);
-  if (!(support & CONFIG_FILE_MISC))
-    _ignore_options(misc_options, options_len);
-  
-  _copy_options(config_file_options,
-                config_file_options_len,
-                misc_options,
                 options_len);
 
   config_file_options_len += options_len;

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.35 2008-05-21 02:15:53 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.36 2008-05-21 23:35:21 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -99,7 +99,7 @@ Don't enter terminal raw mode.
 The following options are specific to
 .B Ipmiconsole.
 .TP
-\fB\-e\fR, \fB\-\-escape-char\fR
+\fB\-e\fR, \fB\-\-escape-char\fR=\fICHAR\fR
 Specify an alternate escape character (default char '&').
 .TP
 \fB\-N\fR, \fB\-\-dont-steal\fR
@@ -225,5 +225,5 @@ Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 Copyright (C) 2006-2007 The Regents of the University of California.
 #include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-ipmiconsole.conf(5), freeipmi(7), bmc-config(8)
+freeipmi.conf(5), freeipmi(7), bmc-config(8)
 #include <@top_srcdir@/common/doc/manpage-common-homepage.man>

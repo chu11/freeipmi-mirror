@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.42 2008-05-21 02:15:53 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.43 2008-05-21 23:35:21 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -435,5 +435,5 @@ Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 Copyright (C) 2003-2007 The Regents of the University of California.
 #include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-ipmipower.conf(5), freeipmi(7), bmc-config(8)
+freeipmi.conf(5), freeipmi(7), bmc-config(8)
 #include <@top_srcdir@/common/doc/manpage-common-homepage.man>

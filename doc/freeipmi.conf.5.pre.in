@@ -1,0 +1,176 @@
+.TH FREEIPMI 5 "@ISODATE@" "FreeIPMI @PACKAGE_VERSION@" "Configuration"
+.SH "NAME"
+freeipmi.conf \- specify default values to FreeIPMI
+.SH "DESCRIPTION"
+The
+.B FreeIPMI
+configuration file can be used to set alternate default values to
+many 
+.B FreeIPMI
+tools so values don't have to be configured on the command line.
+This allows users to avoid typing in a long list of command line options everytime
+a command is executed.  It can also be used to hide usernames, passwords, etc. from
+the
+.B ps(1)
+command.
+.LP
+Currently, the tools that can be configured with the configuration file are: 
+.B ipmiconsole(8), and
+.B ipmipower(8).
+.LP
+By default, the configuration file is stored at
+@FREEIPMI_CONFIG_FILE_DEFAULT@.  But users may select a different
+configuration file at the command line with the --config-file option.
+.LP
+Values specified on the command line override the configuration 
+values specified in the configuration file.
+.SH "FORMAT"
+The configuration options that can be specified in the configuration
+file are listed below.  Each configuration option must be listed on a
+separate line.  Arguments for an option are separated by any amount of
+whitespace.  Multiple arguments are also separated by whitespace.
+Comments can be marked by using the pound sign ("#") character, and
+lines can be continued on the next using backslash ("\\").
+.LP
+Note that it is possible to list the username and password in the
+configuration file.  If this data is stored in a configuration file,
+system administrators should limit access to this file.
+
+.SH "GENERAL OPTIONS"
+The following options are options generally available to all tools,
+although specific options may be ignored by some.  (For example,
+.B ipmiconsole(8)
+and
+.B ipmipower(8)
+do not perform in-band communication, therefore all in-band communication
+options would be ignored).
+.TP
+\fBusername\fR \fIUSERNAME\fR
+Specify the default username to use.
+.TP
+\fBpassword\fR \fIPASSWORD\fR
+Specify the default password to use.
+.TP
+\fBk_g\fR \fIstr\fR
+Specify the default BMC key (K_g) to use.  Prefix with '0x' to enter
+the key in hex.
+.TP
+\fBsession-timeout\fR \fIMILLISECONDS\fR
+Specify the default session timeout length to use in milliseconds.
+.TP
+\fBretransmission-timeout\fR \fIMILLISECONDS\fR
+Specify the default retransmission timeout length to use in
+milliseconds.
+.TP
+\fBauthentication-type\fR \fIAUTHENTICATION-TYPE\fR
+Specify the default authentication type to use.  The following
+authentication types are supported: NONE, STRAIGHT_PASSWORD_KEY, MD2,
+and MD5.
+.TP
+\fBcipher-suite-id\fR \fICIPHER-SUITE-ID\fR
+Specify the default cipher suite id to use.  The following cipher suite
+ids are supported: 0, 1, 2, 3, 6, 7, 8, 11, 12.
+.TP
+\fBprivilege-level\fR \fIPRIVILEGE-LEVEL\fR
+Specify the default privilege type to use.  The following privilege
+levels are supported: USER, OPERATOR, ADMIN.
+.TP
+\fBworkaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use.  Multiple workarounds can be
+specified separated by commas or whitespace.  Please see tool manpages
+for details about workarounds.  The following workarounds are
+supported: idzero, forcepermsg, unexpectedauth, endianseq, authcap,
+solpayloadsize, solport, intel20, supermicro20, sun20.
+
+.SH "SDR OPTIONS"
+The following options are specific to tools that use the sensor 
+data repository (SDR).  They will be ignored by all other tools.
+.TP
+\fBquiet-cache\fR \fIENABLE|DISABLE\fR
+Specify if cache creation/deletion information should not be output by default.
+.TP
+\fBsdr-cache-directory\fR \fIDIRECTORY\fR
+Specify the default sdr cache directory to use.
+
+.SH "HOSTRANGED OPTIONS"
+The following options are specific to tools that support hostranged
+output.  They will be ignored by all other tools.
+.TP
+\fBbuffer-output\fR \fIENABLE|DISABLE\fR
+Specify if hostranged output should be buffered by default.
+.TP
+\fBconsolidate-output\fR \fIENABLE|DISABLE\fR
+Specify if hostranged output should be consolidated by default.
+.TP
+\fBfanout\fR \fICOUNT\fR
+Specify the default multiple host fanout to use.
+.TP
+\fBeliminate\fR \fIENABLE|DISABLE\fR
+Specify if undetected hosts should be eliminated by default.
+.TP
+\fBalways-prefix\fR \fIENABLE|DISABLE\fR
+Specify if output should be always prefixed by default.
+
+.SH "IPMICONSOLE OPTIONS"
+The following options are specific to 
+.B ipmiconsole(8).
+They will be ignored by other tools.
+.TP
+\fBipmiconsole-escape-char\fR \fICHAR\fR
+Specify the default escape character.
+.TP
+\fBipmiconsole-dont-steal\fR \fIENABLE|DISABLE\fR
+Specify if in use SOL sessions should not be stolen by default.
+.TP
+\fBipmiconsole-lock-memory\fR \fIENABLE|DISABLE\fR
+Specify if memory should be locked by default.
+
+.SH "IPMIPOWER OPTIONS"
+The following options are specific to
+.B ipmipower(8).
+They will be ignored by other tools.
+.TP
+\fBipmipower-on-if-off\fR \fIENABLE|DISABLE\fR
+Specify if on-if-off functionality is enabled or disabled by default.
+.TP
+\fBipmipower-wait-until-on\fR \fIENABLE|DISABLE\fR
+Specify if wait-until-on functionality is enabled or disabled by default.
+.TP
+\fBipmipower-wait-until-off\fR \fIENABLE|DISABLE\fR
+Specify if wait-until-off functionality is enabled or disabled by default.
+.TP
+\fBipmipower-retry-wait-timeout\fR \fIMILLISECONDS\fR
+Specify the default retransmission wait timeout length to use in
+milliseconds.
+.TP
+\fBipmipower-retry-backoff-count\fR \fICOUNT\fR
+Specify the default retransmission backoff count to use for
+retransmissions.
+.TP
+\fBipmipower-ping-interval\fR \fIMILLISECONDS\fR
+Specify the default ping interval length to use in milliseconds.
+.TP
+\fBipmipower-ping-timeout\fR \fIMILLISECONDS\fR
+Specify the default ping timeout length to use in milliseconds.
+.TP
+\fBipmipower-ping-packet-count\fR \fICOUNT\fR
+Specify the default ping packet count size to use.
+.TP
+\fBipmipower-ping-percent\fR \fIPERCENT\fR
+Specify the default ping percent value to use.
+.TP
+\fBipmipower-ping-consec-count\fR \fICOUNT\fR
+Specify the default ping consecutive count value to use.
+
+#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
+.SH "COPYRIGHT"
+Copyright \(co 2003-2008 FreeIPMI Core Team.  
+
+FreeIPMI is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or (at
+your option) any later version.
+
+.SH "SEE ALSO"
+freeipmi(7), ipmiconsole(8), ipmipower(8)
+#include <@top_srcdir@/common/doc/manpage-common-homepage.man>

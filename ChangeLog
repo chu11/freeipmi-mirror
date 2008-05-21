@@ -1,5 +1,16 @@
 2008-05-21  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi.conf.5.pre.in: New file.
+
+	* freeipmi.spec.in, configure.ac, doc/Makefile.am: Adjust for new manpage.
+
+	* doc/freeipmi.7.pre.in: Fix typo.
+
+	* ipmiconsole/, ipmipower/: Adjust manpages appropriately.  Fix
+	some typos along the way.
+
+2008-05-21  Albert Chu <chu11@llnl.gov>
+
 	* common/src/tool-config-file-common.h,
 	common/src/tool-config-file-common.c: Final initial tweaks.  Add
 	ipmiconsole support.

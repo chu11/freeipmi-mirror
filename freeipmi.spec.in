@@ -253,6 +253,7 @@ fi
 %{_mandir}/man8/ipmimonitoring.8*
 %{_mandir}/man8/ipmi-chassis.8*
 %{_mandir}/man8/ipmidetect.8*
+%{_mandir}/man5/freeipmi.conf.5*
 %{_mandir}/man5/ipmidetect.conf.5*
 %{_mandir}/man7/freeipmi.7*
 %dir %{_localstatedir}/cache/ipmimonitoringsdrcache
@@ -312,6 +313,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Sat May 21 2008 Albert Chu <chu11@llnl.gov> 0.7.0
+- Add freeipmi.conf.5.
+
 * Sat May 3 2008 Albert Chu <chu11@llnl.gov> 0.7.0
 - Add bmc-device.
 

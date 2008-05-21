@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.15 2008-05-21 18:35:39 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.16 2008-05-21 23:35:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -193,7 +193,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
                          &(cmd_args->common),
                          NULL,
                          NULL,
-                         CONFIG_FILE_OUTOFBAND | CONFIG_FILE_MISC,
+                         CONFIG_FILE_OUTOFBAND,
                          CONFIG_FILE_TOOL_IPMICONSOLE,
                          &config_file_data) < 0)
     {
@@ -202,7 +202,7 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
                              &(cmd_args->common),
                              NULL,
                              NULL,
-                             CONFIG_FILE_OUTOFBAND | CONFIG_FILE_MISC,
+                             CONFIG_FILE_OUTOFBAND,
                              CONFIG_FILE_TOOL_IPMICONSOLE,
                              &config_file_data) < 0)
         {
