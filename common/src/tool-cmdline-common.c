@@ -46,6 +46,38 @@
 
 #define WORKAROUND_FLAG_BUFLEN 1024
 
+error_t 
+cmdline_config_file_parse (int key, char *arg, struct argp_state *state)
+{
+  struct common_cmd_args *cmd_args = state->input;
+
+  switch (key)
+    {
+      /* ARGP_CONFIG_KEY for backwards compatability */
+    case ARGP_CONFIG_KEY:
+    case ARGP_CONFIG_FILE_KEY:
+      if (cmd_args->config_file)
+	free (cmd_args->config_file);
+      if (!(cmd_args->config_file = strdup(arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
+      break;
+    case ARGP_KEY_ARG:
+      /* Too many arguments. */
+      argp_usage (state);
+      break;
+    case ARGP_KEY_END:
+      break;
+    default:
+      /* don't parse anything else, fall to return 0 */
+      break;
+    }
+  
+  return 0;
+}
+
 int 
 parse_inband_driver_type(char *str)
 {
@@ -244,7 +276,7 @@ common_parse_opt (int key,
       cmd_args->driver_address = tmp;
       break;
     case ARGP_DRIVER_DEVICE_KEY:
-      if (cmd_args->driver_device != NULL)
+      if (cmd_args->driver_device)
 	free (cmd_args->driver_device);
       if (!(cmd_args->driver_device = strdup (arg)))
         {
@@ -265,7 +297,7 @@ common_parse_opt (int key,
       cmd_args->register_spacing = tmp;
       break;
     case ARGP_HOSTNAME_KEY:
-      if (cmd_args->hostname != NULL)
+      if (cmd_args->hostname)
 	free (cmd_args->hostname);
       if (!(cmd_args->hostname = strdup (arg)))
         {
@@ -281,7 +313,7 @@ common_parse_opt (int key,
         }
       else 
 	{
-	  if (cmd_args->username != NULL)
+	  if (cmd_args->username)
 	    free (cmd_args->username);
 	  if (!(cmd_args->username = strdup (arg)))
             {
@@ -300,7 +332,7 @@ common_parse_opt (int key,
         }
       else 
 	{
-	  if (cmd_args->password != NULL)
+	  if (cmd_args->password)
 	    free (cmd_args->password);
 	  if (!(cmd_args->password = strdup (arg)))
             {
@@ -312,7 +344,7 @@ common_parse_opt (int key,
       __secure_memset(arg, '\0', n);
       break;
     case ARGP_PASSWORD_PROMPT_KEY:
-      if (cmd_args->password != NULL)
+      if (cmd_args->password)
         free (cmd_args->password);
       arg = getpass ("Password: ");
       if (arg && strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
@@ -444,6 +476,11 @@ common_parse_opt (int key,
         }
       cmd_args->privilege_level = tmp;
       break;
+      /* ARGP_CONFIG_KEY for backwards compatability */
+    case ARGP_CONFIG_KEY:
+    case ARGP_CONFIG_FILE_KEY:
+      /* ignore config option - should have been parsed earlier */
+      break;
     case ARGP_WORKAROUND_FLAGS_KEY:
       if ((tmp = parse_workaround_flags(arg)) < 0)
         {
@@ -555,6 +592,8 @@ _init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->k_g_len = 0;
   cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
   cmd_args->cipher_suite_id = 3;
+  /* privilege_level set by parent function */
+  cmd_args->config_file = NULL;
   cmd_args->workaround_flags = 0;
   cmd_args->debug = 0;
 }
@@ -583,25 +622,30 @@ init_common_cmd_args_admin (struct common_cmd_args *cmd_args)
 void 
 free_common_cmd_args (struct common_cmd_args *cmd_args)
 {
-  if (cmd_args->driver_device != NULL)
+  if (cmd_args->driver_device)
     {
       free (cmd_args->driver_device);
       cmd_args->driver_device = NULL;
     }
-  if (cmd_args->hostname != NULL)
+  if (cmd_args->hostname)
     {
       free (cmd_args->hostname);
       cmd_args->hostname = NULL;
     }
-  if (cmd_args->username != NULL)
+  if (cmd_args->username)
     {
       free (cmd_args->username);
       cmd_args->username = NULL;
     }
-  if (cmd_args->password != NULL)
+  if (cmd_args->password)
     {
       free (cmd_args->password);
       cmd_args->password = NULL;
+    }
+  if (cmd_args->config_file)
+    {
+      free (cmd_args->config_file);
+      cmd_args->config_file = NULL;
     }
 }
 

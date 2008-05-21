@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.125 2008-05-19 18:44:17 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.126 2008-05-21 00:52:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -356,8 +356,7 @@ typedef struct ipmipower_connection *ipmipower_connection_t;
 enum ipmi_sensors_argp_option_keys
   {
     IPMI_VERSION_KEY = 'R',     /* legacy option */
-    CONFIG_KEY = 160,
-    RMCPDUMP_KEY = 161,
+    RMCPDUMP_KEY = 160,
 
     ON_KEY = 'n',
     OFF_KEY = 'f',
@@ -373,9 +372,9 @@ enum ipmi_sensors_argp_option_keys
     SESSION_TIMEOUT_KEY = 't',  /* legacy short option */
     RETRANSMISSION_TIMEOUT_KEY = 'y', /* legacy short option */
 
-    RETRY_WAIT_TIMEOUT_KEY = 163,
+    RETRY_WAIT_TIMEOUT_KEY = 161,
     RETRANSMISSION_WAIT_TIMEOUT_KEY = 'q',
-    RETRY_BACKOFF_COUNT_KEY = 164,
+    RETRY_BACKOFF_COUNT_KEY = 162,
     RETRANSMISSION_BACKOFF_COUNT_KEY = 'b',
     PING_INTERVAL_KEY = 'i',
     PING_TIMEOUT_KEY = 'z',
@@ -388,7 +387,6 @@ struct ipmipower_arguments
 {
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
-  char *configfile;
 #ifndef NDEBUG
   int rmcpdump;
 #endif /* NDEBUG */

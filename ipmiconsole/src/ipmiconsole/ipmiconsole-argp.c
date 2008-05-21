@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.10 2008-05-20 16:06:24 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.11 2008-05-21 00:52:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -80,23 +80,25 @@ static struct argp_option cmdline_options[] =
     {"cipher-suite-id", 'c', "CIPHER-SUITE-ID", OPTION_HIDDEN,                         
      "Specify the IPMI 2.0 cipher suite ID to use.", 14},
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
+    /* legacy short option */
+    {"bogus-long-option1", CONFIG_FILE_KEY, "FILE", OPTION_HIDDEN,
+     "Specify alternate configure file.", 16},
+    ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    {"config-file", CONFIG_FILE_KEY, "FILE", 0,
-     "Specify an alternate configuration file.", 30},
     {"escape-char", ESCAPE_CHAR_KEY, "CHAR", 0,
-     "Specify an alternate escape character (default char '&')", 31},
+     "Specify an alternate escape character (default char '&')", 30},
     {"dont-steal", DONT_STEAL_KEY, 0, 0,
-     "Do not steal an SOL session if one is already detected as being in use.", 32},
+     "Do not steal an SOL session if one is already detected as being in use.", 31},
     {"deactivate", DEACTIVATE_KEY, 0, 0,
-     "Deactivate a SOL session if one is detected as being in use and exit.", 33},
+     "Deactivate a SOL session if one is detected as being in use and exit.", 32},
     {"lock-memory", LOCK_MEMORY_KEY, 0, 0,
-     "Lock sensitive information (such as usernames and passwords) in memory.", 34},
+     "Lock sensitive information (such as usernames and passwords) in memory.", 33},
 #ifndef NDEBUG
     {"debugfile", DEBUGFILE_KEY, 0, 0,
-     "Output debugging to the debugfile rather than to standard output.", 36},
+     "Output debugging to the debugfile rather than to standard output.", 34},
     {"noraw", NORAW_KEY, 0, 0,
-     "Don't enter terminal raw mode.", 37},
+     "Don't enter terminal raw mode.", 35},
 #endif
     { 0 }
   };
@@ -108,37 +110,10 @@ static struct argp cmdline_argp = { cmdline_options,
                                     cmdline_args_doc, 
                                     cmdline_doc };
 
-static error_t config_file_parse (int key, char *arg, struct argp_state *state);
-
-static struct argp config_file_argp = { cmdline_options,
-                                        config_file_parse, 
-                                        cmdline_args_doc, 
-                                        cmdline_doc };
-
-static error_t
-config_file_parse (int key, char *arg, struct argp_state *state)
-{
-  struct ipmiconsole_arguments *cmd_args = state->input;
-
-  switch (key)
-    {
-    case CONFIG_FILE_KEY:	/* --config-file */
-      if (!(cmd_args->config_file = strdup(arg)))
-        err_exit("strdup: %s", strerror(errno));
-      break;
-    case ARGP_KEY_ARG:
-      /* Too many arguments. */
-      argp_usage (state);
-      break;
-    case ARGP_KEY_END:
-      break;
-    default:
-      /* don't parse anything else, fall to return 0 */
-      break;
-    }
-
-  return 0;
-}
+static struct argp cmdline_config_file_argp = { cmdline_options,
+                                                cmdline_config_file_parse, 
+                                                cmdline_args_doc, 
+                                                cmdline_doc };
 
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
@@ -148,11 +123,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-      /* 'I' is advertised option, 'c' is for backwards compatability */
-    case 'c':	/* --cipher-suite-id */
-      ret = common_parse_opt ('I', arg, state, &(cmd_args->common));
-      return ret;
-      break;
     case ESCAPE_CHAR_KEY:          /* --escape-char */
       cmd_args->escape_char = *arg;
       break;
@@ -164,9 +134,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case LOCK_MEMORY_KEY:       /* --lock-memory */
       cmd_args->lock_memory++;
-      break;
-    case CONFIG_FILE_KEY:	/* --config-file */
-      /* ignore */
       break;
 #ifndef NDEBUG
     case DEBUGFILE_KEY:	/* --debugfile */
@@ -181,6 +148,16 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       argp_usage (state);
       break;
     case ARGP_KEY_END:
+      break;
+      /* 'c' for backwards compatability */
+    case 'c':	/* --cipher-suite-id */
+      ret = common_parse_opt (ARGP_CIPHER_SUITE_ID_KEY, arg, state, &(cmd_args->common));
+      return ret;
+      break;
+      /* CONFIG_FILE_KEY for backwards compatability */
+    case CONFIG_FILE_KEY:
+      ret = common_parse_opt (ARGP_CONFIG_FILE_KEY, arg, state, &(cmd_args->common));
+      return ret;
       break;
     default:
       ret = common_parse_opt (key, arg, state, &(cmd_args->common));
@@ -505,12 +482,15 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
     }
 
   num = sizeof(config_file_options)/sizeof(struct conffile_option);
-  if (conffile_parse(cf, cmd_args->config_file, config_file_options, num, cmd_args, 0, 0) < 0)
+  /* XXX come back and support legacy later */
+  if (!cmd_args->common.config_file)
+    cmd_args->common.config_file = IPMICONSOLE_CONFIG_FILE_DEFAULT;
+  if (conffile_parse(cf, cmd_args->common.config_file, config_file_options, num, cmd_args, 0, 0) < 0)
     {
       char buf[CONFFILE_MAX_ERRMSGLEN];
-
+      
       /* Its not an error if the default configuration file doesn't exist */
-      if (!strcmp(cmd_args->config_file, IPMICONSOLE_CONFIG_FILE_DEFAULT)
+      if (!strcmp(cmd_args->common.config_file, IPMICONSOLE_CONFIG_FILE_DEFAULT)
           && conffile_errnum(cf) == CONFFILE_ERR_EXIST)
 	goto cleanup;
 
@@ -540,7 +520,6 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->dont_steal = 0;
   cmd_args->deactivate = 0;
   cmd_args->lock_memory = 0;
-  cmd_args->config_file = IPMICONSOLE_CONFIG_FILE_DEFAULT;
 #ifndef NDEBUG
   cmd_args->debugfile = 0;
   cmd_args->noraw = 0;
@@ -550,7 +529,7 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->common.session_timeout = 60000;
   cmd_args->common.retransmission_timeout = 500;
 
-  argp_parse (&config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   /* change defaults to whatever is configured, run 2nd b/c
    * user may have specified config file on the command line.
    */

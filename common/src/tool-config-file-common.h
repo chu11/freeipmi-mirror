@@ -30,7 +30,7 @@
 #define CONFIG_FILE_INBAND      0x01
 #define CONFIG_FILE_OUTOFBAND   0x02
 #define CONFIG_FILE_MISC        0x03
-   
+
 int config_file_parse(const char *filename,
                       int no_error_if_not_found,
                       struct common_cmd_args *cmd_args, 

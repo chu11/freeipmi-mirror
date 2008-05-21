@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.120 2008-05-20 16:06:24 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.121 2008-05-21 00:52:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -90,11 +90,10 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR,
+    ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    {"config", CONFIG_KEY, "FILE", 0,
-     "Specify an alternate configuration file.", 26},
 #ifndef NDEBUG
     {"rmcpdump", RMCPDUMP_KEY, 0, 0,
      "Turn on RMCP packet dump output.", 27},
@@ -150,43 +149,10 @@ static struct argp cmdline_argp = {cmdline_options,
                                    cmdline_args_doc,
                                    cmdline_doc};
 
-static error_t config_file_parse (int key, char *arg, struct argp_state *state);
-
-
-static struct argp config_file_argp = {cmdline_options,
-                                       config_file_parse,
-                                       cmdline_args_doc,
-                                       cmdline_doc};
-
-static error_t
-config_file_parse (int key,
-                   char *arg,
-                   struct argp_state *state)
-{
-  switch (key) 
-    {
-    case CONFIG_KEY:         /* --config */
-      if (strlen(arg) > MAXPATHLEN)
-        ierr_exit("Command Line Error: configuration file pathname too long");
-      if (!(cmd_args.configfile = strdup(arg)))
-        {
-          perror("strdup");
-          exit(1);
-        }
-      break;
-    case ARGP_KEY_ARG:
-      /* Too many arguments. */
-      argp_usage (state);
-      break;
-    case ARGP_KEY_END:
-      break;
-    default:
-      /* don't parse anything else, fall to return 0 */
-      break;
-    } 
-
-  return 0;
-}
+static struct argp cmdline_config_file_argp = {cmdline_options,
+                                               cmdline_config_file_parse,
+                                               cmdline_args_doc,
+                                               cmdline_doc};
 
 static error_t
 cmdline_parse (int key,
@@ -208,9 +174,6 @@ cmdline_parse (int key,
       else
         ierr_exit("Command Line Error: invalid driver type specified");
       cmd_args.common.driver_type = tmp;
-      break;
-    case CONFIG_KEY:         /* --config */
-      /* ignore */
       break;
 #ifndef NDEBUG
     case RMCPDUMP_KEY:       /* --rmcpdump */
@@ -299,6 +262,16 @@ cmdline_parse (int key,
           || tmp < 0)
         ierr_exit("Command Line Error: ping consec count invalid");
       cmd_args.ping_consec_count = tmp;
+      break;
+      /* backwards compatability */
+    case SESSION_TIMEOUT_KEY:
+      ret = common_parse_opt (ARGP_SESSION_TIMEOUT_KEY, arg, state, &(cmd_args.common));
+      return ret;
+      break;
+      /* backwards compatability */
+    case RETRANSMISSION_TIMEOUT_KEY:
+      ret = common_parse_opt (ARGP_RETRANSMISSION_TIMEOUT_KEY, arg, state, &(cmd_args.common));
+      return ret;
       break;
     default:
       ret = common_parse_opt (key, arg, state, &(cmd_args.common));
@@ -498,7 +471,7 @@ _cb_unsigned_int(conffile_t cf, struct conffile_data *data,
 }
 
 void 
-ipmipower_config_conffile_parse(char *configfile) 
+ipmipower_config_conffile_parse(char *config_file) 
 {
   int driver_type_count = 0,
     ipmi_version_count = 0, 
@@ -631,14 +604,14 @@ ipmipower_config_conffile_parse(char *configfile)
   if (!(cf = conffile_handle_create()))
     ierr_exit("Config File Error: cannot create conffile handle");
 
-  conffile = (configfile) ? configfile : IPMIPOWER_CONFIG_FILE_DEFAULT;
+  conffile = (config_file) ? config_file : IPMIPOWER_CONFIG_FILE_DEFAULT;
   num = sizeof(options)/sizeof(struct conffile_option);
   if (conffile_parse(cf, conffile, options, num, NULL, 0, 0) < 0) 
     {
       char errbuf[CONFFILE_MAX_ERRMSGLEN];
       
       /* Not an error if default file doesn't exist */ 
-      if (!configfile && conffile_errnum(cf) == CONFFILE_ERR_EXIST)
+      if (!config_file && conffile_errnum(cf) == CONFFILE_ERR_EXIST)
         goto done;
       
       if (conffile_errmsg(cf, errbuf, CONFFILE_MAX_ERRMSGLEN) < 0)
@@ -689,7 +662,6 @@ ipmipower_config(int argc, char **argv)
   cmd_args.common.session_timeout = 20000; /* 20 seconds */
   cmd_args.common.retransmission_timeout = 400; /* .4 seconds */
 
-  cmd_args.configfile = NULL;
 #ifndef NDEBUG
   cmd_args.rmcpdump = 0;
 #endif /* NDEBUG */
@@ -706,11 +678,12 @@ ipmipower_config(int argc, char **argv)
   cmd_args.ping_percent = 50;
   cmd_args.ping_consec_count = 5;
 
-  argp_parse(&config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
+  argp_parse(&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
   
-  ipmipower_config_conffile_parse(cmd_args.configfile);
+  ipmipower_config_conffile_parse(cmd_args.common.config_file);
   
   argp_parse(&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
+
   /* achu: don't do these checks, we don't do inband, so checks aren't appropriate 
    * checks will be done in ipmipower_config_check_values().
    */

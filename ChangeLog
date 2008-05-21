@@ -22,6 +22,14 @@
 
 	* Adjust --no-probing to --disable-auto-probe.
 
+	* common/src/tool-cmdline-common.h,
+	common/src/tool-cmdline-common.c (cmdline_config_file_parse): New
+	function.  Add new --config-file option support.
+
+	* ipmipower/, ipmiconsole/: Use new generic config-file option.
+
+	* General cmdline parsing cleanup throughout.
+
 2008-05-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/src/ipmi-sensors-config.c

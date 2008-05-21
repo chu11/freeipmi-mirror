@@ -53,17 +53,19 @@ enum argp_common_option_keys
     ARGP_PRIVILEGE_KEY = 141, /* for backwards compatability */
     ARGP_PRIV_LEVEL_KEY = 142, /* for backwards compatability */
     ARGP_PRIVILEGE_LEVEL_KEY = 'l',
+    ARGP_CONFIG_KEY = 143,      /* for backwards compatability */
+    ARGP_CONFIG_FILE_KEY = 144,
+    ARGP_WORKAROUND_FLAGS_KEY = 'W',
+    ARGP_DEBUG_KEY = 145,
     ARGP_FLUSH_CACHE_KEY = 'f',
     ARGP_QUIET_CACHE_KEY = 'Q',
-    ARGP_SDR_CACHE_DIR_KEY = 143,
-    ARGP_IGNORE_SDR_CACHE_KEY = 144,
+    ARGP_SDR_CACHE_DIR_KEY = 146,
+    ARGP_IGNORE_SDR_CACHE_KEY = 147,
     ARGP_BUFFER_OUTPUT_KEY = 'B',
     ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
     ARGP_ELIMINATE_KEY = 'E',
-    ARGP_ALWAYS_PREFIX_KEY = 145,
-    ARGP_WORKAROUND_FLAGS_KEY = 'W',
-    ARGP_DEBUG_KEY = 146
+    ARGP_ALWAYS_PREFIX_KEY = 148,
   };
 
 /*
@@ -171,37 +173,41 @@ enum argp_common_option_keys
     {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
      "Specify the privilege level to be used.", 15}     
 
+#define ARGP_COMMON_OPTIONS_CONFIG_FILE                                                             \
+  {"config-file", ARGP_CONFIG_FILE_KEY, "FILE", 0,                                                  \
+   "Specify alternate configuration file.", 16}                                                     \
+
 #define ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS                                                        \
     {"workaround-flags",  ARGP_WORKAROUND_FLAGS_KEY, "WORKAROUNDS", 0, 	                            \
-     "Specify workarounds to vendor compliance issues.", 16}
+     "Specify workarounds to vendor compliance issues.", 17}
 
 #define ARGP_COMMON_SDR_OPTIONS                                                                                      \
     {"flush-cache", ARGP_FLUSH_CACHE_KEY,  0, 0,                                                                     \
-     "Flush a cached version of the sensor data repository (SDR) cache.", 17},                                       \
+     "Flush a cached version of the sensor data repository (SDR) cache.", 18},                                       \
     {"quiet-cache", ARGP_QUIET_CACHE_KEY,  0, 0,                                                                     \
-     "Do not output information about cache creation/deletion.", 18},                                                \
+     "Do not output information about cache creation/deletion.", 19},                                                \
     {"sdr-cache-directory", ARGP_SDR_CACHE_DIR_KEY, "DIRECTORY", 0,                                                  \
-     "Specify an alternate directory for sensor data repository (SDR) caches to be stored or read from.", 19} 
+     "Specify an alternate directory for sensor data repository (SDR) caches to be stored or read from.", 20} 
 
 #define ARGP_COMMON_IGNORE_SDR_OPTIONS                                                                               \
     {"ignore-sdr-cache", ARGP_IGNORE_SDR_CACHE_KEY, 0, 0,                                                            \
-     "Ignore all SDR cache related processing.", 20} 
+     "Ignore all SDR cache related processing.", 21} 
 
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                     \
     {"buffer-output", ARGP_BUFFER_OUTPUT_KEY, 0, 0,                        \
-     "Buffer hostranged output.", 21},                                     \
+     "Buffer hostranged output.", 22},                                     \
     {"consolidate-output", ARGP_CONSOLIDATE_OUTPUT_KEY, 0, 0,              \
-     "Consolidate hostranged output.", 22},                                \
+     "Consolidate hostranged output.", 23},                                \
     {"fanout", ARGP_FANOUT_KEY, "NUM", 0,                                  \
-     "Specify multiple host fanout.", 23},                                 \
+     "Specify multiple host fanout.", 24},                                 \
     {"eliminate", ARGP_ELIMINATE_KEY, 0, 0,                                \
-     "Eliminate undetected nodes.", 24},                                   \
+     "Eliminate undetected nodes.", 25},                                   \
     {"always-prefix", ARGP_ALWAYS_PREFIX_KEY, 0, 0,                        \
-     "Always prefix output.", 25}
+     "Always prefix output.", 26}
 
 #define ARGP_COMMON_OPTIONS_DEBUG                                          \
     {"debug",     ARGP_DEBUG_KEY, 0, 0, 	                           \
-     "Turn on debugging.", 26}                                             
+     "Turn on debugging.", 27}                                             
 
 struct common_cmd_args 
 {
@@ -220,7 +226,8 @@ struct common_cmd_args
   unsigned int k_g_len;
   int authentication_type;
   int cipher_suite_id;
-  int privilege_level;
+  int privilege_level; 
+  char *config_file;
   unsigned int workaround_flags;
   int debug;
 };
@@ -248,7 +255,6 @@ struct hostrange_cmd_args
 #define IPMI_DEVICE_KCS_STR      "kcs"
 #define IPMI_DEVICE_SSIF_STR     "ssif"
 #define IPMI_DEVICE_OPENIPMI_STR "openipmi"
-
 
 #define IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR      "idzero"
 #define IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR "forcepermsg"
@@ -312,5 +318,8 @@ void verify_sdr_cmd_args (struct sdr_cmd_args *cmd_args);
 void init_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
 void free_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
 void verify_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
+
+/* to parse only the --config-file option */
+error_t cmdline_config_file_parse (int key, char *arg, struct argp_state *state);
 
 #endif
