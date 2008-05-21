@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.conf.5.pre.in,v 1.6 2008-04-24 05:46:46 chu11 Exp $
+\."$Id: ipmiconsole.conf.5.pre.in,v 1.6.2.1 2008-05-21 22:13:40 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 \."  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -75,7 +75,7 @@ Specify the default password to use.
 Specify the BMC key (K_g) to use.  Prefix with '0x' to enter the key in hex.
 .TP
 .I cipher-suite-id str
-Specify the default Cipher Suite ID to use: "auto", "0", "1", "2", "3", "6", "7", "8", "11", 12"
+Specify the default Cipher Suite ID to use: "0", "1", "2", "3", "6", "7", "8", "11", 12"
 .TP
 .I privilege-level str
 Specify the default privilege type to use.  

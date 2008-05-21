@@ -1,6 +1,8 @@
 2008-05-21  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi.7.pre.in: Fix typo.
+
+	* ipmiconsole/ipmiconsole.conf.5.pre.in: Fix typo.
 	
 2008-05-20  Albert Chu <chu11@llnl.gov>
   
