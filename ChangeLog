@@ -1,6 +1,11 @@
 2008-05-22  Albert Chu <chu11@llnl.gov>
 
+	* common/src/tool-config-file-common.c: Minor tweaks.
+
 	* common/doc/: More manpage updates.
+
+	* bmc-info/, bmc-device/, doc/freeipmi.conf.5.pre.in: Add bmc-info
+	and bmc-device config file support.
 	
 2008-05-21  Albert Chu <chu11@llnl.gov>
 
