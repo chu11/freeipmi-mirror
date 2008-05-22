@@ -70,12 +70,10 @@ config
 config-file
 -bmc-config
 -bmc-watchdog?
--ipmi-fru
--ipmi-sel
--ipmi-sensors
 -ipmi-sensors-config
--ipmimonitoring
 -pef-config
+- group/sensor list for ipmi-sensors and ipmimontironig?
+- grop/sections for config tools?
 config file - support workarounds/etc. for heterogenous cluster?
 map hostname -> IP config
 map hostname -> IP config

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.11 2008-05-21 16:48:31 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.12 2008-05-22 17:37:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -41,7 +41,7 @@
 #include <assert.h>
 
 #include "tool-cmdline-common.h"
-
+#include "tool-config-file-common.h"
 #include "ipmimonitoring.h"
 #include "ipmimonitoring-argp.h"
 
@@ -97,6 +97,11 @@ static struct argp cmdline_argp = { cmdline_options,
                                     cmdline_parse, 
                                     cmdline_args_doc, 
                                     cmdline_doc };
+
+static struct argp cmdline_config_file_argp = { cmdline_options,
+                                                cmdline_config_file_parse,
+                                                cmdline_args_doc,
+                                                cmdline_doc };
 
 static error_t 
 cmdline_parse (int key, char *arg, struct argp_state *state)
@@ -171,6 +176,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+static void
+_ipmimonitoring_config_file_parse(struct ipmimonitoring_arguments *cmd_args)
+{
+  if (config_file_parse (cmd_args->common.config_file,
+                         0,
+                         &(cmd_args->common),
+                         NULL,
+                         &(cmd_args->hostrange),
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
+                         0,
+                         NULL) < 0)
+    {
+      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
+      exit(1);
+    }
+}
+
 void 
 ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_arguments *cmd_args)
 {
@@ -201,6 +223,10 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
          sizeof(unsigned int)*IPMIMONITORING_MAX_GROUPS);
 
   cmd_args->ipmimonitoring_groups_length = 0;
+
+  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
+
+  _ipmimonitoring_config_file_parse(cmd_args);
 
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));

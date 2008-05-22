@@ -4,8 +4,9 @@
 
 	* common/doc/: More manpage updates.
 
-	* ipmi-oem/, ipmi-chassis/, bmc-info/, bmc-device/, ipmi-raw/: Add
-	config file support.
+	* ipmimonitoring/, ipmi-fru/, ipmi-sel/, ipmi-sensors/, ipmi-oem/,
+	ipmi-chassis/, bmc-info/, bmc-device/, ipmi-raw/: Add config file
+	support.
 
 	* doc/freeipmi.conf.5.pre.in: Update appropriately for additions.
 

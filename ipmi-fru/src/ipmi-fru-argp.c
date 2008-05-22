@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.12 2008-05-21 16:48:30 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.13 2008-05-22 17:37:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -40,6 +40,7 @@
 #endif /* HAVE_UNISTD_H */
 
 #include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 #include "ipmi-fru.h"
 #include "ipmi-fru-argp.h"
 
@@ -66,6 +67,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
+    ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_IGNORE_SDR_OPTIONS,
@@ -86,6 +88,11 @@ static struct argp cmdline_argp = { cmdline_options,
                                     cmdline_parse,
                                     cmdline_args_doc,
                                     cmdline_doc };
+
+static struct argp cmdline_config_file_argp = { cmdline_options,
+                                                cmdline_config_file_parse,
+                                                cmdline_args_doc,
+                                                cmdline_doc };
 
 static error_t 
 cmdline_parse (int key, char *arg, struct argp_state *state)
@@ -129,6 +136,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+static void
+_ipmi_fru_config_file_parse(struct ipmi_fru_arguments *cmd_args)
+{
+  if (config_file_parse (cmd_args->common.config_file,
+                         0,
+                         &(cmd_args->common),
+                         NULL,
+                         &(cmd_args->hostrange),
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
+                         0,
+                         NULL) < 0)
+    {
+      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
+      exit(1);
+    }
+}
+
 void 
 ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
 {
@@ -139,6 +163,10 @@ ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
   cmd_args->device_id_set = 0;
   cmd_args->verbose_count = 0;
   cmd_args->skip_checks = 0;
+
+  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
+
+  _ipmi_fru_config_file_parse(cmd_args);
 
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));

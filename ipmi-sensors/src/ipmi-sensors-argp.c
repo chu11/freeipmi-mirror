@@ -33,6 +33,7 @@
 #include <assert.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 #include "tool-sensor-common.h"
 
 #include "ipmi-sensors.h"
@@ -91,6 +92,11 @@ static struct argp cmdline_argp = { cmdline_options,
                                     cmdline_parse, 
                                     cmdline_args_doc, 
                                     cmdline_doc };
+
+static struct argp cmdline_config_file_argp = { cmdline_options,
+                                                cmdline_config_file_parse,
+                                                cmdline_args_doc,
+                                                cmdline_doc };
 
 static error_t 
 cmdline_parse (int key, char *arg, struct argp_state *state)
@@ -169,6 +175,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+static void
+_ipmi_sensors_config_file_parse(struct ipmi_sensors_arguments *cmd_args)
+{
+  if (config_file_parse (cmd_args->common.config_file,
+                         0,
+                         &(cmd_args->common),
+                         NULL,
+                         &(cmd_args->hostrange),
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
+                         0,
+                         NULL) < 0)
+    {
+      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
+      exit(1);
+    }
+}
+
 void
 _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 {
@@ -232,6 +255,10 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
          sizeof(unsigned int)*IPMI_SENSORS_MAX_RECORD_IDS);
   cmd_args->sensors_list_length = 0;
   
+  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
+
+  _ipmi_sensors_config_file_parse(cmd_args);
+
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
   verify_sdr_cmd_args (&(cmd_args->sdr));

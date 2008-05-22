@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.36 2008-05-15 22:30:45 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.37 2008-05-22 17:37:04 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -55,6 +55,7 @@ sensor reading use, it is recommended that users use
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-main.man>
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-details.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-config-file.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
