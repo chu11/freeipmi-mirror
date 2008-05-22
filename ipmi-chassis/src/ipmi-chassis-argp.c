@@ -32,6 +32,7 @@
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
 #include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 
 #include "freeipmi-portability.h"
 
@@ -57,6 +58,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
+    ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
@@ -109,6 +111,11 @@ static struct argp cmdline_argp = { cmdline_options,
                                     cmdline_parse,
                                     cmdline_args_doc,
                                     cmdline_doc };
+
+static struct argp cmdline_config_file_argp = { cmdline_options,
+                                                cmdline_config_file_parse,
+                                                cmdline_args_doc,
+                                                cmdline_doc };
 
 static error_t boot_flag_parse (int key, char *arg, struct argp_state *state);
 
@@ -479,6 +486,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+static void
+_ipmi_chassis_config_file_parse(struct ipmi_chassis_arguments *cmd_args)
+{
+  if (config_file_parse (cmd_args->common.config_file,
+                         0,
+                         &(cmd_args->common),
+                         NULL,
+                         &(cmd_args->hostrange),
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
+                         0,
+                         NULL) < 0)
+    {
+      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
+      exit(1);
+    }
+}
+
 void 
 _ipmi_chassis_args_validate (struct ipmi_chassis_arguments *args)
 {
@@ -514,6 +538,10 @@ ipmi_chassis_argp_parse (int argc,
   cmd_args->args.boot_option_args.user_password_bypass = -1;
   cmd_args->args.boot_option_args.force_progress_event_traps = -1;
   cmd_args->args.boot_option_args.firmware_bios_verbosity = -1;
+
+  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
+
+  _ipmi_chassis_config_file_parse(cmd_args);
 
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
