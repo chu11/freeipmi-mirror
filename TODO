@@ -72,8 +72,6 @@ config-file
 -bmc-watchdog?
 -ipmi-chassis
 -ipmi-fru
--ipmi-oem
--ipmi-raw
 -ipmi-sel
 -ipmi-sensors
 -ipmi-sensors-config
