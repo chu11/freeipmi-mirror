@@ -28,6 +28,7 @@
 #include <argp.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 #include "ipmi-raw.h"
 #include "ipmi-raw-argp.h"
 
@@ -56,6 +57,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
+    ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
@@ -70,6 +72,12 @@ static struct argp cmdline_argp = { cmdline_options,
                                     cmdline_parse, 
                                     cmdline_args_doc, 
                                     cmdline_doc };
+
+static struct argp cmdline_config_file_argp = { cmdline_options,
+                                                cmdline_config_file_parse,
+                                                cmdline_args_doc,
+                                                cmdline_doc };
+
 static error_t 
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
@@ -134,6 +142,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+static void
+_ipmi_raw_config_file_parse(struct ipmi_raw_arguments *cmd_args)
+{
+  if (config_file_parse (cmd_args->common.config_file,
+                         0,
+                         &(cmd_args->common),
+                         NULL,
+                         &(cmd_args->hostrange),
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
+                         0,
+                         NULL) < 0)
+    {
+      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
+      exit(1);
+    }
+}
+
 void 
 ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
 {
@@ -143,6 +168,10 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
   cmd_args->cmd_file = NULL;
   memset (cmd_args->cmd, 0, sizeof(cmd_args->cmd));
   cmd_args->cmd_length = 0;
+
+  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
+
+  _ipmi_raw_config_file_parse(cmd_args);
 
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));

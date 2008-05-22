@@ -17,6 +17,7 @@ command.
 Currently, the tools that can be configured with the configuration file are: 
 .B bmc-info(8),
 .B bmc-device(8),
+.B ipmi-raw(8),
 .B ipmiconsole(8), and
 .B ipmipower(8).
 .LP
@@ -189,5 +190,6 @@ the Free Software Foundation; either version 2 of the License, or (at
 your option) any later version.
 
 .SH "SEE ALSO"
-freeipmi(7), bmc-device(8), bmc-info(8), ipmiconsole(8), ipmipower(8)
+freeipmi(7), bmc-device(8), bmc-info(8), ipmi-raw(8), ipmiconsole(8),
+ipmipower(8)
 #include <@top_srcdir@/common/doc/manpage-common-homepage.man>
