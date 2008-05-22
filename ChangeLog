@@ -8,6 +8,8 @@
 	config file support.
 
 	* doc/freeipmi.conf.5.pre.in: Update appropriately for additions.
+
+	* bmc-watchdog/: Tweak error messages to be consistent to other tools.
 	
 2008-05-21  Albert Chu <chu11@llnl.gov>
 
