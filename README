@@ -148,6 +148,16 @@ be specified.  Some vendors may have not implemented IPMI properly and
 a vendor specific workaround may also be necessary.  See tool manpages
 for more information and general trouble-shooting information.
 
+Configuration
+-------------
+
+In order to avoid typing in a long list of command line options to
+specify IPMI communication requirements everytime a command is
+executed (i.e. driver paths, usernames, passwords, etc.), an
+alternate set of default values can be set for most FreeIPMI
+tools in the FreeIPMI configuration file.  See freeipmi.conf(5)
+for more information.
+
 HPC Support
 -----------
 
@@ -164,7 +174,6 @@ ipmimonitoring(8) tool interprets sensor readings as well as just
 reporting them.  By mapping sensor readings into NOMINAL, WARNING, or
 CRITICAL states, it makes monitoring sensors easier across large
 numbers of nodes.
-
 
 Development
 -----------

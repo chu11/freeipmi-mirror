@@ -1,3 +1,7 @@
+2008-05-22  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/: More manpage updates.
+	
 2008-05-21  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-ignore-sdr-cache.man: Fix option
