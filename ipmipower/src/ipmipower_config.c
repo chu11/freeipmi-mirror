@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.125 2008-05-21 23:35:21 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.126 2008-05-22 00:03:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -296,8 +296,21 @@ ipmipower_config_conffile_parse(void)
          sizeof(struct config_file_data_ipmipower));
 
   /* try legacy file first */
-  if (config_file_parse (IPMIPOWER_CONFIG_FILE_DEFAULT,
-                         1,         /* do not exit if file not found */
+  if (!cmd_args.common.config_file)
+    {
+      if (!config_file_parse (IPMIPOWER_CONFIG_FILE_DEFAULT,
+                              1,         /* do not exit if file not found */
+                              &(cmd_args.common),
+                              NULL,
+                              &(cmd_args.hostrange),
+                              CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
+                              CONFIG_FILE_TOOL_IPMIPOWER,
+                              &config_file_data))
+        goto out;
+    }
+  
+  if (config_file_parse (cmd_args.common.config_file,
+                         0,
                          &(cmd_args.common),
                          NULL,
                          &(cmd_args.hostrange),
@@ -305,20 +318,11 @@ ipmipower_config_conffile_parse(void)
                          CONFIG_FILE_TOOL_IPMIPOWER,
                          &config_file_data) < 0)
     {
-      if (config_file_parse (cmd_args.common.config_file,
-                             0,
-                             &(cmd_args.common),
-                             NULL,
-                             &(cmd_args.hostrange),
-                             CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
-                             CONFIG_FILE_TOOL_IPMIPOWER,
-                             &config_file_data) < 0)
-        {
-          fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
-          exit(1);
-        }
+      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
+      exit(1);
     }
 
+ out:
   if (config_file_data.on_if_off_count)
     cmd_args.on_if_off = config_file_data.on_if_off;
   if (config_file_data.wait_until_on_count)

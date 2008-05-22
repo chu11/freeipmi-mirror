@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.16 2008-05-21 23:35:21 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.17 2008-05-22 00:03:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -187,9 +187,22 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
          '\0',
          sizeof(struct config_file_data_ipmiconsole));
 
-  /* try legacy file first */
-  if (config_file_parse (IPMICONSOLE_CONFIG_FILE_DEFAULT,
-                         1,         /* do not exit if file not found */
+  if (!cmd_args->common.config_file)
+    {
+      /* try legacy file first */
+      if (!config_file_parse (IPMICONSOLE_CONFIG_FILE_DEFAULT,
+                              1,         /* do not exit if file not found */
+                              &(cmd_args->common),
+                              NULL,
+                              NULL,
+                              CONFIG_FILE_OUTOFBAND,
+                              CONFIG_FILE_TOOL_IPMICONSOLE,
+                              &config_file_data))
+        goto out;
+    }
+
+  if (config_file_parse (cmd_args->common.config_file,
+                         0,
                          &(cmd_args->common),
                          NULL,
                          NULL,
@@ -197,20 +210,11 @@ _config_file_parse(struct ipmiconsole_arguments *cmd_args)
                          CONFIG_FILE_TOOL_IPMICONSOLE,
                          &config_file_data) < 0)
     {
-      if (config_file_parse (cmd_args->common.config_file,
-                             0,
-                             &(cmd_args->common),
-                             NULL,
-                             NULL,
-                             CONFIG_FILE_OUTOFBAND,
-                             CONFIG_FILE_TOOL_IPMICONSOLE,
-                             &config_file_data) < 0)
-        {
-          fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
-          exit(1);
-        }
+      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
+      exit(1);
     }
 
+ out:
   if (config_file_data.escape_char_count)
     cmd_args->escape_char = config_file_data.escape_char;
   if (config_file_data.dont_steal_count)
