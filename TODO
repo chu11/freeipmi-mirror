@@ -19,11 +19,6 @@ solaris
 - builds?
 - solaris inband driver (solaris 9? solaris 10? solaris 11?)
 
-ipmipower
----------
-- make sure works w/ powerman still
-  - make sure everything works
-  
 bmc-config
 ----------
 remaining serial config
@@ -40,12 +35,15 @@ pef-config
 * conf.5 manpage
 * how to specify event reading type codes easily
 
+test
+----
+all config file options
+- legacy config files
+- ipmipower still works with powerman
+- old .conf manpages poitn to new one
+
 general
 -------
---config-file manpage stuffs 
- - need freeipmi(5) too
- - point old manpage to it
- - remove old config path autoconf
 audit error message consistency in tool validate functions
 - exit(1) vs. exit(EXIT_FAILURE)
 audit error messages in command line parsing in all tools
