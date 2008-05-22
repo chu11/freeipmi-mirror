@@ -67,8 +67,21 @@ fix port variable naming in argp for all tools
 
 config
 ------
+config-file
+bmc-config
+bmc-device
+bmc-info
+bmc-watchdog?
+ipmi-chassis
+ipmi-fru
+ipmi-oem
+ipmi-raw
+ipmi-sel
+ipmi-sensors
+ipmi-sensors-config
+ipmimonitoring
+pef-config
 config file - support workarounds/etc. for heterogenous cluster?
-- re-work ipmiconsole to allow command line option to work
 map hostname -> IP config
 map hostname -> IP config
 - 1) deal w/ tools
