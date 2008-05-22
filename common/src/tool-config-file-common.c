@@ -1300,7 +1300,10 @@ config_file_parse(const char *filename,
         }
       else
         {
-          if (CONFFILE_IS_PARSE_ERR(conffile_errnum(cf)))
+          if (CONFFILE_IS_PARSE_ERR(conffile_errnum(cf))
+              || conffile_errnum(cf) == CONFFILE_ERR_EXIST
+              || conffile_errnum(cf) == CONFFILE_ERR_OPEN
+              || conffile_errnum(cf) == CONFFILE_ERR_READ)
             fprintf(stderr, "Config File Error: %s\n", buf);
           else
             fprintf(stderr, "conffile_parse: %s\n", buf);
