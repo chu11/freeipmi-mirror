@@ -115,7 +115,7 @@ _bmc_device_config_file_parse(struct bmc_device_arguments *cmd_args)
                          &(cmd_args->common),
                          NULL,
                          &(cmd_args->hostrange),
-                         CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          0,
                          NULL) < 0)
     {
