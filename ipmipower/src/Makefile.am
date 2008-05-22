@@ -3,7 +3,7 @@ ipmipower_SOURCES= \
 	argv.c \
 	ierror.c \
 	ipmipower_check.c \
-	ipmipower_config.c \
+	ipmipower_argp.c \
 	ipmipower_connection.c \
 	ipmipower.c \
 	ipmipower_output.c \
@@ -33,7 +33,7 @@ noinst_HEADERS= \
 	argv.h \
 	ierror.h \
 	ipmipower_check.h \
-	ipmipower_config.h \
+	ipmipower_argp.h \
 	ipmipower_connection.h \
 	ipmipower.h \
 	ipmipower_output.h \

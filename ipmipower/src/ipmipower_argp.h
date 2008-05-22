@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.h,v 1.11 2008-05-16 21:29:16 chu11 Exp $
+ *  $Id: ipmipower_argp.h,v 1.1 2008-05-22 00:19:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -24,14 +24,11 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_CONFIG_H
-#define _IPMIPOWER_CONFIG_H
+#ifndef _IPMIPOWER_ARGP_H
+#define _IPMIPOWER_ARGP_H
 
 #include "ipmipower.h"
 
-/* ipmipower_config
- * - parse config file and cmdline
- */
-void ipmipower_config(int argc, char **argv);
+void ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_args);
 
-#endif /* _IPMIPOWER_CONFIG_H */
+#endif /* _IPMIPOWER_ARGP_H */

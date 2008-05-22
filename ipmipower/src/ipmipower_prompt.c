@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.94 2008-05-21 16:40:18 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.95 2008-05-22 00:19:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -44,7 +44,7 @@
 #endif /* HAVE_UNISTD_H */
 #include <errno.h> 
 
-#include "ipmipower_config.h"
+#include "ipmipower_argp.h"
 #include "ipmipower_prompt.h"
 #include "ipmipower_ping.h"
 #include "ipmipower_connection.h"

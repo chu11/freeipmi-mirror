@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.67 2008-05-20 16:21:42 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.68 2008-05-22 00:19:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -56,7 +56,7 @@
 #include <errno.h>
 
 #include "ipmipower.h"
-#include "ipmipower_config.h"
+#include "ipmipower_argp.h"
 #include "ipmipower_connection.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_prompt.h"
@@ -402,7 +402,7 @@ main(int argc, char *argv[])
   if (ipmi_rmcpplus_init() < 0)
     ierr_exit("ipmi_rmcpplus_init");
 
-  ipmipower_config(argc, argv);
+  ipmipower_argp_parse (argc, argv, &cmd_args);
 
   _setup();
 

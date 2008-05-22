@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.17 2008-05-22 00:03:03 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.18 2008-05-22 00:19:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -160,26 +160,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
-static int
-_cb_escape_char(conffile_t cf, 
-                struct conffile_data *data,
-                char *optionname,
-                int option_type,
-                void *option_ptr,
-                int option_data, 
-                void *app_ptr, 
-                int app_data)
-{
-  struct ipmiconsole_arguments *cmd_args;
-
-  cmd_args = (struct ipmiconsole_arguments *)app_ptr;
-
-  cmd_args->escape_char = data->string[0];
-  return 0;
-}
-
 static void
-_config_file_parse(struct ipmiconsole_arguments *cmd_args)
+_ipmiconsole_config_file_parse(struct ipmiconsole_arguments *cmd_args)
 {
   struct config_file_data_ipmiconsole config_file_data;
 
@@ -248,7 +230,9 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->common.retransmission_timeout = 500;
 
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
-  _config_file_parse(cmd_args);
+
+  _ipmiconsole_config_file_parse(cmd_args);
+
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->common));
   _ipmiconsole_args_validate (cmd_args);

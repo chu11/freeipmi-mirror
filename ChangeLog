@@ -6,6 +6,11 @@
 	* common/src/tool-sdr-cache-common.c (sdr_cache_flush_cache),
 	ipmimonitoring/, ipmi-fru/, ipmi-sel/, ipmi-sensors/,
 	ipmi-sensors-config/: Fix --quiet-cache to work with flush option.
+
+	* ipmipower/src/ipmipower_config.h,
+	ipmipower/src/ipmipower_config.c: Rename to ipmipower_arg.h and
+	ipmipower_arg.c for consistency to other tools.  Rename functions
+	appropriately.
 	
 2008-05-21  Albert Chu <chu11@llnl.gov>
 
