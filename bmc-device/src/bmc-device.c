@@ -111,7 +111,6 @@ run_cmd_args (bmc_device_state_data_t *state_data)
     return warm_reset (state_data);
 
   rv = 0;
- cleanup:
   return (rv);
 }
 
