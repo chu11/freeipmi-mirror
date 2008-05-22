@@ -59,7 +59,8 @@ machine.  Please try to use IPMI 1.5 instead.
 "connection timeout" - Initial IPMI communication failed.  A number of
 potential errors are possible, including an invalid hostname
 specified, an IPMI IP address cannot be resolved, IPMI is not enabled
-on the remote server, etc.  Please verify configuration.
+on the remote server, the network connection is bad, etc.  Please
+verify configuration and connectivity.
 .LP
 "session timeout" - The IPMI session has timed out.  Please reconnect.
 .LP
