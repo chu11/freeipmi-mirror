@@ -1,3 +1,8 @@
+2008-05-23  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/manpage-common-workaround-heading-text.man: Tweak
+	description.
+	
 2008-05-22  Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-config-file-common.c: Minor tweaks.
