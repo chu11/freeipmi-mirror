@@ -74,6 +74,7 @@ config-file
 -pef-config
 - group/sensor list for ipmi-sensors and ipmimontironig?
 - grop/sections for config tools?
+- fru skip checks config?
 config file - support workarounds/etc. for heterogenous cluster?
 map hostname -> IP config
 map hostname -> IP config
