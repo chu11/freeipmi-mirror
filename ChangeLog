@@ -1,3 +1,8 @@
+2008-05-23  Albert Chu <chu11@llnl.gov>
+
+        * common/doc/manpage-common-workaround-heading-text.man: Tweak
+        description.
+
 2008-05-21  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi.7.pre.in: Fix typo.
