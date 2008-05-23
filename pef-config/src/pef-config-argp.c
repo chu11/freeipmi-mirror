@@ -27,6 +27,7 @@
 #endif /* STDC_HEADERS */
 
 #include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
 
@@ -67,6 +68,11 @@ static struct argp cmdline_argp = { cmdline_options,
                                     cmdline_args_doc,
                                     cmdline_doc };
 
+static struct argp cmdline_config_file_argp = { cmdline_options,
+                                                cmdline_config_file_parse,
+                                                cmdline_args_doc,
+                                                cmdline_doc };
+
 static error_t 
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
@@ -97,6 +103,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+static void
+_pef_config_config_file_parse(struct pef_config_arguments *cmd_args)
+{
+  if (config_file_parse (cmd_args->config_args.common.config_file,
+                         0,
+                         &(cmd_args->config_args.common),
+                         NULL,
+                         NULL,
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND,
+                         0,
+                         NULL) < 0)
+    {
+      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
+      exit(1);
+    }
+}
+
 void
 _pef_config_args_validate (struct pef_config_arguments *cmd_args)
 {
@@ -122,6 +145,10 @@ pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_a
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_admin (&(cmd_args->config_args.common));
   cmd_args->info = 0;
+
+  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->config_args.common));
+
+  _pef_config_config_file_parse(cmd_args);
 
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->config_args.common));

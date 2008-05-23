@@ -68,10 +68,7 @@ fix port variable naming in argp for all tools
 config
 ------
 config-file
--bmc-config
 -bmc-watchdog?
--ipmi-sensors-config
--pef-config
 - group/sensor list for ipmi-sensors and ipmimontironig?
 - grop/sections for config tools?
 - fru skip checks config?

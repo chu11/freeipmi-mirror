@@ -27,6 +27,7 @@
 #endif /* STDC_HEADERS */
 
 #include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 #include "ipmi-sensors-config.h"
 #include "ipmi-sensors-config-argp.h"
 
@@ -65,6 +66,11 @@ static struct argp cmdline_argp = { cmdline_options,
                                     cmdline_args_doc, 
                                     cmdline_doc };
 
+static struct argp cmdline_config_file_argp = { cmdline_options,
+                                                cmdline_config_file_parse,
+                                                cmdline_args_doc,
+                                                cmdline_doc };
+
 static error_t 
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
@@ -91,6 +97,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+static void
+_ipmi_sensors_config_config_file_parse(struct ipmi_sensors_config_arguments *cmd_args)
+{
+  if (config_file_parse (cmd_args->config_args.common.config_file,
+                         0,
+                         &(cmd_args->config_args.common),
+                         &(cmd_args->sdr),
+                         NULL,
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR,
+                         0,
+                         NULL) < 0)
+    {
+      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
+      exit(1);
+    }
+}
+
 void
 _ipmi_sensors_config_config_args_validate (struct ipmi_sensors_config_arguments *cmd_args)
 {
@@ -110,13 +133,16 @@ _ipmi_sensors_config_config_args_validate (struct ipmi_sensors_config_arguments 
   config_args_validate(&(cmd_args->config_args));
 }
 
-
 void 
 ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_config_arguments *cmd_args)
 {
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_operator (&(cmd_args->config_args.common));
   init_sdr_cmd_args (&(cmd_args->sdr));
+
+  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->config_args.common));
+
+  _ipmi_sensors_config_config_file_parse(cmd_args);
 
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_sdr_cmd_args (&(cmd_args->sdr));

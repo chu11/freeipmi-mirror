@@ -22,6 +22,7 @@ bmc_config_SOURCES = \
 	bmc-config-validate.c
 
 bmc_config_LDADD = ../../common/src/libtoolcommon.la \
+		   ../../common/src/libmiscutils.la \
                    ../../libfreeipmi/src/libfreeipmi.la \
 		   ../../common/src/libconfigtoolcommon.la
 
@@ -56,6 +57,9 @@ noinst_HEADERS = bmc-config.h \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libconfigtoolcommon.la : force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libmiscutils.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

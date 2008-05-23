@@ -2,7 +2,12 @@
 
 	* common/doc/manpage-common-workaround-heading-text.man: Tweak
 	description.
+
+	* bmc-config/, pef-config/, ipmi-sensors-config/: Add config file
+	support.
 	
+	* doc/freeipmi.conf.5.pre.in: Update appropriately for additions.
+
 2008-05-22  Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-config-file-common.c: Minor tweaks.

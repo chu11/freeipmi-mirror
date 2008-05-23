@@ -28,7 +28,7 @@
 #endif /* STDC_HEADERS */
 
 #include "tool-cmdline-common.h"
-
+#include "tool-config-file-common.h"
 #include "bmc-config.h"
 #include "bmc-config-argp.h"
 
@@ -67,6 +67,11 @@ static struct argp cmdline_argp = { cmdline_options,
                                     cmdline_args_doc, 
                                     cmdline_doc};
 
+static struct argp cmdline_config_file_argp = { cmdline_options,
+                                                cmdline_config_file_parse,
+                                                cmdline_args_doc,
+                                                cmdline_doc };
+
 /* Parse a single option. */
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
@@ -94,6 +99,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+static void
+_bmc_config_config_file_parse(struct bmc_config_arguments *cmd_args)
+{
+  if (config_file_parse (cmd_args->config_args.common.config_file,
+                         0,
+                         &(cmd_args->config_args.common),
+                         NULL,
+                         NULL,
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND,
+                         0,
+                         NULL) < 0)
+    {
+      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
+      exit(1);
+    }
+}
+
 void
 _bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
 {
@@ -113,6 +135,10 @@ bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_
 {
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_admin (&(cmd_args->config_args.common));
+
+  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->config_args.common));
+
+  _bmc_config_config_file_parse(cmd_args);
 
   argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
   verify_common_cmd_args (&(cmd_args->config_args.common));
