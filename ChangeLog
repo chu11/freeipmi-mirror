@@ -8,6 +8,11 @@
 	
 	* doc/freeipmi.conf.5.pre.in: Update appropriately for additions.
 
+	* common/doc/manpage-common-known-issues.man: Update with config
+	file info.
+
+	* contrib/: Update instructions with config file information.
+
 2008-05-22  Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-config-file-common.c: Minor tweaks.

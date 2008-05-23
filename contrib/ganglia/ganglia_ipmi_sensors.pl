@@ -58,8 +58,10 @@
 # argument or IPMI_SENSORS_ARGS environment variable.  Typically, this
 # option is necessary for non-default communication information or
 # authentication information (i.e. driver path, driver type, username,
-# password, etc.).  If you also wish to limit the sensors being monitored,
-# you can also specify which record-ids are to be monitored (-s option).
+# password, etc.).  Non-default communication information can also be
+# stored in the FreeIPMI configuration file.  If you wish to limit the
+# sensors being monitored, you can also specify which record-ids are
+# to be monitored (-s option).
 #
 # In order to specify non-defaults for gmetric, use the -g argument
 # or GMETRIC_ARGS environment variable.  Typically, this option is

@@ -1,10 +1,13 @@
 .SH "KNOWN ISSUES"
-On certain operating systems, if you input your username and password
-on the command line, the username and password may be discovered by
-other users when using the
+On certain operating systems, if you input your username, password,
+and other potentially security relevant information on the command
+line, this information may be discovered by other users when using
+tools like the
 .B ps(1)
 command or looking in the /proc file system.  It is generally more
-secure to input password information with the -P or -K options.
+secure to input password information with options like the -P or -K
+options.  Configuring security relevant information in the FreeIPMI
+configuration file would also be an appropriate way to hide this information.
 .LP
 In order to prevent brute force attacks, some BMCs will temporarily
 "lock up" after a number of remote authentication errors.  You may
