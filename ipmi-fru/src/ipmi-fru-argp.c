@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.14 2008-05-22 17:38:47 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.15 2008-05-24 16:03:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -139,18 +139,27 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 static void
 _ipmi_fru_config_file_parse(struct ipmi_fru_arguments *cmd_args)
 {
+  struct config_file_data_ipmi_fru config_file_data;
+
+  memset(&config_file_data,
+         '\0',
+         sizeof(struct config_file_data_ipmi_fru));
+
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
                          &(cmd_args->sdr),
                          &(cmd_args->hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
-                         0,
-                         NULL) < 0)
+                         CONFIG_FILE_TOOL_IPMI_FRU,
+                         &config_file_data) < 0)
     {
       fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
       exit(1);
     }
+  
+  if (config_file_data.skip_checks_count)
+    cmd_args->skip_checks = config_file_data.skip_checks;
 }
 
 void 

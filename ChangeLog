@@ -1,3 +1,11 @@
+2008-05-24  Albert Chu <chu11@llnl.gov>
+
+	* common/src/tool-config-file-common.h,
+	common/src/tool-config-file-common.c, ipmi-fru/: Add config file
+	option for --skip-checks.
+
+	* doc/freeipmi.conf.5.pre.in: Update appropriately for additions.
+	
 2008-05-23  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/manpage-common-workaround-heading-text.man: Tweak

@@ -33,8 +33,15 @@
 #define CONFIG_FILE_HOSTRANGE   0x08
 
 #define CONFIG_FILE_TOOL_NONE        0x00
-#define CONFIG_FILE_TOOL_IPMICONSOLE 0x01
-#define CONFIG_FILE_TOOL_IPMIPOWER   0x02
+#define CONFIG_FILE_TOOL_IPMI_FRU    0x01
+#define CONFIG_FILE_TOOL_IPMICONSOLE 0x02
+#define CONFIG_FILE_TOOL_IPMIPOWER   0x04
+
+struct config_file_data_ipmi_fru
+{
+  int skip_checks;
+  int skip_checks_count;
+};
 
 struct config_file_data_ipmiconsole
 {

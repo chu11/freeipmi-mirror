@@ -486,6 +486,9 @@ config_file_parse(const char *filename,
   int buffer_output_count = 0, consolidate_output_count = 0, 
     fanout_count = 0, eliminate_count = 0, always_prefix_count = 0;
 
+  struct config_file_data_ipmi_fru ipmi_fru_data;
+  struct config_file_data_ipmi_fru *ipmi_fru_data_ptr;
+
   struct config_file_data_ipmiconsole ipmiconsole_data;
   struct config_file_data_ipmiconsole *ipmiconsole_data_ptr;
 
@@ -795,6 +798,25 @@ config_file_parse(const char *filename,
   /* 
    * Tool Config Options
    */
+
+  /* 
+   * Ipmi-fru
+   */
+
+  struct conffile_option ipmi_fru_options[] =
+    {
+      {
+        "ipmi-fru-skip-checks",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_fru_data.skip_checks_count),
+        &(ipmi_fru_data.skip_checks),
+        0,
+      },
+    };
 
   /* 
    * Ipmiconsole
@@ -1236,6 +1258,17 @@ config_file_parse(const char *filename,
    * tool flags 
    */
 
+  options_len = sizeof(ipmi_fru_options)/sizeof(struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_IPMI_FRU))
+    _ignore_options(ipmi_fru_options, options_len);
+  
+  _copy_options(config_file_options,
+                config_file_options_len,
+                ipmi_fru_options,
+                options_len);
+
+  config_file_options_len += options_len;
+
   options_len = sizeof(ipmiconsole_options)/sizeof(struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMICONSOLE))
     _ignore_options(ipmiconsole_options, options_len);
@@ -1313,7 +1346,14 @@ config_file_parse(const char *filename,
 
   /* copy file data over to tool */
   
-  if (tool_support & CONFIG_FILE_TOOL_IPMICONSOLE)
+  if (tool_support & CONFIG_FILE_TOOL_IPMI_FRU)
+    {
+      ipmi_fru_data_ptr = (struct config_file_data_ipmi_fru *)data;
+      memcpy(ipmi_fru_data_ptr, 
+             &ipmi_fru_data,
+             sizeof(struct config_file_data_ipmi_fru));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMICONSOLE)
     {
       ipmiconsole_data_ptr = (struct config_file_data_ipmiconsole *)data;
       memcpy(ipmiconsole_data_ptr, 

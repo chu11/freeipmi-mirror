@@ -139,6 +139,14 @@ Specify if undetected hosts should be eliminated by default.
 \fBalways-prefix\fR \fIENABLE|DISABLE\fR
 Specify if output should be always prefixed by default.
 
+.SH "IPMI-FRU OPTIONS"
+The following options are specific to 
+.B ipmi-fru(8).
+They will be ignored by other tools.
+.TP
+\fBipmi-fru-skip-checks\fR \fIENABLE|DISABLE\fR
+Specify if checksum checks will be skiped by default.
+
 .SH "IPMICONSOLE OPTIONS"
 The following options are specific to 
 .B ipmiconsole(8).
