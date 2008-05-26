@@ -1,3 +1,7 @@
+2008-05-24  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/: Document Sun Fire X4150 and X4450 workarounds.
+	
 2008-05-23  Albert Chu <chu11@llnl.gov>
 
         * common/doc/manpage-common-workaround-heading-text.man: Tweak
