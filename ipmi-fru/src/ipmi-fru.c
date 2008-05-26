@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.24 2008-05-21 23:50:03 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.25 2008-05-26 16:07:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -95,17 +95,13 @@ _output_fru(ipmi_fru_state_data_t *state_data,
   assert(output_count);
   assert(device_id_str);
 
-  /* In verbose mode, output this earlier to attach it to other error messages */
-  if (state_data->prog_data->args->verbose_count)
-    {
-      if ((*output_count))
-        pstdout_printf(state_data->pstate, "\n");
-      (*output_count)++;
-      pstdout_printf(state_data->pstate, 
-                     "FRU Inventory Device: %s (ID 0x%02X)\n",
-                     device_id_str,
-                     device_id);
-    }
+  if ((*output_count))
+    pstdout_printf(state_data->pstate, "\n");
+  (*output_count)++;
+  pstdout_printf(state_data->pstate, 
+                 "FRU Inventory Device: %s (ID 0x%02X)\n",
+                 device_id_str,
+                 device_id);
 
   _FIID_OBJ_CREATE(fru_get_inventory_rs, tmpl_cmd_get_fru_inventory_area_info_rs);
 
@@ -226,17 +222,6 @@ _output_fru(ipmi_fru_state_data_t *state_data,
                         format_version);
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
-    }
-
-  /* In non-verbose mode, now we're pretty sure we can output stuff for real */
-  if (!state_data->prog_data->args->verbose_count)
-    {
-      if ((*output_count))
-        pstdout_printf(state_data->pstate, "\n");
-      (*output_count)++;
-      pstdout_printf(state_data->pstate, 
-                     "FRU Inventory Device ID: 0x%02X\n",
-                     device_id);
     }
 
   if (chassis_info_area_starting_offset)

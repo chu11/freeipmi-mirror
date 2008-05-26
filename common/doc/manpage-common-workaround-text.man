@@ -43,6 +43,11 @@ will likely cause "session timeout" errors to occur.  In order to work
 around this issue, the "endianseq" workaround must be specified.  This
 problem is reported to be fixed in a later release.
 .LP
+Sun Fire X4150/X4450: The motherboard does not properly report
+username capabilities.  This will likely cause "username invalid"
+errors to occur.  In order to work around this issue, the "authcap"
+workaround must be specified.
+.LP
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): There are a number of Intel IPMI 2.0 bugs which can be
 worked around by specifying the "intel20" workaround.  The workarounds

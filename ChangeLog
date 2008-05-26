@@ -1,3 +1,12 @@
+2008-05-26  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-fru/src/ipmi-fru.c (_output_fru): Change output to always
+	output device id first.
+	
+2008-05-24  Albert Chu <chu11@llnl.gov>
+
+	* doc/, common/doc/: Document Sun Fire X4150 and X4450 workarounds.
+	
 2008-05-24  Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-config-file-common.h,
