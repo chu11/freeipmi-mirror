@@ -91,6 +91,10 @@ Sun Fire 4100 with ILOM: During a RAKP2 response, the key exchange
 authentication code is the wrong length.  Resolved with a workaround
 to adjust this length.
 
+Sun Fire X4150/X4450: Username capabilities are not reported properly
+by the Get Authentication Capabilities response.  Resolved with a
+workaround ignoring those flags.
+
 Session Issues
 --------------
 

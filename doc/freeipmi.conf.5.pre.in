@@ -45,9 +45,10 @@ whitespace.  Multiple arguments are also separated by whitespace.
 Comments can be marked by using the pound sign ("#") character, and
 lines can be continued on the next using backslash ("\\").
 .LP
-Note that it is possible to list the username and password in the
-configuration file.  If this data is stored in a configuration file,
-system administrators should limit access to this file.
+Note that it is possible to list the username, password and other
+potentially sensitive information in the configuration file.  If this
+data is stored in a configuration file, system administrators should
+limit access to this file.
 
 .SH "GENERAL OPTIONS"
 The following options are options generally available to all tools,
