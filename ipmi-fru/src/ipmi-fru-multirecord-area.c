@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.8 2008-03-28 00:14:34 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.8.2.1 2008-05-27 17:29:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -583,11 +583,11 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
     pstdout_printf(state_data->pstate,
                    "  FRU Management Access System Management URL: %s\n",
                    managementaccessbuf);
-  else if (IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_NAME)
+  else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_NAME)
     pstdout_printf(state_data->pstate,
                    "  FRU Management Access System Name: %s\n",
                    managementaccessbuf);
-  else if (IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_PING_ADDRESS)
+  else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_PING_ADDRESS)
     {
       if (state_data->prog_data->args->verbose_count)
         {
@@ -596,15 +596,15 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
                          managementaccessbuf);
         }
     }
-  else if (IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_MANAGEMENT_URL)
+  else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_MANAGEMENT_URL)
     pstdout_printf(state_data->pstate,
                    "  FRU Management Access Component Management URL: %s\n",
                    managementaccessbuf);
-  else if (IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_NAME)
+  else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_NAME)
     pstdout_printf(state_data->pstate,
                    "  FRU Management Access Component Name: %s\n",
                    managementaccessbuf);
-  else if (IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_PING_ADDRESS)
+  else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_PING_ADDRESS)
     {
       if (state_data->prog_data->args->verbose_count)
         {
@@ -613,7 +613,7 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
                          managementaccessbuf);
         }
     }
-  else if (IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID)
+  else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID)
     {
       if (state_data->prog_data->args->verbose_count)
         {          
