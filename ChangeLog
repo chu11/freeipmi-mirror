@@ -2,6 +2,8 @@
 
 	* ipmi-fru/src/ipmi-fru-util.c
 	(ipmi_fru_output_type_length_field): Fix output corner case.
+
+	* ipmi-fru/: Adjust verbose vs default output.
 	
 2008-05-26  Albert Chu <chu11@llnl.gov>
 
