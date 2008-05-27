@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.10 2008-03-28 00:14:34 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.11 2008-05-27 16:41:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -451,6 +451,32 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
   uint8_t language_code;
   uint32_t product_offset = 0;
   unsigned int len_parsed;
+#if 0
+  FRU Device Description : Nic 0 (ID 40)
+    Product Manufacturer  : Intel
+    Product Name          : DUAL PORT GIGABIT NIC
+    Product Part Number   : ESB2
+    Product Serial        :                  
+  Product Extra         : 00:1E:68:1E:30:C2
+    Product Extra         : 00:1E:68:1E:30:C3
+
+  uint8_t frubuf[] =
+    {
+      0x01 ,0x0C ,0x00 ,0xC5 ,0x49 ,0x6E ,0x74 ,0x65,
+      0x6C ,0xD5 ,0x44 ,0x55 ,0x41 ,0x4C ,0x20 ,0x50,
+      0x4F ,0x52 ,0x54 ,0x20 ,0x47 ,0x49 ,0x47 ,0x41,
+      0x42 ,0x49 ,0x54 ,0x20 ,0x4E ,0x49 ,0x43 ,0xC4,
+      0x45 ,0x53 ,0x42 ,0x32 ,0xC0 ,0xD1 ,0x20 ,0x20,
+      0x20 ,0x20 ,0x20 ,0x20 ,0x20 ,0x20 ,0x20 ,0x20,
+      0x20 ,0x20 ,0x20 ,0x20 ,0x20 ,0x20 ,0x20 ,0xC0,
+      0x01 ,0x32 ,0xD1 ,0x30 ,0x30 ,0x3A ,0x31 ,0x45,
+      0x3A ,0x36 ,0x38 ,0x3A ,0x31 ,0x45 ,0x3A ,0x33,
+      0x30 ,0x3A ,0x43 ,0x32 ,0xD1 ,0x30 ,0x30 ,0x3A,
+      0x31 ,0x45 ,0x3A ,0x36 ,0x38 ,0x3A ,0x31 ,0x45,
+      0x3A ,0x33 ,0x30 ,0x3A ,0x43 ,0x33 ,0xC1 ,0x81,
+    };
+  product_info_area_length_bytes = 12*8;
+#endif
 
   assert(state_data);
   assert(offset);
@@ -476,6 +502,7 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
       rv = ret;
       goto cleanup;
     }
+  
 
   if ((ret = ipmi_fru_dump_hex(state_data,
                                frubuf,
@@ -507,6 +534,7 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
     }
 
   product_offset++;
+
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
                                                product_info_area_length_bytes,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.17 2008-05-21 16:48:31 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.18 2008-05-27 16:41:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -419,7 +419,7 @@ ipmi_fru_output_type_length_field(ipmi_fru_state_data_t *state_data,
 
           pstdout_printf(state_data->pstate,
                          " 0x%02X",
-                         typestr[i]);
+                         typebuf[i]);
         }
 
       pstdout_printf(state_data->pstate, "\n");
