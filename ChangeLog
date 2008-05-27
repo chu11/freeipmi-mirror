@@ -1,4 +1,10 @@
 2008-05-27  Albert Chu <chu11@llnl.gov>
+	
+	* configure.ac, NEWS: Update for release.
+
+	* Tagged Release-0_6_3.
+
+2008-05-27  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/src/ipmi-fru-multirecord-area.c
 	(output_management_access_record): Fix output corner case.

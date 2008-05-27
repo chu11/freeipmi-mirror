@@ -1,4 +1,4 @@
-0.6.3 - 00/00/00
+0.6.3 - 05/27/08
 ----------------
 o Fix --eliminate option in ipmipower.
 o Fix --quiet-cache option to work with flushing cache.
