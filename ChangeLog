@@ -2,6 +2,8 @@
 
 	* ipmi-fru/src/ipmi-fru-multirecord-area.c
 	(output_management_access_record): Fix output corner case.
+
+	* doc/: Tweaks.
 	
 2008-05-27  Albert Chu <chu11@llnl.gov>
 
