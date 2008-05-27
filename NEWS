@@ -67,6 +67,25 @@ Contributions
 o Ganglia plugin scripts ganglia_ipmimonitoring.pl and ganglia_ipmi_sensors.pl.
 o Nagios plugin script nagios_ipmimonitoring.pl.
 
+0.6.3 - 05/27/08
+----------------
+o Fix --eliminate option in ipmipower.
+o Fix --quiet-cache option to work with flushing cache.
+o Fix ipmi-sensors-config flush cache corner case.
+o Fix ipmi-fru output corner case.
+o Fix workarounds parsing bug.
+o Fix/clarify various manpage text.
+
+0.6.2 - 05/15/08
+----------------
+o Fix ipmi-fru output corner cases.
+o Fix ipmi-chassis boot-device configuration bug.
+o Fix ipmiconsole config file parsing corner case.
+o Fix ipmipower max password length corner case check.
+o Fix command line parsing error messages.
+o Remove excess error output messages.
+o Add missing manpage option listings.
+
 0.6.1 - 04/27/08
 ----------------
 For Users
