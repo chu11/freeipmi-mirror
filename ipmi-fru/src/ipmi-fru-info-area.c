@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.11 2008-05-27 16:41:53 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.12 2008-05-27 17:22:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -165,38 +165,35 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
     
   chassis_offset += len_parsed;
 
-  if (state_data->prog_data->args->verbose_count)
+  while (chassis_offset < chassis_info_area_length_bytes
+         && frubuf[chassis_offset] != IPMI_FRU_SENTINEL_VALUE)
     {
-      while (chassis_offset < chassis_info_area_length_bytes
-             && frubuf[chassis_offset] != IPMI_FRU_SENTINEL_VALUE)
+      if ((ret = ipmi_fru_output_type_length_field(state_data,
+                                                   frubuf,
+                                                   chassis_info_area_length_bytes,
+                                                   chassis_offset,
+                                                   NULL,
+                                                   &len_parsed,
+                                                   "Chassis Custom Info")) != FRU_ERR_SUCCESS)
         {
-          if ((ret = ipmi_fru_output_type_length_field(state_data,
-                                                       frubuf,
-                                                       chassis_info_area_length_bytes,
-                                                       chassis_offset,
-                                                       NULL,
-                                                       &len_parsed,
-                                                       "Chassis Custom Info")) != FRU_ERR_SUCCESS)
-            {
-              pstdout_fprintf(state_data->pstate, 
-                              stderr,
-                              "  FRU Chassis Info: Remaining Area Cannot Be Parsed\n");
-              rv = ret;
-              goto cleanup;
-            }
-          
-          chassis_offset += len_parsed;
-        }
-      
-      if (state_data->prog_data->args->verbose_count >= 2
-          && chassis_offset >= chassis_info_area_length_bytes)
-        {
-          pstdout_fprintf(state_data->pstate,
+          pstdout_fprintf(state_data->pstate, 
                           stderr,
-                          "  FRU Missing Sentinel Value\n");
-          rv = FRU_ERR_NON_FATAL_ERROR;
+                          "  FRU Chassis Info: Remaining Area Cannot Be Parsed\n");
+          rv = ret;
           goto cleanup;
         }
+      
+      chassis_offset += len_parsed;
+    }
+  
+  if (state_data->prog_data->args->verbose_count >= 2
+      && chassis_offset >= chassis_info_area_length_bytes)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "  FRU Missing Sentinel Value\n");
+      rv = FRU_ERR_NON_FATAL_ERROR;
+      goto cleanup;
     }
 
   rv = FRU_ERR_SUCCESS;
@@ -278,41 +275,36 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
 
   board_offset++;
 
-  if (state_data->prog_data->args->verbose_count)
-    {
-      /* mfg_date_time is little endian - see spec */
-      mfg_date_time |= frubuf[board_offset];
-      board_offset++;
-      mfg_date_time |= (frubuf[board_offset] << 8);
-      board_offset++;
-      mfg_date_time |= (frubuf[board_offset] << 16);
-      board_offset++;
+  /* mfg_date_time is little endian - see spec */
+  mfg_date_time |= frubuf[board_offset];
+  board_offset++;
+  mfg_date_time |= (frubuf[board_offset] << 8);
+  board_offset++;
+  mfg_date_time |= (frubuf[board_offset] << 16);
+  board_offset++;
       
-      /* Here, epoch is 0:00 hrs 1/1/96 
-       *
-       * mfg_date_time is in minutes
-       *
-       * So convert into ansi epoch to output date/time
-       *
-       * 26 years difference in epoch
-       * 365 days/year
-       * etc.
-       * 
-       */
-      mfg_date_time_tmp = 26 * 365 * 24 * 60 * 60;
-      mfg_date_time_tmp += (mfg_date_time * 60);
-      
-      localtime_r(&mfg_date_time_tmp, &mfg_date_time_tm);
-      
-      memset(mfg_date_time_buf, '\0', FRU_BUF_LEN+1);
-      strftime(mfg_date_time_buf, FRU_BUF_LEN, "%D - %T", &mfg_date_time_tm);
-      
-      pstdout_printf(state_data->pstate,
-                     "  FRU Board Info Area Manufacturing Date/Time: %s\n",
-                     mfg_date_time_buf);
-    }
-  else
-    board_offset += 3;
+  /* Here, epoch is 0:00 hrs 1/1/96 
+   *
+   * mfg_date_time is in minutes
+   *
+   * So convert into ansi epoch to output date/time
+   *
+   * 26 years difference in epoch
+   * 365 days/year
+   * etc.
+   * 
+   */
+  mfg_date_time_tmp = 26 * 365 * 24 * 60 * 60;
+  mfg_date_time_tmp += (mfg_date_time * 60);
+  
+  localtime_r(&mfg_date_time_tmp, &mfg_date_time_tm);
+  
+  memset(mfg_date_time_buf, '\0', FRU_BUF_LEN+1);
+  strftime(mfg_date_time_buf, FRU_BUF_LEN, "%D - %T", &mfg_date_time_tm);
+  
+  pstdout_printf(state_data->pstate,
+                 "  FRU Board Info Area Manufacturing Date/Time: %s\n",
+                 mfg_date_time_buf);
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
@@ -399,38 +391,35 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
     
   board_offset += len_parsed;
 
-  if (state_data->prog_data->args->verbose_count)
+  while (board_offset < board_info_area_length_bytes
+         && frubuf[board_offset] != IPMI_FRU_SENTINEL_VALUE)
     {
-      while (board_offset < board_info_area_length_bytes
-             && frubuf[board_offset] != IPMI_FRU_SENTINEL_VALUE)
+      if ((ret = ipmi_fru_output_type_length_field(state_data,
+                                                   frubuf,
+                                                   board_info_area_length_bytes,
+                                                   board_offset,
+                                                   &language_code,
+                                                   &len_parsed,
+                                                   "Board Custom Info")) != FRU_ERR_SUCCESS)
         {
-          if ((ret = ipmi_fru_output_type_length_field(state_data,
-                                                       frubuf,
-                                                       board_info_area_length_bytes,
-                                                       board_offset,
-                                                       &language_code,
-                                                       &len_parsed,
-                                                       "Board Custom Info")) != FRU_ERR_SUCCESS)
-            {
-              pstdout_fprintf(state_data->pstate, 
-                              stderr,
-                              "  FRU Board Info: Remaining Area Cannot Be Parsed\n");
-              rv = ret;
-              goto cleanup;
-            }
-          
-          board_offset += len_parsed;
-        }
-      
-      if (state_data->prog_data->args->verbose_count >= 2
-          && board_offset >= board_info_area_length_bytes)
-        {
-          pstdout_fprintf(state_data->pstate,
+          pstdout_fprintf(state_data->pstate, 
                           stderr,
-                          "  FRU Missing Sentinel Value\n");
-          rv = FRU_ERR_NON_FATAL_ERROR;
+                          "  FRU Board Info: Remaining Area Cannot Be Parsed\n");
+          rv = ret;
           goto cleanup;
         }
+      
+      board_offset += len_parsed;
+    }
+  
+  if (state_data->prog_data->args->verbose_count >= 2
+      && board_offset >= board_info_area_length_bytes)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "  FRU Missing Sentinel Value\n");
+      rv = FRU_ERR_NON_FATAL_ERROR;
+      goto cleanup;
     }
 
   rv = FRU_ERR_SUCCESS;
@@ -654,38 +643,35 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
     
   product_offset += len_parsed;
 
-  if (state_data->prog_data->args->verbose_count)
+  while (product_offset < product_info_area_length_bytes
+         && frubuf[product_offset] != IPMI_FRU_SENTINEL_VALUE)
     {
-      while (product_offset < product_info_area_length_bytes
-             && frubuf[product_offset] != IPMI_FRU_SENTINEL_VALUE)
+      if ((ret = ipmi_fru_output_type_length_field(state_data,
+                                                   frubuf,
+                                                   product_info_area_length_bytes,
+                                                   product_offset,
+                                                   &language_code,
+                                                   &len_parsed,
+                                                   "Product Custom Info")) != FRU_ERR_SUCCESS)
         {
-          if ((ret = ipmi_fru_output_type_length_field(state_data,
-                                                       frubuf,
-                                                       product_info_area_length_bytes,
-                                                       product_offset,
-                                                       &language_code,
-                                                       &len_parsed,
-                                                       "Product Custom Info")) != FRU_ERR_SUCCESS)
-            {
-              pstdout_fprintf(state_data->pstate, 
-                              stderr,
-                              "  FRU Product Info: Remaining Area Cannot Be Parsed\n");
-              rv = ret;
-              goto cleanup;
-            }
-          
-          product_offset += len_parsed;
-        }
-      
-      if (state_data->prog_data->args->verbose_count >= 2
-          && product_offset >= product_info_area_length_bytes)
-        {
-          pstdout_fprintf(state_data->pstate,
+          pstdout_fprintf(state_data->pstate, 
                           stderr,
-                          "  FRU Missing Sentinel Value\n");
-          rv = FRU_ERR_NON_FATAL_ERROR;
+                          "  FRU Product Info: Remaining Area Cannot Be Parsed\n");
+          rv = ret;
           goto cleanup;
         }
+      
+      product_offset += len_parsed;
+    }
+  
+  if (state_data->prog_data->args->verbose_count >= 2
+      && product_offset >= product_info_area_length_bytes)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "  FRU Missing Sentinel Value\n");
+      rv = FRU_ERR_NON_FATAL_ERROR;
+      goto cleanup;
     }
 
   rv = FRU_ERR_SUCCESS;

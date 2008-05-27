@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.9 2008-05-15 17:34:28 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.10 2008-05-27 17:22:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -194,88 +194,85 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
   pstdout_printf(state_data->pstate,
                  "  FRU Power Supply Overall Capacity: %u Watts\n",
                  overall_capacity);
-  if (state_data->prog_data->args->verbose_count)
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Peak VA: %u VA\n",
+                 peak_va);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Max Inrush Current: %u Amps\n",
+                 inrush_current);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Inrush Interval: %u ms\n",
+                 inrush_interval);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Low End Input Voltage 1: %u mV\n",
+                 low_end_input_voltage_range_1*10);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply High End Input Voltage 1: %u mV\n",
+                 high_end_input_voltage_range_1*10);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Low End Input Voltage 2: %u mV\n",
+                 low_end_input_voltage_range_2*10);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply High End Input Voltage 2: %u mV\n",
+                 high_end_input_voltage_range_2*10);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Low End Acceptable Frequencey: %u Hz\n",
+                 low_end_input_frequency_range);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply High End Acceptable Frequencey: %u Hz\n",
+                 high_end_input_frequency_range);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply A/C Dropout Tolerance: %u ms\n",
+                 ac_dropout_tolerance);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Predictive Fail Support: %s\n",
+                 (predictive_fail_support) ? "Yes" : "No");
+  if (predictive_fail_support)
     {
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Peak VA: %u VA\n",
-                     peak_va);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Max Inrush Current: %u Amps\n",
-                     inrush_current);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Inrush Interval: %u ms\n",
-                     inrush_interval);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Low End Input Voltage 1: %u mV\n",
-                     low_end_input_voltage_range_1*10);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply High End Input Voltage 1: %u mV\n",
-                     high_end_input_voltage_range_1*10);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Low End Input Voltage 2: %u mV\n",
-                     low_end_input_voltage_range_2*10);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply High End Input Voltage 2: %u mV\n",
-                     high_end_input_voltage_range_2*10);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Low End Acceptable Frequencey: %u Hz\n",
-                     low_end_input_frequency_range);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply High End Acceptable Frequencey: %u Hz\n",
-                     high_end_input_frequency_range);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply A/C Dropout Tolerance: %u ms\n",
-                     ac_dropout_tolerance);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Predictive Fail Support: %s\n",
-                     (predictive_fail_support) ? "Yes" : "No");
-      if (predictive_fail_support)
+      if (tachometer_pulses_per_rotation_predictive_fail_polarity)
         {
-          if (tachometer_pulses_per_rotation_predictive_fail_polarity)
-            {
-              if (predictive_fail_tachometer_lower_threshold)
-                pstdout_printf(state_data->pstate,
-                               "  FRU Power Supply Predictive Fail: Tach output, two pulses per rotation\n");             
-              else
-                pstdout_printf(state_data->pstate,
-                               "  FRU Power Supply Predictive Fail: Pass/Fail predictive fail pin (0 = fail)\n");
-            }
+          if (predictive_fail_tachometer_lower_threshold)
+            pstdout_printf(state_data->pstate,
+                           "  FRU Power Supply Predictive Fail: Tach output, two pulses per rotation\n");             
           else
-            {
-              if (predictive_fail_tachometer_lower_threshold)
-                pstdout_printf(state_data->pstate,
-                               "  FRU Power Supply Predictive Fail: Tach output, one pulse per rotation\n");
-              else
-                pstdout_printf(state_data->pstate,
-                               "  FRU Power Supply Predictive Fail: Pass/Fail predictive fail pin (1 = fail)\n");
-            }
+            pstdout_printf(state_data->pstate,
+                           "  FRU Power Supply Predictive Fail: Pass/Fail predictive fail pin (0 = fail)\n");
         }
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Power Factor Correction Supported: %s\n",
-                     (power_factor_correction) ? "Yes" : "No");
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply AutoSwitch Supprt: %s\n",
-                     (autoswitch) ? "Yes" : "No");
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Hot Swap Support: %s\n",
-                     (hot_swap_support) ? "Yes" : "No");
-      
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Peak Capacity: %u Watts\n",
-                     peak_capacity);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Hold Up Time: %u s\n",
-                     hold_up_time);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Voltage 1: %s\n",
-                     voltage_str(voltage_1));
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Voltage 2: %s\n",
-                     voltage_str(voltage_2));
-      pstdout_printf(state_data->pstate,
-                     "  FRU Power Supply Total Combined Wattage: %u Watts\n",
-                     total_combined_wattage);
+      else
+        {
+          if (predictive_fail_tachometer_lower_threshold)
+            pstdout_printf(state_data->pstate,
+                           "  FRU Power Supply Predictive Fail: Tach output, one pulse per rotation\n");
+          else
+            pstdout_printf(state_data->pstate,
+                           "  FRU Power Supply Predictive Fail: Pass/Fail predictive fail pin (1 = fail)\n");
+        }
     }
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Power Factor Correction Supported: %s\n",
+                 (power_factor_correction) ? "Yes" : "No");
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply AutoSwitch Supprt: %s\n",
+                 (autoswitch) ? "Yes" : "No");
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Hot Swap Support: %s\n",
+                 (hot_swap_support) ? "Yes" : "No");
+      
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Peak Capacity: %u Watts\n",
+                 peak_capacity);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Hold Up Time: %u s\n",
+                 hold_up_time);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Voltage 1: %s\n",
+                 voltage_str(voltage_1));
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Voltage 2: %s\n",
+                 voltage_str(voltage_2));
+  pstdout_printf(state_data->pstate,
+                 "  FRU Power Supply Total Combined Wattage: %u Watts\n",
+                 total_combined_wattage);
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
@@ -361,30 +358,24 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
                 "maximum_current_draw",
                 &maximum_current_draw);
 
-  if (state_data->prog_data->args->verbose_count)
-    {
-      pstdout_printf(state_data->pstate,
-                     "  FRU DC Output Output Number: %u\n",
-                     output_number);
-      pstdout_printf(state_data->pstate,
-                     "  FRU DC Output Output on Standy: %s\n",
-                     (standby) ? "Yes" : "No");
-    }
+  pstdout_printf(state_data->pstate,
+                 "  FRU DC Output Output Number: %u\n",
+                 output_number);
+  pstdout_printf(state_data->pstate,
+                 "  FRU DC Output Output on Standy: %s\n",
+                 (standby) ? "Yes" : "No");
   pstdout_printf(state_data->pstate,
                  "  FRU DC Output Nominal Voltage: %d mV\n",
                  (int16_t)nominal_voltage);
-  if (state_data->prog_data->args->verbose_count)
-    {
-      pstdout_printf(state_data->pstate,
-                     "  FRU DC Output Maximum Negative Voltage Deviation: %d mV\n",
-                     (int16_t)maximum_negative_voltage_deviation);
-      pstdout_printf(state_data->pstate,
-                     "  FRU DC Output Maximum Positive Voltage Deviation: %d mV\n",
-                     (int16_t)maximum_positive_voltage_deviation);
-      pstdout_printf(state_data->pstate,
-                     "  FRU DC Output Ripple and Noise pk-pk: %u mV\n",
-                     ripple_and_noise_pk_pk);
-    }
+  pstdout_printf(state_data->pstate,
+                 "  FRU DC Output Maximum Negative Voltage Deviation: %d mV\n",
+                 (int16_t)maximum_negative_voltage_deviation);
+  pstdout_printf(state_data->pstate,
+                 "  FRU DC Output Maximum Positive Voltage Deviation: %d mV\n",
+                 (int16_t)maximum_positive_voltage_deviation);
+  pstdout_printf(state_data->pstate,
+                 "  FRU DC Output Ripple and Noise pk-pk: %u mV\n",
+                 ripple_and_noise_pk_pk);
   pstdout_printf(state_data->pstate,
                  "  FRU DC Output Minimum Current Draw: %u mA\n",
                  minimum_current_draw);
@@ -472,34 +463,27 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
                 "maximum_current_load",
                 &maximum_current_load);
 
-  if (state_data->prog_data->args->verbose_count)
-    {
-      pstdout_printf(state_data->pstate,
-                     "  FRU DC Load Output Number: %u\n",
-                     output_number);
-    }
+  pstdout_printf(state_data->pstate,
+                 "  FRU DC Load Output Number: %u\n",
+                 output_number);
   pstdout_printf(state_data->pstate,
                  "  FRU DC Load Nominal Voltage: %d mV\n",
                  (int16_t)nominal_voltage);
-  if (state_data->prog_data->args->verbose_count)
-    {
-      pstdout_printf(state_data->pstate,
-                     "  FRU DC Load Spec'd Minimum Voltage: %d mV\n",
-                     (int16_t)specd_minimum_voltage);
-      pstdout_printf(state_data->pstate,
-                     "  FRU DC Load Spec'd Maximum Voltage: %d mV\n",
-                     (int16_t)specd_maximum_voltage);
-      pstdout_printf(state_data->pstate,
-                     "  FRU DC Load Spec'd Ripple and Noise pk-pk: %u mV\n",
-                     specd_ripple_and_noise_pk_pk);
-    }
+  pstdout_printf(state_data->pstate,
+                 "  FRU DC Load Spec'd Minimum Voltage: %d mV\n",
+                 (int16_t)specd_minimum_voltage);
+  pstdout_printf(state_data->pstate,
+                 "  FRU DC Load Spec'd Maximum Voltage: %d mV\n",
+                 (int16_t)specd_maximum_voltage);
+  pstdout_printf(state_data->pstate,
+                 "  FRU DC Load Spec'd Ripple and Noise pk-pk: %u mV\n",
+                 specd_ripple_and_noise_pk_pk);
   pstdout_printf(state_data->pstate,
                  "  FRU DC Load Minimum Current Load: %u mA\n",
                  minimum_current_load);
   pstdout_printf(state_data->pstate,
                  "  FRU DC Load Maximum Current Load: %u mA\n",
                  maximum_current_load);
-
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
@@ -588,14 +572,9 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
                    "  FRU Management Access System Name: %s\n",
                    managementaccessbuf);
   else if (IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_PING_ADDRESS)
-    {
-      if (state_data->prog_data->args->verbose_count)
-        {
-          pstdout_printf(state_data->pstate,
-                         "  FRU Management Access System Ping Address: %s\n",
-                         managementaccessbuf);
-        }
-    }
+    pstdout_printf(state_data->pstate,
+                   "  FRU Management Access System Ping Address: %s\n",
+                   managementaccessbuf);
   else if (IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_MANAGEMENT_URL)
     pstdout_printf(state_data->pstate,
                    "  FRU Management Access Component Management URL: %s\n",
@@ -605,50 +584,39 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
                    "  FRU Management Access Component Name: %s\n",
                    managementaccessbuf);
   else if (IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_PING_ADDRESS)
-    {
-      if (state_data->prog_data->args->verbose_count)
-        {
-          pstdout_printf(state_data->pstate,
-                         "  FRU Management Access Component Ping Address: %s\n",
-                         managementaccessbuf);
-        }
-    }
+    pstdout_printf(state_data->pstate,
+                   "  FRU Management Access Component Ping Address: %s\n",
+                   managementaccessbuf);
   else if (IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID)
     {
-      if (state_data->prog_data->args->verbose_count)
-        {          
-          pstdout_printf(state_data->pstate,
-                         "  FRU Management Access System Unique ID:");
+      pstdout_printf(state_data->pstate,
+                     "  FRU Management Access System Unique ID:");
+      
+      for (i = 0; i < len; i++)
+        {
+          if ((i % 8) == 0)
+            pstdout_printf(state_data->pstate, "\n    ");
           
-          for (i = 0; i < len; i++)
-            {
-              if ((i % 8) == 0)
-                pstdout_printf(state_data->pstate, "\n    ");
-              
-              pstdout_printf(state_data->pstate,
-                             " 0x%02X",
-                             managementaccessbuf[i]);
-            }
-          pstdout_printf(state_data->pstate, "\n");
+          pstdout_printf(state_data->pstate,
+                         " 0x%02X",
+                         managementaccessbuf[i]);
         }
+      pstdout_printf(state_data->pstate, "\n");
     }
   else
     {
-      if (state_data->prog_data->args->verbose_count)
+      pstdout_printf(state_data->pstate,
+                     "  FRU Management Access Record: Unknown Sub Record Type:\n");
+      for (i = 0; i < len; i++)
         {
+          if ((i % 8) == 0)
+            pstdout_printf(state_data->pstate, "\n    ");
+          
           pstdout_printf(state_data->pstate,
-                         "  FRU Management Access Record: Unknown Sub Record Type:\n");
-          for (i = 0; i < len; i++)
-            {
-              if ((i % 8) == 0)
-                pstdout_printf(state_data->pstate, "\n    ");
-              
-              pstdout_printf(state_data->pstate,
-                             " 0x%02X",
-                             managementaccessbuf[i]);
-            }
-          pstdout_printf(state_data->pstate, "\n");
+                         " 0x%02X",
+                         managementaccessbuf[i]);
         }
+      pstdout_printf(state_data->pstate, "\n");
     }
 
   rv = FRU_ERR_SUCCESS;
@@ -737,36 +705,33 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
   pstdout_printf(state_data->pstate,
                  "  FRU Base Compatibility Manufacturer ID: 0x%X\n",
                  manufacturer_id);
-  if (state_data->prog_data->args->verbose_count)
-    {
-      pstdout_printf(state_data->pstate,
-                     "  FRU Base Compatibility Entity ID: 0x%X\n",
-                     entity_id_code);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Base Compatibility Comptability Base: 0x%X\n",
-                     compatibility_base);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Base Compatibility Comptability Code Start Value: 0x%X\n",
-                     compatibility_code_start_value);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Base Compatibility Entity ID: 0x%X\n",
+                 entity_id_code);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Base Compatibility Comptability Base: 0x%X\n",
+                 compatibility_base);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Base Compatibility Comptability Code Start Value: 0x%X\n",
+                 compatibility_code_start_value);
       
-      if (len)
+  if (len)
+    {
+      int i;
+      
+      pstdout_printf(state_data->pstate,
+                     "  FRU Base Compatibility Code Mask:");
+      
+      for (i = 0; i < len; i++)
         {
-          int i;
+          if ((i % 8) == 0)
+            pstdout_printf(state_data->pstate, "\n    ");
           
           pstdout_printf(state_data->pstate,
-                         "  FRU Base Compatibility Code Mask:");
-          
-          for (i = 0; i < len; i++)
-            {
-              if ((i % 8) == 0)
-                pstdout_printf(state_data->pstate, "\n    ");
-              
-              pstdout_printf(state_data->pstate,
-                             " 0x%02X",
-                             codemaskbuf[i]);
-            }
-          pstdout_printf(state_data->pstate, "\n");
+                         " 0x%02X",
+                         codemaskbuf[i]);
         }
+      pstdout_printf(state_data->pstate, "\n");
     }
 
   rv = FRU_ERR_SUCCESS;
@@ -856,36 +821,33 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
                  "  FRU Extended Compatibility Manufacturer ID: 0x%X\n",
                  manufacturer_id);
 
-  if (state_data->prog_data->args->verbose_count)
+  pstdout_printf(state_data->pstate,
+                 "  FRU Extended Compatibility Entity ID: 0x%X\n",
+                 entity_id_code);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Extended Compatibility Comptability Base: 0x%X\n",
+                 compatibility_base);
+  pstdout_printf(state_data->pstate,
+                 "  FRU Extended Compatibility Comptability Code Start Value: 0x%X\n",
+                 compatibility_code_start_value);
+  
+  if (len)
     {
-      pstdout_printf(state_data->pstate,
-                     "  FRU Extended Compatibility Entity ID: 0x%X\n",
-                     entity_id_code);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Extended Compatibility Comptability Base: 0x%X\n",
-                     compatibility_base);
-      pstdout_printf(state_data->pstate,
-                     "  FRU Extended Compatibility Comptability Code Start Value: 0x%X\n",
-                     compatibility_code_start_value);
+      int i;
       
-      if (len)
+      pstdout_printf(state_data->pstate,
+                     "  FRU Extended Compatibility Code Mask:");
+      
+      for (i = 0; i < len; i++)
         {
-          int i;
+          if ((i % 8) == 0)
+            pstdout_printf(state_data->pstate, "\n    ");
           
           pstdout_printf(state_data->pstate,
-                         "  FRU Extended Compatibility Code Mask:");
-
-          for (i = 0; i < len; i++)
-            {
-              if ((i % 8) == 0)
-                pstdout_printf(state_data->pstate, "\n    ");
-              
-              pstdout_printf(state_data->pstate,
-                             " 0x%02X",
-                             codemaskbuf[i]);
-            }
-          pstdout_printf(state_data->pstate, "\n");
+                         " 0x%02X",
+                         codemaskbuf[i]);
         }
+      pstdout_printf(state_data->pstate, "\n");
     }
 
   rv = FRU_ERR_SUCCESS;
@@ -960,26 +922,23 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
                  "  FRU OEM Manufacturer ID: 0x%X\n",
                  manufacturer_id);
 
-  if (state_data->prog_data->args->verbose_count)
+  if (len)
     {
-      if (len)
+      int i;
+      
+      pstdout_printf(state_data->pstate,
+                     "  FRU OEM Code Mask:");
+      
+      for (i = 0; i < len; i++)
         {
-          int i;
+          if ((i % 8) == 0)
+            pstdout_printf(state_data->pstate, "\n    ");
           
           pstdout_printf(state_data->pstate,
-                         "  FRU OEM Code Mask:");
-          
-          for (i = 0; i < len; i++)
-            {
-              if ((i % 8) == 0)
-                pstdout_printf(state_data->pstate, "\n    ");
-              
-              pstdout_printf(state_data->pstate,
-                             " 0x%02X",
-                             oemdatabuf[i]);
-            }
-          pstdout_printf(state_data->pstate, "\n");
+                         " 0x%02X",
+                         oemdatabuf[i]);
         }
+      pstdout_printf(state_data->pstate, "\n");
     }
 
   rv = FRU_ERR_SUCCESS;
