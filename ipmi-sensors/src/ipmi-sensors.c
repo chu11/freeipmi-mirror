@@ -180,7 +180,7 @@ _flush_cache (ipmi_sensors_state_data_t *state_data)
 }
 
 static int 
-_display_group_list (ipmi_sensors_state_data_t *state_data)
+_display_group (ipmi_sensors_state_data_t *state_data)
 {
   int i = 0;
   char *group = NULL;
@@ -227,7 +227,7 @@ _sensors_group_specified(ipmi_sensors_state_data_t *state_data,
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
-  assert(state_data->prog_data->args->groups_list_wanted);
+  assert(state_data->prog_data->args->groups_wanted);
 
   if (sdr_cache_get_record_id_and_type(state_data->pstate,
                                        sdr_record,
@@ -256,12 +256,12 @@ _sensors_group_specified(ipmi_sensors_state_data_t *state_data,
       strcpy(sdr_group_name_subst, sdr_group_name);
       str_replace_char (sdr_group_name_subst, ' ', '_');
       
-      for (i = 0; i < state_data->prog_data->args->groups_list_length; i++)
+      for (i = 0; i < state_data->prog_data->args->groups_length; i++)
         {
           if ((strcasecmp (sdr_group_name, 
-                           state_data->prog_data->args->groups_list[i]) == 0)
+                           state_data->prog_data->args->groups[i]) == 0)
               || (strcasecmp (sdr_group_name_subst, 
-                              state_data->prog_data->args->groups_list[i]) == 0))
+                              state_data->prog_data->args->groups[i]) == 0))
             return 1;
         }
     }
@@ -346,21 +346,21 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (args->sensors_list_wanted)
+  if (args->sensors_wanted)
     {
-      for (i = 0; i < state_data->prog_data->args->sensors_list_length; i++)
+      for (i = 0; i < state_data->prog_data->args->sensors_length; i++)
         {
           uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
           int sdr_record_len = 0;
 
           if (ipmi_sdr_cache_search_record_id(state_data->ipmi_sdr_cache_ctx,
-                                              state_data->prog_data->args->sensors_list[i]) < 0)
+                                              state_data->prog_data->args->sensors[i]) < 0)
             {
               if (ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx) == IPMI_SDR_CACHE_CTX_ERR_NOT_FOUND)
                 {
                   pstdout_printf(state_data->pstate,
                                  "Sensor Record ID '%d' not found\n",
-                                 state_data->prog_data->args->sensors_list[i]);
+                                 state_data->prog_data->args->sensors[i]);
                   continue;
                 }
               else
@@ -428,7 +428,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
           if (!sdr_record_len)
             continue;
           
-          if (args->groups_list_wanted)
+          if (args->groups_wanted)
             {
               if ((ret = _sensors_group_specified (state_data,
                                                    sdr_record,
@@ -467,7 +467,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
     return _flush_cache (state_data);
   
   if (args->list_groups)
-    return _display_group_list (state_data);
+    return _display_group (state_data);
   
   if (sdr_cache_create_and_load (state_data->ipmi_sdr_cache_ctx,
                                  state_data->pstate,

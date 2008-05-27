@@ -37,7 +37,7 @@ enum ipmi_sensors_argp_option_keys
     LIST_GROUPS_KEY = 'L', 
     GROUP_KEY = 160,            /* legacy */
     GROUPS_KEY = 'g', 
-    SENSORS_LIST_KEY = 's', 
+    SENSORS_KEY = 's', 
   };
 
 struct ipmi_sensors_arguments
@@ -50,12 +50,12 @@ struct ipmi_sensors_arguments
   int quiet_readings;
   int sdr_info;
   int list_groups;
-  int groups_list_wanted;
-  char groups_list[IPMI_SENSORS_MAX_GROUPS][IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH+1];
-  unsigned int groups_list_length;
-  int sensors_list_wanted;
-  unsigned int sensors_list[IPMI_SENSORS_MAX_RECORD_IDS];
-  unsigned int sensors_list_length;
+  int groups_wanted;
+  char groups[IPMI_SENSORS_MAX_GROUPS][IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH+1];
+  unsigned int groups_length;
+  int sensors_wanted;
+  unsigned int sensors[IPMI_SENSORS_MAX_RECORD_IDS];
+  unsigned int sensors_length;
 };
 
 typedef struct ipmi_sensors_prog_data

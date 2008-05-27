@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.13 2008-05-22 17:38:47 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.14 2008-05-27 22:46:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -84,9 +84,9 @@ static struct argp_option cmdline_options[] =
      "Do not output sensor readings, only states.", 32},
     {"list-groups",    LIST_GROUPS_KEY,    0, 0, 
      "List sensor groups.", 33}, 
-    {"groups",         GROUPS_KEY,       "GROUP-NAME", 0, 
+    {"groups",         GROUPS_KEY,       "GROUP-LIST", 0, 
      "Show sensors belonging to a specific group.", 34}, 
-    {"sensors",        SENSORS_LIST_KEY, "SENSORS-LIST", 0, 
+    {"sensors",        SENSORS_KEY, "SENSORS-LIST", 0, 
      "Show sensors by record id.  Accepts space or comma separated lists", 35}, 
     { 0 }
   };
@@ -131,21 +131,21 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->list_groups = 1;
       break;
     case GROUPS_KEY:
-      cmd_args->groups_list_wanted = 1;
+      cmd_args->groups_wanted = 1;
       tok = strtok(arg, " ,");
-      while (tok && cmd_args->groups_list_length < IPMIMONITORING_MAX_GROUPS)
+      while (tok && cmd_args->groups_length < IPMIMONITORING_MAX_GROUPS)
         {
-          strncpy(cmd_args->groups_list[cmd_args->groups_list_length],
+          strncpy(cmd_args->groups[cmd_args->groups_length],
                   tok,
                   IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
-          cmd_args->groups_list_length++;
+          cmd_args->groups_length++;
           tok = strtok(NULL, " ,");
         }
       break;
-    case SENSORS_LIST_KEY:
-      cmd_args->sensors_list_wanted = 1;
+    case SENSORS_KEY:
+      cmd_args->sensors_wanted = 1;
       tok = strtok(arg, " ,");
-      while (tok && cmd_args->sensors_list_length < IPMIMONITORING_MAX_RECORD_IDS)
+      while (tok && cmd_args->sensors_length < IPMIMONITORING_MAX_RECORD_IDS)
         {
           unsigned int n = strtoul(tok, &ptr, 10);
           if (ptr != (tok + strlen(tok)))
@@ -153,8 +153,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               fprintf (stderr, "invalid sensor record id\n");
               exit(1);
             }
-          cmd_args->sensors_list[cmd_args->sensors_list_length] = n;
-          cmd_args->sensors_list_length++;
+          cmd_args->sensors[cmd_args->sensors_length] = n;
+          cmd_args->sensors_length++;
           tok = strtok(NULL, " ,");
         }
       break;
@@ -204,17 +204,17 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   cmd_args->regenerate_sdr_cache = 0;
   cmd_args->quiet_readings = 0;
   cmd_args->list_groups = 0;
-  cmd_args->groups_list_wanted = 0;
+  cmd_args->groups_wanted = 0;
   for (i = 0; i < IPMIMONITORING_MAX_GROUPS; i++)
-    memset(cmd_args->groups_list[i],
+    memset(cmd_args->groups[i],
            '\0',
            IPMIMONITORING_MAX_GROUPS_STRING_LENGTH+1);
-  cmd_args->groups_list_length = 0;
-  cmd_args->sensors_list_wanted = 0;
-  memset(cmd_args->sensors_list, 
+  cmd_args->groups_length = 0;
+  cmd_args->sensors_wanted = 0;
+  memset(cmd_args->sensors, 
          '\0', 
          sizeof(unsigned int)*IPMIMONITORING_MAX_RECORD_IDS);
-  cmd_args->sensors_list_length = 0;
+  cmd_args->sensors_length = 0;
 
   memset(&(cmd_args->conf), '\0', sizeof(struct ipmi_monitoring_ipmi_config));
   cmd_args->ipmimonitoring_flags = 0;

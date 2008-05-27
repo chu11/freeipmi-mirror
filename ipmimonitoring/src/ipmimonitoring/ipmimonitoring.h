@@ -36,7 +36,7 @@ enum ipmimonitoring_argp_option_keys
     QUIET_READINGS_KEY = 'q',
     LIST_GROUPS_KEY = 'L', 
     GROUPS_KEY = 'g', 
-    SENSORS_LIST_KEY = 's', 
+    SENSORS_KEY = 's', 
     CACHE_DIR_KEY = 'c',            /* legacy */
   };
 
@@ -48,12 +48,12 @@ struct ipmimonitoring_arguments
   int regenerate_sdr_cache;
   int quiet_readings;
   int list_groups;
-  int groups_list_wanted;
-  char groups_list[IPMIMONITORING_MAX_GROUPS][IPMIMONITORING_MAX_GROUPS_STRING_LENGTH+1];
-  unsigned int groups_list_length;
-  int sensors_list_wanted;
-  unsigned int sensors_list[IPMIMONITORING_MAX_RECORD_IDS];
-  unsigned int sensors_list_length;
+  int groups_wanted;
+  char groups[IPMIMONITORING_MAX_GROUPS][IPMIMONITORING_MAX_GROUPS_STRING_LENGTH+1];
+  unsigned int groups_length;
+  int sensors_wanted;
+  unsigned int sensors[IPMIMONITORING_MAX_RECORD_IDS];
+  unsigned int sensors_length;
 
   struct ipmi_monitoring_ipmi_config conf;
   int ipmimonitoring_flags;

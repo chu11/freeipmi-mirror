@@ -4,6 +4,8 @@
 	(output_management_access_record): Fix output corner case.
 
 	* doc/: Tweaks.
+
+	* ipmi-sensors/, ipmimonitoring/: Variable name consistency cleanup.
 	
 2008-05-27  Albert Chu <chu11@llnl.gov>
 

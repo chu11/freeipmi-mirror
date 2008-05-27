@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.48 2008-05-21 23:50:04 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.49 2008-05-27 22:46:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -209,7 +209,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   if (args->regenerate_sdr_cache)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;
   
-  if (!args->sensors_list_length && !args->ipmimonitoring_groups_length)
+  if (!args->sensors_length && !args->ipmimonitoring_groups_length)
     {
       if ((num = ipmi_monitoring_sensor_readings_by_record_id(state_data->ctx,
                                                               state_data->hostname,
@@ -225,14 +225,14 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
           return -1;
         }
     }
-  else if (args->sensors_list_length)
+  else if (args->sensors_length)
     {
       if ((num = ipmi_monitoring_sensor_readings_by_record_id(state_data->ctx,
                                                               state_data->hostname,
                                                               &(args->conf),
                                                               sensor_reading_flags,
-                                                              args->sensors_list,
-                                                              args->sensors_list_length)) < 0)
+                                                              args->sensors,
+                                                              args->sensors_length)) < 0)
         {
           /* special case error message */
           if (ipmi_monitoring_ctx_errnum(state_data->ctx) == IPMI_MONITORING_ERR_SENSOR_NOT_FOUND)
@@ -650,57 +650,57 @@ _grab_ipmimonitoring_options(struct ipmimonitoring_arguments *cmd_args)
       cmd_args->ipmimonitoring_flags |= IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS;
     }
 
-  for (i = 0; i < cmd_args->groups_list_length; i++)
+  for (i = 0; i < cmd_args->groups_length; i++)
     { 
       int n = -1;
 
-      if (!strcasecmp(cmd_args->groups_list[i], "temperature"))
+      if (!strcasecmp(cmd_args->groups[i], "temperature"))
         n = IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE;
-      else if (!strcasecmp(cmd_args->groups_list[i], "voltage"))
+      else if (!strcasecmp(cmd_args->groups[i], "voltage"))
         n = IPMI_MONITORING_SENSOR_GROUP_VOLTAGE;
-      else if (!strcasecmp(cmd_args->groups_list[i], "current"))
+      else if (!strcasecmp(cmd_args->groups[i], "current"))
         n = IPMI_MONITORING_SENSOR_GROUP_CURRENT;
-      else if (!strcasecmp(cmd_args->groups_list[i], "fan"))
+      else if (!strcasecmp(cmd_args->groups[i], "fan"))
         n = IPMI_MONITORING_SENSOR_GROUP_FAN;
-      else if (!strcasecmp(cmd_args->groups_list[i], "physical_security"))
+      else if (!strcasecmp(cmd_args->groups[i], "physical_security"))
         n = IPMI_MONITORING_SENSOR_GROUP_PHYSICAL_SECURITY;
-      else if (!strcasecmp(cmd_args->groups_list[i], "platform_security_violation_attempt"))
+      else if (!strcasecmp(cmd_args->groups[i], "platform_security_violation_attempt"))
         n = IPMI_MONITORING_SENSOR_GROUP_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
-      else if (!strcasecmp(cmd_args->groups_list[i], "processor"))
+      else if (!strcasecmp(cmd_args->groups[i], "processor"))
         n = IPMI_MONITORING_SENSOR_GROUP_PROCESSOR;
-      else if (!strcasecmp(cmd_args->groups_list[i], "power_supply"))
+      else if (!strcasecmp(cmd_args->groups[i], "power_supply"))
         n = IPMI_MONITORING_SENSOR_GROUP_POWER_SUPPLY;
-      else if (!strcasecmp(cmd_args->groups_list[i], "power_unit"))
+      else if (!strcasecmp(cmd_args->groups[i], "power_unit"))
         n = IPMI_MONITORING_SENSOR_GROUP_POWER_UNIT;
-      else if (!strcasecmp(cmd_args->groups_list[i], "memory"))
+      else if (!strcasecmp(cmd_args->groups[i], "memory"))
         n = IPMI_MONITORING_SENSOR_GROUP_MEMORY;
-      else if (!strcasecmp(cmd_args->groups_list[i], "drive_slot"))
+      else if (!strcasecmp(cmd_args->groups[i], "drive_slot"))
         n = IPMI_MONITORING_SENSOR_GROUP_DRIVE_SLOT;
-      else if (!strcasecmp(cmd_args->groups_list[i], "system_firmware_progress"))
+      else if (!strcasecmp(cmd_args->groups[i], "system_firmware_progress"))
         n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_FIRMWARE_PROGRESS;
-      else if (!strcasecmp(cmd_args->groups_list[i], "event_logging_disabled"))
+      else if (!strcasecmp(cmd_args->groups[i], "event_logging_disabled"))
         n = IPMI_MONITORING_SENSOR_GROUP_EVENT_LOGGING_DISABLED;
-      else if (!strcasecmp(cmd_args->groups_list[i], "system_event"))
+      else if (!strcasecmp(cmd_args->groups[i], "system_event"))
         n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_EVENT;
-      else if (!strcasecmp(cmd_args->groups_list[i], "critical_interrupt"))
+      else if (!strcasecmp(cmd_args->groups[i], "critical_interrupt"))
         n = IPMI_MONITORING_SENSOR_GROUP_CRITICAL_INTERRUPT;
-      else if (!strcasecmp(cmd_args->groups_list[i], "module_board"))
+      else if (!strcasecmp(cmd_args->groups[i], "module_board"))
         n = IPMI_MONITORING_SENSOR_GROUP_MODULE_BOARD;
-      else if (!strcasecmp(cmd_args->groups_list[i], "slot_connector"))
+      else if (!strcasecmp(cmd_args->groups[i], "slot_connector"))
         n = IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR;
-      else if (!strcasecmp(cmd_args->groups_list[i], "watchdog2"))
+      else if (!strcasecmp(cmd_args->groups[i], "watchdog2"))
         n = IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2;
-      else if (!strcasecmp(cmd_args->groups_list[i], "entity_presence"))
+      else if (!strcasecmp(cmd_args->groups[i], "entity_presence"))
         n = IPMI_MONITORING_SENSOR_GROUP_ENTITY_PRESENCE;
-      else if (!strcasecmp(cmd_args->groups_list[i], "management_subsystem_health"))
+      else if (!strcasecmp(cmd_args->groups[i], "management_subsystem_health"))
         n = IPMI_MONITORING_SENSOR_GROUP_MANAGEMENT_SUBSYSTEM_HEALTH;
-      else if (!strcasecmp(cmd_args->groups_list[i], "battery"))
+      else if (!strcasecmp(cmd_args->groups[i], "battery"))
         n = IPMI_MONITORING_SENSOR_GROUP_BATTERY;
-      else if (!strcasecmp(cmd_args->groups_list[i], "fru_state"))
+      else if (!strcasecmp(cmd_args->groups[i], "fru_state"))
         n = IPMI_MONITORING_SENSOR_GROUP_FRU_STATE;
       else
         {
-          fprintf(stderr, "invalid sensor group '%s'\n", cmd_args->groups_list[i]);
+          fprintf(stderr, "invalid sensor group '%s'\n", cmd_args->groups[i]);
           exit(1);
         }
       
