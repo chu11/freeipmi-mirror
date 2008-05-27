@@ -1,3 +1,8 @@
+2008-05-27  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-fru/src/ipmi-fru-util.c
+	(ipmi_fru_output_type_length_field): Fix output corner case.
+
 2008-05-24  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/: Document Sun Fire X4150 and X4450 workarounds.
