@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.10 2008-05-27 17:22:41 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.11 2008-05-27 17:27:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -567,27 +567,27 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
     pstdout_printf(state_data->pstate,
                    "  FRU Management Access System Management URL: %s\n",
                    managementaccessbuf);
-  else if (IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_NAME)
+  else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_NAME)
     pstdout_printf(state_data->pstate,
                    "  FRU Management Access System Name: %s\n",
                    managementaccessbuf);
-  else if (IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_PING_ADDRESS)
+  else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_PING_ADDRESS)
     pstdout_printf(state_data->pstate,
                    "  FRU Management Access System Ping Address: %s\n",
                    managementaccessbuf);
-  else if (IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_MANAGEMENT_URL)
+  else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_MANAGEMENT_URL)
     pstdout_printf(state_data->pstate,
                    "  FRU Management Access Component Management URL: %s\n",
                    managementaccessbuf);
-  else if (IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_NAME)
+  else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_NAME)
     pstdout_printf(state_data->pstate,
                    "  FRU Management Access Component Name: %s\n",
                    managementaccessbuf);
-  else if (IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_PING_ADDRESS)
+  else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_PING_ADDRESS)
     pstdout_printf(state_data->pstate,
                    "  FRU Management Access Component Ping Address: %s\n",
                    managementaccessbuf);
-  else if (IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID)
+  else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID)
     {
       pstdout_printf(state_data->pstate,
                      "  FRU Management Access System Unique ID:");
