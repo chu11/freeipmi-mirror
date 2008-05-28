@@ -1,4 +1,8 @@
 2008-05-27  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/ipmi-sensors.8.pre.in: Fix typo.
+	
+2008-05-27  Albert Chu <chu11@llnl.gov>
 	
 	* configure.ac, NEWS: Update for release.
 
