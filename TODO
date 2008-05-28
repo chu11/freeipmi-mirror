@@ -19,6 +19,10 @@ solaris
 - builds?
 - solaris inband driver (solaris 9? solaris 10? solaris 11?)
 
+bmc-watchdog
+------------
+autoconf logfile
+
 bmc-config
 ----------
 remaining serial config
