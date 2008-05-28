@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.94 2008-05-28 20:40:23 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.95 2008-05-28 20:50:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -34,35 +34,34 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
-#include <syslog.h>
-#include <assert.h>
 #include <stdarg.h>
+#endif /* STDC_HEADERS */
+#include <syslog.h>
 #include <signal.h>
 #include <sys/types.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
+#endif /* HAVE_UNISTD_H */
 #if HAVE_FCNTL_H
 #include <fcntl.h>
-#endif
-#include <errno.h>
-#if HAVE_GETOPT_H
-#include <getopt.h>
-#endif
-#include <stdint.h>
+#endif /* HAVE_FCNTL_H */
 #include <sys/stat.h>
 #include <sys/select.h>
 #if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
+#include <sys/time.h>
+#include <time.h>
+#else  /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif  /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
+#if HAVE_GETOPT_H
+#include <getopt.h>
 #endif
+#include <assert.h>
+#include <errno.h>
 
 #include <freeipmi/freeipmi.h>
 
