@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.87 2008-05-28 17:26:50 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.88 2008-05-28 17:32:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -125,9 +125,7 @@ struct cmdline_info
   int driver_type;
   int disable_auto_probe;
   int driver_address;
-  uint32_t driver_address_val;
-  int driver_device;
-  char *driver_device_val;
+  char *driver_device;
   int register_spacing;
   uint8_t register_spacing_val;
   char *logfile;
@@ -297,7 +295,7 @@ _init_openipmi_ipmi(void)
   if (cinfo.driver_device)
     {
       if (ipmi_openipmi_ctx_set_driver_device(openipmi_ctx, 
-                                              cinfo.driver_device_val) < 0)
+                                              cinfo.driver_device) < 0)
         {
           _bmclog("ipmi_openipmi_ctx_set_driver_device: %s", 
                   ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
@@ -340,9 +338,9 @@ _init_kcs_ipmi(void)
     }
 
   if (cinfo.driver_address)
-    l.driver_address = cinfo.driver_address_val;
+    l.driver_address = cinfo.driver_address;
   if (cinfo.register_spacing)
-    l.register_spacing = cinfo.register_spacing_val;
+    l.register_spacing = cinfo.register_spacing;
   
   if (!cinfo.disable_auto_probe || cinfo.driver_address)
     {
@@ -404,10 +402,10 @@ _init_ssif_ipmi(void)
     }
 
   if (cinfo.driver_address)
-    l.driver_address = cinfo.driver_address_val;
+    l.driver_address = cinfo.driver_address;
   if (cinfo.driver_device)
     {
-      strncpy(l.driver_device, cinfo.driver_device_val, IPMI_LOCATE_PATH_MAX);
+      strncpy(l.driver_device, cinfo.driver_device, IPMI_LOCATE_PATH_MAX);
       l.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
   
@@ -1367,6 +1365,8 @@ _cmdline_default(void)
 {
   memset(&cinfo, '\0', sizeof(cinfo));
   cinfo.driver_type = IPMI_DEVICE_UNKNOWN;
+  cinfo.driver_address = 0;
+  cinfo.driver_device = NULL;
   cinfo.logfile = BMC_WATCHDOG_LOGFILE;
 }
 
@@ -1459,7 +1459,6 @@ _cmdline_parse(int argc, char **argv)
           cinfo.daemon++;
           break;
 	case 'D':
-	  cinfo.driver_type++;
           tmp = parse_inband_driver_type(optarg);
           if (tmp == IPMI_DEVICE_KCS)
 	    cinfo.driver_type = IPMI_DEVICE_KCS;
@@ -1476,21 +1475,18 @@ _cmdline_parse(int argc, char **argv)
           cinfo.disable_auto_probe++;
           break;
         case BMC_WATCHDOG_DRIVER_ADDRESS_KEY:
-          cinfo.driver_address++;
-          cinfo.driver_address_val = strtol(optarg, &ptr, 0);
+          cinfo.driver_address = strtol(optarg, &ptr, 0);
           if (ptr != (optarg + strlen(optarg))
-              || cinfo.driver_address_val <= 0)
+              || cinfo.driver_address <= 0)
             _err_exit("invalid driver address");
           break;
 	case BMC_WATCHDOG_DRIVER_DEVICE_KEY:
-	  cinfo.driver_device++;
-	  cinfo.driver_device_val = optarg;
+	  cinfo.driver_device = optarg;
 	  break;
         case BMC_WATCHDOG_REGISTER_SPACING_KEY:
-          cinfo.register_spacing++;
-          cinfo.register_spacing_val = strtol(optarg, &ptr, 10);
+          cinfo.register_spacing = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg))
-              || cinfo.register_spacing_val <= 0)
+              || cinfo.register_spacing <= 0)
             _err_exit("invalid register spacing");
           break;
         case 'f':
