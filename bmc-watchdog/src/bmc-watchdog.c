@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.95 2008-05-28 20:50:07 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.96 2008-05-28 20:58:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -211,7 +211,7 @@ _syslog(int priority, const char *fmt, ...)
   char buffer[BMC_WATCHDOG_ERR_BUFLEN];
   va_list ap;
 
-  assert (fmt != NULL && err_progname != NULL);
+  assert (fmt && err_progname);
 
   if (cmd_args.no_logging)
     return;
@@ -260,8 +260,8 @@ _bmclog(const char *fmt, ...)
   char fbuffer[BMC_WATCHDOG_ERR_BUFLEN];
   va_list ap;
   
-  assert (fmt != NULL 
-          && err_progname != NULL 
+  assert (fmt 
+          && err_progname 
           && (cmd_args.no_logging || logfile_fd >= 0));
   
   if (cmd_args.no_logging)
@@ -270,7 +270,7 @@ _bmclog(const char *fmt, ...)
   va_start(ap, fmt);
   t = time(NULL);
 
-  if ((tm = localtime(&t)) == NULL)
+  if (!(tm = localtime(&t)))
     {
       /* Just use the value from time() */
       snprintf(buffer, BMC_WATCHDOG_ERR_BUFLEN, "%ld: %s\n", t, fmt);
@@ -293,7 +293,7 @@ static void
 _err_init(char *progname)
 {
   char *ptr = strrchr(progname, '/');
-  err_progname = (ptr == NULL) ? progname : ptr + 1;
+  err_progname = (!ptr) ? progname : ptr + 1;
 }
             
 static void
@@ -302,7 +302,7 @@ _err_exit(char *fmt, ...)
   char buffer[BMC_WATCHDOG_ERR_BUFLEN];
   va_list ap;
   
-  assert (fmt != NULL && err_progname != NULL);
+  assert (fmt && err_progname);
   
   va_start(ap, fmt);
   snprintf(buffer, BMC_WATCHDOG_ERR_BUFLEN, "%s: %s\n", err_progname, fmt);
@@ -478,9 +478,9 @@ _init_ssif_ipmi(void)
 static int
 _init_ipmi(void)
 {
-  assert(cmdline_parsed != 0 && err_progname != NULL);
+  assert(cmdline_parsed && err_progname);
 
-  if (getuid() != 0)
+  if (getuid())
     _err_exit("Permission denied, must be root.");
 
   if (cmd_args.common.driver_type != IPMI_DEVICE_UNKNOWN)
@@ -598,7 +598,7 @@ _ipmi_err_exit(uint8_t cmd, uint8_t netfn, int comp_code, char *str)
 {
   char buf[BMC_WATCHDOG_ERR_BUFLEN];
 
-  assert(str != NULL);
+  assert(str);
 
   if (comp_code < 0)
     {
@@ -625,7 +625,7 @@ _sleep(unsigned int sleep_len)
 {
   struct timeval tv;
   
-  if (sleep_len == 0)
+  if (!sleep_len)
     return 0;
 
   tv.tv_sec = sleep_len;
@@ -651,12 +651,12 @@ _cmd(char *str,
   int retry_count = 0;
   int8_t ret;
 
-  assert (str != NULL 
+  assert (str 
 	  && retry_wait_time >= 0 
 	  && retry_attempt >= 0
           && (netfn == IPMI_NET_FN_APP_RQ || netfn == IPMI_NET_FN_TRANSPORT_RQ)
-          && cmd_rq != NULL
-          && cmd_rs != NULL);
+          && cmd_rq
+          && cmd_rs);
 
   if (cmd_args.common.debug)
     {
@@ -816,14 +816,14 @@ _reset_watchdog_timer_cmd(int retry_wait_time, int retry_attempt)
   fiid_obj_t cmd_rs = NULL;
   int retval = -1;
 
-  if ((cmd_rq = fiid_obj_create(tmpl_cmd_reset_watchdog_timer_rq)) == NULL)
+  if (!(cmd_rq = fiid_obj_create(tmpl_cmd_reset_watchdog_timer_rq)))
     {
       _bmclog("_reset_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_create(tmpl_cmd_reset_watchdog_timer_rs)) == NULL)
+  if (!(cmd_rs = fiid_obj_create(tmpl_cmd_reset_watchdog_timer_rs)))
     {
       _bmclog("_reset_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
@@ -875,14 +875,14 @@ _set_watchdog_timer_cmd(int retry_wait_time,
   /* IPMI specifies timeout in 100 millisecond chunks */
   initial_countdown_chunks = initial_countdown_seconds * 10;
 
-  if ((cmd_rq = fiid_obj_create(tmpl_cmd_set_watchdog_timer_rq)) == NULL)
+  if (!(cmd_rq = fiid_obj_create(tmpl_cmd_set_watchdog_timer_rq)))
     {
       _bmclog("_set_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_create(tmpl_cmd_set_watchdog_timer_rs)) == NULL)
+  if (!(cmd_rs = fiid_obj_create(tmpl_cmd_set_watchdog_timer_rs)))
     {
       _bmclog("_set_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
@@ -944,14 +944,14 @@ _get_watchdog_timer_cmd(int retry_wait_time,
   uint64_t val, *valptr;
   int retval = -1;
 
-  if ((cmd_rq = fiid_obj_create(tmpl_cmd_get_watchdog_timer_rq)) == NULL)
+  if (!(cmd_rq = fiid_obj_create(tmpl_cmd_get_watchdog_timer_rq)))
     {
       _bmclog("_get_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_create(tmpl_cmd_get_watchdog_timer_rs)) == NULL)
+  if (!(cmd_rs = fiid_obj_create(tmpl_cmd_get_watchdog_timer_rs)))
     {
       _bmclog("_get_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
@@ -971,7 +971,7 @@ _get_watchdog_timer_cmd(int retry_wait_time,
 		     IPMI_NET_FN_APP_RQ,
                      IPMI_CMD_GET_WATCHDOG_TIMER,
 		     cmd_rq, 
-		     cmd_rs)) != 0)
+		     cmd_rs)))
     goto cleanup;
 
   if (timer_use)
@@ -1101,7 +1101,7 @@ _get_channel_number(int retry_wait_time, int retry_attempt)
 		  IPMI_NET_FN_APP_RQ,
                   IPMI_CMD_GET_DEVICE_ID,
 		  dev_id_cmd_rq, 
-		  dev_id_cmd_rs)) != 0)
+		  dev_id_cmd_rs)))
     _ipmi_err_exit(IPMI_CMD_GET_DEVICE_ID, 
                    IPMI_NET_FN_APP_RQ,
                    ret, 
@@ -1155,7 +1155,7 @@ _get_channel_number(int retry_wait_time, int retry_attempt)
 	       IPMI_NET_FN_APP_RQ,
                IPMI_CMD_GET_CHANNEL_INFO_COMMAND,
 	       channel_info_cmd_rq, 
-	       channel_info_cmd_rs) != 0)
+	       channel_info_cmd_rs))
 	continue;
       
       _FIID_OBJ_GET(channel_info_cmd_rs,
@@ -1198,14 +1198,14 @@ _suspend_bmc_arps_cmd(int retry_wait_time,
   int retval = -1;
   int8_t num;
 
-  if ((cmd_rq = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rq)) == NULL)
+  if (!(cmd_rq = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rq)))
     {
       _bmclog("_suspend_bmc_arps: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rs)) == NULL)
+  if (!(cmd_rs = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rs)))
     {
       _bmclog("_suspend_bmc_arps: fiid_obj_create: %s", 
               strerror(errno));
@@ -1266,7 +1266,7 @@ _usage(void)
 {
   char *cmdstr = _cmd_string();
 
-  if (cmdstr == NULL)
+  if (!cmdstr)
     {
       fprintf(stderr,
               "Usage: bmc-watchdog <COMMAND> [OPTIONS]... [COMMAND_OPTIONS]...\n\n");
@@ -1706,7 +1706,7 @@ _cmdline_parse(int argc, char **argv)
   
   count = cmd_args.set + cmd_args.get + cmd_args.reset +  
     cmd_args.start + cmd_args.stop + cmd_args.clear + cmd_args.daemon;
-  if (count == 0 || help_opt)
+  if (!count || help_opt)
     _usage();
   if (count > 1)
     _err_exit("Only one command can be specified");
@@ -1775,7 +1775,7 @@ _set_cmd(void)
                                      NULL, 
                                      NULL,
                                      &initial_countdown_seconds, 
-                                     NULL)) != 0)
+                                     NULL)))
     _ipmi_err_exit(IPMI_CMD_GET_WATCHDOG_TIMER, 
                    IPMI_NET_FN_APP_RQ,
                    ret, 
@@ -1785,7 +1785,7 @@ _set_cmd(void)
       || (timer_state && cmd_args.reset_if_running))
     {
       if ((ret = _reset_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
-                                           BMC_WATCHDOG_RETRY_ATTEMPT)) != 0)
+                                           BMC_WATCHDOG_RETRY_ATTEMPT)))
         _ipmi_err_exit(IPMI_CMD_RESET_WATCHDOG_TIMER, 
                        IPMI_NET_FN_APP_RQ,
                        ret, 
@@ -1820,7 +1820,7 @@ _set_cmd(void)
                                      (cmd_args.clear_os_load) ? 1 : 0,
                                      (cmd_args.clear_sms_os) ? 1 : 0,
                                      (cmd_args.clear_oem) ? 1 : 0,
-                                     initial_countdown_seconds)) != 0)
+                                     initial_countdown_seconds)))
     _ipmi_err_exit(IPMI_CMD_SET_WATCHDOG_TIMER, 
                    IPMI_NET_FN_APP_RQ,
                    ret, 
@@ -1842,7 +1842,7 @@ _set_cmd(void)
                                          NULL,
                                          NULL,
                                          NULL,
-                                         NULL)) != 0)
+                                         NULL)))
         _ipmi_err_exit(IPMI_CMD_GET_WATCHDOG_TIMER, 
                        IPMI_NET_FN_APP_RQ,
                        ret, 
@@ -1852,7 +1852,7 @@ _set_cmd(void)
           || (timer_state && cmd_args.reset_after_set))
         {
           if ((ret = _reset_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
-                                               BMC_WATCHDOG_RETRY_ATTEMPT)) != 0)
+                                               BMC_WATCHDOG_RETRY_ATTEMPT)))
             _ipmi_err_exit(IPMI_CMD_RESET_WATCHDOG_TIMER, 
                            IPMI_NET_FN_APP_RQ,
                            ret, 
@@ -1966,7 +1966,7 @@ _get_cmd(void)
                                      &timer_use_expiration_flag_sms_os,
                                      &timer_use_expiration_flag_oem,
                                      &initial_countdown_seconds,
-                                     &present_countdown_seconds)) != 0) 
+                                     &present_countdown_seconds))) 
     _ipmi_err_exit(IPMI_CMD_GET_WATCHDOG_TIMER, 
                    IPMI_NET_FN_APP_RQ,
                    ret, 
@@ -2006,7 +2006,7 @@ _reset_cmd(void)
   int ret;
   
   if ((ret = _reset_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
-                                       BMC_WATCHDOG_RETRY_ATTEMPT)) != 0)
+                                       BMC_WATCHDOG_RETRY_ATTEMPT)))
     _ipmi_err_exit(IPMI_CMD_RESET_WATCHDOG_TIMER, 
                    IPMI_NET_FN_APP_RQ,
                    ret, 
@@ -2033,7 +2033,7 @@ _start_cmd(void)
                                      NULL, 
                                      NULL,
                                      NULL,
-                                     NULL)) != 0)
+                                     NULL)))
     _ipmi_err_exit(IPMI_CMD_GET_WATCHDOG_TIMER, 
                    IPMI_NET_FN_APP_RQ,
                    ret, 
@@ -2042,7 +2042,7 @@ _start_cmd(void)
   if (!timer_state)
     {
       if ((ret = _reset_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
-                                           BMC_WATCHDOG_RETRY_ATTEMPT)) != 0)
+                                           BMC_WATCHDOG_RETRY_ATTEMPT)))
         _ipmi_err_exit(IPMI_CMD_RESET_WATCHDOG_TIMER, 
                        IPMI_NET_FN_APP_RQ,
                        ret, 
@@ -2067,7 +2067,7 @@ _start_cmd(void)
       if ((ret = _suspend_bmc_arps_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                        BMC_WATCHDOG_RETRY_ATTEMPT,
                                        gratuitous_arp,
-                                       arp_response)) != 0)
+                                       arp_response)))
         _ipmi_err_exit(IPMI_CMD_SUSPEND_BMC_ARPS, 
                        IPMI_NET_FN_TRANSPORT_RQ,
                        ret, 
@@ -2097,7 +2097,7 @@ _stop_cmd(void)
                                      NULL, 
                                      NULL, 
                                      &initial_countdown_seconds, 
-                                     NULL)) != 0)
+                                     NULL)))
     _ipmi_err_exit(IPMI_CMD_GET_WATCHDOG_TIMER, 
                    IPMI_NET_FN_APP_RQ,
                    ret, 
@@ -2116,7 +2116,7 @@ _stop_cmd(void)
                                      0,
                                      0,
                                      0,
-                                     initial_countdown_seconds)) != 0)
+                                     initial_countdown_seconds)))
     _ipmi_err_exit(IPMI_CMD_SET_WATCHDOG_TIMER, 
                    IPMI_NET_FN_APP_RQ,
                    ret, 
@@ -2145,7 +2145,7 @@ _clear_cmd(void)
                                      NULL,
                                      NULL, 
                                      NULL,
-                                     NULL)) != 0)
+                                     NULL)))
     _ipmi_err_exit(IPMI_CMD_GET_WATCHDOG_TIMER, 
                    IPMI_NET_FN_APP_RQ,
                    ret, 
@@ -2164,7 +2164,7 @@ _clear_cmd(void)
                                      0,
                                      0,
                                      0,
-                                     0)) != 0)
+                                     0)))
     _ipmi_err_exit(IPMI_CMD_SET_WATCHDOG_TIMER, 
                    IPMI_NET_FN_APP_RQ,
                    ret, 
@@ -2184,7 +2184,7 @@ _daemon_init()
     {
       if ((pid = fork()) < 0) 
 	_err_exit("fork: %s", strerror(errno));
-      if (pid != 0)
+      if (pid)
 	exit(0);                    /* parent terminates */
       
       setsid();
@@ -2194,7 +2194,7 @@ _daemon_init()
       
       if ((pid = fork()) < 0) 
 	_err_exit("fork: %s", strerror(errno));
-      if (pid != 0)
+      if (pid)
 	exit(0);                    /* 1st child terminates */
       
       if (chdir("/") < 0)
@@ -2212,7 +2212,7 @@ _daemon_init()
 static void
 _deamon_cmd_error_exit(char *str, int ret)
 {
-  assert(str != NULL); 
+  assert(str); 
 
   if (ret < 0) 
     {
@@ -2262,7 +2262,7 @@ _daemon_setup(void)
                                          NULL,
                                          NULL,
                                          &initial_countdown_seconds, 
-                                         NULL)) != 0)
+                                         NULL)))
         {
           _deamon_cmd_error_exit("Get Watchdog Timer", ret);
           continue;
@@ -2307,7 +2307,7 @@ _daemon_setup(void)
                                          (cmd_args.clear_os_load) ? 1 : 0,
                                          (cmd_args.clear_sms_os) ? 1 : 0,
                                          (cmd_args.clear_oem) ? 1 : 0,
-                                         initial_countdown_seconds)) != 0)
+                                         initial_countdown_seconds)))
         {
           _deamon_cmd_error_exit("Set Watchdog Timer", ret);
           continue;
@@ -2319,7 +2319,7 @@ _daemon_setup(void)
   while (1)
     {
       if ((ret = _reset_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
-                                           BMC_WATCHDOG_RETRY_ATTEMPT)) != 0)
+                                           BMC_WATCHDOG_RETRY_ATTEMPT)))
         {
           _deamon_cmd_error_exit("Reset Watchdog Timer", ret);
           continue;
@@ -2346,7 +2346,7 @@ _daemon_setup(void)
           if ((ret = _suspend_bmc_arps_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                            BMC_WATCHDOG_RETRY_ATTEMPT,
                                            gratuitous_arp,
-                                           arp_response)) != 0)
+                                           arp_response)))
             {
               _deamon_cmd_error_exit("Suspend BMC ARPs", ret);
               continue;
@@ -2367,7 +2367,7 @@ _signal_handler(int sig)
 static void
 _daemon_cmd_error_noexit(char *str, int ret)
 {
-  assert(str != NULL); 
+  assert(str); 
 
   if (ret < 0) 
     {
@@ -2447,7 +2447,7 @@ _daemon_cmd(void)
                                          NULL, 
                                          NULL, 
                                          NULL, 
-                                         NULL)) != 0)
+                                         NULL)))
         {
           _daemon_cmd_error_noexit("Get Watchdog Timer", ret);
           goto sleep_now;
@@ -2460,12 +2460,12 @@ _daemon_cmd(void)
         }
 
       if ((ret = _reset_watchdog_timer_cmd(retry_wait_time, 
-                                           retry_attempt)) != 0)
+                                           retry_attempt)))
         {
           _daemon_cmd_error_noexit("Reset Watchdog Timer", ret);
           goto sleep_now;
         }
-      if (ret != 0)
+      if (ret)
         {
           char buf[BMC_WATCHDOG_STR_BUFLEN];
 
@@ -2523,7 +2523,7 @@ _daemon_cmd(void)
                                          NULL,
                                          NULL, 
                                          &initial_countdown_seconds, 
-                                         NULL)) != 0)
+                                         NULL)))
         {
           _daemon_cmd_error_noexit("Get Watchdog Timer", ret);
           continue;
@@ -2546,7 +2546,7 @@ _daemon_cmd(void)
                                          0,
                                          0,
                                          0,
-                                         initial_countdown_seconds)) != 0)
+                                         initial_countdown_seconds)))
         {
           _daemon_cmd_error_noexit("Set Watchdog Timer", ret);
           continue;
