@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: bmc-watchdog.8.pre.in,v 1.17 2008-04-24 05:00:35 chu11 Exp $
+.\"$Id: bmc-watchdog.8.pre.in,v 1.18 2008-05-28 21:54:01 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -123,19 +123,8 @@ Specify an alternate logfile from the default of
 \fB\-n\fR, \fB\-\-no-logging\fR
 Turns off all logging done by 
 .B bmc-watchdog.  
-.TP
-\fB\-\-debug\fR
-Turns on debugging.  All data written and read from the BMC is dumped
-to stderr.
-.TP
-\fB\-?\fR, \fB\-\-help\fR
-Output the help menu.  If a specific command (\fB\-\-set\fR,
-\fB\-\-get\fR, \fB\-\-reset\fR, \fB\-\-start\fR, \fB\-\-stop\fR,
-\fB\-\-clear\fR, or \fB\-\-daemon\fR) is listed on the command line,
-only the specific options for that command will be listed.
-.TP
-\fB\-V\fR, \fB\-\-version\fR
-Output the program version and exit.
+#include <@top_srcdir@/common/doc/manpage-common-debug.man>
+#include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .SH "SET OPTIONS"
 The following options can be used by the set command to set or clear
 various BMC watchdog configuration parameters.
