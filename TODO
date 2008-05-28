@@ -46,6 +46,7 @@ all config file options
 - ipmipower still works with powerman
 - old .conf manpages poitn to new one
 bmc-wwatchdog
+- w/ config options
 
 general
 -------
