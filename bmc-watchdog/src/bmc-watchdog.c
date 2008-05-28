@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.91 2008-05-28 18:04:29 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.92 2008-05-28 18:20:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -147,8 +147,9 @@ enum bmc_watchdog_argp_option_keys
      *(__val) = __temp; \
   } while (0) 
 
-struct cmdline_info
+struct bmc_watchdog_arguments
 {
+  struct common_cmd_args common;
   int set;
   int get;
   int reset;
@@ -156,12 +157,6 @@ struct cmdline_info
   int stop;
   int clear;
   int daemon;
-  int driver_type;
-  int disable_auto_probe;
-  int driver_address;
-  char *driver_device;
-  int register_spacing;
-  uint8_t register_spacing_val;
   char *logfile;
   int no_logging;
   int timer_use;
@@ -192,9 +187,10 @@ struct cmdline_info
   int arp_response;
   uint8_t arp_response_val;
   int reset_period;
-  uint32_t reset_period_val; 
-  int debug;
+  uint32_t reset_period_val;
 };
+
+struct bmc_watchdog_arguments cmd_args;
 
 /* program name */
 char *err_progname = NULL;
@@ -205,7 +201,6 @@ ipmi_openipmi_ctx_t openipmi_ctx = NULL;
 int driver_type_used = -1;
 
 int cmdline_parsed = 0;
-struct cmdline_info cinfo;
 
 int shutdown_flag = 1;
 
@@ -219,7 +214,7 @@ _syslog(int priority, const char *fmt, ...)
 
   assert (fmt != NULL && err_progname != NULL);
 
-  if (cinfo.no_logging)
+  if (cmd_args.no_logging)
     return;
 
   va_start(ap, fmt);
@@ -268,9 +263,9 @@ _bmclog(const char *fmt, ...)
   
   assert (fmt != NULL 
           && err_progname != NULL 
-          && (cinfo.no_logging || logfile_fd >= 0));
+          && (cmd_args.no_logging || logfile_fd >= 0));
   
-  if (cinfo.no_logging)
+  if (cmd_args.no_logging)
     return;
   
   va_start(ap, fmt);
@@ -326,10 +321,10 @@ _init_openipmi_ipmi(void)
       return -1;
     }
   
-  if (cinfo.driver_device)
+  if (cmd_args.common.driver_device)
     {
       if (ipmi_openipmi_ctx_set_driver_device(openipmi_ctx, 
-                                              cinfo.driver_device) < 0)
+                                              cmd_args.common.driver_device) < 0)
         {
           _bmclog("ipmi_openipmi_ctx_set_driver_device: %s", 
                   ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
@@ -352,7 +347,7 @@ _init_kcs_ipmi(void)
 {
   struct ipmi_locate_info l;
   
-  if (!cinfo.disable_auto_probe)
+  if (!cmd_args.common.disable_auto_probe)
     {
       int err;
 
@@ -371,12 +366,12 @@ _init_kcs_ipmi(void)
       return -1;
     }
 
-  if (cinfo.driver_address)
-    l.driver_address = cinfo.driver_address;
-  if (cinfo.register_spacing)
-    l.register_spacing = cinfo.register_spacing;
+  if (cmd_args.common.driver_address)
+    l.driver_address = cmd_args.common.driver_address;
+  if (cmd_args.common.register_spacing)
+    l.register_spacing = cmd_args.common.register_spacing;
   
-  if (!cinfo.disable_auto_probe || cinfo.driver_address)
+  if (!cmd_args.common.disable_auto_probe || cmd_args.common.driver_address)
     {
       if (ipmi_kcs_ctx_set_driver_address(kcs_ctx, l.driver_address) < 0)
         {
@@ -386,7 +381,7 @@ _init_kcs_ipmi(void)
         }
     }
   
-  if (!cinfo.disable_auto_probe || cinfo.register_spacing)
+  if (!cmd_args.common.disable_auto_probe || cmd_args.common.register_spacing)
     {
       if (ipmi_kcs_ctx_set_register_spacing(kcs_ctx, l.register_spacing) < 0)
         {
@@ -418,7 +413,7 @@ _init_ssif_ipmi(void)
 {
   struct ipmi_locate_info l;
 
-  if (!cinfo.disable_auto_probe)
+  if (!cmd_args.common.disable_auto_probe)
     {
       int err;
       if ((err = ipmi_locate_get_device_info(IPMI_INTERFACE_SSIF,
@@ -435,15 +430,15 @@ _init_ssif_ipmi(void)
       return -1;
     }
 
-  if (cinfo.driver_address)
-    l.driver_address = cinfo.driver_address;
-  if (cinfo.driver_device)
+  if (cmd_args.common.driver_address)
+    l.driver_address = cmd_args.common.driver_address;
+  if (cmd_args.common.driver_device)
     {
-      strncpy(l.driver_device, cinfo.driver_device, IPMI_LOCATE_PATH_MAX);
+      strncpy(l.driver_device, cmd_args.common.driver_device, IPMI_LOCATE_PATH_MAX);
       l.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
   
-  if (!cinfo.disable_auto_probe || cinfo.driver_address)
+  if (!cmd_args.common.disable_auto_probe || cmd_args.common.driver_address)
     {
       if (ipmi_ssif_ctx_set_driver_address(ssif_ctx, l.driver_address) < 0)
         {
@@ -453,7 +448,7 @@ _init_ssif_ipmi(void)
         }
     }
   
-  if (!cinfo.disable_auto_probe || cinfo.driver_device)
+  if (!cmd_args.common.disable_auto_probe || cmd_args.common.driver_device)
     {
       if (ipmi_ssif_ctx_set_driver_device(ssif_ctx, l.driver_device) < 0)
         {
@@ -489,21 +484,21 @@ _init_ipmi(void)
   if (getuid() != 0)
     _err_exit("Permission denied, must be root.");
 
-  if (cinfo.driver_type != IPMI_DEVICE_UNKNOWN)
+  if (cmd_args.common.driver_type != IPMI_DEVICE_UNKNOWN)
     {
-      if (cinfo.driver_type == IPMI_DEVICE_KCS)
+      if (cmd_args.common.driver_type == IPMI_DEVICE_KCS)
 	{
 	  if (_init_kcs_ipmi() < 0)
 	    _err_exit("Error initializing KCS IPMI driver");
 	  driver_type_used = IPMI_DEVICE_KCS;
 	}
-      if (cinfo.driver_type == IPMI_DEVICE_SSIF)
+      if (cmd_args.common.driver_type == IPMI_DEVICE_SSIF)
 	{
 	  if (_init_ssif_ipmi() < 0)
 	    _err_exit("Error initializing SSIF IPMI driver");
 	  driver_type_used = IPMI_DEVICE_SSIF;
 	}
-      if (cinfo.driver_type == IPMI_DEVICE_OPENIPMI)
+      if (cmd_args.common.driver_type == IPMI_DEVICE_OPENIPMI)
 	{
 	  if (_init_openipmi_ipmi() < 0)
 	    _err_exit("Error initializing OPENIPMI IPMI driver");
@@ -573,18 +568,18 @@ _init_bmc_watchdog(int facility, int err_to_stderr)
 
   openlog(err_progname, LOG_ODELAY | LOG_PID, facility);
 
-  if (!cinfo.no_logging)
+  if (!cmd_args.no_logging)
     {
-      if ((logfile_fd = open(cinfo.logfile,
+      if ((logfile_fd = open(cmd_args.logfile,
                              O_WRONLY | O_CREAT | O_APPEND,
                              S_IRUSR | S_IWUSR)) < 0)
         {
           if (err_to_stderr)
             _err_exit("Error opening logfile '%s': %s",
-                      cinfo.logfile, strerror(errno));
+                      cmd_args.logfile, strerror(errno));
           else
             _syslog(LOG_ERR, "Error opening logfile '%s': %s",
-                     cinfo.logfile, strerror(errno));
+                     cmd_args.logfile, strerror(errno));
           exit(1);
         }
     }
@@ -664,7 +659,7 @@ _cmd(char *str,
           && cmd_rq != NULL
           && cmd_rs != NULL);
 
-  if (cinfo.debug)
+  if (cmd_args.common.debug)
     {
       char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
 
@@ -776,7 +771,7 @@ _cmd(char *str,
 	      return -1;
 	    }
 
-	  if (cinfo.debug)
+	  if (cmd_args.common.debug)
 	    {
 	      fprintf(stderr, "%s: BMC busy\n", str);
 	      _bmclog("%s: BMC busy", str);
@@ -789,7 +784,7 @@ _cmd(char *str,
         break;
     }
 
-  if (cinfo.debug)
+  if (cmd_args.common.debug)
     {
       char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
 
@@ -1249,19 +1244,19 @@ _suspend_bmc_arps_cmd(int retry_wait_time,
 static char *
 _cmd_string(void)
 {
-  if (cinfo.get)
+  if (cmd_args.get)
     return "--get";
-  else if (cinfo.set)
+  else if (cmd_args.set)
     return "--set";
-  else if (cinfo.reset)
+  else if (cmd_args.reset)
     return "--reset";
-  else if (cinfo.start)
+  else if (cmd_args.start)
     return "--start";
-  else if (cinfo.stop)
+  else if (cmd_args.stop)
     return "--stop";
-  else if (cinfo.clear)
+  else if (cmd_args.clear)
     return "--clear";
-  else if (cinfo.daemon)
+  else if (cmd_args.daemon)
     return "--daemon";
   else
     return NULL;
@@ -1307,11 +1302,11 @@ _usage(void)
 
   fprintf(stderr, "\n");
 
-  if (cinfo.set || cinfo.start || cinfo.daemon)
+  if (cmd_args.set || cmd_args.start || cmd_args.daemon)
     fprintf(stderr, 
             "COMMAND SPECIFIC OPTIONS:\n");
 
-  if (cinfo.set || cinfo.daemon)
+  if (cmd_args.set || cmd_args.daemon)
     fprintf(stderr,
             "  -u INT     --timer-use=INT              Set timer use.\n"
             "             %d = BIOS FRB2\n"
@@ -1359,13 +1354,13 @@ _usage(void)
             IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_SMI,
             IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NMI,
             IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT);
-  if (cinfo.set)
+  if (cmd_args.set)
     fprintf(stderr,
             "  -w         --start-after-set            Start timer after set if timer is stopped.\n"
             "  -x         --reset-after-set            Reset timer after set if timer is running.\n"
             "  -j         --start-if-stopped           Don't set if timer is stopped, just start.\n"
             "  -k         --reset-if-running           Don't set if timer is running, just reset.\n");
-  if (cinfo.start || cinfo.daemon)
+  if (cmd_args.start || cmd_args.daemon)
     fprintf(stderr, 
             "  -G INT     --gratuitous-arp=INT         Suspend Gratuitous ARPs.\n"
             "             %d = Suspend Gratuitous ARPs\n"
@@ -1377,11 +1372,11 @@ _usage(void)
             IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND,
             IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPEND,
             IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND);
-  if (cinfo.daemon)
+  if (cmd_args.daemon)
     fprintf(stderr, 
             "  -e SECS    --reset-period=SECS          Specify time interval before resetting timer.\n");
               
-  if (cinfo.set || cinfo.start || cinfo.daemon)
+  if (cmd_args.set || cmd_args.start || cmd_args.daemon)
     fprintf(stderr, "\n");
 
   exit(1);
@@ -1397,11 +1392,11 @@ _version(void)
 static void
 _cmdline_default(void)
 {
-  memset(&cinfo, '\0', sizeof(cinfo));
-  cinfo.driver_type = IPMI_DEVICE_UNKNOWN;
-  cinfo.driver_address = 0;
-  cinfo.driver_device = NULL;
-  cinfo.logfile = BMC_WATCHDOG_LOGFILE;
+  memset(&cmd_args, '\0', sizeof(cmd_args));
+  cmd_args.common.driver_type = IPMI_DEVICE_UNKNOWN;
+  cmd_args.common.driver_address = 0;
+  cmd_args.common.driver_device = NULL;
+  cmd_args.logfile = BMC_WATCHDOG_LOGFILE;
 }
 
 static void
@@ -1472,34 +1467,34 @@ _cmdline_parse(int argc, char **argv)
       switch(c) 
         {
         case SET_KEY:
-          cinfo.set++;
+          cmd_args.set++;
           break;
         case GET_KEY:
-          cinfo.get++;
+          cmd_args.get++;
           break;
         case RESET_KEY:
-          cinfo.reset++;
+          cmd_args.reset++;
           break;
         case START_KEY:
-          cinfo.start++;
+          cmd_args.start++;
           break;
         case STOP_KEY:
-          cinfo.stop++;
+          cmd_args.stop++;
           break;
         case CLEAR_KEY:
-          cinfo.clear++;
+          cmd_args.clear++;
           break;
         case DAEMON_KEY:
-          cinfo.daemon++;
+          cmd_args.daemon++;
           break;
 	case 'D':
           tmp = parse_inband_driver_type(optarg);
           if (tmp == IPMI_DEVICE_KCS)
-	    cinfo.driver_type = IPMI_DEVICE_KCS;
+	    cmd_args.common.driver_type = IPMI_DEVICE_KCS;
           else if (tmp == IPMI_DEVICE_SSIF)
-	    cinfo.driver_type = IPMI_DEVICE_SSIF;
+	    cmd_args.common.driver_type = IPMI_DEVICE_SSIF;
           else if (tmp == IPMI_DEVICE_OPENIPMI)
-	    cinfo.driver_type = IPMI_DEVICE_OPENIPMI;
+	    cmd_args.common.driver_type = IPMI_DEVICE_OPENIPMI;
           else
             {
               fprintf(stderr, "invalid driver type\n");
@@ -1509,37 +1504,39 @@ _cmdline_parse(int argc, char **argv)
           /* BMC_WATCHDOG_NO_PROBING_KEY for backwards compatability */
         case BMC_WATCHDOG_NO_PROBING_KEY:
         case BMC_WATCHDOG_DISABLE_AUTO_PROBE_KEY:
-          cinfo.disable_auto_probe++;
+          cmd_args.common.disable_auto_probe++;
           break;
         case BMC_WATCHDOG_DRIVER_ADDRESS_KEY:
-          cinfo.driver_address = strtol(optarg, &ptr, 0);
+          tmp = strtol(optarg, &ptr, 0);
           if (ptr != (optarg + strlen(optarg))
-              || cinfo.driver_address <= 0)
+              || tmp <= 0)
             {
               fprintf (stderr, "invalid driver address\n");
               exit(1);
             }
+          cmd_args.common.driver_address = tmp;
           break;
 	case BMC_WATCHDOG_DRIVER_DEVICE_KEY:
-	  cinfo.driver_device = optarg;
+	  cmd_args.common.driver_device = optarg;
 	  break;
         case BMC_WATCHDOG_REGISTER_SPACING_KEY:
-          cinfo.register_spacing = strtol(optarg, &ptr, 10);
+          tmp = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg))
-              || cinfo.register_spacing <= 0)
+              || tmp <= 0)
             {
               fprintf (stderr, "invalid register spacing\n");
               exit(1);
             }
+          cmd_args.common.register_spacing = 0;
           break;
         case LOGFILE_KEY:
-          cinfo.logfile = optarg;
+          cmd_args.logfile = optarg;
           break;
         case NO_LOGGING_KEY:
-          cinfo.no_logging++;
+          cmd_args.no_logging++;
           break;
         case TIMER_USE_KEY:
-          cinfo.timer_use++;
+          cmd_args.timer_use++;
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID(tmp))
@@ -1547,10 +1544,10 @@ _cmdline_parse(int argc, char **argv)
               fprintf (stderr, "invalid timer use\n");
               exit(1);
             }
-          cinfo.timer_use_val = tmp;
+          cmd_args.timer_use_val = tmp;
           break;
         case STOP_TIMER_KEY:
-          cinfo.stop_timer++;
+          cmd_args.stop_timer++;
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID(tmp))
@@ -1558,10 +1555,10 @@ _cmdline_parse(int argc, char **argv)
               fprintf (stderr, "invalid stop timer value\n");
               exit(1);
             }
-          cinfo.stop_timer_val = tmp;
+          cmd_args.stop_timer_val = tmp;
           break;
         case LOG_KEY:
-          cinfo.log++;
+          cmd_args.log++;
           tmp = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID(tmp))
@@ -1570,9 +1567,9 @@ _cmdline_parse(int argc, char **argv)
               exit(1);
             }
           break;
-          cinfo.log_val = tmp;
+          cmd_args.log_val = tmp;
         case TIMEOUT_ACTION_KEY:
-          cinfo.timeout_action++;
+          cmd_args.timeout_action++;
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID(tmp))
@@ -1580,10 +1577,10 @@ _cmdline_parse(int argc, char **argv)
               fprintf (stderr, "invalid timeout action value\n");
               exit(1);
             }
-          cinfo.timeout_action_val = tmp;
+          cmd_args.timeout_action_val = tmp;
           break;
         case PRE_TIMEOUT_INTERRUPT_KEY:
-          cinfo.pre_timeout_interrupt++;
+          cmd_args.pre_timeout_interrupt++;
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID(tmp))
@@ -1591,10 +1588,10 @@ _cmdline_parse(int argc, char **argv)
               fprintf (stderr, "invalid pre timeout interrupt value\n");
               exit(1);
             }
-          cinfo.pre_timeout_interrupt_val = tmp;
+          cmd_args.pre_timeout_interrupt_val = tmp;
           break;
         case PRE_TIMEOUT_INTERVAL_KEY:
-          cinfo.pre_timeout_interval++;
+          cmd_args.pre_timeout_interval++;
           tmp = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
             {
@@ -1607,25 +1604,25 @@ _cmdline_parse(int argc, char **argv)
               fprintf (stderr, "pre timeout interval out of range\n");
               exit(1);
             }
-          cinfo.pre_timeout_interval_val = tmp;
+          cmd_args.pre_timeout_interval_val = tmp;
           break;
         case CLEAR_BIOS_FRB2_KEY:
-          cinfo.clear_bios_frb2++;
+          cmd_args.clear_bios_frb2++;
           break;
         case CLEAR_BIOS_POST_KEY:
-          cinfo.clear_bios_post++;
+          cmd_args.clear_bios_post++;
           break;
         case CLEAR_OS_LOAD_KEY:
-          cinfo.clear_os_load++;
+          cmd_args.clear_os_load++;
           break;
         case CLEAR_SMS_OS_KEY:
-          cinfo.clear_sms_os++;
+          cmd_args.clear_sms_os++;
           break;
         case CLEAR_OEM_KEY:
-          cinfo.clear_oem++;
+          cmd_args.clear_oem++;
           break;
         case INITIAL_COUNTDOWN_KEY:
-          cinfo.initial_countdown_seconds++;
+          cmd_args.initial_countdown_seconds++;
           tmp = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
             {
@@ -1638,21 +1635,21 @@ _cmdline_parse(int argc, char **argv)
               fprintf (stderr, "initial countdown out of range\n");
               exit(1);
             }
-          cinfo.initial_countdown_seconds_val = tmp;
+          cmd_args.initial_countdown_seconds_val = tmp;
           break;
         case START_AFTER_SET_KEY:
-          cinfo.start_after_set++;
+          cmd_args.start_after_set++;
           break;
         case RESET_AFTER_SET_KEY:
-          cinfo.reset_after_set++;
+          cmd_args.reset_after_set++;
           break;
         case START_IF_STOPPED_KEY:
-          cinfo.start_if_stopped++;
+          cmd_args.start_if_stopped++;
         case RESET_IF_RUNNING_KEY:
-          cinfo.reset_if_running++;
+          cmd_args.reset_if_running++;
           break;
         case GRATUITOUS_ARP_KEY:
-          cinfo.gratuitous_arp++;
+          cmd_args.gratuitous_arp++;
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(tmp))
@@ -1660,10 +1657,10 @@ _cmdline_parse(int argc, char **argv)
               fprintf (stderr, "invalid gratuitous arp value\n");
               exit(1);
             }
-          cinfo.gratuitous_arp_val = tmp;
+          cmd_args.gratuitous_arp_val = tmp;
           break;
         case ARP_RESPONSE_KEY:
-          cinfo.arp_response++;
+          cmd_args.arp_response++;
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(tmp))
@@ -1671,10 +1668,10 @@ _cmdline_parse(int argc, char **argv)
               fprintf (stderr, "invalid arp response value\n");
               exit(1);
             }
-          cinfo.arp_response_val = tmp;
+          cmd_args.arp_response_val = tmp;
           break;
         case RESET_PERIOD_KEY:
-          cinfo.reset_period++;
+          cmd_args.reset_period++;
           tmp = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
             {
@@ -1687,10 +1684,10 @@ _cmdline_parse(int argc, char **argv)
               fprintf (stderr, "reset period out of range\n");
               exit(1);
             }
-          cinfo.reset_period_val = tmp;
+          cmd_args.reset_period_val = tmp;
           break;
         case BMC_WATCHDOG_DEBUG_KEY:
-          cinfo.debug++;
+          cmd_args.common.debug++;
           break;
         case HELP_KEY:          /* legacy */
         case HELP2_KEY:         /* legacy */
@@ -1708,47 +1705,47 @@ _cmdline_parse(int argc, char **argv)
         }
     }
   
-  count = cinfo.set + cinfo.get + cinfo.reset +  
-    cinfo.start + cinfo.stop + cinfo.clear + cinfo.daemon;
+  count = cmd_args.set + cmd_args.get + cmd_args.reset +  
+    cmd_args.start + cmd_args.stop + cmd_args.clear + cmd_args.daemon;
   if (count == 0 || help_opt)
     _usage();
   if (count > 1)
     _err_exit("Only one command can be specified");
 
-  if (((cinfo.get 
-        || cinfo.reset
-        || cinfo.start
-        || cinfo.stop
-        || cinfo.clear)
-       && (cinfo.timer_use
-           || cinfo.stop_timer
-           || cinfo.log
-           || cinfo.timeout_action 
-           || cinfo.pre_timeout_interrupt
-           || cinfo.pre_timeout_interval 
-           || cinfo.clear_bios_frb2
-           || cinfo.clear_bios_post 
-           || cinfo.clear_sms_os 
-           || cinfo.clear_oem 
-           || cinfo.initial_countdown_seconds
-           || cinfo.start_after_set
-           || cinfo.reset_after_set
-           || cinfo.reset_if_running 
-           || cinfo.reset_period))
-      || (cinfo.set
-          && cinfo.reset_period)
-      || (cinfo.daemon
-          && (cinfo.stop_timer 
-              || cinfo.start_after_set
-              || cinfo.reset_after_set
-              || cinfo.reset_if_running))
-      || ((cinfo.set 
-           || cinfo.get 
-           || cinfo.reset
-           || cinfo.stop
-           || cinfo.clear)
-          && (cinfo.gratuitous_arp 
-              || cinfo.arp_response)))
+  if (((cmd_args.get 
+        || cmd_args.reset
+        || cmd_args.start
+        || cmd_args.stop
+        || cmd_args.clear)
+       && (cmd_args.timer_use
+           || cmd_args.stop_timer
+           || cmd_args.log
+           || cmd_args.timeout_action 
+           || cmd_args.pre_timeout_interrupt
+           || cmd_args.pre_timeout_interval 
+           || cmd_args.clear_bios_frb2
+           || cmd_args.clear_bios_post 
+           || cmd_args.clear_sms_os 
+           || cmd_args.clear_oem 
+           || cmd_args.initial_countdown_seconds
+           || cmd_args.start_after_set
+           || cmd_args.reset_after_set
+           || cmd_args.reset_if_running 
+           || cmd_args.reset_period))
+      || (cmd_args.set
+          && cmd_args.reset_period)
+      || (cmd_args.daemon
+          && (cmd_args.stop_timer 
+              || cmd_args.start_after_set
+              || cmd_args.reset_after_set
+              || cmd_args.reset_if_running))
+      || ((cmd_args.set 
+           || cmd_args.get 
+           || cmd_args.reset
+           || cmd_args.stop
+           || cmd_args.clear)
+          && (cmd_args.gratuitous_arp 
+              || cmd_args.arp_response)))
     {
       char *cmdstr = _cmd_string();
       _err_exit("Invalid command option specified for '%s' command", cmdstr);
@@ -1785,8 +1782,8 @@ _set_cmd(void)
                    ret, 
                    "Get Watchdog Timer Error");
 
-  if ((!timer_state && cinfo.start_if_stopped)
-      || (timer_state && cinfo.reset_if_running))
+  if ((!timer_state && cmd_args.start_if_stopped)
+      || (timer_state && cmd_args.reset_if_running))
     {
       if ((ret = _reset_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                            BMC_WATCHDOG_RETRY_ATTEMPT)) != 0)
@@ -1796,17 +1793,17 @@ _set_cmd(void)
                        "Reset Watchdog Timer Error");
     }
   
-  timer_use = (cinfo.timer_use) ? cinfo.timer_use_val : timer_use;
-  stop_timer = (cinfo.stop_timer) ? cinfo.stop_timer_val : timer_state;
-  log = (cinfo.log) ? cinfo.log_val : log;
-  timeout_action = (cinfo.timeout_action) ? 
-    cinfo.timeout_action_val : timeout_action;
-  pre_timeout_interrupt = (cinfo.pre_timeout_interrupt) ? 
-    cinfo.pre_timeout_interrupt_val : pre_timeout_interrupt;
-  pre_timeout_interval = (cinfo.pre_timeout_interval) ? 
-    cinfo.pre_timeout_interval_val : pre_timeout_interval;
-  initial_countdown_seconds = (cinfo.initial_countdown_seconds) ? 
-    cinfo.initial_countdown_seconds_val : initial_countdown_seconds;
+  timer_use = (cmd_args.timer_use) ? cmd_args.timer_use_val : timer_use;
+  stop_timer = (cmd_args.stop_timer) ? cmd_args.stop_timer_val : timer_state;
+  log = (cmd_args.log) ? cmd_args.log_val : log;
+  timeout_action = (cmd_args.timeout_action) ? 
+    cmd_args.timeout_action_val : timeout_action;
+  pre_timeout_interrupt = (cmd_args.pre_timeout_interrupt) ? 
+    cmd_args.pre_timeout_interrupt_val : pre_timeout_interrupt;
+  pre_timeout_interval = (cmd_args.pre_timeout_interval) ? 
+    cmd_args.pre_timeout_interval_val : pre_timeout_interval;
+  initial_countdown_seconds = (cmd_args.initial_countdown_seconds) ? 
+    cmd_args.initial_countdown_seconds_val : initial_countdown_seconds;
   
   if ((pre_timeout_interrupt != IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
       && (pre_timeout_interval > initial_countdown_seconds))
@@ -1819,18 +1816,18 @@ _set_cmd(void)
                                      timeout_action, 
                                      pre_timeout_interrupt,
                                      pre_timeout_interval, 
-                                     (cinfo.clear_bios_frb2) ? 1 : 0,
-                                     (cinfo.clear_bios_post) ? 1 : 0,
-                                     (cinfo.clear_os_load) ? 1 : 0,
-                                     (cinfo.clear_sms_os) ? 1 : 0,
-                                     (cinfo.clear_oem) ? 1 : 0,
+                                     (cmd_args.clear_bios_frb2) ? 1 : 0,
+                                     (cmd_args.clear_bios_post) ? 1 : 0,
+                                     (cmd_args.clear_os_load) ? 1 : 0,
+                                     (cmd_args.clear_sms_os) ? 1 : 0,
+                                     (cmd_args.clear_oem) ? 1 : 0,
                                      initial_countdown_seconds)) != 0)
     _ipmi_err_exit(IPMI_CMD_SET_WATCHDOG_TIMER, 
                    IPMI_NET_FN_APP_RQ,
                    ret, 
                    "Set Watchdog Timer Error");
 
-  if (cinfo.start_after_set || cinfo.reset_after_set)
+  if (cmd_args.start_after_set || cmd_args.reset_after_set)
     {
       if ((ret = _get_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                          BMC_WATCHDOG_RETRY_ATTEMPT,
@@ -1852,8 +1849,8 @@ _set_cmd(void)
                        ret, 
                        "Get Watchdog Timer Error");
       
-      if ((!timer_state && cinfo.start_after_set)
-          || (timer_state && cinfo.reset_after_set))
+      if ((!timer_state && cmd_args.start_after_set)
+          || (timer_state && cmd_args.reset_after_set))
         {
           if ((ret = _reset_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                                BMC_WATCHDOG_RETRY_ATTEMPT)) != 0)
@@ -2054,17 +2051,17 @@ _start_cmd(void)
     }
 
 
-  if (cinfo.gratuitous_arp || cinfo.arp_response)
+  if (cmd_args.gratuitous_arp || cmd_args.arp_response)
     {
       uint8_t gratuitous_arp, arp_response;
 
-      if (cinfo.gratuitous_arp)
-        gratuitous_arp = cinfo.gratuitous_arp_val;
+      if (cmd_args.gratuitous_arp)
+        gratuitous_arp = cmd_args.gratuitous_arp_val;
       else
         gratuitous_arp = IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND;
 
-      if (cinfo.arp_response)
-        arp_response = cinfo.arp_response_val;
+      if (cmd_args.arp_response)
+        arp_response = cmd_args.arp_response_val;
       else
         arp_response = IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND;
         
@@ -2184,7 +2181,7 @@ _daemon_init()
 
 
   /* Run in foreground if debugging */
-  if (!cinfo.debug)
+  if (!cmd_args.common.debug)
     {
       if ((pid = fork()) < 0) 
 	_err_exit("fork: %s", strerror(errno));
@@ -2277,22 +2274,22 @@ _daemon_setup(void)
   if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_RUNNING)
     _err_exit("watchdog timer must be stopped before running daemon");
 
-  timer_use = (cinfo.timer_use) ? cinfo.timer_use_val : timer_use;
-  log = (cinfo.log) ? cinfo.log_val : log;
-  timeout_action = (cinfo.timeout_action) ? 
-    cinfo.timeout_action_val : timeout_action;
-  pre_timeout_interrupt = (cinfo.pre_timeout_interrupt) ? 
-    cinfo.pre_timeout_interrupt_val : pre_timeout_interrupt;
-  pre_timeout_interval = (cinfo.pre_timeout_interval) ? 
-    cinfo.pre_timeout_interval_val : pre_timeout_interval;
-  initial_countdown_seconds = (cinfo.initial_countdown_seconds) ? 
-    cinfo.initial_countdown_seconds_val : initial_countdown_seconds;
+  timer_use = (cmd_args.timer_use) ? cmd_args.timer_use_val : timer_use;
+  log = (cmd_args.log) ? cmd_args.log_val : log;
+  timeout_action = (cmd_args.timeout_action) ? 
+    cmd_args.timeout_action_val : timeout_action;
+  pre_timeout_interrupt = (cmd_args.pre_timeout_interrupt) ? 
+    cmd_args.pre_timeout_interrupt_val : pre_timeout_interrupt;
+  pre_timeout_interval = (cmd_args.pre_timeout_interval) ? 
+    cmd_args.pre_timeout_interval_val : pre_timeout_interval;
+  initial_countdown_seconds = (cmd_args.initial_countdown_seconds) ? 
+    cmd_args.initial_countdown_seconds_val : initial_countdown_seconds;
   
   if ((pre_timeout_interrupt != IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
       && (pre_timeout_interval > initial_countdown_seconds))
     _err_exit("pre-timeout interval greater than initial countdown seconds");
-  if (cinfo.reset_period)
-    reset_period = cinfo.reset_period_val;
+  if (cmd_args.reset_period)
+    reset_period = cmd_args.reset_period_val;
   if (reset_period > initial_countdown_seconds)
     _err_exit("reset-period interval greater than initial countdown seconds");
 
@@ -2306,11 +2303,11 @@ _daemon_setup(void)
                                          timeout_action, 
                                          pre_timeout_interrupt,
                                          pre_timeout_interval, 
-                                         (cinfo.clear_bios_frb2) ? 1 : 0,
-                                         (cinfo.clear_bios_post) ? 1 : 0,
-                                         (cinfo.clear_os_load) ? 1 : 0,
-                                         (cinfo.clear_sms_os) ? 1 : 0,
-                                         (cinfo.clear_oem) ? 1 : 0,
+                                         (cmd_args.clear_bios_frb2) ? 1 : 0,
+                                         (cmd_args.clear_bios_post) ? 1 : 0,
+                                         (cmd_args.clear_os_load) ? 1 : 0,
+                                         (cmd_args.clear_sms_os) ? 1 : 0,
+                                         (cmd_args.clear_oem) ? 1 : 0,
                                          initial_countdown_seconds)) != 0)
         {
           _deamon_cmd_error_exit("Set Watchdog Timer", ret);
@@ -2331,17 +2328,17 @@ _daemon_setup(void)
       break;
     }
 
-  if (cinfo.gratuitous_arp || cinfo.arp_response)
+  if (cmd_args.gratuitous_arp || cmd_args.arp_response)
     {
       uint8_t gratuitous_arp, arp_response;
       
-      if (cinfo.gratuitous_arp)
-        gratuitous_arp = cinfo.gratuitous_arp_val;
+      if (cmd_args.gratuitous_arp)
+        gratuitous_arp = cmd_args.gratuitous_arp_val;
       else
         gratuitous_arp = IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND;
       
-      if (cinfo.arp_response)
-        arp_response = cinfo.gratuitous_arp_val;
+      if (cmd_args.arp_response)
+        arp_response = cmd_args.gratuitous_arp_val;
       else
         arp_response = IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND;
 
@@ -2404,8 +2401,8 @@ _daemon_cmd(void)
 
   _daemon_setup();
 
-  if (cinfo.reset_period)
-    reset_period = cinfo.reset_period_val;
+  if (cmd_args.reset_period)
+    reset_period = cmd_args.reset_period_val;
 
   if (signal(SIGTERM, _signal_handler) == SIG_ERR)
     _err_exit("signal: %s", strerror(errno));
@@ -2574,22 +2571,22 @@ main(int argc, char **argv)
    * Daemon must do all initialization in daemon_init() b/c
    * daemon_init() needs to close all formerly open file descriptors.
    */
-  if (!cinfo.daemon)
+  if (!cmd_args.daemon)
     _init_bmc_watchdog(LOG_CRON, 1);
 
-  if (cinfo.set)
+  if (cmd_args.set)
     _set_cmd();
-  else if (cinfo.get)
+  else if (cmd_args.get)
     _get_cmd();
-  else if (cinfo.reset)
+  else if (cmd_args.reset)
     _reset_cmd();
-  else if (cinfo.start)
+  else if (cmd_args.start)
     _start_cmd();
-  else if (cinfo.stop)
+  else if (cmd_args.stop)
     _stop_cmd();
-  else if (cinfo.clear)
+  else if (cmd_args.clear)
     _clear_cmd();
-  else if (cinfo.daemon)
+  else if (cmd_args.daemon)
     _daemon_cmd();
   else
     _err_exit("internal error, command not set");
