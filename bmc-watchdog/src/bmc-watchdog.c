@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.93 2008-05-28 20:37:21 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.94 2008-05-28 20:40:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1362,10 +1362,10 @@ _usage(void)
             "  -k         --reset-if-running           Don't set if timer is running, just reset.\n");
   if (cmd_args.start || cmd_args.daemon)
     fprintf(stderr, 
-            "  -G INT     --gratuitous-arp=INT         Suspend Gratuitous ARPs.\n"
+            "  -G INT     --gratuitous-arp=INT         Set Gratuitous ARPs Flag.\n"
             "             %d = Suspend Gratuitous ARPs\n"
             "             %d = Do Not Suspend Gratuitous ARPs\n"
-            "  -A INT     --arp-response=INT           Suspend ARP Responses.\n"
+            "  -A INT     --arp-response=INT           Set ARP Responses Flag.\n"
             "             %d = Suspend ARP Responses\n"
             "             %d = Do Not Suspend ARP Responses\n",
             IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND,
