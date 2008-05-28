@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.86 2008-05-22 17:09:33 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.87 2008-05-28 17:26:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -69,11 +69,6 @@
 #include "debug-common.h"
 #include "tool-cmdline-common.h"
 
-/* Driver Types */
-#define DRIVER_TYPE_KCS      0
-#define DRIVER_TYPE_SSIF     1
-#define DRIVER_TYPE_OPENIPMI 2
-
 /* Pre Timeout Interval is 1 byte */
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS  0
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MAX_SECS  255
@@ -128,7 +123,6 @@ struct cmdline_info
   int clear;
   int daemon;
   int driver_type;
-  int driver_type_val;
   int disable_auto_probe;
   int driver_address;
   uint32_t driver_address_val;
@@ -463,25 +457,25 @@ _init_ipmi(void)
   if (getuid() != 0)
     _err_exit("Permission denied, must be root.");
 
-  if (cinfo.driver_type)
+  if (cinfo.driver_type != IPMI_DEVICE_UNKNOWN)
     {
-      if (cinfo.driver_type_val == DRIVER_TYPE_KCS)
+      if (cinfo.driver_type == IPMI_DEVICE_KCS)
 	{
 	  if (_init_kcs_ipmi() < 0)
 	    _err_exit("Error initializing KCS IPMI driver");
-	  driver_type_used = DRIVER_TYPE_KCS;
+	  driver_type_used = IPMI_DEVICE_KCS;
 	}
-      if (cinfo.driver_type_val == DRIVER_TYPE_SSIF)
+      if (cinfo.driver_type == IPMI_DEVICE_SSIF)
 	{
 	  if (_init_ssif_ipmi() < 0)
 	    _err_exit("Error initializing SSIF IPMI driver");
-	  driver_type_used = DRIVER_TYPE_SSIF;
+	  driver_type_used = IPMI_DEVICE_SSIF;
 	}
-      if (cinfo.driver_type_val == DRIVER_TYPE_OPENIPMI)
+      if (cinfo.driver_type == IPMI_DEVICE_OPENIPMI)
 	{
 	  if (_init_openipmi_ipmi() < 0)
 	    _err_exit("Error initializing OPENIPMI IPMI driver");
-	  driver_type_used = DRIVER_TYPE_OPENIPMI;
+	  driver_type_used = IPMI_DEVICE_OPENIPMI;
 	}
     }
   else
@@ -505,7 +499,7 @@ _init_ipmi(void)
         {
           if (!_init_kcs_ipmi())
             {
-              driver_type_used = DRIVER_TYPE_KCS;
+              driver_type_used = IPMI_DEVICE_KCS;
               goto out;
             }
         }
@@ -514,7 +508,7 @@ _init_ipmi(void)
         {
           if (!_init_ssif_ipmi())
             {
-              driver_type_used = DRIVER_TYPE_SSIF;
+              driver_type_used = IPMI_DEVICE_SSIF;
               goto out;
             }
         }
@@ -526,13 +520,13 @@ _init_ipmi(void)
               if (_init_ssif_ipmi() < 0)
                 _err_exit("Error initializing IPMI driver");
               else
-                driver_type_used = DRIVER_TYPE_SSIF;
+                driver_type_used = IPMI_DEVICE_SSIF;
             }
           else
-            driver_type_used = DRIVER_TYPE_KCS;
+            driver_type_used = IPMI_DEVICE_KCS;
         }
       else
-        driver_type_used = DRIVER_TYPE_OPENIPMI;
+        driver_type_used = IPMI_DEVICE_OPENIPMI;
     }
 
  out:
@@ -655,7 +649,7 @@ _cmd(char *str,
 
   while (1)
     {
-      if (driver_type_used == DRIVER_TYPE_KCS)
+      if (driver_type_used == IPMI_DEVICE_KCS)
 	{
 	  if ((ret = ipmi_kcs_cmd (kcs_ctx,
 				   IPMI_BMC_IPMB_LUN_BMC, 
@@ -684,7 +678,7 @@ _cmd(char *str,
 		}
 	    }
 	}
-      else if (driver_type_used == DRIVER_TYPE_OPENIPMI)
+      else if (driver_type_used == IPMI_DEVICE_OPENIPMI)
 	{
 	  if ((ret = ipmi_openipmi_cmd (openipmi_ctx,
 					IPMI_BMC_IPMB_LUN_BMC, 
@@ -1372,6 +1366,7 @@ static void
 _cmdline_default(void)
 {
   memset(&cinfo, '\0', sizeof(cinfo));
+  cinfo.driver_type = IPMI_DEVICE_UNKNOWN;
   cinfo.logfile = BMC_WATCHDOG_LOGFILE;
 }
 
@@ -1467,11 +1462,11 @@ _cmdline_parse(int argc, char **argv)
 	  cinfo.driver_type++;
           tmp = parse_inband_driver_type(optarg);
           if (tmp == IPMI_DEVICE_KCS)
-	    cinfo.driver_type_val = DRIVER_TYPE_KCS;
+	    cinfo.driver_type = IPMI_DEVICE_KCS;
           else if (tmp == IPMI_DEVICE_SSIF)
-	    cinfo.driver_type_val = DRIVER_TYPE_SSIF;
+	    cinfo.driver_type = IPMI_DEVICE_SSIF;
           else if (tmp == IPMI_DEVICE_OPENIPMI)
-	    cinfo.driver_type_val = DRIVER_TYPE_OPENIPMI;
+	    cinfo.driver_type = IPMI_DEVICE_OPENIPMI;
           else
 	    _err_exit("invalid driver type");
 	  break;
