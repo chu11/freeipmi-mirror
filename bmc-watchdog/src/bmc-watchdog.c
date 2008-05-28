@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.90 2008-05-28 17:50:45 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.91 2008-05-28 18:04:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -91,6 +91,40 @@
 #define BMC_WATCHDOG_DRIVER_DEVICE_KEY       133
 #define BMC_WATCHDOG_REGISTER_SPACING_KEY    134
 #define BMC_WATCHDOG_DEBUG_KEY               135
+
+enum bmc_watchdog_argp_option_keys
+  {
+    SET_KEY = 's',
+    GET_KEY = 'g',
+    RESET_KEY = 'r',
+    START_KEY = 't',
+    STOP_KEY = 'y',
+    CLEAR_KEY = 'c',
+    DAEMON_KEY = 'd',
+    LOGFILE_KEY = 'f',
+    NO_LOGGING_KEY = 'n',
+    TIMER_USE_KEY = 'u',
+    STOP_TIMER_KEY = 'm',
+    LOG_KEY = 'l',
+    TIMEOUT_ACTION_KEY = 'a',
+    PRE_TIMEOUT_INTERRUPT_KEY = 'p',
+    PRE_TIMEOUT_INTERVAL_KEY = 'z',
+    CLEAR_BIOS_FRB2_KEY = 'F',
+    CLEAR_BIOS_POST_KEY = 'P',
+    CLEAR_OS_LOAD_KEY = 'L',
+    CLEAR_SMS_OS_KEY = 'S',
+    CLEAR_OEM_KEY = 'O',
+    INITIAL_COUNTDOWN_KEY = 'i',
+    START_AFTER_SET_KEY = 'w',
+    RESET_AFTER_SET_KEY = 'x',
+    START_IF_STOPPED_KEY = 'j',
+    RESET_IF_RUNNING_KEY = 'k',
+    GRATUITOUS_ARP_KEY = 'G',
+    ARP_RESPONSE_KEY = 'A',
+    RESET_PERIOD_KEY = 'e',
+    HELP_KEY = 'h',             /* legacy */
+    HELP2_KEY = 'H',             /* legacy */
+  };
 
 #define _FIID_OBJ_GET(__obj, __field, __val, __func) \
   do { \
@@ -1383,13 +1417,13 @@ _cmdline_parse(int argc, char **argv)
   struct option long_options[] = {
     {"help",                  0, NULL, '?'},
     {"version",               0, NULL, 'V'},
-    {"set",                   0, NULL, 's'},
-    {"get",                   0, NULL, 'g'},
-    {"reset",                 0, NULL, 'r'},
-    {"start",                 0, NULL, 't'},
-    {"stop",                  0, NULL, 'y'},
-    {"clear",                 0, NULL, 'c'},
-    {"daemon",                0, NULL, 'd'},
+    {"set",                   0, NULL, SET_KEY},
+    {"get",                   0, NULL, GET_KEY},
+    {"reset",                 0, NULL, RESET_KEY},
+    {"start",                 0, NULL, START_KEY},
+    {"stop",                  0, NULL, STOP_KEY},
+    {"clear",                 0, NULL, CLEAR_KEY},
+    {"daemon",                0, NULL, DAEMON_KEY},
     {"driver-type",           1, NULL, 'D'},
     {"no-probing",            0, NULL, BMC_WATCHDOG_NO_PROBING_KEY},
     {"disable-auto-probe",    0, NULL, BMC_WATCHDOG_DISABLE_AUTO_PROBE_KEY},
@@ -1398,27 +1432,27 @@ _cmdline_parse(int argc, char **argv)
     /* "reg-space" maintained for backwards compatability */
     {"reg-space",             1, NULL, BMC_WATCHDOG_REGISTER_SPACING_KEY},
     {"register-spacing",      1, NULL, BMC_WATCHDOG_REGISTER_SPACING_KEY},
-    {"logfile",               1, NULL, 'f'},
-    {"no-logging",            0, NULL, 'n'},
-    {"timer-use",             1, NULL, 'u'},
-    {"stop-timer",            1, NULL, 'm'},
-    {"log",                   1, NULL, 'l'},
-    {"timeout-action",        1, NULL, 'a'},
-    {"pre-timeout-interrupt", 1, NULL, 'p'},
-    {"pre-timeout-interval",  1, NULL, 'z'},
-    {"clear-bios-frb2",       0, NULL, 'F'},
-    {"clear-bios-post",       0, NULL, 'P'},
-    {"clear-os-load",         0, NULL, 'L'},
-    {"clear-sms-os",          0, NULL, 'S'},
-    {"clear-oem",             0, NULL, 'O'},
-    {"initial-countdown",     1, NULL, 'i'},
-    {"start-after-set",       0, NULL, 'w'},
-    {"reset-after-set",       0, NULL, 'x'},
-    {"start-if-stopped",      0, NULL, 'j'}, 
-    {"reset-if-running",      0, NULL, 'k'},
-    {"gratuitous-arp",        1, NULL, 'G'},
-    {"arp-response",          1, NULL, 'A'},
-    {"reset-period",          1, NULL, 'e'},
+    {"logfile",               1, NULL, LOGFILE_KEY},
+    {"no-logging",            0, NULL, NO_LOGGING_KEY},
+    {"timer-use",             1, NULL, TIMER_USE_KEY},
+    {"stop-timer",            1, NULL, STOP_TIMER_KEY},
+    {"log",                   1, NULL, LOG_KEY},
+    {"timeout-action",        1, NULL, TIMEOUT_ACTION_KEY},
+    {"pre-timeout-interrupt", 1, NULL, PRE_TIMEOUT_INTERRUPT_KEY},
+    {"pre-timeout-interval",  1, NULL, PRE_TIMEOUT_INTERVAL_KEY},
+    {"clear-bios-frb2",       0, NULL, CLEAR_BIOS_FRB2_KEY},
+    {"clear-bios-post",       0, NULL, CLEAR_BIOS_POST_KEY},
+    {"clear-os-load",         0, NULL, CLEAR_OS_LOAD_KEY},
+    {"clear-sms-os",          0, NULL, CLEAR_SMS_OS_KEY},
+    {"clear-oem",             0, NULL, CLEAR_OEM_KEY},
+    {"initial-countdown",     1, NULL, INITIAL_COUNTDOWN_KEY},
+    {"start-after-set",       0, NULL, START_AFTER_SET_KEY},
+    {"reset-after-set",       0, NULL, RESET_AFTER_SET_KEY},
+    {"start-if-stopped",      0, NULL, START_IF_STOPPED_KEY}, 
+    {"reset-if-running",      0, NULL, RESET_IF_RUNNING_KEY},
+    {"gratuitous-arp",        1, NULL, GRATUITOUS_ARP_KEY},
+    {"arp-response",          1, NULL, ARP_RESPONSE_KEY},
+    {"reset-period",          1, NULL, RESET_PERIOD_KEY},
     {"debug",                 0, NULL, BMC_WATCHDOG_DEBUG_KEY},
     {0, 0, 0, 0}
   };
@@ -1437,25 +1471,25 @@ _cmdline_parse(int argc, char **argv)
     {
       switch(c) 
         {
-        case 's':
+        case SET_KEY:
           cinfo.set++;
           break;
-        case 'g':
+        case GET_KEY:
           cinfo.get++;
           break;
-        case 'r':
+        case RESET_KEY:
           cinfo.reset++;
           break;
-        case 't':
+        case START_KEY:
           cinfo.start++;
           break;
-        case 'y':
+        case STOP_KEY:
           cinfo.stop++;
           break;
-        case 'c':
+        case CLEAR_KEY:
           cinfo.clear++;
           break;
-        case 'd':
+        case DAEMON_KEY:
           cinfo.daemon++;
           break;
 	case 'D':
@@ -1498,13 +1532,13 @@ _cmdline_parse(int argc, char **argv)
               exit(1);
             }
           break;
-        case 'f':
+        case LOGFILE_KEY:
           cinfo.logfile = optarg;
           break;
-        case 'n':
+        case NO_LOGGING_KEY:
           cinfo.no_logging++;
           break;
-        case 'u':
+        case TIMER_USE_KEY:
           cinfo.timer_use++;
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
@@ -1515,7 +1549,7 @@ _cmdline_parse(int argc, char **argv)
             }
           cinfo.timer_use_val = tmp;
           break;
-        case 'm':
+        case STOP_TIMER_KEY:
           cinfo.stop_timer++;
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
@@ -1526,7 +1560,7 @@ _cmdline_parse(int argc, char **argv)
             }
           cinfo.stop_timer_val = tmp;
           break;
-        case 'l':
+        case LOG_KEY:
           cinfo.log++;
           tmp = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
@@ -1537,7 +1571,7 @@ _cmdline_parse(int argc, char **argv)
             }
           break;
           cinfo.log_val = tmp;
-        case 'a':
+        case TIMEOUT_ACTION_KEY:
           cinfo.timeout_action++;
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
@@ -1548,7 +1582,7 @@ _cmdline_parse(int argc, char **argv)
             }
           cinfo.timeout_action_val = tmp;
           break;
-        case 'p':
+        case PRE_TIMEOUT_INTERRUPT_KEY:
           cinfo.pre_timeout_interrupt++;
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
@@ -1559,7 +1593,7 @@ _cmdline_parse(int argc, char **argv)
             }
           cinfo.pre_timeout_interrupt_val = tmp;
           break;
-        case 'z':
+        case PRE_TIMEOUT_INTERVAL_KEY:
           cinfo.pre_timeout_interval++;
           tmp = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
@@ -1575,22 +1609,22 @@ _cmdline_parse(int argc, char **argv)
             }
           cinfo.pre_timeout_interval_val = tmp;
           break;
-        case 'F':
+        case CLEAR_BIOS_FRB2_KEY:
           cinfo.clear_bios_frb2++;
           break;
-        case 'P':
+        case CLEAR_BIOS_POST_KEY:
           cinfo.clear_bios_post++;
           break;
-        case 'L':
+        case CLEAR_OS_LOAD_KEY:
           cinfo.clear_os_load++;
           break;
-        case 'S':
+        case CLEAR_SMS_OS_KEY:
           cinfo.clear_sms_os++;
           break;
-        case 'O':
+        case CLEAR_OEM_KEY:
           cinfo.clear_oem++;
           break;
-        case 'i':
+        case INITIAL_COUNTDOWN_KEY:
           cinfo.initial_countdown_seconds++;
           tmp = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
@@ -1606,18 +1640,18 @@ _cmdline_parse(int argc, char **argv)
             }
           cinfo.initial_countdown_seconds_val = tmp;
           break;
-        case 'w':
+        case START_AFTER_SET_KEY:
           cinfo.start_after_set++;
           break;
-        case 'x':
+        case RESET_AFTER_SET_KEY:
           cinfo.reset_after_set++;
           break;
-        case 'j':
+        case START_IF_STOPPED_KEY:
           cinfo.start_if_stopped++;
-        case 'k':
+        case RESET_IF_RUNNING_KEY:
           cinfo.reset_if_running++;
           break;
-        case 'G':
+        case GRATUITOUS_ARP_KEY:
           cinfo.gratuitous_arp++;
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
@@ -1628,7 +1662,7 @@ _cmdline_parse(int argc, char **argv)
             }
           cinfo.gratuitous_arp_val = tmp;
           break;
-        case 'A':
+        case ARP_RESPONSE_KEY:
           cinfo.arp_response++;
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
@@ -1639,7 +1673,7 @@ _cmdline_parse(int argc, char **argv)
             }
           cinfo.arp_response_val = tmp;
           break;
-        case 'e':
+        case RESET_PERIOD_KEY:
           cinfo.reset_period++;
           tmp = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
@@ -1658,11 +1692,9 @@ _cmdline_parse(int argc, char **argv)
         case BMC_WATCHDOG_DEBUG_KEY:
           cinfo.debug++;
           break;
+        case HELP_KEY:          /* legacy */
+        case HELP2_KEY:         /* legacy */
         case '?':
-          /* 'h' maintained for backwards compatability */
-        case 'h':
-          /* 'H" for consistency with other tools */
-        case 'H':
           help_opt++;
           break;
         /* 'v' maintained for backwards compatability */
