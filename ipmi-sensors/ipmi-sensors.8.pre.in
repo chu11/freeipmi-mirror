@@ -63,7 +63,7 @@ Show sensor data repository (SDR) information
 List sensor groups.
 .TP
 \fB\-g\fR GROUP-LIST, \fB\-\-groups\fR=\fIGROUP\-LIST\fR
-Specify groups to show sensor outps for.  Multiple groups can be
+Specify groups to show sensor outputs for.  Multiple groups can be
 separated by commas or spaces.
 .TP
 \fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"

@@ -70,6 +70,7 @@ config
 config-file
 -bmc-watchdog?
 - group/sensor list for ipmi-sensors and ipmimontironig?
+  - quiet readings
 - grop/sections for config tools?
 config file - support workarounds/etc. for heterogenous cluster?
 map hostname -> IP config

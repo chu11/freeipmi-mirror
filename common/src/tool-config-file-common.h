@@ -32,15 +32,28 @@
 #define CONFIG_FILE_SDR         0x04
 #define CONFIG_FILE_HOSTRANGE   0x08
 
-#define CONFIG_FILE_TOOL_NONE        0x00
-#define CONFIG_FILE_TOOL_IPMI_FRU    0x01
-#define CONFIG_FILE_TOOL_IPMICONSOLE 0x02
-#define CONFIG_FILE_TOOL_IPMIPOWER   0x04
+#define CONFIG_FILE_TOOL_NONE          0x00
+#define CONFIG_FILE_TOOL_IPMI_FRU      0x01
+#define CONFIG_FILE_TOOL_IPMI_SENSORS  0x02
+#define CONFIG_FILE_TOOL_IPMICONSOLE   0x04
+#define CONFIG_FILE_TOOL_IPMIPOWER     0x08
+
+#define CONFIG_FILE_SENSORS_MAX_GROUPS               256
+#define CONFIG_FILE_SENSORS_MAX_GROUPS_STRING_LENGTH 256
 
 struct config_file_data_ipmi_fru
 {
   int skip_checks;
   int skip_checks_count;
+};
+
+struct config_file_data_ipmi_sensors
+{
+  int quiet_readings;
+  int quiet_readings_count;
+  char groups[CONFIG_FILE_SENSORS_MAX_GROUPS][CONFIG_FILE_SENSORS_MAX_GROUPS_STRING_LENGTH+1];
+  unsigned int groups_length;
+  int groups_count;
 };
 
 struct config_file_data_ipmiconsole

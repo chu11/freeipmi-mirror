@@ -106,9 +106,9 @@ levels are supported: USER, OPERATOR, ADMIN.
 .TP
 \fBworkaround-flags\fR \fIWORKAROUNDS\fR
 Specify default workaround flags to use.  Multiple workarounds can be
-specified separated by commas or whitespace.  Please see tool manpages
-for details about workarounds.  The following workarounds are
-supported: idzero, forcepermsg, unexpectedauth, endianseq, authcap,
+specified separated by whitespace.  Please see tool manpages for
+details about workarounds.  The following workarounds are supported:
+idzero, forcepermsg, unexpectedauth, endianseq, authcap,
 solpayloadsize, solport, intel20, supermicro20, sun20.
 
 .SH "SDR OPTIONS"
@@ -147,6 +147,22 @@ They will be ignored by other tools.
 .TP
 \fBipmi-fru-skip-checks\fR \fIENABLE|DISABLE\fR
 Specify if checksum checks will be skiped by default.
+
+.SH "IPMI-SENSORS OPTIONS"
+The following options are specific to 
+.B ipmi-sensors(8).
+They will be ignored by other tools.
+.TP
+\fBipmi-sensors-quiet-readings\fR \fIENABLE|DISABLE\fR
+Specify if sensor reading values and thresholds should not be
+output by default.
+.TP
+\fBipmi-sensors-groups\fR \fIGROUP-LIST\fR
+Specify default groups to show sensor outputs for.  Multiple groups
+can be specified separated by whitespace.  Please run
+.B ipmi-sensors(8)
+\fI--list-groups\fR
+option to see possible groups.
 
 .SH "IPMICONSOLE OPTIONS"
 The following options are specific to 

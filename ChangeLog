@@ -1,5 +1,13 @@
 2008-05-27  Albert Chu <chu11@llnl.gov>
 
+        * ipmi-sensors/ipmi-sensors.8.pre.in: Fix typo.
+
+	* common/src/tool-config-file-common.h,
+	common/src/tool-config-file-common.c, ipmi-sensors/: Add config
+	file support for ipmi-sensors specific options.
+	
+2008-05-27  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/src/ipmi-fru-multirecord-area.c
 	(output_management_access_record): Fix output corner case.
 

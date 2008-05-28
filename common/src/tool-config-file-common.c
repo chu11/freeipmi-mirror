@@ -370,6 +370,52 @@ config_file_fanout(conffile_t cf,
   return 0;
 }
 
+#define CONFIG_FILE_SENSORS_MAX_GROUPS               256
+#define CONFIG_FILE_SENSORS_MAX_GROUPS_STRING_LENGTH 256
+
+int 
+config_file_ipmi_sensors_groups(conffile_t cf,
+                                struct conffile_data *data,
+                                char *optionname,
+                                int option_type,
+                                void *option_ptr,
+                                int option_data,
+                                void *app_ptr,
+                                int app_data)
+{
+  struct config_file_data_ipmi_sensors *config_file_data;
+  int i;
+
+  assert(option_ptr);
+
+  config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
+
+  if (data->stringlist_len > CONFIG_FILE_SENSORS_MAX_GROUPS)
+    {
+      fprintf(stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
+      exit(1);
+    }
+
+  for (i = 0; i < data->stringlist_len; i++)
+    {
+      if (strlen(data->stringlist[i]) > CONFIG_FILE_SENSORS_MAX_GROUPS_STRING_LENGTH)
+        {
+          fprintf(stderr, "Config File Error: invalid value '%s' for %s\n", 
+                  data->stringlist[i],
+                  optionname);
+          exit(1);
+        }
+
+      strncpy(config_file_data->groups[i], 
+              data->stringlist[i], 
+              CONFIG_FILE_SENSORS_MAX_GROUPS_STRING_LENGTH);
+
+      config_file_data->groups_length++;
+    }
+
+  return 0;
+}
+
 static int
 config_file_ipmiconsole_escape_char(conffile_t cf,
                                     struct conffile_data *data,
@@ -488,6 +534,9 @@ config_file_parse(const char *filename,
 
   struct config_file_data_ipmi_fru ipmi_fru_data;
   struct config_file_data_ipmi_fru *ipmi_fru_data_ptr;
+
+  struct config_file_data_ipmi_sensors ipmi_sensors_data;
+  struct config_file_data_ipmi_sensors *ipmi_sensors_data_ptr;
 
   struct config_file_data_ipmiconsole ipmiconsole_data;
   struct config_file_data_ipmiconsole *ipmiconsole_data_ptr;
@@ -814,6 +863,36 @@ config_file_parse(const char *filename,
         0,
         &(ipmi_fru_data.skip_checks_count),
         &(ipmi_fru_data.skip_checks),
+        0,
+      },
+    };
+
+  /* 
+   * Ipmi-sensors
+   */
+
+  struct conffile_option ipmi_sensors_options[] =
+    {
+      {
+        "ipmi-sensors-quiet-readings",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.quiet_readings_count),
+        &(ipmi_sensors_data.quiet_readings),
+        0,
+      },
+      {
+        "ipmi-sensors-groups",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmi_sensors_groups,
+        1,
+        0,
+        &(ipmi_sensors_data.groups_count),
+        &(ipmi_sensors_data),
         0,
       },
     };
@@ -1269,6 +1348,17 @@ config_file_parse(const char *filename,
 
   config_file_options_len += options_len;
 
+  options_len = sizeof(ipmi_sensors_options)/sizeof(struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS))
+    _ignore_options(ipmi_sensors_options, options_len);
+  
+  _copy_options(config_file_options,
+                config_file_options_len,
+                ipmi_sensors_options,
+                options_len);
+
+  config_file_options_len += options_len;
+
   options_len = sizeof(ipmiconsole_options)/sizeof(struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMICONSOLE))
     _ignore_options(ipmiconsole_options, options_len);
@@ -1352,6 +1442,13 @@ config_file_parse(const char *filename,
       memcpy(ipmi_fru_data_ptr, 
              &ipmi_fru_data,
              sizeof(struct config_file_data_ipmi_fru));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS)
+    {
+      ipmi_sensors_data_ptr = (struct config_file_data_ipmi_sensors *)data;
+      memcpy(ipmi_sensors_data_ptr, 
+             &ipmi_sensors_data,
+             sizeof(struct config_file_data_ipmi_sensors));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMICONSOLE)
     {
