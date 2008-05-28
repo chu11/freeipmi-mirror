@@ -1,10 +1,13 @@
 sbin_PROGRAMS = bmc-watchdog
 
-bmc_watchdog_SOURCES = bmc-watchdog.c
+bmc_watchdog_SOURCES = bmc-watchdog.c bmc-watchdog-argp.c
+
+noinst_HEADERS = bmc-watchdog.h bmc-watchdog-argp.h
 
 bmc_watchdog_LDADD = \
 	../../libfreeipmi/src/libfreeipmi.la \
 	../../common/src/libtoolcommon.la \
+	../../common/src/libmiscutils.la \
 	../../common/src/libdebugcommon.la
 
 bmc_watchdog_CPPFLAGS = \
@@ -16,6 +19,9 @@ bmc_watchdog_CPPFLAGS = \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libtoolcommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libmiscutils.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libdebugcommon.la: force-dependency-check

@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.96 2008-05-28 20:58:29 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.97 2008-05-28 21:09:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -65,16 +65,11 @@
 
 #include <freeipmi/freeipmi.h>
 
+#include "bmc-watchdog.h"
+#include "bmc-watchdog-argp.h"
+
+#include "tool-common.h"
 #include "debug-common.h"
-#include "tool-cmdline-common.h"
-
-/* Pre Timeout Interval is 1 byte */
-#define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS  0
-#define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MAX_SECS  255
-
-/* Countdown Seconds is 2 bytes of 100 millisecond chunks */
-#define IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS     0
-#define IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS     6553
 
 #define BMC_WATCHDOG_ERR_BUFLEN           1024
 #define BMC_WATCHDOG_STR_BUFLEN           1024
@@ -83,47 +78,6 @@
 
 #define BMC_WATCHDOG_RETRY_WAIT_TIME         1
 #define BMC_WATCHDOG_RETRY_ATTEMPT           5
-
-#define BMC_WATCHDOG_NO_PROBING_KEY          130 /* legacy */
-#define BMC_WATCHDOG_DISABLE_AUTO_PROBE_KEY  131
-#define BMC_WATCHDOG_DRIVER_ADDRESS_KEY      132
-#define BMC_WATCHDOG_DRIVER_DEVICE_KEY       133
-#define BMC_WATCHDOG_REGISTER_SPACING_KEY    134
-#define BMC_WATCHDOG_DEBUG_KEY               135
-
-enum bmc_watchdog_argp_option_keys
-  {
-    SET_KEY = 's',
-    GET_KEY = 'g',
-    RESET_KEY = 'r',
-    START_KEY = 't',
-    STOP_KEY = 'y',
-    CLEAR_KEY = 'c',
-    DAEMON_KEY = 'd',
-    LOGFILE_KEY = 'f',
-    NO_LOGGING_KEY = 'n',
-    TIMER_USE_KEY = 'u',
-    STOP_TIMER_KEY = 'm',
-    LOG_KEY = 'l',
-    TIMEOUT_ACTION_KEY = 'a',
-    PRE_TIMEOUT_INTERRUPT_KEY = 'p',
-    PRE_TIMEOUT_INTERVAL_KEY = 'z',
-    CLEAR_BIOS_FRB2_KEY = 'F',
-    CLEAR_BIOS_POST_KEY = 'P',
-    CLEAR_OS_LOAD_KEY = 'L',
-    CLEAR_SMS_OS_KEY = 'S',
-    CLEAR_OEM_KEY = 'O',
-    INITIAL_COUNTDOWN_KEY = 'i',
-    START_AFTER_SET_KEY = 'w',
-    RESET_AFTER_SET_KEY = 'x',
-    START_IF_STOPPED_KEY = 'j',
-    RESET_IF_RUNNING_KEY = 'k',
-    GRATUITOUS_ARP_KEY = 'G',
-    ARP_RESPONSE_KEY = 'A',
-    RESET_PERIOD_KEY = 'e',
-    HELP_KEY = 'h',             /* legacy */
-    HELP2_KEY = 'H',             /* legacy */
-  };
 
 #define _FIID_OBJ_GET(__obj, __field, __val, __func) \
   do { \
@@ -146,49 +100,6 @@ enum bmc_watchdog_argp_option_keys
      *(__val) = __temp; \
   } while (0) 
 
-struct bmc_watchdog_arguments
-{
-  struct common_cmd_args common;
-  int set;
-  int get;
-  int reset;
-  int start;
-  int stop;
-  int clear;
-  int daemon;
-  char *logfile;
-  int no_logging;
-  int timer_use;
-  uint8_t timer_use_val;
-  int stop_timer;
-  uint8_t stop_timer_val;
-  int log;
-  uint8_t log_val;
-  int timeout_action;
-  uint8_t timeout_action_val;
-  int pre_timeout_interrupt;
-  uint8_t pre_timeout_interrupt_val;
-  int pre_timeout_interval;
-  uint8_t pre_timeout_interval_val;
-  int clear_bios_frb2;
-  int clear_bios_post;
-  int clear_os_load;
-  int clear_sms_os;
-  int clear_oem;
-  int initial_countdown_seconds;
-  uint16_t initial_countdown_seconds_val;
-  int start_after_set;
-  int reset_after_set;
-  int start_if_stopped;
-  int reset_if_running;
-  int gratuitous_arp;
-  uint8_t gratuitous_arp_val;
-  int arp_response;
-  uint8_t arp_response_val;
-  int reset_period;
-  uint32_t reset_period_val;
-};
-
 struct bmc_watchdog_arguments cmd_args;
 
 /* program name */
@@ -198,8 +109,6 @@ ipmi_kcs_ctx_t kcs_ctx = NULL;
 ipmi_ssif_ctx_t ssif_ctx = NULL;
 ipmi_openipmi_ctx_t openipmi_ctx = NULL;
 int driver_type_used = -1;
-
-int cmdline_parsed = 0;
 
 int shutdown_flag = 1;
 
@@ -478,9 +387,9 @@ _init_ssif_ipmi(void)
 static int
 _init_ipmi(void)
 {
-  assert(cmdline_parsed && err_progname);
+  assert(err_progname);
 
-  if (getuid())
+  if (!ipmi_is_root())
     _err_exit("Permission denied, must be root.");
 
   if (cmd_args.common.driver_type != IPMI_DEVICE_UNKNOWN)
@@ -1176,14 +1085,10 @@ _get_channel_number(int retry_wait_time, int retry_attempt)
 
   errno = EINVAL;
  cleanup:
-  if (dev_id_cmd_rq)
-    fiid_obj_destroy(dev_id_cmd_rq);
-  if (dev_id_cmd_rs)
-    fiid_obj_destroy(dev_id_cmd_rs);
-  if (channel_info_cmd_rq)
-    fiid_obj_destroy(channel_info_cmd_rq);
-  if (channel_info_cmd_rs)
-    fiid_obj_destroy(channel_info_cmd_rs);
+  fiid_obj_destroy(dev_id_cmd_rq);
+  fiid_obj_destroy(dev_id_cmd_rs);
+  fiid_obj_destroy(channel_info_cmd_rq);
+  fiid_obj_destroy(channel_info_cmd_rs);
   return (rv);
 }
 
@@ -1238,519 +1143,6 @@ _suspend_bmc_arps_cmd(int retry_wait_time,
   fiid_obj_destroy(cmd_rq);
   fiid_obj_destroy(cmd_rs);
   return retval;
-}
-
-static char *
-_cmd_string(void)
-{
-  if (cmd_args.get)
-    return "--get";
-  else if (cmd_args.set)
-    return "--set";
-  else if (cmd_args.reset)
-    return "--reset";
-  else if (cmd_args.start)
-    return "--start";
-  else if (cmd_args.stop)
-    return "--stop";
-  else if (cmd_args.clear)
-    return "--clear";
-  else if (cmd_args.daemon)
-    return "--daemon";
-  else
-    return NULL;
-}
-
-static void 
-_usage(void) 
-{
-  char *cmdstr = _cmd_string();
-
-  if (!cmdstr)
-    {
-      fprintf(stderr,
-              "Usage: bmc-watchdog <COMMAND> [OPTIONS]... [COMMAND_OPTIONS]...\n\n");
-      fprintf(stderr,
-              "COMMANDS:\n"
-              "  -s         --set                            Set BMC Watchdog Config.\n"
-              "  -g         --get                            Get BMC Watchdog Config.\n"
-              "  -r         --reset                          Reset BMC Watchdog Timer.\n"
-              "  -t         --start                          Start BMC Watchdog Timer.\n"
-              "  -y         --stop                           Stop BMC Watchdog Timer.\n"
-              "  -c         --clear                          Clear BMC Watchdog Config.\n"
-              "  -d         --daemon                         Run in Daemon Mode.\n\n");
-    }
-  else
-    fprintf(stderr,
-            "Usage: bmc-watchdog %s [OPTIONS]... \n\n", cmdstr);
-
-  fprintf(stderr,
-	  "OPTIONS:\n"
-          "  -?         --help                               Output help menu.\n"
-          "  -V         --version                            Output version.\n"
-	  "  -D STRING  --driver-type=IPMIDRIVER             Specify IPMI driver type.\n"
-          "             --disable-auto-probe                 Do not probe driver for default settings.\n"
-	  "             --driver-address=DRIVER-ADDRESS      Specify driver address.\n"
-	  "             --driver-device=DEVICE               Specify driver device path.\n"
-          "             --register-spacing=REGISTER-SPACING  Specify driver register spacing.\n"
-          "  -f STRING  --logfile=FILE                       Specify an alternate logfile\n"
-          "  -n         --no-logging                         Turn off all logging\n");
-
-  fprintf(stderr,
-	  "             --debug                              Turn on debugging.\n");
-
-  fprintf(stderr, "\n");
-
-  if (cmd_args.set || cmd_args.start || cmd_args.daemon)
-    fprintf(stderr, 
-            "COMMAND SPECIFIC OPTIONS:\n");
-
-  if (cmd_args.set || cmd_args.daemon)
-    fprintf(stderr,
-            "  -u INT     --timer-use=INT              Set timer use.\n"
-            "             %d = BIOS FRB2\n"
-            "             %d = BIOS POST\n"
-            "             %d = OS_LOAD\n"
-            "             %d = SMS OS\n"
-            "             %d = OEM\n"
-            "  -m INT     --stop-timer=INT             Set Stop Timer Flag.\n"
-            "             %d = Stop Timer\n"
-            "             %d = Don't Stop timer\n"
-            "  -l INT     --log=INT                    Set Log Flag.\n"
-            "             %d = Enable Log\n"
-            "             %d = Disable Log\n"
-            "  -a INT     --timeout-action=INT         Set timeout action.\n"
-            "             %d = No action\n" 
-            "             %d = Hard Reset\n"
-            "             %d = Power Down\n"
-            "             %d = Power Cycle\n"
-            "  -p INT     --pre-timeout-interrupt=INT  Set pre-timeout interrupt.\n"
-            "             %d = None\n" 
-            "             %d = SMI\n" 
-            "             %d = NMI\n" 
-            "             %d = Messaging Interrupt\n"
-            "  -z SECS    --pre-timeout-interval=SECS  Set pre-timeout interval in seconds.\n"
-            "  -F         --clear-bios-frb2            Clear BIOS FRB2 Timer Use Flag.\n"
-            "  -P         --clear-bios-post            Clear BIOS POST Timer Use Flag.\n"
-            "  -L         --clear-os-load              Clear OS Load Timer Use Flag.\n"
-            "  -S         --clear-sms-os               Clear SMS/OS Timer Use Flag.\n"
-            "  -O         --clear-oem                  Clear OEM Timer Use Flag.\n"
-            "  -i SECS    --initial-countdown=SECS     Set initial countdown in seconds.\n",
-            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2,
-            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_POST,
-            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OS_LOAD, 
-            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_SMS_OS,
-            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OEM,
-            IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE, 
-            IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_DISABLE,
-            IPMI_BMC_WATCHDOG_TIMER_LOG_ENABLE, 
-            IPMI_BMC_WATCHDOG_TIMER_LOG_DISABLE,
-            IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_NO_ACTION,
-            IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_HARD_RESET,
-            IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_DOWN,
-            IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_CYCLE,
-            IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE,
-            IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_SMI,
-            IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NMI,
-            IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT);
-  if (cmd_args.set)
-    fprintf(stderr,
-            "  -w         --start-after-set            Start timer after set if timer is stopped.\n"
-            "  -x         --reset-after-set            Reset timer after set if timer is running.\n"
-            "  -j         --start-if-stopped           Don't set if timer is stopped, just start.\n"
-            "  -k         --reset-if-running           Don't set if timer is running, just reset.\n");
-  if (cmd_args.start || cmd_args.daemon)
-    fprintf(stderr, 
-            "  -G INT     --gratuitous-arp=INT         Set Gratuitous ARPs Flag.\n"
-            "             %d = Suspend Gratuitous ARPs\n"
-            "             %d = Do Not Suspend Gratuitous ARPs\n"
-            "  -A INT     --arp-response=INT           Set ARP Responses Flag.\n"
-            "             %d = Suspend ARP Responses\n"
-            "             %d = Do Not Suspend ARP Responses\n",
-            IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND,
-            IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND,
-            IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPEND,
-            IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND);
-  if (cmd_args.daemon)
-    fprintf(stderr, 
-            "  -e SECS    --reset-period=SECS          Specify time interval before resetting timer.\n");
-              
-  if (cmd_args.set || cmd_args.start || cmd_args.daemon)
-    fprintf(stderr, "\n");
-
-  exit(1);
-}
-
-static void
-_version(void)
-{
-  fprintf(stderr, "bmc-watchdog %s\n", VERSION);
-  exit(1);
-}
-
-static void
-_cmdline_default(void)
-{
-  memset(&cmd_args, '\0', sizeof(cmd_args));
-  cmd_args.common.driver_type = IPMI_DEVICE_UNKNOWN;
-  cmd_args.common.driver_address = 0;
-  cmd_args.common.driver_device = NULL;
-  cmd_args.logfile = BMC_WATCHDOG_LOGFILE;
-}
-
-static void
-_cmdline_parse(int argc, char **argv)
-{
-  int c, count;
-  char options[100];
-  char *ptr;
-  int help_opt = 0;
-  int tmp;
-
-#if HAVE_GETOPT_LONG
-  struct option long_options[] = {
-    {"help",                  0, NULL, '?'},
-    {"version",               0, NULL, 'V'},
-    {"set",                   0, NULL, SET_KEY},
-    {"get",                   0, NULL, GET_KEY},
-    {"reset",                 0, NULL, RESET_KEY},
-    {"start",                 0, NULL, START_KEY},
-    {"stop",                  0, NULL, STOP_KEY},
-    {"clear",                 0, NULL, CLEAR_KEY},
-    {"daemon",                0, NULL, DAEMON_KEY},
-    {"driver-type",           1, NULL, 'D'},
-    {"no-probing",            0, NULL, BMC_WATCHDOG_NO_PROBING_KEY},
-    {"disable-auto-probe",    0, NULL, BMC_WATCHDOG_DISABLE_AUTO_PROBE_KEY},
-    {"driver-address",        1, NULL, BMC_WATCHDOG_DRIVER_ADDRESS_KEY},
-    {"driver-device",         1, NULL, BMC_WATCHDOG_DRIVER_DEVICE_KEY},
-    /* "reg-space" maintained for backwards compatability */
-    {"reg-space",             1, NULL, BMC_WATCHDOG_REGISTER_SPACING_KEY},
-    {"register-spacing",      1, NULL, BMC_WATCHDOG_REGISTER_SPACING_KEY},
-    {"logfile",               1, NULL, LOGFILE_KEY},
-    {"no-logging",            0, NULL, NO_LOGGING_KEY},
-    {"timer-use",             1, NULL, TIMER_USE_KEY},
-    {"stop-timer",            1, NULL, STOP_TIMER_KEY},
-    {"log",                   1, NULL, LOG_KEY},
-    {"timeout-action",        1, NULL, TIMEOUT_ACTION_KEY},
-    {"pre-timeout-interrupt", 1, NULL, PRE_TIMEOUT_INTERRUPT_KEY},
-    {"pre-timeout-interval",  1, NULL, PRE_TIMEOUT_INTERVAL_KEY},
-    {"clear-bios-frb2",       0, NULL, CLEAR_BIOS_FRB2_KEY},
-    {"clear-bios-post",       0, NULL, CLEAR_BIOS_POST_KEY},
-    {"clear-os-load",         0, NULL, CLEAR_OS_LOAD_KEY},
-    {"clear-sms-os",          0, NULL, CLEAR_SMS_OS_KEY},
-    {"clear-oem",             0, NULL, CLEAR_OEM_KEY},
-    {"initial-countdown",     1, NULL, INITIAL_COUNTDOWN_KEY},
-    {"start-after-set",       0, NULL, START_AFTER_SET_KEY},
-    {"reset-after-set",       0, NULL, RESET_AFTER_SET_KEY},
-    {"start-if-stopped",      0, NULL, START_IF_STOPPED_KEY}, 
-    {"reset-if-running",      0, NULL, RESET_IF_RUNNING_KEY},
-    {"gratuitous-arp",        1, NULL, GRATUITOUS_ARP_KEY},
-    {"arp-response",          1, NULL, ARP_RESPONSE_KEY},
-    {"reset-period",          1, NULL, RESET_PERIOD_KEY},
-    {"debug",                 0, NULL, BMC_WATCHDOG_DEBUG_KEY},
-    {0, 0, 0, 0}
-  };
-#endif /* HAVE_GETOPT_LONG */
-
-  strcpy(options, "HVD:f:nsgRtycdu:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
-
-  /* turn off output messages printed by getopt_long */
-  opterr = 0;
-
-#if HAVE_GETOPT_LONG
-  while ((c = getopt_long(argc, argv, options, long_options, NULL)) != -1) 
-#else
-  while ((c = getopt(argc, argv, options)) != -1) 
-#endif
-    {
-      switch(c) 
-        {
-        case SET_KEY:
-          cmd_args.set++;
-          break;
-        case GET_KEY:
-          cmd_args.get++;
-          break;
-        case RESET_KEY:
-          cmd_args.reset++;
-          break;
-        case START_KEY:
-          cmd_args.start++;
-          break;
-        case STOP_KEY:
-          cmd_args.stop++;
-          break;
-        case CLEAR_KEY:
-          cmd_args.clear++;
-          break;
-        case DAEMON_KEY:
-          cmd_args.daemon++;
-          break;
-	case 'D':
-          tmp = parse_inband_driver_type(optarg);
-          if (tmp == IPMI_DEVICE_KCS)
-	    cmd_args.common.driver_type = IPMI_DEVICE_KCS;
-          else if (tmp == IPMI_DEVICE_SSIF)
-	    cmd_args.common.driver_type = IPMI_DEVICE_SSIF;
-          else if (tmp == IPMI_DEVICE_OPENIPMI)
-	    cmd_args.common.driver_type = IPMI_DEVICE_OPENIPMI;
-          else
-            {
-              fprintf(stderr, "invalid driver type\n");
-              exit(1);
-            }
-	  break;
-          /* BMC_WATCHDOG_NO_PROBING_KEY for backwards compatability */
-        case BMC_WATCHDOG_NO_PROBING_KEY:
-        case BMC_WATCHDOG_DISABLE_AUTO_PROBE_KEY:
-          cmd_args.common.disable_auto_probe++;
-          break;
-        case BMC_WATCHDOG_DRIVER_ADDRESS_KEY:
-          tmp = strtol(optarg, &ptr, 0);
-          if (ptr != (optarg + strlen(optarg))
-              || tmp <= 0)
-            {
-              fprintf (stderr, "invalid driver address\n");
-              exit(1);
-            }
-          cmd_args.common.driver_address = tmp;
-          break;
-	case BMC_WATCHDOG_DRIVER_DEVICE_KEY:
-	  cmd_args.common.driver_device = optarg;
-	  break;
-        case BMC_WATCHDOG_REGISTER_SPACING_KEY:
-          tmp = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg))
-              || tmp <= 0)
-            {
-              fprintf (stderr, "invalid register spacing\n");
-              exit(1);
-            }
-          cmd_args.common.register_spacing = 0;
-          break;
-        case LOGFILE_KEY:
-          cmd_args.logfile = optarg;
-          break;
-        case NO_LOGGING_KEY:
-          cmd_args.no_logging++;
-          break;
-        case TIMER_USE_KEY:
-          cmd_args.timer_use++;
-          tmp = strtol(optarg, &ptr, 10);
-          if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID(tmp))
-            {
-              fprintf (stderr, "invalid timer use\n");
-              exit(1);
-            }
-          cmd_args.timer_use_val = tmp;
-          break;
-        case STOP_TIMER_KEY:
-          cmd_args.stop_timer++;
-          tmp = strtol(optarg, &ptr, 10);
-          if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID(tmp))
-            {
-              fprintf (stderr, "invalid stop timer value\n");
-              exit(1);
-            }
-          cmd_args.stop_timer_val = tmp;
-          break;
-        case LOG_KEY:
-          cmd_args.log++;
-          tmp = (uint8_t)strtol(optarg, &ptr, 10);
-          if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID(tmp))
-            {
-              fprintf (stderr, "invalid log value\n");
-              exit(1);
-            }
-          break;
-          cmd_args.log_val = tmp;
-        case TIMEOUT_ACTION_KEY:
-          cmd_args.timeout_action++;
-          tmp = strtol(optarg, &ptr, 10);
-          if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID(tmp))
-            {
-              fprintf (stderr, "invalid timeout action value\n");
-              exit(1);
-            }
-          cmd_args.timeout_action_val = tmp;
-          break;
-        case PRE_TIMEOUT_INTERRUPT_KEY:
-          cmd_args.pre_timeout_interrupt++;
-          tmp = strtol(optarg, &ptr, 10);
-          if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID(tmp))
-            {
-              fprintf (stderr, "invalid pre timeout interrupt value\n");
-              exit(1);
-            }
-          cmd_args.pre_timeout_interrupt_val = tmp;
-          break;
-        case PRE_TIMEOUT_INTERVAL_KEY:
-          cmd_args.pre_timeout_interval++;
-          tmp = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            {
-              fprintf (stderr, "invalid pre timeout interval\n");
-              exit(1);
-            }
-          if (tmp < IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS
-              || tmp > IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MAX_SECS)
-            {
-              fprintf (stderr, "pre timeout interval out of range\n");
-              exit(1);
-            }
-          cmd_args.pre_timeout_interval_val = tmp;
-          break;
-        case CLEAR_BIOS_FRB2_KEY:
-          cmd_args.clear_bios_frb2++;
-          break;
-        case CLEAR_BIOS_POST_KEY:
-          cmd_args.clear_bios_post++;
-          break;
-        case CLEAR_OS_LOAD_KEY:
-          cmd_args.clear_os_load++;
-          break;
-        case CLEAR_SMS_OS_KEY:
-          cmd_args.clear_sms_os++;
-          break;
-        case CLEAR_OEM_KEY:
-          cmd_args.clear_oem++;
-          break;
-        case INITIAL_COUNTDOWN_KEY:
-          cmd_args.initial_countdown_seconds++;
-          tmp = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            {
-              fprintf (stderr, "invalid initial countdown\n");
-              exit(1);
-            }
-          if (tmp < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS 
-              || tmp > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
-            {
-              fprintf (stderr, "initial countdown out of range\n");
-              exit(1);
-            }
-          cmd_args.initial_countdown_seconds_val = tmp;
-          break;
-        case START_AFTER_SET_KEY:
-          cmd_args.start_after_set++;
-          break;
-        case RESET_AFTER_SET_KEY:
-          cmd_args.reset_after_set++;
-          break;
-        case START_IF_STOPPED_KEY:
-          cmd_args.start_if_stopped++;
-        case RESET_IF_RUNNING_KEY:
-          cmd_args.reset_if_running++;
-          break;
-        case GRATUITOUS_ARP_KEY:
-          cmd_args.gratuitous_arp++;
-          tmp = strtol(optarg, &ptr, 10);
-          if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(tmp))
-            {
-              fprintf (stderr, "invalid gratuitous arp value\n");
-              exit(1);
-            }
-          cmd_args.gratuitous_arp_val = tmp;
-          break;
-        case ARP_RESPONSE_KEY:
-          cmd_args.arp_response++;
-          tmp = strtol(optarg, &ptr, 10);
-          if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(tmp))
-            {
-              fprintf (stderr, "invalid arp response value\n");
-              exit(1);
-            }
-          cmd_args.arp_response_val = tmp;
-          break;
-        case RESET_PERIOD_KEY:
-          cmd_args.reset_period++;
-          tmp = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            {
-              fprintf (stderr, "invalid reset period\n");
-              exit(1);
-            }
-          if (tmp < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS
-              || tmp > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
-            {
-              fprintf (stderr, "reset period out of range\n");
-              exit(1);
-            }
-          cmd_args.reset_period_val = tmp;
-          break;
-        case BMC_WATCHDOG_DEBUG_KEY:
-          cmd_args.common.debug++;
-          break;
-        case HELP_KEY:          /* legacy */
-        case HELP2_KEY:         /* legacy */
-        case '?':
-          help_opt++;
-          break;
-        /* 'v' maintained for backwards compatability */
-        case 'v':
-        case 'V':
-          _version();
-          break;
-        default:
-          _err_exit("command line option error");
-          break;
-        }
-    }
-  
-  count = cmd_args.set + cmd_args.get + cmd_args.reset +  
-    cmd_args.start + cmd_args.stop + cmd_args.clear + cmd_args.daemon;
-  if (!count || help_opt)
-    _usage();
-  if (count > 1)
-    _err_exit("Only one command can be specified");
-
-  if (((cmd_args.get 
-        || cmd_args.reset
-        || cmd_args.start
-        || cmd_args.stop
-        || cmd_args.clear)
-       && (cmd_args.timer_use
-           || cmd_args.stop_timer
-           || cmd_args.log
-           || cmd_args.timeout_action 
-           || cmd_args.pre_timeout_interrupt
-           || cmd_args.pre_timeout_interval 
-           || cmd_args.clear_bios_frb2
-           || cmd_args.clear_bios_post 
-           || cmd_args.clear_sms_os 
-           || cmd_args.clear_oem 
-           || cmd_args.initial_countdown_seconds
-           || cmd_args.start_after_set
-           || cmd_args.reset_after_set
-           || cmd_args.reset_if_running 
-           || cmd_args.reset_period))
-      || (cmd_args.set
-          && cmd_args.reset_period)
-      || (cmd_args.daemon
-          && (cmd_args.stop_timer 
-              || cmd_args.start_after_set
-              || cmd_args.reset_after_set
-              || cmd_args.reset_if_running))
-      || ((cmd_args.set 
-           || cmd_args.get 
-           || cmd_args.reset
-           || cmd_args.stop
-           || cmd_args.clear)
-          && (cmd_args.gratuitous_arp 
-              || cmd_args.arp_response)))
-    {
-      char *cmdstr = _cmd_string();
-      _err_exit("Invalid command option specified for '%s' command", cmdstr);
-    }
-
-  cmdline_parsed++;
 }
 
 static void
@@ -2563,8 +1955,9 @@ main(int argc, char **argv)
 {
   _err_init(argv[0]);
 
-  _cmdline_default();
-  _cmdline_parse(argc, argv);
+  ipmi_disable_coredump();
+
+  bmc_watchdog_argp_parse (argc, argv, &cmd_args);
 
   /* Early initialization.  Assumes its a cronjob if its not a daemon.
    * Daemon must do all initialization in daemon_init() b/c
@@ -2594,6 +1987,8 @@ main(int argc, char **argv)
     ipmi_kcs_ctx_destroy(kcs_ctx);
   if (ssif_ctx)
     ipmi_ssif_ctx_destroy(ssif_ctx);
+  if (openipmi_ctx)
+    ipmi_openipmi_ctx_destroy(openipmi_ctx);
   close(logfile_fd);
   closelog();
   exit(0);

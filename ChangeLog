@@ -1,3 +1,17 @@
+2008-05-28  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/: Code cleanup.
+
+	* common/src/tool-cmdline-common.c,
+	common/src/tool-config-file-common.c: driver address input cannot
+	be 0.
+
+	* bmc-watchdog/src/bmc-watchdog.h,
+	bmc-watchdog/src/bmc-watchdog-argp.h,
+	bmc-watchdog/src/bmc-watchdog-argp.c: New files.
+
+	* bmc-watchdog/: Support config file.  Use argp.
+	
 2008-05-27  Albert Chu <chu11@llnl.gov>
 
         * ipmi-sensors/ipmi-sensors.8.pre.in: Fix typo.
