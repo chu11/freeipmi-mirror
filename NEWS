@@ -6,7 +6,8 @@ o Add new tool bmc-device.
 o Support FreeIPMI configuration file for most tools (bmc-config,
   bmc-info, bmc-device, ipmi-chassis, ipmi-fru, ipmi-oem, ipmi-raw,
   ipmi-sel, ipmi-sensors, ipmi-sensors-config, ipmiconsole,
-  ipmimonitoring, ipmipower, pef-config).
+  ipmimonitoring, ipmipower, pef-config).  See freeipmi.conf(5) for
+  more information.
 o Add additional "connection timeout" error message to tools to
   differentiate between no IPMI communication at all vs. failed session
   timeout in the middle of a command's operations.
@@ -21,7 +22,8 @@ o Global in most tools
     in FreeIPMI.  Backwards compatability maintained.
 o ipmi-chassis
   - Alter ipmi-chassis output to print "unknown" when field is not known.
-  - Alter some ipmi-chassis output to be more consistent to IPMI spec.
+  - Alter some ipmi-chassis output text to be more consistent to IPMI
+    spec.
 o ipmi-fru
   - Output FRU device names along with IDs in ipmi-fru.
   - Reduce excessive newline outputs in ipmi-fru.
@@ -30,14 +32,13 @@ o ipmi-fru
 o ipmi-sel
   - Change default privilege from user to operator in ipmi-sel.
 o ipmiconsole
-  - Support --session-timeout and --retransmission-timeout options in ipmiconsole.
-  - Removed -C short option in ipmiconsole for consistency to other
-    tools.
+  - Support --session-timeout and --retransmission-timeout options.
+  - Removed -C short option for consistency to other tools.
   - Removed hostname config file option.  Require users to always input
     atleast hostname.
   - Changed primary config file to /etc/freeipmi.conf.  Legacy config
-    file searched for an still supported.
-  - Prefixed config file options with 'ipmipower' for consistency to
+    file searched for and still supported.
+  - Prefixed config file options with 'ipmiconsole' for consistency to
     new global FreeIPMI config file.  Old options still supported.
 o ipmipower
   - Removed many early experimental features from ipmipower so
@@ -48,11 +49,11 @@ o ipmipower
   - Changed --config to --config-file in ipmipower for consistency to
     other tools.  Backwards compatability maintiained.
   - Replace --ipmi-version option with --driver-type.  Backwards
-    compatability maintiained.
+    compatability maintained.
   - Removed hostname config file option.  Require users to always input
     atleast hostname.
   - Changed primary config file to /etc/freeipmi.conf.  Legacy config
-    file searched for an still supported.
+    file searched for and still supported.
   - Prefixed config file options with 'ipmipower' for consistency to
     new global FreeIPMI config file.  Old options still supported.
 
