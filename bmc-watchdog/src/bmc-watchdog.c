@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.92 2008-05-28 18:20:12 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.93 2008-05-28 20:37:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1295,7 +1295,7 @@ _usage(void)
 	  "             --driver-device=DEVICE               Specify driver device path.\n"
           "             --register-spacing=REGISTER-SPACING  Specify driver register spacing.\n"
           "  -f STRING  --logfile=FILE                       Specify an alternate logfile\n"
-          "  -n         --no-logging                         Turn off all syslogging\n");
+          "  -n         --no-logging                         Turn off all logging\n");
 
   fprintf(stderr,
 	  "             --debug                              Turn on debugging.\n");
