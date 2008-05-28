@@ -44,13 +44,6 @@ all config file options
 
 general
 -------
-audit error message consistency in tool validate functions
-- exit(1) vs. exit(EXIT_FAILURE)
-audit error messages in command line parsing in all tools
-- ipmipower
-- bmc-watchdog
-- ipmiconsole
-- is consistent?
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
@@ -62,8 +55,6 @@ rework common cmdline & config lib, into one?
  - rename funcs
  - rename vars/structs
  - need to encapsulate better
-fix port variable naming in argp for all tools
-- audit common doc manpages, all still used?
 
 config
 ------
@@ -71,32 +62,6 @@ config-file
 -bmc-watchdog?
 - grop/sections for config tools?
 config file - support workarounds/etc. for heterogenous cluster?
-map hostname -> IP config
-map hostname -> IP config
-- 1) deal w/ tools
-  - core tools
-  - config tools
-  - ipmiconsole
-  - ipmipower
-  - rmcpping
-  - ipmiping
-- 2) -E options
-- 3) ipmidetect
-  - how deal w/ duplicate althost point to same ipmihost?
-- 4) invalid hostname errors
-- 5) alternate hostmap file option in tools
-- 6) output debug along w/ --debug
-- 7) prefix debug output correctly
-- in branch hostmap_branch?  Abandon?
-  - complicates functionality of freeipmi
-    - how support in rmcpping/ipmiping? w/ debug abilities?
-    - how support in ipmidetect?
-      - ipmidetect can only work off ipmi ip addresses.
-      - would it output mapped or ipmi ip addresses?
-    - support in some tools but not others?
-    - seems not worth effort - this is something upper level software
-      should handle.  Not something that should be handled in FreeIPMI.
-    - if revisit, put in freeipmi.conf?
 support hostranged commit/checkout in all config tools except bmc-config??
 - or special case IP/MAC part
 
