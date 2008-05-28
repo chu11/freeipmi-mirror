@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.89 2008-05-28 17:45:43 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.90 2008-05-28 17:50:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1467,7 +1467,10 @@ _cmdline_parse(int argc, char **argv)
           else if (tmp == IPMI_DEVICE_OPENIPMI)
 	    cinfo.driver_type = IPMI_DEVICE_OPENIPMI;
           else
-	    _err_exit("invalid driver type");
+            {
+              fprintf(stderr, "invalid driver type\n");
+              exit(1);
+            }
 	  break;
           /* BMC_WATCHDOG_NO_PROBING_KEY for backwards compatability */
         case BMC_WATCHDOG_NO_PROBING_KEY:
@@ -1478,7 +1481,10 @@ _cmdline_parse(int argc, char **argv)
           cinfo.driver_address = strtol(optarg, &ptr, 0);
           if (ptr != (optarg + strlen(optarg))
               || cinfo.driver_address <= 0)
-            _err_exit("invalid driver address");
+            {
+              fprintf (stderr, "invalid driver address\n");
+              exit(1);
+            }
           break;
 	case BMC_WATCHDOG_DRIVER_DEVICE_KEY:
 	  cinfo.driver_device = optarg;
@@ -1487,7 +1493,10 @@ _cmdline_parse(int argc, char **argv)
           cinfo.register_spacing = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg))
               || cinfo.register_spacing <= 0)
-            _err_exit("invalid register spacing");
+            {
+              fprintf (stderr, "invalid register spacing\n");
+              exit(1);
+            }
           break;
         case 'f':
           cinfo.logfile = optarg;
@@ -1500,7 +1509,10 @@ _cmdline_parse(int argc, char **argv)
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID(tmp))
-            _err_exit("invalid timer user");
+            {
+              fprintf (stderr, "invalid timer use\n");
+              exit(1);
+            }
           cinfo.timer_use_val = tmp;
           break;
         case 'm':
@@ -1508,7 +1520,10 @@ _cmdline_parse(int argc, char **argv)
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID(tmp))
-            _err_exit("invalid stop timer value");
+            {
+              fprintf (stderr, "invalid stop timer value\n");
+              exit(1);
+            }
           cinfo.stop_timer_val = tmp;
           break;
         case 'l':
@@ -1516,7 +1531,10 @@ _cmdline_parse(int argc, char **argv)
           tmp = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID(tmp))
-            _err_exit("invalid log value");
+            {
+              fprintf (stderr, "invalid log value\n");
+              exit(1);
+            }
           break;
           cinfo.log_val = tmp;
         case 'a':
@@ -1524,7 +1542,10 @@ _cmdline_parse(int argc, char **argv)
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID(tmp))
-            _err_exit("invalid timeout action value");
+            {
+              fprintf (stderr, "invalid timeout action value\n");
+              exit(1);
+            }
           cinfo.timeout_action_val = tmp;
           break;
         case 'p':
@@ -1532,17 +1553,26 @@ _cmdline_parse(int argc, char **argv)
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID(tmp))
-            _err_exit("invalid pre timeout interrupt value");
+            {
+              fprintf (stderr, "invalid pre timeout interrupt value\n");
+              exit(1);
+            }
           cinfo.pre_timeout_interrupt_val = tmp;
           break;
         case 'z':
           cinfo.pre_timeout_interval++;
           tmp = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
-            _err_exit("invalid pre timeout interval");
+            {
+              fprintf (stderr, "invalid pre timeout interval\n");
+              exit(1);
+            }
           if (tmp < IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS
               || tmp > IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MAX_SECS)
-            _err_exit("pre timeout interval out of range");
+            {
+              fprintf (stderr, "pre timeout interval out of range\n");
+              exit(1);
+            }
           cinfo.pre_timeout_interval_val = tmp;
           break;
         case 'F':
@@ -1564,10 +1594,16 @@ _cmdline_parse(int argc, char **argv)
           cinfo.initial_countdown_seconds++;
           tmp = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
-            _err_exit("invalid initial countdown");
+            {
+              fprintf (stderr, "invalid initial countdown\n");
+              exit(1);
+            }
           if (tmp < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS 
               || tmp > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
-            _err_exit("initial countdown out of range");
+            {
+              fprintf (stderr, "initial countdown out of range\n");
+              exit(1);
+            }
           cinfo.initial_countdown_seconds_val = tmp;
           break;
         case 'w':
@@ -1586,7 +1622,10 @@ _cmdline_parse(int argc, char **argv)
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(tmp))
-            _err_exit("invalid gratuitous arp");
+            {
+              fprintf (stderr, "invalid gratuitous arp value\n");
+              exit(1);
+            }
           cinfo.gratuitous_arp_val = tmp;
           break;
         case 'A':
@@ -1594,17 +1633,26 @@ _cmdline_parse(int argc, char **argv)
           tmp = strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(tmp))
-            _err_exit("invalid arp response");
+            {
+              fprintf (stderr, "invalid arp response value\n");
+              exit(1);
+            }
           cinfo.arp_response_val = tmp;
           break;
         case 'e':
           cinfo.reset_period++;
           tmp = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
-            _err_exit("invalid reset period");
+            {
+              fprintf (stderr, "invalid reset period\n");
+              exit(1);
+            }
           if (tmp < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS
               || tmp > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
-            _err_exit("reset period out of range");
+            {
+              fprintf (stderr, "reset period out of range\n");
+              exit(1);
+            }
           cinfo.reset_period_val = tmp;
           break;
         case BMC_WATCHDOG_DEBUG_KEY:
