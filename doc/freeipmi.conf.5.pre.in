@@ -160,7 +160,7 @@ output by default.
 \fBipmi-sensors-groups\fR \fIGROUP-LIST\fR
 Specify default groups to show sensor outputs for.  Multiple groups
 can be specified separated by whitespace.  Please run
-.B ipmi-sensors(8)
+.B ipmi-sensors(8)'s
 \fI--list-groups\fR
 option to see possible groups.
 
@@ -177,6 +177,22 @@ Specify if in use SOL sessions should not be stolen by default.
 .TP
 \fBipmiconsole-lock-memory\fR \fIENABLE|DISABLE\fR
 Specify if memory should be locked by default.
+
+.SH "IPMIMONITORING OPTIONS"
+The following options are specific to 
+.B ipmimonitoring(8).
+They will be ignored by other tools.
+.TP
+\fBipmimonitoring-quiet-readings\fR \fIENABLE|DISABLE\fR
+Specify if sensor reading values and thresholds should not be
+output by default.
+.TP
+\fBipmimonitoring-groups\fR \fIGROUP-LIST\fR
+Specify default groups to show sensor outputs for.  Multiple groups
+can be specified separated by whitespace.  Please run
+.B ipmimonitoring(8)'s
+\fI--list-groups\fR
+option to see possible groups.
 
 .SH "IPMIPOWER OPTIONS"
 The following options are specific to

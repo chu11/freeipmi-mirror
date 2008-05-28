@@ -370,9 +370,6 @@ config_file_fanout(conffile_t cf,
   return 0;
 }
 
-#define CONFIG_FILE_SENSORS_MAX_GROUPS               256
-#define CONFIG_FILE_SENSORS_MAX_GROUPS_STRING_LENGTH 256
-
 int 
 config_file_ipmi_sensors_groups(conffile_t cf,
                                 struct conffile_data *data,
@@ -390,7 +387,7 @@ config_file_ipmi_sensors_groups(conffile_t cf,
 
   config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
 
-  if (data->stringlist_len > CONFIG_FILE_SENSORS_MAX_GROUPS)
+  if (data->stringlist_len > CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS)
     {
       fprintf(stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
       exit(1);
@@ -398,7 +395,7 @@ config_file_ipmi_sensors_groups(conffile_t cf,
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      if (strlen(data->stringlist[i]) > CONFIG_FILE_SENSORS_MAX_GROUPS_STRING_LENGTH)
+      if (strlen(data->stringlist[i]) > CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH)
         {
           fprintf(stderr, "Config File Error: invalid value '%s' for %s\n", 
                   data->stringlist[i],
@@ -408,7 +405,7 @@ config_file_ipmi_sensors_groups(conffile_t cf,
 
       strncpy(config_file_data->groups[i], 
               data->stringlist[i], 
-              CONFIG_FILE_SENSORS_MAX_GROUPS_STRING_LENGTH);
+              CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
 
       config_file_data->groups_length++;
     }
@@ -433,6 +430,49 @@ config_file_ipmiconsole_escape_char(conffile_t cf,
   chr = (char *)option_ptr;
 
   *chr = data->string[0];
+  return 0;
+}
+
+int 
+config_file_ipmimonitoring_groups(conffile_t cf,
+                                  struct conffile_data *data,
+                                  char *optionname,
+                                  int option_type,
+                                  void *option_ptr,
+                                  int option_data,
+                                  void *app_ptr,
+                                  int app_data)
+{
+  struct config_file_data_ipmimonitoring *config_file_data;
+  int i;
+
+  assert(option_ptr);
+
+  config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
+
+  if (data->stringlist_len > CONFIG_FILE_IPMIMONITORING_MAX_GROUPS)
+    {
+      fprintf(stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
+      exit(1);
+    }
+
+  for (i = 0; i < data->stringlist_len; i++)
+    {
+      if (strlen(data->stringlist[i]) > CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH)
+        {
+          fprintf(stderr, "Config File Error: invalid value '%s' for %s\n", 
+                  data->stringlist[i],
+                  optionname);
+          exit(1);
+        }
+
+      strncpy(config_file_data->groups[i], 
+              data->stringlist[i], 
+              CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
+
+      config_file_data->groups_length++;
+    }
+
   return 0;
 }
 
@@ -540,6 +580,9 @@ config_file_parse(const char *filename,
 
   struct config_file_data_ipmiconsole ipmiconsole_data;
   struct config_file_data_ipmiconsole *ipmiconsole_data_ptr;
+
+  struct config_file_data_ipmimonitoring ipmimonitoring_data;
+  struct config_file_data_ipmimonitoring *ipmimonitoring_data_ptr;
 
   struct config_file_data_ipmipower ipmipower_data;
   struct config_file_data_ipmipower *ipmipower_data_ptr;
@@ -980,6 +1023,36 @@ config_file_parse(const char *filename,
     };
 
   /* 
+   * ipmimonitoring
+   */
+
+  struct conffile_option ipmimonitoring_options[] =
+    {
+      {
+        "ipmimonitoring-quiet-readings",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmimonitoring_data.quiet_readings_count),
+        &(ipmimonitoring_data.quiet_readings),
+        0,
+      },
+      {
+        "ipmimonitoring-groups",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmimonitoring_groups,
+        1,
+        0,
+        &(ipmimonitoring_data.groups_count),
+        &(ipmimonitoring_data),
+        0,
+      },
+    };
+
+  /* 
    * Ipmipower
    */
 
@@ -1370,6 +1443,17 @@ config_file_parse(const char *filename,
 
   config_file_options_len += options_len;
 
+  options_len = sizeof(ipmimonitoring_options)/sizeof(struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_IPMIMONITORING))
+    _ignore_options(ipmimonitoring_options, options_len);
+  
+  _copy_options(config_file_options,
+                config_file_options_len,
+                ipmimonitoring_options,
+                options_len);
+
+  config_file_options_len += options_len;
+
   options_len = sizeof(ipmipower_options)/sizeof(struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMIPOWER))
     _ignore_options(ipmipower_options, options_len);
@@ -1456,6 +1540,13 @@ config_file_parse(const char *filename,
       memcpy(ipmiconsole_data_ptr, 
              &ipmiconsole_data,
              sizeof(struct config_file_data_ipmiconsole));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMIMONITORING)
+    {
+      ipmimonitoring_data_ptr = (struct config_file_data_ipmimonitoring *)data;
+      memcpy(ipmimonitoring_data_ptr, 
+             &ipmimonitoring_data,
+             sizeof(struct config_file_data_ipmimonitoring));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMIPOWER)
     {

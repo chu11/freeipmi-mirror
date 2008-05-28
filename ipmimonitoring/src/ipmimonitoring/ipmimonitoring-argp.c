@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.14 2008-05-27 22:46:13 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.15 2008-05-28 05:00:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -179,17 +179,38 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 static void
 _ipmimonitoring_config_file_parse(struct ipmimonitoring_arguments *cmd_args)
 {
+  struct config_file_data_ipmimonitoring config_file_data;
+
+  memset(&config_file_data,
+         '\0',
+         sizeof(struct config_file_data_ipmimonitoring));
+
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
                          &(cmd_args->sdr),
                          &(cmd_args->hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
-                         0,
-                         NULL) < 0)
+                         CONFIG_FILE_TOOL_IPMIMONITORING,
+                         &config_file_data) < 0)
     {
       fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
       exit(1);
+    }
+
+  if (config_file_data.quiet_readings_count)
+    cmd_args->quiet_readings = config_file_data.quiet_readings;
+  if (config_file_data.groups_count)
+    {
+      int i;
+      
+      assert(IPMIMONITORING_MAX_GROUPS == CONFIG_FILE_IPMIMONITORING_MAX_GROUPS);
+      assert(IPMIMONITORING_MAX_GROUPS_STRING_LENGTH == CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
+      
+      for (i = 0; i < config_file_data.groups_length; i++)
+        strncpy(cmd_args->groups[i],
+                config_file_data.groups[i],
+                IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
     }
 }
 

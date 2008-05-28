@@ -5,6 +5,12 @@
 	* common/src/tool-config-file-common.h,
 	common/src/tool-config-file-common.c, ipmi-sensors/: Add config
 	file support for ipmi-sensors specific options.
+
+	* common/src/tool-config-file-common.h,
+	common/src/tool-config-file-common.c, ipmimonitoring/: Add config
+	file support for ipmimonitoring specific options.
+
+	* doc/freeipmi.conf.5.pre.in: Update appropriately.
 	
 2008-05-27  Albert Chu <chu11@llnl.gov>
 
