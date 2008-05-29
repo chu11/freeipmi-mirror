@@ -11,6 +11,10 @@
 	bmc-watchdog/src/bmc-watchdog-argp.c: New files.
 
 	* bmc-watchdog/: Support config file.  Use argp.
+
+	* bmc-watchdog/, common/src/tool-cmdline-common.c,
+	common/src/tool-config-file-common.c: Support bmc-watchdog
+	specific options.
 	
 2008-05-27  Albert Chu <chu11@llnl.gov>
 

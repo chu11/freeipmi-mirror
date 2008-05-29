@@ -33,17 +33,26 @@
 #define CONFIG_FILE_HOSTRANGE   0x08
 
 #define CONFIG_FILE_TOOL_NONE           0x00
-#define CONFIG_FILE_TOOL_IPMI_FRU       0x01
-#define CONFIG_FILE_TOOL_IPMI_SENSORS   0x02
-#define CONFIG_FILE_TOOL_IPMICONSOLE    0x04
-#define CONFIG_FILE_TOOL_IPMIMONITORING 0x08
-#define CONFIG_FILE_TOOL_IPMIPOWER      0x10
+#define CONFIG_FILE_TOOL_BMC_WATCHDOG   0x01
+#define CONFIG_FILE_TOOL_IPMI_FRU       0x02
+#define CONFIG_FILE_TOOL_IPMI_SENSORS   0x04
+#define CONFIG_FILE_TOOL_IPMICONSOLE    0x08
+#define CONFIG_FILE_TOOL_IPMIMONITORING 0x10
+#define CONFIG_FILE_TOOL_IPMIPOWER      0x20
 
 #define CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS               256
 #define CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH 256
 
 #define CONFIG_FILE_IPMIMONITORING_MAX_GROUPS               256
 #define CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH 256
+
+struct config_file_data_bmc_watchdog
+{
+  char *logfile;
+  int logfile_count;
+  int no_logging;
+  int no_logging_count;
+};
 
 struct config_file_data_ipmi_fru
 {

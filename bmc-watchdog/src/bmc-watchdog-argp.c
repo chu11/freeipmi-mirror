@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.2 2008-05-28 21:57:46 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.3 2008-05-29 05:17:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -313,7 +313,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->daemon++;
       break;
     case LOGFILE_KEY:
-      cmd_args->logfile = arg;
+      if (cmd_args->logfile)
+        free (cmd_args->logfile);
+      if (!(cmd_args->logfile = strdup (arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
       break;
     case NO_LOGGING_KEY:
       cmd_args->no_logging++;
@@ -492,18 +498,30 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 static void
 _bmc_watchdog_config_file_parse(struct bmc_watchdog_arguments *cmd_args)
 {
+  struct config_file_data_bmc_watchdog config_file_data;
+
+  memset(&config_file_data,
+         '\0',
+         sizeof(struct config_file_data_bmc_watchdog));
+
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
                          NULL,
                          NULL,
                          CONFIG_FILE_INBAND,
-                         0,
-                         NULL) < 0)
+                         CONFIG_FILE_TOOL_BMC_WATCHDOG,
+                         &config_file_data) < 0)
+
     {
       fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
       exit(1);
     }
+
+  if (config_file_data.logfile_count)
+    cmd_args->logfile = config_file_data.logfile;
+  if (config_file_data.no_logging_count)
+    cmd_args->no_logging = config_file_data.no_logging;
 }
 
 void

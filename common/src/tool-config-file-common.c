@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
+#endif /* STDC_HEADERS */
 #include <argp.h>
 #include <errno.h>
 #include <assert.h>
@@ -572,6 +572,9 @@ config_file_parse(const char *filename,
   int buffer_output_count = 0, consolidate_output_count = 0, 
     fanout_count = 0, eliminate_count = 0, always_prefix_count = 0;
 
+  struct config_file_data_bmc_watchdog bmc_watchdog_data;
+  struct config_file_data_bmc_watchdog *bmc_watchdog_data_ptr;
+
   struct config_file_data_ipmi_fru ipmi_fru_data;
   struct config_file_data_ipmi_fru *ipmi_fru_data_ptr;
 
@@ -890,6 +893,37 @@ config_file_parse(const char *filename,
   /* 
    * Tool Config Options
    */
+
+  /* 
+   * Bmc-watchdog
+   */
+
+  struct conffile_option bmc_watchdog_options[] =
+    {
+      {
+        "bmc-watchdog-logfile", 
+        CONFFILE_OPTION_STRING, 
+        -1,
+        config_file_string, 
+        1, 
+        0,
+        &(bmc_watchdog_data.logfile_count),
+        &(bmc_watchdog_data.logfile),
+        0
+      },
+      {
+        "bmc-watchdog-no-logging",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(bmc_watchdog_data.no_logging_count),
+        &(bmc_watchdog_data.no_logging),
+        0,
+      },
+    };
+
 
   /* 
    * Ipmi-fru
@@ -1410,6 +1444,17 @@ config_file_parse(const char *filename,
    * tool flags 
    */
 
+  options_len = sizeof(bmc_watchdog_options)/sizeof(struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_BMC_WATCHDOG))
+    _ignore_options(bmc_watchdog_options, options_len);
+  
+  _copy_options(config_file_options,
+                config_file_options_len,
+                bmc_watchdog_options,
+                options_len);
+
+  config_file_options_len += options_len;
+
   options_len = sizeof(ipmi_fru_options)/sizeof(struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_FRU))
     _ignore_options(ipmi_fru_options, options_len);
@@ -1520,7 +1565,14 @@ config_file_parse(const char *filename,
 
   /* copy file data over to tool */
   
-  if (tool_support & CONFIG_FILE_TOOL_IPMI_FRU)
+  if (tool_support & CONFIG_FILE_TOOL_BMC_WATCHDOG)
+    {
+      bmc_watchdog_data_ptr = (struct config_file_data_bmc_watchdog *)data;
+      memcpy(bmc_watchdog_data_ptr, 
+             &bmc_watchdog_data,
+             sizeof(struct config_file_data_bmc_watchdog));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_FRU)
     {
       ipmi_fru_data_ptr = (struct config_file_data_ipmi_fru *)data;
       memcpy(ipmi_fru_data_ptr, 
