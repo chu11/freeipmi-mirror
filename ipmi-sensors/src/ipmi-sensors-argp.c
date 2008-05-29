@@ -199,7 +199,7 @@ _ipmi_sensors_config_file_parse(struct ipmi_sensors_arguments *cmd_args)
 
   if (config_file_data.quiet_readings_count)
     cmd_args->quiet_readings = config_file_data.quiet_readings;
-  if (config_file_data.groups_count)
+  if (config_file_data.groups_count && config_file_data.groups_length)
     {
       int i;
       
@@ -210,6 +210,8 @@ _ipmi_sensors_config_file_parse(struct ipmi_sensors_arguments *cmd_args)
         strncpy(cmd_args->groups[i],
                 config_file_data.groups[i],
                 IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
+      cmd_args->groups_wanted++;
+      cmd_args->groups_length = config_file_data.groups_length;
     }
 
 }

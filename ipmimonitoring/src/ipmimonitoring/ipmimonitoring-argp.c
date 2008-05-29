@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.15 2008-05-28 05:00:30 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.16 2008-05-29 17:00:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -200,7 +200,7 @@ _ipmimonitoring_config_file_parse(struct ipmimonitoring_arguments *cmd_args)
 
   if (config_file_data.quiet_readings_count)
     cmd_args->quiet_readings = config_file_data.quiet_readings;
-  if (config_file_data.groups_count)
+  if (config_file_data.groups_count && config_file_data.groups_length)
     {
       int i;
       
@@ -211,6 +211,8 @@ _ipmimonitoring_config_file_parse(struct ipmimonitoring_arguments *cmd_args)
         strncpy(cmd_args->groups[i],
                 config_file_data.groups[i],
                 IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
+      cmd_args->groups_wanted++;
+      cmd_args->groups_length = config_file_data.groups_length;
     }
 }
 

@@ -2,6 +2,8 @@
 
 	* libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_inband): Fix
 	driver device corner case.
+
+	* ipmi-sensors/, ipmimonitoring/: Fix config file groups.
 	
 2008-05-29  Albert Chu <chu11@llnl.gov>
 
