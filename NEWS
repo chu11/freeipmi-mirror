@@ -4,10 +4,10 @@ For Users - New Features
 ------------------------
 o Add new tool bmc-device.
 o Support FreeIPMI configuration file for most tools (bmc-config,
-  bmc-info, bmc-device, ipmi-chassis, ipmi-fru, ipmi-oem, ipmi-raw,
-  ipmi-sel, ipmi-sensors, ipmi-sensors-config, ipmiconsole,
-  ipmimonitoring, ipmipower, pef-config).  See freeipmi.conf(5) for
-  more information.
+  bmc-info, bmc-device, bmc-watchdog, ipmi-chassis, ipmi-fru,
+  ipmi-oem, ipmi-raw, ipmi-sel, ipmi-sensors, ipmi-sensors-config,
+  ipmiconsole, ipmimonitoring, ipmipower, pef-config).  See
+  freeipmi.conf(5) for more information.
 o Add additional "connection timeout" error message to tools to
   differentiate between no IPMI communication at all vs. failed session
   timeout in the middle of a command's operations.
