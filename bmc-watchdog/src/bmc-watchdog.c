@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.98 2008-05-29 05:20:15 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.99 2008-05-29 05:50:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -478,17 +478,17 @@ _init_bmc_watchdog(int facility, int err_to_stderr)
 
   if (!cmd_args.no_logging)
     {
-      if ((logfile_fd = open((cmd_args.logfile) ? cmd_args.logfile : BMC_WATCHDOG_LOGFILE,
+      if ((logfile_fd = open((cmd_args.logfile) ? cmd_args.logfile : BMC_WATCHDOG_LOGFILE_DEFAULT,
                              O_WRONLY | O_CREAT | O_APPEND,
                              S_IRUSR | S_IWUSR)) < 0)
         {
           if (err_to_stderr)
             _err_exit("Error opening logfile '%s': %s",
-                      (cmd_args.logfile) ? cmd_args.logfile : BMC_WATCHDOG_LOGFILE,
+                      (cmd_args.logfile) ? cmd_args.logfile : BMC_WATCHDOG_LOGFILE_DEFAULT,
                       strerror(errno));
           else
             _syslog(LOG_ERR, "Error opening logfile '%s': %s",
-                    (cmd_args.logfile) ? cmd_args.logfile : BMC_WATCHDOG_LOGFILE,
+                    (cmd_args.logfile) ? cmd_args.logfile : BMC_WATCHDOG_LOGFILE_DEFAULT,
                     
                     strerror(errno));
           exit(1);

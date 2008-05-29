@@ -12,8 +12,7 @@ bmc_watchdog_LDADD = \
 
 bmc_watchdog_CPPFLAGS = \
 	-I$(srcdir)/../../libfreeipmi/include \
-	-I$(srcdir)/../../common/src \
-	-DBMC_WATCHDOG_LOGFILE=\"$(localstatedir)/log/freeipmi/bmc-watchdog.log\"
+	-I$(srcdir)/../../common/src
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
