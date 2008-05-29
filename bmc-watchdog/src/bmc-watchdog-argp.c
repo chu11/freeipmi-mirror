@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.3 2008-05-29 05:17:59 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.4 2008-05-29 05:20:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -597,7 +597,7 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
   cmd_args->clear = 0;
   cmd_args->daemon = 0;
   /* defined by Makefile */
-  cmd_args->logfile = BMC_WATCHDOG_LOGFILE;
+  cmd_args->logfile = NULL;
   cmd_args->no_logging = 0;
   cmd_args->timer_use = 0;
   cmd_args->timer_use_val = 0;
