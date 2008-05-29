@@ -597,8 +597,11 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 	  locate_info.ipmi_version_minor = 5;
 	  locate_info.locate_driver_type = IPMI_LOCATE_DRIVER_NONE;
 	  locate_info.interface_type = IPMI_INTERFACE_SSIF;
-	  strncpy(locate_info.driver_device, driver_device, IPMI_LOCATE_PATH_MAX);
-	  locate_info.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+	  if (driver_device)
+	    {
+	      strncpy(locate_info.driver_device, driver_device, IPMI_LOCATE_PATH_MAX);
+	      locate_info.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+	    }
 	  locate_info.address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
 	  locate_info.driver_address = driver_address;
 	  locate_info.register_spacing = register_spacing;
@@ -625,8 +628,9 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 
       API_ERR_CLEANUP ((ctx->io.inband.ssif_ctx = ipmi_ssif_ctx_create()));
       
-      API_ERR_SSIF_CLEANUP (!(ipmi_ssif_ctx_set_driver_device(ctx->io.inband.ssif_ctx, 
-                                                              locate_info.driver_device) < 0));
+      if (driver_device)
+        API_ERR_SSIF_CLEANUP (!(ipmi_ssif_ctx_set_driver_device(ctx->io.inband.ssif_ctx, 
+                                                                locate_info.driver_device) < 0));
  
       API_ERR_SSIF_CLEANUP (!(ipmi_ssif_ctx_set_driver_address(ctx->io.inband.ssif_ctx, 
                                                                locate_info.driver_address) < 0));
