@@ -15,7 +15,7 @@ o Support --always-prefix option in many tools.
 o Support --guid option in bmc-info.
 o Support --get-time and --set-time in ipmi-sel.
 
-For Users - Minor Enhancements/Bug Fixes/Changes
+For Users - Minor Enhancements/Changes/Bug Fixes
 ------------------------------------------------
 o Global in most tools
   - Rename --no-probing option to --disable-auto-probe for consistency
