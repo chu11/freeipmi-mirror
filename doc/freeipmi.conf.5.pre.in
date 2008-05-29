@@ -66,7 +66,7 @@ all out-of-band options).
 \fBdriver-type\fR \fIIPMIDRIVER\fR
 Specify the default driver type to use.  
 .TP
-\fBdisable-auto-probe\fR
+\fBdisable-auto-probe\fR \fIENABLE|DISABLE\fR
 Specify if IPMI devices should be probed for default settings.
 .TP
 \fBdriver-address\fR \fIDRIVER-ADDRESS\fR
