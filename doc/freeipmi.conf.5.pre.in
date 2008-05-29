@@ -57,8 +57,11 @@ although specific options may be ignored by some.  (For example,
 .B ipmiconsole(8)
 and
 .B ipmipower(8)
-do not perform in-band communication, therefore all in-band communication
-options would be ignored).
+do not perform in-band communication, therefore they would ignore
+in-band communication options.  Similarly
+.B bmc-watchdog(8)
+does not perform out-of-band communication, therefore it would ignore
+all out-of-band options).
 .TP
 \fBdriver-type\fR \fIIPMIDRIVER\fR
 Specify the default driver type to use.  

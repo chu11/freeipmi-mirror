@@ -1,3 +1,9 @@
+2008-05-29  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/: Minor fixes.
+
+	* Various minor doc updates.
+	
 2008-05-28  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/: Code cleanup.
