@@ -1,7 +1,8 @@
 0.6.4 - 00/00/00
 ----------------
-o Do not exit for sensors that return "sensor data not present"
-  errors.  Output "NA" or "Unknown" as needed.
+o Do not exit ipmi-sensors or ipmimonitoring for sensors that return
+  "sensor data not present" errors.  Output "NA", "Unknown", skip sensor
+  output, etc. as needed.
 o Fix minor corner cases.
 o Fix manpage typos.
 

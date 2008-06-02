@@ -426,7 +426,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           if (ipmi_check_completion_code(obj_cmd_rs,
                                          IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
             {
-              if (state_data->prog_data->args->common.debug)
+              if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
                 pstdout_fprintf(state_data->pstate,
                                 stderr,
                                 "Sensor number 0x%X data in record %u not present\n",
@@ -549,7 +549,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           if (ipmi_check_completion_code(obj_cmd_rs,
                                          IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
             {
-              if (state_data->prog_data->args->common.debug)
+              if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
                 pstdout_fprintf(state_data->pstate,
                                 stderr,
                                 "Sensor number 0x%X data in record %u not present\n",
