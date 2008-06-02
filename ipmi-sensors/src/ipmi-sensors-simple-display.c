@@ -156,7 +156,7 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
                             round_double2 (*reading), 
                             ipmi_sensor_units_abbreviated[sensor_unit]);
           else 
-            pstdout_printf (state_data->pstate, "NA");
+            pstdout_printf (state_data->pstate, "NA ");
           
           if (lower_critical_threshold)
             pstdout_printf (state_data->pstate,

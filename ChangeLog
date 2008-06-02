@@ -1,3 +1,21 @@
+2008-06-02  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-reading.c
+	(_get_sensor_specific_event_message_list,
+	_get_generic_event_message_list, _get_threshold_message_list),
+	ipmi-sensors/src/ipmi-sensors-display-common.c
+	(ipmi_sensors_output_event_message_list): Change internal API so
+	that NULL event_message_list means "UNKNOWN" reading.  Event
+	message list creation responsible for storing "OK" event message
+	when appropriate.
+
+	* ipmi-sensors/src/ipmi-sensors-reading.c (sensor_rading): Do not
+	exit on an error of
+	IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT.
+
+	* ipmi-sensors/src/ipmi-sensors-simple-display.c
+	(sensors_display_simple_full_record): Fix output formatting.
+	
 2008-05-29  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_inband): Fix
