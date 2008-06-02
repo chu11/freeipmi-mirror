@@ -5,7 +5,7 @@
 	_get_generic_event_message_list, _get_threshold_message_list),
 	ipmi-sensors/src/ipmi-sensors-display-common.c
 	(ipmi_sensors_output_event_message_list): Change internal API so
-	that NULL event_message_list means "UNKNOWN" reading.  Event
+	that NULL event_message_list means "Unknown" reading.  Event
 	message list creation responsible for storing "OK" event message
 	when appropriate.
 
