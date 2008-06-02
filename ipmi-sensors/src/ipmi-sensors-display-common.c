@@ -58,8 +58,8 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
     }
   else 
     pstdout_printf (state_data->pstate,
-                    "[%s]\n", 
-                    "OK");
+                    "[%s]\n",
+                    "Unknown"); 
   
   return 0;
 }

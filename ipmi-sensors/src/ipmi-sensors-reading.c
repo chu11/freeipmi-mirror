@@ -95,6 +95,7 @@ _get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
   char **tmp_event_message_list = NULL;
   char *tmp_message_list[IPMI_SENSORS_MAX_LIST];
   int num_messages = 0;
+  int count = 0;
   int i;
   
   assert(state_data);
@@ -143,27 +144,44 @@ _get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
     }
   
   if (num_messages)
+    count = num_messages;
+  else
+    count = 1;
+
+  if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (count + 1))))
     {
-      if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (num_messages + 1))))
-        {
-          pstdout_perror(state_data->pstate, "malloc");
-          goto cleanup;
-        }
-      
+      pstdout_perror(state_data->pstate, "malloc");
+      goto cleanup;
+    }
+    
+  if (num_messages)
+    {
       for (i = 0; i < num_messages; i++)
 	tmp_event_message_list[i] = tmp_message_list[i];
-      
-      tmp_event_message_list[num_messages] = NULL;
-
-      *event_message_list = tmp_event_message_list;
-      *event_message_list_len = 1;
+    }
+  else
+    {
+      if (!(tmp_event_message_list[0] = strdup("OK")))
+        {
+          pstdout_perror(state_data->pstate, "strdup");
+          goto cleanup;
+        }
     }
   
+  tmp_event_message_list[count] = NULL;
+  *event_message_list = tmp_event_message_list;
+  /* achu: note, not like generic_event_message_list or
+   * sensor_specific_event_message_list, max of one message output
+   */
+  *event_message_list_len = 1;
+
   return 0;
 
  cleanup:
   for (i = 0; i < num_messages; i++)
     free(tmp_message_list[num_messages]);
+  if (tmp_event_message_list)
+    free(tmp_event_message_list);
   return -1;
 }
 
@@ -177,6 +195,7 @@ _get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
   char **tmp_event_message_list = NULL;
   char *tmp_message_list[IPMI_SENSORS_MAX_LIST];
   int num_messages = 0;
+  int count = 0;
   int i;
   
   assert(state_data);
@@ -208,27 +227,41 @@ _get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
     }
   
   if (num_messages)
-    {
-      if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (num_messages + 1))))
-        {
-          pstdout_perror(state_data->pstate, "malloc");
-          goto cleanup;
-        }
+    count = num_messages;
+  else
+    count = 1;
 
+  if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (count + 1))))
+    {
+      pstdout_perror(state_data->pstate, "malloc");
+      goto cleanup;
+    }
+      
+  if (num_messages)
+    {
       for (i = 0; i < num_messages; i++)
 	tmp_event_message_list[i] = tmp_message_list[i];
-
-      tmp_event_message_list[num_messages] = NULL;
-
-      *event_message_list = tmp_event_message_list;
-      *event_message_list_len = num_messages;
     }
+  else
+    {
+      if (!(tmp_event_message_list[0] = strdup("OK")))
+        {
+          pstdout_perror(state_data->pstate, "strdup");
+          goto cleanup;
+        }
+    }
+
+  tmp_event_message_list[count] = NULL;
+  *event_message_list = tmp_event_message_list;
+  *event_message_list_len = count;
   
   return 0;
 
  cleanup:
   for (i = 0; i < num_messages; i++)
     free(tmp_message_list[num_messages]);
+  if (tmp_event_message_list)
+    free(tmp_event_message_list);
   return -1;
 }
 
@@ -242,6 +275,7 @@ _get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_d
   char **tmp_event_message_list = NULL;
   char *tmp_message_list[IPMI_SENSORS_MAX_LIST];
   int num_messages = 0;
+  int count = 0;
   int i;
   
   assert(state_data);
@@ -274,27 +308,41 @@ _get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_d
     }
   
   if (num_messages)
-    {
-      if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (num_messages + 1))))
-        {
-          pstdout_perror(state_data->pstate, "malloc");
-          goto cleanup;
-        }
+    count = num_messages;
+  else
+    count = 1;
 
+  if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (count + 1))))
+    {
+      pstdout_perror(state_data->pstate, "malloc");
+      goto cleanup;
+    }
+      
+  if (num_messages)
+    {
       for (i = 0; i < num_messages; i++)
 	tmp_event_message_list[i] = tmp_message_list[i];
-
-      tmp_event_message_list[num_messages] = NULL;
-
-      *event_message_list = tmp_event_message_list;
-      *event_message_list_len = num_messages;
     }
-  
+  else
+    {
+      if (!(tmp_event_message_list[0] = strdup("OK")))
+        {
+          pstdout_perror(state_data->pstate, "strdup");
+          goto cleanup;
+        }
+    }
+
+  tmp_event_message_list[count] = NULL;
+  *event_message_list = tmp_event_message_list;
+  *event_message_list_len = count;
+
   return 0;
 
  cleanup:
   for (i = 0; i < num_messages; i++)
     free(tmp_message_list[num_messages]);
+  if (tmp_event_message_list)
+    free(tmp_event_message_list);
   return -1;
 }
 
@@ -306,6 +354,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                 char ***event_message_list,
                 unsigned int *event_message_list_len)
 { 
+  uint16_t record_id;
   uint8_t record_type;
   uint8_t sensor_number;
   uint8_t sensor_type;
@@ -331,7 +380,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   if (sdr_cache_get_record_id_and_type(state_data->pstate,
                                        sdr_record,
                                        sdr_record_len,
-                                       NULL,
+                                       &record_id,
                                        &record_type) < 0)
     return -1;
 
@@ -371,10 +420,25 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                                  sensor_number, 
                                                  obj_cmd_rs) < 0)
         {
-          pstdout_fprintf(state_data->pstate,
-                          stderr,
-                          "ipmi_cmd_get_sensor_reading_discrete: %s\n",
-                          ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+          /* A sensor listed by the SDR is not present.  Skip it's
+           * output, don't error out.
+           */
+          if (ipmi_check_completion_code(obj_cmd_rs,
+                                         IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+            {
+              if (state_data->prog_data->args->common.debug)
+                pstdout_fprintf(state_data->pstate,
+                                stderr,
+                                "Sensor number 0x%X data in record %u not present\n",
+                                sensor_number,
+                                record_id);
+              rv = 0;
+            }
+          else
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "ipmi_cmd_get_sensor_reading_discrete: %s\n",
+                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           goto cleanup;
         }
 
@@ -479,10 +543,25 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                                 sensor_number, 
                                                 obj_cmd_rs) < 0)
         {
-          pstdout_fprintf(state_data->pstate,
-                          stderr,
-                          "ipmi_cmd_get_sensor_reading_discrete: %s\n",
-                          ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+          /* A sensor listed by the SDR is not present.  Skip it's
+           * output, don't error out.
+           */
+          if (ipmi_check_completion_code(obj_cmd_rs,
+                                         IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+            {
+              if (state_data->prog_data->args->common.debug)
+                pstdout_fprintf(state_data->pstate,
+                                stderr,
+                                "Sensor number 0x%X data in record %u not present\n",
+                                sensor_number,
+                                record_id);
+              rv = 0;
+            }
+          else
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "ipmi_cmd_get_sensor_reading_discrete: %s\n",
+                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           goto cleanup;
         }
       
