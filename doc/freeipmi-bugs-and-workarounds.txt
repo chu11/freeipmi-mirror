@@ -217,6 +217,10 @@ although only half of the sensor state (8 bit field) is optional.
 Resolved by assuming the sensor state is 0 (i.e. no sensor states have
 been asserted).
 
+Dell 2950: Some sensors return sensor states that are invalid
+(i.e. return 0xC0 if only 0x1 through 0x20 are supported).  Resolved
+ignoring sensor states that are unknown.
+
 Misc
 ----
 
