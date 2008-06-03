@@ -573,44 +573,44 @@ do {                                                                            
       }                                                                                                       \
 } while (0)
 
-#define FIID_OBJ_GET(__obj, __field, __val)                   \
-do {                                                          \
-    uint64_t __localval = 0, *__localval_ptr;                 \
-    int8_t __ret;                                             \
-    __localval_ptr = (__val);                                 \
-    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)   \
-      {                                                       \
-         __FIID_OBJ_TRACE((__obj));                           \
-         __FIID_OBJ_SET_ERRNO((__obj));                       \
-         return (-1);                                         \
-      }                                                       \
-    if (!__ret)                                               \
-      {                                                       \
-         __FIID_OBJ_NO_DATA_TRACE((__field));                 \
-         __FIID_ERRNUM_SET_ERRNO(FIID_ERR_INTERNAL_ERROR);    \
-         return (-1);                                         \
-      }                                                       \
-    *__localval_ptr = __localval;                             \
+#define FIID_OBJ_GET(__obj, __field, __val)                             \
+do {                                                                    \
+    uint64_t __localval = 0, *__localval_ptr;                           \
+    int8_t __ret;                                                       \
+    __localval_ptr = (__val);                                           \
+    if ((__ret = fiid_obj_get ((__obj), (__field), &__localval)) < 0)   \
+      {                                                                 \
+         __FIID_OBJ_TRACE((__obj));                                     \
+         __FIID_OBJ_SET_ERRNO((__obj));                                 \
+         return (-1);                                                   \
+      }                                                                 \
+    if (!__ret)                                                         \
+      {                                                                 \
+         __FIID_OBJ_NO_DATA_TRACE((__field));                           \
+         __FIID_ERRNUM_SET_ERRNO(FIID_ERR_INTERNAL_ERROR);              \
+         return (-1);                                                   \
+      }                                                                 \
+    *__localval_ptr = __localval;                                       \
 } while (0)
 
-#define FIID_OBJ_GET_CLEANUP(__obj, __field, __val)           \
-do {                                                          \
-    uint64_t __localval = 0, *__localval_ptr;                 \
-    int8_t __ret;                                             \
-    __localval_ptr = (__val);                                 \
-    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)   \
-      {                                                       \
-         __FIID_OBJ_TRACE((__obj));                           \
-         __FIID_OBJ_SET_ERRNO((__obj));                       \
-         goto cleanup;                                        \
-      }                                                       \
-    if (!__ret)                                               \
-      {                                                       \
-         __FIID_OBJ_NO_DATA_TRACE((__field));                 \
-         __FIID_ERRNUM_SET_ERRNO(FIID_ERR_INTERNAL_ERROR);    \
-         goto cleanup;                                        \
-      }                                                       \
-    *__localval_ptr = __localval;                             \
+#define FIID_OBJ_GET_CLEANUP(__obj, __field, __val)                     \
+do {                                                                    \
+    uint64_t __localval = 0, *__localval_ptr;                           \
+    int8_t __ret;                                                       \
+    __localval_ptr = (__val);                                           \
+    if ((__ret = fiid_obj_get ((__obj), (__field), &__localval)) < 0)   \
+      {                                                                 \
+         __FIID_OBJ_TRACE((__obj));                                     \
+         __FIID_OBJ_SET_ERRNO((__obj));                                 \
+         goto cleanup;                                                  \
+      }                                                                 \
+    if (!__ret)                                                         \
+      {                                                                 \
+         __FIID_OBJ_NO_DATA_TRACE((__field));                           \
+         __FIID_ERRNUM_SET_ERRNO(FIID_ERR_INTERNAL_ERROR);              \
+         goto cleanup;                                                  \
+      }                                                                 \
+    *__localval_ptr = __localval;                                       \
 } while (0)
 
 #define FIID_OBJ_GET_DATA(__obj, __field, __data, __data_len)                \
@@ -1316,7 +1316,7 @@ do {                                                                          \
     uint64_t __localval = 0, *__localval_ptr;                                 \
     int8_t __ret;                                                             \
     __localval_ptr = (__val);                                                 \
-    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)                   \
+    if ((__ret = fiid_obj_get ((__obj), (__field), &__localval)) < 0)         \
       {                                                                       \
          __FIID_OBJ_TRACE((__obj));                                           \
          __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM((__obj));                         \
@@ -1444,7 +1444,7 @@ do {                                                                          \
     uint64_t __localval = 0, *__localval_ptr;                                 \
     int8_t __ret;                                                             \
     __localval_ptr = (__val);                                                 \
-    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)                   \
+    if ((__ret = fiid_obj_get ((__obj), (__field), &__localval)) < 0)         \
       {                                                                       \
          __FIID_OBJ_TRACE((__obj));                                           \
          __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM((__obj));                      \
@@ -1464,7 +1464,7 @@ do {                                                                          \
     uint64_t __localval = 0, *__localval_ptr;                                 \
     int8_t __ret;                                                             \
     __localval_ptr = (__val);                                                 \
-    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)                   \
+    if ((__ret = fiid_obj_get ((__obj), (__field), &__localval)) < 0)         \
       {                                                                       \
          __FIID_OBJ_TRACE((__obj));                                           \
          __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM((__obj));                      \
