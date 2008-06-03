@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_fiid_wrappers.h,v 1.8 2008-03-28 00:14:43 chu11 Exp $
+ *  $Id: ipmi_monitoring_fiid_wrappers.h,v 1.9 2008-06-03 00:31:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -29,12 +29,6 @@
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
-
-/* XXX */
-/* XXX */
-/* XXX */
-/* XXX */
-/* XXX */
 
 int32_t Fiid_template_len_bytes(ipmi_monitoring_ctx_t c, fiid_template_t tmpl);
 int32_t Fiid_template_block_len_bytes(ipmi_monitoring_ctx_t c, fiid_template_t tmpl, char *field_start, char *field_end);
