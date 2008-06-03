@@ -64,6 +64,7 @@ For Developers
 o Additional IPMI commands added into libfreeipmi.
 o Support new "connection timeout" error message in libfreeipmi.
 o Various naming consistency fixes to IPMI specification.
+o Various minor bug fixes.
 
 Contributions
 -------------
