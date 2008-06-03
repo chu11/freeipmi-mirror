@@ -67,6 +67,19 @@ do {                                                      \
     }                                                     \
 } while (0)
 
+#define _FIID_OBJ_LEN_BYTES(__obj, __rv)                               \
+  do {                                                                 \
+    if (((__rv) = fiid_obj_len_bytes((__obj))) < 0)                    \
+      {                                                                \
+        pstdout_fprintf(state_data->pstate,                            \
+                        stderr,                                        \
+                        "fiid_obj_len_bytes: %s\n",                    \
+                        fiid_strerror(fiid_obj_errnum((__obj))));      \
+        goto cleanup;                                                  \
+      }                                                                \
+  } while (0)
+
+
 #define _FIID_OBJ_COPY(__obj_dest, __obj_src, __alt_tmpl)            \
 do {                                                                 \
   if (!((__obj_dest) = fiid_obj_copy((__obj_src), (__alt_tmpl))))    \

@@ -3,6 +3,10 @@
 o Do not exit ipmi-sensors or ipmimonitoring for sensors that return
   "sensor data not present" errors.  Output "NA", "Unknown", skip sensor
   output, etc. as needed.
+o Fix bug in ipmi-sensors and ipmimonitoring when dealing with
+  optional sensor state assertions after a sensor read in ipmi-sensors.
+o Add workaround in ipmi-sensors and ipmimonitoring when dealing with
+  sensors that improperly report no sensor assertions after a sensor read.
 o Fix minor corner cases.
 o Fix manpage typos.
 

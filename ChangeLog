@@ -1,5 +1,17 @@
 2008-06-02  Albert Chu <chu11@llnl.gov>
 
+ 	* ipmi-sensors/src/ipmi-sensors-reading.c: Support optional sensor
+ 	state fields as stated in IPMI spec.  Support workaround for Dell
+ 	no sensor-state returned issue.
+ 
+ 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c:
+ 	Support workaround for Dell no sensor-state returned issue.
+
+        * common/src/tool-fiid-wrappers.h (_FIID_OBJ_LEN_BYTES): New
+        macro.
+	
+2008-06-02  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c
 	(_get_sensor_reading): Change internal API so that return value -1
 	= error, 0 = unreadable sensor reading, 1 = sensor reading

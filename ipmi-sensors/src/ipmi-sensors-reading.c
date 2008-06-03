@@ -65,7 +65,27 @@ fiid_template_t l_tmpl_cmd_get_sensor_reading_threshold_rs =
     {0,  "", 0}
   };
   
-fiid_template_t l_tmpl_cmd_get_sensor_reading_discrete_rs =
+fiid_template_t l_tmpl_cmd_get_sensor_reading_discrete_8_states_rs =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {8, "sensor_reading", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "reading_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {8, "sensor_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    /* optional byte */
+    {8, "ignore", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {0,  "", 0}
+  };
+
+fiid_template_t l_tmpl_cmd_get_sensor_reading_discrete_15_states_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -78,7 +98,7 @@ fiid_template_t l_tmpl_cmd_get_sensor_reading_discrete_rs =
     {1, "all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
     {15, "sensor_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "reserved2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
     
     {0,  "", 0}
   };
@@ -536,8 +556,11 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
            || sensor_class ==  SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE
            || sensor_class == SENSOR_CLASS_OEM)
     {
+      fiid_field_t *l_tmpl_cmd_get_sensor_reading_discrete_rs = NULL;
+      int32_t obj_cmd_rs_len;
+      int8_t sensor_state_len;
+
       _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
-      _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
       if (ipmi_cmd_get_sensor_reading_discrete (state_data->ipmi_ctx, 
                                                 sensor_number, 
@@ -565,13 +588,47 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           goto cleanup;
         }
       
+      _FIID_OBJ_LEN_BYTES(obj_cmd_rs, obj_cmd_rs_len);
+
+      /* achu:
+       * 
+       * hack to get around optional byte, b/c sensor_state size of 15
+       * bits messes up fiid_obj_copy's expectation of byte aligned
+       * fields when doing a copy.
+       */
+
+      if (obj_cmd_rs_len == fiid_template_block_len_bytes(l_tmpl_cmd_get_sensor_reading_discrete_8_states_rs, 
+                                                          "cmd", 
+                                                          "sensor_state"))
+        l_tmpl_cmd_get_sensor_reading_discrete_rs = &l_tmpl_cmd_get_sensor_reading_discrete_8_states_rs[0];
+      else
+        l_tmpl_cmd_get_sensor_reading_discrete_rs = &l_tmpl_cmd_get_sensor_reading_discrete_15_states_rs[0];
+      
+      _FIID_OBJ_CREATE(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
+      
       _FIID_OBJ_COPY(l_obj_cmd_rs,
                      obj_cmd_rs,
                      l_tmpl_cmd_get_sensor_reading_discrete_rs);
+      
+      /* 
+       * IPMI Workaround (achu)
+       *
+       * Discovered on Dell 2950.
+       *
+       * It seems the sensor_state may not be returned by the server
+       * at all for some sensors.  Under this situation, there's not
+       * much that can be done.  Since there is no sensor_state, we
+       * just assume that no states have been asserted and the
+       * sensor_state = 0;
+       */
 
-      _FIID_OBJ_GET (l_obj_cmd_rs, 
-                     "sensor_state", 
-                     &val);
+      _FIID_OBJ_GET_WITH_RETURN_VALUE (l_obj_cmd_rs,
+                                       "sensor_state",
+                                       &val,
+                                       sensor_state_len);
+
+      if (!sensor_state_len)
+        val = 0;
       
       if (sensor_class == SENSOR_CLASS_GENERIC_DISCRETE)
         {
