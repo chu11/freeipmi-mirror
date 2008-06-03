@@ -1,5 +1,9 @@
 2008-06-02  Albert Chu <chu11@llnl.gov>
 
+	* common/src/tool-common.c (ipmi_open): Code cleanup.
+	
+2008-06-02  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/src/ipmi-sensors-reading.c: Support optional sensor
 	state fields as stated in IPMI spec.  Support workaround for Dell
 	no sensor-state returned issue.

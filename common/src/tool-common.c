@@ -225,41 +225,41 @@ ipmi_open(const char *progname,
                 goto out;
             }
           
-          if (ipmi_ctx_open_inband (ipmi_ctx,
-                                    IPMI_DEVICE_OPENIPMI,
-                                    cmd_args->disable_auto_probe,
-                                    cmd_args->driver_address,
-                                    cmd_args->register_spacing,
-                                    cmd_args->driver_device,
-                                    cmd_args->workaround_flags,
-                                    (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
-            {
-              if (ipmi_ctx_open_inband (ipmi_ctx,
-                                        IPMI_DEVICE_KCS,
-                                        cmd_args->disable_auto_probe,
-                                        cmd_args->driver_address,
-                                        cmd_args->register_spacing,
-                                        cmd_args->driver_device,
-                                        cmd_args->workaround_flags,
-                                        (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
-                {
-                  if (ipmi_ctx_open_inband (ipmi_ctx,
-                                            IPMI_DEVICE_SSIF,
-                                            cmd_args->disable_auto_probe,
-                                            cmd_args->driver_address,
-                                            cmd_args->register_spacing,
-                                            cmd_args->driver_device,
-                                            cmd_args->workaround_flags,
-                                            (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
-                    {
-                      snprintf(errmsg,
-                               errmsglen,
-                               "ipmi_ctx_open_inband: %s",
-                               ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
-                      goto cleanup;
-                    }
-                }
-            }
+          if (!ipmi_ctx_open_inband (ipmi_ctx,
+                                     IPMI_DEVICE_OPENIPMI,
+                                     cmd_args->disable_auto_probe,
+                                     cmd_args->driver_address,
+                                     cmd_args->register_spacing,
+                                     cmd_args->driver_device,
+                                     cmd_args->workaround_flags,
+                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
+            goto out;
+
+          if (!ipmi_ctx_open_inband (ipmi_ctx,
+                                     IPMI_DEVICE_KCS,
+                                     cmd_args->disable_auto_probe,
+                                     cmd_args->driver_address,
+                                     cmd_args->register_spacing,
+                                     cmd_args->driver_device,
+                                     cmd_args->workaround_flags,
+                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
+            goto out;
+          
+          if (!ipmi_ctx_open_inband (ipmi_ctx,
+                                     IPMI_DEVICE_SSIF,
+                                     cmd_args->disable_auto_probe,
+                                     cmd_args->driver_address,
+                                     cmd_args->register_spacing,
+                                     cmd_args->driver_device,
+                                     cmd_args->workaround_flags,
+                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
+            goto out;
+          
+          /* else error ... */
+          snprintf(errmsg,
+                   errmsglen,
+                   "could not find inband device");
+          goto cleanup;
         }
       else
         {
