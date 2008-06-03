@@ -2,6 +2,10 @@
 
 	* ipmi-sensors/src/ipmi-sensors-reading.c: Code cleanup.
 
+	* libfreeipmi/src/cmds/ipmi-sensor-cmds.c: Make
+	tmpl_cmd_get_sensor_reading_rs sensor_state field length variable,
+	not fixed.
+
 2008-06-02  Albert Chu <chu11@llnl.gov>
 
  	* ipmi-sensors/src/ipmi-sensors-reading.c: Support optional sensor
