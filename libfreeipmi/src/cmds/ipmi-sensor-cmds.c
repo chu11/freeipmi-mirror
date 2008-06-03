@@ -632,7 +632,9 @@ fiid_template_t tmpl_cmd_get_sensor_reading_rs =
     {1, "reading_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {16, "sensor_state", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
+    {8, "sensor_state1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "sensor_state2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "reserved2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     {0,  "", 0}
   };
 
