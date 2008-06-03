@@ -209,6 +209,14 @@ Forgotten/Undocumented Motherboard(s): Some FRU data has invalid
 checksums.  Resolved with workaround to ignore the checksum (pray for
 the best).
 
+ipmi-sensors/ipmimonitoring
+---------------------------
+
+Dell 2950: Some sensors don't return a sensor state (16 bit field)
+although only half of the sensor state (8 bit field) is optional.
+Resolved by assuming the sensor state is 0 (i.e. no sensor states have
+been asserted).
+
 Misc
 ----
 
