@@ -327,7 +327,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   int rv = -1;
   uint64_t sensor_state1 = 0;
   uint64_t sensor_state2 = 0;
-  uint64_t sensor_state;
+  uint64_t sensor_state = 0;
   int8_t sensor_state1_len;
   int8_t sensor_state2_len;
 
@@ -432,9 +432,12 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   else if (sensor_state1_len && !sensor_state2_len)
     sensor_state = sensor_state1;
   else
-    pstdout_fprintf(state_data->pstate,
-                    stderr,
-                    "invalid sensor_state condition\n");
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "invalid sensor_state condition\n");
+      goto cleanup;
+    }
   
   sensor_class = sensor_classify (event_reading_type_code);
 

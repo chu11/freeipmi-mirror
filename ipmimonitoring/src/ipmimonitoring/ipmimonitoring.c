@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.49 2008-05-27 22:46:13 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.50 2008-06-03 23:13:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -438,22 +438,29 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                   ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
                   return -1;
                 }
-              
+
               if (bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
                 {
                   char buffer[IPMIMONITORING_BUFLEN+1];
                   
+                  memset(buffer, '\0', IPMIMONITORING_BUFLEN+1);
                   if (ipmi_monitoring_bitmask_string(state_data->ctx,
                                                      bitmask_type,
                                                      *((uint16_t *)sensor_reading),
                                                      buffer,
                                                      IPMIMONITORING_BUFLEN) < 0)
                     {
-                      pstdout_fprintf(state_data->pstate, 
-                                      stderr, 
-                                      "ipmi_monitoring_bitmask_string: %s\n", 
-                                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
-                      return -1;
+                      /* If parameters error, assume remote machine has given us some
+                       * bogus offset.  We'll fall through and output nothing.
+                       */
+                      if (ipmi_monitoring_ctx_errnum(state_data->ctx) != IPMI_MONITORING_ERR_PARAMETERS)
+                        {
+                          pstdout_fprintf(state_data->pstate, 
+                                          stderr, 
+                                          "ipmi_monitoring_bitmask_string: %s\n", 
+                                          ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                          return -1;
+                        }
                     }
                   
                 pstdout_printf(state_data->pstate,
