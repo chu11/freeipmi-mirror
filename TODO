@@ -50,6 +50,8 @@ bmc-wwatchdog
 
 general
 -------
+all fiid_obj_get wrappers should check rv != 0
+- adjust code appropriately in all tools/libs/etc.
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
