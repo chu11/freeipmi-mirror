@@ -8,6 +8,8 @@
 	Adjust for change.
 
 	* ipmi-sensors/src/ipmi-sensors-reading.c: Adjust for change.
+
+	* configure.ac: Update version.
 	
 2008-06-03  Albert Chu <chu11@llnl.gov>
 
