@@ -1,5 +1,24 @@
 2008-06-03  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(run_cmd_args): If receive parameters error on
+	ipmi_monitoring_bitmask_string() call, assume bogus bitmask
+	returned from remote machine.
+	
+2008-06-03  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-reading.c: Fix compiler warning.
+	Fix error return bug.
+	
+2008-06-03  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(run_cmd_args): If receive parameters error on
+	ipmi_monitoring_bitmask_string() call, assume bogus bitmask
+	returned from remote machine.
+	
+2008-06-03  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/src/ipmi-sensors-reading.c: Fix compiler warning.
 	Fix error return bug.
 	

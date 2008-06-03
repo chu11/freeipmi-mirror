@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.40.2.1 2008-05-21 23:54:04 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.40.2.2 2008-06-03 23:16:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -443,11 +443,17 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                                      buffer,
                                                      IPMIMONITORING_BUFLEN) < 0)
                     {
-                      pstdout_fprintf(state_data->pstate, 
-                                      stderr, 
-                                      "ipmi_monitoring_bitmask_string: %s\n", 
-                                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
-                      return -1;
+                      /* If parameters error, assume remote machine has given us some
+                       * bogus offset.  We'll fall through and output nothing.
+                       */
+                      if (ipmi_monitoring_ctx_errnum(state_data->ctx) != IPMI_MONITORING_ERR_PARAMETERS)
+                        {
+                          pstdout_fprintf(state_data->pstate, 
+                                          stderr, 
+                                          "ipmi_monitoring_bitmask_string: %s\n", 
+                                          ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                          return -1;
+                        }
                     }
                   
                 pstdout_printf(state_data->pstate,

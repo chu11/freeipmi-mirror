@@ -8,7 +8,8 @@ o Fix bug in ipmi-sensors and ipmimonitoring when dealing with
 o Fix bug in ipmi-sensors and ipmimonitoring when dealing with
   reserved fields in sensor state assertions after a sensor read.
 o Add workaround in ipmi-sensors and ipmimonitoring when dealing with
-  sensors that improperly report no sensor assertions after a sensor read.
+  sensors that improperly report sensor assertions after a sensor read
+  (i.e. no assertions set when required, or invalid assertions set).
 o Fix minor corner cases.
 o Fix manpage typos.
 
