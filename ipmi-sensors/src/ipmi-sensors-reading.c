@@ -325,8 +325,11 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   double *tmp_reading = NULL;
   uint64_t val;
   int rv = -1;
+  uint64_t sensor_state1 = 0;
+  uint64_t sensor_state2 = 0;
   uint64_t sensor_state;
-  int8_t sensor_state_len;
+  int8_t sensor_state1_len;
+  int8_t sensor_state2_len;
 
   assert(state_data);
   assert(sdr_record);
@@ -400,6 +403,16 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
       goto cleanup;
     }
 
+  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
+                                   "sensor_state1",
+                                   &sensor_state1,
+                                   sensor_state1_len);
+  
+  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
+                                   "sensor_state2",
+                                   &sensor_state2,
+                                   sensor_state2_len);
+  
   /* 
    * IPMI Workaround (achu)
    *
@@ -412,13 +425,16 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
    * sensor_state = 0;
    */
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
-                                   "sensor_state",
-                                   &sensor_state,
-                                   sensor_state_len);
-  
-  if (!sensor_state_len)
+  if (!sensor_state1_len && !sensor_state2_len)
     sensor_state = 0;
+  else if (sensor_state1_len && sensor_state2_len)
+    sensor_state = sensor_state1 | (sensor_state2 << 8);
+  else if (sensor_state1_len && !sensor_state2_len)
+    sensor_state = sensor_state1;
+  else
+    pstdout_fprintf(state_data->pstate,
+                    stderr,
+                    "invalid sensor_state condition\n");
   
   sensor_class = sensor_classify (event_reading_type_code);
 

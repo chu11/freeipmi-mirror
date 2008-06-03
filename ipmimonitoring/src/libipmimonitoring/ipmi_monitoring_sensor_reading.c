@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.18 2008-06-03 04:37:50 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.19 2008-06-03 21:26:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -361,8 +361,10 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
   uint64_t val;
+  uint64_t sensor_state1;
+  uint64_t sensor_state2;
   int32_t len;
-  int ret;
+  int8_t sensor_state1_len, sensor_state2_len;
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
@@ -434,23 +436,44 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
    * just assume that no states have been asserted and the
    * sensor_state = 0;
    */
-  /* Don't use wrapper, see workaround comment above */
-  if ((ret = fiid_obj_get(obj_cmd_rs, "sensor_state", &val)) < 0)
+  /* Don't use wrapper, we need the return value */
+  if ((sensor_state1_len = fiid_obj_get(obj_cmd_rs, 
+                                        "sensor_state1", 
+                                        &sensor_state1)) < 0)
     {
       IPMI_MONITORING_DEBUG(("fiid_obj_get: field=%s; %s", 
-                             "sensor_state", 
+                             "sensor_state1", 
                              fiid_strerror(fiid_obj_errnum(obj_cmd_rs))));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
-  
-  if (!ret)
+
+  if ((sensor_state2_len = fiid_obj_get(obj_cmd_rs, 
+                                        "sensor_state2", 
+                                        &sensor_state2)) < 0)
+    {
+      IPMI_MONITORING_DEBUG(("fiid_obj_get: field=%s; %s", 
+                             "sensor_state2", 
+                             fiid_strerror(fiid_obj_errnum(obj_cmd_rs))));
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
+
+  if (!sensor_state1_len && !sensor_state2_len)
     {
       IPMI_MONITORING_DEBUG(("assume sensor_state = 0"));
-      val = 0;
+      *sensor_state = 0;
     }
-  
-  *sensor_state = val;
+  else if (sensor_state1_len && sensor_state2_len)
+    *sensor_state = sensor_state1 | (sensor_state2 << 8);
+  else if (sensor_state1_len && !sensor_state2_len)
+    *sensor_state = sensor_state1;
+  else
+    {
+      IPMI_MONITORING_DEBUG(("invalid sensor_state conditions"));
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
 
   rv = 1;
  cleanup:

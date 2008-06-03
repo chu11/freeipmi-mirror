@@ -1,5 +1,16 @@
 2008-06-03  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/cmds/ipmi-sensor-cmds.c: Make "sensor_state",
+	"sensor_state1", "sensor_state2", and "reserved2".
+
+	*
+	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c:
+	Adjust for change.
+
+	* ipmi-sensors/src/ipmi-sensors-reading.c: Adjust for change.
+	
+2008-06-03  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/src/ipmi-sensors-reading.c: Code cleanup.
 
 	* common/src/tool-fiid-wrappers.h (_FIID_OBJ_LEN_BYTES): Remove
