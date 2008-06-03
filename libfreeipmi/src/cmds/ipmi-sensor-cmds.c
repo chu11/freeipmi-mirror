@@ -632,7 +632,7 @@ fiid_template_t tmpl_cmd_get_sensor_reading_rs =
     {1, "reading_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {16, "sensor_state", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "sensor_state", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
     {0,  "", 0}
   };
 
@@ -673,14 +673,14 @@ fiid_template_t tmpl_cmd_get_sensor_reading_discrete_rs =
     {1, "state_5_asserted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "state_6_asserted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "state_7_asserted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "state_8_asserted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "state_9_asserted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "state_10_asserted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "state_11_asserted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "state_12_asserted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "state_13_asserted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "state_14_asserted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "state_8_asserted", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "state_9_asserted", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "state_10_asserted", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "state_11_asserted", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "state_12_asserted", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "state_13_asserted", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "state_14_asserted", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "reserved2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
