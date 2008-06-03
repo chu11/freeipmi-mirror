@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.50 2008-06-03 23:13:56 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.51 2008-06-03 23:21:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -461,6 +461,14 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                           ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
                           return -1;
                         }
+                      
+                      if (ipmi_monitoring_ctx_errnum(state_data->ctx) == IPMI_MONITORING_ERR_PARAMETERS
+                          && state_data->prog_data->args->common.debug)
+                        pstdout_fprintf(state_data->pstate,
+                                        stderr,
+                                        "ipmi_monitoring_bitmask_string: %s: invalid bitmask likely: %X\n", 
+                                        ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)),
+                                        *((uint16_t *)sensor_reading));
                     }
                   
                 pstdout_printf(state_data->pstate,
