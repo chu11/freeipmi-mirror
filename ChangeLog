@@ -1,6 +1,20 @@
 2008-06-02  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-bugs-and-workarounds.txt: Add info on Dell sensor issue.
+
+	* libfreeipmi/src/cmds/ipmi-sensor-cmds.c: Fix declarations.  Some
+	required fields are actually optional.
+
+	* common/src/tool-fiid-wrappers.h (_FIID_OBJ_LEN_BYTES): New
+	macro.
+
+	* common/src/tool-fiid-wrappers.h,
+	libfreeipmi/src/libcommon/ipmi-fiid-wrappers.h,
+	libfreeipmi/src/api/ipmi-fiid-wrappers-api.h: Check for good
+	return value from fiid_obj_get() calls.
+
+	* libfreeipmi/src/fiid/fiid.c (fiid_obj_copy): Fix errnum return
+	corner case.
 	
 2008-06-02  Albert Chu <chu11@llnl.gov>
 
