@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.17 2008-06-02 22:41:50 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.18 2008-06-03 04:37:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -362,6 +362,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
   int rv = -1;
   uint64_t val;
   int32_t len;
+  int ret;
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
@@ -414,7 +415,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
       ipmi_monitoring_ipmi_ctx_error_convert(c);
       goto cleanup;
     }
-  
+
   if (Fiid_obj_get(c,
                    obj_cmd_rs,
                    "sensor_reading",
@@ -422,11 +423,33 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
     goto cleanup;
   *sensor_reading = val;
 
-  if (Fiid_obj_get(c,
-                   obj_cmd_rs,
-                   "sensor_state",
-                   &val) < 0)
-    goto cleanup;
+  /* 
+   * IPMI Workaround (achu)
+   *
+   * Discovered on Dell 2950.
+   *
+   * It seems the sensor_state may not be returned by the server
+   * at all for some sensors.  Under this situation, there's not
+   * much that can be done.  Since there is no sensor_state, we
+   * just assume that no states have been asserted and the
+   * sensor_state = 0;
+   */
+  /* Don't use wrapper, see workaround comment above */
+  if ((ret = fiid_obj_get(obj_cmd_rs, "sensor_state", &val)) < 0)
+    {
+      IPMI_MONITORING_DEBUG(("fiid_obj_get: field=%s; %s", 
+                             "sensor_state", 
+                             fiid_strerror(fiid_obj_errnum(obj_cmd_rs))));
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (!ret)
+    {
+      IPMI_MONITORING_DEBUG(("assume sensor_state = 0"));
+      val = 0;
+    }
+  
   *sensor_state = val;
 
   rv = 1;

@@ -1,5 +1,14 @@
 2008-06-02  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/src/ipmi-sensors-reading.c: Support optional sensor
+	state fields as stated in IPMI spec.  Support workaround for Dell
+	no sensor-state returned issue.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c:
+	Support workaround for Dell no sensor-state returned issue.
+	
+2008-06-02  Albert Chu <chu11@llnl.gov>
+
 	* doc/freeipmi-bugs-and-workarounds.txt: Add info on Dell sensor issue.
 
 	* libfreeipmi/src/cmds/ipmi-sensor-cmds.c: Fix declarations.  Some
