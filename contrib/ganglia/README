@@ -1,0 +1,29 @@
+The ganglia scripts can be used to monitor IPMI sensors in ganglia via
+FreeIPMI.  Please see instructions found at the top of each script for
+instructions.
+
+ganglia_ipmimonitoring.pl
+-------------------------
+
+Monitor via FreeIPMI's ipmimonitoring.  This is the recommended script
+to use.  It will monitor the state (Nominal, Warning, or Critical) of
+all the sensors currently supported by libipmimonitoring(3).  At last
+check, the sesnors supported are: temperature, voltage, current, fan,
+physical security, platform security violation attempt, processor,
+power supply, power unit, memory, drive slot, syste firmware progress,
+event logging disabled, system event, critical interrupt, module
+board, slot connector, watchdog2, entity presence, management
+subsystem health, battery, fru state.
+
+It will also monitor the sensor readings for temperature, fan, and
+voltage sensors (i.e. 99.0 C, 130000.00 RPM, 1.2 V).
+
+ganglia_ipmi_sensors.pl
+-----------------------
+Monitor via FreeIPMI's ipmi-sensors.  This general script will monitor
+temperature, fan, and voltage sensor readings.
+
+Albert Chu
+chu11 at llnl dot gov
+
+
