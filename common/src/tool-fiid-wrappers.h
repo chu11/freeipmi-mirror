@@ -67,6 +67,19 @@ do {                                                      \
     }                                                     \
 } while (0)
 
+#define _FIID_OBJ_LEN_BYTES(__obj, __rv)                             \
+do {                                                                 \
+  if (((__rv) = fiid_obj_len_bytes((__obj))) < 0)                    \
+    {                                                                \
+      pstdout_fprintf(state_data->pstate,                            \
+                      stderr,                                        \
+                      "fiid_obj_len_bytes: %s\n",                    \
+                      fiid_strerror(fiid_obj_errnum((__obj))));      \
+      goto cleanup;                                                  \
+    }                                                                \
+} while (0)
+
+
 #define _FIID_OBJ_COPY(__obj_dest, __obj_src, __alt_tmpl)            \
 do {                                                                 \
   if (!((__obj_dest) = fiid_obj_copy((__obj_src), (__alt_tmpl))))    \
@@ -79,20 +92,29 @@ do {                                                                 \
     }                                                                \
 } while (0)
 
-#define _FIID_OBJ_GET(__obj, __field, __val)                    \
-do {                                                            \
-    uint64_t __localval = 0, *__localval_ptr;                   \
-    __localval_ptr = (__val);                                   \
-    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)     \
-      {                                                         \
-        pstdout_fprintf(state_data->pstate,                     \
-                        stderr,                                 \
-                        "fiid_obj_get: %s: %s\n",               \
-                        __field,                                \
-                        fiid_strerror(fiid_obj_errnum((__obj)))); \
-         goto cleanup;                                          \
-      }                                                         \
-    *__localval_ptr = __localval;                               \
+#define _FIID_OBJ_GET(__obj, __field, __val)                            \
+do {                                                                    \
+    uint64_t __localval = 0, *__localval_ptr;                           \
+    int8_t __ret;                                                       \
+    __localval_ptr = (__val);                                           \
+    if ((__ret = fiid_obj_get ((__obj), (__field), &__localval)) < 0)   \
+      {                                                                 \
+        pstdout_fprintf(state_data->pstate,                             \
+                        stderr,                                         \
+                        "fiid_obj_get: %s: %s\n",                       \
+                        __field,                                        \
+                        fiid_strerror(fiid_obj_errnum((__obj))));       \
+        goto cleanup;                                                   \
+      }                                                                 \
+    if (!__ret)                                                         \
+      {                                                                 \
+        pstdout_fprintf(state_data->pstate,                             \
+                        stderr,                                         \
+                        "fiid_obj_get: %s: no data set\n",              \
+                        __field);                                       \
+        goto cleanup;                                                   \
+      }                                                                 \
+    *__localval_ptr = __localval;                                       \
 } while (0)
 
 #define _FIID_OBJ_GET_WITH_RETURN_VALUE(__obj, __field, __val, __rv)    \

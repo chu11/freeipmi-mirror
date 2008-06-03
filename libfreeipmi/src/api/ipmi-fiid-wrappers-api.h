@@ -159,30 +159,44 @@ do {                                                     \
       }                                                  \
 } while (0)
 
-#define API_FIID_OBJ_GET(__obj, __field, __val)               \
-do {                                                          \
-    uint64_t __localval = 0, *__localval_ptr;                 \
-    __localval_ptr = (__val);                                 \
-    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)   \
-      {                                                       \
-         __FIID_OBJ_TRACE((__obj));                           \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                  \
-         return (-1);                                         \
-      }                                                       \
-    *__localval_ptr = __localval;                             \
+#define API_FIID_OBJ_GET(__obj, __field, __val)                         \
+do {                                                                    \
+    uint64_t __localval = 0, *__localval_ptr;                           \
+    int8_t __ret;                                                       \
+    __localval_ptr = (__val);                                           \
+    if ((__ret = fiid_obj_get ((__obj), (__field), &__localval)) < 0)   \
+      {                                                                 \
+         __FIID_OBJ_TRACE((__obj));                                     \
+         __FIID_OBJ_SET_API_ERRNUM((__obj));                            \
+         return (-1);                                                   \
+      }                                                                 \
+    if (!__ret)                                                         \
+      {                                                                 \
+         __FIID_OBJ_TRACE((__obj));                                     \
+         ctx->errnum = IPMI_ERR_IPMI_ERROR;                             \
+         return (-1);                                                   \
+      }                                                                 \
+    *__localval_ptr = __localval;                                       \
 } while (0)
 
-#define API_FIID_OBJ_GET_CLEANUP(__obj, __field, __val)       \
-do {                                                          \
-    uint64_t __localval = 0, *__localval_ptr;                 \
-    __localval_ptr = (__val);                                 \
-    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)   \
-      {                                                       \
-         __FIID_OBJ_TRACE((__obj));                           \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                  \
-         goto cleanup;                                        \
-      }                                                       \
-    *__localval_ptr = __localval;                             \
+#define API_FIID_OBJ_GET_CLEANUP(__obj, __field, __val)                 \
+do {                                                                    \
+    uint64_t __localval = 0, *__localval_ptr;                           \
+    int8_t __ret;                                                       \
+    __localval_ptr = (__val);                                           \
+    if ((__ret = fiid_obj_get ((__obj), (__field), &__localval)) < 0)   \
+      {                                                                 \
+         __FIID_OBJ_TRACE((__obj));                                     \
+         __FIID_OBJ_SET_API_ERRNUM((__obj));                            \
+         goto cleanup;                                                  \
+      }                                                                 \
+    if (!__ret)                                                         \
+      {                                                                 \
+         __FIID_OBJ_TRACE((__obj));                                     \
+         ctx->errnum = IPMI_ERR_IPMI_ERROR;                             \
+         goto cleanup;                                                  \
+      }                                                                 \
+    *__localval_ptr = __localval;                                       \
 } while (0)
 
 #define API_FIID_OBJ_SET(__obj, __field, __val)               \

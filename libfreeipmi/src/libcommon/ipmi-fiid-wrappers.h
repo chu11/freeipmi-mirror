@@ -74,10 +74,20 @@ do {                                                               \
   __FIID_ERRNUM_TRACE(__iter_errnum);                              \
 } while (0)
 
+#define __FIID_OBJ_NO_DATA_TRACE(__field)                          \
+do {                                                               \
+  fprintf (stderr,                                                 \
+	   "%s: %d: %s: %s: no data\n",                            \
+           __FILE__, __LINE__, __PRETTY_FUNCTION__,                \
+           __field);                                               \
+  fflush (stderr);                                                 \
+} while (0)
+
 #else
 #define __FIID_TRACE
 #define __FIID_OBJ_TRACE(___obj)
 #define __FIID_ITER_TRACE(___iter)
+#define __FIID_OBJ_NO_DATA_TRACE(__field)
 #endif /* IPMI_TRACE */
 
 #define __FIID_ERRNUM_SET_ERRNO(___errnum)              \
@@ -566,11 +576,18 @@ do {                                                                            
 #define FIID_OBJ_GET(__obj, __field, __val)                   \
 do {                                                          \
     uint64_t __localval = 0, *__localval_ptr;                 \
+    int8_t __ret;                                             \
     __localval_ptr = (__val);                                 \
     if (fiid_obj_get ((__obj), (__field), &__localval) < 0)   \
       {                                                       \
          __FIID_OBJ_TRACE((__obj));                           \
          __FIID_OBJ_SET_ERRNO((__obj));                       \
+         return (-1);                                         \
+      }                                                       \
+    if (!__ret)                                               \
+      {                                                       \
+         __FIID_OBJ_NO_DATA_TRACE((__field));                 \
+         __FIID_ERRNUM_SET_ERRNO(FIID_ERR_INTERNAL_ERROR);    \
          return (-1);                                         \
       }                                                       \
     *__localval_ptr = __localval;                             \
@@ -579,11 +596,18 @@ do {                                                          \
 #define FIID_OBJ_GET_CLEANUP(__obj, __field, __val)           \
 do {                                                          \
     uint64_t __localval = 0, *__localval_ptr;                 \
+    int8_t __ret;                                             \
     __localval_ptr = (__val);                                 \
     if (fiid_obj_get ((__obj), (__field), &__localval) < 0)   \
       {                                                       \
          __FIID_OBJ_TRACE((__obj));                           \
          __FIID_OBJ_SET_ERRNO((__obj));                       \
+         goto cleanup;                                        \
+      }                                                       \
+    if (!__ret)                                               \
+      {                                                       \
+         __FIID_OBJ_NO_DATA_TRACE((__field));                 \
+         __FIID_ERRNUM_SET_ERRNO(FIID_ERR_INTERNAL_ERROR);    \
          goto cleanup;                                        \
       }                                                       \
     *__localval_ptr = __localval;                             \
@@ -1270,11 +1294,18 @@ do {                                                                          \
 #define LOCATE_FIID_OBJ_GET(__obj, __field, __val)                            \
 do {                                                                          \
     uint64_t __localval = 0, *__localval_ptr;                                 \
+    int8_t __ret;                                                             \
     __localval_ptr = (__val);                                                 \
-    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)                   \
+    if ((__ret = fiid_obj_get ((__obj), (__field), &__localval)) < 0)         \
       {                                                                       \
          __FIID_OBJ_TRACE((__obj));                                           \
          __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM((__obj));                         \
+         return (-1);                                                         \
+      }                                                                       \
+    if (!__ret)                                                               \
+      {                                                                       \
+         __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
+         (*locate_errnum) = IPMI_LOCATE_ERR_SYSTEM_ERROR;                     \
          return (-1);                                                         \
       }                                                                       \
     *__localval_ptr = __localval;                                             \
@@ -1283,11 +1314,18 @@ do {                                                                          \
 #define LOCATE_FIID_OBJ_GET_CLEANUP(__obj, __field, __val)                    \
 do {                                                                          \
     uint64_t __localval = 0, *__localval_ptr;                                 \
+    int8_t __ret;                                                             \
     __localval_ptr = (__val);                                                 \
     if (fiid_obj_get ((__obj), (__field), &__localval) < 0)                   \
       {                                                                       \
          __FIID_OBJ_TRACE((__obj));                                           \
          __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM((__obj));                         \
+         goto cleanup;                                                        \
+      }                                                                       \
+    if (!__ret)                                                               \
+      {                                                                       \
+         __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
+         (*locate_errnum) = IPMI_LOCATE_ERR_SYSTEM_ERROR;                     \
          goto cleanup;                                                        \
       }                                                                       \
     *__localval_ptr = __localval;                                             \
@@ -1404,11 +1442,18 @@ do {                                                                          \
 #define SDR_CACHE_FIID_OBJ_GET(__obj, __field, __val)                         \
 do {                                                                          \
     uint64_t __localval = 0, *__localval_ptr;                                 \
+    int8_t __ret;                                                             \
     __localval_ptr = (__val);                                                 \
     if (fiid_obj_get ((__obj), (__field), &__localval) < 0)                   \
       {                                                                       \
          __FIID_OBJ_TRACE((__obj));                                           \
          __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM((__obj));                      \
+         return (-1);                                                         \
+      }                                                                       \
+    if (!__ret)                                                               \
+      {                                                                       \
+         __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
+         ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_IPMI_ERROR;                     \
          return (-1);                                                         \
       }                                                                       \
     *__localval_ptr = __localval;                                             \
@@ -1417,11 +1462,18 @@ do {                                                                          \
 #define SDR_CACHE_FIID_OBJ_GET_CLEANUP(__obj, __field, __val)                 \
 do {                                                                          \
     uint64_t __localval = 0, *__localval_ptr;                                 \
+    int8_t __ret;                                                             \
     __localval_ptr = (__val);                                                 \
     if (fiid_obj_get ((__obj), (__field), &__localval) < 0)                   \
       {                                                                       \
          __FIID_OBJ_TRACE((__obj));                                           \
          __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM((__obj));                      \
+         goto cleanup;                                                        \
+      }                                                                       \
+    if (!__ret)                                                               \
+      {                                                                       \
+         __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
+         ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_IPMI_ERROR;                     \
          goto cleanup;                                                        \
       }                                                                       \
     *__localval_ptr = __localval;                                             \
