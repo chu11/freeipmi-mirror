@@ -1,5 +1,10 @@
 2008-06-03  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/src/ipmi-sensors-reading.c: Fix compiler warning.
+	Fix error return bug.
+	
+2008-06-03  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/cmds/ipmi-sensor-cmds.c: Make "sensor_state",
 	"sensor_state1", "sensor_state2", and "reserved2".
 
