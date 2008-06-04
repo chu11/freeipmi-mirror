@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.32 2008-06-04 04:24:25 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.33 2008-06-04 05:15:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -863,16 +863,15 @@ ipmiconsole_ctx_connection_cleanup_session_not_submitted(ipmiconsole_ctx_t c)
 int
 ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
 {
-#ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
   struct hostent hent;
   int h_errnop;
   char buf[GETHOSTBYNAME_AUX_BUFLEN];
-#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  struct hostent hent;
-  int h_errnop;
-  char buf[GETHOSTBYNAME_AUX_BUFLEN];
-#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
+#if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
   struct hostent *hptr;
+#elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
+#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
+  struct hostent *hptr;
+#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -898,14 +897,28 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
       return -1;
     }  
 
-#ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
   memset(&hent, '\0', sizeof(struct hostent));
+#if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
   if (gethostbyname_r(c->config.hostname,
                       &hent,
                       buf,
                       GETHOSTBYNAME_AUX_BUFLEN,
                       &hptr,
                       &h_errnop) != 0)
+#elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
+  if (!gethostbyname_r(c->config.hostname,
+                       &hent,
+                       buf,
+                       GETHOSTBYNAME_AUX_BUFLEN,
+                       &h_errnop))
+#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
+  if (freeipmi_gethostbyname_r(c->config.hostname,
+                               &hent,
+                               buf,
+                               GETHOSTBYNAME_AUX_BUFLEN,
+                               &hptr,
+                               &h_errnop) != 0)
+#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
     {
       if (h_errnop == HOST_NOT_FOUND
           || h_errnop == NO_ADDRESS
@@ -919,32 +932,14 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
       return -1;
     }
 
+#if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
   if (!hptr)
     {
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
       return -1;
     }
+#elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
 #else /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  memset(&hent, '\0', sizeof(struct hostent));
-  if (freeipmi_gethostbyname_r(c->config.hostname,
-                               &hent,
-                               buf,
-                               GETHOSTBYNAME_AUX_BUFLEN,
-                               &hptr,
-                               &h_errnop) != 0)
-    {
-      if (h_errnop == HOST_NOT_FOUND
-          || h_errnop == NO_ADDRESS
-          || h_errnop == NO_DATA)
-        {
-          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
-          return -1;
-        }
-      IPMICONSOLE_DEBUG(("freeipmi_gethostbyname_r: %s", hstrerror(h_errnop)));
-      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return -1;
-    }
-
   if (!hptr)
     {
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
@@ -952,7 +947,7 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
     }
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
 
-  c->session.addr.sin_addr = *((struct in_addr *)hptr->h_addr);
+  c->session.addr.sin_addr = *((struct in_addr *)hent.h_addr);
 
   c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_START;
   c->session.close_session_flag = 0;

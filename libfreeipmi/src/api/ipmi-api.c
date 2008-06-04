@@ -218,16 +218,15 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                          uint32_t flags)
 {
   struct sockaddr_in addr;
-#ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
   struct hostent hent;
   int h_errnop;
   char buf[GETHOSTBYNAME_AUX_BUFLEN];
-#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  struct hostent hent;
-  int h_errnop;
-  char buf[GETHOSTBYNAME_AUX_BUFLEN];
-#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
+#if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
   struct hostent *hptr;
+#elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
+#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
+  struct hostent *hptr;
+#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
   uint32_t flags_mask = (IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO
                          | IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION
                          | IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE
@@ -252,8 +251,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   ctx->workaround_flags = workaround_flags;
   ctx->flags = flags;
 
-#ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
   memset(&hent, '\0', sizeof(struct hostent));
+#if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
   API_ERR_HOSTNAME_INVALID_CLEANUP(!gethostbyname_r(hostname,
                                                     &hent,
                                                     buf,
@@ -261,8 +260,13 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                                                     &hptr,
                                                     &h_errnop));
   API_ERR_HOSTNAME_INVALID_CLEANUP(hptr);
+#elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
+  API_ERR_HOSTNAME_INVALID_CLEANUP(!gethostbyname_r(hostname,
+                                                    &hent,
+                                                    buf,
+                                                    GETHOSTBYNAME_AUX_BUFLEN,
+                                                    &h_errnop));
 #else  /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  memset(&hent, '\0', sizeof(struct hostent));
   API_ERR_HOSTNAME_INVALID_CLEANUP(!freeipmi_gethostbyname_r(hostname,
                                                              &hent,
                                                              buf,
@@ -278,7 +282,7 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
 
   ctx->io.outofband.remote_host.sin_family = AF_INET;
   ctx->io.outofband.remote_host.sin_port = htons(RMCP_AUX_BUS_SHUNT);
-  ctx->io.outofband.remote_host.sin_addr = *(struct in_addr *) hptr->h_addr;
+  ctx->io.outofband.remote_host.sin_addr = *(struct in_addr *) hent.h_addr;
   
   memset(ctx->io.outofband.username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
   if (username)
@@ -357,16 +361,15 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                              uint32_t flags)
 {
   struct sockaddr_in addr;
-#ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
   struct hostent hent;
   int h_errnop;
   char buf[GETHOSTBYNAME_AUX_BUFLEN];
-#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  struct hostent hent;
-  int h_errnop;
-  char buf[GETHOSTBYNAME_AUX_BUFLEN];
-#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
+#if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
   struct hostent *hptr;
+#elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
+#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
+  struct hostent *hptr;
+#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
   uint32_t flags_mask = (IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES
                          | IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE
                          | IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PORT
@@ -395,8 +398,8 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   ctx->workaround_flags = workaround_flags;
   ctx->flags = flags;
 
-#ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
   memset(&hent, '\0', sizeof(struct hostent));
+#if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
   API_ERR_HOSTNAME_INVALID_CLEANUP(!gethostbyname_r(hostname,
                                                     &hent,
                                                     buf,
@@ -404,8 +407,13 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                                                     &hptr,
                                                     &h_errnop));
   API_ERR_HOSTNAME_INVALID_CLEANUP(hptr);
+#elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
+  API_ERR_HOSTNAME_INVALID_CLEANUP(!gethostbyname_r(hostname,
+                                                    &hent,
+                                                    buf,
+                                                    GETHOSTBYNAME_AUX_BUFLEN,
+                                                    &h_errnop));
 #else  /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  memset(&hent, '\0', sizeof(struct hostent));
   API_ERR_HOSTNAME_INVALID_CLEANUP(!freeipmi_gethostbyname_r(hostname,
                                                              &hent,
                                                              buf,
@@ -421,7 +429,7 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
 
   ctx->io.outofband.remote_host.sin_family = AF_INET;
   ctx->io.outofband.remote_host.sin_port = htons(RMCP_AUX_BUS_SHUNT);
-  ctx->io.outofband.remote_host.sin_addr = *(struct in_addr *) hptr->h_addr;
+  ctx->io.outofband.remote_host.sin_addr = *(struct in_addr *) hent.h_addr;
   
   memset(ctx->io.outofband.username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
   if (username)

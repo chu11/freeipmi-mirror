@@ -1,5 +1,12 @@
 2008-06-03  Albert Chu <chu11@llnl.gov>
 
+	* configure.ac: Check for netdb.h for gethostbyname_r.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c,
+	libfreeipmi/src/api/ipmi-api.c: Support 5 argument gethostbyname_r.
+
+2008-06-03  Albert Chu <chu11@llnl.gov>
+
 	* common/src/freeipmi-portability.h,
 	common/src/freeipmi-portability.c (freeipmi_gethostbyname_r):
 	Change compile rules.  Compile only if known gethostbyname_r isn't
