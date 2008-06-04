@@ -70,9 +70,6 @@ rework common cmdline & config lib, into one?
 
 config
 ------
-config-file
-- bmc-watchdog?
- - other options?
 config file - support workarounds/etc. for heterogenous cluster?
 support hostranged commit/checkout in all config tools except bmc-config??
 - or special case IP/MAC part
