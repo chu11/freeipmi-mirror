@@ -83,6 +83,10 @@ ipmi-sensors-config
 - sensor enable/disable??
 - sensor event enable/disable??
 
+webpage
+-------
+examples of ipmi-sensors, ipmi-sel, ipmimontiroing, etc. output
+
 0.7.0 porting ensure works
 --------------------------
 gethostbyname_r - still compiles right for BSD
