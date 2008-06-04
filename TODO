@@ -48,7 +48,6 @@ pef-config
 
 general
 -------
-remove configure checks in program_invocation_short_name/getprogname
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
