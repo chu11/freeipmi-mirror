@@ -21,7 +21,7 @@ solaris
 - gethostbyname_r 5 args
      struct hostent *gethostbyname_r(const char *name, struct hostent *result,
          char *buffer, int buflen, int *h_errnop);
-  need -lnsl
+  need -lnsl??
 - no argp
   - need argp standalone lib, maybe cut and paste in?
 
@@ -104,7 +104,7 @@ update index w/ new bmc-info text.
 update w/ bmc-device index.htp
 update w/ bmc-device manpage
 update all manpages and docs
-links to ganglia/nagios??
+links to ganglia/nagios
 update w/ freeipmi.conf.5 manpage
 - remove ipmiconsole.conf.5 and ipmipower.conf.5
 
