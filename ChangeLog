@@ -1,5 +1,11 @@
 2008-06-04  Albert Chu <chu11@llnl.gov>
 
+	* config/ac_gethostbyname_r.m4: Remove file.
+
+	* configure.ac: Add alternate gethostbyname_r checks that work on Solaris.
+	
+2008-06-04  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/src/ipmi-sensors-display-common.c
 	(ipmi_sensors_get_thresholds): Special case completion code
 	IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT as an
