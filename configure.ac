@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.126 2008-06-04 22:16:49 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127 2008-06-04 22:17:21 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -452,20 +452,6 @@ AC_CHECK_HEADERS([linux/ipmi.h], [], [],
 AC_CHECK_HEADERS([sys/ipmi.h])
 
 dnl Check for variables
-
-dnl program_invocation_short_name is a GNU extension,
-dnl we use getprogname() instead on FreeBSD
-AC_MSG_CHECKING([for program_invocation_short_name])
-AC_TRY_LINK([
-		#define _GNU_SOURCE
-		#include <errno.h>
-	], [
-		char *try = program_invocation_short_name;
-	], [
-		AC_DEFINE([HAVE_PROGRAM_SHORT_NAME], [1],
-			[Define if you have program_invocation_shortname variable])
-		AC_MSG_RESULT([yes])
-	], [AC_MSG_RESULT([no])])
 
 dnl Macro definitions
 
