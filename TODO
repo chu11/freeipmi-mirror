@@ -1,7 +1,7 @@
 libfreeipmi:
 ------------
 * Missing IPMI commands.
-  - lan-cmds 
+f  - lan-cmds 
   - msg-support-cmds
   - chassis-cmds
   - serial-cmds
@@ -18,6 +18,12 @@ solaris
 -------
 - builds?
 - solaris inband driver (solaris 9? solaris 10? solaris 11?)
+- gethostbyname_r 5 args
+     struct hostent *gethostbyname_r(const char *name, struct hostent *result,
+         char *buffer, int buflen, int *h_errnop);
+  need -lnsl
+- no argp
+  - need argp standalone lib, maybe cut and paste in?
 
 bmc-watchdog
 ------------
