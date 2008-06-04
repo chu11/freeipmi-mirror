@@ -195,7 +195,10 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                         "ipmi_cmd_get_sensor_thresholds: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       if ((ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID)
-          && (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1))
+          && (ipmi_check_completion_code(obj_cmd_rs, 
+                                         IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
+              || ipmi_check_completion_code(obj_cmd_rs,
+                                            IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
         {
           /* The thresholds cannot be gathered for one reason or
            * another, maybe b/c its a OEM sensor or something.  We can
