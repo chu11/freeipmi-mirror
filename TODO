@@ -22,6 +22,7 @@ solaris
      struct hostent *gethostbyname_r(const char *name, struct hostent *result,
          char *buffer, int buflen, int *h_errnop);
   need -lnsl for linking or can't find symbol?
+- /usr/ccs/bin for ld?
 - no argp
   - need argp standalone lib, maybe cut and paste in?
 
