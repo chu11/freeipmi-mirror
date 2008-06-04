@@ -93,9 +93,9 @@ ipmi-sensors-config
 - sensor enable/disable??
 - sensor event enable/disable??
 
-porting announcements
----------------------
-gethostbyname_r for BSD
+0.7.0 porting ensure works
+--------------------------
+gethostbyname_r - still compiles right for BSD
 
 0.7.0
 -----
