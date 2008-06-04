@@ -1,7 +1,5 @@
 2008-06-03  Albert Chu <chu11@llnl.gov>
 
-	* configure.ac: Check for netdb.h for gethostbyname_r.
-
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c,
 	libfreeipmi/src/api/ipmi-api.c: Support 5 argument gethostbyname_r.
 
