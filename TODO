@@ -45,15 +45,6 @@ pef-config
 * conf.5 manpage
 * how to specify event reading type codes easily
 
-test
-----
-all config file options
-- legacy config files
-- ipmipower still works with powerman
-- old .conf manpages poitn to new one
-bmc-wwatchdog
-- w/ config options
-
 general
 -------
 event handling
