@@ -1,5 +1,16 @@
 2008-06-03  Albert Chu <chu11@llnl.gov>
 
+	* common/src/freeipmi-portability.h,
+	common/src/freeipmi-portability.c (freeipmi_gethostbyname_r):
+	Change compile rules.  Compile only if known gethostbyname_r isn't
+	found.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c,
+	libfreeipmi/src/api/ipmi-api.c: Call freeipmi_gethostbyname_r
+	appropriately.
+	
+2008-06-03  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
 	(run_cmd_args): If receive parameters error on
 	ipmi_monitoring_bitmask_string() call, assume bogus bitmask

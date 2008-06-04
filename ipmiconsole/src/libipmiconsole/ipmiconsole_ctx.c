@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.31 2008-04-18 01:30:09 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.32 2008-06-04 04:24:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -867,7 +867,11 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
   struct hostent hent;
   int h_errnop;
   char buf[GETHOSTBYNAME_AUX_BUFLEN];
-#endif /* HAVE_FUNC_GETHOSTBYNAME_R_6 */
+#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
+  struct hostent hent;
+  int h_errnop;
+  char buf[GETHOSTBYNAME_AUX_BUFLEN];
+#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
   struct hostent *hptr;
 
   assert(c);
@@ -921,7 +925,31 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
       return -1;
     }
 #else /* !HAVE_FUNC_GETHOSTBYNAME_R */
-#error Additional threadsafe gethostbyname support needed
+  memset(&hent, '\0', sizeof(struct hostent));
+  if (freeipmi_gethostbyname_r(c->config.hostname,
+                               &hent,
+                               buf,
+                               GETHOSTBYNAME_AUX_BUFLEN,
+                               &hptr,
+                               &h_errnop) != 0)
+    {
+      if (h_errnop == HOST_NOT_FOUND
+          || h_errnop == NO_ADDRESS
+          || h_errnop == NO_DATA)
+        {
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
+          return -1;
+        }
+      IPMICONSOLE_DEBUG(("freeipmi_gethostbyname_r: %s", hstrerror(h_errnop)));
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
+      return -1;
+    }
+
+  if (!hptr)
+    {
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
+      return -1;
+    }
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
 
   c->session.addr.sin_addr = *((struct in_addr *)hptr->h_addr);

@@ -222,7 +222,11 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   struct hostent hent;
   int h_errnop;
   char buf[GETHOSTBYNAME_AUX_BUFLEN];
-#endif /* HAVE_FUNC_GETHOSTBYNAME_R_6 */
+#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
+  struct hostent hent;
+  int h_errnop;
+  char buf[GETHOSTBYNAME_AUX_BUFLEN];
+#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
   struct hostent *hptr;
   uint32_t flags_mask = (IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO
                          | IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION
@@ -258,7 +262,14 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                                                     &h_errnop));
   API_ERR_HOSTNAME_INVALID_CLEANUP(hptr);
 #else  /* !HAVE_FUNC_GETHOSTBYNAME_R */
-#error Additional threadsafe gethostbyname support needed
+  memset(&hent, '\0', sizeof(struct hostent));
+  API_ERR_HOSTNAME_INVALID_CLEANUP(!freeipmi_gethostbyname_r(hostname,
+                                                             &hent,
+                                                             buf,
+                                                             GETHOSTBYNAME_AUX_BUFLEN,
+                                                             &hptr,
+                                                             &h_errnop));
+  API_ERR_HOSTNAME_INVALID_CLEANUP(hptr);
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
 
   strncpy(ctx->io.outofband.hostname,
@@ -350,7 +361,11 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   struct hostent hent;
   int h_errnop;
   char buf[GETHOSTBYNAME_AUX_BUFLEN];
-#endif /* HAVE_FUNC_GETHOSTBYNAME_R_6 */
+#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
+  struct hostent hent;
+  int h_errnop;
+  char buf[GETHOSTBYNAME_AUX_BUFLEN];
+#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
   struct hostent *hptr;
   uint32_t flags_mask = (IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES
                          | IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE
@@ -390,7 +405,14 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                                                     &h_errnop));
   API_ERR_HOSTNAME_INVALID_CLEANUP(hptr);
 #else  /* !HAVE_FUNC_GETHOSTBYNAME_R */
-#error Additional threadsafe gethostbyname support needed
+  memset(&hent, '\0', sizeof(struct hostent));
+  API_ERR_HOSTNAME_INVALID_CLEANUP(!freeipmi_gethostbyname_r(hostname,
+                                                             &hent,
+                                                             buf,
+                                                             GETHOSTBYNAME_AUX_BUFLEN,
+                                                             &hptr,
+                                                             &h_errnop));
+  API_ERR_HOSTNAME_INVALID_CLEANUP(hptr);
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
 
   strncpy(ctx->io.outofband.hostname,

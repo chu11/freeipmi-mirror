@@ -93,6 +93,10 @@ ipmi-sensors-config
 - sensor enable/disable??
 - sensor event enable/disable??
 
+porting announcements
+---------------------
+gethostbyname_r for BSD
+
 0.7.0
 -----
 add contributions (ganglia/nagios) to webpage downloads

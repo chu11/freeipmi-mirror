@@ -103,6 +103,7 @@ freeipmi_getline(char **buf, size_t *size, FILE *fp)
 }
 #endif
 
+#ifndef HAVE_FUNC_GETHOSTBYNAME_R_6
 /*
  * Replacement for 6-argument variant of gethostbyname_r(). This is a
  * slightly modified version of gethostbyname_r() by Enzo Michelangeli
@@ -112,13 +113,12 @@ freeipmi_getline(char **buf, size_t *size, FILE *fp)
  * static thread data from being overwritten by next call to
  * gethostbyname(). So mutex is not required.
  */
-#ifdef LOCAL_GETHOSTBYNAME_R
 int freeipmi_gethostbyname_r(const char *name,
-	struct hostent *ret,
-	char *buf,
-	size_t buflen,
-	struct hostent **result,
-	int *h_errnop)
+                             struct hostent *ret,
+                             char *buf,
+                             size_t buflen,
+                             struct hostent **result,
+                             int *h_errnop)
 {
 	int hsave;
 	struct hostent *ph;
@@ -221,4 +221,4 @@ int freeipmi_gethostbyname_r(const char *name,
 
 	return (*result == NULL);
 }
-#endif
+#endif /* HAVE_FUNC_GETHOSTBYNAME_R_6 */
