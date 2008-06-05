@@ -25,10 +25,6 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <pthread.h>
-#include <err.h>
 #include <assert.h>
 #include <errno.h>
 
