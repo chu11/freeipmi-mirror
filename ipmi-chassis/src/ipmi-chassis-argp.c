@@ -20,12 +20,17 @@
 #include "config.h"
 #endif
 
+#include <stdio.h>
 #include <stdlib.h>
-#include <argp.h>
-
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_ARGP_H
+#include <argp.h>
+#else /* !HAVE_ARGP_H */
+#include "freeipmi-argp.h"
+#endif /* !HAVE_ARGP_H */
+
 
 #include <freeipmi/freeipmi.h>
 

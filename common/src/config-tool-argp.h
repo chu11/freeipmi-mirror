@@ -19,9 +19,18 @@
 #ifndef _CONFIG_TOOL_ARGP_H_
 #define _CONFIG_TOOL_ARGP_H_
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 #include <stdint.h>
+
+#if HAVE_ARGP_H
 #include <argp.h>
+#else /* !HAVE_ARGP_H */
+#include "freeipmi-argp.h"
+#endif /* !HAVE_ARGP_H */
 
 #include "config-tool-common.h"
 

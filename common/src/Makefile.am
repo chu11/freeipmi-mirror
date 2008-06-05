@@ -36,6 +36,18 @@ noinst_HEADERS = \
 	freeipmi-argp-namefrob.h \
 	freeipmi-argp.h
 
+if WITH_FREEIPMI_ARGP
+FREEIPMI_ARGP_LIB = libfreeipmiargp.la
+FREEIPMI_ARG_SOURCES = \
+	freeipmi-argp-ba.c \
+	freeipmi-argp-eexst.c \
+	freeipmi-argp-fmtstream.c \
+	freeipmi-argp-help.c \
+	freeipmi-argp-parse.c \
+	freeipmi-argp-pv.c \
+	freeipmi-argp-pvh.c
+endif
+
 noinst_LTLIBRARIES = \
 	libfreeipmiportability.la \
 	libtoolcommon.la \
@@ -44,7 +56,7 @@ noinst_LTLIBRARIES = \
 	libhostrange.la \
 	libconfigtoolcommon.la \
 	libdebugcommon.la \
-	libfreeipmiargp.la
+	$(FREEIPMI_ARGP_LIB)
 
 libfreeipmiportability_la_SOURCES = freeipmi-portability.c
 libfreeipmiportability_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
@@ -100,11 +112,4 @@ libconfigtoolcommon_la_SOURCES = \
 	config-tool-validate.c
 libconfigtoolcommon_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 
-libfreeipmiargp_la_SOURCES = \
-	freeipmi-argp-ba.c \
-	freeipmi-argp-eexst.c \
-	freeipmi-argp-fmtstream.c \
-	freeipmi-argp-help.c \
-	freeipmi-argp-parse.c \
-	freeipmi-argp-pv.c \
-	freeipmi-argp-pvh.c
+libfreeipmiargp_la_SOURCES = $(FREEIPMI_ARG_SOURCES)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.1 2008-05-22 00:19:24 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.1.2.1 2008-06-05 22:56:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -33,14 +33,15 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <assert.h>
+#if HAVE_ARGP_H
+#include <argp.h>
+#else /* !HAVE_ARGP_H */
+#include "freeipmi-argp.h"
+#endif /* !HAVE_ARGP_H */
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
-#include <stdint.h>
-#if HAVE_GETOPT_H
-#include <getopt.h>
-#endif /* HAVE_GETOPT_H */
+#include <assert.h>
 #include <errno.h>
 
 #include <argp.h>

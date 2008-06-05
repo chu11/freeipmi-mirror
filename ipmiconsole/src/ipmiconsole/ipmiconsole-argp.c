@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.18 2008-05-22 00:19:23 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.18.2.1 2008-06-05 22:56:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -33,9 +33,11 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if HAVE_GETOPT_H
-#include <getopt.h>
-#endif /* HAVE_GETOPT_H */
+#if HAVE_ARGP_H
+#include <argp.h>
+#else /* !HAVE_ARGP_H */
+#include "freeipmi-argp.h"
+#endif /* !HAVE_ARGP_H */
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */

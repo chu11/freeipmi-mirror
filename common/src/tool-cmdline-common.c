@@ -32,7 +32,6 @@
 #include <error.h>
 #endif
 #include <assert.h>
-#include <argp.h>
 
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"

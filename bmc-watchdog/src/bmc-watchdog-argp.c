@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.5 2008-05-29 16:04:41 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.5.2.1 2008-06-05 22:56:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -31,10 +31,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <argp.h>
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_ARGP_H
+#include <argp.h>
+#else /* !HAVE_ARGP_H */
+#include "freeipmi-argp.h"
+#endif /* !HAVE_ARGP_H */
 
 #include "tool-cmdline-common.h"
 #include "tool-config-file-common.h"

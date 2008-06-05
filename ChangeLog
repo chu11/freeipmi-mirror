@@ -16,6 +16,13 @@
 	common/src/freeipmi-argp-parse.c
 	common/src/freeipmi-argp-pv.c
 	common/src/freeipmi-argp-pvh.c: New files.
+
+	* common/src/Makefile.am: Update for new freeipmi-argp lib.
+
+	* configure.ac: Update with lib argp checking and argp.h.
+
+	* Update all tools and libraries to load argp.h or freeipmi-argp.h
+	respectively.
 	
 2008-06-04  Albert Chu <chu11@llnl.gov>
 

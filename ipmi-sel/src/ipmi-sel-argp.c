@@ -25,12 +25,16 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_ARGP_H
 #include <argp.h>
-#include <errno.h>
+#else /* !HAVE_ARGP_H */
+#include "freeipmi-argp.h"
+#endif /* !HAVE_ARGP_H */
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <assert.h>
+#include <errno.h>
 
 #include "tool-cmdline-common.h"
 #include "tool-config-file-common.h"

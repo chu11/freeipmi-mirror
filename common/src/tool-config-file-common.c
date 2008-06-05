@@ -25,7 +25,6 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <argp.h>
 #include <errno.h>
 #include <assert.h>
 

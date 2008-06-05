@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.2 2008-06-05 22:12:42 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.3 2008-06-05 22:56:05 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -420,9 +420,33 @@ dnl not conforming to strndup(3). If we have no strndup() in libc (as
 dnl in FreeBSD), and strndup() check is placed after argp check, argp's
 dnl strndup() will be detected, which is wrong. So place argp check _after_
 dnl strndup() check.
-AC_CHECK_FUNC([argp_parse], ,
-	AC_CHECK_LIB([argp], [argp_parse], ,
-		AC_MSG_ERROR([argp library not found. argp-standalone required.])))
+dnl
+dnl Solaris has no argp library
+AC_CHECK_FUNC([argp_parse], 
+              [have_argp=yes],
+	      AC_CHECK_LIB([argp], 
+                           [argp_parse], 
+                           [have_argp=yes],
+                           [have_argp=no]))
+
+if test "x$have_argp" = "xyes"; then
+   AC_CHECK_HEADER([argp.h], 
+		   AC_DEFINE([HAVE_ARGP_H], [1], [Define if you have argp.h]),
+	           AC_MSG_ERROR([argp header cannot be found]))
+else
+dnl FreeBSD has the argp-standalone package.  If we're on FreeBSD
+dnl make them install the argp-standalone.  On non-FreeBSD, the code
+dnl will fall through and compile the internal FreeIPMI-argp
+   AC_TRY_COMPILE([#include <sys/param.h>],
+                  [
+                   #ifndef __FreeBSD_version
+                   uncompilable junk syntax %$ # @
+                   #endif
+                  ],
+                  AC_MSG_ERROR([argp library not found. argp-standalone required.]))
+fi
+
+AM_CONDITIONAL(WITH_FREEIPMI_ARGP, test "$have_argp" = "no")
 
 ACX_PTHREAD([], AC_MSG_ERROR([Posix threads required to build libipmiconsole]))
 
