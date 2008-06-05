@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.1 2008-06-05 16:05:33 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.2 2008-06-05 22:12:42 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -310,9 +310,8 @@ AC_FUNC_MMAP
 AC_CHECK_FUNCS([strchr memcpy memset mlock])
 
 dnl There is no strndup() and getline() on FreeBSD
-AC_CHECK_FUNCS([strndup getline strerror_r getprogname getpwuid_r])
 dnl mempcpy() and strchrnul() for argp
-AC_CHECK_FUNCS([mempcpy strchrnul])
+AC_CHECK_FUNCS([strndup strchrnul mempcpy getline strerror_r getprogname getpwuid_r])
 
 dnl
 dnl achu: Most parts of this gethostbyname_r testing is from the
