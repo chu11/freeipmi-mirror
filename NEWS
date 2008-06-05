@@ -71,6 +71,21 @@ Contributions
 o Ganglia plugin scripts ganglia_ipmimonitoring.pl and ganglia_ipmi_sensors.pl.
 o Nagios plugin script nagios_ipmimonitoring.pl.
 
+0.6.4 - 06/04/08
+----------------
+o Do not exit ipmi-sensors or ipmimonitoring for sensors that return
+  "sensor data not present" errors.  Output "NA", "Unknown", skip sensor
+  output, etc. as needed.
+o Fix bug in ipmi-sensors and ipmimonitoring when dealing with
+  optional sensor state assertions after a sensor read.
+o Fix bug in ipmi-sensors and ipmimonitoring when dealing with
+  reserved fields in sensor state assertions after a sensor read.
+o Add workaround in ipmi-sensors and ipmimonitoring when dealing with
+  sensors that improperly report sensor assertions after a sensor read
+  (i.e. no assertions set when required, or invalid assertions set).
+o Fix minor corner cases.
+o Fix manpage typos.
+
 0.6.3 - 05/27/08
 ----------------
 o Fix --eliminate option in ipmipower.

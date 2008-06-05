@@ -82,13 +82,12 @@ ipmi-sensors-config
 - sensor enable/disable??
 - sensor event enable/disable??
 
-webpage
--------
-examples of ipmi-sensors, ipmi-sel, ipmimontiroing, etc. output
-
 0.7.0 porting ensure works
 --------------------------
-gethostbyname_r - still compiles right for BSD
+BSD
+- gethostbyname_r - still compiles
+- autoconf - no argp-standalone - config errors w/ argp library not found. argp-standalone required
+- autoconf - finds argp-standalone
 
 0.7.0
 -----

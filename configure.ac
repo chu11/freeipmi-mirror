@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.3 2008-06-05 22:56:05 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.4 2008-06-05 22:59:37 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -324,14 +324,10 @@ dnl
 
 AC_CHECK_FUNC([gethostbyname_r], 
               [have_gethostname_r=yes], 
-              [have_gethostname_r=no])
-
-if test "x${have_gethostname_r}" = "xno"; then
-   AC_CHECK_LIB([nsl],
-                [gethostbyname_r], 
-                [LIBS="$LIBS -lnsl" have_gethostname_r=yes],
-                [have_gethostname_r=no])
-fi
+              AC_CHECK_LIB([nsl],
+                           [gethostbyname_r],
+                           [LIBS="$LIBS -lnsl" have_gethostname_r=yes],
+                           [have_gethostname_r=no]))             
 
 if test "x${have_gethostname_r}" = "xyes"; then
    AC_TRY_LINK(
