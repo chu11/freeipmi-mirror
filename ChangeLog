@@ -23,6 +23,9 @@
 
 	* Update all tools and libraries to load argp.h or freeipmi-argp.h
 	respectively.
+
+	* General cleanup for portability, do not load unnecessary .h
+	files, remove unneeded .h files, etc.
 	
 2008-06-05  Albert Chu <chu11@llnl.gov>
 
