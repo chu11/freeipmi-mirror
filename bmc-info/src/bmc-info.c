@@ -29,7 +29,6 @@
 #include <netinet/in.h>
 #include <pthread.h>
 #include <err.h>
-#include <argp.h>
 #include <assert.h>
 #include <errno.h>
 
