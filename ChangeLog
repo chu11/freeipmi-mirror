@@ -1,3 +1,22 @@
+2008-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	Port for Solaris.
+
+	* README.argp: New file.
+
+	* config/ac_lsh_gcc_attributes.m4: New file.
+
+	* common/src/freeipmi-argp.h
+	common/src/freeipmi-argp-ba.c
+	common/src/freeipmi-argp-eexst.c
+	common/src/freeipmi-argp-fmtstream.c
+	common/src/freeipmi-argp-fmtstream.h
+	common/src/freeipmi-argp-help.c
+	common/src/freeipmi-argp-namefrob.h
+	common/src/freeipmi-argp-parse.c
+	common/src/freeipmi-argp-pv.c
+	common/src/freeipmi-argp-pvh.c: New files.
+	
 2008-06-04  Albert Chu <chu11@llnl.gov>
 
 	* config/ac_gethostbyname_r.m4: Remove file.

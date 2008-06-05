@@ -31,7 +31,10 @@ noinst_HEADERS = \
 	config-tool-section.h \
 	config-tool-utils.h \
 	config-tool-validate.h \
-	debug-common.h
+	debug-common.h \
+	freeipmi-argp-fmtstream.h \
+	freeipmi-argp-namefrob.h \
+	freeipmi-argp.h
 
 noinst_LTLIBRARIES = \
 	libfreeipmiportability.la \
@@ -40,7 +43,8 @@ noinst_LTLIBRARIES = \
 	libmiscutils.la \
 	libhostrange.la \
 	libconfigtoolcommon.la \
-	libdebugcommon.la
+	libdebugcommon.la \
+	libfreeipmiargp.la
 
 libfreeipmiportability_la_SOURCES = freeipmi-portability.c
 libfreeipmiportability_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
@@ -95,3 +99,12 @@ libconfigtoolcommon_la_SOURCES = \
 	config-tool-utils.c \
 	config-tool-validate.c
 libconfigtoolcommon_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
+
+libfreeipmiargp_la_SOURCES = \
+	freeipmi-argp-ba.c \
+	freeipmi-argp-eexst.c \
+	freeipmi-argp-fmtstream.c \
+	freeipmi-argp-help.c \
+	freeipmi-argp-parse.c \
+	freeipmi-argp-pv.c \
+	freeipmi-argp-pvh.c
