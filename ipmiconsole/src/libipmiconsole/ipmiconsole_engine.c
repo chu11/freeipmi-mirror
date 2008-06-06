@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.75 2008-04-18 01:30:09 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.75.6.1 2008-06-06 22:02:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -675,7 +675,7 @@ _console_read(ipmiconsole_ctx_t c)
     }
   
   return 0;
-};
+}
 
 /*
  * Return 0 on success
@@ -740,7 +740,7 @@ _console_write(ipmiconsole_ctx_t c)
     }
 
   return 0;
-};
+}
 
 static void *
 _ipmiconsole_engine(void *arg)
