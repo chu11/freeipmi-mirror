@@ -50,6 +50,8 @@
 
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
+
+	* General cleanup, make Makefile's consistent to one another, etc.
 	
 2008-06-05  Albert Chu <chu11@llnl.gov>
 
