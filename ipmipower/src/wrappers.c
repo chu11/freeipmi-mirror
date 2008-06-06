@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.17 2008-03-28 00:14:49 chu11 Exp $
+ *  $Id: wrappers.c,v 1.17.6.1 2008-06-06 22:25:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -63,7 +63,6 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
-#include <signal.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
@@ -76,7 +75,6 @@
 #include <limits.h>
 
 #include "wrappers.h"
-#include "cbuf.h"
 #include "error.h"
 
 #define MAX_REG_BUF 64000
@@ -278,13 +276,6 @@ Usleep(unsigned long usec)
     Select(0, &rset, &wset, &eset, &tv);
 }
 
-void Delay(struct timeval *tv)
-{
-    int res;
-    res = Select(0, NULL, NULL, NULL, tv);
-    assert(res == 0);
-}
-
 /* Review: look into dmalloc */
 #define MALLOC_MAGIC 0xf00fbaab
 #define MALLOC_PAD_SIZE   16
@@ -463,158 +454,6 @@ static void _clean_stack(void)
     for (i = 0; i < (sizeof(_dummy)/sizeof(_dummy[0])); i++)
         _dummy[i] = 0;
 }
-
-#define MAX_GETADDRINFO_ERR_STR 1024
-static void _gai_fatal_error(char *host, char *service, int err)
-{
-    char buf[MAX_GETADDRINFO_ERR_STR];
-
-    snprintf(buf, sizeof(buf),
-            "getaddrinfo: %s:%s: %s", host, service, gai_strerror(err));
-    lsd_fatal_error(__FILE__, __LINE__, buf);
-}
-
-int
-Getaddrinfo(char *host, char *service, struct addrinfo *hints,
-            struct addrinfo **addrinfo)
-{
-    int n;
-
-    _clean_stack();
-
-    n = getaddrinfo(host, service, hints, addrinfo);
-    if (n != 0)
-        _gai_fatal_error(host, service, n);
-    return n;
-}
-
-/* 
- * Substitute all occurrences of s2 with s3 in s1, 
- * e.g. _str_subst(str, "\\r", "\r") 
- */
-static void _str_subst(char *s1, int len, const char *s2, const char *s3)
-{
-    int s2len = strlen(s2);
-    int s3len = strlen(s3);
-    char *p;
-
-    while ((p = strstr(s1, s2)) != NULL) {
-        assert(strlen(s1) + (s3len - s2len) + 1 <= len);
-        memmove(p + s3len, p + s2len, strlen(p + s2len) + 1);
-        memcpy(p, s3, s3len);
-    }
-}
-
-void Regcomp(regex_t * preg, const char *regex, int cflags)
-{
-    char buf[MAX_REG_BUF];
-    int n;
-
-    assert(regex != NULL);
-    assert(strlen(regex) < sizeof(buf));
-
-    Strncpy(buf, regex, MAX_REG_BUF);
-
-    /* convert backslash-prefixed special characters in regex to value */
-    _str_subst(buf, MAX_REG_BUF, "\\r", "\r");
-    _str_subst(buf, MAX_REG_BUF, "\\n", "\n");
-
-    /*
-     * N.B.
-     * The buffer space available in a compiled RegEx expression is only 
-     * 256 bytes.  A long or complicated RegEx will exceed this space and 
-     * cause the library call to silently fail.
-     */
-    n = regcomp(preg, buf, cflags);
-    if (n != 0)
-        lsd_fatal_error(__FILE__, __LINE__, "regcomp failed");
-}
-
-int
-Regexec(const regex_t * preg, const char *string,
-        size_t nmatch, regmatch_t pmatch[], int eflags)
-{
-    int n;
-    char buf[MAX_REG_BUF];
-
-#ifndef __FreeBSD__
-    /* Review: undocumented, is it needed? */
-    re_syntax_options = RE_SYNTAX_POSIX_EXTENDED;
-#endif
-    Strncpy(buf, string, MAX_REG_BUF);
-    n = regexec(preg, buf, nmatch, pmatch, eflags);
-    return n;
-}
-
-pid_t Fork(void)
-{
-    pid_t pid;
-
-    if ((pid = fork()) == -1)
-        lsd_fatal_error(__FILE__, __LINE__, "fork");
-    return (pid);
-}
-
-Sigfunc *Signal(int signo, Sigfunc * func)
-{
-    struct sigaction act, oact;
-    int n;
-
-    act.sa_handler = func;
-    sigemptyset(&act.sa_mask);
-    act.sa_flags = 0;
-    if (signo == SIGALRM) {
-#ifdef  SA_INTERRUPT
-        act.sa_flags |= SA_INTERRUPT;   /* SunOS 4.x */
-#endif
-    } else {
-#ifdef  SA_RESTART
-        act.sa_flags |= SA_RESTART;     /* SVR4, 44BSD */
-#endif
-    }
-    n = sigaction(signo, &act, &oact);
-    if (n < 0)
-        lsd_fatal_error(__FILE__, __LINE__, "sigaction");
-
-    return (oact.sa_handler);
-}
-
-void Pipe(int filedes[2])
-{
-    if (pipe(filedes) < 0)
-        lsd_fatal_error(__FILE__, __LINE__, "pipe");
-}
-
-void Dup2(int oldfd, int newfd)
-{
-    if (dup2(oldfd, newfd) < 0)
-        lsd_fatal_error(__FILE__, __LINE__, "dup2");
-}
-
-void Execv(const char *path, char *const argv[])
-{
-    if (execv(path, argv) < 0)
-        lsd_fatal_error(__FILE__, __LINE__, "execv");
-}
-
-pid_t Waitpid(pid_t pid, int *status, int options)
-{
-    pid_t n;
-
-    while ((n = waitpid(pid, status, options)) < 0) {
-        if (errno != EINTR)
-            lsd_fatal_error(__FILE__, __LINE__, "waitpid");
-    }
-
-    return n;
-}
-
-#ifndef NDEBUG
-int Memory(void)
-{
-    return memory_alloc;
-}
-#endif
 
 int Recvfrom(int fd, unsigned char *p, int len, int flags, 
              struct sockaddr_in *from, socklen_t *fromlen)

@@ -68,6 +68,9 @@
 	* libfreeipmi/src/driver/ipmi-inband.h: Removed file.  Move macros
 	into ipmi-kcs-driver.c.
 
+	* ipmipower/src/wrappers.h, ipmipower/src/wrappers.c: Remove
+	some unused wrapper functions.
+
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
 

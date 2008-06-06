@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.h,v 1.13 2008-03-28 00:14:49 chu11 Exp $
+ *  $Id: wrappers.h,v 1.13.6.1 2008-06-06 22:25:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -55,7 +55,6 @@
 #include <sys/types.h>
 
 #include <stdint.h>
-#include <regex.h>
 #include <netdb.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -98,7 +97,6 @@ int Listen(int fd, int backlog);
 int Fcntl(int fd, int cmd, int arg);
 int Select(int maxfd, fd_set * rset, fd_set * wset, fd_set * eset,
            struct timeval *tv);
-void Delay(struct timeval *tv);
 
 #define Malloc(size)          wrap_malloc(__FILE__, __LINE__, size)
 #define Realloc(item,newsize) wrap_realloc(__FILE__, __LINE__, item, newsize)
@@ -113,11 +111,7 @@ int Read(int fd, unsigned char *p, int max);
 int Write(int fd, unsigned char *p, int max);
 int Open(char *str, int flags, int mode);
 int Close(int fd);
-int Getaddrinfo(char *host, char *service, struct addrinfo *hints,
-                struct addrinfo **addrinfo);
-void Regcomp(regex_t * preg, const char *regex, int cflags);
-int Regexec(const regex_t * preg, const char *string,
-            size_t nmatch, regmatch_t pmatch[], int eflags);
+
 pid_t Fork(void);
 typedef void Sigfunc(int);
 Sigfunc *Signal(int signo, Sigfunc * func);
