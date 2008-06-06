@@ -4,7 +4,7 @@ info_TEXINFOS =  freeipmi-faq.texi
 MANS_CPP = freeipmi.7 freeipmi.conf.5
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
-	cpp -C -P -I. $@.pre  $@
+	$(CPP) -C -P -I. $@.pre  $@
 
 dist_man_MANS = $(MANS_CPP)
 

@@ -40,6 +40,10 @@
 
 	* Globally remove "-x c" and "-o" options from cpp lines.
 
+	* configure.ac: Search for cpp.
+
+	* Globally change 'cpp' call to $(CPP).
+
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
 	

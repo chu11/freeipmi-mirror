@@ -3,7 +3,7 @@ SUBDIRS = src
 MANS_CPP = ipmiconsole.8 ipmiconsole.conf.5 libipmiconsole.3
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
-	cpp -C -P -I. $@.pre  $@
+	$(CPP) -C -P -I. $@.pre  $@
 
 dist_man_MANS = $(MANS_CPP)
 
