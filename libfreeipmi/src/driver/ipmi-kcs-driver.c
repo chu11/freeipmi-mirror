@@ -157,6 +157,9 @@
 #elif defined(HAVE_IOPL)
 # define _INB(port)  inb (port)
 # define _OUTB(data, port)  outb (data, port)
+#else
+# define _INB(port)  0
+# define _OUTB(data, port)
 #endif
 
 static char * ipmi_kcs_ctx_errmsg[] =
@@ -381,11 +384,7 @@ _ipmi_kcs_get_status (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-#if defined(_INB)
   return _INB (IPMI_KCS_REG_STATUS (ctx->driver_address, ctx->register_spacing));
-#else
-  return 0;
-#endif
 }
 
 /*
@@ -443,11 +442,7 @@ _ipmi_kcs_read_byte (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-#if defined(_INB)
   return _INB (IPMI_KCS_REG_DATAOUT (ctx->driver_address));
-#else
-  return 0;
-#endif
 }
 
 /*
@@ -458,9 +453,7 @@ _ipmi_kcs_read_next (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-#if defined(_OUTB)
   _OUTB (IPMI_KCS_CTRL_READ, IPMI_KCS_REG_DATAIN (ctx->driver_address));
-#endif
 }
 
 /*
@@ -471,9 +464,7 @@ _ipmi_kcs_start_write (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-#if defined(_OUTB)
   _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->register_spacing));
-#endif
 }
 
 /*
@@ -484,9 +475,7 @@ _ipmi_kcs_write_byte (ipmi_kcs_ctx_t ctx, uint8_t byte)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-#if defined(_OUTB)
   _OUTB (byte, IPMI_KCS_REG_DATAIN (ctx->driver_address));
-#endif
 }
 
 /* 
@@ -497,9 +486,7 @@ _ipmi_kcs_end_write (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-#if defined(_OUTB)
   _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->register_spacing));
-#endif
 }
 
 #if 0
@@ -513,9 +500,7 @@ _ipmi_kcs_get_abort (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-#if defined(_OUTB)
   _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->register_spacing));
-#endif
 }
 #endif
 
