@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.17.6.1 2008-06-06 22:25:26 chu11 Exp $
+ *  $Id: wrappers.c,v 1.17.6.2 2008-06-06 22:28:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -76,6 +76,8 @@
 
 #include "wrappers.h"
 #include "error.h"
+
+#include "freeipmi-portability.h"
 
 #define MAX_REG_BUF 64000
 
