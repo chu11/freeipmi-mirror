@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.11 2008-06-06 17:33:20 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.12 2008-06-06 17:36:37 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -203,7 +203,7 @@ AC_PROG_INSTALL
 AC_PROG_CC
 AC_PROG_LIBTOOL
 AC_PATH_PROG([CPP], [cpp])
-if test -n "x${CPP}"; then
+if test -z "${CPP}"; then
   AC_MSG_ERROR([cannot find cpp])
 fi
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
