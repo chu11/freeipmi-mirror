@@ -62,6 +62,9 @@
 	* common/src/freeipmi-portability.h: Define timeradd and timersub
 	if they don't exist on the system.
 
+	* configure.ac, libfreeipmi/src/driver/ipmi-inband.h: Check and
+	load sys/ddi.h and sys/sunddi.h as needed.
+
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
 

@@ -39,6 +39,10 @@ extern "C" {
 #elif defined(HAVE_ASM_IO_H)
 /* PPC */
 # include <asm/io.h>
+#elif defined(HAVE_SYS_DDI_H) && defined (HAVE_SYS_SUNDDI_H)
+/* Solaris */
+# include <sys/ddi.h>
+# include <sys/sunddi.h>
 #endif
 
 #if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
