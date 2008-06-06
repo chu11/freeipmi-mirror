@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.1.2.1 2008-06-05 22:56:08 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.1.2.2 2008-06-06 22:16:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -43,8 +43,6 @@
 #endif /* HAVE_UNISTD_H */
 #include <assert.h>
 #include <errno.h>
-
-#include <argp.h>
 
 #include "ipmipower_argp.h"
 #include "ipmipower_output.h"
