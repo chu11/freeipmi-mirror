@@ -44,6 +44,9 @@
 #include <time.h>
 #endif /* !HAVE_SYS_TIME_H */
 #endif  /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_IOCCOM_H
+#include <sys/ioccom.h>         /* solaris _IOR, etc. */
+#endif /* !HAVE_SYS_IOCCOM_H */
 #include <sys/select.h>
 #include <sys/ioctl.h>
 #include <assert.h>

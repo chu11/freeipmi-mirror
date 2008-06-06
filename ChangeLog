@@ -56,6 +56,9 @@
 
 	* Cleanup Makefiles for portable use.
 
+	* configure.ac, libfreeipmi/src/driver/ipmi-openipmi-driver.c:
+	Check and load sys/ioccom.h as needed.
+
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
 
