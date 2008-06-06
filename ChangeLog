@@ -26,6 +26,9 @@
 
 	* Include alloca.h in all files as needed.
 
+	* common/src/pstdout.c: Rename internal variables stdout and
+	stderr to p_stdout and p_stderr as needed.
+
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
 	
