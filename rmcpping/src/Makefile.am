@@ -7,6 +7,7 @@ AM_CPPFLAGS = \
 
 rmcpping_LDADD = \
 	$(top_builddir)/common/src/libipmiping.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/common/src/libdebugcommon.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 

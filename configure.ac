@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.9 2008-06-06 04:19:07 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.10 2008-06-06 16:21:08 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -294,7 +294,7 @@ fi
 dnl FreeBSD < 5 has getopt_long in a separate gnugetopt library
 AC_CHECK_FUNC([getopt_long], [have_getopt_long=yes],
 	AC_CHECK_LIB([gnugetopt], [getopt_long], [have_getopt_long=yes],
-		AC_MSG_ERROR([gnugetopt library not found. libgnugetopt required.])))
+		AC_MSG_ERROR([getopt_long not found.])))
 
 if test "x${have_getopt_long}" = "xyes"; then
    AC_DEFINE(HAVE_GETOPT_LONG, 1, [define if you found getopt_long])
@@ -401,7 +401,7 @@ dnl  define HAVE_FUNC_GETHOSTBYNAME_R_3 if gethostbyname_r needs 3 arguments (e.
    fi
 fi
 
-dnl Check for thread-safe gethostbyname()
+dnl Check for thread-safe gethostbyname() for internal portable freeipmi_gethostbyname_r
 AC_MSG_CHECKING([for thread-safe gethostbyname()])
 have_thread_safe_gethostbyname=no
 case "$host_os" in

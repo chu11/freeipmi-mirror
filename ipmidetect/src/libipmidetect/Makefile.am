@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.3.14.1 2008-06-06 06:10:04 chu11 Exp $
+## $Id: Makefile.am,v 1.3.14.2 2008-06-06 16:21:11 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -21,7 +21,8 @@ libipmidetect_la_LDFLAGS = \
 	$(OTHER_FLAGS)
 
 libipmidetect_la_LIBADD = \
-	$(top_builddir)/common/src/libmiscutils.la
+	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la
 
 libipmidetect_la_SOURCES = \
 	ipmidetect.c

@@ -20,8 +20,8 @@ noinst_HEADERS = \
 	bmc-config-validate.h
 
 AM_CPPFLAGS = \
-	-I$(top_buildir)/common/src \
-	-I$(top_buildir)/libfreeipmi/include \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 
@@ -30,6 +30,7 @@ sbin_PROGRAMS = bmc-config
 bmc_config_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
 	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/common/src/libconfigtoolcommon.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 

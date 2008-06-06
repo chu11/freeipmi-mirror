@@ -13,6 +13,7 @@ sbin_PROGRAMS = bmc-watchdog
 bmc_watchdog_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
 	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/common/src/libdebugcommon.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 

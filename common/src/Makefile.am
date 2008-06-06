@@ -37,7 +37,6 @@ noinst_HEADERS = \
 	freeipmi-argp.h
 
 if WITH_FREEIPMI_ARGP
-FREEIPMI_ARGP_LIB = libfreeipmiargp.la
 FREEIPMI_ARG_SOURCES = \
 	freeipmi-argp-ba.c \
 	freeipmi-argp-eexst.c \
@@ -55,11 +54,19 @@ noinst_LTLIBRARIES = \
 	libmiscutils.la \
 	libhostrange.la \
 	libconfigtoolcommon.la \
-	libdebugcommon.la \
-	$(FREEIPMI_ARGP_LIB)
+	libdebugcommon.la
 
-libfreeipmiportability_la_SOURCES = freeipmi-portability.c
-libfreeipmiportability_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
+libfreeipmiportability_la_CPPFLAGS = \
+	-I$(srcdir)/../../libfreeipmi/include 
+
+libfreeipmiportability_la_SOURCES = \
+	freeipmi-portability.c \
+	$(FREEIPMI_ARG_SOURCES)
+
+libtoolcommon_la_CPPFLAGS = \
+	-D_GNU_SOURCE \
+	-D_REENTRANT \
+	-I$(top_builddir)/libfreeipmi/include 
 
 libtoolcommon_la_SOURCES = \
 	tool-common.c \
@@ -67,18 +74,18 @@ libtoolcommon_la_SOURCES = \
 	tool-cmdline-common.c \
 	tool-sdr-cache-common.c \
 	tool-sensor-common.c
-libtoolcommon_la_CPPFLAGS = \
-	-D_GNU_SOURCE \
-	-D_REENTRANT \
-	-I$(srcdir)/../../libfreeipmi/include 
+
+libdebugcommon_la_CPPFLAGS = \
+	-I$(top_builddir)/libfreeipmi/include 
 
 libdebugcommon_la_SOURCES = \
 	debug-common.c
-libdebugcommon_la_CPPFLAGS = \
-	-I$(srcdir)/../../libfreeipmi/include 
 
-libipmiping_la_SOURCES = ipmi-ping.c
-libipmiping_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
+libipmiping_la_CPPFLAGS = \
+	-I$(top_builddir)/libfreeipmi/include 
+
+libipmiping_la_SOURCES = \
+	ipmi-ping.c
 
 libmiscutils_la_SOURCES = \
 	cbuf.c \
@@ -92,11 +99,19 @@ libmiscutils_la_SOURCES = \
 	thread.c \
 	timeval.c
 
-libhostrange_la_SOURCES = pstdout.c hostrange.c
-libhostrange_la_LDFLAGS = $(PTHREAD_LIBS)
+libhostrange_la_LDFLAGS = \
+	$(PTHREAD_LIBS)
+
 libhostrange_la_CPPFLAGS = \
-	-D_REENTRANT \
-	-I$(srcdir)/../../ipmidetect/src/libipmidetect/
+	-I$(top_builddir)/ipmidetect/src/libipmidetect/ \
+	-D_REENTRANT
+
+libhostrange_la_SOURCES = \
+	hostrange.c \
+	pstdout.c
+
+libconfigtoolcommon_la_CPPFLAGS = \
+	-I$(top_builddir)/libfreeipmi/include
 
 libconfigtoolcommon_la_SOURCES = \
 	config-tool-argp.c \
@@ -110,6 +125,3 @@ libconfigtoolcommon_la_SOURCES = \
 	config-tool-section.c \
 	config-tool-utils.c \
 	config-tool-validate.c
-libconfigtoolcommon_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
-
-libfreeipmiargp_la_SOURCES = $(FREEIPMI_ARG_SOURCES)

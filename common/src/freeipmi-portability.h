@@ -79,7 +79,6 @@ extern "C" {
 	})
 #endif
 
-#ifndef STDC_HEADERS
 #ifndef HAVE_MEMCPY
 static inline void*
 freeipmi_memcpy (void *dest, const void *src, size_t n)
@@ -89,6 +88,12 @@ freeipmi_memcpy (void *dest, const void *src, size_t n)
 }
 #define memcpy freeipmi_memcpy
 #endif /* HAVE_MEMCPY */
+
+#ifndef HAVE_MEMPCPY
+#define mempcpy freeipmi_mempcpy
+void *freeipmi_mempcpy (void *to, const void *from, size_t size);
+#endif /* HAVE_MEMPCPY */
+
 #  ifndef HAVE_MEMSET
 static inline void*
 freeipmi_memset (void *s, int c, size_t n)
@@ -98,6 +103,7 @@ freeipmi_memset (void *s, int c, size_t n)
 }
 #define memset freeipmi_memset
 #endif /* HAVE_MEMSET */
+
 #ifndef HAVE_STRCHR
 static inline char*
 freeipmi_strchr (const char* s, int c)
@@ -109,7 +115,6 @@ freeipmi_strchr (const char* s, int c)
 }
 # define strchr	freeipmi_strchr
 #endif /* HAVE_STRCHR */
-#endif /* STDC_HEADERS */
 
 /* FreeBSD don't have strndup() */
 #ifndef HAVE_STRNDUP
@@ -117,20 +122,25 @@ freeipmi_strchr (const char* s, int c)
 char *freeipmi_strndup(const char *, size_t);
 #endif
 
+#ifndef HAVE_STRCHRNUL
+#define strchrnul freeipmi_strchrnul
+char *freeipmi_strchrnul(const char *s, int c);
+#endif /* !HAVE_STRCHRNUL */
+
 /* FreeBSD don't have getline() */
 #ifndef HAVE_GETLINE
 #define getline	freeipmi_getline
 ssize_t freeipmi_getline(char **buf, size_t *bufsize, FILE *fp);
 #endif
 
-#ifndef HAVE_FUNC_GETHOSTBYNAME_R_6
+#if !defined(HAVE_FUNC_GETHOSTBYNAME_R_6) && !defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
 int freeipmi_gethostbyname_r(const char *name,
                              struct hostent *ret,
                              char *buf,
                              size_t buflen,
                              struct hostent **result,
                              int *h_errnop);
-#endif /* HAVE_FUNC_GETHOSTBYNAME_R_6 */
+#endif /* !defined(HAVE_FUNC_GETHOSTBYNAME_R_6) && !defined(HAVE_FUNC_GETHOSTBYNAME_R_5) */
 
 #ifdef __cplusplus
 }

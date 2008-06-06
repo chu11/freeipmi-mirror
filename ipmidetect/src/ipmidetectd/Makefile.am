@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.4.6.1 2008-06-06 06:10:03 chu11 Exp $
+## $Id: Makefile.am,v 1.4.6.2 2008-06-06 16:21:11 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -20,6 +20,7 @@ sbin_PROGRAMS = ipmidetectd
 
 ipmidetectd_LDADD = \
 	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 ipmidetectd_SOURCES = \

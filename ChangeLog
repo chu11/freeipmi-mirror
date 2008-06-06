@@ -4,6 +4,10 @@
 
 	* README.argp: New file.
 
+	* common/src/freeipmi-portability.h,
+	common/src/freeipmi-portability.c: Handle mempcpy and strchrnul
+	portability.
+
 	* config/ac_lsh_gcc_attributes.m4: New file.
 
 	* common/src/freeipmi-argp.h
@@ -17,12 +21,16 @@
 	common/src/freeipmi-argp-pv.c
 	common/src/freeipmi-argp-pvh.c: New files.
 
-	* common/src/Makefile.am: Update for new freeipmi-argp lib.
+	* common/src/Makefile.am: Update for libfreeipmiportability for
+	new freeipmi-argp lib.
 
 	* configure.ac: Update with lib argp checking and argp.h.
 
 	* Update all tools and libraries to load argp.h or freeipmi-argp.h
 	respectively.
+
+	* Update all Makefile's to include libfreeipmiportability as
+	needed.
 
 	* Include alloca.h in all files as needed.
 

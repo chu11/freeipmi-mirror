@@ -10,6 +10,7 @@ sbin_PROGRAMS = ipmi-locate
 
 ipmi_locate_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 ipmi_locate_SOURCES = \

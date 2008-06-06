@@ -90,67 +90,7 @@ char *alloca ();
 #endif
 
 #if !_LIBC
-# if !HAVE_STRNDUP
-static char *strndup (const char *s, size_t size);
-
-/* Written by Niels Moller <nisse@lysator.liu.se>
- *
- * This file is hereby placed in the public domain.
- */
-static char *
-strndup (const char *s, size_t size)
-{
-  char *r;
-  char *end = memchr(s, 0, size);
-  
-  if (end)
-    /* Length + 1 */
-    size = end - s + 1;
-  
-  r = malloc(size);
-
-  if (size)
-    {
-      memcpy(r, s, size-1);
-      r[size-1] = '\0';
-    }
-  return r;
-}
-# endif /* !HAVE_STRNDUP */
-
-# if !HAVE_MEMPCPY
-static void *mempcpy (void *to, const void *from, size_t size);
-
-/* Written by Niels Moller <nisse@lysator.liu.se>
- *
- * This file is hereby placed in the public domain.
- */
-static void *
-mempcpy (void *to, const void *from, size_t size)
-{
-  memcpy(to, from, size);
-  return (char *) to + size;
-}
-# endif /* !HAVE_MEMPCPY */
-
-# if !HAVE_STRCHRNUL
-static char *strchrnul(const char *s, int c);
-
-/* Written by Niels Moller <nisse@lysator.liu.se>
- *
- * This file is hereby placed in the public domain.
- */
-static char *
-strchrnul(const char *s, int c)
-{
-  const char *p = s;
-  while (*p && (*p != c))
-    p++;
-
-  return (char *) p;
-}
-# endif /* !HAVE_STRCHRNUL */
-
+#include "freeipmi-portability.h"
 #endif /* !_LIBC */
 
 

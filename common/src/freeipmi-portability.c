@@ -35,6 +35,19 @@
 
 #include "freeipmi-portability.h"
 
+#ifndef HAVE_MEMPCPY
+/* Written by Niels Moller <nisse@lysator.liu.se>
+ *
+ * This file is hereby placed in the public domain.
+ */
+void *
+freeipmi_mempcpy (void *to, const void *from, size_t size)
+{
+  memcpy(to, from, size);
+  return (char *) to + size;
+}
+#endif
+
 #ifndef HAVE_STRNDUP
 /* Replacement for glibc strndup() */
 char *
@@ -51,6 +64,22 @@ freeipmi_strndup(const char *s, size_t n)
 
 	new[len] = '\0';
 	return (char *)memcpy(new, s, len);
+}
+#endif
+
+#ifndef HAVE_STRCHRNUL
+/* Written by Niels Moller <nisse@lysator.liu.se>
+ *
+ * This file is hereby placed in the public domain.
+ */
+char *
+freeipmi_strchrnul(const char *s, int c)
+{
+  const char *p = s;
+  while (*p && (*p != c))
+    p++;
+
+  return (char *) p;
 }
 #endif
 
