@@ -249,11 +249,18 @@ _get_home_directory (pstdout_state_t pstate,
     }
 
   user_id = getuid ();
+#if defined(HAVE_FUNC_GETPWUID_R_5)
   if (getpwuid_r (user_id, 
                   user_passwd, 
                   tbuf,
                   tbuf_len,
                   &user_passwd) != 0)
+#elif defined(HAVE_FUNC_GETPWUID_R_4)
+  if (getpwuid_r (user_id, 
+                  user_passwd, 
+                  tbuf,
+                  tbuf_len) != 0)
+#endif /* !defined(HAVE_FUNC_GETPWUID_R_4) */
     {
       if (pstate)
         pstdout_perror(pstate, "getpwuid_r");

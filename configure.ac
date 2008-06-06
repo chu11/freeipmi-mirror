@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.7 2008-06-06 03:21:36 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.8 2008-06-06 03:50:02 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -314,7 +314,7 @@ AC_FUNC_VPRINTF
 dnl There is no strndup() and getline() on FreeBSD
 AC_CHECK_FUNCS([strchr strndup strchrnul])
 AC_CHECK_FUNCS([memcpy mempcpy memset mlock])
-AC_CHECK_FUNCS([getline getprogname getpwuid_r])
+AC_CHECK_FUNCS([getline getprogname])
 AC_CHECK_FUNCS([strerror strerror_r])
 AC_CHECK_FUNCS([flockfile fputs_unlocked fwrite_unlocked])
 
@@ -323,6 +323,11 @@ AC_CHECK_FUNCS([flockfile fputs_unlocked fwrite_unlocked])
 AC_TRY_LINK([#include <stdio.h>], 
             [putc_unlocked('x', stdout)],
             [AC_DEFINE_UNQUOTED(HAVE_PUTC_UNLOCKED, [1], [Define to 1 if you have putc_unlocked])])
+
+dnl FreeBSD has no exp10() nor log2(), FreeBSD < 5 has no exp2()
+AC_CHECK_LIB([m], [exp10])
+AC_CHECK_LIB([m], [exp2])
+AC_CHECK_LIB([m], [log2])
 
 dnl
 dnl achu: Most parts of this gethostbyname_r testing is from the
@@ -395,11 +400,6 @@ dnl  define HAVE_FUNC_GETHOSTBYNAME_R_3 if gethostbyname_r needs 3 arguments (e.
    fi
 fi
 
-dnl FreeBSD has no exp10() nor log2(), FreeBSD < 5 has no exp2()
-AC_CHECK_LIB([m], [exp10])
-AC_CHECK_LIB([m], [exp2])
-AC_CHECK_LIB([m], [log2])
-
 dnl Check for thread-safe gethostbyname()
 AC_MSG_CHECKING([for thread-safe gethostbyname()])
 have_thread_safe_gethostbyname=no
@@ -419,6 +419,49 @@ if test "x$have_thread_safe_gethostbyname" = "xyes"; then
 	AC_MSG_RESULT([yes])
 else
 	AC_MSG_RESULT([no])
+fi
+
+AC_CHECK_FUNC([getpwuid_r], , AC_MSG_ERROR([getpwuid_r cannot be found]))
+
+if test "x${have_getpwuid_r}" = "xyes"; then
+   AC_TRY_LINK(
+   [
+   #include <pwd.h>
+   ],
+   [
+   uid_t uid;
+   struct passwd pwd;
+   struct passwd *result;
+   char buffer[1];
+   int bufsize;
+   (void) getpwuid_r (uid, &pwd, buffer, bufsize, &result);
+   ],
+   [ac_cv_func_which_getpwuid_r=five], [
+	AC_TRY_LINK(
+	[
+	#include <pwd.h>
+	],
+	[
+        uid_t uid;
+        struct passwd pwd;
+        char buffer[1];
+        int bufsize;
+        (void) getpwuid_r (uid, &pwd, buffer, bufsize);
+	],
+	[ac_cv_func_which_getpwuid_r=four], 
+        [ac_cv_func_which_getpwuid_r=no])
+   ])
+
+dnl  define HAVE_FUNC_GETPWUID_R_5 if getpwuid_r needs 5 arguments (e.g. linux)
+dnl  define HAVE_FUNC_GETPWUID_R_4 if getpwuid_r needs 4 arguments (e.g. solaris)
+
+   if test "x${ac_cv_func_which_gethostname_r}" = "xfive"; then
+      AC_DEFINE(HAVE_FUNC_GETPWUID_R_5, [], [Define getpwuid_r with 5 args])
+   elif test "x${ac_cv_func_which_gethostname_r}" = "xfour"; then
+      AC_DEFINE(HAVE_FUNC_GETPWUID_R_4, [], [Define getpwuid_r with 4 args])
+   else
+      AC_MSG_ERROR([getpwuid_r cannot be compiled])
+   fi
 fi
 
 dnl FreeBSD has argp as a separate library
