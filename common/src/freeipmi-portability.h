@@ -27,15 +27,27 @@ extern "C" {
 #include <config.h>
 #endif
 
+#include <stdio.h>	/* For FILE definition */
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
 #include <sys/types.h>
 #include <math.h>
-#include <stdlib.h>
-#include <string.h>
 #include <netdb.h>
-#include <stdio.h>	/* For FILE definition */
 #if HAVE_ALLOCA_H
 #include <alloca.h>
 #endif /* HAVE_ALLOCA_H */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif  /* !TIME_WITH_SYS_TIME */
 
 #if  __WORDSIZE == 64
 #define FI_64 "%l"
@@ -132,6 +144,35 @@ char *freeipmi_strchrnul(const char *s, int c);
 #define getline	freeipmi_getline
 ssize_t freeipmi_getline(char **buf, size_t *bufsize, FILE *fp);
 #endif
+
+/* achu: timeradd and timersub not in solaris 
+ *
+ * these definitions ripped from sys/time.h on linux.
+ */
+#ifndef timeradd
+# define timeradd(a, b, result)                                               \
+  do {                                                                        \
+    (result)->tv_sec = (a)->tv_sec + (b)->tv_sec;                             \
+    (result)->tv_usec = (a)->tv_usec + (b)->tv_usec;                          \
+    if ((result)->tv_usec >= 1000000)                                         \
+      {                                                                       \
+        ++(result)->tv_sec;                                                   \
+        (result)->tv_usec -= 1000000;                                         \
+      }                                                                       \
+  } while (0)
+#endif /* timeradd */
+
+#ifndef timersub
+# define timersub(a, b, result)                                               \
+  do {                                                                        \
+    (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;                             \
+    (result)->tv_usec = (a)->tv_usec - (b)->tv_usec;                          \
+    if ((result)->tv_usec < 0) {                                              \
+      --(result)->tv_sec;                                                     \
+      (result)->tv_usec += 1000000;                                           \
+    }                                                                         \
+  } while (0)
+#endif /* timersub */
 
 #if !defined(HAVE_FUNC_GETHOSTBYNAME_R_6) && !defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
 int freeipmi_gethostbyname_r(const char *name,
