@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.15 2008-06-06 20:43:40 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.16 2008-06-06 20:51:29 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -340,6 +340,7 @@ AC_CHECK_FUNCS([memcpy mempcpy memset mlock])
 AC_CHECK_FUNCS([getline getprogname])
 AC_CHECK_FUNCS([strerror strerror_r])
 AC_CHECK_FUNCS([flockfile fputs_unlocked fwrite_unlocked])
+AC_CHECK_FUNCS([iopl])
 
 # At least on freebsd, putc_unlocked is a macro, so the standard
 # AC_CHECK_FUNCS doesn't work well.

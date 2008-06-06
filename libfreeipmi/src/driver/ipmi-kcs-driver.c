@@ -341,7 +341,12 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
   KCS_ERR(!((ctx->dev_fd = open ("/dev/io", O_RDONLY)) < 0));
 #endif /* !USE_IOPERM */
 #else  /* !__FreeBSD__ */
+#if HAVE_IOPL
   KCS_ERR(!(iopl (3) < 0));
+#else /* !HAVE_IOPL */
+  /* otherwise, we always return a system error */
+  KCS_ERR_SYSTEM_ERROR(0);
+#endif /* !HAVE_IOPL */
 #endif/* !__FreeBSD__ */
 
   ctx->io_init = 1;
