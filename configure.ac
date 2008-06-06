@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.17 2008-06-06 21:19:39 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.18 2008-06-06 23:21:33 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -362,13 +362,13 @@ dnl See original: http://www.csn.ul.ie/~caolan/publink/gethostbyname_r
 dnl
 
 AC_CHECK_FUNC([gethostbyname_r], 
-              [have_gethostname_r=yes], 
+              [have_gethostbyname_r=yes], 
               AC_CHECK_LIB([nsl],
                            [gethostbyname_r],
-                           [LIBS="$LIBS -lnsl" have_gethostname_r=yes],
-                           [have_gethostname_r=no]))             
+                           [LIBS="$LIBS -lnsl" have_gethostbyname_r=yes],
+                           [have_gethostbyname_r=no]))             
 
-if test "x${have_gethostname_r}" = "xyes"; then
+if test "x${have_gethostbyname_r}" = "xyes"; then
    AC_TRY_LINK(
    [
    #include <netdb.h>
@@ -379,7 +379,7 @@ if test "x${have_gethostname_r}" = "xyes"; then
    struct hostent_data data;
    (void) gethostbyname_r(name, he, &data);
    ],
-   [ac_cv_func_which_gethostname_r=three], [
+   [ac_cv_func_which_gethostbyname_r=three], [
 	AC_TRY_LINK(
 	[
 	#include <netdb.h>
@@ -392,7 +392,7 @@ if test "x${have_gethostname_r}" = "xyes"; then
 	int h_errnop;
 	(void) gethostbyname_r(name, he, buffer, buflen, &res, &h_errnop);
 	],
-	[ac_cv_func_which_gethostname_r=six], [
+	[ac_cv_func_which_gethostbyname_r=six], [
 	    AC_TRY_LINK(
 	    [
 	    #include <netdb.h>
@@ -405,8 +405,8 @@ if test "x${have_gethostname_r}" = "xyes"; then
 	    int h_errnop;
 	    (void) gethostbyname_r(name, he, buffer, buflen, &h_errnop);
 	    ],
-	    [ac_cv_func_which_gethostname_r=five],
-	    [ac_cv_func_which_gethostname_r=no])
+	    [ac_cv_func_which_gethostbyname_r=five],
+	    [ac_cv_func_which_gethostbyname_r=no])
 	])
    ])
 
@@ -414,11 +414,11 @@ dnl  define HAVE_FUNC_GETHOSTBYNAME_R_6 if gethostbyname_r needs 6 arguments (e.
 dnl  define HAVE_FUNC_GETHOSTBYNAME_R_5 if gethostbyname_r needs 5 arguments (e.g. solaris)
 dnl  define HAVE_FUNC_GETHOSTBYNAME_R_3 if gethostbyname_r needs 3 arguments (e.g. osf/1)
 
-   if test "x${ac_cv_func_which_gethostname_r}" = "xsix"; then
+   if test "x${ac_cv_func_which_gethostbyname_r}" = "xsix"; then
       AC_DEFINE(HAVE_FUNC_GETHOSTBYNAME_R_6, [], [Define gethostbyname_r with 6 args])
-   elif test "x${ac_cv_func_which_gethostname_r}" = "xfive"; then
+   elif test "x${ac_cv_func_which_gethostbyname_r}" = "xfive"; then
       AC_DEFINE(HAVE_FUNC_GETHOSTBYNAME_R_5, [], [Define gethostbyname_r with 5 args])
-   elif test "x${ac_cv_func_which_gethostname_r}" = "xthree"; then
+   elif test "x${ac_cv_func_which_gethostbyname_r}" = "xthree"; then
       AC_DEFINE(HAVE_FUNC_GETHOSTBYNAME_R_3, [], [Define gethostbyname_r with 3 args])
    fi
 fi
@@ -442,6 +442,17 @@ if test "x$have_thread_safe_gethostbyname" = "xyes"; then
 	AC_MSG_RESULT([yes])
 else
 	AC_MSG_RESULT([no])
+fi
+
+AC_CHECK_FUNC([hstrerror], 
+              [have_hstrerror=yes], 
+              AC_CHECK_LIB([nsl],
+                           [hstrerror],
+                           [have_hstrerror=yes],
+                           [have_hstrerror=no]))
+
+if test "x$have_hstrerror" = "xyes"; then
+    AC_DEFINE([HAVE_HSTRERROR], [1], [Define if you have hstrerror])
 fi
 
 AC_CHECK_FUNC([getpwuid_r], , AC_MSG_ERROR([getpwuid_r cannot be found]))
@@ -478,9 +489,9 @@ if test "x${have_getpwuid_r}" = "xyes"; then
 dnl  define HAVE_FUNC_GETPWUID_R_5 if getpwuid_r needs 5 arguments (e.g. linux)
 dnl  define HAVE_FUNC_GETPWUID_R_4 if getpwuid_r needs 4 arguments (e.g. solaris)
 
-   if test "x${ac_cv_func_which_gethostname_r}" = "xfive"; then
+   if test "x${ac_cv_func_which_getpwuid_r}" = "xfive"; then
       AC_DEFINE(HAVE_FUNC_GETPWUID_R_5, [], [Define getpwuid_r with 5 args])
-   elif test "x${ac_cv_func_which_gethostname_r}" = "xfour"; then
+   elif test "x${ac_cv_func_which_getpwuid_r}" = "xfour"; then
       AC_DEFINE(HAVE_FUNC_GETPWUID_R_4, [], [Define getpwuid_r with 4 args])
    else
       AC_MSG_ERROR([getpwuid_r cannot be compiled])

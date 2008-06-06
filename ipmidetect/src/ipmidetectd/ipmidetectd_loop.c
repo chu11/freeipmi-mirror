@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.8 2008-03-28 00:14:42 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.8.6.1 2008-06-06 23:21:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -202,7 +202,13 @@ _nodes_setup(void)
       info->fd = fds[i/IPMIDETECTD_NODES_PER_SOCKET];
       
       if (!(h = gethostbyname(host)))
-        ERR_EXIT(("gethostbyname: %s", hstrerror(h_errno)));
+        {
+#if HAVE_HSTRERROR
+          ERR_EXIT(("gethostbyname: %s", hstrerror(h_errno)));
+#else /* !HAVE_HSTRERROR */
+          ERR_EXIT(("gethostbyname: h_errno = %d", h_errno));
+#endif /* !HAVE_HSTRERROR */
+        }
         
       info->destaddr.sin_family = AF_INET;
       info->destaddr.sin_addr = *((struct in_addr *)h->h_addr);

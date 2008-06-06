@@ -71,6 +71,15 @@
 	* ipmipower/src/wrappers.h, ipmipower/src/wrappers.c: Remove
 	some unused wrapper functions.
 
+	* ipmpower/src/wrappers.c: include freeipmi-portability.h to deal
+	with timersub() portability.
+
+	* configure.ac, common/src/ipmi-ping.c,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c,
+	ipmidetect/src/ipmidetectd/ipmidetectd_loop.c,
+	ipmipower/src/ipmipower_connection.c: Check and use hstrerror
+	appropriately.
+
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.33 2008-06-04 05:15:55 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.33.2.1 2008-06-06 23:21:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -927,7 +927,11 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
           ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
           return -1;
         }
+#if HAVE_HSTRERROR
       IPMICONSOLE_DEBUG(("gethostbyname_r: %s", hstrerror(h_errnop)));
+#else /* !HAVE_HSTRERROR */
+      IPMICONSOLE_DEBUG(("gethostbyname_r: h_errno = %d", h_errnop));
+#endif /* !HAVE_HSTRERROR */
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
