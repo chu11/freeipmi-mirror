@@ -6,7 +6,6 @@ libspec_la_SOURCES = \
 	ipmi-sensor-types-spec.c \
 	ipmi-sensor-units-spec.c
 
-libspec_la_CFLAGS = -Wall
 libspec_la_CPPFLAGS = \
 	-I$(srcdir)/.. \
 	-I$(srcdir)/../../include \

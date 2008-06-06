@@ -6,7 +6,6 @@ ipmi_locate_LDADD = ../../common/src/libtoolcommon.la \
  
 noinst_HEADERS=ipmi-locate-argp.h
  
-AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
 	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\"

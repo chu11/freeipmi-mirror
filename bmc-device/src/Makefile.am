@@ -8,7 +8,6 @@ bmc_device_LDADD = ../../common/src/libtoolcommon.la \
  
 noinst_HEADERS=bmc-device-argp.h bmc-device.h
  
-AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
 	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \

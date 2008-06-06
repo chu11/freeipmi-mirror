@@ -17,7 +17,6 @@ noinst_HEADERS = ipmi-fru.h \
 		 ipmi-fru-multirecord-area.h \
 		 ipmi-fru-util.h
  
-AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
 	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \

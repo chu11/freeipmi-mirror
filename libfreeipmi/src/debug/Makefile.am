@@ -11,7 +11,6 @@ libdebug_la_SOURCES = \
 noinst_HEADERS = \
 	ipmi-debug-common.h
 
-libdebug_la_CFLAGS = -Wall
 libdebug_la_CPPFLAGS = \
 	-I$(srcdir)/.. \
 	-I$(srcdir)/../../include \

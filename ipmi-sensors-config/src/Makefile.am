@@ -16,7 +16,6 @@ ipmi_sensors_config_LDADD = ../../common/src/libtoolcommon.la \
 			    ../../libfreeipmi/src/libfreeipmi.la \
 			    ../../common/src/libconfigtoolcommon.la
 
-AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src -D_GNU_SOURCE \
 		-I$(srcdir)/../../libfreeipmi/include 
 

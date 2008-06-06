@@ -15,7 +15,6 @@ noinst_HEADERS = \
 # IPMI_DEBUG_IPCKEY is so we can do inband development without the real ipckey being
 # installed.
 
-libdriver_la_CFLAGS = -Wall
 libdriver_la_CPPFLAGS = \
 	-I$(srcdir)/.. \
 	-I$(srcdir)/../../include \

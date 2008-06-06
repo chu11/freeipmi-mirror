@@ -24,7 +24,6 @@ libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERS
 
 libfreeipmi_la_SOURCES = 
 
-libfreeipmi_la_CFLAGS = -Wall
 libfreeipmi_la_CPPFLAGS = \
 	-I$(srcdir)/../include \
 	-I$(srcdir)/../../common/src \

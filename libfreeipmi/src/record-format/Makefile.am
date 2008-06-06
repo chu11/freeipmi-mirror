@@ -6,7 +6,6 @@ librecordformat_la_SOURCES = \
 	ipmi-fru-information-record-format.c \
 	ipmi-sel-record-format.c
 
-librecordformat_la_CFLAGS = -Wall
 librecordformat_la_CPPFLAGS = \
 	-I$(srcdir)/.. \
 	-I$(srcdir)/../../include \

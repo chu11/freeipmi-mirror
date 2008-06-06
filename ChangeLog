@@ -44,6 +44,8 @@
 
 	* Globally change 'cpp' call to $(CPP).
 
+	* Remove default -Wall compilation.
+
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
 	

@@ -8,7 +8,6 @@ liblocate_la_SOURCES = \
 	ipmi-locate-pci.c \
 	ipmi-locate-smbios.c
 
-liblocate_la_CFLAGS = -Wall
 liblocate_la_CPPFLAGS = \
 	-I$(srcdir)/.. \
 	-I$(srcdir)/../../include \

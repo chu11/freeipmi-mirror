@@ -15,7 +15,6 @@ noinst_HEADERS = \
 	ipmi-md5.h
 
 libcommon_la_LDFLAGS = -lgcrypt
-libcommon_la_CFLAGS = -Wall
 libcommon_la_CPPFLAGS = \
 	-I$(srcdir)/.. \
 	-I$(srcdir)/../../include \

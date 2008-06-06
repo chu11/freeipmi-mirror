@@ -30,7 +30,6 @@ noinst_HEADERS = \
 	ipmi-openipmi-driver-api.h \
 	ipmi-ssif-driver-api.h
 
-libapi_la_CFLAGS = -Wall
 libapi_la_CPPFLAGS = \
 	-I$(srcdir)/.. \
 	-I$(srcdir)/../../include \

@@ -9,7 +9,6 @@ ipmi_raw_LDADD = ../../common/src/libtoolcommon.la \
  
 noinst_HEADERS=ipmi-raw-argp.h ipmi-raw.h
  
-AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
 	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \

@@ -16,7 +16,6 @@ libcmds_la_SOURCES = \
 	ipmi-sol-cmds.c \
 	rmcp-cmds.c
 
-libcmds_la_CFLAGS = -Wall
 libcmds_la_CPPFLAGS = \
 	-I$(srcdir)/.. \
 	-I$(srcdir)/../../include \

@@ -10,7 +10,6 @@ libutil_la_SOURCES = \
 	ipmi-util.c \
 	rmcp-util.c
 
-libutil_la_CFLAGS = -Wall
 libutil_la_CPPFLAGS = \
 	-I$(srcdir)/.. \
 	-I$(srcdir)/../../include \

@@ -6,7 +6,6 @@ libinterface_la_SOURCES = \
 	ipmi-rmcpplus-interface.c \
 	rmcp-interface.c
 
-libinterface_la_CFLAGS = -Wall
 libinterface_la_CPPFLAGS = \
 	-I$(srcdir)/.. \
 	-I$(srcdir)/../../include \
