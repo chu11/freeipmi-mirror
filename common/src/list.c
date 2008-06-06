@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: list.c,v 1.3 2007-09-05 20:13:24 chu11 Exp $
+ *  $Id: list.c,v 1.3.20.1 2008-06-06 21:33:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -29,9 +29,9 @@
 #  include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-#ifdef WITH_PTHREADS
+#if HAVE_PTHREAD_H
 #  include <pthread.h>
-#endif /* WITH_PTHREADS */
+#endif /* HAVE_PTHREAD_H */
 
 #include <assert.h>
 #include <errno.h>

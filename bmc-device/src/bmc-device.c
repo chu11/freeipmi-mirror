@@ -27,7 +27,6 @@
 #endif /* STDC_HEADERS */
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <pthread.h>
 #include <assert.h>
 #include <errno.h>
 

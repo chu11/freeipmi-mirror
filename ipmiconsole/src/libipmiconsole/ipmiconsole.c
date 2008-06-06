@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.83 2008-05-15 21:48:00 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.83.2.1 2008-06-06 21:33:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -51,9 +51,9 @@
 #endif /* !TIME_WITH_SYS_TIME */
 #include <sys/types.h>
 #include <sys/select.h>
-#ifdef WITH_PTHREADS
+#ifdef HAVE_PTHREAD_H
 #include <pthread.h>
-#endif /* WITH_PTHREADS */
+#endif /* HAVE_PTHREAD_H */
 #include <sys/resource.h>
 #include <assert.h>
 #include <errno.h>

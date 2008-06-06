@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.12.4.1 2008-06-06 03:09:03 chu11 Exp $
+ *  $Id: pstdout.c,v 1.12.4.2 2008-06-06 21:33:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -41,7 +41,9 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_PTHREAD_H
 #include <pthread.h>
+#endif /* HAVE_PTHREAD_H */
 #include <signal.h>
 #include <assert.h>
 #include <errno.h>

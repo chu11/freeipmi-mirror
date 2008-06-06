@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.25 2008-05-26 16:07:43 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.25.2.1 2008-06-06 21:33:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -34,9 +34,6 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <pthread.h>
-#include <err.h>
-#include <argp.h>
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>

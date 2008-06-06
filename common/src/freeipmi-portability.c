@@ -31,7 +31,9 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 #include <netdb.h>
+#if HAVE_PTHREAD_H
 #include <pthread.h>
+#endif /* HAVE_PTHREAD_H */
 
 #include "freeipmi-portability.h"
 
