@@ -44,9 +44,20 @@ libfreeipmi_la_LIBADD = \
 	sdr-cache/libsdrcache.la \
 	spec/libspec.la \
 	util/libutil.la \
-	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/common/src/libdebugcommon.la
+
+$(top_builddir)/common/src/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+force-dependency-check:
 
 libfreeipmi_la_SOURCES = 
 

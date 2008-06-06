@@ -16,3 +16,14 @@ ipmi_locate_LDADD = \
 ipmi_locate_SOURCES = \
 	ipmi-locate.c \
 	ipmi-locate-argp.c
+
+$(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+force-dependency-check:

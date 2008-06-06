@@ -12,3 +12,17 @@ ipmiping_LDADD = \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 ipmiping_SOURCES = ipmiping.c
+
+$(top_builddir)/common/src/libipmipingcommon.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libdebugcommon.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+force-dependency-check:

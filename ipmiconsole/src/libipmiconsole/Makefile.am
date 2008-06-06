@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.12.6.1 2008-06-06 06:10:03 chu11 Exp $
+## $Id: Makefile.am,v 1.12.6.2 2008-06-06 16:39:34 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -57,6 +57,20 @@ libipmiconsole_la_SOURCES = \
 	ipmiconsole_packet.c \
 	ipmiconsole_processing.c \
 	ipmiconsole_util.c
+
+$(top_builddir)/common/src/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libdebugcommon.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+force-dependency-check:
 
 install-data-hook: $(INSTALL_LOGDIR)
 
