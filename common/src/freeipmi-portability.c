@@ -85,6 +85,39 @@ freeipmi_strchrnul(const char *s, int c)
 }
 #endif
 
+#ifndef HAVE_STRSEP
+/* achu: ripped from wine
+ * http://www.winehq.org/pipermail/wine-patches/2001-November/001322.html
+ */
+char * 
+freeipmi_strsep(char **stringp, const char *delim)
+{
+  char *token;
+  
+  if (*stringp == NULL) 
+    {
+      /* No more tokens */
+      return NULL;
+    }
+
+  token = *stringp;
+  while (**stringp != '\0') 
+    {
+      if (strchr(delim, **stringp) != NULL)
+        {
+          **stringp = '\0';
+          (*stringp)++;
+          return token;
+        }
+      (*stringp)++;
+    }
+
+  /* There is no other token */
+  *stringp = NULL;
+  return token;
+}
+#endif
+
 #ifndef HAVE_GETLINE
 /* Replacement for glibc getline */
 ssize_t

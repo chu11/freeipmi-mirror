@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.18 2008-06-06 23:21:33 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.19 2008-06-06 23:31:45 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -334,7 +334,7 @@ AC_FUNC_MMAP
 AC_FUNC_VPRINTF
 
 dnl There is no strndup() and getline() on FreeBSD
-AC_CHECK_FUNCS([strchr strndup strchrnul])
+AC_CHECK_FUNCS([strchr strndup strchrnul strsep])
 AC_CHECK_FUNCS([memcpy mempcpy memset mlock])
 AC_CHECK_FUNCS([getline getprogname])
 AC_CHECK_FUNCS([strerror strerror_r])

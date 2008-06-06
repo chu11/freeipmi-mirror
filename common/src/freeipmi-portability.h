@@ -139,6 +139,11 @@ char *freeipmi_strndup(const char *, size_t);
 char *freeipmi_strchrnul(const char *s, int c);
 #endif /* !HAVE_STRCHRNUL */
 
+#ifndef HAVE_STRSEP
+#define strsep freeipmi_strsep
+char *freeipmi_strsep(char **stringp, const char *delim);
+#endif /* !HAVE_STRSEP */
+
 /* FreeBSD don't have getline() */
 #ifndef HAVE_GETLINE
 #define getline	freeipmi_getline

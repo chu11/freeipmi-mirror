@@ -65,6 +65,12 @@
 	* configure.ac, libfreeipmi/src/driver/ipmi-kcs-driver.c: Check
 	and handle iopl() as needed.
 
+	* configure.ac, common/src/freeipmi-portability.h,
+	common/src/freeipmi-portability.c: Check for and port strsep as needed.
+
+	* ipmi-raw/src/ipmi-raw.c: include freeipmi-portability.h to deal
+	with strsep.
+
 	* libfreeipmi/src/driver/ipmi-inband.h: Removed file.  Move macros
 	into ipmi-kcs-driver.c.
 
