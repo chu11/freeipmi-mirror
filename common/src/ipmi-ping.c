@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.19 2008-04-17 18:06:27 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.19.6.1 2008-06-06 03:21:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -46,6 +46,9 @@
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
+#if HAVE_SYS_SOCKIO_H
+#incldue <sys/sockio.h>
+#endif /* HAVE_SYS_SOCKIO_H */
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>

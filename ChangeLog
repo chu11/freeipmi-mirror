@@ -29,6 +29,10 @@
 	* common/src/pstdout.c: Rename internal variables stdout and
 	stderr to p_stdout and p_stderr as needed.
 
+	* configure.ac: Add sys/sockio.h check.
+
+	* common/src/ipmi-ping.c: Include sys/sockio.h.
+
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
 	
