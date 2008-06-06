@@ -18,8 +18,8 @@ sbin_PROGRAMS = ipmi-sensors-config
 # we need miscutils for hostlist lib in pstdout too
 ipmi_sensors_config_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
-	$(top_builddir)/common/src/libmiscutils.la \
 	$(top_builddir)/common/src/libhostrange.la \
+	$(top_builddir)/common/src/libmiscutils.la \
 	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/common/src/libconfigtoolcommon.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
@@ -32,6 +32,9 @@ ipmi_sensors_config_SOURCES = \
 	ipmi-sensors-config-utils.c
 
 $(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libhostrange.l : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/libmiscutils.la : force-dependency-check
