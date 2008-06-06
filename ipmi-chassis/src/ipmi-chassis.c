@@ -25,10 +25,6 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <err.h>
-#include <argp.h>
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>

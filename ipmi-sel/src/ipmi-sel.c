@@ -25,7 +25,6 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <argp.h>
 #if TIME_WITH_SYS_TIME
 #include <sys/time.h>
 #include <time.h>

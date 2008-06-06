@@ -25,10 +25,6 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#ifdef HAVE_ERROR_H
-#include <error.h>
-#endif
-#include <argp.h>
 #include <assert.h>
 
 #include "freeipmi-portability.h"
