@@ -1,44 +1,30 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.8 2008-04-18 18:21:22 chu11 Exp $
+## $Id: Makefile.am,v 1.8.6.1 2008-06-06 06:10:04 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
-
-sbin_PROGRAMS = ipmimonitoring
 
 noinst_HEADERS = \
 	ipmimonitoring.h \
 	ipmimonitoring-argp.h
 
+AM_CPPFLAGS = \
+	-I$(top_builddir)/ipmimonitoring/src/libipmimonitoring \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+sbin_PROGRAMS = ipmimonitoring
+
+ipmimonitoring_LDADD = \
+	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libhostrange.la \
+	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
+	$(top_builddir)/ipmimonitoring/src/libipmimonitoring/libipmimonitoring.la
+
 ipmimonitoring_SOURCES = \
 	ipmimonitoring.c \
 	ipmimonitoring-argp.c
 
-ipmimonitoring_CPPFLAGS = \
-	-I$(srcdir)/../libipmimonitoring \
-	-I$(srcdir)/../../../common/src \
-	-I$(srcdir)/../../../libfreeipmi/include
-
-ipmimonitoring_LDADD = \
-	../../../common/src/libmiscutils.la \
-	../libipmimonitoring/libipmimonitoring.la \
-	../../../common/src/libhostrange.la \
-	../../../ipmidetect/src/libipmidetect/libipmidetect.la \
-	../../../common/src/libtoolcommon.la
-
-../../../common/src/libmiscutils.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../libipmimonitoring/libipmimonitoring.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../../common/src/libhostrange.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../../ipmidetect/src/libipmidetect/libipmidetect.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-force-dependency-check:

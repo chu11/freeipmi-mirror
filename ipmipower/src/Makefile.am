@@ -1,35 +1,4 @@
-sbin_PROGRAMS=ipmipower
-ipmipower_SOURCES= \
-	argv.c \
-	ierror.c \
-	ipmipower_check.c \
-	ipmipower_argp.c \
-	ipmipower_connection.c \
-	ipmipower.c \
-	ipmipower_output.c \
-	ipmipower_packet.c \
-	ipmipower_ping.c \
-	ipmipower_powercmd.c \
-	ipmipower_prompt.c \
-	ipmipower_util.c \
-	ipmipower_wrappers.c \
-	wrappers.c
- 
-ipmipower_LDADD = \
-	../../common/src/libtoolcommon.la \
-	../../common/src/libmiscutils.la \
-	../../ipmidetect/src/libipmidetect/libipmidetect.la \
-	../../libfreeipmi/src/libfreeipmi.la \
-	../../common/src/libdebugcommon.la
- 
-ipmipower_CPPFLAGS = \
-	-I$(srcdir)/../../common/src \
-	-I$(srcdir)/../../ipmidetect/src/libipmidetect \
-	-I$(srcdir)/../../libfreeipmi/include \
-	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
-	-DWITH_LSD_NOMEM_ERROR_FUNC=1	
-
-noinst_HEADERS= \
+noinst_HEADERS = \
 	argv.h \
 	ierror.h \
 	ipmipower_check.h \
@@ -45,19 +14,37 @@ noinst_HEADERS= \
 	ipmipower_wrappers.h \
 	wrappers.h
  
-../../common/src/libmiscutils.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+sbin_PROGRAMS = ipmipower
 
-../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+ipmipower_CPPFLAGS = \
+	-I$(top_builddir)/ipmidetect/src/libipmidetect \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
+	-DWITH_LSD_NOMEM_ERROR_FUNC=1 \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
 
-../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+ipmipower_LDADD = \
+	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libdebugcommon.la \
+	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
-../../ipmidetect/src/libipmidetect/libipmidetect.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libdebugcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+ipmipower_SOURCES = \
+	argv.c \
+	ierror.c \
+	ipmipower_check.c \
+	ipmipower_argp.c \
+	ipmipower_connection.c \
+	ipmipower.c \
+	ipmipower_output.c \
+	ipmipower_packet.c \
+	ipmipower_ping.c \
+	ipmipower_powercmd.c \
+	ipmipower_prompt.c \
+	ipmipower_util.c \
+	ipmipower_wrappers.c \
+	wrappers.c
  
-force-dependency-check:

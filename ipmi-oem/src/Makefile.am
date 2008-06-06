@@ -1,35 +1,23 @@
-sbin_PROGRAMS=ipmi-oem
-ipmi_oem_SOURCES=ipmi-oem-argp.c ipmi-oem.c 
-ipmi_oem_LDADD = ../../common/src/libtoolcommon.la \
-		 ../../libfreeipmi/src/libfreeipmi.la \
-		 ../../common/src/libhostrange.la \
-		 ../../common/src/libmiscutils.la \
-		 ../../ipmidetect/src/libipmidetect/libipmidetect.la \
-		 ../../common/src/libfreeipmiportability.la
- 
-noinst_HEADERS=ipmi-oem-argp.h ipmi-oem.h
- 
-AM_CPPFLAGS = -I$(srcdir)/../../common/src \
-	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
-	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \
+noinst_HEADERS = \
+	ipmi-oem.h \
+	ipmi-oem-argp.h
+
+AM_CPPFLAGS = \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
 	-D_REENTRANT 
- 
-../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
- 
-../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libfreeipmiportability.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+sbin_PROGRAMS = ipmi-oem
 
-../../common/src/libhostrange.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+ipmi_oem_LDADD = \
+	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libhostrange.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
+	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
-../../common/src/libmiscutils.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-force-dependency-check:
+ipmi_oem_SOURCES = \
+	ipmi-oem.c \
+	ipmi-oem-argp.c

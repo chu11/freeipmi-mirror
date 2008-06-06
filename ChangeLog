@@ -46,6 +46,8 @@
 
 	* Remove default -Wall compilation.
 
+	* Cleanup Makefiles for portable use.
+
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
 	

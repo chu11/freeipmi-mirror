@@ -1,4 +1,32 @@
+noinst_HEADERS = \
+	pef-config.h \
+	pef-config-argp.h \
+	pef-config-pef-conf-section.h \
+	pef-config-community-string.h \
+	pef-config-lan-alert-destination.h \
+	pef-config-alert-string.h \
+	pef-config-alert-policy-table.h \
+	pef-config-event-filter-table.h \
+	pef-config-info.h \
+	pef-config-map.h \
+	pef-config-sections.h \
+	pef-config-utils.h \
+	pef-config-validate.h
+
+AM_CPPFLAGS = \
+	-I$(srcdir)/../../common/src \
+	-I$(srcdir)/../../libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
 sbin_PROGRAMS = pef-config
+
+pef_config_LDADD = \
+	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
+	$(top_builddir)/common/src/libconfigtoolcommon.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 pef_config_SOURCES = \
 	pef-config.c \
@@ -14,45 +42,3 @@ pef_config_SOURCES = \
 	pef-config-sections.c \
 	pef-config-utils.c \
 	pef-config-validate.c
- 
-pef_config_LDADD = ../../common/src/libtoolcommon.la \
-		   ../../common/src/libmiscutils.la \
-		   ../../libfreeipmi/src/libfreeipmi.la \
-		   ../../common/src/libfreeipmiportability.la \
-		   ../../common/src/libconfigtoolcommon.la
- 
-noinst_HEADERS = \
-	pef-config.h \
-	pef-config-argp.h \
-	pef-config-pef-conf-section.h \
-	pef-config-community-string.h \
-	pef-config-lan-alert-destination.h \
-	pef-config-alert-string.h \
-	pef-config-alert-policy-table.h \
-	pef-config-event-filter-table.h \
-	pef-config-info.h \
-	pef-config-map.h \
-	pef-config-sections.h \
-	pef-config-utils.h \
-	pef-config-validate.h
- 
-AM_CPPFLAGS = -I$(srcdir)/../../common/src \
-	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
-	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\"
- 
-../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
- 
-../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libfreeipmiportability.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libconfigtoolcommon.la : force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libmiscutils.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-force-dependency-check:

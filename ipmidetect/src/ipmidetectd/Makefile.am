@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.4 2008-04-12 00:05:21 chu11 Exp $
+## $Id: Makefile.am,v 1.4.6.1 2008-06-06 06:10:03 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -10,7 +10,17 @@ noinst_HEADERS = \
 	ipmidetectd_config.h \
 	ipmidetectd_loop.h
 
+AM_CPPFLAGS = \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
 sbin_PROGRAMS = ipmidetectd
+
+ipmidetectd_LDADD = \
+	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 ipmidetectd_SOURCES = \
 	debug.c \
@@ -18,18 +28,3 @@ ipmidetectd_SOURCES = \
 	ipmidetectd_config.c \
 	ipmidetectd_loop.c
 
-ipmidetectd_CPPFLAGS = \
-	-I$(srcdir)/../../../common/src \
-	-I$(srcdir)/../../../libfreeipmi/include
-
-ipmidetectd_LDADD = \
-	../../../common/src/libmiscutils.la \
-	../../../libfreeipmi/src/libfreeipmi.la
-
-../../../common/src/libmiscutils.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-force-dependency-check:

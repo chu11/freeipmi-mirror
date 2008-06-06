@@ -1,4 +1,37 @@
+noinst_HEADERS = \
+	bmc-config.h \
+	bmc-config-argp.h \
+	bmc-config-channel-common.h \
+	bmc-config-utils.h \
+	bmc-config-user-sections.h \
+	bmc-config-lan-channel-section.h \
+	bmc-config-lan-conf-auth-section.h \
+	bmc-config-lan-conf-misc-section.h \
+	bmc-config-lan-conf-section.h \
+	bmc-config-lan-conf-security-keys-section.h \
+	bmc-config-rmcpplus-conf-privilege-section.h \
+	bmc-config-serial-channel-section.h \
+	bmc-config-serial-conf-section.h \
+	bmc-config-pef-conf-section.h \
+	bmc-config-sol-conf-section.h \
+	bmc-config-misc-section.h \
+	bmc-config-map.h \
+	bmc-config-sections.h \
+	bmc-config-validate.h
+
+AM_CPPFLAGS = \
+	-I$(top_buildir)/common/src \
+	-I$(top_buildir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
 sbin_PROGRAMS = bmc-config
+
+bmc_config_LDADD = \
+	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libconfigtoolcommon.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 bmc_config_SOURCES = \
 	bmc-config.c \
@@ -20,45 +53,3 @@ bmc_config_SOURCES = \
 	bmc-config-sol-conf-section.c \
 	bmc-config-misc-section.c \
 	bmc-config-validate.c
-
-bmc_config_LDADD = ../../common/src/libtoolcommon.la \
-		   ../../common/src/libmiscutils.la \
-                   ../../libfreeipmi/src/libfreeipmi.la \
-		   ../../common/src/libconfigtoolcommon.la
-
-AM_CPPFLAGS = -I$(srcdir)/../../common/src -D_GNU_SOURCE \
-		-I$(srcdir)/../../libfreeipmi/include 
-
-noinst_HEADERS = bmc-config.h \
-		 bmc-config-argp.h \
-		 bmc-config-channel-common.h \
-		 bmc-config-utils.h \
-		 bmc-config-user-sections.h \
-		 bmc-config-lan-channel-section.h \
-		 bmc-config-lan-conf-auth-section.h \
-		 bmc-config-lan-conf-misc-section.h \
-		 bmc-config-lan-conf-section.h \
-		 bmc-config-lan-conf-security-keys-section.h \
-		 bmc-config-rmcpplus-conf-privilege-section.h \
-		 bmc-config-serial-channel-section.h \
-		 bmc-config-serial-conf-section.h \
-		 bmc-config-pef-conf-section.h \
-		 bmc-config-sol-conf-section.h \
-		 bmc-config-misc-section.h \
-		 bmc-config-map.h \
-		 bmc-config-sections.h \
-		 bmc-config-validate.h
-
-../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libconfigtoolcommon.la : force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libmiscutils.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-force-dependency-check:

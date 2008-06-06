@@ -68,6 +68,7 @@ docdir   = $(datadir)/doc/$(PACKAGE)
 doc_DATA = $(EXTRA)
 
 CLEANFILES =
+
 DISTCLEANFILES = .deps/*.P
 
 uninstall-extra:

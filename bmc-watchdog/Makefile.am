@@ -8,6 +8,7 @@ $(MANS_CPP): $(MANS_CPP:%=%.pre)
 dist_man_MANS = $(MANS_CPP)
 
 CLEANFILES = $(MANS_CPP) *~
+
 DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
 #  if you write a self-test script named `chk', uncomment the

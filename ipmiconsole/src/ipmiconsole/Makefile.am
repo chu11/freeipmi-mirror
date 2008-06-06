@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.12 2008-05-21 16:02:33 chu11 Exp $
+## $Id: Makefile.am,v 1.12.2.1 2008-06-06 06:10:03 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -8,27 +8,21 @@ noinst_HEADERS = \
 	ipmiconsole_.h \
 	ipmiconsole-argp.h
 
+AM_CPPFLAGS = \
+	-I$(top_builddir)/ipmiconsole/src/libipmiconsole \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
 sbin_PROGRAMS = ipmiconsole
+
+ipmiconsole_LDADD = \
+	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/ipmiconsole/src/libipmiconsole/libipmiconsole.la
 
 ipmiconsole_SOURCES = \
 	ipmiconsole.c \
 	ipmiconsole-argp.c
 
-ipmiconsole_CPPFLAGS = -I$(srcdir)/../libipmiconsole \
-		       -I$(srcdir)/../../../common/src \
-		       -I$(srcdir)/../../../libfreeipmi/include	
-
-ipmiconsole_LDADD = ../../../common/src/libtoolcommon.la \
-		    ../../../common/src/libmiscutils.la \
-		    ../libipmiconsole/libipmiconsole.la
-
-../../../common/src/libmiscutils.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../libipmiconsole/libipmiconsole.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-force-dependency-check:

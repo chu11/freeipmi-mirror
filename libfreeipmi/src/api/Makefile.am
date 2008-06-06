@@ -1,4 +1,21 @@
+noinst_HEADERS = \
+	ipmi-err-wrappers-api.h \
+	ipmi-fiid-wrappers-api.h \
+	ipmi-ctx.h \
+	ipmi-lan-interface-api.h \
+	ipmi-lan-session-common.h \
+	ipmi-kcs-driver-api.h \
+	ipmi-openipmi-driver-api.h \
+	ipmi-ssif-driver-api.h
+
 noinst_LTLIBRARIES = libapi.la
+
+libapi_la_CPPFLAGS = \
+	-I$(top_builddir)/libfreeipmi/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-I$(top_builddir)/common/src \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
 
 libapi_la_SOURCES = \
 	ipmi-api.c \
@@ -20,19 +37,3 @@ libapi_la_SOURCES = \
 	ipmi-serial-modem-cmds-api.c \
 	ipmi-sol-cmds-api.c
 
-noinst_HEADERS = \
-	ipmi-err-wrappers-api.h \
-	ipmi-fiid-wrappers-api.h \
-	ipmi-ctx.h \
-	ipmi-lan-interface-api.h \
-	ipmi-lan-session-common.h \
-	ipmi-kcs-driver-api.h \
-	ipmi-openipmi-driver-api.h \
-	ipmi-ssif-driver-api.h
-
-libapi_la_CPPFLAGS = \
-	-I$(srcdir)/.. \
-	-I$(srcdir)/../../include \
-	-I$(srcdir)/../../../common/src \
-	-D_GNU_SOURCE \
-	-D_REENTRANT

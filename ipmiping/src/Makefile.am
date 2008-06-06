@@ -1,24 +1,13 @@
+AM_CPPFLAGS = \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-D_GNU_SOURCE
+
 sbin_PROGRAMS = ipmiping
 
-ipmiping_SOURCES = ipmiping.c
- 
 ipmiping_LDADD = \
-	../../libfreeipmi/src/libfreeipmi.la \
-	../../common/src/libipmiping.la \
-	../../common/src/libdebugcommon.la
- 
-ipmiping_CPPFLAGS = \
-	-I$(srcdir)/../../libfreeipmi/include \
-	-I$(srcdir)/../../common/src
- 
-../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+	$(top_builddir)/common/src/libipmiping.la \
+	$(top_builddir)/common/src/libdebugcommon.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
-../../common/src/libipmiping.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libdebugcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
- 
-force-dependency-check:
-
+ipmiping_SOURCES = ipmiping.c

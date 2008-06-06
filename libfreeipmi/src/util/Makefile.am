@@ -1,5 +1,12 @@
 noinst_LTLIBRARIES = libutil.la
 
+libutil_la_CPPFLAGS = \
+	-I$(top_builddir)/libfreeipmi/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-I$(top_builddir)/common/src \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
 libutil_la_SOURCES = \
 	ipmi-cipher-suite-util.c \
 	ipmi-error-util.c \
@@ -9,10 +16,3 @@ libutil_la_SOURCES = \
 	ipmi-rmcpplus-util.c \
 	ipmi-util.c \
 	rmcp-util.c
-
-libutil_la_CPPFLAGS = \
-	-I$(srcdir)/.. \
-	-I$(srcdir)/../../include \
-	-I$(srcdir)/../../../common/src \
-	-D_GNU_SOURCE \
-	-D_REENTRANT

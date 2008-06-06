@@ -1,5 +1,12 @@
 noinst_LTLIBRARIES = libcmds.la
 
+libcmds_la_CPPFLAGS = \
+	-I$(top_builddir)/libfreeipmi/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-I$(top_builddir)/common/src \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
 libcmds_la_SOURCES = \
 	ipmi-bmc-watchdog-timer-cmds.c \
 	ipmi-chassis-cmds.c \
@@ -16,9 +23,3 @@ libcmds_la_SOURCES = \
 	ipmi-sol-cmds.c \
 	rmcp-cmds.c
 
-libcmds_la_CPPFLAGS = \
-	-I$(srcdir)/.. \
-	-I$(srcdir)/../../include \
-	-I$(srcdir)/../../../common/src \
-	-D_GNU_SOURCE \
-	-D_REENTRANT

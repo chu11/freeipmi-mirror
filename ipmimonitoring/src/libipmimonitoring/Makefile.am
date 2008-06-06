@@ -1,10 +1,8 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.7 2007-12-29 17:20:32 chu11 Exp $
+## $Id: Makefile.am,v 1.7.12.1 2008-06-06 06:10:04 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
-
-include_HEADERS = ipmi_monitoring.h
 
 noinst_HEADERS = \
 	ipmi_monitoring_debug.h \
@@ -15,7 +13,23 @@ noinst_HEADERS = \
 	ipmi_monitoring_sensor_reading.h \
 	ipmi_monitoring_sensor_config.h
 
+include_HEADERS = ipmi_monitoring.h
+
 lib_LTLIBRARIES = libipmimonitoring.la
+
+libipmimonitoring_la_CPPFLAGS = \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-D_REENTRANT
+
+libipmimonitoring_la_LDFLAGS = \
+	-version-info @LIBIPMIMONITORING_VERSION_INFO@ \
+	$(OTHER_FLAGS)
+
+libipmimonitoring_la_LIBADD = \
+	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 libipmimonitoring_la_SOURCES = \
 	ipmi_monitoring.c \
@@ -25,30 +39,6 @@ libipmimonitoring_la_SOURCES = \
 	ipmi_monitoring_sdr_cache.c \
 	ipmi_monitoring_sensor_reading.c \
 	ipmi_monitoring_sensor_config.c
-
-libipmimonitoring_la_CPPFLAGS = -D_REENTRANT \
-	-I$(srcdir)/../../../common/src \
-	-I$(srcdir)/../../../libfreeipmi/include
-
-libipmimonitoring_la_LDFLAGS = \
-	-version-info @LIBIPMIMONITORING_VERSION_INFO@ \
-	$(OTHER_FLAGS)
-
-libipmimonitoring_la_LIBADD = \
-	../../../common/src/libmiscutils.la \
-	../../../libfreeipmi/src/libfreeipmi.la \
-	../../../common/src/libfreeipmiportability.la
-
-../../../common/src/libmiscutils.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../../common/src/libfreeipmiportability.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-force-dependency-check:
 
 IPMISDRCACHEdir = $(IPMI_MONITORING_SDR_CACHE_DIR)
 

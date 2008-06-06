@@ -1,23 +1,14 @@
 sbin_PROGRAMS = rmcpping
 
-rmcpping_SOURCES = rmcpping.c
+AM_CPPFLAGS = \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-D_GNU_SOURCE
 
 rmcpping_LDADD = \
-	../../libfreeipmi/src/libfreeipmi.la \
-	../../common/src/libipmiping.la \
-	../../common/src/libdebugcommon.la
+	$(top_builddir)/common/src/libipmiping.la \
+	$(top_builddir)/common/src/libdebugcommon.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
-rmcpping_CPPFLAGS = \
-	-I$(srcdir)/../../libfreeipmi/include \
-	-I$(srcdir)/../../common/src
- 
-../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+rmcpping_SOURCES = rmcpping.c
 
-../../common/src/libipmiping.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libdebugcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-force-dependency-check:
