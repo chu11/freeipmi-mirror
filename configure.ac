@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.14 2008-06-06 20:40:36 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.15 2008-06-06 20:43:40 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -310,6 +310,25 @@ AC_C_INLINE
 AC_TYPE_SIZE_T
 LSH_GCC_ATTRIBUTES
 
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_HEADER_TIME
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS([unistd.h fcntl.h getopt.h pthread.h])
+AC_CHECK_HEADERS([linux/types.h error.h sys/io.h sys/sockio.h asm/io.h sys/ioccom.h])
+AC_CHECK_HEADERS([sys/ddi.h sys/sunddi.h])
+AC_CHECK_HEADERS([linux/ipmi_msgdefs.h])
+AC_CHECK_HEADERS([linux/compiler.h])
+AC_CHECK_HEADERS([linux/ipmi.h], [], [], 
+[#ifdef HAVE_LINUX_IPMI_MSGDEFS_H
+ #include <linux/ipmi_msgdefs.h>
+ #endif
+ #ifdef HAVE_LINUX_COMPILER_H
+ #include <linux/compiler.h>
+ #endif
+])
+AC_CHECK_HEADERS([sys/ipmi.h])
+
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
 AC_FUNC_MMAP
@@ -511,25 +530,6 @@ AC_IPMI_MONITORING_SDR_CACHE_DIR
 AC_IPMI_MONITORING_SENSOR_CONFIG_FILE
 AC_IPMIDETECT_CONFIG_FILE
 AC_IPMIDETECTD_CONFIG_FILE
-
-dnl Checks for header files.
-AC_HEADER_STDC
-AC_HEADER_TIME
-AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([unistd.h fcntl.h getopt.h pthread.h])
-AC_CHECK_HEADERS([linux/types.h error.h sys/io.h sys/sockio.h asm/io.h sys/ioccom.h])
-AC_CHECK_HEADERS([sys/ddi.h sys/sunddi.h])
-AC_CHECK_HEADERS([linux/ipmi_msgdefs.h])
-AC_CHECK_HEADERS([linux/compiler.h])
-AC_CHECK_HEADERS([linux/ipmi.h], [], [], 
-[#ifdef HAVE_LINUX_IPMI_MSGDEFS_H
- #include <linux/ipmi_msgdefs.h>
- #endif
- #ifdef HAVE_LINUX_COMPILER_H
- #include <linux/compiler.h>
- #endif
-])
-AC_CHECK_HEADERS([sys/ipmi.h])
 
 dnl Checks for things needed in lib argp
 AC_CHECK_DECLS([program_invocation_name, program_invocation_short_name],
