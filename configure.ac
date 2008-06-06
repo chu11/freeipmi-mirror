@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.4 2008-06-05 22:59:37 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.5 2008-06-06 02:52:14 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -303,15 +303,38 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
 AC_C_CONST
 AC_C_INLINE
+AC_TYPE_SIZE_T
+LSH_GCC_ATTRIBUTES
 
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
 AC_FUNC_MMAP
-AC_CHECK_FUNCS([strchr memcpy memset mlock])
+AC_FUNC_VPRINTF
 
 dnl There is no strndup() and getline() on FreeBSD
 dnl mempcpy() and strchrnul() for argp
-AC_CHECK_FUNCS([strndup strchrnul mempcpy getline strerror_r getprogname getpwuid_r])
+AC_CHECK_FUNCS([
+        strchr
+        strndup 
+        strchrnul 
+        memcpy
+        mempcpy 
+        memset
+        mlock
+        getline 
+        strerror
+        strerror_r 
+        getprogname 
+        getpwuid_r
+        flockfile 
+        fputs_unlocked 
+        fwrite_unlocked])
+
+# At least on freebsd, putc_unlocked is a macro, so the standard
+# AC_CHECK_FUNCS doesn't work well.
+AC_TRY_LINK([#include <stdio.h>], 
+            [putc_unlocked('x', stdout)],
+            [AC_DEFINE_UNQUOTED(HAVE_PUTC_UNLOCKED, [1], [Define to 1 if you have putc_unlocked])])
 
 dnl
 dnl achu: Most parts of this gethostbyname_r testing is from the
@@ -473,20 +496,6 @@ AC_CHECK_HEADERS([linux/ipmi.h], [], [],
 AC_CHECK_HEADERS([sys/ipmi.h])
 
 dnl Checks for things needed in lib argp
-AC_C_CONST
-AC_C_INLINE
-AC_TYPE_SIZE_T
-LSH_GCC_ATTRIBUTES
-AC_FUNC_ALLOCA
-AC_FUNC_VPRINTF
-AC_CHECK_FUNCS(strerror)
-# At least on freebsd, putc_unlocked is a macro, so the standard
-# AC_CHECK_FUNCS doesn't work well.
-AC_TRY_LINK([#include <stdio.h>], 
-            [putc_unlocked('x', stdout)],
-            [AC_DEFINE_UNQUOTED(HAVE_PUTC_UNLOCKED, [1], [Define to 1 if you have putc_unlocked])])
-AC_CHECK_FUNCS(flockfile)
-AC_CHECK_FUNCS(fputs_unlocked fwrite_unlocked)
 AC_CHECK_DECLS([program_invocation_name, program_invocation_short_name],
                [], [], [[#include <errno.h>]])
 

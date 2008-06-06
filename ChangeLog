@@ -24,6 +24,8 @@
 	* Update all tools and libraries to load argp.h or freeipmi-argp.h
 	respectively.
 
+	* Include alloca.h in all files as needed.
+
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
 	

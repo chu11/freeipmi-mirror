@@ -33,6 +33,9 @@ extern "C" {
 #include <string.h>
 #include <netdb.h>
 #include <stdio.h>	/* For FILE definition */
+#if HAVE_ALLOCA_H
+#include <alloca.h>
+#endif /* HAVE_ALLOCA_H */
 
 #if  __WORDSIZE == 64
 #define FI_64 "%l"
