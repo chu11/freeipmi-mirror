@@ -42,7 +42,6 @@
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
-#include "ipmi-inband.h"
 #include "ipmi-semaphores.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
@@ -137,6 +136,28 @@
 #define IPMI_KCS_CTX_MAGIC 0xabbaadda
 
 #define IPMI_KCS_FLAGS_MASK IPMI_KCS_FLAGS_NONBLOCKING
+
+#if defined(__FreeBSD__)
+# include <machine/cpufunc.h>
+# include <machine/sysarch.h>
+#elif defined(__NetBSD__) || defined(__OpenBSD__)
+# include <machine/pio.h>               /* inb/outb */
+# include <machine/sysarch.h>   /* sysarch call */
+#elif defined(HAVE_SYS_IO_H)
+/* Linux, _AXP_ */
+# include <sys/io.h>
+#elif defined(HAVE_ASM_IO_H)
+/* PPC */
+# include <asm/io.h>
+#endif
+
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+# define _INB(port)  inb (port)
+# define _OUTB(data, port)  outb (port, data)
+#elif defined(HAVE_IOPL)
+# define _INB(port)  inb (port)
+# define _OUTB(data, port)  outb (data, port)
+#endif
 
 static char * ipmi_kcs_ctx_errmsg[] =
   {
@@ -360,7 +381,11 @@ _ipmi_kcs_get_status (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
+#if defined(_INB)
   return _INB (IPMI_KCS_REG_STATUS (ctx->driver_address, ctx->register_spacing));
+#else
+  return 0;
+#endif
 }
 
 /*
@@ -418,7 +443,11 @@ _ipmi_kcs_read_byte (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
+#if defined(_INB)
   return _INB (IPMI_KCS_REG_DATAOUT (ctx->driver_address));
+#else
+  return 0;
+#endif
 }
 
 /*
@@ -429,8 +458,11 @@ _ipmi_kcs_read_next (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
+#if defined(_OUTB)
   _OUTB (IPMI_KCS_CTRL_READ, IPMI_KCS_REG_DATAIN (ctx->driver_address));
+#endif
 }
+
 /*
  * Set up channel for writing.
  */
@@ -439,7 +471,9 @@ _ipmi_kcs_start_write (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
+#if defined(_OUTB)
   _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->register_spacing));
+#endif
 }
 
 /*
@@ -450,7 +484,9 @@ _ipmi_kcs_write_byte (ipmi_kcs_ctx_t ctx, uint8_t byte)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
+#if defined(_OUTB)
   _OUTB (byte, IPMI_KCS_REG_DATAIN (ctx->driver_address));
+#endif
 }
 
 /* 
@@ -461,7 +497,9 @@ _ipmi_kcs_end_write (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
+#if defined(_OUTB)
   _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->register_spacing));
+#endif
 }
 
 #if 0
@@ -475,7 +513,9 @@ _ipmi_kcs_get_abort (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
+#if defined(_OUTB)
   _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->register_spacing));
+#endif
 }
 #endif
 

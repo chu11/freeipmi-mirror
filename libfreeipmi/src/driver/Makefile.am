@@ -1,5 +1,4 @@
 noinst_HEADERS = \
-	ipmi-inband.h \
 	ipmi-semaphores.h
 
 noinst_LTLIBRARIES = libdriver.la
