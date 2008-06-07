@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.17.6.3 2008-06-07 15:21:16 chu11 Exp $
+ *  $Id: wrappers.c,v 1.17.6.4 2008-06-07 15:43:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -445,16 +445,6 @@ int Close(int fd)
     if (n < 0)
         lsd_fatal_error(__FILE__, __LINE__, "close");
     return n;
-}
-
-/* Work around a problem in glibc-2.3.2-27.9 (redhat 9) */
-static void _clean_stack(void)
-{
-    char _dummy[330]; /* 320 nope, 330 yes */
-    int i;
-
-    for (i = 0; i < (sizeof(_dummy)/sizeof(_dummy[0])); i++)
-        _dummy[i] = 0;
 }
 
 int Recvfrom(int fd, unsigned char *p, int len, int flags, 

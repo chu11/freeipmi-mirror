@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.8.6.1 2008-06-07 15:21:12 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.8.6.2 2008-06-07 15:43:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -35,7 +35,6 @@
 #include <stdarg.h>
 #endif /* STDC_HEADERS */
 
-#define _GNU_SOURCE
 #if HAVE_GETOPT_H
 #include <getopt.h>
 #endif /* HAVE_GETOPT_H */
