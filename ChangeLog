@@ -74,6 +74,9 @@
 	* configure.ac, common/src/freeipmi-portability.h,
 	common/src/freeipmi-portability.c: Check for and port strsep as needed.
 
+	* configure.ac, common/src/freeipmi-portability.h: Check for and
+	deal with __FUNCTION__ portability.
+
 	* ipmi-sensors/src/ipmi-sensors-reading.c: include
 	freeipmi-portability.h to deal with asprintf.
 

@@ -50,6 +50,11 @@ extern "C" {
 #endif /* !HAVE_SYS_TIME_H */
 #endif  /* !TIME_WITH_SYS_TIME */
 
+/* achu: I guess __func__ is the other macro people use?? */
+#ifndef HAVE_FUNCTION_MACRO
+#define __FUNCTION__ __func__
+#endif  
+
 #if  __WORDSIZE == 64
 #define FI_64 "%l"
 #else

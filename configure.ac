@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.22 2008-06-07 15:22:45 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.23 2008-06-07 15:48:38 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -530,14 +530,19 @@ dnl make them install the argp-standalone.  On non-FreeBSD, the code
 dnl will fall through and compile the internal FreeIPMI-argp
    AC_TRY_COMPILE([#include <sys/param.h>],
                   [
-                   #ifndef __FreeBSD_version
+                   #ifdef __FreeBSD_version
                    uncompilable junk syntax %$ # @
                    #endif
                   ],
+                  ,
                   AC_MSG_ERROR([argp library not found. argp-standalone required.]))
 fi
 
 AM_CONDITIONAL(WITH_FREEIPMI_ARGP, test "$have_argp" = "no")
+
+AC_TRY_COMPILE([#include <stdlib.h>],
+               [printf("%s\n", __FUNCTION__);],
+               [AC_DEFINE([HAVE_FUNCTION_MACRO], [1], [Define is you have __FUNCTION__])])
 
 ACX_PTHREAD([], AC_MSG_ERROR([Posix threads required to build libipmiconsole]))
 
