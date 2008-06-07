@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.70 2008-05-15 21:48:02 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.70.2.1 2008-06-07 00:15:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -52,6 +52,7 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
+#include <sys/types.h>
 #include <limits.h>
 #include <assert.h>
 #include <errno.h>

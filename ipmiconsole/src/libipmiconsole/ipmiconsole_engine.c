@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.75.6.1 2008-06-06 22:02:27 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.75.6.2 2008-06-07 00:15:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -39,6 +39,7 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <sys/types.h>
 #include <sys/poll.h>
 #include <signal.h>
 #include <assert.h>

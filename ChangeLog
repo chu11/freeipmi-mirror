@@ -86,6 +86,8 @@
 	ipmipower/src/ipmipower_connection.c: Check and use hstrerror
 	appropriately.
 
+	* ipmiconsole/src/libipmiconsole/: include sys/types.h for UINT_MAX.
+
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
 
