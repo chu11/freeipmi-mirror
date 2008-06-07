@@ -55,6 +55,11 @@ extern "C" {
 #define __FUNCTION__ __func__
 #endif  
 
+/* achu: not on Solaris */
+#ifndef UINT_MAX
+#define UINT_MAX 4294967295U
+#endif
+
 #if  __WORDSIZE == 64
 #define FI_64 "%l"
 #else
