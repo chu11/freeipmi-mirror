@@ -31,6 +31,7 @@ extern "C" {
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
+#include <stdarg.h>
 #endif /* STDC_HEADERS */
 #include <sys/types.h>
 #include <math.h>
@@ -148,6 +149,11 @@ char *freeipmi_strsep(char **stringp, const char *delim);
 #ifndef HAVE_GETLINE
 #define getline	freeipmi_getline
 ssize_t freeipmi_getline(char **buf, size_t *bufsize, FILE *fp);
+#endif
+
+#ifndef HAVE_ASPRINTF
+#define asprintf freeipmi_asprintf
+int asprintf(char **strp, const char *fmt, ...);
 #endif
 
 /* achu: timeradd and timersub not in solaris 

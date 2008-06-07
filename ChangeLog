@@ -66,7 +66,14 @@
 	and handle iopl() as needed.
 
 	* configure.ac, common/src/freeipmi-portability.h,
+	common/src/freeipmi-portability.c: Check for an port asprintf as
+	needed.
+
+	* configure.ac, common/src/freeipmi-portability.h,
 	common/src/freeipmi-portability.c: Check for and port strsep as needed.
+
+	* ipmi-sensors/src/ipmi-sensors-reading.c: include
+	freeipmi-portability.h to deal with asprintf.
 
 	* ipmi-raw/src/ipmi-raw.c: include freeipmi-portability.h to deal
 	with strsep.

@@ -167,6 +167,43 @@ freeipmi_getline(char **buf, size_t *size, FILE *fp)
 }
 #endif
 
+#ifndef HAVE_ASPRINTF
+/* achu: ripped from IkiWiki
+ * http://ikiwiki.info/bugs/build_in_opensolaris/
+ */
+int 
+asprintf(char **strp, const char *fmt, ...)
+{
+  va_list arg;
+  char *str;
+  int size;
+  int rv;
+
+  va_start(arg, format);
+  size = vsnprintf(NULL, 0, format, arg);
+  size++;
+
+  va_start(arg, format);
+  str = malloc(size);
+  if (str == NULL) 
+    {
+      va_end(arg);
+      /*
+       * Strictly speaking, GNU asprintf doesn't do this,
+       * but the caller isn't checking the return value.
+       */
+      perror("malloc");
+      exit(1);
+    }
+
+  rv = vsnprintf(str, size, format, arg);
+  va_end(arg);
+
+  *strp = str;
+  return (rv);
+}
+#endif
+
 #ifndef HAVE_FUNC_GETHOSTBYNAME_R_6
 /*
  * Replacement for 6-argument variant of gethostbyname_r(). This is a

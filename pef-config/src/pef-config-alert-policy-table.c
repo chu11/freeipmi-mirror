@@ -32,6 +32,8 @@
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
 
+#include "freeipmi-portability.h"
+
 /* convenience struct */
 struct alert_policy_table {
   uint8_t policy_type;
