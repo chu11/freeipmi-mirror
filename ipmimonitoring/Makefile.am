@@ -1,15 +1,18 @@
 SUBDIRS = src
 
-MANS_CPP = ipmimonitoring.8 libipmimonitoring.3
+MANS_CPP = \
+	ipmimonitoring.8 \
+	libipmimonitoring.3
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
-	cpp -C -P -I. -x c $@.pre -o $@
+	$(CPP) -C -P -I. $@.pre  $@
 
 dist_man_MANS = $(MANS_CPP) 
 
 EXTRA_DIST = ipmi_monitoring_sensors.conf
 
 CLEANFILES = $(MANS_CPP) *~
+
 DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
 Monitoringconfdir     = $(sysconfdir)

@@ -1,44 +1,50 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.8 2008-04-18 18:21:22 chu11 Exp $
+## $Id: Makefile.am,v 1.9 2008-06-07 16:09:56 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
-
-sbin_PROGRAMS = ipmimonitoring
 
 noinst_HEADERS = \
 	ipmimonitoring.h \
 	ipmimonitoring-argp.h
 
+AM_CPPFLAGS = \
+	-I$(top_builddir)/ipmimonitoring/src/libipmimonitoring \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+sbin_PROGRAMS = ipmimonitoring
+
+ipmimonitoring_LDADD = \
+	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/libhostrange.la \
+	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
+	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
+	$(top_builddir)/ipmimonitoring/src/libipmimonitoring/libipmimonitoring.la
+
 ipmimonitoring_SOURCES = \
 	ipmimonitoring.c \
 	ipmimonitoring-argp.c
 
-ipmimonitoring_CPPFLAGS = \
-	-I$(srcdir)/../libipmimonitoring \
-	-I$(srcdir)/../../../common/src \
-	-I$(srcdir)/../../../libfreeipmi/include
+$(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
 
-ipmimonitoring_LDADD = \
-	../../../common/src/libmiscutils.la \
-	../libipmimonitoring/libipmimonitoring.la \
-	../../../common/src/libhostrange.la \
-	../../../ipmidetect/src/libipmidetect/libipmidetect.la \
-	../../../common/src/libtoolcommon.la
+$(top_builddir)/common/src/libhostrange.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
 
-../../../common/src/libmiscutils.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+$(top_builddir)/common/src/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
 
-../libipmimonitoring/libipmimonitoring.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
 
-../../../common/src/libhostrange.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
 
-../../../ipmidetect/src/libipmidetect/libipmidetect.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+$(top_builddir)/ipmimonitoring/src/libipmimonitoring/libipmimonitoring.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

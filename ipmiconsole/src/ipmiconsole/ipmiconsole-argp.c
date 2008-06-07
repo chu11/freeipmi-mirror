@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.18 2008-05-22 00:19:23 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.19 2008-06-07 16:09:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -33,9 +33,11 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if HAVE_GETOPT_H
-#include <getopt.h>
-#endif /* HAVE_GETOPT_H */
+#if HAVE_ARGP_H
+#include <argp.h>
+#else /* !HAVE_ARGP_H */
+#include "freeipmi-argp.h"
+#endif /* !HAVE_ARGP_H */
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
@@ -47,14 +49,14 @@
 
 #include "ipmiconsole_.h"       /* tool ipmiconsole.h */
 #include "ipmiconsole-argp.h"
-#include "tool-cmdline-common.h"
-#include "tool-config-file-common.h"
+
 #include "conffile.h"
 #include "error.h"
-#include "secure.h"
-
 #include "freeipmi-portability.h"
+#include "secure.h"
+#include "tool-cmdline-common.h"
 #include "tool-common.h"
+#include "tool-config-file-common.h"
 
 #define IPMICONSOLE_CONFIG_FILE_DEFAULT "/etc/ipmiconsole.conf"
 

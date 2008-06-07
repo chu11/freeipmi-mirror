@@ -22,15 +22,21 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <argp.h>
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_ARGP_H
+#include <argp.h>
+#else /* !HAVE_ARGP_H */
+#include "freeipmi-argp.h"
+#endif /* !HAVE_ARGP_H */
 
-#include "tool-cmdline-common.h"
-#include "tool-config-file-common.h"
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
+
+#include "freeipmi-portability.h"
+#include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 
 const char *argp_program_version = 
   "bmc-info - " PACKAGE_VERSION "\n"

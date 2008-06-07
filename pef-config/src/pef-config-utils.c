@@ -28,7 +28,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include <freeipmi/freeipmi.h>
+#include "freeipmi-portability.h"
 
 #include "pef-config.h"
 #include "pef-config-utils.h"

@@ -39,6 +39,8 @@
 #include "pef-config-alert-policy-table.h"
 #include "pef-config-event-filter-table.h"
 
+#include "freeipmi-portability.h"
+
 struct config_section *
 pef_config_sections_create (pef_config_state_data_t *state_data)
 {

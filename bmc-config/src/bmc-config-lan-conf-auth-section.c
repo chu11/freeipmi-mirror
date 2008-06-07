@@ -31,6 +31,8 @@
 #include "bmc-config-validate.h"
 #include "bmc-config-utils.h"
 
+#include "freeipmi-portability.h"
+
 /* convenience struct */
 struct bmc_authentication_level {
   uint8_t callback_level_none;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.16 2008-05-29 17:00:44 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.17 2008-06-07 16:09:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -33,19 +33,23 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_ARGP_H
 #include <argp.h>
-#include <errno.h>
+#else /* !HAVE_ARGP_H */
+#include "freeipmi-argp.h"
+#endif /* !HAVE_ARGP_H */
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <assert.h>
+#include <errno.h>
 
-#include "tool-cmdline-common.h"
-#include "tool-config-file-common.h"
 #include "ipmimonitoring.h"
 #include "ipmimonitoring-argp.h"
 
 #include "freeipmi-portability.h"
+#include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 
 const char *argp_program_version = 
   "ipmimonitoring - " PACKAGE_VERSION "\n"

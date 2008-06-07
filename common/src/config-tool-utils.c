@@ -30,6 +30,8 @@
 
 #include "config-tool-utils.h"
 
+#include "freeipmi-portability.h"
+
 int8_t
 config_ipv4_address_string2int(char *src, uint32_t *dest)
 {

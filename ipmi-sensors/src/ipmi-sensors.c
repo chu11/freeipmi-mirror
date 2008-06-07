@@ -35,14 +35,8 @@
 #include <time.h>
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
-#include <argp.h>
 #include <assert.h>
 
-#include "tool-common.h"
-#include "tool-cmdline-common.h"
-#include "tool-fiid-wrappers.h"
-#include "tool-sensor-common.h"
-#include "tool-sdr-cache-common.h"
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-reading.h"
@@ -51,10 +45,14 @@
 #include "ipmi-sensors-very-verbose-display.h"
 #include "ipmi-sensors-util.h"
 
+#include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "hostrange.h"
-
-#include "freeipmi-portability.h"
+#include "tool-common.h"
+#include "tool-cmdline-common.h"
+#include "tool-fiid-wrappers.h"
+#include "tool-sensor-common.h"
+#include "tool-sdr-cache-common.h"
 
 static int 
 _sdr_repository_info (ipmi_sensors_state_data_t *state_data)

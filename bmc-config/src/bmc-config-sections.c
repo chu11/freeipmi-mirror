@@ -45,6 +45,8 @@
 #include "bmc-config-sol-conf-section.h"
 #include "bmc-config-misc-section.h"
 
+#include "freeipmi-portability.h"
+
 struct config_section *
 bmc_config_sections_create (bmc_config_state_data_t *state_data)
 {

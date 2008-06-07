@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: thread.c,v 1.1 2008-04-12 00:05:20 chu11 Exp $
+ *  $Id: thread.c,v 1.2 2008-06-07 16:09:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -29,7 +29,9 @@
 
 #include <assert.h>
 #include <errno.h>
+#if HAVE_PTHREAD_H
 #include <pthread.h>
+#endif /* HAVE_PTHREAD_H */
 #include "thread.h"
 
 

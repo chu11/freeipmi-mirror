@@ -29,8 +29,9 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "freeipmi-portability.h"
 #include "ipmi-locate-argp.h"
+
+#include "freeipmi-portability.h"
 #include "tool-common.h"
 
 void 

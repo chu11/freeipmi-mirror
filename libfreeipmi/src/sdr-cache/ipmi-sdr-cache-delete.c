@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-delete.c,v 1.3 2008-03-28 00:15:05 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-delete.c,v 1.4 2008-06-07 16:10:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -43,6 +43,8 @@
 #include "ipmi-sdr-cache-defs.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
+
+#include "freeipmi-portability.h"
 
 int 
 ipmi_sdr_cache_delete(ipmi_sdr_cache_ctx_t ctx, char *filename)

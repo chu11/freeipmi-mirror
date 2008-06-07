@@ -25,19 +25,16 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#ifdef HAVE_ERROR_H
-#include <error.h>
-#endif
-#include <argp.h>
 #include <assert.h>
 
-#include "freeipmi-portability.h"
-#include "tool-common.h"
-#include "tool-cmdline-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
 #include "pef-config-info.h"
 #include "pef-config-sections.h"
+
+#include "freeipmi-portability.h"
+#include "tool-common.h"
+#include "tool-cmdline-common.h"
 
 static void
 _pef_config_state_data_init(pef_config_state_data_t *state_data)

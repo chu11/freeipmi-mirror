@@ -25,11 +25,6 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <pthread.h>
-#include <err.h>
-#include <argp.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -37,12 +32,13 @@
 
 #include "bmc-device.h"
 #include "bmc-device-argp.h"
+
+#include "freeipmi-portability.h"
+#include "hostrange.h"
+#include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-fiid-wrappers.h"
-#include "freeipmi-portability.h"
-#include "pstdout.h"
-#include "hostrange.h"
 
 static int
 cold_reset (bmc_device_state_data_t *state_data)

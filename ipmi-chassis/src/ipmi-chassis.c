@@ -25,24 +25,19 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <err.h>
-#include <argp.h>
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
 
-#include "freeipmi-portability.h"
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
 
+#include "freeipmi-portability.h"
+#include "hostrange.h"
+#include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-fiid-wrappers.h"
-
-#include "pstdout.h"
-#include "hostrange.h"
 
 static int32_t
 get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)

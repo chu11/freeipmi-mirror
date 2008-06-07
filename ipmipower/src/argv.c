@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: argv.c,v 1.7 2007-09-05 20:13:33 chu11 Exp $
+ *  $Id: argv.c,v 1.8 2008-06-07 16:09:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,8 +33,11 @@
 #include <ctype.h>
 #endif /* STDC_HEADERS */
 #include <assert.h>
-#include "wrappers.h"
+
+#include "freeipmi-portability.h"
+
 #include "argv.h"
+#include "wrappers.h"
 
 /* make a copy of the first word in str and advance str past it */
 static char *_nextargv(char **strp, char *ignore)

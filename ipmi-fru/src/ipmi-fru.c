@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.25 2008-05-26 16:07:43 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.26 2008-06-07 16:09:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -34,9 +34,6 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <pthread.h>
-#include <err.h>
-#include <argp.h>
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
@@ -47,12 +44,13 @@
 #include "ipmi-fru-multirecord-area.h"
 #include "ipmi-fru-util.h"
 
+#include "hostrange.h"
+#include "pstdout.h"
+#include "freeipmi-portability.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
-#include "pstdout.h"
-#include "hostrange.h"
 
 #define IPMI_FRU_DEFAULT_DEVICE_ID_STRING "Default FRU Device"
 

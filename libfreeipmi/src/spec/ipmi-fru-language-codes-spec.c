@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-language-codes-spec.c,v 1.3 2008-03-28 00:15:05 chu11 Exp $
+ *  $Id: ipmi-fru-language-codes-spec.c,v 1.4 2008-06-07 16:10:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -34,6 +34,8 @@
 #include <stdlib.h>
 
 #include "freeipmi/spec/ipmi-fru-language-codes-spec.h"
+
+#include "freeipmi-portability.h"
 
 const char *const ipmi_fru_language_codes[] =
   {

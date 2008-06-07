@@ -23,7 +23,11 @@
 #include "config.h"
 #endif
 
+#if HAVE_ARGP_H
 #include <argp.h>
+#else /* !HAVE_ARGP_H */
+#include "freeipmi-argp.h"
+#endif /* !HAVE_ARGP_H */
 
 #include "freeipmi/api/ipmi-api.h"
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"

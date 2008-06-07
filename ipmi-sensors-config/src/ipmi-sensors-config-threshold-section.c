@@ -30,6 +30,7 @@
 #include "ipmi-sensors-config.h"
 #include "ipmi-sensors-config-utils.h"
 
+#include "freeipmi-portability.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 

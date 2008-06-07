@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostrange.c,v 1.9 2008-05-21 16:40:16 chu11 Exp $
+ *  $Id: hostrange.c,v 1.10 2008-06-07 16:09:51 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -15,10 +15,11 @@
 #include <errno.h>
 
 #include "ipmidetect.h"
-#include "hostlist.h"
 
-#include "pstdout.h"
+#include "freeipmi-portability.h"
+#include "hostlist.h"
 #include "hostrange.h"
+#include "pstdout.h"
 
 #define HOSTLIST_BUFLEN 1024
 

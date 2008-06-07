@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.9 2008-03-28 00:14:42 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.10 2008-06-07 16:09:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -63,6 +63,7 @@
 
 #include "conffile.h"
 #include "fd.h"
+#include "freeipmi-portability.h"
 #include "hostlist.h"
 
 /*

@@ -40,6 +40,7 @@
 
 #include "ipmi-sensors.h"
 
+#include "freeipmi-portability.h"
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"

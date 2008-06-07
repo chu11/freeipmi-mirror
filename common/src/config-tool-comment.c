@@ -31,6 +31,8 @@
 
 #include "config-tool-comment.h"
 
+#include "freeipmi-portability.h"
+
 /* achu: There must be a library out there that can do this better,
  * but I can't find one.  So here's my hacked up simple one.
  */

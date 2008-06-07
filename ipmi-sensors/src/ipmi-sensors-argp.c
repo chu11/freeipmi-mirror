@@ -25,22 +25,25 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_ARGP_H
 #include <argp.h>
-#include <errno.h>
+#else /* !HAVE_ARGP_H */
+#include "freeipmi-argp.h"
+#endif /* !HAVE_ARGP_H */
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <assert.h>
-
-#include "tool-cmdline-common.h"
-#include "tool-config-file-common.h"
-#include "tool-sensor-common.h"
+#include <errno.h>
 
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
+#include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
+#include "tool-sensor-common.h"
 
 const char *argp_program_version = 
   "ipmi-sensors - " PACKAGE_VERSION "\n"

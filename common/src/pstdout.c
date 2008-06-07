@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.12 2008-04-29 21:58:41 chu11 Exp $
+ *  $Id: pstdout.c,v 1.13 2008-06-07 16:09:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -41,7 +41,9 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_PTHREAD_H
 #include <pthread.h>
+#endif /* HAVE_PTHREAD_H */
 #include <signal.h>
 #include <assert.h>
 #include <errno.h>
@@ -83,8 +85,8 @@ struct pstdout_thread_data {
 struct pstdout_state {
   uint32_t magic;
   char *hostname; 
-  cbuf_t stdout;
-  cbuf_t stderr;
+  cbuf_t p_stdout;
+  cbuf_t p_stderr;
   char *buffer_stdout;
   char *buffer_stderr;
   unsigned int buffer_stdout_len;
@@ -496,8 +498,8 @@ _pstdout_print(pstdout_state_t pstate,
 
   assert(pstate);
   assert(pstate->magic == PSTDOUT_STATE_MAGIC);
-  assert(pstate->stdout);
-  assert(pstate->stderr);
+  assert(pstate->p_stdout);
+  assert(pstate->p_stderr);
   assert(stream);
   assert(stream == stdout || stream == stderr);
   assert(format);
@@ -505,7 +507,7 @@ _pstdout_print(pstdout_state_t pstate,
 
   if (stream == stdout)
     {
-      whichcbuf = pstate->stdout;
+      whichcbuf = pstate->p_stdout;
       whichdefaultmask = PSTDOUT_OUTPUT_STDOUT_DEFAULT;
       whichprependmask = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME;
       whichbuffermask = PSTDOUT_OUTPUT_BUFFER_STDOUT;
@@ -515,7 +517,7 @@ _pstdout_print(pstdout_state_t pstate,
     }
   else
     {
-      whichcbuf = pstate->stderr;
+      whichcbuf = pstate->p_stderr;
       whichdefaultmask = PSTDOUT_OUTPUT_STDERR_DEFAULT;
       whichprependmask = PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
       whichbuffermask = PSTDOUT_OUTPUT_BUFFER_STDERR;
@@ -801,14 +803,14 @@ _pstdout_state_init(pstdout_state_t pstate, const char *hostname)
   pstate->magic = PSTDOUT_STATE_MAGIC;
   pstate->hostname = (char *)hostname;
 
-  if (!(pstate->stdout = cbuf_create(PSTDOUT_STATE_CBUF_MIN, PSTDOUT_STATE_CBUF_MAX)))
+  if (!(pstate->p_stdout = cbuf_create(PSTDOUT_STATE_CBUF_MIN, PSTDOUT_STATE_CBUF_MAX)))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
         fprintf(stderr, "cbuf_create: %s\n", strerror(errno));
       pstdout_errnum = PSTDOUT_ERR_INTERNAL;
       return -1;
     }
-  if (!(pstate->stderr = cbuf_create(PSTDOUT_STATE_CBUF_MIN, PSTDOUT_STATE_CBUF_MAX)))
+  if (!(pstate->p_stderr = cbuf_create(PSTDOUT_STATE_CBUF_MIN, PSTDOUT_STATE_CBUF_MAX)))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
         fprintf(stderr, "cbuf_create: %s\n", strerror(errno));
@@ -844,8 +846,8 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
 {
   assert(pstate);
   assert(pstate->magic == PSTDOUT_STATE_MAGIC);
-  assert(pstate->stdout);
-  assert(pstate->stderr);
+  assert(pstate->p_stdout);
+  assert(pstate->p_stderr);
   assert(stream);
   assert(stream == stdout || stream == stderr);
   assert(whichbuffer);
@@ -947,8 +949,8 @@ _pstdout_output_finish(pstdout_state_t pstate)
 
   assert(pstate);
   assert(pstate->magic == PSTDOUT_STATE_MAGIC);
-  assert(pstate->stdout);
-  assert(pstate->stderr);
+  assert(pstate->p_stdout);
+  assert(pstate->p_stderr);
 
   if ((rc = pthread_mutex_lock(&(pstate->mutex))))
     {
@@ -962,10 +964,10 @@ _pstdout_output_finish(pstdout_state_t pstate)
   /* If there is remaining junk in the cbufs, write a "\n" to it so we
    * finish off the line and get it flushed out.
    */
-  if (!cbuf_is_empty(pstate->stdout))
+  if (!cbuf_is_empty(pstate->p_stdout))
     _pstdout_print_wrapper(pstate, 1, stdout, "\n");
   
-  if (!cbuf_is_empty(pstate->stderr))
+  if (!cbuf_is_empty(pstate->p_stderr))
     _pstdout_print_wrapper(pstate, 1, stderr, "\n");
   
   if (_pstdout_output_buffer_data(pstate,
@@ -1013,10 +1015,10 @@ _pstdout_state_cleanup(pstdout_state_t pstate)
   assert(pstate);
   assert(pstate->magic == PSTDOUT_STATE_MAGIC);
 
-  if (pstate->stdout)
-    cbuf_destroy(pstate->stdout);
-  if (pstate->stderr)
-    cbuf_destroy(pstate->stderr);
+  if (pstate->p_stdout)
+    cbuf_destroy(pstate->p_stdout);
+  if (pstate->p_stderr)
+    cbuf_destroy(pstate->p_stderr);
   if (pstate->buffer_stdout)
     free(pstate->buffer_stdout);
   if (pstate->buffer_stderr)

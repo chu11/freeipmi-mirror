@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.32 2008-05-18 15:49:59 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.33 2008-06-07 16:09:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -44,6 +44,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+
+#include "freeipmi-portability.h"
 
 #include "ipmipower_connection.h"
 #include "ipmipower_output.h"
@@ -175,7 +177,13 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
       if (h_errno == HOST_NOT_FOUND)
         ipmipower_output(MSG_TYPE_HOSTNAME_INVALID, ic->hostname);
       else
-        cbuf_printf(ttyout, "gethostbyname() error %s: %s", ic->hostname, hstrerror(h_errno));
+        {
+#if HAVE_HSTRERROR
+          cbuf_printf(ttyout, "gethostbyname() error %s: %s", ic->hostname, hstrerror(h_errno));
+#else /* !HAVE_HSTRERROR */
+          cbuf_printf(ttyout, "gethostbyname() error %s: h_errno = %d", ic->hostname, h_errno);
+#endif /* !HAVE_HSTRERROR */
+        }
       return -1;
     }
   ic->destaddr.sin_addr = *((struct in_addr *)result->h_addr);

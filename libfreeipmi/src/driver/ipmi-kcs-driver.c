@@ -42,7 +42,6 @@
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
-#include "ipmi-inband.h"
 #include "ipmi-semaphores.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
@@ -137,6 +136,31 @@
 #define IPMI_KCS_CTX_MAGIC 0xabbaadda
 
 #define IPMI_KCS_FLAGS_MASK IPMI_KCS_FLAGS_NONBLOCKING
+
+#if defined(__FreeBSD__)
+# include <machine/cpufunc.h>
+# include <machine/sysarch.h>
+#elif defined(__NetBSD__) || defined(__OpenBSD__)
+# include <machine/pio.h>               /* inb/outb */
+# include <machine/sysarch.h>   /* sysarch call */
+#elif defined(HAVE_SYS_IO_H)
+/* Linux, _AXP_ */
+# include <sys/io.h>
+#elif defined(HAVE_ASM_IO_H)
+/* PPC */
+# include <asm/io.h>
+#endif
+
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+# define _INB(port)  inb (port)
+# define _OUTB(data, port)  outb (port, data)
+#elif defined(HAVE_IOPL)
+# define _INB(port)  inb (port)
+# define _OUTB(data, port)  outb (data, port)
+#else
+# define _INB(port)  0
+# define _OUTB(data, port)
+#endif
 
 static char * ipmi_kcs_ctx_errmsg[] =
   {
@@ -341,7 +365,12 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
   KCS_ERR(!((ctx->dev_fd = open ("/dev/io", O_RDONLY)) < 0));
 #endif /* !USE_IOPERM */
 #else  /* !__FreeBSD__ */
+#if HAVE_IOPL
   KCS_ERR(!(iopl (3) < 0));
+#else /* !HAVE_IOPL */
+  /* otherwise, we always return a system error */
+  KCS_ERR_SYSTEM_ERROR(0);
+#endif /* !HAVE_IOPL */
 #endif/* !__FreeBSD__ */
 
   ctx->io_init = 1;
@@ -426,6 +455,7 @@ _ipmi_kcs_read_next (ipmi_kcs_ctx_t ctx)
 
   _OUTB (IPMI_KCS_CTRL_READ, IPMI_KCS_REG_DATAIN (ctx->driver_address));
 }
+
 /*
  * Set up channel for writing.
  */

@@ -31,6 +31,8 @@
 #include "config-tool-commit.h"
 #include "config-tool-utils.h"
 
+#include "freeipmi-portability.h"
+
 config_err_t
 config_commit_section(struct config_section *section,
                       struct config_arguments *cmd_args,

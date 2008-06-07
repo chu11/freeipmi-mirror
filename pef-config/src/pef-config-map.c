@@ -27,6 +27,8 @@
 #endif /* STDC_HEADERS */
 #include <freeipmi/freeipmi.h>
 
+#include "freeipmi-portability.h"
+
 #include "pef-config.h"
 #include "pef-config-map.h"
 

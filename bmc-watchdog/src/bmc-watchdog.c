@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.99 2008-05-29 05:50:19 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.100 2008-06-07 16:09:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -68,8 +68,9 @@
 #include "bmc-watchdog.h"
 #include "bmc-watchdog-argp.h"
 
-#include "tool-common.h"
+#include "freeipmi-portability.h"
 #include "debug-common.h"
+#include "tool-common.h"
 
 #define BMC_WATCHDOG_ERR_BUFLEN           1024
 #define BMC_WATCHDOG_STR_BUFLEN           1024

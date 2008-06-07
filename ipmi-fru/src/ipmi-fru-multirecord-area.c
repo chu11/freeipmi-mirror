@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.11 2008-05-27 17:27:28 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.12 2008-06-07 16:09:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -40,6 +40,7 @@
 #include "ipmi-fru-multirecord-area.h"
 #include "ipmi-fru-util.h"
 
+#include "freeipmi-portability.h"
 #include "tool-fiid-wrappers.h"
 
 static char *

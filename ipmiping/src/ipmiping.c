@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.45 2008-04-17 23:10:15 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.46 2008-06-07 16:09:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -42,6 +42,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "debug-common.h"
+#include "freeipmi-portability.h"
 #include "ipmi-ping.h"
 
 #define _setstr(x)   (x) ? "set" : "clear"
@@ -366,10 +367,10 @@ parsepacket(char *destination,
             {
               _fiid_obj_get(obj_cmd, 
 			    "channel_supports_ipmi_v1.5_connections", 
-			    (u_int64_t *)&ipmi_v15);
+			    (uint64_t *)&ipmi_v15);
               _fiid_obj_get(obj_cmd, 
 			    "channel_supports_ipmi_v2.0_connections", 
-			    (u_int64_t *)&ipmi_v20);
+			    (uint64_t *)&ipmi_v20);
 	      
               printf("ipmi_v1.5=%s ipmi_v2.0=%s ", _setstr(ipmi_v15), _setstr(ipmi_v20));
             }

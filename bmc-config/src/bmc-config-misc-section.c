@@ -30,6 +30,8 @@
 #include "bmc-config-map.h"
 #include "bmc-config-validate.h"
 
+#include "freeipmi-portability.h"
+
 static config_err_t
 power_restore_policy_checkout (const char *section_name,
 			       struct config_keyvalue *kv,

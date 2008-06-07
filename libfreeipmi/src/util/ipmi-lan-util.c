@@ -26,6 +26,9 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_ALLOCA_H
+#include <alloca.h>
+#endif /* HAVE_ALLOCA_H */
 #include <errno.h>
 
 #include "freeipmi/util/ipmi-lan-util.h"

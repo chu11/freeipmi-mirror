@@ -20,9 +20,17 @@
 #include <config.h>
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+#if HAVE_ARGP_H
 #include <argp.h>
+#else /* !HAVE_ARGP_H */
+#include "freeipmi-argp.h"
+#endif /* !HAVE_ARGP_H */
 
 #include "ipmi-locate-argp.h"
+
+#include "freeipmi-portability.h"
 
 const char *argp_program_version = 
   "ipmi-locate - " PACKAGE_VERSION "\n"

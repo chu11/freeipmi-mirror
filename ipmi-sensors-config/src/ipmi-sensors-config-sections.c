@@ -32,6 +32,7 @@
 #include "ipmi-sensors-config-sections.h"
 #include "ipmi-sensors-config-threshold-section.h"
 
+#include "freeipmi-portability.h"
 #include "tool-sdr-cache-common.h"
 
 struct config_section *

@@ -30,6 +30,8 @@
 #include "bmc-config.h"
 #include "bmc-config-map.h"
 
+#include "freeipmi-portability.h"
+
 int
 channel_access_mode (const char *string)
 {

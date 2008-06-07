@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.20 2008-04-17 23:10:15 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.21 2008-06-07 16:09:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -43,13 +43,15 @@
 #include "ipmiconsole.h"
 #include "ipmiconsole_defs.h"
 
-#include "cbuf.h"
-#include "debug-common.h"
-#include "secure.h"
 #include "ipmiconsole_packet.h"
 #include "ipmiconsole_ctx.h"
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_fiid_wrappers.h"
+
+#include "cbuf.h"
+#include "freeipmi-portability.h"
+#include "debug-common.h"
+#include "secure.h"
 
 #define IPMICONSOLE_MAX_PACKET_DUMP_HDR_LEN 1024
 

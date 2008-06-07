@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.18 2008-05-27 16:41:53 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.19 2008-06-07 16:09:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -40,6 +40,7 @@
 #include "ipmi-fru.h"
 #include "ipmi-fru-util.h"
 
+#include "freeipmi-portability.h"
 #include "tool-fiid-wrappers.h"
 
 #define FRU_COUNT_TO_READ_BLOCK_SIZE  16

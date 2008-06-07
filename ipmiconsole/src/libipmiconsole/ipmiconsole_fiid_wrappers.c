@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.c,v 1.11 2008-03-28 00:14:40 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.c,v 1.12 2008-06-07 16:09:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -43,6 +43,8 @@
 #include "ipmiconsole_fiid_wrappers.h"
 #include "ipmiconsole_ctx.h"
 #include "ipmiconsole_debug.h"
+
+#include "freeipmi-portability.h"
 
 int32_t
 Fiid_template_len_bytes(ipmiconsole_ctx_t c, fiid_template_t tmpl)

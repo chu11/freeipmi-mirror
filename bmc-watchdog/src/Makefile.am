@@ -1,29 +1,39 @@
+noinst_HEADERS = \
+	bmc-watchdog.h \
+	bmc-watchdog-argp.h
+
+AM_CPPFLAGS = \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
 sbin_PROGRAMS = bmc-watchdog
 
-bmc_watchdog_SOURCES = bmc-watchdog.c bmc-watchdog-argp.c
-
-noinst_HEADERS = bmc-watchdog.h bmc-watchdog-argp.h
-
 bmc_watchdog_LDADD = \
-	../../libfreeipmi/src/libfreeipmi.la \
-	../../common/src/libtoolcommon.la \
-	../../common/src/libmiscutils.la \
-	../../common/src/libdebugcommon.la
+	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
+	$(top_builddir)/common/src/libdebugcommon.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
-bmc_watchdog_CPPFLAGS = \
-	-I$(srcdir)/../../libfreeipmi/include \
-	-I$(srcdir)/../../common/src
+bmc_watchdog_SOURCES = \
+	bmc-watchdog.c \
+	bmc-watchdog-argp.c
 
-../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+$(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
 
-../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+$(top_builddir)/common/src/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
 
-../../common/src/libmiscutils.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
 
-../../common/src/libdebugcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+$(top_builddir)/common/src/libdebugcommon.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

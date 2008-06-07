@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.156 2008-05-19 23:37:10 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.157 2008-06-07 16:09:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -45,6 +45,8 @@
 #include <time.h>
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
+
+#include "freeipmi-portability.h"
 
 #include "ipmipower.h"
 #include "ipmipower_connection.h"

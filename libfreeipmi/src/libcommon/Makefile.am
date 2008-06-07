@@ -1,11 +1,3 @@
-noinst_LTLIBRARIES = libcommon.la
-
-libcommon_la_SOURCES = \
-	ipmi-bit-ops.c \
-	ipmi-crypt.c \
-	ipmi-md2.c \
-	ipmi-md5.c
-
 noinst_HEADERS = \
 	ipmi-bit-ops.h \
 	ipmi-crypt.h \
@@ -14,12 +6,19 @@ noinst_HEADERS = \
 	ipmi-md2.h \
 	ipmi-md5.h
 
+noinst_LTLIBRARIES = libcommon.la
+
 libcommon_la_LDFLAGS = -lgcrypt
-libcommon_la_CFLAGS = -Wall
+
 libcommon_la_CPPFLAGS = \
-	-I$(srcdir)/.. \
-	-I$(srcdir)/../../include \
-	-I$(srcdir)/../../../common/src \
+	-I$(top_builddir)/libfreeipmi/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-I$(top_builddir)/common/src \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 
+libcommon_la_SOURCES = \
+	ipmi-bit-ops.c \
+	ipmi-crypt.c \
+	ipmi-md2.c \
+	ipmi-md5.c

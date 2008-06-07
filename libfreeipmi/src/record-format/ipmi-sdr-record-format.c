@@ -26,6 +26,8 @@
 
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 
+#include "freeipmi-portability.h"
+
 fiid_template_t tmpl_sdr_record_header = 
   {
     // SDR record header

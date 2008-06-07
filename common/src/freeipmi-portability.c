@@ -31,9 +31,24 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 #include <netdb.h>
+#if HAVE_PTHREAD_H
 #include <pthread.h>
+#endif /* HAVE_PTHREAD_H */
 
 #include "freeipmi-portability.h"
+
+#ifndef HAVE_MEMPCPY
+/* Written by Niels Moller <nisse@lysator.liu.se>
+ *
+ * This file is hereby placed in the public domain.
+ */
+void *
+freeipmi_mempcpy (void *to, const void *from, size_t size)
+{
+  memcpy(to, from, size);
+  return (char *) to + size;
+}
+#endif
 
 #ifndef HAVE_STRNDUP
 /* Replacement for glibc strndup() */
@@ -51,6 +66,55 @@ freeipmi_strndup(const char *s, size_t n)
 
 	new[len] = '\0';
 	return (char *)memcpy(new, s, len);
+}
+#endif
+
+#ifndef HAVE_STRCHRNUL
+/* Written by Niels Moller <nisse@lysator.liu.se>
+ *
+ * This file is hereby placed in the public domain.
+ */
+char *
+freeipmi_strchrnul(const char *s, int c)
+{
+  const char *p = s;
+  while (*p && (*p != c))
+    p++;
+
+  return (char *) p;
+}
+#endif
+
+#ifndef HAVE_STRSEP
+/* achu: ripped from wine
+ * http://www.winehq.org/pipermail/wine-patches/2001-November/001322.html
+ */
+char * 
+freeipmi_strsep(char **stringp, const char *delim)
+{
+  char *token;
+  
+  if (*stringp == NULL) 
+    {
+      /* No more tokens */
+      return NULL;
+    }
+
+  token = *stringp;
+  while (**stringp != '\0') 
+    {
+      if (strchr(delim, **stringp) != NULL)
+        {
+          **stringp = '\0';
+          (*stringp)++;
+          return token;
+        }
+      (*stringp)++;
+    }
+
+  /* There is no other token */
+  *stringp = NULL;
+  return token;
 }
 #endif
 
@@ -100,6 +164,43 @@ freeipmi_getline(char **buf, size_t *size, FILE *fp)
 			return n;
 		}
 	}
+}
+#endif
+
+#ifndef HAVE_ASPRINTF
+/* achu: ripped from IkiWiki
+ * http://ikiwiki.info/bugs/build_in_opensolaris/
+ */
+int 
+asprintf(char **strp, const char *fmt, ...)
+{
+  va_list arg;
+  char *str;
+  int size;
+  int rv;
+
+  va_start(arg, fmt);
+  size = vsnprintf(NULL, 0, fmt, arg);
+  size++;
+
+  va_start(arg, fmt);
+  str = malloc(size);
+  if (str == NULL) 
+    {
+      va_end(arg);
+      /*
+       * Strictly speaking, GNU asprintf doesn't do this,
+       * but the caller isn't checking the return value.
+       */
+      perror("malloc");
+      exit(1);
+    }
+
+  rv = vsnprintf(str, size, fmt, arg);
+  va_end(arg);
+
+  *strp = str;
+  return (rv);
 }
 #endif
 

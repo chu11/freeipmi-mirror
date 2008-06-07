@@ -30,6 +30,8 @@
 
 #include "config-tool-fiid.h"
 
+#include "freeipmi-portability.h"
+
 fiid_obj_t 
 Fiid_obj_create(fiid_template_t tmpl)
 {

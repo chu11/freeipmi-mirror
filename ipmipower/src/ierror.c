@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ierror.c,v 1.3 2008-05-18 15:41:35 chu11 Exp $
+ *  $Id: ierror.c,v 1.4 2008-06-07 16:09:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -65,6 +65,8 @@
 
 #include "fd.h"
 #include "cbuf.h"
+#include "freeipmi-portability.h"
+
 #include "ierror.h"
 #include "wrappers.h"
 

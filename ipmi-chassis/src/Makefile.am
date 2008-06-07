@@ -1,32 +1,43 @@
-sbin_PROGRAMS=ipmi-chassis
-ipmi_chassis_SOURCES=ipmi-chassis-argp.c ipmi-chassis.c 
- 
-ipmi_chassis_LDADD = ../../common/src/libtoolcommon.la \
-		     ../../common/src/libhostrange.la \
-		     ../../common/src/libmiscutils.la \
-		     ../../ipmidetect/src/libipmidetect/libipmidetect.la \
-	             ../../libfreeipmi/src/libfreeipmi.la
- 
-noinst_HEADERS=ipmi-chassis-argp.h ipmi-chassis.h
- 
-AM_CFLAGS = -Wall
-AM_CPPFLAGS = -I$(srcdir)/../../common/src \
-	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
-	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\"
- 
-../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+noinst_HEADERS = \
+	ipmi-chassis.h \
+	ipmi-chassis-argp.h
 
-../../common/src/libtoolcommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+AM_CPPFLAGS = \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
 
-../../common/src/libhostrange.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+sbin_PROGRAMS = ipmi-chassis
 
-../../common/src/libmiscutils.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+ipmi_chassis_LDADD = \
+	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/libhostrange.la \
+	$(top_builddir)/common/src/libmiscutils.la \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
+	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
-../../ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
+ipmi_chassis_SOURCES = \
+	ipmi-chassis.c \
+	ipmi-chassis-argp.c
+
+$(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libhostrange.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

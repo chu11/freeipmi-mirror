@@ -30,9 +30,8 @@
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 
-#include "tool-sensor-common.h"
-
 #include "freeipmi-portability.h"
+#include "tool-sensor-common.h"
 
 int 
 sensor_classify (uint8_t event_reading_type_code)

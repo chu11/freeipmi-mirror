@@ -28,9 +28,6 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif	/* HAVE_UNISTD_H */
-#ifdef HAVE_ERROR_H
-#include <error.h>
-#endif
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
@@ -45,7 +42,6 @@
 #include <time.h>
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
-#include <argp.h>
 #include <assert.h>
 
 #include "freeipmi/api/ipmi-sel-cmds-api.h"

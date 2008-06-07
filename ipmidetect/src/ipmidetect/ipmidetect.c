@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.8 2008-03-28 00:14:41 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.9 2008-06-07 16:09:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -35,7 +35,6 @@
 #include <stdarg.h>
 #endif /* STDC_HEADERS */
 
-#define _GNU_SOURCE
 #if HAVE_GETOPT_H
 #include <getopt.h>
 #endif /* HAVE_GETOPT_H */
@@ -62,6 +61,7 @@
 #include "hostlist.h"
 #include "error.h"
 #include "fd.h"
+#include "freeipmi-portability.h"
 
 /* 
  * External variables for getopt 

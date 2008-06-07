@@ -30,6 +30,8 @@
 
 #include "ipmi-sensors-util.h"
 
+#include "freeipmi-portability.h"
+
 void 
 str_replace_char (char *str, char chr, char with)
 {

@@ -32,6 +32,8 @@
 #include "config-tool-comment.h"
 #include "config-tool-section.h"
 
+#include "freeipmi-portability.h"
+
 config_err_t
 config_checkout_section(struct config_section *section,
                         struct config_arguments *cmd_args,

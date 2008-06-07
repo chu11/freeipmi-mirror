@@ -27,12 +27,38 @@ extern "C" {
 #include <config.h>
 #endif
 
+#include <stdio.h>	/* For FILE definition */
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#include <stdarg.h>
+#endif /* STDC_HEADERS */
 #include <sys/types.h>
 #include <math.h>
-#include <stdlib.h>
-#include <string.h>
 #include <netdb.h>
-#include <stdio.h>	/* For FILE definition */
+#if HAVE_ALLOCA_H
+#include <alloca.h>
+#endif /* HAVE_ALLOCA_H */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif  /* !TIME_WITH_SYS_TIME */
+
+/* achu: I guess __func__ is the other macro people use?? */
+#ifndef HAVE_FUNCTION_MACRO
+#define __FUNCTION__ __func__
+#endif  
+
+/* achu: not on Solaris */
+#ifndef UINT_MAX
+#define UINT_MAX 4294967295U
+#endif
 
 #if  __WORDSIZE == 64
 #define FI_64 "%l"
@@ -76,7 +102,6 @@ extern "C" {
 	})
 #endif
 
-#ifndef STDC_HEADERS
 #ifndef HAVE_MEMCPY
 static inline void*
 freeipmi_memcpy (void *dest, const void *src, size_t n)
@@ -86,6 +111,12 @@ freeipmi_memcpy (void *dest, const void *src, size_t n)
 }
 #define memcpy freeipmi_memcpy
 #endif /* HAVE_MEMCPY */
+
+#ifndef HAVE_MEMPCPY
+#define mempcpy freeipmi_mempcpy
+void *freeipmi_mempcpy (void *to, const void *from, size_t size);
+#endif /* HAVE_MEMPCPY */
+
 #  ifndef HAVE_MEMSET
 static inline void*
 freeipmi_memset (void *s, int c, size_t n)
@@ -95,6 +126,7 @@ freeipmi_memset (void *s, int c, size_t n)
 }
 #define memset freeipmi_memset
 #endif /* HAVE_MEMSET */
+
 #ifndef HAVE_STRCHR
 static inline char*
 freeipmi_strchr (const char* s, int c)
@@ -106,7 +138,6 @@ freeipmi_strchr (const char* s, int c)
 }
 # define strchr	freeipmi_strchr
 #endif /* HAVE_STRCHR */
-#endif /* STDC_HEADERS */
 
 /* FreeBSD don't have strndup() */
 #ifndef HAVE_STRNDUP
@@ -114,20 +145,64 @@ freeipmi_strchr (const char* s, int c)
 char *freeipmi_strndup(const char *, size_t);
 #endif
 
+#ifndef HAVE_STRCHRNUL
+#define strchrnul freeipmi_strchrnul
+char *freeipmi_strchrnul(const char *s, int c);
+#endif /* !HAVE_STRCHRNUL */
+
+#ifndef HAVE_STRSEP
+#define strsep freeipmi_strsep
+char *freeipmi_strsep(char **stringp, const char *delim);
+#endif /* !HAVE_STRSEP */
+
 /* FreeBSD don't have getline() */
 #ifndef HAVE_GETLINE
 #define getline	freeipmi_getline
 ssize_t freeipmi_getline(char **buf, size_t *bufsize, FILE *fp);
 #endif
 
-#ifndef HAVE_FUNC_GETHOSTBYNAME_R_6
+#ifndef HAVE_ASPRINTF
+#define asprintf freeipmi_asprintf
+int asprintf(char **strp, const char *fmt, ...);
+#endif
+
+/* achu: timeradd and timersub not in solaris 
+ *
+ * these definitions ripped from sys/time.h on linux.
+ */
+#ifndef timeradd
+# define timeradd(a, b, result)                                               \
+  do {                                                                        \
+    (result)->tv_sec = (a)->tv_sec + (b)->tv_sec;                             \
+    (result)->tv_usec = (a)->tv_usec + (b)->tv_usec;                          \
+    if ((result)->tv_usec >= 1000000)                                         \
+      {                                                                       \
+        ++(result)->tv_sec;                                                   \
+        (result)->tv_usec -= 1000000;                                         \
+      }                                                                       \
+  } while (0)
+#endif /* timeradd */
+
+#ifndef timersub
+# define timersub(a, b, result)                                               \
+  do {                                                                        \
+    (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;                             \
+    (result)->tv_usec = (a)->tv_usec - (b)->tv_usec;                          \
+    if ((result)->tv_usec < 0) {                                              \
+      --(result)->tv_sec;                                                     \
+      (result)->tv_usec += 1000000;                                           \
+    }                                                                         \
+  } while (0)
+#endif /* timersub */
+
+#if !defined(HAVE_FUNC_GETHOSTBYNAME_R_6) && !defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
 int freeipmi_gethostbyname_r(const char *name,
                              struct hostent *ret,
                              char *buf,
                              size_t buflen,
                              struct hostent **result,
                              int *h_errnop);
-#endif /* HAVE_FUNC_GETHOSTBYNAME_R_6 */
+#endif /* !defined(HAVE_FUNC_GETHOSTBYNAME_R_6) && !defined(HAVE_FUNC_GETHOSTBYNAME_R_5) */
 
 #ifdef __cplusplus
 }

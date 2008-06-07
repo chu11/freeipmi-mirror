@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.128 2008-06-05 13:58:21 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.129 2008-06-07 16:09:47 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -43,13 +43,43 @@ AC_CONFIG_FILES([
         libfreeipmi/src/sdr-cache/Makefile
         libfreeipmi/src/spec/Makefile
         libfreeipmi/src/util/Makefile
+	bmc-config/Makefile 
+ 	bmc-config/bmc-config.8.pre 
+        bmc-config/bmc-config.conf.5.pre
+        bmc-config/src/Makefile
+        bmc-device/Makefile 
+	bmc-device/bmc-device.8.pre
+        bmc-device/src/Makefile
+        bmc-info/Makefile 
+	bmc-info/bmc-info.8.pre
+        bmc-info/src/Makefile
         bmc-watchdog/Makefile 
         bmc-watchdog/bmc-watchdog.8.pre
         bmc-watchdog/src/Makefile
-        ipmipower/Makefile 
-        ipmipower/ipmipower.8.pre
-        ipmipower/ipmipower.conf.5.pre
-        ipmipower/src/Makefile
+	ipmi-chassis/Makefile
+	ipmi-chassis/ipmi-chassis.8.pre
+	ipmi-chassis/src/Makefile
+        ipmi-fru/Makefile 
+	ipmi-fru/ipmi-fru.8.pre
+        ipmi-fru/src/Makefile
+        ipmi-locate/Makefile 
+        ipmi-locate/ipmi-locate.8.pre
+        ipmi-locate/src/Makefile
+        ipmi-oem/Makefile 
+	ipmi-oem/ipmi-oem.8.pre
+        ipmi-oem/src/Makefile 
+        ipmi-raw/Makefile 
+	ipmi-raw/ipmi-raw.8.pre
+        ipmi-raw/src/Makefile 
+        ipmi-sel/Makefile 
+	ipmi-sel/ipmi-sel.8.pre
+        ipmi-sel/src/Makefile 
+        ipmi-sensors/Makefile 
+	ipmi-sensors/ipmi-sensors.8.pre
+        ipmi-sensors/src/Makefile 
+        ipmi-sensors-config/Makefile 
+	ipmi-sensors-config/ipmi-sensors-config.8.pre
+        ipmi-sensors-config/src/Makefile 
 	ipmiconsole/Makefile 
 	ipmiconsole/ipmiconsole.8.pre
         ipmiconsole/ipmiconsole.conf.5.pre
@@ -57,12 +87,6 @@ AC_CONFIG_FILES([
         ipmiconsole/src/Makefile
 	ipmiconsole/src/libipmiconsole/Makefile
         ipmiconsole/src/ipmiconsole/Makefile
-	ipmimonitoring/Makefile
-        ipmimonitoring/src/Makefile
-	ipmimonitoring/ipmimonitoring.8.pre
-        ipmimonitoring/libipmimonitoring.3.pre
-        ipmimonitoring/src/libipmimonitoring/Makefile 
-        ipmimonitoring/src/ipmimonitoring/Makefile
         ipmidetect/Makefile
         ipmidetect/ipmidetect.8.pre
         ipmidetect/ipmidetect.conf.5.pre
@@ -73,49 +97,25 @@ AC_CONFIG_FILES([
         ipmidetect/src/ipmidetect/Makefile
         ipmidetect/src/ipmidetectd/Makefile
         ipmidetect/src/libipmidetect/Makefile
-        ipmi-oem/Makefile 
-	ipmi-oem/ipmi-oem.8.pre
-        ipmi-oem/src/Makefile 
-        ipmi-raw/Makefile 
-	ipmi-raw/ipmi-raw.8.pre
-        ipmi-raw/src/Makefile 
-        ipmi-sel/Makefile 
-	ipmi-sel/ipmi-sel.8.pre
-        ipmi-sel/src/Makefile 
-        pef-config/Makefile
-	pef-config/pef-config.8.pre
-        pef-config/src/Makefile 
-        ipmi-sensors/Makefile 
-	ipmi-sensors/ipmi-sensors.8.pre
-        ipmi-sensors/src/Makefile 
-        ipmi-sensors-config/Makefile 
-	ipmi-sensors-config/ipmi-sensors-config.8.pre
-        ipmi-sensors-config/src/Makefile 
-        ipmi-locate/Makefile 
-        ipmi-locate/ipmi-locate.8.pre
-        ipmi-locate/src/Makefile
-        bmc-info/Makefile 
-	bmc-info/bmc-info.8.pre
-        bmc-info/src/Makefile
-        bmc-device/Makefile 
-	bmc-device/bmc-device.8.pre
-        bmc-device/src/Makefile
-        ipmi-fru/Makefile 
-	ipmi-fru/ipmi-fru.8.pre
-        ipmi-fru/src/Makefile
+	ipmimonitoring/Makefile
+        ipmimonitoring/src/Makefile
+	ipmimonitoring/ipmimonitoring.8.pre
+        ipmimonitoring/libipmimonitoring.3.pre
+        ipmimonitoring/src/libipmimonitoring/Makefile 
+        ipmimonitoring/src/ipmimonitoring/Makefile
         ipmiping/Makefile 
         ipmiping/ipmiping.8.pre
         ipmiping/src/Makefile
+        ipmipower/Makefile 
+        ipmipower/ipmipower.8.pre
+        ipmipower/ipmipower.conf.5.pre
+        ipmipower/src/Makefile
+        pef-config/Makefile
+	pef-config/pef-config.8.pre
+        pef-config/src/Makefile 
         rmcpping/Makefile 
         rmcpping/rmcpping.8.pre
         rmcpping/src/Makefile
-	bmc-config/Makefile 
- 	bmc-config/bmc-config.8.pre 
-        bmc-config/bmc-config.conf.5.pre
-        bmc-config/src/Makefile
-	ipmi-chassis/Makefile
-	ipmi-chassis/ipmi-chassis.8.pre
-	ipmi-chassis/src/Makefile
         freeipmi.spec])
 
 ISODATE=`date +%Y-%m-%d`
@@ -202,6 +202,10 @@ dnl Checks for programs.
 AC_PROG_INSTALL
 AC_PROG_CC
 AC_PROG_LIBTOOL
+AC_PATH_PROG([CPP], [cpp])
+if test -z "${CPP}"; then
+  AC_MSG_ERROR([cannot find cpp])
+fi
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 AC_PROG_MAKE_SET
 
@@ -293,7 +297,7 @@ fi
 dnl FreeBSD < 5 has getopt_long in a separate gnugetopt library
 AC_CHECK_FUNC([getopt_long], [have_getopt_long=yes],
 	AC_CHECK_LIB([gnugetopt], [getopt_long], [have_getopt_long=yes],
-		AC_MSG_ERROR([gnugetopt library not found. libgnugetopt required.])))
+		AC_MSG_ERROR([getopt_long not found.])))
 
 if test "x${have_getopt_long}" = "xyes"; then
    AC_DEFINE(HAVE_GETOPT_LONG, 1, [define if you found getopt_long])
@@ -303,14 +307,57 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
 AC_C_CONST
 AC_C_INLINE
+AC_TYPE_SIZE_T
+LSH_GCC_ATTRIBUTES
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_HEADER_TIME
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS([unistd.h fcntl.h getopt.h pthread.h])
+AC_CHECK_HEADERS([linux/types.h error.h sys/io.h sys/sockio.h asm/io.h sys/ioccom.h])
+AC_CHECK_HEADERS([linux/ipmi_msgdefs.h])
+AC_CHECK_HEADERS([linux/compiler.h])
+AC_CHECK_HEADERS([linux/ipmi.h], [], [], 
+[#ifdef HAVE_LINUX_IPMI_MSGDEFS_H
+ #include <linux/ipmi_msgdefs.h>
+ #endif
+ #ifdef HAVE_LINUX_COMPILER_H
+ #include <linux/compiler.h>
+ #endif
+])
+AC_CHECK_HEADERS([sys/ipmi.h])
 
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
 AC_FUNC_MMAP
-AC_CHECK_FUNCS([strchr memcpy memset mlock])
+AC_FUNC_VPRINTF
 
 dnl There is no strndup() and getline() on FreeBSD
-AC_CHECK_FUNCS([strndup getline strerror_r getprogname getpwuid_r])
+AC_CHECK_FUNCS([strchr strndup strchrnul strsep])
+AC_CHECK_FUNCS([memcpy mempcpy memset mlock])
+AC_CHECK_FUNCS([getline getprogname])
+AC_CHECK_FUNCS([strerror strerror_r])
+AC_CHECK_FUNCS([flockfile fputs_unlocked fwrite_unlocked])
+AC_CHECK_FUNCS([iopl])
+AC_CHECK_FUNCS([asprintf])
+
+# At least on freebsd, putc_unlocked is a macro, so the standard
+# AC_CHECK_FUNCS doesn't work well.
+AC_TRY_LINK([#include <stdio.h>], 
+            [putc_unlocked('x', stdout)],
+            [AC_DEFINE_UNQUOTED(HAVE_PUTC_UNLOCKED, [1], [Define to 1 if you have putc_unlocked])])
+
+dnl FreeBSD has no exp10() nor log2(), FreeBSD < 5 has no exp2()
+AC_CHECK_LIB([m], [exp10])
+AC_CHECK_LIB([m], [exp2])
+AC_CHECK_LIB([m], [log2])
+
+dnl Solaris needs -lsocket
+AC_CHECK_FUNC([socket], 
+              , 
+              AC_CHECK_LIB([socket],
+                           [socket]))
 
 dnl
 dnl achu: Most parts of this gethostbyname_r testing is from the
@@ -322,13 +369,13 @@ dnl See original: http://www.csn.ul.ie/~caolan/publink/gethostbyname_r
 dnl
 
 AC_CHECK_FUNC([gethostbyname_r], 
-              [have_gethostname_r=yes], 
+              [have_gethostbyname_r=yes], 
               AC_CHECK_LIB([nsl],
                            [gethostbyname_r],
-                           [LIBS="$LIBS -lnsl" have_gethostname_r=yes],
-                           [have_gethostname_r=no]))             
+                           [LIBS="$LIBS -lnsl" have_gethostbyname_r=yes],
+                           [have_gethostbyname_r=no]))             
 
-if test "x${have_gethostname_r}" = "xyes"; then
+if test "x${have_gethostbyname_r}" = "xyes"; then
    AC_TRY_LINK(
    [
    #include <netdb.h>
@@ -339,7 +386,7 @@ if test "x${have_gethostname_r}" = "xyes"; then
    struct hostent_data data;
    (void) gethostbyname_r(name, he, &data);
    ],
-   [ac_cv_func_which_gethostname_r=three], [
+   [ac_cv_func_which_gethostbyname_r=three], [
 	AC_TRY_LINK(
 	[
 	#include <netdb.h>
@@ -352,7 +399,7 @@ if test "x${have_gethostname_r}" = "xyes"; then
 	int h_errnop;
 	(void) gethostbyname_r(name, he, buffer, buflen, &res, &h_errnop);
 	],
-	[ac_cv_func_which_gethostname_r=six], [
+	[ac_cv_func_which_gethostbyname_r=six], [
 	    AC_TRY_LINK(
 	    [
 	    #include <netdb.h>
@@ -365,8 +412,8 @@ if test "x${have_gethostname_r}" = "xyes"; then
 	    int h_errnop;
 	    (void) gethostbyname_r(name, he, buffer, buflen, &h_errnop);
 	    ],
-	    [ac_cv_func_which_gethostname_r=five],
-	    [ac_cv_func_which_gethostname_r=no])
+	    [ac_cv_func_which_gethostbyname_r=five],
+	    [ac_cv_func_which_gethostbyname_r=no])
 	])
    ])
 
@@ -374,21 +421,16 @@ dnl  define HAVE_FUNC_GETHOSTBYNAME_R_6 if gethostbyname_r needs 6 arguments (e.
 dnl  define HAVE_FUNC_GETHOSTBYNAME_R_5 if gethostbyname_r needs 5 arguments (e.g. solaris)
 dnl  define HAVE_FUNC_GETHOSTBYNAME_R_3 if gethostbyname_r needs 3 arguments (e.g. osf/1)
 
-   if test "x${ac_cv_func_which_gethostname_r}" = "xsix"; then
+   if test "x${ac_cv_func_which_gethostbyname_r}" = "xsix"; then
       AC_DEFINE(HAVE_FUNC_GETHOSTBYNAME_R_6, [], [Define gethostbyname_r with 6 args])
-   elif test "x${ac_cv_func_which_gethostname_r}" = "xfive"; then
+   elif test "x${ac_cv_func_which_gethostbyname_r}" = "xfive"; then
       AC_DEFINE(HAVE_FUNC_GETHOSTBYNAME_R_5, [], [Define gethostbyname_r with 5 args])
-   elif test "x${ac_cv_func_which_gethostname_r}" = "xthree"; then
+   elif test "x${ac_cv_func_which_gethostbyname_r}" = "xthree"; then
       AC_DEFINE(HAVE_FUNC_GETHOSTBYNAME_R_3, [], [Define gethostbyname_r with 3 args])
    fi
 fi
 
-dnl FreeBSD has no exp10() nor log2(), FreeBSD < 5 has no exp2()
-AC_CHECK_LIB([m], [exp10])
-AC_CHECK_LIB([m], [exp2])
-AC_CHECK_LIB([m], [log2])
-
-dnl Check for thread-safe gethostbyname()
+dnl Check for thread-safe gethostbyname() for internal portable freeipmi_gethostbyname_r
 AC_MSG_CHECKING([for thread-safe gethostbyname()])
 have_thread_safe_gethostbyname=no
 case "$host_os" in
@@ -409,15 +451,98 @@ else
 	AC_MSG_RESULT([no])
 fi
 
+AC_CHECK_FUNC([hstrerror], 
+              [have_hstrerror=yes], 
+              AC_CHECK_LIB([nsl],
+                           [hstrerror],
+                           [have_hstrerror=yes],
+                           [have_hstrerror=no]))
+
+if test "x$have_hstrerror" = "xyes"; then
+    AC_DEFINE([HAVE_HSTRERROR], [1], [Define if you have hstrerror])
+fi
+
+AC_CHECK_FUNC([getpwuid_r], , AC_MSG_ERROR([getpwuid_r cannot be found]))
+
+if test "x${have_getpwuid_r}" = "xyes"; then
+   AC_TRY_LINK(
+   [
+   #include <pwd.h>
+   ],
+   [
+   uid_t uid;
+   struct passwd pwd;
+   struct passwd *result;
+   char buffer[1];
+   int bufsize;
+   (void) getpwuid_r (uid, &pwd, buffer, bufsize, &result);
+   ],
+   [ac_cv_func_which_getpwuid_r=five], [
+	AC_TRY_LINK(
+	[
+	#include <pwd.h>
+	],
+	[
+        uid_t uid;
+        struct passwd pwd;
+        char buffer[1];
+        int bufsize;
+        (void) getpwuid_r (uid, &pwd, buffer, bufsize);
+	],
+	[ac_cv_func_which_getpwuid_r=four], 
+        [ac_cv_func_which_getpwuid_r=no])
+   ])
+
+dnl  define HAVE_FUNC_GETPWUID_R_5 if getpwuid_r needs 5 arguments (e.g. linux)
+dnl  define HAVE_FUNC_GETPWUID_R_4 if getpwuid_r needs 4 arguments (e.g. solaris)
+
+   if test "x${ac_cv_func_which_getpwuid_r}" = "xfive"; then
+      AC_DEFINE(HAVE_FUNC_GETPWUID_R_5, [], [Define getpwuid_r with 5 args])
+   elif test "x${ac_cv_func_which_getpwuid_r}" = "xfour"; then
+      AC_DEFINE(HAVE_FUNC_GETPWUID_R_4, [], [Define getpwuid_r with 4 args])
+   else
+      AC_MSG_ERROR([getpwuid_r cannot be compiled])
+   fi
+fi
+
 dnl FreeBSD has argp as a separate library
 dnl CAVEAT: argp-standalone library exports it's own strndup() function,
 dnl not conforming to strndup(3). If we have no strndup() in libc (as
 dnl in FreeBSD), and strndup() check is placed after argp check, argp's
 dnl strndup() will be detected, which is wrong. So place argp check _after_
 dnl strndup() check.
-AC_CHECK_FUNC([argp_parse], ,
-	AC_CHECK_LIB([argp], [argp_parse], ,
-		AC_MSG_ERROR([argp library not found. argp-standalone required.])))
+dnl
+dnl Solaris has no argp library
+AC_CHECK_FUNC([argp_parse], 
+              [have_argp=yes],
+	      AC_CHECK_LIB([argp], 
+                           [argp_parse], 
+                           [have_argp=yes],
+                           [have_argp=no]))
+
+if test "x$have_argp" = "xyes"; then
+   AC_CHECK_HEADER([argp.h], 
+		   AC_DEFINE([HAVE_ARGP_H], [1], [Define if you have argp.h]),
+	           AC_MSG_ERROR([argp header cannot be found]))
+else
+dnl FreeBSD has the argp-standalone package.  If we're on FreeBSD
+dnl make them install the argp-standalone.  On non-FreeBSD, the code
+dnl will fall through and compile the internal FreeIPMI-argp
+   AC_TRY_COMPILE([#include <sys/param.h>],
+                  [
+                   #ifdef __FreeBSD_version
+                   uncompilable junk syntax %$ # @
+                   #endif
+                  ],
+                  ,
+                  AC_MSG_ERROR([argp library not found. argp-standalone required.]))
+fi
+
+AM_CONDITIONAL(WITH_FREEIPMI_ARGP, test "$have_argp" = "no")
+
+AC_TRY_COMPILE([#include <stdlib.h>],
+               [printf("%s\n", __FUNCTION__);],
+               [AC_DEFINE([HAVE_FUNCTION_MACRO], [1], [Define is you have __FUNCTION__])])
 
 ACX_PTHREAD([], AC_MSG_ERROR([Posix threads required to build libipmiconsole]))
 
@@ -429,23 +554,9 @@ AC_IPMI_MONITORING_SENSOR_CONFIG_FILE
 AC_IPMIDETECT_CONFIG_FILE
 AC_IPMIDETECTD_CONFIG_FILE
 
-dnl Checks for header files.
-AC_HEADER_STDC
-AC_HEADER_TIME
-AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([unistd.h fcntl.h getopt.h pthread.h])
-AC_CHECK_HEADERS([linux/types.h error.h sys/io.h asm/io.h])
-AC_CHECK_HEADERS([linux/ipmi_msgdefs.h])
-AC_CHECK_HEADERS([linux/compiler.h])
-AC_CHECK_HEADERS([linux/ipmi.h], [], [], 
-[#ifdef HAVE_LINUX_IPMI_MSGDEFS_H
- #include <linux/ipmi_msgdefs.h>
- #endif
- #ifdef HAVE_LINUX_COMPILER_H
- #include <linux/compiler.h>
- #endif
-])
-AC_CHECK_HEADERS([sys/ipmi.h])
+dnl Checks for things needed in lib argp
+AC_CHECK_DECLS([program_invocation_name, program_invocation_short_name],
+               [], [], [[#include <errno.h>]])
 
 dnl Check for variables
 

@@ -30,6 +30,7 @@
 
 #include "freeipmi/util/ipmi-util.h"
 
+#include "freeipmi-portability.h"
 #include "debug-common.h"
 
 int

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.70 2008-05-15 21:48:02 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.71 2008-06-07 16:09:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -52,6 +52,7 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
+#include <sys/types.h>
 #include <limits.h>
 #include <assert.h>
 #include <errno.h>
@@ -59,9 +60,6 @@
 #include "ipmiconsole.h"
 #include "ipmiconsole_defs.h"
 
-#include "list.h"
-#include "secure.h"
-#include "timeval.h"
 #include "ipmiconsole_processing.h"
 #include "ipmiconsole_ctx.h"
 #include "ipmiconsole_checks.h"
@@ -70,6 +68,11 @@
 #include "ipmiconsole_fiid_wrappers.h"
 #include "ipmiconsole_packet.h"
 #include "scbuf.h"
+
+#include "freeipmi-portability.h"
+#include "list.h"
+#include "secure.h"
+#include "timeval.h"
 
 /* 
  * Returns 0 on success

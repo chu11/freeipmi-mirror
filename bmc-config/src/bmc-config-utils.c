@@ -28,6 +28,8 @@
 
 #include "bmc-config-utils.h"
 
+#include "freeipmi-portability.h"
+
 config_err_t 
 get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_num)
 {

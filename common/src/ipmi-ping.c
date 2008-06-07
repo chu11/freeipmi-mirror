@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.19 2008-04-17 18:06:27 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.20 2008-06-07 16:09:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -46,6 +46,9 @@
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
+#if HAVE_SYS_SOCKIO_H
+#include <sys/sockio.h>
+#endif /* HAVE_SYS_SOCKIO_H */
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -358,8 +361,13 @@ _setup(void)
   _destaddr.sin_port = htons(RMCP_PRIMARY_RMCP_PORT);
     
   if ((hptr = gethostbyname(_dest)) == NULL)
-    ipmi_ping_err_exit("gethostbyname: %s", hstrerror(h_errno));
-    
+    {
+#if HAVE_HSTRERROR
+      ipmi_ping_err_exit("gethostbyname: %s", hstrerror(h_errno));
+#else /* !HAVE_HSTRERROR */
+      ipmi_ping_err_exit("gethostbyname: h_errno = %d", h_errno);
+#endif /* !HAVE_HSTRERROR */
+    }
   _destaddr.sin_addr = *((struct in_addr *)hptr->h_addr);
   temp = inet_ntoa(_destaddr.sin_addr);
   _strncpy(_dest_ip, temp, INET_ADDRSTRLEN);

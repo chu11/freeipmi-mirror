@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.30 2008-04-17 23:10:15 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.31 2008-06-07 16:10:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -42,6 +42,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "debug-common.h"
+#include "freeipmi-portability.h"
 #include "ipmi-ping.h"
 
 #define _supported(x)   (x) ? "supported" : "not-supported"

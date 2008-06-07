@@ -1,1 +1,3 @@
-SUBDIRS = libipmiconsole ipmiconsole
+SUBDIRS = \
+	libipmiconsole \
+	ipmiconsole

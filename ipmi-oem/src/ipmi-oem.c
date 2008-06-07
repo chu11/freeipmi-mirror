@@ -25,19 +25,19 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <argp.h>
 #include <limits.h>
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
 
-#include "freeipmi-portability.h"
 #include "ipmi-oem.h"
 #include "ipmi-oem-argp.h"
+
+#include "freeipmi-portability.h"
+#include "hostrange.h"
+#include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
-#include "pstdout.h"
-#include "hostrange.h"
 
 int
 run_cmd_args (ipmi_oem_state_data_t *state_data)

@@ -1,3 +1,117 @@
+2008-06-07 Albert Chu <chu11@llnl.gov>
+
+	Port for Solaris.
+
+	* README.argp: New file.
+
+	* common/src/freeipmi-portability.h,
+	common/src/freeipmi-portability.c: Handle mempcpy and strchrnul
+	portability.
+
+	* config/ac_lsh_gcc_attributes.m4: New file.
+
+	* common/src/freeipmi-argp.h
+	common/src/freeipmi-argp-ba.c
+	common/src/freeipmi-argp-eexst.c
+	common/src/freeipmi-argp-fmtstream.c
+	common/src/freeipmi-argp-fmtstream.h
+	common/src/freeipmi-argp-help.c
+	common/src/freeipmi-argp-namefrob.h
+	common/src/freeipmi-argp-parse.c
+	common/src/freeipmi-argp-pv.c
+	common/src/freeipmi-argp-pvh.c: New files.
+
+	* common/src/Makefile.am: Update for libfreeipmiportability for
+	new freeipmi-argp lib.
+
+	* configure.ac: Update with lib argp checking and argp.h.
+
+	* Update all tools and libraries to load argp.h or freeipmi-argp.h
+	respectively.
+
+	* Update all Makefile's to include libfreeipmiportability as
+	needed.
+
+	* Include alloca.h in all files as needed.
+
+	* common/src/pstdout.c: Rename internal variables stdout and
+	stderr to p_stdout and p_stderr as needed.
+
+	* configure.ac: Add sys/sockio.h check.
+
+	* common/src/ipmi-ping.c: Include sys/sockio.h.
+
+	* configure.ac: Check for 5 vs 4 argument getpwuid_r.
+
+	* common/src/tool-sdr-cache-common.c (_get_home_directory): Use 5
+	or 4 argument getpwuid_r appropriately.
+
+	* Globally remove "-x c" and "-o" options from cpp lines.
+
+	* configure.ac: Search for cpp.
+
+	* Globally change 'cpp' call to $(CPP).
+
+	* Remove default -Wall compilation.
+
+	* Cleanup Makefiles for portable use.
+
+	* configure.ac, libfreeipmi/src/driver/ipmi-openipmi-driver.c:
+	Check and load sys/ioccom.h as needed.
+
+	* configure.ac: Check if -lsocket lib is needed.
+
+	* common/src/freeipmi-portability.h: Define timeradd and timersub
+	if they don't exist on the system.
+
+	* configure.ac, libfreeipmi/src/driver/ipmi-kcs-driver.c: Check
+	and handle iopl() as needed.
+
+	* configure.ac, common/src/freeipmi-portability.h,
+	common/src/freeipmi-portability.c: Check for an port asprintf as
+	needed.
+
+	* configure.ac, common/src/freeipmi-portability.h,
+	common/src/freeipmi-portability.c: Check for and port strsep as needed.
+
+	* configure.ac, common/src/freeipmi-portability.h: Check for and
+	deal with __FUNCTION__ portability.
+
+	* ipmi-sensors/src/ipmi-sensors-reading.c: include
+	freeipmi-portability.h to deal with asprintf.
+
+	* ipmi-raw/src/ipmi-raw.c: include freeipmi-portability.h to deal
+	with strsep.
+
+	* libfreeipmi/src/driver/ipmi-inband.h: Removed file.  Move macros
+	into ipmi-kcs-driver.c.
+
+	* ipmipower/src/wrappers.h, ipmipower/src/wrappers.c: Remove
+	some unused wrapper functions.
+
+	* ipmpower/src/wrappers.c: include freeipmi-portability.h to deal
+	with timersub() portability.
+
+	* configure.ac, common/src/ipmi-ping.c,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c,
+	ipmidetect/src/ipmidetectd/ipmidetectd_loop.c,
+	ipmipower/src/ipmipower_connection.c: Check and use hstrerror
+	appropriately.
+
+	* ipmiconsole/src/libipmiconsole/: include sys/types.h for UINT_MAX.
+
+	* Globally make everyone load freeipmi-portability.h.
+
+	* General cleanup for portability, do not load unnecessary .h
+	files, remove unneeded .h files, etc.
+
+	* General cleanup, make Makefile's consistent to one another, etc.
+	
+2008-06-05  Albert Chu <chu11@llnl.gov>
+
+	* README, doc/freeipmi.7.pre.in: Remove 'Linux' from reference to
+	OpenIPMI (OpenIPMI is on BSD too).
+	
 2008-06-05  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Tweak gethostbyname_r logic.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.97 2008-05-20 16:21:43 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.98 2008-06-07 16:09:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -37,10 +37,11 @@
 #include <assert.h>
 #include <stdint.h>
 
+#include "debug-common.h"
+#include "freeipmi-portability.h"
+
 #include "ipmipower_packet.h"
 #include "ipmipower_wrappers.h"
-
-#include "debug-common.h"
 
 extern struct ipmipower_arguments cmd_args;
 

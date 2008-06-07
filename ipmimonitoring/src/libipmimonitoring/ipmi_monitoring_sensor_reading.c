@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.19 2008-06-03 21:26:53 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.20 2008-06-07 16:09:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -44,6 +44,8 @@
 #include "ipmi_monitoring_ipmi_communication.h"
 #include "ipmi_monitoring_sensor_config.h"
 #include "ipmi_monitoring_sensor_reading.h"
+
+#include "freeipmi-portability.h"
 
 static struct ipmi_monitoring_sensor_reading *
 _allocate_sensor_reading(ipmi_monitoring_ctx_t c)

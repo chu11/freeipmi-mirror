@@ -19,6 +19,8 @@
 #ifndef _DEBUG_COMMON_H
 #define	_DEBUG_COMMON_H	1
 
+#include <stdint.h>
+
 #define DEBUG_COMMON_HDR_BUFLEN     1024
 
 #define DEBUG_COMMON_TYPE_NONE      0x00
@@ -39,10 +41,10 @@
 #define DEBUG_COMMON_RMCPPONG_STR       "RMCP Pong"
 
 int debug_hdr_str(uint8_t packet_type,
-                   uint8_t packet_direction,
-                   const char *str,
-                   char *hdrbuf,
-                   unsigned int hdrbuf_len);
+                  uint8_t packet_direction,
+                  const char *str,
+                  char *hdrbuf,
+                  unsigned int hdrbuf_len);
 
 int debug_hdr_cmd(uint8_t packet_type,
                   uint8_t packet_direction,

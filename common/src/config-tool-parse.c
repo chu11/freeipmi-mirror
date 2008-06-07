@@ -30,6 +30,8 @@
 #include "config-tool-section.h"
 #include "config-tool-utils.h"
 
+#include "freeipmi-portability.h"
+
 config_err_t
 config_parse (struct config_section *sections, 
               struct config_arguments *cmd_args,
