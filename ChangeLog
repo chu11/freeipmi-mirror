@@ -59,6 +59,8 @@
 	* configure.ac, libfreeipmi/src/driver/ipmi-openipmi-driver.c:
 	Check and load sys/ioccom.h as needed.
 
+	* configure.ac: Check if -lsocket lib is needed.
+
 	* common/src/freeipmi-portability.h: Define timeradd and timersub
 	if they don't exist on the system.
 

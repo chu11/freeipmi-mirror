@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.20 2008-06-07 00:21:57 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.21 2008-06-07 03:11:19 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -352,6 +352,12 @@ dnl FreeBSD has no exp10() nor log2(), FreeBSD < 5 has no exp2()
 AC_CHECK_LIB([m], [exp10])
 AC_CHECK_LIB([m], [exp2])
 AC_CHECK_LIB([m], [log2])
+
+dnl Solaris needs -lsocket
+AC_CHECK_FUNC([socket], 
+              , 
+              AC_CHECK_LIB([socket],
+                           [socket]))
 
 dnl
 dnl achu: Most parts of this gethostbyname_r testing is from the
