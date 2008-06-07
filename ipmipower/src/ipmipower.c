@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.68 2008-05-22 00:19:24 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.68.2.1 2008-06-07 15:21:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -55,6 +55,9 @@
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
 
+#include "freeipmi-portability.h"
+#include "tool-common.h"
+
 #include "ipmipower.h"
 #include "ipmipower_argp.h"
 #include "ipmipower_connection.h"
@@ -63,8 +66,6 @@
 #include "ipmipower_ping.h"
 #include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
-
-#include "tool-common.h"
 
 cbuf_t ttyin;
 cbuf_t ttyout;

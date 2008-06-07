@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_util.c,v 1.7 2008-03-28 00:14:40 chu11 Exp $
+ *  $Id: ipmiconsole_util.c,v 1.7.6.1 2008-06-07 15:21:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -45,11 +45,13 @@
 #include "ipmiconsole.h"
 #include "ipmiconsole_defs.h"
 
-#include "list.h"
 #include "ipmiconsole_util.h"
 #include "ipmiconsole_ctx.h"
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_engine.h"
+
+#include "freeipmi-portability.h"
+#include "list.h"
 
 int 
 ipmiconsole_set_closeonexec(ipmiconsole_ctx_t c, int fd)

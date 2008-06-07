@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.51 2008-06-03 23:21:40 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.51.2.1 2008-06-07 15:21:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -57,6 +57,9 @@
 
 #include "ipmi_monitoring.h"    /* lib .h file */
 
+#include "ipmimonitoring.h"     /* tool .h file */
+#include "ipmimonitoring-argp.h"
+
 #include "pstdout.h"
 #include "hostrange.h"
 #include "freeipmi-portability.h"
@@ -64,9 +67,6 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-sdr-cache-common.h"
-
-#include "ipmimonitoring.h"     /* tool .h file */
-#include "ipmimonitoring-argp.h"
 
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096

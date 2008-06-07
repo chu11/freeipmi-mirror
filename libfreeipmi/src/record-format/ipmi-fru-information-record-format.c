@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-information-record-format.c,v 1.3 2008-03-28 00:15:04 chu11 Exp $
+ *  $Id: ipmi-fru-information-record-format.c,v 1.3.6.1 2008-06-07 15:21:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -35,6 +35,8 @@
 
 #include "freeipmi/record-format/ipmi-fru-information-record-format.h"
 #include "freeipmi/fiid/fiid.h"
+
+#include "freeipmi-portability.h"
 
 fiid_template_t tmpl_fru_common_header =
   {

@@ -30,13 +30,14 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "freeipmi-portability.h"
 #include "ipmi-raw.h"
 #include "ipmi-raw-argp.h"
-#include "tool-common.h"
-#include "tool-cmdline-common.h"
+
+#include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "hostrange.h"
+#include "tool-common.h"
+#include "tool-cmdline-common.h"
 
 int
 ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)

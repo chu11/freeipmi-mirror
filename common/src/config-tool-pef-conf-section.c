@@ -33,6 +33,8 @@
 #include "config-tool-fiid.h"
 #include "config-tool-section.h"
 
+#include "freeipmi-portability.h"
+
 /* convenience structs */
 
 struct pef_control

@@ -29,6 +29,8 @@
 #include "bmc-config.h"
 #include "bmc-config-channel-common.h"
 
+#include "freeipmi-portability.h"
+
 struct config_section *
 bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
 {

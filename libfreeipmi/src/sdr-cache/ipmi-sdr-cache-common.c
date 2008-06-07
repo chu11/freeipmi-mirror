@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.c,v 1.4 2008-03-28 00:15:05 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-common.c,v 1.4.6.1 2008-06-07 15:21:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -45,6 +45,8 @@
 
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
+
+#include "freeipmi-portability.h"
 
 void
 ipmi_sdr_cache_init_ctx(ipmi_sdr_cache_ctx_t ctx)

@@ -38,10 +38,10 @@
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 
-#include "tool-cmdline-common.h"
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "tool-common.h"
+#include "tool-cmdline-common.h"
 
 #define WORKAROUND_FLAG_BUFLEN 1024
 

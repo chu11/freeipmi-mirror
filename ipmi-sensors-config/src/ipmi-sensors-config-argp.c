@@ -31,10 +31,12 @@
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
 
-#include "tool-cmdline-common.h"
-#include "tool-config-file-common.h"
 #include "ipmi-sensors-config.h"
 #include "ipmi-sensors-config-argp.h"
+
+#include "freeipmi-portability.h"
+#include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 
 const char *argp_program_version = 
   "ipmi-sensors-config - " PACKAGE_VERSION "\n"

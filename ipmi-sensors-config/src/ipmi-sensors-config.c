@@ -27,13 +27,14 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
+#include "ipmi-sensors-config.h"
+#include "ipmi-sensors-config-argp.h"
+#include "ipmi-sensors-config-sections.h"
+
 #include "freeipmi-portability.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-sdr-cache-common.h"
-#include "ipmi-sensors-config.h"
-#include "ipmi-sensors-config-argp.h"
-#include "ipmi-sensors-config-sections.h"
 
 static void
 _ipmi_sensors_config_state_data_init(ipmi_sensors_config_state_data_t *state_data)

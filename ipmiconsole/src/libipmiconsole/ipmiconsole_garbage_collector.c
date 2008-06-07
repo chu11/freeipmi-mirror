@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_garbage_collector.c,v 1.16 2008-04-18 01:30:09 chu11 Exp $
+ *  $Id: ipmiconsole_garbage_collector.c,v 1.16.6.1 2008-06-07 15:21:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -52,10 +52,12 @@
 #include "ipmiconsole.h"
 #include "ipmiconsole_defs.h"
 
-#include "list.h"
 #include "ipmiconsole_ctx.h"
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_engine.h"
+
+#include "freeipmi-portability.h"
+#include "list.h"
 
 extern List console_engine_ctxs_to_destroy;
 extern pthread_mutex_t console_engine_ctxs_to_destroy_mutex;

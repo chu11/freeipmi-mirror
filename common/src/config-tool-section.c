@@ -31,6 +31,8 @@
 #include "config-tool-section.h"
 #include "config-tool-utils.h"
 
+#include "freeipmi-portability.h"
+
 int
 config_section_append(struct config_section **sections, 
                       struct config_section *section)

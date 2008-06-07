@@ -27,12 +27,12 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
+#include "freeipmi-portability.h"
+
 #include "pef-config.h"
 #include "pef-config-map.h"
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
-
-#include "freeipmi-portability.h"
 
 #define PEF_CONFIG_MAXIPADDRLEN 16
 #define PEF_CONFIG_MAXMACADDRLEN 24

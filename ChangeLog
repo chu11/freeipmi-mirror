@@ -97,6 +97,8 @@
 
 	* ipmiconsole/src/libipmiconsole/: include sys/types.h for UINT_MAX.
 
+	* Globally make everyone load freeipmi-portability.h.
+
 	* General cleanup for portability, do not load unnecessary .h
 	files, remove unneeded .h files, etc.
 

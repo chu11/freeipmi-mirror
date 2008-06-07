@@ -32,6 +32,8 @@
 #include "bmc-config-validate.h"
 #include "bmc-config-utils.h"
 
+#include "freeipmi-portability.h"
+
 static config_err_t
 _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 {

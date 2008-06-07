@@ -28,14 +28,15 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "tool-config-file-common.h"
-#include "tool-common.h"
-#include "pstdout.h"
-
 #include "freeipmi/api/ipmi-api.h"
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
+
+#include "freeipmi-portability.h"
+#include "pstdout.h"
+#include "tool-config-file-common.h"
+#include "tool-common.h"
 
 #define CONFIG_FILE_OPTIONS_MAX 1024
 

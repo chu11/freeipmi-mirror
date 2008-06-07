@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.17.6.2 2008-06-06 22:28:44 chu11 Exp $
+ *  $Id: wrappers.c,v 1.17.6.3 2008-06-07 15:21:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -74,10 +74,10 @@
 #include <sys/poll.h>
 #include <limits.h>
 
-#include "wrappers.h"
+#include "freeipmi-portability.h"
 #include "error.h"
 
-#include "freeipmi-portability.h"
+#include "wrappers.h"
 
 #define MAX_REG_BUF 64000
 

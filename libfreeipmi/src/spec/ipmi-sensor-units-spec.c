@@ -25,6 +25,8 @@
 
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 
+#include "freeipmi-portability.h"
+
 const char *const ipmi_sensor_units[] = 
   {
     "unspecified", 

@@ -32,12 +32,13 @@
 
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
+
+#include "freeipmi-portability.h"
+#include "hostrange.h"
+#include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-fiid-wrappers.h"
-#include "freeipmi-portability.h"
-#include "pstdout.h"
-#include "hostrange.h"
 
 typedef struct channel_info 
 {

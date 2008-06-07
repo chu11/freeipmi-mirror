@@ -32,6 +32,8 @@
 #include "bmc-config-validate.h"
 #include "bmc-config-utils.h"
 
+#include "freeipmi-portability.h"
+
 /* convenience struct */
 struct channel_access
 {

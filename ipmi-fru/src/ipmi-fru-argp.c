@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.15.2.1 2008-06-05 22:56:06 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.15.2.2 2008-06-07 15:21:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -43,10 +43,12 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 
-#include "tool-cmdline-common.h"
-#include "tool-config-file-common.h"
 #include "ipmi-fru.h"
 #include "ipmi-fru-argp.h"
+
+#include "freeipmi-portability.h"
+#include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 
 const char *argp_program_version = 
   "ipmi-fru - " PACKAGE_VERSION "\n"

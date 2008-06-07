@@ -29,6 +29,8 @@
 
 #include "ipmi-sensors-config-utils.h"
 
+#include "freeipmi-portability.h"
+
 config_err_t 
 convert_id_string (ipmi_sensors_config_state_data_t *state_data, 
                    char *id_string)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.8.6.1 2008-06-06 23:21:34 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.8.6.2 2008-06-07 15:21:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -69,6 +69,7 @@
 #include "debug.h"
 #include "error.h"
 #include "fd.h"
+#include "freeipmi-portability.h"
 #include "hash.h"
 #include "list.h"
 #include "timeval.h"

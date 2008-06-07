@@ -36,12 +36,12 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "tool-cmdline-common.h"
-#include "tool-config-file-common.h"
 #include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"
 
 #include "freeipmi-portability.h"
+#include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 
 const char *argp_program_version = 
   "ipmi-sel - " PACKAGE_VERSION "\n"

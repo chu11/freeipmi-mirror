@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.49 2008-05-20 16:21:42 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.49.2.1 2008-06-07 15:21:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -60,6 +60,7 @@
 #include "ipmiconsole-argp.h"
 
 #include "error.h"
+#include "freeipmi-portability.h"
 #include "secure.h"
 
 static struct termios saved_tty;

@@ -41,6 +41,7 @@
 #include <assert.h>
 #include <errno.h>
 
+#include "freeipmi-portability.h"
 #include "pstdout.h"
 
 #define SDR_CACHE_DIR                     "sdr-cache"

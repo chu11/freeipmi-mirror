@@ -27,6 +27,8 @@
 
 #include "libcommon/ipmi-err-wrappers.h"
 
+#include "freeipmi-portability.h"
+
 fiid_template_t tmpl_cipher_suite_record_header =
   {
     {6, "record_format", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

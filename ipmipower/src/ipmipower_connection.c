@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.32.2.1 2008-06-06 23:21:34 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.32.2.2 2008-06-07 15:21:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -44,6 +44,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+
+#include "freeipmi-portability.h"
 
 #include "ipmipower_connection.h"
 #include "ipmipower_output.h"

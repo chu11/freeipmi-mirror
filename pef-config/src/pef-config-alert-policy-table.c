@@ -27,12 +27,12 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
+#include "freeipmi-portability.h"
+
 #include "pef-config.h"
 #include "pef-config-map.h"
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
-
-#include "freeipmi-portability.h"
 
 /* convenience struct */
 struct alert_policy_table {

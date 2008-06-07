@@ -28,6 +28,8 @@
 
 #include "libcommon/ipmi-err-wrappers.h"
 
+#include "freeipmi-portability.h"
+
 int8_t 
 ipmi_cipher_suite_id_to_algorithms(uint8_t cipher_suite_id,
 				   uint8_t *authentication_algorithm,

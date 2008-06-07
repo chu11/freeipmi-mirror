@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.70.2.1 2008-06-07 00:15:08 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.70.2.2 2008-06-07 15:21:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -60,9 +60,6 @@
 #include "ipmiconsole.h"
 #include "ipmiconsole_defs.h"
 
-#include "list.h"
-#include "secure.h"
-#include "timeval.h"
 #include "ipmiconsole_processing.h"
 #include "ipmiconsole_ctx.h"
 #include "ipmiconsole_checks.h"
@@ -71,6 +68,11 @@
 #include "ipmiconsole_fiid_wrappers.h"
 #include "ipmiconsole_packet.h"
 #include "scbuf.h"
+
+#include "freeipmi-portability.h"
+#include "list.h"
+#include "secure.h"
+#include "timeval.h"
 
 /* 
  * Returns 0 on success

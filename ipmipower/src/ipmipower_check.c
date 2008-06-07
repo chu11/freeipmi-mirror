@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.86 2008-05-19 23:37:09 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.86.2.1 2008-06-07 15:21:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -35,6 +35,8 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 #include <assert.h>
+
+#include "freeipmi-portability.h"
 
 #include "ipmipower_check.h"
 #include "ipmipower_packet.h"

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.6 2008-04-17 17:58:32 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.6.6.1 2008-06-07 15:21:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -46,6 +46,8 @@
 #include "ipmi-sdr-cache-defs.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
+
+#include "freeipmi-portability.h"
 
 static char *ipmi_sdr_cache_errmsgs[] =
   {

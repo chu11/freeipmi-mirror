@@ -30,6 +30,8 @@
 
 #include "ipmi-locate-argp.h"
 
+#include "freeipmi-portability.h"
+
 const char *argp_program_version = 
   "ipmi-locate - " PACKAGE_VERSION "\n"
   "Copyright (C) 2003-2008 FreeIPMI Core Team\n"

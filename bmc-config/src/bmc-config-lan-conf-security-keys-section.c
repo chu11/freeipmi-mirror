@@ -32,6 +32,7 @@
 #include "bmc-config-validate.h"
 #include "bmc-config-utils.h"
 
+#include "freeipmi-portability.h"
 #include "tool-common.h"
 
 static config_err_t

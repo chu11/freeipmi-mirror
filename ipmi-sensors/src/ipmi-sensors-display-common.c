@@ -34,6 +34,7 @@
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-display-common.h"
 
+#include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"

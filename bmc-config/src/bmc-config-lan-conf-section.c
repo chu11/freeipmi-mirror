@@ -32,6 +32,8 @@
 #include "bmc-config-map.h"
 #include "bmc-config-validate.h"
 
+#include "freeipmi-portability.h"
+
 #define BMC_MAXIPADDRLEN 16
 #define BMC_MAXMACADDRLEN 24
 

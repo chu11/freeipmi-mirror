@@ -31,15 +31,14 @@
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
 
-
 #include <freeipmi/freeipmi.h>
 
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
-#include "tool-cmdline-common.h"
-#include "tool-config-file-common.h"
 
 #include "freeipmi-portability.h"
+#include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
 
 const char *argp_program_version = 
   "ipmi-chassis - " PACKAGE_VERSION "\n"

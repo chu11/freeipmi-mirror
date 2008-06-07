@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.14 2008-05-21 17:15:44 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.14.2.1 2008-06-07 15:21:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -42,6 +42,7 @@
 #include "ipmi_monitoring_sensor_config.h"
 
 #include "conffile.h"
+#include "freeipmi-portability.h"
 
 struct ipmi_sensor_config ipmi_threshold_sensor_config[] =
   {

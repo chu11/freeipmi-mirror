@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.21 2008-03-28 00:14:39 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.21.6.1 2008-06-07 15:21:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -48,6 +48,8 @@
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_fiid_wrappers.h"
 #include "ipmiconsole_packet.h"
+
+#include "freeipmi-portability.h"
 
 int
 ipmiconsole_check_checksum(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)

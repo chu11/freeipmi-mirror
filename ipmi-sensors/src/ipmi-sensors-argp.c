@@ -36,15 +36,14 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "tool-cmdline-common.h"
-#include "tool-config-file-common.h"
-#include "tool-sensor-common.h"
-
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
+#include "tool-cmdline-common.h"
+#include "tool-config-file-common.h"
+#include "tool-sensor-common.h"
 
 const char *argp_program_version = 
   "ipmi-sensors - " PACKAGE_VERSION "\n"

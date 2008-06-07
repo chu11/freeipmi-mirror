@@ -28,6 +28,8 @@
 #include <errno.h>
 #include <assert.h>
 
+#include "freeipmi-portability.h"
+
 #include "pef-config.h"
 #include "pef-config-info.h"
 

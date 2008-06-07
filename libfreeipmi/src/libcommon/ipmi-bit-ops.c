@@ -28,6 +28,8 @@
 #include <stdint.h>
 #include <errno.h>
 
+#include "freeipmi-portability.h"
+
 #include "ipmi-bit-ops.h"
 
 /* Return the integer composed of the START (inclusive) through END

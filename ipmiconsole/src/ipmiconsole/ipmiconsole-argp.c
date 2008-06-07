@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.18.2.1 2008-06-05 22:56:07 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.18.2.2 2008-06-07 15:21:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -49,14 +49,14 @@
 
 #include "ipmiconsole_.h"       /* tool ipmiconsole.h */
 #include "ipmiconsole-argp.h"
-#include "tool-cmdline-common.h"
-#include "tool-config-file-common.h"
+
 #include "conffile.h"
 #include "error.h"
-#include "secure.h"
-
 #include "freeipmi-portability.h"
+#include "secure.h"
+#include "tool-cmdline-common.h"
 #include "tool-common.h"
+#include "tool-config-file-common.h"
 
 #define IPMICONSOLE_CONFIG_FILE_DEFAULT "/etc/ipmiconsole.conf"
 

@@ -38,6 +38,8 @@
 #include "config-tool-argp.h"
 #include "config-tool-utils.h"
 
+#include "freeipmi-portability.h"
+
 void 
 init_config_args (struct config_arguments *config_args)
 {

@@ -31,6 +31,8 @@
 
 #include "config-tool-pef-conf-section.h"
 
+#include "freeipmi-portability.h"
+
 static config_err_t
 _enable_pef_checkout (const char *section_name,
                       struct config_keyvalue *kv,

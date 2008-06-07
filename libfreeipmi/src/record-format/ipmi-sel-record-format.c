@@ -27,6 +27,8 @@
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/fiid/fiid.h"
 
+#include "freeipmi-portability.h"
+
 fiid_template_t tmpl_sel_record_header = 
   {
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 

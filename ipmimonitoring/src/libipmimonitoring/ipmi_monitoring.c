@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.26 2008-04-21 18:13:17 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.26.6.1 2008-06-07 15:21:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -49,6 +49,7 @@
 #include "ipmi_monitoring_sensor_config.h"
 #include "ipmi_monitoring_sensor_reading.h"
 
+#include "freeipmi-portability.h"
 #include "secure.h"
 
 static char *ipmi_monitoring_errmsgs[] =

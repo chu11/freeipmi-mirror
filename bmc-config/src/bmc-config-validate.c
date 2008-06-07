@@ -36,6 +36,8 @@
 #include "bmc-config-map.h"
 #include "bmc-config-validate.h"
 
+#include "freeipmi-portability.h"
+
 config_validate_t 
 channel_access_mode_validate (const char *section_name,
                               const char *key_name,
