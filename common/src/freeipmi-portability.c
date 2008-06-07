@@ -179,11 +179,11 @@ asprintf(char **strp, const char *fmt, ...)
   int size;
   int rv;
 
-  va_start(arg, format);
-  size = vsnprintf(NULL, 0, format, arg);
+  va_start(arg, fmt);
+  size = vsnprintf(NULL, 0, fmt, arg);
   size++;
 
-  va_start(arg, format);
+  va_start(arg, fmt);
   str = malloc(size);
   if (str == NULL) 
     {
@@ -196,7 +196,7 @@ asprintf(char **strp, const char *fmt, ...)
       exit(1);
     }
 
-  rv = vsnprintf(str, size, format, arg);
+  rv = vsnprintf(str, size, fmt, arg);
   va_end(arg);
 
   *strp = str;
