@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.127.2.21 2008-06-07 03:11:19 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.127.2.22 2008-06-07 15:22:45 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -43,13 +43,43 @@ AC_CONFIG_FILES([
         libfreeipmi/src/sdr-cache/Makefile
         libfreeipmi/src/spec/Makefile
         libfreeipmi/src/util/Makefile
+	bmc-config/Makefile 
+ 	bmc-config/bmc-config.8.pre 
+        bmc-config/bmc-config.conf.5.pre
+        bmc-config/src/Makefile
+        bmc-device/Makefile 
+	bmc-device/bmc-device.8.pre
+        bmc-device/src/Makefile
+        bmc-info/Makefile 
+	bmc-info/bmc-info.8.pre
+        bmc-info/src/Makefile
         bmc-watchdog/Makefile 
         bmc-watchdog/bmc-watchdog.8.pre
         bmc-watchdog/src/Makefile
-        ipmipower/Makefile 
-        ipmipower/ipmipower.8.pre
-        ipmipower/ipmipower.conf.5.pre
-        ipmipower/src/Makefile
+	ipmi-chassis/Makefile
+	ipmi-chassis/ipmi-chassis.8.pre
+	ipmi-chassis/src/Makefile
+        ipmi-fru/Makefile 
+	ipmi-fru/ipmi-fru.8.pre
+        ipmi-fru/src/Makefile
+        ipmi-locate/Makefile 
+        ipmi-locate/ipmi-locate.8.pre
+        ipmi-locate/src/Makefile
+        ipmi-oem/Makefile 
+	ipmi-oem/ipmi-oem.8.pre
+        ipmi-oem/src/Makefile 
+        ipmi-raw/Makefile 
+	ipmi-raw/ipmi-raw.8.pre
+        ipmi-raw/src/Makefile 
+        ipmi-sel/Makefile 
+	ipmi-sel/ipmi-sel.8.pre
+        ipmi-sel/src/Makefile 
+        ipmi-sensors/Makefile 
+	ipmi-sensors/ipmi-sensors.8.pre
+        ipmi-sensors/src/Makefile 
+        ipmi-sensors-config/Makefile 
+	ipmi-sensors-config/ipmi-sensors-config.8.pre
+        ipmi-sensors-config/src/Makefile 
 	ipmiconsole/Makefile 
 	ipmiconsole/ipmiconsole.8.pre
         ipmiconsole/ipmiconsole.conf.5.pre
@@ -57,12 +87,6 @@ AC_CONFIG_FILES([
         ipmiconsole/src/Makefile
 	ipmiconsole/src/libipmiconsole/Makefile
         ipmiconsole/src/ipmiconsole/Makefile
-	ipmimonitoring/Makefile
-        ipmimonitoring/src/Makefile
-	ipmimonitoring/ipmimonitoring.8.pre
-        ipmimonitoring/libipmimonitoring.3.pre
-        ipmimonitoring/src/libipmimonitoring/Makefile 
-        ipmimonitoring/src/ipmimonitoring/Makefile
         ipmidetect/Makefile
         ipmidetect/ipmidetect.8.pre
         ipmidetect/ipmidetect.conf.5.pre
@@ -73,49 +97,25 @@ AC_CONFIG_FILES([
         ipmidetect/src/ipmidetect/Makefile
         ipmidetect/src/ipmidetectd/Makefile
         ipmidetect/src/libipmidetect/Makefile
-        ipmi-oem/Makefile 
-	ipmi-oem/ipmi-oem.8.pre
-        ipmi-oem/src/Makefile 
-        ipmi-raw/Makefile 
-	ipmi-raw/ipmi-raw.8.pre
-        ipmi-raw/src/Makefile 
-        ipmi-sel/Makefile 
-	ipmi-sel/ipmi-sel.8.pre
-        ipmi-sel/src/Makefile 
-        pef-config/Makefile
-	pef-config/pef-config.8.pre
-        pef-config/src/Makefile 
-        ipmi-sensors/Makefile 
-	ipmi-sensors/ipmi-sensors.8.pre
-        ipmi-sensors/src/Makefile 
-        ipmi-sensors-config/Makefile 
-	ipmi-sensors-config/ipmi-sensors-config.8.pre
-        ipmi-sensors-config/src/Makefile 
-        ipmi-locate/Makefile 
-        ipmi-locate/ipmi-locate.8.pre
-        ipmi-locate/src/Makefile
-        bmc-info/Makefile 
-	bmc-info/bmc-info.8.pre
-        bmc-info/src/Makefile
-        bmc-device/Makefile 
-	bmc-device/bmc-device.8.pre
-        bmc-device/src/Makefile
-        ipmi-fru/Makefile 
-	ipmi-fru/ipmi-fru.8.pre
-        ipmi-fru/src/Makefile
+	ipmimonitoring/Makefile
+        ipmimonitoring/src/Makefile
+	ipmimonitoring/ipmimonitoring.8.pre
+        ipmimonitoring/libipmimonitoring.3.pre
+        ipmimonitoring/src/libipmimonitoring/Makefile 
+        ipmimonitoring/src/ipmimonitoring/Makefile
         ipmiping/Makefile 
         ipmiping/ipmiping.8.pre
         ipmiping/src/Makefile
+        ipmipower/Makefile 
+        ipmipower/ipmipower.8.pre
+        ipmipower/ipmipower.conf.5.pre
+        ipmipower/src/Makefile
+        pef-config/Makefile
+	pef-config/pef-config.8.pre
+        pef-config/src/Makefile 
         rmcpping/Makefile 
         rmcpping/rmcpping.8.pre
         rmcpping/src/Makefile
-	bmc-config/Makefile 
- 	bmc-config/bmc-config.8.pre 
-        bmc-config/bmc-config.conf.5.pre
-        bmc-config/src/Makefile
-	ipmi-chassis/Makefile
-	ipmi-chassis/ipmi-chassis.8.pre
-	ipmi-chassis/src/Makefile
         freeipmi.spec])
 
 ISODATE=`date +%Y-%m-%d`
