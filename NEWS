@@ -14,6 +14,7 @@ o Add additional "connection timeout" error message to tools to
 o Support --always-prefix option in many tools.
 o Support --guid option in bmc-info.
 o Support --get-time and --set-time in ipmi-sel.
+o Support build on Solaris.
 
 For Users - Minor Enhancements/Changes/Bug Fixes
 ------------------------------------------------
