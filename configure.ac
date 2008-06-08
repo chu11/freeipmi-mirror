@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([freeipmi],[0.7.0.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.129 2008-06-07 16:09:47 chu11 Exp $])
+AC_INIT([freeipmi],[0.7.0.alpha1],[freeipmi-devel@gnu.org])
+AC_REVISION([$Id: configure.ac,v 1.130 2008-06-08 17:50:30 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -462,7 +462,7 @@ if test "x$have_hstrerror" = "xyes"; then
     AC_DEFINE([HAVE_HSTRERROR], [1], [Define if you have hstrerror])
 fi
 
-AC_CHECK_FUNC([getpwuid_r], , AC_MSG_ERROR([getpwuid_r cannot be found]))
+AC_CHECK_FUNC([getpwuid_r], [have_getpwuid_r=yes], AC_MSG_ERROR([getpwuid_r cannot be found]))
 
 if test "x${have_getpwuid_r}" = "xyes"; then
    AC_TRY_LINK(

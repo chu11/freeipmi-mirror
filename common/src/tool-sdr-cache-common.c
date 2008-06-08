@@ -216,7 +216,10 @@ _get_home_directory (pstdout_state_t pstate,
                      unsigned int buflen)
 {
   uid_t user_id;
-  struct passwd *user_passwd;
+  struct passwd pwd;
+#if defined(HAVE_FUNC_GETPWUID_R_5)
+  struct passwd *pwdptr = NULL;
+#endif
   long int tbuf_len;
   char *tbuf;
   int ret;
@@ -231,15 +234,6 @@ _get_home_directory (pstdout_state_t pstate,
 #endif
     tbuf_len = 1024;	/* XXX */
 
-  if (!(user_passwd = alloca (sizeof (*user_passwd))))
-    {
-      if (pstate)
-        pstdout_perror(pstate, "alloca");
-      else
-        perror("alloca");
-      return -1;
-    }
-
   if (!(tbuf = alloca (tbuf_len)))
     {
       if (pstate)
@@ -248,20 +242,15 @@ _get_home_directory (pstdout_state_t pstate,
         perror("alloca");
       return -1;
     }
-
+  
   user_id = getuid ();
+  memset(&pwd, '\0', sizeof(struct passwd));
 #if defined(HAVE_FUNC_GETPWUID_R_5)
   if (getpwuid_r (user_id, 
-                  user_passwd, 
+                  &pwd,
                   tbuf,
                   tbuf_len,
-                  &user_passwd) != 0)
-#elif defined(HAVE_FUNC_GETPWUID_R_4)
-  if (getpwuid_r (user_id, 
-                  user_passwd, 
-                  tbuf,
-                  tbuf_len) != 0)
-#endif /* !defined(HAVE_FUNC_GETPWUID_R_4) */
+                  &(pwdptr)) != 0)
     {
       if (pstate)
         pstdout_perror(pstate, "getpwuid_r");
@@ -270,7 +259,7 @@ _get_home_directory (pstdout_state_t pstate,
       return -1;
     }
 
-  if (!user_passwd) 
+  if (!pwdptr) 
     {
       /* User not found - can't figure out cache directory */
       if (pstate)
@@ -279,11 +268,24 @@ _get_home_directory (pstdout_state_t pstate,
         perror("getpwuid_r");
       return -1;
     }
-
-  if (user_passwd->pw_dir)
+#elif defined(HAVE_FUNC_GETPWUID_R_4)
+  if (getpwuid_r (user_id, 
+                  &pwd,
+                  tbuf,
+                  tbuf_len) != 0)
     {
-      if (!access (user_passwd->pw_dir, R_OK|W_OK|X_OK)) {
-        if (strlen(user_passwd->pw_dir) > (buflen - 1))
+      if (pstate)
+        pstdout_perror(pstate, "getpwuid_r");
+      else
+        perror("getpwuid_r");
+      return -1;
+    }
+#endif /* !defined(HAVE_FUNC_GETPWUID_R_4) */
+
+  if (pwd.pw_dir)
+    {
+      if (!access (pwd.pw_dir, R_OK|W_OK|X_OK)) {
+        if (strlen(pwd.pw_dir) > (buflen - 1))
           {
             if (pstate)
               pstdout_fprintf(pstate, 
@@ -294,7 +296,7 @@ _get_home_directory (pstdout_state_t pstate,
                       "internal overflow error\n");
             return -1;
           }
-        strcpy(buf, user_passwd->pw_dir);
+        strcpy(buf, pwd.pw_dir);
         return 0;
       }
     }
@@ -303,7 +305,7 @@ _get_home_directory (pstdout_state_t pstate,
                       buflen,
                       "/tmp/.%s-%s",
                       PACKAGE_NAME, 
-                      user_passwd->pw_name)) < 0)
+                      pwd.pw_name)) < 0)
     {
       if (pstate)
         pstdout_perror(pstate, "snprintf");
