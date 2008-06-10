@@ -6,7 +6,8 @@ noinst_HEADERS = \
 	ipmi-lan-session-common.h \
 	ipmi-kcs-driver-api.h \
 	ipmi-openipmi-driver-api.h \
-	ipmi-ssif-driver-api.h
+	ipmi-ssif-driver-api.h \
+	ipmi-sunbmc-driver-api.h
 
 noinst_LTLIBRARIES = libapi.la
 
@@ -22,6 +23,7 @@ libapi_la_SOURCES = \
 	ipmi-kcs-driver-api.c \
 	ipmi-openipmi-driver-api.c \
 	ipmi-ssif-driver-api.c \
+	ipmi-sunbmc-driver-api.c \
 	ipmi-chassis-cmds-api.c \
 	ipmi-device-global-cmds-api.c \
 	ipmi-fru-inventory-device-cmds-api.c \
