@@ -1,3 +1,11 @@
+2008-XX-XX Albert Chu <chu11@llnl.gov>
+
+	Add Solaris BMC interface.
+
+	* libfreeipmi/include/freeipmi/driver/ipmi-sunbmc-driver.h: New file.
+
+	* libfreeipmi/src/driver/ipmi-sunbmc-driver.c: New file.
+
 2008-06-08 Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-sdr-cache-common.c (_get_home_directory): Fix

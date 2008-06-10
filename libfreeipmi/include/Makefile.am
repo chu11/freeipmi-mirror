@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.24 2007-12-29 17:20:33 chu11 Exp $
+## $Id: Makefile.am,v 1.24.14.1 2008-06-10 23:20:09 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -34,6 +34,7 @@ nobase_include_HEADERS = \
 	freeipmi/debug/ipmi-debug.h \
 	freeipmi/driver/ipmi-kcs-driver.h \
 	freeipmi/driver/ipmi-openipmi-driver.h \
+	freeipmi/driver/ipmi-sunbmc-driver.h \
 	freeipmi/driver/ipmi-ssif-driver.h \
 	freeipmi/fiid/fiid.h \
 	freeipmi/interface/rmcp-interface.h \
