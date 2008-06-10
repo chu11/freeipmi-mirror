@@ -85,6 +85,13 @@ do {                                                                         \
   __TRACE_CTX_OUTPUT;                                                        \
 } while (0)
 
+#define __API_SUNBMC_TRACE                                                   \
+do {                                                                         \
+  int __ctxerrnum = ipmi_sunbmc_ctx_errnum(ctx->io.inband.sunbmc_ctx);       \
+  char *__ctxerrstr = ipmi_sunbmc_ctx_strerror(__ctxerrnum);                 \
+  __TRACE_CTX_OUTPUT;                                                        \
+} while (0)
+
 #define __API_LOCATE_TRACE                                                   \
 do {                                                                         \
   int __ctxerrnum = __locate_errnum;                                         \
@@ -100,6 +107,7 @@ do {                                                                         \
 #define __API_KCS_TRACE
 #define __API_SSIF_TRACE
 #define __API_OPENIPMI_TRACE
+#define __API_SUNBMC_TRACE
 #define __API_LOCATE_TRACE
 #endif /* IPMI_TRACE */
 
@@ -520,6 +528,47 @@ do {                                                                    \
     {                                                                   \
       __OPENIPMI_ERRNUM_TO_API_ERRNUM;                                  \
       __API_OPENIPMI_TRACE;                                             \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define __SUNBMC_ERRNUM_TO_API_ERRNUM                                       \
+do {                                                                        \
+  int32_t __errnum = ipmi_sunbmc_ctx_errnum(ctx->io.inband.sunbmc_ctx);     \
+  if (__errnum == IPMI_SUNBMC_CTX_ERR_SUCCESS)                              \
+    ctx->errnum = IPMI_ERR_SUCCESS;                                         \
+  else if (__errnum == IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY)                   \
+    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;                                   \
+  else if (__errnum == IPMI_SUNBMC_CTX_ERR_PERMISSION)                      \
+    ctx->errnum = IPMI_ERR_PERMISSION;                                      \
+  else if (__errnum == IPMI_SUNBMC_CTX_ERR_PARAMETERS)                      \
+    ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                                   \
+  else if (__errnum == IPMI_SUNBMC_CTX_ERR_DEVICE_NOT_FOUND)                \
+    ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                                \
+  else if (__errnum == IPMI_SUNBMC_CTX_ERR_DRIVER_TIMEOUT)                  \
+    ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;                                  \
+  else if (__errnum == IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR)                    \
+    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                                    \
+  else                                                                      \
+    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                                  \
+} while (0)
+
+#define API_ERR_SUNBMC(expr)                                            \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __SUNBMC_ERRNUM_TO_API_ERRNUM;                                    \
+      __API_SUNBMC_TRACE;                                               \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define API_ERR_SUNBMC_CLEANUP(expr)                                    \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __SUNBMC_ERRNUM_TO_API_ERRNUM;                                    \
+      __API_SUNBMC_TRACE;                                               \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)

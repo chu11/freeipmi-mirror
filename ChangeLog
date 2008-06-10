@@ -6,6 +6,13 @@
 
 	* libfreeipmi/src/driver/ipmi-sunbmc-driver.c: New file.
 
+	* libfreeipmi/src/api/ipmi-sunbmc-driver-api.h,
+	libfreeipmi/src/api/ipmi-sunbmc-driver-api.c: New files.
+
+	* libfreeipmi/include/freeipmi/ipmi-api.h, libfreeipmi/src/api/ipmi-ctx.h,
+	libfreeipmi/src/api/ipmi-api.c: Support
+	IPMI_DEVICE_SUNBMC.
+
 2008-06-08 Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-sdr-cache-common.c (_get_home_directory): Fix
