@@ -10,8 +10,10 @@
 	libfreeipmi/src/api/ipmi-sunbmc-driver-api.c: New files.
 
 	* libfreeipmi/include/freeipmi/ipmi-api.h, libfreeipmi/src/api/ipmi-ctx.h,
-	libfreeipmi/src/api/ipmi-api.c: Support
+	libfreeipmi/src/api/ipmi-api.c, libfreeipmi/src/api/ipmi-err-wrappers-api.h: Support
 	IPMI_DEVICE_SUNBMC.
+
+	* configure.ac: check for sys/stropts.h.
 
 2008-06-08 Albert Chu <chu11@llnl.gov>
 

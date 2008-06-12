@@ -27,7 +27,7 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
-#define IPMI_SUNBMC_DRIVER_DEVICE_DEFAULT      "/dev/ipmi0"
+#define IPMI_SUNBMC_DRIVER_DEVICE_DEFAULT      "/dev/bmc"
 
 #define IPMI_SUNBMC_CTX_ERR_SUCCESS             0
 #define IPMI_SUNBMC_CTX_ERR_NULL                1

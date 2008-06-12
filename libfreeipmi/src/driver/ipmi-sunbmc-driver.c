@@ -44,6 +44,9 @@
 #include <time.h>
 #endif /* !HAVE_SYS_TIME_H */
 #endif  /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_STROPTS_H
+#include <sys/stropts.h>
+#endif
 #include <sys/select.h>
 #include <sys/ioctl.h>
 #include <assert.h>
@@ -228,6 +231,8 @@ ipmi_sunbmc_ctx_io_init(ipmi_sunbmc_ctx_t ctx)
   SUNBMC_ERR_CLEANUP(!((ctx->device_fd = open (device, 
                                                O_RDWR)) < 0));
   
+  
+
   ctx->io_init = 1;
  out:
   ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
