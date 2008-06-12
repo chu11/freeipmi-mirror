@@ -99,6 +99,7 @@ update all manpages and docs
 links to ganglia/nagios
 update w/ freeipmi.conf.5 manpage
 - remove ipmiconsole.conf.5 and ipmipower.conf.5
+README.sunbmc
 
 other monitoring
 ----------------

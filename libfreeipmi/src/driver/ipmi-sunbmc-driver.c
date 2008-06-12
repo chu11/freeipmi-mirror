@@ -45,8 +45,11 @@
 #endif /* !HAVE_SYS_TIME_H */
 #endif  /* !TIME_WITH_SYS_TIME */
 #if HAVE_SYS_STROPTS_H
-#include <sys/stropts.h>
-#endif
+#include <sys/stropts.h>        /* for I_STR */
+#endif  /* !HAVE_SYS_STROPTS_H */
+#if HAVE_BMC_INTF_H
+#include <bmc_intf.h>
+#endif /* HAVE_BMC_INTF_H */
 #include <sys/select.h>
 #include <sys/ioctl.h>
 #include <assert.h>
