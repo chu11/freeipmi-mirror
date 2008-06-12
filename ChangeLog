@@ -13,7 +13,7 @@
 	libfreeipmi/src/api/ipmi-api.c, libfreeipmi/src/api/ipmi-err-wrappers-api.h: Support
 	IPMI_DEVICE_SUNBMC.
 
-	* configure.ac: check for sys/stropts.h.
+	* configure.ac: check for sys/stropts.h. check for bmc_intf.h.
 
 2008-06-08 Albert Chu <chu11@llnl.gov>
 

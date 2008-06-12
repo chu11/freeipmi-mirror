@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.alpha1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.130.2.1 2008-06-12 20:32:34 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.130.2.2 2008-06-12 20:57:40 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -328,6 +328,7 @@ AC_CHECK_HEADERS([linux/ipmi.h], [], [],
  #endif
 ])
 AC_CHECK_HEADERS([sys/ipmi.h])
+AC_CHECK_HEADERS([bmc_intf.h])
 
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
