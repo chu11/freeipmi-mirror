@@ -26,6 +26,7 @@
 #include <stdint.h>
 #ifdef STDC_HEADERS
 #include <string.h>
+#include <stddef.h>
 #endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -106,6 +107,7 @@ struct ipmi_sunbmc_ctx {
   int device_fd;
   int io_init;
   int putmsg_intf;
+  uint8_t putmsg_intf_msg_id;
 };
 
 ipmi_sunbmc_ctx_t
@@ -122,6 +124,7 @@ ipmi_sunbmc_ctx_create(void)
   ctx->device_fd = -1;
   ctx->io_init = 0;
   ctx->putmsg_intf = 0;
+  ctx->putmsg_intf_msg_id = 0;  /* XXX: randomize? */
 
   ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
   return ctx;
@@ -297,15 +300,18 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
               uint8_t net_fn,
               fiid_obj_t obj_cmd_rq)
 {
+#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+  struct strbuf sbuf;
+  bmc_msg_t *msg = NULL;
+  bmc_req_t *req = NULL;
+  unsigned int msg_len;
+#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   uint8_t rq_buf_temp[IPMI_SUNBMC_BUFLEN];
   uint8_t rq_buf[IPMI_SUNBMC_BUFLEN];
   uint8_t rq_cmd;
   int32_t rq_buf_len;
   int32_t len;
-#if 0
-  struct ipmi_system_interface_addr rq_addr;
-  struct ipmi_req rq_packet;
-#endif
+  int rv = -1;
 
   assert(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
   assert(IPMI_BMC_LUN_VALID(lun));
@@ -313,6 +319,10 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
   assert(fiid_obj_valid(obj_cmd_rq));
   assert(fiid_obj_packet_valid(obj_cmd_rq));
   assert(ctx->io_init);
+  assert(ctx->putmsg_intf);
+
+#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+  memset(&sbuf, '\0', sizeof(struct strbuf));
 
   /* Due to API differences, we need to extract the cmd out of the
    * request.
@@ -332,55 +342,39 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
   else
     rq_buf_len = 0;
 
-#if defined(HAVE_BMC_INTF_H)
-  if (ctx->putmsg_intf)
-    {
-    }
-  else
-    {
-      struct strioctl istr;
-      bmc_reqrsp_t reqrsp;
+  msg_len = offsetof(bmc_msg_t, msg) 
+    + sizeof(bmc_req_t)
+    + rq_buf_len;
+  
+  SUNBMC_ERR_OUT_OF_MEMORY_CLEANUP((msg = (bmc_msg_t *)malloc(msg_len)));
 
-      reqrsp.req.fn = net_fn;
-      reqrsp.req.lun = lun;
-      reqrsp.req.cmd = rq_cmd;
+  msg->m_type = BMC_MSG_REQUEST;
+  msg->m_id = ctx->putmsg_intf_msg_id;
 
-      istr.ic_cmd = IOCTL_IPMI_KCS_ACTION;
-      istr.ic_timout = 0;       /* spelled 'timout', not a typo */
-      istr.ic_len = sizeof(struct bmc_reqrsp);
-      istr.ic_dp = (char *)&reqrsp;
-      
-      SUNBMC_ERR(!(ioctl(ctx->device_fd,
-                         I_STR,
-                         &istr) < 0));
+  req = (bmc_req_t *)&(msg->msg[0]);
+  req->fn = net_fn;
+  req->lun = lun;
+  req->cmd = rq_cmd;
+  req->datalength = rq_buf_len;
+  memcpy(req->data, rq_buf, rq_buf_len);
 
-      
-
-    }
-#else /* !HAVE_BMC_INTF_H */
+  sbuf.len = msg_len;
+  sbuf.buf = (char *)msg;
+  
+  SUNBMC_ERR_SYSTEM_ERROR_CLEANUP(!(putmsg(ctx->device_fd, NULL, &sbuf, 0) < 0));
+  
+#else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   /* otherwise, we always return an internal error - we shouldn't reach this point */
   SUNBMC_ERR_INTERNAL_ERROR(0);
-#endif /* !HAVE_BMC_INTF_H */
+#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
-#if 0
-  rq_addr.addr_type = IPMI_SYSTEM_INTERFACE_ADDR_TYPE;
-  rq_addr.channel = IPMI_BMC_CHANNEL;
-  rq_addr.lun = lun;
-
-  rq_packet.addr = (unsigned char *)&rq_addr;
-  rq_packet.addr_len = sizeof(struct ipmi_system_interface_addr);
-  rq_packet.msgid = 0;             
-  rq_packet.msg.netfn = net_fn;
-  rq_packet.msg.cmd = rq_cmd;
-  rq_packet.msg.data_len = rq_buf_len;
-  rq_packet.msg.data = rq_buf;
-
-  SUNBMC_ERR(!(ioctl(ctx->device_fd, 
-                     IPMICTL_SEND_COMMAND,
-                     &rq_packet) < 0));
-#endif
-
-  return (0);
+  rv = 0;
+ cleanup:
+#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+  if (msg)
+    free(msg);
+#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+  return rv;
 }
 
 static int8_t
@@ -396,6 +390,10 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   fd_set read_fds;
   struct timeval tv;
   int n;
+
+  assert(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
+  assert(ctx->io_init);
+  assert(ctx->putmsg_intf);
 
 #if 0
   rs_packet.addr = (unsigned char *)&rs_addr;
@@ -479,7 +477,7 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
     }
   else
     {
-#if defined(HAVE_BMC_INTF_H)
+#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
       struct strioctl istr;
       bmc_reqrsp_t reqrsp;
       uint8_t rq_buf_temp[IPMI_SUNBMC_BUFLEN];
@@ -488,6 +486,9 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
       int32_t rq_buf_len;
       uint8_t rs_buf[IPMI_SUNBMC_BUFLEN];
       int32_t len;
+
+      memset(&istr, '\0', sizeof(struct strioctl));
+      memset(&reqrsp, '\0', sizeof(bmc_reqrsp_t));
 
       /* Due to API differences, we need to extract the cmd out of the
        * request.
@@ -536,10 +537,10 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
       SUNBMC_ERR_INTERNAL_ERROR(!(fiid_obj_set_all(obj_cmd_rs, 
                                                    rs_buf, 
                                                    reqrsp.rsp.datalength + 2) < 0));
-#else /* !HAVE_BMC_INTF_H */
+#else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
       /* otherwise, we always return an internal error - we shouldn't reach this point */
       SUNBMC_ERR_INTERNAL_ERROR(0);
-#endif /* !HAVE_BMC_INTF_H */
+#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
     }
       
   return (0);
