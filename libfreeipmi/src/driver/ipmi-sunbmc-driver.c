@@ -382,12 +382,15 @@ static int8_t
 _sunbmc_read (ipmi_sunbmc_ctx_t ctx, 
               fiid_obj_t obj_cmd_rs)
 {
+#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+  struct strbuf sbuf;
+  bmc_msg_t *msg = NULL;
+  bmc_rsp_t *rsp = NULL;
+  int flags = 0;
+#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   uint8_t rs_buf_temp[IPMI_SUNBMC_BUFLEN];
   uint8_t rs_buf[IPMI_SUNBMC_BUFLEN];
-#if 0
-  struct ipmi_system_interface_addr rs_addr;
-  struct ipmi_recv rs_packet;
-#endif
+  unsigned int rs_buf_len = 0;
   fd_set read_fds;
   struct timeval tv;
   int n;
@@ -396,12 +399,15 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   assert(ctx->io_init);
   assert(ctx->putmsg_intf);
 
-#if 0
-  rs_packet.addr = (unsigned char *)&rs_addr;
-  rs_packet.addr_len = sizeof(struct ipmi_system_interface_addr);
-  rs_packet.msg.data = rs_buf_temp;
-  rs_packet.msg.data_len = IPMI_SUNBMC_BUFLEN;
-#endif
+#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+  memset(&sbuf, '\0', sizeof(struct strbuf));
+  
+  sbuf.maxlen = IPMI_SUNBMC_BUFLEN;
+  sbuf.buf = (char *)rs_buf_temp;
+#else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+  /* otherwise, we always return an internal error - we shouldn't reach this point */
+  SUNBMC_ERR_INTERNAL_ERROR(0);
+#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
   FD_ZERO(&read_fds);
   FD_SET(ctx->device_fd, &read_fds);
@@ -422,27 +428,40 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
       return (-1);
     }
 
-#if 0
-  SUNBMC_ERR(!(ioctl(ctx->device_fd, 
-                     IPMICTL_RECEIVE_MSG_TRUNC, 
-                     &rs_packet) < 0)); 
-
-  /* achu: atleast the completion code should be returned */
-  if (!rs_packet.msg.data_len)
+#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+  SUNBMC_ERR_SYSTEM_ERROR(!(getmsg(ctx->device_fd, NULL, &sbuf, &flags) < 0));
+  
+  msg = (bmc_msg_t *)&(sbuf.buf[0]);
+  
+  if (msg->m_type == BMC_MSG_ERROR)
     {
-      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
-      return (-1);
+      errno = msg->msg[0];
+      SUNBMC_ERR(0);
     }
+  SUNBMC_ERR_SYSTEM_ERROR(msg->m_type == BMC_MSG_RESPONSE);
+  SUNBMC_ERR_SYSTEM_ERROR(msg->m_id == ctx->putmsg_intf_msg_id);
 
-  rs_buf[0] = rs_packet.msg.cmd;
-  if (rs_packet.msg.data_len >= (IPMI_SUNBMC_BUFLEN - 1))
-    rs_packet.msg.data_len = IPMI_SUNBMC_BUFLEN - 1;
-  memcpy(rs_buf + 1, rs_buf_temp, rs_packet.msg.data_len);
+  rsp = (bmc_rsp_t *)&(msg->msg[0]);
+  
+  /* Due to API differences, we need to put the cmd/ccode back into
+   * the buffer.
+   */
+  rs_buf[0] = rsp->cmd;
+  rs_buf_len++;
+  rs_buf[1] = rsp->ccode;
+  rs_buf_len++;
+  memcpy(&(rs_buf[2]), rsp->data, rsp->datalength);
+  rs_buf_len += rsp->datalength;
 
   SUNBMC_ERR_INTERNAL_ERROR(!(fiid_obj_set_all(obj_cmd_rs, 
                                                rs_buf, 
-                                               rs_packet.msg.data_len + 1) < 0));
-#endif
+                                               rs_buf_len) < 0));
+  
+
+#else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+  /* otherwise, we always return an internal error - we shouldn't reach this point */
+  SUNBMC_ERR_INTERNAL_ERROR(0);
+#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
   return (0);
 }
@@ -526,8 +545,11 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
       rs_buf[0] = reqrsp.rsp.cmd;
       rs_buf[1] = reqrsp.rsp.ccode;
       /* -2 b/c of cmd and ccode */
-      if (reqrsp.rsp.datalength >= (IPMI_SUNBMC_BUFLEN - 2))
-        reqrsp.rsp.datalength = IPMI_SUNBMC_BUFLEN - 2;
+#if 0
+      /* achu: to remove warnings, IPMI_SUNBMC_BUFLEN > amount uint8_t can hold */
+      if (reqrsp.rsp.datalength >= (IPMI_SUNBMC_BUFLEN - 2)) 
+         reqrsp.rsp.datalength = IPMI_SUNBMC_BUFLEN - 2;
+#endif
       /* remove header data stuff in front we don't care about */
       if (reqrsp.rsp.datalength > 3)
         reqrsp.rsp.datalength -= 3;
