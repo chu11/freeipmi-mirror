@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.100 2008-06-07 16:09:48 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.101 2008-06-13 21:22:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -57,9 +57,6 @@
 #include <time.h>
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
-#if HAVE_GETOPT_H
-#include <getopt.h>
-#endif
 #include <assert.h>
 #include <errno.h>
 
