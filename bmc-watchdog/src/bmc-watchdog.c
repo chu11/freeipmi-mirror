@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.101 2008-06-13 21:22:20 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.102 2008-06-13 21:23:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -219,36 +219,6 @@ _err_exit(char *fmt, ...)
 }
 
 static int
-_init_openipmi_ipmi(void)
-{
-  if (!(openipmi_ctx = ipmi_openipmi_ctx_create()))
-    {
-      _bmclog("ipmi_openipmi_ctx_create: %s", strerror(errno));
-      return -1;
-    }
-  
-  if (cmd_args.common.driver_device)
-    {
-      if (ipmi_openipmi_ctx_set_driver_device(openipmi_ctx, 
-                                              cmd_args.common.driver_device) < 0)
-        {
-          _bmclog("ipmi_openipmi_ctx_set_driver_device: %s", 
-                  ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
-          return -1;
-        }
-    }
-  
-  if (ipmi_openipmi_ctx_io_init(openipmi_ctx) < 0)
-    {
-      _bmclog("ipmi_openipmi_ctx_io_init: %s",
-              ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
-      return -1;
-    }
-
-  return 0;
-}
-
-static int
 _init_kcs_ipmi(void)
 {
   struct ipmi_locate_info l;
@@ -375,6 +345,36 @@ _init_ssif_ipmi(void)
     {
       _bmclog("ipmi_ssif_ctx_io_init: %s", 
               ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+      return -1;
+    }
+
+  return 0;
+}
+
+static int
+_init_openipmi_ipmi(void)
+{
+  if (!(openipmi_ctx = ipmi_openipmi_ctx_create()))
+    {
+      _bmclog("ipmi_openipmi_ctx_create: %s", strerror(errno));
+      return -1;
+    }
+  
+  if (cmd_args.common.driver_device)
+    {
+      if (ipmi_openipmi_ctx_set_driver_device(openipmi_ctx, 
+                                              cmd_args.common.driver_device) < 0)
+        {
+          _bmclog("ipmi_openipmi_ctx_set_driver_device: %s", 
+                  ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
+          return -1;
+        }
+    }
+  
+  if (ipmi_openipmi_ctx_io_init(openipmi_ctx) < 0)
+    {
+      _bmclog("ipmi_openipmi_ctx_io_init: %s",
+              ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
       return -1;
     }
 
