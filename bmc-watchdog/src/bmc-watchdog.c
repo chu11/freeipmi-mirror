@@ -1,6 +1,6 @@
 
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.102 2008-06-13 21:23:12 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.103 2008-06-13 21:25:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -614,31 +614,7 @@ _cmd(char *str,
 		}
 	    }
 	}
-      else if (driver_type_used == IPMI_DEVICE_OPENIPMI)
-	{
-	  if ((ret = ipmi_openipmi_cmd (openipmi_ctx,
-					IPMI_BMC_IPMB_LUN_BMC, 
-					netfn, 
-					cmd_rq, 
-					cmd_rs)) < 0)
-	    {
-              _bmclog("%s: ipmi_openipmi_cmd: %s", 
-                      str,
-                      ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
-              if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)
-                errno = EINVAL;
-              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_PERMISSION)
-                errno = EPERM;
-              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY)
-                errno = ENOMEM;
-              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED)
-                errno = EIO;
-              else
-                errno = EINVAL;
-              return -1;
-	    }
-	}
-      else
+      else if (driver_type_used == IPMI_DEVICE_SSIF)
 	{
 	  if ((ret = ipmi_ssif_cmd (ssif_ctx,
 				    IPMI_BMC_IPMB_LUN_BMC, 
@@ -665,6 +641,30 @@ _cmd(char *str,
 		    errno = EINVAL;
 		  return -1;
 		}
+	    }
+	}
+      else if (driver_type_used == IPMI_DEVICE_OPENIPMI)
+	{
+	  if ((ret = ipmi_openipmi_cmd (openipmi_ctx,
+					IPMI_BMC_IPMB_LUN_BMC, 
+					netfn, 
+					cmd_rq, 
+					cmd_rs)) < 0)
+	    {
+              _bmclog("%s: ipmi_openipmi_cmd: %s", 
+                      str,
+                      ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
+              if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)
+                errno = EINVAL;
+              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_PERMISSION)
+                errno = EPERM;
+              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY)
+                errno = ENOMEM;
+              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED)
+                errno = EIO;
+              else
+                errno = EINVAL;
+              return -1;
 	    }
 	}
 
