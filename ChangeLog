@@ -13,6 +13,9 @@
 	libfreeipmi/src/api/ipmi-api.c, libfreeipmi/src/api/ipmi-err-wrappers-api.h: Support
 	IPMI_DEVICE_SUNBMC.
 
+	* libfreeipmi/include/freeipmi/freeipmi.h: add
+	libfreeipmi/include/freeipmi/driver/ipmi-sunbmc-driver.h.
+
 	* configure.ac: check for sys/stropts.h, sys/int_types.h, bmc_intf.h.
 
 	* common/src/tool-cmdline-common.h,
@@ -21,6 +24,8 @@
 
 	* README, doc/freeipmi.7.pre.in,
 	common/doc/manpage-common-driver.man: Update with sunbmc.
+
+	* bmc-watchdog/: Support sunbmc driver.
 
 	* README.sunbmc: New file.
 
