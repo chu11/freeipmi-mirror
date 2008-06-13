@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
@@ -47,6 +48,9 @@
 #if HAVE_SYS_STROPTS_H
 #include <sys/stropts.h>        /* for I_STR */
 #endif  /* !HAVE_SYS_STROPTS_H */
+#if HAVE_SYS_INT_TYPES_H
+#include <sys/int_types.h>      /* for uint8_t on Solaris?? */
+#endif /* !HAVE_SYS_INT_TYPES_H */
 #if HAVE_BMC_INTF_H
 #include <bmc_intf.h>
 #endif /* HAVE_BMC_INTF_H */
@@ -335,7 +339,7 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
   else
     {
       struct strioctl istr;
-      bmc_reqrsp_t reqres;
+      bmc_reqrsp_t reqrsp;
 
       reqrsp.req.fn = net_fn;
       reqrsp.req.lun = lun;
@@ -477,7 +481,7 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
     {
 #if defined(HAVE_BMC_INTF_H)
       struct strioctl istr;
-      bmc_reqrsp_t reqres;
+      bmc_reqrsp_t reqrsp;
       uint8_t rq_buf_temp[IPMI_SUNBMC_BUFLEN];
       uint8_t rq_buf[IPMI_SUNBMC_BUFLEN];
       uint8_t rq_cmd;
@@ -533,8 +537,8 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
                                                    rs_buf, 
                                                    reqrsp.rsp.datalength + 2) < 0));
 #else /* !HAVE_BMC_INTF_H */
-  /* otherwise, we always return an internal error - we shouldn't reach this point */
-  SUNBMC_ERR_INTERNAL_ERROR(0);
+      /* otherwise, we always return an internal error - we shouldn't reach this point */
+      SUNBMC_ERR_INTERNAL_ERROR(0);
 #endif /* !HAVE_BMC_INTF_H */
     }
       
