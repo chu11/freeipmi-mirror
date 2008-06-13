@@ -342,9 +342,10 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
   else
     rq_buf_len = 0;
 
-  msg_len = offsetof(bmc_msg_t, msg) 
-    + sizeof(bmc_req_t)
-    + rq_buf_len;
+  /* achu: see header for for how this is calculated */
+  msg_len = offsetof(bmc_msg_t, msg);
+  msg_len += sizeof(bmc_req_t);
+  msg_len += (rq_buf_len > SEND_MAX_PAYLOAD_SIZE) ? (rq_buf_len - SEND_MAX_PAYLOAD_SIZE) : 0;
   
   SUNBMC_ERR_OUT_OF_MEMORY_CLEANUP((msg = (bmc_msg_t *)malloc(msg_len)));
 
