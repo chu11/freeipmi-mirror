@@ -93,6 +93,12 @@ parse_inband_driver_type(char *str)
   else if (strcasecmp (str, "open") == 0
            || strcasecmp (str, "openipmi") == 0)
     return IPMI_DEVICE_OPENIPMI;
+  /* support "bmc" for those that might be used to 
+   * ipmitool.
+   */
+  else if (strcasecmp (str, "bmc") == 0
+           || strcasecmp (str, "sunbmc") == 0)
+    return IPMI_DEVICE_SUNBMC;
   
   return -1;
 }
