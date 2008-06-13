@@ -101,6 +101,7 @@ struct ipmi_sunbmc_ctx {
   char *driver_device;
   int device_fd;
   int io_init;
+  int putmsg_intf;
 };
 
 ipmi_sunbmc_ctx_t
@@ -116,6 +117,7 @@ ipmi_sunbmc_ctx_create(void)
   ctx->driver_device = NULL;
   ctx->device_fd = -1;
   ctx->io_init = 0;
+  ctx->putmsg_intf = 0;
 
   ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
   return ctx;
@@ -219,6 +221,10 @@ ipmi_sunbmc_ctx_set_flags(ipmi_sunbmc_ctx_t ctx, uint32_t flags)
 int8_t
 ipmi_sunbmc_ctx_io_init(ipmi_sunbmc_ctx_t ctx)
 {
+#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H) && defined(IOCTL_IPMI_INTERFACE_METHOD)
+  struct strioctl istr;
+  uint8_t method;
+#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H) && defined(IOCTL_IPMI_INTERFACE_METHOD)) */
   char *device;
 
   ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
@@ -234,7 +240,41 @@ ipmi_sunbmc_ctx_io_init(ipmi_sunbmc_ctx_t ctx)
   SUNBMC_ERR_CLEANUP(!((ctx->device_fd = open (device, 
                                                O_RDWR)) < 0));
   
+#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+
+#ifdef IOCTL_IPMI_INTERFACE_METHOD
+
+#ifdef BMC_PUTMSG_METHOD
+  method = BMC_PUTMSG_METHOD;
+#else  
+  method = 1;
+#endif 
   
+  istr.ic_cmd = IOCTL_IPMI_INTERFACE_METHOD;
+  istr.ic_timout = 0;           /* spelled 'timout', not a typo */
+  istr.ic_len = 1;
+  istr.ic_dp = (char *)&method;
+  
+  if (ioctl (ctx->device_fd, I_STR, &istr) < 0)
+    {
+      if (errno != EINVAL)
+        SUNBMC_ERR_SYSTEM_ERROR(0);
+      /* achu: assume ioctl method */
+      ctx->putmsg_intf = 0;
+      goto out;
+    }
+  ctx->putmsg_intf = method;
+#else /* !IOCTL_IPMI_INTERFACE_METHOD */
+  /* achu: assume ioctl method */
+  ctx->putmsg_intf = 0;
+#endif /* !IOCTL_IPMI_INTERFACE_METHOD */
+
+#else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+
+  /* otherwise, we always return a system error */
+  SUNBMC_ERR_SYSTEM_ERROR(0);
+
+#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
   ctx->io_init = 1;
  out:
@@ -268,6 +308,7 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
   assert(IPMI_NET_FN_RQ_VALID(net_fn));
   assert(fiid_obj_valid(obj_cmd_rq));
   assert(fiid_obj_packet_valid(obj_cmd_rq));
+  assert(ctx->io_init);
 
   /* Due to API differences, we need to extract the cmd out of the
    * request.
@@ -286,6 +327,36 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
     }
   else
     rq_buf_len = 0;
+
+#if defined(HAVE_BMC_INTF_H)
+  if (ctx->putmsg_intf)
+    {
+    }
+  else
+    {
+      struct strioctl istr;
+      bmc_reqrsp_t reqres;
+
+      reqrsp.req.fn = net_fn;
+      reqrsp.req.lun = lun;
+      reqrsp.req.cmd = rq_cmd;
+
+      istr.ic_cmd = IOCTL_IPMI_KCS_ACTION;
+      istr.ic_timout = 0;       /* spelled 'timout', not a typo */
+      istr.ic_len = sizeof(struct bmc_reqrsp);
+      istr.ic_dp = (char *)&reqrsp;
+      
+      SUNBMC_ERR(!(ioctl(ctx->device_fd,
+                         I_STR,
+                         &istr) < 0));
+
+      
+
+    }
+#else /* !HAVE_BMC_INTF_H */
+  /* otherwise, we always return an internal error - we shouldn't reach this point */
+  SUNBMC_ERR_INTERNAL_ERROR(0);
+#endif /* !HAVE_BMC_INTF_H */
 
 #if 0
   rq_addr.addr_type = IPMI_SYSTEM_INTERFACE_ADDR_TYPE;
@@ -390,15 +461,82 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
   
   SUNBMC_ERR_IO_NOT_INITIALIZED(ctx->io_init);
 
-  if (_sunbmc_write(ctx,
-                    lun,
-                    net_fn,
-                    obj_cmd_rq) < 0)
-    return (-1);
+  if (ctx->putmsg_intf)
+    {
+      if (_sunbmc_write(ctx,
+                        lun,
+                        net_fn,
+                        obj_cmd_rq) < 0)
+        return (-1);
+      
+      if (_sunbmc_read(ctx,
+                       obj_cmd_rs) < 0)
+        return (-1);
+    }
+  else
+    {
+#if defined(HAVE_BMC_INTF_H)
+      struct strioctl istr;
+      bmc_reqrsp_t reqres;
+      uint8_t rq_buf_temp[IPMI_SUNBMC_BUFLEN];
+      uint8_t rq_buf[IPMI_SUNBMC_BUFLEN];
+      uint8_t rq_cmd;
+      int32_t rq_buf_len;
+      uint8_t rs_buf[IPMI_SUNBMC_BUFLEN];
+      int32_t len;
 
-  if (_sunbmc_read(ctx,
-                   obj_cmd_rs) < 0)
-    return (-1);
+      /* Due to API differences, we need to extract the cmd out of the
+       * request.
+       */
+      memset(rq_buf_temp, '\0', IPMI_SUNBMC_BUFLEN);
+      
+      SUNBMC_ERR_INTERNAL_ERROR(!((len = fiid_obj_get_all(obj_cmd_rq, 
+                                                          rq_buf_temp, 
+                                                          IPMI_SUNBMC_BUFLEN)) <= 0));
 
+      rq_cmd = rq_buf_temp[0];
+      if (len > 1)
+        {
+          /* -1 b/c of cmd */
+          memcpy(rq_buf, &rq_buf_temp[1], len - 1);
+          rq_buf_len = len - 1;
+        }
+      else
+        rq_buf_len = 0;
+      
+      reqrsp.req.fn = net_fn;
+      reqrsp.req.lun = lun;
+      reqrsp.req.cmd = rq_cmd;
+      
+      istr.ic_cmd = IOCTL_IPMI_KCS_ACTION;
+      istr.ic_timout = 0;       /* spelled 'timout', not a typo */
+      istr.ic_len = sizeof(struct bmc_reqrsp);
+      istr.ic_dp = (char *)&reqrsp;
+      
+      SUNBMC_ERR(!(ioctl(ctx->device_fd,
+                         I_STR,
+                         &istr) < 0));
+      
+      rs_buf[0] = reqrsp.rsp.cmd;
+      rs_buf[1] = reqrsp.rsp.ccode;
+      /* -2 b/c of cmd and ccode */
+      if (reqrsp.rsp.datalength >= (IPMI_SUNBMC_BUFLEN - 2))
+        reqrsp.rsp.datalength = IPMI_SUNBMC_BUFLEN - 2;
+      /* remove header data stuff in front we don't care about */
+      if (reqrsp.rsp.datalength > 3)
+        reqrsp.rsp.datalength -= 3;
+      else
+        reqrsp.rsp.datalength = 0;
+      memcpy(rs_buf + 2, reqrsp.rsp.data, reqrsp.rsp.datalength);
+      
+      SUNBMC_ERR_INTERNAL_ERROR(!(fiid_obj_set_all(obj_cmd_rs, 
+                                                   rs_buf, 
+                                                   reqrsp.rsp.datalength + 2) < 0));
+#else /* !HAVE_BMC_INTF_H */
+  /* otherwise, we always return an internal error - we shouldn't reach this point */
+  SUNBMC_ERR_INTERNAL_ERROR(0);
+#endif /* !HAVE_BMC_INTF_H */
+    }
+      
   return (0);
 }

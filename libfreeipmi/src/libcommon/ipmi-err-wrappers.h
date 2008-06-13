@@ -832,6 +832,26 @@ do {                                                                    \
       }                                                                 \
   } while (0)
 
+#define SUNBMC_ERR_SYSTEM_ERROR(expr)                                   \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR;                 \
+        __SUNBMC_TRACE;                                                 \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SUNBMC_ERR_SYSTEM_ERROR_CLEANUP(expr)                           \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR;                 \
+        __SUNBMC_TRACE;                                                 \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
 #define SUNBMC_ERR_INTERNAL_ERROR(expr)                                 \
   do {                                                                  \
     if (!(expr))                                                        \
