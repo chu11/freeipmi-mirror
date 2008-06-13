@@ -335,6 +335,7 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
   rq_cmd = rq_buf_temp[0];
   if (len > 1)
     {
+      /* -1 b/c of cmd */
       memcpy(rq_buf, &rq_buf_temp[1], len - 1);
       rq_buf_len = len - 1;
     }
@@ -408,6 +409,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
     }
 
   rs_buf[0] = rs_packet.msg.cmd;
+  /* -1 b/c of cmd */
   if (rs_packet.msg.data_len >= (IPMI_OPENIPMI_BUFLEN - 1))
     rs_packet.msg.data_len = IPMI_OPENIPMI_BUFLEN - 1;
   memcpy(rs_buf + 1, rs_buf_temp, rs_packet.msg.data_len);

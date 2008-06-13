@@ -1,6 +1,5 @@
-
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.100.2.1 2008-06-13 21:27:42 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.100.2.2 2008-06-13 21:31:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -57,9 +56,6 @@
 #include <time.h>
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
-#if HAVE_GETOPT_H
-#include <getopt.h>
-#endif
 #include <assert.h>
 #include <errno.h>
 
@@ -223,36 +219,6 @@ _err_exit(char *fmt, ...)
 }
 
 static int
-_init_openipmi_ipmi(void)
-{
-  if (!(openipmi_ctx = ipmi_openipmi_ctx_create()))
-    {
-      _bmclog("ipmi_openipmi_ctx_create: %s", strerror(errno));
-      return -1;
-    }
-  
-  if (cmd_args.common.driver_device)
-    {
-      if (ipmi_openipmi_ctx_set_driver_device(openipmi_ctx, 
-                                              cmd_args.common.driver_device) < 0)
-        {
-          _bmclog("ipmi_openipmi_ctx_set_driver_device: %s", 
-                  ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
-          return -1;
-        }
-    }
-  
-  if (ipmi_openipmi_ctx_io_init(openipmi_ctx) < 0)
-    {
-      _bmclog("ipmi_openipmi_ctx_io_init: %s",
-              ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
-      return -1;
-    }
-
-  return 0;
-}
-
-static int
 _init_kcs_ipmi(void)
 {
   struct ipmi_locate_info l;
@@ -379,6 +345,36 @@ _init_ssif_ipmi(void)
     {
       _bmclog("ipmi_ssif_ctx_io_init: %s", 
               ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+      return -1;
+    }
+
+  return 0;
+}
+
+static int
+_init_openipmi_ipmi(void)
+{
+  if (!(openipmi_ctx = ipmi_openipmi_ctx_create()))
+    {
+      _bmclog("ipmi_openipmi_ctx_create: %s", strerror(errno));
+      return -1;
+    }
+  
+  if (cmd_args.common.driver_device)
+    {
+      if (ipmi_openipmi_ctx_set_driver_device(openipmi_ctx, 
+                                              cmd_args.common.driver_device) < 0)
+        {
+          _bmclog("ipmi_openipmi_ctx_set_driver_device: %s", 
+                  ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
+          return -1;
+        }
+    }
+  
+  if (ipmi_openipmi_ctx_io_init(openipmi_ctx) < 0)
+    {
+      _bmclog("ipmi_openipmi_ctx_io_init: %s",
+              ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
       return -1;
     }
 
@@ -659,6 +655,35 @@ _cmd(char *str,
 		}
 	    }
 	}
+      else if (driver_type_used == IPMI_DEVICE_SSIF)
+	{
+	  if ((ret = ipmi_ssif_cmd (ssif_ctx,
+				    IPMI_BMC_IPMB_LUN_BMC, 
+				    netfn, 
+				    cmd_rq, 
+				    cmd_rs)) < 0)
+	    {
+	      if (ipmi_ssif_ctx_errnum(ssif_ctx) != IPMI_SSIF_CTX_ERR_BUSY)
+		{
+		  _bmclog("%s: ipmi_ssif_cmd: %s", 
+			  str, 
+                          ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+		  if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_PARAMETERS)
+		    errno = EINVAL;
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_PERMISSION)
+		    errno = EPERM;
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY)
+		    errno = ENOMEM;
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED)
+		    errno = EIO;
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OVERFLOW)
+		    errno = ENOSPC;
+		  else
+		    errno = EINVAL;
+		  return -1;
+		}
+	    }
+	}
       else if (driver_type_used == IPMI_DEVICE_OPENIPMI)
 	{
 	  if ((ret = ipmi_openipmi_cmd (openipmi_ctx,
@@ -705,35 +730,6 @@ _cmd(char *str,
               else
                 errno = EINVAL;
               return -1;
-	    }
-	}
-      else
-	{
-	  if ((ret = ipmi_ssif_cmd (ssif_ctx,
-				    IPMI_BMC_IPMB_LUN_BMC, 
-				    netfn, 
-				    cmd_rq, 
-				    cmd_rs)) < 0)
-	    {
-	      if (ipmi_ssif_ctx_errnum(ssif_ctx) != IPMI_SSIF_CTX_ERR_BUSY)
-		{
-		  _bmclog("%s: ipmi_ssif_cmd: %s", 
-			  str, 
-                          ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
-		  if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_PARAMETERS)
-		    errno = EINVAL;
-		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_PERMISSION)
-		    errno = EPERM;
-		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY)
-		    errno = ENOMEM;
-		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED)
-		    errno = EIO;
-		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OVERFLOW)
-		    errno = ENOSPC;
-		  else
-		    errno = EINVAL;
-		  return -1;
-		}
 	    }
 	}
 

@@ -29,6 +29,11 @@
 
 	* README.sunbmc: New file.
 
+2008-06-13 Albert Chu <chu11@llnl.gov>
+
+	* common/src/tool-common.c (ipmi_open): Add/fix conditions under
+	which "nice" error message output occurs.
+	
 2008-06-08 Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-sdr-cache-common.c (_get_home_directory): Fix
