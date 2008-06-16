@@ -414,25 +414,16 @@ which nodes have problems via scripts.
 4) Exceptions to the hostrange support in FreeIPMI
 --------------------------------------------------
 
-The hostrange input/output is not been supported in bmc-config.  There
-are two major reasons for this:
+The hostrange input/output is not been supported in a few situations.
 
-1) Almost always, bmc-config must be run in-band before it can be used
-out-of-band.  This is because you can't run out-of-band until the BMC
-is configured with atleast the IP address and MAC address of the
-motherboard.  So there's really no point to supporting hostranged
-configuration if it is mostly run in-band.
-
-2) Each BMC in the cluster must be configured with a different IP
+o Each BMC in the cluster must be configured with a different IP
 address and MAC address.  So the parallelism that the hostrange input
 gives you effectively cannot be used when trying to use bmc-config's
 --commit option to configure a cluster using one config file.
+Therefore we prohibit hostranged input when trying to configure these
+values in bmc-config.
 
-The architecture of bmc-config was subsequently used in pef-config and
-ipmi-sensors-config, which is why those tools do not support
-hostranges as well.
-
-Ipmipower was written with a different architecture than bmc-info,
+o Ipmipower was written with a different architecture than bmc-info,
 ipmi-sensors, ipmi-sel, etc. because of need for it to interact with
 Powerman, so it cannot use the parallel stdout libraries developed.
 It instead emulates the --buffer-output, --consolidate-output, and
