@@ -26,6 +26,7 @@ pef_config_LDADD = \
 	$(top_builddir)/common/src/libhostrange.la \
 	$(top_builddir)/common/src/libmiscutils.la \
 	$(top_builddir)/common/src/libfreeipmiportability.la \
+	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
 	$(top_builddir)/common/src/libconfigtoolcommon.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
@@ -54,6 +55,9 @@ $(top_builddir)/common/src/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/libconfigtoolcommon.la : force-dependency-check
