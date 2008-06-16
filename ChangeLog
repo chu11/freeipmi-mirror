@@ -2,6 +2,10 @@
 
 	Support hostranges on bmc-config, ipmi-sensors-config, and pef-config.
 
+	* bmc-config/src/Makefile.am, ipmi-sensors-config/src/Makefile.am,
+	pef-config/src/Makefile.am: Update to load appropriate hostrange
+	libraries.
+
 	* bmc-config/bmc-config.8.pre.in,
 	ipmi-sensors-config/ipmi-sensors-config.8.pre.in,
 	pef-config/pef-config.8.pre.in: Update appropriately for all changes.

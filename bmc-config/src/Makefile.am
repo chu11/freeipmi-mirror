@@ -29,6 +29,7 @@ sbin_PROGRAMS = bmc-config
 
 bmc_config_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/libhostrange.la \
 	$(top_builddir)/common/src/libmiscutils.la \
 	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/common/src/libconfigtoolcommon.la \
@@ -56,6 +57,9 @@ bmc_config_SOURCES = \
 	bmc-config-validate.c
 
 $(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libhostrange.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/libmiscutils.la : force-dependency-check

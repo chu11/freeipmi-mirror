@@ -13,9 +13,6 @@ AM_CPPFLAGS = \
 
 sbin_PROGRAMS = ipmi-sensors-config
 
-# ipmi_sensors_config doesn't use hostrange, but
-# we need pstdout for linking reasons
-# we need miscutils for hostlist lib in pstdout too
 ipmi_sensors_config_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
 	$(top_builddir)/common/src/libhostrange.la \
