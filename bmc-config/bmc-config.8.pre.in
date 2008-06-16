@@ -22,7 +22,7 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-username-admin.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
@@ -37,6 +37,12 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
 #include <@top_srcdir@/common/doc/manpage-common-config-tool-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-always-prefix.man>
 #include <@top_srcdir@/common/doc/manpage-common-config-tool-general-use.man>
 .LP
 Comments throughout the checked out file will give instructions on how
@@ -56,6 +62,10 @@ a cluster with the same BMC config file.  The script only needs to
 determine the correct IP address and MAC address to use.
 .LP
 .B # bmc-config --commit -k "Lan_Conf:Ip_Address=$MY_IP" -k "Lan_Conf:Mac_Address=$MY_MAC" -n my_bmc.conf
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>

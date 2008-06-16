@@ -14,7 +14,7 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-username-admin.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
@@ -35,6 +35,12 @@ The following options are specific to
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about PEF configuration.
 #include <@top_srcdir@/common/doc/manpage-common-config-tool-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-always-prefix.man>
 #include <@top_srcdir@/common/doc/manpage-common-config-tool-general-use.man>
 .SH "EDITING THE CHECKOUT FILE"
 Options for editing fields in the checkout file are usually listed in
@@ -53,6 +59,10 @@ Boot_Error, OS_Boot, OS_Critical_Stop, Slot_Connector,
 ACPI_Power_State, Watchdog2, Platform_Alert, Entity_Presence,
 Monitor_Asic, Lan, Management_Subsystem_Health, Battery,
 Session_Audit, Version_Change, FRU_State, and Any
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
