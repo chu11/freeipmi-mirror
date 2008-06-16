@@ -33,6 +33,8 @@
 #include "pef-config-sections.h"
 
 #include "freeipmi-portability.h"
+#include "hostrange.h"
+#include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 
@@ -53,7 +55,9 @@ _pef_config_state_data_init(pef_config_state_data_t *state_data)
 }
 
 static int 
-_pef_config (void *arg)
+_pef_config (pstdout_state_t pstate,
+             const char *hostname,
+             void *arg)
 {
   pef_config_state_data_t state_data;
   pef_config_prog_data_t *prog_data;
@@ -75,7 +79,10 @@ _pef_config (void *arg)
                                         errmsg,
                                         IPMI_OPEN_ERRMSGLEN)))
     {
-      fprintf(stderr, "%s\n", errmsg);
+      pstdout_fprintf(pstate,
+                      stderr, 
+                      "%s\n", 
+                      errmsg);
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -92,7 +99,8 @@ _pef_config (void *arg)
         {
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
-              perror("fopen");
+              pstdout_perror(pstate, 
+                             "fopen");
               goto cleanup;
             }
           file_opened++;
@@ -107,7 +115,8 @@ _pef_config (void *arg)
         {
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
-              perror("fopen");
+              pstdout_perror(pstate,
+                             "fopen");
               goto cleanup;
             }
           file_opened++;
@@ -193,9 +202,10 @@ _pef_config (void *arg)
           if (!config_find_section(sections,
                                    sstr->section_name))
             {
-              fprintf(stderr,
-                      "Unknown section `%s'\n",
-                      sstr->section_name);
+              pstdout_fprintf(pstate,
+                              stderr,
+                              "Unknown section `%s'\n",
+                              sstr->section_name);
               goto cleanup;
             }
           sstr = sstr->next;
@@ -224,8 +234,10 @@ _pef_config (void *arg)
                 
                 if (!(s = config_find_section(sections, sstr->section_name)))
                   {
-                    fprintf(stderr, "## FATAL: Cannot checkout section '%s'\n",
-                            sstr->section_name);
+                    pstdout_fprintf(pstate,
+                                    stderr, 
+                                    "## FATAL: Cannot checkout section '%s'\n",
+                                    sstr->section_name);
                     continue;
                   }
                 
@@ -299,7 +311,8 @@ main (int argc, char **argv)
   pef_config_prog_data_t prog_data;
   struct pef_config_arguments cmd_args;
   int exit_code;
-  
+  int rv;
+
   ipmi_disable_coredump();
 
   memset(&prog_data, '\0', sizeof(pef_config_prog_data_t));
@@ -308,8 +321,30 @@ main (int argc, char **argv)
 
   prog_data.args = &cmd_args;
 
-  exit_code = _pef_config (&prog_data);
-  
+  if (pstdout_setup(&(prog_data.args->config_args.common.hostname),
+                    prog_data.args->config_args.hostrange.buffer_output,
+                    prog_data.args->config_args.hostrange.consolidate_output,
+                    prog_data.args->config_args.hostrange.fanout,
+                    prog_data.args->config_args.hostrange.eliminate,
+                    prog_data.args->config_args.hostrange.always_prefix) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  if ((rv = pstdout_launch(prog_data.args->config_args.common.hostname,
+                           _pef_config,
+                           &prog_data)) < 0)
+    {
+      fprintf(stderr,
+              "pstdout_launch: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  exit_code = rv;
+ cleanup:
   return exit_code;
 }
 

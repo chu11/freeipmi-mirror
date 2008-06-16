@@ -23,6 +23,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "pstdout.h"
 
 #include "config-tool-argp.h"
 #include "config-tool-common.h"
@@ -52,6 +53,7 @@ typedef struct ipmi_sensors_config_state_data
 { 
   ipmi_sensors_config_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
+  pstdout_state_t pstate;
   ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx;
 } ipmi_sensors_config_state_data_t;
 

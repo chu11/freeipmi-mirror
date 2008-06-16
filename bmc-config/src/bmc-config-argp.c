@@ -141,6 +141,7 @@ bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_
 {
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_admin (&(cmd_args->config_args.common));
+  init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));
 
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->config_args.common));
 

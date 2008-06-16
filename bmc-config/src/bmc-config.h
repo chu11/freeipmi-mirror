@@ -24,6 +24,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "pstdout.h"
 
 #include "config-tool-argp.h"
 #include "config-tool-common.h"
@@ -54,6 +55,7 @@ typedef struct bmc_config_state_data
 {
   bmc_config_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
+  pstdout_state_t pstate;
 
   /* achu: caching to make rmcpplus priv go faster */
   int cipher_suite_entry_count;
