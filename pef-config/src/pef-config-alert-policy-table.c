@@ -27,12 +27,13 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "freeipmi-portability.h"
-
 #include "pef-config.h"
 #include "pef-config-map.h"
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
+
+#include "freeipmi-portability.h"
+#include "pstdout.h"
 
 /* convenience struct */
 struct alert_policy_table {
@@ -71,9 +72,10 @@ _get_alert_policy_table (struct pef_config_state_data *state_data,
 								    obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_pef_configuration_parameters_alert_policy_table: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_pef_configuration_parameters_alert_policy_table: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -140,9 +142,10 @@ _set_alert_policy_table (struct pef_config_state_data *state_data,
 								    obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -451,7 +454,10 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
 
   if (num <= 0)
     {
-      fprintf(stderr, "Invalid Num = %d\n", num);
+      pstdout_fprintf(state_data->pstate,
+                      stderr, 
+                      "Invalid Num = %d\n",
+                      num);
       return NULL;
     }
 

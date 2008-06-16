@@ -27,12 +27,13 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "freeipmi-portability.h"
-
 #include "pef-config.h"
 #include "pef-config-map.h"
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
+
+#include "freeipmi-portability.h"
+#include "pstdout.h"
 
 /* achu: presumably there is no maximum.  We could read/write blocks
    forever based on block numbers.  However, we need to have some
@@ -71,9 +72,10 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
                                                                    obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_pef_configuration_parameters_alert_string_keys: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_pef_configuration_parameters_alert_string_keys: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -117,9 +119,10 @@ _set_alert_string_keys (pef_config_state_data_t *state_data,
                                                                    obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_pef_configuration_parameters_alert_string_keys: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_pef_configuration_parameters_alert_string_keys: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -250,9 +253,10 @@ alert_string_checkout (const char *section_name,
                                                                   obj_cmd_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
-            fprintf(stderr,
-                    "ipmi_cmd_get_pef_configuration_parameters_alert_string: %s\n",
-                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "ipmi_cmd_get_pef_configuration_parameters_alert_string: %s\n",
+                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -343,9 +347,10 @@ alert_string_commit (const char *section_name,
                                                                    obj_cmd_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
-            fprintf(stderr,
-                    "ipmi_cmd_set_pef_configuration_parameters_alert_strings: %s\n",
-                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "ipmi_cmd_set_pef_configuration_parameters_alert_strings: %s\n",
+                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -379,7 +384,9 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
 
   if (num <= 0)
     {
-      fprintf(stderr, "Invalid Num = %d\n", num);
+      pstdout_fprintf(state_data->pstate,
+                      stderr, 
+                      "Invalid Num = %d\n", num);
       return NULL;
     }
 

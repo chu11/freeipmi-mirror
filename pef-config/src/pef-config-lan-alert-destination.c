@@ -27,12 +27,13 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "freeipmi-portability.h"
-
 #include "pef-config.h"
 #include "pef-config-map.h"
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
+
+#include "freeipmi-portability.h"
+#include "pstdout.h"
 
 #define PEF_CONFIG_MAXIPADDRLEN 16
 #define PEF_CONFIG_MAXMACADDRLEN 24
@@ -86,9 +87,10 @@ _get_destination_type(pef_config_state_data_t *state_data,
                                                                   obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_lan_configuration_parameters_destination_type: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_lan_configuration_parameters_destination_type: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -151,9 +153,10 @@ _set_destination_type(pef_config_state_data_t *state_data,
                                                                   obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_lan_configuration_parameters_destination_type: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_lan_configuration_parameters_destination_type: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -374,9 +377,10 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
                                                                        obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_lan_configuration_parameters_destination_addresses: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_lan_configuration_parameters_destination_addresses: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -466,9 +470,10 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
                                                                        obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_lan_configuration_parameters_destination_addresses: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_lan_configuration_parameters_destination_addresses: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -612,7 +617,10 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
 
   if (num <= 0)
     {
-      fprintf(stderr, "Invalid Num = %d\n", num);
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "Invalid Num = %d\n", 
+                      num);
       return NULL;
     }
 
