@@ -1,7 +1,7 @@
 libfreeipmi:
 ------------
 * Missing IPMI commands.
-f  - lan-cmds 
+  - lan-cmds 
   - msg-support-cmds
   - chassis-cmds
   - serial-cmds

@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.sun.alpha1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.130.2.4 2008-06-13 23:13:49 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.130.2.5 2008-06-16 21:13:57 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -329,7 +329,7 @@ AC_CHECK_HEADERS([linux/ipmi.h], [], [],
 ])
 AC_CHECK_HEADERS([sys/ipmi.h])
 AC_CHECK_HEADERS([sys/int_types.h])
-AC_CHECK_HEADERS([bmc_intf.h])
+AC_CHECK_HEADERS([bmc_intf.h],, AC_MSG_WARN([cannot build sunbmc driver]))
 
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
