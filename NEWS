@@ -1,3 +1,7 @@
+0.6.5 - XX/XX/XX
+----------------
+o Minor documentation cleanup.
+
 0.6.4 - 06/04/08
 ----------------
 o Do not exit ipmi-sensors or ipmimonitoring for sensors that return
