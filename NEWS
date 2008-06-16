@@ -11,7 +11,7 @@ o Support FreeIPMI configuration file for most tools (bmc-config,
 o Add additional "connection timeout" error message to tools to
   differentiate between no IPMI communication at all vs. failed session
   timeout in the middle of a command's operations.
-o Support --always-prefix option in many tools.
+o Support --always-prefix option in most tools.
 o Support --guid option in bmc-info.
 o Support --get-time and --set-time in ipmi-sel.
 o Support build on Solaris.
