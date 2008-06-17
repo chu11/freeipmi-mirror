@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.13 2008-06-07 16:09:51 chu11 Exp $
+ *  $Id: pstdout.c,v 1.13.4.1 2008-06-17 20:37:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1507,4 +1507,91 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
   if (sighandler_set)
     signal(SIGINT, sighandler_save);
   return exit_code;
+}
+
+int 
+PSTDOUT_PRINTF(pstdout_state_t pstate, const char *format, ...)
+{
+  va_list ap;
+  int rv;
+
+  if (!pstdout_initialized)
+    {
+      pstdout_errnum = PSTDOUT_ERR_UNINITIALIZED;
+      return -1;
+    }
+
+  if (!format)
+    {
+      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
+      return -1;
+    }
+
+  va_start(ap, format);
+  if (!pstate || pstate->magic != PSTDOUT_STATE_MAGIC)
+    rv = vprintf(format, ap);
+  else
+    rv = _pstdout_print(pstate, 0, stdout, format, ap);
+  va_end(ap);
+  return rv;
+}
+
+int 
+PSTDOUT_FPRINTF(pstdout_state_t pstate, FILE *stream, const char *format, ...)
+{
+  va_list ap;
+  int rv;
+
+  if (!pstdout_initialized)
+    {
+      pstdout_errnum = PSTDOUT_ERR_UNINITIALIZED;
+      return -1;
+    }
+
+  if (!stream || !format)
+    {
+      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (stream != stdout && stream != stderr)
+    {
+      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
+      return -1;
+    }
+
+  va_start(ap, format);
+  if (!pstate || pstate->magic != PSTDOUT_STATE_MAGIC)
+    rv = vfprintf(stream, format, ap);
+  else
+    rv = _pstdout_print(pstate, 0, stream, format, ap);
+  va_end(ap);
+  return rv;
+}
+
+void 
+PSTDOUT_PERROR(pstdout_state_t pstate, const char *s)
+{
+  if (!pstdout_initialized)
+    {
+      pstdout_errnum = PSTDOUT_ERR_UNINITIALIZED;
+      return;
+    }
+
+  if (!s)
+    {
+      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
+      return;
+    }
+
+  if (!pstate || pstate->magic != PSTDOUT_STATE_MAGIC)
+    {
+      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
+      return;
+    }
+
+  if (!pstate || pstate->magic != PSTDOUT_STATE_MAGIC)
+    fprintf(stderr, "%s: %s\n", s, strerror(errno));
+  else
+    _pstdout_print_wrapper(pstate, 0, stderr, "%s: %s\n", s, strerror(errno));
 }
