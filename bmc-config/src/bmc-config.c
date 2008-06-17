@@ -33,6 +33,8 @@
 #include "bmc-config-sections.h"
 
 #include "freeipmi-portability.h"
+#include "hostrange.h"
+#include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 
@@ -56,7 +58,9 @@ _bmc_config_state_data_init(bmc_config_state_data_t *state_data)
 }
 
 static int
-_bmc_config (void *arg)
+_bmc_config (pstdout_state_t pstate,
+             const char *hostname,
+             void *arg)
 {
   bmc_config_state_data_t state_data;
   bmc_config_prog_data_t *prog_data;
@@ -71,14 +75,18 @@ _bmc_config (void *arg)
 
   _bmc_config_state_data_init(&state_data);
   state_data.prog_data = prog_data;
+  state_data.pstate = pstate;
 
   if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
-                                        prog_data->args->config_args.common.hostname,
+                                        hostname,
                                         &(prog_data->args->config_args.common),
                                         errmsg,
                                         IPMI_OPEN_ERRMSGLEN)))
     {
-      fprintf(stderr, "%s\n", errmsg);
+      pstdout_fprintf(pstate,
+                      stderr, 
+                      "%s\n", 
+                      errmsg);
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -95,7 +103,8 @@ _bmc_config (void *arg)
         {
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
-              perror("fopen");
+              pstdout_perror(pstate,
+                             "fopen");
               goto cleanup;
             }
           file_opened++;
@@ -110,7 +119,8 @@ _bmc_config (void *arg)
         {
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
-              perror("fopen");
+              pstdout_perror(pstate,
+                             "fopen");
               goto cleanup;
             }
           file_opened++;
@@ -195,9 +205,10 @@ _bmc_config (void *arg)
           if (!config_find_section(sections,
                                    sstr->section_name))
             {
-              fprintf(stderr,
-                      "Unknown section `%s'\n",
-                      sstr->section_name);
+              pstdout_fprintf(pstate,
+                              stderr,
+                              "Unknown section `%s'\n",
+                              sstr->section_name);
               goto cleanup;
             }
           sstr = sstr->next;
@@ -223,8 +234,10 @@ _bmc_config (void *arg)
             if (!(s = config_find_section(sections, 
                                           sstr->section_name)))
               {
-                fprintf(stderr, "## FATAL: Cannot checkout section '%s'\n",
-                        sstr->section_name);
+                pstdout_fprintf(pstate,
+                                stderr, 
+                                "## FATAL: Cannot checkout section '%s'\n",
+                                sstr->section_name);
                 continue;
               }
 
@@ -297,6 +310,7 @@ main (int argc, char *argv[])
   bmc_config_prog_data_t prog_data;
   struct bmc_config_arguments cmd_args;
   int exit_code;
+  int rv;
 
   ipmi_disable_coredump();
 
@@ -305,6 +319,30 @@ main (int argc, char *argv[])
   bmc_config_argp_parse (argc, argv, &cmd_args);
 
   prog_data.args = &cmd_args;
-  exit_code = _bmc_config(&prog_data);
-  return (exit_code);
+
+  if (pstdout_setup(&(prog_data.args->config_args.common.hostname),
+                    prog_data.args->config_args.hostrange.buffer_output,
+                    prog_data.args->config_args.hostrange.consolidate_output,
+                    prog_data.args->config_args.hostrange.fanout,
+                    prog_data.args->config_args.hostrange.eliminate,
+                    prog_data.args->config_args.hostrange.always_prefix) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  if ((rv = pstdout_launch(prog_data.args->config_args.common.hostname,
+                           _bmc_config,
+                           &prog_data)) < 0)
+    {
+      fprintf(stderr,
+              "pstdout_launch: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  exit_code = rv;
+ cleanup:
+  return exit_code;
 }

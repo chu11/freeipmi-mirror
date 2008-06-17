@@ -69,9 +69,10 @@ _get_key(bmc_config_state_data_t *state_data,
                                           obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_channel_security_keys: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_channel_security_keys: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -81,7 +82,9 @@ _get_key(bmc_config_state_data_t *state_data,
 
   if (key_len < buf_len)
     {
-      fprintf(stderr, "ipmi_cmd_set_channel_security_keys: short buffer\n");
+      pstdout_fprintf(state_data->pstate,
+                      stderr, 
+                      "ipmi_cmd_set_channel_security_keys: short buffer\n");
       goto cleanup;
     }
   memcpy(key, buf, buf_len);
@@ -124,9 +127,10 @@ _set_key(bmc_config_state_data_t *state_data,
                                           obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_channel_security_keys: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_channel_security_keys: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

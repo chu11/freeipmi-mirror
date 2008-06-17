@@ -33,6 +33,7 @@
 #include "bmc-config-utils.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 
 /* convenience struct */
 struct channel_access
@@ -166,9 +167,10 @@ _get_channel_access (bmc_config_state_data_t *state_data,
                                    obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_channel_access: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_channel_access: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -248,9 +250,10 @@ _set_channel_access (bmc_config_state_data_t *state_data,
                                    obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_channel_access: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_channel_access: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

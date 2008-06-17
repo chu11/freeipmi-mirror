@@ -32,6 +32,7 @@
 #include "bmc-config-utils.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 
 /* convenience struct */
 struct bmc_authentication_level {
@@ -92,9 +93,10 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
 									     obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -256,9 +258,10 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
                                                                              obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -270,10 +273,12 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
 }
 
 static uint8_t *
-_authentication_level_ptr (const char *section_name,
+_authentication_level_ptr (bmc_config_state_data_t *state_data,
+                           const char *section_name,
                            const char *key_name,
                            struct bmc_authentication_level *al)
 {
+  assert(state_data);
   assert(key_name);
   assert(al);
 
@@ -328,10 +333,11 @@ _authentication_level_ptr (const char *section_name,
   else if (!strcasecmp(key_name, "OEM_Enable_Auth_Type_OEM_Proprietary"))
     return &al->oem_level_oem_proprietary;
 
-  fprintf(stderr, 
-          "Unknown key '%s' in section '%s'\n", 
-          key_name,
-          section_name);
+  pstdout_fprintf(state_data->pstate,
+                  stderr, 
+                  "Unknown key '%s' in section '%s'\n", 
+                  key_name,
+                  section_name);
   return NULL;
 }
 
@@ -349,7 +355,10 @@ _authentication_level_checkout (const char *section_name,
                                                &al)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(flag = _authentication_level_ptr(section_name, kv->key->key_name, &al)))
+  if (!(flag = _authentication_level_ptr(state_data,
+                                         section_name, 
+                                         kv->key->key_name, 
+                                         &al)))
     return CONFIG_ERR_FATAL_ERROR;
 
   if (config_section_update_keyvalue_output(kv, *flag ? "Yes" : "No") < 0)
@@ -372,7 +381,10 @@ _authentication_level_commit (const char *section_name,
                                                &al)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(flag = _authentication_level_ptr(section_name, kv->key->key_name, &al)))
+  if (!(flag = _authentication_level_ptr(state_data,
+                                         section_name, 
+                                         kv->key->key_name, 
+                                         &al)))
     return CONFIG_ERR_FATAL_ERROR;
   
   *flag = same (kv->value_input, "yes");

@@ -33,6 +33,7 @@
 #include "bmc-config-utils.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 
 /* convenience struct */
 struct bmc_generated_arp_control
@@ -71,9 +72,10 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
                                                                            obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -120,9 +122,10 @@ _set_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
                                                                            obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -231,9 +234,10 @@ gratuitous_arp_interval_checkout (const char *section_name,
                                                                          obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
