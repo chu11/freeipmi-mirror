@@ -72,7 +72,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
   if (!prog_data->args->sdr.flush_cache)
     {
       if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
-                                            prog_data->args->config_args.common.hostname,
+                                            hostname,
                                             &(prog_data->args->config_args.common),
                                             errmsg,
                                             IPMI_OPEN_ERRMSGLEN)))

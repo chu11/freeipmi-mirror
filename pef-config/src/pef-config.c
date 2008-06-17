@@ -75,7 +75,7 @@ _pef_config (pstdout_state_t pstate,
   state_data.pstate = pstate;
 
   if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
-                                        prog_data->args->config_args.common.hostname,
+                                        hostname,
                                         &(prog_data->args->config_args.common),
                                         errmsg,
                                         IPMI_OPEN_ERRMSGLEN)))
