@@ -514,7 +514,8 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
         {
           if (!strp)
             {
-              perror("asprintf");
+              pstdout_perror(state_data->pstate,
+                             "asprintf");
               goto cleanup;
             }
         }
@@ -523,7 +524,8 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
     {
       if (!(strp = strdup("Give a valid number")))
         {
-          perror("strdup");
+          pstdout_perror(state_data->pstate,
+                         "strdup");
           goto cleanup;
         }
     }

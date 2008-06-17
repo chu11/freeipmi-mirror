@@ -73,7 +73,8 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
   if (!(str = strdup(section_name)))
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        perror("strdup");
+        pstdout_perror(state_data->pstate, 
+                       "strdup");
       goto cleanup;
     }
 
