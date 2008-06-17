@@ -32,6 +32,8 @@
 #include "ipmi-sensors-config-sections.h"
 
 #include "freeipmi-portability.h"
+#include "hostrange.h"
+#include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-sdr-cache-common.h"
@@ -47,7 +49,9 @@ _ipmi_sensors_config_state_data_init(ipmi_sensors_config_state_data_t *state_dat
 }
 
 static int 
-_ipmi_sensors_config (void *arg)
+_ipmi_sensors_config (pstdout_state_t pstate,
+                      const char *hostname,
+                      void *arg)
 {
   ipmi_sensors_config_state_data_t state_data;
   ipmi_sensors_config_prog_data_t *prog_data;
@@ -62,6 +66,7 @@ _ipmi_sensors_config (void *arg)
   
   _ipmi_sensors_config_state_data_init (&state_data);
   state_data.prog_data = prog_data;
+  state_data.pstate = pstate;
 
   /* Special case, just flush, don't do an IPMI connection */
   if (!prog_data->args->sdr.flush_cache)
@@ -72,7 +77,10 @@ _ipmi_sensors_config (void *arg)
                                             errmsg,
                                             IPMI_OPEN_ERRMSGLEN)))
         {
-          fprintf(stderr, "%s\n", errmsg);
+          pstdout_fprintf(pstate,
+                          stderr, 
+                          "%s\n", 
+                          errmsg);
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }
@@ -80,7 +88,8 @@ _ipmi_sensors_config (void *arg)
 
   if (!(state_data.ipmi_sdr_cache_ctx = ipmi_sdr_cache_ctx_create()))
     {
-      perror ("ipmi_sdr_cache_ctx_create()");
+      pstdout_perror (pstate, 
+                      "ipmi_sdr_cache_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -90,17 +99,19 @@ _ipmi_sensors_config (void *arg)
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sdr_cache_ctx_set_flags(state_data.ipmi_sdr_cache_ctx,
                                        IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
-        fprintf (stderr,
-                 "ipmi_sdr_cache_ctx_set_flags: %s\n",
-                 ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+        pstdout_fprintf (pstate,
+                         stderr,
+                         "ipmi_sdr_cache_ctx_set_flags: %s\n",
+                         ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
 
       if (prog_data->args->config_args.common.hostname)
         {
           if (ipmi_sdr_cache_ctx_set_debug_prefix(state_data.ipmi_sdr_cache_ctx,
                                                   prog_data->args->config_args.common.hostname) < 0)
-            fprintf (stderr,
-                     "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
-                     ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
+                             ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
         }
     }  
 
@@ -142,7 +153,8 @@ _ipmi_sensors_config (void *arg)
         {
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
-              perror("fopen");
+              pstdout_perror(pstate,
+                             "fopen");
               goto cleanup;
             }
           file_opened++;
@@ -157,7 +169,8 @@ _ipmi_sensors_config (void *arg)
         {
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
-              perror("fopen");
+              pstdout_perror(pstate,
+                             "fopen");
               goto cleanup;
             }
           file_opened++;
@@ -242,9 +255,10 @@ _ipmi_sensors_config (void *arg)
           if (!config_find_section(sections,
                                    sstr->section_name))
             {
-              fprintf(stderr,
-                      "Unknown section `%s'\n",
-                      sstr->section_name);
+              pstdout_fprintf(pstate,
+                              stderr,
+                              "Unknown section `%s'\n",
+                              sstr->section_name);
               goto cleanup;
             }
           sstr = sstr->next;
@@ -270,8 +284,10 @@ _ipmi_sensors_config (void *arg)
 
 	    if (!(s = config_find_section(sections, sstr->section_name)))
               {
-                fprintf(stderr, "## FATAL: Cannot checkout section '%s'\n",
-                        sstr->section_name);
+                pstdout_fprintf(pstate,
+                                stderr, 
+                                "## FATAL: Cannot checkout section '%s'\n",
+                                sstr->section_name);
                 continue;
               }
 
@@ -346,7 +362,8 @@ main (int argc, char **argv)
   ipmi_sensors_config_prog_data_t prog_data;
   struct ipmi_sensors_config_arguments cmd_args;
   int exit_code;
-  
+  int rv;
+
   ipmi_disable_coredump();
 
   memset(&prog_data, '\0', sizeof(ipmi_sensors_config_prog_data_t));
@@ -355,8 +372,30 @@ main (int argc, char **argv)
 
   prog_data.args = &cmd_args;
 
-  exit_code = _ipmi_sensors_config (&prog_data);
+  if (pstdout_setup(&(prog_data.args->config_args.common.hostname),
+                    prog_data.args->config_args.hostrange.buffer_output,
+                    prog_data.args->config_args.hostrange.consolidate_output,
+                    prog_data.args->config_args.hostrange.fanout,
+                    prog_data.args->config_args.hostrange.eliminate,
+                    prog_data.args->config_args.hostrange.always_prefix) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
   
+  if ((rv = pstdout_launch(prog_data.args->config_args.common.hostname,
+                           _ipmi_sensors_config,
+                           &prog_data)) < 0)
+    {
+      fprintf(stderr,
+              "pstdout_launch: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+  
+  exit_code = rv;
+ cleanup:
   return exit_code;
 }
 

@@ -31,6 +31,7 @@
 #include "ipmi-sensors-config-utils.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
@@ -78,8 +79,9 @@ _get_sdr_decoding_data(ipmi_sensors_config_state_data_t *state_data,
   if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(*analog_data_format))
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "Attempting to decode non-analog threshold\n");
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Attempting to decode non-analog threshold\n");
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -88,8 +90,9 @@ _get_sdr_decoding_data(ipmi_sensors_config_state_data_t *state_data,
   if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(*linearization))
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "Cannot decode non-linear threshold\n");
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Cannot decode non-linear threshold\n");
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -141,9 +144,10 @@ _calculate_threshold(ipmi_sensors_config_state_data_t *state_data,
                                 threshold_calc) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf (stderr,
-                 "ipmi_sensor_decode_value: %s\n",
-                 strerror(errno));
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_sensor_decode_value: %s\n",
+                         strerror(errno));
       goto cleanup;
     }
 
@@ -193,9 +197,10 @@ threshold_checkout (const char *section_name,
                                       obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_sensor_thresholds: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_sensor_thresholds: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -241,10 +246,11 @@ threshold_checkout (const char *section_name,
     {
       /* Inconsistency w/ the SDR, should be readable */
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "%s:%s - threshold not readable\n",
-                section_name,
-                kv->key->key_name);
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "%s:%s - threshold not readable\n",
+                        section_name,
+                        kv->key->key_name);
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -310,9 +316,10 @@ _calculate_threshold_raw(ipmi_sensors_config_state_data_t *state_data,
   if (*ptr != '\0')
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf (stderr,
-                 "Invalid input: %s\n",
-                 threshold_input);
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "Invalid input: %s\n",
+                         threshold_input);
       /* fatal error, should have been validated earlier */
       goto cleanup;
     }
@@ -327,9 +334,10 @@ _calculate_threshold_raw(ipmi_sensors_config_state_data_t *state_data,
                                     threshold_raw) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf (stderr,
-                 "ipmi_sensor_decode_value: %s\n",
-                 strerror(errno));
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_sensor_decode_value: %s\n",
+                         strerror(errno));
       goto cleanup;
     }
 
@@ -414,9 +422,10 @@ threshold_commit (const char *section_name,
                                       obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_sensor_thresholds: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_sensor_thresholds: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -619,9 +628,10 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   if ((ret = convert_id_string (state_data, id_string)) != CONFIG_ERR_SUCCESS)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr, 
-                "convert_id_string: %s\n",
-                strerror(errno));
+        pstdout_fprintf(state_data->pstate,
+                        stderr, 
+                        "convert_id_string: %s\n",
+                        strerror(errno));
       rv = ret;
       goto cleanup;
     }

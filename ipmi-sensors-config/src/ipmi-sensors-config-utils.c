@@ -30,6 +30,7 @@
 #include "ipmi-sensors-config-utils.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 
 config_err_t 
 convert_id_string (ipmi_sensors_config_state_data_t *state_data, 
@@ -79,9 +80,10 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
   if (!(ptr = strchr(str, '_')))
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "Invalid section_name: %s\n",
-                section_name);
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Invalid section_name: %s\n",
+                        section_name);
       goto cleanup;
     }
 
@@ -91,9 +93,10 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
   if (*ptr != '\0')
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "Invalid section_name: %s\n",
-                section_name);
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Invalid section_name: %s\n",
+                        section_name);
       goto cleanup;
     }
     
@@ -101,9 +104,10 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
                                       record_id) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "Record_id not found: %u\n",
-                record_id);
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Record_id not found: %u\n",
+                        record_id);
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -113,9 +117,10 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
                                         *sdr_record_len)) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_sdr_cache_record_read: %s\n",
-                ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_sdr_cache_record_read: %s\n",
+                        ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
