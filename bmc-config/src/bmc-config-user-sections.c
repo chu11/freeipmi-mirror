@@ -114,42 +114,22 @@ _get_user_access(bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "user_ipmi_messaging",
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "user_ipmi_messaging", &val);
   ua->user_ipmi_messaging = val;
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "user_link_authentication", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "user_link_authentication", &val);
   ua->user_link_authentication = val;
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "user_restricted_to_callback", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "user_restricted_to_callback", &val);
   ua->user_restricted_to_callback = val;
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "user_privilege_level_limit", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "user_privilege_level_limit", &val);
   ua->privilege_limit = val;
 
   /* XXX: no way to retrieve, deal with this later */
   ua->session_limit = 0;
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "user_id_enable_status", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "user_id_enable_status", &val);
   ua->user_id_enable_status = val;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -242,14 +222,10 @@ username_checkout (const char *section_name,
   if (userid == 1)
     strcpy ((char *)username, "NULL");
   else
-    {
-      if (Fiid_obj_get_data (state_data->pstate,
-                             obj_cmd_rs,
-                             "user_name",
-                             username,
-                             IPMI_MAX_USER_NAME_LENGTH) < 0)
-        goto cleanup;
-    }
+    _FIID_OBJ_GET_DATA (obj_cmd_rs,
+                        "user_name",
+                        username,
+                        IPMI_MAX_USER_NAME_LENGTH);
 
   /* for backwards compatability with older bmc-configs */
   if (state_data->prog_data->args->config_args.action == CONFIG_ACTION_DIFF
@@ -514,8 +490,8 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
     {
       uint64_t comp_code;
 
-      if (Fiid_obj_get(state_data->pstate,
-                       obj_cmd_rs, 
+      /* don't use wrapper - non-fatal error */
+      if (fiid_obj_get(obj_cmd_rs, 
                        "comp_code",
                        &comp_code) < 0)
         {
@@ -660,8 +636,8 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
     {
       uint64_t comp_code;
 
-      if (Fiid_obj_get(state_data->pstate,
-                       obj_cmd_rs, 
+      /* don't use wrapper - non-fatal error */
+      if (fiid_obj_get(obj_cmd_rs, 
                        "comp_code",
                        &comp_code) < 0)
         {
@@ -1050,11 +1026,7 @@ sol_payload_access_checkout (const char *section_name,
     }
   
   /* standard_payload_1 is the SOL payload type */
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "standard_payload_1", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "standard_payload_1", &val);
   
   if (config_section_update_keyvalue_output(state_data->pstate,
                                             kv,

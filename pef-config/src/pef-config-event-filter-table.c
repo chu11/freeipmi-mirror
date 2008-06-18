@@ -115,173 +115,88 @@ _get_event_filter_table (struct pef_config_state_data *state_data,
     }
   
 #if 0
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "filter_number", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "filter_number", &val);
 #endif
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "filter_configuration.type", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "filter_configuration.type", &val);
   eft->filter_type = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "filter_configuration.filter", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "filter_configuration.filter", &val);
   eft->enable_filter = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "event_filter_action.alert", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.alert", &val);
   eft->event_filter_action_alert = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "event_filter_action.power_off", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.power_off", &val);
   eft->event_filter_action_power_off = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "event_filter_action.reset", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.reset", &val);
   eft->event_filter_action_reset = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "event_filter_action.power_cycle", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.power_cycle", &val);
   eft->event_filter_action_power_cycle = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "event_filter_action.oem", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.oem", &val);
   eft->event_filter_action_oem = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "event_filter_action.diagnostic_interrupt", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.diagnostic_interrupt", &val);
   eft->event_filter_action_diagnostic_interrupt = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "event_filter_action.group_control_operation", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.group_control_operation", &val);
   eft->event_filter_action_group_control_operation = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "alert_policy_number.policy_number", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "alert_policy_number.policy_number", &val);
   eft->alert_policy_number = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "alert_policy_number.group_control_selector", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "alert_policy_number.group_control_selector", &val);
   eft->group_control_selector = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "event_severity", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_severity", &val);
   eft->event_severity = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "generator_id_byte1", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "generator_id_byte1", &val);
   eft->generator_id_byte_1 = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "generator_id_byte2", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "generator_id_byte2", &val);
   eft->generator_id_byte_2 = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "sensor_type", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "sensor_type", &val);
   eft->sensor_type = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "sensor_number", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "sensor_number", &val);
   eft->sensor_number = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "event_trigger", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_trigger", &val);
   eft->event_trigger = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "event_data1_offset_mask", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data1_offset_mask", 
+                    &val);
   eft->event_data1_offset_mask = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "event_data1_AND_mask", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data1_AND_mask", &val);
   eft->event_data1_and_mask = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "event_data1_compare1", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data1_compare1", &val);
   eft->event_data1_compare1 = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "event_data1_compare2", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data1_compare2", &val);
   eft->event_data1_compare2 = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "event_data2_AND_mask", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data2_AND_mask", &val);
   eft->event_data2_and_mask = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "event_data2_compare1", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data2_compare1", &val);
   eft->event_data2_compare1 = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "event_data2_compare2", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data2_compare2", &val);
   eft->event_data2_compare2 = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "event_data3_AND_mask", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data3_AND_mask", &val);
   eft->event_data3_and_mask = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "event_data3_compare1", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data3_compare1", &val);
   eft->event_data3_compare1 = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "event_data3_compare2",
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data3_compare2", &val);
   eft->event_data3_compare2 = val;
 
   rv = CONFIG_ERR_SUCCESS;

@@ -57,11 +57,7 @@ power_restore_policy_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "current_power_state.power_restore_policy", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_restore_policy", &val);
 
   if (config_section_update_keyvalue_output(state_data->pstate,
                                             kv,

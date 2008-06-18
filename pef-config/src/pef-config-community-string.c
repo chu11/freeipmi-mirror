@@ -71,12 +71,10 @@ community_string_checkout (const char *section_name,
     }
   
   memset(community_string,'\0', IPMI_MAX_COMMUNITY_STRING_LENGTH+1);
-  if (Fiid_obj_get_data (state_data->pstate, 
-                         obj_cmd_rs,
-                         "community_string",
-                         (uint8_t *)community_string,
-                         IPMI_MAX_COMMUNITY_STRING_LENGTH+1) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA (obj_cmd_rs,
+                      "community_string",
+                      (uint8_t *)community_string,
+                      IPMI_MAX_COMMUNITY_STRING_LENGTH+1);
 
   if (config_section_update_keyvalue_output(state_data->pstate, 
                                             kv,

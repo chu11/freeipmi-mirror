@@ -121,8 +121,8 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
       goto cleanup;
     }
   
-  if (Fiid_obj_get(state_data->pstate,
-                   obj_cmd_rs,
+  /* don't use wrapper - non-fatal error */
+  if (fiid_obj_get(obj_cmd_rs,
 		   "payload_channel",
 		   &val) < 0)
     {
@@ -177,8 +177,8 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
       goto cleanup;
     }
   
-  if (Fiid_obj_get(state_data->pstate,
-                   obj_cmd_rs,
+  /* don't use wrapper - non-fatal error */
+  if (fiid_obj_get(obj_cmd_rs,
                    "max_channel_user_ids",
                    &val) < 0)
     {

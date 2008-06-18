@@ -91,11 +91,7 @@ enable_sol_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "sol_enable", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "sol_enable", &val);
   
   if (config_section_update_keyvalue_output(state_data->pstate,
                                             kv,
@@ -184,25 +180,13 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "sol_privilege_level", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "sol_privilege_level", &val);
   sa->sol_privilege_level = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "force_sol_payload_authentication", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "force_sol_payload_authentication", &val);
   sa->force_sol_payload_authentication = val;
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "force_sol_payload_encryption", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "force_sol_payload_encryption", &val);
   sa->force_sol_payload_encryption = val;
   
   rv = CONFIG_ERR_SUCCESS;
@@ -401,18 +385,10 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "character_accumulate_interval", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "character_accumulate_interval", &val);
   it->character_accumulate_interval = val;
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs,
-                    "character_send_threshold", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "character_send_threshold", &val);
   it->character_send_threshold = val;
   
   rv = CONFIG_ERR_SUCCESS;
@@ -573,18 +549,10 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "retry_count", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "retry_count", &val);
   sr->retry_count = val;
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "retry_interval", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "retry_interval", &val);
   sr->retry_interval = val;
   
   rv = CONFIG_ERR_SUCCESS;
@@ -742,11 +710,7 @@ non_volatile_bit_rate_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "bit_rate", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "bit_rate", &val);
 
   if (config_section_update_keyvalue_output(state_data->pstate,
                                             kv, 
@@ -834,11 +798,7 @@ volatile_bit_rate_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "bit_rate", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "bit_rate", &val);
 
   if (config_section_update_keyvalue_output(state_data->pstate,
                                             kv, 
@@ -926,11 +886,7 @@ sol_payload_port_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "port_number", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "port_number", &val);
 
   if (config_section_update_keyvalue_output_int(state_data->pstate,
                                                 kv,

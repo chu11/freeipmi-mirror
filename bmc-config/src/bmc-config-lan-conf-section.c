@@ -82,11 +82,7 @@ ip_address_source_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "ip_address_source",
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "ip_address_source", &val);
 
   if (config_section_update_keyvalue_output(state_data->pstate,
                                             kv,
@@ -175,12 +171,10 @@ ip_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (state_data->pstate,
-                         obj_cmd_rs, 
-                         "ip_address", 
-                         ip_address_bytes,
-                         4) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                      "ip_address", 
+                      ip_address_bytes,
+                      4);
 
   memset(ip_address_str, '\0', BMC_MAXIPADDRLEN+1);
   snprintf(ip_address_str, 
@@ -284,12 +278,10 @@ mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (state_data->pstate,
-                         obj_cmd_rs, 
-                         "mac_address", 
-                         mac_address_bytes,
-                         6) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                      "mac_address", 
+                      mac_address_bytes,
+                      6);
   
   memset(mac_address_str, '\0', BMC_MAXMACADDRLEN+1);
   snprintf(mac_address_str, 
@@ -396,12 +388,10 @@ subnet_mask_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (state_data->pstate,
-                         obj_cmd_rs, 
-                         "subnet_mask", 
-                         subnet_mask_bytes,
-                         4) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                      "subnet_mask", 
+                      subnet_mask_bytes,
+                      4);
 
   memset(subnet_mask_str, '\0', BMC_MAXIPADDRLEN + 1);
   snprintf (subnet_mask_str, 
@@ -505,12 +495,10 @@ default_gateway_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (state_data->pstate,
-                         obj_cmd_rs, 
-                         "ip_address", 
-                         ip_address_bytes,
-                         4) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                      "ip_address", 
+                      ip_address_bytes,
+                      4);
   
   memset(ip_address_str, '\0', BMC_MAXIPADDRLEN + 1);
   snprintf (ip_address_str, 
@@ -615,12 +603,10 @@ default_gateway_mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (state_data->pstate,
-                         obj_cmd_rs, 
-                         "mac_address", 
-                         mac_address_bytes,
-                         6) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                      "mac_address", 
+                      mac_address_bytes,
+                      6);
   
   memset(mac_address_str, '\0', BMC_MAXMACADDRLEN + 1);
   snprintf (mac_address_str, 
@@ -727,12 +713,10 @@ backup_gateway_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (state_data->pstate,
-                         obj_cmd_rs, 
-                         "ip_address", 
-                         ip_address_bytes,
-                         4) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                      "ip_address", 
+                      ip_address_bytes,
+                      4);
   
   memset(ip_address_str, '\0', BMC_MAXIPADDRLEN+1);
   snprintf (ip_address_str, 
@@ -836,12 +820,10 @@ backup_gateway_mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (state_data->pstate,
-                         obj_cmd_rs, 
-                         "mac_address", 
-                         mac_address_bytes,
-                         6) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                      "mac_address", 
+                      mac_address_bytes,
+                      6);
   
   memset(mac_address_str, '\0', BMC_MAXMACADDRLEN+1);
   snprintf (mac_address_str, 
@@ -947,18 +929,10 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs,
-                    "vlan_id", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "vlan_id", &val);
   vi->vlan_id = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "vlan_id_enable",
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "vlan_id_enable", &val);
   vi->vlan_id_enable = val;
   
   rv = CONFIG_ERR_SUCCESS;
@@ -1127,11 +1101,7 @@ vlan_priority_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "vlan_priority", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "vlan_priority", &val);
 
   if (config_section_update_keyvalue_output_int(state_data->pstate,
                                                 kv,

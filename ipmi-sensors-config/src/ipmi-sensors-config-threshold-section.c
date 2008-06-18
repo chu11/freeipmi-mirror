@@ -239,11 +239,7 @@ threshold_checkout (const char *section_name,
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs,
-                    readable_str, 
-                    &readable) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, readable_str, &readable);
 
   if (!readable)
     {
@@ -258,11 +254,7 @@ threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    threshold_str, 
-                    &threshold_raw) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, threshold_str, &threshold_raw);
 
   if ((ret = _calculate_threshold(state_data,
                                   sdr_record,

@@ -27,6 +27,11 @@
 
 	* common/src/tool-sdr-cache-common.c: Use PSTDOUT_PRINTF,
 	PSTDOUT_FPRINTF, PSTDOUT_PERROR appropriately.
+
+	* common/src/tool-fiid-wrappers.h (_FIID_OBJ_GET_DATA): Remove
+	__len in parameters.
+
+	* bmc-info/, ipmi-fru/: Adjust for _FIID_OBJ_GET_DATA change.
 	
 2008-06-13 Albert Chu <chu11@llnl.gov>
 

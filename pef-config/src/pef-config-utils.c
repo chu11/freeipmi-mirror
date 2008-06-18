@@ -105,8 +105,8 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
       goto cleanup;
     }
   
-  if (Fiid_obj_get(state_data->pstate,
-                   obj_cmd_rs,
+  /* don't use wrapper - non-fatal error */
+  if (fiid_obj_get(obj_cmd_rs,
                    "number_of_lan_destinations",
                    &val) < 0)
     {
@@ -157,8 +157,8 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *
       goto cleanup;
     }
   
-  if (Fiid_obj_get(state_data->pstate,
-                   obj_cmd_rs,
+  /* don't use wrapper - non-fatal error */
+  if (fiid_obj_get(obj_cmd_rs,
                    "number_of_alert_strings",
                    &val) < 0)
     {
@@ -209,8 +209,8 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
       goto cleanup;
     }
   
-  if (Fiid_obj_get(state_data->pstate,
-                   obj_cmd_rs,
+  /* don't use wrapper - non-fatal error */
+  if (fiid_obj_get(obj_cmd_rs,
                    "number_of_alert_policy_entries",
                    &val) < 0)
     {
@@ -261,8 +261,8 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *
       goto cleanup;
     }
 
-  if (Fiid_obj_get(state_data->pstate,
-                   obj_cmd_rs,
+  /* don't use wrapper - non-fatal error */
+  if (fiid_obj_get(obj_cmd_rs,
                    "number_of_event_filters",
                    &val) < 0)
     {

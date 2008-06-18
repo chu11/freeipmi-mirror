@@ -80,18 +80,10 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "filter_number", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "filter_number", &val);
   ask->event_filter_number = val;
 
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "set_number_for_string", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "set_number_for_string", &val);
   ask->alert_string_set = val;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -273,12 +265,10 @@ alert_string_checkout (const char *section_name,
        * whatever is passed in, so don't check for overflow errors
        * from Fiid_obj_get_data.
        */
-      if (Fiid_obj_get_data (state_data->pstate, 
-                             obj_cmd_rs,
-                             "string_data",
-                             alert_string + (i * 16),
-                             PEF_ALERT_STRING_MAX_LEN - (i * 16)) < 0)
-        goto cleanup;
+      _FIID_OBJ_GET_DATA (obj_cmd_rs,
+                          "string_data",
+                          alert_string + (i * 16),
+                          PEF_ALERT_STRING_MAX_LEN - (i * 16));
 
       /* Check if we've found a nul character */
       for (j = 0; j < 16; j++)

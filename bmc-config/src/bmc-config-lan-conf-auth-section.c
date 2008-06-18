@@ -101,179 +101,79 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "callback_level.none", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "callback_level.none", &val);
   al->callback_level_none = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "callback_level.md2", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "callback_level.md2", &val);
   al->callback_level_md2 = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "callback_level.md5", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "callback_level.md5", &val);
   al->callback_level_md5 = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "callback_level.straight_password", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "callback_level.straight_password", &val);
   al->callback_level_straight_password = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "callback_level.oem_proprietary", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "callback_level.oem_proprietary", &val);
   al->callback_level_oem_proprietary = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "user_level.none", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "user_level.none", &val);
   al->user_level_none = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "user_level.md2", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "user_level.md2", &val);
   al->user_level_md2 = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "user_level.md5", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "user_level.md5", &val);
   al->user_level_md5 = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "user_level.straight_password", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "user_level.straight_password", &val);
   al->user_level_straight_password = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs,
-                    "user_level.oem_proprietary", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "user_level.oem_proprietary", &val);
   al->user_level_oem_proprietary = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "operator_level.none", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "operator_level.none", &val);
   al->operator_level_none = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "operator_level.md2", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "operator_level.md2", &val);
   al->operator_level_md2 = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "operator_level.md5", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "operator_level.md5", &val);
   al->operator_level_md5 = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "operator_level.straight_password",
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "operator_level.straight_password", &val);
   al->operator_level_straight_password = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "operator_level.oem_proprietary", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "operator_level.oem_proprietary", &val);
   al->operator_level_oem_proprietary = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "admin_level.none", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "admin_level.none", &val);
   al->admin_level_none = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "admin_level.md2", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "admin_level.md2", &val);
   al->admin_level_md2 = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "admin_level.md5", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "admin_level.md5", &val);
   al->admin_level_md5 = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "admin_level.straight_password", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "admin_level.straight_password", &val);
   al->admin_level_straight_password = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "admin_level.oem_proprietary", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "admin_level.oem_proprietary", &val);
   al->admin_level_oem_proprietary = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "oem_level.none", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "oem_level.none", &val);
   al->oem_level_none = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs,
-                    "oem_level.md2",
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "oem_level.md2", &val);
   al->oem_level_md2 = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "oem_level.md5", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "oem_level.md5", &val);
   al->oem_level_md5 = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "oem_level.straight_password", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "oem_level.straight_password", &val);
   al->oem_level_straight_password = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "oem_level.oem_proprietary", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "oem_level.oem_proprietary", &val);
   al->oem_level_oem_proprietary = val;
   
   rv = CONFIG_ERR_SUCCESS;

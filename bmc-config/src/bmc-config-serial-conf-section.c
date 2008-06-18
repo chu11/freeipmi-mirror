@@ -88,32 +88,16 @@ _get_connection_mode (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "basic_mode", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "basic_mode", &val);
   cm->basic_mode = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "ppp_mode", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "ppp_mode", &val);
   cm->ppp_mode = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "terminal_mode", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "terminal_mode", &val);
   cm->terminal_mode = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "connect_mode",
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "connect_mode", &val);
   cm->connect_mode = val;
   
   rv = CONFIG_ERR_SUCCESS;
@@ -349,11 +333,7 @@ page_blackout_interval_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "page_blackout_interval", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "page_blackout_interval", &val);
 
   if (config_section_update_keyvalue_output_int(state_data->pstate,
                                                 kv,
@@ -442,11 +422,7 @@ call_retry_interval_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "call_retry_interval", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "call_retry_interval", &val);
 
   if (config_section_update_keyvalue_output_int(state_data->pstate,
                                                 kv,
@@ -535,25 +511,13 @@ _get_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "dtr_hangup", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "dtr_hangup", &val);
   cs->dtr_hangup = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "flow_control", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "flow_control", &val);
   cs->flow_control = val;
   
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "bit_rate", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "bit_rate", &val);
   cs->bit_rate = val;
   
   rv = CONFIG_ERR_SUCCESS;

@@ -78,12 +78,11 @@ _get_key(bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((buf_len = Fiid_obj_get_data (state_data->pstate,
-                                    obj_cmd_rs, 
-                                    "key_value", 
-                                    buf, 
-                                    CONFIG_PARSE_BUFLEN)) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA_LEN (buf_len,
+                          obj_cmd_rs, 
+                          "key_value", 
+                          buf, 
+                          CONFIG_PARSE_BUFLEN);
 
   if (key_len < buf_len)
     {

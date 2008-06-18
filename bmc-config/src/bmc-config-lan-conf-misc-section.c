@@ -80,18 +80,10 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "bmc_generated_gratuitous_arps", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "bmc_generated_gratuitous_arps", &val);
   ac->bmc_generated_gratuitous_arps = val;
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs,
-                    "bmc_generated_arp_responses", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "bmc_generated_arp_responses", &val);
   ac->bmc_generated_arp_responses = val;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -250,11 +242,7 @@ gratuitous_arp_interval_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "gratuitous_arp_interval", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "gratuitous_arp_interval", &val);
 
   if (config_section_update_keyvalue_output_int(state_data->pstate,
                                                 kv, 

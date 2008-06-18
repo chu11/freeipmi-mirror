@@ -81,53 +81,27 @@ _get_alert_policy_table (struct pef_config_state_data *state_data,
     }
 
 #if 0
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "alert_policy_entry_number", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "alert_policy_entry_number", &val);
 #endif
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "policy_number.policy_type", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "policy_number.policy_type", &val);
   apt->policy_type = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "policy_number.enabled", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "policy_number.enabled", &val);
   apt->policy_enabled = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "policy_number.policy_number", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "policy_number.policy_number", &val);
   apt->policy_number = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "channel_destination.destination_selector",
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "channel_destination.destination_selector", &val);
   apt->destination_selector = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "channel_destination.channel_number", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "channel_destination.channel_number", &val);
   apt->channel_number = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "alert_string_key.alert_string_set_selector", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "alert_string_key.alert_string_set_selector", &val);
   apt->alert_string_set_selector = val;
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "alert_string_key.event_specific_alert_string", 
-                    &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "alert_string_key.event_specific_alert_string", &val);
   apt->event_specific_alert_string = val;
   
   rv = CONFIG_ERR_SUCCESS;

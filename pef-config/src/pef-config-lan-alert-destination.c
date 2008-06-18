@@ -95,32 +95,16 @@ _get_destination_type(pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "destination_type",
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "destination_type", &val);
   dt->alert_destination_type = val;
 
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "alert_acknowledge", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "alert_acknowledge", &val);
   dt->alert_acknowledge = val;
 
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "alert_acknowledge_timeout", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "alert_acknowledge_timeout", &val);
   dt->alert_acknowledge_timeout = val;
 
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs,
-                    "retries", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "retries", &val);
   dt->alert_retries = val;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -403,19 +387,13 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (state_data->pstate, 
-                    obj_cmd_rs, 
-                    "gateway_selector", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "gateway_selector", &val);
   da->alert_gateway = val;
 
-  if (Fiid_obj_get_data (state_data->pstate, 
-                         obj_cmd_rs,
-                         "alerting_ip_address",
-                         alert_ip_address_bytes,
-                         4) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA (obj_cmd_rs,
+                      "alerting_ip_address",
+                      alert_ip_address_bytes,
+                      4);
   
   memset(da->alert_ip, '\0', PEF_CONFIG_MAXIPADDRLEN+1);
   snprintf (da->alert_ip,
@@ -426,12 +404,10 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
             alert_ip_address_bytes[2],
             alert_ip_address_bytes[3]);
 
-  if (Fiid_obj_get_data (state_data->pstate, 
-                         obj_cmd_rs,
-                         "alerting_mac_address",
-                         alert_mac_address_bytes,
-                         6) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA (obj_cmd_rs,
+                      "alerting_mac_address",
+                      alert_mac_address_bytes,
+                      6);
   
   memset(da->alert_mac, '\0', PEF_CONFIG_MAXMACADDRLEN+1);
   snprintf (da->alert_mac,

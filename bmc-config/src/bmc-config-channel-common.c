@@ -175,42 +175,22 @@ _get_channel_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "ipmi_messaging_access_mode",
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "ipmi_messaging_access_mode", &val);
   ch->access_mode = val;
 
   /* yes/no is backwards here, see ipmi spec */
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "user_level_authentication", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "user_level_authentication", &val);
   ch->user_level_authentication = (val ? 0 : 1);
 
   /* yes/no is backwards here, see ipmi spec */
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "per_message_authentication", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "per_message_authentication", &val);
   ch->per_message_authentication = (val ? 0 : 1);
 
   /* yes/no is backwards here, see ipmi spec */
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "pef_alerting",
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "pef_alerting", &val);
   ch->pef_alerting = (val ? 0 : 1);
 
-  if (Fiid_obj_get (state_data->pstate,
-                    obj_cmd_rs, 
-                    "channel_privilege_level_limit", 
-                    &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "channel_privilege_level_limit", &val);
   ch->channel_privilege_limit = val;
 
   rv = CONFIG_ERR_SUCCESS;
