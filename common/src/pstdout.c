@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.13.4.2 2008-06-18 17:41:52 chu11 Exp $
+ *  $Id: pstdout.c,v 1.13.4.3 2008-06-18 20:44:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1557,14 +1557,10 @@ PSTDOUT_FPRINTF(pstdout_state_t pstate, FILE *stream, const char *format, ...)
       return -1;
     }
 
-  if (stream != stdout && stream != stderr)
-    {
-      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
-      return -1;
-    }
-
   va_start(ap, format);
-  if (!pstate || pstate->magic != PSTDOUT_STATE_MAGIC)
+  if (!pstate 
+      || pstate->magic != PSTDOUT_STATE_MAGIC
+      || (stream != stdout && stream != stderr))
     rv = vfprintf(stream, format, ap);
   else
     rv = _pstdout_print(pstate, 0, stream, format, ap);

@@ -47,7 +47,6 @@ config_checkout_section(pstdout_state_t pstate,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
   config_err_t this_ret;
-  pstdout_state_t l_pstate = NULL;
 
   assert(section);
   assert(cmd_args);
@@ -55,11 +54,6 @@ config_checkout_section(pstdout_state_t pstate,
 
   if (section->flags & CONFIG_DO_NOT_CHECKOUT)
     return CONFIG_ERR_SUCCESS;
-
-  if (fp == stdout || fp == stderr)
-    l_pstate = pstate;
-  else
-    l_pstate = NULL;
 
   /* if no keyvalues specified by user, we want to checkout all keys,
    * so build keyvalues list appropriately
@@ -106,7 +100,7 @@ config_checkout_section(pstdout_state_t pstate,
         }
     }
   
-  PSTDOUT_FPRINTF(l_pstate,
+  PSTDOUT_FPRINTF(pstate,
                   fp, 
                   "Section %s\n", 
                   section->section_name);
@@ -134,7 +128,7 @@ config_checkout_section(pstdout_state_t pstate,
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
         {
           if (cmd_args->verbose)
-            PSTDOUT_FPRINTF (l_pstate,
+            PSTDOUT_FPRINTF (pstate,
                              fp, 
                              "\t## ERROR: Unable to checkout %s:%s\n",
                              section->section_name,
@@ -147,7 +141,7 @@ config_checkout_section(pstdout_state_t pstate,
 
           assert(kv->value_output);
 
-          PSTDOUT_FPRINTF(l_pstate,
+          PSTDOUT_FPRINTF(pstate,
                           fp, 
                           "\t## %s\n", 
                           kv->key->description);
@@ -194,20 +188,20 @@ config_checkout_section(pstdout_state_t pstate,
                                "\t%s", 
                                kv->key->key_name);
 
-          PSTDOUT_FPRINTF(l_pstate,
+          PSTDOUT_FPRINTF(pstate,
                           fp,
                           "%s",
                           obuf);
 
           while (key_len <= CONFIG_CHECKOUT_LINE_LEN)
             {
-              PSTDOUT_FPRINTF(l_pstate,
+              PSTDOUT_FPRINTF(pstate,
                               fp, 
                               " ");
               key_len++;
             }
 
-          PSTDOUT_FPRINTF(l_pstate,
+          PSTDOUT_FPRINTF(pstate,
                           fp,
                           "%s\n", 
                           kv->value_output);
@@ -216,7 +210,7 @@ config_checkout_section(pstdout_state_t pstate,
       kv = kv->next;
     }
 
-  PSTDOUT_FPRINTF(l_pstate,
+  PSTDOUT_FPRINTF(pstate,
                   fp, 
                   "EndSection\n");
   rv = ret;

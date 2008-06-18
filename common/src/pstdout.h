@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.h,v 1.7.10.3 2008-06-18 17:43:28 chu11 Exp $
+ *  $Id: pstdout.h,v 1.7.10.4 2008-06-18 20:44:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -263,7 +263,7 @@ int PSTDOUT_PRINTF(pstdout_state_t pstate, const char *format, ...);
 /* PSTDOUT_FPRINTF
  *
  * Identical to 'pstdout_fprintf', but will call standard fprintf() if an invalid
- * pstate is passed in (i.e. a NULL pstate).
+ * pstate or stream is passed in (i.e. a NULL pstate).
  */
 int PSTDOUT_FPRINTF(pstdout_state_t pstate, FILE *stream, const char *format, ...);
 
