@@ -137,6 +137,8 @@ config_checkout_section(pstdout_state_t pstate,
         } 
       else
         {
+          char obuf[CONFIG_OUTPUT_BUFLEN];
+
           assert(kv->value_output);
 
           PSTDOUT_FPRINTF(pstate,
@@ -154,30 +156,42 @@ config_checkout_section(pstdout_state_t pstate,
            * Some other keys may or may not have a value, depending on
            * the IPMI version or the implementation.
            */
+
+          /* achu:
+           * 
+           * The pstdout library does not return string lengths like 
+           * printf/fprintf do.  So we have to calculate it via
+           * snprintf.
+           */
           if (kv->key->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT
               || kv->key->flags & CONFIG_UNDEFINED)
-            key_len = PSTDOUT_FPRINTF(pstate,
-                                      fp, 
-                                      "\t## %s", 
-                                      kv->key->key_name);
+            key_len = snprintf(obuf, 
+                               CONFIG_OUTPUT_BUFLEN,
+                               "\t## %s", 
+                               kv->key->key_name);
           else if (kv->key->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY)
             {
               if (kv->value_output && strlen(kv->value_output))
-                key_len = PSTDOUT_FPRINTF(pstate,
-                                          fp, 
-                                          "\t%s", 
-                                          kv->key->key_name);
+                key_len = snprintf(obuf, 
+                                   CONFIG_OUTPUT_BUFLEN,
+                                   "\t%s", 
+                                   kv->key->key_name);
               else
-                key_len = PSTDOUT_FPRINTF(pstate,
-                                          fp, 
-                                          "\t## %s", 
-                                          kv->key->key_name);
+                key_len = snprintf(obuf, 
+                                   CONFIG_OUTPUT_BUFLEN,
+                                   "\t## %s", 
+                                   kv->key->key_name);
             }
           else
-            key_len = PSTDOUT_FPRINTF(pstate,
-                                      fp, 
-                                      "\t%s", 
-                                      kv->key->key_name);
+            key_len = snprintf(obuf, 
+                               CONFIG_OUTPUT_BUFLEN,
+                               "\t%s", 
+                               kv->key->key_name);
+
+          PSTDOUT_FPRINTF(pstate,
+                          fp,
+                          "%s",
+                          obuf);
 
           while (key_len <= CONFIG_CHECKOUT_LINE_LEN)
             {

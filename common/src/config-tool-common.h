@@ -32,6 +32,7 @@
 #define CONFIG_CHECKOUT_LINE_LEN                           45
 
 #define CONFIG_PARSE_BUFLEN                                4096
+#define CONFIG_OUTPUT_BUFLEN                               8192
 
 #define CONFIG_MAX_SECTION_NAME_LEN                        128
 #define CONFIG_MAX_DESCRIPTION_LEN                         1024

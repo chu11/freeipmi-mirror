@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.13.4.1 2008-06-17 20:37:50 chu11 Exp $
+ *  $Id: pstdout.c,v 1.13.4.2 2008-06-18 17:41:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -664,6 +664,9 @@ _pstdout_print(pstdout_state_t pstate,
 
       linebuflen += PSTDOUT_BUFLEN;
     }
+
+  if (rv < 0)
+    rv = 0;
 
   pstdout_errnum = PSTDOUT_ERR_SUCCESS;
  cleanup:

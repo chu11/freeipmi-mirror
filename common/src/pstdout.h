@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.h,v 1.7.10.1 2008-06-17 20:37:50 chu11 Exp $
+ *  $Id: pstdout.h,v 1.7.10.2 2008-06-18 17:41:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -214,6 +214,10 @@ int pstdout_hostnames_count(const char *hostnames);
  * executed by 'pstdout_launch'.
  *
  * Returns number of characters printed, -1 on error.
+ *
+ * Note that the return value of number of characters printed may be
+ * 0, because data is being buffered for output on a later
+ * pstdout_printf call.
  */
 int pstdout_printf(pstdout_state_t pstate, const char *format, ...);
 
@@ -224,6 +228,10 @@ int pstdout_printf(pstdout_state_t pstate, const char *format, ...);
  * and stderr.
  *
  * Returns number of characters printed, -1 on error.
+ *
+ * Note that the return value of number of characters printed may be
+ * 0, because data is being buffered for output on a later
+ * pstdout_fprintf call.
  */
 int pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ...);
 
