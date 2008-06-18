@@ -23,6 +23,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "pstdout.h"
 
 #include "config-tool-argp.h"
 #include "config-tool-common.h"
@@ -30,7 +31,6 @@
 #include "config-tool-checkout.h"
 #include "config-tool-commit.h"
 #include "config-tool-diff.h"
-#include "config-tool-fiid.h"
 #include "config-tool-parse.h"
 #include "config-tool-section.h"
 #include "config-tool-utils.h"
@@ -51,12 +51,14 @@ typedef struct pef_config_prog_data
 { 
   char *progname;
   struct pef_config_arguments *args;
+  int hosts_count;
 } pef_config_prog_data_t;
 
 typedef struct pef_config_state_data
 { 
   pef_config_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
+  pstdout_state_t pstate;
 
   /* achu: caching to make pef-config work more quickly */
   int lan_channel_number_initialized;

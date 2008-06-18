@@ -34,7 +34,8 @@
 #include "freeipmi-portability.h"
 
 int
-config_section_append(struct config_section **sections, 
+config_section_append(pstdout_state_t pstate,
+                      struct config_section **sections, 
                       struct config_section *section)
 {
   assert(sections);
@@ -54,21 +55,23 @@ config_section_append(struct config_section **sections,
 }
 
 void 
-config_sections_destroy(struct config_section *sections)
+config_sections_destroy(pstdout_state_t pstate,
+                        struct config_section *sections)
 {
   if (sections)
     {
       while (sections)
 	{
 	  struct config_section *sections_next = sections->next;
-	  config_section_destroy(sections);
+	  config_section_destroy(pstate, sections);
 	  sections = sections_next;
 	}
     }
 }
 
 struct config_section * 
-config_section_create (char *section_name,
+config_section_create (pstdout_state_t pstate,
+                       char *section_name,
                        char *section_comment_section_name,
                        char *section_comment,
                        unsigned int flags)
@@ -79,14 +82,16 @@ config_section_create (char *section_name,
 
   if (!(section = (struct config_section *)malloc(sizeof(struct config_section))))
     {
-      perror("malloc");
+      PSTDOUT_PERROR(pstate,
+                     "malloc");
       goto cleanup;
     }
   memset(section, '\0', sizeof(struct config_section));
 
   if (!(section->section_name = strdup(section_name)))
     {
-      perror("strdup");
+      PSTDOUT_PERROR(pstate,
+                     "strdup");
       goto cleanup;
     }
 
@@ -94,7 +99,8 @@ config_section_create (char *section_name,
     {
       if (!(section->section_comment_section_name = strdup(section_comment_section_name)))
         {
-          perror("strdup");
+          PSTDOUT_PERROR(pstate,
+                         "strdup");
           goto cleanup;
         }
     }
@@ -103,7 +109,8 @@ config_section_create (char *section_name,
     {
       if (!(section->section_comment = strdup(section_comment)))
         {
-          perror("strdup");
+          PSTDOUT_PERROR(pstate,
+                         "strdup");
           goto cleanup;
         }
     }
@@ -113,12 +120,13 @@ config_section_create (char *section_name,
   return section;
  cleanup:
   if (section)
-    config_section_destroy(section);
+    config_section_destroy(pstate, section);
   return NULL;
 }
 
 static void
-_config_key_destroy(struct config_key *key)
+_config_key_destroy(pstdout_state_t pstate,
+                    struct config_key *key)
 {
   if (key)
     {
@@ -131,7 +139,8 @@ _config_key_destroy(struct config_key *key)
 }
 
 static void
-_config_keyvalue_destroy(struct config_keyvalue *keyvalue)
+_config_keyvalue_destroy(pstdout_state_t pstate,
+                         struct config_keyvalue *keyvalue)
 {
   if (keyvalue)
     {
@@ -144,7 +153,8 @@ _config_keyvalue_destroy(struct config_keyvalue *keyvalue)
 }
 
 void 
-config_section_destroy (struct config_section *section)
+config_section_destroy (pstdout_state_t pstate,
+                        struct config_section *section)
 {
   if (section)
     {
@@ -160,7 +170,7 @@ config_section_destroy (struct config_section *section)
       while (section->keyvalues)
 	{
 	  struct config_keyvalue *keyvalue_next = section->keyvalues->next;
-          _config_keyvalue_destroy(section->keyvalues);
+          _config_keyvalue_destroy(pstate, section->keyvalues);
 	  section->keyvalues = keyvalue_next;
 	}
 
@@ -169,7 +179,8 @@ config_section_destroy (struct config_section *section)
 }
 
 int 
-config_section_add_key (struct config_section *section,
+config_section_add_key (pstdout_state_t pstate,
+                        struct config_section *section,
                         const char *key_name,
                         const char *description,
                         unsigned int flags,
@@ -188,19 +199,22 @@ config_section_add_key (struct config_section *section,
 
   if (!(k = (struct config_key *)malloc(sizeof(struct config_key))))
     {
-      perror("malloc");
+      PSTDOUT_PERROR(pstate,
+                     "malloc");
       goto cleanup;
     }
   memset(k, '\0', sizeof(struct config_key));
 
   if (!(k->key_name = strdup(key_name)))
     {
-      perror("strdup");
+      PSTDOUT_PERROR(pstate,
+                     "strdup");
       goto cleanup;
     }
   if (!(k->description = strdup(description)))
     {
-      perror("strdup");
+      PSTDOUT_PERROR(pstate,
+                     "strdup");
       goto cleanup;
     }
   k->flags = flags;
@@ -220,12 +234,13 @@ config_section_add_key (struct config_section *section,
 
   return 0;
  cleanup:
-  _config_key_destroy(k);
+  _config_key_destroy(pstate, k);
   return -1;
 }
 
 int
-config_section_add_keyvalue (struct config_section *section,
+config_section_add_keyvalue (pstdout_state_t pstate,
+                             struct config_section *section,
                              struct config_key *key,
                              const char *value_input,
                              const char *value_output)
@@ -237,7 +252,8 @@ config_section_add_keyvalue (struct config_section *section,
   
   if (!(kv = malloc(sizeof(struct config_keyvalue))))
     {
-      perror("malloc");
+      PSTDOUT_PERROR(pstate,
+                     "malloc");
       goto cleanup;
     }
   memset(kv, '\0', sizeof(struct config_keyvalue));
@@ -249,7 +265,8 @@ config_section_add_keyvalue (struct config_section *section,
     {
       if (!(kv->value_input = strdup(value_input)))
         {
-          perror("strdup");
+          PSTDOUT_PERROR(pstate,
+                         "strdup");
           goto cleanup;
         }
     }
@@ -258,7 +275,8 @@ config_section_add_keyvalue (struct config_section *section,
     {
       if (!(kv->value_output = strdup(value_output)))
         {
-          perror("strdup");
+          PSTDOUT_PERROR(pstate,
+                         "strdup");
           goto cleanup;
         }
     }
@@ -278,12 +296,13 @@ config_section_add_keyvalue (struct config_section *section,
   return 0;
   
  cleanup:
-  _config_keyvalue_destroy(kv);
+  _config_keyvalue_destroy(pstate, kv);
   return -1;
 }
 
 int
-config_section_update_keyvalue_input(struct config_keyvalue *keyvalue,
+config_section_update_keyvalue_input(pstdout_state_t pstate,
+                                     struct config_keyvalue *keyvalue,
                                      const char *value_input)
 {
   assert(keyvalue);
@@ -298,7 +317,8 @@ config_section_update_keyvalue_input(struct config_keyvalue *keyvalue,
 
       if (!(keyvalue->value_input = strdup(value_input)))
         {
-          perror("strdup");
+          PSTDOUT_PERROR(pstate,
+                         "strdup");
           return -1;
         }
     }
@@ -307,7 +327,8 @@ config_section_update_keyvalue_input(struct config_keyvalue *keyvalue,
 }
 
 int
-config_section_update_keyvalue_output(struct config_keyvalue *keyvalue,
+config_section_update_keyvalue_output(pstdout_state_t pstate,
+                                      struct config_keyvalue *keyvalue,
                                       const char *value_output)
 {
   assert(keyvalue);
@@ -318,7 +339,8 @@ config_section_update_keyvalue_output(struct config_keyvalue *keyvalue,
       
       if (!(keyvalue->value_output = strdup(value_output)))
         {
-          perror("strdup");
+          PSTDOUT_PERROR(pstate,
+                         "strdup");
           return -1;
         }
     }
@@ -327,7 +349,8 @@ config_section_update_keyvalue_output(struct config_keyvalue *keyvalue,
 }
 
 int
-config_section_update_keyvalue_output_int(struct config_keyvalue *keyvalue,
+config_section_update_keyvalue_output_int(pstdout_state_t pstate,
+                                          struct config_keyvalue *keyvalue,
                                           unsigned int value_output)
 {
   char buf[CONFIG_PARSE_BUFLEN];
@@ -339,7 +362,8 @@ config_section_update_keyvalue_output_int(struct config_keyvalue *keyvalue,
   
   if (!(keyvalue->value_output = strdup(buf)))
     {
-      perror("strdup");
+      PSTDOUT_PERROR(pstate,
+                     "strdup");
       return -1;
     }
 
@@ -347,7 +371,8 @@ config_section_update_keyvalue_output_int(struct config_keyvalue *keyvalue,
 }
 
 int
-config_section_update_keyvalue_output_double(struct config_keyvalue *keyvalue,
+config_section_update_keyvalue_output_double(pstdout_state_t pstate,
+                                             struct config_keyvalue *keyvalue,
                                              double value_output)
 {
   char buf[CONFIG_PARSE_BUFLEN];
@@ -359,7 +384,8 @@ config_section_update_keyvalue_output_double(struct config_keyvalue *keyvalue,
   
   if (!(keyvalue->value_output = strdup(buf)))
     {
-      perror("strdup");
+      PSTDOUT_PERROR(pstate,
+                     "strdup");
       return -1;
     }
 
@@ -367,7 +393,8 @@ config_section_update_keyvalue_output_double(struct config_keyvalue *keyvalue,
 }
 
 int
-config_sections_validate_keyvalue_inputs(struct config_section *sections,
+config_sections_validate_keyvalue_inputs(pstdout_state_t pstate,
+                                         struct config_section *sections,
                                          int value_input_required,
                                          void *arg)
 {
@@ -387,10 +414,11 @@ config_sections_validate_keyvalue_inputs(struct config_section *sections,
         {
           if (value_input_required && !kv->value_input)
             {
-              fprintf(stderr,
-                      "Value not specified for key '%s' in section '%s'\n",
-                      kv->key->key_name,
-                      s->section_name);
+              PSTDOUT_FPRINTF(pstate,
+                              stderr,
+                              "Value not specified for key '%s' in section '%s'\n",
+                              kv->key->key_name,
+                              s->section_name);
               nonvalid_count++;
               goto next_kv;
             }
@@ -407,29 +435,32 @@ config_sections_validate_keyvalue_inputs(struct config_section *sections,
 
               if (v == CONFIG_VALIDATE_NON_FATAL_ERROR)
                 {
-                  fprintf(stderr,
-                          "Error validating value '%s' for key '%s' in section '%s'\n",
-                          kv->value_input,
-                          kv->key->key_name,
-                          s->section_name);
+                  PSTDOUT_FPRINTF(pstate,
+                                  stderr,
+                                  "Error validating value '%s' for key '%s' in section '%s'\n",
+                                  kv->value_input,
+                                  kv->key->key_name,
+                                  s->section_name);
                   nonvalid_count++;
                 }
               if (v == CONFIG_VALIDATE_OUT_OF_RANGE_VALUE)
                 {
-                  fprintf(stderr,
-                          "Out of Range value '%s' for key '%s' in section '%s'\n",
-                          kv->value_input,
-                          kv->key->key_name,
-                          s->section_name);
+                  PSTDOUT_FPRINTF(pstate,
+                                  stderr,
+                                  "Out of Range value '%s' for key '%s' in section '%s'\n",
+                                  kv->value_input,
+                                  kv->key->key_name,
+                                  s->section_name);
                   nonvalid_count++;
                 }
               if (v == CONFIG_VALIDATE_INVALID_VALUE)
                 {
-                  fprintf(stderr,
-                          "Invalid value '%s' for key '%s' in section '%s'\n",
-                          kv->value_input,
-                          kv->key->key_name,
-                          s->section_name);
+                  PSTDOUT_FPRINTF(pstate,
+                                  stderr,
+                                  "Invalid value '%s' for key '%s' in section '%s'\n",
+                                  kv->value_input,
+                                  kv->key->key_name,
+                                  s->section_name);
                   nonvalid_count++;
                 }
             }
@@ -446,7 +477,8 @@ config_sections_validate_keyvalue_inputs(struct config_section *sections,
 }
 
 int
-config_sections_insert_keyvalues(struct config_section *sections,
+config_sections_insert_keyvalues(pstdout_state_t pstate,
+                                 struct config_section *sections,
                                  struct config_keypair *keypairs)
 {
   struct config_section *s;
@@ -461,26 +493,31 @@ config_sections_insert_keyvalues(struct config_section *sections,
   kp = keypairs;
   while (kp)
     {
-      if (!(s = config_find_section(sections, kp->section_name)))
+      if (!(s = config_find_section(pstate, sections, kp->section_name)))
         {
-          fprintf(stderr, "Unknown section `%s'\n", kp->section_name);
+          PSTDOUT_FPRINTF(pstate,
+                          stderr,
+                          "Unknown section `%s'\n", 
+                          kp->section_name);
           rv = -1;
           goto next_keypair;
         }
 
-      if (!(k = config_find_key(s, kp->key_name)))
+      if (!(k = config_find_key(pstate, s, kp->key_name)))
         {
-          fprintf(stderr,
-                  "Unknown key `%s' in section `%s'\n",
-                  kp->key_name,
-                  kp->section_name);
+          PSTDOUT_FPRINTF(pstate,
+                          stderr,
+                          "Unknown key `%s' in section `%s'\n",
+                          kp->key_name,
+                          kp->section_name);
           rv = -1;
           goto next_keypair;
         }
 
-      if ((kv = config_find_keyvalue(s, kp->key_name)))
+      if ((kv = config_find_keyvalue(pstate, s, kp->key_name)))
         {
-          if (config_section_update_keyvalue_input(kv,
+          if (config_section_update_keyvalue_input(pstate,
+                                                   kv,
                                                    kp->value_input) < 0)
             {
               rv = -1;
@@ -489,7 +526,8 @@ config_sections_insert_keyvalues(struct config_section *sections,
         }
       else
         {
-          if (config_section_add_keyvalue(s,
+          if (config_section_add_keyvalue(pstate,
+                                          s,
                                           k,
                                           kp->value_input,
                                           NULL) < 0)
@@ -508,7 +546,8 @@ config_sections_insert_keyvalues(struct config_section *sections,
 }
 
 config_err_t 
-config_output_sections_list (struct config_section *sections)
+config_output_sections_list (pstdout_state_t pstate,
+                             struct config_section *sections)
 {
   struct config_section *s;
 
@@ -516,7 +555,9 @@ config_output_sections_list (struct config_section *sections)
   while (s)
     {
       if (!(s->flags & CONFIG_DO_NOT_CHECKOUT))
-	printf("%s\n", s->section_name); 
+	PSTDOUT_PRINTF(pstate,
+                       "%s\n", 
+                       s->section_name); 
       s = s->next;
     }
 

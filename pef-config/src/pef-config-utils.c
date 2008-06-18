@@ -28,10 +28,12 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "freeipmi-portability.h"
-
 #include "pef-config.h"
 #include "pef-config-utils.h"
+
+#include "freeipmi-portability.h"
+#include "pstdout.h"
+#include "tool-fiid-wrappers.h"
 
 config_err_t
 get_lan_channel_number (struct pef_config_state_data *state_data, uint8_t *channel_number)
@@ -49,9 +51,10 @@ get_lan_channel_number (struct pef_config_state_data *state_data, uint8_t *chann
                                                                  IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0) 
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_get_channel_number: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_get_channel_number: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       return CONFIG_ERR_NON_FATAL_ERROR;
     }
   
@@ -84,8 +87,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
       goto cleanup; 
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs);
 
   if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (state_data->ipmi_ctx, 
 									channel_number, 
@@ -95,14 +97,16 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
 									obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_lan_configuration_parameters_number_of_destinations: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_lan_configuration_parameters_number_of_destinations: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
-  if (Fiid_obj_get(obj_cmd_rs,
+  /* don't use wrapper - non-fatal error */
+  if (fiid_obj_get(obj_cmd_rs,
                    "number_of_lan_destinations",
                    &val) < 0)
     {
@@ -116,7 +120,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
   *number_of_lan_alert_destinations = state_data->number_of_lan_alert_destinations;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy (obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 
@@ -136,24 +140,25 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *
       return CONFIG_ERR_SUCCESS;
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs);
 
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->ipmi_ctx, 
-										IPMI_GET_PEF_PARAMETER, 
-										SET_SELECTOR, 
-										BLOCK_SELECTOR, 
-										obj_cmd_rs) < 0)
+                                                                         IPMI_GET_PEF_PARAMETER, 
+                                                                         SET_SELECTOR, 
+                                                                         BLOCK_SELECTOR, 
+                                                                         obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
-  if (Fiid_obj_get(obj_cmd_rs,
+  /* don't use wrapper - non-fatal error */
+  if (fiid_obj_get(obj_cmd_rs,
                    "number_of_alert_strings",
                    &val) < 0)
     {
@@ -167,7 +172,7 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *
   *number_of_alert_strings = state_data->number_of_alert_strings;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy (obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -187,8 +192,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
       return CONFIG_ERR_SUCCESS;
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs);
 
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->ipmi_ctx, 
 										IPMI_GET_PEF_PARAMETER, 
@@ -197,14 +201,16 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
 										obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
-  if (Fiid_obj_get(obj_cmd_rs,
+  /* don't use wrapper - non-fatal error */
+  if (fiid_obj_get(obj_cmd_rs,
                    "number_of_alert_policy_entries",
                    &val) < 0)
     {
@@ -218,7 +224,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
   *number_of_alert_policy_entries = state_data->number_of_alert_policy_entries;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy (obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -238,8 +244,7 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *
       return CONFIG_ERR_SUCCESS;
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs);
 
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->ipmi_ctx, 
 									 IPMI_GET_PEF_PARAMETER, 
@@ -248,14 +253,16 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *
 									 obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (Fiid_obj_get(obj_cmd_rs,
+  /* don't use wrapper - non-fatal error */
+  if (fiid_obj_get(obj_cmd_rs,
                    "number_of_event_filters",
                    &val) < 0)
     {
@@ -269,7 +276,7 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *
   *number_of_event_filters = state_data->number_of_event_filters;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy (obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

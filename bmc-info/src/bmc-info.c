@@ -54,7 +54,6 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
 {
   uint8_t guidbuf[1024];
   fiid_obj_t cmd_rs = NULL;
-  int32_t guid_len;
   int rv = -1;
 
   assert(state_data);
@@ -70,7 +69,7 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
       goto cleanup;
     }
   
-  _FIID_OBJ_GET_DATA (guid_len, cmd_rs, "guid", guidbuf, 1024);
+  _FIID_OBJ_GET_DATA (cmd_rs, "guid", guidbuf, 1024);
 
   /* IPMI transfers the guid in least significant bit order and the
    * fields are reverse from the "Wired for Management

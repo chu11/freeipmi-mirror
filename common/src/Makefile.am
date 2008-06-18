@@ -25,7 +25,6 @@ noinst_HEADERS = \
 	config-tool-checkout.h \
 	config-tool-commit.h \
 	config-tool-diff.h \
-	config-tool-fiid.h \
 	config-tool-parse.h \
 	config-tool-pef-conf-section.h \
 	config-tool-section.h \
@@ -119,7 +118,6 @@ libconfigtoolcommon_la_SOURCES = \
 	config-tool-checkout.c \
 	config-tool-commit.c \
 	config-tool-diff.c \
-	config-tool-fiid.c \
 	config-tool-parse.c \
 	config-tool-pef-conf-section.c \
 	config-tool-section.c \

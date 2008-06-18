@@ -27,12 +27,14 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "freeipmi-portability.h"
-
 #include "pef-config.h"
 #include "pef-config-map.h"
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
+
+#include "freeipmi-portability.h"
+#include "pstdout.h"
+#include "tool-fiid-wrappers.h"
 
 #define PEF_CONFIG_MAXIPADDRLEN 16
 #define PEF_CONFIG_MAXMACADDRLEN 24
@@ -69,8 +71,7 @@ _get_destination_type(pef_config_state_data_t *state_data,
 
   destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_type_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_destination_type_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -86,32 +87,29 @@ _get_destination_type(pef_config_state_data_t *state_data,
                                                                   obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_lan_configuration_parameters_destination_type: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_lan_configuration_parameters_destination_type: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_cmd_rs, "destination_type", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "destination_type", &val);
   dt->alert_destination_type = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "alert_acknowledge", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "alert_acknowledge", &val);
   dt->alert_acknowledge = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "alert_acknowledge_timeout", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "alert_acknowledge_timeout", &val);
   dt->alert_acknowledge_timeout = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "retries", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "retries", &val);
   dt->alert_retries = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -132,8 +130,7 @@ _set_destination_type(pef_config_state_data_t *state_data,
 
   destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -151,16 +148,17 @@ _set_destination_type(pef_config_state_data_t *state_data,
                                                                   obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_lan_configuration_parameters_destination_type: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_lan_configuration_parameters_destination_type: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -178,7 +176,9 @@ alert_destination_type_checkout (const char *section_name,
                                    &dt)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (config_section_update_keyvalue_output(kv, alert_destination_type_string (dt.alert_destination_type)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv, 
+                                            alert_destination_type_string (dt.alert_destination_type)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -219,7 +219,9 @@ alert_acknowledge_checkout (const char *section_name,
                                    &dt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, dt.alert_acknowledge ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            dt.alert_acknowledge ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -260,7 +262,9 @@ alert_acknowledge_timeout_checkout (const char *section_name,
                                    &dt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, dt.alert_acknowledge_timeout) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate, 
+                                                kv,
+                                                dt.alert_acknowledge_timeout) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -301,7 +305,9 @@ alert_retries_checkout (const char *section_name,
                                    &dt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, dt.alert_retries) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate, 
+                                                kv,
+                                                dt.alert_retries) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -356,9 +362,8 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
   assert(da);
 
   destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
-
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs)))
-    goto cleanup;
+  
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -374,22 +379,21 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
                                                                        obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_lan_configuration_parameters_destination_addresses: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_lan_configuration_parameters_destination_addresses: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_cmd_rs, "gateway_selector", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "gateway_selector", &val);
   da->alert_gateway = val;
 
-  if (Fiid_obj_get_data (obj_cmd_rs,
-                         "alerting_ip_address",
-                         alert_ip_address_bytes,
-                         4) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA (obj_cmd_rs,
+                      "alerting_ip_address",
+                      alert_ip_address_bytes,
+                      4);
   
   memset(da->alert_ip, '\0', PEF_CONFIG_MAXIPADDRLEN+1);
   snprintf (da->alert_ip,
@@ -400,11 +404,10 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
             alert_ip_address_bytes[2],
             alert_ip_address_bytes[3]);
 
-  if (Fiid_obj_get_data (obj_cmd_rs,
-                         "alerting_mac_address",
-                         alert_mac_address_bytes,
-                         6) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET_DATA (obj_cmd_rs,
+                      "alerting_mac_address",
+                      alert_mac_address_bytes,
+                      6);
   
   memset(da->alert_mac, '\0', PEF_CONFIG_MAXMACADDRLEN+1);
   snprintf (da->alert_mac,
@@ -419,7 +422,7 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -442,8 +445,7 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
 
   destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -451,10 +453,14 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (config_ipv4_address_string2int(da->alert_ip, &alert_ip_address_val) < 0)
+  if (config_ipv4_address_string2int(state_data->pstate, 
+                                     da->alert_ip, 
+                                     &alert_ip_address_val) < 0)
     goto cleanup;
 
-  if (config_mac_address_string2int(da->alert_mac, &alert_mac_address_val) < 0)
+  if (config_mac_address_string2int(state_data->pstate, 
+                                    da->alert_mac, 
+                                    &alert_mac_address_val) < 0)
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (state_data->ipmi_ctx,
@@ -466,16 +472,17 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
                                                                        obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_lan_configuration_parameters_destination_addresses: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_lan_configuration_parameters_destination_addresses: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -493,7 +500,9 @@ alert_gateway_checkout (const char *section_name,
                                         &da)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (config_section_update_keyvalue_output(kv, alert_gateway_string (da.alert_gateway)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv, 
+                                            alert_gateway_string (da.alert_gateway)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -534,7 +543,9 @@ alert_ip_address_checkout (const char *section_name,
                                         &da)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, da.alert_ip) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            da.alert_ip) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -576,7 +587,9 @@ alert_mac_address_checkout (const char *section_name,
                                         &da)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, da.alert_mac) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            da.alert_mac) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -612,19 +625,24 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
 
   if (num <= 0)
     {
-      fprintf(stderr, "Invalid Num = %d\n", num);
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "Invalid Num = %d\n", 
+                      num);
       return NULL;
     }
 
   snprintf(buf, CONFIG_MAX_SECTION_NAME_LEN, "Lan_Alert_Destination_%d", num);
 
-  if (!(section = config_section_create (buf, 
+  if (!(section = config_section_create (state_data->pstate, 
+                                         buf, 
                                          NULL, 
                                          NULL, 
                                          0)))
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Alert_Destination_Type",
                               "Possible values: PET_Trap/OEM1/OEM2",
                               0,
@@ -633,7 +651,8 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                               alert_destination_type_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Alert_Acknowledge",
                               "Possible values: Yes/No",
                               0,
@@ -642,7 +661,8 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                               config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Alert_Acknowledge_Timeout",
                               "Give valid unsigned number in seconds",
                               0,
@@ -651,7 +671,8 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                               config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Alert_Retries",
                               "Give valid unsigned number",
                               0,
@@ -660,7 +681,8 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                               alert_retries_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Alert_Gateway",
                               "Possible values: Default/Backup",
                               0,
@@ -669,7 +691,8 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                               alert_gateway_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Alert_IP_Address",
                               "Give valid IP address",
                               0,
@@ -678,7 +701,8 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                               config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Alert_MAC_Address",
                               "Give valid MAC address",
                               0,
@@ -691,7 +715,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
 
  cleanup:
   if (section)
-    config_section_destroy(section);
+    config_section_destroy(state_data->pstate, section);
   return NULL;
 }
 

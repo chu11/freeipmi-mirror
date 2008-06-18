@@ -48,7 +48,8 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
     "communication can be disabled.  This can be done by setting "
     "\"Access_Mode\" to \"Disabled\".";
 
-  if (!(serial_channel_section = config_section_create ("Serial_Channel",
+  if (!(serial_channel_section = config_section_create (state_data->pstate,
+                                                        "Serial_Channel",
                                                         "Serial_Channel",
                                                         section_comment,
                                                         0)))
@@ -62,7 +63,7 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (serial_channel_section)
-    config_section_destroy(serial_channel_section);
+    config_section_destroy(state_data->pstate, serial_channel_section);
   return NULL;
 }
 

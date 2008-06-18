@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.12 2008-06-07 16:09:52 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.13 2008-06-18 20:50:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -549,11 +549,11 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
                 "sub_record_type",
                 &sub_record_type);
 
-  _FIID_OBJ_GET_DATA(len,
-                     obj_record,
-                     "record",
-                     managementaccessbuf,
-                     FRU_BUF_LEN);
+  _FIID_OBJ_GET_DATA_LEN(len,
+                         obj_record,
+                         "record",
+                         managementaccessbuf,
+                         FRU_BUF_LEN);
 
   if (!len)
     {
@@ -697,11 +697,11 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
                 "compatibility_code_start_value",
                 &compatibility_code_start_value);
 
-  _FIID_OBJ_GET_DATA(len,
-                     obj_record,
-                     "code_range_mask",
-                     codemaskbuf,
-                     FRU_BUF_LEN);
+  _FIID_OBJ_GET_DATA_LEN(len,
+                         obj_record,
+                         "code_range_mask",
+                         codemaskbuf,
+                         FRU_BUF_LEN);
 
   pstdout_printf(state_data->pstate,
                  "  FRU Base Compatibility Manufacturer ID: 0x%X\n",
@@ -812,11 +812,11 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
                 "compatibility_code_start_value",
                 &compatibility_code_start_value);
 
-  _FIID_OBJ_GET_DATA(len,
-                     obj_record,
-                     "code_range_mask",
-                     codemaskbuf,
-                     FRU_BUF_LEN);
+  _FIID_OBJ_GET_DATA_LEN(len,
+                         obj_record,
+                         "code_range_mask",
+                         codemaskbuf,
+                         FRU_BUF_LEN);
 
   pstdout_printf(state_data->pstate,
                  "  FRU Extended Compatibility Manufacturer ID: 0x%X\n",
@@ -913,11 +913,11 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
                 "manufacturer_id",
                 &manufacturer_id);
 
-  _FIID_OBJ_GET_DATA(len,
-                     obj_record,
-                     "oem_data",
-                     oemdatabuf,
-                     FRU_BUF_LEN);
+  _FIID_OBJ_GET_DATA_LEN(len,
+                         obj_record,
+                         "oem_data",
+                         oemdatabuf,
+                         FRU_BUF_LEN);
 
   pstdout_printf(state_data->pstate,
                  "  FRU OEM Manufacturer ID: 0x%X\n",

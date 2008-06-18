@@ -20,8 +20,10 @@
 #define _CONFIG_TOOL_DIFF_H
 
 #include "config-tool-common.h"
+#include "pstdout.h"
 
-config_err_t config_diff (struct config_section *sections,
+config_err_t config_diff (pstdout_state_t pstate,
+                          struct config_section *sections,
                           struct config_arguments *cmd_args,
                           void *arg);
 
