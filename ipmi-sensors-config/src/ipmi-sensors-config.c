@@ -104,10 +104,10 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                          "ipmi_sdr_cache_ctx_set_flags: %s\n",
                          ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
 
-      if (prog_data->args->config_args.common.hostname)
+      if (hostname)
         {
           if (ipmi_sdr_cache_ctx_set_debug_prefix(state_data.ipmi_sdr_cache_ctx,
-                                                  prog_data->args->config_args.common.hostname) < 0)
+                                                  hostname) < 0)
             pstdout_fprintf (pstate,
                              stderr,
                              "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
@@ -120,7 +120,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
       if (sdr_cache_flush_cache(state_data.ipmi_sdr_cache_ctx,
                                 NULL,
                                 state_data.prog_data->args->sdr.quiet_cache,
-                                state_data.prog_data->args->config_args.common.hostname,
+                                hostname,
                                 state_data.prog_data->args->sdr.sdr_cache_directory) < 0)
         {
           exit_code = EXIT_FAILURE;
@@ -134,7 +134,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                                  NULL,
                                  state_data.ipmi_ctx,
                                  prog_data->args->sdr.quiet_cache,
-                                 prog_data->args->config_args.common.hostname,
+                                 hostname,
                                  prog_data->args->sdr.sdr_cache_directory) < 0)
     {
       exit_code = EXIT_FAILURE;
