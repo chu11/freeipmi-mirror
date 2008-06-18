@@ -38,7 +38,6 @@ config_err_t
 config_commit_section(pstdout_state_t pstate,
                       struct config_section *section,
                       struct config_arguments *cmd_args,
-                      FILE *fp,
                       void *arg)
 {
   struct config_keyvalue *kv;
@@ -47,7 +46,6 @@ config_commit_section(pstdout_state_t pstate,
 
   assert(section);
   assert(cmd_args);
-  assert(fp);
 
   kv = section->keyvalues;
   while (kv) 
@@ -97,7 +95,6 @@ config_err_t
 config_commit (pstdout_state_t pstate,
                struct config_section *sections,
                struct config_arguments *cmd_args,
-               FILE *fp,
                void *arg)
 {
   struct config_section *s;
@@ -106,7 +103,6 @@ config_commit (pstdout_state_t pstate,
 
   assert(sections);
   assert(cmd_args);
-  assert(fp);
 
   s = sections;
   while (s)
@@ -114,7 +110,6 @@ config_commit (pstdout_state_t pstate,
       if ((ret = config_commit_section(pstate,
                                        s, 
                                        cmd_args,
-                                       fp, 
                                        arg)) != CONFIG_ERR_SUCCESS)
         {
           if (ret == CONFIG_ERR_FATAL_ERROR)

@@ -280,7 +280,6 @@ _bmc_config (pstdout_state_t pstate,
     ret = config_commit (pstate, 
                          sections,
                          &(prog_data->args->config_args),
-                         fp,
                          &state_data);
     break;
   case CONFIG_ACTION_DIFF:

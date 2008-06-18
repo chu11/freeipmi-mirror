@@ -38,6 +38,9 @@
 
 	* common/src/config-tool-pef-conf-section.c: Adjust for removed
 	wrapper functions.
+
+	* common/src/config-tool-commit.h, common/src/config-tool-commit.c
+	(config_commit_section, config_commit): Remove fp argument.
 	
 2008-06-13 Albert Chu <chu11@llnl.gov>
 

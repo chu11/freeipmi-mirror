@@ -25,13 +25,11 @@
 config_err_t config_commit_section (pstdout_state_t pstate,
                                     struct config_section *section,
                                     struct config_arguments *cmd_args,
-                                    FILE *fp,
                                     void *arg);
 
 config_err_t config_commit (pstdout_state_t pstate,
                             struct config_section *sections,
                             struct config_arguments *cmd_args,
-                            FILE *fp,
                             void *arg);
 
 #endif /* _CONFIG_TOOL_COMMIT_H_ */
