@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.h,v 1.7.10.2 2008-06-18 17:41:52 chu11 Exp $
+ *  $Id: pstdout.h,v 1.7.10.3 2008-06-18 17:43:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -239,8 +239,6 @@ int pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ..
  *
  * Parallel perror.  Should only be called by a thread executed by
  * 'pstdout_launch'.
- *
- * Returns number of characters printed, -1 on error.
  */
 void pstdout_perror(pstdout_state_t pstate, const char *s);
 
