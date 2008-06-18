@@ -32,7 +32,6 @@
 #include "config-tool-checkout.h"
 #include "config-tool-commit.h"
 #include "config-tool-diff.h"
-#include "config-tool-fiid.h"
 #include "config-tool-parse.h"
 #include "config-tool-section.h"
 #include "config-tool-utils.h"

@@ -430,12 +430,10 @@ enable_user_commit (const char *section_name,
         goto cleanup;
       
       /* Force the password to be filled in with a length */
-      if (Fiid_obj_set_data (state_data->pstate,
-                             obj_cmd_rq,
-                             "password",
-                             (uint8_t *)password,
-                             IPMI_1_5_MAX_PASSWORD_LENGTH) < 0)
-        goto cleanup;
+      _FIID_OBJ_SET_DATA (obj_cmd_rq,
+                          "password",
+                          (uint8_t *)password,
+                          IPMI_1_5_MAX_PASSWORD_LENGTH);
 
       if (ipmi_cmd (state_data->ipmi_ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
