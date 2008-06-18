@@ -32,6 +32,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+#include "tool-fiid-wrappers.h"
 
 static config_err_t
 community_string_checkout (const char *section_name,
@@ -86,7 +87,7 @@ community_string_checkout (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -128,7 +129,7 @@ community_string_commit (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

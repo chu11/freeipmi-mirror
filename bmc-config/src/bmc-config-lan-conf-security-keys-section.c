@@ -33,7 +33,9 @@
 #include "bmc-config-utils.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 #include "tool-common.h"
+#include "tool-fiid-wrappers.h"
 
 static config_err_t
 _get_key(bmc_config_state_data_t *state_data,
@@ -51,9 +53,7 @@ _get_key(bmc_config_state_data_t *state_data,
   assert(key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
          || key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
-                                     tmpl_cmd_set_channel_security_keys_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_channel_security_keys_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -96,7 +96,7 @@ _get_key(bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -114,9 +114,7 @@ _set_key(bmc_config_state_data_t *state_data,
   assert(key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
          || key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
-                                     tmpl_cmd_set_channel_security_keys_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_channel_security_keys_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -143,7 +141,7 @@ _set_key(bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

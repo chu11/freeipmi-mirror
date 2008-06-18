@@ -34,6 +34,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+#include "tool-fiid-wrappers.h"
 
 /* achu: presumably there is no maximum.  We could read/write blocks
    forever based on block numbers.  However, we need to have some
@@ -97,7 +98,7 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -137,7 +138,7 @@ _set_alert_string_keys (pef_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -301,7 +302,7 @@ alert_string_checkout (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 
 }
@@ -378,7 +379,7 @@ alert_string_commit (const char *section_name,
  cleanup:
   if (alert_string_buf)
     free(alert_string_buf);
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 
 }

@@ -34,6 +34,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+#include "tool-fiid-wrappers.h"
 
 /* convenience struct */
 struct channel_access
@@ -158,9 +159,7 @@ _get_channel_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
-                                     tmpl_cmd_get_channel_access_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_channel_access_rs);
 
   if (ipmi_cmd_get_channel_access (state_data->ipmi_ctx,
                                    channel_number,
@@ -216,7 +215,7 @@ _get_channel_access (bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -247,9 +246,7 @@ _set_channel_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
-                                     tmpl_cmd_set_channel_access_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_channel_access_rs);
 
   /* yes/no is backwards several places, see ipmi spec */
 
@@ -277,7 +274,7 @@ _set_channel_access (bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

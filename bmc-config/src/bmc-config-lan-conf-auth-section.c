@@ -33,6 +33,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+#include "tool-fiid-wrappers.h"
 
 /* convenience struct */
 struct bmc_authentication_level {
@@ -76,9 +77,7 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(al);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
-                                     tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs);
   
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -279,7 +278,7 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -295,9 +294,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(al);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -345,7 +342,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

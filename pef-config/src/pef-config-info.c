@@ -33,6 +33,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+#include "tool-fiid-wrappers.h"
 
 config_err_t
 pef_info (pef_config_state_data_t *state_data)
@@ -143,7 +144,7 @@ pef_info (pef_config_state_data_t *state_data)
 
   if (alert_action_support)
     {
-      Fiid_obj_destroy (state_data->pstate, obj_cmd_rs);
+      _FIID_OBJ_DESTROY(obj_cmd_rs);
 
       if (!(obj_cmd_rs = Fiid_obj_create (state_data->pstate,
                                           tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))
@@ -176,7 +177,7 @@ pef_info (pef_config_state_data_t *state_data)
                       "Number of Event Filters:                %d\n", 
                       (int)val);
 
-      Fiid_obj_destroy (state_data->pstate, obj_cmd_rs);
+      _FIID_OBJ_DESTROY(obj_cmd_rs);
 
       if (!(obj_cmd_rs = Fiid_obj_create (state_data->pstate,
                                           tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
@@ -209,7 +210,7 @@ pef_info (pef_config_state_data_t *state_data)
                       "Number of Alert Policy entries:         %d\n", 
                       (int)val);
       
-      Fiid_obj_destroy (state_data->pstate, obj_cmd_rs);
+      _FIID_OBJ_DESTROY(obj_cmd_rs);
 
       if (!(obj_cmd_rs = Fiid_obj_create (state_data->pstate,
                                           tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
@@ -246,6 +247,6 @@ pef_info (pef_config_state_data_t *state_data)
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
