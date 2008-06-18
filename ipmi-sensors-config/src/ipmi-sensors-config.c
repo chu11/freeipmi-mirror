@@ -373,6 +373,7 @@ main (int argc, char **argv)
   ipmi_sensors_config_prog_data_t prog_data;
   struct ipmi_sensors_config_arguments cmd_args;
   int exit_code;
+  int hosts_count;
   int rv;
 
   ipmi_disable_coredump();
@@ -383,16 +384,20 @@ main (int argc, char **argv)
 
   prog_data.args = &cmd_args;
 
-  if (pstdout_setup(&(prog_data.args->config_args.common.hostname),
-                    prog_data.args->config_args.hostrange.buffer_output,
-                    prog_data.args->config_args.hostrange.consolidate_output,
-                    prog_data.args->config_args.hostrange.fanout,
-                    prog_data.args->config_args.hostrange.eliminate,
-                    prog_data.args->config_args.hostrange.always_prefix) < 0)
+  if ((hosts_count = pstdout_setup(&(prog_data.args->config_args.common.hostname),
+                                   prog_data.args->config_args.hostrange.buffer_output,
+                                   prog_data.args->config_args.hostrange.consolidate_output,
+                                   prog_data.args->config_args.hostrange.fanout,
+                                   prog_data.args->config_args.hostrange.eliminate,
+                                   prog_data.args->config_args.hostrange.always_prefix)) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
+
+  /* We don't want caching info to output when are doing ranged output */
+  if (hosts_count > 1)
+    prog_data.args->sdr.quiet_cache = 1;
   
   if ((rv = pstdout_launch(prog_data.args->config_args.common.hostname,
                            _ipmi_sensors_config,
