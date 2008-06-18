@@ -7,5 +7,7 @@ or a file can be specified with the --filename option.
 .LP
 B) Edit the configuration file with an editor.
 .LP
-C) Commit the configuration back using the --commit option and specifying
-the configuration file with the --filename option.
+C) Commit the configuration back using the --commit option and
+specifying the configuration file with the --filename option.  The
+configuration can be committed to multiple hosts in parallel via the
+hostrange support.

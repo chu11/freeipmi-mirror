@@ -16,7 +16,9 @@
 	* bmc-config/src/, ipmi-sensors-config/src/, pef-config/src/:
 	Support hostranges.
 
-	* doc/freeipmi-hostrange.txt, bmc-config/bmc-config.8.pre.in,
+	* doc/freeipmi-hostrange.txt,
+	common/doc/manpage-common-config-tool-general-use.man,
+	bmc-config/bmc-config.8.pre.in,
 	ipmi-sensors-config/ipmi-sensors-config.8.pre.in,
 	pef-config/pef-config.8.pre.in: Update appropriately for hostrange
 	support in config tools.
