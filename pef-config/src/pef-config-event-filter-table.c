@@ -28,12 +28,14 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "freeipmi-portability.h"
-
 #include "pef-config.h"
 #include "pef-config-map.h"
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
+
+#include "freeipmi-portability.h"
+#include "pstdout.h"
+#include "tool-fiid-wrappers.h"
 
 /* convenience struct */
 struct event_filter_table {
@@ -67,7 +69,8 @@ struct event_filter_table {
 };
 
 static int
-_config_section_update_keyvalue_output_hex(struct config_keyvalue *kv, 
+_config_section_update_keyvalue_output_hex(pstdout_state_t pstate,
+                                           struct config_keyvalue *kv, 
                                            unsigned int value_output)
 {
   char buf[CONFIG_PARSE_BUFLEN];
@@ -75,7 +78,7 @@ _config_section_update_keyvalue_output_hex(struct config_keyvalue *kv,
   assert(kv);
 
   sprintf(buf, "0x%02X", value_output);
-  return config_section_update_keyvalue_output(kv, buf);
+  return config_section_update_keyvalue_output(pstate, kv, buf);
 }
 
 static config_err_t
@@ -94,8 +97,7 @@ _get_event_filter_table (struct pef_config_state_data *state_data,
 
   filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs);
   
   if (ipmi_cmd_get_pef_configuration_parameters_event_filter_table (state_data->ipmi_ctx,
 								    IPMI_GET_PEF_PARAMETER,
@@ -104,102 +106,102 @@ _get_event_filter_table (struct pef_config_state_data *state_data,
 								    obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_pef_configuration_parameters_event_filter_table: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_pef_configuration_parameters_event_filter_table: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
 #if 0
-  if (Fiid_obj_get (obj_cmd_rs, "filter_number", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "filter_number", &val);
 #endif
-  if (Fiid_obj_get (obj_cmd_rs, "filter_configuration.type", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "filter_configuration.type", &val);
   eft->filter_type = val;
-  if (Fiid_obj_get (obj_cmd_rs, "filter_configuration.filter", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "filter_configuration.filter", &val);
   eft->enable_filter = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_filter_action.alert", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.alert", &val);
   eft->event_filter_action_alert = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_filter_action.power_off", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.power_off", &val);
   eft->event_filter_action_power_off = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_filter_action.reset", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.reset", &val);
   eft->event_filter_action_reset = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_filter_action.power_cycle", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.power_cycle", &val);
   eft->event_filter_action_power_cycle = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_filter_action.oem", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.oem", &val);
   eft->event_filter_action_oem = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_filter_action.diagnostic_interrupt", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.diagnostic_interrupt", &val);
   eft->event_filter_action_diagnostic_interrupt = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_filter_action.group_control_operation", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_filter_action.group_control_operation", &val);
   eft->event_filter_action_group_control_operation = val;
-  if (Fiid_obj_get (obj_cmd_rs, "alert_policy_number.policy_number", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "alert_policy_number.policy_number", &val);
   eft->alert_policy_number = val;
-  if (Fiid_obj_get (obj_cmd_rs, "alert_policy_number.group_control_selector", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "alert_policy_number.group_control_selector", &val);
   eft->group_control_selector = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_severity", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_severity", &val);
   eft->event_severity = val;
-  if (Fiid_obj_get (obj_cmd_rs, "generator_id_byte1", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "generator_id_byte1", &val);
   eft->generator_id_byte_1 = val;
-  if (Fiid_obj_get (obj_cmd_rs, "generator_id_byte2", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "generator_id_byte2", &val);
   eft->generator_id_byte_2 = val;
-  if (Fiid_obj_get (obj_cmd_rs, "sensor_type", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "sensor_type", &val);
   eft->sensor_type = val;
-  if (Fiid_obj_get (obj_cmd_rs, "sensor_number", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "sensor_number", &val);
   eft->sensor_number = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_trigger", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_trigger", &val);
   eft->event_trigger = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_data1_offset_mask", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data1_offset_mask", 
+                    &val);
   eft->event_data1_offset_mask = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_data1_AND_mask", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data1_AND_mask", &val);
   eft->event_data1_and_mask = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_data1_compare1", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data1_compare1", &val);
   eft->event_data1_compare1 = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_data1_compare2", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data1_compare2", &val);
   eft->event_data1_compare2 = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_data2_AND_mask", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data2_AND_mask", &val);
   eft->event_data2_and_mask = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_data2_compare1", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data2_compare1", &val);
   eft->event_data2_compare1 = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_data2_compare2", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data2_compare2", &val);
   eft->event_data2_compare2 = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_data3_AND_mask", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data3_AND_mask", &val);
   eft->event_data3_and_mask = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_data3_compare1", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data3_compare1", &val);
   eft->event_data3_compare1 = val;
-  if (Fiid_obj_get (obj_cmd_rs, "event_data3_compare2", &val) < 0)
-    goto cleanup;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "event_data3_compare2", &val);
   eft->event_data3_compare2 = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -218,8 +220,7 @@ _set_event_filter_table (struct pef_config_state_data *state_data,
 
   filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
 
   if (ipmi_cmd_set_pef_configuration_parameters_event_filter_table (state_data->ipmi_ctx, 
 								    filter_number, 
@@ -253,16 +254,17 @@ _set_event_filter_table (struct pef_config_state_data *state_data,
 								    obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_pef_configuration_parameters_event_filter_table: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_pef_configuration_parameters_event_filter_table: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -280,7 +282,9 @@ filter_type_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (config_section_update_keyvalue_output(kv, filter_type_string (eft.filter_type)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            filter_type_string (eft.filter_type)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -321,7 +325,9 @@ enable_filter_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, eft.enable_filter ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            eft.enable_filter ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -362,7 +368,9 @@ event_filter_action_alert_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, eft.event_filter_action_alert ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            eft.event_filter_action_alert ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -403,7 +411,9 @@ event_filter_action_power_off_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, eft.event_filter_action_power_off ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            eft.event_filter_action_power_off ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -444,7 +454,9 @@ event_filter_action_reset_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, eft.event_filter_action_reset ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            eft.event_filter_action_reset ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -485,7 +497,9 @@ event_filter_action_power_cycle_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, eft.event_filter_action_power_cycle ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            eft.event_filter_action_power_cycle ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -526,7 +540,9 @@ event_filter_action_oem_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, eft.event_filter_action_oem ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv, 
+                                            eft.event_filter_action_oem ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -567,7 +583,9 @@ event_filter_action_diagnostic_interrupt_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, eft.event_filter_action_diagnostic_interrupt ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            eft.event_filter_action_diagnostic_interrupt ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -608,7 +626,9 @@ event_filter_action_group_control_operation_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (config_section_update_keyvalue_output(kv, eft.event_filter_action_group_control_operation ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            eft.event_filter_action_group_control_operation ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -649,7 +669,9 @@ alert_policy_number_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, eft.alert_policy_number) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate, 
+                                                kv, 
+                                                eft.alert_policy_number) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -690,7 +712,9 @@ group_control_selector_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, eft.group_control_selector) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate, 
+                                                kv, 
+                                                eft.group_control_selector) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -731,7 +755,9 @@ event_severity_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, event_severity_string (eft.event_severity)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            event_severity_string (eft.event_severity)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -772,7 +798,9 @@ generator_id_byte_1_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.generator_id_byte_1) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv, 
+                                                 eft.generator_id_byte_1) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -814,7 +842,9 @@ generator_id_byte_2_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.generator_id_byte_2) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv, 
+                                                 eft.generator_id_byte_2) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -855,7 +885,9 @@ sensor_type_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, sensor_type_string (eft.sensor_type)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv, 
+                                            sensor_type_string (eft.sensor_type)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -896,7 +928,9 @@ sensor_number_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.sensor_number) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv, 
+                                                 eft.sensor_number) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -937,7 +971,9 @@ event_trigger_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.event_trigger) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv,
+                                                 eft.event_trigger) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -978,7 +1014,9 @@ event_data1_offset_mask_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.event_data1_offset_mask) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv, 
+                                                 eft.event_data1_offset_mask) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1019,7 +1057,9 @@ event_data1_and_mask_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.event_data1_and_mask) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv, 
+                                                 eft.event_data1_and_mask) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1060,7 +1100,9 @@ event_data1_compare1_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.event_data1_compare1) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv, 
+                                                 eft.event_data1_compare1) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1101,7 +1143,9 @@ event_data1_compare2_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.event_data1_compare2) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv, 
+                                                 eft.event_data1_compare2) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1142,7 +1186,9 @@ event_data2_and_mask_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.event_data2_and_mask) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv,
+                                                 eft.event_data2_and_mask) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1183,7 +1229,9 @@ event_data2_compare1_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.event_data2_compare1) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv,
+                                                 eft.event_data2_compare1) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1224,7 +1272,9 @@ event_data2_compare2_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.event_data2_compare2) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv, 
+                                                 eft.event_data2_compare2) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1265,7 +1315,9 @@ event_data3_and_mask_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.event_data3_and_mask) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv,
+                                                 eft.event_data3_and_mask) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1306,7 +1358,9 @@ event_data3_compare1_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.event_data3_compare1) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv,
+                                                 eft.event_data3_compare1) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1347,7 +1401,9 @@ event_data3_compare2_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (_config_section_update_keyvalue_output_hex(kv, eft.event_data3_compare2) < 0)
+  if (_config_section_update_keyvalue_output_hex(state_data->pstate, 
+                                                 kv, 
+                                                 eft.event_data3_compare2) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1382,19 +1438,24 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
 
   if (num <= 0)
     {
-      fprintf(stderr, "Invalid Num = %d\n", num);
+      pstdout_fprintf(state_data->pstate,
+                      stderr, 
+                      "Invalid Num = %d\n", 
+                      num);
       return NULL;
     }
 
   snprintf(buf, CONFIG_MAX_SECTION_NAME_LEN, "Event_Filter_%d", num);
 
-  if (!(section = config_section_create (buf, 
+  if (!(section = config_section_create (state_data->pstate, 
+                                         buf, 
                                          NULL, 
                                          NULL, 
                                          0)))
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Filter_Type",
                               "Possible values: Manufacturer_Pre_Configured/Software_Configurable/Reserved1/Reserved3",
                               0,
@@ -1403,7 +1464,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               filter_type_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Enable_Filter",
                               "Possible values: Yes/No",
                               0,
@@ -1412,7 +1474,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Filter_Action_Alert",
                               "Possible values: Yes/No",
                               0,
@@ -1421,7 +1484,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Filter_Action_Power_Off",
                               "Possible values: Yes/No",
                               0,
@@ -1430,7 +1494,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Filter_Action_Reset",
                               "Possible values: Yes/No",
                               0,
@@ -1439,7 +1504,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Filter_Action_Power_Cycle",
                               "Possible values: Yes/No",
                               0,
@@ -1448,7 +1514,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Filter_Action_Oem",
                               "Possible values: Yes/No",
                               0,
@@ -1457,7 +1524,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Filter_Action_Diagnostic_Interrupt",
                               "Possible values: Yes/No",
                               0,
@@ -1466,7 +1534,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Filter_Action_Group_Control_Operation",
                               "Possible values: Yes/No",
                               0,
@@ -1475,7 +1544,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Alert_Policy_Number",
                               "Give a valid number",
                               0,
@@ -1484,7 +1554,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Group_Control_Selector",
                               "Give a valid number",
                               0,
@@ -1493,7 +1564,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_three_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Severity",
                               "Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable",
                               0,
@@ -1502,7 +1574,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               event_severity_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Generator_Id_Byte_1",
                               "Specify a hex Slave Address or Software ID from Event Message or 0xFF to Match Any",
                               0,
@@ -1511,7 +1584,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Generator_Id_Byte_2",
                               "Specify a hex Channel Number or LUN to match or 0xFF to Match Any",
                               0,
@@ -1520,7 +1594,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Sensor_Type",
                               "Specify a Sensor Type, For options see the MAN page",
                               0,
@@ -1529,7 +1604,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               sensor_type_validate) < 0) 
     goto cleanup;
   
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Sensor_Number",
                               "Specify a Sensor Number or 0xFF to Match Any",
                               0,
@@ -1538,7 +1614,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Trigger",
                               "Specify a Event/Reading Type Number or 0xFF to Match Any",
                               0,
@@ -1547,7 +1624,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Data1_Offset_Mask",
                               "Give a valid number",
                               0,
@@ -1556,7 +1634,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_two_bytes) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Data1_AND_Mask",
                               "Give a valid number",
                               0,
@@ -1565,7 +1644,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Data1_Compare1",
                               "Give a valid number",
                               0,
@@ -1574,7 +1654,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Data1_Compare2",
                               "Give a valid number",
                               0,
@@ -1583,7 +1664,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0) 
     goto cleanup;
   
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Data2_AND_Mask",
                               "Give a valid number",
                               0,
@@ -1592,7 +1674,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Data2_Compare1",
                               "Give a valid number",
                               0,
@@ -1601,7 +1684,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Data2_Compare2",
                               "Give a valid number",
                               0,
@@ -1610,7 +1694,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Data3_AND_Mask",
                               "Give a valid number",
                               0,
@@ -1619,7 +1704,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Data3_Compare1",
                               "Give a valid number",
                               0,
@@ -1628,7 +1714,8 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Data3_Compare2",
                               "Give a valid number",
                               0,
@@ -1641,6 +1728,6 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
 
  cleanup:
   if (section)
-    config_section_destroy(section);
+    config_section_destroy(state_data->pstate, section);
   return NULL;
 }

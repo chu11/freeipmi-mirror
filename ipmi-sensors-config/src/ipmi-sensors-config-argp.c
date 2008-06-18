@@ -61,6 +61,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_SDR_OPTIONS,
+    ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     CONFIG_ARGP_COMMON_OPTIONS,
     { 0, }
@@ -98,6 +99,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         ret = common_parse_opt (key, arg, state, &(cmd_args->config_args.common));
       if (ret == ARGP_ERR_UNKNOWN)
         ret = sdr_parse_opt (key, arg, state, &(cmd_args->sdr));
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->config_args.hostrange));
       return ret;
     }
   
@@ -145,6 +148,7 @@ ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_confi
 {
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_operator (&(cmd_args->config_args.common));
+  init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));
   init_sdr_cmd_args (&(cmd_args->sdr));
 
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->config_args.common));

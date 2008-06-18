@@ -33,6 +33,8 @@
 #include "pef-config-sections.h"
 
 #include "freeipmi-portability.h"
+#include "hostrange.h"
+#include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 
@@ -53,7 +55,9 @@ _pef_config_state_data_init(pef_config_state_data_t *state_data)
 }
 
 static int 
-_pef_config (void *arg)
+_pef_config (pstdout_state_t pstate,
+             const char *hostname,
+             void *arg)
 {
   pef_config_state_data_t state_data;
   pef_config_prog_data_t *prog_data;
@@ -68,14 +72,18 @@ _pef_config (void *arg)
   
   _pef_config_state_data_init (&state_data);
   state_data.prog_data = prog_data;
+  state_data.pstate = pstate;
 
   if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
-                                        prog_data->args->config_args.common.hostname,
+                                        hostname,
                                         &(prog_data->args->config_args.common),
                                         errmsg,
                                         IPMI_OPEN_ERRMSGLEN)))
     {
-      fprintf(stderr, "%s\n", errmsg);
+      pstdout_fprintf(pstate,
+                      stderr, 
+                      "%s\n", 
+                      errmsg);
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -90,9 +98,18 @@ _pef_config (void *arg)
     {
       if (prog_data->args->config_args.filename)
         {
+          if (prog_data->hosts_count > 1)
+            {
+              pstdout_fprintf(pstate,
+                              stderr,
+                              "Cannot output multiple host checkout into a single file\n");
+              goto cleanup;
+            }
+
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
-              perror("fopen");
+              pstdout_perror(pstate, 
+                             "fopen");
               goto cleanup;
             }
           file_opened++;
@@ -103,11 +120,13 @@ _pef_config (void *arg)
   else if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
            || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
     {
-      if (prog_data->args->config_args.filename && strcmp (prog_data->args->config_args.filename, "-"))
+      if (prog_data->args->config_args.filename 
+          && strcmp (prog_data->args->config_args.filename, "-"))
         {
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
-              perror("fopen");
+              pstdout_perror(pstate,
+                             "fopen");
               goto cleanup;
             }
           file_opened++;
@@ -128,7 +147,8 @@ _pef_config (void *arg)
           && !prog_data->args->config_args.filename
           && !prog_data->args->config_args.keypairs))
     {
-      if (config_parse(sections,
+      if (config_parse(pstate,
+                       sections,
                        &(prog_data->args->config_args),
                        fp) < 0)
         {
@@ -145,7 +165,8 @@ _pef_config (void *arg)
        || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
       && prog_data->args->config_args.keypairs)
     {
-      if (config_sections_insert_keyvalues(sections,
+      if (config_sections_insert_keyvalues(pstate,
+                                           sections,
                                            prog_data->args->config_args.keypairs) < 0)
         {
           /* errors printed in function call */
@@ -164,7 +185,8 @@ _pef_config (void *arg)
       if (prog_data->args->config_args.action != CONFIG_ACTION_CHECKOUT)
         value_input_required = 1;
 
-      if ((num = config_sections_validate_keyvalue_inputs(sections,
+      if ((num = config_sections_validate_keyvalue_inputs(pstate,
+                                                          sections,
                                                           value_input_required,
                                                           &state_data)) < 0)
         {
@@ -190,12 +212,14 @@ _pef_config (void *arg)
       sstr = prog_data->args->config_args.section_strs;
       while (sstr)
         {
-          if (!config_find_section(sections,
+          if (!config_find_section(pstate,
+                                   sections,
                                    sstr->section_name))
             {
-              fprintf(stderr,
-                      "Unknown section `%s'\n",
-                      sstr->section_name);
+              pstdout_fprintf(pstate,
+                              stderr,
+                              "Unknown section `%s'\n",
+                              sstr->section_name);
               goto cleanup;
             }
           sstr = sstr->next;
@@ -222,14 +246,19 @@ _pef_config (void *arg)
                 struct config_section *s;
                 config_err_t this_ret;
                 
-                if (!(s = config_find_section(sections, sstr->section_name)))
+                if (!(s = config_find_section(pstate,
+                                              sections, 
+                                              sstr->section_name)))
                   {
-                    fprintf(stderr, "## FATAL: Cannot checkout section '%s'\n",
-                            sstr->section_name);
+                    pstdout_fprintf(pstate,
+                                    stderr, 
+                                    "## FATAL: Cannot checkout section '%s'\n",
+                                    sstr->section_name);
                     continue;
                   }
                 
-                this_ret = config_checkout_section(s,
+                this_ret = config_checkout_section(pstate,
+                                                   s,
                                                    &(prog_data->args->config_args),
                                                    1,
                                                    fp,
@@ -249,7 +278,8 @@ _pef_config (void *arg)
             if (!prog_data->args->config_args.keypairs)
               all_keys_if_none_specified++;
             
-            ret = config_checkout (sections,
+            ret = config_checkout (pstate,
+                                   sections,
                                    &(prog_data->args->config_args),
                                    all_keys_if_none_specified,
                                    fp,
@@ -257,18 +287,19 @@ _pef_config (void *arg)
           }
         break;
       case CONFIG_ACTION_COMMIT:
-        ret = config_commit (sections,
+        ret = config_commit (pstate,
+                             sections,
                              &(prog_data->args->config_args),
-                             fp,
                              &state_data);
         break;
       case CONFIG_ACTION_DIFF:
-        ret = config_diff (sections,
+        ret = config_diff (pstate,
+                           sections,
                            &(prog_data->args->config_args),
                            &state_data);
         break;
       case CONFIG_ACTION_LIST_SECTIONS:
-        ret = config_output_sections_list (sections);
+        ret = config_output_sections_list (pstate, sections);
         break;
       }
     }
@@ -289,7 +320,7 @@ _pef_config (void *arg)
   if (file_opened)
     fclose(fp);
   if (sections)
-    config_sections_destroy(sections);
+    config_sections_destroy(pstate, sections);
   return exit_code;
 }
 
@@ -299,7 +330,9 @@ main (int argc, char **argv)
   pef_config_prog_data_t prog_data;
   struct pef_config_arguments cmd_args;
   int exit_code;
-  
+  int hosts_count;
+  int rv;
+
   ipmi_disable_coredump();
 
   memset(&prog_data, '\0', sizeof(pef_config_prog_data_t));
@@ -308,8 +341,32 @@ main (int argc, char **argv)
 
   prog_data.args = &cmd_args;
 
-  exit_code = _pef_config (&prog_data);
-  
+  if ((hosts_count = pstdout_setup(&(prog_data.args->config_args.common.hostname),
+                                   prog_data.args->config_args.hostrange.buffer_output,
+                                   prog_data.args->config_args.hostrange.consolidate_output,
+                                   prog_data.args->config_args.hostrange.fanout,
+                                   prog_data.args->config_args.hostrange.eliminate,
+                                   prog_data.args->config_args.hostrange.always_prefix)) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  prog_data.hosts_count = hosts_count;
+
+  if ((rv = pstdout_launch(prog_data.args->config_args.common.hostname,
+                           _pef_config,
+                           &prog_data)) < 0)
+    {
+      fprintf(stderr,
+              "pstdout_launch: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  exit_code = rv;
+ cleanup:
   return exit_code;
 }
 

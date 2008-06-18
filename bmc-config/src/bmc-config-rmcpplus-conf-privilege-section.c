@@ -33,6 +33,8 @@
 #include "bmc-config-utils.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
+#include "tool-fiid-wrappers.h"
 
 static config_err_t
 _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
@@ -61,8 +63,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 
   if (!state_data->cipher_suite_entry_count)
     {
-      if (!(obj_cmd_count_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs)))
-	goto cleanup;
+      _FIID_OBJ_CREATE(obj_cmd_count_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs);
 
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (state_data->ipmi_ctx, 
 												   channel_number, 
@@ -72,15 +73,15 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 												   obj_cmd_count_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
-            fprintf(stderr,
-                    "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support: %s\n",
-                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support: %s\n",
+                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
-      if (Fiid_obj_get (obj_cmd_count_rs, "cipher_suite_entry_count", &val) < 0)
-	goto cleanup;
+      _FIID_OBJ_GET (obj_cmd_count_rs, "cipher_suite_entry_count", &val);
 
       state_data->cipher_suite_entry_count = val;
 
@@ -90,8 +91,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 
   if (!state_data->cipher_suite_id_supported_set)
     {
-      if (!(obj_cmd_id_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs)))
-	goto cleanup;
+      _FIID_OBJ_CREATE(obj_cmd_id_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs);
 
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (state_data->ipmi_ctx, 
 											     channel_number, 
@@ -101,9 +101,10 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 											     obj_cmd_id_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
-            fprintf(stderr,
-                    "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries: %s\n",
-                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries: %s\n",
+                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -145,8 +146,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 	  else if (i == 15)
 	    field = "cipher_suite_id_entry_P";
 
-	  if (Fiid_obj_get (obj_cmd_id_rs, field, &val) < 0)
-	    goto cleanup;
+	  _FIID_OBJ_GET (obj_cmd_id_rs, field, &val);
 	  
 	  state_data->cipher_suite_id_supported[i] = val;
 	}
@@ -156,8 +156,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
   
   if (!state_data->cipher_suite_priv_set)
     {
-      if (!(obj_cmd_priv_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs)))
-	goto cleanup;
+      _FIID_OBJ_CREATE(obj_cmd_priv_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs);
 
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (state_data->ipmi_ctx, 
 												      channel_number, 
@@ -167,9 +166,10 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 												      obj_cmd_priv_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
-            fprintf(stderr,
-                    "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_level: %s\n",
-                    ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_level: %s\n",
+                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -211,8 +211,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 	  else if (i == 15)
 	    field = "maximum_privilege_for_cipher_suite_16";
 
-	  if (Fiid_obj_get (obj_cmd_priv_rs, field, &val) < 0)
-	    goto cleanup;
+	  _FIID_OBJ_GET (obj_cmd_priv_rs, field, &val);
 	  
 	  state_data->cipher_suite_priv[i] = val;
 	}
@@ -222,9 +221,9 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_count_rs);
-  Fiid_obj_destroy(obj_cmd_id_rs);
-  Fiid_obj_destroy(obj_cmd_priv_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_count_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_id_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_priv_rs);
   return (rv);
 }
 
@@ -254,7 +253,9 @@ id_checkout (const char *section_name,
   
   if (id_found)
     {
-      if (config_section_update_keyvalue_output(kv, rmcpplus_priv_string (privilege)) < 0)
+      if (config_section_update_keyvalue_output(state_data->pstate,
+                                                kv, 
+                                                rmcpplus_priv_string (privilege)) < 0)
         return CONFIG_ERR_FATAL_ERROR;
       return CONFIG_ERR_SUCCESS;
     }
@@ -278,8 +279,7 @@ id_commit (const char *section_name,
   if ((ret = _rmcpplus_cipher_suite_id_privilege_setup(state_data)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -314,9 +314,10 @@ id_commit (const char *section_name,
                                                                                                  obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -325,7 +326,7 @@ id_commit (const char *section_name,
   rv = CONFIG_ERR_SUCCESS;
   
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -362,13 +363,15 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
     "username configured should set for support under a cipher suite ID. "
     "This is typically \"Administrator\".";
 
-  if (!(rmcpplus_conf_privilege_section = config_section_create ("Rmcpplus_Conf_Privilege",
+  if (!(rmcpplus_conf_privilege_section = config_section_create (state_data->pstate,
+                                                                 "Rmcpplus_Conf_Privilege",
                                                                  "Rmcpplus_Conf_Privilege",
                                                                  section_comment,
                                                                  0)))
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_0",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -377,7 +380,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_1",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -386,7 +390,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_2",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -395,7 +400,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_3",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -404,7 +410,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_4",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -413,7 +420,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_5",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -422,7 +430,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_6",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -431,7 +440,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_7",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -440,7 +450,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_8",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -449,7 +460,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_9",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -458,7 +470,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_10",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -467,7 +480,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_11",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -476,7 +490,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_12",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -485,7 +500,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_13",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -494,7 +510,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (rmcpplus_conf_privilege_section,
+  if (config_section_add_key (state_data->pstate,
+                              rmcpplus_conf_privilege_section,
                               "Maximum_Privilege_Cipher_Suite_Id_14",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -507,7 +524,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
 
  cleanup:
   if (rmcpplus_conf_privilege_section)
-    config_section_destroy(rmcpplus_conf_privilege_section);
+    config_section_destroy(state_data->pstate, rmcpplus_conf_privilege_section);
   return NULL;
 }
 

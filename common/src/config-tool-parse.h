@@ -20,8 +20,10 @@
 #define _CONFIG_TOOL_PARSE_H_
 
 #include "config-tool-common.h"
+#include "pstdout.h"
 
-config_err_t config_parse (struct config_section *sections, 
+config_err_t config_parse (pstdout_state_t pstate,
+                           struct config_section *sections, 
                            struct config_arguments *cmd_args,
                            FILE *fp);
 

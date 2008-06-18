@@ -31,6 +31,8 @@
 #include "bmc-config-validate.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
+#include "tool-fiid-wrappers.h"
 
 static config_err_t
 power_restore_policy_checkout (const char *section_name,
@@ -42,28 +44,29 @@ power_restore_policy_checkout (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   uint64_t val;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs);
 
   if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_chassis_status: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_chassis_status: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_cmd_rs, "current_power_state.power_restore_policy", &val) < 0)
-    goto cleanup;
+  _FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_restore_policy", &val);
 
-  if (config_section_update_keyvalue_output(kv, power_restore_policy_string ((uint8_t)val)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            power_restore_policy_string ((uint8_t)val)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -76,24 +79,24 @@ power_restore_policy_commit (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_power_restore_policy_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_power_restore_policy_rs);
   
   if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
                                          power_restore_policy_number (kv->value_input),
                                          obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_power_restore_policy: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_power_restore_policy: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -112,13 +115,15 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
     "machine (\"Off_State_AC_Apply\"), or return the power to the state that "
     "existed before the power loss (\"Restore_State_AC_Apply\").";
 
-  if (!(misc_section = config_section_create ("Misc",
+  if (!(misc_section = config_section_create (state_data->pstate,
+                                              "Misc",
                                               "Misc",
                                               section_comment,
                                               0)))
     goto cleanup;
 
-  if (config_section_add_key (misc_section,
+  if (config_section_add_key (state_data->pstate,
+                              misc_section,
                               "Power_Restore_Policy",
                               "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
                               CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
@@ -131,6 +136,6 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (misc_section)
-    config_section_destroy(misc_section);
+    config_section_destroy(state_data->pstate, misc_section);
   return NULL;
 }

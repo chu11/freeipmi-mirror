@@ -60,6 +60,7 @@ static struct argp_option cmdline_options[] = {
   ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
   ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
   ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
+  ARGP_COMMON_HOSTRANGED_OPTIONS,
   ARGP_COMMON_OPTIONS_DEBUG,
   CONFIG_ARGP_COMMON_OPTIONS,
   CONFIG_ARGP_COMMON_OPTIONS_LEGACY,
@@ -100,6 +101,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       ret = config_parse_opt (key, arg, state, &cmd_args->config_args);
       if (ret == ARGP_ERR_UNKNOWN)
         ret = common_parse_opt (key, arg, state, &cmd_args->config_args.common);
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->config_args.hostrange));
       return ret;
     }
   return 0;
@@ -141,6 +144,7 @@ bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_
 {
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_admin (&(cmd_args->config_args.common));
+  init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));
 
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->config_args.common));
 

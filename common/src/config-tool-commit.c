@@ -32,11 +32,12 @@
 #include "config-tool-utils.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 
 config_err_t
-config_commit_section(struct config_section *section,
+config_commit_section(pstdout_state_t pstate,
+                      struct config_section *section,
                       struct config_arguments *cmd_args,
-                      FILE *fp,
                       void *arg)
 {
   struct config_keyvalue *kv;
@@ -45,7 +46,6 @@ config_commit_section(struct config_section *section,
 
   assert(section);
   assert(cmd_args);
-  assert(fp);
 
   kv = section->keyvalues;
   while (kv) 
@@ -62,32 +62,39 @@ config_commit_section(struct config_section *section,
           
           if (ret == CONFIG_ERR_NON_FATAL_ERROR)
             {
-              fprintf (stderr, "ERROR: Failed to commit `%s:%s'\n", 
-                       section->section_name, kv->key->key_name);
+              PSTDOUT_FPRINTF (pstate,
+                               stderr, 
+                               "ERROR: Failed to commit `%s:%s'\n", 
+                               section->section_name,
+                               kv->key->key_name);
               ret = CONFIG_ERR_NON_FATAL_ERROR;
             }
         }
       else
-        fprintf (stderr, "ERROR: `%s:%s' is not writeable\n", 
-                 section->section_name, kv->key->key_name);
+        PSTDOUT_FPRINTF (pstate,
+                         stderr, 
+                         "ERROR: `%s:%s' is not writeable\n", 
+                         section->section_name, 
+                         kv->key->key_name);
       
       kv = kv->next;
     }
   
   if (cmd_args->verbose)
-    fprintf (stderr, "Completed commit of Section: %s\n",
-             section->section_name);
+    PSTDOUT_FPRINTF (pstate,
+                     stderr, 
+                     "Completed commit of Section: %s\n",
+                     section->section_name);
   
   rv = ret;
  cleanup:
   return rv;
 }
 
-
 config_err_t
-config_commit (struct config_section *sections,
+config_commit (pstdout_state_t pstate,
+               struct config_section *sections,
                struct config_arguments *cmd_args,
-               FILE *fp,
                void *arg)
 {
   struct config_section *s;
@@ -96,12 +103,14 @@ config_commit (struct config_section *sections,
 
   assert(sections);
   assert(cmd_args);
-  assert(fp);
 
   s = sections;
   while (s)
     {
-      if ((ret = config_commit_section(s, cmd_args, fp, arg)) != CONFIG_ERR_SUCCESS)
+      if ((ret = config_commit_section(pstate,
+                                       s, 
+                                       cmd_args,
+                                       arg)) != CONFIG_ERR_SUCCESS)
         {
           if (ret == CONFIG_ERR_FATAL_ERROR)
             {

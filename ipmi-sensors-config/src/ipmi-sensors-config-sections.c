@@ -33,6 +33,7 @@
 #include "ipmi-sensors-config-threshold-section.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 #include "tool-sdr-cache-common.h"
 
 struct config_section *
@@ -44,9 +45,10 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
 
   if (ipmi_sdr_cache_record_count(state_data->ipmi_sdr_cache_ctx, &record_count) < 0)
     {
-      fprintf(stderr,
-              "ipmi_sdr_cache_record_count: %s\n",
-              ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_sdr_cache_record_count: %s\n",
+                      ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
       goto cleanup;
     }
 
@@ -64,9 +66,10 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
                                                        sdr_record,
                                                        IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
         {
-          fprintf(stderr,
-                  "ipmi_sdr_cache_record_read: %s\n",
-                  ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "ipmi_sdr_cache_record_read: %s\n",
+                          ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
           goto cleanup;
         }
 
@@ -114,13 +117,13 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
           continue;
         }
 
-      if (config_section_append (&sections, section) < 0)
+      if (config_section_append (state_data->pstate, &sections, section) < 0)
         goto cleanup;
     }
 
   return sections;
 
  cleanup:
-  config_sections_destroy(sections);
+  config_sections_destroy(state_data->pstate, sections);
   return NULL;
 }

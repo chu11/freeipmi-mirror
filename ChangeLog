@@ -1,3 +1,4 @@
+<<<<<<< ChangeLog
 2008-XX-XX Albert Chu <chu11@llnl.gov>
 
 	Add Solaris BMC interface.
@@ -29,6 +30,66 @@
 
 	* README.sunbmc: New file.
 
+=======
+2008-06-18 Albert Chu <chu11@llnl.gov>
+
+	Support hostranges on bmc-config, ipmi-sensors-config, and pef-config.
+
+	* common/src/config-tool-argp.c, common/src/config-tool-argp.h,
+	common/src/config-tool-checkout.c,
+	common/src/config-tool-checkout.h,
+	common/src/config-tool-comment.c,
+	common/src/config-tool-comment.h, common/src/config-tool-commit.c,
+	common/src/config-tool-commit.h, common/src/config-tool-common.h,
+	common/src/config-tool-diff.c, common/src/config-tool-diff.h,
+	common/src/config-tool-parse.c, common/src/config-tool-parse.h,
+	common/src/config-tool-pef-conf-section.c,
+	common/src/config-tool-pef-conf-section.h: Support hostranges.
+
+	* bmc-config/src/, ipmi-sensors-config/src/, pef-config/src/:
+	Support hostranges.
+
+	* doc/freeipmi-hostrange.txt,
+	common/doc/manpage-common-config-tool-general-use.man,
+	bmc-config/bmc-config.8.pre.in,
+	ipmi-sensors-config/ipmi-sensors-config.8.pre.in,
+	pef-config/pef-config.8.pre.in: Update appropriately for hostrange
+	support in config tools.
+
+	Misc fallout from above changes.
+
+	* common/src/pstdout.h, common/src/pstdout.c (PSTDOUT_PRINTF,
+	PSTDOUT_FPRINTF, PSTDOUT_PERROR): new functions.
+
+	* common/src/tool-sdr-cache-common.c: Use PSTDOUT_PRINTF,
+	PSTDOUT_FPRINTF, PSTDOUT_PERROR appropriately.
+
+	* common/src/tool-fiid-wrappers.h (_FIID_OBJ_GET_DATA): Remove
+	__len in parameters.
+
+	* bmc-info/, ipmi-fru/: Adjust for _FIID_OBJ_GET_DATA change.
+
+	* common/src/config-tool-fiid.h, common/src/config-tool-fiid.c:
+	Removed files.
+
+	* common/src/config-tool-pef-conf-section.c: Adjust for removed
+	wrapper functions.
+
+	* common/src/config-tool-commit.h, common/src/config-tool-commit.c
+	(config_commit_section, config_commit): Remove fp argument.
+
+	* common/src/pstdout.c (_pstdout_printf): Resolve return value
+	corner case.
+
+	* common/src/pstdout.h: Update comments on pstdout_printf,
+	pstdout_fprintf, and pstdout_perror.
+	
+2008-06-16 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors-config/ipmi-sensors-config.8.pre.in: Fix manpage
+	output text ordering.
+	
+>>>>>>> 1.1609
 2008-06-13 Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-common.c (ipmi_open): Add/fix conditions under

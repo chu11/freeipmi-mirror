@@ -28,12 +28,13 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 #include <assert.h>
+#include <freeipmi/freeipmi.h>
 
 #include "config-tool-pef-conf-section.h"
-#include "config-tool-fiid.h"
 #include "config-tool-section.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 
 /* convenience structs */
 
@@ -56,7 +57,8 @@ struct pef_action_global_control
 };
 
 static config_err_t
-_get_pef_control (ipmi_ctx_t ipmi_ctx,
+_get_pef_control (pstdout_state_t pstate,
+                  ipmi_ctx_t ipmi_ctx,
                   struct config_arguments *cmd_args,
                   struct pef_control *pc)
 {
@@ -68,8 +70,14 @@ _get_pef_control (ipmi_ctx_t ipmi_ctx,
   assert(cmd_args);
   assert(pc);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_control_rs)))
-    goto cleanup;
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_control_rs)))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_create: %s",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx,
                                                              IPMI_GET_PEF_PARAMETER,
@@ -78,37 +86,64 @@ _get_pef_control (ipmi_ctx_t ipmi_ctx,
                                                              obj_cmd_rs) < 0)
     {
       if (cmd_args->common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+        PSTDOUT_FPRINTF(pstate,
+                        stderr,
+                        "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_cmd_rs, "pef", &val) < 0)
-    goto cleanup;
+  if (fiid_obj_get (obj_cmd_rs, "pef", &val) < 0)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+      goto cleanup;
+    }
   pc->enable_pef = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "pef_event_messages", &val) < 0)
-    goto cleanup;
+  if (fiid_obj_get (obj_cmd_rs, "pef_event_messages", &val) < 0)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+      goto cleanup;
+    }
   pc->enable_pef_event_messages = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "pef_startup_delay", &val) < 0)
-    goto cleanup;
+  if (fiid_obj_get (obj_cmd_rs, "pef_startup_delay", &val) < 0)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+      goto cleanup;
+    }
   pc->enable_pef_startup_delay = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
-    goto cleanup;
+  if (fiid_obj_get (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+      goto cleanup;
+    }
   pc->enable_pef_alert_startup_delay = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
 static config_err_t
-_set_pef_control (ipmi_ctx_t ipmi_ctx,
+_set_pef_control (pstdout_state_t pstate,
+                  ipmi_ctx_t ipmi_ctx,
                   struct config_arguments *cmd_args,
                   struct pef_control *pc)
 {
@@ -119,8 +154,14 @@ _set_pef_control (ipmi_ctx_t ipmi_ctx,
   assert(cmd_args);
   assert(pc);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
-    goto cleanup;
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_create: %s",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx,
                                                              pc->enable_pef,
@@ -130,153 +171,196 @@ _set_pef_control (ipmi_ctx_t ipmi_ctx,
                                                              obj_cmd_rs) < 0)
     {
       if (cmd_args->common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_pef_configuration_parameters_pef_control: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+        PSTDOUT_FPRINTF(pstate,
+                        stderr,
+                        "ipmi_cmd_set_pef_configuration_parameters_pef_control: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
 config_err_t
-enable_pef_checkout (struct config_keyvalue *kv,
+enable_pef_checkout (pstdout_state_t pstate,
+                     struct config_keyvalue *kv,
                      ipmi_ctx_t ipmi_ctx,
                      struct config_arguments *cmd_args)
 {
   struct pef_control pc;
   config_err_t ret;
   
-  if ((ret = _get_pef_control (ipmi_ctx, cmd_args, &pc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_control (pstate,
+                               ipmi_ctx, 
+                               cmd_args, 
+                               &pc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, pc.enable_pef ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(pstate,
+                                            kv,
+                                            pc.enable_pef ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
 
 config_err_t
-enable_pef_commit (const struct config_keyvalue *kv,
+enable_pef_commit (pstdout_state_t pstate,
+                   const struct config_keyvalue *kv,
                    ipmi_ctx_t ipmi_ctx,
                    struct config_arguments *cmd_args)
 {
   struct pef_control pc;
   config_err_t ret;
 
-  if ((ret = _get_pef_control (ipmi_ctx, cmd_args, &pc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_control (pstate, 
+                               ipmi_ctx, 
+                               cmd_args, 
+                               &pc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   pc.enable_pef = same (kv->value_input, "yes");
 
-  return _set_pef_control (ipmi_ctx, cmd_args, &pc);
+  return _set_pef_control (pstate, ipmi_ctx, cmd_args, &pc);
 }
 
 config_err_t
-enable_pef_event_messages_checkout (struct config_keyvalue *kv,
+enable_pef_event_messages_checkout (pstdout_state_t pstate,
+                                    struct config_keyvalue *kv,
                                     ipmi_ctx_t ipmi_ctx,
                                     struct config_arguments *cmd_args)
 {
   struct pef_control pc;
   config_err_t ret;
   
-  if ((ret = _get_pef_control (ipmi_ctx, cmd_args, &pc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_control (pstate, 
+                               ipmi_ctx, 
+                               cmd_args, 
+                               &pc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, pc.enable_pef_event_messages ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(pstate,
+                                            kv,
+                                            pc.enable_pef_event_messages ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
 
 config_err_t
-enable_pef_event_messages_commit (const struct config_keyvalue *kv,
+enable_pef_event_messages_commit (pstdout_state_t pstate,
+                                  const struct config_keyvalue *kv,
                                   ipmi_ctx_t ipmi_ctx,
                                   struct config_arguments *cmd_args)
 {
   struct pef_control pc;
   config_err_t ret;
 
-  if ((ret = _get_pef_control (ipmi_ctx, cmd_args, &pc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_control (pstate, 
+                               ipmi_ctx, 
+                               cmd_args, 
+                               &pc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   pc.enable_pef_event_messages = same (kv->value_input, "yes");
 
-  return _set_pef_control (ipmi_ctx, cmd_args, &pc);
+  return _set_pef_control (pstate, ipmi_ctx, cmd_args, &pc);
 }
 
 config_err_t
-enable_pef_startup_delay_checkout (struct config_keyvalue *kv,
+enable_pef_startup_delay_checkout (pstdout_state_t pstate,
+                                   struct config_keyvalue *kv,
                                    ipmi_ctx_t ipmi_ctx,
                                    struct config_arguments *cmd_args)
 {
   struct pef_control pc;
   config_err_t ret;
   
-  if ((ret = _get_pef_control (ipmi_ctx, cmd_args, &pc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_control (pstate, 
+                               ipmi_ctx, 
+                               cmd_args,
+                               &pc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, pc.enable_pef_startup_delay ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(pstate,
+                                            kv,
+                                            pc.enable_pef_startup_delay ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
 
 config_err_t
-enable_pef_startup_delay_commit (const struct config_keyvalue *kv,
+enable_pef_startup_delay_commit (pstdout_state_t pstate,
+                                 const struct config_keyvalue *kv,
                                  ipmi_ctx_t ipmi_ctx,
                                  struct config_arguments *cmd_args)
 {
   struct pef_control pc;
   config_err_t ret;
 
-  if ((ret = _get_pef_control (ipmi_ctx, cmd_args, &pc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_control (pstate, 
+                               ipmi_ctx,
+                               cmd_args, 
+                               &pc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   pc.enable_pef_startup_delay = same (kv->value_input, "yes");
 
-  return _set_pef_control (ipmi_ctx, cmd_args, &pc);
+  return _set_pef_control (pstate, ipmi_ctx, cmd_args, &pc);
 }
 
 config_err_t
-enable_pef_alert_startup_delay_checkout (struct config_keyvalue *kv,
+enable_pef_alert_startup_delay_checkout (pstdout_state_t pstate,
+                                         struct config_keyvalue *kv,
                                          ipmi_ctx_t ipmi_ctx,
                                          struct config_arguments *cmd_args)
 {
   struct pef_control pc;
   config_err_t ret;
   
-  if ((ret = _get_pef_control (ipmi_ctx, cmd_args, &pc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_control (pstate, 
+                               ipmi_ctx, 
+                               cmd_args,
+                               &pc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, pc.enable_pef_alert_startup_delay ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(pstate,
+                                            kv,
+                                            pc.enable_pef_alert_startup_delay ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
 
 config_err_t
-enable_pef_alert_startup_delay_commit (const struct config_keyvalue *kv,
+enable_pef_alert_startup_delay_commit (pstdout_state_t pstate,
+                                       const struct config_keyvalue *kv,
                                        ipmi_ctx_t ipmi_ctx,
                                        struct config_arguments *cmd_args)
 {
   struct pef_control pc;
   config_err_t ret;
 
-  if ((ret = _get_pef_control (ipmi_ctx, cmd_args, &pc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_control (pstate,
+                               ipmi_ctx, 
+                               cmd_args, 
+                               &pc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   pc.enable_pef_alert_startup_delay = same (kv->value_input, "yes");
 
-  return _set_pef_control (ipmi_ctx, cmd_args, &pc);
+  return _set_pef_control (pstate, ipmi_ctx, cmd_args, &pc);
 }
 
 static config_err_t
-_get_pef_action_global_control (ipmi_ctx_t ipmi_ctx,
+_get_pef_action_global_control (pstdout_state_t pstate,
+                                ipmi_ctx_t ipmi_ctx,
                                 struct config_arguments *cmd_args,
                                 struct pef_action_global_control *gc)
                                
@@ -289,8 +373,14 @@ _get_pef_action_global_control (ipmi_ctx_t ipmi_ctx,
   assert(cmd_args);
   assert(gc);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_action_global_control_rs)))
-    goto cleanup;
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_action_global_control_rs)))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_create: %s",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_ctx,
                                                                            IPMI_GET_PEF_PARAMETER,
@@ -299,45 +389,84 @@ _get_pef_action_global_control (ipmi_ctx_t ipmi_ctx,
                                                                            obj_cmd_rs) < 0)
     {
       if (cmd_args->common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+        PSTDOUT_FPRINTF(pstate,
+                        stderr,
+                        "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_cmd_rs, "alert_action", &val) < 0)
-    goto cleanup;
+  if (fiid_obj_get (obj_cmd_rs, "alert_action", &val) < 0)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+      goto cleanup;
+    }
   gc->enable_alert_action = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "power_down_action", &val) < 0)
-    goto cleanup;
+  if (fiid_obj_get (obj_cmd_rs, "power_down_action", &val) < 0)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+      goto cleanup;
+    }
   gc->enable_power_down_action = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "reset_action", &val) < 0)
-    goto cleanup;
+  if (fiid_obj_get (obj_cmd_rs, "reset_action", &val) < 0)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+      goto cleanup;
+    }
   gc->enable_reset_action = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "power_cycle_action", &val) < 0)
-    goto cleanup;
+  if (fiid_obj_get (obj_cmd_rs, "power_cycle_action", &val) < 0)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+      goto cleanup;
+    }
   gc->enable_power_cycle_action = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "oem_action", &val) < 0)
-    goto cleanup;
+  if (fiid_obj_get (obj_cmd_rs, "oem_action", &val) < 0)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+      goto cleanup;
+    }
   gc->enable_oem_action = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "diagnostic_interrupt", &val) < 0)
-    goto cleanup;
+  if (fiid_obj_get (obj_cmd_rs, "diagnostic_interrupt", &val) < 0)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+      goto cleanup;
+    }
   gc->enable_diagnostic_interrupt = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
 static config_err_t
-_set_pef_action_global_control (ipmi_ctx_t ipmi_ctx,
+_set_pef_action_global_control (pstdout_state_t pstate,
+                                ipmi_ctx_t ipmi_ctx,
                                 struct config_arguments *cmd_args,
                                 struct pef_action_global_control *gc)
 {
@@ -348,8 +477,14 @@ _set_pef_action_global_control (ipmi_ctx_t ipmi_ctx,
   assert(cmd_args);
   assert(gc);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
-    goto cleanup;
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_create: %s",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (ipmi_ctx,
                                                                            gc->enable_alert_action,
@@ -361,219 +496,282 @@ _set_pef_action_global_control (ipmi_ctx_t ipmi_ctx,
                                                                            obj_cmd_rs) < 0)
     {
       if (cmd_args->common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+        PSTDOUT_FPRINTF(pstate,
+                        stderr,
+                        "ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
 config_err_t
-enable_alert_action_checkout (struct config_keyvalue *kv,
+enable_alert_action_checkout (pstdout_state_t pstate,
+                              struct config_keyvalue *kv,
                               ipmi_ctx_t ipmi_ctx,
                               struct config_arguments *cmd_args)
 {
   struct pef_action_global_control gc;
   config_err_t ret;
   
-  if ((ret = _get_pef_action_global_control (ipmi_ctx, cmd_args, &gc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_action_global_control (pstate,
+                                             ipmi_ctx, 
+                                             cmd_args,
+                                             &gc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, gc.enable_alert_action ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(pstate,
+                                            kv,
+                                            gc.enable_alert_action ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
 
 config_err_t
-enable_alert_action_commit (const struct config_keyvalue *kv,
+enable_alert_action_commit (pstdout_state_t pstate,
+                            const struct config_keyvalue *kv,
                             ipmi_ctx_t ipmi_ctx,
                             struct config_arguments *cmd_args)
 {
   struct pef_action_global_control gc;
   config_err_t ret;
 
-  if ((ret = _get_pef_action_global_control (ipmi_ctx, cmd_args, &gc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_action_global_control (pstate,
+                                             ipmi_ctx, 
+                                             cmd_args, 
+                                             &gc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   gc.enable_alert_action = same (kv->value_input, "yes");
 
-  return _set_pef_action_global_control (ipmi_ctx, cmd_args, &gc);
+  return _set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc);
 }
 
 config_err_t
-enable_power_down_action_checkout (struct config_keyvalue *kv,
+enable_power_down_action_checkout (pstdout_state_t pstate,
+                                   struct config_keyvalue *kv,
                                    ipmi_ctx_t ipmi_ctx,
                                    struct config_arguments *cmd_args)
 {
   struct pef_action_global_control gc;
   config_err_t ret;
 
-  if ((ret = _get_pef_action_global_control (ipmi_ctx, cmd_args, &gc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_action_global_control (pstate, 
+                                             ipmi_ctx, 
+                                             cmd_args, 
+                                             &gc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, gc.enable_power_down_action ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(pstate,
+                                            kv,
+                                            gc.enable_power_down_action ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
 
 config_err_t
-enable_power_down_action_commit (const struct config_keyvalue *kv,
+enable_power_down_action_commit (pstdout_state_t pstate,
+                                 const struct config_keyvalue *kv,
                                  ipmi_ctx_t ipmi_ctx,
                                  struct config_arguments *cmd_args)
 {
   struct pef_action_global_control gc;
   config_err_t ret;
 
-  if ((ret = _get_pef_action_global_control (ipmi_ctx, cmd_args, &gc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_action_global_control (pstate, 
+                                             ipmi_ctx, 
+                                             cmd_args, 
+                                             &gc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   gc.enable_power_down_action = same (kv->value_input, "yes");
 
-  return _set_pef_action_global_control (ipmi_ctx, cmd_args, &gc);
+  return _set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc);
 }
 
 config_err_t
-enable_reset_action_checkout (struct config_keyvalue *kv,
+enable_reset_action_checkout (pstdout_state_t pstate,
+                              struct config_keyvalue *kv,
                               ipmi_ctx_t ipmi_ctx,
                               struct config_arguments *cmd_args)
 {
   struct pef_action_global_control gc;
   config_err_t ret;
 
-  if ((ret = _get_pef_action_global_control (ipmi_ctx, cmd_args, &gc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_action_global_control (pstate, 
+                                             ipmi_ctx, 
+                                             cmd_args,
+                                             &gc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, gc.enable_reset_action ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(pstate,
+                                            kv,
+                                            gc.enable_reset_action ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
 
 config_err_t
-enable_reset_action_commit (const struct config_keyvalue *kv,
+enable_reset_action_commit (pstdout_state_t pstate,
+                            const struct config_keyvalue *kv,
                             ipmi_ctx_t ipmi_ctx,
                             struct config_arguments *cmd_args)
 {
   struct pef_action_global_control gc;
   config_err_t ret;
 
-  if ((ret = _get_pef_action_global_control (ipmi_ctx, cmd_args, &gc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_action_global_control (pstate, 
+                                             ipmi_ctx, 
+                                             cmd_args,
+                                             &gc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   gc.enable_reset_action = same (kv->value_input, "yes");
 
-  return _set_pef_action_global_control (ipmi_ctx, cmd_args, &gc);
+  return _set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc);
 }
 
 config_err_t
-enable_power_cycle_action_checkout (struct config_keyvalue *kv,
+enable_power_cycle_action_checkout (pstdout_state_t pstate,
+                                    struct config_keyvalue *kv,
                                     ipmi_ctx_t ipmi_ctx,
                                     struct config_arguments *cmd_args)
 {
   struct pef_action_global_control gc;
   config_err_t ret;
 
-  if ((ret = _get_pef_action_global_control (ipmi_ctx, cmd_args, &gc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_action_global_control (pstate, 
+                                             ipmi_ctx,
+                                             cmd_args,
+                                             &gc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, gc.enable_power_cycle_action ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(pstate,
+                                            kv,
+                                            gc.enable_power_cycle_action ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
 
 config_err_t
-enable_power_cycle_action_commit (const struct config_keyvalue *kv,
+enable_power_cycle_action_commit (pstdout_state_t pstate,
+                                  const struct config_keyvalue *kv,
                                   ipmi_ctx_t ipmi_ctx,
                                   struct config_arguments *cmd_args)
 {
   struct pef_action_global_control gc;
   config_err_t ret;
 
-  if ((ret = _get_pef_action_global_control (ipmi_ctx, cmd_args, &gc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_action_global_control (pstate, 
+                                             ipmi_ctx, 
+                                             cmd_args,
+                                             &gc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   gc.enable_power_cycle_action = same (kv->value_input, "yes");
 
-  return _set_pef_action_global_control (ipmi_ctx, cmd_args, &gc);
+  return _set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc);
 }
 
 config_err_t
-enable_oem_action_checkout (struct config_keyvalue *kv,
+enable_oem_action_checkout (pstdout_state_t pstate,
+                            struct config_keyvalue *kv,
                             ipmi_ctx_t ipmi_ctx,
                             struct config_arguments *cmd_args)
 {
   struct pef_action_global_control gc;
   config_err_t ret;
 
-  if ((ret = _get_pef_action_global_control (ipmi_ctx, cmd_args, &gc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_action_global_control (pstate, 
+                                             ipmi_ctx,
+                                             cmd_args,
+                                             &gc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, gc.enable_oem_action ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(pstate,
+                                            kv, 
+                                            gc.enable_oem_action ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
 
 config_err_t
-enable_oem_action_commit (const struct config_keyvalue *kv,
+enable_oem_action_commit (pstdout_state_t pstate,
+                          const struct config_keyvalue *kv,
                           ipmi_ctx_t ipmi_ctx,
                           struct config_arguments *cmd_args)
 {
   struct pef_action_global_control gc;
   config_err_t ret;
 
-  if ((ret = _get_pef_action_global_control (ipmi_ctx, cmd_args, &gc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_action_global_control (pstate,
+                                             ipmi_ctx, 
+                                             cmd_args,
+                                             &gc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   gc.enable_oem_action = same (kv->value_input, "yes");
 
-  return _set_pef_action_global_control (ipmi_ctx, cmd_args, &gc);
+  return _set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc);
 }
 
 config_err_t
-enable_diagnostic_interrupt_checkout (struct config_keyvalue *kv,
+enable_diagnostic_interrupt_checkout (pstdout_state_t pstate,
+                                      struct config_keyvalue *kv,
                                       ipmi_ctx_t ipmi_ctx,
                                       struct config_arguments *cmd_args)
 {
   struct pef_action_global_control gc;
   config_err_t ret;
 
-  if ((ret = _get_pef_action_global_control (ipmi_ctx, cmd_args, &gc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_action_global_control (pstate, 
+                                             ipmi_ctx, 
+                                             cmd_args, 
+                                             &gc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, gc.enable_diagnostic_interrupt ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(pstate,
+                                            kv, 
+                                            gc.enable_diagnostic_interrupt ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
 
 config_err_t
-enable_diagnostic_interrupt_commit (const struct config_keyvalue *kv,
+enable_diagnostic_interrupt_commit (pstdout_state_t pstate,
+                                    const struct config_keyvalue *kv,
                                     ipmi_ctx_t ipmi_ctx,
                                     struct config_arguments *cmd_args)
 {
   struct pef_action_global_control gc;
   config_err_t ret;
 
-  if ((ret = _get_pef_action_global_control (ipmi_ctx, cmd_args, &gc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_pef_action_global_control (pstate, 
+                                             ipmi_ctx, 
+                                             cmd_args,
+                                             &gc)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   gc.enable_diagnostic_interrupt = same (kv->value_input, "yes");
 
-  return _set_pef_action_global_control (ipmi_ctx, cmd_args, &gc);
+  return _set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc);
 }
 
 config_err_t
-pef_startup_delay_checkout (struct config_keyvalue *kv,
+pef_startup_delay_checkout (pstdout_state_t pstate,
+                            struct config_keyvalue *kv,
                             ipmi_ctx_t ipmi_ctx,
                             struct config_arguments *cmd_args)
 {
@@ -585,8 +783,14 @@ pef_startup_delay_checkout (struct config_keyvalue *kv,
   assert(ipmi_ctx);
   assert(cmd_args);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs)))
-    goto cleanup;
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs)))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_create: %s",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_ctx,
                                                                    IPMI_GET_PEF_PARAMETER,
@@ -595,27 +799,38 @@ pef_startup_delay_checkout (struct config_keyvalue *kv,
                                                                    obj_cmd_rs) < 0)
     {
       if (cmd_args->common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+        PSTDOUT_FPRINTF(pstate,
+                        stderr,
+                        "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_cmd_rs, "pef_startup_delay", &val) < 0)
-    goto cleanup;
+  if (fiid_obj_get (obj_cmd_rs, "pef_startup_delay", &val) < 0)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+      goto cleanup;
+    }
 
-  if (config_section_update_keyvalue_output_int(kv, val) < 0)
+  if (config_section_update_keyvalue_output_int(pstate,
+                                                kv,
+                                                val) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
 config_err_t
-pef_startup_delay_commit (const struct config_keyvalue *kv,
+pef_startup_delay_commit (pstdout_state_t pstate,
+                          const struct config_keyvalue *kv,
                           ipmi_ctx_t ipmi_ctx,
                           struct config_arguments *cmd_args)
 {
@@ -626,29 +841,38 @@ pef_startup_delay_commit (const struct config_keyvalue *kv,
   assert(ipmi_ctx);
   assert(cmd_args);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
-    goto cleanup;
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_create: %s",
+                      strerror(errno));
+      goto cleanup;
+    }
   
   if (ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (ipmi_ctx,
                                                                    atoi (kv->value_input),
                                                                    obj_cmd_rs) < 0)
     {
       if (cmd_args->common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+        PSTDOUT_FPRINTF(pstate,
+                        stderr,
+                        "ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
 config_err_t
-pef_alert_startup_delay_checkout (struct config_keyvalue *kv,
+pef_alert_startup_delay_checkout (pstdout_state_t pstate,
+                                  struct config_keyvalue *kv,
                                   ipmi_ctx_t ipmi_ctx,
                                   struct config_arguments *cmd_args)
 {
@@ -660,8 +884,14 @@ pef_alert_startup_delay_checkout (struct config_keyvalue *kv,
   assert(ipmi_ctx);
   assert(cmd_args);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay_rs)))
-    goto cleanup;
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay_rs)))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_create: %s",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx,
                                                                          IPMI_GET_PEF_PARAMETER,
@@ -670,27 +900,38 @@ pef_alert_startup_delay_checkout (struct config_keyvalue *kv,
                                                                          obj_cmd_rs) < 0)
     {
       if (cmd_args->common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+        PSTDOUT_FPRINTF(pstate,
+                        stderr,
+                        "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
-    goto cleanup;
+  if (fiid_obj_get (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_get: %s\n",
+                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+      goto cleanup;
+    }
 
-  if (config_section_update_keyvalue_output_int(kv, val) < 0)
+  if (config_section_update_keyvalue_output_int(pstate,
+                                                kv,
+                                                val) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
 config_err_t
-pef_alert_startup_delay_commit (const struct config_keyvalue *kv,
+pef_alert_startup_delay_commit (pstdout_state_t pstate,
+                                const struct config_keyvalue *kv,
                                 ipmi_ctx_t ipmi_ctx,
                                 struct config_arguments *cmd_args)
 {
@@ -701,24 +942,32 @@ pef_alert_startup_delay_commit (const struct config_keyvalue *kv,
   assert(ipmi_ctx);
   assert(cmd_args);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
-    goto cleanup;
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "fiid_obj_create: %s",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx,
                                                                          atoi (kv->value_input),
                                                                          obj_cmd_rs) < 0)
     {
       if (cmd_args->common.debug)
-        fprintf(stderr,
-                "ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
-                ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+        PSTDOUT_FPRINTF(pstate,
+                        stderr,
+                        "ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 

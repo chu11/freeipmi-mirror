@@ -23,20 +23,19 @@
 #include <stdint.h>
 
 #include "config-tool-common.h"
+#include "pstdout.h"
 
-int8_t config_ipv4_address_string2int(char *src, uint32_t *dest);
-
-int8_t config_mac_address_string2int(char *src, uint64_t *dest);
+/* note: keypair and section_str functions for argp parsing, no pstate involved */
 
 int config_keypair_parse_string(char *str,
                                 char **section_name,
                                 char **key_name,
                                 char **value);
 
-/* no config_keypairs_create, responsibility of config tool to create list */
-
 int config_keypair_append(struct config_keypair **keypairs,
                           struct config_keypair *keypair);
+
+/* no config_keypairs_create, responsibility of config tool to create list */
 
 void config_keypairs_destroy(struct config_keypair *keypairs);
 
@@ -55,13 +54,24 @@ int config_section_str_append(struct config_section_str **section_strs,
 
 void config_section_str_destroy(struct config_section_str *section_str);
 
-struct config_section *config_find_section(struct config_section *sections, 
+int8_t config_ipv4_address_string2int(pstdout_state_t pstate,
+                                      char *src, 
+                                      uint32_t *dest);
+
+int8_t config_mac_address_string2int(pstdout_state_t pstate,
+                                     char *src, 
+                                     uint64_t *dest);
+
+struct config_section *config_find_section(pstdout_state_t pstate,
+                                           struct config_section *sections, 
                                            const char *section_name);
 
-struct config_key *config_find_key(struct config_section *section, 
+struct config_key *config_find_key(pstdout_state_t pstate,
+                                   struct config_section *section, 
                                    const char *key_name);
 
-struct config_keyvalue *config_find_keyvalue(struct config_section *section, 
+struct config_keyvalue *config_find_keyvalue(pstdout_state_t pstate,
+                                             struct config_section *section, 
                                              const char *key_name);
 
 #endif /* _CONFIG_TOOL_UTIL_H_ */
