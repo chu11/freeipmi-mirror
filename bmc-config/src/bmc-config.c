@@ -220,6 +220,41 @@ _bmc_config (pstdout_state_t pstate,
         }
     }
 
+  /* Special case: IP addresses and MAC addresses cannot be configured
+   * in parallel.  Reject input if user attempts to configure the same
+   * IP or MAC on multiple hosts.
+   */
+  if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
+      && prog_data->hosts_count > 1)
+    {
+      struct config_section *section;
+      
+      if ((section = config_find_section(pstate,
+                                         sections,
+                                         "Lan_Conf")))
+        {
+          if (config_find_keyvalue(pstate,
+                                   section,
+                                   "IP_Address"))
+            {
+              pstdout_fprintf(pstate,
+                              stderr,
+                              "Cannot configure Lan_Conf:IP_Address on multiple hosts\n");
+              goto cleanup;
+            }
+
+          if (config_find_keyvalue(pstate,
+                                   section,
+                                   "MAC_Address"))
+            {
+              pstdout_fprintf(pstate,
+                              stderr,
+                              "Cannot configure Lan_Conf:MAC_Address on multiple hosts\n");
+              goto cleanup;
+            }
+        }
+    }
+
   switch (prog_data->args->config_args.action) {
   case CONFIG_ACTION_CHECKOUT:
     if (prog_data->args->config_args.section_strs)
@@ -319,6 +354,7 @@ main (int argc, char *argv[])
   bmc_config_prog_data_t prog_data;
   struct bmc_config_arguments cmd_args;
   int exit_code;
+  int hosts_count;
   int rv;
 
   ipmi_disable_coredump();
@@ -329,16 +365,18 @@ main (int argc, char *argv[])
 
   prog_data.args = &cmd_args;
 
-  if (pstdout_setup(&(prog_data.args->config_args.common.hostname),
-                    prog_data.args->config_args.hostrange.buffer_output,
-                    prog_data.args->config_args.hostrange.consolidate_output,
-                    prog_data.args->config_args.hostrange.fanout,
-                    prog_data.args->config_args.hostrange.eliminate,
-                    prog_data.args->config_args.hostrange.always_prefix) < 0)
+  if ((hosts_count = pstdout_setup(&(prog_data.args->config_args.common.hostname),
+                                   prog_data.args->config_args.hostrange.buffer_output,
+                                   prog_data.args->config_args.hostrange.consolidate_output,
+                                   prog_data.args->config_args.hostrange.fanout,
+                                   prog_data.args->config_args.hostrange.eliminate,
+                                   prog_data.args->config_args.hostrange.always_prefix)) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
+
+  prog_data.hosts_count = hosts_count;
 
   if ((rv = pstdout_launch(prog_data.args->config_args.common.hostname,
                            _bmc_config,

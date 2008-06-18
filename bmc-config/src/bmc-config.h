@@ -48,6 +48,7 @@ typedef struct bmc_config_prog_data
 {
   char *progname;
   struct bmc_config_arguments *args;
+  int hosts_count;
 } bmc_config_prog_data_t;
 
 typedef struct bmc_config_state_data
