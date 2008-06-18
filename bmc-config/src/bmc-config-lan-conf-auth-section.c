@@ -76,7 +76,8 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(al);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs)))
     goto cleanup;
   
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -101,109 +102,184 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (obj_cmd_rs, "callback_level.none", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "callback_level.none", 
+                    &val) < 0)
     goto cleanup;
   al->callback_level_none = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "callback_level.md2", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "callback_level.md2", 
+                    &val) < 0)
     goto cleanup;
   al->callback_level_md2 = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "callback_level.md5", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "callback_level.md5", 
+                    &val) < 0)
     goto cleanup;
   al->callback_level_md5 = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "callback_level.straight_password", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "callback_level.straight_password", 
+                    &val) < 0)
     goto cleanup;
   al->callback_level_straight_password = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "callback_level.oem_proprietary", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "callback_level.oem_proprietary", 
+                    &val) < 0)
     goto cleanup;
   al->callback_level_oem_proprietary = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "user_level.none", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "user_level.none", 
+                    &val) < 0)
     goto cleanup;
   al->user_level_none = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "user_level.md2", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "user_level.md2", 
+                    &val) < 0)
     goto cleanup;
   al->user_level_md2 = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "user_level.md5", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "user_level.md5", 
+                    &val) < 0)
     goto cleanup;
   al->user_level_md5 = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "user_level.straight_password", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "user_level.straight_password", 
+                    &val) < 0)
     goto cleanup;
   al->user_level_straight_password = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "user_level.oem_proprietary", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs,
+                    "user_level.oem_proprietary", 
+                    &val) < 0)
     goto cleanup;
   al->user_level_oem_proprietary = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "operator_level.none", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "operator_level.none", 
+                    &val) < 0)
     goto cleanup;
   al->operator_level_none = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "operator_level.md2", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "operator_level.md2", 
+                    &val) < 0)
     goto cleanup;
   al->operator_level_md2 = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "operator_level.md5", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "operator_level.md5", 
+                    &val) < 0)
     goto cleanup;
   al->operator_level_md5 = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "operator_level.straight_password", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "operator_level.straight_password",
+                    &val) < 0)
     goto cleanup;
   al->operator_level_straight_password = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "operator_level.oem_proprietary", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "operator_level.oem_proprietary", 
+                    &val) < 0)
     goto cleanup;
   al->operator_level_oem_proprietary = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "admin_level.none", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "admin_level.none", 
+                    &val) < 0)
     goto cleanup;
   al->admin_level_none = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "admin_level.md2", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "admin_level.md2", 
+                    &val) < 0)
     goto cleanup;
   al->admin_level_md2 = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "admin_level.md5", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "admin_level.md5", 
+                    &val) < 0)
     goto cleanup;
   al->admin_level_md5 = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "admin_level.straight_password", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "admin_level.straight_password", 
+                    &val) < 0)
     goto cleanup;
   al->admin_level_straight_password = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "admin_level.oem_proprietary", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "admin_level.oem_proprietary", 
+                    &val) < 0)
     goto cleanup;
   al->admin_level_oem_proprietary = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "oem_level.none", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "oem_level.none", 
+                    &val) < 0)
     goto cleanup;
   al->oem_level_none = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "oem_level.md2", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs,
+                    "oem_level.md2",
+                    &val) < 0)
     goto cleanup;
   al->oem_level_md2 = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "oem_level.md5", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "oem_level.md5", 
+                    &val) < 0)
     goto cleanup;
   al->oem_level_md5 = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "oem_level.straight_password", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "oem_level.straight_password", 
+                    &val) < 0)
     goto cleanup;
   al->oem_level_straight_password = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "oem_level.oem_proprietary", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "oem_level.oem_proprietary", 
+                    &val) < 0)
     goto cleanup;
   al->oem_level_oem_proprietary = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -219,7 +295,8 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(al);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -268,7 +345,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -361,7 +438,9 @@ _authentication_level_checkout (const char *section_name,
                                          &al)))
     return CONFIG_ERR_FATAL_ERROR;
 
-  if (config_section_update_keyvalue_output(kv, *flag ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            *flag ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -408,13 +487,15 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
     "will also want to configure some of the \"None\" fields to \"Yes\" "
     "to allow \"None\" authentication to work.";
 
-  if (!(lan_conf_auth_section = config_section_create("Lan_Conf_Auth",
+  if (!(lan_conf_auth_section = config_section_create(state_data->pstate,
+                                                      "Lan_Conf_Auth",
                                                       "Lan_Conf_Auth",
                                                       section_comment,
                                                       0)))
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Callback_Enable_Auth_Type_None",
                               "Possible values: Yes/No",
                               0,
@@ -423,7 +504,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Callback_Enable_Auth_Type_MD2",
                               "Possible values: Yes/No",
                               0,
@@ -432,7 +514,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Callback_Enable_Auth_Type_MD5",
                               "Possible values: Yes/No",
                               0,
@@ -441,7 +524,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Callback_Enable_Auth_Type_Straight_Password",
                               "Possible values: Yes/No",
                               0,
@@ -450,7 +534,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Callback_Enable_Auth_Type_OEM_Proprietary",
                               "Possible values: Yes/No",
                               0,
@@ -459,7 +544,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "User_Enable_Auth_Type_None",
                               "Possible values: Yes/No",
                               0,
@@ -468,7 +554,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "User_Enable_Auth_Type_MD2",
                               "Possible values: Yes/No",
                               0,
@@ -477,7 +564,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "User_Enable_Auth_Type_MD5",
                               "Possible values: Yes/No",
                               0,
@@ -486,7 +574,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "User_Enable_Auth_Type_Straight_Password",
                               "Possible values: Yes/No",
                               0,
@@ -495,7 +584,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "User_Enable_Auth_Type_OEM_Proprietary",
                               "Possible values: Yes/No",
                               0,
@@ -504,7 +594,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Operator_Enable_Auth_Type_None",
                               "Possible values: Yes/No",
                               0,
@@ -513,7 +604,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Operator_Enable_Auth_Type_MD2",
                               "Possible values: Yes/No",
                               0,
@@ -522,7 +614,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Operator_Enable_Auth_Type_MD5",
                               "Possible values: Yes/No",
                               0,
@@ -531,7 +624,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Operator_Enable_Auth_Type_Straight_Password",
                               "Possible values: Yes/No",
                               0,
@@ -540,7 +634,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Operator_Enable_Auth_Type_OEM_Proprietary",
                               "Possible values: Yes/No",
                               0,
@@ -549,7 +644,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Admin_Enable_Auth_Type_None",
                               "Possible values: Yes/No",
                               0,
@@ -558,7 +654,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Admin_Enable_Auth_Type_MD2",
                               "Possible values: Yes/No",
                               0,
@@ -567,7 +664,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Admin_Enable_Auth_Type_MD5",
                               "Possible values: Yes/No",
                               0,
@@ -576,7 +674,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Admin_Enable_Auth_Type_Straight_Password",
                               "Possible values: Yes/No",
                               0,
@@ -585,7 +684,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "Admin_Enable_Auth_Type_OEM_Proprietary",
                               "Possible values: Yes/No",
                               0,
@@ -594,7 +694,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "OEM_Enable_Auth_Type_None",
                               "Possible values: Yes/No",
                               0,
@@ -603,7 +704,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "OEM_Enable_Auth_Type_MD2",
                               "Possible values: Yes/No",
                               0,
@@ -612,7 +714,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "OEM_Enable_Auth_Type_MD5",
                               "Possible values: Yes/No",
                               0,
@@ -621,7 +724,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "OEM_Enable_Auth_Type_Straight_Password",
                               "Possible values: Yes/No",
                               0,
@@ -630,7 +734,8 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_auth_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_auth_section,
                               "OEM_Enable_Auth_Type_OEM_Proprietary",
                               "Possible values: Yes/No",
                               0,
@@ -643,6 +748,6 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (lan_conf_auth_section)
-    config_section_destroy(lan_conf_auth_section);
+    config_section_destroy(state_data->pstate, lan_conf_auth_section);
   return NULL;
 }

@@ -189,7 +189,8 @@ threshold_checkout (const char *section_name,
                                   &sensor_number) < 0)
     goto cleanup;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sensor_thresholds_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_sensor_thresholds_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_sensor_thresholds (state_data->ipmi_ctx,
@@ -239,7 +240,10 @@ threshold_checkout (const char *section_name,
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  if (Fiid_obj_get (obj_cmd_rs, readable_str, &readable) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs,
+                    readable_str, 
+                    &readable) < 0)
     goto cleanup;
 
   if (!readable)
@@ -255,7 +259,10 @@ threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_cmd_rs, threshold_str, &threshold_raw) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    threshold_str, 
+                    &threshold_raw) < 0)
     goto cleanup;
 
   if ((ret = _calculate_threshold(state_data,
@@ -268,12 +275,14 @@ threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (config_section_update_keyvalue_output_double(kv, threshold_calc) < 0)
+  if (config_section_update_keyvalue_output_double(state_data->pstate,
+                                                   kv, 
+                                                   threshold_calc) < 0)
     goto cleanup;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -408,7 +417,8 @@ threshold_commit (const char *section_name,
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_sensor_thresholds_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_sensor_thresholds_rs)))
     goto cleanup;
 
   if (ipmi_cmd_set_sensor_thresholds (state_data->ipmi_ctx,
@@ -432,7 +442,7 @@ threshold_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -659,7 +669,8 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
              record_id,
              "Unknown_Sensor_Name");
 
-  if (!(section = config_section_create (section_name,
+  if (!(section = config_section_create (state_data->pstate,
+                                         section_name,
                                          NULL,
                                          NULL,
                                          0)))
@@ -730,7 +741,8 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
           flags |= CONFIG_READABLE_ONLY;
         }
 
-      if (config_section_add_key (section,
+      if (config_section_add_key (state_data->pstate,
+                                  section,
                                   "Lower_Non_Critical_Threshold",
                                   desc,
                                   flags,
@@ -754,7 +766,8 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
           flags |= CONFIG_READABLE_ONLY;
         }
 
-      if (config_section_add_key (section,
+      if (config_section_add_key (state_data->pstate,
+                                  section,
                                   "Lower_Critical_Threshold",
                                   desc,
                                   flags,
@@ -778,7 +791,8 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
           flags |= CONFIG_READABLE_ONLY;
         }
 
-      if (config_section_add_key (section,
+      if (config_section_add_key (state_data->pstate,
+                                  section,
                                   "Lower_Non_Recoverable_Threshold",
                                   desc,
                                   flags,
@@ -802,7 +816,8 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
           flags |= CONFIG_READABLE_ONLY;
         }
 
-      if (config_section_add_key (section,
+      if (config_section_add_key (state_data->pstate,
+                                  section,
                                   "Upper_Non_Critical_Threshold",
                                   desc,
                                   flags,
@@ -826,7 +841,8 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
           flags |= CONFIG_READABLE_ONLY;
         }
 
-      if (config_section_add_key (section,
+      if (config_section_add_key (state_data->pstate,
+                                  section,
                                   "Upper_Critical_Threshold",
                                   desc,
                                   flags,
@@ -850,7 +866,8 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
           flags |= CONFIG_READABLE_ONLY;
         }
 
-      if (config_section_add_key (section,
+      if (config_section_add_key (state_data->pstate,
+                                  section,
                                   "Upper_Non_Recoverable_Threshold",
                                   desc,
                                   flags,
@@ -865,6 +882,6 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
 
  cleanup:
   if (section)
-    config_section_destroy(section);
+    config_section_destroy(state_data->pstate, section);
   return rv;
 }

@@ -31,86 +31,7 @@
 #include "config-tool-utils.h"
 
 #include "freeipmi-portability.h"
-
-int8_t
-config_ipv4_address_string2int(char *src, uint32_t *dest)
-{
-  unsigned int b1, b2, b3, b4;
-  uint64_t val;
-  int rv;
-
-  assert(src && dest);
-
-  if ((rv = sscanf (src, 
-                    "%u.%u.%u.%u", 
-                    &b1,
-                    &b2, 
-                    &b3, 
-                    &b4)) < 0)
-    {
-      perror("sscanf");
-      return (-1);
-    }
-
-  if (rv != 4)
-    {
-      fprintf(stderr, 
-              "config_ipv4_address_string2int: Invalid src input: %s\n",
-              src);
-      return (-1);
-    }
-
-  val = 0;
-  val |= (uint64_t)b1;
-  val |= ((uint64_t)b2 << 8);
-  val |= ((uint64_t)b3 << 16);
-  val |= ((uint64_t)b4 << 24);
-
-  *dest = val;
-  return (0);
-}
-
-int8_t
-config_mac_address_string2int(char *src, uint64_t *dest)
-{
-  unsigned int b1, b2, b3, b4, b5, b6;
-  uint64_t val;
-  int rv;
-
-  assert(src && dest);
-
-  if ((rv = sscanf (src,
-                    "%02X:%02X:%02X:%02X:%02X:%02X", 
-                    &b1,
-                    &b2, 
-                    &b3, 
-                    &b4,
-                    &b5, 
-                    &b6)) < 0)
-    {
-      perror("sscanf");
-      return (-1);
-    }
-
-  if (rv != 6)
-    {
-      fprintf(stderr, 
-              "config_mac_address_string2int: Invalid src input: %s\n",
-              src);
-      return (-1);
-    }
-
-  val = 0;
-  val |= (uint64_t)b1;
-  val |= ((uint64_t)b2 << 8);
-  val |= ((uint64_t)b3 << 16);
-  val |= ((uint64_t)b4 << 24);
-  val |= ((uint64_t)b5 << 32);
-  val |= ((uint64_t)b6 << 40);
-
-  *dest = val;
-  return (0);
-}
+#include "pstdout.h"
 
 int
 config_keypair_parse_string(char *str,
@@ -396,8 +317,97 @@ config_section_str_destroy(struct config_section_str *section_str)
     }
 }
 
+int8_t
+config_ipv4_address_string2int(pstdout_state_t pstate,
+                               char *src, 
+                               uint32_t *dest)
+{
+  unsigned int b1, b2, b3, b4;
+  uint64_t val;
+  int rv;
+
+  assert(src && dest);
+
+  if ((rv = sscanf (src, 
+                    "%u.%u.%u.%u", 
+                    &b1,
+                    &b2, 
+                    &b3, 
+                    &b4)) < 0)
+    {
+      PSTDOUT_PERROR(pstate,
+                     "sscanf");
+      return (-1);
+    }
+
+  if (rv != 4)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr, 
+                      "config_ipv4_address_string2int: Invalid src input: %s\n",
+                      src);
+      return (-1);
+    }
+
+  val = 0;
+  val |= (uint64_t)b1;
+  val |= ((uint64_t)b2 << 8);
+  val |= ((uint64_t)b3 << 16);
+  val |= ((uint64_t)b4 << 24);
+
+  *dest = val;
+  return (0);
+}
+
+int8_t
+config_mac_address_string2int(pstdout_state_t pstate,
+                              char *src, 
+                              uint64_t *dest)
+{
+  unsigned int b1, b2, b3, b4, b5, b6;
+  uint64_t val;
+  int rv;
+
+  assert(src && dest);
+
+  if ((rv = sscanf (src,
+                    "%02X:%02X:%02X:%02X:%02X:%02X", 
+                    &b1,
+                    &b2, 
+                    &b3, 
+                    &b4,
+                    &b5, 
+                    &b6)) < 0)
+    {
+      PSTDOUT_PERROR(pstate,
+                     "sscanf");
+      return (-1);
+    }
+
+  if (rv != 6)
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr, 
+                      "config_mac_address_string2int: Invalid src input: %s\n",
+                      src);
+      return (-1);
+    }
+
+  val = 0;
+  val |= (uint64_t)b1;
+  val |= ((uint64_t)b2 << 8);
+  val |= ((uint64_t)b3 << 16);
+  val |= ((uint64_t)b4 << 24);
+  val |= ((uint64_t)b5 << 32);
+  val |= ((uint64_t)b6 << 40);
+
+  *dest = val;
+  return (0);
+}
+
 struct config_section *
-config_find_section(struct config_section *sections, 
+config_find_section(pstdout_state_t pstate,
+                    struct config_section *sections, 
                     const char *section_name)
 {
   struct config_section *s = NULL;
@@ -417,7 +427,8 @@ config_find_section(struct config_section *sections,
 }
 
 struct config_key *
-config_find_key(struct config_section *section, 
+config_find_key(pstdout_state_t pstate,
+                struct config_section *section, 
                 const char *key_name)
 {
   struct config_key *k = NULL;
@@ -437,7 +448,8 @@ config_find_key(struct config_section *section,
 }
 
 struct config_keyvalue *
-config_find_keyvalue(struct config_section *section, 
+config_find_keyvalue(pstdout_state_t pstate,
+                     struct config_section *section, 
                      const char *key_name)
 {
   struct config_keyvalue *kv = NULL;

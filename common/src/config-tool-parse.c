@@ -31,9 +31,11 @@
 #include "config-tool-utils.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 
 config_err_t
-config_parse (struct config_section *sections, 
+config_parse (pstdout_state_t pstate,
+              struct config_section *sections, 
               struct config_arguments *cmd_args,
               FILE *fp)
 { 
@@ -55,14 +57,20 @@ config_parse (struct config_section *sections,
       if (!str) 
         {
           if (cmd_args->common.debug)
-            fprintf (stderr, "%d: empty line\n", line_num);
+            PSTDOUT_FPRINTF (pstate,
+                             stderr, 
+                             "%d: empty line\n", 
+                             line_num);
           continue;
         }
     
       if (str[0] == '#') 
         {
           if (cmd_args->common.debug)
-            fprintf (stderr, "Comment on line %d\n", line_num);
+            PSTDOUT_FPRINTF (pstate,
+                             stderr, 
+                             "Comment on line %d\n", 
+                             line_num);
           continue;
         }
       
@@ -70,19 +78,29 @@ config_parse (struct config_section *sections,
         {
           if (!(tok = strtok (NULL, " \t\n")))
             {
-              fprintf (stderr, "FATAL: Error parsing line number %d\n",
-                       line_num);
+              PSTDOUT_FPRINTF (pstate,
+                               stderr,
+                               "FATAL: Error parsing line number %d\n",
+                               line_num);
               goto cleanup;
             }
 
-          if (!(section = config_find_section(sections, tok)))
+          if (!(section = config_find_section(pstate,
+                                              sections, 
+                                              tok)))
             {
-              fprintf(stderr, "Unknown section `%s'\n", tok);
+              PSTDOUT_FPRINTF(pstate,
+                              stderr, 
+                              "Unknown section `%s'\n", 
+                              tok);
               goto cleanup;
             }
 
           if (cmd_args->common.debug) 
-            fprintf (stderr, "Entering section `%s'\n", section->section_name);
+            PSTDOUT_FPRINTF (pstate,
+                             stderr,
+                             "Entering section `%s'\n", 
+                             section->section_name);
 
           continue;
         } 
@@ -92,13 +110,18 @@ config_parse (struct config_section *sections,
         {
           if (!section) 
             {
-              fprintf (stderr, "FATAL: encountered `%s' without a matching Section\n",
-                       str);
+              PSTDOUT_FPRINTF (pstate,
+                               stderr, 
+                               "FATAL: encountered `%s' without a matching Section\n",
+                               str);
               goto cleanup;
             }
 
           if (cmd_args->common.debug)
-            fprintf (stderr, "Leaving section `%s'\n", section->section_name);
+            PSTDOUT_FPRINTF (pstate,
+                             stderr, 
+                             "Leaving section `%s'\n", 
+                             section->section_name);
 
           section = NULL;
           continue;
@@ -107,17 +130,22 @@ config_parse (struct config_section *sections,
       
       if (!section) 
         {
-          fprintf (stderr, "FATAL: Key `%s' not inside a valid Section\n",
-                   str);
+          PSTDOUT_FPRINTF (pstate,
+                           stderr, 
+                           "FATAL: Key `%s' not inside a valid Section\n",
+                           str);
           goto cleanup;
         }
       
-      if (!(key = config_find_key(section, str)))
+      if (!(key = config_find_key(pstate,
+                                  section, 
+                                  str)))
         {
-          fprintf(stderr,
-                  "Unknown key `%s' in section `%s'\n",
-                  str,
-                  section->section_name);
+          PSTDOUT_FPRINTF(pstate,
+                          stderr,
+                          "Unknown key `%s' in section `%s'\n",
+                          str,
+                          section->section_name);
           goto cleanup;
         }
 
@@ -126,22 +154,27 @@ config_parse (struct config_section *sections,
         tok = "";
       
       if (cmd_args->common.debug)
-        fprintf(stderr,
-                "Parsed `%s:%s=%s'\n",
-                section->section_name,
-                key->key_name,
-                tok);
+        PSTDOUT_FPRINTF(pstate,
+                        stderr,
+                        "Parsed `%s:%s=%s'\n",
+                        section->section_name,
+                        key->key_name,
+                        tok);
 
-      if (config_find_keyvalue(section, key->key_name))
+      if (config_find_keyvalue(pstate,
+                               section, 
+                               key->key_name))
         {
-          fprintf(stderr,
-                  "Key '%s' specified twice in section '%s'\n",
-                  key->key_name,
-                  section->section_name);
+          PSTDOUT_FPRINTF(pstate,
+                          stderr,
+                          "Key '%s' specified twice in section '%s'\n",
+                          key->key_name,
+                          section->section_name);
           goto cleanup;
         }
 
-      if (config_section_add_keyvalue (section,
+      if (config_section_add_keyvalue (pstate,
+                                       section,
                                        key,
                                        tok,
                                        NULL) < 0) 

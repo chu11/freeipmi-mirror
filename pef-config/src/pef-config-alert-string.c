@@ -62,7 +62,8 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
+                                     tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (state_data->ipmi_ctx,
@@ -80,17 +81,23 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_cmd_rs, "filter_number", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate, 
+                    obj_cmd_rs,
+                    "filter_number", 
+                    &val) < 0)
     goto cleanup;
   ask->event_filter_number = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "set_number_for_string", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate, 
+                    obj_cmd_rs, 
+                    "set_number_for_string", 
+                    &val) < 0)
     goto cleanup;
   ask->alert_string_set = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -109,7 +116,8 @@ _set_alert_string_keys (pef_config_state_data_t *state_data,
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
+                                     tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
   if (ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (state_data->ipmi_ctx,
@@ -129,7 +137,7 @@ _set_alert_string_keys (pef_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -147,7 +155,9 @@ event_filter_number_checkout (const char *section_name,
                                      &ask)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, ask.event_filter_number) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate, 
+                                                kv, 
+                                                ask.event_filter_number) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -188,7 +198,9 @@ alert_string_set_checkout (const char *section_name,
                                      &ask)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, ask.alert_string_set) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate, 
+                                                kv,
+                                                ask.alert_string_set) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -232,7 +244,8 @@ alert_string_checkout (const char *section_name,
 
   memset(alert_string, '\0', PEF_ALERT_STRING_MAX_LEN+1);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
+                                     tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs)))
     goto cleanup;
 
   if (!((PEF_ALERT_STRING_MAX_LEN) % 16))
@@ -244,7 +257,7 @@ alert_string_checkout (const char *section_name,
     {
       int j;
 
-      Fiid_obj_clear(obj_cmd_rs);
+      Fiid_obj_clear(state_data->pstate, obj_cmd_rs);
 
       if (ipmi_cmd_get_pef_configuration_parameters_alert_string (state_data->ipmi_ctx,
                                                                   IPMI_GET_PEF_PARAMETER,
@@ -265,7 +278,8 @@ alert_string_checkout (const char *section_name,
        * whatever is passed in, so don't check for overflow errors
        * from Fiid_obj_get_data.
        */
-      if (Fiid_obj_get_data (obj_cmd_rs,
+      if (Fiid_obj_get_data (state_data->pstate, 
+                             obj_cmd_rs,
                              "string_data",
                              alert_string + (i * 16),
                              PEF_ALERT_STRING_MAX_LEN - (i * 16)) < 0)
@@ -280,12 +294,14 @@ alert_string_checkout (const char *section_name,
     }
 
  done:
-  if (config_section_update_keyvalue_output(kv, (char *)alert_string) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv, 
+                                            (char *)alert_string) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 
 }
@@ -307,7 +323,8 @@ alert_string_commit (const char *section_name,
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
+                                     tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
   
   alert_string_len = strlen((char *)kv->value_input);
@@ -361,7 +378,7 @@ alert_string_commit (const char *section_name,
  cleanup:
   if (alert_string_buf)
     free(alert_string_buf);
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 
 }
@@ -393,13 +410,15 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
 
   snprintf(buf, CONFIG_MAX_SECTION_NAME_LEN, "Alert_String_%d", num);
 
-  if (!(section = config_section_create (buf, 
+  if (!(section = config_section_create (state_data->pstate, 
+                                         buf, 
                                          NULL, 
                                          NULL, 
                                          0)))
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Filter_Number",
                               "Give valid number",
                               0,
@@ -408,7 +427,8 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
                               config_number_range_seven_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Alert_String_Set",
                               "Give valid number",
                               0,
@@ -417,7 +437,8 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
                               config_number_range_seven_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Alert_String",
                               "Give string. Max 64 chars.",
                               0,
@@ -430,7 +451,7 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
 
  cleanup:
   if (section)
-    config_section_destroy(section);
+    config_section_destroy(state_data->pstate, section);
   return NULL;
 }
 

@@ -62,7 +62,8 @@ _get_alert_policy_table (struct pef_config_state_data *state_data,
   
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
+                                     tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (state_data->ipmi_ctx, 
@@ -81,34 +82,58 @@ _get_alert_policy_table (struct pef_config_state_data *state_data,
     }
 
 #if 0
-  if (Fiid_obj_get (obj_cmd_rs, "alert_policy_entry_number", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate, 
+                    obj_cmd_rs,
+                    "alert_policy_entry_number", 
+                    &val) < 0)
     goto cleanup;
 #endif
-  if (Fiid_obj_get (obj_cmd_rs, "policy_number.policy_type", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate, 
+                    obj_cmd_rs, 
+                    "policy_number.policy_type", 
+                    &val) < 0)
     goto cleanup;
   apt->policy_type = val;
-  if (Fiid_obj_get (obj_cmd_rs, "policy_number.enabled", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate, 
+                    obj_cmd_rs,
+                    "policy_number.enabled", 
+                    &val) < 0)
     goto cleanup;
   apt->policy_enabled = val;
-  if (Fiid_obj_get (obj_cmd_rs, "policy_number.policy_number", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate, 
+                    obj_cmd_rs, 
+                    "policy_number.policy_number", 
+                    &val) < 0)
     goto cleanup;
   apt->policy_number = val;
-  if (Fiid_obj_get (obj_cmd_rs, "channel_destination.destination_selector", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate, 
+                    obj_cmd_rs,
+                    "channel_destination.destination_selector",
+                    &val) < 0)
     goto cleanup;
   apt->destination_selector = val;
-  if (Fiid_obj_get (obj_cmd_rs, "channel_destination.channel_number", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate, 
+                    obj_cmd_rs, 
+                    "channel_destination.channel_number", 
+                    &val) < 0)
     goto cleanup;
   apt->channel_number = val;
-  if (Fiid_obj_get (obj_cmd_rs, "alert_string_key.alert_string_set_selector", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate, 
+                    obj_cmd_rs,
+                    "alert_string_key.alert_string_set_selector", 
+                    &val) < 0)
     goto cleanup;
   apt->alert_string_set_selector = val;
-  if (Fiid_obj_get (obj_cmd_rs, "alert_string_key.event_specific_alert_string", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate, 
+                    obj_cmd_rs,
+                    "alert_string_key.event_specific_alert_string", 
+                    &val) < 0)
     goto cleanup;
   apt->event_specific_alert_string = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -127,7 +152,8 @@ _set_alert_policy_table (struct pef_config_state_data *state_data,
 
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
+                                     tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
   if (ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (state_data->ipmi_ctx, 
@@ -152,7 +178,7 @@ _set_alert_policy_table (struct pef_config_state_data *state_data,
       
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -170,7 +196,9 @@ policy_type_checkout (const char *section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, policy_type_string (apt.policy_type)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv, 
+                                            policy_type_string (apt.policy_type)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -211,7 +239,9 @@ policy_enabled_checkout (const char *section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, apt.policy_enabled ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv, 
+                                            apt.policy_enabled ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -252,7 +282,9 @@ policy_number_checkout (const char *section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, apt.policy_number) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate, 
+                                                kv,
+                                                apt.policy_number) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -293,7 +325,9 @@ destination_selector_checkout (const char *section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, apt.destination_selector) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate, 
+                                                kv,
+                                                apt.destination_selector) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -334,7 +368,9 @@ channel_number_checkout (const char *section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, apt.channel_number) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate, 
+                                                kv,
+                                                apt.channel_number) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -375,7 +411,9 @@ alert_string_set_selector_checkout (const char *section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, apt.alert_string_set_selector) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate, 
+                                                kv,
+                                                apt.alert_string_set_selector) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -416,7 +454,9 @@ event_specific_alert_string_checkout (const char *section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, apt.event_specific_alert_string ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            apt.event_specific_alert_string ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -463,13 +503,15 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
 
   snprintf(buf, CONFIG_MAX_SECTION_NAME_LEN, "Alert_Policy_%d", num);
 
-  if (!(section = config_section_create (buf, 
+  if (!(section = config_section_create (state_data->pstate, 
+                                         buf, 
                                          NULL, 
                                          NULL, 
                                          0)))
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Policy_Type",
                               "Possible values: Always_Send_To_This_Destination/Proceed_To_Next_Entry/Do_Not_Proceed_Any_More_Entries/Proceed_To_Next_Entry_Different_Channel/Proceed_To_Next_Entry_Different_Destination_Type",
                               0,
@@ -478,7 +520,8 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                               policy_type_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Policy_Enabled",
                               "Possible values: Yes/No",
                               0,
@@ -487,7 +530,8 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                               config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Policy_Number",
                               "Give a valid number",
                               0,
@@ -496,7 +540,8 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Destination_Selector",
                               "Give a valid number",
                               0,
@@ -530,7 +575,8 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
         }
     }
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Channel_Number",
                               strp,
                               0,
@@ -539,7 +585,8 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Alert_String_Set_Selector",
                               "Give a valid number",
                               0,
@@ -548,7 +595,8 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_seven_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Event_Specific_Alert_String",
                               "Possible values: Yes/No",
                               0,
@@ -565,7 +613,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
   if (strp)
     free(strp);
   if (section)
-    config_section_destroy(section);
+    config_section_destroy(state_data->pstate, section);
   return NULL;
 }
 

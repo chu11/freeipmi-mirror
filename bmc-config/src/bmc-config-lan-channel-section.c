@@ -52,7 +52,8 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
     "\"User_Level_Auth\" and \"Per_Message_Auth\" are typically set to "
     "\"Yes\" for additional security.";
 
-  if (!(lan_channel_section = config_section_create ("Lan_Channel",
+  if (!(lan_channel_section = config_section_create (state_data->pstate,
+                                                     "Lan_Channel",
                                                      "Lan_Channel",
                                                      section_comment,
                                                      0)))
@@ -66,7 +67,7 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (lan_channel_section)
-    config_section_destroy(lan_channel_section);
+    config_section_destroy(state_data->pstate, lan_channel_section);
   return NULL;
 }
 

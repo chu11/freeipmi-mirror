@@ -51,7 +51,8 @@ _get_key(bmc_config_state_data_t *state_data,
   assert(key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
          || key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_channel_security_keys_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -77,7 +78,11 @@ _get_key(bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((buf_len = Fiid_obj_get_data (obj_cmd_rs, "key_value", buf, CONFIG_PARSE_BUFLEN)) < 0)
+  if ((buf_len = Fiid_obj_get_data (state_data->pstate,
+                                    obj_cmd_rs, 
+                                    "key_value", 
+                                    buf, 
+                                    CONFIG_PARSE_BUFLEN)) < 0)
     goto cleanup;
 
   if (key_len < buf_len)
@@ -91,7 +96,7 @@ _get_key(bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -109,7 +114,8 @@ _set_key(bmc_config_state_data_t *state_data,
   assert(key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
          || key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_channel_security_keys_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -137,7 +143,7 @@ _set_key(bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -160,7 +166,9 @@ k_r_checkout (const char *section_name,
   
   k_r[IPMI_MAX_K_R_LENGTH] = '\0';
   
-  if (config_section_update_keyvalue_output(kv, (char *)k_r) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            (char *)k_r) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -223,7 +231,9 @@ k_g_checkout (const char *section_name,
 
       if (!memcmp (kv_k_g, k_g, IPMI_MAX_K_G_LENGTH)) 
         {
-          if (config_section_update_keyvalue_output(kv, kv->value_input) < 0)
+          if (config_section_update_keyvalue_output(state_data->pstate,
+                                                    kv, 
+                                                    kv->value_input) < 0)
             return CONFIG_ERR_FATAL_ERROR;
 
           return CONFIG_ERR_SUCCESS;
@@ -235,7 +245,9 @@ k_g_checkout (const char *section_name,
   if (!format_kg(k_g_str, IPMI_MAX_K_G_LENGTH*2+3, (unsigned char *)k_g))
     return CONFIG_ERR_FATAL_ERROR;
   
-  if (config_section_update_keyvalue_output(kv, (char *)k_g_str) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            (char *)k_g_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -284,13 +296,15 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
     "can be set for two key authentication in IPMI 2.0.  It is optionally "
     "configured.  Most users will want to set this to zero (or blank).";
 
-  if (!(lan_conf_security_keys_section = config_section_create ("Lan_Conf_Security_Keys",
+  if (!(lan_conf_security_keys_section = config_section_create (state_data->pstate,
+                                                                "Lan_Conf_Security_Keys",
                                                                 "Lan_Conf_Security_Keys",
                                                                 section_comment,
                                                                 0)))
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_security_keys_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_security_keys_section,
                               "K_R",
                               "Give string or blank to clear. Max 20 chars",
                               0,
@@ -299,7 +313,8 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
                               k_r_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_security_keys_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_security_keys_section,
                               "K_G",
                               "Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",
                               0,
@@ -312,6 +327,6 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
 
  cleanup:
   if (lan_conf_security_keys_section)
-    config_section_destroy(lan_conf_security_keys_section);
+    config_section_destroy(state_data->pstate, lan_conf_security_keys_section);
   return NULL;
 }

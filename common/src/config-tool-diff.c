@@ -31,9 +31,11 @@
 #include "config-tool-checkout.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 
 config_err_t
-config_diff (struct config_section *sections,
+config_diff (pstdout_state_t pstate,
+             struct config_section *sections,
              struct config_arguments *cmd_args,
              void *arg)
 {
@@ -61,25 +63,29 @@ config_diff (struct config_section *sections,
           if (this_ret == CONFIG_ERR_SUCCESS)
             {
               if (!same (kv->value_input, kv->value_output))
-                printf ("%s:%s - input=`%s':actual=`%s'\n",
-                        s->section_name,
-                        kv->key->key_name,
-                        kv->value_input,
-                        kv->value_output);
+                PSTDOUT_PRINTF (pstate,
+                                "%s:%s - input=`%s':actual=`%s'\n",
+                                s->section_name,
+                                kv->key->key_name,
+                                kv->value_input,
+                                kv->value_output);
             }
           else
             {
-              printf("\t## ERROR: Unable to checkout %s:%s\n",
-                     s->section_name,
-                     kv->key->key_name);
+              PSTDOUT_PRINTF(pstate,
+                             "\t## ERROR: Unable to checkout %s:%s\n",
+                             s->section_name,
+                             kv->key->key_name);
               ret = this_ret;
             }
           kv = kv->next;
         }
 
       if (cmd_args->verbose)
-        fprintf (stderr, "Completed diff of Section: %s\n",
-                 s->section_name);
+        PSTDOUT_FPRINTF (pstate,
+                         stderr, 
+                         "Completed diff of Section: %s\n",
+                         s->section_name);
 
       s = s->next;
     }

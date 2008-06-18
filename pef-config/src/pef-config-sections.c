@@ -95,19 +95,19 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
 
   if (!(section = pef_config_pef_conf_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   if (!(section = pef_config_community_string_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   for (i = 0; i < number_of_lan_alert_destinations; i++)
     {
       if (!(section = pef_config_lan_alert_destination_section_get(state_data, i+1)))
 	goto cleanup;
-      if (config_section_append (&sections, section) < 0)
+      if (config_section_append (state_data->pstate, &sections, section) < 0)
 	goto cleanup;
     }
 
@@ -115,7 +115,7 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
     {
       if (!(section = pef_config_alert_string_section_get(state_data, i+1)))
 	goto cleanup;
-      if (config_section_append (&sections, section) < 0)
+      if (config_section_append (state_data->pstate, &sections, section) < 0)
 	goto cleanup;
     }
 
@@ -123,7 +123,7 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
     {
       if (!(section = pef_config_alert_policy_table_section_get(state_data, i+1)))
 	goto cleanup;
-      if (config_section_append (&sections, section) < 0)
+      if (config_section_append (state_data->pstate, &sections, section) < 0)
 	goto cleanup;
     }
 
@@ -131,13 +131,13 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
     {
       if (!(section = pef_config_event_filter_table_section_get(state_data, i+1)))
 	goto cleanup;
-      if (config_section_append (&sections, section) < 0)
+      if (config_section_append (state_data->pstate, &sections, section) < 0)
 	goto cleanup;
     }
   
   return sections;
 
  cleanup:
-  config_sections_destroy(sections);
+  config_sections_destroy(state_data->pstate, sections);
   return NULL;
 }

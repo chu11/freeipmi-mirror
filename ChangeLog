@@ -2,7 +2,17 @@
 
 	Support hostranges on bmc-config, ipmi-sensors-config, and pef-config.
 
-	* common/src/config-tool-common.h: Support hostranges.
+	* common/src/config-tool-argp.c, common/src/config-tool-argp.h,
+	common/src/config-tool-checkout.c,
+	common/src/config-tool-checkout.h,
+	common/src/config-tool-comment.c,
+	common/src/config-tool-comment.h, common/src/config-tool-commit.c,
+	common/src/config-tool-commit.h, common/src/config-tool-common.h,
+	common/src/config-tool-diff.c, common/src/config-tool-diff.h,
+	common/src/config-tool-fiid.c, common/src/config-tool-fiid.h,
+	common/src/config-tool-parse.c, common/src/config-tool-parse.h,
+	common/src/config-tool-pef-conf-section.c,
+	common/src/config-tool-pef-conf-section.h: Support hostranges.
 
 	* bmc-config/src/, ipmi-sensors-config/src/, pef-config/src/:
 	Support hostranges.

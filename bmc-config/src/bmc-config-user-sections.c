@@ -97,7 +97,8 @@ _get_user_access(bmc_config_state_data_t *state_data,
                            &channel_number)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_user_access_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_user_access_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_user_access (state_data->ipmi_ctx,
@@ -114,32 +115,47 @@ _get_user_access(bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_cmd_rs, "user_ipmi_messaging", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "user_ipmi_messaging",
+                    &val) < 0)
     goto cleanup;
   ua->user_ipmi_messaging = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "user_link_authentication", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "user_link_authentication", 
+                    &val) < 0)
     goto cleanup;
   ua->user_link_authentication = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "user_restricted_to_callback", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "user_restricted_to_callback", 
+                    &val) < 0)
     goto cleanup;
   ua->user_restricted_to_callback = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "user_privilege_level_limit", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "user_privilege_level_limit", 
+                    &val) < 0)
     goto cleanup;
   ua->privilege_limit = val;
 
   /* XXX: no way to retrieve, deal with this later */
   ua->session_limit = 0;
 
-  if (Fiid_obj_get (obj_cmd_rs, "user_id_enable_status", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "user_id_enable_status", 
+                    &val) < 0)
     goto cleanup;
   ua->user_id_enable_status = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -167,7 +183,8 @@ _set_user_access (bmc_config_state_data_t *state_data,
                            &channel_number)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_user_access_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_user_access_rs)))
     goto cleanup;
 
   if (ipmi_cmd_set_user_access (state_data->ipmi_ctx,
@@ -191,7 +208,7 @@ _set_user_access (bmc_config_state_data_t *state_data,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -208,7 +225,8 @@ username_checkout (const char *section_name,
 
   userid = atoi (section_name + strlen ("User"));
 		    
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_user_name_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_user_name_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_user_name (state_data->ipmi_ctx,
@@ -230,7 +248,8 @@ username_checkout (const char *section_name,
     strcpy ((char *)username, "NULL");
   else
     {
-      if (Fiid_obj_get_data (obj_cmd_rs,
+      if (Fiid_obj_get_data (state_data->pstate,
+                             obj_cmd_rs,
                              "user_name",
                              username,
                              IPMI_MAX_USER_NAME_LENGTH) < 0)
@@ -242,18 +261,22 @@ username_checkout (const char *section_name,
       && userid == 1
       && same(kv->value_input, "anonymous"))
     {
-      if (config_section_update_keyvalue_output(kv, "anonymous") < 0)
+      if (config_section_update_keyvalue_output(state_data->pstate,
+                                                kv,
+                                                "anonymous") < 0)
         return CONFIG_ERR_FATAL_ERROR;
     }
   else
     {
-      if (config_section_update_keyvalue_output(kv, (char *)username) < 0)
+      if (config_section_update_keyvalue_output(state_data->pstate,
+                                                kv, 
+                                                (char *)username) < 0)
         return CONFIG_ERR_FATAL_ERROR;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -278,7 +301,8 @@ username_commit (const char *section_name,
         return CONFIG_ERR_NON_FATAL_ERROR;
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_user_name_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_user_name_rs)))
     goto cleanup;
 
   if (ipmi_cmd_set_user_name (state_data->ipmi_ctx,
@@ -298,7 +322,7 @@ username_commit (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -346,17 +370,23 @@ enable_user_checkout (const char *section_name,
    */
   if (ua.user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED)
     {
-      if (config_section_update_keyvalue_output(kv, "Yes") < 0)
+      if (config_section_update_keyvalue_output(state_data->pstate,
+                                                kv,
+                                                "Yes") < 0)
         return CONFIG_ERR_FATAL_ERROR;
     }
   else if (ua.user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_DISABLED)
     {
-      if (config_section_update_keyvalue_output(kv, "No") < 0)
+      if (config_section_update_keyvalue_output(state_data->pstate,
+                                                kv,
+                                                "No") < 0)
         return CONFIG_ERR_FATAL_ERROR;
     }
   else /* ua.user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED */
     {
-      if (config_section_update_keyvalue_output(kv, "") < 0)
+      if (config_section_update_keyvalue_output(state_data->pstate,
+                                                kv, 
+                                                "") < 0)
         return CONFIG_ERR_FATAL_ERROR;
     }
 
@@ -377,7 +407,8 @@ enable_user_commit (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_user_password_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_user_password_rs)))
     goto cleanup;
 
   if (same (kv->value_input, "yes"))
@@ -422,7 +453,8 @@ enable_user_commit (const char *section_name,
           goto cleanup;
         }
 
-      if (!(obj_cmd_rq = Fiid_obj_create(tmpl_cmd_set_user_password_rq)))
+      if (!(obj_cmd_rq = Fiid_obj_create(state_data->pstate,
+                                         tmpl_cmd_set_user_password_rq)))
         goto cleanup;
 
       if (fill_cmd_set_user_password (userid,
@@ -433,7 +465,8 @@ enable_user_commit (const char *section_name,
         goto cleanup;
       
       /* Force the password to be filled in with a length */
-      if (Fiid_obj_set_data (obj_cmd_rq,
+      if (Fiid_obj_set_data (state_data->pstate,
+                             obj_cmd_rq,
                              "password",
                              (uint8_t *)password,
                              IPMI_1_5_MAX_PASSWORD_LENGTH) < 0)
@@ -463,8 +496,8 @@ enable_user_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rq);
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rq);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -481,7 +514,8 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
   assert(password);
   assert(is_same);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_user_password_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_user_password_rs)))
     goto cleanup;
 
   if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
@@ -493,7 +527,10 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
     {
       uint64_t comp_code;
 
-      if (Fiid_obj_get(obj_cmd_rs, "comp_code", &comp_code) < 0)
+      if (Fiid_obj_get(state_data->pstate,
+                       obj_cmd_rs, 
+                       "comp_code",
+                       &comp_code) < 0)
         {
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
@@ -522,7 +559,7 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
  done:
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -557,7 +594,9 @@ password_checkout (const char *section_name,
         str = "<something else>";
     } 
 
-  if (config_section_update_keyvalue_output(kv, str) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -573,7 +612,8 @@ password_commit (const char *section_name,
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_user_password_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_user_password_rs)))
     goto cleanup;
 
   if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
@@ -594,7 +634,7 @@ password_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -623,7 +663,8 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
   assert(password);
   assert(is_same);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_user_password_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_user_password_rs)))
     goto cleanup;
 
   if (ipmi_cmd_set_user_password_v20 (state_data->ipmi_ctx,
@@ -636,7 +677,10 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
     {
       uint64_t comp_code;
 
-      if (Fiid_obj_get(obj_cmd_rs, "comp_code", &comp_code) < 0)
+      if (Fiid_obj_get(state_data->pstate,
+                       obj_cmd_rs, 
+                       "comp_code",
+                       &comp_code) < 0)
         {
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
@@ -665,7 +709,7 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
  done:
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -702,7 +746,9 @@ password20_checkout (const char *section_name,
         str = "<something else>";
     } 
 
-  if (config_section_update_keyvalue_output(kv, str) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -718,7 +764,8 @@ password20_commit (const char *section_name,
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_user_password_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_user_password_rs)))
     goto cleanup;
 
   if (ipmi_cmd_set_user_password_v20 (state_data->ipmi_ctx,
@@ -740,7 +787,7 @@ password20_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 
 }
@@ -771,7 +818,9 @@ lan_enable_ipmi_messaging_checkout (const char *section_name,
                               &ua)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, ua.user_ipmi_messaging ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            ua.user_ipmi_messaging ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -815,7 +864,9 @@ lan_enable_link_auth_checkout (const char *section_name,
                               &ua)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, ua.user_link_authentication ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            ua.user_link_authentication ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -859,7 +910,9 @@ lan_enable_restricted_to_callback_checkout (const char *section_name,
                               &ua)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, ua.user_restricted_to_callback ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            ua.user_restricted_to_callback ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -903,7 +956,9 @@ lan_privilege_limit_checkout (const char *section_name,
                               &ua)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, get_privilege_limit_string (ua.privilege_limit)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            get_privilege_limit_string (ua.privilege_limit)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -947,7 +1002,9 @@ lan_session_limit_checkout (const char *section_name,
                               &ua)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, ua.session_limit) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate,
+                                                kv,
+                                                ua.session_limit) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -989,7 +1046,8 @@ sol_payload_access_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_user_payload_access_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_user_payload_access_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -1013,15 +1071,20 @@ sol_payload_access_checkout (const char *section_name,
     }
   
   /* standard_payload_1 is the SOL payload type */
-  if (Fiid_obj_get (obj_cmd_rs, "standard_payload_1", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "standard_payload_1", 
+                    &val) < 0)
     goto cleanup;
   
-  if (config_section_update_keyvalue_output(kv, val ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            val ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -1038,7 +1101,8 @@ sol_payload_access_commit (const char *section_name,
   uint8_t channel_number;
   uint8_t operation;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_user_payload_access_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_user_payload_access_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -1084,7 +1148,7 @@ sol_payload_access_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -1103,7 +1167,9 @@ serial_enable_ipmi_messaging_checkout (const char *section_name,
                               &ua)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, ua.user_ipmi_messaging ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            ua.user_ipmi_messaging ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1147,7 +1213,9 @@ serial_enable_link_auth_checkout (const char *section_name,
                               &ua)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, ua.user_link_authentication ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            ua.user_link_authentication ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1191,7 +1259,9 @@ serial_enable_restricted_to_callback_checkout (const char *section_name,
                               &ua)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, ua.user_restricted_to_callback ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            ua.user_restricted_to_callback ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1235,7 +1305,9 @@ serial_privilege_limit_checkout (const char *section_name,
                               &ua)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, get_privilege_limit_string (ua.privilege_limit)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            get_privilege_limit_string (ua.privilege_limit)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1279,7 +1351,9 @@ serial_session_limit_checkout (const char *section_name,
                               &ua)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, ua.session_limit) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate,
+                                                kv,
+                                                ua.session_limit) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -1352,7 +1426,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
 
   if (userid == 1)
     {
-      if (!(user_section = config_section_create(section_name,
+      if (!(user_section = config_section_create(state_data->pstate,
+                                                 section_name,
                                                  "UserX",
                                                  section_comment,
                                                  0)))
@@ -1360,7 +1435,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
     }
   else
     {
-      if (!(user_section = config_section_create(section_name,
+      if (!(user_section = config_section_create(state_data->pstate,
+                                                 section_name,
                                                  NULL,
                                                  NULL,
                                                  0)))
@@ -1368,7 +1444,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
     }
 
   /* userid 1 is the NULL username, so comment it out by default */
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Username",
                               "Give Username",
                               (userid == 1) ? CONFIG_CHECKOUT_KEY_COMMENTED_OUT : 0,
@@ -1377,7 +1454,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               username_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Enable_User",
                               "Possible values: Yes/No or blank to not set",
                               CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
@@ -1386,7 +1464,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Password",
                               "Give password or blank to clear. MAX 16 chars.",
                               CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
@@ -1395,7 +1474,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               password_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Password20",
                               "Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
                               CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
@@ -1404,7 +1484,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               password20_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Lan_Enable_IPMI_Msgs",
                               "Possible values: Yes/No",
                               0,
@@ -1413,7 +1494,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Lan_Enable_Link_Auth",
                               "Possible values: Yes/No",
                               0,
@@ -1422,7 +1504,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Lan_Enable_Restricted_to_Callback",
                               "Possible values: Yes/No",
                               0,
@@ -1432,7 +1515,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Lan_Enable_Restrict_to_Callback",
                               "Possible values: Yes/No",
                               CONFIG_DO_NOT_CHECKOUT,
@@ -1441,7 +1525,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Lan_Privilege_Limit",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
                               0,
@@ -1450,7 +1535,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               get_privilege_limit_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Lan_Session_Limit",
                               "Possible values: 0-255, 0 is unlimited",
                               CONFIG_DO_NOT_CHECKOUT,
@@ -1459,7 +1545,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "SOL_Payload_Access",
                               "Possible values: Yes/No",
                               0,
@@ -1468,7 +1555,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Serial_Enable_IPMI_Msgs",
                               "Possible values: Yes/No",
                               0,
@@ -1477,7 +1565,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Serial_Enable_Link_Auth",
                               "Possible values: Yes/No",
                               0,
@@ -1486,7 +1575,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Serial_Enable_Restricted_to_Callback",
                               "Possible values: Yes/No",
                               0,
@@ -1496,7 +1586,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Serial_Enable_Restrict_to_Callback",
                               "Possible values: Yes/No",
                               CONFIG_DO_NOT_CHECKOUT,
@@ -1505,7 +1596,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Serial_Privilege_Limit",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
                               0,
@@ -1514,7 +1606,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               get_privilege_limit_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (user_section,
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
                               "Serial_Session_Limit",
                               "Possible values: 0-255, 0 is unlimited",
                               CONFIG_DO_NOT_CHECKOUT,
@@ -1527,6 +1620,6 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
 
  cleanup:
   if (user_section)
-    config_section_destroy(user_section);
+    config_section_destroy(state_data->pstate, user_section);
   return NULL;
 }

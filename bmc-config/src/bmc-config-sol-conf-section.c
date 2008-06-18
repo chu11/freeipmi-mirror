@@ -66,7 +66,8 @@ enable_sol_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs)))
     goto cleanup;
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -91,15 +92,20 @@ enable_sol_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (obj_cmd_rs, "sol_enable", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "sol_enable", 
+                    &val) < 0)
     goto cleanup;
   
-  if (config_section_update_keyvalue_output(kv, val ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            val ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -114,7 +120,8 @@ enable_sol_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
   
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -139,7 +146,7 @@ enable_sol_commit (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -156,7 +163,8 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(sa);
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs)))
     goto cleanup;
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -181,21 +189,30 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (obj_cmd_rs, "sol_privilege_level", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "sol_privilege_level", 
+                    &val) < 0)
     goto cleanup;
   sa->sol_privilege_level = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "force_sol_payload_authentication", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "force_sol_payload_authentication", 
+                    &val) < 0)
     goto cleanup;
   sa->force_sol_payload_authentication = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "force_sol_payload_encryption", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "force_sol_payload_encryption", 
+                    &val) < 0)
     goto cleanup;
   sa->force_sol_payload_encryption = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -211,7 +228,8 @@ _set_sol_sol_authentication(bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(sa);
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -238,7 +256,7 @@ _set_sol_sol_authentication(bmc_config_state_data_t *state_data,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -254,7 +272,9 @@ sol_privilege_level_checkout (const char *section_name,
   if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, privilege_level_string (sa.sol_privilege_level)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            privilege_level_string (sa.sol_privilege_level)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -289,7 +309,9 @@ force_sol_payload_authentication_checkout (const char *section_name,
   if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, sa.force_sol_payload_authentication ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            sa.force_sol_payload_authentication ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -324,7 +346,9 @@ force_sol_payload_encryption_checkout (const char *section_name,
   if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, sa.force_sol_payload_encryption ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            sa.force_sol_payload_encryption ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -360,7 +384,8 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
   assert(state_data);
   assert(it);
  
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs)))
     goto cleanup;
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -385,17 +410,23 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
       goto cleanup;
     }
   
-  if (Fiid_obj_get (obj_cmd_rs, "character_accumulate_interval", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "character_accumulate_interval", 
+                    &val) < 0)
     goto cleanup;
   it->character_accumulate_interval = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "character_send_threshold", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs,
+                    "character_send_threshold", 
+                    &val) < 0)
     goto cleanup;
   it->character_send_threshold = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -411,7 +442,8 @@ _set_sol_character_accumulate_interval_and_send_threshold(bmc_config_state_data_
   assert(state_data);
   assert(it);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -437,7 +469,7 @@ _set_sol_character_accumulate_interval_and_send_threshold(bmc_config_state_data_
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -453,7 +485,9 @@ character_accumulate_interval_checkout (const char *section_name,
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, it.character_accumulate_interval) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate,
+                                                kv, 
+                                                it.character_accumulate_interval) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -488,7 +522,9 @@ character_send_threshold_checkout (const char *section_name,
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, it.character_send_threshold) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate,
+                                                kv, 
+                                                it.character_send_threshold) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -524,7 +560,8 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(sr);
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs)))
     goto cleanup;
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -549,17 +586,23 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (obj_cmd_rs, "retry_count", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "retry_count", 
+                    &val) < 0)
     goto cleanup;
   sr->retry_count = val;
 
-  if (Fiid_obj_get (obj_cmd_rs, "retry_interval", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "retry_interval", 
+                    &val) < 0)
     goto cleanup;
   sr->retry_interval = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -572,7 +615,8 @@ _set_sol_sol_retry(bmc_config_state_data_t *state_data,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
   
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -598,7 +642,7 @@ _set_sol_sol_retry(bmc_config_state_data_t *state_data,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -614,7 +658,9 @@ sol_retry_count_checkout (const char *section_name,
   if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, sr.retry_count) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate,
+                                                kv, 
+                                                sr.retry_count) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -650,7 +696,9 @@ sol_retry_interval_checkout (const char *section_name,
   if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, sr.retry_interval) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate,
+                                                kv,
+                                                sr.retry_interval) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -685,7 +733,8 @@ non_volatile_bit_rate_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs)))
     goto cleanup;
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -710,15 +759,20 @@ non_volatile_bit_rate_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (obj_cmd_rs, "bit_rate", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "bit_rate", 
+                    &val) < 0)
     goto cleanup;
 
-  if (config_section_update_keyvalue_output(kv, sol_bit_rate_string (val)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            sol_bit_rate_string (val)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -733,7 +787,8 @@ non_volatile_bit_rate_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
   
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -758,7 +813,7 @@ non_volatile_bit_rate_commit (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -774,7 +829,8 @@ volatile_bit_rate_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs)))
     goto cleanup;
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -799,15 +855,20 @@ volatile_bit_rate_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (obj_cmd_rs, "bit_rate", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "bit_rate", 
+                    &val) < 0)
     goto cleanup;
 
-  if (config_section_update_keyvalue_output(kv, sol_bit_rate_string (val)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            sol_bit_rate_string (val)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -822,7 +883,8 @@ volatile_bit_rate_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
   
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -847,7 +909,7 @@ volatile_bit_rate_commit (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -863,7 +925,8 @@ sol_payload_port_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs)))
     goto cleanup;
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -888,15 +951,20 @@ sol_payload_port_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (obj_cmd_rs, "port_number", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "port_number", 
+                    &val) < 0)
     goto cleanup;
 
-  if (config_section_update_keyvalue_output_int(kv, val) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate,
+                                                kv,
+                                                val) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -911,7 +979,8 @@ sol_payload_port_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
   
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -936,7 +1005,7 @@ sol_payload_port_commit (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -960,13 +1029,15 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     "rate for your system.  This is typically the same baud rate configured "
     "in the BIOS and/or operating system.";
 
-  if (!(sol_conf_section = config_section_create("SOL_Conf",
+  if (!(sol_conf_section = config_section_create(state_data->pstate,
+                                                 "SOL_Conf",
                                                  "SOL_Conf",
                                                  section_comment,
                                                  0)))
     goto cleanup;
 
-  if (config_section_add_key (sol_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              sol_conf_section,
                               "Enable_SOL",
                               "Possible values: Yes/No",
                               0,
@@ -975,7 +1046,8 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (sol_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              sol_conf_section,
                               "SOL_Privilege_Level",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -984,7 +1056,8 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                               privilege_level_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (sol_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              sol_conf_section,
                               "Force_SOL_Payload_Authentication",
                               "Possible values: Yes/No",
                               0,
@@ -993,7 +1066,8 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (sol_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              sol_conf_section,
                               "Force_SOL_Payload_Encryption",
                               "Possible values: Yes/No",
                               0,
@@ -1002,7 +1076,8 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (sol_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              sol_conf_section,
                               "Character_Accumulate_Interval",
                               "Give a non-zero valid integer. Each unit is 5ms",
                               0,
@@ -1011,7 +1086,8 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                               config_number_range_one_byte_non_zero) < 0)
     goto cleanup;
 
-  if (config_section_add_key (sol_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              sol_conf_section,
                               "Character_Send_Threshold",
                               "Give a valid number",
                               0,
@@ -1020,7 +1096,8 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                               config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (config_section_add_key (sol_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              sol_conf_section,
                               "SOL_Retry_Count",
                               "Give a valid integer",
                               0,
@@ -1029,7 +1106,8 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                               config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (config_section_add_key (sol_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              sol_conf_section,
                               "SOL_Retry_Interval",
                               "Give a valid integer. Interval unit is 10ms",
                               0,
@@ -1038,7 +1116,8 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                               config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (config_section_add_key (sol_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              sol_conf_section,
                               "Non_Volatile_Bit_Rate",
                               "Possible values: Serial/9600/19200/38400/57600/115200",
                               0,
@@ -1047,7 +1126,8 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                               sol_bit_rate_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (sol_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              sol_conf_section,
                               "Volatile_Bit_Rate",
                               "Possible values: Serial/9600/19200/38400/57600/115200",
                               0,
@@ -1056,7 +1136,8 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                               sol_bit_rate_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (sol_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              sol_conf_section,
                               "SOL_Payload_Port_Number",
                               "Give a valid port number",
                               CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
@@ -1069,6 +1150,6 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (sol_conf_section)
-    config_section_destroy(sol_conf_section);
+    config_section_destroy(state_data->pstate, sol_conf_section);
   return NULL;
 }

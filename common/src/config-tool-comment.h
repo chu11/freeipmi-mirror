@@ -21,7 +21,10 @@
 
 #include <stdio.h>
 
-int config_section_comments(char *section_name,
+#include "pstdout.h"
+
+int config_section_comments(pstdout_state_t pstate,
+                            char *section_name,
                             char *in,
                             FILE *fp);
 #endif

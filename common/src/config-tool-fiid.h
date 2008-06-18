@@ -23,23 +23,32 @@
 #include <stdint.h>
 
 #include "config-tool-common.h"
+#include "pstdout.h"
 
-fiid_obj_t Fiid_obj_create(fiid_template_t tmpl);
+fiid_obj_t Fiid_obj_create(pstdout_state_t pstate,
+                           fiid_template_t tmpl);
 
-int8_t Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val);
+int8_t Fiid_obj_get(pstdout_state_t pstate,
+                    fiid_obj_t obj, 
+                    char *field, 
+                    uint64_t *val);
 
-int32_t Fiid_obj_get_data(fiid_obj_t obj,
+int32_t Fiid_obj_get_data(pstdout_state_t pstate,
+                          fiid_obj_t obj,
                           char *field,
                           uint8_t *data,
                           uint32_t data_len);
 
-int32_t Fiid_obj_set_data (fiid_obj_t obj,
+int32_t Fiid_obj_set_data (pstdout_state_t pstate,
+                           fiid_obj_t obj,
                            char *field,
                            uint8_t *data,
                            uint32_t data_len);
 
-int Fiid_obj_clear(fiid_obj_t obj);
+int Fiid_obj_clear(pstdout_state_t pstate,
+                   fiid_obj_t obj);
 
-void Fiid_obj_destroy(fiid_obj_t obj);
+void Fiid_obj_destroy(pstdout_state_t pstate,
+                      fiid_obj_t obj);
 
 #endif /* _CONFIG_TOOL_FIID_H_ */

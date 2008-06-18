@@ -33,9 +33,11 @@
 #include "config-tool-section.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 
 config_err_t
-config_checkout_section(struct config_section *section,
+config_checkout_section(pstdout_state_t pstate,
+                        struct config_section *section,
                         struct config_arguments *cmd_args,
                         int all_keys_if_none_specified,
                         FILE *fp,
@@ -65,7 +67,8 @@ config_checkout_section(struct config_section *section,
         {
           if (!(k->flags & CONFIG_DO_NOT_CHECKOUT))
             {
-              if (config_section_add_keyvalue(section,
+              if (config_section_add_keyvalue(pstate,
+                                              section,
                                               k,
                                               NULL,
                                               NULL) < 0)
@@ -84,17 +87,23 @@ config_checkout_section(struct config_section *section,
   if (section->section_comment_section_name
       && section->section_comment)
     {
-      if (config_section_comments(section->section_comment_section_name,
+      if (config_section_comments(pstate,
+                                  section->section_comment_section_name,
                                   section->section_comment,
                                   fp) < 0)
         {
           if (cmd_args->common.debug)
-            fprintf(stderr, "## Error: Comment output error\n");
+            PSTDOUT_FPRINTF(pstate,
+                            stderr, 
+                            "## Error: Comment output error\n");
           ret = CONFIG_ERR_NON_FATAL_ERROR;
         }
     }
   
-  fprintf(fp, "Section %s\n", section->section_name);
+  PSTDOUT_FPRINTF(pstate,
+                  fp, 
+                  "Section %s\n", 
+                  section->section_name);
 
   kv = section->keyvalues;
   while (kv)
@@ -103,7 +112,9 @@ config_checkout_section(struct config_section *section,
 
       if (kv->key->flags & CONFIG_UNDEFINED)
         {
-          if (config_section_update_keyvalue_output(kv, "Undefined") < 0)
+          if (config_section_update_keyvalue_output(pstate,
+                                                    kv, 
+                                                    "Undefined") < 0)
             this_ret = CONFIG_ERR_FATAL_ERROR;
         }
       else
@@ -117,16 +128,21 @@ config_checkout_section(struct config_section *section,
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
         {
           if (cmd_args->verbose)
-            fprintf (fp, "\t## ERROR: Unable to checkout %s:%s\n",
-                     section->section_name,
-                     kv->key->key_name);
+            PSTDOUT_FPRINTF (pstate,
+                             fp, 
+                             "\t## ERROR: Unable to checkout %s:%s\n",
+                             section->section_name,
+                             kv->key->key_name);
           ret = CONFIG_ERR_NON_FATAL_ERROR;
         } 
       else
         {
           assert(kv->value_output);
 
-          fprintf(fp, "\t## %s\n", kv->key->description);
+          PSTDOUT_FPRINTF(pstate,
+                          fp, 
+                          "\t## %s\n", 
+                          kv->key->description);
 
           /* achu: Certain keys should have their checked out
            * value automatically commented out.  Sometimes (in the
@@ -140,37 +156,57 @@ config_checkout_section(struct config_section *section,
            */
           if (kv->key->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT
               || kv->key->flags & CONFIG_UNDEFINED)
-            key_len = fprintf(fp, "\t## %s", kv->key->key_name);
+            key_len = PSTDOUT_FPRINTF(pstate,
+                                      fp, 
+                                      "\t## %s", 
+                                      kv->key->key_name);
           else if (kv->key->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY)
             {
               if (kv->value_output && strlen(kv->value_output))
-                key_len = fprintf(fp, "\t%s", kv->key->key_name);
+                key_len = PSTDOUT_FPRINTF(pstate,
+                                          fp, 
+                                          "\t%s", 
+                                          kv->key->key_name);
               else
-                key_len = fprintf(fp, "\t## %s", kv->key->key_name);
+                key_len = PSTDOUT_FPRINTF(pstate,
+                                          fp, 
+                                          "\t## %s", 
+                                          kv->key->key_name);
             }
           else
-            key_len = fprintf(fp, "\t%s", kv->key->key_name);
+            key_len = PSTDOUT_FPRINTF(pstate,
+                                      fp, 
+                                      "\t%s", 
+                                      kv->key->key_name);
 
           while (key_len <= CONFIG_CHECKOUT_LINE_LEN)
             {
-              fprintf(fp, " ");
+              PSTDOUT_FPRINTF(pstate,
+                              fp, 
+                              " ");
               key_len++;
             }
 
-          fprintf(fp, "%s\n", kv->value_output);
+          PSTDOUT_FPRINTF(pstate,
+                          fp,
+                          "%s\n", 
+                          kv->value_output);
         }
 
       kv = kv->next;
     }
 
-  fprintf(fp, "EndSection\n");
+  PSTDOUT_FPRINTF(pstate,
+                  fp, 
+                  "EndSection\n");
   rv = ret;
  cleanup:
   return rv;
 }
 
 config_err_t
-config_checkout (struct config_section *sections,
+config_checkout (pstdout_state_t pstate,
+                 struct config_section *sections,
                  struct config_arguments *cmd_args,
                  int all_keys_if_none_specified,
                  FILE *fp,
@@ -187,7 +223,8 @@ config_checkout (struct config_section *sections,
   s = sections;
   while (s)
     {
-      if ((ret = config_checkout_section(s,
+      if ((ret = config_checkout_section(pstate,
+                                         s,
                                          cmd_args,
                                          all_keys_if_none_specified,
                                          fp,

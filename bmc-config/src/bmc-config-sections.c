@@ -69,69 +69,69 @@ bmc_config_sections_create (bmc_config_state_data_t *state_data)
     {
       if (!(section = bmc_config_user_section_get(state_data, i+1)))
 	goto cleanup;
-      if (config_section_append (&sections, section) < 0)
+      if (config_section_append (state_data->pstate, &sections, section) < 0)
 	goto cleanup;
     }
   
   if (!(section = bmc_config_lan_channel_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   if (!(section = bmc_config_lan_conf_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   if (!(section = bmc_config_lan_conf_auth_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   if (!(section = bmc_config_lan_conf_security_keys_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   if (!(section = bmc_config_lan_conf_misc_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   if (!(section = bmc_config_rmcpplus_conf_privilege_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   if (!(section = bmc_config_serial_channel_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   if (!(section = bmc_config_serial_conf_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   if (!(section = bmc_config_pef_conf_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   if (!(section = bmc_config_sol_conf_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   if (!(section = bmc_config_misc_section_get (state_data)))
     goto cleanup;
-  if (config_section_append (&sections, section) < 0)
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   return sections;
 
  cleanup:
-  config_sections_destroy(sections);
+  config_sections_destroy(state_data->pstate, sections);
   return NULL;
 }
 

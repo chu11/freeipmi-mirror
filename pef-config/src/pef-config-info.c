@@ -42,7 +42,8 @@ pef_info (pef_config_state_data_t *state_data)
   uint64_t val, val1, val2;
   int alert_action_support = 0;
 
-  if (!(obj_cmd_rs = Fiid_obj_create (tmpl_cmd_get_pef_capabilities_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create (state_data->pstate,
+                                      tmpl_cmd_get_pef_capabilities_rs)))
     goto cleanup;
   
   if (ipmi_cmd_get_pef_capabilities (state_data->ipmi_ctx, obj_cmd_rs) < 0)
@@ -59,52 +60,82 @@ pef_info (pef_config_state_data_t *state_data)
       goto cleanup;
     }
   
-  if (Fiid_obj_get (obj_cmd_rs, "pef_version_major", &val1) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "pef_version_major", 
+                    &val1) < 0)
     goto cleanup;
-  if (Fiid_obj_get (obj_cmd_rs, "pef_version_minor", &val2) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "pef_version_minor", 
+                    &val2) < 0)
     goto cleanup;
   /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
   pstdout_printf (state_data->pstate,
                   "PEF version:                            %d.%d\n", 
                   (int)val1, 
                   (int)val2);
-  if (Fiid_obj_get (obj_cmd_rs, "action_support.alert", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "action_support.alert", 
+                    &val) < 0)
     goto cleanup;
   pstdout_printf (state_data->pstate,
                   "Alert action support:                   %s\n", 
                   (val ? "Yes" : "No"));
   alert_action_support = val;
-  if (Fiid_obj_get (obj_cmd_rs, "action_support.power_down", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "action_support.power_down", 
+                    &val) < 0)
     goto cleanup;
   pstdout_printf (state_data->pstate,
                   "Power down action support:              %s\n", 
                   (val ? "Yes" : "No"));
-  if (Fiid_obj_get (obj_cmd_rs, "action_support.reset", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "action_support.reset", 
+                    &val) < 0)
     goto cleanup;
   pstdout_printf (state_data->pstate,
                   "Power reset action support:             %s\n", 
                   (val? "Yes" : "No"));
-  if (Fiid_obj_get (obj_cmd_rs, "action_support.power_cycle", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "action_support.power_cycle", 
+                    &val) < 0)
     goto cleanup;
   pstdout_printf (state_data->pstate,
                   "Power cycle action support:             %s\n", 
                   (val ? "Yes" : "No"));
-  if (Fiid_obj_get (obj_cmd_rs, "action_support.oem_action", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs,
+                    "action_support.oem_action", 
+                    &val) < 0)
     goto cleanup;
   pstdout_printf (state_data->pstate,
                   "OEM action support:                     %s\n", 
                   (val ? "Yes" : "No"));
-  if (Fiid_obj_get (obj_cmd_rs, "action_support.diagnostic_interrupt", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "action_support.diagnostic_interrupt", 
+                    &val) < 0)
     goto cleanup;
   pstdout_printf (state_data->pstate,
                   "Diagnostic interrupt action support:    %s\n", 
                   (val ? "Yes" : "No"));
-  if (Fiid_obj_get (obj_cmd_rs, "oem_event_record_filtering_supported", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs,
+                    "oem_event_record_filtering_supported",
+                    &val) < 0)
     goto cleanup;
   pstdout_printf (state_data->pstate,
                   "OEM event record filtering support:     %s\n", 
                   (val ? "Yes" : "No"));
-  if (Fiid_obj_get (obj_cmd_rs, "number_of_event_filter_table_entries", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "number_of_event_filter_table_entries", 
+                    &val) < 0)
     goto cleanup;
   pstdout_printf (state_data->pstate,
                   "Number of Event Filter Table entries:   %d\n", 
@@ -112,9 +143,10 @@ pef_info (pef_config_state_data_t *state_data)
 
   if (alert_action_support)
     {
-      Fiid_obj_destroy (obj_cmd_rs);
+      Fiid_obj_destroy (state_data->pstate, obj_cmd_rs);
 
-      if (!(obj_cmd_rs = Fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))
+      if (!(obj_cmd_rs = Fiid_obj_create (state_data->pstate,
+                                          tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))
         goto cleanup;
 
       if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->ipmi_ctx,
@@ -134,16 +166,20 @@ pef_info (pef_config_state_data_t *state_data)
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
-      if (Fiid_obj_get (obj_cmd_rs, "number_of_event_filters", &val) < 0)
+      if (Fiid_obj_get (state_data->pstate,
+                        obj_cmd_rs,
+                        "number_of_event_filters", 
+                        &val) < 0)
         goto cleanup;
 
       pstdout_printf (state_data->pstate,
                       "Number of Event Filters:                %d\n", 
                       (int)val);
 
-      Fiid_obj_destroy (obj_cmd_rs);
+      Fiid_obj_destroy (state_data->pstate, obj_cmd_rs);
 
-      if (!(obj_cmd_rs = Fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
+      if (!(obj_cmd_rs = Fiid_obj_create (state_data->pstate,
+                                          tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
         goto cleanup;
 
       if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->ipmi_ctx,
@@ -163,16 +199,20 @@ pef_info (pef_config_state_data_t *state_data)
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
-      if (Fiid_obj_get (obj_cmd_rs, "number_of_alert_policy_entries", &val) < 0)
+      if (Fiid_obj_get (state_data->pstate,
+                        obj_cmd_rs, 
+                        "number_of_alert_policy_entries", 
+                        &val) < 0)
         goto cleanup;
 
       pstdout_printf (state_data->pstate,
                       "Number of Alert Policy entries:         %d\n", 
                       (int)val);
       
-      Fiid_obj_destroy (obj_cmd_rs);
+      Fiid_obj_destroy (state_data->pstate, obj_cmd_rs);
 
-      if (!(obj_cmd_rs = Fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
+      if (!(obj_cmd_rs = Fiid_obj_create (state_data->pstate,
+                                          tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
         goto cleanup;
 
       if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->ipmi_ctx,
@@ -193,7 +233,10 @@ pef_info (pef_config_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (Fiid_obj_get (obj_cmd_rs, "number_of_alert_strings", &val) < 0)
+      if (Fiid_obj_get (state_data->pstate,
+                        obj_cmd_rs, 
+                        "number_of_alert_strings",
+                        &val) < 0)
         goto cleanup;
       
       pstdout_printf (state_data->pstate,
@@ -203,6 +246,6 @@ pef_info (pef_config_state_data_t *state_data)
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }

@@ -115,7 +115,8 @@ _bmc_config (pstdout_state_t pstate,
   else if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
            || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
     {
-      if (prog_data->args->config_args.filename && strcmp (prog_data->args->config_args.filename, "-"))
+      if (prog_data->args->config_args.filename
+          && strcmp (prog_data->args->config_args.filename, "-"))
         {
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
@@ -141,7 +142,8 @@ _bmc_config (pstdout_state_t pstate,
           && !prog_data->args->config_args.filename
           && !prog_data->args->config_args.keypairs))
     {
-      if (config_parse(sections,
+      if (config_parse(pstate, 
+                       sections,
                        &(prog_data->args->config_args),
                        fp) < 0)
         {
@@ -158,7 +160,8 @@ _bmc_config (pstdout_state_t pstate,
        || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
       && prog_data->args->config_args.keypairs)
     {
-      if (config_sections_insert_keyvalues(sections,
+      if (config_sections_insert_keyvalues(pstate, 
+                                           sections,
                                            prog_data->args->config_args.keypairs) < 0)
         {
           /* errors printed in function call */
@@ -177,7 +180,8 @@ _bmc_config (pstdout_state_t pstate,
       if (prog_data->args->config_args.action != CONFIG_ACTION_CHECKOUT)
         value_input_required = 1;
 
-      if ((num = config_sections_validate_keyvalue_inputs(sections,
+      if ((num = config_sections_validate_keyvalue_inputs(pstate, 
+                                                          sections,
                                                           value_input_required,
                                                           &state_data)) < 0)
         {
@@ -202,7 +206,8 @@ _bmc_config (pstdout_state_t pstate,
       sstr = prog_data->args->config_args.section_strs;
       while (sstr)
         {
-          if (!config_find_section(sections,
+          if (!config_find_section(pstate, 
+                                   sections,
                                    sstr->section_name))
             {
               pstdout_fprintf(pstate,
@@ -231,7 +236,8 @@ _bmc_config (pstdout_state_t pstate,
             struct config_section *s;
             config_err_t this_ret;
             
-            if (!(s = config_find_section(sections, 
+            if (!(s = config_find_section(pstate, 
+                                          sections, 
                                           sstr->section_name)))
               {
                 pstdout_fprintf(pstate,
@@ -241,7 +247,8 @@ _bmc_config (pstdout_state_t pstate,
                 continue;
               }
 
-            this_ret = config_checkout_section(s,
+            this_ret = config_checkout_section(pstate, 
+                                               s,
                                                &(prog_data->args->config_args),
                                                1,
                                                fp,
@@ -261,7 +268,8 @@ _bmc_config (pstdout_state_t pstate,
         if (!prog_data->args->config_args.keypairs)
           all_keys_if_none_specified++;
         
-        ret = config_checkout (sections,
+        ret = config_checkout (pstate, 
+                               sections,
                                &(prog_data->args->config_args),
                                all_keys_if_none_specified,
                                fp,
@@ -269,18 +277,20 @@ _bmc_config (pstdout_state_t pstate,
       }
     break;
   case CONFIG_ACTION_COMMIT:
-    ret = config_commit (sections,
+    ret = config_commit (pstate, 
+                         sections,
                          &(prog_data->args->config_args),
                          fp,
                          &state_data);
     break;
   case CONFIG_ACTION_DIFF:
-    ret = config_diff (sections,
+    ret = config_diff (pstate, 
+                       sections,
                        &(prog_data->args->config_args),
                        &state_data);
     break;
   case CONFIG_ACTION_LIST_SECTIONS:
-    ret = config_output_sections_list (sections);
+    ret = config_output_sections_list (pstate, sections);
     break;
   }
   
@@ -300,7 +310,7 @@ _bmc_config (pstdout_state_t pstate,
   if (file_opened)
     fclose(fp);
   if (sections)
-    config_sections_destroy(sections);
+    config_sections_destroy(pstate, sections);
   return exit_code;
 }
 

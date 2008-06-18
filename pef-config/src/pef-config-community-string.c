@@ -45,7 +45,8 @@ community_string_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
+                                     tmpl_cmd_get_lan_configuration_parameters_community_string_rs)))
     goto cleanup;
   
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -71,18 +72,21 @@ community_string_checkout (const char *section_name,
     }
   
   memset(community_string,'\0', IPMI_MAX_COMMUNITY_STRING_LENGTH+1);
-  if (Fiid_obj_get_data (obj_cmd_rs,
+  if (Fiid_obj_get_data (state_data->pstate, 
+                         obj_cmd_rs,
                          "community_string",
                          (uint8_t *)community_string,
                          IPMI_MAX_COMMUNITY_STRING_LENGTH+1) < 0)
     goto cleanup;
 
-  if (config_section_update_keyvalue_output(kv, community_string) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate, 
+                                            kv,
+                                            community_string) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -97,7 +101,8 @@ community_string_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
+                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -123,7 +128,7 @@ community_string_commit (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -143,13 +148,15 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
 {
   struct config_section *section = NULL;
 
-  if (!(section = config_section_create ("Community_String",
+  if (!(section = config_section_create (state_data->pstate, 
+                                         "Community_String",
                                          NULL, 
                                          NULL, 
                                          0)))
     goto cleanup;
 
-  if (config_section_add_key (section,
+  if (config_section_add_key (state_data->pstate, 
+                              section,
                               "Community_String",
                               "Give valid string",
                               0,
@@ -162,7 +169,7 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
 
  cleanup:
   if (section)
-    config_section_destroy(section);
+    config_section_destroy(state_data->pstate, section);
   return NULL;
 }
 

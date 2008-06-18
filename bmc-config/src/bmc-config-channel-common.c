@@ -158,7 +158,8 @@ _get_channel_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_channel_access_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_channel_access_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_channel_access (state_data->ipmi_ctx,
@@ -175,32 +176,47 @@ _get_channel_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_cmd_rs, "ipmi_messaging_access_mode", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "ipmi_messaging_access_mode",
+                    &val) < 0)
     goto cleanup;
   ch->access_mode = val;
 
   /* yes/no is backwards here, see ipmi spec */
-  if (Fiid_obj_get (obj_cmd_rs, "user_level_authentication", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "user_level_authentication", 
+                    &val) < 0)
     goto cleanup;
   ch->user_level_authentication = (val ? 0 : 1);
 
   /* yes/no is backwards here, see ipmi spec */
-  if (Fiid_obj_get (obj_cmd_rs, "per_message_authentication", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "per_message_authentication", 
+                    &val) < 0)
     goto cleanup;
   ch->per_message_authentication = (val ? 0 : 1);
 
   /* yes/no is backwards here, see ipmi spec */
-  if (Fiid_obj_get (obj_cmd_rs, "pef_alerting", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "pef_alerting",
+                    &val) < 0)
     goto cleanup;
   ch->pef_alerting = (val ? 0 : 1);
 
-  if (Fiid_obj_get (obj_cmd_rs, "channel_privilege_level_limit", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "channel_privilege_level_limit", 
+                    &val) < 0)
     goto cleanup;
   ch->channel_privilege_limit = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -231,7 +247,8 @@ _set_channel_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_channel_access_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_channel_access_rs)))
     goto cleanup;
 
   /* yes/no is backwards several places, see ipmi spec */
@@ -260,7 +277,7 @@ _set_channel_access (bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -279,7 +296,9 @@ _access_mode_checkout (const char *section_name,
                                  &ch)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, channel_access_mode_string (ch.access_mode)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            channel_access_mode_string (ch.access_mode)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -327,7 +346,9 @@ _enable_user_level_authentication_checkout (const char *section_name,
     return ret;
 
   /* achu: Backwards values in this command are handled above */
-  if (config_section_update_keyvalue_output(kv, ch.user_level_authentication ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            ch.user_level_authentication ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -375,7 +396,9 @@ _enable_per_message_authentication_checkout (const char *section_name,
     return ret;
 
   /* achu: Backwards values in this command are handled above */
-  if (config_section_update_keyvalue_output(kv, ch.per_message_authentication ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            ch.per_message_authentication ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -423,7 +446,9 @@ _enable_pef_alerting_checkout (const char *section_name,
     return ret;
 
   /* achu: Backwards values in this command are handled above */
-  if (config_section_update_keyvalue_output(kv, ch.pef_alerting ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            ch.pef_alerting ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -470,7 +495,9 @@ _channel_privilege_limit_checkout (const char *section_name,
                                  &ch)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, privilege_level_string (ch.channel_privilege_limit)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            privilege_level_string (ch.channel_privilege_limit)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -509,7 +536,8 @@ bmc_config_channel_common_section_get(bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(channel_section);
 
-  if (config_section_add_key (channel_section,
+  if (config_section_add_key (state_data->pstate,
+                              channel_section,
                               "Volatile_Access_Mode",
                               "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
                               0,
@@ -518,7 +546,8 @@ bmc_config_channel_common_section_get(bmc_config_state_data_t *state_data,
                               channel_access_mode_validate) < 0)
     return -1;
 
-  if (config_section_add_key (channel_section,
+  if (config_section_add_key (state_data->pstate,
+                              channel_section,
                               "Volatile_Enable_User_Level_Auth",
                               "Possible values: Yes/No",
                               0,
@@ -527,7 +556,8 @@ bmc_config_channel_common_section_get(bmc_config_state_data_t *state_data,
                               config_yes_no_validate) < 0)
     return -1;
 
-  if (config_section_add_key (channel_section,
+  if (config_section_add_key (state_data->pstate,
+                              channel_section,
                               "Volatile_Enable_Per_Message_Auth",
                               "Possible values: Yes/No",
                               0,
@@ -536,7 +566,8 @@ bmc_config_channel_common_section_get(bmc_config_state_data_t *state_data,
                               config_yes_no_validate) < 0)
     return -1;
 
-  if (config_section_add_key (channel_section,
+  if (config_section_add_key (state_data->pstate,
+                              channel_section,
                               "Volatile_Enable_Pef_Alerting",
                               "Possible values: Yes/No",
                               0,
@@ -545,7 +576,8 @@ bmc_config_channel_common_section_get(bmc_config_state_data_t *state_data,
                               config_yes_no_validate) < 0)
     return -1;
 
-  if (config_section_add_key (channel_section,
+  if (config_section_add_key (state_data->pstate,
+                              channel_section,
                               "Volatile_Channel_Privilege_Limit",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -554,7 +586,8 @@ bmc_config_channel_common_section_get(bmc_config_state_data_t *state_data,
                               privilege_level_number_validate) < 0)
     return -1;
 
-  if (config_section_add_key (channel_section,
+  if (config_section_add_key (state_data->pstate,
+                              channel_section,
                               "Non_Volatile_Access_Mode",
                               "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
                               0,
@@ -563,7 +596,8 @@ bmc_config_channel_common_section_get(bmc_config_state_data_t *state_data,
                               channel_access_mode_validate) < 0)
     return -1;
 
-  if (config_section_add_key (channel_section,
+  if (config_section_add_key (state_data->pstate,
+                              channel_section,
                               "Non_Volatile_Enable_User_Level_Auth",
                               "Possible values: Yes/No",
                               0,
@@ -572,7 +606,8 @@ bmc_config_channel_common_section_get(bmc_config_state_data_t *state_data,
                               config_yes_no_validate) < 0)
     return -1;
 
-  if (config_section_add_key (channel_section,
+  if (config_section_add_key (state_data->pstate,
+                              channel_section,
                               "Non_Volatile_Enable_Per_Message_Auth",
                               "Possible values: Yes/No",
                               0,
@@ -581,7 +616,8 @@ bmc_config_channel_common_section_get(bmc_config_state_data_t *state_data,
                               config_yes_no_validate) < 0)
     return -1;
 
-  if (config_section_add_key (channel_section,
+  if (config_section_add_key (state_data->pstate,
+                              channel_section,
                               "Non_Volatile_Enable_Pef_Alerting",
                               "Possible values: Yes/No",
                               0,
@@ -590,7 +626,8 @@ bmc_config_channel_common_section_get(bmc_config_state_data_t *state_data,
                               config_yes_no_validate) < 0)
     return -1;
 
-  if (config_section_add_key (channel_section,
+  if (config_section_add_key (state_data->pstate,
+                              channel_section,
                               "Non_Volatile_Channel_Privilege_Limit",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                               0,

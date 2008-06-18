@@ -57,7 +57,8 @@ ip_address_source_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -82,15 +83,20 @@ ip_address_source_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (obj_cmd_rs, "ip_address_source", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "ip_address_source",
+                    &val) < 0)
     goto cleanup;
 
-  if (config_section_update_keyvalue_output(kv, ip_address_source_string (val)) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            ip_address_source_string (val)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -105,7 +111,8 @@ ip_address_source_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -130,7 +137,7 @@ ip_address_source_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -147,7 +154,8 @@ ip_address_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_ip_address_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_lan_configuration_parameters_ip_address_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -172,7 +180,8 @@ ip_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (obj_cmd_rs, 
+  if (Fiid_obj_get_data (state_data->pstate,
+                         obj_cmd_rs, 
                          "ip_address", 
                          ip_address_bytes,
                          4) < 0)
@@ -187,12 +196,14 @@ ip_address_checkout (const char *section_name,
            ip_address_bytes[2], 
            ip_address_bytes[3]);
 
-  if (config_section_update_keyvalue_output(kv, ip_address_str) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            ip_address_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -208,10 +219,13 @@ ip_address_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (config_ipv4_address_string2int(kv->value_input, &ip_address_val) < 0)
+  if (config_ipv4_address_string2int(state_data->pstate,
+                                     kv->value_input, 
+                                     &ip_address_val) < 0)
     goto cleanup;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -236,7 +250,7 @@ ip_address_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -253,7 +267,8 @@ mac_address_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_mac_address_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_lan_configuration_parameters_mac_address_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -278,7 +293,8 @@ mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (obj_cmd_rs, 
+  if (Fiid_obj_get_data (state_data->pstate,
+                         obj_cmd_rs, 
                          "mac_address", 
                          mac_address_bytes,
                          6) < 0)
@@ -295,12 +311,14 @@ mac_address_checkout (const char *section_name,
            mac_address_bytes[4], 
            mac_address_bytes[5]);
   
-  if (config_section_update_keyvalue_output(kv, mac_address_str) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            mac_address_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 
 }
@@ -317,10 +335,13 @@ mac_address_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (config_mac_address_string2int(kv->value_input, &mac_address_val) < 0)
+  if (config_mac_address_string2int(state_data->pstate,
+                                    kv->value_input,
+                                    &mac_address_val) < 0)
     goto cleanup;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -345,7 +366,7 @@ mac_address_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -362,7 +383,8 @@ subnet_mask_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -387,7 +409,8 @@ subnet_mask_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (obj_cmd_rs, 
+  if (Fiid_obj_get_data (state_data->pstate,
+                         obj_cmd_rs, 
                          "subnet_mask", 
                          subnet_mask_bytes,
                          4) < 0)
@@ -402,12 +425,14 @@ subnet_mask_checkout (const char *section_name,
             subnet_mask_bytes[2], 
             subnet_mask_bytes[3]);
   
-  if (config_section_update_keyvalue_output(kv, subnet_mask_str) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            subnet_mask_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -423,10 +448,13 @@ subnet_mask_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (config_ipv4_address_string2int(kv->value_input, &subnet_mask_val) < 0)
+  if (config_ipv4_address_string2int(state_data->pstate,
+                                     kv->value_input, 
+                                     &subnet_mask_val) < 0)
     goto cleanup;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -451,7 +479,7 @@ subnet_mask_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -468,7 +496,8 @@ default_gateway_address_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -493,7 +522,8 @@ default_gateway_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (obj_cmd_rs, 
+  if (Fiid_obj_get_data (state_data->pstate,
+                         obj_cmd_rs, 
                          "ip_address", 
                          ip_address_bytes,
                          4) < 0)
@@ -508,12 +538,14 @@ default_gateway_address_checkout (const char *section_name,
             ip_address_bytes[2], 
             ip_address_bytes[3]);
   
-  if (config_section_update_keyvalue_output(kv, ip_address_str) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            ip_address_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 
 }
@@ -530,10 +562,13 @@ default_gateway_address_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (config_ipv4_address_string2int(kv->value_input, &ip_address_val) < 0)
+  if (config_ipv4_address_string2int(state_data->pstate,
+                                     kv->value_input,
+                                     &ip_address_val) < 0)
     goto cleanup;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -558,7 +593,7 @@ default_gateway_address_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -575,7 +610,8 @@ default_gateway_mac_address_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_default_gateway_mac_address_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_lan_configuration_parameters_default_gateway_mac_address_rs)))
     goto cleanup;
   
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -600,7 +636,8 @@ default_gateway_mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (obj_cmd_rs, 
+  if (Fiid_obj_get_data (state_data->pstate,
+                         obj_cmd_rs, 
                          "mac_address", 
                          mac_address_bytes,
                          6) < 0)
@@ -617,12 +654,14 @@ default_gateway_mac_address_checkout (const char *section_name,
             mac_address_bytes[4], 
             mac_address_bytes[5]);
   
-  if (config_section_update_keyvalue_output(kv, mac_address_str) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            mac_address_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 
 }
@@ -639,10 +678,13 @@ default_gateway_mac_address_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (config_mac_address_string2int(kv->value_input, &mac_address_val) < 0)
+  if (config_mac_address_string2int(state_data->pstate,
+                                    kv->value_input, 
+                                    &mac_address_val) < 0)
     goto cleanup;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -667,7 +709,7 @@ default_gateway_mac_address_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -684,7 +726,8 @@ backup_gateway_address_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -709,7 +752,8 @@ backup_gateway_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (obj_cmd_rs, 
+  if (Fiid_obj_get_data (state_data->pstate,
+                         obj_cmd_rs, 
                          "ip_address", 
                          ip_address_bytes,
                          4) < 0)
@@ -724,12 +768,14 @@ backup_gateway_address_checkout (const char *section_name,
             ip_address_bytes[2], 
             ip_address_bytes[3]);
   
-  if (config_section_update_keyvalue_output(kv, ip_address_str) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            ip_address_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -745,10 +791,13 @@ backup_gateway_address_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (config_ipv4_address_string2int(kv->value_input, &ip_address_val) < 0)
+  if (config_ipv4_address_string2int(state_data->pstate,
+                                     kv->value_input, 
+                                     &ip_address_val) < 0)
     goto cleanup;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -773,7 +822,7 @@ backup_gateway_address_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -790,7 +839,8 @@ backup_gateway_mac_address_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_address_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_address_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -815,7 +865,8 @@ backup_gateway_mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  if (Fiid_obj_get_data (obj_cmd_rs, 
+  if (Fiid_obj_get_data (state_data->pstate,
+                         obj_cmd_rs, 
                          "mac_address", 
                          mac_address_bytes,
                          6) < 0)
@@ -832,12 +883,14 @@ backup_gateway_mac_address_checkout (const char *section_name,
             mac_address_bytes[4], 
             mac_address_bytes[5]);
   
-  if (config_section_update_keyvalue_output(kv, mac_address_str) < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            mac_address_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -853,10 +906,13 @@ backup_gateway_mac_address_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (config_mac_address_string2int(kv->value_input, &mac_address_val) < 0)
+  if (config_mac_address_string2int(state_data->pstate,
+                                    kv->value_input,
+                                    &mac_address_val) < 0)
     goto cleanup;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -881,7 +937,7 @@ backup_gateway_mac_address_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -898,7 +954,8 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(vi);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -923,17 +980,23 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (Fiid_obj_get (obj_cmd_rs, "vlan_id", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs,
+                    "vlan_id", 
+                    &val) < 0)
     goto cleanup;
   vi->vlan_id = val;
   
-  if (Fiid_obj_get (obj_cmd_rs, "vlan_id_enable", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "vlan_id_enable",
+                    &val) < 0)
     goto cleanup;
   vi->vlan_id_enable = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -949,7 +1012,8 @@ _set_vlan_id (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(vi);
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -975,7 +1039,7 @@ _set_vlan_id (bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -991,7 +1055,9 @@ vlan_id_checkout (const char *section_name,
   if ((ret = _get_vlan_id (state_data, &vi)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (config_section_update_keyvalue_output_int(kv, vi.vlan_id) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate,
+                                                kv,
+                                                vi.vlan_id) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1035,7 +1101,9 @@ vlan_id_enable_checkout (const char *section_name,
   if ((ret = _get_vlan_id (state_data, &vi)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, vi.vlan_id_enable ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            vi.vlan_id_enable ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -1070,7 +1138,8 @@ vlan_priority_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -1095,15 +1164,20 @@ vlan_priority_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_cmd_rs, "vlan_priority", &val) < 0)
+  if (Fiid_obj_get (state_data->pstate,
+                    obj_cmd_rs, 
+                    "vlan_priority", 
+                    &val) < 0)
     goto cleanup;
 
-  if (config_section_update_keyvalue_output_int(kv, val) < 0)
+  if (config_section_update_keyvalue_output_int(state_data->pstate,
+                                                kv,
+                                                val) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -1118,7 +1192,8 @@ vlan_priority_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
+                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -1143,7 +1218,7 @@ vlan_priority_commit (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(state_data->pstate, obj_cmd_rs);
   return (rv);
 }
 
@@ -1157,13 +1232,15 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     "and set the appropriate \"IP_Address\", \"MAC_Address\", "
     "\"Subnet_Mask\", etc. for the machine.";
 
-  if (!(lan_conf_section = config_section_create ("Lan_Conf",
+  if (!(lan_conf_section = config_section_create (state_data->pstate,
+                                                  "Lan_Conf",
                                                   "Lan_Conf",
                                                   section_comment,
                                                   0)))
     goto cleanup;
   
-  if (config_section_add_key (lan_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_section,
                               "IP_Address_Source",
                               "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
                               0,
@@ -1172,7 +1249,8 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                               ip_address_source_number_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_section,
                               "IP_Address",
                               "Give valid IP address",
                               0,
@@ -1181,7 +1259,8 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                               config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_section,
                               "MAC_Address",
                               "Give valid MAC address",
                               0,
@@ -1191,7 +1270,8 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   /* TODO: checking valid netmask is not same as checking valid IP */
-  if (config_section_add_key (lan_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_section,
                               "Subnet_Mask",
                               "Give valid Subnet Mask",
                               0,
@@ -1200,7 +1280,8 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                               config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_section,
                               "Default_Gateway_IP_Address",
                               "Give valid IP address",
                               0,
@@ -1209,7 +1290,8 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                               config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_section,
                               "Default_Gateway_MAC_Address",
                               "Give valid MAC address",
                               0,
@@ -1218,7 +1300,8 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                               config_mac_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_section,
                               "Backup_Gateway_IP_Address",
                               "Give valid IP address",
                               0,
@@ -1227,7 +1310,8 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                               config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_section,
                               "Backup_Gateway_MAC_Address",
                               "Give valid MAC address",
                               0,
@@ -1236,7 +1320,8 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                               config_mac_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_section,
                               "Vlan_id",
                               "Give valid unsigned number",
                               0,
@@ -1245,7 +1330,8 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                               vlan_id_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_section,
                               "Vlan_Id_Enable",
                               "Possible values: Yes/No",
                               0,
@@ -1254,7 +1340,8 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                               config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (lan_conf_section,
+  if (config_section_add_key (state_data->pstate,
+                              lan_conf_section,
                               "Vlan_Priority",
                               "Give valid unsigned number",
                               0,
@@ -1267,7 +1354,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (lan_conf_section)
-    config_section_destroy(lan_conf_section);
+    config_section_destroy(state_data->pstate, lan_conf_section);
   return NULL;
 }
 

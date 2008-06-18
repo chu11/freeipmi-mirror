@@ -31,22 +31,30 @@
 #include "config-tool-fiid.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 
 fiid_obj_t 
-Fiid_obj_create(fiid_template_t tmpl)
+Fiid_obj_create(pstdout_state_t pstate,
+                fiid_template_t tmpl)
 {
   fiid_obj_t obj;
 
   assert(tmpl);
 
   if (!(obj = fiid_obj_create(tmpl)))
-    fprintf(stderr, "fiid_obj_create: %s", strerror(errno));
+    PSTDOUT_FPRINTF(pstate,
+                    stderr, 
+                    "fiid_obj_create: %s", 
+                    strerror(errno));
 
   return obj;
 }
 
 int8_t
-Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
+Fiid_obj_get(pstdout_state_t pstate,
+             fiid_obj_t obj,
+             char *field, 
+             uint64_t *val)
 {
   int8_t ret;
 
@@ -55,13 +63,17 @@ Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
   assert(val);
 
   if ((ret = fiid_obj_get (obj, field, val)) < 0)
-    fprintf(stderr, "fiid_obj_get: %s\n", fiid_strerror(fiid_obj_errnum(obj)));
+    PSTDOUT_FPRINTF(pstate,
+                    stderr, 
+                    "fiid_obj_get: %s\n", 
+                    fiid_strerror(fiid_obj_errnum(obj)));
 
   return ret;
 }
 
 int32_t 
-Fiid_obj_get_data (fiid_obj_t obj,
+Fiid_obj_get_data (pstdout_state_t pstate,
+                   fiid_obj_t obj,
                    char *field,
                    uint8_t *data,
                    uint32_t data_len)
@@ -74,13 +86,17 @@ Fiid_obj_get_data (fiid_obj_t obj,
   assert(data_len);
 
   if ((ret = fiid_obj_get_data (obj, field, data, data_len)) < 0)
-    fprintf(stderr, "fiid_obj_get_data: %s\n", fiid_strerror(fiid_obj_errnum(obj)));
+    PSTDOUT_FPRINTF(pstate,
+                    stderr, 
+                    "fiid_obj_get_data: %s\n", 
+                    fiid_strerror(fiid_obj_errnum(obj)));
 
   return ret;
 }
 
 int32_t 
-Fiid_obj_set_data (fiid_obj_t obj,
+Fiid_obj_set_data (pstdout_state_t pstate,
+                   fiid_obj_t obj,
                    char *field,
                    uint8_t *data,
                    uint32_t data_len)
@@ -93,27 +109,35 @@ Fiid_obj_set_data (fiid_obj_t obj,
   assert(data_len);
 
   if ((ret = fiid_obj_set_data (obj, field, data, data_len)) < 0)
-    fprintf(stderr, "fiid_obj_set_data: %s\n", fiid_strerror(fiid_obj_errnum(obj)));
+    PSTDOUT_FPRINTF(pstate,
+                    stderr, 
+                    "fiid_obj_set_data: %s\n", 
+                    fiid_strerror(fiid_obj_errnum(obj)));
 
   return ret;
 }
 
 
 int 
-Fiid_obj_clear(fiid_obj_t obj)
+Fiid_obj_clear(pstdout_state_t pstate,
+               fiid_obj_t obj)
 {
   int8_t ret;
 
   assert(obj);
 
   if ((ret = fiid_obj_clear(obj)) < 0)
-    fprintf(stderr, "fiid_obj_clear: %s\n", fiid_strerror(fiid_obj_errnum(obj)));
+    PSTDOUT_FPRINTF(pstate,
+                    stderr, 
+                    "fiid_obj_clear: %s\n", 
+                    fiid_strerror(fiid_obj_errnum(obj)));
 
   return ret;
 }
 
 void
-Fiid_obj_destroy (fiid_obj_t obj)
+Fiid_obj_destroy (pstdout_state_t pstate,
+                  fiid_obj_t obj)
 {
   if (obj)
     fiid_obj_destroy(obj);
