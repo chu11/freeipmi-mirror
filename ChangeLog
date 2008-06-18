@@ -1,4 +1,3 @@
-<<<<<<< ChangeLog
 2008-XX-XX Albert Chu <chu11@llnl.gov>
 
 	Add Solaris BMC interface.
@@ -30,7 +29,6 @@
 
 	* README.sunbmc: New file.
 
-=======
 2008-06-18 Albert Chu <chu11@llnl.gov>
 
 	Support hostranges on bmc-config, ipmi-sensors-config, and pef-config.
@@ -89,7 +87,6 @@
 	* ipmi-sensors-config/ipmi-sensors-config.8.pre.in: Fix manpage
 	output text ordering.
 	
->>>>>>> 1.1609
 2008-06-13 Albert Chu <chu11@llnl.gov>
 
 	* common/src/tool-common.c (ipmi_open): Add/fix conditions under
