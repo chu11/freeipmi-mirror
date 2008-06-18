@@ -60,6 +60,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
+    ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     {"info",       INFO_KEY,       0, 0, 
      "Show general information about PEF configuration.", 30},
