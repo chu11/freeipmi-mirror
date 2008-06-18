@@ -87,9 +87,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
       goto cleanup; 
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
-                                     tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs);
 
   if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (state_data->ipmi_ctx, 
 									channel_number, 
@@ -142,9 +140,7 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *
       return CONFIG_ERR_SUCCESS;
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
-                                     tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs);
 
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->ipmi_ctx, 
                                                                          IPMI_GET_PEF_PARAMETER, 
@@ -196,9 +192,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
       return CONFIG_ERR_SUCCESS;
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
-                                     tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs);
 
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->ipmi_ctx, 
 										IPMI_GET_PEF_PARAMETER, 
@@ -250,9 +244,7 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *
       return CONFIG_ERR_SUCCESS;
     }
 
-  if (!(obj_cmd_rs = Fiid_obj_create (state_data->pstate,
-                                      tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs);
 
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->ipmi_ctx, 
 									 IPMI_GET_PEF_PARAMETER, 

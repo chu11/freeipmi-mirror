@@ -71,9 +71,7 @@ _get_destination_type(pef_config_state_data_t *state_data,
 
   destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
-                                     tmpl_cmd_get_lan_configuration_parameters_destination_type_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_destination_type_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -148,9 +146,7 @@ _set_destination_type(pef_config_state_data_t *state_data,
 
   destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
-                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -382,10 +378,8 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
   assert(da);
 
   destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
-
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
-                                     tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs)))
-    goto cleanup;
+  
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -475,9 +469,7 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
 
   destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
-                                     tmpl_cmd_set_lan_configuration_parameters_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {

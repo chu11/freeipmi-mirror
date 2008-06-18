@@ -190,9 +190,7 @@ threshold_checkout (const char *section_name,
                                   &sensor_number) < 0)
     goto cleanup;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
-                                     tmpl_cmd_get_sensor_thresholds_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_thresholds_rs);
 
   if (ipmi_cmd_get_sensor_thresholds (state_data->ipmi_ctx,
                                       sensor_number,
@@ -418,9 +416,7 @@ threshold_commit (const char *section_name,
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate,
-                                     tmpl_cmd_set_sensor_thresholds_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sensor_thresholds_rs);
 
   if (ipmi_cmd_set_sensor_thresholds (state_data->ipmi_ctx,
                                       sensor_number,

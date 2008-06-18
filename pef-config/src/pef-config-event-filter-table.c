@@ -97,9 +97,7 @@ _get_event_filter_table (struct pef_config_state_data *state_data,
 
   filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
-                                     tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs);
   
   if (ipmi_cmd_get_pef_configuration_parameters_event_filter_table (state_data->ipmi_ctx,
 								    IPMI_GET_PEF_PARAMETER,
@@ -307,9 +305,7 @@ _set_event_filter_table (struct pef_config_state_data *state_data,
 
   filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
-  if (!(obj_cmd_rs = Fiid_obj_create(state_data->pstate, 
-                                     tmpl_cmd_set_pef_configuration_parameters_rs)))
-    goto cleanup;
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
 
   if (ipmi_cmd_set_pef_configuration_parameters_event_filter_table (state_data->ipmi_ctx, 
 								    filter_number, 
