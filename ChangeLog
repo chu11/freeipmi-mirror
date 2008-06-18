@@ -1,4 +1,4 @@
-2008-XX-XX Albert Chu <chu11@llnl.gov>
+2008-06-18 Albert Chu <chu11@llnl.gov>
 
 	Support hostranges on bmc-config, ipmi-sensors-config, and pef-config.
 
@@ -50,6 +50,11 @@
 
 	* common/src/pstdout.h: Update comments on pstdout_printf,
 	pstdout_fprintf, and pstdout_perror.
+	
+2008-06-16 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors-config/ipmi-sensors-config.8.pre.in: Fix manpage
+	output text ordering.
 	
 2008-06-13 Albert Chu <chu11@llnl.gov>
 

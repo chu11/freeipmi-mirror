@@ -13,7 +13,7 @@ o Add additional "connection timeout" error message to tools to
   timeout in the middle of a command's operations.
 o Add hostrange support in bmc-config, ipmi-sensors-config, and
   pef-config.
-o Support --always-prefix option in many tools.
+o Support --always-prefix option in most tools.
 o Support --guid option in bmc-info.
 o Support --get-time and --set-time in ipmi-sel.
 o Support build on Solaris.
