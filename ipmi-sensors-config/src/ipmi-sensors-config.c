@@ -151,6 +151,14 @@ _ipmi_sensors_config (pstdout_state_t pstate,
     {
       if (prog_data->args->config_args.filename)
         {
+          if (prog_data->hosts_count > 1)
+            {
+              pstdout_fprintf(pstate,
+                              stderr,
+                              "Cannot output multiple host checkout into a single file\n");
+              goto cleanup;
+            }
+
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
               pstdout_perror(pstate,
@@ -397,6 +405,8 @@ main (int argc, char **argv)
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
     prog_data.args->sdr.quiet_cache = 1;
+
+  prog_data.hosts_count = hosts_count;
   
   if ((rv = pstdout_launch(prog_data.args->config_args.common.hostname,
                            _ipmi_sensors_config,

@@ -46,6 +46,7 @@ typedef struct ipmi_sensors_config_prog_data
 { 
   char *progname;
   struct ipmi_sensors_config_arguments *args;
+  int hosts_count;
 } ipmi_sensors_config_prog_data_t;
 
 typedef struct ipmi_sensors_config_state_data

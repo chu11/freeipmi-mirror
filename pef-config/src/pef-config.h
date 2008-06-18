@@ -51,6 +51,7 @@ typedef struct pef_config_prog_data
 { 
   char *progname;
   struct pef_config_arguments *args;
+  int hosts_count;
 } pef_config_prog_data_t;
 
 typedef struct pef_config_state_data

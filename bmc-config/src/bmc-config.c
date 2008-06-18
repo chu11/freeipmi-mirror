@@ -101,6 +101,14 @@ _bmc_config (pstdout_state_t pstate,
     {
       if (prog_data->args->config_args.filename)
         {
+          if (prog_data->hosts_count > 1)
+            {
+              pstdout_fprintf(pstate,
+                              stderr, 
+                              "Cannot output multiple host checkout into a single file\n");
+              goto cleanup;
+            }
+
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
               pstdout_perror(pstate,

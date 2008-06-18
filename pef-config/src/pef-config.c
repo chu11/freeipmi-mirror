@@ -98,6 +98,14 @@ _pef_config (pstdout_state_t pstate,
     {
       if (prog_data->args->config_args.filename)
         {
+          if (prog_data->hosts_count > 1)
+            {
+              pstdout_fprintf(pstate,
+                              stderr,
+                              "Cannot output multiple host checkout into a single file\n");
+              goto cleanup;
+            }
+
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
               pstdout_perror(pstate, 
@@ -322,6 +330,7 @@ main (int argc, char **argv)
   pef_config_prog_data_t prog_data;
   struct pef_config_arguments cmd_args;
   int exit_code;
+  int hosts_count;
   int rv;
 
   ipmi_disable_coredump();
@@ -332,16 +341,18 @@ main (int argc, char **argv)
 
   prog_data.args = &cmd_args;
 
-  if (pstdout_setup(&(prog_data.args->config_args.common.hostname),
-                    prog_data.args->config_args.hostrange.buffer_output,
-                    prog_data.args->config_args.hostrange.consolidate_output,
-                    prog_data.args->config_args.hostrange.fanout,
-                    prog_data.args->config_args.hostrange.eliminate,
-                    prog_data.args->config_args.hostrange.always_prefix) < 0)
+  if ((hosts_count = pstdout_setup(&(prog_data.args->config_args.common.hostname),
+                                   prog_data.args->config_args.hostrange.buffer_output,
+                                   prog_data.args->config_args.hostrange.consolidate_output,
+                                   prog_data.args->config_args.hostrange.fanout,
+                                   prog_data.args->config_args.hostrange.eliminate,
+                                   prog_data.args->config_args.hostrange.always_prefix)) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
+
+  prog_data.hosts_count = hosts_count;
 
   if ((rv = pstdout_launch(prog_data.args->config_args.common.hostname,
                            _pef_config,
