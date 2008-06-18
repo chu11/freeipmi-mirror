@@ -32,6 +32,12 @@
 	__len in parameters.
 
 	* bmc-info/, ipmi-fru/: Adjust for _FIID_OBJ_GET_DATA change.
+
+	* common/src/config-tool-fiid.h, common/src/config-tool-fiid.c:
+	Removed files.
+
+	* common/src/config-tool-pef-conf-section.c: Adjust for removed
+	wrapper functions.
 	
 2008-06-13 Albert Chu <chu11@llnl.gov>
 
