@@ -57,9 +57,6 @@ $(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
 $(top_builddir)/common/src/libdebugcommon.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
-$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
 force-dependency-check:
 
 libfreeipmi_la_SOURCES = 
