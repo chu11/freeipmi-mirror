@@ -1,3 +1,9 @@
+2008-06-19 Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(ipmimonitoring.c): Output multiple strings if multiple bitmasks
+	set.
+	
 2008-06-18 Albert Chu <chu11@llnl.gov>
 
 	Support hostranges on bmc-config, ipmi-sensors-config, and pef-config.
