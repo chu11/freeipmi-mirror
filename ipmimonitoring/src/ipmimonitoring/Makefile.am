@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.13 2008-06-19 22:07:37 chu11 Exp $
+## $Id: Makefile.am,v 1.14 2008-06-19 22:31:07 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -18,13 +18,17 @@ AM_CPPFLAGS = \
 sbin_PROGRAMS = ipmimonitoring
 
 ipmimonitoring_LDADD = \
-	$(top_builddir)/common/src/libtoolcommon.la
+	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/ipmimonitoring/src/libipmimonitoring/libipmimonitoring.la
 
 ipmimonitoring_SOURCES = \
 	ipmimonitoring.c \
 	ipmimonitoring-argp.c
 
 $(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/ipmimonitoring/src/libipmimonitoring/libipmimonitoring.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:
