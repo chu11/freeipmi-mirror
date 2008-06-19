@@ -13,7 +13,6 @@ sbin_PROGRAMS = ipmi-sel
 
 ipmi_sel_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
-	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
  
@@ -23,9 +22,6 @@ ipmi_sel_SOURCES = \
 	ipmi-sel-entry.c
  
 $(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
-$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check

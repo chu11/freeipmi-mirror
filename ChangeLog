@@ -8,7 +8,8 @@
 	tool-hostrange-common.h and tool-hostrange-common.c.
 
 	* common/src/Makefile.am: Merge hostrange lib into toolcommon lib.
-	Link libmiscutils.la into libtoolcommon.la.
+	Link libmiscutils.la into libtoolcommon.la.  Link
+	libfreeipmiportability.la into libtoolcommon.la.
 
 	* Adjust all tool Makefiles appropriately for lib changes.
 	

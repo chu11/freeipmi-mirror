@@ -1,5 +1,8 @@
 noinst_HEADERS = \
 	freeipmi-portability.h \
+	freeipmi-argp-fmtstream.h \
+	freeipmi-argp-namefrob.h \
+	freeipmi-argp.h \
 	tool-common.h \
 	tool-config-file-common.h \
 	tool-cmdline-common.h \
@@ -7,6 +10,7 @@ noinst_HEADERS = \
 	tool-fiid-wrappers.h \
 	tool-sdr-cache-common.h \
 	tool-sensor-common.h \
+	pstdout.h \
 	ipmi-ping.h \
 	cbuf.h \
 	conffile.h \
@@ -18,7 +22,6 @@ noinst_HEADERS = \
 	secure.h \
 	timeval.h \
 	thread.h \
-	pstdout.h \
 	config-tool-argp.h \
 	config-tool-common.h \
 	config-tool-comment.h \
@@ -30,10 +33,7 @@ noinst_HEADERS = \
 	config-tool-section.h \
 	config-tool-utils.h \
 	config-tool-validate.h \
-	debug-common.h \
-	freeipmi-argp-fmtstream.h \
-	freeipmi-argp-namefrob.h \
-	freeipmi-argp.h
+	debug-common.h
 
 if WITH_FREEIPMI_ARGP
 FREEIPMI_ARG_SOURCES = \
@@ -62,6 +62,7 @@ libfreeipmiportability_la_SOURCES = \
 	$(FREEIPMI_ARG_SOURCES)
 
 libtoolcommon_la_LIBADD = \
+	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/common/src/libmiscutils.la
 
 libtoolcommon_la_LDFLAGS = \
@@ -122,6 +123,9 @@ libconfigtoolcommon_la_SOURCES = \
 	config-tool-validate.c
 
 $(top_builddir)/common/src/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:
