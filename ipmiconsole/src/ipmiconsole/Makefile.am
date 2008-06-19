@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.13 2008-06-07 16:09:54 chu11 Exp $
+## $Id: Makefile.am,v 1.14 2008-06-19 21:17:37 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -19,7 +19,6 @@ sbin_PROGRAMS = ipmiconsole
 
 ipmiconsole_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
-	$(top_builddir)/common/src/libmiscutils.la \
 	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/ipmiconsole/src/libipmiconsole/libipmiconsole.la
 
@@ -28,9 +27,6 @@ ipmiconsole_SOURCES = \
 	ipmiconsole-argp.c
 
 $(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
-$(top_builddir)/common/src/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check

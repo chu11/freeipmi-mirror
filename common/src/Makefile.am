@@ -61,6 +61,9 @@ libfreeipmiportability_la_SOURCES = \
 	freeipmi-portability.c \
 	$(FREEIPMI_ARG_SOURCES)
 
+libtoolcommon_la_LIBADD = \
+	$(top_builddir)/common/src/libmiscutils.la
+
 libtoolcommon_la_LDFLAGS = \
 	$(PTHREAD_LIBS)
 
@@ -117,3 +120,8 @@ libconfigtoolcommon_la_SOURCES = \
 	config-tool-section.c \
 	config-tool-utils.c \
 	config-tool-validate.c
+
+$(top_builddir)/common/src/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+force-dependency-check:

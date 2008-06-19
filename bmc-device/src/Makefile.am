@@ -12,7 +12,6 @@ sbin_PROGRAMS = bmc-device
 
 bmc_device_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
-	$(top_builddir)/common/src/libmiscutils.la \
 	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
@@ -22,9 +21,6 @@ bmc_device_SOURCES = \
 	bmc-device-argp.c 
 
 $(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
-$(top_builddir)/common/src/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
