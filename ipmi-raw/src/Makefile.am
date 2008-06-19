@@ -11,21 +11,13 @@ AM_CPPFLAGS = \
 sbin_PROGRAMS = ipmi-raw
  
 ipmi_raw_LDADD = \
-	$(top_builddir)/common/src/libtoolcommon.la \
-	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
-	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
+	$(top_builddir)/common/src/libtoolcommon.la
 
 ipmi_raw_SOURCES = \
 	ipmi-raw.c \
 	ipmi-raw-argp.c
 
 $(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
-$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
-$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

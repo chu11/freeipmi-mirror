@@ -17,9 +17,7 @@ AM_CPPFLAGS = \
 sbin_PROGRAMS = ipmi-sensors
 
 ipmi_sensors_LDADD = \
-	$(top_builddir)/common/src/libtoolcommon.la \
-	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
-	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
+	$(top_builddir)/common/src/libtoolcommon.la
  
 ipmi_sensors_SOURCES = \
 	ipmi-sensors.c \
@@ -32,12 +30,6 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-util.c
 
 $(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
-$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
-$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

@@ -12,8 +12,7 @@ sbin_PROGRAMS = bmc-watchdog
 
 bmc_watchdog_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
-	$(top_builddir)/common/src/libdebugcommon.la \
-	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
+	$(top_builddir)/common/src/libdebugcommon.la
 
 bmc_watchdog_SOURCES = \
 	bmc-watchdog.c \
@@ -23,9 +22,6 @@ $(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/libdebugcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
-$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

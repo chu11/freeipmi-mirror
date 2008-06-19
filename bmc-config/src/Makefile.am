@@ -28,10 +28,7 @@ AM_CPPFLAGS = \
 sbin_PROGRAMS = bmc-config
 
 bmc_config_LDADD = \
-	$(top_builddir)/common/src/libtoolcommon.la \
-	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
-	$(top_builddir)/common/src/libconfigtoolcommon.la \
-	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
+	$(top_builddir)/common/src/libconfigtoolcommon.la
 
 bmc_config_SOURCES = \
 	bmc-config.c \
@@ -54,16 +51,7 @@ bmc_config_SOURCES = \
 	bmc-config-misc-section.c \
 	bmc-config-validate.c
 
-$(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
-$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
 $(top_builddir)/common/src/libconfigtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
-$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

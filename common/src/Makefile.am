@@ -62,6 +62,8 @@ libfreeipmiportability_la_SOURCES = \
 	$(FREEIPMI_ARG_SOURCES)
 
 libtoolcommon_la_LIBADD = \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la \
+	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
 	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/common/src/libmiscutils.la
 
@@ -90,6 +92,7 @@ libdebugcommon_la_SOURCES = \
 	debug-common.c
 
 libpingtoolcommon_la_LIBADD = \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la \
 	$(top_builddir)/common/src/libfreeipmiportability.la
 
 libpingtoolcommon_la_CPPFLAGS = \
@@ -110,6 +113,9 @@ libmiscutils_la_SOURCES = \
 	thread.c \
 	timeval.c
 
+libconfigtoolcommon_la_LIBADD = \
+	$(top_builddir)/common/src/libtoolcommon.la
+
 libconfigtoolcommon_la_CPPFLAGS = \
 	-I$(top_builddir)/libfreeipmi/include
 
@@ -125,10 +131,19 @@ libconfigtoolcommon_la_SOURCES = \
 	config-tool-utils.c \
 	config-tool-validate.c
 
-$(top_builddir)/common/src/libmiscutils.la : force-dependency-check
+$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:
