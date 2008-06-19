@@ -20,6 +20,8 @@
 	libpingtoolcommon.
 
 	* Adjust all tool Makefiles appropriately for lib changes.
+
+	* General Makefile cleanup.
 	
 2008-06-18 Albert Chu <chu11@llnl.gov>
 
