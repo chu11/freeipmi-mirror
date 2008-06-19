@@ -32,10 +32,10 @@
 #include "ipmi-sensors-config-sections.h"
 
 #include "freeipmi-portability.h"
-#include "hostrange.h"
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
 
 static void

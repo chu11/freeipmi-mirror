@@ -12,7 +12,6 @@ sbin_PROGRAMS = ipmi-raw
  
 ipmi_raw_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
-	$(top_builddir)/common/src/libhostrange.la \
 	$(top_builddir)/common/src/libmiscutils.la \
 	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
@@ -23,9 +22,6 @@ ipmi_raw_SOURCES = \
 	ipmi-raw-argp.c
 
 $(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
-$(top_builddir)/common/src/libhostrange.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/libmiscutils.la : force-dependency-check

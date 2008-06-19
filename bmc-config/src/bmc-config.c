@@ -33,10 +33,10 @@
 #include "bmc-config-sections.h"
 
 #include "freeipmi-portability.h"
-#include "hostrange.h"
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-hostrange-common.h"
 
 static void
 _bmc_config_state_data_init(bmc_config_state_data_t *state_data)

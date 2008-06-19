@@ -33,11 +33,11 @@
 #include "ipmi-chassis-argp.h"
 
 #include "freeipmi-portability.h"
-#include "hostrange.h"
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-fiid-wrappers.h"
+#include "tool-hostrange-common.h"
 
 static int32_t
 get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)

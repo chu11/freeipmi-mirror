@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.9 2008-06-07 16:09:56 chu11 Exp $
+## $Id: Makefile.am,v 1.10 2008-06-19 21:09:12 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -19,7 +19,6 @@ sbin_PROGRAMS = ipmimonitoring
 
 ipmimonitoring_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
-	$(top_builddir)/common/src/libhostrange.la \
 	$(top_builddir)/common/src/libmiscutils.la \
 	$(top_builddir)/common/src/libfreeipmiportability.la \
 	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
@@ -30,9 +29,6 @@ ipmimonitoring_SOURCES = \
 	ipmimonitoring-argp.c
 
 $(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
-
-$(top_builddir)/common/src/libhostrange.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/libmiscutils.la : force-dependency-check

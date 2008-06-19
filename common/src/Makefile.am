@@ -3,6 +3,7 @@ noinst_HEADERS = \
 	tool-common.h \
 	tool-config-file-common.h \
 	tool-cmdline-common.h \
+	tool-hostrange-common.h \
 	tool-fiid-wrappers.h \
 	tool-sdr-cache-common.h \
 	tool-sensor-common.h \
@@ -18,7 +19,6 @@ noinst_HEADERS = \
 	timeval.h \
 	thread.h \
 	pstdout.h \
-	hostrange.h \
 	config-tool-argp.h \
 	config-tool-common.h \
 	config-tool-comment.h \
@@ -51,7 +51,6 @@ noinst_LTLIBRARIES = \
 	libtoolcommon.la \
 	libipmiping.la \
 	libmiscutils.la \
-	libhostrange.la \
 	libconfigtoolcommon.la \
 	libdebugcommon.la
 
@@ -62,17 +61,23 @@ libfreeipmiportability_la_SOURCES = \
 	freeipmi-portability.c \
 	$(FREEIPMI_ARG_SOURCES)
 
+libtoolcommon_la_LDFLAGS = \
+	$(PTHREAD_LIBS)
+
 libtoolcommon_la_CPPFLAGS = \
 	-D_GNU_SOURCE \
 	-D_REENTRANT \
+	-I$(top_builddir)/ipmidetect/src/libipmidetect/ \
 	-I$(top_builddir)/libfreeipmi/include 
 
 libtoolcommon_la_SOURCES = \
 	tool-common.c \
 	tool-config-file-common.c \
 	tool-cmdline-common.c \
+	tool-hostrange-common.c \
 	tool-sdr-cache-common.c \
-	tool-sensor-common.c
+	tool-sensor-common.c \
+	pstdout.c
 
 libdebugcommon_la_CPPFLAGS = \
 	-I$(top_builddir)/libfreeipmi/include 
@@ -97,17 +102,6 @@ libmiscutils_la_SOURCES = \
 	secure.c \
 	thread.c \
 	timeval.c
-
-libhostrange_la_LDFLAGS = \
-	$(PTHREAD_LIBS)
-
-libhostrange_la_CPPFLAGS = \
-	-I$(top_builddir)/ipmidetect/src/libipmidetect/ \
-	-D_REENTRANT
-
-libhostrange_la_SOURCES = \
-	hostrange.c \
-	pstdout.c
 
 libconfigtoolcommon_la_CPPFLAGS = \
 	-I$(top_builddir)/libfreeipmi/include

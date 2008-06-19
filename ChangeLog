@@ -3,6 +3,13 @@
 	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
 	(ipmimonitoring.c): Output multiple strings if multiple bitmasks
 	set.
+
+	* common/src/hostrange.h, common/src/hostrange.c: Rename to
+	tool-hostrange-common.h and tool-hostrange-common.c.
+
+	* common/src/Makefile.am: Merge hostrange lib into toolcommon lib.
+
+	* Adjust all tool Makefiles appropriately for lib change.
 	
 2008-06-18 Albert Chu <chu11@llnl.gov>
 

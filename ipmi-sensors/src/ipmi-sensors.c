@@ -47,10 +47,10 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "hostrange.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-fiid-wrappers.h"
+#include "tool-hostrange-common.h"
 #include "tool-sensor-common.h"
 #include "tool-sdr-cache-common.h"
 

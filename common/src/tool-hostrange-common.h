@@ -1,9 +1,9 @@
 /*****************************************************************************\
- *  $Id: hostrange.h,v 1.5 2008-05-21 16:40:16 chu11 Exp $
+ *  $Id: tool-hostrange-common.h,v 1.1 2008-06-19 21:09:11 chu11 Exp $
 \*****************************************************************************/
 
-#ifndef _HOSTRANGE_H
-#define _HOSTRANGE_H
+#ifndef _TOOL_HOSTRANGE_COMMON_H
+#define _TOOL_HOSTRANGE_COMMON_H
 
 /* Returns number of hosts setup for, -1 on error */
 int pstdout_setup(char **hosts,
@@ -13,4 +13,4 @@ int pstdout_setup(char **hosts,
                   int eliminate,
                   int always_prefix);
 
-#endif /* _HOSTRANGE_H */
+#endif /* _TOOL_HOSTRANGE_COMMON_H */
