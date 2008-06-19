@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.h,v 1.11 2008-04-17 18:06:27 chu11 Exp $
+ *  $Id: ping-tool-common.h,v 1.1 2008-06-19 21:30:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -24,8 +24,8 @@
  *  with Ipmiping.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_PING_H
-#define _IPMI_PING_H
+#ifndef _PING_TOOL_COMMON_H
+#define _PING_TOOL_COMMON_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -99,4 +99,4 @@ void ipmi_ping_loop(Ipmi_Ping_CreatePacket _create,
 }
 #endif
 
-#endif /* _IPMI_PING_H */
+#endif /* _PING_TOOL_COMMON_H */

@@ -7,9 +7,14 @@
 	* common/src/hostrange.h, common/src/hostrange.c: Rename to
 	tool-hostrange-common.h and tool-hostrange-common.c.
 
+	* common/src/ipmi-ping.h, common/src/ipmi-ping.c: Rename to
+	ping-tool-common.h and ping-tool-common.c.
+
 	* common/src/Makefile.am: Merge hostrange lib into toolcommon lib.
 	Link libmiscutils.la into libtoolcommon.la.  Link
-	libfreeipmiportability.la into libtoolcommon.la.
+	libfreeipmiportability.la into libtoolcommon.la.  rename
+	libipmiping.la to libpingtoolcommon.la for consistency.  Link
+	libfreeipmiportability.la into libpingtoolcommon.la.
 
 	* Adjust all tool Makefiles appropriately for lib changes.
 	

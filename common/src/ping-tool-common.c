@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.20 2008-06-07 16:09:51 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.1 2008-06-19 21:30:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -71,7 +71,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "ipmi-ping.h"
+#include "ping-tool-common.h"
 
 #ifndef INET_ADDRSTRLEN 
 #define INET_ADDRSTRLEN 16
