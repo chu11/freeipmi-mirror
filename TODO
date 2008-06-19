@@ -40,6 +40,7 @@ pef-config
 
 general
 -------
+beginning doc
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
