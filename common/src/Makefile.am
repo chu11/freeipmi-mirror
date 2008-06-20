@@ -1,3 +1,7 @@
+SUBDIRS = \
+	configtool \
+	pingtool
+
 noinst_HEADERS = \
 	freeipmi-portability.h \
 	freeipmi-argp-fmtstream.h \
