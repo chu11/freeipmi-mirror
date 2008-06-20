@@ -245,7 +245,7 @@ Specify the default ping percent value to use.
 \fBipmipower-ping-consec-count\fR \fICOUNT\fR
 Specify the default ping consecutive count value to use.
 
-#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2003-2008 FreeIPMI Core Team.  
 
@@ -259,4 +259,4 @@ freeipmi(7), bmc-config(8), bmc-device(8), bmc-info(8), bmc-watchdog(8),
 ipmi-chassis(8), ipmi-fru(8), ipmi-oem(8), ipmi-raw(8), ipmi-sel(8),
 ipmi-sensors(8), ipmi-sensors-config(8), ipmiconsole(8),
 ipmimonitoring(8), ipmipower(8), pef-config(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: rmcpping.8.pre.in,v 1.10 2008-04-24 05:00:36 chu11 Exp $
+.\"$Id: rmcpping.8.pre.in,v 1.11 2008-06-20 03:15:03 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -39,17 +39,17 @@ be randomized.
 .B rmcpping
 will return 0 to the environment if it receives atleast 1 response
 from the remote host.  Otherwise, it exits with a value of 1.
-#include <@top_srcdir@/common/doc/manpage-common-ping-options.man>
-#include <@top_srcdir@/common/doc/manpage-common-known-issues-ping.man>
-#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/common/man/manpage-common-ping-options.man>
+#include <@top_srcdir@/common/man/manpage-common-known-issues-ping.man>
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2003-2007 The Regents of the University of California.
-#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "ORIGIN"
 Command and manpage based off 
 .B ping(8).
 .SH "SEE ALSO"
 freeipmi(7), ping(8), ipmiping(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>

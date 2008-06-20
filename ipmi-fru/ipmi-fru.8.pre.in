@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.32 2008-05-27 17:25:24 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.33 2008-06-20 03:15:00 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -33,23 +33,23 @@ ipmi-fru \- display FRU information
 .SH "DESCRIPTION"
 .B Ipmi-fru
 displays Field Replaceable Unit (FRU) Information.
-#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
-#include <@top_srcdir@/common/doc/manpage-common-driver.man>
-#include <@top_srcdir@/common/doc/manpage-common-inband.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-username-user.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-session-timeout.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-retransmission-timeout.man>
-#include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
-#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-main.man>
-#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
-#include <@top_srcdir@/common/doc/manpage-common-config-file.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
-#include <@top_srcdir@/common/doc/manpage-common-debug.man>
-#include <@top_srcdir@/common/doc/manpage-common-misc.man>
+#include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/common/man/manpage-common-driver.man>
+#include <@top_srcdir@/common/man/manpage-common-inband.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/common/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/common/man/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/man/manpage-common-config-file.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/common/man/manpage-common-debug.man>
+#include <@top_srcdir@/common/man/manpage-common-misc.man>
 .SH "IPMI-FRU OPTIONS"
 The following options are specific to
 .B Ipmi-fru.
@@ -67,21 +67,21 @@ Increase verbosity more in output to include detailed FRU parsing information.
 Skip FRU checksum checks. Some FRUs have incorrect checksums, but the
 FRU data is correct.  Use this option to skip the checks checksum.
 Output may be unknown, pray for the best.
-#include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
-#include <@top_srcdir@/common/doc/manpage-common-ignore-sdr-cache.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-always-prefix.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-shell.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-localhost.man>
-#include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
+#include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
+#include <@top_srcdir@/common/man/manpage-common-ignore-sdr-cache.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
 .SH "EXAMPLES"
 .B # ipmi-fru 
 .PP
@@ -99,13 +99,13 @@ Get FRU information of a remote machine using IPMI over LAN.
 .PP
 Get FRU information across a cluster using IPMI over LAN.
 .PP
-#include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
-#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2007 The Regents of the University of California.
-#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>

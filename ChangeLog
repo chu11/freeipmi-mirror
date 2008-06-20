@@ -15,6 +15,10 @@
 	* Makefile.am: Remove freeipmi.spec.in and autogen.sh from
 	EXTRA_DIST.
 
+	* common/doc: Move to common/man.
+
+	* Adjust all manpages appropriately.
+
 2008-06-19 Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c

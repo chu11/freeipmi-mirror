@@ -9,11 +9,11 @@ IPMI \- IPMI probing utility
 probes and displays information about the location of a BMC device,
 such as device addresses.
 .SH "OPTIONS"
-#include <@top_srcdir@/common/doc/manpage-common-misc.man>
-#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/common/man/manpage-common-misc.man>
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2005-2008 FreeIPMI Core Team
-#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>

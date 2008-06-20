@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.43 2008-05-21 23:35:21 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.44 2008-06-20 03:15:03 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -50,13 +50,13 @@ INTERACTIVE COMMANDS.
 .LP
 See EXAMPLES below for examples of how ipmipower is commonly used.
 
-#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
+#include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 .TP
 \fB\-D\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR
 Specify the driver type to use instead of doing an auto selection.
 The currently available outofband drivers are LAN and LAN_2_0, which
 perform IPMI 1.5 and IPMI 2.0 respectively.
-#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-hostname-hostranged.man>
 .TP
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Specify the username to use when authenticating with the remote host.
@@ -65,21 +65,21 @@ user must have atleast OPERATOR privileges to run the --on, --off,
 --reset, --cycle, --pulse, or --soft power control commands.  The user
 must have atleast USER privileges to determine the power status of the
 machine through --stat.
-#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-session-timeout.man>
 .TP
 \fB\-\-retransmission-timeout\fR=\fIMILLISECONDS\fR
 Specify the packet retransmission timeout in milliseconds.  Defaults
 to 400 milliseconds (0.4 seconds) if not specified.
-#include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
-#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-main.man>
-#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/doc/manpage-common-privilege-level-operator.man>
-#include <@top_srcdir@/common/doc/manpage-common-config-file.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
-#include <@top_srcdir@/common/doc/manpage-common-debug.man>
-#include <@top_srcdir@/common/doc/manpage-common-misc.man>
+#include <@top_srcdir@/common/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/common/man/manpage-common-privilege-level-operator.man>
+#include <@top_srcdir@/common/man/manpage-common-config-file.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/common/man/manpage-common-debug.man>
+#include <@top_srcdir@/common/man/manpage-common-misc.man>
 .if @WITH_DEBUG@ \{
 .TP
 \fB\-\-rmcpdump\fR
@@ -210,15 +210,15 @@ regardless of other heuristics listed above.  Defaults to 5.  This
 heuristic can be disabled by setting this value to 0.  This feature is
 not used if other ping features described above are disabled.
 .LP
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>
 .TP
 \fB\-F\fR, \fB\-\-fanout\fR
 Specify multiple host fanout.  Indicates the maximum number of power
 control operations that can be executed in parallel.
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-always-prefix.man>
 .LP
 .SH "INTERACTIVE COMMANDS"
 .B ipmipower
@@ -347,9 +347,9 @@ Output the current configuration.
 \fBquit\fR
 Quit program.
 .B ipmipower.
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-shell.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
 .SH "EXAMPLES"
 .LP
 Determine the power status of foo[0-2] with null username and password
@@ -361,7 +361,7 @@ Determine the power status of foo[0-2] with non-null username and password
 Hard reset nodes foo[0-2] with non-null username and password
         ipmipower -h foo[0-2] -u foo -p bar --reset
 
-#include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
 
 .SH "IPMIPOWER TROUBLESHOOTING"
 When powering on a powered off machine, the client must have a means
@@ -392,9 +392,9 @@ not matter when running in interactive mode or with
 .B powerman, 
 since it is a one-time setup cost.
 
-#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
+#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
 .LP
 IPMI specifications do not require BMCs to perform a power control
 operation before returning a completion code to the caller.
@@ -428,12 +428,12 @@ to stdout.
 Before placing ipmipower in a production system, it is recommended
 that the program be compiled with debugging turned off.
 \}
-#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2003-2007 The Regents of the University of California.
-#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi.conf(5), freeipmi(7), bmc-config(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>

@@ -11,37 +11,37 @@ is a Platform Event Filtering (PEF) configuration utility.
 .LP
 See GENERAL USE below for a description on how most will want to use
 .B Pef-config.
-#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
-#include <@top_srcdir@/common/doc/manpage-common-driver.man>
-#include <@top_srcdir@/common/doc/manpage-common-inband.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-username-admin.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-session-timeout.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-retransmission-timeout.man>
-#include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
-#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-main.man>
-#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/doc/manpage-common-privilege-level-admin.man>
-#include <@top_srcdir@/common/doc/manpage-common-config-file.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
-#include <@top_srcdir@/common/doc/manpage-common-debug.man>
-#include <@top_srcdir@/common/doc/manpage-common-misc.man>
+#include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/common/man/manpage-common-driver.man>
+#include <@top_srcdir@/common/man/manpage-common-inband.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-username-admin.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/common/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/common/man/manpage-common-privilege-level-admin.man>
+#include <@top_srcdir@/common/man/manpage-common-config-file.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/common/man/manpage-common-debug.man>
+#include <@top_srcdir@/common/man/manpage-common-misc.man>
 .SH "PEF-CONFIG OPTIONS"
 The following options are specific to
 .B Pef-config.
 .TP
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about PEF configuration.
-#include <@top_srcdir@/common/doc/manpage-common-config-tool-options.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-always-prefix.man>
-#include <@top_srcdir@/common/doc/manpage-common-config-tool-general-use.man>
+#include <@top_srcdir@/common/man/manpage-common-config-tool-options.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/common/man/manpage-common-config-tool-general-use.man>
 .SH "EDITING THE CHECKOUT FILE"
 Options for editing fields in the checkout file are usually listed in
 a comment above the field.  When there are to many options to make it
@@ -59,13 +59,13 @@ Boot_Error, OS_Boot, OS_Critical_Stop, Slot_Connector,
 ACPI_Power_State, Watchdog2, Platform_Alert, Entity_Presence,
 Monitor_Asic, Lan, Management_Subsystem_Health, Battery,
 Session_Audit, Version_Change, FRU_State, and Any
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-shell.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-localhost.man>
-#include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
 .SH "EXAMPLES"
 .B # pef-config --checkout
 .PP
@@ -83,11 +83,11 @@ Show all difference between the current configuration and the pef-data2.conf fil
 .PP
 Commit all configuration values from the pef-data1.conf file.
 .PP
-#include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
-#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2007-2008 FreeIPMI Core Team.  
-#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), ipmi-sensors-config(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>

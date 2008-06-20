@@ -1,5 +1,5 @@
 .\"############################################################################
-.\"  $Id: libipmimonitoring.3.pre.in,v 1.9 2008-04-24 00:00:29 chu11 Exp $
+.\"  $Id: libipmimonitoring.3.pre.in,v 1.10 2008-06-20 03:15:02 chu11 Exp $
 .\"############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -101,13 +101,13 @@ more severe state is returned to the user.
 
 @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
 
-#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 
 .SH COPYRIGHT
 Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2006-2007 The Regents of the University of California.
-#include <@top_srcdir@/common/doc/manpage-common-gpl-library-text.man>
+#include <@top_srcdir@/common/man/manpage-common-gpl-library-text.man>
 .SH "SEE ALSO"
 ipmimonitoring(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>
