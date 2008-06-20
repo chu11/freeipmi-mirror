@@ -14,15 +14,16 @@ noinst_HEADERS = \
 	pef-config-validate.h
 
 AM_CPPFLAGS = \
-	-I$(srcdir)/../../common/src \
-	-I$(srcdir)/../../libfreeipmi/include \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/common/src/configtool \
+	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 sbin_PROGRAMS = pef-config
 
 pef_config_LDADD = \
-	$(top_builddir)/common/src/libconfigtoolcommon.la
+	$(top_builddir)/common/src/configtool/libconfigtoolcommon.la
 
 pef_config_SOURCES = \
 	pef-config.c \
@@ -39,7 +40,7 @@ pef_config_SOURCES = \
 	pef-config-utils.c \
 	pef-config-validate.c
 
-$(top_builddir)/common/src/libconfigtoolcommon.la : force-dependency-check
+$(top_builddir)/common/src/configtool/libconfigtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

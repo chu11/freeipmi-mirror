@@ -21,6 +21,7 @@ noinst_HEADERS = \
 
 AM_CPPFLAGS = \
 	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/common/src/configtool \
 	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
@@ -28,7 +29,7 @@ AM_CPPFLAGS = \
 sbin_PROGRAMS = bmc-config
 
 bmc_config_LDADD = \
-	$(top_builddir)/common/src/libconfigtoolcommon.la
+	$(top_builddir)/common/src/configtool/libconfigtoolcommon.la
 
 bmc_config_SOURCES = \
 	bmc-config.c \
@@ -51,7 +52,7 @@ bmc_config_SOURCES = \
 	bmc-config-misc-section.c \
 	bmc-config-validate.c
 
-$(top_builddir)/common/src/libconfigtoolcommon.la : force-dependency-check
+$(top_builddir)/common/src/configtool/libconfigtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

@@ -7,6 +7,7 @@ noinst_HEADERS = \
 
 AM_CPPFLAGS = \
 	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/common/src/configtool \
 	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
@@ -14,7 +15,7 @@ AM_CPPFLAGS = \
 sbin_PROGRAMS = ipmi-sensors-config
 
 ipmi_sensors_config_LDADD = \
-	$(top_builddir)/common/src/libconfigtoolcommon.la
+	$(top_builddir)/common/src/configtool/libconfigtoolcommon.la
 
 ipmi_sensors_config_SOURCES = \
 	ipmi-sensors-config.c \
@@ -23,7 +24,7 @@ ipmi_sensors_config_SOURCES = \
 	ipmi-sensors-config-threshold-section.c \
 	ipmi-sensors-config-utils.c
 
-$(top_builddir)/common/src/libconfigtoolcommon.la : force-dependency-check
+$(top_builddir)/common/src/configtool/libconfigtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

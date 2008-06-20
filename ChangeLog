@@ -5,6 +5,11 @@
 	* common/src/ping-tool-common.h, common/src/ping-tool-common.c:
 	Moved to common/src/pingtool/.
 
+	* common/src/configtool/: New directory.
+
+	* common/src/: Moved to config tool files to
+	common/src/configtool/.
+	
 	* Adjust all tool Makefiles appropriately for path changes.
 
 2008-06-19 Albert Chu <chu11@llnl.gov>
