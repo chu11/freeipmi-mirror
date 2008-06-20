@@ -26,6 +26,9 @@
 
 	* Adjust all manpages appropriately.
 
+	* common/src/freeipmi-portability.h,
+	common/src/freeipmi-portability.c: Fix portability of asprintf.
+
 2008-06-19 Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c

@@ -163,7 +163,7 @@ ssize_t freeipmi_getline(char **buf, size_t *bufsize, FILE *fp);
 
 #ifndef HAVE_ASPRINTF
 #define asprintf freeipmi_asprintf
-int asprintf(char **strp, const char *fmt, ...);
+int freeipmi_asprintf(char **strp, const char *fmt, ...);
 #endif
 
 /* achu: timeradd and timersub not in solaris 

@@ -172,7 +172,7 @@ freeipmi_getline(char **buf, size_t *size, FILE *fp)
  * http://ikiwiki.info/bugs/build_in_opensolaris/
  */
 int 
-asprintf(char **strp, const char *fmt, ...)
+freeipmi_asprintf(char **strp, const char *fmt, ...)
 {
   va_list arg;
   char *str;
