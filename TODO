@@ -37,6 +37,7 @@ pef-config
 general
 -------
 beginning doc for developers
+make header file/macro usage consistent across files
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
