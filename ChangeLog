@@ -12,6 +12,9 @@
 	
 	* Adjust all tool Makefiles appropriately for path changes.
 
+	* Makefile.am: Remove freeipmi.spec.in and autogen.sh from
+	EXTRA_DIST.
+
 2008-06-19 Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
