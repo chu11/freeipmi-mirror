@@ -9,6 +9,7 @@ libpingtoolcommon_la_LIBADD = \
 	$(top_builddir)/common/src/libfreeipmiportability.la
 
 libpingtoolcommon_la_CPPFLAGS = \
+	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/libfreeipmi/include 
 
 libpingtoolcommon_la_SOURCES = \

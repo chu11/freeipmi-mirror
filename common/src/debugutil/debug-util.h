@@ -16,29 +16,29 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _DEBUG_COMMON_H
-#define	_DEBUG_COMMON_H	1
+#ifndef _DEBUG_UTIL_H
+#define	_DEBUG_UTIL_H	1
 
 #include <stdint.h>
 
-#define DEBUG_COMMON_HDR_BUFLEN     1024
+#define DEBUG_UTIL_HDR_BUFLEN     1024
 
-#define DEBUG_COMMON_TYPE_NONE      0x00
-#define DEBUG_COMMON_TYPE_INBAND    0x01
-#define DEBUG_COMMON_TYPE_IPMI_1_5  0x02
-#define DEBUG_COMMON_TYPE_IPMI_2_0  0x03
+#define DEBUG_UTIL_TYPE_NONE      0x00
+#define DEBUG_UTIL_TYPE_INBAND    0x01
+#define DEBUG_UTIL_TYPE_IPMI_1_5  0x02
+#define DEBUG_UTIL_TYPE_IPMI_2_0  0x03
 
-#define DEBUG_COMMON_DIRECTION_NONE      0x00
-#define DEBUG_COMMON_DIRECTION_REQUEST   0x01
-#define DEBUG_COMMON_DIRECTION_RESPONSE  0x02
+#define DEBUG_UTIL_DIRECTION_NONE      0x00
+#define DEBUG_UTIL_DIRECTION_REQUEST   0x01
+#define DEBUG_UTIL_DIRECTION_RESPONSE  0x02
 
-#define DEBUG_COMMON_OPEN_SESSION_STR   "Open Session"
-#define DEBUG_COMMON_RAKP_1_STR         "RAKP Message 1"
-#define DEBUG_COMMON_RAKP_2_STR         "RAKP Message 2"
-#define DEBUG_COMMON_RAKP_3_STR         "RAKP Message 3"
-#define DEBUG_COMMON_RAKP_4_STR         "RAKP Message 4"
-#define DEBUG_COMMON_RMCPPING_STR       "RMCP Ping"
-#define DEBUG_COMMON_RMCPPONG_STR       "RMCP Pong"
+#define DEBUG_UTIL_OPEN_SESSION_STR   "Open Session"
+#define DEBUG_UTIL_RAKP_1_STR         "RAKP Message 1"
+#define DEBUG_UTIL_RAKP_2_STR         "RAKP Message 2"
+#define DEBUG_UTIL_RAKP_3_STR         "RAKP Message 3"
+#define DEBUG_UTIL_RAKP_4_STR         "RAKP Message 4"
+#define DEBUG_UTIL_RMCPPING_STR       "RMCP Ping"
+#define DEBUG_UTIL_RMCPPONG_STR       "RMCP Pong"
 
 int debug_hdr_str(uint8_t packet_type,
                   uint8_t packet_direction,

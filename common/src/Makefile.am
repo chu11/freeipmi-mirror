@@ -1,5 +1,6 @@
 SUBDIRS = \
 	configtool \
+	debugutil \
 	pingtool
 
 noinst_HEADERS = \
@@ -24,8 +25,7 @@ noinst_HEADERS = \
 	list.h \
 	secure.h \
 	timeval.h \
-	thread.h \
-	debug-common.h
+	thread.h
 
 if WITH_FREEIPMI_ARGP
 FREEIPMI_ARG_SOURCES = \
@@ -41,8 +41,7 @@ endif
 noinst_LTLIBRARIES = \
 	libfreeipmiportability.la \
 	libtoolcommon.la \
-	libmiscutils.la \
-	libdebugcommon.la
+	libmiscutils.la
 
 libfreeipmiportability_la_CPPFLAGS = \
 	-I$(srcdir)/../../libfreeipmi/include 
@@ -74,12 +73,6 @@ libtoolcommon_la_SOURCES = \
 	tool-sdr-cache-common.c \
 	tool-sensor-common.c \
 	pstdout.c
-
-libdebugcommon_la_CPPFLAGS = \
-	-I$(top_builddir)/libfreeipmi/include 
-
-libdebugcommon_la_SOURCES = \
-	debug-common.c
 
 libmiscutils_la_SOURCES = \
 	cbuf.c \

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.48 2008-06-20 02:30:38 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.49 2008-06-20 04:23:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -41,9 +41,8 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "debug-common.h"
 #include "freeipmi-portability.h"
-
+#include "debug-util.h"
 #include "ping-tool-common.h"
 
 #define _setstr(x)   (x) ? "set" : "clear"
@@ -150,14 +149,14 @@ createpacket(char *destination,
 
   if (debug)
     {
-      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
-      debug_hdr_cmd((version == IPMI_PING_VERSION_1_5) ? DEBUG_COMMON_TYPE_IPMI_1_5 : DEBUG_COMMON_TYPE_IPMI_2_0,
-                    DEBUG_COMMON_DIRECTION_REQUEST,
+      debug_hdr_cmd((version == IPMI_PING_VERSION_1_5) ? DEBUG_UTIL_TYPE_IPMI_1_5 : DEBUG_UTIL_TYPE_IPMI_2_0,
+                    DEBUG_UTIL_DIRECTION_REQUEST,
                     IPMI_NET_FN_APP_RQ,
                     IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES,
                     hdrbuf,
-                    DEBUG_COMMON_HDR_BUFLEN);
+                    DEBUG_UTIL_HDR_BUFLEN);
 
       if (ipmi_dump_lan_packet(STDERR_FILENO, 
                                destination,
@@ -223,14 +222,14 @@ parsepacket(char *destination,
 
   if (debug)
     {
-      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
       
-      debug_hdr_cmd((version == IPMI_PING_VERSION_1_5) ? DEBUG_COMMON_TYPE_IPMI_1_5 : DEBUG_COMMON_TYPE_IPMI_2_0,
-                    DEBUG_COMMON_DIRECTION_RESPONSE,
+      debug_hdr_cmd((version == IPMI_PING_VERSION_1_5) ? DEBUG_UTIL_TYPE_IPMI_1_5 : DEBUG_UTIL_TYPE_IPMI_2_0,
+                    DEBUG_UTIL_DIRECTION_RESPONSE,
                     IPMI_NET_FN_APP_RQ,
                     IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES,
                     hdrbuf,
-                    DEBUG_COMMON_HDR_BUFLEN);
+                    DEBUG_UTIL_HDR_BUFLEN);
       
       if (ipmi_dump_lan_packet(STDERR_FILENO, 
                                destination,

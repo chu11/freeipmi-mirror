@@ -10,7 +10,14 @@
 	* common/src/: Moved to config tool files to
 	common/src/configtool/.
 	
-	* Adjust all tool Makefiles appropriately for path changes.
+	* common/src/debugutil/: New directory.
+
+	* common/src/debug-common.h, common/src/debug-common.c: Rename to
+	debug-util.h and debug-util.c respectively.  Rename library to
+	libdebugutil.
+
+	* Adjust all tools and libs appropriately for path changes and
+	naming changes.
 
 	* Makefile.am: Remove freeipmi.spec.in and autogen.sh from
 	EXTRA_DIST.

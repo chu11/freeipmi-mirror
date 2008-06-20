@@ -31,7 +31,7 @@
 #include "freeipmi/util/ipmi-util.h"
 
 #include "freeipmi-portability.h"
-#include "debug-common.h"
+#include "debug-util.h"
 
 int
 debug_hdr_str(uint8_t packet_type,
@@ -51,13 +51,13 @@ debug_hdr_str(uint8_t packet_type,
   char *str_direction;
   int len;
 
-  if (!((packet_type == DEBUG_COMMON_TYPE_NONE
-         || packet_type == DEBUG_COMMON_TYPE_INBAND
-         || packet_type == DEBUG_COMMON_TYPE_IPMI_1_5
-         || packet_type == DEBUG_COMMON_TYPE_IPMI_2_0)
-        && (packet_direction == DEBUG_COMMON_DIRECTION_NONE
-            || packet_direction == DEBUG_COMMON_DIRECTION_REQUEST
-            || packet_direction == DEBUG_COMMON_DIRECTION_RESPONSE)
+  if (!((packet_type == DEBUG_UTIL_TYPE_NONE
+         || packet_type == DEBUG_UTIL_TYPE_INBAND
+         || packet_type == DEBUG_UTIL_TYPE_IPMI_1_5
+         || packet_type == DEBUG_UTIL_TYPE_IPMI_2_0)
+        && (packet_direction == DEBUG_UTIL_DIRECTION_NONE
+            || packet_direction == DEBUG_UTIL_DIRECTION_REQUEST
+            || packet_direction == DEBUG_UTIL_DIRECTION_RESPONSE)
         && str
         && hdrbuf
         && hdrbuf_len))
@@ -65,15 +65,15 @@ debug_hdr_str(uint8_t packet_type,
   
   memset(hdrbuf, '\0', hdrbuf_len);
 
-  if (packet_direction == DEBUG_COMMON_DIRECTION_REQUEST)
+  if (packet_direction == DEBUG_UTIL_DIRECTION_REQUEST)
     str_direction = "Request";
-  else if (packet_direction == DEBUG_COMMON_DIRECTION_RESPONSE)
+  else if (packet_direction == DEBUG_UTIL_DIRECTION_RESPONSE)
     str_direction = "Response";
   else
     str_direction = "";
 
-  if (packet_type == DEBUG_COMMON_TYPE_NONE
-      || packet_type == DEBUG_COMMON_TYPE_INBAND)
+  if (packet_type == DEBUG_UTIL_TYPE_NONE
+      || packet_type == DEBUG_UTIL_TYPE_INBAND)
     len = snprintf(hdrbuf,
                    hdrbuf_len,
                    fmt_inband,
@@ -83,7 +83,7 @@ debug_hdr_str(uint8_t packet_type,
     {
       char *str_version;
 
-      if (packet_type == DEBUG_COMMON_TYPE_IPMI_1_5)
+      if (packet_type == DEBUG_UTIL_TYPE_IPMI_1_5)
         str_version = "IPMI 1.5";
       else
         str_version = "IPMI 2.0";

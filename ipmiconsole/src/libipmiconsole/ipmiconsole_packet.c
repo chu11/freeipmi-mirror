@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.21 2008-06-07 16:09:55 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.22 2008-06-20 04:23:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -48,9 +48,9 @@
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_fiid_wrappers.h"
 
-#include "cbuf.h"
 #include "freeipmi-portability.h"
-#include "debug-common.h"
+#include "cbuf.h"
+#include "debug-util.h"
 #include "secure.h"
 
 #define IPMICONSOLE_MAX_PACKET_DUMP_HDR_LEN 1024
@@ -201,24 +201,24 @@ _packet_dump_hdr(ipmiconsole_ctx_t c,
 
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
       || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
-    packet_type = DEBUG_COMMON_TYPE_IPMI_1_5;
+    packet_type = DEBUG_UTIL_TYPE_IPMI_1_5;
   else
-    packet_type = DEBUG_COMMON_TYPE_IPMI_2_0;
+    packet_type = DEBUG_UTIL_TYPE_IPMI_2_0;
 
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
       || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
     str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
   else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST
            || p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE)
-    str_cmd = DEBUG_COMMON_OPEN_SESSION_STR;
+    str_cmd = DEBUG_UTIL_OPEN_SESSION_STR;
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1)
-    str_cmd = DEBUG_COMMON_RAKP_1_STR;
+    str_cmd = DEBUG_UTIL_RAKP_1_STR;
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2)
-    str_cmd = DEBUG_COMMON_RAKP_2_STR;
+    str_cmd = DEBUG_UTIL_RAKP_2_STR;
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3)
-    str_cmd = DEBUG_COMMON_RAKP_3_STR;
+    str_cmd = DEBUG_UTIL_RAKP_3_STR;
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4)
-    str_cmd = DEBUG_COMMON_RAKP_4_STR;
+    str_cmd = DEBUG_UTIL_RAKP_4_STR;
   else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ
            || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS)
     str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
@@ -254,11 +254,11 @@ _packet_dump_hdr(ipmiconsole_ctx_t c,
   /* special case: there is no "Request/Response" with SOL data */
   if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ
       || p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS)
-    packet_direction = DEBUG_COMMON_DIRECTION_NONE;
+    packet_direction = DEBUG_UTIL_DIRECTION_NONE;
   else if (IPMICONSOLE_PACKET_TYPE_REQUEST(p))
-    packet_direction = DEBUG_COMMON_DIRECTION_REQUEST;
+    packet_direction = DEBUG_UTIL_DIRECTION_REQUEST;
   else 
-    packet_direction = DEBUG_COMMON_DIRECTION_RESPONSE;
+    packet_direction = DEBUG_UTIL_DIRECTION_RESPONSE;
   
   if (debug_hdr_str(packet_type,
                     packet_direction,

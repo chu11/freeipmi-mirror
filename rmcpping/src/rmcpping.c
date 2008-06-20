@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.33 2008-06-20 02:30:38 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.34 2008-06-20 04:23:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -41,9 +41,8 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "debug-common.h"
 #include "freeipmi-portability.h"
-
+#include "debug-util.h"
 #include "ping-tool-common.h"
 
 #define _supported(x)   (x) ? "supported" : "not-supported"
@@ -113,13 +112,13 @@ createpacket(char *destination,
   
   if (debug)
     {
-      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
       
-      debug_hdr_str(DEBUG_COMMON_TYPE_NONE,
-                    DEBUG_COMMON_DIRECTION_NONE,
-                    DEBUG_COMMON_RMCPPING_STR,
+      debug_hdr_str(DEBUG_UTIL_TYPE_NONE,
+                    DEBUG_UTIL_DIRECTION_NONE,
+                    DEBUG_UTIL_RMCPPING_STR,
                     hdrbuf,
-                    DEBUG_COMMON_HDR_BUFLEN);
+                    DEBUG_UTIL_HDR_BUFLEN);
 
       if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
                                 destination,
@@ -162,13 +161,13 @@ parsepacket(char * destination,
 
   if (debug)
     {
-      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
       
-      debug_hdr_str(DEBUG_COMMON_TYPE_NONE,
-                    DEBUG_COMMON_DIRECTION_NONE,
-                    DEBUG_COMMON_RMCPPONG_STR,
+      debug_hdr_str(DEBUG_UTIL_TYPE_NONE,
+                    DEBUG_UTIL_DIRECTION_NONE,
+                    DEBUG_UTIL_RMCPPONG_STR,
                     hdrbuf,
-                    DEBUG_COMMON_HDR_BUFLEN);
+                    DEBUG_UTIL_HDR_BUFLEN);
 
       if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
                                 destination,

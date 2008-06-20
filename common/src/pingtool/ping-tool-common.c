@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.1 2008-06-20 02:30:37 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.2 2008-06-20 04:23:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -70,6 +70,8 @@
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
+
+#include "freeipmi-portability.h"
 
 #include "ping-tool-common.h"
 

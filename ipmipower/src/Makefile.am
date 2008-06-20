@@ -19,6 +19,7 @@ sbin_PROGRAMS = ipmipower
 ipmipower_CPPFLAGS = \
 	-I$(top_builddir)/ipmidetect/src/libipmidetect \
 	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/common/src/debugutil \
 	-I$(top_builddir)/libfreeipmi/include \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
 	-DWITH_LSD_NOMEM_ERROR_FUNC=1 \
@@ -27,7 +28,7 @@ ipmipower_CPPFLAGS = \
 
 ipmipower_LDADD = \
 	$(top_builddir)/common/src/libtoolcommon.la \
-	$(top_builddir)/common/src/libdebugcommon.la
+	$(top_builddir)/common/src/debugutil/libdebugutil.la
 
 ipmipower_SOURCES = \
 	argv.c \
@@ -48,7 +49,7 @@ ipmipower_SOURCES = \
 $(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
-$(top_builddir)/common/src/libdebugcommon.la : force-dependency-check
+$(top_builddir)/common/src/debugutil/libdebugutil.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:
