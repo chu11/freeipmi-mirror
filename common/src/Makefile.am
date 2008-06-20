@@ -11,7 +11,6 @@ noinst_HEADERS = \
 	tool-sdr-cache-common.h \
 	tool-sensor-common.h \
 	pstdout.h \
-	ping-tool-common.h \
 	cbuf.h \
 	conffile.h \
 	error.h \
@@ -49,7 +48,6 @@ endif
 noinst_LTLIBRARIES = \
 	libfreeipmiportability.la \
 	libtoolcommon.la \
-	libpingtoolcommon.la \
 	libmiscutils.la \
 	libconfigtoolcommon.la \
 	libdebugcommon.la
@@ -90,16 +88,6 @@ libdebugcommon_la_CPPFLAGS = \
 
 libdebugcommon_la_SOURCES = \
 	debug-common.c
-
-libpingtoolcommon_la_LIBADD = \
-	$(top_builddir)/libfreeipmi/src/libfreeipmi.la \
-	$(top_builddir)/common/src/libfreeipmiportability.la
-
-libpingtoolcommon_la_CPPFLAGS = \
-	-I$(top_builddir)/libfreeipmi/include 
-
-libpingtoolcommon_la_SOURCES = \
-	ping-tool-common.c
 
 libmiscutils_la_SOURCES = \
 	cbuf.c \
