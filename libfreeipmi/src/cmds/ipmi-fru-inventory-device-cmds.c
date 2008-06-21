@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.3 2008-03-28 00:14:58 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.3.8.1 2008-06-21 16:19:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -28,7 +28,7 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>

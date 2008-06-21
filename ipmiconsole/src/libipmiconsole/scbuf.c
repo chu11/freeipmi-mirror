@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: scbuf.c,v 1.2 2007-12-14 19:16:24 chu11 Exp $
+ *  $Id: scbuf.c,v 1.2.16.1 2008-06-21 16:18:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2002-2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -24,20 +24,23 @@
  *  Refer to "scbuf.h" for documentation on public functions.
  *****************************************************************************/
 
-
 #ifdef HAVE_CONFIG_H
-#  include "config.h"
+#include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-#ifdef WITH_PTHREADS
-#  include <pthread.h>
-#endif /* WITH_PTHREADS */
+#ifdef HAVE_PTHREAD_H
+#include <pthread.h>
+#endif /* HAVE_PTHREAD_H */
 
 #include <assert.h>
 #include <errno.h>
 #include <stdlib.h>
+#if STDC_HEADERS
 #include <string.h>
+#endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
 #include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include "scbuf.h"
 
 #include "secure.h"

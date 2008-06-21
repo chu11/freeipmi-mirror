@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.35 2008-06-07 16:09:58 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.35.2.1 2008-06-21 16:18:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -36,12 +36,12 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "debug-common.h"
-#include "freeipmi-portability.h"
-
 #include "ipmipower_ping.h"
 #include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
+
+#include "freeipmi-portability.h"
+#include "debug-util.h"
 
 extern struct ipmipower_arguments cmd_args;
 extern struct ipmipower_connection *ics;
@@ -142,13 +142,13 @@ ipmipower_ping_process_pings(int *timeout)
 #ifndef NDEBUG
           if (cmd_args.rmcpdump) 
             {
-              char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+              char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
-              debug_hdr_str(DEBUG_COMMON_TYPE_NONE,
-                            DEBUG_COMMON_DIRECTION_NONE,
-                            DEBUG_COMMON_RMCPPING_STR,
+              debug_hdr_str(DEBUG_UTIL_TYPE_NONE,
+                            DEBUG_UTIL_DIRECTION_NONE,
+                            DEBUG_UTIL_RMCPPING_STR,
                             hdrbuf,
-                            DEBUG_COMMON_HDR_BUFLEN);
+                            DEBUG_UTIL_HDR_BUFLEN);
 
               if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
                                         ics[i].hostname,
@@ -188,13 +188,13 @@ ipmipower_ping_process_pings(int *timeout)
 #ifndef NDEBUG
           if (cmd_args.rmcpdump) 
             {
-              char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+              char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
-              debug_hdr_str(DEBUG_COMMON_TYPE_NONE,
-                            DEBUG_COMMON_DIRECTION_NONE,
-                            DEBUG_COMMON_RMCPPING_STR,
+              debug_hdr_str(DEBUG_UTIL_TYPE_NONE,
+                            DEBUG_UTIL_DIRECTION_NONE,
+                            DEBUG_UTIL_RMCPPING_STR,
                             hdrbuf,
-                            DEBUG_COMMON_HDR_BUFLEN);
+                            DEBUG_UTIL_HDR_BUFLEN);
 
               if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
                                         ics[i].hostname,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: debug.c,v 1.3 2008-06-07 16:09:56 chu11 Exp $
+ *  $Id: debug.c,v 1.3.2.1 2008-06-21 16:18:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -36,6 +36,7 @@
 #endif /* STDC_HEADERS */
 
 #include "debug.h"
+
 #include "freeipmi-portability.h"
 
 char *

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.37 2008-05-22 17:37:04 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.37.4.1 2008-06-21 16:18:38 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -42,23 +42,23 @@ sensor readings into NOMINAL, WARNING, or CRITICAL states, it makes
 monitoring easier across large numbers of nodes.  For more general
 sensor reading use, it is recommended that users use
 .B ipmi-sensors(8).
-#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
-#include <@top_srcdir@/common/doc/manpage-common-driver.man>
-#include <@top_srcdir@/common/doc/manpage-common-inband.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-username-user.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-session-timeout.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-retransmission-timeout.man>
-#include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
-#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-main.man>
-#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
-#include <@top_srcdir@/common/doc/manpage-common-config-file.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
-#include <@top_srcdir@/common/doc/manpage-common-debug.man>
-#include <@top_srcdir@/common/doc/manpage-common-misc.man>
+#include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/common/man/manpage-common-driver.man>
+#include <@top_srcdir@/common/man/manpage-common-inband.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/common/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/common/man/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/man/manpage-common-config-file.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/common/man/manpage-common-debug.man>
+#include <@top_srcdir@/common/man/manpage-common-misc.man>
 .SH "IPMIMONITORING OPTIONS"
 The following options are specific to
 .B Ipmimonitoring.
@@ -80,18 +80,18 @@ be separated by commas or spaces.
 \fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"
 Specify sensors to monitor by record id.  Multiple record ids can be
 separated by commas or spaces.
-#include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-options-header.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-always-prefix.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-shell.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
-#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-localhost.man>
-#include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
+#include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
 .SH "IPMIMONITORING TROUBLESHOOTING"
 The following are common issues for given error messages specifically
 for
@@ -101,8 +101,8 @@ for
 .B libipmimonitoring(3)
 sensor configuration file.  Please see
 .B libipmimonitoring(3).
-#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
 .SH "EXAMPLES"
 .B # ipmimonitoring
 .PP
@@ -124,7 +124,7 @@ Show all sensors on a remote machine using IPMI over LAN.
 .PP
 Show all sensors across a cluster using IPMI over LAN.
 .PP
-#include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
+#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
 .LP
 Interpretation rules have not been written for all sensors
 permutations and types.  Users may notice some sensors output in 
@@ -154,12 +154,12 @@ that the program be compiled with debugging turned off.
 .SH "FILES"
 @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
 
-#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2006-2007 The Regents of the University of California.
-#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 libipmimonitoring(3), freeipmi(7), ipmi-sensors(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>

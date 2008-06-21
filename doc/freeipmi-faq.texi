@@ -168,7 +168,7 @@ support of IPMI via libipmiconsole is being integrated into Conman.
 
 Scalable parallel execution of many FreeIPMI tools (i.e. ipmi-sensors,
 ipmi-sel, bmc-info, ipmimonitoring, etc.) across a cluster is
-supported through hostranged input and output.
+supported through hostranged input and output.  For example:
 
 @example
 # > bmc-info -h "pwopr[0-5]" -u XXX -p XXX -C
@@ -235,8 +235,14 @@ them.  It can be used for host monitoring IPMI on a cluster.  By
 mapping sensor readings into NOMINAL, WARNING, or CRITICAL states, it
 makes monitoring sensors easier across large numbers of nodes.
 Skummee
-(@uref{https://sourceforge.net/projects/skummee}) 
-uses libipmimonitoring on LLNL clusters up to 1152 nodes in size.
+(@uref{http://sourceforge.net/projects/skummee}) 
+uses libipmimonitoring on LLNL clusters up to 1152 nodes in size.  
+FreeIPMI monitoring plugins
+for Ganglia 
+(@uref{http://ganglia.info/}) 
+and Nagios 
+(@uref{http://www.nagios.org/}) 
+have also been made available for download.
 
 The bmc-config, pef-config, and ipmi-sensors-config configuration file
 and command-line interface are used to easily copy the BMC

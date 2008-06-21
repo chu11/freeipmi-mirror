@@ -9,8 +9,9 @@
 	* libfreeipmi/src/api/ipmi-sunbmc-driver-api.h,
 	libfreeipmi/src/api/ipmi-sunbmc-driver-api.c: New files.
 
-	* libfreeipmi/include/freeipmi/ipmi-api.h, libfreeipmi/src/api/ipmi-ctx.h,
-	libfreeipmi/src/api/ipmi-api.c, libfreeipmi/src/api/ipmi-err-wrappers-api.h: Support
+	* libfreeipmi/include/freeipmi/ipmi-api.h,
+	libfreeipmi/src/api/ipmi-ctx.h, libfreeipmi/src/api/ipmi-api.c,
+	libfreeipmi/src/api/ipmi-err-wrappers-api.h: Support
 	IPMI_DEVICE_SUNBMC.
 
 	* libfreeipmi/include/freeipmi/freeipmi.h: add
@@ -29,6 +30,92 @@
 
 	* README.sunbmc: New file.
 
+2008-06-21 Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-faq.texi: Add various HPC notes.
+	
+2008-06-21 Albert Chu <chu11@llnl.gov>
+
+	* Audit and cleanup header file usage throughout (i.e. use correct
+	#ifs, proper commenting for GNU style, etc.).
+	
+2008-06-20 Albert Chu <chu11@llnl.gov>
+
+	* common/src/portability/: New directory.
+
+	* common/src/: Moved to portability files to
+	common/src/portability/.
+
+	* common/src/toolcommon/: New directory.
+
+	* common/src/: Moved to toolcommon files to
+	common/src/toolcommon/.
+
+	* common/src/miscutil/: New directory.
+
+	* common/src/: Moved to miscutil files to common/src/miscutil/.
+
+	* Adjust all tools and libs appropriately for path changes and
+	naming changes.
+
+	* Variety of Makefile cleanup.
+	
+2008-06-19 Albert Chu <chu11@llnl.gov>
+
+	* common/src/pingtool/: New directory.
+
+	* common/src/ping-tool-common.h, common/src/ping-tool-common.c:
+	Moved to common/src/pingtool/.
+
+	* common/src/configtool/: New directory.
+
+	* common/src/: Moved to config tool files to
+	common/src/configtool/.
+	
+	* common/src/debugutil/: New directory.
+
+	* common/src/debug-common.h, common/src/debug-common.c: Rename to
+	debug-util.h and debug-util.c respectively.  Rename library to
+	libdebugutil.
+
+	* Adjust all tools and libs appropriately for path changes and
+	naming changes.
+
+	* Makefile.am: Remove freeipmi.spec.in and autogen.sh from
+	EXTRA_DIST.
+
+	* common/doc: Move to common/man.
+
+	* Adjust all manpages appropriately.
+
+	* common/src/freeipmi-portability.h,
+	common/src/freeipmi-portability.c: Fix portability of asprintf.
+
+2008-06-19 Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(ipmimonitoring.c): Output multiple strings if multiple bitmasks
+	set.
+
+	* common/src/hostrange.h, common/src/hostrange.c: Rename to
+	tool-hostrange-common.h and tool-hostrange-common.c.
+
+	* common/src/ipmi-ping.h, common/src/ipmi-ping.c: Rename to
+	ping-tool-common.h and ping-tool-common.c.
+
+	* common/src/Makefile.am: Merge hostrange lib into toolcommon lib.
+	Link libmiscutils.la into libtoolcommon.la.  Link
+	libfreeipmiportability.la into libtoolcommon.la.  rename
+	libipmiping.la to libpingtoolcommon.la for consistency.  Link
+	libfreeipmiportability.la into libpingtoolcommon.la.  Link
+	libtoolcommon into libconfigtoolcommon.  Link libipmidetect and
+	libfreeipmi into libtoolcommon.  Link libfreeipmi into
+	libpingtoolcommon.
+
+	* Adjust all tool Makefiles appropriately for lib changes.
+
+	* General Makefile cleanup.
+	
 2008-06-18 Albert Chu <chu11@llnl.gov>
 
 	Support hostranges on bmc-config, ipmi-sensors-config, and pef-config.

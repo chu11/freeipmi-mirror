@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.32 2008-06-07 16:09:58 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.32.2.1 2008-06-21 16:18:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -39,9 +39,9 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi-portability.h"
-
 #include "ipmipower_wrappers.h"
+
+#include "freeipmi-portability.h"
 
 cbuf_t 
 Cbuf_create(int minsize, int maxsize) 

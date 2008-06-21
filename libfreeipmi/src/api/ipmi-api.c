@@ -19,7 +19,7 @@
 
 #if HAVE_CONFIG_H
 #include <config.h>
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -76,7 +76,7 @@
 #include "libcommon/ipmi-crypt.h"
 
 #include "freeipmi-portability.h"
-#include "debug-common.h"
+#include "debug-util.h"
 #include "secure.h"
 
 #define IPMI_SESSION_TIMEOUT         20000
@@ -758,17 +758,17 @@ ipmi_cmd (ipmi_ctx_t ctx,
       if (ctx->type != IPMI_DEVICE_LAN
           && ctx->type != IPMI_DEVICE_LAN_2_0)
         {
-          char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint64_t cmd = 0;
 
           API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
 
-          debug_hdr_cmd(DEBUG_COMMON_TYPE_INBAND,
-                        DEBUG_COMMON_DIRECTION_REQUEST,
+          debug_hdr_cmd(DEBUG_UTIL_TYPE_INBAND,
+                        DEBUG_UTIL_DIRECTION_REQUEST,
                         ctx->net_fn,
                         cmd,
                         hdrbuf,
-                        DEBUG_COMMON_HDR_BUFLEN);
+                        DEBUG_UTIL_HDR_BUFLEN);
 
           ipmi_obj_dump (STDERR_FILENO, 
                          NULL,
@@ -797,18 +797,18 @@ ipmi_cmd (ipmi_ctx_t ctx,
       if (ctx->type != IPMI_DEVICE_LAN
           && ctx->type != IPMI_DEVICE_LAN_2_0)
         {
-          char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint64_t cmd = 0;
           
           API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
 
 	  /* its ok to use the "request" net_fn */
-          debug_hdr_cmd(DEBUG_COMMON_TYPE_INBAND,
-                        DEBUG_COMMON_DIRECTION_RESPONSE,
+          debug_hdr_cmd(DEBUG_UTIL_TYPE_INBAND,
+                        DEBUG_UTIL_DIRECTION_RESPONSE,
                         ctx->net_fn,
                         cmd,
                         hdrbuf,
-                        DEBUG_COMMON_HDR_BUFLEN);
+                        DEBUG_UTIL_HDR_BUFLEN);
           
           ipmi_obj_dump (STDERR_FILENO, 
                          NULL,

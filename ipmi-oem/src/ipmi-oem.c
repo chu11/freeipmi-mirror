@@ -18,7 +18,7 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,10 +34,10 @@
 #include "ipmi-oem-argp.h"
 
 #include "freeipmi-portability.h"
-#include "hostrange.h"
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-hostrange-common.h"
 
 int
 run_cmd_args (ipmi_oem_state_data_t *state_data)

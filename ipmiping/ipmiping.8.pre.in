@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiping.8.pre.in,v 1.12 2008-04-24 05:00:35 chu11 Exp $
+.\"$Id: ipmiping.8.pre.in,v 1.12.8.1 2008-06-21 16:18:46 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -40,7 +40,7 @@ randomized.
 .B ipmiping 
 will return 0 to the environment if it receives atleast 1 response 
 from the remote host.  Otherwise, it exists with a value of 1.
-#include <@top_srcdir@/common/doc/manpage-common-ping-options.man>
+#include <@top_srcdir@/common/man/manpage-common-ping-options.man>
 .TP
 .I "-r version"
 Specify IPMI version.  Available options are "1.5" and "2.0".  Default
@@ -48,14 +48,14 @@ is to use "1.5".  Note that packets will always be sent with the IPMI
 1.5 protocol, but IPMI 1.5 vs IPMI 2.0 relevant fields will be
 communicated in the Get Channel Authentication Capabilities datagram
 depending on user choice.
-#include <@top_srcdir@/common/doc/manpage-common-known-issues-ping.man>
-#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/common/man/manpage-common-known-issues-ping.man>
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2003-2007 The Regents of the University of California.
-#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-ping-origin.man>
+#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/common/man/manpage-common-ping-origin.man>
 .SH "SEE ALSO"
 freeipmi(7), ping(8), rmcpping(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>

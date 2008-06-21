@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_config.c,v 1.8 2008-06-07 16:09:56 chu11 Exp $
+ *  $Id: ipmidetectd_config.c,v 1.8.2.1 2008-06-21 16:18:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -47,11 +47,11 @@
 
 #include "ipmidetectd.h"
 #include "ipmidetectd_config.h"
-
-#include "conffile.h"
 #include "debug.h"
-#include "error.h"
+
 #include "freeipmi-portability.h"
+#include "conffile.h"
+#include "error.h"
 
 struct ipmidetectd_config conf;
 

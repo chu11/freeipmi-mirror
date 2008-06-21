@@ -18,7 +18,7 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,9 +29,8 @@
 #include "bmc-config.h"
 #include "bmc-config-validate.h"
 
-#include "config-tool-pef-conf-section.h"
-
 #include "freeipmi-portability.h"
+#include "config-tool-pef-conf-section.h"
 
 static config_err_t
 _enable_pef_checkout (const char *section_name,

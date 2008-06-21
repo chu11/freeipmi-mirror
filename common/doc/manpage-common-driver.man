@@ -1,6 +1,0 @@
-.TP
-\fB\-D\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR
-Specify the driver type to use instead of doing an auto selection.
-The currently available outofband drivers are LAN and LAN_2_0, which
-perform IPMI 1.5 and IPMI 2.0 respectively.  The currently available
-inband drivers are KCS, SSIF, OPENIPMI, and SUNBMC.

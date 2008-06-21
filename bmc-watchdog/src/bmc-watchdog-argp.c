@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.6 2008-06-07 16:09:48 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.6.2.1 2008-06-21 16:15:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -27,7 +27,7 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>

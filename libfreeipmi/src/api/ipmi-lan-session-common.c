@@ -19,7 +19,7 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <sys/types.h>
 
@@ -69,8 +69,8 @@
 #include "ipmi-fiid-wrappers-api.h"
 #include "ipmi-lan-session-common.h"
 
-#include "debug-common.h"
 #include "freeipmi-portability.h"
+#include "debug-util.h"
 
 #define IPMI_PKT_LEN                   1024
 #define IPMI_LAN_BACKOFF_COUNT         2
@@ -175,14 +175,14 @@ _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
 
   if ((tmpl_cmd = fiid_obj_template(obj_cmd_rq)))
     {
-      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
-      debug_hdr_cmd(DEBUG_COMMON_TYPE_IPMI_1_5,
-                    DEBUG_COMMON_DIRECTION_REQUEST,
+      debug_hdr_cmd(DEBUG_UTIL_TYPE_IPMI_1_5,
+                    DEBUG_UTIL_DIRECTION_REQUEST,
                     net_fn,
                     cmd,
                     hdrbuf,
-                    DEBUG_COMMON_HDR_BUFLEN);
+                    DEBUG_UTIL_HDR_BUFLEN);
 
       ipmi_dump_lan_packet (STDERR_FILENO,
                             ctx->io.outofband.hostname,
@@ -217,14 +217,14 @@ _ipmi_lan_dump_rs (ipmi_ctx_t ctx,
 
   if ((tmpl_cmd = fiid_obj_template(obj_cmd_rs)))
     {
-      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
-      debug_hdr_cmd(DEBUG_COMMON_TYPE_IPMI_1_5,
-                    DEBUG_COMMON_DIRECTION_RESPONSE,
+      debug_hdr_cmd(DEBUG_UTIL_TYPE_IPMI_1_5,
+                    DEBUG_UTIL_DIRECTION_RESPONSE,
                     net_fn,
                     cmd,
                     hdrbuf,
-                    DEBUG_COMMON_HDR_BUFLEN);
+                    DEBUG_UTIL_HDR_BUFLEN);
 
       ipmi_dump_lan_packet (STDERR_FILENO,
                             ctx->io.outofband.hostname,
@@ -1171,21 +1171,21 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
       
       if ((cmd_str = ipmi_cmd_str (net_fn, cmd)))
         {
-          char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
           /* Handle a few IPMI 2.0 special cases */
           if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_open_session_request) == 1)
-            cmd_str = DEBUG_COMMON_OPEN_SESSION_STR;
+            cmd_str = DEBUG_UTIL_OPEN_SESSION_STR;
           else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_1) == 1)
-            cmd_str = DEBUG_COMMON_RAKP_1_STR;
+            cmd_str = DEBUG_UTIL_RAKP_1_STR;
           else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_3) == 1)
-            cmd_str = DEBUG_COMMON_RAKP_3_STR;
+            cmd_str = DEBUG_UTIL_RAKP_3_STR;
           
-          debug_hdr_str(DEBUG_COMMON_TYPE_IPMI_2_0,
-                        DEBUG_COMMON_DIRECTION_REQUEST,
+          debug_hdr_str(DEBUG_UTIL_TYPE_IPMI_2_0,
+                        DEBUG_UTIL_DIRECTION_REQUEST,
                         cmd_str,
                         hdrbuf,
-                        DEBUG_COMMON_HDR_BUFLEN);
+                        DEBUG_UTIL_HDR_BUFLEN);
           
           ipmi_dump_rmcpplus_packet (STDERR_FILENO,
                                      ctx->io.outofband.hostname,
@@ -1242,21 +1242,21 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
 
       if ((cmd_str = ipmi_cmd_str (net_fn, cmd)))
         {
-          char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
           /* Handle a few IPMI 2.0 special cases */
           if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_open_session_response) == 1)
-            cmd_str = DEBUG_COMMON_OPEN_SESSION_STR;
+            cmd_str = DEBUG_UTIL_OPEN_SESSION_STR;
           else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_2) == 1)
-            cmd_str = DEBUG_COMMON_RAKP_2_STR;
+            cmd_str = DEBUG_UTIL_RAKP_2_STR;
           else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_4) == 1)
-            cmd_str = DEBUG_COMMON_RAKP_4_STR;
+            cmd_str = DEBUG_UTIL_RAKP_4_STR;
 
-          debug_hdr_str(DEBUG_COMMON_TYPE_IPMI_2_0,
-                        DEBUG_COMMON_DIRECTION_RESPONSE,
+          debug_hdr_str(DEBUG_UTIL_TYPE_IPMI_2_0,
+                        DEBUG_UTIL_DIRECTION_RESPONSE,
                         cmd_str,
                         hdrbuf,
-                        DEBUG_COMMON_HDR_BUFLEN);
+                        DEBUG_UTIL_HDR_BUFLEN);
 
           ipmi_dump_rmcpplus_packet (STDERR_FILENO,
                                      ctx->io.outofband.hostname,

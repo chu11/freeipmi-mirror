@@ -1,7 +1,6 @@
 #ifndef _IPMI_CTX_H
 #define _IPMI_CTX_H
 
-#include <sys/time.h>
 #include <stdint.h>
 #include <netinet/in.h>
 #include <sys/param.h>

@@ -16,19 +16,7 @@ libfreeipmi:
 
 solaris
 -------
-- builds?
 - solaris inband driver (solaris 9? solaris 10? solaris 11?)
-- gethostbyname_r 5 args
-     struct hostent *gethostbyname_r(const char *name, struct hostent *result,
-         char *buffer, int buflen, int *h_errnop);
-  need -lnsl for linking or can't find symbol?
-- /usr/ccs/bin for ld?
-- no argp
-  - need argp standalone lib, maybe cut and paste in?
-
-bmc-watchdog
-------------
-autoconf logfile
 
 bmc-config
 ----------
@@ -48,17 +36,12 @@ pef-config
 
 general
 -------
+beginning doc for developers
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
-merge many util libs into one?
-- rework util libs in general, its a mess of interdependencies
-rework common cmdline & config lib, into one?
- - rename funcs
- - rename vars/structs
- - need to encapsulate better
 
 config
 ------
@@ -70,10 +53,6 @@ ipmiconsole
 -----------
 retry under a different port
 - has never been tested, does any manufacturer do this?
-
-ipmimonitoring
---------------
-output all bitmasks set
 
 ipmi-sensors-config
 -------------------

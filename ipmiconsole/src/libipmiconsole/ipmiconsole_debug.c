@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.c,v 1.11 2008-06-07 16:09:55 chu11 Exp $
+ *  $Id: ipmiconsole_debug.c,v 1.11.2.1 2008-06-21 16:18:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -55,8 +55,8 @@
 
 #include "ipmiconsole_debug.h"
 
-#include "fd.h"
 #include "freeipmi-portability.h"
+#include "fd.h"
 
 static uint32_t console_debug_flags = 0;
 static int console_debug_fd = -1;

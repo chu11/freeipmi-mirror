@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.9 2008-06-07 16:09:56 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.9.2.1 2008-06-21 16:18:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -40,14 +40,14 @@
 #endif /* HAVE_GETOPT_H */
 #include <dirent.h>
 #if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
+#include <sys/time.h>
+#include <time.h>
 #else  /* !TIME_WITH_SYS_TIME */
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else /* !HAVE_SYS_TIME_H */
-#  include <time.h>
-# endif /* !HAVE_SYS_TIME_H */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -58,10 +58,11 @@
 #include <errno.h>
 
 #include "ipmidetect.h"
-#include "hostlist.h"
+
+#include "freeipmi-portability.h"
 #include "error.h"
 #include "fd.h"
-#include "freeipmi-portability.h"
+#include "hostlist.h"
 
 /* 
  * External variables for getopt 

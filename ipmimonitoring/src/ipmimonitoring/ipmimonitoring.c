@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.52 2008-06-07 16:09:56 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.52.2.1 2008-06-21 16:18:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -34,18 +34,15 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if HAVE_GETOPT_H
-#include <getopt.h>
-#endif /* HAVE_GETOPT_H */
 #if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
+#include <sys/time.h>
+#include <time.h>
 #else  /* !TIME_WITH_SYS_TIME */
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else /* !HAVE_SYS_TIME_H */
-#  include <time.h>
-# endif /* !HAVE_SYS_TIME_H */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 #include <sys/resource.h>
 #if HAVE_UNISTD_H
@@ -60,12 +57,12 @@
 #include "ipmimonitoring.h"     /* tool .h file */
 #include "ipmimonitoring-argp.h"
 
-#include "pstdout.h"
-#include "hostrange.h"
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 #include "secure.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
 
 #ifndef MAXPATHLEN
@@ -441,39 +438,51 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
 
               if (bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
                 {
-                  char buffer[IPMIMONITORING_BUFLEN+1];
+                  uint16_t bitmask_value = *((uint16_t *)sensor_reading);
+                  int j;
                   
-                  memset(buffer, '\0', IPMIMONITORING_BUFLEN+1);
-                  if (ipmi_monitoring_bitmask_string(state_data->ctx,
-                                                     bitmask_type,
-                                                     *((uint16_t *)sensor_reading),
-                                                     buffer,
-                                                     IPMIMONITORING_BUFLEN) < 0)
+                  pstdout_printf(state_data->pstate,
+                                 " |");
+
+                  for (j = 0; j < 16; j++)
                     {
-                      /* If parameters error, assume remote machine has given us some
-                       * bogus offset.  We'll fall through and output nothing.
-                       */
-                      if (ipmi_monitoring_ctx_errnum(state_data->ctx) != IPMI_MONITORING_ERR_PARAMETERS)
+                      if (bitmask_value & (0x1 << j))
                         {
-                          pstdout_fprintf(state_data->pstate, 
-                                          stderr, 
-                                          "ipmi_monitoring_bitmask_string: %s\n", 
-                                          ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
-                          return -1;
-                        }
+                          char buffer[IPMIMONITORING_BUFLEN+1];
+                          
+                          memset(buffer, '\0', IPMIMONITORING_BUFLEN+1);
+                          if (ipmi_monitoring_bitmask_string(state_data->ctx,
+                                                             bitmask_type,
+                                                             (bitmask_value & (0x1 << j)),
+                                                             buffer,
+                                                             IPMIMONITORING_BUFLEN) < 0)
+                            {
+                              /* If parameters error, assume remote machine has given us some
+                               * bogus offset.  We'll fall through and output nothing.
+                               */
+                              if (ipmi_monitoring_ctx_errnum(state_data->ctx) != IPMI_MONITORING_ERR_PARAMETERS)
+                                {
+                                  pstdout_fprintf(state_data->pstate, 
+                                                  stderr, 
+                                                  "ipmi_monitoring_bitmask_string: %s\n", 
+                                                  ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                                  return -1;
+                                }
+                              
+                              if (ipmi_monitoring_ctx_errnum(state_data->ctx) == IPMI_MONITORING_ERR_PARAMETERS
+                                  && state_data->prog_data->args->common.debug)
+                                pstdout_fprintf(state_data->pstate,
+                                                stderr,
+                                                "ipmi_monitoring_bitmask_string: %s: invalid bitmask likely: %X\n", 
+                                                ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)),
+                                                *((uint16_t *)sensor_reading));
+                            }
                       
-                      if (ipmi_monitoring_ctx_errnum(state_data->ctx) == IPMI_MONITORING_ERR_PARAMETERS
-                          && state_data->prog_data->args->common.debug)
-                        pstdout_fprintf(state_data->pstate,
-                                        stderr,
-                                        "ipmi_monitoring_bitmask_string: %s: invalid bitmask likely: %X\n", 
-                                        ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)),
-                                        *((uint16_t *)sensor_reading));
+                          pstdout_printf(state_data->pstate,
+                                         " '%s'", 
+                                         buffer);
+                        }
                     }
-                  
-                pstdout_printf(state_data->pstate,
-                                 " | '%s' ", 
-                                 buffer);
                 }
               else
                 pstdout_printf(state_data->pstate,

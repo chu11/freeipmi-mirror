@@ -18,7 +18,7 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,12 +45,12 @@
 #include "ipmi-sel-entry.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 #include "tool-common.h"
 #include "tool-fiid-wrappers.h"
 #include "tool-cmdline-common.h"
+#include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
-#include "pstdout.h"
-#include "hostrange.h"
 
 static int 
 _display_sel_info (ipmi_sel_state_data_t *state_data)

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.36 2008-05-21 23:35:21 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.36.4.1 2008-06-21 16:18:18 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -50,16 +50,16 @@ Often (although not always), console redirection must be also
 be configured properly in the BIOS and/or operating system.  Both must
 be configured to redirect console traffic out the appropriate COM port.
 
-#include <@top_srcdir@/common/doc/manpage-common-general-options-header.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname.man>
+#include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-hostname.man>
 .TP
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Specify the username to use when authenticating with the remote host.
 If not specified, a null (i.e. anonymous) username is assumed.  The
 user must a high enough privilege to establish a SOL session and have
 SOL session abilities.
-#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
-#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
 .TP
 \fB\-\-session-timeout\fR=\fIMILLISECONDS\fR
 Specify the session timeout in milliseconds.  Defaults to 60000
@@ -81,12 +81,12 @@ specified.  The user should be aware that only cipher suite ids 3, 8,
 and 12 encrypt console payloads.  Console information will be sent in
 the clear an alternate cipher suite id is selected.  The following
 cipher suite ids are currently supported:
-#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/doc/manpage-common-privilege-level-admin.man>
-#include <@top_srcdir@/common/doc/manpage-common-config-file.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
-#include <@top_srcdir@/common/doc/manpage-common-debug.man>
-#include <@top_srcdir@/common/doc/manpage-common-misc.man>
+#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/common/man/manpage-common-privilege-level-admin.man>
+#include <@top_srcdir@/common/man/manpage-common-config-file.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/common/man/manpage-common-debug.man>
+#include <@top_srcdir@/common/man/manpage-common-misc.man>
 .if @WITH_DEBUG@ \{
 .TP
 \fB\-\-debugfile\fR
@@ -139,7 +139,7 @@ Send a DEL character.
 .I &&
 Send a single escape character.
 
-#include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
 
 .SH "IPMICONSOLE TROUBLESHOOTING"
 The following are common issues for given error messages specifically
@@ -190,15 +190,15 @@ has occurred and
 has given up.  This may be due to network issues or SOL issues.
 Please try to reconnect.
 
-#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-sol-only-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-sol-only-text.man>
 
 .SH "EXAMPLES"
 .B # ipmiconsole -h ahost -u myusername -p mypassword
 .PP
 Establish a console sesssion with a remote host.
 .PP
-#include <@top_srcdir@/common/doc/manpage-common-known-issues.man>
+#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
 
 .if @WITH_DEBUG@ \{
 
@@ -218,12 +218,12 @@ Core dumps are enabled.
 Before placing ipmiconsole in a production system, it is recommended
 that the program be compiled with debugging turned off.
 \}
-#include <@top_srcdir@/common/doc/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2006-2007 The Regents of the University of California.
-#include <@top_srcdir@/common/doc/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi.conf(5), freeipmi(7), bmc-config(8)
-#include <@top_srcdir@/common/doc/manpage-common-homepage.man>
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>

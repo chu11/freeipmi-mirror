@@ -18,7 +18,7 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,10 +32,10 @@
 #include "ipmi-sensors-config-sections.h"
 
 #include "freeipmi-portability.h"
-#include "hostrange.h"
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
 
 static void

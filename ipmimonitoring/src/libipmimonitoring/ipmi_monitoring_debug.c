@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_debug.c,v 1.10 2008-06-07 16:09:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_debug.c,v 1.10.2.1 2008-06-21 16:18:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -37,7 +37,7 @@
 #endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif /* !HAVE_UNISTD_H */
+#endif /* HAVE_UNISTD_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -45,8 +45,8 @@
 #include "ipmi_monitoring_defs.h"
 #include "ipmi_monitoring_debug.h"
 
-#include "fd.h"
 #include "freeipmi-portability.h"
+#include "fd.h"
 
 extern uint32_t _ipmi_monitoring_flags;
 

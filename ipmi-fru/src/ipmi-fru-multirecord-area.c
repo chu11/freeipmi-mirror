@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.12.2.1 2008-06-18 20:52:58 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.12.2.2 2008-06-21 16:17:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -27,7 +27,7 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>

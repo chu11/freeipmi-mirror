@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.100.2.2 2008-06-13 21:31:08 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.100.2.3 2008-06-21 16:15:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -27,7 +27,7 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,7 +65,7 @@
 #include "bmc-watchdog-argp.h"
 
 #include "freeipmi-portability.h"
-#include "debug-common.h"
+#include "debug-util.h"
 #include "tool-common.h"
 
 #define BMC_WATCHDOG_ERR_BUFLEN           1024
@@ -611,14 +611,14 @@ _cmd(char *str,
 
   if (cmd_args.common.debug)
     {
-      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
-      debug_hdr_cmd(DEBUG_COMMON_TYPE_INBAND,
-                    DEBUG_COMMON_DIRECTION_REQUEST,
+      debug_hdr_cmd(DEBUG_UTIL_TYPE_INBAND,
+                    DEBUG_UTIL_DIRECTION_REQUEST,
                     netfn,
                     cmd,
                     hdrbuf,
-                    DEBUG_COMMON_HDR_BUFLEN);
+                    DEBUG_UTIL_HDR_BUFLEN);
 
       if (ipmi_obj_dump(STDERR_FILENO, NULL, hdrbuf, NULL, cmd_rq) < 0)
         _bmclog("%s: ipmi_obj_dump: %s", str, strerror(errno));
@@ -760,14 +760,14 @@ _cmd(char *str,
 
   if (cmd_args.common.debug)
     {
-      char hdrbuf[DEBUG_COMMON_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
-      debug_hdr_cmd(DEBUG_COMMON_TYPE_INBAND,
-                    DEBUG_COMMON_DIRECTION_REQUEST,
+      debug_hdr_cmd(DEBUG_UTIL_TYPE_INBAND,
+                    DEBUG_UTIL_DIRECTION_REQUEST,
                     netfn,
                     cmd,
                     hdrbuf,
-                    DEBUG_COMMON_HDR_BUFLEN);
+                    DEBUG_UTIL_HDR_BUFLEN);
 
       if (ipmi_obj_dump(STDERR_FILENO, NULL, hdrbuf, NULL, cmd_rs) < 0)
         _bmclog("%s: ipmi_obj_dump: %s", str, strerror(errno));
