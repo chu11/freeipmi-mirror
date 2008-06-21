@@ -34,6 +34,7 @@ EXTRA = \
 	INSTALL \
 	NEWS \
 	README \
+	README.argp \
 	TODO \
 	COPYING.bmc-watchdog \
 	COPYING.ipmipower \
