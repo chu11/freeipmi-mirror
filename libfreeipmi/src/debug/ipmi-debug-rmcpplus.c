@@ -621,9 +621,6 @@ _dump_rmcpplus_payload(int fd,
                                        tmpl_cmd,
                                        pkt,
                                        ipmi_payload_len);
-
-  /* NOT REACHED */
-  return (-1);
 }
 
 static int32_t

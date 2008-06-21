@@ -796,9 +796,6 @@ _construct_payload(uint8_t payload_type,
     return _construct_payload_rakp(payload_type,
                                    obj_cmd,
                                    obj_rmcpplus_payload);
-
-  /* NOT REACHED */
-  return (0);
 }
 
 static int8_t
@@ -1630,9 +1627,6 @@ _deconstruct_payload(uint8_t payload_type,
                                      obj_cmd,
                                      pkt,
                                      ipmi_payload_len);
-
-  /* NOT REACHED */
-  return (0);
 }
 
 int32_t

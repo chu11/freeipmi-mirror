@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.87 2008-06-07 16:09:58 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.88 2008-06-21 17:14:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -530,7 +530,7 @@ int
 ipmipower_check_command(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
   uint64_t cmd = 0;
-  uint64_t expected_cmd = -1;
+  uint64_t expected_cmd;
   fiid_obj_t obj_cmd;
 
   assert(ip);
@@ -590,7 +590,6 @@ ipmipower_check_requester_sequence_number(ipmipower_powercmd_t ip, packet_type_t
              ip->ic->hostname, ip->protocol_state, 
              (unsigned int)req_seq, (unsigned int)expected_req_seq);
   
-  return 1;
   return ((req_seq == expected_req_seq) ? 1 : 0);
 }
 

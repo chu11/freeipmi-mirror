@@ -300,9 +300,6 @@ _ipmi_calculate_k(uint8_t authentication_algorithm,
                                       k_len, 
                                       constant, 
                                       constant_len);
-
-  /* NOT REACHED */
-  return (0);
 }
 
 int32_t
@@ -703,9 +700,6 @@ ipmi_rmcpplus_check_payload_pad(uint8_t confidentiality_algorithm,
 
       return (1);
     }
-
-  /* NOT REACHED */
-  return (0);
 }
 
 int8_t
