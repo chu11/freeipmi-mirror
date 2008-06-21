@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: debug.c,v 1.4 2008-06-21 15:09:40 chu11 Exp $
+ *  $Id: debug.c,v 1.5 2008-06-21 17:14:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -57,5 +57,3 @@ _debug_msg_create(const char *fmt, ...)
 
   return buffer;
 }
-
-#endif /* NDEBUG */
