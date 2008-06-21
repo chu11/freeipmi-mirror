@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.31.2.1 2008-06-21 16:19:28 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.31.2.2 2008-06-21 17:40:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -179,7 +179,10 @@ parsepacket(char * destination,
         ipmi_ping_err_exit("ipmi_dump_rmcp_packet: %s", strerror(errno));
     }
 
-  if (unassemble_rmcp_pkt(buffer, buflen, obj_rmcp_hdr, obj_rmcp_cmd) < 0)
+  if (unassemble_rmcp_pkt((uint8_t *)buffer, 
+                          buflen, 
+                          obj_rmcp_hdr,
+                          obj_rmcp_cmd) < 0)
     ipmi_ping_err_exit("unassemble_rmcp_pkt: %s", strerror(errno));
 
   _fiid_obj_get(obj_rmcp_cmd, "message_type", (uint64_t *)&message_type);

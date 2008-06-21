@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.6.2.1 2008-06-21 16:15:58 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.6.2.2 2008-06-21 17:40:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -362,8 +362,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid log value\n");
           exit(1);
         }
-      break;
       cmd_args->log_val = tmp;
+      break;
     case TIMEOUT_ACTION_KEY:
       cmd_args->timeout_action++;
       tmp = strtol(arg, &ptr, 10);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.33.2.1 2008-06-21 16:18:50 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.33.2.2 2008-06-21 17:40:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -31,12 +31,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif /* HAVE_UNISTD_H */
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_STRINGS_H
+#include <strings.h>            /* bzero */
+#endif /* HAVE_STRINGS_H */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <errno.h>
 
 #include <stdint.h>

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.21.2.1 2008-06-21 16:18:28 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.21.2.2 2008-06-21 17:40:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1319,7 +1319,7 @@ ipmiconsole_packet_unassemble(ipmiconsole_ctx_t c,
 			      uint8_t *buf,
 			      uint32_t buflen)
 {
-  ipmiconsole_protocol_state_t pkt;
+  ipmiconsole_packet_type_t pkt;
   fiid_obj_t obj_cmd = NULL;
   int8_t rv;
 

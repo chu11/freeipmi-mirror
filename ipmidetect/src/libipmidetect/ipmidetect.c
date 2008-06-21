@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.10 2008-06-07 16:09:56 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.10.2.1 2008-06-21 17:40:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -33,6 +33,9 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_STRINGS_H
+#include <strings.h>            /* bzero */
+#endif /* HAVE_STRINGS_H */
 #include <sys/types.h>
 #include <sys/stat.h>
 #if HAVE_FCNTL_H

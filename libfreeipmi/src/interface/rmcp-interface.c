@@ -102,7 +102,7 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
 }  
 
 int32_t
-unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd)
+unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd)
 {
   uint32_t indx = 0;
   int32_t len;

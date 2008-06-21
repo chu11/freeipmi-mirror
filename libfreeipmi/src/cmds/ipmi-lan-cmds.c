@@ -826,8 +826,6 @@ fill_cmd_set_lan_configuration_parameters_ip_address (uint8_t channel_number,
                        channel_number,
                        ip_address,
                        obj_cmd_rq));
-  
-  return 0;
 }
 
 int8_t 
@@ -969,8 +967,6 @@ fill_cmd_set_lan_configuration_parameters_default_gateway_address (uint8_t chann
                        channel_number,
                        ip_address,
                        obj_cmd_rq));
-  
-  return 0;
 }
 
 int8_t 
@@ -1003,8 +999,6 @@ fill_cmd_set_lan_configuration_parameters_backup_gateway_address (uint8_t channe
                        channel_number,
                        ip_address,
                        obj_cmd_rq));
-  
-  return 0;
 }
 
 int8_t 

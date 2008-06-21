@@ -46,6 +46,9 @@
 #include <time.h>
 #endif /* !HAVE_SYS_TIME_H */
 #endif  /* !TIME_WITH_SYS_TIME */
+#if HAVE_STROPTS_H
+#include <stropts.h>            /* putmsg, getmsg on Solaris */
+#endif /* HAVE_STROPTS_H */
 #if HAVE_SYS_STROPTS_H
 #include <sys/stropts.h>        /* for I_STR */
 #endif  /* !HAVE_SYS_STROPTS_H */

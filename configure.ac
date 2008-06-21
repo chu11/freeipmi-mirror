@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.sun.alpha2],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.130.2.6 2008-06-21 16:15:48 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.130.2.7 2008-06-21 17:40:10 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -320,11 +320,12 @@ dnl Checks for header files.
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([unistd.h fcntl.h getopt.h pthread.h])
+dnl achu: note "strings.h" plural
+AC_CHECK_HEADERS([unistd.h fcntl.h getopt.h pthread.h strings.h])
 AC_CHECK_HEADERS([linux/types.h error.h sys/io.h sys/sockio.h asm/io.h sys/ioccom.h])
 AC_CHECK_HEADERS([linux/ipmi_msgdefs.h])
 AC_CHECK_HEADERS([linux/compiler.h])
-AC_CHECK_HEADERS([sys/stropts.h])
+AC_CHECK_HEADERS([stropts.h sys/stropts.h])
 AC_CHECK_HEADERS([linux/ipmi.h], [], [], 
 [#ifdef HAVE_LINUX_IPMI_MSGDEFS_H
  #include <linux/ipmi_msgdefs.h>
