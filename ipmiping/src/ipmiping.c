@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.51 2008-06-21 15:09:46 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.52 2008-06-21 17:31:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -254,7 +254,7 @@ parsepacket(char *destination,
       goto cleanup;
     }
 
-  if (unassemble_ipmi_lan_pkt((uint8_t *)buffer, 
+  if (unassemble_ipmi_lan_pkt(buffer, 
 			      buflen, 
                               obj_rmcp_hdr, 
 			      obj_lan_session_hdr, 
