@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.37 2008-06-21 15:09:57 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.38 2008-06-21 17:31:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -207,7 +207,7 @@ ipmipower_ping_process_pings(int *timeout)
             }
 #endif /* NDEBUG */
 
-          if (unassemble_rmcp_pkt(buffer, 
+          if (unassemble_rmcp_pkt((uint8_t *)buffer, 
 				  len, 
                                   rmcp_hdr, 
 				  rmcp_pong) < 0)
