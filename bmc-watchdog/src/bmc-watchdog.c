@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.105 2008-06-21 14:34:06 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.106 2008-06-21 16:55:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1264,8 +1264,6 @@ _log_str(uint8_t log)
     return "Disabled";
   else
     return "Internal Error, Unknown Log Value";
-
-  return NULL;			/* NOT_REACHED */
 }
 
 static char *
@@ -1277,8 +1275,6 @@ _timer_state_str(uint8_t timer_state)
     return "Stopped";
   else
     return "Internal Error, Unknown Stop Timer Value";
-
-  return NULL;			/* NOT_REACHED */
 }
 
 static char *
@@ -1296,8 +1292,6 @@ _timer_use_str(uint8_t timer_use)
     return "OEM";
   else
     return "Reserved";
-
-  return NULL;			/* NOT_REACHED */
 }
 
 static char *
@@ -1313,8 +1307,6 @@ _pre_timeout_interrupt_str(uint8_t pre_timeout_interrupt)
     return "Messaging Interrupt";
   else
     return "Reserved";
-  
-  return NULL;			/* NOT_REACHED */
 }
 
 static char *
@@ -1330,8 +1322,6 @@ _timeout_action_str(uint8_t timeout_action)
     return "Power Cycle";
   else
     return "Reserved";
-
-  return NULL;			/* NOT_REACHED */
 }
 
 static void
