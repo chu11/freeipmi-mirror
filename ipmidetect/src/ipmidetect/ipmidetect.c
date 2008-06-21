@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.10 2008-06-21 14:34:11 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.11 2008-06-21 15:09:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -58,10 +58,11 @@
 #include <errno.h>
 
 #include "ipmidetect.h"
-#include "hostlist.h"
+
+#include "freeipmi-portability.h"
 #include "error.h"
 #include "fd.h"
-#include "freeipmi-portability.h"
+#include "hostlist.h"
 
 /* 
  * External variables for getopt 

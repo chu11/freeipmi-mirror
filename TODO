@@ -37,19 +37,11 @@ pef-config
 general
 -------
 beginning doc for developers
-make header file/macro usage consistent across files
-make makefile inclusions/libadds consistents
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
-merge many util libs into one?
-- rework util libs in general, its a mess of interdependencies
-rework common cmdline & config lib, into one?
- - rename funcs
- - rename vars/structs
- - need to encapsulate better
 
 config
 ------

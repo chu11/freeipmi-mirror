@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.c,v 1.5 2008-06-21 14:34:17 chu11 Exp $
+ *  $Id: ipmi-md2.c,v 1.6 2008-06-21 15:10:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -36,9 +36,9 @@
 #include <sys/types.h>
 #include <errno.h>
 
-#include "freeipmi-portability.h"
-
 #include "ipmi-md2.h"
+
+#include "freeipmi-portability.h"
 
 static char padding[16][16] = 
   {

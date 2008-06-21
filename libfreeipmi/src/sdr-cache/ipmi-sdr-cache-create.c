@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.16 2008-06-20 04:23:24 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.17 2008-06-21 15:10:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -58,9 +58,9 @@
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
+#include "freeipmi-portability.h"
 #include "debug-util.h"
 #include "fd.h"
-#include "freeipmi-portability.h"
 
 #define IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH    1024
 #define IPMI_SDR_CACHE_MAX_RESERVATION_ID_RETRY 4

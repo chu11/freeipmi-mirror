@@ -37,7 +37,6 @@
 #if HAVE_ALLOCA_H
 #include <alloca.h>
 #endif /* HAVE_ALLOCA_H */
-
 #include <assert.h>
 #include <errno.h>
 

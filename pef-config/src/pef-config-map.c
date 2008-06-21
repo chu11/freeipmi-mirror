@@ -27,10 +27,10 @@
 #endif /* STDC_HEADERS */
 #include <freeipmi/freeipmi.h>
 
-#include "freeipmi-portability.h"
-
 #include "pef-config.h"
 #include "pef-config-map.h"
+
+#include "freeipmi-portability.h"
 
 int
 alert_destination_type_number (const char *source)

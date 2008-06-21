@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.157 2008-06-07 16:09:58 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.158 2008-06-21 15:09:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -46,8 +46,6 @@
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 
-#include "freeipmi-portability.h"
-
 #include "ipmipower.h"
 #include "ipmipower_connection.h"
 #include "ipmipower_output.h"
@@ -56,6 +54,8 @@
 #include "ipmipower_check.h"
 #include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
+
+#include "freeipmi-portability.h"
 
 extern cbuf_t ttyout;
 extern struct ipmipower_arguments cmd_args;

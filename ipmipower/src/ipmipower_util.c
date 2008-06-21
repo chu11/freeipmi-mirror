@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.c,v 1.23 2008-06-07 16:09:58 chu11 Exp $
+ *  $Id: ipmipower_util.c,v 1.24 2008-06-21 15:09:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -36,10 +36,10 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "freeipmi-portability.h"
+#include "ipmipower_util.h"
 #include "ierror.h"
 
-#include "ipmipower_util.h"
+#include "freeipmi-portability.h"
 
 uint32_t
 get_rand(void)

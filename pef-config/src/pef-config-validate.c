@@ -32,11 +32,11 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "freeipmi-portability.h"
-
 #include "pef-config.h"
 #include "pef-config-map.h"
 #include "pef-config-validate.h"
+
+#include "freeipmi-portability.h"
 
 config_validate_t 
 alert_destination_type_validate (const char *section_name,

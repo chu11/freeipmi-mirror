@@ -30,8 +30,9 @@
 
 #include "freeipmi/util/ipmi-util.h"
 
-#include "freeipmi-portability.h"
 #include "debug-util.h"
+
+#include "freeipmi-portability.h"
 
 int
 debug_hdr_str(uint8_t packet_type,
