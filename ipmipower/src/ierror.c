@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ierror.c,v 1.4 2008-06-07 16:09:57 chu11 Exp $
+ *  $Id: ierror.c,v 1.5 2008-06-21 14:34:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -53,15 +53,15 @@
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
+#include <stdio.h>
+#include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
 #include <stdarg.h>
 #endif /* STDC_HEADERS */
 #include <assert.h>
 #include <errno.h>
-#include <stdlib.h>
 #include <syslog.h>
-#include <stdio.h>
 
 #include "fd.h"
 #include "cbuf.h"

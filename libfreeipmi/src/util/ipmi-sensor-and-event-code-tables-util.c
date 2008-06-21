@@ -18,9 +18,7 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
-
-#include <sys/types.h>
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,6 +26,7 @@
 #include <string.h>
 #include <stdarg.h>
 #endif /* STDC_HEADERS */
+#include <sys/types.h>
 #include <assert.h>
 #include <errno.h>
 

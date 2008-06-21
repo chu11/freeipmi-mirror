@@ -18,7 +18,7 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,10 +26,10 @@
 #include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
-#endif
+#endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
+#endif /* HAVE_UNISTD_H */
 #include <sys/types.h>
 #include <sys/resource.h>
 #include <errno.h>

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_debug.c,v 1.10 2008-06-07 16:09:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_debug.c,v 1.11 2008-06-21 14:34:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -37,7 +37,7 @@
 #endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif /* !HAVE_UNISTD_H */
+#endif /* HAVE_UNISTD_H */
 #include <assert.h>
 #include <errno.h>
 

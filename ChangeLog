@@ -1,3 +1,8 @@
+2008-06-21 Albert Chu <chu11@llnl.gov>
+
+	* Audit and cleanup header file usage throughout (i.e. use correct
+	#ifs, proper commenting for GNU style, etc.).
+	
 2008-06-20 Albert Chu <chu11@llnl.gov>
 
 	* common/src/portability/: New directory.

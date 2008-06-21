@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.34 2008-06-20 04:23:24 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.35 2008-06-21 14:34:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -26,7 +26,7 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,10 +1,10 @@
 /*****************************************************************************\
- *  $Id: tool-hostrange-common.c,v 1.1 2008-06-21 03:57:43 chu11 Exp $
+ *  $Id: tool-hostrange-common.c,v 1.2 2008-06-21 14:34:08 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>

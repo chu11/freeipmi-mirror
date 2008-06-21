@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.54 2008-06-19 21:09:12 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.55 2008-06-21 14:34:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -34,18 +34,15 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if HAVE_GETOPT_H
-#include <getopt.h>
-#endif /* HAVE_GETOPT_H */
 #if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
+#include <sys/time.h>
+#include <time.h>
 #else  /* !TIME_WITH_SYS_TIME */
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else /* !HAVE_SYS_TIME_H */
-#  include <time.h>
-# endif /* !HAVE_SYS_TIME_H */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 #include <sys/resource.h>
 #if HAVE_UNISTD_H

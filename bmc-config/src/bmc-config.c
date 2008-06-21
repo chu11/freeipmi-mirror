@@ -18,13 +18,13 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
+#endif /* STDC_HEADERS */
 #include <assert.h>
 #include <errno.h>
 

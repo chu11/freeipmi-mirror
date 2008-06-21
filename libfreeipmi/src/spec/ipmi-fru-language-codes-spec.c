@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-language-codes-spec.c,v 1.4 2008-06-07 16:10:00 chu11 Exp $
+ *  $Id: ipmi-fru-language-codes-spec.c,v 1.5 2008-06-21 14:34:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -28,7 +28,7 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>

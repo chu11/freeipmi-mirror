@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.2 2008-06-20 04:23:23 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.3 2008-06-21 14:34:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -26,20 +26,20 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
 #include <stdarg.h>
-#endif
+#endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
+#endif /* HAVE_UNISTD_H */
 #if HAVE_FCNTL_H
 #include <fcntl.h>
-#endif
+#endif /* HAVE_FCNTL_H */
 #include <signal.h>
 #include <errno.h>
 #include <sys/types.h>
@@ -56,17 +56,17 @@
 #include <netdb.h>
 #if HAVE_GETOPT_H
 #include <getopt.h>
-#endif
+#endif /* HAVE_GETOPT_H */
 #if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
+#include <sys/time.h>
+#include <time.h>
+#else  /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif  /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>

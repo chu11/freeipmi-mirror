@@ -21,7 +21,7 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #if HAVE_ARGP_H
 #include <argp.h>
