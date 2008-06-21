@@ -1,3 +1,9 @@
+2008-06-21 Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_check.c
+	(ipmipower_check_requester_sequence_number): Remove left over
+	debugging.
+	
 2008-06-16 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/ipmi-sensors-config.8.pre.in: Fix manpage
