@@ -15,11 +15,12 @@ noinst_LTLIBRARIES = \
 	libconfigtoolcommon.la
 
 libconfigtoolcommon_la_LIBADD = \
-	$(top_builddir)/common/src/libtoolcommon.la
+	$(top_builddir)/common/src/toolcommon/libtoolcommon.la
 
 libconfigtoolcommon_la_CPPFLAGS = \
 	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/common/src/portability \
+	-I$(top_builddir)/common/src/toolcommon \
 	-I$(top_builddir)/libfreeipmi/include
 
 libconfigtoolcommon_la_SOURCES = \
@@ -34,7 +35,7 @@ libconfigtoolcommon_la_SOURCES = \
 	config-tool-utils.c \
 	config-tool-validate.c
 
-$(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
+$(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.16 2008-06-21 03:41:45 chu11 Exp $
+## $Id: Makefile.am,v 1.17 2008-06-21 03:57:44 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -12,6 +12,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir)/ipmiconsole/src/libipmiconsole \
 	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/common/src/portability \
+	-I$(top_builddir)/common/src/toolcommon \
 	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
@@ -19,14 +20,14 @@ AM_CPPFLAGS = \
 sbin_PROGRAMS = ipmiconsole
 
 ipmiconsole_LDADD = \
-	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
 	$(top_builddir)/ipmiconsole/src/libipmiconsole/libipmiconsole.la
 
 ipmiconsole_SOURCES = \
 	ipmiconsole.c \
 	ipmiconsole-argp.c
 
-$(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
+$(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/ipmiconsole/src/libipmiconsole/libipmiconsole.la : force-dependency-check

@@ -5,6 +5,7 @@ noinst_HEADERS = \
 AM_CPPFLAGS = \
 	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/common/src/portability \
+	-I$(top_builddir)/common/src/toolcommon \
 	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT 
@@ -12,13 +13,13 @@ AM_CPPFLAGS = \
 sbin_PROGRAMS = bmc-info
 
 bmc_info_LDADD = \
-	$(top_builddir)/common/src/libtoolcommon.la
+	$(top_builddir)/common/src/toolcommon/libtoolcommon.la
  
 bmc_info_SOURCES = \
 	bmc-info.c \
 	bmc-info-argp.c 
 
-$(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
+$(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

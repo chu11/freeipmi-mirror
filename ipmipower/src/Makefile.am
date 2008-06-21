@@ -21,6 +21,7 @@ ipmipower_CPPFLAGS = \
 	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/common/src/debugutil \
 	-I$(top_builddir)/common/src/portability \
+	-I$(top_builddir)/common/src/toolcommon \
 	-I$(top_builddir)/libfreeipmi/include \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
 	-DWITH_LSD_NOMEM_ERROR_FUNC=1 \
@@ -28,7 +29,7 @@ ipmipower_CPPFLAGS = \
 	-D_REENTRANT
 
 ipmipower_LDADD = \
-	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
 	$(top_builddir)/common/src/debugutil/libdebugutil.la
 
 ipmipower_SOURCES = \
@@ -47,7 +48,7 @@ ipmipower_SOURCES = \
 	ipmipower_wrappers.c \
 	wrappers.c
  
-$(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
+$(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/debugutil/libdebugutil.la : force-dependency-check

@@ -5,6 +5,11 @@
 	* common/src/: Moved to portability files to
 	common/src/portability/.
 
+	* common/src/toolcommon/: New directory.
+
+	* common/src/: Moved to toolcommon files to
+	common/src/toolcommon/.
+
 	* Adjust all tools and libs appropriately for path changes and
 	naming changes.
 	

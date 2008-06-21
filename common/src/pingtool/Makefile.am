@@ -11,6 +11,7 @@ libpingtoolcommon_la_LIBADD = \
 libpingtoolcommon_la_CPPFLAGS = \
 	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/common/src/portability \
+	-I$(top_builddir)/common/src/toolcommon \
 	-I$(top_builddir)/libfreeipmi/include 
 
 libpingtoolcommon_la_SOURCES = \

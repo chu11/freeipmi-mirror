@@ -6,6 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/common/src/debugutil \
 	-I$(top_builddir)/common/src/portability \
+	-I$(top_builddir)/common/src/toolcommon \
 	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
@@ -13,14 +14,14 @@ AM_CPPFLAGS = \
 sbin_PROGRAMS = bmc-watchdog
 
 bmc_watchdog_LDADD = \
-	$(top_builddir)/common/src/libtoolcommon.la \
+	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
 	$(top_builddir)/common/src/debugutil/libdebugutil.la
 
 bmc_watchdog_SOURCES = \
 	bmc-watchdog.c \
 	bmc-watchdog-argp.c
 
-$(top_builddir)/common/src/libtoolcommon.la : force-dependency-check
+$(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/debugutil/libdebugutil.la : force-dependency-check
