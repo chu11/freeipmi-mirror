@@ -1,7 +1,7 @@
 SUBDIRS = \
 	configtool \
 	debugutil \
+	miscutil \
 	pingtool \
 	portability \
-	toolcommon \
-	util
+	toolcommon

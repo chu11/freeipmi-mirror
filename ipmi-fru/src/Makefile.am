@@ -6,9 +6,9 @@ noinst_HEADERS = \
 	ipmi-fru-util.h
 
 AM_CPPFLAGS = \
+	-I$(top_builddir)/common/src/miscutil \
 	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/common/src/toolcommon \
-	-I$(top_builddir)/common/src/util \
 	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT 

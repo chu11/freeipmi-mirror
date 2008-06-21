@@ -10,9 +10,9 @@
 	* common/src/: Moved to toolcommon files to
 	common/src/toolcommon/.
 
-	* common/src/util/: New directory.
+	* common/src/miscutil/: New directory.
 
-	* common/src/: Moved to miscutil files to common/src/util/.
+	* common/src/: Moved to miscutil files to common/src/miscutil/.
 
 	* Adjust all tools and libs appropriately for path changes and
 	naming changes.

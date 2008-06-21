@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.6 2008-06-21 04:50:15 chu11 Exp $
+## $Id: Makefile.am,v 1.7 2008-06-21 05:46:35 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -14,11 +14,11 @@ libsdrcache_la_LIBADD = \
 	$(top_builddir)/common/src/portability/libfreeipmiportability.la
 
 libsdrcache_la_CPPFLAGS = \
-	-I$(top_builddir)/libfreeipmi/src \
-	-I$(top_builddir)/libfreeipmi/include \
 	-I$(top_builddir)/common/src/debugutil \
+	-I$(top_builddir)/common/src/miscutil \
 	-I$(top_builddir)/common/src/portability \
-	-I$(top_builddir)/common/src/util \
+	-I$(top_builddir)/libfreeipmi/include \
+	-I$(top_builddir)/libfreeipmi/src \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 
