@@ -1,6 +1,8 @@
 2008-06-21 Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Add various HPC notes.
+
+	* Fix compiler warnings.
 	
 2008-06-21 Albert Chu <chu11@llnl.gov>
 
