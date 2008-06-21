@@ -28,6 +28,7 @@ libfreeipmi_la_LDFLAGS = \
 libfreeipmi_la_CPPFLAGS = \
 	-I$(top_builddir)/libfreeipmi/include \
 	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/common/src/debugutil \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
@@ -46,7 +47,7 @@ libfreeipmi_la_LIBADD = \
 	$(top_builddir)/libfreeipmi/src/spec/libspec.la \
 	$(top_builddir)/libfreeipmi/src/util/libutil.la \
 	$(top_builddir)/common/src/libmiscutils.la \
-	$(top_builddir)/common/src/libfreeipmiportability.la \
+	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
 	$(top_builddir)/common/src/debugutil/libdebugutil.la
 
 $(top_builddir)/libfreeipmi/src/api/libapi.la : force-dependency-check
@@ -88,7 +89,7 @@ $(top_builddir)/libfreeipmi/src/util/libutil.la : force-dependency-check
 $(top_builddir)/common/src/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
-$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/debugutil/libdebugutil.la : force-dependency-check

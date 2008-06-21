@@ -5,6 +5,7 @@ noinst_HEADERS = \
 AM_CPPFLAGS = \
 	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/common/src/debugutil \
+	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT

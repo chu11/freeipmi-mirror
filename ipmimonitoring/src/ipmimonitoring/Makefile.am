@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.14 2008-06-19 22:31:07 chu11 Exp $
+## $Id: Makefile.am,v 1.15 2008-06-21 03:41:46 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -11,6 +11,7 @@ noinst_HEADERS = \
 AM_CPPFLAGS = \
 	-I$(top_builddir)/ipmimonitoring/src/libipmimonitoring \
 	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT

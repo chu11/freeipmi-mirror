@@ -1,3 +1,13 @@
+2008-06-20 Albert Chu <chu11@llnl.gov>
+
+	* common/src/portability/: New directory.
+
+	* common/src/: Moved to portability files to
+	common/src/portability/.
+
+	* Adjust all tools and libs appropriately for path changes and
+	naming changes.
+	
 2008-06-19 Albert Chu <chu11@llnl.gov>
 
 	* common/src/pingtool/: New directory.

@@ -6,10 +6,11 @@ noinst_LTLIBRARIES = \
 
 libpingtoolcommon_la_LIBADD = \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la \
-	$(top_builddir)/common/src/libfreeipmiportability.la
+	$(top_builddir)/common/src/portability/libfreeipmiportability.la
 
 libpingtoolcommon_la_CPPFLAGS = \
 	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/libfreeipmi/include 
 
 libpingtoolcommon_la_SOURCES = \
@@ -18,7 +19,7 @@ libpingtoolcommon_la_SOURCES = \
 $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
-$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 force-dependency-check:

@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.14 2008-06-20 04:23:23 chu11 Exp $
+## $Id: Makefile.am,v 1.15 2008-06-21 03:41:45 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -30,6 +30,7 @@ libipmiconsole_la_CFLAGS = $(PTHREAD_CFLAGS)
 
 libipmiconsole_la_CPPFLAGS = \
 	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/common/src/debugutil \
         -I$(top_builddir)/libfreeipmi/include \
 	-DWITH_PTHREADS=1 \
@@ -42,7 +43,7 @@ libipmiconsole_la_LDFLAGS = \
 
 libipmiconsole_la_LIBADD = \
 	$(top_builddir)/common/src/libmiscutils.la \
-	$(top_builddir)/common/src/libfreeipmiportability.la \
+	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
 	$(top_builddir)/common/src/debugutil/libdebugutil.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
@@ -62,7 +63,7 @@ libipmiconsole_la_SOURCES = \
 $(top_builddir)/common/src/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
-$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/common/src/debugutil/libdebugutil.la : force-dependency-check

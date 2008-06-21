@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.5 2008-06-07 16:09:56 chu11 Exp $
+## $Id: Makefile.am,v 1.6 2008-06-21 03:41:45 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -7,15 +7,26 @@
 sbin_PROGRAMS = ipmidetect
 
 AM_CPPFLAGS = \
-	-I $(top_builddir)/common/src \
-	-I $(top_builddir)/ipmidetect/src/libipmidetect \
+	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/common/src/portability \
+	-I$(top_builddir)/ipmidetect/src/libipmidetect \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 ipmidetect_LDADD = \
 	$(top_builddir)/common/src/libmiscutils.la \
-	$(top_builddir)/common/src/libfreeipmiportability.la \
+	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
 	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la
 
 ipmidetect_SOURCES = ipmidetect.c
 
+$(top_builddir)/common/src/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+force-dependency-check:

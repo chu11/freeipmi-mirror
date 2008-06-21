@@ -6,6 +6,7 @@ noinst_LTLIBRARIES = \
 
 libdebugutil_la_CPPFLAGS = \
 	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/libfreeipmi/include 
 
 libdebugutil_la_SOURCES = \

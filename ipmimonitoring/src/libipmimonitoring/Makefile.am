@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.8 2008-06-07 16:09:56 chu11 Exp $
+## $Id: Makefile.am,v 1.9 2008-06-21 03:41:46 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -19,6 +19,7 @@ lib_LTLIBRARIES = libipmimonitoring.la
 
 libipmimonitoring_la_CPPFLAGS = \
 	-I$(top_builddir)/common/src \
+	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/libfreeipmi/include \
 	-D_REENTRANT
 
@@ -28,7 +29,7 @@ libipmimonitoring_la_LDFLAGS = \
 
 libipmimonitoring_la_LIBADD = \
 	$(top_builddir)/common/src/libmiscutils.la \
-	$(top_builddir)/common/src/libfreeipmiportability.la \
+	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 libipmimonitoring_la_SOURCES = \
@@ -43,7 +44,7 @@ libipmimonitoring_la_SOURCES = \
 $(top_builddir)/common/src/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
-$(top_builddir)/common/src/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && make `basename $@`
 
 $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check

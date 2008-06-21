@@ -1,13 +1,10 @@
 SUBDIRS = \
 	configtool \
 	debugutil \
-	pingtool
+	pingtool \
+	portability
 
 noinst_HEADERS = \
-	freeipmi-portability.h \
-	freeipmi-argp-fmtstream.h \
-	freeipmi-argp-namefrob.h \
-	freeipmi-argp.h \
 	tool-common.h \
 	tool-config-file-common.h \
 	tool-cmdline-common.h \
@@ -27,33 +24,14 @@ noinst_HEADERS = \
 	timeval.h \
 	thread.h
 
-if WITH_FREEIPMI_ARGP
-FREEIPMI_ARG_SOURCES = \
-	freeipmi-argp-ba.c \
-	freeipmi-argp-eexst.c \
-	freeipmi-argp-fmtstream.c \
-	freeipmi-argp-help.c \
-	freeipmi-argp-parse.c \
-	freeipmi-argp-pv.c \
-	freeipmi-argp-pvh.c
-endif
-
 noinst_LTLIBRARIES = \
-	libfreeipmiportability.la \
 	libtoolcommon.la \
 	libmiscutils.la
-
-libfreeipmiportability_la_CPPFLAGS = \
-	-I$(srcdir)/../../libfreeipmi/include 
-
-libfreeipmiportability_la_SOURCES = \
-	freeipmi-portability.c \
-	$(FREEIPMI_ARG_SOURCES)
 
 libtoolcommon_la_LIBADD = \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la \
 	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
-	$(top_builddir)/common/src/libfreeipmiportability.la \
+	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
 	$(top_builddir)/common/src/libmiscutils.la
 
 libtoolcommon_la_LDFLAGS = \
@@ -62,6 +40,7 @@ libtoolcommon_la_LDFLAGS = \
 libtoolcommon_la_CPPFLAGS = \
 	-D_GNU_SOURCE \
 	-D_REENTRANT \
+	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/ipmidetect/src/libipmidetect/ \
 	-I$(top_builddir)/libfreeipmi/include 
 
