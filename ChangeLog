@@ -10,8 +10,14 @@
 	* common/src/: Moved to toolcommon files to
 	common/src/toolcommon/.
 
+	* common/src/util/: New directory.
+
+	* common/src/: Moved to miscutil files to common/src/util/.
+
 	* Adjust all tools and libs appropriately for path changes and
 	naming changes.
+
+	* Variety of Makefile cleanup.
 	
 2008-06-19 Albert Chu <chu11@llnl.gov>
 

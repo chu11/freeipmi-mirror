@@ -18,7 +18,6 @@ libconfigtoolcommon_la_LIBADD = \
 	$(top_builddir)/common/src/toolcommon/libtoolcommon.la
 
 libconfigtoolcommon_la_CPPFLAGS = \
-	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/common/src/toolcommon \
 	-I$(top_builddir)/libfreeipmi/include

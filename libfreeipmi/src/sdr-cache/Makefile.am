@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.5 2008-06-21 03:41:47 chu11 Exp $
+## $Id: Makefile.am,v 1.6 2008-06-21 04:50:15 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -10,12 +10,15 @@ noinst_HEADERS = \
 
 noinst_LTLIBRARIES = libsdrcache.la 
 
+libsdrcache_la_LIBADD = \
+	$(top_builddir)/common/src/portability/libfreeipmiportability.la
+
 libsdrcache_la_CPPFLAGS = \
 	-I$(top_builddir)/libfreeipmi/src \
 	-I$(top_builddir)/libfreeipmi/include \
-	-I$(top_builddir)/common/src \
-	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/common/src/debugutil \
+	-I$(top_builddir)/common/src/portability \
+	-I$(top_builddir)/common/src/util \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 
@@ -26,3 +29,7 @@ libsdrcache_la_SOURCES = \
 	ipmi-sdr-cache-delete.c \
 	ipmi-sdr-cache-read.c
 
+$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+force-dependency-check:

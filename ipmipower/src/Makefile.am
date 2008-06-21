@@ -18,10 +18,10 @@ sbin_PROGRAMS = ipmipower
 
 ipmipower_CPPFLAGS = \
 	-I$(top_builddir)/ipmidetect/src/libipmidetect \
-	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/common/src/debugutil \
 	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/common/src/toolcommon \
+	-I$(top_builddir)/common/src/util \
 	-I$(top_builddir)/libfreeipmi/include \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
 	-DWITH_LSD_NOMEM_ERROR_FUNC=1 \

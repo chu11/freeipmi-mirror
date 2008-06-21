@@ -1,5 +1,4 @@
 AM_CPPFLAGS = \
-	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/common/src/debugutil \
 	-I$(top_builddir)/common/src/pingtool \
 	-I$(top_builddir)/common/src/portability \

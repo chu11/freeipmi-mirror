@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.alpha1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.136 2008-06-21 03:57:39 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.137 2008-06-21 04:50:03 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -29,6 +29,7 @@ AC_CONFIG_FILES([
         common/src/pingtool/Makefile
         common/src/portability/Makefile
         common/src/toolcommon/Makefile
+        common/src/util/Makefile
         contrib/Makefile
         contrib/ganglia/Makefile
         contrib/nagios/Makefile

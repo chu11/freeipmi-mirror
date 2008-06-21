@@ -3,8 +3,8 @@ noinst_LTLIBRARIES = libutil.la
 libutil_la_CPPFLAGS = \
 	-I$(top_builddir)/libfreeipmi/src \
 	-I$(top_builddir)/libfreeipmi/include \
-	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/common/src/portability \
+	-I$(top_builddir)/common/src/util \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 

@@ -6,10 +6,10 @@ noinst_HEADERS = \
 	ipmi-sensors-config-utils.h
 
 AM_CPPFLAGS = \
-	-I$(top_builddir)/common/src \
 	-I$(top_builddir)/common/src/configtool \
 	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/common/src/toolcommon \
+	-I$(top_builddir)/common/src/util \
 	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT

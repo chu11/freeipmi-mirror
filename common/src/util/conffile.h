@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: conffile.h,v 1.3 2008-05-20 22:49:03 chu11 Exp $
+ *  $Id: conffile.h,v 1.1 2008-06-21 04:50:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.

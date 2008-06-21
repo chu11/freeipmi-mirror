@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: cbuf.h,v 1.2 2007-09-05 20:13:23 chu11 Exp $
+ *  $Id: cbuf.h,v 1.1 2008-06-21 04:50:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2002-2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
