@@ -30,6 +30,10 @@
 
 	* README.sunbmc: New file.
 
+2008-06-22 Albert Chu <chu11@llnl.gov>
+
+	* man/: New dir.  Move manpages from doc/ into man/.
+	
 2008-06-21 Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Add various HPC notes.

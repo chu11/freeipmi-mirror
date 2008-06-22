@@ -2,6 +2,7 @@ SUBDIRS = \
 	doc \
 	common \
 	libfreeipmi \
+	man \
 	bmc-config \
 	bmc-info \
 	bmc-device \

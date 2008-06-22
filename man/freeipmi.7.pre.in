@@ -7,9 +7,9 @@ IPMI v1.5/2.0 specification.
 .SH "Project Libraries and Tools"
 .B Libfreeipmi
 .PP
-A C library that includes KCS, SSIF, OpenIPMI, and Sun BMC drivers,
-IPMI 1.5 and IPMI 2.0 LAN communication interfaces, IPMI packet
-building utilities, IPMI command utilities, and utilities for
+A C library that includes KCS, SSIF, and OpenIPMI drivers, IPMI
+1.5 and IPMI 2.0 LAN communication interfaces, IPMI packet building
+utilities, IPMI command utilities, and utilities for
 reading/interpreting/managing IPMI.
 .PP
 .B Bmc-info
@@ -107,11 +107,11 @@ out-of-band (i.e. connecting remotely).
 Most FreeIPMI tools can operate in-band by using one of the in-band
 drivers included.  These in-band drivers include a direct KCS
 interface driver, a Linux SSIF driver through the SSIF device
-(i.e. /dev/i2c-0), the OpenIPMI kernel driver (i.e. /dev/ipmi0), and a
-Sun BMC driver (i.e. /dev/bmc) .  If your system requires the use of
-installed drivers, those appropriate modules must be installed ahead
-of time.  However, most systems should automatically load these
-drivers when appropriate.
+(i.e. /dev/i2c-0), and the OpenIPMI kernel driver
+(i.e. /dev/ipmi0).  If your system requires the use of installed
+drivers, those appropriate modules must be installed ahead of time.
+However, most systems should automatically load these drivers when
+appropriate.
 .PP
 Under most scenarios, the FreeIPMI tools should automatically discover
 which in-band interface to use and the proper settings to use.
