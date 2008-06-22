@@ -147,6 +147,7 @@ Specify if output should be always prefixed by default.
 .SH "BMC-WATCHDOG OPTIONS"
 The following options are specific to 
 .B bmc-watchdog(8).
+They will be ignored by other tools.
 .TP
 \fBbmc-watchdog-logfile\fR \fIFILE\fR
 Specify the default logfile.
