@@ -19,12 +19,13 @@
 
 	* configure.ac: check for sys/stropts.h, sys/int_types.h, bmc_intf.h.
 
-	* common/src/tool-cmdline-common.h,
-	common/src/tool-cmdline-common.c, common/src/tool-commonc.: Add
-	Sun BMC driver cmdline support.
+	* common/src/toolcommon/tool-cmdline-common.h,
+	common/src/toolcommon/tool-cmdline-common.c,
+	common/src/toolcommon/tool-common.c.: Add Sun BMC driver cmdline
+	support.
 
-	* README, doc/freeipmi.7.pre.in,
-	common/doc/manpage-common-driver.man: Update with sunbmc.
+	* README, man/freeipmi.7.pre.in,
+	common/man/manpage-common-driver.man: Update with sunbmc.
 
 	* bmc-watchdog/: Support sunbmc driver.
 

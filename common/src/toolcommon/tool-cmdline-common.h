@@ -259,6 +259,7 @@ struct hostrange_cmd_args
 #define IPMI_DEVICE_KCS_STR      "kcs"
 #define IPMI_DEVICE_SSIF_STR     "ssif"
 #define IPMI_DEVICE_OPENIPMI_STR "openipmi"
+#define IPMI_DEVICE_SUNBMC_STR   "sunbmc"
 
 #define IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR      "idzero"
 #define IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR "forcepermsg"
