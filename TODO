@@ -63,6 +63,7 @@ ipmi-sensors-config
 
 DCMI functionality
 ------------------
+http://www.intel.com/technology/product/DCMI/index.htm
 dcmi-info to output capabilities
 doubt anything else in it is useful.
 
