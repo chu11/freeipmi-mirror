@@ -61,6 +61,11 @@ ipmi-sensors-config
 - sensor enable/disable??
 - sensor event enable/disable??
 
+DCMI functionality
+------------------
+dcmi-info to output capabilities
+doubt anything else in it is useful.
+
 0.7.0 porting ensure works
 --------------------------
 BSD
