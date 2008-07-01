@@ -10,6 +10,12 @@
 
 	* bmc-device/: Support get self test results.
 	
+	* libfreeipmi/include/freeipmi/cmds/ipmi-device-global-cmds.h,
+	libfreeipmi/src/cmds/ipmi-device-global-cmds.c,
+	libfreeipmi/include/api/ipmi-device-global-cmds-api.h,
+	libfreeipmi/src/api/ipmi-device-global-cmds-api.c: Support Set and Get
+	ACPI power state commands.
+
 2008-06-22 Albert Chu <chu11@llnl.gov>
 
 	* man/: New dir.  Move manpages from doc/ into man/.
