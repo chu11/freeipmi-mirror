@@ -123,6 +123,31 @@ fiid_template_t tmpl_cmd_warm_reset_rs =
     {0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_get_self_test_results_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+/* note: bitfield results only if self_test_results == 0x57.  See
+ * specification for more information
+ */
+fiid_template_t tmpl_cmd_get_self_test_results_rs =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "self_test_result", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "controller_operation_firmware_corrupted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "controller_update_boot_block_firmware_corrupted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "internal_use_area_of_bmc_fru_corrupted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "sdr_repository_empty", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "ipmb_signal_lines_do_not_respond", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "cannot_access_bmc_fru_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "cannot_access_sdr_repository", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "cannot_access_sel_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_device_guid_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -191,6 +216,18 @@ fill_cmd_warm_reset (fiid_obj_t obj_cmd_rq)
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_WARM_RESET);
+  return (0);
+}
+
+int8_t 
+fill_cmd_get_self_test_results (fiid_obj_t obj_cmd_rq)
+{ 
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_self_test_results_rq);
+
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SELF_TEST_RESULTS);
   return (0);
 }
 

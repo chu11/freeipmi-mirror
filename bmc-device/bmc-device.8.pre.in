@@ -35,6 +35,9 @@ Perform a cold reset.
 .TP
 \fB\-\-warm-reset\fR
 Perform a warm reset.
+.TP
+\fB\-\-get-self-test-results\fR
+Output BMC self test results.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>

@@ -37,6 +37,11 @@ extern "C" {
 #define IPMI_PRODUCT_ID_SE7501WV2         0x1B
 #define IPMI_PRODUCT_ID_CDC1620           0x1B
 
+#define IPMI_SELF_TEST_RESULT_NO_ERROR                                               0x55
+#define IPMI_SELF_TEST_RESULT_SELF_TEST_FUNCTION_NOT_IMPLEMENTED_IN_THIS_CONTROLLER  0x56
+#define IPMI_SELF_TEST_RESULT_CORRUPTED_OR_INACCESSIBLE_DATA_OR_DEVICES              0x57
+#define IPMI_SELF_TEST_RESULT_FATAL_HARDWARE_ERROR                                   0x58
+
 extern fiid_template_t tmpl_cmd_get_device_id_rq;
 extern fiid_template_t tmpl_cmd_get_device_id_rs;
 extern fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs;
@@ -47,6 +52,9 @@ extern fiid_template_t tmpl_cmd_cold_reset_rs;
 extern fiid_template_t tmpl_cmd_warm_reset_rq;
 extern fiid_template_t tmpl_cmd_warm_reset_rs;
 
+extern fiid_template_t tmpl_cmd_get_self_test_results_rq;
+extern fiid_template_t tmpl_cmd_get_self_test_results_rs;
+
 extern fiid_template_t tmpl_cmd_get_device_guid_rq;
 extern fiid_template_t tmpl_cmd_get_device_guid_rs;
 extern fiid_template_t tmpl_cmd_get_device_guid_format_rs;
@@ -54,6 +62,7 @@ extern fiid_template_t tmpl_cmd_get_device_guid_format_rs;
 int8_t fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq);
 int8_t fill_cmd_cold_reset (fiid_obj_t obj_cmd_rq);
 int8_t fill_cmd_warm_reset (fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_get_self_test_results (fiid_obj_t obj_cmd_rq);
 int8_t fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus

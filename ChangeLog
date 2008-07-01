@@ -1,6 +1,14 @@
 2008-07-01 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.8.pre.in: Tweak text.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-device-global-cmds.h,
+	libfreeipmi/src/cmds/ipmi-device-global-cmds.c,
+	libfreeipmi/include/api/ipmi-device-global-cmds-api.h,
+	libfreeipmi/src/api/ipmi-device-global-cmds-api.c: Support Get
+	Self Test Results IPMI command.
+
+	* bmc-device/: Support get self test results.
 	
 2008-06-22 Albert Chu <chu11@llnl.gov>
 
