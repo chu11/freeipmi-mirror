@@ -92,11 +92,6 @@ links to ganglia/nagios
 update w/ freeipmi.conf.5 manpage
 - remove ipmiconsole.conf.5 and ipmipower.conf.5
 
-other monitoring
-----------------
-cacti - #3 most popular linuxquestions.org
-with clumon? - don't know how popular it is
-
 RELEASE TODOS - Do on every release
 -----------------------------------
 Email freeipmi-users && freeipmi-devel
