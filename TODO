@@ -18,6 +18,10 @@ solaris
 -------
 - solaris inband driver (solaris 9? solaris 10? solaris 11?)
 
+bmc-device
+----------
+acpi power state set-get
+
 bmc-config
 ----------
 remaining serial config
@@ -26,7 +30,6 @@ chassis boot params
 - new chassis config tool?
 - move power restore polcy over
 advanced option??
-acpi power state get/set??
 only output lan-conf-auth sections is supported via supported field
 
 pef-config
