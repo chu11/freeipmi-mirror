@@ -73,7 +73,7 @@ dcmi-fru like command to get asset tags
 dcmi-sensor like command to get sensor stuff
 - move ipmi-sensor code into libfreeipmi??
 dcmi-chassis like command to get power stuff 
-- or all in one tool?
+- or all in one tool? (ipmi-dcmi ??)
 - or in FreeIPMI but add --dcmi options??
 - part of FreeIPMI? or a separate project?
 
