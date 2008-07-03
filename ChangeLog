@@ -15,6 +15,8 @@
 	* bmc-config/src/: Output lan authentication enables fields
 	dependent on authentication support fields.
 
+	* configure.ac: Get getpwuid_r portability bug.
+
 2008-07-01 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.8.pre.in: Tweak text.

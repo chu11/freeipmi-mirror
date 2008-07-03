@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.alpha1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.140 2008-06-22 17:07:39 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.141 2008-07-03 22:38:30 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -476,6 +476,9 @@ if test "x${have_getpwuid_r}" = "xyes"; then
    AC_TRY_LINK(
    [
    #include <pwd.h>
+   #if HAVE_UNISTD_H
+   #include <unistd.h>
+   #endif
    ],
    [
    uid_t uid;
@@ -489,6 +492,9 @@ if test "x${have_getpwuid_r}" = "xyes"; then
 	AC_TRY_LINK(
 	[
 	#include <pwd.h>
+	#if HAVE_UNISTD_H
+	#include <unistd.h>
+	#endif
 	],
 	[
         uid_t uid;
