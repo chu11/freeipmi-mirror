@@ -86,7 +86,7 @@ extern "C" {
 #define IPMI_ACPI_DEVICE_POWER_STATE_D1             0x01
 #define IPMI_ACPI_DEVICE_POWER_STATE_D2             0x02
 #define IPMI_ACPI_DEVICE_POWER_STATE_D3             0x03
-#define IPMI_ACPI_DEVICE_POWER_STATE_UNKNOWN        0x04
+#define IPMI_ACPI_DEVICE_POWER_STATE_UNKNOWN        0x2A
 #define IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE      0x7F
 
 #define IPMI_ACPI_DEVICE_POWER_STATE_VALID(__acpi_device_power_state) \
