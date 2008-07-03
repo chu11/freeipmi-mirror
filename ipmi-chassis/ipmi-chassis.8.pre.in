@@ -77,7 +77,7 @@ Set system boot flags.  Must be specified to use the
 \fB\-\-boot\-type\fR,
 \fB\-\-lock\-out\-reset\-button\fR,
 \fB\-\-blank\-screen\fR,
-\fB\-\-boot\-device\fR,
+A\fB\-\-boot\-device\fR,
 \fB\-\-lock\-keyboard\fR,
 \fB\-\-clear\-cmos\fR,
 \fB\-\-console\-redirection\fR,
@@ -87,38 +87,38 @@ and
 \fB\-\-firmware\-bios\-verbosity\fR
 options listed below.
 .TP
-\fB\-\-boot\-type\fR[=\fIBOOT_TYPE\fR]
+\fB\-\-boot\-type\fR=\fIBOOT_TYPE\fR
 Set BIOS boot type to BOOT_TYPE.  Supported values:
 PC\-COMPATIBLE, EFI. Used with the
 \fB\-\-set\-boot\-flags\fR option.
 .TP
-\fB\-\-lock\-out\-reset\-button\fR[=\fILOCK_OUT_RESET_BUTTON\fR]
+\fB\-\-lock\-out\-reset\-button\fR=\fILOCK_OUT_RESET_BUTTON\fR
 Modify lock out reset button support. Supported values: YES/NO.
 Used with the \fB\-\-set\-boot\-flags\fR option.
 .TP
-\fB\-\-blank\-screen\fR[=\fIBLANK_SCREEN\fR]
+\fB\-\-blank\-screen\fR=\fIBLANK_SCREEN\fR
 Modify blank screen support. Supported values: YES/NO.
 Used with the \fB\-\-set\-boot\-flags\fR option.
 .TP
-\fB\-\-boot\-device\fR[=\fIBOOT_DEVICE\fR]
+\fB\-\-boot\-device\fR=\fIBOOT_DEVICE\fR
 Set device to boot from to BOOT_DEVICE. Allowed
 values: NO-OVERRIDE, PXE, HARD-DRIVE, HARD\-DRIVE\-SAFE, DIAG, CD\-DVD,
 BIOS, FLOPPY. Used with the \fB\-\-set\-boot\-flags\fR option.
 .TP
-\fB\-\-lock\-keyboard\fR[=\fILOCK_KEYBOARD\fR]
+\fB\-\-lock\-keyboard\fR=\fILOCK_KEYBOARD\fR
 Modify lock keyboard support. Supported values: YES/NO. 
 Used with the \fB\-\-set\-boot\-flags\fR option.
 .TP
-\fB\-\-clear\-cmos\fR[=\fICMOS_CLEAR\fR]
+\fB\-\-clear\-cmos\fR=\fICMOS_CLEAR\fR
 Modify clear CMOS support. Supported values: YES/NO. Used with the
 \fB\-\-set\-boot\-flags\fR option.
 .TP
-\fB\-\-console\-redirection\fR[=\fICONSOLE_REDIRECTION\fR]
+\fB\-\-console\-redirection\fR=\fICONSOLE_REDIRECTION\fR
 Set console redirection type. Supported values: DEFAULT,
 SUPPRESS, ENABLE. Used with the
 \fB\-\-set\-boot\-flags\fR option.
 .TP
-\fB\-\-user\-password\-bypass\fR[=\fIUSER_PASSWORD_BYPASSfR]
+\fB\-\-user\-password\-bypass\fR=\fIUSER_PASSWORD_BYPASSfR]
 Modify user password bypass support.  When enabled, the managed
 client's BIOS boots the systema nd bypasses any user or boot password
 that might be set in teh system.  This option allows a system
@@ -126,13 +126,13 @@ administrator to, for example, force a system boot via PXE in an
 unattended manner.  Supported values: YES/NO.  Used with the
 \fB\-\-set\-boot\-flags\fR option.
 .TP
-\fB\-\-force\-progress\-event\-traps\fR[=\fIFORCE_PROGRESS_EVENT_TRAPS\fR]
+\fB\-\-force\-progress\-event\-traps\fR=\fIFORCE_PROGRESS_EVENT_TRAPS\fR
 Modify force progress event traps support. When enabled, the BMC
 transmits PET traps for BIOS progress events to the session that set
 the flag.  Supported values: YES/NO. Used with the
 \fB\-\-set\-boot\-flags\fR option.
 .TP
-\fB\-\-firmware\-bios\-verbosity\fR[=\fIFIRMWARE_BIOS_VERBOSITY\fR]
+\fB\-\-firmware\-bios\-verbosity\fR=\fIFIRMWARE_BIOS_VERBOSITY\fR
 Set firmware verbosity.  Directs what appears on POST display.
 Supported values: DEFAULT, QUIET, VERBOSE. Used with the
 \fB\-\-set\-boot\-flags\fR option.
