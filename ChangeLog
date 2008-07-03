@@ -7,6 +7,11 @@
 
 	* bmc-device/: Support --get-acpi-power-state.
 
+	* libfreeipmi/src/api/ipmi-device-global-cmds.c
+	(ipmi_cmd_set_acpi_power_state): Fix parameter check bug.
+
+	* bmc-device/: Support --set-acpi-power-state.
+
 2008-07-01 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.8.pre.in: Tweak text.

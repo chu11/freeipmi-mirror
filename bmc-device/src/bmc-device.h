@@ -30,8 +30,21 @@ enum bmc_device_argp_option_keys
     CMD_WARM_RESET_KEY = 161,
     CMD_GET_SELF_TEST_RESULTS_KEY = 162,
     CMD_GET_ACPI_POWER_STATE_KEY = 163,
-    VERBOSE_KEY = 164,
+    CMD_SET_ACPI_POWER_STATE_KEY = 164,
+    VERBOSE_KEY = 165,
   };
+
+enum bmc_device_set_acpi_power_state_options
+  {
+    SET_ACPI_SYSTEM_POWER_STATE_KEY = 180,
+    SET_ACPI_DEVICE_POWER_STATE_KEY = 181,
+  };
+
+struct bmc_device_set_acpi_power_state 
+{
+  int system_power_state;
+  int device_power_state;
+};
 
 struct bmc_device_arguments
 {
@@ -41,6 +54,8 @@ struct bmc_device_arguments
   int warm_reset;
   int get_self_test_results;
   int get_acpi_power_state;
+  int set_acpi_power_state;
+  struct bmc_device_set_acpi_power_state set_acpi_power_state_args;
   int verbose;
 };
 

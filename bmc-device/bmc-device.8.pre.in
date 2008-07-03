@@ -51,13 +51,13 @@ and
 options listed below.
 .TP
 \fB\-\-set-acpi-system-power-state\fR=\fISYSTEM_POWER_STATE\fR
-Set system power state.  Allowed values:
-S0/G0, S1, S2, S3, S4, S5/G2, S4/S5, G3, SLEEPING, G1_SLEEPING, OVERRIDE,
+Set ACPI system power state.  Allowed values:
+S0_G0, S1, S2, S3, S4, S5_G2, S4_S5, G3, SLEEPING, G1_SLEEPING, OVERRIDE,
 LEGACY_ON, LEGACY_OFF, UNKNOWN.
 Used with the \fB\-\--set-acpi-power-state\fR option.
 .TP
 \fB\-\-set-acpi-device-power-state\fR=\fIDEVICE_POWER_STATE\fR
-Set device power state.  Allowed values:
+Set ACPI device power state.  Allowed values:
 D0, D1, D2, D3, UNKNOWN.
 Used with the \fB\-\--set-acpi-power-state\fR option.
 .TP

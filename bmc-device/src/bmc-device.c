@@ -352,6 +352,41 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
   return rv;
 }
 
+static int
+set_acpi_power_state (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  uint8_t system_power_state;
+  uint8_t device_power_state;
+  int rv = -1;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_acpi_power_state_rs);
+
+  system_power_state = state_data->prog_data->args->set_acpi_power_state_args.system_power_state;
+  device_power_state = state_data->prog_data->args->set_acpi_power_state_args.device_power_state;
+
+  if (ipmi_cmd_set_acpi_power_state (state_data->ipmi_ctx, 
+                                     system_power_state,
+                                     (system_power_state == IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE) ? IPMI_ACPI_SET_SYSTEM_POWER_STATE_DONT_SET_SYSTEM_POWER_STATE : IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE,
+                                     device_power_state,
+                                     (device_power_state == IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE) ? IPMI_ACPI_SET_DEVICE_POWER_STATE_DONT_SET_DEVICE_POWER_STATE : IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE,
+                                     cmd_rs) != 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_set_acpi_power_state: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return rv;
+}
+
 int
 run_cmd_args (bmc_device_state_data_t *state_data)
 {
@@ -373,6 +408,9 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->get_acpi_power_state)
     return get_acpi_power_state (state_data);
+
+  if (args->set_acpi_power_state)
+    return set_acpi_power_state (state_data);
 
   rv = 0;
   return (rv);
