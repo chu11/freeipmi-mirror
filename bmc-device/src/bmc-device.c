@@ -199,6 +199,159 @@ get_self_test_results (bmc_device_state_data_t *state_data)
   return rv;
 }
 
+static int
+get_acpi_power_state (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  uint64_t val;
+  char *statestr = NULL;
+  char statestrbuf[1024];
+  char *verbosestr = NULL;
+  char verbosestrbuf[1024];
+  int rv = -1;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_acpi_power_state_rs);
+
+  if (ipmi_cmd_get_acpi_power_state (state_data->ipmi_ctx, cmd_rs) != 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_acpi_power_state: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+  
+  _FIID_OBJ_GET (cmd_rs,
+                 "system_power_state_enumeration",
+                 &val);
+
+  switch (val) 
+    {
+    case IPMI_ACPI_SYSTEM_POWER_STATE_S0_G0:
+      statestr = "S0/G0";
+      verbosestr = "working";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_S1:
+      statestr = "S1";
+      verbosestr = "hardware context maintained, typically equates to processor/chip set clocks stopped";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_S2:
+      statestr = "S2";
+      verbosestr = "typically equates to stopped clocks with processor/cache context lost";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_S3:
+      statestr = "S3";
+      verbosestr = "typically equates to \"suspend-to-RAM\"";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_S4:
+      statestr = "S4";
+      verbosestr = "typically equates to \"suspend-to-disk\"";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_S5_G2:
+      statestr = "S5/G2";
+      verbosestr = "soft off";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_S4_S5:
+      statestr = "S4/S5";
+      verbosestr = "soft off, cannot differentiate between S4 and S5";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_G3:
+      statestr = "G3";
+      verbosestr = "mechanical off";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_SLEEPING:
+      statestr = "SLEEPING";
+      verbosestr = "sleeping - cannot differentiate between S1-S3";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_G1_SLEEPING:
+      statestr = "G1 SLEEPING";
+      verbosestr = "sleeping - cannot differentiate between S1-S4";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_OVERRIDE:
+      statestr = "OVERRIDE";
+      verbosestr = "S5 entered by override";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_ON:
+      statestr = "LEGACY_ON";
+      /* achu: specification text uses singular "system".  I substitute in correct english. */
+      verbosestr = "Legacy On (indicates On for systems that don't support ACPI or have ACPI capabilities disabled:";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_OFF:
+      statestr = "LEGACY_OFF";
+      verbosestr = "Legacy Soft-Off";
+      break;
+    case IPMI_ACPI_SYSTEM_POWER_STATE_UNKNOWN:
+      statestr = "UNKNOWN";
+      verbosestr = "power state has not been initialized, or device lost track of power state";
+      break;
+    default:
+      snprintf(statestrbuf, 1024, "UNSPECIFIED");
+      statestr = statestrbuf;
+      snprintf(verbosestrbuf, 1024, "0x%X", (unsigned int)val);
+      verbosestr = verbosestrbuf;
+      break;
+    }
+  
+  if (state_data->prog_data->args->verbose && verbosestr)
+    pstdout_printf(state_data->pstate,
+                   "ACPI System Power State: %s: %s\n",
+                   statestr,
+                   verbosestr);
+  else
+    pstdout_printf(state_data->pstate,
+                   "ACPI System Power State: %s\n",
+                   statestr);
+
+  statestr = NULL;
+  verbosestr = NULL;
+
+  _FIID_OBJ_GET (cmd_rs,
+                 "device_power_state_enumeration",
+                 &val);
+  switch (val) 
+    {
+    case IPMI_ACPI_DEVICE_POWER_STATE_D0:
+      statestr = "D0";
+      break;
+    case IPMI_ACPI_DEVICE_POWER_STATE_D1:
+      statestr = "D1";
+      break;
+    case IPMI_ACPI_DEVICE_POWER_STATE_D2:
+      statestr = "D2";
+      break;
+    case IPMI_ACPI_DEVICE_POWER_STATE_D3:
+      statestr = "D3";
+      break;
+    case IPMI_ACPI_DEVICE_POWER_STATE_UNKNOWN:
+      statestr = "UNKNOWN";
+      verbosestr = "power state has not been initialized, or device lost track of power state";
+      break;
+    default:
+      snprintf(statestrbuf, 1024, "UNSPECIFIED");
+      statestr = statestrbuf;
+      snprintf(verbosestrbuf, 1024, "0x%X", (unsigned int)val);
+      verbosestr = verbosestrbuf;
+      break;
+    }
+
+  if (state_data->prog_data->args->verbose && verbosestr)
+    pstdout_printf(state_data->pstate,
+                   "ACPI Device Power State: %s: %s\n",
+                   statestr,
+                   verbosestr);
+  else
+    pstdout_printf(state_data->pstate,
+                   "ACPI Device Power State: %s\n",
+                   statestr);
+  
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return rv;
+}
+
 int
 run_cmd_args (bmc_device_state_data_t *state_data)
 {
@@ -217,6 +370,9 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->get_self_test_results)
     return get_self_test_results (state_data);
+
+  if (args->get_acpi_power_state)
+    return get_acpi_power_state (state_data);
 
   rv = 0;
   return (rv);

@@ -70,6 +70,10 @@ static struct argp_option cmdline_options[] =
      "Perform a warm reset.", 31},
     {"get-self-test-results", CMD_GET_SELF_TEST_RESULTS_KEY, NULL, 0,
      "Output BMC self test results.", 32},
+    {"get-acpi-power-state", CMD_GET_ACPI_POWER_STATE_KEY, NULL, 0,
+     "Get ACPI system and device power state.", 33},
+    {"verbose", VERBOSE_KEY, 0, 0,
+     "Increase verbosity in output.", 34},
     { 0 }
   };
 
@@ -101,6 +105,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case CMD_GET_SELF_TEST_RESULTS_KEY:
       cmd_args->get_self_test_results++;
+      break;
+    case CMD_GET_ACPI_POWER_STATE_KEY:
+      cmd_args->get_acpi_power_state++;
+      break;
+    case VERBOSE_KEY:
+      cmd_args->verbose++;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -140,7 +150,8 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
 { 
   if (!cmd_args->cold_reset 
       && !cmd_args->warm_reset
-      && !cmd_args->get_self_test_results)
+      && !cmd_args->get_self_test_results
+      && !cmd_args->get_acpi_power_state)
     {
       fprintf (stderr, 
                "No BMC device command specified.\n");
@@ -149,7 +160,8 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
 
   if ((cmd_args->cold_reset 
        + cmd_args->warm_reset
-       + cmd_args->get_self_test_results) > 1)
+       + cmd_args->get_self_test_results
+       + cmd_args->get_acpi_power_state) > 1)
     {
       fprintf (stderr, 
                "Multiple BMC device commands specified.\n");
@@ -166,7 +178,9 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->cold_reset = 0;
   cmd_args->warm_reset = 0;
   cmd_args->get_self_test_results = 0;
-  
+  cmd_args->get_acpi_power_state = 0;
+  cmd_args->verbose = 0;
+
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
 
   _bmc_device_config_file_parse(cmd_args);

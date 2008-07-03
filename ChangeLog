@@ -2,6 +2,11 @@
 
 	* ipmi-chassis/ipmi-chassis.8.pre.in: Update some text.
 	
+	* libfreeipmi/include/freeipmi/cmds/ipmi-device-global-cmds.h: Add
+	"NO_CHANGE" macros.
+
+	* bmc-device/: Support --get-acpi-power-state.
+
 2008-07-01 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.8.pre.in: Tweak text.

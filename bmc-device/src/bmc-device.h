@@ -29,6 +29,8 @@ enum bmc_device_argp_option_keys
     CMD_COLD_RESET_KEY = 160,
     CMD_WARM_RESET_KEY = 161,
     CMD_GET_SELF_TEST_RESULTS_KEY = 162,
+    CMD_GET_ACPI_POWER_STATE_KEY = 163,
+    VERBOSE_KEY = 164,
   };
 
 struct bmc_device_arguments
@@ -38,6 +40,8 @@ struct bmc_device_arguments
   int cold_reset;
   int warm_reset;
   int get_self_test_results;
+  int get_acpi_power_state;
+  int verbose;
 };
 
 typedef struct bmc_device_prog_data
