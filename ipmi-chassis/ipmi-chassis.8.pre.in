@@ -73,8 +73,19 @@ Get system boot\-flags.  This command returns the current boot
 flag settings.
 .TP
 \fB\-L\fR, \fB\-\-set\-boot\-flags\fR
-Set system boot flags.  Used in conjunction with many other options
-listed below.
+Set system boot flags.  Must be specified to use the 
+\fB\-\-boot\-type\fR,
+\fB\-\-lock\-out\-reset\-button\fR,
+\fB\-\-blank\-screen\fR,
+\fB\-\-boot\-device\fR,
+\fB\-\-lock\-keyboard\fR,
+\fB\-\-clear\-cmos\fR,
+\fB\-\-console\-redirection\fR,
+\fB\-\-user\-password\-bypass\fR,
+\fB\-\-force\-progress\-event\-traps\fR,
+and
+\fB\-\-firmware\-bios\-verbosity\fR
+options listed below.
 .TP
 \fB\-\-boot\-type\fR[=\fIBOOT_TYPE\fR]
 Set BIOS boot type to BOOT_TYPE.  Supported values:

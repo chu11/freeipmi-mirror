@@ -1,3 +1,7 @@
+2008-07-03 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-chassis/ipmi-chassis.8.pre.in: Update some text.
+	
 2008-07-01 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.8.pre.in: Tweak text.
