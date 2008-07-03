@@ -47,6 +47,8 @@ _bmc_config_state_data_init(bmc_config_state_data_t *state_data)
   state_data->prog_data = NULL;
   state_data->ipmi_ctx = NULL;
 
+  state_data->authentication_type_initialized = 0;
+
   state_data->cipher_suite_entry_count = 0;
   state_data->cipher_suite_id_supported_set = 0;
   state_data->cipher_suite_priv_set = 0;

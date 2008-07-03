@@ -26,7 +26,6 @@ chassis boot params
 - new chassis config tool?
 - move power restore polcy over
 advanced option??
-only output lan-conf-auth sections is supported via supported field
 
 pef-config
 -----------
@@ -41,6 +40,7 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
+make strcasestr function
 
 config
 ------

@@ -57,6 +57,14 @@ typedef struct bmc_config_state_data
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
 
+  /* achu: caching to make lan authentication enables go faster */
+  int authentication_type_initialized;
+  uint8_t authentication_type_none;
+  uint8_t authentication_type_md2;
+  uint8_t authentication_type_md5;
+  uint8_t authentication_type_straight_password;
+  uint8_t authentication_type_oem_proprietary;
+
   /* achu: caching to make rmcpplus priv go faster */
   int cipher_suite_entry_count;
   int cipher_suite_id_supported[CIPHER_SUITE_LEN];
