@@ -133,7 +133,7 @@ _to_uppercase(char *s)
 }
 
 char *
-freeipmi_stristr(char *s1, const char *s2)
+freeipmi_stristr(const char *s1, const char *s2)
 {
   char *s1cpy = NULL;
   char *s2cpy = NULL;

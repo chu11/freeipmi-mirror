@@ -5,6 +5,8 @@
 	* common/src/portability/freeipmi-portability.h,
 	common/src/portability/freeipmi-portability.c (freeipmi_stristr):
 	New function.
+
+	* bmc-config/src/: Use stristr when appropriate.
 	
 2008-07-03 Albert Chu <chu11@llnl.gov>
 

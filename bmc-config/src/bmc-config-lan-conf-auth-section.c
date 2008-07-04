@@ -398,15 +398,15 @@ _authentication_type_enable_available (bmc_config_state_data_t *state_data,
 
   if (state_data->authentication_type_initialized)
     {
-      if (strstr(key_name, "None") && !state_data->authentication_type_none)
+      if (stristr(key_name, "None") && !state_data->authentication_type_none)
         *available = 0;
-      else if (strstr(key_name, "MD2") && !state_data->authentication_type_md2)
+      else if (stristr(key_name, "MD2") && !state_data->authentication_type_md2)
         *available = 0;
-      else if (strstr(key_name, "MD5") && !state_data->authentication_type_md5)
+      else if (stristr(key_name, "MD5") && !state_data->authentication_type_md5)
         *available = 0;
-      else if (strstr(key_name, "Straight_Password") && !state_data->authentication_type_straight_password)
+      else if (stristr(key_name, "Straight_Password") && !state_data->authentication_type_straight_password)
         *available = 0;
-      else if (strstr(key_name, "OEM_Proprietary") && !state_data->authentication_type_oem_proprietary)
+      else if (stristr(key_name, "OEM_Proprietary") && !state_data->authentication_type_oem_proprietary)
         *available = 0;
     }
 
