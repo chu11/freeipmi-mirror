@@ -1,5 +1,13 @@
 2008-07-03 Albert Chu <chu11@llnl.gov>
 
+	* configure.ac: Check for stristr.
+
+	* common/src/portability/freeipmi-portability.h,
+	common/src/portability/freeipmi-portability.c (freeipmi_stristr):
+	New function.
+	
+2008-07-03 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-chassis/ipmi-chassis.8.pre.in: Update some text.
 	
 	* libfreeipmi/include/freeipmi/cmds/ipmi-device-global-cmds.h: Add

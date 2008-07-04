@@ -118,6 +118,50 @@ freeipmi_strsep(char **stringp, const char *delim)
 }
 #endif
 
+#ifndef HAVE_STRISTR
+/* achu: this is my cheap and quick implementation */
+static void
+_to_uppercase(char *s)
+{
+  while ((*s) != '\0')
+    {
+      if ((*s) >= 'A'
+          && (*s) <= 'Z')
+        (*s) = (*s) + ('a' - 'A');
+      s++;
+    }
+}
+
+char *
+freeipmi_stristr(char *s1, const char *s2)
+{
+  char *s1cpy = NULL;
+  char *s2cpy = NULL;
+  char *ptr;
+  char *rv = NULL;
+
+  if (!s1 || !s2)
+    goto cleanup;
+
+  if (!(s1cpy = strdup(s1)))
+    goto cleanup;
+
+  if (!(s2cpy = strdup(s2)))
+    goto cleanup;
+
+  _to_uppercase(s1cpy);
+  _to_uppercase(s2cpy);
+  
+  if ((ptr = strstr(s1cpy, s2cpy)))
+    rv = (s1 + (ptr - s1cpy));
+  
+ cleanup:
+  if (s1cpy)
+    free(s1cpy);
+  return rv;
+}
+#endif /* !HAVE_STRISTR */
+
 #ifndef HAVE_GETLINE
 /* Replacement for glibc getline */
 ssize_t
