@@ -2,7 +2,8 @@
 ----------------
 For Users - New Features
 ------------------------
-o Add new tool bmc-device.
+o Add new tool bmc-device to support miscellaneous BMC device
+  commands.
 o Support FreeIPMI configuration file for most tools (bmc-config,
   bmc-info, bmc-device, bmc-watchdog, ipmi-chassis, ipmi-fru,
   ipmi-oem, ipmi-raw, ipmi-sel, ipmi-sensors, ipmi-sensors-config,
