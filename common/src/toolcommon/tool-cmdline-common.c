@@ -527,6 +527,9 @@ sdr_parse_opt (int key,
           exit(1);
         }
       break;
+    case ARGP_SDR_CACHE_RECREATE_KEY:
+      cmd_args->sdr_cache_recreate = 1;
+      break;
     case ARGP_IGNORE_SDR_CACHE_KEY:
       cmd_args->ignore_sdr_cache = 1;
       break;
@@ -702,6 +705,7 @@ init_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
   cmd_args->flush_cache = 0;
   cmd_args->quiet_cache = 0;
   cmd_args->sdr_cache_directory = NULL;
+  cmd_args->sdr_cache_recreate = 0;
   cmd_args->ignore_sdr_cache = 0;
 }
 

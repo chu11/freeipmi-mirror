@@ -68,6 +68,18 @@ static struct argp_option cmdline_options[] =
      "Perform a cold reset.", 30},
     {"warm-reset", CMD_WARM_RESET_KEY, NULL, 0,
      "Perform a warm reset.", 31},
+    {"get-self-test-results", CMD_GET_SELF_TEST_RESULTS_KEY, NULL, 0,
+     "Output BMC self test results.", 32},
+    {"get-acpi-power-state", CMD_GET_ACPI_POWER_STATE_KEY, NULL, 0,
+     "Get ACPI system and device power state.", 33},
+    {"set-acpi-power-state", CMD_SET_ACPI_POWER_STATE_KEY, NULL, 0,
+     "Set ACPI power state.", 34},
+    {"set-acpi-system-power-state", SET_ACPI_SYSTEM_POWER_STATE_KEY, "SYSTEM_POWER_STATE", 0,
+     "Set ACPI system power state.", 35},
+    {"set-acpi-device-power-state", SET_ACPI_DEVICE_POWER_STATE_KEY, "DEVICE_POWER_STATE", 0,
+     "Set ACPI device power state.", 36},
+    {"verbose", VERBOSE_KEY, 0, 0,
+     "Increase verbosity in output.", 37},
     { 0 }
   };
 
@@ -96,6 +108,76 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case CMD_WARM_RESET_KEY:
       cmd_args->warm_reset++;
+      break;
+    case CMD_GET_SELF_TEST_RESULTS_KEY:
+      cmd_args->get_self_test_results++;
+      break;
+    case CMD_GET_ACPI_POWER_STATE_KEY:
+      cmd_args->get_acpi_power_state++;
+      break;
+    case CMD_SET_ACPI_POWER_STATE_KEY:
+      cmd_args->set_acpi_power_state++;
+      break;
+    case SET_ACPI_SYSTEM_POWER_STATE_KEY:
+      if (!strcasecmp(arg, "S0") /* acceptable here */
+          || !strcasecmp(arg, "G0") /* acceptable here */
+          || !strcasecmp(arg, "S0_G0")
+          || !strcasecmp(arg, "S0/G0")) /* just in case */
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_S0_G0;
+      else if (!strcasecmp(arg, "S1"))
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_S1;
+      else if (!strcasecmp(arg, "S2"))
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_S2;
+      else if (!strcasecmp(arg, "S3"))
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_S3;
+      else if (!strcasecmp(arg, "S4"))
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_S4;
+      else if (!strcasecmp(arg, "G2") /* acceptable here */
+               || !strcasecmp(arg, "S5_G2")
+               || !strcasecmp(arg, "S5/G2")) /* just in case */
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_S5_G2;
+      else if (!strcasecmp(arg, "S4_S5")
+               || !strcasecmp(arg, "S4/S5")) /* just in case */
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_S4_S5;
+      else if (!strcasecmp(arg, "G3"))
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_G3;
+      else if (!strcasecmp(arg, "SLEEPING"))
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_SLEEPING;
+      else if (!strcasecmp(arg, "G1_SLEEPING"))
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_G1_SLEEPING;
+      else if (!strcasecmp(arg, "OVERRIDE"))
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_OVERRIDE;
+      else if (!strcasecmp(arg, "LEGACY_ON")) 
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_ON;
+      else if (!strcasecmp(arg, "LEGACY_OFF"))
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_OFF;
+      else if (!strcasecmp(arg, "UNKNOWN"))
+        cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_UNKNOWN;
+      else
+        {
+          fprintf(stderr, "invalid value for system power state\n");
+          exit(1);
+        }
+      break;
+    case SET_ACPI_DEVICE_POWER_STATE_KEY:
+      if (!strcasecmp(arg, "D0"))
+        cmd_args->set_acpi_power_state_args.device_power_state = IPMI_ACPI_DEVICE_POWER_STATE_D0;
+      else if (!strcasecmp(arg, "D1"))
+        cmd_args->set_acpi_power_state_args.device_power_state = IPMI_ACPI_DEVICE_POWER_STATE_D1;
+      else if (!strcasecmp(arg, "D2"))
+        cmd_args->set_acpi_power_state_args.device_power_state = IPMI_ACPI_DEVICE_POWER_STATE_D2;
+      else if (!strcasecmp(arg, "D3"))
+        cmd_args->set_acpi_power_state_args.device_power_state = IPMI_ACPI_DEVICE_POWER_STATE_D3;
+      else if (!strcasecmp(arg, "UNKNOWN"))
+        cmd_args->set_acpi_power_state_args.device_power_state = IPMI_ACPI_DEVICE_POWER_STATE_UNKNOWN;
+      else
+        {
+          fprintf(stderr, "invalid value for device power state\n");
+          exit(1);
+        }
+      break;
+    case VERBOSE_KEY:
+      cmd_args->verbose++;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -133,14 +215,22 @@ _bmc_device_config_file_parse(struct bmc_device_arguments *cmd_args)
 void
 _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
 { 
-  if (!cmd_args->cold_reset && !cmd_args->warm_reset)
+  if (!cmd_args->cold_reset 
+      && !cmd_args->warm_reset
+      && !cmd_args->get_self_test_results
+      && !cmd_args->get_acpi_power_state
+      && !cmd_args->set_acpi_power_state)
     {
       fprintf (stderr, 
                "No BMC device command specified.\n");
       exit(1);
     }
 
-  if (cmd_args->cold_reset && cmd_args->warm_reset)
+  if ((cmd_args->cold_reset 
+       + cmd_args->warm_reset
+       + cmd_args->get_self_test_results
+       + cmd_args->get_acpi_power_state
+       + cmd_args->set_acpi_power_state) > 1)
     {
       fprintf (stderr, 
                "Multiple BMC device commands specified.\n");
@@ -156,7 +246,13 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
 
   cmd_args->cold_reset = 0;
   cmd_args->warm_reset = 0;
-  
+  cmd_args->get_self_test_results = 0;
+  cmd_args->get_acpi_power_state = 0;
+  cmd_args->set_acpi_power_state = 0;
+  cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE;
+  cmd_args->set_acpi_power_state_args.device_power_state = IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE;
+  cmd_args->verbose = 0;
+
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
 
   _bmc_device_config_file_parse(cmd_args);

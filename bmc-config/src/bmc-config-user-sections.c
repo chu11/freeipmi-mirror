@@ -57,7 +57,7 @@ _channel_info(bmc_config_state_data_t *state_data,
   assert(key_name);
   assert(channel_number);
   
-  if (strstr(key_name, "Lan"))
+  if (stristr(key_name, "Lan"))
     {
       if ((ret = get_lan_channel_number (state_data,
                                          channel_number)) != CONFIG_ERR_SUCCESS)

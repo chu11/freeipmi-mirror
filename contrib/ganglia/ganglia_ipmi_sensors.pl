@@ -10,7 +10,8 @@
 # Description:
 #
 # This script can be used to monitor IPMI sensors in ganglia via
-# FreeIPMI's ipmi-sensors utility.
+# FreeIPMI's ipmi-sensors utility.  Data will be passed into ganglia
+# via ganglia's gmetric utility.
 #
 # Currently only temperature, fan, and voltage sensor readings are
 # monitored.
@@ -59,9 +60,10 @@
 # option is necessary for non-default communication information or
 # authentication information (i.e. driver path, driver type, username,
 # password, etc.).  Non-default communication information can also be
-# stored in the FreeIPMI configuration file.  If you wish to limit the
-# sensors being monitored, you can also specify which record-ids are
-# to be monitored (-s option).
+# stored in the FreeIPMI configuration file.  This is the suggested
+# method because passwords and other sensitive information could show
+# up in ps(1).  If you wish to limit the sensors being monitored, you
+# can also specify which record-ids are to be monitored (-s option).
 #
 # In order to specify non-defaults for gmetric, use the -g argument
 # or GMETRIC_ARGS environment variable.  Typically, this option is
@@ -211,11 +213,11 @@ if (!$no_ganglia)
 
 if ($IPMI_HOSTS)
 {
-    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS -h $IPMI_HOSTS --quiet-cache --always-prefix";
+    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS -h $IPMI_HOSTS --quiet-cache --sdr-cache-recreate --always-prefix";
 }
 else
 {
-    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS --quiet-cache --always-prefix"
+    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS --quiet-cache --sdr-cache-recreate --always-prefix"
 }
 
 if ($debug)

@@ -6,9 +6,10 @@ bmc-device \- perform BMC device commands
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B bmc-device 
-performs several BMC device commands.  This tool is primarily used for
-development or for BMCs to recover under error conditions.  It is not
-recommended for general use.
+supports commands to perform several BMC device functions and retrieve
+more detailed technical information about the BMC device.  This tool
+is primarily used for development purposes or for BMC recovery under
+error conditions.  It is not recommended for general use.
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
@@ -35,6 +36,33 @@ Perform a cold reset.
 .TP
 \fB\-\-warm-reset\fR
 Perform a warm reset.
+.TP
+\fB\-\-get-self-test-results\fR
+Output BMC self test results.
+.TP
+\fB\-\-get-acpi-power-state\fR
+Get ACPI system and device power state.
+.TP
+\fB\-\-set-acpi-power-state\fR
+Set ACPI power state.  Must be specified to use the 
+\fB\-\-set-acpi-system-power-state\fR,
+and
+\fB\-\-set-acpi-device-power-state\fR
+options listed below.
+.TP
+\fB\-\-set-acpi-system-power-state\fR=\fISYSTEM_POWER_STATE\fR
+Set ACPI system power state.  Allowed values:
+S0_G0, S1, S2, S3, S4, S5_G2, S4_S5, G3, SLEEPING, G1_SLEEPING, OVERRIDE,
+LEGACY_ON, LEGACY_OFF, UNKNOWN.
+Used with the \fB\-\--set-acpi-power-state\fR option.
+.TP
+\fB\-\-set-acpi-device-power-state\fR=\fIDEVICE_POWER_STATE\fR
+Set ACPI device power state.  Allowed values:
+D0, D1, D2, D3, UNKNOWN.
+Used with the \fB\-\--set-acpi-power-state\fR option.
+.TP
+\fB\-\-verbose\fR
+Increase verbosity in output.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>

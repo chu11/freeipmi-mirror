@@ -471,6 +471,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  args->sdr.quiet_cache,
+                                 args->sdr.sdr_cache_recreate,
                                  state_data->hostname,
                                  args->sdr.sdr_cache_directory) < 0)
     return -1;

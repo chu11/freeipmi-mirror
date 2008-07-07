@@ -48,6 +48,7 @@ int sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                       pstdout_state_t pstate,
                       ipmi_ctx_t ipmi_ctx,
                       int quiet_cache,
+                      int sdr_cache_recreate,
                       const char *hostname,
                       const char *cache_dir);
 
@@ -55,6 +56,7 @@ int sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                                pstdout_state_t pstate,
                                ipmi_ctx_t ipmi_ctx,
                                int quiet_cache,
+                               int sdr_cache_recreate,
                                const char *hostname,
                                const char *cache_dir);
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.52.2.1 2008-06-21 16:18:42 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.52.2.2 2008-07-07 22:24:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -144,6 +144,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                 state_data->pstate,
                                 state_data->ipmi_ctx,
                                 args->sdr.quiet_cache,
+                                args->sdr.sdr_cache_recreate,
                                 state_data->hostname,
                                 args->sdr.sdr_cache_directory) < 0)
     return -1;
@@ -439,6 +440,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
               if (bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
                 {
                   uint16_t bitmask_value = *((uint16_t *)sensor_reading);
+                  unsigned int output_count = 0;
                   int j;
                   
                   pstdout_printf(state_data->pstate,
@@ -481,8 +483,13 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                           pstdout_printf(state_data->pstate,
                                          " '%s'", 
                                          buffer);
+                          output_count++;
                         }
                     }
+
+                  if (!output_count)
+                    pstdout_printf(state_data->pstate,
+                                   " ''");
                 }
               else
                 pstdout_printf(state_data->pstate,
