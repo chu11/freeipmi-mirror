@@ -175,11 +175,11 @@ if (!(-x $IPMIMONITORING_PATH))
 
 if ($IPMI_HOSTS)
 {
-    $cmd = "$IPMIMONITORING_PATH $IPMIMONITORING_ARGS -h $IPMI_HOSTS --quiet-cache --always-prefix";
+    $cmd = "$IPMIMONITORING_PATH $IPMIMONITORING_ARGS -h $IPMI_HOSTS --quiet-cache --sdr-cache-recreate --always-prefix";
 }
 else
 {
-    $cmd = "$IPMIMONITORING_PATH $IPMIMONITORING_ARGS --quiet-cache --always-prefix"
+    $cmd = "$IPMIMONITORING_PATH $IPMIMONITORING_ARGS --quiet-cache --sdr-cache-recreate --always-prefix"
 }
 
 if ($debug)

@@ -134,6 +134,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                                  NULL,
                                  state_data.ipmi_ctx,
                                  prog_data->args->sdr.quiet_cache,
+                                 prog_data->args->sdr.sdr_cache_recreate,
                                  hostname,
                                  prog_data->args->sdr.sdr_cache_directory) < 0)
     {

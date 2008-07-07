@@ -1,5 +1,26 @@
 2008-07-07 Albert Chu <chu11@llnl.gov>
 
+	Support --sdr-cache-recreate globally.
+
+	* common/src/toolcommon/tool-cmdline-common.h,
+	common/src/toolcommon/tool-cmdline-common.c: Support new
+	--sdr-cache-recreate option.
+
+	* common/man/manpage-common-sdr-options.man: Document new --sdr-cache-recreate option.
+
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+	common/src/toolcommon/tool-sdr-cache-common.c
+	(sdr_cache_create, sdr_cache_create_and_load): Add support for
+	--sdr-cache-recreate.
+
+	* ipmi-sensors/src/ipmi-sensors.c, ipmi-sel/src/ipmi-sel.c,
+	ipmi-fru/src/ipmi-fru.c,
+	ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c,
+	ipmi-sensors-config/src/ipmi-sensors-config.c: Update for new
+	sdr_cache_create_and_load call.
+	
+2008-07-07 Albert Chu <chu11@llnl.gov>
+
 	* bmc-config/src/bmc-config.c, pef-config/src/pef-config.c,
 	ipmi-sensors-config/src/ipmi-sensors-config.c: Fix error message
 	output corner cases.

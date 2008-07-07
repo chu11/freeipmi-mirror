@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.55 2008-06-21 14:34:12 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.56 2008-07-07 20:33:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -144,6 +144,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                 state_data->pstate,
                                 state_data->ipmi_ctx,
                                 args->sdr.quiet_cache,
+                                args->sdr.sdr_cache_recreate,
                                 state_data->hostname,
                                 args->sdr.sdr_cache_directory) < 0)
     return -1;
