@@ -17,5 +17,6 @@ to be stored or read from.  Defaults to the home directory if not
 specified.
 .TP
 \fB\-\-sdr-cache-recreate\fR=\fIDIRECTORY\fR
-If the SDR cache is out of date or invalid, automatically recreate
-the sensor data repository (SDR) cache.
+If the SDR cache is out of date or invalid, automatically recreate the
+sensor data repository (SDR) cache.  This option may be useful for
+scripting purposes.
