@@ -40,7 +40,6 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
-make strcasestr function
 
 config
 ------
