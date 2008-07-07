@@ -9,11 +9,11 @@ o Support FreeIPMI configuration file for most tools (bmc-config,
   ipmi-oem, ipmi-raw, ipmi-sel, ipmi-sensors, ipmi-sensors-config,
   ipmiconsole, ipmimonitoring, ipmipower, pef-config).  See
   freeipmi.conf(5) for more information.
+o Add hostrange support in bmc-config, ipmi-sensors-config, and
+  pef-config.
 o Add additional "connection timeout" error message to tools to
   differentiate between no IPMI communication at all vs. failed session
   timeout in the middle of a command's operations.
-o Add hostrange support in bmc-config, ipmi-sensors-config, and
-  pef-config.
 o Support --always-prefix option in most tools.
 o Support --guid option in bmc-info.
 o Support --get-time and --set-time in ipmi-sel.
