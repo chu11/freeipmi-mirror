@@ -27,6 +27,11 @@ chassis boot params
 - move power restore polcy over
 advanced option??
 
+sdr
+---
+--force-sdr-update
+or something similar for scripting purposes?
+
 pef-config
 -----------
 * conf.5 manpage
