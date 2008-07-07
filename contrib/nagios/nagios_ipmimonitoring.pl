@@ -53,9 +53,11 @@
 # this option is necessary for non-default communication information
 # or authentication information (i.e. driver path, driver type,
 # username, password, etc.).  Non-default communication information
-# can also be stored in the FreeIPMI configuration file.  If you wish
-# to limit the sensors being monitored, you can also specify which
-# record-ids are to be monitored (-s option).
+# can also be stored in the FreeIPMI configuration file.  This is the
+# suggested method because passwords and other sensitive information
+# could show up in ps(1).  If you wish to limit the sensors being
+# monitored, you can also specify which record-ids are to be monitored
+# (-s option).
 #
 # The setup for this can vary depending on your environment and nagios
 # setup, but most will need to set this up in nagios by defining a

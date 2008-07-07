@@ -10,7 +10,8 @@
 # Description:
 #
 # This script can be used to monitor IPMI sensors in ganglia via
-# FreeIPMI's ipmimonitoring utility.
+# FreeIPMI's ipmimonitoring utility.  Data will be passed into ganglia
+# via ganglia's gmetric utility.
 #
 # All sensors currently supported by libipmimonitoring(3) (at last
 # check this is: temperature, voltage, current, fan, physical
@@ -68,9 +69,11 @@
 # this option is necessary for non-default communication information
 # or authentication information (i.e. driver path, driver type,
 # username, password, etc.).  Non-default communication information
-# can also be stored in the FreeIPMI configuration file.  If you wish
-# to limit the sensors being monitored, you can also specify which
-# record-ids are to be monitored (-s option).
+# can also be stored in the FreeIPMI configuration file.  This is the
+# suggested method because passwords and other sensitive information
+# could show up in ps(1).  If you wish to limit the sensors being
+# monitored, you can also specify which record-ids are to be monitored
+# (-s option).
 #
 # In order to specify non-defaults for gmetric, use the -g argument
 # or GMETRIC_ARGS environment variable.  Typically, this option is
