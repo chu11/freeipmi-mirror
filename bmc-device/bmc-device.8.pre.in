@@ -6,10 +6,11 @@ bmc-device \- perform BMC device commands
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B bmc-device 
-supports commands to perform several BMC device functions and retrieve
-more detailed technical information about the BMC device.  This tool
-is primarily used for development purposes or for BMC recovery under
-error conditions.  It is not recommended for general use.
+supports a variety of IPMI commands to perform BMC functions and
+retrieve more detailed technical information about the BMC device.
+This tool is primarily used for development purposes, BMC firmware
+recover, and other advanced purposes.  It is not recommended for
+general use.
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
