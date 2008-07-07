@@ -35,6 +35,9 @@ pef-config
 -----------
 * conf.5 manpage
 * how to specify event reading type codes easily
+- support get/set last processed event/id
+- alert immediate support?
+- PET acknowledge support?
 
 ipmi-sel
 --------
@@ -52,6 +55,8 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
+get/set SDR repository time?
+- in ipmi-sensors-config?
 
 config
 ------
@@ -68,6 +73,8 @@ ipmi-sensors-config
 35.10/35.11
 - sensor enable/disable??
 - sensor event enable/disable??
+35.6/35.7
+- sensor hysterisis enable/disable??
 
 DCMI functionality
 ------------------
