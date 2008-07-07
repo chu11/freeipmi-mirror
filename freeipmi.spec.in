@@ -177,7 +177,11 @@ fi
 %doc %{_datadir}/doc/%{name}/INSTALL
 %doc %{_datadir}/doc/%{name}/NEWS
 %doc %{_datadir}/doc/%{name}/README
+<<<<<<< freeipmi.spec.in
 %doc %{_datadir}/doc/%{name}/README.sunbmc
+=======
+%doc %{_datadir}/doc/%{name}/README.argp
+>>>>>>> 1.103
 %doc %{_datadir}/doc/%{name}/TODO
 %doc %{_infodir}/*
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiping

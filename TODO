@@ -26,8 +26,6 @@ chassis boot params
 - new chassis config tool?
 - move power restore polcy over
 advanced option??
-acpi power state get/set??
-only output lan-conf-auth sections is supported via supported field
 
 pef-config
 -----------
@@ -42,12 +40,11 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
+make strcasestr function
 
 config
 ------
 config file - support workarounds/etc. for heterogenous cluster?
-support hostranged commit/checkout in all config tools except bmc-config??
-- or special case IP/MAC part
 
 ipmiconsole
 -----------
@@ -61,6 +58,19 @@ ipmi-sensors-config
 - sensor enable/disable??
 - sensor event enable/disable??
 
+DCMI functionality
+------------------
+http://www.intel.com/technology/product/DCMI/index.htm
+dcmi-info to output capabilities
+dcmi-fru like command to get asset tags
+- move ipmi-fru code into libfreeipmi??
+dcmi-sensor like command to get sensor stuff
+- move ipmi-sensor code into libfreeipmi??
+dcmi-chassis like command to get power stuff 
+- or all in one tool? (ipmi-dcmi ??)
+- or in FreeIPMI but add --dcmi options??
+- part of FreeIPMI? or a separate project?
+
 0.7.0 porting ensure works
 --------------------------
 BSD
@@ -68,8 +78,8 @@ BSD
 - autoconf - no argp-standalone - config errors w/ argp library not found. argp-standalone required
 - autoconf - finds argp-standalone
 
-0.7.0
------
+0.7.0 web stuff
+---------------
 add contributions (ganglia/nagios) to webpage downloads
 update index w/ new bmc-info text.
 update w/ bmc-device index.htp
@@ -80,11 +90,6 @@ update w/ freeipmi.conf.5 manpage
 - remove ipmiconsole.conf.5 and ipmipower.conf.5
 README.sunbmc
 libfreeipmi description add sunbmc
-
-other monitoring
-----------------
-cacti - #3 most popular linuxquestions.org
-with clumon? - don't know how popular it is
 
 RELEASE TODOS - Do on every release
 -----------------------------------

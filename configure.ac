@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.sun.alpha3],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.130.2.9 2008-06-29 15:20:14 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.130.2.10 2008-07-07 22:24:48 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -345,7 +345,8 @@ AC_FUNC_MMAP
 AC_FUNC_VPRINTF
 
 dnl There is no strndup() and getline() on FreeBSD
-AC_CHECK_FUNCS([strchr strndup strchrnul strsep])
+dnl stristr may not exist at all on *nix libc.  Maybe only in script-lands??
+AC_CHECK_FUNCS([strchr strndup strchrnul strsep stristr])
 AC_CHECK_FUNCS([memcpy mempcpy memset mlock])
 AC_CHECK_FUNCS([getline getprogname])
 AC_CHECK_FUNCS([strerror strerror_r])
@@ -479,6 +480,7 @@ if test "x${have_getpwuid_r}" = "xyes"; then
    AC_TRY_LINK(
    [
    #include <pwd.h>
+   #include <sys/types.h>
    ],
    [
    uid_t uid;
@@ -492,6 +494,7 @@ if test "x${have_getpwuid_r}" = "xyes"; then
 	AC_TRY_LINK(
 	[
 	#include <pwd.h>
+        #include <sys/types.h>
 	],
 	[
         uid_t uid;

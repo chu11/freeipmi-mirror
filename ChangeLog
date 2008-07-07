@@ -33,6 +33,91 @@
 
 	* freeipmi.spec.in: Add README.sunbmc.
 
+2008-07-07 Albert Chu <chu11@llnl.gov>
+
+	Support --sdr-cache-recreate globally.
+
+	* common/src/toolcommon/tool-cmdline-common.h,
+	common/src/toolcommon/tool-cmdline-common.c: Support new
+	--sdr-cache-recreate option.
+
+	* common/man/manpage-common-sdr-options.man: Document new --sdr-cache-recreate option.
+
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+	common/src/toolcommon/tool-sdr-cache-common.c
+	(sdr_cache_create, sdr_cache_create_and_load): Add support for
+	--sdr-cache-recreate.
+
+	* ipmi-sensors/src/ipmi-sensors.c, ipmi-sel/src/ipmi-sel.c,
+	ipmi-fru/src/ipmi-fru.c,
+	ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c,
+	ipmi-sensors-config/src/ipmi-sensors-config.c: Update for new
+	sdr_cache_create_and_load call.
+
+	* contrib/ganglia/ganglia_ipmi_sensors.pl,
+	contrib/ganglia/ganglia_ipmimonitoring.pl,
+	contrib/nagios/nagios_ipmimonitoring.pl: Use --sdr-cache-recreate
+	when appropriate.	
+
+	* freeipmi.spec.in: Fix build problem.
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(run_cmd_args): Preserve old output format when no messages can be
+	output.
+	
+2008-07-07 Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-config.c, pef-config/src/pef-config.c,
+	ipmi-sensors-config/src/ipmi-sensors-config.c: Fix error message
+	output corner cases.
+	
+2008-07-03 Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Check for stristr.
+
+	* common/src/portability/freeipmi-portability.h,
+	common/src/portability/freeipmi-portability.c (freeipmi_stristr):
+	New function.
+
+	* bmc-config/src/: Use stristr when appropriate.
+	
+2008-07-03 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-chassis/ipmi-chassis.8.pre.in: Update some text.
+	
+	* libfreeipmi/include/freeipmi/cmds/ipmi-device-global-cmds.h: Add
+	"NO_CHANGE" macros.
+
+	* bmc-device/: Support --get-acpi-power-state.
+
+	* libfreeipmi/src/api/ipmi-device-global-cmds.c
+	(ipmi_cmd_set_acpi_power_state): Fix parameter check bug.
+
+	* bmc-device/: Support --set-acpi-power-state.
+
+	* bmc-config/src/: Output lan authentication enables fields
+	dependent on authentication support fields.
+
+	* configure.ac: Get getpwuid_r portability bug.
+
+2008-07-01 Albert Chu <chu11@llnl.gov>
+
+	* bmc-device/bmc-device.8.pre.in: Tweak text.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-device-global-cmds.h,
+	libfreeipmi/src/cmds/ipmi-device-global-cmds.c,
+	libfreeipmi/include/api/ipmi-device-global-cmds-api.h,
+	libfreeipmi/src/api/ipmi-device-global-cmds-api.c: Support Get
+	Self Test Results IPMI command.
+
+	* bmc-device/: Support get self test results.
+	
+	* libfreeipmi/include/freeipmi/cmds/ipmi-device-global-cmds.h,
+	libfreeipmi/src/cmds/ipmi-device-global-cmds.c,
+	libfreeipmi/include/api/ipmi-device-global-cmds-api.h,
+	libfreeipmi/src/api/ipmi-device-global-cmds-api.c: Support Set and Get
+	ACPI power state commands.
+
 2008-06-22 Albert Chu <chu11@llnl.gov>
 
 	* man/: New dir.  Move manpages from doc/ into man/.

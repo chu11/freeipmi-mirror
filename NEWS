@@ -2,18 +2,20 @@
 ----------------
 For Users - New Features
 ------------------------
-o Add new tool bmc-device.
+o Add new tool bmc-device to support miscellaneous BMC device
+  commands.
 o Support FreeIPMI configuration file for most tools (bmc-config,
   bmc-info, bmc-device, bmc-watchdog, ipmi-chassis, ipmi-fru,
   ipmi-oem, ipmi-raw, ipmi-sel, ipmi-sensors, ipmi-sensors-config,
   ipmiconsole, ipmimonitoring, ipmipower, pef-config).  See
   freeipmi.conf(5) for more information.
+o Add hostrange support in bmc-config, ipmi-sensors-config, and
+  pef-config.
 o Add additional "connection timeout" error message to tools to
   differentiate between no IPMI communication at all vs. failed session
   timeout in the middle of a command's operations.
-o Add hostrange support in bmc-config, ipmi-sensors-config, and
-  pef-config.
 o Support --always-prefix option in most tools.
+o Support --sdr-cache-recreate in all SDR related tools.
 o Support --guid option in bmc-info.
 o Support --get-time and --set-time in ipmi-sel.
 o Support "SUNBMC" in-band driver.
@@ -62,6 +64,10 @@ o ipmipower
     new global FreeIPMI config file.  Old options still supported.
 o ipmimonitoring
   - Output multiple bitmask strings if multiple bits are set.
+o bmc-config
+  - Do not output unsupported authentication type enables when checking
+    out the Lan_Conf_Auth section.
+  - Fix several string case sensitivity corner cases.
 o bmc-watchdog
   - Remove legacy 'v' option for version.
 

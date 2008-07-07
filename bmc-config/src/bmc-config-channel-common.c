@@ -57,7 +57,7 @@ _channel_info(bmc_config_state_data_t *state_data,
   assert(section_name);
   assert(channel_number);
 
-  if (strstr(section_name, "Lan"))
+  if (stristr(section_name, "Lan"))
     {
       if ((ret = get_lan_channel_number (state_data,
                                          channel_number)) != CONFIG_ERR_SUCCESS)
@@ -94,7 +94,7 @@ _get_key_info(bmc_config_state_data_t *state_data,
     return ret;
 
   /* Must check for Non_Volatile b/c Volatile is a substring of the former */
-  if (strstr(section_name, "Non_Volatile"))
+  if (stristr(section_name, "Non_Volatile"))
     *access_type = IPMI_CHANNEL_ACCESS_GET_NON_VOLATILE;
   else
     *access_type = IPMI_CHANNEL_ACCESS_GET_VOLATILE;
@@ -123,7 +123,7 @@ _set_key_info(bmc_config_state_data_t *state_data,
     return ret;
 
   /* Must check for Non_Volatile b/c Volatile is a substring of the former */
-  if (strstr(section_name, "Non_Volatile"))
+  if (stristr(section_name, "Non_Volatile"))
     *access_type = IPMI_CHANNEL_ACCESS_SET_NON_VOLATILE;
   else
     *access_type = IPMI_CHANNEL_ACCESS_SET_VOLATILE;

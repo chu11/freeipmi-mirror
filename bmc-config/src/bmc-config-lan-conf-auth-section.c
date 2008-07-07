@@ -35,7 +35,7 @@
 #include "pstdout.h"
 #include "tool-fiid-wrappers.h"
 
-/* convenience struct */
+/* convenience structs */
 struct bmc_authentication_level {
   uint8_t callback_level_none;
   uint8_t callback_level_md2;
@@ -63,6 +63,63 @@ struct bmc_authentication_level {
   uint8_t oem_level_straight_password;
   uint8_t oem_level_oem_proprietary;
 };
+
+static config_err_t 
+_get_authentication_type_support (bmc_config_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+  
+  assert(state_data);
+  
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs);
+  
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (state_data->ipmi_ctx,
+                                                                             channel_number,
+                                                                             IPMI_GET_LAN_PARAMETER,
+                                                                             SET_SELECTOR,
+                                                                             BLOCK_SELECTOR,
+                                                                             obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_lan_configuration_parameters_authentication_type_support: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET (obj_cmd_rs, "none", &val);
+  state_data->authentication_type_none = val;
+  
+  _FIID_OBJ_GET (obj_cmd_rs, "md2", &val);
+  state_data->authentication_type_md2 = val;
+
+  _FIID_OBJ_GET (obj_cmd_rs, "md5", &val);
+  state_data->authentication_type_md5 = val;
+  
+  _FIID_OBJ_GET (obj_cmd_rs, "straight_password", &val);
+  state_data->authentication_type_straight_password = val;
+  
+  _FIID_OBJ_GET (obj_cmd_rs, "oem_proprietary", &val);
+  state_data->authentication_type_oem_proprietary = val;
+  
+  state_data->authentication_type_initialized++;
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  return (rv); 
+}
 
 static config_err_t 
 _get_authentication_type_enables (bmc_config_state_data_t *state_data,
@@ -315,6 +372,47 @@ _authentication_level_ptr (bmc_config_state_data_t *state_data,
   return NULL;
 }
 
+/* based on support flags, determine if checkout is available 
+ * - if we cannot determine support, we always checkout
+ */
+static config_err_t
+_authentication_type_enable_available (bmc_config_state_data_t *state_data,
+                                       const char *section_name,
+                                       const char *key_name,
+                                       unsigned int *available)
+{
+  config_err_t ret;
+
+  assert(state_data);
+  assert(key_name);
+  assert(available);
+
+  /* default to always allow checkout */
+  *available = 1;
+          
+  if (!state_data->authentication_type_initialized)
+    {
+      if ((ret = _get_authentication_type_support (state_data)) != CONFIG_ERR_SUCCESS)
+        return ret;
+    }
+
+  if (state_data->authentication_type_initialized)
+    {
+      if (stristr(key_name, "None") && !state_data->authentication_type_none)
+        *available = 0;
+      else if (stristr(key_name, "MD2") && !state_data->authentication_type_md2)
+        *available = 0;
+      else if (stristr(key_name, "MD5") && !state_data->authentication_type_md5)
+        *available = 0;
+      else if (stristr(key_name, "Straight_Password") && !state_data->authentication_type_straight_password)
+        *available = 0;
+      else if (stristr(key_name, "OEM_Proprietary") && !state_data->authentication_type_oem_proprietary)
+        *available = 0;
+    }
+
+  return CONFIG_ERR_SUCCESS;
+}
+
 static config_err_t
 _authentication_level_checkout (const char *section_name,
                                 struct config_keyvalue *kv,
@@ -323,24 +421,38 @@ _authentication_level_checkout (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct bmc_authentication_level al;
   config_err_t ret;
-  uint8_t *flag;
+  unsigned int available_flag = 1; /* default is to always allow checkout */
+  uint8_t *al_ptr;
 
   if ((ret = _get_authentication_type_enables (state_data, 
                                                &al)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(flag = _authentication_level_ptr(state_data,
-                                         section_name, 
-                                         kv->key->key_name, 
-                                         &al)))
-    return CONFIG_ERR_FATAL_ERROR;
+  /* non-fatal error is ok here */
+  ret = _authentication_type_enable_available (state_data,
+                                               section_name,
+                                               kv->key->key_name,
+                                               &available_flag);
+  if (ret == CONFIG_ERR_FATAL_ERROR)
+    return ret;
+      
+  if (available_flag) 
+    {
+      if (!(al_ptr = _authentication_level_ptr(state_data,
+                                               section_name, 
+                                               kv->key->key_name, 
+                                               &al)))
+        return CONFIG_ERR_FATAL_ERROR;
+      
+      if (config_section_update_keyvalue_output(state_data->pstate,
+                                                kv,
+                                                *al_ptr ? "Yes" : "No") < 0)
+        return CONFIG_ERR_FATAL_ERROR;
 
-  if (config_section_update_keyvalue_output(state_data->pstate,
-                                            kv,
-                                            *flag ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+      return CONFIG_ERR_SUCCESS;
+    }
   
-  return CONFIG_ERR_SUCCESS;
+  return CONFIG_ERR_NON_FATAL_ERROR;
 }
 
 static config_err_t
