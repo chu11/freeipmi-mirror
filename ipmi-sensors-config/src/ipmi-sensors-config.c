@@ -156,6 +156,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
               pstdout_fprintf(pstate,
                               stderr,
                               "Cannot output multiple host checkout into a single file\n");
+              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
 
@@ -163,6 +164,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
             {
               pstdout_perror(pstate,
                              "fopen");
+              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           file_opened++;
@@ -180,6 +182,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
             {
               pstdout_perror(pstate,
                              "fopen");
+              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           file_opened++;
@@ -206,6 +209,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                        fp) < 0)
         {
           /* errors printed in function call */
+          exit_code = EXIT_FAILURE;
           goto cleanup;
         }
     }
@@ -272,6 +276,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                               stderr,
                               "Unknown section `%s'\n",
                               sstr->section_name);
+              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           sstr = sstr->next;

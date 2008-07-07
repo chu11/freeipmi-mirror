@@ -1,3 +1,9 @@
+2008-07-07 Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-config.c, pef-config/src/pef-config.c,
+	ipmi-sensors-config/src/ipmi-sensors-config.c: Fix error message
+	output corner cases.
+	
 2008-07-03 Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Check for stristr.
