@@ -64,6 +64,7 @@ o ipmimonitoring
 o bmc-config
   - Do not output unsupported authentication type enables when checking
     out the Lan_Conf_Auth section.
+  - Fix several string case sensitivity corner cases.
 o bmc-watchdog
   - Remove legacy 'v' option for version.
 
