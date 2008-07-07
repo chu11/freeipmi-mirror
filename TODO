@@ -57,6 +57,7 @@ firmware firewall support?
 - new config tool??
 get/set SDR repository time?
 - in ipmi-sensors-config?
+- in bmc-device?
 
 config
 ------
