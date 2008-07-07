@@ -23,6 +23,12 @@
 	contrib/ganglia/ganglia_ipmimonitoring.pl,
 	contrib/nagios/nagios_ipmimonitoring.pl: Use --sdr-cache-recreate
 	when appropriate.	
+
+	* freeipmi.spec.in: Fix build problem.
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(run_cmd_args): Preserve old output format when no messages can be
+	output.
 	
 2008-07-07 Albert Chu <chu11@llnl.gov>
 

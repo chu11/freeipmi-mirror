@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.56 2008-07-07 20:33:37 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.57 2008-07-07 20:59:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -440,6 +440,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
               if (bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
                 {
                   uint16_t bitmask_value = *((uint16_t *)sensor_reading);
+                  unsigned int output_count = 0;
                   int j;
                   
                   pstdout_printf(state_data->pstate,
@@ -482,8 +483,13 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                           pstdout_printf(state_data->pstate,
                                          " '%s'", 
                                          buffer);
+                          output_count++;
                         }
                     }
+
+                  if (!output_count)
+                    pstdout_printf(state_data->pstate,
+                                   " ''");
                 }
               else
                 pstdout_printf(state_data->pstate,
