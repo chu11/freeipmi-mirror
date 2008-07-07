@@ -78,8 +78,8 @@ BSD
 - autoconf - no argp-standalone - config errors w/ argp library not found. argp-standalone required
 - autoconf - finds argp-standalone
 
-0.7.0
------
+0.7.0 web stuff
+---------------
 add contributions (ganglia/nagios) to webpage downloads
 update index w/ new bmc-info text.
 update w/ bmc-device index.htp
