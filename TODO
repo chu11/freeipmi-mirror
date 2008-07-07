@@ -21,16 +21,28 @@ solaris
 bmc-config
 ----------
 remaining serial config
+advanced option??
+
+ipmi-chassis-config
+-------------------
 power cycle interval
 chassis boot params
 - new chassis config tool?
 - move power restore polcy over
-advanced option??
+chassis front-panel enables
 
 pef-config
 -----------
 * conf.5 manpage
 * how to specify event reading type codes easily
+
+ipmi-sel
+--------
+get/set auxiliary log status
+
+bmc-info
+--------
+get ip/udp/rmcp statistics
 
 general
 -------
