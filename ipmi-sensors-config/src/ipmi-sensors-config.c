@@ -146,6 +146,7 @@ _ipmi_sensors_config (void *arg)
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
               perror("fopen");
+              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           file_opened++;
@@ -161,6 +162,7 @@ _ipmi_sensors_config (void *arg)
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
               perror("fopen");
+              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           file_opened++;
@@ -186,6 +188,7 @@ _ipmi_sensors_config (void *arg)
                        fp) < 0)
         {
           /* errors printed in function call */
+          exit_code = EXIT_FAILURE;
           goto cleanup;
         }
     }
@@ -248,6 +251,7 @@ _ipmi_sensors_config (void *arg)
               fprintf(stderr,
                       "Unknown section `%s'\n",
                       sstr->section_name);
+              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           sstr = sstr->next;
