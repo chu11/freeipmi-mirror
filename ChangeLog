@@ -31,6 +31,8 @@
 
 	* README.sunbmc: New file.
 
+	* freeipmi.spec.in: Add README.sunbmc.
+
 2008-06-22 Albert Chu <chu11@llnl.gov>
 
 	* man/: New dir.  Move manpages from doc/ into man/.
