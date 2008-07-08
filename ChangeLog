@@ -12,6 +12,14 @@
 	* bmc-device/: Support --get-sdr-repository-time and
 	--set-sdr-repository-time.
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-sel.h,
+	libfreeipmi/src/cmds/ipmi-sel.c,
+	libfreeipmi/include/api/ipmi-sel-api.h,
+	libfreeipmi/src/api/ipmi-sel-api.c: Support Get Auxiliary Log
+	status IPMI command.
+
+	* bmc-device/: Support --get-mca-auxiliary-log-status.
+
 2008-07-07 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/api/ipmi-lan-cmds-api.h,

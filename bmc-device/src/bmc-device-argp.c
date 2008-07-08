@@ -90,8 +90,10 @@ static struct argp_option cmdline_options[] =
      "Get SEL time.", 41},
     {"set-sel-time", CMD_SET_SEL_TIME_KEY,  "TIME", 0,
      "Set SEL time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 42},
+    {"get-auxiliary-log-status", CMD_GET_MCA_AUXILIARY_LOG_STATUS_KEY, NULL, 0,
+     "Get machine check architecture (MCA) auxiliary log status information.", 43},
     {"verbose", VERBOSE_KEY, 0, 0,
-     "Increase verbosity in output.", 43},
+     "Increase verbosity in output.", 44},
     { 0 }
   };
 
@@ -208,6 +210,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->set_sel_time = 1;
       cmd_args->set_sel_time_arg = arg;
       break;
+    case CMD_GET_MCA_AUXILIARY_LOG_STATUS_KEY:
+      cmd_args->get_mca_auxiliary_log_status = 1;
+      break;
     case VERBOSE_KEY:
       cmd_args->verbose++;
       break;
@@ -257,7 +262,8 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && !cmd_args->get_sdr_repository_time
       && !cmd_args->set_sdr_repository_time
       && !cmd_args->get_sel_time
-      && !cmd_args->set_sel_time)
+      && !cmd_args->set_sel_time
+      && !cmd_args->get_mca_auxiliary_log_status)
     {
       fprintf (stderr, 
                "No command specified.\n");
@@ -274,7 +280,8 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
        + cmd_args->get_sdr_repository_time
        + cmd_args->set_sdr_repository_time
        + cmd_args->get_sel_time
-       + cmd_args->set_sel_time) > 1)
+       + cmd_args->set_sel_time
+       + cmd_args->get_mca_auxiliary_log_status) > 1)
     {
       fprintf (stderr, 
                "Multiple commands specified.\n");
@@ -303,6 +310,7 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->get_sel_time = 0;
   cmd_args->set_sel_time = 0;
   cmd_args->set_sel_time_arg = NULL;
+  cmd_args->get_mca_auxiliary_log_status = 0;
   cmd_args->verbose = 0;
 
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));

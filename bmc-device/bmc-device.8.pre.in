@@ -83,6 +83,9 @@ Set SEL time.  Input format = "MM/DD/YYYY - HH:MM:SS".  Note that
 hours are input in 24 hour form.  Alternatively, the local
 system time can be specified with "now".
 .TP
+\fB\-\-get\-mca\-auxiliary\-log\-status\fR
+Get machine check architecture (MCA) auxiliary log status information.
+.TP
 \fB\-\-verbose\fR
 Increase verbosity in output.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>

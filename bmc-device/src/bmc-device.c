@@ -717,6 +717,75 @@ set_sel_time (bmc_device_state_data_t *state_data)
   return (rv);
 }
 
+static int
+get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t mca_cmd_rs = NULL;
+  uint64_t val;
+  char str[512];
+  int rv = -1;
+  time_t t;
+  struct tm tm;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_auxiliary_log_status_rs);
+
+  if (ipmi_cmd_get_auxiliary_log_status (state_data->ipmi_ctx, 
+                                         IPMI_AUXILIARY_LOG_TYPE_MCA,
+                                         cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_auxiliary_log_status: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+  
+  _FIID_OBJ_GET (cmd_rs,
+                 "log_type",
+                 &val);
+  
+  if (val != IPMI_AUXILIARY_LOG_TYPE_MCA)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_auxiliary_log_status: invalid log type returned: 0x%X\n",
+                      (uint8_t)val);
+      goto cleanup;
+    }
+
+  _FIID_OBJ_COPY(mca_cmd_rs,
+                 cmd_rs,
+                 tmpl_cmd_get_auxiliary_log_status_mca_rs);
+
+  _FIID_OBJ_GET (mca_cmd_rs,
+                 "timestamp",
+                 &val);
+
+  t = val;
+  localtime_r (&t, &tm);
+  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
+  pstdout_printf (state_data->pstate,
+                  "Last Entry Added to MCA Log: %s\n",
+                  str);
+  
+  _FIID_OBJ_GET (mca_cmd_rs,
+                 "mca_log_entry_count",
+                 &val);
+  
+  pstdout_printf (state_data->pstate,
+                  "Number of entries in MCA log: %u\n",
+                  (uint32_t)val);
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  _FIID_OBJ_DESTROY(mca_cmd_rs);
+  return rv;
+}
+
 int
 run_cmd_args (bmc_device_state_data_t *state_data)
 {
@@ -759,6 +828,9 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->set_sel_time)
     return set_sel_time (state_data);
+
+  if (args->get_mca_auxiliary_log_status)
+    return get_mca_auxiliary_log_status (state_data);
 
   rv = 0;
   return (rv);

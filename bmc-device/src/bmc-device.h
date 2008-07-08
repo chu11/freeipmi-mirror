@@ -37,7 +37,8 @@ enum bmc_device_argp_option_keys
     CMD_SET_SDR_REPOSITORY_TIME_KEY = 168,
     CMD_GET_SEL_TIME_KEY = 169,
     CMD_SET_SEL_TIME_KEY = 170,
-    VERBOSE_KEY = 171,
+    CMD_GET_MCA_AUXILIARY_LOG_STATUS_KEY = 171,
+    VERBOSE_KEY = 172,
   };
 
 enum bmc_device_set_acpi_power_state_options
@@ -70,6 +71,7 @@ struct bmc_device_arguments
   int get_sel_time;
   int set_sel_time;
   char *set_sel_time_arg;
+  int get_mca_auxiliary_log_status;
   int verbose;
 };
 
