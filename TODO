@@ -39,10 +39,6 @@ pef-config
 - alert immediate support?
 - PET acknowledge support?
 
-bmc-device
---------
-get/set auxiliary log status
-
 general
 -------
 beginning doc for developers
@@ -60,6 +56,11 @@ ipmiconsole
 -----------
 retry under a different port
 - has never been tested, does any manufacturer do this?
+
+bmc-device
+--------
+get auxiliary log status
+- not tested, don't have a machine with this support
 
 ipmi-sensors-config
 -------------------
