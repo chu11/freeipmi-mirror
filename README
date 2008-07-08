@@ -86,7 +86,7 @@ A tool to configure IPMI Sensors.
 
 Bmc-device
 
-A tool to perform BMC device commands.
+A tool to perform advanced BMC commands.
 
 Ipmiping
 

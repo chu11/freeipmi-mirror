@@ -82,7 +82,7 @@ A tool to configure IPMI Sensors.
 .PP
 .B Bmc-device
 .PP
-A tool to perform BMC device commands.
+A tool to perform advanced BMC commands.
 .PP
 .B Ipmiping
 .PP
