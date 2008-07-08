@@ -38,6 +38,80 @@
 
 #include "freeipmi-portability.h"
 
+/* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
+int8_t 
+ipmi_cmd_set_sensor_hysteresis (ipmi_ctx_t ctx,
+                                uint8_t sensor_number,
+                                uint8_t hysteresis_mask,
+                                uint8_t positive_going_threshold_hysteresis_value,
+                                uint8_t negative_going_threshold_hysteresis_value,
+                                fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+  
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (hysteresis_mask == IPMI_SENSOR_HYSTERESIS_MASK
+                      && fiid_obj_valid(obj_cmd_rs));
+  
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_sensor_hysteresis_rs);
+
+  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sensor_hysteresis_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_set_sensor_hysteresis (sensor_number,
+                                                     hysteresis_mask,
+                                                     positive_going_threshold_hysteresis_value,
+                                                     negative_going_threshold_hysteresis_value,
+						     obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_SENSOR_EVENT_RQ, 
+			    obj_cmd_rq, 
+			    obj_cmd_rs);
+
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+/* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
+int8_t 
+ipmi_cmd_get_sensor_hysteresis (ipmi_ctx_t ctx, 
+                                uint8_t sensor_number, 
+                                uint8_t hysteresis_mask,
+                                fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+  
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (hysteresis_mask == IPMI_SENSOR_HYSTERESIS_MASK
+                      && fiid_obj_valid(obj_cmd_rs));
+  
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sensor_hysteresis_rs);
+
+  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sensor_hysteresis_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_get_sensor_hysteresis (sensor_number,
+                                                     hysteresis_mask,
+						     obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_SENSOR_EVENT_RQ, 
+			    obj_cmd_rq, 
+			    obj_cmd_rs);
+
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
 int8_t 
 ipmi_cmd_set_sensor_thresholds (ipmi_ctx_t ctx, 
 				uint8_t sensor_number, 

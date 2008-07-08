@@ -28,6 +28,20 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
+/* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
+int8_t ipmi_cmd_set_sensor_hysteresis (ipmi_ctx_t ctx,
+                                       uint8_t sensor_number,
+                                       uint8_t hysteresis_mask,
+                                       uint8_t positive_going_threshold_hysteresis_value,
+                                       uint8_t negative_going_threshold_hysteresis_value,
+                                       fiid_obj_t obj_cmd_rs);
+
+/* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
+int8_t ipmi_cmd_get_sensor_hysteresis (ipmi_ctx_t ctx, 
+				       uint8_t sensor_number, 
+                                       uint8_t hysteresis_mask,
+				       fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_set_sensor_thresholds (ipmi_ctx_t ctx,
                                        uint8_t sensor_number,
                                        uint8_t *lower_non_critical_threshold,

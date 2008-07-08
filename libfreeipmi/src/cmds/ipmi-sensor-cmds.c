@@ -105,7 +105,7 @@ fiid_template_t tmpl_cmd_set_sensor_hysteresis_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "reserved_for_future_hysteresis_mask_definition", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "hysteresis_mask", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "positive_going_threshold_hysteresis_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "negative_going_threshold_hysteresis_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
@@ -122,7 +122,7 @@ fiid_template_t tmpl_cmd_get_sensor_hysteresis_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "reserved_for_future_hysteresis_mask_definition", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "hysteresis_mask", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
@@ -719,6 +719,52 @@ fiid_template_t tmpl_cmd_get_sensor_type_rs =
     {1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
+
+/* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
+int8_t 
+fill_cmd_set_sensor_hysteresis (uint8_t sensor_number, 
+                                uint8_t hysteresis_mask,
+                                uint8_t positive_going_threshold_hysteresis_value,
+                                uint8_t negative_going_threshold_hysteresis_value,
+                                fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (hysteresis_mask == IPMI_SENSOR_HYSTERESIS_MASK
+              && fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sensor_hysteresis_rq);
+
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_HYSTERESIS);   
+  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  FIID_OBJ_SET (obj_cmd_rq, "hysteresis_mask", hysteresis_mask);
+  FIID_OBJ_SET (obj_cmd_rq, 
+                "positive_going_threshold_hysteresis_value", 
+                positive_going_threshold_hysteresis_value);
+  FIID_OBJ_SET (obj_cmd_rq, 
+                "negative_going_threshold_hysteresis_value", 
+                negative_going_threshold_hysteresis_value);
+
+  return 0;
+}
+
+/* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
+int8_t 
+fill_cmd_get_sensor_hysteresis (uint8_t sensor_number, 
+                                uint8_t hysteresis_mask,
+                                fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (hysteresis_mask == IPMI_SENSOR_HYSTERESIS_MASK
+              && fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sensor_hysteresis_rq);
+
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_HYSTERESIS);   
+  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  FIID_OBJ_SET (obj_cmd_rq, "hysteresis_mask", hysteresis_mask);
+  
+  return 0;
+}
 
 int8_t 
 fill_cmd_set_sensor_thresholds (uint8_t sensor_number, 

@@ -55,6 +55,9 @@ extern "C" {
 #define IPMI_SENSOR_THRESHOLD_SET     0x1
 #define IPMI_SENSOR_THRESHOLD_NOT_SET 0x0
 
+/* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
+#define IPMI_SENSOR_HYSTERESIS_MASK   0xFF
+
 extern fiid_template_t tmpl_cmd_get_device_sdr_info_rq;
 extern fiid_template_t tmpl_cmd_get_device_sdr_info_rs;
   
@@ -108,6 +111,18 @@ extern fiid_template_t tmpl_cmd_set_sensor_type_rs;
 
 extern fiid_template_t tmpl_cmd_get_sensor_type_rq;
 extern fiid_template_t tmpl_cmd_get_sensor_type_rs;
+
+/* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
+int8_t fill_cmd_set_sensor_hysteresis (uint8_t sensor_number,
+                                       uint8_t hysteresis_mask,
+                                       uint8_t positive_going_threshold_hysteresis_value,
+                                       uint8_t negative_going_threshold_hysteresis_value,
+                                       fiid_obj_t obj_cmd_rq);
+
+/* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
+int8_t fill_cmd_get_sensor_hysteresis (uint8_t sensor_number, 
+                                       uint8_t hysteresis_mask,
+                                       fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
                                        uint8_t *lower_non_critical_threshold,
