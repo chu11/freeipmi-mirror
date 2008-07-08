@@ -20,6 +20,8 @@
 
 	* bmc-device/: Support --get-mca-auxiliary-log-status.
 
+	* libfreeipmi/: various minor code cleanup.
+
 2008-07-07 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/api/ipmi-lan-cmds-api.h,

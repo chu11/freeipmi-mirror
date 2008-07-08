@@ -103,7 +103,7 @@ fiid_template_t tmpl_cmd_get_sensor_reading_factors_rs =
 
 fiid_template_t tmpl_cmd_set_sensor_hysteresis_rq =
   {
-    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "reserved_for_future_hysteresis_mask_definition", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "positive_going_threshold_hysteresis_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -128,7 +128,7 @@ fiid_template_t tmpl_cmd_get_sensor_hysteresis_rq =
 
 fiid_template_t tmpl_cmd_get_sensor_hysteresis_rs =
   {
-    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "positive_going_threshold_hysteresis_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "negative_going_threshold_hysteresis_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -721,20 +721,6 @@ fiid_template_t tmpl_cmd_get_sensor_type_rs =
   };
 
 int8_t 
-fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
-{
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
-
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sensor_reading_rq);
-
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_READING);   
-  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  
-  return 0;
-}
-
-int8_t 
 fill_cmd_set_sensor_thresholds (uint8_t sensor_number, 
                                 uint8_t *lower_non_critical_threshold,
                                 uint8_t *lower_critical_threshold,
@@ -836,3 +822,16 @@ fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
   return 0;
 }
 
+int8_t 
+fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sensor_reading_rq);
+
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_READING);   
+  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  
+  return 0;
+}
