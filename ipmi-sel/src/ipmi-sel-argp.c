@@ -73,10 +73,6 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     {"info",       INFO_KEY,       0, 0, 
      "Show general information about the SEL.", 30},
-    {"get-time",   GET_TIME_KEY,   0, 0,
-     "Get SEL time.", 31},
-    {"set-time",   SET_TIME_KEY,   "TIME", 0,
-     "Set SEL time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 32},
     {"delete",     DELETE_KEY,     "REC-LIST", 0, 
      "Delete SEL records by record ids.", 33},
     {"delete-all", DELETE_ALL_KEY, 0, 0, 
@@ -112,13 +108,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     {
     case INFO_KEY:
       cmd_args->info = 1;
-      break;
-    case GET_TIME_KEY:
-      cmd_args->get_time = 1;
-      break;
-    case SET_TIME_KEY:
-      cmd_args->set_time = 1;
-      cmd_args->set_time_arg = arg;
       break;
     case DELETE_ALL_KEY:
       cmd_args->delete_all = 1;
@@ -248,9 +237,6 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->info = 0;
-  cmd_args->get_time = 0;
-  cmd_args->set_time = 0;
-  cmd_args->set_time_arg = NULL;
   cmd_args->delete_all = 0;
   cmd_args->delete = 0;
   memset(cmd_args->delete_record_list,

@@ -82,8 +82,12 @@ static struct argp_option cmdline_options[] =
      "Get IP, UDP, and RMCP statistics.", 37},
     {"clear-lan-statistics", CMD_CLEAR_LAN_STATISTICS_KEY, NULL, 0,
      "Clear IP, UDP, and RMCP statistics.", 38},
+    {"get-sel-time",   CMD_GET_SEL_TIME_KEY,  0, 0,
+     "Get SEL time.", 39},
+    {"set-sel-time",   CMD_SET_SEL_TIME_KEY,  "TIME", 0,
+     "Set SEL time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 40},
     {"verbose", VERBOSE_KEY, 0, 0,
-     "Increase verbosity in output.", 39},
+     "Increase verbosity in output.", 41},
     { 0 }
   };
 
@@ -186,6 +190,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case CMD_CLEAR_LAN_STATISTICS_KEY:
       cmd_args->clear_lan_statistics++;
       break;
+    case CMD_GET_SEL_TIME_KEY:
+      cmd_args->get_sel_time = 1;
+      break;
+    case CMD_SET_SEL_TIME_KEY:
+      cmd_args->set_sel_time = 1;
+      cmd_args->set_sel_time_arg = arg;
+      break;
     case VERBOSE_KEY:
       cmd_args->verbose++;
       break;
@@ -231,7 +242,9 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && !cmd_args->get_acpi_power_state
       && !cmd_args->set_acpi_power_state
       && !cmd_args->get_lan_statistics
-      && !cmd_args->clear_lan_statistics)
+      && !cmd_args->clear_lan_statistics
+      && !cmd_args->get_sel_time
+      && !cmd_args->set_sel_time)
     {
       fprintf (stderr, 
                "No command specified.\n");
@@ -244,7 +257,9 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
        + cmd_args->get_acpi_power_state
        + cmd_args->set_acpi_power_state
        + cmd_args->get_lan_statistics
-       + cmd_args->clear_lan_statistics) > 1)
+       + cmd_args->clear_lan_statistics
+       + !cmd_args->get_sel_time
+       + !cmd_args->set_sel_time) > 1)
     {
       fprintf (stderr, 
                "Multiple commands specified.\n");
@@ -267,6 +282,9 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->set_acpi_power_state_args.device_power_state = IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE;
   cmd_args->get_lan_statistics = 0;
   cmd_args->clear_lan_statistics = 0;
+  cmd_args->get_sel_time = 0;
+  cmd_args->set_sel_time = 0;
+  cmd_args->set_sel_time_arg = NULL;
   cmd_args->verbose = 0;
 
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));

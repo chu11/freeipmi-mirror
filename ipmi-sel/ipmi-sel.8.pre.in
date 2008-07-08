@@ -35,14 +35,6 @@ The following options are specific to
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about the SEL.
 .TP
-\fB\-g\fR, \fB\-\-get-time\fR
-Get SEL time.
-.TP
-\fB\-s\fR, \fB\-\-set\-time=TIME\fR
-Set SEL time.  Input format = "MM/DD/YYYY - HH:MM:SS".  Note that
-hours are input in 24 hour form.  Alternatively, the local
-system time can be specified with "now".
-.TP
 \fB\-c\fR, \fB\-\-delete-all\fR
 Delete all SEL records.
 .TP

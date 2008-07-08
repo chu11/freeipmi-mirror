@@ -17,7 +17,6 @@ o Add additional "connection timeout" error message to tools to
 o Support --always-prefix option in most tools.
 o Support --sdr-cache-recreate in all SDR related tools.
 o Support --guid option in bmc-info.
-o Support --get-time and --set-time in ipmi-sel.
 o Support build on Solaris.
 
 For Users - Minor Enhancements/Changes/Bug Fixes
