@@ -2,20 +2,24 @@
 ----------------
 For Users - New Features
 ------------------------
-o Add new tool bmc-device to support advanced BMC commands.
+o Add new tool bmc-device to support advanced BMC commands including
+  cold reset, warm reset, setting BMC times, and more.
 o Support FreeIPMI configuration file for most tools (bmc-config,
   bmc-info, bmc-device, bmc-watchdog, ipmi-chassis, ipmi-fru,
   ipmi-oem, ipmi-raw, ipmi-sel, ipmi-sensors, ipmi-sensors-config,
-  ipmiconsole, ipmimonitoring, ipmipower, pef-config).  See
+  ipmiconsole, ipmimonitoring, ipmipower, pef-config) to avoid
+  typing common options on the command line.  See
   freeipmi.conf(5) for more information.
 o Add hostrange support in bmc-config, ipmi-sensors-config, and
   pef-config.
 o Add additional "connection timeout" error message to tools to
   differentiate between no IPMI communication at all vs. failed session
   timeout in the middle of a command's operations.
-o Support --always-prefix option in most tools.
-o Support --sdr-cache-recreate in all SDR related tools.
-o Support --guid option in bmc-info.
+o Support --always-prefix option in most tools for easier scripting
+  needs.
+o Support --sdr-cache-recreate in all SDR related tools for easier
+  scripting needs.
+o Support --guid option in bmc-info to retrieve global ID.
 o Support build on Solaris.
 
 For Users - Minor Enhancements/Changes/Bug Fixes
