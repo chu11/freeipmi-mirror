@@ -48,7 +48,7 @@ const char *argp_program_bug_address =
   "<" PACKAGE_BUGREPORT ">";
 
 static char cmdline_doc[] = 
-  "bmc-device - perform BMC device commands";
+  "bmc-device - perform advanced BMC device commands";
 
 static char cmdline_args_doc[] = "";
 
@@ -78,8 +78,12 @@ static struct argp_option cmdline_options[] =
      "Set ACPI system power state.", 35},
     {"set-acpi-device-power-state", SET_ACPI_DEVICE_POWER_STATE_KEY, "DEVICE_POWER_STATE", 0,
      "Set ACPI device power state.", 36},
+    {"get-lan-statistics", CMD_GET_LAN_STATISTICS_KEY, NULL, 0,
+     "Get IP, UDP, and RMCP statistics.", 37},
+    {"clear-lan-statistics", CMD_CLEAR_LAN_STATISTICS_KEY, NULL, 0,
+     "Clear IP, UDP, and RMCP statistics.", 38},
     {"verbose", VERBOSE_KEY, 0, 0,
-     "Increase verbosity in output.", 37},
+     "Increase verbosity in output.", 39},
     { 0 }
   };
 
@@ -176,6 +180,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           exit(1);
         }
       break;
+    case CMD_GET_LAN_STATISTICS_KEY:
+      cmd_args->get_lan_statistics++;
+      break;
+    case CMD_CLEAR_LAN_STATISTICS_KEY:
+      cmd_args->clear_lan_statistics++;
+      break;
     case VERBOSE_KEY:
       cmd_args->verbose++;
       break;
@@ -219,10 +229,12 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && !cmd_args->warm_reset
       && !cmd_args->get_self_test_results
       && !cmd_args->get_acpi_power_state
-      && !cmd_args->set_acpi_power_state)
+      && !cmd_args->set_acpi_power_state
+      && !cmd_args->get_lan_statistics
+      && !cmd_args->clear_lan_statistics)
     {
       fprintf (stderr, 
-               "No BMC device command specified.\n");
+               "No command specified.\n");
       exit(1);
     }
 
@@ -230,10 +242,12 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
        + cmd_args->warm_reset
        + cmd_args->get_self_test_results
        + cmd_args->get_acpi_power_state
-       + cmd_args->set_acpi_power_state) > 1)
+       + cmd_args->set_acpi_power_state
+       + cmd_args->get_lan_statistics
+       + cmd_args->clear_lan_statistics) > 1)
     {
       fprintf (stderr, 
-               "Multiple BMC device commands specified.\n");
+               "Multiple commands specified.\n");
       exit(1);
     }
 }
@@ -251,6 +265,8 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->set_acpi_power_state = 0;
   cmd_args->set_acpi_power_state_args.system_power_state = IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE;
   cmd_args->set_acpi_power_state_args.device_power_state = IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE;
+  cmd_args->get_lan_statistics = 0;
+  cmd_args->clear_lan_statistics = 0;
   cmd_args->verbose = 0;
 
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));

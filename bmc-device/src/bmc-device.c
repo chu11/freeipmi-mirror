@@ -50,7 +50,7 @@ cold_reset (bmc_device_state_data_t *state_data)
 
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_cold_reset_rs);
 
-  if (ipmi_cmd_cold_reset (state_data->ipmi_ctx, cmd_rs) != 0)
+  if (ipmi_cmd_cold_reset (state_data->ipmi_ctx, cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -75,7 +75,7 @@ warm_reset (bmc_device_state_data_t *state_data)
 
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_warm_reset_rs);
 
-  if (ipmi_cmd_warm_reset (state_data->ipmi_ctx, cmd_rs) != 0)
+  if (ipmi_cmd_warm_reset (state_data->ipmi_ctx, cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -101,7 +101,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
 
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_self_test_results_rs);
 
-  if (ipmi_cmd_get_self_test_results (state_data->ipmi_ctx, cmd_rs) != 0)
+  if (ipmi_cmd_get_self_test_results (state_data->ipmi_ctx, cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -214,7 +214,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
 
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_acpi_power_state_rs);
 
-  if (ipmi_cmd_get_acpi_power_state (state_data->ipmi_ctx, cmd_rs) != 0)
+  if (ipmi_cmd_get_acpi_power_state (state_data->ipmi_ctx, cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -372,7 +372,7 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
                                      (system_power_state == IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE) ? IPMI_ACPI_SET_SYSTEM_POWER_STATE_DONT_SET_SYSTEM_POWER_STATE : IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE,
                                      device_power_state,
                                      (device_power_state == IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE) ? IPMI_ACPI_SET_DEVICE_POWER_STATE_DONT_SET_DEVICE_POWER_STATE : IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE,
-                                     cmd_rs) != 0)
+                                     cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -381,6 +381,148 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return rv;
+}
+
+static int
+get_lan_statistics (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  int8_t lan_channel_number;
+  uint64_t val;
+  int rv = -1;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_ip_udp_rmcp_statistics_rs);
+
+  if ((lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
+                                                     IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_get_channel_number: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_ip_udp_rmcp_statistics (state_data->ipmi_ctx,
+                                           lan_channel_number,
+                                           IPMI_DONT_CLEAR_ALL_STATISTICS,
+                                           cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_ip_udp_rmcp_statistics: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "ip_packets_received",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "IP Packets Received: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "received_ip_header_errors",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "Received IP Header Errors: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "received_ip_address_errors",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "Received IP Address Errors: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "fragmented_ip_packets_received",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "Fragmented IP Packets Received: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "ip_packets_transmitted",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "IP Packets Transmitted: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "udp_packets_received",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "UDP Packets Received: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "valid_rmcp_packets_received",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "Valid RMCP Packets Received: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "udp_proxy_packets_received",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "UDP Proxy Packets Received: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "udp_proxy_packets_dropped",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "UDP Proxy Packets Dropped: %u\n",
+                  (uint16_t)val);
+  
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return rv;
+}
+
+static int
+clear_lan_statistics (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  int8_t lan_channel_number;
+  int rv = -1;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_ip_udp_rmcp_statistics_rs);
+
+  if ((lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
+                                                     IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_get_channel_number: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_ip_udp_rmcp_statistics (state_data->ipmi_ctx,
+                                           lan_channel_number,
+                                           IPMI_CLEAR_ALL_STATISTICS,
+                                           cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_ip_udp_rmcp_statistics: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+  
   rv = 0;
  cleanup:
   _FIID_OBJ_DESTROY(cmd_rs);
@@ -411,6 +553,12 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->set_acpi_power_state)
     return set_acpi_power_state (state_data);
+
+  if (args->get_lan_statistics)
+    return get_lan_statistics (state_data);
+
+  if (args->clear_lan_statistics)
+    return clear_lan_statistics (state_data);
 
   rv = 0;
   return (rv);

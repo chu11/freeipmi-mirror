@@ -1,5 +1,21 @@
 2008-07-07 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-lan-cmds-api.h,
+	libfreeipmi/include/freeipmi/cmds/ipmi-lan-cmds.h,
+	libfreeipmi/src/api/ipmi-lan-cmds-api.c,
+	libfreeipmi/src/cmds/ipmi-lan-cmds.c: Support get IP/UDP/RMCP
+	statistics command.
+
+	* libfreeipmi/src/api/ipmi-lan-cmds-api.c
+	(ipmi_cmd_suspend_bmc_arps): Fix parameter corner case check.
+
+	* bmc-device/: Support --get-lan-statistics and
+	--clear-lan-statistics.
+
+	* bmc-device/: Various minor cleanup.
+
+2008-07-07 Albert Chu <chu11@llnl.gov>
+
 	Support --sdr-cache-recreate globally.
 
 	* common/src/toolcommon/tool-cmdline-common.h,

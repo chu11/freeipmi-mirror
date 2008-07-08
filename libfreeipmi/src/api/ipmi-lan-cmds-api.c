@@ -1642,6 +1642,8 @@ ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+                      && IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(gratuitous_arp_suspend)
+                      && IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(arp_response_suspend)
                       && fiid_obj_valid(obj_cmd_rs));
    
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_suspend_bmc_arps_rs);
@@ -1652,6 +1654,41 @@ ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
 						gratuitous_arp_suspend, 
 						arp_response_suspend,
 						obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_TRANSPORT_RQ, 
+			    obj_cmd_rq, 
+			    obj_cmd_rs);
+ 
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
+ipmi_cmd_get_ip_udp_rmcp_statistics (ipmi_ctx_t ctx, 
+                                     uint8_t channel_number, 
+                                     uint8_t clear_all_statistics, 
+                                     fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+  
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+                      && IPMI_CLEAR_ALL_STATISTICS_VALID(clear_all_statistics)
+                      && fiid_obj_valid(obj_cmd_rs));
+   
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_ip_udp_rmcp_statistics_rs);
+
+  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_ip_udp_rmcp_statistics_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_get_ip_udp_rmcp_statistics (channel_number, 
+                                                          clear_all_statistics,
+                                                          obj_cmd_rq) < 0));
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 

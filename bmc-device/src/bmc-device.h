@@ -31,7 +31,9 @@ enum bmc_device_argp_option_keys
     CMD_GET_SELF_TEST_RESULTS_KEY = 162,
     CMD_GET_ACPI_POWER_STATE_KEY = 163,
     CMD_SET_ACPI_POWER_STATE_KEY = 164,
-    VERBOSE_KEY = 165,
+    CMD_GET_LAN_STATISTICS_KEY = 165,
+    CMD_CLEAR_LAN_STATISTICS_KEY = 166,
+    VERBOSE_KEY = 167,
   };
 
 enum bmc_device_set_acpi_power_state_options
@@ -55,6 +57,8 @@ struct bmc_device_arguments
   int get_self_test_results;
   int get_acpi_power_state;
   int set_acpi_power_state;
+  int get_lan_statistics;
+  int clear_lan_statistics;
   struct bmc_device_set_acpi_power_state set_acpi_power_state_args;
   int verbose;
 };

@@ -1,15 +1,15 @@
 .TH BMC-DEVICE 8 "@ISODATE@" "bmc-device @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
-bmc-device \- perform BMC device commands
+bmc-device \- perform advanced BMC device commands
 .SH "SYNOPSIS"
 .B bmc-device
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B bmc-device 
-supports a variety of IPMI commands to perform BMC functions and
-retrieve more detailed technical information about the BMC device.
-This tool is primarily used for development purposes, BMC firmware
-recover, and other advanced purposes.  It is not recommended for
+supports a variety of IPMI commands to perform advanced BMC functions
+and retrieve more detailed technical information about the BMC device.
+This tool is primarily used for development debugging, BMC firmware
+recovery, and other advanced purposes.  It is not recommended for
 general use.
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
@@ -35,32 +35,38 @@ The following options are specific to
 \fB\-\-cold\-reset\fR
 Perform a cold reset.
 .TP
-\fB\-\-warm-reset\fR
+\fB\-\-warm\-reset\fR
 Perform a warm reset.
 .TP
-\fB\-\-get-self-test-results\fR
+\fB\-\-get\-self\-test\-results\fR
 Output BMC self test results.
 .TP
-\fB\-\-get-acpi-power-state\fR
+\fB\-\-get\-acpi\-power\-state\fR
 Get ACPI system and device power state.
 .TP
-\fB\-\-set-acpi-power-state\fR
+\fB\-\-set\-acpi\-power\-state\fR
 Set ACPI power state.  Must be specified to use the 
-\fB\-\-set-acpi-system-power-state\fR,
+\fB\-\-set\-acpi\-system\-power\-state\fR,
 and
-\fB\-\-set-acpi-device-power-state\fR
+\fB\-\-set\-acpi\-device\-power\-state\fR
 options listed below.
 .TP
-\fB\-\-set-acpi-system-power-state\fR=\fISYSTEM_POWER_STATE\fR
+\fB\-\-set\-acpi\-system\-power\-state\fR=\fISYSTEM_POWER_STATE\fR
 Set ACPI system power state.  Allowed values:
 S0_G0, S1, S2, S3, S4, S5_G2, S4_S5, G3, SLEEPING, G1_SLEEPING, OVERRIDE,
 LEGACY_ON, LEGACY_OFF, UNKNOWN.
-Used with the \fB\-\--set-acpi-power-state\fR option.
+Used with the \fB\-\-set\-acpi\-power\-state\fR option.
 .TP
-\fB\-\-set-acpi-device-power-state\fR=\fIDEVICE_POWER_STATE\fR
+\fB\-\-set\-acpi\-device\-power\-state\fR=\fIDEVICE_POWER_STATE\fR
 Set ACPI device power state.  Allowed values:
 D0, D1, D2, D3, UNKNOWN.
-Used with the \fB\-\--set-acpi-power-state\fR option.
+Used with the \fB\-\-set\-acpi\-power\-state\fR option.
+.TP
+\fB\-\-get\-lan\-statistics\fR
+Get IP, UDP, and RMCP statistics.
+.TP
+\fB\-\-clear\-lan\-statistics\fR
+Clear IP, UDP, and RMCP statistics.
 .TP
 \fB\-\-verbose\fR
 Increase verbosity in output.
