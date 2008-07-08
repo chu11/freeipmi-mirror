@@ -39,7 +39,7 @@ pef-config
 - alert immediate support?
 - PET acknowledge support?
 
-ipmi-sel
+bmc-device
 --------
 get/set auxiliary log status
 
