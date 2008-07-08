@@ -25,6 +25,16 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #include <assert.h>
 #include <errno.h>
 
@@ -530,6 +540,95 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
 }
 
 static int
+get_sdr_repository_time (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  uint64_t val;
+  char str[512];
+  int rv = -1;
+  time_t t;
+  struct tm tm;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_get_sdr_repository_time_rs);
+
+  if (ipmi_cmd_get_sdr_repository_time (state_data->ipmi_ctx, cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_sdr_repository_time: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET (cmd_rs, "time", &val);
+
+  t = val;
+  localtime_r (&t, &tm);
+  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
+  pstdout_printf (state_data->pstate,
+                  "SDR Repository Time: %s\n",
+                  str);
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return (rv);
+}
+
+static int
+set_sdr_repository_time (bmc_device_state_data_t *state_data)
+{
+  struct bmc_device_arguments *args;
+  fiid_obj_t cmd_rs = NULL;
+  int rv = -1;
+  time_t t;
+  struct tm tm;
+
+  assert(state_data);
+
+  args = state_data->prog_data->args;
+
+  if (!strcasecmp(args->set_sdr_repository_time_arg, "now"))
+    t = time(NULL);
+  else
+    {
+      if (!strptime(args->set_sdr_repository_time_arg, "%m/%d/%Y - %H:%M:%S", &tm))
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "Invalid time specification '%s'.\n",
+                          args->set_sdr_repository_time_arg);
+          goto cleanup;
+        }
+      if ((t = mktime(&tm)) == (time_t)-1)
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "Time specification '%s' cannot be represented.\n",
+                          args->set_sdr_repository_time_arg);
+          goto cleanup;
+        }
+    }
+
+  _FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_set_sdr_repository_time_rs);
+
+  if (ipmi_cmd_set_sdr_repository_time (state_data->ipmi_ctx, t, cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_set_sdr_repository_time: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return (rv);
+}
+
+static int
 get_sel_time (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t cmd_rs = NULL;
@@ -648,6 +747,12 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->clear_lan_statistics)
     return clear_lan_statistics (state_data);
+
+  if (args->get_sdr_repository_time)
+    return get_sdr_repository_time (state_data);
+
+  if (args->set_sdr_repository_time)
+    return set_sdr_repository_time (state_data);
 
   if (args->get_sel_time)
     return get_sel_time (state_data);

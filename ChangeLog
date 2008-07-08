@@ -3,6 +3,15 @@
 	* ipmi-sel/, bmc-device/: Move --get-time and --set-time from
 	ipmi-sel to --get-sel-time and --set-sel-time in bmc-device.
 	
+	* libfreeipmi/include/freeipmi/api/ipmi-sdr-repository-cmds-api.h,
+	libfreeipmi/include/freeipmi/cmds/ipmi-sdr-repository-cmds.h,
+	libfreeipmi/src/api/ipmi-sdr-repository-cmds-api.c,
+	libfreeipmi/src/cmds/ipmi-sdr-repository-cmds.c: Support get/set
+	SDR repository time commands.
+
+	* bmc-device/: Support --get-sdr-repository-time and
+	--set-sdr-repository-time.
+
 2008-07-07 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/api/ipmi-lan-cmds-api.h,

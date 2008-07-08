@@ -67,6 +67,14 @@ Get IP, UDP, and RMCP statistics.
 \fB\-\-clear\-lan\-statistics\fR
 Clear IP, UDP, and RMCP statistics.
 .TP
+\fB\-\-get\-sdr\-repository\-time\fR
+Get SDR repository time.
+.TP
+\fB\-\-set\-sdr\-repository\-time=TIME\fR
+Set SDR repository time.  Input format = "MM/DD/YYYY - HH:MM:SS".
+Note that hours are input in 24 hour form.  Alternatively, the local
+system time can be specified with "now".
+.TP
 \fB\-\-get\-sel\-time\fR
 Get SEL time.
 .TP

@@ -44,6 +44,13 @@ int8_t ipmi_cmd_get_sdr (ipmi_ctx_t ctx,
 			 uint8_t bytes_to_read, 
 			 fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_get_sdr_repository_time (ipmi_ctx_t ctx,
+                                         fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_set_sdr_repository_time (ipmi_ctx_t ctx,
+                                         uint32_t time,
+                                         fiid_obj_t obj_cmd_rs);
+
 #ifdef __cplusplus
 }
 #endif

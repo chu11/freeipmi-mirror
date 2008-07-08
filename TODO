@@ -51,9 +51,6 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
-get/set SDR repository time?
-- in ipmi-sensors-config?
-- in bmc-device?
 
 config
 ------
