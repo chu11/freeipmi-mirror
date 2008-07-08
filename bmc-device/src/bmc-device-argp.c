@@ -90,7 +90,7 @@ static struct argp_option cmdline_options[] =
      "Get SEL time.", 41},
     {"set-sel-time", CMD_SET_SEL_TIME_KEY,  "TIME", 0,
      "Set SEL time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 42},
-    {"get-auxiliary-log-status", CMD_GET_MCA_AUXILIARY_LOG_STATUS_KEY, NULL, 0,
+    {"get-mca-auxiliary-log-status", CMD_GET_MCA_AUXILIARY_LOG_STATUS_KEY, NULL, 0,
      "Get machine check architecture (MCA) auxiliary log status information.", 43},
     {"verbose", VERBOSE_KEY, 0, 0,
      "Increase verbosity in output.", 44},
