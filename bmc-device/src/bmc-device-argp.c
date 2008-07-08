@@ -48,7 +48,7 @@ const char *argp_program_bug_address =
   "<" PACKAGE_BUGREPORT ">";
 
 static char cmdline_doc[] = 
-  "bmc-device - perform advanced BMC device commands";
+  "bmc-device - perform advanced BMC commands";
 
 static char cmdline_args_doc[] = "";
 
