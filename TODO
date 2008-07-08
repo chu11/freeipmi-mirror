@@ -43,10 +43,6 @@ ipmi-sel
 --------
 get/set auxiliary log status
 
-bmc-info
---------
-get ip/udp/rmcp statistics
-
 general
 -------
 beginning doc for developers
