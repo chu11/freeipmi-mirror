@@ -1,4 +1,4 @@
-2008-07-07 Albert Chu <chu11@llnl.gov>
+2008-07-08 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/, bmc-device/: Move --get-time and --set-time from
 	ipmi-sel to --get-sel-time and --set-sel-time in bmc-device.
