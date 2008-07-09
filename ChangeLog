@@ -5,6 +5,10 @@
 	libfreeipmi/include/api/ipmi-sensor-cmds-api.h,
 	libfreeipmi/src/api/ipmi-sensor-cmds-api.c: Support Get/Set event
 	enable commands.
+
+	* Globally rename "sensor_state" to "sensor_event_bitmask" for
+	consistency to get/set enable commands and for clarification from
+	ipmimonitoring's "sensor_state".
 	
 2008-07-08 Albert Chu <chu11@llnl.gov>
 

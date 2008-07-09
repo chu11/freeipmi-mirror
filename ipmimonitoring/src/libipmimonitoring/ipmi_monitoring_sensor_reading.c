@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.20 2008-06-07 16:09:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.21 2008-07-09 21:19:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -220,7 +220,7 @@ _get_sensor_units(ipmi_monitoring_ctx_t c,
 
 static int
 _get_sensor_state(ipmi_monitoring_ctx_t c,
-                  uint16_t sensor_state,
+                  uint16_t sensor_event_bitmask,
                   struct ipmi_sensor_config *config)
 {
   int sensor_state_value = IPMI_MONITORING_SENSOR_STATE_NOMINAL;
@@ -233,7 +233,7 @@ _get_sensor_state(ipmi_monitoring_ctx_t c,
   i = 0;
   while (config[i].option_str && i < 16)
     {
-      if (sensor_state & (0x1 << i))
+      if (sensor_event_bitmask & (0x1 << i))
         {
           if (config[i].sensor_state > sensor_state_value)
             sensor_state_value = config[i].sensor_state;
@@ -246,19 +246,19 @@ _get_sensor_state(ipmi_monitoring_ctx_t c,
 
 static int
 _get_threshold_sensor_state(ipmi_monitoring_ctx_t c,
-                            uint16_t sensor_state)
+                            uint16_t sensor_event_bitmask)
 {
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
 
-  return _get_sensor_state(c, sensor_state, ipmi_threshold_sensor_config);
+  return _get_sensor_state(c, sensor_event_bitmask, ipmi_threshold_sensor_config);
 }
 
 static int
 _get_digital_sensor_state(ipmi_monitoring_ctx_t c,
                           uint8_t event_reading_type_code,
                           uint8_t sensor_type,
-                          uint16_t sensor_state)
+                          uint16_t sensor_event_bitmask)
 {
   struct ipmi_sensor_config *config;
 
@@ -289,13 +289,13 @@ _get_digital_sensor_state(ipmi_monitoring_ctx_t c,
       return IPMI_MONITORING_SENSOR_STATE_UNKNOWN;
     }
 
-  return _get_sensor_state(c, sensor_state, config);
+  return _get_sensor_state(c, sensor_event_bitmask, config);
 }
 
 static int
 _get_specific_sensor_state(ipmi_monitoring_ctx_t c,
                            uint8_t sensor_type,
-                           uint16_t sensor_state)
+                           uint16_t sensor_event_bitmask)
 {
   struct ipmi_sensor_config *config;
 
@@ -344,7 +344,7 @@ _get_specific_sensor_state(ipmi_monitoring_ctx_t c,
       return IPMI_MONITORING_SENSOR_STATE_UNKNOWN;
     }
 
-  return _get_sensor_state(c, sensor_state, config);
+  return _get_sensor_state(c, sensor_event_bitmask, config);
 }
 
 /*
@@ -358,15 +358,15 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
                     char *sensor_name,
                     unsigned int sensor_name_len,
                     uint8_t *sensor_reading,
-                    uint16_t *sensor_state)
+                    uint16_t *sensor_event_bitmask)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
   uint64_t val;
-  uint64_t sensor_state1;
-  uint64_t sensor_state2;
+  uint64_t sensor_event_bitmask1;
+  uint64_t sensor_event_bitmask2;
   int32_t len;
-  int8_t sensor_state1_len, sensor_state2_len;
+  int8_t sensor_event_bitmask1_len, sensor_event_bitmask2_len;
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
@@ -376,7 +376,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
   assert(sensor_name);
   assert(sensor_name_len);
   assert(sensor_reading);
-  assert(sensor_state);
+  assert(sensor_event_bitmask);
 
   if (!(obj_cmd_rs = Fiid_obj_create(c, tmpl_cmd_get_sensor_reading_rs)))
     goto cleanup;
@@ -432,47 +432,47 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
    *
    * Discovered on Dell 2950.
    *
-   * It seems the sensor_state may not be returned by the server
+   * It seems the sensor_event_bitmask may not be returned by the server
    * at all for some sensors.  Under this situation, there's not
-   * much that can be done.  Since there is no sensor_state, we
+   * much that can be done.  Since there is no sensor_event_bitmask, we
    * just assume that no states have been asserted and the
-   * sensor_state = 0;
+   * sensor_event_bitmask = 0;
    */
   /* Don't use wrapper, we need the return value */
-  if ((sensor_state1_len = fiid_obj_get(obj_cmd_rs, 
-                                        "sensor_state1", 
-                                        &sensor_state1)) < 0)
+  if ((sensor_event_bitmask1_len = fiid_obj_get(obj_cmd_rs, 
+                                                "sensor_event_bitmask1", 
+                                                &sensor_event_bitmask1)) < 0)
     {
       IPMI_MONITORING_DEBUG(("fiid_obj_get: field=%s; %s", 
-                             "sensor_state1", 
+                             "sensor_event_bitmask1", 
                              fiid_strerror(fiid_obj_errnum(obj_cmd_rs))));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
-  if ((sensor_state2_len = fiid_obj_get(obj_cmd_rs, 
-                                        "sensor_state2", 
-                                        &sensor_state2)) < 0)
+  if ((sensor_event_bitmask2_len = fiid_obj_get(obj_cmd_rs, 
+                                                "sensor_event_bitmask2", 
+                                                &sensor_event_bitmask2)) < 0)
     {
       IPMI_MONITORING_DEBUG(("fiid_obj_get: field=%s; %s", 
-                             "sensor_state2", 
+                             "sensor_event_bitmask2", 
                              fiid_strerror(fiid_obj_errnum(obj_cmd_rs))));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
-  if (!sensor_state1_len && !sensor_state2_len)
+  if (!sensor_event_bitmask1_len && !sensor_event_bitmask2_len)
     {
-      IPMI_MONITORING_DEBUG(("assume sensor_state = 0"));
-      *sensor_state = 0;
+      IPMI_MONITORING_DEBUG(("assume sensor_event_bitmask = 0"));
+      *sensor_event_bitmask = 0;
     }
-  else if (sensor_state1_len && sensor_state2_len)
-    *sensor_state = sensor_state1 | (sensor_state2 << 8);
-  else if (sensor_state1_len && !sensor_state2_len)
-    *sensor_state = sensor_state1;
+  else if (sensor_event_bitmask1_len && sensor_event_bitmask2_len)
+    *sensor_event_bitmask = sensor_event_bitmask1 | (sensor_event_bitmask2 << 8);
+  else if (sensor_event_bitmask1_len && !sensor_event_bitmask2_len)
+    *sensor_event_bitmask = sensor_event_bitmask1;
   else
     {
-      IPMI_MONITORING_DEBUG(("invalid sensor_state conditions"));
+      IPMI_MONITORING_DEBUG(("invalid sensor_event_bitmask conditions"));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
@@ -505,7 +505,7 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
   int8_t b_exponent;
   char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
   uint8_t sensor_reading;
-  uint16_t sensor_state;
+  uint16_t sensor_event_bitmask;
   uint64_t val;
   int sensor_units;
   int sensor_state_value;
@@ -626,7 +626,7 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
                                  sensor_name,
                                  IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH,
                                  &sensor_reading,
-                                 &sensor_state)) < 0)
+                                 &sensor_event_bitmask)) < 0)
     return -1;
   
   if (!ret)
@@ -651,7 +651,7 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
       return -1;
     }
 
-  if ((sensor_state_value = _get_threshold_sensor_state(c, sensor_state)) < 0)
+  if ((sensor_state_value = _get_threshold_sensor_state(c, sensor_event_bitmask)) < 0)
     return -1;
 
   if ((sensor_units = _get_sensor_units(c,
@@ -735,7 +735,7 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
   uint8_t sensor_number;
   char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
   uint8_t sensor_reading;
-  uint16_t sensor_state;
+  uint16_t sensor_event_bitmask;
   int sensor_state_value;
   int sensor_bitmask_type;
   int ret;
@@ -754,7 +754,7 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
                                  sensor_name,
                                  IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH,
                                  &sensor_reading,
-                                 &sensor_state)) < 0)
+                                 &sensor_event_bitmask)) < 0)
     return -1;
   
   if (!ret)
@@ -768,7 +768,7 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
   if ((sensor_state_value = _get_digital_sensor_state(c, 
                                                       event_reading_type_code, 
                                                       sensor_type,
-                                                      sensor_state)) < 0)
+                                                      sensor_event_bitmask)) < 0)
     return -1;
 
   if ((sensor_bitmask_type = _get_digital_sensor_bitmask_type(c, 
@@ -785,7 +785,7 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
                             IPMI_MONITORING_SENSOR_UNITS_NONE,
                             IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK,
                             sensor_bitmask_type,
-                            &sensor_state) < 0)
+                            &sensor_event_bitmask) < 0)
     return -1;
   
   return 0;
@@ -856,7 +856,7 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
   uint8_t sensor_number;
   char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
   uint8_t sensor_reading;
-  uint16_t sensor_state;
+  uint16_t sensor_event_bitmask;
   int sensor_state_value;
   int sensor_bitmask_type;
   int ret;
@@ -873,7 +873,7 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
                                  sensor_name,
                                  IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH,
                                  &sensor_reading,
-                                 &sensor_state)) < 0)
+                                 &sensor_event_bitmask)) < 0)
     return -1;
   
   if (!ret)
@@ -886,7 +886,7 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
   
   if ((sensor_state_value = _get_specific_sensor_state(c, 
                                                        sensor_type, 
-                                                       sensor_state)) < 0)
+                                                       sensor_event_bitmask)) < 0)
     return -1;
 
   if ((sensor_bitmask_type = _get_specific_sensor_bitmask_type(c,
@@ -903,7 +903,7 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
                             IPMI_MONITORING_SENSOR_UNITS_NONE,
                             IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK,
                             sensor_bitmask_type,
-                            &sensor_state) < 0)
+                            &sensor_event_bitmask) < 0)
     return -1;
   
   return 0;
