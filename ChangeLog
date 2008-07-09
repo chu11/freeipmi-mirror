@@ -9,6 +9,18 @@
 	* Globally rename "sensor_state" to "sensor_event_bitmask" for
 	consistency to get/set enable commands and for clarification from
 	ipmimonitoring's "sensor_state".
+
+	* ipmi-sensors/: Re-order hysteresis output with positive first,
+	for consistency to IPMI spec.  Gather hysteresis values from IPMI
+	command when available.
+
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+	common/src/toolcommon/tool-sdr-cache-common.c
+	(sdr_cache_get_hysteresis_real): Removed function.
+
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+        common/src/toolcommon/tool-sdr-cache-common.c
+        (sdr_cache_get_hysteresis_integeer): Renamed to sdr_cache_get_hysteresis.
 	
 2008-07-08 Albert Chu <chu11@llnl.gov>
 

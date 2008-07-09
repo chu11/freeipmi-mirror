@@ -36,6 +36,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+#include "tool-fiid-wrappers.h"
 #include "tool-sensor-common.h"
 
 #define IPMI_SENSORS_OEM_DATA_LEN 1024
@@ -143,14 +144,35 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
                                  unsigned int sdr_record_len,
                                  uint8_t record_type)
 {
-  double *positive_going_threshold_hysteresis_real = NULL;
-  double *negative_going_threshold_hysteresis_real = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t positive_going_threshold_hysteresis_raw;
+  uint8_t negative_going_threshold_hysteresis_raw;
+  uint8_t sensor_number;
   uint8_t sensor_unit;
+  uint64_t val;
   int rv = -1;
 
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
+
+  /* achu:
+   *
+   * I will admit I'm not entirely sure what the best way is to get
+   * hysteresis.  It seems the information is stored/retrievable in
+   * the SDR and through an IPMI command.  Unlike thresholds, there
+   * are no masks to indicate if there is a superior way to retrieve
+   * it.
+   *
+   * We will try to read it via IPMI.  If that fails, output whatever
+   * is in the SDR.
+   */
+
+  if (sdr_cache_get_sensor_number (state_data->pstate,
+                                   sdr_record,
+                                   sdr_record_len,
+                                   &sensor_number) < 0)
+    goto cleanup;
 
   if (sdr_cache_get_sensor_unit (state_data->pstate,
                                  sdr_record,
@@ -158,70 +180,152 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
                                  &sensor_unit) < 0)
     goto cleanup;
 
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_hysteresis_rs);
+
+  if (ipmi_cmd_get_sensor_hysteresis (state_data->ipmi_ctx,
+                                      sensor_number,
+                                      IPMI_SENSOR_HYSTERESIS_MASK,
+                                      obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_sensor_hysteresis: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      
+      if (sdr_cache_get_hysteresis (state_data->pstate,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &positive_going_threshold_hysteresis_raw,
+                                    &negative_going_threshold_hysteresis_raw) < 0)
+        goto cleanup;
+    }
+  else
+    {
+      _FIID_OBJ_GET (obj_cmd_rs,
+                     "positive_going_threshold_hysteresis_value",
+                     &val);
+      positive_going_threshold_hysteresis_raw = val;
+
+      _FIID_OBJ_GET (obj_cmd_rs,
+                     "negative_going_threshold_hysteresis_value",
+                     &val);
+      negative_going_threshold_hysteresis_raw = val;
+    } 
+
   /* achu: Well, compact records don't have the values to compute a
    * hysteresis value.  Perhaps that's a typo in the spec?  We just
-   * output the integer values?  That's as good as guess as any I
-   * could make.
+   * output the integer values?  That's the best guess I can make.
    */
   
   if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
     {
-      if (sdr_cache_get_hysteresis_real (state_data->pstate,
-                                         sdr_record,
-                                         sdr_record_len,
-                                         &positive_going_threshold_hysteresis_real,
-                                         &negative_going_threshold_hysteresis_real) < 0)
-        goto cleanup;
-      
-      if (negative_going_threshold_hysteresis_real)
-        pstdout_printf (state_data->pstate, 
-                        "Negative Hysteresis: %f %s\n", 
-                        *negative_going_threshold_hysteresis_real,
-                        ipmi_sensor_units[sensor_unit]);
-      else
-        pstdout_printf (state_data->pstate,
-                        "Negative Hysteresis: %s\n", 
-                        "NA");
-      
-      if (positive_going_threshold_hysteresis_real)
+      double positive_going_threshold_hysteresis_real;
+      double negative_going_threshold_hysteresis_real;
+
+      if (positive_going_threshold_hysteresis_raw
+          || negative_going_threshold_hysteresis_raw)
+        {
+          int8_t r_exponent, b_exponent;
+          int16_t m, b;
+          uint8_t linearization, analog_data_format;
+
+          if (sdr_cache_get_sensor_decoding_data(state_data->pstate,
+                                                 sdr_record,
+                                                 sdr_record_len,
+                                                 &r_exponent,
+                                                 &b_exponent,
+                                                 &m,
+                                                 &b,
+                                                 &linearization,
+                                                 &analog_data_format) < 0)
+            goto cleanup;
+          
+          /* if the sensor is not analog, this is most likely a bug in the
+           * SDR, since we shouldn't be decoding a non-threshold sensor.
+           *
+           * Don't return an error.  Output integer value.
+           */
+          if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
+            goto output_raw;
+          
+          /* if the sensor is non-linear, I just don't know what to do
+           *
+           * Don't return an error.  Output integer value.
+           */
+          if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
+            goto output_raw;
+          
+          if (ipmi_sensor_decode_value (r_exponent,
+                                        b_exponent,
+                                        m,
+                                        b,
+                                        linearization,
+                                        analog_data_format,
+                                        positive_going_threshold_hysteresis_raw,
+                                        &positive_going_threshold_hysteresis_real) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sensor_decode_value: %s\n",
+                               strerror(errno));
+              goto cleanup;
+            }
+          
+          if (ipmi_sensor_decode_value (r_exponent,
+                                        b_exponent,
+                                        m,
+                                        b,
+                                        linearization,
+                                        analog_data_format,
+                                        negative_going_threshold_hysteresis_raw,
+                                        &negative_going_threshold_hysteresis_real) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sensor_decode_value: %s\n",
+                               strerror(errno));
+              goto cleanup;
+            }
+        }
+          
+      if (positive_going_threshold_hysteresis_raw)
         pstdout_printf (state_data->pstate, 
                         "Positive Hysteresis: %f %s\n", 
-                        *positive_going_threshold_hysteresis_real,
+                        positive_going_threshold_hysteresis_real,
                         ipmi_sensor_units[sensor_unit]);
       else
         pstdout_printf (state_data->pstate,
                         "Positive Hysteresis: %s\n", 
                         "NA");
+
+      if (negative_going_threshold_hysteresis_raw)
+        pstdout_printf (state_data->pstate, 
+                        "Negative Hysteresis: %f %s\n", 
+                        negative_going_threshold_hysteresis_real,
+                        ipmi_sensor_units[sensor_unit]);
+      else
+        pstdout_printf (state_data->pstate,
+                        "Negative Hysteresis: %s\n", 
+                        "NA");
     }
   else
-    {
-      uint8_t positive_going_threshold_hysteresis_integer;
-      uint8_t negative_going_threshold_hysteresis_integer;
-
-      if (sdr_cache_get_hysteresis_integer (state_data->pstate,
-                                            sdr_record,
-                                            sdr_record_len,
-                                            &positive_going_threshold_hysteresis_integer,
-                                            &negative_going_threshold_hysteresis_integer) < 0)
-        goto cleanup;
-      
-      pstdout_printf (state_data->pstate, 
-                      "Negative Hysteresis: %d %s\n", 
-                      negative_going_threshold_hysteresis_integer,
-                      ipmi_sensor_units[sensor_unit]);
-      
+    {          
+    output_raw:
       pstdout_printf (state_data->pstate, 
                       "Positive Hysteresis: %d %s\n", 
-                      positive_going_threshold_hysteresis_integer,
+                      positive_going_threshold_hysteresis_raw,
+                      ipmi_sensor_units[sensor_unit]);
+
+      pstdout_printf (state_data->pstate, 
+                      "Negative Hysteresis: %d %s\n", 
+                      negative_going_threshold_hysteresis_raw,
                       ipmi_sensor_units[sensor_unit]);
     }
 
   rv = 0;
  cleanup:
-  if (positive_going_threshold_hysteresis_real)
-    free(positive_going_threshold_hysteresis_real);
-  if (negative_going_threshold_hysteresis_real)
-    free(negative_going_threshold_hysteresis_real);
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 

@@ -63,6 +63,8 @@ o ipmipower
     file searched for and still supported.
   - Prefixed config file options with 'ipmipower' for consistency to
     new global FreeIPMI config file.  Old options still supported.
+o ipmi-sensors
+  - Alter some output ordering for consistency to IPMI spec.
 o ipmimonitoring
   - Output multiple bitmask strings if multiple bits are set.
 o bmc-config
