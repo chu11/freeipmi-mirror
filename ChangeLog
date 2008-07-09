@@ -1,3 +1,11 @@
+2008-07-09 Albert Chu <chu11@llnl.gov>
+	
+	* libfreeipmi/include/freeipmi/cmds/ipmi-sensor-cmds.h,
+	libfreeipmi/src/cmds/ipmi-sensor-cmds.c,
+	libfreeipmi/include/api/ipmi-sensor-cmds-api.h,
+	libfreeipmi/src/api/ipmi-sensor-cmds-api.c: Support Get/Set event
+	enable commands.
+	
 2008-07-08 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/, bmc-device/: Move --get-time and --set-time from
