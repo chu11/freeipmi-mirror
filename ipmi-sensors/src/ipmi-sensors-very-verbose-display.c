@@ -164,7 +164,8 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
    * are no masks to indicate if there is a superior way to retrieve
    * it.
    *
-   * We will try to read it via IPMI.  If that fails, output whatever
+   * We will try to read it via IPMI, since a change to the hysteresis 
+   * may not be written to the SDR.  If a read fails, output whatever
    * is in the SDR.
    */
 

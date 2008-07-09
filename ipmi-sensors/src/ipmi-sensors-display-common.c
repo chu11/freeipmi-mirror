@@ -135,7 +135,13 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
    * Since the readable_threshold_mask in the SDR record indicates the
    * mask is for the "Get Sensor Thresholds" command, it suggests the
    * best/right way is to get the values via that command.  Sounds
-   * good to me.
+   * good to me.  Also, I suppose its possible that changes to the
+   * thresholds may not be written to the SDR.
+   *
+   * Also, because the results from the get_sensor_thresholds include
+   * readability flags, we can ignore the readability flags in the
+   * SDR.
+   * 
    */
 
   if (sdr_cache_get_sensor_number (state_data->pstate,
