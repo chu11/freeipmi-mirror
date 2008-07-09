@@ -23,6 +23,11 @@ bmc-config
 remaining serial config
 advanced option??
 
+ipmi-sensors
+------------
+get hysteresis via get hystereis instead of SDR?
+output enable/disable event flag information
+
 ipmi-chassis-config
 -------------------
 power cycle interval
