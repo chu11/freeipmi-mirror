@@ -29,6 +29,7 @@ get hysteresis via get hystereis instead of SDR?
 output enable/disable event flag information
 check "all event messages disabled" or "sensor scaning disabled" or
 "reading/state unavailable" flag from get sensor reading?
+sensor_state --> sensor_event_bitmask
 
 ipmi-chassis-config
 -------------------
