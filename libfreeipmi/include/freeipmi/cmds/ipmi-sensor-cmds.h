@@ -228,6 +228,8 @@ int8_t fill_cmd_set_sensor_event_enable_discrete (uint8_t sensor_number,
                                                   uint8_t deassertion_event_state_bit_14, 
                                                   fiid_obj_t obj_cmd_rq);
 
+int8_t fill_cmd_get_sensor_event_enable (uint8_t sensor_number, fiid_obj_t obj_cmd_rq);
+
 int8_t fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
