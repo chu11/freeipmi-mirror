@@ -433,7 +433,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
   if (upper_critical_threshold)
     *upper_critical_threshold = tmp_upper_critical_threshold;
   if (upper_non_recoverable_threshold)
-  *upper_non_recoverable_threshold = tmp_upper_non_recoverable_threshold;
+    *upper_non_recoverable_threshold = tmp_upper_non_recoverable_threshold;
 
   rv = 0;
  cleanup:
