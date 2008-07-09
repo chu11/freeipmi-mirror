@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.21 2008-07-09 21:19:43 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.22 2008-07-09 21:21:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -223,7 +223,7 @@ _get_sensor_state(ipmi_monitoring_ctx_t c,
                   uint16_t sensor_event_bitmask,
                   struct ipmi_sensor_config *config)
 {
-  int sensor_state_value = IPMI_MONITORING_SENSOR_STATE_NOMINAL;
+  int sensor_state = IPMI_MONITORING_SENSOR_STATE_NOMINAL;
   int i = 0;
 
   assert(c);
@@ -235,13 +235,13 @@ _get_sensor_state(ipmi_monitoring_ctx_t c,
     {
       if (sensor_event_bitmask & (0x1 << i))
         {
-          if (config[i].sensor_state > sensor_state_value)
-            sensor_state_value = config[i].sensor_state;
+          if (config[i].sensor_state > sensor_state)
+            sensor_state = config[i].sensor_state;
         }
       i++;
     }
 
-  return sensor_state_value;
+  return sensor_state;
 }
 
 static int
@@ -508,7 +508,7 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
   uint16_t sensor_event_bitmask;
   uint64_t val;
   int sensor_units;
-  int sensor_state_value;
+  int sensor_state;
   double sensor_value;
   int ret;
 
@@ -651,7 +651,7 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
       return -1;
     }
 
-  if ((sensor_state_value = _get_threshold_sensor_state(c, sensor_event_bitmask)) < 0)
+  if ((sensor_state = _get_threshold_sensor_state(c, sensor_event_bitmask)) < 0)
     return -1;
 
   if ((sensor_units = _get_sensor_units(c,
@@ -666,7 +666,7 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
                             record_id,
                             sensor_group,
                             sensor_name,
-                            sensor_state_value,
+                            sensor_state,
                             sensor_units,
                             IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE,
                             IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN,
@@ -678,7 +678,7 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
 
 static int
 _get_digital_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
-                                uint8_t event_reading_type_code)
+                                 uint8_t event_reading_type_code)
 {
   int sensor_bitmask_type;
 
@@ -736,7 +736,7 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
   char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
   uint8_t sensor_reading;
   uint16_t sensor_event_bitmask;
-  int sensor_state_value;
+  int sensor_state;
   int sensor_bitmask_type;
   int ret;
 
@@ -765,14 +765,14 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
       return 0;
     }
 
-  if ((sensor_state_value = _get_digital_sensor_state(c, 
-                                                      event_reading_type_code, 
-                                                      sensor_type,
-                                                      sensor_event_bitmask)) < 0)
+  if ((sensor_state = _get_digital_sensor_state(c, 
+                                                event_reading_type_code, 
+                                                sensor_type,
+                                                sensor_event_bitmask)) < 0)
     return -1;
 
   if ((sensor_bitmask_type = _get_digital_sensor_bitmask_type(c, 
-                                                            event_reading_type_code)) < 0)
+                                                              event_reading_type_code)) < 0)
     return -1;
   
   /* The sensor "reading" is a bitmask */
@@ -781,7 +781,7 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
                             record_id,
                             sensor_group,
                             sensor_name,
-                            sensor_state_value,
+                            sensor_state,
                             IPMI_MONITORING_SENSOR_UNITS_NONE,
                             IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK,
                             sensor_bitmask_type,
@@ -793,7 +793,7 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
 
 static int
 _get_specific_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
-                                 uint8_t sensor_type)
+                                  uint8_t sensor_type)
 {
   int sensor_bitmask_type;
 
@@ -857,7 +857,7 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
   char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
   uint8_t sensor_reading;
   uint16_t sensor_event_bitmask;
-  int sensor_state_value;
+  int sensor_state;
   int sensor_bitmask_type;
   int ret;
 
@@ -884,9 +884,9 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
       return 0;
     }
   
-  if ((sensor_state_value = _get_specific_sensor_state(c, 
-                                                       sensor_type, 
-                                                       sensor_event_bitmask)) < 0)
+  if ((sensor_state = _get_specific_sensor_state(c, 
+                                                 sensor_type, 
+                                                 sensor_event_bitmask)) < 0)
     return -1;
 
   if ((sensor_bitmask_type = _get_specific_sensor_bitmask_type(c,
@@ -899,7 +899,7 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
                             record_id,
                             sensor_group,
                             sensor_name,
-                            sensor_state_value,
+                            sensor_state,
                             IPMI_MONITORING_SENSOR_UNITS_NONE,
                             IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK,
                             sensor_bitmask_type,
