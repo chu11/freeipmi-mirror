@@ -22,6 +22,9 @@
 	(ipmi_sensors_get_thresholds): Before issuing threshold reading
 	commands, check if threshold can even be read.
 
+	* ipmi-sensors/src/ipmi-sensors-reading.c (sensor_reading): Check
+	for unavailable sensor readings.
+
 2008-07-09 Albert Chu <chu11@llnl.gov>
 	
 	* libfreeipmi/include/freeipmi/cmds/ipmi-sensor-cmds.h,
