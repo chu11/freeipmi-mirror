@@ -1,3 +1,9 @@
+2008-07-10 Albert Chu <chu11@llnl.gov>
+
+        * ipmi-sensors/src/ipmi-sensors-reading.c
+        (_get_threshold_message_list, _get_generic_event_message_list,
+        _get_sensor_specific_event_message_list): Fix cleanup corner case.
+	
 2008-07-07 Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-config.c, pef-config/src/pef-config.c,

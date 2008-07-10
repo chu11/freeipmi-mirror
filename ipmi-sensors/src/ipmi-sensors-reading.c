@@ -140,7 +140,7 @@ _get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
 
  cleanup:
   for (i = 0; i < num_messages; i++)
-    free(tmp_message_list[num_messages]);
+    free(tmp_message_list[i]);
   if (tmp_event_message_list)
     free(tmp_event_message_list);
   return -1;
@@ -220,7 +220,7 @@ _get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
 
  cleanup:
   for (i = 0; i < num_messages; i++)
-    free(tmp_message_list[num_messages]);
+    free(tmp_message_list[i]);
   if (tmp_event_message_list)
     free(tmp_event_message_list);
   return -1;
@@ -301,7 +301,7 @@ _get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_d
 
  cleanup:
   for (i = 0; i < num_messages; i++)
-    free(tmp_message_list[num_messages]);
+    free(tmp_message_list[i]);
   if (tmp_event_message_list)
     free(tmp_event_message_list);
   return -1;
