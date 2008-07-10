@@ -28,6 +28,10 @@
 	* ipmi-sensors/src/ipmi-sensors-reading.c (_get_na_message_list):
 	New function.
 
+	* ipmi-sensors/src/ipmi-sensors-reading.c (sensor_reading): If
+	sensor is not linear or has invalid analog_data_format, still try
+	to get proper event message list before falling through.
+
 2008-07-09 Albert Chu <chu11@llnl.gov>
 	
 	* libfreeipmi/include/freeipmi/cmds/ipmi-sensor-cmds.h,
