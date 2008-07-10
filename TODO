@@ -118,7 +118,8 @@ update w/ bmc-device manpage
 update all manpages and docs
 update w/ freeipmi.conf.5 manpage
 - remove ipmiconsole.conf.5 and ipmipower.conf.5
-add example conf file to docs
+add example conf file to docs??
+- example sensors_config too?
 
 RELEASE TODOS - Do on every release
 -----------------------------------
