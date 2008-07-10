@@ -2,6 +2,8 @@
 
 	* ipmipower/ipmipower.8.pre.in: Add default info.
 
+	* man/freeipmi.conf.5.pre.in: Add default config file path info.
+
 	* etc/: New dir.
 
 	* etc/freeipmi.conf: New default freeipmi.conf file.
