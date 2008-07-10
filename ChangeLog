@@ -17,7 +17,11 @@
 	* ipmi-sensors/src/ipmi-sensors-very-verbose-display.c
 	(_output_very_verbose_hysteresis): Before issuing hysteresis
 	command, check if hysteresis can even be read.
-	
+
+	* ipmi-sensors/src/ipmi-sensors-display-common.c
+	(ipmi_sensors_get_thresholds): Before issuing threshold reading
+	commands, check if threshold can even be read.
+
 2008-07-09 Albert Chu <chu11@llnl.gov>
 	
 	* libfreeipmi/include/freeipmi/cmds/ipmi-sensor-cmds.h,

@@ -106,6 +106,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
   double *tmp_upper_critical_threshold = NULL;
   double *tmp_upper_non_recoverable_threshold = NULL;
   double threshold;
+  uint8_t threshold_access_support;
   uint64_t val;
   int rv = -1;
 
@@ -125,6 +126,21 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
     *upper_critical_threshold = NULL;
   if (upper_non_recoverable_threshold)
     *upper_non_recoverable_threshold = NULL;
+
+  /* achu: first lets check if we have anything to output */
+  if (sdr_cache_get_sensor_capabilities (state_data->pstate,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         NULL,
+                                         &threshold_access_support,
+                                         NULL,
+                                         NULL,
+                                         NULL) < 0)
+    goto cleanup;
+
+  if (threshold_access_support == IPMI_SDR_NO_THRESHOLDS_SUPPORT
+      || threshold_access_support == IPMI_SDR_FIXED_UNREADABLE_THRESHOLDS_SUPPORT)
+    goto output_na;
 
   /* achu:
    *
@@ -428,6 +444,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
         }
     }
 
+ output_na:
   if (lower_non_critical_threshold)
     *lower_non_critical_threshold = tmp_lower_non_critical_threshold;
   if (lower_critical_threshold)
