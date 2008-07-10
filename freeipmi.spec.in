@@ -169,7 +169,8 @@ fi
 
 %files
 %defattr(-,root,root)
-%attr(0444,root,root) %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/freeipmi.conf
 %doc %{_datadir}/doc/%{name}/AUTHORS
 %doc %{_datadir}/doc/%{name}/COPYING
 %doc %{_datadir}/doc/%{name}/ChangeLog
@@ -314,6 +315,10 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Thu Jul 10 2008 Albert Chu <chu11@llnl.gov> 0.7.0
+- Add freeipmi.conf default file. 
+- Make 0644 perms default for config files.
+
 * Sat May 21 2008 Albert Chu <chu11@llnl.gov> 0.7.0
 - Add freeipmi.conf.5.
 

@@ -1,6 +1,12 @@
 2008-07-10 Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.8.pre.in: Add default info.
+
+	* etc/: New dir.
+
+	* etc/freeipmi.conf: New default freeipmi.conf file.
+
+	* configure.ac, freeipmi.spec.in: Update appropriately for new files.
 	
 2008-07-09 Albert Chu <chu11@llnl.gov>
 	

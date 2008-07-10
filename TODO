@@ -18,6 +18,11 @@ solaris
 -------
 - solaris inband driver (solaris 9? solaris 10? solaris 11?)
 
+config
+------
+debugging - output default values used
+install example .conf file
+
 bmc-config
 ----------
 remaining serial config
