@@ -29,6 +29,10 @@ output enable/disable event flag information
 check "all event messages disabled" or "sensor scaning disabled" or
 "reading/state unavailable" flag from get sensor reading?
 
+ipmi-sensors/ipmi-sensors-config
+--------------------------------
+hysteresis and thresholds only if hysteresis readlba/settable based on SDR flag
+
 ipmi-chassis-config
 -------------------
 power cycle interval
