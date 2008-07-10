@@ -49,6 +49,44 @@
 #define IPMI_SENSORS_MAX_LIST   32
 
 static int
+_get_na_message_list (struct ipmi_sensors_state_data *state_data,
+                      char ***event_message_list,
+                      unsigned int *event_message_list_len)
+{
+  char **tmp_event_message_list = NULL;
+  int count = 0;
+  
+  assert(state_data);
+  assert(event_message_list);
+  assert(event_message_list_len);
+
+  count = 1;
+    
+  if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (count + 1))))
+    {
+      pstdout_perror(state_data->pstate, "malloc");
+      goto cleanup;
+    }
+    
+  if (!(tmp_event_message_list[0] = strdup("NA")))
+    {
+      pstdout_perror(state_data->pstate, "strdup");
+      goto cleanup;
+    }
+  
+  tmp_event_message_list[count] = NULL;
+  *event_message_list = tmp_event_message_list;
+  *event_message_list_len = 1;
+
+  return 0;
+
+ cleanup:
+  if (tmp_event_message_list)
+    free(tmp_event_message_list);
+  return -1;
+}
+
+static int
 _get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
                              char ***event_message_list,
                              unsigned int *event_message_list_len,
@@ -414,6 +452,13 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "Sensor reading unavailable\n");
+
+      /* make status message "na" instead of "unknown" */
+      if (_get_na_message_list (state_data,
+                                event_message_list,
+                                event_message_list_len) < 0)
+        goto cleanup;
+      
       rv = 0;
       goto cleanup;
     }
