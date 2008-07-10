@@ -422,7 +422,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
    * 
    * Note: I don't bother checking the "all_event_messages" or
    * "sensor_scanning" from the get_sensor_reading response.  If that
-   * stuff is turned off.  The bitmasks should be zeroed out.
+   * stuff is turned off, the bitmasks should be zeroed out.
    *
    * Hopefully this doesn't bite me later on.
    */
