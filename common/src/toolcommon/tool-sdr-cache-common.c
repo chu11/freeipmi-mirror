@@ -1175,6 +1175,75 @@ sdr_cache_get_device_id_string (pstdout_state_t pstate,
 }
 
 int 
+sdr_cache_get_sensor_capabilities (pstdout_state_t pstate,
+                                   uint8_t *sdr_record,
+                                   unsigned int sdr_record_len,
+                                   uint8_t *event_message_control_support,
+                                   uint8_t *threshold_access_support,
+                                   uint8_t *hysteresis_support,
+                                   uint8_t *auto_re_arm_support,
+                                   uint8_t *entity_ignore_support)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+    
+  if (event_message_control_support)
+    {
+      _SDR_FIID_OBJ_GET (obj_sdr_record, 
+                         "sensor_capabilities.event_message_control_support", 
+                         &val);
+      *event_message_control_support = val;
+    }
+  if (threshold_access_support)
+    {
+      _SDR_FIID_OBJ_GET (obj_sdr_record, 
+                         "sensor_capabilities.threshold_access_support", 
+                         &val);
+      *threshold_access_support = val;
+    }
+  if (hysteresis_support)
+    {
+      _SDR_FIID_OBJ_GET (obj_sdr_record, 
+                         "sensor_capabilities.hysteresis_support", 
+                         &val);
+      *hysteresis_support = val;
+    }
+  if (auto_re_arm_support)
+    {
+      _SDR_FIID_OBJ_GET (obj_sdr_record, 
+                         "sensor_capabilities.auto_re_arm_support", 
+                         &val);
+      *auto_re_arm_support = val;
+    }
+  if (entity_ignore_support)
+    {
+      _SDR_FIID_OBJ_GET (obj_sdr_record, 
+                         "sensor_capabilities.entity_ignore_support", 
+                         &val);
+      *entity_ignore_support = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv; 
+}
+
+int 
 sdr_cache_get_sensor_decoding_data (pstdout_state_t pstate,
                                     uint8_t *sdr_record,
                                     unsigned int sdr_record_len,

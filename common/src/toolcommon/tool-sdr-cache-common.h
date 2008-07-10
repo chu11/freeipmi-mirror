@@ -110,6 +110,15 @@ int sdr_cache_get_device_id_string (pstdout_state_t pstate,
                                     char *device_id_string,
                                     unsigned int device_id_string_len);
 
+int sdr_cache_get_sensor_capabilities (pstdout_state_t pstate,
+                                       uint8_t *sdr_record,
+                                       unsigned int sdr_record_len,
+                                       uint8_t *event_message_control_support,
+                                       uint8_t *threshold_access_support,
+                                       uint8_t *hysteresis_support,
+                                       uint8_t *auto_re_arm_support,
+                                       uint8_t *entity_ignore_support);
+                                       
 int sdr_cache_get_sensor_decoding_data (pstdout_state_t pstate,
                                         uint8_t *sdr_record,
                                         unsigned int sdr_record_len,

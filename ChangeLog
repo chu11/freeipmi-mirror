@@ -9,6 +9,14 @@
 	* etc/freeipmi.conf: New default freeipmi.conf file.
 
 	* configure.ac, freeipmi.spec.in: Update appropriately for new files.
+
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+	common/src/toolcommon/tool-sdr-cache-common.c
+	(sdr_cache_get_sensor_capabilities): New function.
+
+	* ipmi-sensors/src/ipmi-sensors-very-verbose-display.c
+	(_output_very_verbose_hysteresis): Before issuing hysteresis
+	command, check if hysteresis can even be read.
 	
 2008-07-09 Albert Chu <chu11@llnl.gov>
 	

@@ -145,16 +145,32 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
                                  uint8_t record_type)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t positive_going_threshold_hysteresis_raw;
-  uint8_t negative_going_threshold_hysteresis_raw;
+  uint8_t positive_going_threshold_hysteresis_raw = 0;
+  uint8_t negative_going_threshold_hysteresis_raw = 0;
   uint8_t sensor_number;
   uint8_t sensor_unit;
+  uint8_t hysteresis_support;
   uint64_t val;
   int rv = -1;
 
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
+
+  /* achu: first lets check if we have anything to output */
+  if (sdr_cache_get_sensor_capabilities (state_data->pstate,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         NULL,
+                                         NULL,
+                                         &hysteresis_support,
+                                         NULL,
+                                         NULL) < 0)
+    goto cleanup;
+
+  if (hysteresis_support == IPMI_SDR_NO_HYSTERESIS_SUPPORT
+      || hysteresis_support == IPMI_SDR_FIXED_UNREADABLE_HYSTERESIS_SUPPORT)
+    goto output_raw;
 
   /* achu:
    *
@@ -313,15 +329,25 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
   else
     {          
     output_raw:
-      pstdout_printf (state_data->pstate, 
-                      "Positive Hysteresis: %d %s\n", 
-                      positive_going_threshold_hysteresis_raw,
-                      ipmi_sensor_units[sensor_unit]);
+      if (positive_going_threshold_hysteresis_raw)
+        pstdout_printf (state_data->pstate, 
+                        "Positive Hysteresis: %d %s\n", 
+                        positive_going_threshold_hysteresis_raw,
+                        ipmi_sensor_units[sensor_unit]);
+      else
+        pstdout_printf (state_data->pstate,
+                        "Positive Hysteresis: %s\n", 
+                        "NA");
 
-      pstdout_printf (state_data->pstate, 
-                      "Negative Hysteresis: %d %s\n", 
-                      negative_going_threshold_hysteresis_raw,
-                      ipmi_sensor_units[sensor_unit]);
+      if (negative_going_threshold_hysteresis_raw)
+        pstdout_printf (state_data->pstate, 
+                        "Negative Hysteresis: %d %s\n", 
+                        negative_going_threshold_hysteresis_raw,
+                        ipmi_sensor_units[sensor_unit]);
+      else
+        pstdout_printf (state_data->pstate,
+                        "Negative Hysteresis: %s\n", 
+                        "NA");
     }
 
   rv = 0;
