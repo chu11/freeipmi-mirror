@@ -404,6 +404,29 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
       goto cleanup;
     }
 
+  _FIID_OBJ_GET (obj_cmd_rs,
+                 "reading_state",
+                 &val);
+  
+  if (val == IPMI_SENSOR_READING_STATE_UNAVAILABLE)
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Sensor reading unavailable\n");
+      rv = 0;
+      goto cleanup;
+    }
+
+  /* achu:
+   * 
+   * Note: I don't bother checking the "all_event_messages" or
+   * "sensor_scanning" from the get_sensor_reading response.  If that
+   * stuff is turned off.  The bitmasks should be zeroed out.
+   *
+   * Hopefully this doesn't bite me later on.
+   */
+
   _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
                                    "sensor_event_bitmask1",
                                    &sensor_event_bitmask1,
@@ -413,7 +436,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                    "sensor_event_bitmask2",
                                    &sensor_event_bitmask2,
                                    sensor_event_bitmask2_len);
-  
+ 
   /* 
    * IPMI Workaround (achu)
    *
