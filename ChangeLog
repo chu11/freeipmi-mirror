@@ -25,6 +25,9 @@
 	* ipmi-sensors/src/ipmi-sensors-reading.c (sensor_reading): Check
 	for unavailable sensor readings.
 
+	* ipmi-sensors/src/ipmi-sensors-reading.c (_get_na_message_list):
+	New function.
+
 2008-07-09 Albert Chu <chu11@llnl.gov>
 	
 	* libfreeipmi/include/freeipmi/cmds/ipmi-sensor-cmds.h,
