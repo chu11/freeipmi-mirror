@@ -541,6 +541,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                 stderr,
                                 "Attempting to decode non-analog sensor\n");
 
+              /* still get event messages */
               if (_get_threshold_message_list (state_data,
                                                event_message_list,
                                                event_message_list_len,
@@ -561,6 +562,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                 stderr,
                                 "Cannot decode non-linear sensor\n");
 
+              /* still get event messages */
               if (_get_threshold_message_list (state_data,
                                                event_message_list,
                                                event_message_list_len,
