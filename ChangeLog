@@ -4,6 +4,8 @@
 	lines under verbose mode.  Retrieve hysteresis only from IPMI cmd,
 	not from SDR.  Support output of event enable information in very
 	verbose mode.
+
+	* common/src/miscutil/hostlist.c: update to newest lib version.
 	
 2008-07-10 Albert Chu <chu11@llnl.gov>
 
