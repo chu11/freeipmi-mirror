@@ -55,6 +55,8 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
+fatal vs. non-fatal error dependent on error code returned from ipmi_ctx
+- i.e. timeout == fatal, bad completion code == non-fatal
 
 config
 ------

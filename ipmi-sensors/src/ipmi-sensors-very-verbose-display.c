@@ -33,6 +33,7 @@
 
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-display-common.h"
+#include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -40,6 +41,8 @@
 #include "tool-sensor-common.h"
 
 #define IPMI_SENSORS_OEM_DATA_LEN 1024
+
+#define IPMI_SENSORS_NONE_MSG     "NONE"
 
 static int
 _output_very_verbose_record_type_and_id (ipmi_sensors_state_data_t *state_data,
@@ -178,9 +181,8 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
    * hysteresis.  It seems the information is stored/retrievable in
    * the SDR and through an IPMI command.
    *
-   * We will try to read it via IPMI, since a change to the hysteresis 
-   * may not be written to the SDR.  If a read fails, output whatever
-   * is in the SDR.
+   * We will try to read it via IPMI like we do with thresholds, since
+   * a change to the hysteresis may not be written to the SDR.
    */
 
   if (sdr_cache_get_sensor_number (state_data->pstate,
@@ -208,25 +210,31 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
                         "ipmi_cmd_get_sensor_hysteresis: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       
-      if (sdr_cache_get_hysteresis (state_data->pstate,
-                                    sdr_record,
-                                    sdr_record_len,
-                                    &positive_going_threshold_hysteresis_raw,
-                                    &negative_going_threshold_hysteresis_raw) < 0)
-        goto cleanup;
+      if ((ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID)
+          && (ipmi_check_completion_code(obj_cmd_rs,
+                                         IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
+              || ipmi_check_completion_code(obj_cmd_rs,
+                                            IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+        {
+          /* The hysteresis cannot be gathered for one reason or
+           * another, maybe b/c its a OEM sensor or something.  Output
+           * "NA" stuff in output_raw.
+           */
+          goto output_raw;
+        }
+      
+      goto cleanup;
     }
-  else
-    {
-      _FIID_OBJ_GET (obj_cmd_rs,
-                     "positive_going_threshold_hysteresis_value",
-                     &val);
-      positive_going_threshold_hysteresis_raw = val;
 
-      _FIID_OBJ_GET (obj_cmd_rs,
-                     "negative_going_threshold_hysteresis_value",
-                     &val);
-      negative_going_threshold_hysteresis_raw = val;
-    } 
+  _FIID_OBJ_GET (obj_cmd_rs,
+                 "positive_going_threshold_hysteresis_value",
+                 &val);
+  positive_going_threshold_hysteresis_raw = val;
+  
+  _FIID_OBJ_GET (obj_cmd_rs,
+                 "negative_going_threshold_hysteresis_value",
+                 &val);
+  negative_going_threshold_hysteresis_raw = val;
 
   /* achu: Well, compact records don't have the values to compute a
    * hysteresis value.  Perhaps that's a typo in the spec?  We just
@@ -354,6 +362,215 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
   return rv;
 }
 
+static int
+_output_very_verbose_event_enable (ipmi_sensors_state_data_t *state_data,
+                                   uint8_t *sdr_record,
+                                   unsigned int sdr_record_len,
+                                   uint8_t record_type)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t sensor_number;
+  int sensor_class;
+  uint64_t val;
+  uint8_t event_reading_type_code;
+  uint8_t sensor_type;
+  char **assertion_event_message_list = NULL;
+  unsigned int assertion_event_message_list_len = 0;
+  char **deassertion_event_message_list = NULL;
+  unsigned int deassertion_event_message_list_len = 0;
+  int8_t field_len;
+  int rv = -1;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  /* achu:
+   *
+   * I will admit I'm not entirely sure what the best way is to get
+   * event enables.  It seems the information is stored/retrievable in
+   * the SDR and through an IPMI command.
+   *
+   * We will try to read it via IPMI like we do with thresholds, since
+   * a change to the event enables may not be written to the SDR.
+   */
+
+  if (sdr_cache_get_sensor_number (state_data->pstate,
+                                   sdr_record,
+                                   sdr_record_len,
+                                   &sensor_number) < 0)
+    goto cleanup;
+
+  if (sdr_cache_get_event_reading_type_code (state_data->pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
+    goto cleanup;
+
+  sensor_class = sensor_classify (event_reading_type_code);
+
+  if (sensor_class != SENSOR_CLASS_THRESHOLD
+      && sensor_class != SENSOR_CLASS_GENERIC_DISCRETE
+      && sensor_class !=  SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Cannot handle event enables for event type reading code: 0x%X\n",
+                        event_reading_type_code);
+      rv = 0;
+      goto cleanup;
+    }
+
+  if (sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
+    {
+      if (sdr_cache_get_sensor_type (state_data->pstate,
+                                     sdr_record,
+                                     sdr_record_len,
+                                     &sensor_type) < 0)
+        goto cleanup;
+    }
+  
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_event_enable_rs);
+  
+  if (ipmi_cmd_get_sensor_event_enable (state_data->ipmi_ctx,
+                                        sensor_number,
+                                        obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_sensor_hysteresis: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      
+      if ((ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID)
+          && (ipmi_check_completion_code(obj_cmd_rs,
+                                         IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
+              || ipmi_check_completion_code(obj_cmd_rs,
+                                            IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+        {
+          /* The event enables cannot be gathered for one reason or
+           * another, maybe b/c its a OEM sensor or something.  Just
+           * don't output this info.
+           */
+          rv = 0;
+          goto cleanup;
+        }
+      
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET (obj_cmd_rs,
+                 "all_event_messages",
+                 &val);
+  
+  if (val == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE)
+    {
+      pstdout_printf (state_data->pstate,
+                      "Assertion Events Enabled: [All Event Messages Disabled]\n");
+      pstdout_printf (state_data->pstate,
+                      "Deassertion Events Enabled: [All Event Messages Disabled]\n");
+      rv = 0;
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET (obj_cmd_rs,
+                 "scanning_on_this_sensor",
+                 &val);
+
+  if (val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
+    {
+      pstdout_printf (state_data->pstate,
+                      "Assertion Events Enabled: [Sensor Scanning Disabled]\n");
+      pstdout_printf (state_data->pstate,
+                      "Deassertion Events Enabled: [Sensor Scanning Disabled]\n");
+      rv = 0;
+      goto cleanup;
+    }
+
+  /* achu: According to the spec, bytes 3-6 of the packet should exist
+   * if all event messages are not disabled and sensor scanning is not
+   * disabled.
+   */
+
+  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
+                                   "assertion_event_bitmask",
+                                   &val,
+                                   field_len);
+  if (field_len)
+    {
+      if (sensor_class == SENSOR_CLASS_THRESHOLD
+          || sensor_class == SENSOR_CLASS_GENERIC_DISCRETE)
+        {
+          if (get_generic_event_message_list (state_data,
+                                              &assertion_event_message_list,
+                                              &assertion_event_message_list_len,
+                                              event_reading_type_code,
+                                              (uint16_t)val,
+                                              IPMI_SENSORS_NONE_MSG) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          if (get_sensor_specific_event_message_list (state_data,
+                                                      &assertion_event_message_list,
+                                                      &assertion_event_message_list_len,
+                                                      sensor_type,
+                                                      (uint16_t)val,
+                                                      IPMI_SENSORS_NONE_MSG) < 0)
+            goto cleanup;
+        }
+
+      if (ipmi_sensors_output_event_message_list (state_data,
+                                                  assertion_event_message_list,
+                                                  assertion_event_message_list_len,
+                                                  "Assertion Events Enabled: ",
+                                                  1) < 0)
+        goto cleanup;
+    }
+
+  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
+                                   "deassertion_event_bitmask",
+                                   &val,
+                                   field_len);
+  if (field_len)
+    {
+      if (sensor_class == SENSOR_CLASS_THRESHOLD
+          || sensor_class == SENSOR_CLASS_GENERIC_DISCRETE)
+        {
+          if (get_generic_event_message_list (state_data,
+                                              &deassertion_event_message_list,
+                                              &deassertion_event_message_list_len,
+                                              event_reading_type_code,
+                                              (uint16_t)val,
+                                              IPMI_SENSORS_NONE_MSG) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          if (get_sensor_specific_event_message_list (state_data,
+                                                      &deassertion_event_message_list,
+                                                      &deassertion_event_message_list_len,
+                                                      sensor_type,
+                                                      (uint16_t)val,
+                                                      IPMI_SENSORS_NONE_MSG) < 0)
+            goto cleanup;
+        }
+      
+      if (ipmi_sensors_output_event_message_list (state_data,
+                                                  deassertion_event_message_list,
+                                                  deassertion_event_message_list_len,
+                                                  "Deassertion Events Enabled: ",
+                                                  1) < 0)
+        goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  return rv;
+}
+
 static int 
 sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                                           uint8_t *sdr_record,
@@ -425,6 +642,12 @@ sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                                        record_type) < 0)
     return -1;
 
+  if (_output_very_verbose_event_enable (state_data,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         record_type) < 0)
+    return -1;
+
   if (ipmi_sensors_output_verbose_sensor_reading (state_data,
                                                   sdr_record,
                                                   sdr_record_len,
@@ -465,6 +688,12 @@ sensors_display_very_verbose_compact_record (ipmi_sensors_state_data_t *state_da
                                        sdr_record,
                                        sdr_record_len,
                                        record_type) < 0)
+    return -1;
+
+  if (_output_very_verbose_event_enable (state_data,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         record_type) < 0)
     return -1;
 
   if (ipmi_sensors_output_verbose_event_message_list (state_data,

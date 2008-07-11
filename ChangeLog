@@ -1,7 +1,9 @@
 2008-07-11 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/src/: Output multiple event messages on multiple
-	lines under verbose mode.
+	lines under verbose mode.  Retrieve hysteresis only from IPMI cmd,
+	not from SDR.  Support output of event enable information in very
+	verbose mode.
 	
 2008-07-10 Albert Chu <chu11@llnl.gov>
 
