@@ -39,21 +39,54 @@
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
 
+#define IPMI_SENSORS_SPACE_BUFFER 1024
+
 int
 ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                                         char **event_message_list,
-                                        unsigned int event_message_list_len)
+                                        unsigned int event_message_list_len,
+                                        char *prefix,
+                                        unsigned int each_on_newline)
 {
+  char spcbuf[IPMI_SENSORS_SPACE_BUFFER + 1];
+  int i;
+
   assert(state_data);
+  
+  if (prefix)
+    pstdout_printf (state_data->pstate, "%s", prefix);
+  
+  memset(spcbuf, '\0', IPMI_SENSORS_SPACE_BUFFER + 1);
+  if (prefix && each_on_newline)
+    {
+      unsigned int len;
+      
+      len = strlen(prefix);
+      if (len > IPMI_SENSORS_SPACE_BUFFER)
+        len = IPMI_SENSORS_SPACE_BUFFER;
+      
+      for (i = 0; i < len; i++)
+        strcat(spcbuf, " ");
+    }
   
   if (event_message_list)
     {
-      int i;
-      
-      for (i = 0; i < event_message_list_len; i++)
+      if (event_message_list_len >= 1)
         pstdout_printf (state_data->pstate,
                         "[%s]",
-                        event_message_list[i]);
+                        event_message_list[0]);
+
+      for (i = 1; i < event_message_list_len; i++)
+        {
+          if (each_on_newline)
+            pstdout_printf (state_data->pstate,
+                            "\n");
+          pstdout_printf (state_data->pstate,
+                          "%s[%s]",
+                          spcbuf,
+                          event_message_list[i]);
+        }
+
       pstdout_printf (state_data->pstate,
                       "\n");
     }
@@ -71,13 +104,12 @@ ipmi_sensors_output_verbose_event_message_list (ipmi_sensors_state_data_t *state
                                                 unsigned int event_message_list_len)
 {
   assert (state_data);
-
-  pstdout_printf (state_data->pstate, 
-                  "Sensor Status: ");
-  
+ 
   if (ipmi_sensors_output_event_message_list (state_data,
                                               event_message_list,
-                                              event_message_list_len) < 0)
+                                              event_message_list_len,
+                                              "Sensor Status: ",
+                                              1) < 0)
     return -1;
   
   return 0;

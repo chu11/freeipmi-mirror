@@ -73,6 +73,8 @@ o ipmi-sensors
     sensor is disabled on the motherboard, the sensor status will
     likely report "NA".  Previously, "OK" would have been
     reported under both conditions.
+  - Output multiple sensor status messages on separate lines, rather
+    than all on one line under verbose modes.
   - Alter some output ordering for consistency to IPMI spec.
 o ipmimonitoring
   - Output multiple bitmask strings if multiple bits are set.

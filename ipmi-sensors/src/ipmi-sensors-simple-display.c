@@ -180,7 +180,9 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
     default:
       if (ipmi_sensors_output_event_message_list(state_data,
                                                  event_message_list,
-                                                 event_message_list_len) < 0)
+                                                 event_message_list_len,
+                                                 NULL,
+                                                 0) < 0)
         goto cleanup;
       break;
     }
@@ -214,7 +216,9 @@ sensors_display_simple_compact_record (ipmi_sensors_state_data_t *state_data,
 
   if (ipmi_sensors_output_event_message_list(state_data,
                                              event_message_list,
-                                             event_message_list_len) < 0)
+                                             event_message_list_len,
+                                             NULL,
+                                             0) < 0)
     return -1;
   
   return 0;
