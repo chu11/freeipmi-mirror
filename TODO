@@ -23,14 +23,6 @@ bmc-config
 remaining serial config
 advanced option??
 
-ipmi-sensors
-------------
-output enable/disable event flag information
-
-ipmi-sensors-config
---------------------------------
-hysteresis and thresholds only if hysteresis readlba/settable based on SDR flag
-
 ipmi-chassis-config
 -------------------
 power cycle interval
@@ -80,6 +72,8 @@ ipmi-sensors-config
 - sensor event enable/disable??
 35.6/35.7
 - sensor hysterisis enable/disable??
+output hysteresis and thresholds only if hysteresis readlba/settable
+based on SDR flag
 
 libs
 ----
