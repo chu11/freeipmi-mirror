@@ -65,12 +65,14 @@ o ipmipower
     new global FreeIPMI config file.  Old options still supported.
 o ipmi-sensors
   - Check variety of corner cases such as whether sensor readings,
-    thresholds, etc. are even available before reading them.  Some sensors
-    may output slightly different information than before.  For example, 
-    suppose a power supply sensor exists for a power supply that is
-    not installed.  If the sensor is enabled, the sensor status will
-    likely report "OK".  If the sensor is disabled, the sensor status
-    will likely report "NA".
+    hysteresis, thresholds, etc. are even available before reading
+    them.  Some sensors may output slightly different information than
+    before.  For example, suppose a power supply sensor exists for a
+    power supply that is not installed.  If the sensor is enabled on the
+    motherboard, the sensor status will likely report "OK".  If the
+    sensor is disabled on the motherboard, the sensor status will
+    likely report "NA".  Previously, "OK" would have been
+    reported under both conditions.
   - Alter some output ordering for consistency to IPMI spec.
 o ipmimonitoring
   - Output multiple bitmask strings if multiple bits are set.
