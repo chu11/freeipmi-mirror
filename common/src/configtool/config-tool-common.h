@@ -23,6 +23,34 @@
 
 #include "tool-cmdline-common.h"
 
+#define IPMI_CTX_ERRNUM_IS_FATAL_ERROR(__ipmi_ctx) \
+(((ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_CTX_NULL \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_CTX_INVALID \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_PERMISSION \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_USERNAME_INVALID \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_PASSWORD_INVALID \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_K_G_INVALID \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_IPMI_2_0_UNAVAILABLE \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_CONNECTION_TIMEOUT \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_SESSION_TIMEOUT \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_DEVICE_ALREADY_OPEN \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_DEVICE_NOT_OPEN \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_DEVICE_NOT_SUPPORTED \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_DEVICE_NOT_FOUND \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_DRIVER_TIMEOUT \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_OUT_OF_MEMORY \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_HOSTNAME_INVALID \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_PARAMETERS \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_DRIVER_PATH_REQUIRED \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_IPMI_ERROR \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_SYSTEM_ERROR \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_LIBRARY_ERROR \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_INTERNAL_ERROR) ? 1 : 0)
+
 #define CONFIG_CHECKOUT_KEY_COMMENTED_OUT                  0x01
 #define CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x02
 #define CONFIG_DO_NOT_CHECKOUT                             0x04

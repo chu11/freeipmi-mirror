@@ -6,6 +6,14 @@
 	verbose mode.
 
 	* common/src/miscutil/hostlist.c: update to newest lib version.
+
+	* common/src/configtool/config-tool-common.h
+	(IPMI_CTX_ERRNUM_IS_FATAL_ERROR): New macro.
+
+	* bmc-config/, pef-config/, ipmi-sensors-config/,
+	common/src/configtool/config-tool-pef-conf-section.c: Utilize
+	IPMI_CTX_ERRNUM_IS_FATAL_ERROR to check if an error from an IPMI
+	API cmd call is really non-fatal.
 	
 2008-07-10 Albert Chu <chu11@llnl.gov>
 

@@ -84,7 +84,8 @@ _get_connection_mode (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_get_serial_modem_configuration_connection_mode: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -139,7 +140,8 @@ _set_connection_mode (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_set_serial_modem_configuration_connection_mode: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
    
@@ -329,7 +331,8 @@ page_blackout_interval_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_serial_modem_configuration_page_blackout_interval: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -376,7 +379,8 @@ page_blackout_interval_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_serial_modem_configuration_page_blackout_interval: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -418,7 +422,8 @@ call_retry_interval_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_serial_modem_configuration_call_retry_interval: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -464,7 +469,8 @@ call_retry_interval_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_serial_modem_configuration_call_retry_interval: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -507,7 +513,8 @@ _get_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -558,7 +565,8 @@ _set_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   

@@ -78,7 +78,8 @@ ip_address_source_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_ip_address_source: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -124,7 +125,8 @@ ip_address_source_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_ip_address_source: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -167,7 +169,8 @@ ip_address_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_ip_address: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -231,7 +234,8 @@ ip_address_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_ip_address: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -274,7 +278,8 @@ mac_address_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_mac_address: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -341,7 +346,8 @@ mac_address_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_mac_address: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -384,7 +390,8 @@ subnet_mask_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_subnet_mask: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -448,7 +455,8 @@ subnet_mask_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_subnet_mask: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -491,7 +499,8 @@ default_gateway_address_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_default_gateway_address: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -556,7 +565,8 @@ default_gateway_address_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_default_gateway_address: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -599,7 +609,8 @@ default_gateway_mac_address_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -666,7 +677,8 @@ default_gateway_mac_address_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -709,7 +721,8 @@ backup_gateway_address_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -773,7 +786,8 @@ backup_gateway_address_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -816,7 +830,8 @@ backup_gateway_mac_address_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -882,7 +897,8 @@ backup_gateway_mac_address_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -925,7 +941,8 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_vlan_id: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -972,7 +989,8 @@ _set_vlan_id (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_vlan_id: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -1097,7 +1115,8 @@ vlan_priority_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_vlan_priority: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -1143,7 +1162,8 @@ vlan_priority_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_vlan_priority: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
