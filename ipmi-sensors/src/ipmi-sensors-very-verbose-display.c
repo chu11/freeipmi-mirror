@@ -176,9 +176,7 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
    *
    * I will admit I'm not entirely sure what the best way is to get
    * hysteresis.  It seems the information is stored/retrievable in
-   * the SDR and through an IPMI command.  Unlike thresholds, there
-   * are no masks to indicate if there is a superior way to retrieve
-   * it.
+   * the SDR and through an IPMI command.
    *
    * We will try to read it via IPMI, since a change to the hysteresis 
    * may not be written to the SDR.  If a read fails, output whatever
