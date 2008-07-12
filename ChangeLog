@@ -14,6 +14,9 @@
 	common/src/configtool/config-tool-pef-conf-section.c: Utilize
 	IPMI_CTX_ERRNUM_IS_FATAL_ERROR to check if an error from an IPMI
 	API cmd call is really non-fatal.
+
+	* ipmi-sensors/src/: Limit output in verbose and very verbose when
+	data is clearly irrelevant.  
 	
 2008-07-10 Albert Chu <chu11@llnl.gov>
 

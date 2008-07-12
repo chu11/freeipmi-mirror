@@ -81,7 +81,7 @@ o ipmi-sensors
     than all on one line under verbose modes.
   - When fields are not relevant, do not output as much information in
     verbose and very verbose mode.  For example, don't output
-    hysteresis information for power supply information.
+    hysteresis information for power supplys.
   - Alter some output ordering for consistency to IPMI spec.
 o ipmimonitoring
   - Output multiple bitmask strings if multiple bits are set.
