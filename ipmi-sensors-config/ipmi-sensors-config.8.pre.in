@@ -37,6 +37,13 @@ when configuring new thresholds.  The inaccuracies may not be
 apparent immediately.  It is recommend users verify their changes
 after configuring new thresholds.
 
+For configuration of general BMC parameters or platform event filtering (PEF), please
+see the 
+.B bmc-config(8)
+and
+.B pef-config(8)
+tools respectively.
+
 .LP
 See GENERAL USE below for a description on how most will want to use
 .B Ipmi-sensors-config.

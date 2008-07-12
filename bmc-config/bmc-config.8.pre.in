@@ -16,6 +16,14 @@ configuration operations require ADMIN privilege when using
 out-of-band.  Although connecting via a user with ADMIN privileges is
 not required for out-of-band use, the vast majority of configuration
 options will not be retrieved or set.
+
+For configuration of platform event filtering (PEF) or sensors, please
+see the 
+.B pef-config(8)
+and 
+.B ipmi-sensors-config(8)
+tools respectively.
+
 .LP
 See GENERAL USE below for a description on how most will want to use
 .B Bmc-config.

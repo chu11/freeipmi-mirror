@@ -1,3 +1,8 @@
+2008-07-12 Albert Chu <chu11@llnl.gov>
+
+	* Update bmc-config, pef-config, ipmi-sensors-config with some
+	config text.
+	
 2008-07-11 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/src/: Output multiple event messages on multiple
