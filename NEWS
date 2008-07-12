@@ -1,7 +1,7 @@
 0.7.1 - 00/00/00
 ----------------
-For Users - New Features
-------------------------
+For Users - New Signifcant Features
+-----------------------------------
 o Add new tool bmc-device to support advanced BMC commands including
   cold reset, warm reset, setting BMC times, and more.
 o Support FreeIPMI configuration file for most tools (bmc-config,
@@ -17,10 +17,9 @@ o Add additional "connection timeout" error message to tools to
   timeout in the middle of a command's operations.
 o Output additional sensor information in ipmi-sensors under very verbose
   mode, such as event enable information.
-o Support --always-prefix option in most tools for easier scripting
-  needs.
+o Support --always-prefix option in most tools for easier scripting.
 o Support --sdr-cache-recreate in all SDR related tools for easier
-  scripting needs.
+  scripting.
 o Support --guid option in bmc-info to retrieve global ID.
 o Support build on Solaris.
 
