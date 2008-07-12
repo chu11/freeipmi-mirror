@@ -29,6 +29,8 @@ For Users - Minor Enhancements/Changes/Bug Fixes
 o Global in most tools
   - Rename --no-probing option to --disable-auto-probe for consistency
     in FreeIPMI.  Backwards compatability maintained.
+o Global in config tools
+  - More carefully check for fatal vs. non-fatal errors when configuring.
 o ipmi-chassis
   - Alter ipmi-chassis output to print "unknown" when field is not known.
   - Alter some ipmi-chassis output text to be more consistent to IPMI
