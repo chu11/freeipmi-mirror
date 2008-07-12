@@ -173,7 +173,10 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
 
   if (hysteresis_support == IPMI_SDR_NO_HYSTERESIS_SUPPORT
       || hysteresis_support == IPMI_SDR_FIXED_UNREADABLE_HYSTERESIS_SUPPORT)
-    goto output_raw;
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   /* achu:
    *

@@ -172,7 +172,10 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
 
   if (threshold_access_support == IPMI_SDR_NO_THRESHOLDS_SUPPORT
       || threshold_access_support == IPMI_SDR_FIXED_UNREADABLE_THRESHOLDS_SUPPORT)
-    goto output_na;
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   /* achu:
    *
@@ -476,7 +479,6 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
         }
     }
 
- output_na:
   if (lower_non_critical_threshold)
     *lower_non_critical_threshold = tmp_lower_non_critical_threshold;
   if (lower_critical_threshold)
@@ -545,6 +547,18 @@ ipmi_sensors_output_verbose_thresholds (ipmi_sensors_state_data_t *state_data,
                                    &upper_critical_threshold,
                                    &upper_non_recoverable_threshold) < 0)
     goto cleanup;
+
+  /* don't output at all if there isn't atleast 1 threshold to output */
+  if (!lower_critical_threshold
+      && !upper_critical_threshold
+      && !lower_non_critical_threshold
+      && !upper_non_critical_threshold
+      && !lower_non_recoverable_threshold
+      && !upper_non_recoverable_threshold)
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   if (lower_critical_threshold)
     pstdout_printf (state_data->pstate,
@@ -655,6 +669,17 @@ ipmi_sensors_output_verbose_sensor_reading_ranges (ipmi_sensors_state_data_t *st
                                            &sensor_maximum_reading,
                                            &sensor_minimum_reading) < 0)
       goto cleanup;
+
+  /* don't output at all if there isn't atleast 1 threshold to output */
+  if (!sensor_minimum_reading
+      && !sensor_maximum_reading
+      && !normal_minimum
+      && !normal_maximum
+      && !nominal_reading)
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   if (sensor_minimum_reading)
     pstdout_printf (state_data->pstate,
