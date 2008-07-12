@@ -47,8 +47,6 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
-fatal vs. non-fatal error dependent on error code returned from ipmi_ctx
-- i.e. timeout == fatal, bad completion code == non-fatal
 
 config
 ------
@@ -82,6 +80,7 @@ libs
 merge all libs into one?
 - make package layout simpler?
 - make .so-naming consistent?
+- merge all except libipmidetect?
 
 DCMI functionality
 ------------------
@@ -114,7 +113,7 @@ update all manpages and docs
 update w/ freeipmi.conf.5 manpage
 - remove ipmiconsole.conf.5 and ipmipower.conf.5
 add example conf file to docs??
-- example sensors_config too?
+- example ipmi_monitoring_sensors_config too?
 
 RELEASE TODOS - Do on every release
 -----------------------------------
