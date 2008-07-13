@@ -18,24 +18,19 @@ solaris
 -------
 - solaris inband driver (solaris 9? solaris 10? solaris 11?)
 
-bmc-config
-----------
-remaining serial config
-advanced option??
-
 ipmi-chassis-config
 -------------------
 power cycle interval
 chassis boot params
 - new chassis config tool?
-- move power restore polcy over
+- move power restore polcy over from bmc-config
 chassis front-panel enables
 
 pef-config
 -----------
 * conf.5 manpage
 * how to specify event reading type codes easily
-- support get/set last processed event/id
+- support get/set last processed event/id?
 - alert immediate support?
 - PET acknowledge support?
 
