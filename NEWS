@@ -89,6 +89,8 @@ o ipmi-sensors
   - Alter some output ordering for consistency to IPMI spec.
 o ipmimonitoring
   - Output multiple bitmask strings if multiple bits are set.
+  - Output "OK", similarly to ipmi-sensors when no bitmask strings are
+    returned from a sensor reading.
 o bmc-watchdog
   - Remove legacy 'v' option for version.
 
