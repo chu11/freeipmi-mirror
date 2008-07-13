@@ -30,6 +30,11 @@ o Global in most tools
     in FreeIPMI.  Backwards compatability maintained.
 o Global in config tools
   - More carefully check for fatal vs. non-fatal errors when configuring.
+o bmc-config
+  - Do not output unsupported authentication type enables when checking
+    out the Lan_Conf_Auth section.
+  - Remove checkout of serial configuration parameters.
+  - Fix several string case sensitivity corner cases.
 o ipmi-chassis
   - Alter ipmi-chassis output to print "unknown" when field is not known.
   - Alter some ipmi-chassis output text to be more consistent to IPMI
@@ -84,10 +89,6 @@ o ipmi-sensors
   - Alter some output ordering for consistency to IPMI spec.
 o ipmimonitoring
   - Output multiple bitmask strings if multiple bits are set.
-o bmc-config
-  - Do not output unsupported authentication type enables when checking
-    out the Lan_Conf_Auth section.
-  - Fix several string case sensitivity corner cases.
 o bmc-watchdog
   - Remove legacy 'v' option for version.
 
