@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.23 2008-07-13 23:41:44 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.24 2008-07-13 23:47:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -380,7 +380,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
 
   if (!(obj_cmd_rs = Fiid_obj_create(c, tmpl_cmd_get_sensor_reading_rs)))
     goto cleanup;
-
+     
   if (Fiid_obj_get(c,
                    obj_sdr_record,
                    "sensor_number",
@@ -417,6 +417,22 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
           goto cleanup;
         }
       ipmi_monitoring_ipmi_ctx_error_convert(c);
+      goto cleanup;
+    }
+
+  if (Fiid_obj_get(c,
+                   obj_cmd_rs,
+                   "reading_state",
+                   &val) < 0)
+    goto cleanup;
+  
+  if (val == IPMI_SENSOR_READING_STATE_UNAVAILABLE)
+    {
+      IPMI_MONITORING_DEBUG(("sensor reading unavailable"));
+      /* sensor reading not available.  Tell the caller to store this
+       * as an unreadable sensor
+       */
+      rv = 0;
       goto cleanup;
     }
 

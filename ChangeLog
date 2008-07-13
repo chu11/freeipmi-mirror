@@ -17,6 +17,9 @@
 	(_threshold_sensor_reading): Check for valid analog data format as
 	well as linearization.
 
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(_get_sensor_reading): Check for reading state in sensor reading.
+
 2008-07-12 Albert Chu <chu11@llnl.gov>
 
 	* Update bmc-config, pef-config, ipmi-sensors-config with some
