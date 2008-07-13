@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.22 2008-07-09 21:21:43 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.23 2008-07-13 23:41:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -610,6 +610,14 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
   b_exponent = val;
   if (b_exponent & 0x08)
     b_exponent |= 0xF0;
+
+  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
+    {
+      IPMI_MONITORING_DEBUG(("non-analog sensors not currently supported: '0x%X'", analog_data_format));
+      if (_store_unreadable_sensor_reading(c, sensor_reading_flags, record_id) < 0)
+        return -1;
+      return 0;
+    }
 
   if (IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(linearization))
     {

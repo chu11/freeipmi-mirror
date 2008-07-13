@@ -13,6 +13,10 @@
 	(run_cmd_args): Similar to ipmi-sensors, output "OK" if a bitmask
 	sensor reading has no bits set.
 
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(_threshold_sensor_reading): Check for valid analog data format as
+	well as linearization.
+
 2008-07-12 Albert Chu <chu11@llnl.gov>
 
 	* Update bmc-config, pef-config, ipmi-sensors-config with some
