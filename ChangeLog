@@ -6,6 +6,9 @@
 
 	* tagged post_remove_serial_bmc_config
 	
+	* ipmi-sensors/src/: Limit output in verbose and very verbose when
+	data is clearly irrelevant.  
+
 2008-07-12 Albert Chu <chu11@llnl.gov>
 
 	* Update bmc-config, pef-config, ipmi-sensors-config with some

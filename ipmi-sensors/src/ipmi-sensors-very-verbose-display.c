@@ -587,6 +587,8 @@ sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
   int8_t r_exponent, b_exponent;
   int16_t m, b;
   uint8_t linearization, analog_data_format;
+  uint8_t event_reading_type_code;
+  int sensor_class;
 
   assert(state_data);
   assert(sdr_record);
@@ -599,35 +601,46 @@ sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                                    record_id) < 0)
     return -1;
 
-  if (sdr_cache_get_sensor_decoding_data(state_data->pstate,
-                                         sdr_record,
-                                         sdr_record_len,
-                                         &r_exponent,
-                                         &b_exponent,
-                                         &m,
-                                         &b,
-                                         &linearization,
-                                         &analog_data_format) < 0)
+  if (sdr_cache_get_event_reading_type_code (state_data->pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
     return -1;
-  
-  pstdout_printf (state_data->pstate, 
-                  "B: %d\n", 
-                  b);
-  pstdout_printf (state_data->pstate,
-                  "M: %d\n", 
-                  m);
-  pstdout_printf (state_data->pstate, 
-                  "R Exponent: %d\n", 
-                  r_exponent);
-  pstdout_printf (state_data->pstate, 
-                  "B Exponent: %d\n", 
-                  b_exponent);
-  pstdout_printf (state_data->pstate, 
-                  "Linearization: %d\n", 
-                  linearization);
-  pstdout_printf (state_data->pstate, 
-                  "Analog Data Format: %d\n", 
-                  analog_data_format);
+
+  sensor_class = sensor_classify (event_reading_type_code);
+
+  if (sensor_class == SENSOR_CLASS_THRESHOLD)
+    {
+      if (sdr_cache_get_sensor_decoding_data(state_data->pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &r_exponent,
+                                             &b_exponent,
+                                             &m,
+                                             &b,
+                                             &linearization,
+                                             &analog_data_format) < 0)
+        return -1;
+      
+      pstdout_printf (state_data->pstate, 
+                      "B: %d\n", 
+                      b);
+      pstdout_printf (state_data->pstate,
+                      "M: %d\n", 
+                      m);
+      pstdout_printf (state_data->pstate, 
+                      "R Exponent: %d\n", 
+                      r_exponent);
+      pstdout_printf (state_data->pstate, 
+                      "B Exponent: %d\n", 
+                      b_exponent);
+      pstdout_printf (state_data->pstate, 
+                      "Linearization: %d\n", 
+                      linearization);
+      pstdout_printf (state_data->pstate, 
+                      "Analog Data Format: %d\n", 
+                      analog_data_format);
+    }
 
   if (ipmi_sensors_output_verbose_thresholds (state_data,
                                               sdr_record,
