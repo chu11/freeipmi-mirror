@@ -9,6 +9,10 @@
 	* ipmi-sensors/src/: Limit output in verbose and very verbose when
 	data is clearly irrelevant.  
 
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(run_cmd_args): Similar to ipmi-sensors, output "OK" if a bitmask
+	sensor reading has no bits set.
+
 2008-07-12 Albert Chu <chu11@llnl.gov>
 
 	* Update bmc-config, pef-config, ipmi-sensors-config with some

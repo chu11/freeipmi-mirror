@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.57 2008-07-07 20:59:20 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.58 2008-07-13 23:35:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -489,7 +489,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
 
                   if (!output_count)
                     pstdout_printf(state_data->pstate,
-                                   " ''");
+                                   " 'OK'");
                 }
               else
                 pstdout_printf(state_data->pstate,
