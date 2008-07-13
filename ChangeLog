@@ -1,3 +1,7 @@
+2008-07-13 Albert Chu <chu11@llnl.gov>
+
+	* tagged pre_remove_serial_bmc_config
+	
 2008-07-12 Albert Chu <chu11@llnl.gov>
 
 	* Update bmc-config, pef-config, ipmi-sensors-config with some
