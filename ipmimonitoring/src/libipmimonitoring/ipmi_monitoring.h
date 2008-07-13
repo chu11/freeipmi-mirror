@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.23 2008-04-07 20:49:55 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.23.8.1 2008-07-13 23:53:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -160,6 +160,7 @@ enum ipmi_monitoring_driver_type
     IPMI_MONITORING_DRIVER_TYPE_KCS      = 0x00,
     IPMI_MONITORING_DRIVER_TYPE_SSIF     = 0x01,
     IPMI_MONITORING_DRIVER_TYPE_OPENIPMI = 0x02,
+    IPMI_MONITORING_DRIVER_TYPE_SUNBMC   = 0x03,
   };
 
 enum ipmi_monitoring_protocol_version
@@ -517,6 +518,7 @@ enum ipmi_monitoring_sensor_bitmask_fru_state
  *   IPMI_MONITORING_DRIVER_TYPE_KCS
  *   IPMI_MONITORING_DRIVER_TYPE_SSIF
  *   IPMI_MONITORING_DRIVER_TYPE_OPENIPMI
+ *   IPMI_MONITORING_DRIVER_TYPE_SUNBMC
  *
  *    Pass < 0 for default of IPMI_MONITORING_DRIVER_TYPE_KCS.
  * 

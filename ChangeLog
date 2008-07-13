@@ -27,7 +27,7 @@
 	* README, man/freeipmi.7.pre.in,
 	common/man/manpage-common-driver.man: Update with sunbmc.
 
-	* bmc-watchdog/: Support sunbmc driver.
+	* ipmimonitoring/, bmc-watchdog/: Support sunbmc driver.
 
 	* README.sunbmc: New file.
 
