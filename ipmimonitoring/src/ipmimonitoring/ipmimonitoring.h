@@ -32,6 +32,7 @@
 
 enum ipmimonitoring_argp_option_keys
   { 
+    VERBOSE_KEY = 'v',
     REGENERATE_SDR_CACHE_KEY = 'r', /* legacy */
     QUIET_READINGS_KEY = 'q',
     LIST_GROUPS_KEY = 'L', 
@@ -45,6 +46,7 @@ struct ipmimonitoring_arguments
   struct common_cmd_args common;
   struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
+  int verbose;
   int regenerate_sdr_cache;
   int quiet_readings;
   int list_groups;

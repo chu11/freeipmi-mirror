@@ -8,6 +8,12 @@ pef-config \- configure PEF values
 .B Pef-config
 is a Platform Event Filtering (PEF) configuration utility.
 
+For configuration of general BMC parameters or sensors, please
+see the 
+.B bmc-config(8)
+and 
+.B ipmi-sensors-config(8)
+tools respectively.
 .LP
 See GENERAL USE below for a description on how most will want to use
 .B Pef-config.

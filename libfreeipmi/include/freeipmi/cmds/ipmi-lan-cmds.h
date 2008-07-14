@@ -130,6 +130,13 @@ extern "C" {
         (((__val) == IPMI_GET_LAN_PARAMETER \
           || (__val) == IPMI_GET_LAN_PARAMETER_REVISION_ONLY) ? 1 : 0)
 
+#define IPMI_CLEAR_ALL_STATISTICS                       0x1
+#define IPMI_DONT_CLEAR_ALL_STATISTICS                  0x0
+
+#define IPMI_CLEAR_ALL_STATISTICS_VALID(__val) \
+        (((__val) == IPMI_CLEAR_ALL_STATISTICS \
+          || (__val) == IPMI_DONT_CLEAR_ALL_STATISTICS) ? 1 : 0)
+
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rs;
 
@@ -178,6 +185,9 @@ extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messag
 
 extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rq;
 extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rs;
+
+extern fiid_template_t tmpl_cmd_get_ip_udp_rmcp_statistics_rq;
+extern fiid_template_t tmpl_cmd_get_ip_udp_rmcp_statistics_rs;
 
 int8_t fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                                   uint8_t parameter_selector,
@@ -313,6 +323,10 @@ int8_t fill_cmd_suspend_bmc_arps (uint8_t channel_number,
                                   uint8_t gratuitous_arp_suspend,
                                   uint8_t arp_response_suspend,
                                   fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_ip_udp_rmcp_statistics (uint8_t channel_number,
+                                            uint8_t clear_all_statistics,
+                                            fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

@@ -41,6 +41,15 @@ extern "C" {
 
 #define IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ  0xFF
 
+#define IPMI_AUXILIARY_LOG_TYPE_MCA  0x00
+#define IPMI_AUXILIARY_LOG_TYPE_OEM1 0x01
+#define IPMI_AUXILIARY_LOG_TYPE_OEM2 0x02
+
+#define IPMI_AUXILIARY_LOG_TYPE_VALID(__val) \
+        (((__val) == IPMI_AUXILIARY_LOG_TYPE_MCA \
+          || (__val) == IPMI_AUXILIARY_LOG_TYPE_OEM1 \
+          || (__val) == IPMI_AUXILIARY_LOG_TYPE_OEM2) ? 1 : 0)
+
 extern fiid_template_t tmpl_cmd_get_sel_info_rq;
 extern fiid_template_t tmpl_cmd_get_sel_info_rs;
 
@@ -64,6 +73,14 @@ extern fiid_template_t tmpl_cmd_get_sel_time_rs;
 
 extern fiid_template_t tmpl_cmd_set_sel_time_rq;
 extern fiid_template_t tmpl_cmd_set_sel_time_rs;
+
+extern fiid_template_t tmpl_cmd_get_auxiliary_log_status_rq;
+extern fiid_template_t tmpl_cmd_get_auxiliary_log_status_rs;
+extern fiid_template_t tmpl_cmd_get_auxiliary_log_status_mca_rs;
+extern fiid_template_t tmpl_cmd_get_auxiliary_log_status_oem_rs;
+
+extern fiid_template_t tmpl_cmd_set_auxiliary_log_status_rq;
+extern fiid_template_t tmpl_cmd_set_auxiliary_log_status_rs;
 
 int8_t fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq);
 
@@ -89,6 +106,13 @@ int8_t fill_cmd_get_sel_time (fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_sel_time (uint32_t time, fiid_obj_t obj_cmd_rq);
 
+int8_t fill_cmd_get_auxiliary_log_status (uint8_t log_type,
+                                          fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_auxiliary_log_status (uint8_t log_type,
+                                          uint8_t *log_data,
+                                          uint8_t log_data_len,
+                                          fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

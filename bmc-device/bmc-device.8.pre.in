@@ -1,15 +1,15 @@
 .TH BMC-DEVICE 8 "@ISODATE@" "bmc-device @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
-bmc-device \- perform BMC device commands
+bmc-device \- perform advanced BMC commands
 .SH "SYNOPSIS"
 .B bmc-device
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B bmc-device 
-supports commands to perform several BMC device functions and retrieve
-more detailed technical information about the BMC device.  This tool
-is primarily used for development purposes or for BMC recovery under
-error conditions.  It is not recommended for general use.
+supports a variety of IPMI commands to perform advanced BMC functions.
+This tool is primarily used for development debugging, BMC error
+recory, retrieving detailed technical information, and other advanced
+purposes.  Most IPMI users will not need to use this tool.
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
@@ -34,32 +34,57 @@ The following options are specific to
 \fB\-\-cold\-reset\fR
 Perform a cold reset.
 .TP
-\fB\-\-warm-reset\fR
+\fB\-\-warm\-reset\fR
 Perform a warm reset.
 .TP
-\fB\-\-get-self-test-results\fR
+\fB\-\-get\-self\-test\-results\fR
 Output BMC self test results.
 .TP
-\fB\-\-get-acpi-power-state\fR
+\fB\-\-get\-acpi\-power\-state\fR
 Get ACPI system and device power state.
 .TP
-\fB\-\-set-acpi-power-state\fR
+\fB\-\-set\-acpi\-power\-state\fR
 Set ACPI power state.  Must be specified to use the 
-\fB\-\-set-acpi-system-power-state\fR,
+\fB\-\-set\-acpi\-system\-power\-state\fR,
 and
-\fB\-\-set-acpi-device-power-state\fR
+\fB\-\-set\-acpi\-device\-power\-state\fR
 options listed below.
 .TP
-\fB\-\-set-acpi-system-power-state\fR=\fISYSTEM_POWER_STATE\fR
+\fB\-\-set\-acpi\-system\-power\-state\fR=\fISYSTEM_POWER_STATE\fR
 Set ACPI system power state.  Allowed values:
 S0_G0, S1, S2, S3, S4, S5_G2, S4_S5, G3, SLEEPING, G1_SLEEPING, OVERRIDE,
 LEGACY_ON, LEGACY_OFF, UNKNOWN.
-Used with the \fB\-\--set-acpi-power-state\fR option.
+Used with the \fB\-\-set\-acpi\-power\-state\fR option.
 .TP
-\fB\-\-set-acpi-device-power-state\fR=\fIDEVICE_POWER_STATE\fR
+\fB\-\-set\-acpi\-device\-power\-state\fR=\fIDEVICE_POWER_STATE\fR
 Set ACPI device power state.  Allowed values:
 D0, D1, D2, D3, UNKNOWN.
-Used with the \fB\-\--set-acpi-power-state\fR option.
+Used with the \fB\-\-set\-acpi\-power\-state\fR option.
+.TP
+\fB\-\-get\-lan\-statistics\fR
+Get IP, UDP, and RMCP statistics.
+.TP
+\fB\-\-clear\-lan\-statistics\fR
+Clear IP, UDP, and RMCP statistics.
+.TP
+\fB\-\-get\-sdr\-repository\-time\fR
+Get SDR repository time.
+.TP
+\fB\-\-set\-sdr\-repository\-time=TIME\fR
+Set SDR repository time.  Input format = "MM/DD/YYYY - HH:MM:SS".
+Note that hours are input in 24 hour form.  Alternatively, the local
+system time can be specified with "now".
+.TP
+\fB\-\-get\-sel\-time\fR
+Get SEL time.
+.TP
+\fB\-\-set\-sel\-time=TIME\fR
+Set SEL time.  Input format = "MM/DD/YYYY - HH:MM:SS".  Note that
+hours are input in 24 hour form.  Alternatively, the local
+system time can be specified with "now".
+.TP
+\fB\-\-get\-mca\-auxiliary\-log\-status\fR
+Get machine check architecture (MCA) auxiliary log status information.
 .TP
 \fB\-\-verbose\fR
 Increase verbosity in output.

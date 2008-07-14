@@ -246,6 +246,9 @@ Specify the default ping percent value to use.
 \fBipmipower-ping-consec-count\fR \fICOUNT\fR
 Specify the default ping consecutive count value to use.
 
+.SH "FILES"
+@FREEIPMI_CONFIG_FILE_DEFAULT@
+
 #include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2003-2008 FreeIPMI Core Team.  

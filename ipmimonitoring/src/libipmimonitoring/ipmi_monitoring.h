@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.23.8.1 2008-07-13 23:53:49 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.23.8.2 2008-07-14 02:13:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -47,22 +47,23 @@ enum ipmi_monitoring_error_codes
     IPMI_MONITORING_ERR_SENSOR_NOT_FOUND                    = 11,
     IPMI_MONITORING_ERR_NO_SENSOR_READINGS                  = 12,
     IPMI_MONITORING_ERR_SENSOR_READINGS_LIST_END            = 13,
-    IPMI_MONITORING_ERR_SESSION_TIMEOUT                     = 14,
-    IPMI_MONITORING_ERR_USERNAME_INVALID                    = 15,
-    IPMI_MONITORING_ERR_PASSWORD_INVALID                    = 16,
-    IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT       = 17,
-    IPMI_MONITORING_ERR_K_G_INVALID                         = 18,
-    IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT        = 19,
-    IPMI_MONITORING_ERR_PRIVILEGEL_LEVEL_CANNOT_BE_OBTAINED = 20,
-    IPMI_MONITORING_ERR_AUTHENTICATION_TYPE_UNAVAILABLE     = 21,
-    IPMI_MONITORING_ERR_IPMI_2_0_UNAVAILABLE                = 22,
-    IPMI_MONITORING_ERR_CIPHER_SUITE_ID_UNAVAILABLE         = 23,
-    IPMI_MONITORING_ERR_BMC_BUSY                            = 24,
-    IPMI_MONITORING_ERR_OUT_OF_MEMORY                       = 25,
-    IPMI_MONITORING_ERR_IPMI_ERROR                          = 26,
-    IPMI_MONITORING_ERR_SYSTEM_ERROR                        = 27,
-    IPMI_MONITORING_ERR_INTERNAL_ERROR                      = 28,
-    IPMI_MONITORING_ERR_ERRNUMRANGE                         = 29,
+    IPMI_MONITORING_ERR_CONNECTION_TIMEOUT                  = 14,
+    IPMI_MONITORING_ERR_SESSION_TIMEOUT                     = 15,
+    IPMI_MONITORING_ERR_USERNAME_INVALID                    = 16,
+    IPMI_MONITORING_ERR_PASSWORD_INVALID                    = 17,
+    IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT       = 18,
+    IPMI_MONITORING_ERR_K_G_INVALID                         = 19,
+    IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT        = 20,
+    IPMI_MONITORING_ERR_PRIVILEGEL_LEVEL_CANNOT_BE_OBTAINED = 21,
+    IPMI_MONITORING_ERR_AUTHENTICATION_TYPE_UNAVAILABLE     = 22,
+    IPMI_MONITORING_ERR_IPMI_2_0_UNAVAILABLE                = 23,
+    IPMI_MONITORING_ERR_CIPHER_SUITE_ID_UNAVAILABLE         = 24,
+    IPMI_MONITORING_ERR_BMC_BUSY                            = 25,
+    IPMI_MONITORING_ERR_OUT_OF_MEMORY                       = 26,
+    IPMI_MONITORING_ERR_IPMI_ERROR                          = 27,
+    IPMI_MONITORING_ERR_SYSTEM_ERROR                        = 28,
+    IPMI_MONITORING_ERR_INTERNAL_ERROR                      = 29,
+    IPMI_MONITORING_ERR_ERRNUMRANGE                         = 30,
   };
 
 enum ipmi_monitoring_sensor_group

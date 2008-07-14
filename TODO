@@ -14,23 +14,32 @@ libfreeipmi:
   - sensor-cmds
 * how to support xRC4 (can we? should we? does any vendor support this?)
 
+ipmimonitoring
+--------------
+verbose output option
+- support outputting "unknown" sensor readings, output "N/A", etc.
+output more info on unreadable sensors
+- i.e. sensor name, group, type, etc. should be readable
+
 solaris
 -------
 - solaris inband driver (solaris 9? solaris 10? solaris 11?)
 
-bmc-config
-----------
-remaining serial config
+ipmi-chassis-config
+-------------------
 power cycle interval
 chassis boot params
 - new chassis config tool?
-- move power restore polcy over
-advanced option??
+- move power restore polcy over from bmc-config
+chassis front-panel enables
 
 pef-config
 -----------
 * conf.5 manpage
 * how to specify event reading type codes easily
+- support get/set last processed event/id?
+- alert immediate support?
+- PET acknowledge support?
 
 general
 -------
@@ -40,7 +49,6 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
-make strcasestr function
 
 config
 ------
@@ -51,12 +59,30 @@ ipmiconsole
 retry under a different port
 - has never been tested, does any manufacturer do this?
 
+bmc-device
+--------
+get auxiliary log status
+- not tested, don't have a machine with this support
+
 ipmi-sensors-config
 -------------------
 * conf.5 manpage
 35.10/35.11
 - sensor enable/disable??
 - sensor event enable/disable??
+35.6/35.7
+- sensor hysterisis enable/disable??
+output hysteresis and thresholds only if hysteresis readlba/settable
+based on SDR flag
+- do not add a sensor to config if it has nothing to config
+  (i.e. all threshold/hysteresis fields are unreadable/unsettable/etc.)
+
+libs
+----
+merge all libs into one?
+- make package layout simpler?
+- make .so-naming consistent?
+- merge all except libipmidetect?
 
 DCMI functionality
 ------------------
@@ -81,15 +107,17 @@ BSD
 0.7.0 web stuff
 ---------------
 add contributions (ganglia/nagios) to webpage downloads
+links to ganglia/nagios
 update index w/ new bmc-info text.
 update w/ bmc-device index.htp
 update w/ bmc-device manpage
 update all manpages and docs
-links to ganglia/nagios
 update w/ freeipmi.conf.5 manpage
 - remove ipmiconsole.conf.5 and ipmipower.conf.5
 README.sunbmc
 libfreeipmi description add sunbmc
+add example conf file to docs??
+- example ipmi_monitoring_sensors_config too?
 
 RELEASE TODOS - Do on every release
 -----------------------------------

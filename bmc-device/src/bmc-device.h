@@ -31,7 +31,14 @@ enum bmc_device_argp_option_keys
     CMD_GET_SELF_TEST_RESULTS_KEY = 162,
     CMD_GET_ACPI_POWER_STATE_KEY = 163,
     CMD_SET_ACPI_POWER_STATE_KEY = 164,
-    VERBOSE_KEY = 165,
+    CMD_GET_LAN_STATISTICS_KEY = 165,
+    CMD_CLEAR_LAN_STATISTICS_KEY = 166,
+    CMD_GET_SDR_REPOSITORY_TIME_KEY = 167,
+    CMD_SET_SDR_REPOSITORY_TIME_KEY = 168,
+    CMD_GET_SEL_TIME_KEY = 169,
+    CMD_SET_SEL_TIME_KEY = 170,
+    CMD_GET_MCA_AUXILIARY_LOG_STATUS_KEY = 171,
+    VERBOSE_KEY = 172,
   };
 
 enum bmc_device_set_acpi_power_state_options
@@ -55,7 +62,16 @@ struct bmc_device_arguments
   int get_self_test_results;
   int get_acpi_power_state;
   int set_acpi_power_state;
+  int get_lan_statistics;
+  int clear_lan_statistics;
   struct bmc_device_set_acpi_power_state set_acpi_power_state_args;
+  int get_sdr_repository_time;
+  int set_sdr_repository_time;
+  char *set_sdr_repository_time_arg;
+  int get_sel_time;
+  int set_sel_time;
+  char *set_sel_time_arg;
+  int get_mca_auxiliary_log_status;
   int verbose;
 };
 

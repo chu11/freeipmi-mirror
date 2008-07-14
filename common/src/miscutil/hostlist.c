@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostlist.c,v 1.1.2.2 2008-06-21 16:17:02 chu11 Exp $
+ *  $Id: hostlist.c,v 1.1.2.3 2008-07-14 02:13:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -24,22 +24,25 @@
  *  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 \*****************************************************************************/
 
-#if HAVE_CONFIG_H
-#include "config.h"
-#endif /* HAVE_CONFIG_H */
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#  if HAVE_STRING_H
+#    include <string.h>
+#  endif
+#  if HAVE_PTHREAD_H
+#    include <pthread.h>
+#  endif
+#else                /* !HAVE_CONFIG_H */
+#  include <string.h>
+#  include <pthread.h>
+#endif                /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
-#if STDC_HEADERS
-#include <string.h>
 #include <stdarg.h>
-#include <ctype.h>
-#endif /* STDC_HEADERS */
-#if HAVE_PTHREAD_H
-#include <pthread.h>
-#endif /* HAVE_PTHREAD_H */
 #include <assert.h>
 #include <errno.h>
+#include <ctype.h>
 #include <sys/param.h>
 #include <unistd.h>
 
@@ -53,7 +56,11 @@
    extern void lsd_fatal_error(char *file, int line, char *mesg);
 #else /* !WITH_LSD_FATAL_ERROR_FUNC */
 #  ifndef lsd_fatal_error
-#    define lsd_fatal_error(file, line, mesg)                                
+#    define lsd_fatal_error(file, line, mesg)                                \
+       do {                                                                  \
+           fprintf(stderr, "ERROR: [%s:%d] %s: %s\n",                        \
+           file, line, mesg, strerror(errno));                               \
+       } while (0)
 #  endif /* !lsd_fatal_error */
 #endif /* !WITH_LSD_FATAL_ERROR_FUNC */
 
@@ -899,22 +906,48 @@ static hostrange_t hostrange_intersect(hostrange_t h1, hostrange_t h2)
  */
 static int hostrange_hn_within(hostrange_t hr, hostname_t hn)
 {
-    int retval = 0;
-
-    if (hr->singlehost && (strcmp(hn->hostname, hr->prefix) == 0))
-        return 1;
-
-    if (strcmp(hr->prefix, hn->prefix) == 0) {
-        if (!hostname_suffix_is_valid(hn)) {
-            if (hr->singlehost)
-                retval = 1;
-        } else if (hn->num <= hr->hi && hn->num >= hr->lo) {
-            int width = hostname_suffix_width(hn);
-            int num = hn->num;
-            retval = _width_equiv(hr->lo, &hr->width, num, &width);
-        }
+    if (hr->singlehost) {
+        /*  
+         *  If the current hostrange [hr] is a `singlehost' (no valid 
+         *   numeric suffix (lo and hi)), then the hostrange [hr]
+         *   stores just one host with name == hr->prefix.
+         *  
+         *  Thus the full hostname in [hn] must match hr->prefix, in
+         *   which case we return true. Otherwise, there is no 
+         *   possibility that [hn] matches [hr].
+         */
+        if (strcmp (hn->hostname, hr->prefix) == 0)
+            return 1;
+        else 
+            return 0;
     }
-    return retval;
+
+    /*
+     *  Now we know [hr] is not a "singlehost", so hostname
+     *   better have a valid numeric suffix, or there is no 
+     *   way we can match
+     */
+    if (!hostname_suffix_is_valid (hn))
+        return 0;
+
+    /*
+     *  If hostrange and hostname prefixes don't match, then
+     *   there is way the hostname falls within the range [hr].
+     */
+    if (strcmp(hr->prefix, hn->prefix) != 0) 
+        return 0;
+
+    /*
+     *  Finally, check whether [hn], with a valid numeric suffix,
+     *   falls within the range of [hr].
+     */
+    if (hn->num <= hr->hi && hn->num >= hr->lo) {
+        int width = hostname_suffix_width(hn);
+        int num = hn->num;
+        return (_width_equiv(hr->lo, &hr->width, num, &width));
+    }
+
+    return 0;
 }
 
 

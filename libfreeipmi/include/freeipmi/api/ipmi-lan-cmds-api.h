@@ -317,6 +317,11 @@ int8_t ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
 				  uint8_t arp_response_suspend, 
 				  fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_get_ip_udp_rmcp_statistics (ipmi_ctx_t ctx, 
+                                            uint8_t channel_number, 
+                                            uint8_t clear_all_statistics,
+                                            fiid_obj_t obj_cmd_rs);
+
 #ifdef __cplusplus
 }
 #endif

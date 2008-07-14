@@ -111,6 +111,34 @@ fiid_template_t tmpl_cmd_get_sdr_rs =
     {0,  "", 0}
   };
 
+fiid_template_t tmpl_cmd_get_sdr_repository_time_rq =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_sdr_repository_time_rs =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, // LS byte first
+    {0,   "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_sdr_repository_time_rq =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, // LS byte first
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_sdr_repository_time_rs =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0,   "", 0}
+  };
+
 int8_t 
 fill_cmd_get_repository_info (fiid_obj_t obj_cmd_rq)
 {
@@ -164,5 +192,32 @@ fill_cmd_get_sdr (uint16_t reservation_id,
   FIID_OBJ_SET (obj_cmd_rq, "record_id", record_id);
   FIID_OBJ_SET (obj_cmd_rq, "offset_into_record", offset_into_record);
   FIID_OBJ_SET (obj_cmd_rq, "bytes_to_read", bytes_to_read);
+  return 0;
+}
+
+int8_t
+fill_cmd_get_sdr_repository_time (fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sdr_repository_time_rq);
+  
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SDR_REPOSITORY_TIME);
+  
+  return 0;
+}
+
+int8_t
+fill_cmd_set_sdr_repository_time (uint32_t time, fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sdr_repository_time_rq);
+  
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SDR_REPOSITORY_TIME);
+  FIID_OBJ_SET (obj_cmd_rq, "time", time);
+  
   return 0;
 }

@@ -81,7 +81,7 @@ static struct argp_option cmdline_options[] =
     {"get-system-restart-cause", GET_SYSTEM_RESTART_CAUSE_KEY, NULL, 0, 
      "Get system restart cause.", 36},
     {"get-power-on-hours-counter", GET_POWER_ON_HOURS_COUNTER_KEY, NULL, 0,
-     "Get power on hours counter.", 37},
+     "Get power on hours (POH) counter.", 37},
     {"get-boot-flags", GET_BOOT_FLAGS_KEY, NULL, 0, 
      "Get system boot-flags.", 38},
     {"set-boot-flags", SET_BOOT_FLAGS_KEY, NULL, 0, 

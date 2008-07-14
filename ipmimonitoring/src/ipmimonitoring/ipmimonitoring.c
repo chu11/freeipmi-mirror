@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.52.2.2 2008-07-07 22:24:53 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.52.2.3 2008-07-14 02:13:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -203,7 +203,11 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
       return -1;
     }
   
-  sensor_reading_flags = IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS;
+  if (args->verbose)
+    sensor_reading_flags = 0;
+  else
+    sensor_reading_flags = IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS;
+
   if (args->regenerate_sdr_cache)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;
   
@@ -328,6 +332,10 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
 	}
       sensor_reading = ipmi_monitoring_iterator_sensor_reading(state_data->ctx);
 
+      if (!sensor_name
+          || !strlen(sensor_name))
+        sensor_name = "N/A";
+
       if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE)
         sensor_group_str = "Temperature";
       else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_VOLTAGE)
@@ -382,7 +390,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
       else if (sensor_state == IPMI_MONITORING_SENSOR_STATE_CRITICAL)
 	sensor_state_str = "Critical";
       else
-	sensor_state_str = "";
+	sensor_state_str = "N/A";
 
       pstdout_printf(state_data->pstate,
                      "%d | %s | %s | %s", 
@@ -489,13 +497,16 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
 
                   if (!output_count)
                     pstdout_printf(state_data->pstate,
-                                   " ''");
+                                   " 'OK'");
                 }
               else
                 pstdout_printf(state_data->pstate,
                                " | 0x%X", 
                                *((uint16_t *)sensor_reading));
-            }         
+            }
+          else
+            pstdout_printf(state_data->pstate,
+                           " | N/A");
         }
       pstdout_printf(state_data->pstate,
                      "\n");

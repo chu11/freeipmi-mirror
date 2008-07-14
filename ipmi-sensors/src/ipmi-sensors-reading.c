@@ -39,274 +39,14 @@
 #include "freeipmi/util/ipmi-sensor-util.h"
 
 #include "ipmi-sensors.h"
+#include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
-#define IPMI_SENSORS_BUFLEN   1024
-#define IPMI_SENSORS_MAX_LIST   32
-
-static int
-_get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
-                             char ***event_message_list,
-                             unsigned int *event_message_list_len,
-                             uint8_t sensor_state)
-{
-  char **tmp_event_message_list = NULL;
-  char *tmp_message_list[IPMI_SENSORS_MAX_LIST];
-  int num_messages = 0;
-  int count = 0;
-  int i;
-  
-  assert(state_data);
-  assert(event_message_list);
-  assert(event_message_list_len);
-
-  /* achu: multiple threshold flags can be set (i.e. if we pass the
-   * critical threshold, we've also passed the non-critical threshold)
-   * but we only want to * output one message at the max.  Luckily for
-   * us (and due to smarts * by the IPMI specification authors) if we
-   * go from high bits to low * bits, we will read the flags in the
-   * correct order for output.
-   *
-   * If you're confused why were use 'ipmi_get_threshold_message'
-   * instead of 'ipmi_get_generic_event_message' (b/c this is
-   * presumably event_reading_type_code == 0x01), the reason is b/c we
-   * actually called the get_sensor_reading command.  In other IPMI
-   * subsystems (like the SEL) we don't call the get_sensor_reading
-   * command, which is when you fall back on
-   * 'ipmi_get_generic_event_message'.
-   */
-
-  for (i = 5; i >= 0; i--)
-    {
-      char buf[IPMI_SENSORS_BUFLEN];
-      uint16_t bit; 
-
-      bit = 0x1 << i;
-
-      if (sensor_state & bit)
-	{
-	  if (ipmi_get_threshold_message (i,
-                                          buf,
-                                          IPMI_SENSORS_BUFLEN) < 0)
-            continue;
-	  
-	  if (!(tmp_message_list[num_messages] = strdup(buf)))
-            {
-              pstdout_perror(state_data->pstate, "strdup");
-              goto cleanup;
-            }
-          
-          num_messages++;
-          break;
-	}
-    }
-  
-  if (num_messages)
-    count = num_messages;
-  else
-    count = 1;
-
-  if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (count + 1))))
-    {
-      pstdout_perror(state_data->pstate, "malloc");
-      goto cleanup;
-    }
-    
-  if (num_messages)
-    {
-      for (i = 0; i < num_messages; i++)
-	tmp_event_message_list[i] = tmp_message_list[i];
-    }
-  else
-    {
-      if (!(tmp_event_message_list[0] = strdup("OK")))
-        {
-          pstdout_perror(state_data->pstate, "strdup");
-          goto cleanup;
-        }
-    }
-  
-  tmp_event_message_list[count] = NULL;
-  *event_message_list = tmp_event_message_list;
-  /* achu: note, not like generic_event_message_list or
-   * sensor_specific_event_message_list, max of one message output
-   */
-  *event_message_list_len = 1;
-
-  return 0;
-
- cleanup:
-  for (i = 0; i < num_messages; i++)
-    free(tmp_message_list[num_messages]);
-  if (tmp_event_message_list)
-    free(tmp_event_message_list);
-  return -1;
-}
-
-static int
-_get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
-                                 char ***event_message_list,
-                                 unsigned int *event_message_list_len,
-                                 uint8_t event_reading_type_code, 
-                                 uint16_t sensor_state)  
-{
-  char **tmp_event_message_list = NULL;
-  char *tmp_message_list[IPMI_SENSORS_MAX_LIST];
-  int num_messages = 0;
-  int count = 0;
-  int i;
-  
-  assert(state_data);
-  assert(event_message_list);
-  assert(event_message_list_len);
-
-  for (i = 0; i < 16; i++)
-    {
-      char buf[IPMI_SENSORS_BUFLEN];
-      uint16_t bit; 
-
-      bit = 0x1 << i;
-      if (sensor_state & bit)
-	{
-	  if (ipmi_get_generic_event_message (event_reading_type_code,
-					      i,
-					      buf,
-					      IPMI_SENSORS_BUFLEN) < 0)
-            continue;
-
-	  if (!(tmp_message_list[num_messages] = strdup(buf)))
-            {
-              pstdout_perror(state_data->pstate, "strdup");
-              goto cleanup;
-            }
-
-          num_messages++; 
-	}
-    }
-  
-  if (num_messages)
-    count = num_messages;
-  else
-    count = 1;
-
-  if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (count + 1))))
-    {
-      pstdout_perror(state_data->pstate, "malloc");
-      goto cleanup;
-    }
-      
-  if (num_messages)
-    {
-      for (i = 0; i < num_messages; i++)
-	tmp_event_message_list[i] = tmp_message_list[i];
-    }
-  else
-    {
-      if (!(tmp_event_message_list[0] = strdup("OK")))
-        {
-          pstdout_perror(state_data->pstate, "strdup");
-          goto cleanup;
-        }
-    }
-
-  tmp_event_message_list[count] = NULL;
-  *event_message_list = tmp_event_message_list;
-  *event_message_list_len = count;
-  
-  return 0;
-
- cleanup:
-  for (i = 0; i < num_messages; i++)
-    free(tmp_message_list[num_messages]);
-  if (tmp_event_message_list)
-    free(tmp_event_message_list);
-  return -1;
-}
-
-static int
-_get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_data,
-                                         char ***event_message_list,
-                                         unsigned int *event_message_list_len,
-                                         uint8_t sensor_type, 
-                                         uint16_t sensor_state)
-{
-  char **tmp_event_message_list = NULL;
-  char *tmp_message_list[IPMI_SENSORS_MAX_LIST];
-  int num_messages = 0;
-  int count = 0;
-  int i;
-  
-  assert(state_data);
-  assert(event_message_list);
-  assert(event_message_list_len);
-
-  for (i = 0; i < 16; i++)
-    {
-      char buf[IPMI_SENSORS_BUFLEN];
-      uint16_t bit; 
-
-      bit = 0x1 << i;
-
-      if (sensor_state & bit)
-	{
-	  if (ipmi_get_sensor_type_code_message (sensor_type,
-						 i,
-						 buf,
-						 IPMI_SENSORS_BUFLEN) < 0)
-            continue;
-
-	  if (!(tmp_message_list[num_messages] = strdup(buf)))
-            {
-              pstdout_perror(state_data->pstate, "strdup");
-              goto cleanup;
-            }
-
-          num_messages++;
-	}
-    }
-  
-  if (num_messages)
-    count = num_messages;
-  else
-    count = 1;
-
-  if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * (count + 1))))
-    {
-      pstdout_perror(state_data->pstate, "malloc");
-      goto cleanup;
-    }
-      
-  if (num_messages)
-    {
-      for (i = 0; i < num_messages; i++)
-	tmp_event_message_list[i] = tmp_message_list[i];
-    }
-  else
-    {
-      if (!(tmp_event_message_list[0] = strdup("OK")))
-        {
-          pstdout_perror(state_data->pstate, "strdup");
-          goto cleanup;
-        }
-    }
-
-  tmp_event_message_list[count] = NULL;
-  *event_message_list = tmp_event_message_list;
-  *event_message_list_len = count;
-
-  return 0;
-
- cleanup:
-  for (i = 0; i < num_messages; i++)
-    free(tmp_message_list[num_messages]);
-  if (tmp_event_message_list)
-    free(tmp_event_message_list);
-  return -1;
-}
+#define IPMI_SENSORS_OK_MSG   "OK"
 
 int
 sensor_reading (struct ipmi_sensors_state_data *state_data,
@@ -326,11 +66,11 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   double *tmp_reading = NULL;
   uint64_t val;
   int rv = -1;
-  uint64_t sensor_state1 = 0;
-  uint64_t sensor_state2 = 0;
-  uint64_t sensor_state = 0;
-  int8_t sensor_state1_len;
-  int8_t sensor_state2_len;
+  uint64_t sensor_event_bitmask1 = 0;
+  uint64_t sensor_event_bitmask2 = 0;
+  uint64_t sensor_event_bitmask = 0;
+  int8_t sensor_event_bitmask1_len;
+  int8_t sensor_event_bitmask2_len;
 
   assert(state_data);
   assert(sdr_record);
@@ -404,39 +144,70 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
       goto cleanup;
     }
 
+  _FIID_OBJ_GET (obj_cmd_rs,
+                 "reading_state",
+                 &val);
+  
+  if (val == IPMI_SENSOR_READING_STATE_UNAVAILABLE)
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Sensor reading unavailable\n");
+
+      /* make status message "na" so "unknown" isn't output */
+      if (get_msg_message_list (state_data,
+                                event_message_list,
+                                event_message_list_len,
+                                "NA") < 0)
+        goto cleanup;
+      
+      rv = 0;
+      goto cleanup;
+    }
+
+  /* achu:
+   * 
+   * Note: I don't bother checking the "all_event_messages" or
+   * "sensor_scanning" from the get_sensor_reading response.  If that
+   * stuff is turned off, the bitmasks should be zeroed out.
+   *
+   * Hopefully this doesn't bite me later on.
+   */
+
   _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
-                                   "sensor_state1",
-                                   &sensor_state1,
-                                   sensor_state1_len);
+                                   "sensor_event_bitmask1",
+                                   &sensor_event_bitmask1,
+                                   sensor_event_bitmask1_len);
   
   _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
-                                   "sensor_state2",
-                                   &sensor_state2,
-                                   sensor_state2_len);
-  
+                                   "sensor_event_bitmask2",
+                                   &sensor_event_bitmask2,
+                                   sensor_event_bitmask2_len);
+ 
   /* 
    * IPMI Workaround (achu)
    *
    * Discovered on Dell 2950.
    *
-   * It seems the sensor_state may not be returned by the server
+   * It seems the sensor_event_bitmask may not be returned by the server
    * at all for some sensors.  Under this situation, there's not
-   * much that can be done.  Since there is no sensor_state, we
+   * much that can be done.  Since there is no sensor_event_bitmask, we
    * just assume that no states have been asserted and the
-   * sensor_state = 0;
+   * sensor_event_bitmask = 0;
    */
 
-  if (!sensor_state1_len && !sensor_state2_len)
-    sensor_state = 0;
-  else if (sensor_state1_len && sensor_state2_len)
-    sensor_state = sensor_state1 | (sensor_state2 << 8);
-  else if (sensor_state1_len && !sensor_state2_len)
-    sensor_state = sensor_state1;
+  if (!sensor_event_bitmask1_len && !sensor_event_bitmask2_len)
+    sensor_event_bitmask = 0;
+  else if (sensor_event_bitmask1_len && sensor_event_bitmask2_len)
+    sensor_event_bitmask = sensor_event_bitmask1 | (sensor_event_bitmask2 << 8);
+  else if (sensor_event_bitmask1_len && !sensor_event_bitmask2_len)
+    sensor_event_bitmask = sensor_event_bitmask1;
   else
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
-                      "invalid sensor_state condition\n");
+                      "invalid sensor_event_bitmask condition\n");
       goto cleanup;
     }
   
@@ -472,6 +243,15 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                 pstdout_fprintf(state_data->pstate,
                                 stderr,
                                 "Attempting to decode non-analog sensor\n");
+
+              /* still get event messages */
+              if (get_threshold_message_list (state_data,
+                                              event_message_list,
+                                              event_message_list_len,
+                                              sensor_event_bitmask,
+                                              IPMI_SENSORS_OK_MSG) < 0)
+                goto cleanup;
+
               rv = 0;
               goto cleanup;
             }
@@ -485,6 +265,15 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                 pstdout_fprintf(state_data->pstate,
                                 stderr,
                                 "Cannot decode non-linear sensor\n");
+
+              /* still get event messages */
+              if (get_threshold_message_list (state_data,
+                                              event_message_list,
+                                              event_message_list_len,
+                                              sensor_event_bitmask,
+                                              IPMI_SENSORS_OK_MSG) < 0)
+                goto cleanup;
+
               rv = 0;
               goto cleanup;
             }
@@ -518,10 +307,11 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
        * can still output something.
        */
            
-      if (_get_threshold_message_list (state_data,
-                                       event_message_list,
-                                       event_message_list_len,
-                                       sensor_state) < 0)
+      if (get_threshold_message_list (state_data,
+                                      event_message_list,
+                                      event_message_list_len,
+                                      sensor_event_bitmask,
+                                      IPMI_SENSORS_OK_MSG) < 0)
         goto cleanup;
       
       rv = 1;
@@ -532,22 +322,24 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
     {               
       if (sensor_class == SENSOR_CLASS_GENERIC_DISCRETE)
         {
-          if (_get_generic_event_message_list (state_data,
-                                               event_message_list,
-                                               event_message_list_len, 
-                                               event_reading_type_code, 
-                                               sensor_state) < 0)
+          if (get_generic_event_message_list (state_data,
+                                              event_message_list,
+                                              event_message_list_len, 
+                                              event_reading_type_code, 
+                                              sensor_event_bitmask,
+                                              IPMI_SENSORS_OK_MSG) < 0)
             goto cleanup;
 
           rv = 1;
         }
       else if (sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
         {
-          if (_get_sensor_specific_event_message_list (state_data,
-                                                       event_message_list,
-                                                       event_message_list_len,
-                                                       sensor_type, 
-                                                       sensor_state) < 0)
+          if (get_sensor_specific_event_message_list (state_data,
+                                                      event_message_list,
+                                                      event_message_list_len,
+                                                      sensor_type, 
+                                                      sensor_event_bitmask,
+                                                      IPMI_SENSORS_OK_MSG) < 0)
             goto cleanup;
 
           rv = 1;
@@ -559,7 +351,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
 
           if (asprintf (&event_message, 
                         "OEM State = %04Xh", 
-                        (uint16_t) sensor_state) < 0)
+                        (uint16_t) sensor_event_bitmask) < 0)
             {
               pstdout_perror(state_data->pstate, "asprintf");
               goto cleanup;

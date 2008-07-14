@@ -30,8 +30,6 @@
 enum ipmi_sel_argp_option_keys
   { 
     INFO_KEY = 'i', 
-    GET_TIME_KEY = 'g',
-    SET_TIME_KEY = 's',
     DELETE_ALL_KEY = 'c', 
     DELETE_KEY = 'd', 
     DELETE_RANGE_KEY = 'R',
@@ -44,9 +42,6 @@ struct ipmi_sel_arguments
   struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
   int info;
-  int get_time;
-  int set_time;
-  char *set_time_arg;
   int delete_all;
   int delete;
   int delete_record_list[IPMI_SEL_MAX_DELETE_RECORD];

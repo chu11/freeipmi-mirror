@@ -287,3 +287,73 @@ ipmi_cmd_set_sel_time (ipmi_ctx_t ctx,
   API_FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
+
+int8_t 
+ipmi_cmd_get_auxiliary_log_status (ipmi_ctx_t ctx, 
+                                   uint8_t log_type,
+                                   fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+  
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
+                      && fiid_obj_valid(obj_cmd_rs));
+  
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_auxiliary_log_status_rs);
+  
+  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_auxiliary_log_status_rq);
+  
+  API_ERR_CLEANUP (!(fill_cmd_get_auxiliary_log_status (log_type,
+                                                        obj_cmd_rq) < 0));
+  
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_STORAGE_RQ, 
+			    obj_cmd_rq, 
+			    obj_cmd_rs);
+  
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
+ipmi_cmd_set_auxiliary_log_status (ipmi_ctx_t ctx, 
+                                   uint8_t log_type,
+                                   uint8_t *log_data,
+                                   uint8_t log_data_len,
+                                   fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+  
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
+                      && log_data
+                      && log_data_len
+                      && fiid_obj_valid(obj_cmd_rs));
+  
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_auxiliary_log_status_rs);
+  
+  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_auxiliary_log_status_rq);
+  
+  API_ERR_CLEANUP (!(fill_cmd_set_auxiliary_log_status (log_type,
+                                                        log_data,
+                                                        log_data_len,
+                                                        obj_cmd_rq) < 0));
+  
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_STORAGE_RQ, 
+			    obj_cmd_rq, 
+			    obj_cmd_rs);
+  
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}

@@ -84,7 +84,8 @@ _get_connection_mode (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_get_serial_modem_configuration_connection_mode: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -139,7 +140,8 @@ _set_connection_mode (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_set_serial_modem_configuration_connection_mode: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
    
@@ -329,7 +331,8 @@ page_blackout_interval_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_serial_modem_configuration_page_blackout_interval: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -376,7 +379,8 @@ page_blackout_interval_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_serial_modem_configuration_page_blackout_interval: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -418,7 +422,8 @@ call_retry_interval_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_serial_modem_configuration_call_retry_interval: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -464,7 +469,8 @@ call_retry_interval_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_serial_modem_configuration_call_retry_interval: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -507,7 +513,8 @@ _get_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -558,7 +565,8 @@ _set_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -688,18 +696,23 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
     "is setup.  Most users will only be interested in IPMI over LAN, "
     "therefore this section can generally be ignored.";
 
+  /*  
+   * achu: section not checked out by default, but leave legacy
+   * comments in .
+   */
+
   if (!(bmc_serial_conf_section = config_section_create(state_data->pstate,
                                                         "Serial_Conf", 
                                                         "Serial_Conf", 
                                                         section_comment,
-                                                        0)))
+                                                        CONFIG_DO_NOT_CHECKOUT)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
                               bmc_serial_conf_section,
                               "Enable_Basic_Mode",
                               "Possible values: Yes/No",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               enable_basic_mode_checkout,
                               enable_basic_mode_commit,
                               config_yes_no_validate) < 0)
@@ -709,7 +722,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Enable_PPP_Mode",
                               "Possible values: Yes/No",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               enable_ppp_mode_checkout,
                               enable_ppp_mode_commit,
                               config_yes_no_validate) < 0)
@@ -719,7 +732,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Enable_Terminal_Mode",
                               "Possible values: Yes/No",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               enable_terminal_mode_checkout,
                               enable_terminal_mode_commit,
                               config_yes_no_validate) < 0)
@@ -729,7 +742,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Connect_Mode",
                               "Possible values: Modem_Connect/Direct_Connect",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               connect_mode_checkout,
                               connect_mode_commit,
                               connect_mode_number_validate) < 0)
@@ -739,7 +752,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Page_Blackout_Interval",
                               "Give a valid number",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               page_blackout_interval_checkout,
                               page_blackout_interval_commit,
                               config_number_range_one_byte) < 0)
@@ -749,7 +762,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Call_Retry_Interval",
                               "Give a valid number",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               call_retry_interval_checkout,
                               call_retry_interval_commit,
                               config_number_range_one_byte) < 0)
@@ -770,7 +783,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Enable_DTR_Hangup",
                               "Possible values: Yes/No",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               enable_dtr_hangup_checkout,
                               enable_dtr_hangup_commit,
                               config_yes_no_validate) < 0)
@@ -780,7 +793,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Flow_Control",
                               "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               flow_control_checkout,
                               flow_control_commit,
                               flow_control_number_validate) < 0)
@@ -790,7 +803,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Bit_Rate",
                               "Possible values: 9600/19200/38400/57600/115200",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               bit_rate_checkout,
                               bit_rate_commit,
                               bit_rate_number_validate) < 0)

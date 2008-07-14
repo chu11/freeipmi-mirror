@@ -60,6 +60,16 @@ int8_t ipmi_cmd_set_sel_time (ipmi_ctx_t ctx,
                               uint32_t time,
                               fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_get_auxiliary_log_status (ipmi_ctx_t ctx, 
+                                          uint8_t log_type,
+                                          fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_set_auxiliary_log_status (ipmi_ctx_t ctx, 
+                                          uint8_t log_type,
+                                          uint8_t *log_data,
+                                          uint8_t log_data_len,
+                                          fiid_obj_t obj_cmd_rs);
+
 #ifdef __cplusplus
 }
 #endif

@@ -66,7 +66,7 @@ operation initiated by a chassis control command.
 Get system restart cause.
 .TP
 \fB\-H\fR, \fB\-\-get\-power\-on\-hours\-counter\fR
-Get power on hours counter.
+Get power on hours (POH) counter.
 .TP
 \fB\-G\fR, \fB\-\-get\-boot\-flags\fR
 Get system boot\-flags.  This command returns the current boot

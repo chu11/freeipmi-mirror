@@ -657,6 +657,32 @@ fiid_template_t tmpl_cmd_suspend_bmc_arps_rs =
     {0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_get_ip_udp_rmcp_statistics_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "clear_all_statistics", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_ip_udp_rmcp_statistics_rs =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "ip_packets_received", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "received_ip_header_errors", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "received_ip_address_errors", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "fragmented_ip_packets_received", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "ip_packets_transmitted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "udp_packets_received", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "valid_rmcp_packets_received", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "udp_proxy_packets_received", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "udp_proxy_packets_dropped", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
+  };
+
 int8_t
 fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                            uint8_t parameter_selector,
@@ -1298,5 +1324,27 @@ fill_cmd_suspend_bmc_arps (uint8_t channel_number,
   
   return 0;
 }
+
+int8_t 
+fill_cmd_get_ip_udp_rmcp_statistics (uint8_t channel_number, 
+                                     uint8_t clear_all_statistics, 
+                                     fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && IPMI_CLEAR_ALL_STATISTICS_VALID(clear_all_statistics)
+	      && fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_ip_udp_rmcp_statistics_rq);
+
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_IP_UDP_RMCP_STATISTICS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "clear_all_statistics", clear_all_statistics);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  
+  return 0;
+}
+
 
 

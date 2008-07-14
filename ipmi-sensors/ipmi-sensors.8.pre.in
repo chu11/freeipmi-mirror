@@ -48,7 +48,7 @@ other sensor types not output by default.
 \fB\-vv\fR
 Output very verbose sensor output.  This option will output more
 additional information than the verbose option such as information
-about oem sensors.
+about events, other sensor types, and oem sensors.
 .TP
 \fB\-q\fR, \fB\-\-quiet-readings\fR
 Do not output sensor reading values or thresholds on simple output,

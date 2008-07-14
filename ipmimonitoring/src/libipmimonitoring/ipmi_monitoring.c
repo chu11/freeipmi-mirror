@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.27.2.1 2008-06-21 16:18:43 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.27.2.2 2008-07-14 02:13:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -68,6 +68,7 @@ static char *ipmi_monitoring_errmsgs[] =
     "sensor not found",
     "no sensor readings available",
     "end of sensor readings list reached",
+    "connection timeout",
     "session timeout",
     "invalid username",
     "invalid password",

@@ -1,5 +1,6 @@
 SUBDIRS = \
 	doc \
+	etc \
 	common \
 	libfreeipmi \
 	man \

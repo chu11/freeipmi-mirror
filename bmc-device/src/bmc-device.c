@@ -25,6 +25,16 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #include <assert.h>
 #include <errno.h>
 
@@ -50,7 +60,7 @@ cold_reset (bmc_device_state_data_t *state_data)
 
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_cold_reset_rs);
 
-  if (ipmi_cmd_cold_reset (state_data->ipmi_ctx, cmd_rs) != 0)
+  if (ipmi_cmd_cold_reset (state_data->ipmi_ctx, cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -75,7 +85,7 @@ warm_reset (bmc_device_state_data_t *state_data)
 
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_warm_reset_rs);
 
-  if (ipmi_cmd_warm_reset (state_data->ipmi_ctx, cmd_rs) != 0)
+  if (ipmi_cmd_warm_reset (state_data->ipmi_ctx, cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -101,7 +111,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
 
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_self_test_results_rs);
 
-  if (ipmi_cmd_get_self_test_results (state_data->ipmi_ctx, cmd_rs) != 0)
+  if (ipmi_cmd_get_self_test_results (state_data->ipmi_ctx, cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -214,7 +224,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
 
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_acpi_power_state_rs);
 
-  if (ipmi_cmd_get_acpi_power_state (state_data->ipmi_ctx, cmd_rs) != 0)
+  if (ipmi_cmd_get_acpi_power_state (state_data->ipmi_ctx, cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -372,7 +382,7 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
                                      (system_power_state == IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE) ? IPMI_ACPI_SET_SYSTEM_POWER_STATE_DONT_SET_SYSTEM_POWER_STATE : IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE,
                                      device_power_state,
                                      (device_power_state == IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE) ? IPMI_ACPI_SET_DEVICE_POWER_STATE_DONT_SET_DEVICE_POWER_STATE : IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE,
-                                     cmd_rs) != 0)
+                                     cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -384,6 +394,395 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
   rv = 0;
  cleanup:
   _FIID_OBJ_DESTROY(cmd_rs);
+  return rv;
+}
+
+static int
+get_lan_statistics (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  int8_t lan_channel_number;
+  uint64_t val;
+  int rv = -1;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_ip_udp_rmcp_statistics_rs);
+
+  if ((lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
+                                                     IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_get_channel_number: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_ip_udp_rmcp_statistics (state_data->ipmi_ctx,
+                                           lan_channel_number,
+                                           IPMI_DONT_CLEAR_ALL_STATISTICS,
+                                           cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_ip_udp_rmcp_statistics: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "ip_packets_received",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "IP Packets Received: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "received_ip_header_errors",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "Received IP Header Errors: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "received_ip_address_errors",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "Received IP Address Errors: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "fragmented_ip_packets_received",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "Fragmented IP Packets Received: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "ip_packets_transmitted",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "IP Packets Transmitted: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "udp_packets_received",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "UDP Packets Received: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "valid_rmcp_packets_received",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "Valid RMCP Packets Received: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "udp_proxy_packets_received",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "UDP Proxy Packets Received: %u\n",
+                  (uint16_t)val);
+
+  _FIID_OBJ_GET (cmd_rs, 
+                 "udp_proxy_packets_dropped",
+                 &val);
+  pstdout_printf (state_data->pstate,
+                  "UDP Proxy Packets Dropped: %u\n",
+                  (uint16_t)val);
+  
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return rv;
+}
+
+static int
+clear_lan_statistics (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  int8_t lan_channel_number;
+  int rv = -1;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_ip_udp_rmcp_statistics_rs);
+
+  if ((lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
+                                                     IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_get_channel_number: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_ip_udp_rmcp_statistics (state_data->ipmi_ctx,
+                                           lan_channel_number,
+                                           IPMI_CLEAR_ALL_STATISTICS,
+                                           cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_ip_udp_rmcp_statistics: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+  
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return rv;
+}
+
+static int
+get_sdr_repository_time (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  uint64_t val;
+  char str[512];
+  int rv = -1;
+  time_t t;
+  struct tm tm;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_get_sdr_repository_time_rs);
+
+  if (ipmi_cmd_get_sdr_repository_time (state_data->ipmi_ctx, cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_sdr_repository_time: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET (cmd_rs, "time", &val);
+
+  t = val;
+  localtime_r (&t, &tm);
+  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
+  pstdout_printf (state_data->pstate,
+                  "SDR Repository Time: %s\n",
+                  str);
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return (rv);
+}
+
+static int
+set_sdr_repository_time (bmc_device_state_data_t *state_data)
+{
+  struct bmc_device_arguments *args;
+  fiid_obj_t cmd_rs = NULL;
+  int rv = -1;
+  time_t t;
+  struct tm tm;
+
+  assert(state_data);
+
+  args = state_data->prog_data->args;
+
+  if (!strcasecmp(args->set_sdr_repository_time_arg, "now"))
+    t = time(NULL);
+  else
+    {
+      if (!strptime(args->set_sdr_repository_time_arg, "%m/%d/%Y - %H:%M:%S", &tm))
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "Invalid time specification '%s'.\n",
+                          args->set_sdr_repository_time_arg);
+          goto cleanup;
+        }
+      if ((t = mktime(&tm)) == (time_t)-1)
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "Time specification '%s' cannot be represented.\n",
+                          args->set_sdr_repository_time_arg);
+          goto cleanup;
+        }
+    }
+
+  _FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_set_sdr_repository_time_rs);
+
+  if (ipmi_cmd_set_sdr_repository_time (state_data->ipmi_ctx, t, cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_set_sdr_repository_time: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return (rv);
+}
+
+static int
+get_sel_time (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  uint64_t val;
+  char str[512];
+  int rv = -1;
+  time_t t;
+  struct tm tm;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_get_sel_time_rs);
+
+  if (ipmi_cmd_get_sel_time (state_data->ipmi_ctx, cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_sel_time: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET (cmd_rs, "time", &val);
+
+  t = val;
+  localtime_r (&t, &tm);
+  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
+  pstdout_printf (state_data->pstate,
+                  "SEL Time: %s\n",
+                  str);
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return (rv);
+}
+
+static int
+set_sel_time (bmc_device_state_data_t *state_data)
+{
+  struct bmc_device_arguments *args;
+  fiid_obj_t cmd_rs = NULL;
+  int rv = -1;
+  time_t t;
+  struct tm tm;
+
+  assert(state_data);
+
+  args = state_data->prog_data->args;
+
+  if (!strcasecmp(args->set_sel_time_arg, "now"))
+    t = time(NULL);
+  else
+    {
+      if (!strptime(args->set_sel_time_arg, "%m/%d/%Y - %H:%M:%S", &tm))
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "Invalid time specification '%s'.\n",
+                          args->set_sel_time_arg);
+          goto cleanup;
+        }
+      if ((t = mktime(&tm)) == (time_t)-1)
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "Time specification '%s' cannot be represented.\n",
+                          args->set_sel_time_arg);
+          goto cleanup;
+        }
+    }
+
+  _FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_set_sel_time_rs);
+
+  if (ipmi_cmd_set_sel_time (state_data->ipmi_ctx, t, cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_set_sel_time: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return (rv);
+}
+
+static int
+get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t mca_cmd_rs = NULL;
+  uint64_t val;
+  char str[512];
+  int rv = -1;
+  time_t t;
+  struct tm tm;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_auxiliary_log_status_rs);
+
+  if (ipmi_cmd_get_auxiliary_log_status (state_data->ipmi_ctx, 
+                                         IPMI_AUXILIARY_LOG_TYPE_MCA,
+                                         cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_auxiliary_log_status: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+  
+  _FIID_OBJ_GET (cmd_rs,
+                 "log_type",
+                 &val);
+  
+  if (val != IPMI_AUXILIARY_LOG_TYPE_MCA)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_auxiliary_log_status: invalid log type returned: 0x%X\n",
+                      (uint8_t)val);
+      goto cleanup;
+    }
+
+  _FIID_OBJ_COPY(mca_cmd_rs,
+                 cmd_rs,
+                 tmpl_cmd_get_auxiliary_log_status_mca_rs);
+
+  _FIID_OBJ_GET (mca_cmd_rs,
+                 "timestamp",
+                 &val);
+
+  t = val;
+  localtime_r (&t, &tm);
+  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
+  pstdout_printf (state_data->pstate,
+                  "Last Entry Added to MCA Log: %s\n",
+                  str);
+  
+  _FIID_OBJ_GET (mca_cmd_rs,
+                 "mca_log_entry_count",
+                 &val);
+  
+  pstdout_printf (state_data->pstate,
+                  "Number of entries in MCA log: %u\n",
+                  (uint32_t)val);
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  _FIID_OBJ_DESTROY(mca_cmd_rs);
   return rv;
 }
 
@@ -411,6 +810,27 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->set_acpi_power_state)
     return set_acpi_power_state (state_data);
+
+  if (args->get_lan_statistics)
+    return get_lan_statistics (state_data);
+
+  if (args->clear_lan_statistics)
+    return clear_lan_statistics (state_data);
+
+  if (args->get_sdr_repository_time)
+    return get_sdr_repository_time (state_data);
+
+  if (args->set_sdr_repository_time)
+    return set_sdr_repository_time (state_data);
+
+  if (args->get_sel_time)
+    return get_sel_time (state_data);
+
+  if (args->set_sel_time)
+    return set_sel_time (state_data);
+
+  if (args->get_mca_auxiliary_log_status)
+    return get_mca_auxiliary_log_status (state_data);
 
   rv = 0;
   return (rv);

@@ -33,6 +33,168 @@
 
 	* freeipmi.spec.in: Add README.sunbmc.
 
+2008-07-13 Albert Chu <chu11@llnl.gov>
+
+	* tagged pre_remove_serial_bmc_config
+
+	* bmc-config/: remove checkout of serial config sections/fields.
+
+	* tagged post_remove_serial_bmc_config
+	
+	* ipmi-sensors/src/: Limit output in verbose and very verbose when
+	data is clearly irrelevant.  
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(run_cmd_args): Similar to ipmi-sensors, output "OK" if a bitmask
+	sensor reading has no bits set.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(_threshold_sensor_reading): Check for valid analog data format as
+	well as linearization.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(_get_sensor_reading): Check for reading state in sensor reading.
+
+	* ipmimonitoring/src/libipmimonitoring/: Support "connection
+	timeout" error message.
+
+	* ipmimonitoring/: Support -v verbose option.
+
+2008-07-12 Albert Chu <chu11@llnl.gov>
+
+	* Update bmc-config, pef-config, ipmi-sensors-config with some
+	config text.
+	
+2008-07-11 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/: Output multiple event messages on multiple
+	lines under verbose mode.  Retrieve hysteresis only from IPMI cmd,
+	not from SDR.  Support output of event enable information in very
+	verbose mode.
+
+	* common/src/miscutil/hostlist.c: update to newest lib version.
+
+	* common/src/configtool/config-tool-common.h
+	(IPMI_CTX_ERRNUM_IS_FATAL_ERROR): New macro.
+
+	* bmc-config/, pef-config/, ipmi-sensors-config/,
+	common/src/configtool/config-tool-pef-conf-section.c: Utilize
+	IPMI_CTX_ERRNUM_IS_FATAL_ERROR to check if an error from an IPMI
+	API cmd call is really non-fatal.
+
+	* ipmi-sensors/src/: Limit output in verbose and very verbose when
+	data is clearly irrelevant.  
+	
+2008-07-10 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-reading.c
+	(_get_threshold_message_list, _get_generic_event_message_list,
+	_get_sensor_specific_event_message_list): Fix cleanup corner case.
+	
+2008-07-10 Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/ipmipower.8.pre.in: Add default info.
+
+	* man/freeipmi.conf.5.pre.in: Add default config file path info.
+
+	* etc/: New dir.
+
+	* etc/freeipmi.conf: New default freeipmi.conf file.
+
+	* configure.ac, freeipmi.spec.in: Update appropriately for new files.
+
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+	common/src/toolcommon/tool-sdr-cache-common.c
+	(sdr_cache_get_sensor_capabilities): New function.
+
+	* ipmi-sensors/src/ipmi-sensors-very-verbose-display.c
+	(_output_very_verbose_hysteresis): Before issuing hysteresis
+	command, check if hysteresis can even be read.
+
+	* ipmi-sensors/src/ipmi-sensors-display-common.c
+	(ipmi_sensors_get_thresholds): Before issuing threshold reading
+	commands, check if threshold can even be read.
+
+	* ipmi-sensors/src/ipmi-sensors-reading.c (sensor_reading): Check
+	for unavailable sensor readings.
+
+	* ipmi-sensors/src/ipmi-sensors-reading.c (_get_na_message_list):
+	New function.
+
+	* ipmi-sensors/src/ipmi-sensors-reading.c (sensor_reading): If
+	sensor is not linear or has invalid analog_data_format, still try
+	to get proper event message list before falling through.
+
+2008-07-09 Albert Chu <chu11@llnl.gov>
+	
+	* libfreeipmi/include/freeipmi/cmds/ipmi-sensor-cmds.h,
+	libfreeipmi/src/cmds/ipmi-sensor-cmds.c,
+	libfreeipmi/include/api/ipmi-sensor-cmds-api.h,
+	libfreeipmi/src/api/ipmi-sensor-cmds-api.c: Support Get/Set event
+	enable commands.
+
+	* Globally rename "sensor_state" to "sensor_event_bitmask" for
+	consistency to get/set enable commands and for clarification from
+	ipmimonitoring's "sensor_state".
+
+	* ipmi-sensors/: Re-order hysteresis output with positive first,
+	for consistency to IPMI spec.  Gather hysteresis values from IPMI
+	command when available.
+
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+	common/src/toolcommon/tool-sdr-cache-common.c
+	(sdr_cache_get_hysteresis_real): Removed function.
+
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+        common/src/toolcommon/tool-sdr-cache-common.c
+        (sdr_cache_get_hysteresis_integeer): Renamed to sdr_cache_get_hysteresis.
+	
+2008-07-08 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/, bmc-device/: Move --get-time and --set-time from
+	ipmi-sel to --get-sel-time and --set-sel-time in bmc-device.
+	
+	* libfreeipmi/include/freeipmi/api/ipmi-sdr-repository-cmds-api.h,
+	libfreeipmi/include/freeipmi/cmds/ipmi-sdr-repository-cmds.h,
+	libfreeipmi/src/api/ipmi-sdr-repository-cmds-api.c,
+	libfreeipmi/src/cmds/ipmi-sdr-repository-cmds.c: Support get/set
+	SDR repository time commands.
+
+	* bmc-device/: Support --get-sdr-repository-time and
+	--set-sdr-repository-time.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-sel-cmds.h,
+	libfreeipmi/src/cmds/ipmi-sel-cmds.c,
+	libfreeipmi/include/api/ipmi-sel-cmds-api.h,
+	libfreeipmi/src/api/ipmi-sel-cmds-api.c: Support Get Auxiliary Log
+	status IPMI command.
+
+	* bmc-device/: Support --get-mca-auxiliary-log-status.
+
+	* libfreeipmi/: various minor code cleanup.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-sensor-cmds.h,
+	libfreeipmi/src/cmds/ipmi-sensor-cmds.c,
+	libfreeipmi/include/api/ipmi-sensor-cmds-api.h,
+	libfreeipmi/src/api/ipmi-sensor-cmds-api.c: Support Get/Set
+	hysteresis commands.
+
+2008-07-07 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/api/ipmi-lan-cmds-api.h,
+	libfreeipmi/include/freeipmi/cmds/ipmi-lan-cmds.h,
+	libfreeipmi/src/api/ipmi-lan-cmds-api.c,
+	libfreeipmi/src/cmds/ipmi-lan-cmds.c: Support get IP/UDP/RMCP
+	statistics command.
+
+	* libfreeipmi/src/api/ipmi-lan-cmds-api.c
+	(ipmi_cmd_suspend_bmc_arps): Fix parameter corner case check.
+
+	* bmc-device/: Support --get-lan-statistics and
+	--clear-lan-statistics.
+
+	* bmc-device/: Various minor cleanup.
+
 2008-07-07 Albert Chu <chu11@llnl.gov>
 
 	Support --sdr-cache-recreate globally.
@@ -64,6 +226,8 @@
 	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
 	(run_cmd_args): Preserve old output format when no messages can be
 	output.
+
+	* ipmi-chassis/: Document power-on-hours typically abbreviated to POH.
 	
 2008-07-07 Albert Chu <chu11@llnl.gov>
 

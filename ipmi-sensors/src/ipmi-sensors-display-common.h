@@ -23,7 +23,9 @@
 
 int ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                                             char **event_message_list,
-                                            unsigned int event_message_list_len);
+                                            unsigned int event_message_list_len,
+                                            char *prefix,
+                                            unsigned int each_on_newline);
 
 int ipmi_sensors_output_verbose_event_message_list (ipmi_sensors_state_data_t *state_data,
                                                     char **event_message_list,

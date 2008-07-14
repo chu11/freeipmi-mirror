@@ -110,7 +110,8 @@ _get_user_access(bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_get_user_access: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -179,7 +180,8 @@ _set_user_access (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_set_user_access: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -213,7 +215,8 @@ username_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_user_name: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -285,7 +288,8 @@ username_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_user_name: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -405,7 +409,8 @@ enable_user_commit (const char *section_name,
                             stderr,
                             "ipmi_check_completion_code: %s\n",
                             ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
+          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
@@ -416,7 +421,8 @@ enable_user_commit (const char *section_name,
                             stderr,
                             "ipmi_cmd_set_user_password: %s\n",
                             ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
+          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
@@ -446,13 +452,15 @@ enable_user_commit (const char *section_name,
                             stderr,
                             "ipmi_cmd: %s\n",
                             ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
+          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
       if (ipmi_check_completion_code_success(obj_cmd_rs) != 1)
         {
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
+          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
     }
@@ -510,7 +518,8 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
                             stderr,
                             "ipmi_cmd_set_user_password: %s\n",
                             ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
+          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
         }
       goto cleanup;
     }
@@ -587,7 +596,8 @@ password_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_user_password: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -639,7 +649,8 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
                        "comp_code",
                        &comp_code) < 0)
         {
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
+          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
@@ -656,7 +667,8 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
                             stderr,
                             "ipmi_cmd_set_user_password_v20: %s\n",
                             ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
+          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
         }
       goto cleanup;
     }
@@ -736,7 +748,8 @@ password20_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_user_password_v20: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -1019,7 +1032,8 @@ sol_payload_access_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_user_payload_access: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -1089,7 +1103,8 @@ sol_payload_access_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_user_payload_access: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -1502,31 +1517,34 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
+  /* achu: backwards compatability to pre FreeIPMI 0.7.1 */
   if (config_section_add_key (state_data->pstate,
                               user_section,
                               "Serial_Enable_IPMI_Msgs",
                               "Possible values: Yes/No",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               serial_enable_ipmi_messaging_checkout,
                               serial_enable_ipmi_messaging_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
+  /* achu: backwards compatability to pre FreeIPMI 0.7.1 */
   if (config_section_add_key (state_data->pstate,
                               user_section,
                               "Serial_Enable_Link_Auth",
                               "Possible values: Yes/No",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               serial_enable_link_auth_checkout,
                               serial_enable_link_auth_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
+  /* achu: backwards compatability to pre FreeIPMI 0.7.1 */
   if (config_section_add_key (state_data->pstate,
                               user_section,
                               "Serial_Enable_Restricted_to_Callback",
                               "Possible values: Yes/No",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               serial_enable_restricted_to_callback_checkout,
                               serial_enable_restricted_to_callback_commit,
                               config_yes_no_validate) < 0)
@@ -1543,16 +1561,18 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
+  /* achu: backwards compatability to pre FreeIPMI 0.7.1 */
   if (config_section_add_key (state_data->pstate,
                               user_section,
                               "Serial_Privilege_Limit",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
-                              0,
+                              CONFIG_DO_NOT_CHECKOUT,
                               serial_privilege_limit_checkout,
                               serial_privilege_limit_commit,
                               get_privilege_limit_number_validate) < 0)
     goto cleanup;
 
+  /* achu: backwards compatability to pre FreeIPMI 0.7.1 */
   if (config_section_add_key (state_data->pstate,
                               user_section,
                               "Serial_Session_Limit",

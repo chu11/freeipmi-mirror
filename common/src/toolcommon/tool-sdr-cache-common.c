@@ -1175,6 +1175,75 @@ sdr_cache_get_device_id_string (pstdout_state_t pstate,
 }
 
 int 
+sdr_cache_get_sensor_capabilities (pstdout_state_t pstate,
+                                   uint8_t *sdr_record,
+                                   unsigned int sdr_record_len,
+                                   uint8_t *event_message_control_support,
+                                   uint8_t *threshold_access_support,
+                                   uint8_t *hysteresis_support,
+                                   uint8_t *auto_re_arm_support,
+                                   uint8_t *entity_ignore_support)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+    
+  if (event_message_control_support)
+    {
+      _SDR_FIID_OBJ_GET (obj_sdr_record, 
+                         "sensor_capabilities.event_message_control_support", 
+                         &val);
+      *event_message_control_support = val;
+    }
+  if (threshold_access_support)
+    {
+      _SDR_FIID_OBJ_GET (obj_sdr_record, 
+                         "sensor_capabilities.threshold_access_support", 
+                         &val);
+      *threshold_access_support = val;
+    }
+  if (hysteresis_support)
+    {
+      _SDR_FIID_OBJ_GET (obj_sdr_record, 
+                         "sensor_capabilities.hysteresis_support", 
+                         &val);
+      *hysteresis_support = val;
+    }
+  if (auto_re_arm_support)
+    {
+      _SDR_FIID_OBJ_GET (obj_sdr_record, 
+                         "sensor_capabilities.auto_re_arm_support", 
+                         &val);
+      *auto_re_arm_support = val;
+    }
+  if (entity_ignore_support)
+    {
+      _SDR_FIID_OBJ_GET (obj_sdr_record, 
+                         "sensor_capabilities.entity_ignore_support", 
+                         &val);
+      *entity_ignore_support = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv; 
+}
+
+int 
 sdr_cache_get_sensor_decoding_data (pstdout_state_t pstate,
                                     uint8_t *sdr_record,
                                     unsigned int sdr_record_len,
@@ -1498,154 +1567,11 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
 }
 
 int
-sdr_cache_get_hysteresis_real (pstdout_state_t pstate,
-                               uint8_t *sdr_record,
-                               unsigned int sdr_record_len,
-                               double **positive_going_threshold_hysteresis,
-                               double **negative_going_threshold_hysteresis)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  int8_t r_exponent, b_exponent;
-  int16_t m, b;
-  uint8_t linearization, analog_data_format;
-  double *tmp_positive_going_threshold_hysteresis = NULL;
-  double *tmp_negative_going_threshold_hysteresis = NULL;
-  uint64_t val;
-  double hysteresis;
-  int rv = -1;
-
-  assert(sdr_record);
-  assert(sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-
-  if (positive_going_threshold_hysteresis)
-    *positive_going_threshold_hysteresis = NULL;
-  if (negative_going_threshold_hysteresis)
-    *negative_going_threshold_hysteresis = NULL;
-
-  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
-                                               sdr_record,
-                                               sdr_record_len,
-                                               acceptable_record_types)))
-    goto cleanup;
-  
-  if (sdr_cache_get_sensor_decoding_data(pstate,
-                                         sdr_record,
-                                         sdr_record_len,
-                                         &r_exponent,
-                                         &b_exponent,
-                                         &m,
-                                         &b,
-                                         &linearization,
-                                         &analog_data_format) < 0)
-    goto cleanup;
-
-  /* if the sensor is not analog, this is most likely a bug in the
-   * SDR, since we shouldn't be decoding a non-threshold sensor.
-   *
-   * Don't return an error.  Allow code to output "NA" or something.
-   */
-  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
-    {
-      rv = 0;
-      goto cleanup;
-    }
-
-  /* if the sensor is non-linear, I just don't know what to do
-   *
-   * Don't return an error.  Allow code to output "NA" or something.
-   */
-  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
-    {
-      rv = 0;
-      goto cleanup;
-    }
-
-  if (positive_going_threshold_hysteresis)
-    {
-      _SDR_FIID_OBJ_GET(obj_sdr_record,
-                        "positive_going_threshold_hysteresis",
-                        &val);
-
-      if (ipmi_sensor_decode_value (r_exponent,
-                                    b_exponent,
-                                    m,
-                                    b,
-                                    linearization,
-                                    analog_data_format,
-                                    val,
-                                    &hysteresis) < 0)
-        {
-          PSTDOUT_FPRINTF (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
-          goto cleanup;
-        }
-
-      if (!(tmp_positive_going_threshold_hysteresis = (double *)malloc(sizeof(double))))
-        {
-          PSTDOUT_PERROR(pstate, "malloc");
-          goto cleanup;
-        }
-      *tmp_positive_going_threshold_hysteresis = hysteresis;
-    }
-  if (negative_going_threshold_hysteresis)
-    {
-      _SDR_FIID_OBJ_GET(obj_sdr_record,
-                        "negative_going_threshold_hysteresis",
-                        &val);
-
-      if (ipmi_sensor_decode_value (r_exponent,
-                                    b_exponent,
-                                    m,
-                                    b,
-                                    linearization,
-                                    analog_data_format,
-                                    val,
-                                    &hysteresis) < 0)
-        {
-          PSTDOUT_FPRINTF (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
-          goto cleanup;
-        }
-
-      if (!(tmp_negative_going_threshold_hysteresis = (double *)malloc(sizeof(double))))
-        {
-          PSTDOUT_PERROR(pstate, "malloc");
-          goto cleanup;
-        }
-      *tmp_negative_going_threshold_hysteresis = hysteresis;
-    }
-  
-  if (positive_going_threshold_hysteresis)
-    *positive_going_threshold_hysteresis = tmp_positive_going_threshold_hysteresis;
-  if (negative_going_threshold_hysteresis)
-    *negative_going_threshold_hysteresis = tmp_negative_going_threshold_hysteresis;
-  
-  rv = 0;
- cleanup:
-  _FIID_OBJ_DESTROY(obj_sdr_record);
-  if (rv < 0)
-    {
-      if (tmp_positive_going_threshold_hysteresis)
-        free(positive_going_threshold_hysteresis);
-      if (tmp_negative_going_threshold_hysteresis)
-        free(negative_going_threshold_hysteresis);
-    }
-  return rv; 
-}
-
-int
-sdr_cache_get_hysteresis_integer (pstdout_state_t pstate,
-                                  uint8_t *sdr_record,
-                                  unsigned int sdr_record_len,
-                                  uint8_t *positive_going_threshold_hysteresis,
-                                  uint8_t *negative_going_threshold_hysteresis)
+sdr_cache_get_hysteresis (pstdout_state_t pstate,
+                          uint8_t *sdr_record,
+                          unsigned int sdr_record_len,
+                          uint8_t *positive_going_threshold_hysteresis,
+                          uint8_t *negative_going_threshold_hysteresis)
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;

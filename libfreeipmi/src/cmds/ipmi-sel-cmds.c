@@ -176,6 +176,58 @@ fiid_template_t tmpl_cmd_set_sel_time_rs =
     {0,   "", 0}
   };
 
+fiid_template_t tmpl_cmd_get_auxiliary_log_status_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "log_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_auxiliary_log_status_rs = 
+  {
+    {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {120, "log_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE}, 
+    {0,   "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_auxiliary_log_status_mca_rs = 
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "mca_log_entry_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, // LS byte first
+    {56, "log_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    {0,  "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_auxiliary_log_status_oem_rs = 
+  {
+    {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {32,  "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {24,  "oem_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {64,  "log_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    {0,   "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_auxiliary_log_status_rq =
+  {
+    {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,   "log_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {120, "log_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE}, 
+    {0,   "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_auxiliary_log_status_rs = 
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
+  };
+
 int8_t 
 fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
 {
@@ -295,6 +347,49 @@ fill_cmd_set_sel_time (uint32_t time, fiid_obj_t obj_cmd_rq)
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SEL_TIME); 
   FIID_OBJ_SET (obj_cmd_rq, "time", time);
+  
+  return 0;
+}
+
+int8_t 
+fill_cmd_get_auxiliary_log_status (uint8_t log_type,
+                                   fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
+              && fiid_obj_valid(obj_cmd_rq));
+  
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_auxiliary_log_status_rq);
+  
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_AUXILIARY_LOG_STATUS); 
+  FIID_OBJ_SET (obj_cmd_rq, "log_type", log_type);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+
+  return 0;
+}
+
+int8_t
+fill_cmd_set_auxiliary_log_status (uint8_t log_type,
+                                   uint8_t *log_data,
+                                   uint8_t log_data_len,
+                                   fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
+              && log_data
+              && log_data_len
+              && fiid_obj_valid(obj_cmd_rq));
+  
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_auxiliary_log_status_rq);
+  
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_AUXILIARY_LOG_STATUS); 
+  FIID_OBJ_SET (obj_cmd_rq, "log_type", log_type);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  
+  FIID_OBJ_SET_DATA (obj_cmd_rq,
+                     "log_data",
+                     log_data,
+                     log_data_len);
   
   return 0;
 }

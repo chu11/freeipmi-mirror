@@ -19,6 +19,33 @@
 #ifndef _IPMI_SENSORS_UTIL_H
 #define _IPMI_SENSORS_UTIL_H
 
+#include "ipmi-sensors.h"
+
+int get_msg_message_list (struct ipmi_sensors_state_data *state_data,
+                          char ***event_message_list,
+                          unsigned int *event_message_list_len,
+                          char *msg);
+
+int get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
+                                char ***event_message_list,
+                                unsigned int *event_message_list_len,
+                                uint8_t sensor_event_bitmask,
+                                char *no_event_msg);
+
+int get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
+                                    char ***event_message_list,
+                                    unsigned int *event_message_list_len,
+                                    uint8_t event_reading_type_code, 
+                                    uint16_t sensor_event_bitmask,
+                                    char *no_event_msg);
+
+int get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_data,
+                                            char ***event_message_list,
+                                            unsigned int *event_message_list_len,
+                                            uint8_t sensor_type, 
+                                            uint16_t sensor_event_bitmask,
+                                            char *no_event_msg);
+
 void str_replace_char (char *str, char chr, char with);
 
 #endif

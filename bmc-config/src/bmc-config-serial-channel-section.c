@@ -48,11 +48,16 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
     "communication can be disabled.  This can be done by setting "
     "\"Access_Mode\" to \"Disabled\".";
 
+  /*  
+   * achu: section not checked out by default, but leave legacy
+   * comments in .
+   */
+
   if (!(serial_channel_section = config_section_create (state_data->pstate,
                                                         "Serial_Channel",
                                                         "Serial_Channel",
                                                         section_comment,
-                                                        0)))
+                                                        CONFIG_DO_NOT_CHECKOUT)))
     goto cleanup;
 
   if (bmc_config_channel_common_section_get(state_data, 

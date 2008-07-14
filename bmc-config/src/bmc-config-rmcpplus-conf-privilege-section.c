@@ -77,7 +77,8 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
                             stderr,
                             "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support: %s\n",
                             ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
+          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
@@ -105,7 +106,8 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
                             stderr,
                             "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries: %s\n",
                             ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
+          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
@@ -170,7 +172,8 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
                             stderr,
                             "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_level: %s\n",
                             ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
+          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
@@ -318,7 +321,8 @@ id_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
       
