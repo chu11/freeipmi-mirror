@@ -148,6 +148,9 @@ config_parse_opt (int key,
       else
         config_args->action = -1;
       break;
+    case CONFIG_ARGP_VERBOSE_KEY:
+      config_args->verbose = 1;
+      break;
     default:
       return ARGP_ERR_UNKNOWN;
     }

@@ -2,6 +2,10 @@
 	
 	* ipmimonitoring/: Fix up -v output formatting.
 
+	* common/src/configtool/config-tool-argp.c: Fix -v option support.
+
+	* common/man/manpage-common-config-tool-options.man: Fix man options.
+
 2008-07-13 Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_remove_serial_bmc_config
