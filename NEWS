@@ -114,6 +114,8 @@ o libipmimonitoring
   - Support new "connection timeout" error message.
   - Variety of corner case fixes, such as dealing with sensor readings
     that are unavailable.
+  - Provide more information to user on unreadabl/uninterpretable
+    sensor readings.
 o Various naming consistency fixes to IPMI specification.
 o Various minor bug fixes.
 
