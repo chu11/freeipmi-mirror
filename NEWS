@@ -23,18 +23,23 @@ o Support --sdr-cache-recreate in all SDR related tools for easier
 o Support --guid option in bmc-info to retrieve global ID.
 o Support build on Solaris.
 
-For Users - Minor Enhancements/Changes/Bug Fixes
-------------------------------------------------
+For Users - Enhancements/Changes
+--------------------------------
 o Global in most tools
   - Rename --no-probing option to --disable-auto-probe for consistency
     in FreeIPMI.  Backwards compatability maintained.
-o Global in config tools
-  - More carefully check for fatal vs. non-fatal errors when configuring.
+o Global in config tools (bmc-config, pef-config, ipmi-sensors-config)
+  - More carefully check for fatal vs. non-fatal errors when
+    configuring.  This change may result in slight behavior
+    differences.  For example, a session-timeout may have previously
+    been considered a non-fatal error, making the config tools
+    continue on attempting more configuration activities.  Now, it
+    would error out on the first session-timeout indication.
 o bmc-config
   - Do not output unsupported authentication type enables when checking
     out the Lan_Conf_Auth section.
   - Remove checkout of serial configuration parameters.
-  - Fix several string case sensitivity corner cases.
+  - Remove case sensitivity when checking a number of fields.
 o ipmi-chassis
   - Alter ipmi-chassis output to print "unknown" when field is not known.
   - Alter some ipmi-chassis output text to be more consistent to IPMI
@@ -42,7 +47,7 @@ o ipmi-chassis
 o ipmi-fru
   - Output FRU device names along with IDs in ipmi-fru.
   - Reduce excessive newline outputs in ipmi-fru.
-  - Output more information by default.  Alter meaning of verbose
+  - Output more information by default.  Change the output of verbose
     vs. very verbose output.
 o ipmi-sel
   - Change default privilege from user to operator in ipmi-sel.
@@ -85,18 +90,17 @@ o ipmi-sensors
     than all on one line under verbose modes.
   - When fields are not relevant, do not output as much information in
     verbose and very verbose mode.  For example, don't output
-    hysteresis or threshold information for power supplys.
+    hysteresis or threshold information for power supply sensors.
   - Alter some output ordering for consistency to IPMI spec.
 o ipmimonitoring
   - Support -v verbose option to output sensors readings that aren't
     readable.
-  - Check corner case for sensor readability.  Return unknown reading
-    if appropriate.  May lead to slightly different output in
-    ipmimonitoring.  For example, suppose a power supply sensor exists
-    for a power supply that is not installed.  If the sensor is
-    enabled on the motherboard, the sensor state would be likely
-    output "Nominal".  If the sensor is disabled on the motherboard,
-    the sensor state would not be output be default (would output "N/A" 
+  - Check corner case for sensor readability.  May lead to slightly
+    different output in ipmimonitoring.  For example, suppose a power
+    supply sensor exists for a power supply that is not installed.  If
+    the sensor is enabled on the motherboard, the sensor state would
+    be "Nominal".  If the sensor is disabled on the motherboard, the
+    sensor state would not be output be default (would output "N/A"
     under verbose mode). Previously, "Nominal" would have been
     reported under both conditions.
   - Output multiple bitmask strings if multiple bits are set.
@@ -112,9 +116,9 @@ o libfreeipmi
   - Support new "connection timeout" error message.
 o libipmimonitoring
   - Support new "connection timeout" error message.
-  - Variety of corner case fixes, such as dealing with sensor readings
-    that are unavailable.
-  - Provide more information to user on unreadabl/uninterpretable
+  - Handle variety of corner case situations better, such as dealing
+    with sensor readings that are unavailable.
+  - Provide more information to user on unreadable/uninterpretable
     sensor readings.
 o Various naming consistency fixes to IPMI specification.
 o Various minor bug fixes.
