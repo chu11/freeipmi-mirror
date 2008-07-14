@@ -1,3 +1,7 @@
+2008-07-14 Albert Chu <chu11@llnl.gov>
+	
+	* ipmimonitoring/: Fix up -v output formatting.
+
 2008-07-13 Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_remove_serial_bmc_config

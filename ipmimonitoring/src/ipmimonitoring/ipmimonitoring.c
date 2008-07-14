@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.59 2008-07-14 01:22:41 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.60 2008-07-14 16:41:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -508,6 +508,10 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
             pstdout_printf(state_data->pstate,
                            " | N/A");
         }
+      else if (!args->quiet_readings && !sensor_reading)
+        pstdout_printf(state_data->pstate,
+                       " | N/A | N/A");
+
       pstdout_printf(state_data->pstate,
                      "\n");
     }
