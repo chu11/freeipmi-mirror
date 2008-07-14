@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.18 2008-06-21 14:34:11 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.19 2008-07-14 01:22:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -78,20 +78,22 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
+    {"verbose", VERBOSE_KEY, 0, 0, 
+     "Increase verbosity in output.", 30}, 
     /* maintain "regenerate-sdr-cache" for backwards compatability */
     {"regenerate-sdr-cache", REGENERATE_SDR_CACHE_KEY, 0, OPTION_HIDDEN,
-     "Regenerate the SDR cache.", 30},
+     "Regenerate the SDR cache.", 31},
     /* maintain "cache-dir" for backwards compatability */
     {"cache-dir", CACHE_DIR_KEY, "DIRECTORY", OPTION_HIDDEN,
-     "Specify an alternate directory to read and write SDR caches..", 31},
+     "Specify an alternate directory to read and write SDR caches..", 32},
     {"quiet-readings", QUIET_READINGS_KEY,  0, 0,
-     "Do not output sensor readings, only states.", 32},
+     "Do not output sensor readings, only states.", 33},
     {"list-groups",    LIST_GROUPS_KEY,    0, 0, 
-     "List sensor groups.", 33}, 
+     "List sensor groups.", 34}, 
     {"groups",         GROUPS_KEY,       "GROUP-LIST", 0, 
-     "Show sensors belonging to a specific group.", 34}, 
+     "Show sensors belonging to a specific group.", 35}, 
     {"sensors",        SENSORS_KEY, "SENSORS-LIST", 0, 
-     "Show sensors by record id.  Accepts space or comma separated lists", 35}, 
+     "Show sensors by record id.  Accepts space or comma separated lists", 36}, 
     { 0 }
   };
 
@@ -117,6 +119,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   
   switch (key)
     {
+    case VERBOSE_KEY:
+      cmd_args->verbose = 1;
+      break;
       /* legacy option */
     case REGENERATE_SDR_CACHE_KEY:
       cmd_args->regenerate_sdr_cache = 1;
@@ -228,6 +233,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   init_common_cmd_args_user (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
+  cmd_args->verbose = 0;
   cmd_args->regenerate_sdr_cache = 0;
   cmd_args->quiet_readings = 0;
   cmd_args->list_groups = 0;

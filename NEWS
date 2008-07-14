@@ -88,6 +88,17 @@ o ipmi-sensors
     hysteresis or threshold information for power supplys.
   - Alter some output ordering for consistency to IPMI spec.
 o ipmimonitoring
+  - Support -v verbose option to output sensors readings that aren't
+    readable.
+  - Check corner case for sensor readability.  Return unknown reading
+    if appropriate.  May lead to slightly different output in
+    ipmimonitoring.  For example, suppose a power supply sensor exists
+    for a power supply that is not installed.  If the sensor is
+    enabled on the motherboard, the sensor state would be likely
+    output "Nominal".  If the sensor is disabled on the motherboard,
+    the sensor state would not be output be default (would output "N/A" 
+    under verbose mode). Previously, "Nominal" would have been
+    reported under both conditions.
   - Output multiple bitmask strings if multiple bits are set.
   - Output "OK", similarly to ipmi-sensors when no bitmask strings are
     returned from a sensor reading.
@@ -96,8 +107,13 @@ o bmc-watchdog
 
 For Developers
 --------------
-o Additional IPMI commands added into libfreeipmi.
-o Support new "connection timeout" error message in libfreeipmi.
+o libfreeipmi
+  - Add additional IPMI commands.
+  - Support new "connection timeout" error message.
+o libipmimonitoring
+  - Support new "connection timeout" error message.
+  - Variety of corner case fixes, such as dealing with sensor readings
+    that are unavailable.
 o Various naming consistency fixes to IPMI specification.
 o Various minor bug fixes.
 

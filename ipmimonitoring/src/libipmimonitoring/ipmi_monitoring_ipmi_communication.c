@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.20 2008-06-07 16:09:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.21 2008-07-14 01:22:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -588,7 +588,9 @@ ipmi_monitoring_ipmi_communication_init(ipmi_monitoring_ctx_t c,
 void
 ipmi_monitoring_ipmi_ctx_error_convert(ipmi_monitoring_ctx_t c)
 {
-  if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT)
+  if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT)
+    c->errnum = IPMI_MONITORING_ERR_CONNECTION_TIMEOUT;
+  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT)
     c->errnum = IPMI_MONITORING_ERR_SESSION_TIMEOUT;
   else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
            || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
