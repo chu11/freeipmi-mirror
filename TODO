@@ -14,15 +14,6 @@ libfreeipmi:
   - sensor-cmds
 * how to support xRC4 (can we? should we? does any vendor support this?)
 
-bmc-config
-----------
-add verbose
-- add back output of stuff under verbose
-
-pef-config
-----------
-add verbose
-
 ipmimonitoring
 --------------
 verbose output option

@@ -695,24 +695,29 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
     "In the Serial_Conf section, typical serial communication configuration "
     "is setup.  Most users will only be interested in IPMI over LAN, "
     "therefore this section can generally be ignored.";
+  unsigned int verbose_flags = 0;
 
   /*  
-   * achu: section not checked out by default, but leave legacy
-   * comments in .
+   * achu: section not checked out by default.
    */
+
+  if (state_data->prog_data->args->config_args.verbose)
+    verbose_flags = 0;
+  else
+    verbose_flags = CONFIG_DO_NOT_CHECKOUT;
 
   if (!(bmc_serial_conf_section = config_section_create(state_data->pstate,
                                                         "Serial_Conf", 
                                                         "Serial_Conf", 
                                                         section_comment,
-                                                        CONFIG_DO_NOT_CHECKOUT)))
+                                                        verbose_flags)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
                               bmc_serial_conf_section,
                               "Enable_Basic_Mode",
                               "Possible values: Yes/No",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               enable_basic_mode_checkout,
                               enable_basic_mode_commit,
                               config_yes_no_validate) < 0)
@@ -722,7 +727,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Enable_PPP_Mode",
                               "Possible values: Yes/No",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               enable_ppp_mode_checkout,
                               enable_ppp_mode_commit,
                               config_yes_no_validate) < 0)
@@ -732,7 +737,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Enable_Terminal_Mode",
                               "Possible values: Yes/No",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               enable_terminal_mode_checkout,
                               enable_terminal_mode_commit,
                               config_yes_no_validate) < 0)
@@ -742,7 +747,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Connect_Mode",
                               "Possible values: Modem_Connect/Direct_Connect",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               connect_mode_checkout,
                               connect_mode_commit,
                               connect_mode_number_validate) < 0)
@@ -752,7 +757,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Page_Blackout_Interval",
                               "Give a valid number",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               page_blackout_interval_checkout,
                               page_blackout_interval_commit,
                               config_number_range_one_byte) < 0)
@@ -762,7 +767,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Call_Retry_Interval",
                               "Give a valid number",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               call_retry_interval_checkout,
                               call_retry_interval_commit,
                               config_number_range_one_byte) < 0)
@@ -783,7 +788,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Enable_DTR_Hangup",
                               "Possible values: Yes/No",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               enable_dtr_hangup_checkout,
                               enable_dtr_hangup_commit,
                               config_yes_no_validate) < 0)
@@ -793,7 +798,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Flow_Control",
                               "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               flow_control_checkout,
                               flow_control_commit,
                               flow_control_number_validate) < 0)
@@ -803,7 +808,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bmc_serial_conf_section,
                               "Bit_Rate",
                               "Possible values: 9600/19200/38400/57600/115200",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               bit_rate_checkout,
                               bit_rate_commit,
                               bit_rate_number_validate) < 0)

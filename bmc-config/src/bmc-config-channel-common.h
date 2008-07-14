@@ -22,6 +22,7 @@
 #include "bmc-config.h"
 
 int bmc_config_channel_common_section_get(bmc_config_state_data_t *state_data,
-                                          struct config_section *channel_section);
+                                          struct config_section *channel_section,
+                                          unsigned int verbose_flags);
 
 #endif /* _BMC_CONFIG_CHANNEL_COMMON_H_ */

@@ -36,9 +36,11 @@ o Global in config tools (bmc-config, pef-config, ipmi-sensors-config)
     continue on attempting more configuration activities.  Now, it
     would error out on the first session-timeout indication.
 o bmc-config
-  - Do not output unsupported authentication type enables when checking
-    out the Lan_Conf_Auth section.
-  - Remove checkout of serial configuration parameters.
+  - By default, do not output unsupported authentication type enables
+    when checking out the Lan_Conf_Auth section.  Output unsupported
+    authentication type enables under verbose output.
+  - By default, do not output serial configuration parameters on checkout.
+    Output serial configuration under verbose output.
   - Remove case sensitivity when checking a number of fields.
 o ipmi-chassis
   - Alter ipmi-chassis output to print "unknown" when field is not known.

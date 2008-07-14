@@ -1374,6 +1374,7 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
     "\n"
     "Please do not forget to uncomment those fields, such as \"Password\", "
     "that may be commented out during the checkout.";
+  unsigned int verbose_flags = 0;
 
   if (userid <= 0)
     {
@@ -1404,6 +1405,11 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                                  0)))
         goto cleanup;
     }
+
+  if (state_data->prog_data->args->config_args.verbose)
+    verbose_flags = 0;
+  else
+    verbose_flags = CONFIG_DO_NOT_CHECKOUT;
 
   /* userid 1 is the NULL username, so comment it out by default */
   if (config_section_add_key (state_data->pstate,
@@ -1517,34 +1523,31 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  /* achu: backwards compatability to pre FreeIPMI 0.7.1 */
   if (config_section_add_key (state_data->pstate,
                               user_section,
                               "Serial_Enable_IPMI_Msgs",
                               "Possible values: Yes/No",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               serial_enable_ipmi_messaging_checkout,
                               serial_enable_ipmi_messaging_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  /* achu: backwards compatability to pre FreeIPMI 0.7.1 */
   if (config_section_add_key (state_data->pstate,
                               user_section,
                               "Serial_Enable_Link_Auth",
                               "Possible values: Yes/No",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               serial_enable_link_auth_checkout,
                               serial_enable_link_auth_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  /* achu: backwards compatability to pre FreeIPMI 0.7.1 */
   if (config_section_add_key (state_data->pstate,
                               user_section,
                               "Serial_Enable_Restricted_to_Callback",
                               "Possible values: Yes/No",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               serial_enable_restricted_to_callback_checkout,
                               serial_enable_restricted_to_callback_commit,
                               config_yes_no_validate) < 0)
@@ -1561,18 +1564,16 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  /* achu: backwards compatability to pre FreeIPMI 0.7.1 */
   if (config_section_add_key (state_data->pstate,
                               user_section,
                               "Serial_Privilege_Limit",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              verbose_flags,
                               serial_privilege_limit_checkout,
                               serial_privilege_limit_commit,
                               get_privilege_limit_number_validate) < 0)
     goto cleanup;
 
-  /* achu: backwards compatability to pre FreeIPMI 0.7.1 */
   if (config_section_add_key (state_data->pstate,
                               user_section,
                               "Serial_Session_Limit",

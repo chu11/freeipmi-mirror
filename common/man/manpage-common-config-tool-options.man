@@ -26,6 +26,7 @@ Specify a SECTION for checkout.  This option can be used multiple times.
 List available sections for checkout.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
-Output additional detailed information.  When used with \-\-checkout,
-additional uncommon, unconfigurable, and/or unused fields may be
-output.
+Output additional detailed information.  In general will output more
+detailed information about what fields can and cannot be checked out,
+committed, etc.  When used with \-\-checkout, additional uncommon,
+unconfigurable, and/or unused fields may be output.

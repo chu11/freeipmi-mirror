@@ -47,21 +47,27 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
     "Most users will only be interested in IPMI over LAN, therefore serial "
     "communication can be disabled.  This can be done by setting "
     "\"Access_Mode\" to \"Disabled\".";
+  unsigned int verbose_flags = 0;
 
   /*  
-   * achu: section not checked out by default, but leave legacy
-   * comments in .
+   * achu: section not checked out by default.
    */
+
+  if (state_data->prog_data->args->config_args.verbose)
+    verbose_flags = 0;
+  else
+    verbose_flags = CONFIG_DO_NOT_CHECKOUT;
 
   if (!(serial_channel_section = config_section_create (state_data->pstate,
                                                         "Serial_Channel",
                                                         "Serial_Channel",
                                                         section_comment,
-                                                        CONFIG_DO_NOT_CHECKOUT)))
+                                                        verbose_flags)))
     goto cleanup;
 
   if (bmc_config_channel_common_section_get(state_data, 
-                                            serial_channel_section) < 0)
+                                            serial_channel_section,
+                                            verbose_flags) < 0)
     goto cleanup;
 
   return serial_channel_section;

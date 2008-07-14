@@ -60,7 +60,8 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (bmc_config_channel_common_section_get(state_data, 
-                                            lan_channel_section) < 0)
+                                            lan_channel_section,
+                                            0) < 0)
     goto cleanup;
 
   return lan_channel_section;
