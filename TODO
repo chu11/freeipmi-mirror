@@ -16,8 +16,10 @@ libfreeipmi:
 
 ipmimonitoring
 --------------
-verbose unkonwn info
-more info on unreadable sensors
+verbose output option
+- support outputting "unknown" sensor readings, output "N/A", etc.
+output more info on unreadable sensors
+- i.e. sensor name, group, type, etc. should be readable
 
 solaris
 -------
