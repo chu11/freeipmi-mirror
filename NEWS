@@ -15,6 +15,7 @@ o Add hostrange support in bmc-config, ipmi-sensors-config, and
 o Add additional "connection timeout" error message to tools to
   differentiate between no IPMI communication at all vs. failed session
   timeout in the middle of a command's operations.
+o Support hysteresis configuration in ipmi-sensors-config.
 o Output additional sensor information in ipmi-sensors under very verbose
   mode, such as event enable information.
 o Support --always-prefix option in most tools for easier scripting.

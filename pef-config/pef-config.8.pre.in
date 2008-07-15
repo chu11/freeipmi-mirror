@@ -6,7 +6,10 @@ pef-config \- configure PEF values
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Pef-config
-is a Platform Event Filtering (PEF) configuration utility.
+is a Platform Event Filtering (PEF) configuration utility.  
+This configuration tool is for advanced IPMI users and
+generally not-required for IPMI to function.  Most IPMI users
+will not need to use this tool.
 
 For configuration of general BMC parameters or sensors, please
 see the 

@@ -2,6 +2,8 @@
 
 	* ipmi-sensors-config/src/ipmi-sensors-config-threshold-section.c:
 	Cleanup to prepare for hysteresis configuration support.
+
+	* ipmi-sensors-config/: Support threshold hysteresis configuration.
 	
 2008-07-14 Albert Chu <chu11@llnl.gov>
 	

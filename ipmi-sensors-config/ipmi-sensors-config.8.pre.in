@@ -7,8 +7,10 @@ ipmi-sensors-config \- configure sensors
 .SH "DESCRIPTION"
 .B Ipmi-sensors-config
 is used to get and set sensor configuration parameters, such as
-thresholds.  For more general sensor reading and/or monitoring, it is
-recommended that users use
+thresholds.  This configuration tool is for advanced IPMI users and
+generally not-required for IPMI to function.  Most IPMI users will not
+need to use this tool.  For more general sensor reading and/or
+monitoring, it is recommended that users use
 .B ipmi-sensors(8)
 or
 .B ipmimonitoring(8).
