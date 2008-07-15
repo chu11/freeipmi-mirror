@@ -130,7 +130,7 @@ config_checkout_section(pstdout_state_t pstate,
           if (cmd_args->verbose)
             PSTDOUT_FPRINTF (pstate,
                              fp, 
-                             "\t## ERROR: Unable to checkout %s:%s\n",
+                             "\t## Unable to checkout %s:%s\n",
                              section->section_name,
                              kv->key->key_name);
           ret = CONFIG_ERR_NON_FATAL_ERROR;

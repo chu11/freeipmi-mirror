@@ -2,6 +2,7 @@ noinst_HEADERS = \
 	ipmi-sensors-config.h \
 	ipmi-sensors-config-argp.h \
 	ipmi-sensors-config-sections.h \
+	ipmi-sensors-config-discrete-section.h \
 	ipmi-sensors-config-threshold-section.h \
 	ipmi-sensors-config-utils.h
 
@@ -23,6 +24,7 @@ ipmi_sensors_config_SOURCES = \
 	ipmi-sensors-config.c \
 	ipmi-sensors-config-argp.c \
 	ipmi-sensors-config-sections.c \
+	ipmi-sensors-config-discrete-section.c \
 	ipmi-sensors-config-threshold-section.c \
 	ipmi-sensors-config-utils.c
 

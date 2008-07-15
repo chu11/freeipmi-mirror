@@ -30,11 +30,13 @@
 
 #include "ipmi-sensors-config.h"
 #include "ipmi-sensors-config-sections.h"
+#include "ipmi-sensors-config-discrete-section.h"
 #include "ipmi-sensors-config-threshold-section.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "tool-sdr-cache-common.h"
+#include "tool-sensor-common.h"
 
 struct config_section *
 ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_data)
@@ -59,6 +61,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
       uint8_t record_type;
       uint8_t event_reading_type_code;
       int sdr_record_len;
+      int sensor_class;
       config_err_t ret;
   
       memset(sdr_record, '\0', IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH);
@@ -95,8 +98,16 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
        * typo.  It shouldn't be there.
        */
 
-       if (record_type != IPMI_SDR_FORMAT_FULL_RECORD) 
-         continue;
+       if (record_type != IPMI_SDR_FORMAT_FULL_RECORD
+           && record_type != IPMI_SDR_FORMAT_COMPACT_RECORD)
+         {
+           if (state_data->prog_data->args->config_args.verbose)
+             pstdout_fprintf (state_data->pstate,
+                              stderr, 
+                              "## Cannot handle SDR record format '0x%X'\n",
+                              record_type);
+           continue;
+         }
 
       if (sdr_cache_get_event_reading_type_code (NULL,
                                                  sdr_record,
@@ -104,22 +115,55 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
                                                  &event_reading_type_code) < 0)
         goto cleanup;
 
-      if (!IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
-        continue;
+      sensor_class = sensor_classify (event_reading_type_code);
 
-      if ((ret = ipmi_sensors_config_threshold_section (state_data,
-                                                        sdr_record,
-                                                        sdr_record_len,
-                                                        &section)) != CONFIG_ERR_SUCCESS)
+      if (sensor_class == SENSOR_CLASS_THRESHOLD)
         {
-          if (ret == CONFIG_ERR_FATAL_ERROR)
-            goto cleanup;
+          if (record_type != IPMI_SDR_FORMAT_FULL_RECORD)
+            {
+              if (state_data->prog_data->args->config_args.verbose)
+                pstdout_printf (state_data->pstate,
+                                "## Unable to checkout threshold sensor with compact SDR record\n");
+              continue;
+            }
+
+          if ((ret = ipmi_sensors_config_threshold_section (state_data,
+                                                            sdr_record,
+                                                            sdr_record_len,
+                                                            &section)) != CONFIG_ERR_SUCCESS)
+            {
+              if (ret == CONFIG_ERR_FATAL_ERROR)
+                goto cleanup;
+              continue;
+            }
+        }
+      else if (sensor_class == SENSOR_CLASS_GENERIC_DISCRETE
+               || sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
+        {
+          if ((ret = ipmi_sensors_config_discrete_section (state_data,
+                                                           sdr_record,
+                                                           sdr_record_len,
+                                                           &section)) != CONFIG_ERR_SUCCESS)
+            {
+              if (ret == CONFIG_ERR_FATAL_ERROR)
+                goto cleanup;
+              continue;
+            }
+        }
+      else
+        {
+          if (state_data->prog_data->args->config_args.common.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr, 
+                             "## Cannot handle SDR with event reading type code '0x%X'\n",
+                             event_reading_type_code);
           continue;
         }
-
+      
       if (config_section_append (state_data->pstate, &sections, section) < 0)
         goto cleanup;
     }
+
 
   return sections;
 

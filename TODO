@@ -28,6 +28,9 @@ solaris
 bmc-config
 ----------
 common hysteresis code?
+common "description" code
+discrete hysteresis
+- not tested
 
 ipmi-chassis-config
 -------------------

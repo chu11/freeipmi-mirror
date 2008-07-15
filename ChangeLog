@@ -5,6 +5,13 @@
 
 	* ipmi-sensors-config/: Support threshold hysteresis configuration.
 	
+	* ipmi-sensors-config/src/ipmi-sensors-config-discrete-section.h,
+	ipmi-sensors-config/src/ipmi-sensors-config-discrete-section.c:
+	New files.
+
+	* ipmi-sensors-config/: Support hysteresis configuration on
+	discrete sensors.
+
 2008-07-14 Albert Chu <chu11@llnl.gov>
 	
 	* ipmimonitoring/: Fix up -v output formatting.

@@ -480,9 +480,9 @@ _get_hysteresis (ipmi_sensors_config_state_data_t *state_data,
 }
 
 static config_err_t
-hysteresis_checkout (const char *section_name,
-                     struct config_keyvalue *kv,
-                     void *arg)
+hysteresis_threshold_checkout (const char *section_name,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
   uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
@@ -580,9 +580,9 @@ hysteresis_checkout (const char *section_name,
 }
 
 static config_err_t
-hysteresis_commit (const char *section_name,
-                   const struct config_keyvalue *kv,
-                   void *arg)
+hysteresis_threshold_commit (const char *section_name,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -780,9 +780,9 @@ _floating_point_in_range(const char *section_name,
 
 config_validate_t 
 threshold_validate(const char *section_name, 
-                        const char *key_name,
-                        const char *value,
-                        void *arg)
+                   const char *key_name,
+                   const char *value,
+                   void *arg)
 {
   double conv;
   char *endptr;
@@ -803,9 +803,9 @@ threshold_validate(const char *section_name,
 
 config_validate_t 
 threshold_validate_positive(const char *section_name, 
-                                 const char *key_name,
-                                 const char *value,
-                                 void *arg)
+                            const char *key_name,
+                            const char *value,
+                            void *arg)
 {
   double conv;
   char *endptr;
@@ -828,10 +828,10 @@ threshold_validate_positive(const char *section_name,
 }
 
 config_validate_t 
-hysteresis_validate(const char *section_name, 
-                    const char *key_name,
-                    const char *value,
-                    void *arg)
+hysteresis_threshold_validate(const char *section_name, 
+                              const char *key_name,
+                              const char *value,
+                              void *arg)
 {
   double conv;
   char *endptr;
@@ -854,10 +854,10 @@ hysteresis_validate(const char *section_name,
 }
 
 config_validate_t 
-hysteresis_validate_positive(const char *section_name, 
-                             const char *key_name,
-                             const char *value,
-                             void *arg)
+hysteresis_threshold_validate_positive(const char *section_name, 
+                                       const char *key_name,
+                                       const char *value,
+                                       void *arg)
 {
   double conv;
   char *endptr;
@@ -1099,17 +1099,17 @@ _setup_threshold (ipmi_sensors_config_state_data_t *state_data,
 }
 
 static int
-_setup_hysteresis (ipmi_sensors_config_state_data_t *state_data,
-                   uint8_t *sdr_record,
-                   unsigned int sdr_record_len,
-                   struct config_section *section,
-                   const char *description,
-                   uint8_t sensor_unit,
-                   uint8_t hysteresis_support)
+_setup_threshold_hysteresis (ipmi_sensors_config_state_data_t *state_data,
+                             uint8_t *sdr_record,
+                             unsigned int sdr_record_len,
+                             struct config_section *section,
+                             const char *description,
+                             uint8_t sensor_unit,
+                             uint8_t hysteresis_support)
 {
   unsigned int flags = 0;
   char description_hysteresis[CONFIG_MAX_DESCRIPTION_LEN];
-  Key_Validate hysteresis_validate_ptr = NULL;
+  Key_Validate hysteresis_threshold_validate_ptr = NULL;
   int rv = -1;
 
   assert(state_data);
@@ -1134,7 +1134,7 @@ _setup_hysteresis (ipmi_sensors_config_state_data_t *state_data,
   memset(description_hysteresis, '\0', CONFIG_MAX_DESCRIPTION_LEN);
   snprintf(description_hysteresis, 
            CONFIG_MAX_DESCRIPTION_LEN,
-           "%s; 'None' to disable",
+           "%s; 'None' to not use hysteresis",
            description);
 
   /* We will adjust this list as necessary later on.  Many
@@ -1143,18 +1143,18 @@ _setup_hysteresis (ipmi_sensors_config_state_data_t *state_data,
    * not sure about.
    */
   if (sensor_unit == IPMI_SENSOR_UNIT_RPM)
-    hysteresis_validate_ptr = hysteresis_validate_positive;
+    hysteresis_threshold_validate_ptr = hysteresis_threshold_validate_positive;
   else
-    hysteresis_validate_ptr = hysteresis_validate;
+    hysteresis_threshold_validate_ptr = hysteresis_threshold_validate;
 
   if (config_section_add_key (state_data->pstate,
                               section,
                               "Positive_Going_Threshold_Hysteresis",
                               description_hysteresis,
                               flags,
-                              hysteresis_checkout,
-                              hysteresis_commit,
-                              hysteresis_validate_ptr) < 0)
+                              hysteresis_threshold_checkout,
+                              hysteresis_threshold_commit,
+                              hysteresis_threshold_validate_ptr) < 0)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
@@ -1162,9 +1162,9 @@ _setup_hysteresis (ipmi_sensors_config_state_data_t *state_data,
                               "Negative_Going_Threshold_Hysteresis",
                               description_hysteresis,
                               flags,
-                              hysteresis_checkout,
-                              hysteresis_commit,
-                              hysteresis_validate_ptr) < 0)
+                              hysteresis_threshold_checkout,
+                              hysteresis_threshold_commit,
+                              hysteresis_threshold_validate_ptr) < 0)
     goto cleanup;
 
   rv = 0;
@@ -1182,7 +1182,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   char section_name[CONFIG_MAX_SECTION_NAME_LEN];
   char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
   uint16_t record_id;
-  uint8_t threshold_access_support = 0;
+  uint8_t threshold_support = 0;
   uint8_t hysteresis_support = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
@@ -1255,7 +1255,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                          sdr_record,
                                          sdr_record_len,
                                          NULL,
-                                         &threshold_access_support,
+                                         &threshold_support,
                                          &hysteresis_support,
                                          NULL,
                                          NULL) < 0)
@@ -1274,14 +1274,21 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
     goto cleanup;
 
   memset(description, '\0', CONFIG_MAX_DESCRIPTION_LEN);
-  snprintf(description, 
-           CONFIG_MAX_DESCRIPTION_LEN,
-           "Give valid input for sensor type = %s; units = %s",
-           sensor_group (sensor_type),
-           ipmi_sensor_units[sensor_unit]);
+  if (IPMI_SENSOR_UNIT_VALID(sensor_unit)
+      && sensor_unit != IPMI_SENSOR_UNIT_UNSPECIFIED)
+    snprintf(description, 
+             CONFIG_MAX_DESCRIPTION_LEN,
+             "Give valid input for sensor type = %s; units = %s",
+             sensor_group (sensor_type),
+             ipmi_sensor_units[sensor_unit]);
+  else
+    snprintf(description, 
+             CONFIG_MAX_DESCRIPTION_LEN,
+             "Give valid input for sensor type = %s",
+             sensor_group (sensor_type));
 
-  if (threshold_access_support == IPMI_SDR_READABLE_THRESHOLDS_SUPPORT
-      || threshold_access_support == IPMI_SDR_READABLE_SETTABLE_THRESHOLDS_SUPPORT
+  if (threshold_support == IPMI_SDR_READABLE_THRESHOLDS_SUPPORT
+      || threshold_support == IPMI_SDR_READABLE_SETTABLE_THRESHOLDS_SUPPORT
       || state_data->prog_data->args->config_args.verbose)
     {
       if (_setup_threshold (state_data,
@@ -1297,13 +1304,13 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
       || hysteresis_support == IPMI_SDR_READABLE_SETTABLE_HYSTERESIS_SUPPORT
       || state_data->prog_data->args->config_args.verbose)
     {
-      if (_setup_hysteresis (state_data,
-                             sdr_record,
-                             sdr_record_len,
-                             section,
-                             description,
-                             sensor_unit,
-                             hysteresis_support) < 0)
+      if (_setup_threshold_hysteresis (state_data,
+                                       sdr_record,
+                                       sdr_record_len,
+                                       section,
+                                       description,
+                                       sensor_unit,
+                                       hysteresis_support) < 0)
         goto cleanup;
     }
 
