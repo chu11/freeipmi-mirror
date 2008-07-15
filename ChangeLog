@@ -1,3 +1,8 @@
+2008-07-15 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors-config/src/ipmi-sensors-config-threshold-section.c:
+	Cleanup to prepare for hysteresis configuration support.
+	
 2008-07-14 Albert Chu <chu11@llnl.gov>
 	
 	* ipmimonitoring/: Fix up -v output formatting.

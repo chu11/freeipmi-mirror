@@ -576,16 +576,14 @@ threshold_floating_point_positive(const char *section_name,
                              arg);
 }
 
-config_err_t
-ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_data,
-                                       uint8_t *sdr_record,
-                                       unsigned int sdr_record_len,
-                                       struct config_section **section_ptr)
+static int
+_setup_thresholds (ipmi_sensors_config_state_data_t *state_data,
+                   uint8_t *sdr_record,
+                   unsigned int sdr_record_len,
+                   struct config_section *section,
+                   const char *description,
+                   Key_Validate threshold_validate_ptr)
 {
-  struct config_section *section = NULL;
-  char section_name[CONFIG_MAX_SECTION_NAME_LEN];
-  char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
-  uint16_t record_id;
   uint8_t lower_non_critical_threshold_settable = 0;
   uint8_t lower_critical_threshold_settable = 0;
   uint8_t lower_non_recoverable_threshold_settable = 0;
@@ -598,11 +596,208 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   uint8_t upper_non_critical_threshold_readable = 0;
   uint8_t upper_critical_threshold_readable = 0;
   uint8_t upper_non_recoverable_threshold_readable = 0;
-  unsigned int flags;
+  int rv = -1;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+  assert(section);
+  assert(description);
+  assert(threshold_validate_ptr);
+
+  if (sdr_cache_get_threshold_readable (NULL,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        &lower_non_critical_threshold_readable,
+                                        &lower_critical_threshold_readable,
+                                        &lower_non_recoverable_threshold_readable,
+                                        &upper_non_critical_threshold_readable,
+                                        &upper_critical_threshold_readable,
+                                        &upper_non_recoverable_threshold_readable) < 0)
+    goto cleanup;
+
+  if (sdr_cache_get_threshold_settable (NULL,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        &lower_non_critical_threshold_settable,
+                                        &lower_critical_threshold_settable,
+                                        &lower_non_recoverable_threshold_settable,
+                                        &upper_non_critical_threshold_settable,
+                                        &upper_critical_threshold_settable,
+                                        &upper_non_recoverable_threshold_settable) < 0)
+    goto cleanup;
+
+  if (lower_non_critical_threshold_readable
+      || state_data->prog_data->args->config_args.verbose)
+    {
+      unsigned int flags = 0;
+
+      if (!lower_non_critical_threshold_readable)
+        flags |= CONFIG_UNDEFINED;
+
+      if (!lower_non_critical_threshold_settable)
+        {
+          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+          flags |= CONFIG_READABLE_ONLY;
+        }
+
+      if (config_section_add_key (state_data->pstate,
+                                  section,
+                                  "Lower_Non_Critical_Threshold",
+                                  description,
+                                  flags,
+                                  threshold_checkout,
+                                  threshold_commit,
+                                  threshold_validate_ptr) < 0)
+        goto cleanup;
+    }
+
+  if (lower_critical_threshold_readable
+      || state_data->prog_data->args->config_args.verbose)
+    {
+      unsigned int flags = 0;
+
+      if (!lower_critical_threshold_readable)
+        flags |= CONFIG_UNDEFINED;
+
+      if (!lower_critical_threshold_settable)
+        {
+          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+          flags |= CONFIG_READABLE_ONLY;
+        }
+
+      if (config_section_add_key (state_data->pstate,
+                                  section,
+                                  "Lower_Critical_Threshold",
+                                  description,
+                                  flags,
+                                  threshold_checkout,
+                                  threshold_commit,
+                                  threshold_validate_ptr) < 0)
+        goto cleanup;
+    }
+
+  if (lower_non_recoverable_threshold_readable
+      || state_data->prog_data->args->config_args.verbose)
+    {
+      unsigned int flags = 0;
+
+      if (!lower_non_recoverable_threshold_readable)
+        flags |= CONFIG_UNDEFINED;
+
+      if (!lower_non_recoverable_threshold_settable)
+        {
+          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+          flags |= CONFIG_READABLE_ONLY;
+        }
+
+      if (config_section_add_key (state_data->pstate,
+                                  section,
+                                  "Lower_Non_Recoverable_Threshold",
+                                  description,
+                                  flags,
+                                  threshold_checkout,
+                                  threshold_commit,
+                                  threshold_validate_ptr) < 0)
+        goto cleanup;
+    }
+
+  if (upper_non_critical_threshold_readable
+      || state_data->prog_data->args->config_args.verbose)
+    {
+      unsigned int flags = 0;
+
+      if (!upper_non_critical_threshold_readable)
+        flags |= CONFIG_UNDEFINED;
+
+      if (!upper_non_critical_threshold_settable)
+        {
+          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+          flags |= CONFIG_READABLE_ONLY;
+        }
+
+      if (config_section_add_key (state_data->pstate,
+                                  section,
+                                  "Upper_Non_Critical_Threshold",
+                                  description,
+                                  flags,
+                                  threshold_checkout,
+                                  threshold_commit,
+                                  threshold_validate_ptr) < 0)
+        goto cleanup;
+    }
+
+  if (upper_critical_threshold_readable
+      || state_data->prog_data->args->config_args.verbose)
+    {
+      unsigned int flags = 0;
+
+      if (!upper_critical_threshold_readable)
+        flags |= CONFIG_UNDEFINED;
+
+      if (!upper_critical_threshold_settable)
+        {
+          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+          flags |= CONFIG_READABLE_ONLY;
+        }
+
+      if (config_section_add_key (state_data->pstate,
+                                  section,
+                                  "Upper_Critical_Threshold",
+                                  description,
+                                  flags,
+                                  threshold_checkout,
+                                  threshold_commit,
+                                  threshold_validate_ptr) < 0)
+        goto cleanup;
+    }
+
+  if (upper_non_recoverable_threshold_readable
+      || state_data->prog_data->args->config_args.verbose)
+    {
+      unsigned int flags = 0;
+
+      if (!upper_non_recoverable_threshold_readable)
+        flags |= CONFIG_UNDEFINED;
+
+      if (!upper_non_recoverable_threshold_settable)
+        {
+          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
+          flags |= CONFIG_READABLE_ONLY;
+        }
+
+      if (config_section_add_key (state_data->pstate,
+                                  section,
+                                  "Upper_Non_Recoverable_Threshold",
+                                  description,
+                                  flags,
+                                  threshold_checkout,
+                                  threshold_commit,
+                                  threshold_validate_ptr) < 0)
+        goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  return rv;
+}
+
+config_err_t
+ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_data,
+                                       uint8_t *sdr_record,
+                                       unsigned int sdr_record_len,
+                                       struct config_section **section_ptr)
+{
+  struct config_section *section = NULL;
+  char section_name[CONFIG_MAX_SECTION_NAME_LEN];
+  char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+  uint16_t record_id;
+  uint8_t threshold_access_support = 0;
+  uint8_t hysteresis_support = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t sensor_type, sensor_unit;
-  char desc[CONFIG_MAX_DESCRIPTION_LEN];
+  char description[CONFIG_MAX_DESCRIPTION_LEN];
   Key_Validate threshold_validate_ptr = NULL;
 
   assert(state_data);
@@ -667,26 +862,14 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                          0)))
     goto cleanup;
 
-  if (sdr_cache_get_threshold_readable (NULL,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        &lower_non_critical_threshold_readable,
-                                        &lower_critical_threshold_readable,
-                                        &lower_non_recoverable_threshold_readable,
-                                        &upper_non_critical_threshold_readable,
-                                        &upper_critical_threshold_readable,
-                                        &upper_non_recoverable_threshold_readable) < 0)
-    goto cleanup;
-
-  if (sdr_cache_get_threshold_settable (NULL,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        &lower_non_critical_threshold_settable,
-                                        &lower_critical_threshold_settable,
-                                        &lower_non_recoverable_threshold_settable,
-                                        &upper_non_critical_threshold_settable,
-                                        &upper_critical_threshold_settable,
-                                        &upper_non_recoverable_threshold_settable) < 0)
+  if (sdr_cache_get_sensor_capabilities (state_data->pstate,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         NULL,
+                                         &threshold_access_support,
+                                         &hysteresis_support,
+                                         NULL,
+                                         NULL) < 0)
     goto cleanup;
 
   if (sdr_cache_get_sensor_type (NULL,
@@ -701,8 +884,8 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                  &sensor_unit) < 0)
     goto cleanup;
 
-  memset(desc, '\0', CONFIG_MAX_DESCRIPTION_LEN);
-  snprintf(desc, 
+  memset(description, '\0', CONFIG_MAX_DESCRIPTION_LEN);
+  snprintf(description, 
            CONFIG_MAX_DESCRIPTION_LEN,
            "Give valid input for sensor type = %s; units = %s",
            sensor_group (sensor_type),
@@ -718,153 +901,16 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   else
     threshold_validate_ptr = threshold_floating_point;
 
-  if (lower_non_critical_threshold_readable
+  if (threshold_access_support == IPMI_SDR_READABLE_THRESHOLDS_SUPPORT
+      || threshold_access_support == IPMI_SDR_READABLE_SETTABLE_THRESHOLDS_SUPPORT
       || state_data->prog_data->args->config_args.verbose)
     {
-      flags = 0;
-
-      if (!lower_non_critical_threshold_readable)
-        flags |= CONFIG_UNDEFINED;
-
-      if (!lower_non_critical_threshold_settable)
-        {
-          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
-          flags |= CONFIG_READABLE_ONLY;
-        }
-
-      if (config_section_add_key (state_data->pstate,
-                                  section,
-                                  "Lower_Non_Critical_Threshold",
-                                  desc,
-                                  flags,
-                                  threshold_checkout,
-                                  threshold_commit,
-                                  threshold_validate_ptr) < 0)
-        goto cleanup;
-    }
-
-  if (lower_critical_threshold_readable
-      || state_data->prog_data->args->config_args.verbose)
-    {
-      flags = 0;
-
-      if (!lower_critical_threshold_readable)
-        flags |= CONFIG_UNDEFINED;
-
-      if (!lower_critical_threshold_settable)
-        {
-          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
-          flags |= CONFIG_READABLE_ONLY;
-        }
-
-      if (config_section_add_key (state_data->pstate,
-                                  section,
-                                  "Lower_Critical_Threshold",
-                                  desc,
-                                  flags,
-                                  threshold_checkout,
-                                  threshold_commit,
-                                  threshold_validate_ptr) < 0)
-        goto cleanup;
-    }
-
-  if (lower_non_recoverable_threshold_readable
-      || state_data->prog_data->args->config_args.verbose)
-    {
-      flags = 0;
-
-      if (!lower_non_recoverable_threshold_readable)
-        flags |= CONFIG_UNDEFINED;
-
-      if (!lower_non_recoverable_threshold_settable)
-        {
-          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
-          flags |= CONFIG_READABLE_ONLY;
-        }
-
-      if (config_section_add_key (state_data->pstate,
-                                  section,
-                                  "Lower_Non_Recoverable_Threshold",
-                                  desc,
-                                  flags,
-                                  threshold_checkout,
-                                  threshold_commit,
-                                  threshold_validate_ptr) < 0)
-        goto cleanup;
-    }
-
-  if (upper_non_critical_threshold_readable
-      || state_data->prog_data->args->config_args.verbose)
-    {
-      flags = 0;
-
-      if (!upper_non_critical_threshold_readable)
-        flags |= CONFIG_UNDEFINED;
-
-      if (!upper_non_critical_threshold_settable)
-        {
-          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
-          flags |= CONFIG_READABLE_ONLY;
-        }
-
-      if (config_section_add_key (state_data->pstate,
-                                  section,
-                                  "Upper_Non_Critical_Threshold",
-                                  desc,
-                                  flags,
-                                  threshold_checkout,
-                                  threshold_commit,
-                                  threshold_validate_ptr) < 0)
-        goto cleanup;
-    }
-
-  if (upper_critical_threshold_readable
-      || state_data->prog_data->args->config_args.verbose)
-    {
-      flags = 0;
-
-      if (!upper_critical_threshold_readable)
-        flags |= CONFIG_UNDEFINED;
-
-      if (!upper_critical_threshold_settable)
-        {
-          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
-          flags |= CONFIG_READABLE_ONLY;
-        }
-
-      if (config_section_add_key (state_data->pstate,
-                                  section,
-                                  "Upper_Critical_Threshold",
-                                  desc,
-                                  flags,
-                                  threshold_checkout,
-                                  threshold_commit,
-                                  threshold_validate_ptr) < 0)
-        goto cleanup;
-    }
-
-  if (upper_non_recoverable_threshold_readable
-      || state_data->prog_data->args->config_args.verbose)
-    {
-      flags = 0;
-
-      if (!upper_non_recoverable_threshold_readable)
-        flags |= CONFIG_UNDEFINED;
-
-      if (!upper_non_recoverable_threshold_settable)
-        {
-          flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
-          flags |= CONFIG_READABLE_ONLY;
-        }
-
-      if (config_section_add_key (state_data->pstate,
-                                  section,
-                                  "Upper_Non_Recoverable_Threshold",
-                                  desc,
-                                  flags,
-                                  threshold_checkout,
-                                  threshold_commit,
-                                  threshold_validate_ptr) < 0)
+      if (_setup_thresholds (state_data,
+                             sdr_record,
+                             sdr_record_len,
+                             section,
+                             description,
+                             threshold_validate_ptr) < 0)
         goto cleanup;
     }
 
