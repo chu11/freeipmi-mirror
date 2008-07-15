@@ -1134,7 +1134,7 @@ _setup_hysteresis (ipmi_sensors_config_state_data_t *state_data,
   memset(description_hysteresis, '\0', CONFIG_MAX_DESCRIPTION_LEN);
   snprintf(description_hysteresis, 
            CONFIG_MAX_DESCRIPTION_LEN,
-           "%s; 'None' to not use hysteresis",
+           "%s; 'None' to disable",
            description);
 
   /* We will adjust this list as necessary later on.  Many
