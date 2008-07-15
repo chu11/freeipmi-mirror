@@ -1,7 +1,7 @@
 0.7.1 - 00/00/00
 ----------------
-For Users - New Signifcant Features
------------------------------------
+For Users - New Significant Features
+------------------------------------
 o Add new tool bmc-device to support advanced BMC commands including
   cold reset, warm reset, setting BMC times, and more.
 o Support FreeIPMI configuration file for most tools (bmc-config,
