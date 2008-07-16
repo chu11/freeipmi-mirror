@@ -2,6 +2,18 @@
 
 	* ipmi-sensors-config/: Remove discrete sensor hysteresis support.
 	Makes no sense.
+
+	* ipmi-sensors-config/src/ipmi-sensors-config-utils.h,
+	ipmi-sensors-config/src/ipmi-sensors-config-utils.c
+	(create_section_name): New function.
+
+	* ipmi-sensors-config/src/ipmi-sensors-config-utils.h,
+	ipmi-sensors-config/src/ipmi-sensors-config-utils.c
+	(convert_id_string): Rename to _convert_id_string, make static.
+
+	* ipmi-sensors-config/src/ipmi-sensors-config-threshold-section.c,
+	ipmi-sensors-config/src/ipmi-sensors-config-threshold-section.h:
+	Use create_section_name appropriately.
 	
 2008-07-15 Albert Chu <chu11@llnl.gov>
 

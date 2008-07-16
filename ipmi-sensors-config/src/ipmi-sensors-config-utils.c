@@ -31,13 +31,14 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+#include "tool-sdr-cache-common.h"
 
-config_err_t 
-convert_id_string (ipmi_sensors_config_state_data_t *state_data, 
-                   char *id_string)
+static config_err_t 
+_convert_id_string (ipmi_sensors_config_state_data_t *state_data, 
+                    char *id_string)
 {
   char *ptr;
-
+  
   assert(state_data);
   assert(id_string);
 
@@ -51,6 +52,76 @@ convert_id_string (ipmi_sensors_config_state_data_t *state_data,
     *ptr = '_';
 
   return CONFIG_ERR_SUCCESS;
+}
+
+config_err_t 
+create_section_name (ipmi_sensors_config_state_data_t *state_data, 
+                     uint8_t *sdr_record,
+                     unsigned int sdr_record_len,
+                     char *section_name,
+                     unsigned int section_name_len)
+{
+  char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+  uint16_t record_id;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+  assert(section_name);
+  assert(section_name_len);
+
+  memset(section_name, '\0', section_name_len);
+  memset(id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
+
+  if (sdr_cache_get_record_id_and_type (NULL,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        &record_id,
+                                        NULL) < 0)
+    goto cleanup;
+
+  if (sdr_cache_get_id_string (NULL,
+                               sdr_record,
+                               sdr_record_len,
+                               id_string,
+                               IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
+    goto cleanup;
+
+  if ((ret = _convert_id_string (state_data, id_string)) != CONFIG_ERR_SUCCESS)
+    {
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "convert_id_string: %s\n",
+                        strerror(errno));
+      rv = ret;
+      goto cleanup;
+    }
+
+  /* We will name sections by record_id then name, since id_strings
+   * could be identical.
+   */
+  if (strlen(id_string) > 0)
+    snprintf(section_name,
+             CONFIG_MAX_SECTION_NAME_LEN,
+             "%u_%s",
+             record_id,
+             id_string);
+  else
+    /* I guess its conceivable the sensor won't have a name, so we
+     * make one up.
+     */
+    snprintf(section_name,
+             CONFIG_MAX_SECTION_NAME_LEN,
+             "%u_%s",
+             record_id,
+             "Unknown_Sensor_Name");
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  return rv;
 }
 
 config_err_t

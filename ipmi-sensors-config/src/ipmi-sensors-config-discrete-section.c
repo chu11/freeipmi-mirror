@@ -43,8 +43,6 @@ ipmi_sensors_config_discrete_section (ipmi_sensors_config_state_data_t *state_da
 {
   struct config_section *section = NULL;
   char section_name[CONFIG_MAX_SECTION_NAME_LEN];
-  char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
-  uint16_t record_id;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
 
@@ -53,56 +51,21 @@ ipmi_sensors_config_discrete_section (ipmi_sensors_config_state_data_t *state_da
   assert(sdr_record_len);
   assert(section_ptr);
 
-  if (sdr_cache_get_record_id_and_type (NULL,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        &record_id,
-                                        NULL) < 0)
-    goto cleanup;
-
-  memset(id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
-
-  if (sdr_cache_get_id_string (NULL,
-                               sdr_record,
-                               sdr_record_len,
-                               id_string,
-                               IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
-    goto cleanup;
-
-  if ((ret = convert_id_string (state_data, id_string)) != CONFIG_ERR_SUCCESS)
+  if ((ret = create_section_name (state_data,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  section_name,
+                                  CONFIG_MAX_SECTION_NAME_LEN)) != CONFIG_ERR_SUCCESS)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
                         stderr, 
-                        "convert_id_string: %s\n",
+                        "create_section_name: %s\n",
                         strerror(errno));
       rv = ret;
       goto cleanup;
     }
-
-  /* We will name sections by record_id then name, since id_strings
-   * could be identical.
-   */
-  /* achu: I know CONFIG_MAX_SECTION_NAME_LEN is much larger than
-   * IPMI_SDR_CACHE_MAX_ID_STRING.  We should probably do some math
-   * instead of just using macros flat out though.
-   */
-  if (strlen(id_string) > 0)
-    snprintf(section_name,
-             CONFIG_MAX_SECTION_NAME_LEN,
-             "%u_%s",
-             record_id,
-             id_string);
-  else
-    /* I guess its conceivable the sensor won't have a name, so we
-     * make one up.
-     */
-    snprintf(section_name,
-             CONFIG_MAX_SECTION_NAME_LEN,
-             "%u_%s",
-             record_id,
-             "Unknown_Sensor_Name");
-
+  
   if (!(section = config_section_create (state_data->pstate,
                                          section_name,
                                          NULL,
