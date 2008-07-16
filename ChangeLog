@@ -12,6 +12,9 @@
 	* ipmi-sensors-config/: Support hysteresis configuration on
 	discrete sensors.
 
+	* common/src/config-checkout.c (config_checkout_section): Fix
+        corner case.
+
 2008-07-14 Albert Chu <chu11@llnl.gov>
 	
 	* ipmimonitoring/: Fix up -v output formatting.

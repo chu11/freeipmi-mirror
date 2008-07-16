@@ -116,6 +116,8 @@ config_checkout_section(pstdout_state_t pstate,
                                                     kv, 
                                                     "Undefined") < 0)
             this_ret = CONFIG_ERR_FATAL_ERROR;
+          else
+            this_ret = CONFIG_ERR_SUCCESS;
         }
       else
         {
