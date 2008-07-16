@@ -1,3 +1,8 @@
+2008-07-16 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors-config/: Remove discrete sensor hysteresis support.
+	Makes no sense.
+	
 2008-07-15 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/src/ipmi-sensors-config-threshold-section.c:
