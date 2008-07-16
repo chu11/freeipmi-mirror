@@ -103,6 +103,8 @@ config_checkout_section(struct config_section *section,
         {
           if (config_section_update_keyvalue_output(kv, "Undefined") < 0)
             this_ret = CONFIG_ERR_FATAL_ERROR;
+          else
+            this_ret = CONFIG_ERR_SUCCESS;
         }
       else
         {
