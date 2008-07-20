@@ -74,12 +74,6 @@ ipmi-sensors-config
 35.10/35.11
 - sensor enable/disable??
 - sensor event enable/disable??
-35.6/35.7
-- sensor hysterisis enable/disable??
-output hysteresis and thresholds only if hysteresis readlba/settable
-based on SDR flag
-- do not add a sensor to config if it has nothing to config
-  (i.e. all threshold/hysteresis fields are unreadable/unsettable/etc.)
 
 libs
 ----
