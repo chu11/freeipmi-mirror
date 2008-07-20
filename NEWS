@@ -25,8 +25,8 @@ o Support --sdr-cache-recreate in all SDR related tools for easier
 o Support --guid option in bmc-info to retrieve global ID.
 o Support build on Solaris.
 
-For Users - Enhancements/Changes
---------------------------------
+For Users - Enhancements/Changes/Bug Fixes
+------------------------------------------
 o Global in most tools
   - Rename --no-probing option to --disable-auto-probe for consistency
     in FreeIPMI.  Backwards compatability maintained.
