@@ -14,20 +14,9 @@ libfreeipmi:
   - sensor-cmds
 * how to support xRC4 (can we? should we? does any vendor support this?)
 
-ipmimonitoring
---------------
-verbose output option
-- support outputting "unknown" sensor readings, output "N/A", etc.
-output more info on unreadable sensors
-- i.e. sensor name, group, type, etc. should be readable
-
 solaris
 -------
 - solaris inband driver (solaris 9? solaris 10? solaris 11?)
-
-bmc-config
-----------
-common "description" code
 
 ipmi-chassis-config
 -------------------
@@ -36,14 +25,6 @@ chassis boot params
 - new chassis config tool?
 - move power restore polcy over from bmc-config
 chassis front-panel enables
-
-pef-config
------------
-* conf.5 manpage
-* how to specify event reading type codes easily
-- support get/set last processed event/id?
-- alert immediate support?
-- PET acknowledge support?
 
 general
 -------
@@ -67,6 +48,14 @@ bmc-device
 --------
 get auxiliary log status
 - not tested, don't have a machine with this support
+
+pef-config
+-----------
+* conf.5 manpage
+* how to specify event reading type codes easily
+- support get/set last processed event/id?
+- alert immediate support?
+- PET acknowledge support?
 
 ipmi-sensors-config
 -------------------
