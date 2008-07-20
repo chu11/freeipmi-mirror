@@ -4,6 +4,7 @@ noinst_HEADERS = \
 	ipmi-sensors-config-sections.h \
 	ipmi-sensors-config-discrete-section.h \
 	ipmi-sensors-config-threshold-section.h \
+	ipmi-sensors-config-sensor-event-enable-common.h \
 	ipmi-sensors-config-utils.h
 
 AM_CPPFLAGS = \
@@ -26,6 +27,7 @@ ipmi_sensors_config_SOURCES = \
 	ipmi-sensors-config-sections.c \
 	ipmi-sensors-config-discrete-section.c \
 	ipmi-sensors-config-threshold-section.c \
+	ipmi-sensors-config-sensor-event-enable-common.c \
 	ipmi-sensors-config-utils.c
 
 $(top_builddir)/common/src/configtool/libconfigtoolcommon.la : force-dependency-check

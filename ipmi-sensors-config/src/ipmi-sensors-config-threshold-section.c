@@ -28,6 +28,7 @@
 #include <assert.h>
 
 #include "ipmi-sensors-config.h"
+#include "ipmi-sensors-config-sensor-event-enable-common.h"
 #include "ipmi-sensors-config-utils.h"
 
 #include "freeipmi-portability.h"
@@ -883,12 +884,12 @@ hysteresis_threshold_validate_positive(const char *section_name,
 }
 
 static int
-_setup_threshold (ipmi_sensors_config_state_data_t *state_data,
-                  uint8_t *sdr_record,
-                  unsigned int sdr_record_len,
-                  struct config_section *section,
-                  const char *description,
-                  uint8_t sensor_unit)
+_setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
+                         uint8_t *sdr_record,
+                         unsigned int sdr_record_len,
+                         struct config_section *section,
+                         const char *description,
+                         uint8_t sensor_unit)
 {
   uint8_t lower_non_critical_threshold_settable = 0;
   uint8_t lower_critical_threshold_settable = 0;
@@ -1099,13 +1100,13 @@ _setup_threshold (ipmi_sensors_config_state_data_t *state_data,
 }
 
 static int
-_setup_threshold_hysteresis (ipmi_sensors_config_state_data_t *state_data,
-                             uint8_t *sdr_record,
-                             unsigned int sdr_record_len,
-                             struct config_section *section,
-                             const char *description,
-                             uint8_t sensor_unit,
-                             uint8_t hysteresis_support)
+_setup_threshold_hysteresis_fields (ipmi_sensors_config_state_data_t *state_data,
+                                    uint8_t *sdr_record,
+                                    unsigned int sdr_record_len,
+                                    struct config_section *section,
+                                    const char *description,
+                                    uint8_t sensor_unit,
+                                    uint8_t hysteresis_support)
 {
   unsigned int flags = 0;
   char description_hysteresis[CONFIG_MAX_DESCRIPTION_LEN];
@@ -1180,7 +1181,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
 {
   struct config_section *section = NULL;
   char section_name[CONFIG_MAX_SECTION_NAME_LEN];
-  uint8_t threshold_support = 0;
+  uint8_t threshold_access_support = 0;
   uint8_t hysteresis_support = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
@@ -1218,7 +1219,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                          sdr_record,
                                          sdr_record_len,
                                          NULL,
-                                         &threshold_support,
+                                         &threshold_access_support,
                                          &hysteresis_support,
                                          NULL,
                                          NULL) < 0)
@@ -1250,16 +1251,22 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
              "Give valid input for sensor type = %s",
              sensor_group (sensor_type));
 
-  if (threshold_support == IPMI_SDR_READABLE_THRESHOLDS_SUPPORT
-      || threshold_support == IPMI_SDR_READABLE_SETTABLE_THRESHOLDS_SUPPORT
+  if (setup_sensor_event_enable_fields (state_data,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        section) < 0)
+    goto cleanup;
+
+  if (threshold_access_support == IPMI_SDR_READABLE_THRESHOLDS_SUPPORT
+      || threshold_access_support == IPMI_SDR_READABLE_SETTABLE_THRESHOLDS_SUPPORT
       || state_data->prog_data->args->config_args.verbose)
     {
-      if (_setup_threshold (state_data,
-                            sdr_record,
-                            sdr_record_len,
-                            section,
-                            description,
-                            sensor_unit) < 0)
+      if (_setup_threshold_fields (state_data,
+                                   sdr_record,
+                                   sdr_record_len,
+                                   section,
+                                   description,
+                                   sensor_unit) < 0)
         goto cleanup;
     }
 
@@ -1267,13 +1274,13 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
       || hysteresis_support == IPMI_SDR_READABLE_SETTABLE_HYSTERESIS_SUPPORT
       || state_data->prog_data->args->config_args.verbose)
     {
-      if (_setup_threshold_hysteresis (state_data,
-                                       sdr_record,
-                                       sdr_record_len,
-                                       section,
-                                       description,
-                                       sensor_unit,
-                                       hysteresis_support) < 0)
+      if (_setup_threshold_hysteresis_fields (state_data,
+                                              sdr_record,
+                                              sdr_record_len,
+                                              section,
+                                              description,
+                                              sensor_unit,
+                                              hysteresis_support) < 0)
         goto cleanup;
     }
 

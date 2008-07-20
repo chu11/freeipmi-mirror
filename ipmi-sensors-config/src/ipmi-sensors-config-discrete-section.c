@@ -28,6 +28,7 @@
 #include <assert.h>
 
 #include "ipmi-sensors-config.h"
+#include "ipmi-sensors-config-sensor-event-enable-common.h"
 #include "ipmi-sensors-config-utils.h"
 
 #include "freeipmi-portability.h"
@@ -71,6 +72,12 @@ ipmi_sensors_config_discrete_section (ipmi_sensors_config_state_data_t *state_da
                                          NULL,
                                          NULL,
                                          0)))
+    goto cleanup;
+
+  if (setup_sensor_event_enable_fields (state_data,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        section) < 0)
     goto cleanup;
 
   *section_ptr = section;
