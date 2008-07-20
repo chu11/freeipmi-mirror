@@ -39,6 +39,12 @@ when configuring new thresholds.  The inaccuracies may not be
 apparent immediately.  It is recommend users verify their changes
 after configuring new thresholds.
 
+Some sensor configuration may not be stored in non-volatile memory, so
+users may wish to veryify that new configurations exist after system
+reboots or to always run
+.B ipmi-sensors-config
+during system initialization.
+
 For configuration of general BMC parameters or platform event filtering (PEF), please
 see the 
 .B bmc-config(8)
