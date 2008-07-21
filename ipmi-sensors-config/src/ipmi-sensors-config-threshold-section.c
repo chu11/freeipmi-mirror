@@ -554,7 +554,7 @@ hysteresis_threshold_checkout (const char *section_name,
     {
       if (config_section_update_keyvalue_output(state_data->pstate,
                                                 kv, 
-                                                "NotUsed") < 0)
+                                                "None") < 0)
         goto cleanup;
     }
   else
@@ -639,9 +639,9 @@ hysteresis_threshold_commit (const char *section_name,
       goto cleanup;
     }
 
-  /* "NotUsed" means hysteresis is not used, so don't decode */
+  /* "None" means hysteresis is not used, so don't decode */
   
-  if (!strcasecmp(kv->value_input, "NotUsed"))
+  if (!strcasecmp(kv->value_input, "None"))
     value_raw = 0;
   else
     {
@@ -839,7 +839,7 @@ hysteresis_threshold_validate(const char *section_name,
 
   assert(value);
 
-  if (!strcasecmp(value, "NotUsed"))
+  if (!strcasecmp(value, "None"))
     return CONFIG_VALIDATE_VALID_VALUE;
 
   conv = strtod(value, &endptr);
@@ -865,7 +865,7 @@ hysteresis_threshold_validate_positive(const char *section_name,
 
   assert(value);
 
-  if (!strcasecmp(value, "NotUsed"))
+  if (!strcasecmp(value, "None"))
     return CONFIG_VALIDATE_VALID_VALUE;
   
   conv = strtod(value, &endptr);
@@ -1135,7 +1135,7 @@ _setup_threshold_hysteresis_fields (ipmi_sensors_config_state_data_t *state_data
   memset(description_hysteresis, '\0', CONFIG_MAX_DESCRIPTION_LEN);
   snprintf(description_hysteresis, 
            CONFIG_MAX_DESCRIPTION_LEN,
-           "%s; 'NotUsed' to not use hysteresis",
+           "%s; 'None' to not use hysteresis",
            description);
 
   /* We will adjust this list as necessary later on.  Many
