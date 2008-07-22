@@ -79,11 +79,6 @@ BSD
 - autoconf - no argp-standalone - config errors w/ argp library not found. argp-standalone required
 - autoconf - finds argp-standalone
 
-0.7.0 web stuff
----------------
-add example conf file to docs??
-- example ipmi_monitoring_sensors_config too?
-
 RELEASE TODOS - Do on every release
 -----------------------------------
 Email freeipmi-users && freeipmi-devel
