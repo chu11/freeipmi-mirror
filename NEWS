@@ -85,11 +85,11 @@ o ipmi-sensors
     hysteresis, thresholds, etc. are even available before reading
     them.  Some sensors may output slightly different information than
     before.  For example, suppose a power supply sensor exists for a
-    power supply that is not installed.  If the sensor is enabled on the
-    motherboard, the sensor status will likely report "OK".  If the
-    sensor is disabled on the motherboard, the sensor status will
-    likely report "NA".  Previously, "OK" would have been
-    reported under both conditions.
+    power supply that is not installed.  If the sensor is enabled on
+    the motherboard, ipmi-sensors would likely report "OK".  If the
+    sensor is disabled on the motherboard, ipmi-sensors would likely
+    report "NA".  Previously, "OK" would have been reported under both
+    conditions.
   - Output multiple sensor status messages on separate lines, rather
     than all on one line under verbose modes.
   - When fields are not relevant, do not output as much information in
@@ -102,11 +102,11 @@ o ipmimonitoring
   - Check corner case for sensor readability.  May lead to slightly
     different output in ipmimonitoring.  For example, suppose a power
     supply sensor exists for a power supply that is not installed.  If
-    the sensor is enabled on the motherboard, the sensor state would
-    be "Nominal".  If the sensor is disabled on the motherboard, the
-    sensor state would not be output be default (would output "N/A"
-    under verbose mode). Previously, "Nominal" would have been
-    reported under both conditions.
+    the sensor is enabled on the motherboard, ipmimonitoring would
+    normally report "Nominal".  If the sensor is disabled on the motherboard, 
+    ipmimonitoring would normally not output a sensor state (it would
+    output "N/A" under verbose mode). Previously, "Nominal" would have
+    been reported under both conditions.
   - Output multiple bitmask strings if multiple bits are set.
   - Output "OK", similarly to ipmi-sensors when no bitmask strings are
     returned from a sensor reading.
