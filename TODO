@@ -54,7 +54,7 @@ ipmi-sensors-config
 
 libs
 ----
-merge all libs into one?
+merge all libs into one?  would aid debian packaging.
 - make package layout simpler?
 - make .so-naming consistent?
 - merge all except libipmidetect?
