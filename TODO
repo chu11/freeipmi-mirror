@@ -81,14 +81,6 @@ BSD
 
 0.7.0 web stuff
 ---------------
-add contributions (ganglia/nagios) to webpage downloads
-links to ganglia/nagios
-update index w/ new bmc-info text.
-update w/ bmc-device index.htp
-update w/ bmc-device manpage
-update all manpages and docs
-update w/ freeipmi.conf.5 manpage
-- remove ipmiconsole.conf.5 and ipmipower.conf.5
 add example conf file to docs??
 - example ipmi_monitoring_sensors_config too?
 
