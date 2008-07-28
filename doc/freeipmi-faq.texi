@@ -242,7 +242,7 @@ for Ganglia
 (@uref{http://ganglia.info/}) 
 and Nagios 
 (@uref{http://www.nagios.org/}) 
-have also been made available for download.
+have also been developed and made available for download.
 
 The bmc-config, pef-config, and ipmi-sensors-config configuration file
 and command-line interface are used to easily copy the BMC
