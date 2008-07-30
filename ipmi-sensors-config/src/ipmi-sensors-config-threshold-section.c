@@ -887,7 +887,7 @@ static int
 _setup_threshold_key (ipmi_sensors_config_state_data_t *state_data,
                       struct config_section *section,
                       const char *description,
-                      const char *key,
+                      const char *key_name,
                       uint8_t threshold_readable,
                       uint8_t threshold_settable,
                       Key_Validate threshold_validate_ptr)
@@ -896,7 +896,7 @@ _setup_threshold_key (ipmi_sensors_config_state_data_t *state_data,
 
   assert(state_data);
   assert(description);
-  assert(key);
+  assert(key_name);
   assert(threshold_validate_ptr);
 
   if (threshold_readable
@@ -913,7 +913,7 @@ _setup_threshold_key (ipmi_sensors_config_state_data_t *state_data,
       
       if (config_section_add_key (state_data->pstate,
                                   section,
-                                  key,
+                                  key_name,
                                   description,
                                   flags,
                                   threshold_checkout,
