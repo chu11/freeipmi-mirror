@@ -123,7 +123,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
             {
               if (state_data->prog_data->args->config_args.verbose)
                 pstdout_printf (state_data->pstate,
-                                "## Unable to checkout threshold sensor with compact SDR record\n");
+                                "## Unable to handle threshold sensor with compact SDR record\n");
               continue;
             }
 
