@@ -6,6 +6,12 @@ solaris
 -------
 - solaris inband driver (solaris 9? solaris 10? solaris 11?)
 
+ipmi-sensors/ipmimonitoring
+---------------------------
+ok vs. non-ok for threshold sensors
+- should depend on "comparison" stored in SDR?
+- probably not
+
 ipmi-chassis-config
 -------------------
 power cycle interval
