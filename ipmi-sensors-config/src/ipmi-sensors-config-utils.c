@@ -33,9 +33,9 @@
 #include "pstdout.h"
 #include "tool-sdr-cache-common.h"
 
-static config_err_t 
-_convert_id_string (ipmi_sensors_config_state_data_t *state_data, 
-                    char *id_string)
+config_err_t 
+convert_id_string (ipmi_sensors_config_state_data_t *state_data, 
+                   char *id_string)
 {
   char *ptr;
   
@@ -89,7 +89,7 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
                                IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
     goto cleanup;
 
-  if ((ret = _convert_id_string (state_data, id_string)) != CONFIG_ERR_SUCCESS)
+  if ((ret = convert_id_string (state_data, id_string)) != CONFIG_ERR_SUCCESS)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,

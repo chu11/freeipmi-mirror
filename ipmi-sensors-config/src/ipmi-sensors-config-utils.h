@@ -21,6 +21,12 @@
 
 #include "ipmi-sensors-config.h"
 
+config_err_t convert_id_string (ipmi_sensors_config_state_data_t *state_data, 
+                                char *id_string);
+
+config_err_t convert_event_string (ipmi_sensors_config_state_data_t *state_data, 
+                                   char *event_string);
+
 config_err_t create_section_name (ipmi_sensors_config_state_data_t *state_data, 
                                   uint8_t *sdr_record,
                                   unsigned int sdr_record_len,
