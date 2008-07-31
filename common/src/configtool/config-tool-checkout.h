@@ -27,6 +27,7 @@ config_err_t config_checkout_section(pstdout_state_t pstate,
                                      struct config_arguments *cmd_args,
                                      int all_keys_if_none_specified,
                                      FILE *fp,
+                                     unsigned int line_length,
                                      void *arg);
 
 config_err_t config_checkout (pstdout_state_t pstate,
@@ -34,6 +35,7 @@ config_err_t config_checkout (pstdout_state_t pstate,
                               struct config_arguments *cmd_args,
                               int all_keys_if_none_specified,
                               FILE *fp,
+                              unsigned int line_length,
                               void *arg);
 
 #endif /* _CONFIG_TOOL_CHECKOUT_H_ */

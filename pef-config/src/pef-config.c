@@ -267,6 +267,7 @@ _pef_config (pstdout_state_t pstate,
                                                    &(prog_data->args->config_args),
                                                    1,
                                                    fp,
+                                                   0.
                                                    &state_data);
                 if (this_ret != CONFIG_ERR_SUCCESS)
                   ret = this_ret;
@@ -288,6 +289,7 @@ _pef_config (pstdout_state_t pstate,
                                    &(prog_data->args->config_args),
                                    all_keys_if_none_specified,
                                    fp,
+                                   0
                                    &state_data);
           }
         break;

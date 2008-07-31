@@ -41,6 +41,7 @@ config_checkout_section(pstdout_state_t pstate,
                         struct config_arguments *cmd_args,
                         int all_keys_if_none_specified,
                         FILE *fp,
+                        unsigned int line_length,
                         void *arg)
 {
   struct config_keyvalue *kv;
@@ -100,10 +101,14 @@ config_checkout_section(pstdout_state_t pstate,
         }
     }
   
+  if (!line_length)
+    line_length = CONFIG_CHECKOUT_LINE_LEN;
+
   PSTDOUT_FPRINTF(pstate,
                   fp, 
                   "Section %s\n", 
                   section->section_name);
+
 
   kv = section->keyvalues;
   while (kv)
@@ -195,7 +200,7 @@ config_checkout_section(pstdout_state_t pstate,
                           "%s",
                           obuf);
 
-          while (key_len <= (CONFIG_CHECKOUT_LINE_LEN-1))
+          while (key_len <= line_length)
             {
               PSTDOUT_FPRINTF(pstate,
                               fp, 
@@ -226,6 +231,7 @@ config_checkout (pstdout_state_t pstate,
                  struct config_arguments *cmd_args,
                  int all_keys_if_none_specified,
                  FILE *fp,
+                 unsigned int line_length,
                  void *arg)
 {
   struct config_section *s;
@@ -244,6 +250,7 @@ config_checkout (pstdout_state_t pstate,
                                          cmd_args,
                                          all_keys_if_none_specified,
                                          fp,
+                                         line_length,
                                          arg)) != CONFIG_ERR_SUCCESS)
         {
           if (ret == CONFIG_ERR_FATAL_ERROR)
