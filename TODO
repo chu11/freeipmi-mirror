@@ -57,6 +57,7 @@ ipmi-sensors-config
 35.10/35.11
 - sensor enable/disable??
 - sensor event enable/disable??
+- conifg line checkout - increase length?
 
 libs
 ----
