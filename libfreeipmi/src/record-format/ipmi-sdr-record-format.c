@@ -585,6 +585,264 @@ fiid_template_t tmpl_sdr_compact_sensor_record =
     {0, "", 0}
   };
 
+fiid_template_t tmpl_sdr_compact_sensor_record_non_threshold_based_sensors = 
+  {
+    // SDR record header
+    // --------------------
+    {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "sdr_version_minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Record Key bytes
+    // ----------------
+    // Sensor owner ID
+    {1, "sensor_owner_id.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "sensor_owner_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Sensor owner LUN
+    {2, "sensor_owner_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "sensor_owner_lun.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Sensor Number
+    {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    // Record body bytes
+    // -----------------
+    // Entity ID
+    {8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Entity instance
+    {7, "instance_number_for_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "treat_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Sensor initialization
+    {1, "sensor_initialization.sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.event_generation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.init_sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.init_hysteresis", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.init_thresholds", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.init_events", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.init_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Sensor capabilities
+    {2, "sensor_capabilities.event_message_control_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "sensor_capabilities.threshold_access_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "sensor_capabilities.hysteresis_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_capabilities.auto_re_arm_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_capabilities.entity_ignore_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+   
+    {8, "sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {1, "assertion_event_mask.event_offset_0", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_7", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_8", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_9", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_10", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_11", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_12", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_13", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.event_offset_14", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "assertion_event_mask.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    {1, "deassertion_event_mask.event_offset_0", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_7", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_8", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_9", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_10", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_11", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_12", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_13", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.event_offset_14", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "deassertion_event_mask.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    {1, "discrete_reading_mask.state_bit_0", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_7", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_8", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_9", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_10", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_11", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_12", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_13", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.state_bit_14", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "discrete_reading_mask.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    //Sensor Unit1
+    {1, "sensor_unit1.percentage", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "sensor_unit1.modifier_unit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "sensor_unit1.rate_unit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "sensor_unit1.analog_data_format", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {8, "sensor_unit2.base_unit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "sensor_unit3.modifier_unit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    // Sensor Record Sharing
+    {4, "share_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "id_string_instance_modifier_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "sensor_direction", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "id_string_instance_modifier_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "entity_instance_sharing", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    // Positive-going Threshold Hysteresis value
+    {8, "positive_going_threshold_hysteresis", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Negative-going Threshold Hysteresis value
+    {8, "negative_going_threshold_hysteresis", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // 3 bytes reserved
+    {24, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // oem 
+    {8, "oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // ID String type/Length code
+    {8, "id_string_type_length_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // ID String bytes
+    {128, "id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_sdr_compact_sensor_record_threshold_based_sensors = 
+  {
+    // SDR record header
+    // --------------------
+    {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "sdr_version_minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Record Key bytes
+    // ----------------
+    // Sensor owner ID
+    {1, "sensor_owner_id.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "sensor_owner_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Sensor owner LUN
+    {2, "sensor_owner_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "sensor_owner_lun.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Sensor Number
+    {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    // Record body bytes
+    // -----------------
+    // Entity ID
+    {8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Entity instance
+    {7, "instance_number_for_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "treat_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Sensor initialization
+    {1, "sensor_initialization.sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.event_generation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.init_sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.init_hysteresis", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.init_thresholds", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.init_events", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.init_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_initialization.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Sensor capabilities
+    {2, "sensor_capabilities.event_message_control_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "sensor_capabilities.threshold_access_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "sensor_capabilities.hysteresis_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_capabilities.auto_re_arm_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sensor_capabilities.entity_ignore_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+   
+    {8, "sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {1, "threshold_assertion_event_mask.lower_non_critical_going_low_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_assertion_event_mask.lower_non_critical_going_high_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_assertion_event_mask.lower_critical_going_low_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_assertion_event_mask.lower_critical_going_high_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_assertion_event_mask.lower_non_recoverable_going_low_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_assertion_event_mask.lower_non_recoverable_going_high_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_assertion_event_mask.upper_non_critical_going_low_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_assertion_event_mask.upper_non_critical_going_high_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_assertion_event_mask.upper_critical_going_low_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_assertion_event_mask.upper_critical_going_high_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_assertion_event_mask.upper_non_recoverable_going_low_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_assertion_event_mask.upper_non_recoverable_going_high_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "lower_threshold_reading_mask.lower_non_critical_threshold_is_comparison", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "lower_threshold_reading_mask.lower_critical_threshold_is_comparison", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "lower_threshold_reading_mask.lower_non_recoverable_is_comparison", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "lower_threshold_reading_mask.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    {1, "threshold_deassertion_event_mask.lower_non_critical_going_low_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_deassertion_event_mask.lower_non_critical_going_high_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_deassertion_event_mask.lower_critical_going_low_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_deassertion_event_mask.lower_critical_going_high_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_deassertion_event_mask.lower_non_recoverable_going_low_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_deassertion_event_mask.lower_non_recoverable_going_high_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_deassertion_event_mask.upper_non_critical_going_low_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_deassertion_event_mask.upper_non_critical_going_high_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_deassertion_event_mask.upper_critical_going_low_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_deassertion_event_mask.upper_critical_going_high_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_deassertion_event_mask.upper_non_recoverable_going_low_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "threshold_deassertion_event_mask.upper_non_recoverable_going_high_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "upper_threshold_reading_mask.upper_non_critical_threshold_is_comparison", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "upper_threshold_reading_mask.upper_critical_threshold_is_comparison", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "upper_threshold_reading_mask.upper_non_recoverable_is_comparison", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "upper_threshold_reading_mask.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    {1, "readable_threshold_mask.lower_non_critical_threshold_is_readable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "readable_threshold_mask.lower_critical_threshold_is_readable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "readable_threshold_mask.lower_non_recoverable_threshold_is_readable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "readable_threshold_mask.upper_non_critical_threshold_is_readable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "readable_threshold_mask.upper_critical_threshold_is_readable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "readable_threshold_mask.upper_non_recoverable_threshold_is_readable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "readable_threshold_mask.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "readable_threshold_mask.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "settable_threshold_mask.lower_non_critical_threshold_is_settable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "settable_threshold_mask.lower_critical_threshold_is_settable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "settable_threshold_mask.lower_non_recoverable_threshold_is_settable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "settable_threshold_mask.upper_non_critical_threshold_is_settable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "settable_threshold_mask.upper_critical_threshold_is_settable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "settable_threshold_mask.upper_non_recoverable_threshold_is_settable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "settable_threshold_mask.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "settable_threshold_mask.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    //Sensor Unit1
+    {1, "sensor_unit1.percentage", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "sensor_unit1.modifier_unit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "sensor_unit1.rate_unit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "sensor_unit1.analog_data_format", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {8, "sensor_unit2.base_unit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "sensor_unit3.modifier_unit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    // Sensor Record Sharing
+    {4, "share_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "id_string_instance_modifier_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "sensor_direction", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "id_string_instance_modifier_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "entity_instance_sharing", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    // Positive-going Threshold Hysteresis value
+    {8, "positive_going_threshold_hysteresis", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Negative-going Threshold Hysteresis value
+    {8, "negative_going_threshold_hysteresis", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // 3 bytes reserved
+    {24, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // oem 
+    {8, "oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // ID String type/Length code
+    {8, "id_string_type_length_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // ID String bytes
+    {128, "id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
+    {0, "", 0}
+  };
+
 fiid_template_t tmpl_sdr_event_only_record = 
   {
     // SDR record header

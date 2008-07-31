@@ -1937,6 +1937,754 @@ sdr_cache_get_oem_data (pstdout_state_t pstate,
 }
 
 int 
+sdr_cache_get_assertion_supported (pstdout_state_t pstate,
+                                   uint8_t *sdr_record,
+                                   unsigned int sdr_record_len,
+                                   uint8_t *event_state_0,
+                                   uint8_t *event_state_1,
+                                   uint8_t *event_state_2,
+                                   uint8_t *event_state_3,
+                                   uint8_t *event_state_4,
+                                   uint8_t *event_state_5,
+                                   uint8_t *event_state_6,
+                                   uint8_t *event_state_7,
+                                   uint8_t *event_state_8,
+                                   uint8_t *event_state_9,
+                                   uint8_t *event_state_10,
+                                   uint8_t *event_state_11,
+                                   uint8_t *event_state_12,
+                                   uint8_t *event_state_13,
+                                   uint8_t *event_state_14)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  fiid_obj_t obj_sdr_record_discrete = NULL;
+  uint32_t acceptable_record_types;
+  uint8_t record_type;
+  uint8_t event_reading_type_code;
+  uint64_t val;
+  int rv = -1;
+
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  if (sdr_cache_get_event_reading_type_code (pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
+    goto cleanup;
+
+  if (!IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code)
+      && !IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "Invalid event reading type code passed in: %X\n",
+                      event_reading_type_code);
+      goto cleanup;
+    }
+
+  /* convert obj_sdr_record to appropriate format we care about */
+  if (sdr_cache_get_record_id_and_type (pstate,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        &record_type) < 0)
+    goto cleanup;
+
+  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+    _SDR_FIID_OBJ_COPY(obj_sdr_record_discrete,
+                       obj_sdr_record,
+                       tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
+  else
+    _SDR_FIID_OBJ_COPY(obj_sdr_record_discrete,
+                       obj_sdr_record,
+                       tmpl_sdr_compact_sensor_record_non_threshold_based_sensors);
+
+  if (event_state_0)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_0",
+                        &val);
+      *event_state_0 = val;
+    }
+
+  if (event_state_1)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_1",
+                        &val);
+      *event_state_1 = val;
+    }
+
+  if (event_state_2)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_2",
+                        &val);
+      *event_state_2 = val;
+    }
+
+  if (event_state_3)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_3",
+                        &val);
+      *event_state_3 = val;
+    }
+
+  if (event_state_4)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_4",
+                        &val);
+      *event_state_4 = val;
+    }
+
+  if (event_state_5)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_5",
+                        &val);
+      *event_state_5 = val;
+    }
+
+  if (event_state_6)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_6",
+                        &val);
+      *event_state_6 = val;
+    }
+
+  if (event_state_7)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_7",
+                        &val);
+      *event_state_7 = val;
+    }
+
+  if (event_state_8)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_8",
+                        &val);
+      *event_state_8 = val;
+    }
+
+  if (event_state_9)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_9",
+                        &val);
+      *event_state_9 = val;
+    }
+
+  if (event_state_10)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_10",
+                        &val);
+      *event_state_10 = val;
+    }
+
+  if (event_state_11)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_11",
+                        &val);
+      *event_state_11 = val;
+    }
+
+  if (event_state_12)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_12",
+                        &val);
+      *event_state_12 = val;
+    }
+
+  if (event_state_13)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_13",
+                        &val);
+      *event_state_13 = val;
+    }
+
+  if (event_state_14)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_14",
+                        &val);
+      *event_state_14 = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record_discrete);
+  return rv; 
+}
+
+int 
+sdr_cache_get_deassertion_supported (pstdout_state_t pstate,
+                                     uint8_t *sdr_record,
+                                     unsigned int sdr_record_len,
+                                     uint8_t *event_state_0,
+                                     uint8_t *event_state_1,
+                                     uint8_t *event_state_2,
+                                     uint8_t *event_state_3,
+                                     uint8_t *event_state_4,
+                                     uint8_t *event_state_5,
+                                     uint8_t *event_state_6,
+                                     uint8_t *event_state_7,
+                                     uint8_t *event_state_8,
+                                     uint8_t *event_state_9,
+                                     uint8_t *event_state_10,
+                                     uint8_t *event_state_11,
+                                     uint8_t *event_state_12,
+                                     uint8_t *event_state_13,
+                                     uint8_t *event_state_14)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  fiid_obj_t obj_sdr_record_discrete = NULL;
+  uint32_t acceptable_record_types;
+  uint8_t record_type;
+  uint8_t event_reading_type_code;
+  uint64_t val;
+  int rv = -1;
+
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  if (sdr_cache_get_event_reading_type_code (pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
+    goto cleanup;
+
+  if (!IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code)
+      && !IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "Invalid event reading type code passed in: %X\n",
+                      event_reading_type_code);
+      goto cleanup;
+    }
+
+  /* convert obj_sdr_record to appropriate format we care about */
+  if (sdr_cache_get_record_id_and_type (pstate,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        &record_type) < 0)
+    goto cleanup;
+
+  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+    _SDR_FIID_OBJ_COPY(obj_sdr_record_discrete,
+                       obj_sdr_record,
+                       tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
+  else
+    _SDR_FIID_OBJ_COPY(obj_sdr_record_discrete,
+                       obj_sdr_record,
+                       tmpl_sdr_compact_sensor_record_non_threshold_based_sensors);
+
+  if (event_state_0)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_0",
+                        &val);
+      *event_state_0 = val;
+    }
+
+  if (event_state_1)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_1",
+                        &val);
+      *event_state_1 = val;
+    }
+
+  if (event_state_2)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_2",
+                        &val);
+      *event_state_2 = val;
+    }
+
+  if (event_state_3)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_3",
+                        &val);
+      *event_state_3 = val;
+    }
+
+  if (event_state_4)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_4",
+                        &val);
+      *event_state_4 = val;
+    }
+
+  if (event_state_5)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_5",
+                        &val);
+      *event_state_5 = val;
+    }
+
+  if (event_state_6)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_6",
+                        &val);
+      *event_state_6 = val;
+    }
+
+  if (event_state_7)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_7",
+                        &val);
+      *event_state_7 = val;
+    }
+
+  if (event_state_8)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_8",
+                        &val);
+      *event_state_8 = val;
+    }
+
+  if (event_state_9)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_9",
+                        &val);
+      *event_state_9 = val;
+    }
+
+  if (event_state_10)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_10",
+                        &val);
+      *event_state_10 = val;
+    }
+
+  if (event_state_11)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_11",
+                        &val);
+      *event_state_11 = val;
+    }
+
+  if (event_state_12)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_12",
+                        &val);
+      *event_state_12 = val;
+    }
+
+  if (event_state_13)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_13",
+                        &val);
+      *event_state_13 = val;
+    }
+
+  if (event_state_14)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_14",
+                        &val);
+      *event_state_14 = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record_discrete);
+  return rv; 
+}
+
+int 
+sdr_cache_get_threshold_assertion_supported (pstdout_state_t pstate,
+                                             uint8_t *sdr_record,
+                                             unsigned int sdr_record_len,
+                                             uint8_t *lower_non_critical_going_low,
+                                             uint8_t *lower_non_critical_going_high,
+                                             uint8_t *lower_critical_going_low,
+                                             uint8_t *lower_critical_going_high,
+                                             uint8_t *lower_non_recoverable_going_low,
+                                             uint8_t *lower_non_recoverable_going_high,
+                                             uint8_t *upper_non_critical_going_low,
+                                             uint8_t *upper_non_critical_going_high,
+                                             uint8_t *upper_critical_going_low,
+                                             uint8_t *upper_critical_going_high,
+                                             uint8_t *upper_non_recoverable_going_low,
+                                             uint8_t *upper_non_recoverable_going_high)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  fiid_obj_t obj_sdr_record_threshold = NULL;
+  uint32_t acceptable_record_types;
+  uint8_t event_reading_type_code;
+  uint64_t val;
+  int rv = -1;
+
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  /* achu:
+   *
+   * Technically, the IPMI spec lists that compact record formats also
+   * support settable thresholds.  However, since compact records
+   * don't contain any information for interpreting threshold sensors
+   * (i.e. R exponent) I don't know how they could be of any use.  No
+   * vendor that I know of supports threshold sensors via a compact
+   * record (excluding possible OEM ones).
+   *
+   * There's a part of me that believes the readable/setting
+   * threshold masks for compact sensor records is a cut and paste
+   * typo.  It shouldn't be there.
+   */
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  /* We don't want the generic sdr full record, we need the special
+   * threshold one.
+   */
+
+  if (sdr_cache_get_event_reading_type_code (pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
+    goto cleanup;
+
+  if (!IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "Invalid event reading type code passed in: %X\n",
+                      event_reading_type_code);
+      goto cleanup;
+    }
+
+  _SDR_FIID_OBJ_COPY(obj_sdr_record_threshold,
+                     obj_sdr_record,
+                     tmpl_sdr_full_sensor_record_threshold_based_sensors);
+
+  if (lower_non_critical_going_low)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.lower_non_critical_going_low_supported",
+                        &val);
+      *lower_non_critical_going_low = val;
+    }
+
+  if (lower_non_critical_going_high)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.lower_non_critical_going_high_supported",
+                        &val);
+      *lower_non_critical_going_high = val;
+    }
+
+  if (lower_critical_going_low)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.lower_critical_going_low_supported",
+                        &val);
+      *lower_critical_going_low = val;
+    }
+
+  if (lower_critical_going_high)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.lower_critical_going_high_supported",
+                        &val);
+      *lower_critical_going_high = val;
+    }
+
+  if (lower_non_recoverable_going_low)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.lower_non_recoverable_going_low_supported",
+                        &val);
+      *lower_non_recoverable_going_low = val;
+    }
+
+  if (lower_non_recoverable_going_high)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.lower_non_recoverable_going_high_supported",
+                        &val);
+      *lower_non_recoverable_going_high = val;
+    }
+
+  if (upper_non_critical_going_low)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.upper_non_critical_going_low_supported",
+                        &val);
+      *upper_non_critical_going_low = val;
+    }
+
+  if (upper_non_critical_going_high)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.upper_non_critical_going_high_supported",
+                        &val);
+      *upper_non_critical_going_high = val;
+    }
+
+  if (upper_critical_going_low)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.upper_critical_going_low_supported",
+                        &val);
+      *upper_critical_going_low = val;
+    }
+
+  if (upper_critical_going_high)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.upper_critical_going_high_supported",
+                        &val);
+      *upper_critical_going_high = val;
+    }
+
+  if (upper_non_recoverable_going_low)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.upper_non_recoverable_going_low_supported",
+                        &val);
+      *upper_non_recoverable_going_low = val;
+    }
+
+  if (upper_non_recoverable_going_high)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.upper_non_recoverable_going_high_supported",
+                        &val);
+      *upper_non_recoverable_going_high = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record_threshold);
+  return rv; 
+}
+
+int 
+sdr_cache_get_threshold_deassertion_supported (pstdout_state_t pstate,
+                                               uint8_t *sdr_record,
+                                               unsigned int sdr_record_len,
+                                               uint8_t *lower_non_critical_going_low,
+                                               uint8_t *lower_non_critical_going_high,
+                                               uint8_t *lower_critical_going_low,
+                                               uint8_t *lower_critical_going_high,
+                                               uint8_t *lower_non_recoverable_going_low,
+                                               uint8_t *lower_non_recoverable_going_high,
+                                               uint8_t *upper_non_critical_going_low,
+                                               uint8_t *upper_non_critical_going_high,
+                                               uint8_t *upper_critical_going_low,
+                                               uint8_t *upper_critical_going_high,
+                                               uint8_t *upper_non_recoverable_going_low,
+                                               uint8_t *upper_non_recoverable_going_high)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  fiid_obj_t obj_sdr_record_threshold = NULL;
+  uint32_t acceptable_record_types;
+  uint8_t event_reading_type_code;
+  uint64_t val;
+  int rv = -1;
+
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  /* achu:
+   *
+   * Technically, the IPMI spec lists that compact record formats also
+   * support settable thresholds.  However, since compact records
+   * don't contain any information for interpreting threshold sensors
+   * (i.e. R exponent) I don't know how they could be of any use.  No
+   * vendor that I know of supports threshold sensors via a compact
+   * record (excluding possible OEM ones).
+   *
+   * There's a part of me that believes the readable/setting
+   * threshold masks for compact sensor records is a cut and paste
+   * typo.  It shouldn't be there.
+   */
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  /* We don't want the generic sdr full record, we need the special
+   * threshold one.
+   */
+
+  if (sdr_cache_get_event_reading_type_code (pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
+    goto cleanup;
+
+  if (!IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "Invalid event reading type code passed in: %X\n",
+                      event_reading_type_code);
+      goto cleanup;
+    }
+
+  _SDR_FIID_OBJ_COPY(obj_sdr_record_threshold,
+                     obj_sdr_record,
+                     tmpl_sdr_full_sensor_record_threshold_based_sensors);
+
+  if (lower_non_critical_going_low)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.lower_non_critical_going_low_supported",
+                        &val);
+      *lower_non_critical_going_low = val;
+    }
+
+  if (lower_non_critical_going_high)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.lower_non_critical_going_high_supported",
+                        &val);
+      *lower_non_critical_going_high = val;
+    }
+
+  if (lower_critical_going_low)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.lower_critical_going_low_supported",
+                        &val);
+      *lower_critical_going_low = val;
+    }
+
+  if (lower_critical_going_high)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.lower_critical_going_high_supported",
+                        &val);
+      *lower_critical_going_high = val;
+    }
+
+  if (lower_non_recoverable_going_low)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.lower_non_recoverable_going_low_supported",
+                        &val);
+      *lower_non_recoverable_going_low = val;
+    }
+
+  if (lower_non_recoverable_going_high)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.lower_non_recoverable_going_high_supported",
+                        &val);
+      *lower_non_recoverable_going_high = val;
+    }
+
+  if (upper_non_critical_going_low)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.upper_non_critical_going_low_supported",
+                        &val);
+      *upper_non_critical_going_low = val;
+    }
+
+  if (upper_non_critical_going_high)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.upper_non_critical_going_high_supported",
+                        &val);
+      *upper_non_critical_going_high = val;
+    }
+
+  if (upper_critical_going_low)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.upper_critical_going_low_supported",
+                        &val);
+      *upper_critical_going_low = val;
+    }
+
+  if (upper_critical_going_high)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.upper_critical_going_high_supported",
+                        &val);
+      *upper_critical_going_high = val;
+    }
+
+  if (upper_non_recoverable_going_low)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.upper_non_recoverable_going_low_supported",
+                        &val);
+      *upper_non_recoverable_going_low = val;
+    }
+
+  if (upper_non_recoverable_going_high)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.upper_non_recoverable_going_high_supported",
+                        &val);
+      *upper_non_recoverable_going_high = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record_threshold);
+  return rv; 
+}
+
+int 
 sdr_cache_get_threshold_readable (pstdout_state_t pstate,
                                   uint8_t *sdr_record,
                                   unsigned int sdr_record_len,

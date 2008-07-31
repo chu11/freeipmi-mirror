@@ -135,6 +135,36 @@ ipmi_dump_sdr_record (int fd, const char *prefix, const char *hdr, const char *t
           obj_sdr_record = obj_temp;
         }
     }
+  else if (record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
+    {
+      uint8_t event_reading_type_code;
+      fiid_obj_t obj_temp = NULL;
+
+      FIID_OBJ_GET_CLEANUP(obj_sdr_record, 
+                           "event_reading_type_code",
+                           &val);
+      event_reading_type_code = val;
+
+      /* achu: shouldn't be possible for this to be a threshold based
+       * sensor, but we'll allow it just in case.
+       */
+
+      if ((IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code)))
+        FIID_OBJ_COPY_CLEANUP(obj_temp,
+                              obj_sdr_record,
+                              tmpl_sdr_compact_sensor_record_threshold_based_sensors);
+      else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code)
+               || IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
+        FIID_OBJ_COPY_CLEANUP(obj_temp,
+                              obj_sdr_record,
+                              tmpl_sdr_compact_sensor_record_non_threshold_based_sensors);
+
+      if (obj_temp)
+        {
+          FIID_OBJ_DESTROY(obj_sdr_record);
+          obj_sdr_record = obj_temp;
+        }
+    }
 
   ERR_CLEANUP (!(ipmi_obj_dump(fd, 
                                prefix, 

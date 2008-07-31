@@ -2,6 +2,21 @@
 
 	* ipmi-sensors-config/src/: Variety of code cleanup.
 
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+	common/src/toolcommon/tool-sdr-cache-common.c
+	(sdr_cache_get_assertion_supported,
+	sdr_cache_get_deassertion_supported,
+	sdr_cache_get_threshold_assertion_supported,
+	sdr_cache_get_threshold_deassertion_supported):  New function.s
+
+	* libfreeipmi/src/record-format/ipmi-sdr-record-format.c,
+	libfreeipmi/include/freeipmi/record-format/ipmi-sdr-record-format.h:
+	Add tmpl_sdr_compact_sensor_record_non_threshold_based_sensors and
+	tmpl_sdr_compact_sensor_record_threshold_based_sensors templates.
+
+	* libfreeipmi/src/debug/ipmi-debug-sdr.c (ipmi_dump_sdr_record):
+	Support new compact record formats.
+
 2008-07-20 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/ipmi-sensors-config.8.pre.in: Update text.
