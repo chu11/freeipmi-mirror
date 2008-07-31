@@ -36,10 +36,31 @@
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
-/* convenience struct */
+/* convenience structs */
+
+struct sensor_event_bits {
+  uint8_t bit0;
+  uint8_t bit1;
+  uint8_t bit2;
+  uint8_t bit3;
+  uint8_t bit4;
+  uint8_t bit5;
+  uint8_t bit6;
+  uint8_t bit7;
+  uint8_t bit8;
+  uint8_t bit9;
+  uint8_t bit10;
+  uint8_t bit11;
+  uint8_t bit12;
+  uint8_t bit13;
+  uint8_t bit14;
+};
+
 struct sensor_event_enable_data {
   uint8_t all_event_messages;
   uint8_t scanning_on_this_sensor;
+  struct sensor_event_bits assertion;
+  struct sensor_event_bits deassertion;
 };
 
 #define KEY_NAME_MAX_LEN 1024
@@ -79,6 +100,114 @@ typedef int (*Sdr_threshold_event_flags_func)(pstdout_state_t pstate,
                                               uint8_t *upper_non_recoverable_going_low,
                                               uint8_t *upper_non_recoverable_going_high);
 
+static void
+_clear_event_bits (struct sensor_event_bits *bits)
+{
+  assert(bits);
+
+  bits->bit0 = 0;
+  bits->bit1 = 0;
+  bits->bit2 = 0;
+  bits->bit3 = 0;
+  bits->bit4 = 0;
+  bits->bit5 = 0;
+  bits->bit6 = 0;
+  bits->bit7 = 0;
+  bits->bit8 = 0;
+  bits->bit9 = 0;
+  bits->bit10 = 0;
+  bits->bit11 = 0;
+  bits->bit12 = 0;
+  bits->bit13 = 0;
+  bits->bit14 = 0;
+}
+
+static void
+_clear_assertion_bits (struct sensor_event_enable_data *data)
+{
+  assert(data);
+
+  _clear_event_bits (&(data->assertion));
+}
+
+static void
+_clear_deassertion_bits (struct sensor_event_enable_data *data)
+{
+  assert(data);
+
+  _clear_event_bits (&(data->deassertion));
+}
+
+static void
+_copy_bitmask_into_bits (struct sensor_event_bits *bits,
+                         uint16_t bitmask)
+{
+  assert(bits);
+
+  bits->bit0 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit1 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit2 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit3 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit4 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit5 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit6 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit7 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit8 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit9 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit10 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit11 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit12 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit13 = bitmask & 0x1;
+  bitmask >>= 1;
+
+  bits->bit14 = bitmask & 0x1;
+  bitmask >>= 1;
+}                         
+
+static void
+_copy_assertion_bitmask_into_bits (struct sensor_event_enable_data *data, 
+                                   uint16_t bitmask)
+{
+  assert(data);
+
+  _copy_bitmask_into_bits (&(data->assertion), bitmask);
+}
+
+static void
+_copy_deassertion_bitmask_into_bits (struct sensor_event_enable_data *data,
+                                     uint16_t bitmask)
+{
+  assert(data);
+
+  _copy_bitmask_into_bits (&(data->deassertion), bitmask);
+}
+
 static config_err_t
 _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
                           const char *section_name,
@@ -90,6 +219,7 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t sensor_number;
+  int8_t field_len;
   uint64_t val;
 
   assert(state_data);
@@ -133,6 +263,32 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
   _FIID_OBJ_GET (obj_cmd_rs, "scanning_on_this_sensor", &val);
   data->scanning_on_this_sensor = val;
 
+  if (data->all_event_messages == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE)
+    {
+      _clear_assertion_bits(data);
+      _clear_deassertion_bits(data);
+      goto out;
+    }
+
+  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
+                                   "assertion_event_bitmask",
+                                   &val,
+                                   field_len);
+  if (field_len)
+    _copy_assertion_bitmask_into_bits (data, val);
+  else
+    _clear_assertion_bits(data);
+
+  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
+                                   "deassertion_event_bitmask",
+                                   &val,
+                                   field_len);
+  if (field_len)
+    _copy_deassertion_bitmask_into_bits (data, val);
+  else
+    _clear_deassertion_bits(data);
+
+ out:
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   _FIID_OBJ_DESTROY(obj_cmd_rs);
@@ -332,11 +488,56 @@ threshold_event_enable_checkout (const char *section_name,
                                  void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  struct sensor_event_enable_data data;
+  struct sensor_event_bits *bits;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  
-  /* XXX */
+  uint8_t val;
 
+  memset(&data, '\0', sizeof(struct sensor_event_enable_data));
+  if ((ret = _get_sensor_event_enable (state_data,
+                                       section_name,
+                                       &data)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+    
+  if (stristr(kv->key->key_name, "Deassertion"))
+    bits = &(data.deassertion);
+  else
+    bits = &(data.assertion);
+
+  if (stristr(kv->key->key_name, "Lower_Non_Critical_Going_Low"))
+    val = bits->bit0;
+  else if (stristr(kv->key->key_name, "Lower_Non_Critical_Going_High"))
+    val = bits->bit1;
+  else if (stristr(kv->key->key_name, "Lower_Critical_Going_Low")) 
+    val = bits->bit2;
+  else if (stristr(kv->key->key_name, "Lower_Critical_Going_High"))
+    val = bits->bit3;
+  else if (stristr(kv->key->key_name, "Lower_Non_Recoverable_Going_Low")) 
+    val = bits->bit4;
+  else if (stristr(kv->key->key_name, "Lower_Non_Recoverable_Going_High"))
+    val = bits->bit5;
+  else if (stristr(kv->key->key_name, "Upper_Non_Critical_Going_Low")) 
+    val = bits->bit6;
+  else if (stristr(kv->key->key_name, "Upper_Non_Critical_Going_High"))
+    val = bits->bit7;
+  else if (stristr(kv->key->key_name, "Upper_Critical_Going_Low")) 
+    val = bits->bit8;
+  else if (stristr(kv->key->key_name, "Upper_Critical_Going_High"))
+    val = bits->bit9;
+  else if (stristr(kv->key->key_name, "Upper_Non_Recoverable_Going_Low")) 
+    val = bits->bit10;
+  else /* stristr(kv->key->key_name, "Upper_Non_Recoverable_Going_High")) */
+    val = bits->bit11;
+   
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            val ? "Yes" : "No") < 0)
+    goto cleanup;
+  
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   return (rv);
@@ -600,9 +801,9 @@ _setup_threshold_event_enable (ipmi_sensors_config_state_data_t *state_data,
 }
 
 config_err_t
-event_enable_checkout (const char *section_name,
-                       struct config_keyvalue *kv,
-                       void *arg)
+generic_event_enable_checkout (const char *section_name,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -616,9 +817,9 @@ event_enable_checkout (const char *section_name,
 }
 
 config_err_t
-event_enable_commit (const char *section_name,
-                     const struct config_keyvalue *kv,
-                     void *arg)
+generic_event_enable_commit (const char *section_name,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -632,10 +833,10 @@ event_enable_commit (const char *section_name,
 }
 
 int
-_setup_event_enable_key (ipmi_sensors_config_state_data_t *state_data,
-                         struct config_section *section,
-                         const char *key_name,
-                         uint8_t event_supported)
+_setup_generic_event_enable_key (ipmi_sensors_config_state_data_t *state_data,
+                                 struct config_section *section,
+                                 const char *key_name,
+                                 uint8_t event_supported)
 {
   unsigned int flags = 0;
 
@@ -654,8 +855,8 @@ _setup_event_enable_key (ipmi_sensors_config_state_data_t *state_data,
                                   key_name,
                                   "Possible values: Yes/No",
                                   flags,
-                                  event_enable_checkout,
-                                  event_enable_commit,
+                                  generic_event_enable_checkout,
+                                  generic_event_enable_commit,
                                   config_yes_no_validate) < 0)
         goto cleanup;
     }
@@ -744,30 +945,30 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Idle", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Active", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Busy", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_2) < 0)
         goto cleanup;
       break;
       /* 
@@ -778,20 +979,20 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_State_Deasserted", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_State_Asserted", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_1) < 0)
         goto cleanup;
       break;
       /* 
@@ -802,20 +1003,20 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Predictive_Failure_Deasserted", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Predictive_Failure_Asserted", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_1) < 0)
         goto cleanup;
       break;
       /* 
@@ -826,20 +1027,20 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Limit_Not_Exceeded", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Limit_Exceeded", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_1) < 0)
         goto cleanup;
       break;
       /* 
@@ -850,20 +1051,20 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Performance_Met", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Performance_Lags", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_1) < 0)
         goto cleanup;
       break;
       /* 
@@ -874,90 +1075,90 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_OK", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Non_Critical_from_OK", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Critical_from_Less_Severe", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Non_Recoverable_from_Less_Severe", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Non_Critical_from_More_Severe", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Critical_from_Non_Recoverable", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_5) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Non_Recoverable", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_6) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_6) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Monitor", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_7) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_7) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Informational", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_8) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_8) < 0)
         goto cleanup;
 
       break;
@@ -969,20 +1170,20 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Device_Removed_or_Device_Absent", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Device_Inserted_or_Device_Present", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_1) < 0)
         goto cleanup;
       break;
       /* 
@@ -993,20 +1194,20 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Device_Disabled", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Device_Enabled", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_1) < 0)
         goto cleanup;
       break;
       /* 
@@ -1017,90 +1218,90 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Running", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_In_Test", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Power_Off", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_On_Line", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Off_Line", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Off_Duty", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_5) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Degraded", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_6) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_6) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Transition_to_Power_Save", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_7) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_7) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Install_Error", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_8) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_8) < 0)
         goto cleanup;
       break;
       /* 
@@ -1111,80 +1312,80 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Fully_Redundant", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Redundancy_Lost", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Redundancy_Degraded", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Entered_from_Redundancy_Degraded_or_Fully_Redundant", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Entered_from_Non_Redundant_Insufficient_Resources", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Non_Redundant_Insufficient_Resources", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_5) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Redundancy_Degraded_from_Fully_Redundant", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_6) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_6) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Redundancy_Degraded_from_Non_Redundant", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_7) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_7) < 0)
         goto cleanup;
       break;
       /* 
@@ -1195,40 +1396,40 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_D0_Power_State", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_D1_Power_State", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_D2_Power_State", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_D3_Power_State", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_generic_event_enable_key (state_data,
+                                           section,
+                                           key_name,
+                                           event_state_3) < 0)
         goto cleanup;
       break;
     default:
@@ -1278,6 +1479,73 @@ _setup_generic_event_enable (ipmi_sensors_config_state_data_t *state_data,
   rv = 0;
  cleanup:
   return rv;
+}
+
+config_err_t
+specific_event_enable_checkout (const char *section_name,
+                                struct config_keyvalue *kv,
+                                void *arg)
+{
+  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  
+  /* XXX */
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  return (rv);
+}
+
+config_err_t
+specific_event_enable_commit (const char *section_name,
+                              const struct config_keyvalue *kv,
+                              void *arg)
+{
+  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  
+  /* XXX */
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  return (rv);
+}
+
+int
+_setup_specific_event_enable_key (ipmi_sensors_config_state_data_t *state_data,
+                                  struct config_section *section,
+                                  const char *key_name,
+                                  uint8_t event_supported)
+{
+  unsigned int flags = 0;
+
+  assert(state_data);
+  assert(section);
+  assert(key_name);
+
+  if (event_supported
+      || state_data->prog_data->args->config_args.verbose)
+    {
+      if (!event_supported)
+        flags |= CONFIG_UNDEFINED;
+
+      if (config_section_add_key (state_data->pstate,
+                                  section,
+                                  key_name,
+                                  "Possible values: Yes/No",
+                                  flags,
+                                  specific_event_enable_checkout,
+                                  specific_event_enable_commit,
+                                  config_yes_no_validate) < 0)
+        goto cleanup;
+    }
+
+  return 0;
+
+ cleanup:
+  return -1;
 }
 
 static int
@@ -1360,70 +1628,70 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_General_Chassis_Intrusion", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Drive_Bay_Intrusion", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_IO_Card_Area_Intrusion", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Processor_Area_Intrusion", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_LAN_Leash_Lost", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Unauthorized_Dock", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_FAN_Area_Intrusion", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_6) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_6) < 0)
         goto cleanup;
 
       break;
@@ -1435,60 +1703,60 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Secure_Mode_Violation_Attempt", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Pre_Boot_Password_Violation_User_Password", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Pre_Boot_Password_Violation_Attempt_Setup_Password", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Pre_Boot_Password_Violation_Network_Boot_Password", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Other_Pre_Boot_Password_Violation", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Out_of_Band_Access_Password_Violation", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       break;
@@ -1500,110 +1768,110 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_IERR", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Thermal_Trip", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_FRB1_BIST_failure", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_FRB2_Hang_in_POST_Failure", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_FRB3_Processor_Startup_Initialization_Failure", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Configuration_Error", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_SM_BIOS_Uncorrectable_CPU_Complex_Error", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_6) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_6) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Processor_Presence_detected", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_7) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_7) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Processor_Disabled", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_8) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_8) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Terminator_Presence_Detected", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_9) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_9) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Processor_Automatically_Throttled", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_10) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_10) < 0)
         goto cleanup;
 
       break;
@@ -1615,70 +1883,70 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Presence_Detected", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Power_Supply_Failure_Detected", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Predictive_Failure", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Power_Supply_Input_Lost_AC_DC", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Power_Supply_Input_Lost_or_Out_of_Range", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Power_Supply_Input_Out_of_Range_but_Present", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Configuration_Error", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_6) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_6) < 0)
         goto cleanup;
       break;
       /* 
@@ -1689,80 +1957,80 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Power_Off_or_Power_Down", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Power_Cycle", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_240VA_Power_Down", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Interlock_Power_Down", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_AC_Lost", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Soft_Power_Control_Failure", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Power_Unit_Failure_Detected", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_6) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_6) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Predictive_Failure", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_7) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_7) < 0)
         goto cleanup;
 
       break;
@@ -1774,110 +2042,110 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Correctable_ECC", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Uncorrectable_ECC", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Parity", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Memory_Scrub_Failed", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Memory_Device_Disabled", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Correctable_ECC_Logging_Limit_Reached", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Presence_Detected", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_6) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_6) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Configuration_Error", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_7) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_7) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Spare", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_8) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_8) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Memory_Automatically_Throttled", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_9) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_9) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Critical_Overtemperature", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_10) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_10) < 0)
         goto cleanup;
       break;
       /* 
@@ -1888,90 +2156,90 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Drive_Presence", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Drive_Fault", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Predictive_Failure", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Hot_Spare", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Consistency_Check_In_Progress", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_In_Critical_Array", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_In_Failed_Array", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_6) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_6) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Rebuild_or_Remap_In_Progress", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_7) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_7) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_Rebuild_or_Remap_Aborted", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_8) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_8) < 0)
         goto cleanup;
 
       break;
@@ -1983,30 +2251,30 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_System_Firmware_Error", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_System_Firmware_Hang", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name, 
                KEY_NAME_MAX_LEN, 
                "Enable_%s_Event_System_Firmware_Progress", 
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       break;
@@ -2018,60 +2286,60 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Correctable_Memory_Error_Logging_Disabled",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Event_Type_Logging_Disabled",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Log_Area_Reset_or_Cleared",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_All_Event_Logging_Disabled",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_SEL_Full",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_SEL_Almost_Full",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       break;
@@ -2084,60 +2352,60 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_System_Reconfigured",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_OEM_System_Boot_Event",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Undetermined_System_Hardware_Failure",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Entry_Added_to_Auxiliary_Log",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_PEF_Action",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Timestamp_Clock_Synch",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       break;
@@ -2149,120 +2417,120 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Front_Panel_NMI_or_Diagnostic_Interrupt",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Bus_Timeout",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_IO_Channel_Check_NMI",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Software_NMI",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_PCI_PERR",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_PCI_SERR",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_EISA_Fail_Safe_Timeout",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_6) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_6) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Bus_Correctable_Error",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_7) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_7) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Bus_Uncorrectable_Error",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_8) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_8) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Fatal_NMI",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_9) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_9) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Bus_Fatal_Error",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_10) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_10) < 0)
         goto cleanup;
       
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Bus_Degraded",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_11) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_11) < 0)
         goto cleanup;
 
       break;
@@ -2274,100 +2542,100 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Fault_Status_Asserted",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Identify_Status_Asserted",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Slot_Connector_Device_Installed_or_Attached",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Slot_Connector_Ready_for_Device_Installation",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Slot_Connector_Ready_for_Device_Removal",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Slot_Power_is_Off",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Slot_Connector_Device_Removal_Request",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_6) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_6) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Interlock_Asserted",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_7) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_7) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Slot_is_Disabled",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_8) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_8) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Slot_Holds_Spare_Device",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_9) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_9) < 0)
         goto cleanup;
 
       break;
@@ -2379,40 +2647,40 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Timer_Expired",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Hard_Reset",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Power_Down",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Power_Cycle",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       /* event state 4-7 are "reserved" and useless */
@@ -2421,10 +2689,10 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Timer_Interrupt",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_8) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_8) < 0)
         goto cleanup;
 
       break;
@@ -2436,30 +2704,30 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Entity_Present",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Entity_Absent",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Entity_Disabled",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       break;
@@ -2471,60 +2739,60 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Sensor_Access_Degraded_or_Unavailable",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Controller_Access_Degraded_or_Unavailable",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Management_Controller_Off_Line",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Management_Controller_Unavailable",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Sensor_Failure",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_FRU_Failure",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       break;
@@ -2536,30 +2804,30 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Battery_Low",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Battery_Failed",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_Battery_Presence_Detected",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       break;
@@ -2571,80 +2839,80 @@ _setup_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_da
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_FRU_Not_Installed",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_0) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_0) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_FRU_Inactive",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_1) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_1) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_FRU_Activation_Requested",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_2) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_2) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_FRU_Activation_In_Progress",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_3) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_3) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_FRU_Active",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_4) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_4) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_FRU_Deactivation_Requested",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_5) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_5) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_FRU_Deactivation_In_Progress",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_6) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_6) < 0)
         goto cleanup;
 
       snprintf(key_name,
                KEY_NAME_MAX_LEN,
                "Enable_%s_Event_FRU_Communication_Lost",
                type_str);
-      if (_setup_event_enable_key (state_data,
-                                   section,
-                                   key_name,
-                                   event_state_7) < 0)
+      if (_setup_specific_event_enable_key (state_data,
+                                            section,
+                                            key_name,
+                                            event_state_7) < 0)
         goto cleanup;
 
       break;
