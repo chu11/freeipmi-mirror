@@ -2,6 +2,16 @@ libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
 
+ipmimontiroing/sensors-config
+-----------------------------
+button/switch type support
+cable/interconnect
+system boot initiated
+boot error
+os boot
+os critical stop
+etc.
+
 solaris
 -------
 - solaris inband driver (solaris 9? solaris 10? solaris 11?)
@@ -58,6 +68,7 @@ ipmi-sensors-config
 - sensor enable/disable??
 - sensor event enable/disable??
 - conifg line checkout - increase length?
+  - make checkout line configurable by tool
 
 libs
 ----
