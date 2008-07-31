@@ -195,7 +195,7 @@ config_checkout_section(pstdout_state_t pstate,
                           "%s",
                           obuf);
 
-          while (key_len <= CONFIG_CHECKOUT_LINE_LEN)
+          while (key_len <= (CONFIG_CHECKOUT_LINE_LEN-1))
             {
               PSTDOUT_FPRINTF(pstate,
                               fp, 
@@ -205,7 +205,7 @@ config_checkout_section(pstdout_state_t pstate,
 
           PSTDOUT_FPRINTF(pstate,
                           fp,
-                          "%s\n", 
+                          " %s\n", 
                           kv->value_output);
         }
 
