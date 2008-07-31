@@ -1,6 +1,12 @@
 2008-07-31 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/src/: Begin specific event enable support.
+
+	* common/src/configtool/config-tool-checkout.c: Fix checkout
+	corner case.  Support different length lines in checkout.
+
+	* bmc-config/, pef-config/, ipmi-sensors-config/: Support config
+	tool API change.
 	
 2008-07-30 Albert Chu <chu11@llnl.gov>
 
