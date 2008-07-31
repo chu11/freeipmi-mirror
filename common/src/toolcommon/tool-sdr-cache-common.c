@@ -1996,6 +1996,7 @@ sdr_cache_get_assertion_supported (pstdout_state_t pstate,
   if (sdr_cache_get_record_id_and_type (pstate,
                                         sdr_record,
                                         sdr_record_len,
+                                        NULL,
                                         &record_type) < 0)
     goto cleanup;
 
@@ -2195,6 +2196,7 @@ sdr_cache_get_deassertion_supported (pstdout_state_t pstate,
   if (sdr_cache_get_record_id_and_type (pstate,
                                         sdr_record,
                                         sdr_record_len,
+                                        NULL,
                                         &record_type) < 0)
     goto cleanup;
 
