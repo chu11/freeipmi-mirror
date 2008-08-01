@@ -488,10 +488,14 @@ threshold_event_enable_checkout (const char *section_name,
                                  void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
   struct sensor_event_enable_data data;
   struct sensor_event_bits *bits;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint8_t event_reading_type_code;
+  int sensor_class;
   uint8_t val;
 
   memset(&data, '\0', sizeof(struct sensor_event_enable_data));
@@ -500,6 +504,33 @@ threshold_event_enable_checkout (const char *section_name,
                                        &data)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
+      goto cleanup;
+    }
+
+  if ((ret = get_sdr_record(state_data,
+                            section_name,
+                            sdr_record,
+                            &sdr_record_len)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (sdr_cache_get_event_reading_type_code (NULL,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
+    goto cleanup;
+      
+  sensor_class = sensor_classify (event_reading_type_code);
+
+  if (sensor_class != SENSOR_CLASS_THRESHOLD)
+    {
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Attempting to checkout threshold event in non-threshold sensor\n");
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
     
@@ -530,8 +561,18 @@ threshold_event_enable_checkout (const char *section_name,
     val = bits->bit9;
   else if (stristr(kv->key->key_name, "Upper_Non_Recoverable_Going_Low")) 
     val = bits->bit10;
-  else /* stristr(kv->key->key_name, "Upper_Non_Recoverable_Going_High")) */
+  else if (stristr(kv->key->key_name, "Upper_Non_Recoverable_Going_High"))
     val = bits->bit11;
+  else
+    {
+      if (state_data->prog_data->args->config_args.verbose)
+        pstdout_printf (state_data->pstate,
+                        "## Unrecognized section:key_name: %s:%s\n",
+                        section_name,
+                        kv->key->key_name);
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
    
   if (config_section_update_keyvalue_output(state_data->pstate,
                                             kv, 
@@ -553,6 +594,7 @@ threshold_event_enable_commit (const char *section_name,
   config_err_t ret;
   
   /* XXX */
+  return CONFIG_ERR_NON_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -806,11 +848,246 @@ generic_event_enable_checkout (const char *section_name,
                                void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  struct sensor_event_enable_data data;
+  struct sensor_event_bits *bits;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  
-  /* XXX */
+  uint8_t event_reading_type_code;
+  int sensor_class;
+  uint8_t val;
 
+  memset(&data, '\0', sizeof(struct sensor_event_enable_data));
+  if ((ret = _get_sensor_event_enable (state_data,
+                                       section_name,
+                                       &data)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+    
+  if ((ret = get_sdr_record(state_data,
+                            section_name,
+                            sdr_record,
+                            &sdr_record_len)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (sdr_cache_get_event_reading_type_code(NULL,
+                                            sdr_record,
+                                            sdr_record_len,
+                                            &event_reading_type_code) < 0)
+    goto cleanup;
+
+  sensor_class = sensor_classify (event_reading_type_code);
+
+  if (sensor_class != SENSOR_CLASS_GENERIC_DISCRETE)
+    {
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Attempting to checkout generic event in non-generic sensor\n");
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (stristr(kv->key->key_name, "Deassertion"))
+    bits = &(data.deassertion);
+  else
+    bits = &(data.assertion);
+
+  switch (event_reading_type_code)
+    {
+      /* achu: I'm sorry.  But these fields have no description in the
+       * IPMI spec, so there is no macro for them.  So I'm hard coding
+       * hex in.  Please see see Table 42-2 in the IPMI spec.
+       */
+      /* 
+       * 0x02
+       */
+    case 0x02:
+      if (stristr(kv->key->key_name, "Transition_to_Idle")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Transition_to_Active")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Transition_to_Busy")) 
+        val = bits->bit2;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * 0x03
+       */
+    case 0x03:
+      if (stristr(kv->key->key_name, "State_Deasserted")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "State_Asserted")) 
+        val = bits->bit1;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * 0x04
+       */
+    case 0x04:
+      if (stristr(kv->key->key_name, "Predictive_Failure_Deasserted")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Predictive_Failure_Asserted")) 
+        val = bits->bit1;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * 0x05
+       */
+    case 0x05:
+      if (stristr(kv->key->key_name, "Limit_Not_Exceeded")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Limit_Exceeded")) 
+        val = bits->bit1;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * 0x06
+       */
+    case 0x06:
+      if (stristr(kv->key->key_name, "Performance_Met")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Performance_Lags")) 
+        val = bits->bit1;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * 0x07
+       */
+    case 0x07:
+      if (stristr(kv->key->key_name, "Transition_to_OK")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Transition_to_Non_Critical_from_OK")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Transition_to_Critical_from_Less_Severe")) 
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Transition_to_Non_Recoverable_from_Less_Severe")) 
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "Transition_to_Non_Critical_from_More_Severe")) 
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "Transition_to_Critical_from_Non_Recoverable")) 
+        val = bits->bit5;
+      else if (stristr(kv->key->key_name, "Transition_to_Non_Recoverable")) 
+        val = bits->bit6;
+      else if (stristr(kv->key->key_name, "Monitor")) 
+        val = bits->bit7;
+      else if (stristr(kv->key->key_name, "Informational")) 
+        val = bits->bit8;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * 0x08
+       */
+    case 0x08:
+      if (stristr(kv->key->key_name, "Device_Removed_or_Device_Absent")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Device_Inserted_or_Device_Present")) 
+        val = bits->bit1;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * 0x09
+       */
+    case 0x09:
+      if (stristr(kv->key->key_name, "Device_Disabled")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Device_Enabled")) 
+        val = bits->bit1;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * 0x0A
+       */
+    case 0x0A:
+      if (stristr(kv->key->key_name, "Transition_to_Running")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Transition_to_In_Test")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Transition_to_Power_Off")) 
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Transition_to_On_Line")) 
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "Transition_to_Off_Line")) 
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "Transition_to_Off_Duty")) 
+        val = bits->bit5;
+      else if (stristr(kv->key->key_name, "Transition_to_Degraded")) 
+        val = bits->bit6;
+      else if (stristr(kv->key->key_name, "Transition_to_Power_Save")) 
+        val = bits->bit7;
+      else if (stristr(kv->key->key_name, "Install_Error")) 
+        val = bits->bit8;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * 0x0B
+       */
+    case 0x0B:
+      if (stristr(kv->key->key_name, "Fully_Redundant")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Redundancy_Lost")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Redundancy_Degraded")) 
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Entered_from_Redundancy_Degraded_or_Fully_Redundant")) 
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "Entered_from_Non_Redundant_Insufficient_Resources")) 
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "Non_Redundant_Insufficient_Resources")) 
+        val = bits->bit5;
+      else if (stristr(kv->key->key_name, "Redundancy_Degraded_from_Fully_Redundant")) 
+        val = bits->bit6;
+      else if (stristr(kv->key->key_name, "Redundancy_Degraded_from_Non_Redundant")) 
+        val = bits->bit7;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * 0x0C
+       */
+    case 0x0C:
+      if (stristr(kv->key->key_name, "D0_Power_State")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "D1_Power_State")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "D2_Power_State")) 
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "D3_Power_State")) 
+        val = bits->bit3;
+      else
+        goto unrecognized_key_name;
+      break;
+    default:
+    unrecognized_key_name:
+      if (state_data->prog_data->args->config_args.verbose)
+        pstdout_printf (state_data->pstate,
+                        "## Unrecognized section:key_name: %s:%s\n",
+                        section_name,
+                        kv->key->key_name);
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            val ? "Yes" : "No") < 0)
+    goto cleanup;
+  
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   return (rv);
@@ -826,6 +1103,7 @@ generic_event_enable_commit (const char *section_name,
   config_err_t ret;
   
   /* XXX */
+  return CONFIG_ERR_NON_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -1491,6 +1769,7 @@ specific_event_enable_checkout (const char *section_name,
   config_err_t ret;
   
   /* XXX */
+  return CONFIG_ERR_NON_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -1507,6 +1786,7 @@ specific_event_enable_commit (const char *section_name,
   config_err_t ret;
   
   /* XXX */
+  return CONFIG_ERR_NON_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -3046,7 +3326,7 @@ setup_sensor_event_enable_fields (ipmi_sensors_config_state_data_t *state_data,
                                            event_reading_type_code) < 0)
             goto cleanup;
         }
-      else
+      else if (sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
         {
           if (_setup_sensor_specific_event_enable (state_data,
                                                    sdr_record,
