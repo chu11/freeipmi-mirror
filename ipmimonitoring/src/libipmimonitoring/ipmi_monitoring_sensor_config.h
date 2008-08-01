@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.h,v 1.8 2008-04-07 20:49:56 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.h,v 1.9 2008-08-01 23:53:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -49,13 +49,14 @@ extern struct ipmi_sensor_config ipmi_system_firmware_progress_config[];
 extern struct ipmi_sensor_config ipmi_event_logging_disabled_config[];
 extern struct ipmi_sensor_config ipmi_system_event_config[];
 extern struct ipmi_sensor_config ipmi_critical_interrupt_config[];
-extern struct ipmi_sensor_config ipmi_cable_interconnect_config[];
 extern struct ipmi_sensor_config ipmi_slot_connector_config[];
 extern struct ipmi_sensor_config ipmi_watchdog2_config[];
 extern struct ipmi_sensor_config ipmi_entity_presence_config[];
 extern struct ipmi_sensor_config ipmi_management_subsystem_health_config[];
 extern struct ipmi_sensor_config ipmi_battery_config[];
 extern struct ipmi_sensor_config ipmi_fru_state_config[];
+extern struct ipmi_sensor_config ipmi_cable_interconnect_config[];
+extern struct ipmi_sensor_config ipmi_boot_error_config[];
 
 int ipmi_monitoring_sensor_config(int *errnum);
 

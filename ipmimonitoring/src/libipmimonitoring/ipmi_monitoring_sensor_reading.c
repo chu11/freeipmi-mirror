@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.25 2008-07-14 02:05:26 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.26 2008-08-01 23:53:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -334,8 +334,6 @@ _get_specific_sensor_state(ipmi_monitoring_ctx_t c,
     config = ipmi_system_event_config;
   else if (sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
     config = ipmi_critical_interrupt_config;
-  else if (sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
-    config = ipmi_cable_interconnect_config;
   else if (sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
     config = ipmi_slot_connector_config;
   else if (sensor_type == IPMI_SENSOR_TYPE_WATCHDOG2)
@@ -348,6 +346,10 @@ _get_specific_sensor_state(ipmi_monitoring_ctx_t c,
     config = ipmi_battery_config;
   else if (sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
     config = ipmi_fru_state_config;
+  else if (sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
+    config = ipmi_cable_interconnect_config;
+  else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
+    config = ipmi_boot_error_config;
   else
     {
       IPMI_MONITORING_DEBUG(("sensor_type '0x%X' not supported", sensor_type));
@@ -910,6 +912,10 @@ _get_specific_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BATTERY;
   else if (sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_FRU_STATE;
+  else if (sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CABLE_INTERCONNECT;
+  else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BOOT_ERROR;
   else
     {
       IPMI_MONITORING_DEBUG(("sensor_type '0x%X' bitmask not supported", sensor_type));
@@ -1019,6 +1025,8 @@ _get_sensor_group(ipmi_monitoring_ctx_t c,
     return IPMI_MONITORING_SENSOR_GROUP_POWER_UNIT;
   else if (sensor_type == IPMI_SENSOR_TYPE_MEMORY)
     return IPMI_MONITORING_SENSOR_GROUP_MEMORY;
+  else if (sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
+    return IPMI_MONITORING_SENSOR_GROUP_DRIVE_SLOT;
   else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
     return IPMI_MONITORING_SENSOR_GROUP_SYSTEM_FIRMWARE_PROGRESS;
   else if (sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED)
@@ -1029,12 +1037,22 @@ _get_sensor_group(ipmi_monitoring_ctx_t c,
     return IPMI_MONITORING_SENSOR_GROUP_CRITICAL_INTERRUPT;
   else if (sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
     return IPMI_MONITORING_SENSOR_GROUP_MODULE_BOARD;
-  else if (sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
-    return IPMI_MONITORING_SENSOR_GROUP_DRIVE_SLOT;
   else if (sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
     return IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR;
   else if (sensor_type == IPMI_SENSOR_TYPE_WATCHDOG2)
     return IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2;
+  else if (sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
+    return IPMI_MONITORING_SENSOR_GROUP_ENTITY_PRESENCE;
+  else if (sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
+    return IPMI_MONITORING_SENSOR_GROUP_MANAGEMENT_SUBSYSTEM_HEALTH;
+  else if (sensor_type == IPMI_SENSOR_TYPE_BATTERY)
+    return IPMI_MONITORING_SENSOR_GROUP_BATTERY;
+  else if (sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
+    return IPMI_MONITORING_SENSOR_GROUP_FRU_STATE;
+  else if (sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
+    return IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT;
+  else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
+    return IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR;
 
   IPMI_MONITORING_DEBUG(("sensor_type '0x%X' not supported", sensor_type));
   return IPMI_MONITORING_SENSOR_GROUP_UNKNOWN;

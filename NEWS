@@ -17,6 +17,7 @@ o Add additional "connection timeout" error message to tools to
   timeout in the middle of a command's operations.
 o Support hysteresis and sensor event configuration in
   ipmi-sensors-config.
+o Support additional sensor monitoring interpretations in ipmimonitoring.
 o Output additional sensor information in ipmi-sensors under very verbose
   mode, such as event enable information.
 o Support --always-prefix option in most tools for easier scripting.

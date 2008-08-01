@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.29 2008-07-14 01:22:41 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.30 2008-08-01 23:53:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -915,6 +915,12 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_FRU_STATE:
           sensor_type_code = IPMI_SENSOR_TYPE_FRU_STATE;
+          break;
+        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_CABLE_INTERCONNECT:
+          sensor_type_code = IPMI_SENSOR_TYPE_CABLE_INTERCONNECT;
+          break;
+        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_BOOT_ERROR:
+          sensor_type_code = IPMI_SENSOR_TYPE_BOOT_ERROR;
           break;
         default:
           c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;

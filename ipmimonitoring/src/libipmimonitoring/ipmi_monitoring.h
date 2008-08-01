@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.24 2008-07-14 01:22:41 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.25 2008-08-01 23:53:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -90,7 +90,9 @@ enum ipmi_monitoring_sensor_group
     IPMI_MONITORING_SENSOR_GROUP_MANAGEMENT_SUBSYSTEM_HEALTH         = 0x13,
     IPMI_MONITORING_SENSOR_GROUP_BATTERY                             = 0x14,
     IPMI_MONITORING_SENSOR_GROUP_FRU_STATE                           = 0x15,
-    IPMI_MONITORING_SENSOR_GROUP_UNKNOWN                             = 0x16,
+    IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT                  = 0x16,
+    IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR                          = 0x17,
+    IPMI_MONITORING_SENSOR_GROUP_UNKNOWN                             = 0x18,
   } ipmi_monitoring_sensor_group_t;
 
 enum ipmi_monitoring_sensor_state
@@ -153,7 +155,9 @@ enum ipmi_monitoring_sensor_bitmask_type
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH         = 0x1A,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_BATTERY                             = 0x1B,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_FRU_STATE                           = 0x1C,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN                             = 0x1D,
+    IPMI_MONITORING_SENSOR_BITMASK_TYPE_CABLE_INTERCONNECT                  = 0x1D,
+    IPMI_MONITORING_SENSOR_BITMASK_TYPE_BOOT_ERROR                          = 0x1E,
+    IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN                             = 0x1F,
   };
 
 enum ipmi_monitoring_driver_type

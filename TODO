@@ -2,15 +2,10 @@ libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
 
-ipmimontiroing/sensors-config
+sensors-config
 -----------------------------
-button/switch type support
 cable/interconnect
-system boot initiated
 boot error
-os boot
-os critical stop
-etc.
 
 solaris
 -------

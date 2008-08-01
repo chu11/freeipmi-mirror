@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.16 2008-06-21 15:09:45 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.17 2008-08-01 23:53:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -242,13 +242,6 @@ struct ipmi_sensor_config ipmi_critical_interrupt_config[] =
     {NULL, -1},
   };
 
-struct ipmi_sensor_config ipmi_cable_interconnect_config[] =
-  {
-    {"IPMI_Cable_Interconnect_Is_Connected", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    {"IPMI_Cable_Interconnect_Incorrect_Cable_Connected_Incorrect_Interconnection", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    {NULL, -1},
-  };
-
 struct ipmi_sensor_config ipmi_slot_connector_config[] =
   {
     {"IPMI_Slot_Connector_Fault_Status_Asserted", IPMI_MONITORING_SENSOR_STATE_CRITICAL}, 
@@ -316,6 +309,23 @@ struct ipmi_sensor_config ipmi_fru_state_config[] =
     {"IPMI_FRU_State_FRU_Deactivation_In_Progress", IPMI_MONITORING_SENSOR_STATE_WARNING},
     {"IPMI_FRU_State_FRU_Communication_Lost", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     {NULL, -1},   
+  };
+
+struct ipmi_sensor_config ipmi_cable_interconnect_config[] =
+  {
+    {"IPMI_Cable_Interconnect_Is_Connected", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Cable_Interconnect_Incorrect_Cable_Connected_Incorrect_Interconnection", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_boot_error_config[] =
+  {
+    {"IPMI_Boot_Error_No_Bootable_Media", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Boot_Error_Non_Bootable_Diskette_Left_In_Drive", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Boot_Error_PXE_Server_Not_Found", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Boot_Error_Invalid_Boot_Sector", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Boot_Error_Timeout_Waiting_For_User_Selection_Of_Boot_Source", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {NULL, -1},
   };
 
 static int _ipmi_monitoring_sensor_config_loaded = 0;
@@ -419,7 +429,6 @@ ipmi_monitoring_sensor_config(int *errnum)
     critical_interrupt_flag3, critical_interrupt_flag4, critical_interrupt_flag5, 
     critical_interrupt_flag6, critical_interrupt_flag7, critical_interrupt_flag8, 
     critical_interrupt_flag9, critical_interrupt_flag10;
-  int cable_interconnect_flag0, cable_interconnect_flag1;
   int slot_connector_flag0, slot_connector_flag1, slot_connector_flag2, 
     slot_connector_flag3, slot_connector_flag4, slot_connector_flag5, 
     slot_connector_flag6, slot_connector_flag7, slot_connector_flag8, 
@@ -434,6 +443,9 @@ ipmi_monitoring_sensor_config(int *errnum)
   int battery_flag0, battery_flag1, battery_flag2;
   int fru_state_flag0, fru_state_flag1, fru_state_flag2, fru_state_flag3,
     fru_state_flag4, fru_state_flag5, fru_state_flag6, fru_state_flag7;
+  int cable_interconnect_flag0, cable_interconnect_flag1;
+  int boot_error_flag0, boot_error_flag1, boot_error_flag2,
+    boot_error_flag3, boot_error_flag4;
   conffile_t cf = NULL;
   int num;
   int rv = -1;
@@ -1682,31 +1694,6 @@ ipmi_monitoring_sensor_config(int *errnum)
         0
       },
       /* 
-       * IPMI_Cable_Interconnect
-       */
-      {
-        ipmi_cable_interconnect_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &cable_interconnect_flag0,
-        ipmi_cable_interconnect_config,
-        0
-      },
-      {
-        ipmi_cable_interconnect_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &cable_interconnect_flag1,
-        ipmi_cable_interconnect_config,
-        0
-      },
-      /* 
        * IPMI_Slot_Connector
        */
       {
@@ -2151,6 +2138,89 @@ ipmi_monitoring_sensor_config(int *errnum)
         0,
         &fru_state_flag7,
         ipmi_fru_state_config,
+        0
+      },
+      /* 
+       * IPMI_Cable_Interconnect
+       */
+      {
+        ipmi_cable_interconnect_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &cable_interconnect_flag0,
+        ipmi_cable_interconnect_config,
+        0
+      },
+      {
+        ipmi_cable_interconnect_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &cable_interconnect_flag1,
+        ipmi_cable_interconnect_config,
+        0
+      },
+      /* 
+       * IPMI_Boot_Error
+       */
+      {
+        ipmi_boot_error_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &boot_error_flag0,
+        ipmi_boot_error_config,
+        0
+      },
+      {
+        ipmi_boot_error_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &boot_error_flag1,
+        ipmi_boot_error_config,
+        0
+      },
+      {
+        ipmi_boot_error_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &boot_error_flag2,
+        ipmi_boot_error_config,
+        0
+      },
+      {
+        ipmi_boot_error_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &boot_error_flag3,
+        ipmi_boot_error_config,
+        0
+      },
+      {
+        ipmi_boot_error_config[4].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &boot_error_flag4,
+        ipmi_boot_error_config,
         0
       },
     };

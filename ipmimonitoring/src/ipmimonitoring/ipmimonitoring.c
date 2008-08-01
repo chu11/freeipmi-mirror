@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.60 2008-07-14 16:41:58 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.61 2008-08-01 23:53:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -98,6 +98,8 @@ _list_groups(ipmimonitoring_state_data_t *state_data)
   pstdout_printf (state_data->pstate, "%s\n", "management_subsystem_health");
   pstdout_printf (state_data->pstate, "%s\n", "battery");
   pstdout_printf (state_data->pstate, "%s\n", "fru_state");
+  pstdout_printf (state_data->pstate, "%s\n", "cable_interconnect");
+  pstdout_printf (state_data->pstate, "%s\n", "boot_error");
 
   return 0;
 }
@@ -380,6 +382,10 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
         sensor_group_str = "Battery";
       else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_FRU_STATE)
         sensor_group_str = "FRU State";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT)
+        sensor_group_str = "Cable Interconnect";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR)
+        sensor_group_str = "Boot Error";
       else 
         sensor_group_str = "N/A";
 
@@ -744,6 +750,10 @@ _grab_ipmimonitoring_options(struct ipmimonitoring_arguments *cmd_args)
         n = IPMI_MONITORING_SENSOR_GROUP_BATTERY;
       else if (!strcasecmp(cmd_args->groups[i], "fru_state"))
         n = IPMI_MONITORING_SENSOR_GROUP_FRU_STATE;
+      else if (!strcasecmp(cmd_args->groups[i], "cable_interconnect"))
+        n = IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT;
+      else if (!strcasecmp(cmd_args->groups[i], "boot_error"))
+        n = IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR;
       else
         {
           fprintf(stderr, "invalid sensor group '%s'\n", cmd_args->groups[i]);
