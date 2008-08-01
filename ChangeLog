@@ -1,6 +1,6 @@
 2008-08-01 Albert Chu <chu11@llnl.gov>
 
-	* ipmi-sensors-config/src/: Continue sensor specific event support.
+	* ipmi-sensors-config/src/: Complete sensor event enable/disable support.
 	
 2008-07-31 Albert Chu <chu11@llnl.gov>
 

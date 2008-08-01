@@ -64,9 +64,6 @@ pef-config
 ipmi-sensors-config
 -------------------
 * conf.5 manpage
-35.10/35.11
-- sensor enable/disable??
-- sensor event enable/disable??
 
 libs
 ----

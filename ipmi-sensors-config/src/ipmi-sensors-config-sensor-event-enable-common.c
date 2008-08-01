@@ -555,8 +555,8 @@ _set_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
                                         event_message_action,
                                         data->scanning_on_this_sensor,
                                         data->all_event_messages,
-                                        0,
-                                        0,
+                                        data->assertion_bits,
+                                        data->assertion_bits,
                                         obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -621,6 +621,10 @@ sensor_event_enable_enable_all_event_messages_commit (const char *section_name,
       goto cleanup;
     }
   
+  /* clear bits just in case, we're not setting anything here */
+  data.assertion_bits = 0;
+  data.deassertion_bits = 0;
+
   data.all_event_messages = same (kv->value_input, "yes");
   
   if ((ret = _set_sensor_event_enable (state_data,
@@ -683,6 +687,10 @@ sensor_event_enable_enable_scanning_on_this_sensor_commit (const char *section_n
       goto cleanup;
     }
   
+  /* clear bits just in case, we're not setting anything here */
+  data.assertion_bits = 0;
+  data.deassertion_bits = 0;
+
   data.scanning_on_this_sensor = same (kv->value_input, "yes");
   
   if ((ret = _set_sensor_event_enable (state_data,
@@ -697,6 +705,43 @@ sensor_event_enable_enable_scanning_on_this_sensor_commit (const char *section_n
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   return (rv);
+}
+
+int
+_setup_event_enable_key (ipmi_sensors_config_state_data_t *state_data,
+                         struct config_section *section,
+                         const char *key_name,
+                         uint8_t event_supported,
+                         Key_Checkout checkout_func,
+                         Key_Commit commit_func)
+{
+  unsigned int flags = 0;
+
+  assert(state_data);
+  assert(section);
+  assert(key_name);
+
+  if (event_supported
+      || state_data->prog_data->args->config_args.verbose)
+    {
+      if (!event_supported)
+        flags |= CONFIG_UNDEFINED;
+
+      if (config_section_add_key (state_data->pstate,
+                                  section,
+                                  key_name,
+                                  "Possible values: Yes/No",
+                                  flags,
+                                  checkout_func,
+                                  commit_func,
+                                  config_yes_no_validate) < 0)
+        goto cleanup;
+    }
+
+  return 0;
+
+ cleanup:
+  return -1;
 }
 
 static config_err_t
@@ -748,7 +793,7 @@ _threshold_event_enable_verify (ipmi_sensors_config_state_data_t *state_data,
 static config_err_t
 _threshold_event_enable_get_data (ipmi_sensors_config_state_data_t *state_data,
                                   const char *section_name,
-                                  struct config_keyvalue *kv,
+                                  const struct config_keyvalue *kv,
                                   struct sensor_event_enable_data *data,
                                   uint16_t *bits,
                                   uint8_t *bitposition)
@@ -852,50 +897,57 @@ threshold_event_enable_commit (const char *section_name,
                                void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  struct sensor_event_enable_data data;
+  uint16_t bits = 0;
+  uint8_t bitposition = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  
-  /* XXX */
-  return CONFIG_ERR_NON_FATAL_ERROR;
+  uint8_t event_message_action;
+
+  if ((ret = _threshold_event_enable_verify (state_data, 
+                                             section_name)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if ((ret = _threshold_event_enable_get_data (state_data,
+                                               section_name,
+                                               kv,
+                                               &data,
+                                               &bits,
+                                               &bitposition)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  /* due to set sensor event enable mechanics, we need to clear the bits */
+  data.assertion_bits = 0;
+  data.deassertion_bits = 0;
+
+  if (stristr(kv->key->key_name, "Deassertion"))
+    data.deassertion_bits = (0x1 << bitposition);
+  else
+    data.assertion_bits = (0x1 << bitposition);
+
+  if (same (kv->value_input, "yes"))
+    event_message_action = IPMI_SENSOR_EVENT_MESSAGE_ACTION_ENABLE_SELECTED_EVENT_MESSAGES;
+  else
+    event_message_action = IPMI_SENSOR_EVENT_MESSAGE_ACTION_DISABLE_SELECTED_EVENT_MESSAGES;
+
+  if ((ret = _set_sensor_event_enable (state_data,
+                                       section_name,
+                                       &data,
+                                       event_message_action)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   return (rv);
-}
-
-int
-_setup_threshold_event_enable_key (ipmi_sensors_config_state_data_t *state_data,
-                                   struct config_section *section,
-                                   const char *key_name,
-                                   uint8_t event_supported)
-{
-  unsigned int flags = 0;
-
-  assert(state_data);
-  assert(section);
-  assert(key_name);
-
-  if (event_supported
-      || state_data->prog_data->args->config_args.verbose)
-    {
-      if (!event_supported)
-        flags |= CONFIG_UNDEFINED;
-
-      if (config_section_add_key (state_data->pstate,
-                                  section,
-                                  key_name,
-                                  "Possible values: Yes/No",
-                                  flags,
-                                  threshold_event_enable_checkout,
-                                  threshold_event_enable_commit,
-                                  config_yes_no_validate) < 0)
-        goto cleanup;
-    }
-
-  return 0;
-
- cleanup:
-  return -1;
 }
 
 static int
@@ -970,10 +1022,12 @@ _setup_threshold_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_d
                type_str,
                threshold_event_strings[i]);
 
-      if (_setup_threshold_event_enable_key (state_data,
-                                             section,
-                                             key_name,
-                                             ((bitmask >> i) & 0x1)) < 0)
+      if (_setup_event_enable_key (state_data,
+                                   section,
+                                   key_name,
+                                   ((bitmask >> i) & 0x1),
+                                   threshold_event_enable_checkout,
+                                   threshold_event_enable_commit) < 0)
         goto cleanup;
 
       i++;
@@ -1041,7 +1095,6 @@ _get_event_state_bitmask (ipmi_sensors_config_state_data_t *state_data,
   uint8_t event_state_13 = 0;
   uint8_t event_state_14 = 0;
   int rv = -1;
-  int i;
 
   assert(state_data);
   assert(sdr_record);
@@ -1184,7 +1237,7 @@ _generic_event_enable_get_event_strings (ipmi_sensors_config_state_data_t *state
 static config_err_t
 _generic_event_enable_get_data (ipmi_sensors_config_state_data_t *state_data,
                                 const char *section_name,
-                                struct config_keyvalue *kv,
+                                const struct config_keyvalue *kv,
                                 uint8_t event_reading_type_code,
                                 struct sensor_event_enable_data *data,
                                 uint16_t *bits,
@@ -1305,50 +1358,60 @@ generic_event_enable_commit (const char *section_name,
                              void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  struct sensor_event_enable_data data;
+  uint16_t bits = 0;
+  uint8_t bitposition = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint8_t event_reading_type_code;
+  uint8_t event_message_action;
+
+  if ((ret = _generic_event_enable_verify (state_data, 
+                                           section_name,
+                                           &event_reading_type_code)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
   
-  /* XXX */
-  return CONFIG_ERR_NON_FATAL_ERROR;
+  if ((ret = _generic_event_enable_get_data (state_data,
+                                             section_name,
+                                             kv,
+                                             event_reading_type_code,
+                                             &data,
+                                             &bits,
+                                             &bitposition)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  /* due to set sensor event enable mechanics, we need to clear the bits */
+  data.assertion_bits = 0;
+  data.deassertion_bits = 0;
+
+  if (stristr(kv->key->key_name, "Deassertion"))
+    data.deassertion_bits = (0x1 << bitposition);
+  else
+    data.assertion_bits = (0x1 << bitposition);
+
+  if (same (kv->value_input, "yes"))
+    event_message_action = IPMI_SENSOR_EVENT_MESSAGE_ACTION_ENABLE_SELECTED_EVENT_MESSAGES;
+  else
+    event_message_action = IPMI_SENSOR_EVENT_MESSAGE_ACTION_DISABLE_SELECTED_EVENT_MESSAGES;
+
+  if ((ret = _set_sensor_event_enable (state_data,
+                                       section_name,
+                                       &data,
+                                       event_message_action)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   return (rv);
-}
-
-int
-_setup_generic_event_enable_key (ipmi_sensors_config_state_data_t *state_data,
-                                 struct config_section *section,
-                                 const char *key_name,
-                                 uint8_t event_supported)
-{
-  unsigned int flags = 0;
-
-  assert(state_data);
-  assert(section);
-  assert(key_name);
-
-  if (event_supported
-      || state_data->prog_data->args->config_args.verbose)
-    {
-      if (!event_supported)
-        flags |= CONFIG_UNDEFINED;
-
-      if (config_section_add_key (state_data->pstate,
-                                  section,
-                                  key_name,
-                                  "Possible values: Yes/No",
-                                  flags,
-                                  generic_event_enable_checkout,
-                                  generic_event_enable_commit,
-                                  config_yes_no_validate) < 0)
-        goto cleanup;
-    }
-
-  return 0;
-
- cleanup:
-  return -1;
 }
 
 static int
@@ -1401,10 +1464,12 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                type_str,
                event_strings[i]);
       
-      if (_setup_generic_event_enable_key (state_data,
-                                           section,
-                                           key_name,
-                                           ((bitmask >> i) & 0x1)) < 0)
+      if (_setup_event_enable_key (state_data,
+                                   section,
+                                   key_name,
+                                   ((bitmask >> i) & 0x1),
+                                   generic_event_enable_checkout,
+                                   generic_event_enable_commit) < 0)
         goto cleanup;
       
       i++;
@@ -1559,7 +1624,7 @@ _sensor_specific_event_enable_get_event_strings (ipmi_sensors_config_state_data_
 static config_err_t
 _sensor_specific_event_enable_get_data (ipmi_sensors_config_state_data_t *state_data,
                                         const char *section_name,
-                                        struct config_keyvalue *kv,
+                                        const struct config_keyvalue *kv,
                                         uint8_t sensor_type,
                                         struct sensor_event_enable_data *data,
                                         uint16_t *bits,
@@ -1699,50 +1764,60 @@ sensor_specific_event_enable_commit (const char *section_name,
                                      void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  struct sensor_event_enable_data data;
+  uint16_t bits = 0;
+  uint8_t bitposition = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint8_t sensor_type;
+  uint8_t event_message_action;
+
+  if ((ret = _sensor_specific_event_enable_verify (state_data, 
+                                                   section_name,
+                                                   &sensor_type)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
   
-  /* XXX */
-  return CONFIG_ERR_NON_FATAL_ERROR;
+  if ((ret = _sensor_specific_event_enable_get_data (state_data,
+                                                     section_name,
+                                                     kv,
+                                                     sensor_type,
+                                                     &data,
+                                                     &bits,
+                                                     &bitposition)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  /* due to set sensor event enable mechanics, we need to clear the bits */
+  data.assertion_bits = 0;
+  data.deassertion_bits = 0;
+
+  if (stristr(kv->key->key_name, "Deassertion"))
+    data.deassertion_bits = (0x1 << bitposition);
+  else
+    data.assertion_bits = (0x1 << bitposition);
+
+  if (same (kv->value_input, "yes"))
+    event_message_action = IPMI_SENSOR_EVENT_MESSAGE_ACTION_ENABLE_SELECTED_EVENT_MESSAGES;
+  else
+    event_message_action = IPMI_SENSOR_EVENT_MESSAGE_ACTION_DISABLE_SELECTED_EVENT_MESSAGES;
+
+  if ((ret = _set_sensor_event_enable (state_data,
+                                       section_name,
+                                       &data,
+                                       event_message_action)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   return (rv);
-}
-
-int
-_setup_sensor_specific_event_enable_key (ipmi_sensors_config_state_data_t *state_data,
-                                         struct config_section *section,
-                                         const char *key_name,
-                                         uint8_t event_supported)
-{
-  unsigned int flags = 0;
-
-  assert(state_data);
-  assert(section);
-  assert(key_name);
-
-  if (event_supported
-      || state_data->prog_data->args->config_args.verbose)
-    {
-      if (!event_supported)
-        flags |= CONFIG_UNDEFINED;
-
-      if (config_section_add_key (state_data->pstate,
-                                  section,
-                                  key_name,
-                                  "Possible values: Yes/No",
-                                  flags,
-                                  sensor_specific_event_enable_checkout,
-                                  sensor_specific_event_enable_commit,
-                                  config_yes_no_validate) < 0)
-        goto cleanup;
-    }
-
-  return 0;
-
- cleanup:
-  return -1;
 }
 
 static int
@@ -1804,10 +1879,13 @@ _setup_sensor_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *s
                    "Enable_%s_Event_%s", 
                    type_str,
                    event_strings[sensor_specific_event_strings_watchdog2_indexes[i]]);
-          if (_setup_threshold_event_enable_key (state_data,
-                                                 section,
-                                                 key_name,
-                                                 ((bitmask >> sensor_specific_event_strings_watchdog2_indexes[i]) & 0x1)) < 0)
+
+          if (_setup_event_enable_key (state_data,
+                                       section,
+                                       key_name,
+                                       ((bitmask >> sensor_specific_event_strings_watchdog2_indexes[i]) & 0x1),
+                                       sensor_specific_event_enable_checkout,
+                                       sensor_specific_event_enable_commit) < 0)
             goto cleanup;
 
           i++;
@@ -1824,10 +1902,12 @@ _setup_sensor_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *s
                    type_str,
                    event_strings[i]);
           
-          if (_setup_sensor_specific_event_enable_key (state_data,
-                                                       section,
-                                                       key_name,
-                                                       ((bitmask >> i) & 0x1)) < 0)
+          if (_setup_event_enable_key (state_data,
+                                       section,
+                                       key_name,
+                                       ((bitmask >> i) & 0x1),
+                                       sensor_specific_event_enable_checkout,
+                                       sensor_specific_event_enable_commit) < 0)
             goto cleanup;
           
           i++;
