@@ -1765,12 +1765,444 @@ specific_event_enable_checkout (const char *section_name,
                                 void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  struct sensor_event_enable_data data;
+  struct sensor_event_bits *bits;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  
-  /* XXX */
-  return CONFIG_ERR_NON_FATAL_ERROR;
+  uint8_t event_reading_type_code;
+  uint8_t sensor_type;
+  int sensor_class;
+  uint8_t val;
 
+  memset(&data, '\0', sizeof(struct sensor_event_enable_data));
+  if ((ret = _get_sensor_event_enable (state_data,
+                                       section_name,
+                                       &data)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+    
+  if ((ret = get_sdr_record(state_data,
+                            section_name,
+                            sdr_record,
+                            &sdr_record_len)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (sdr_cache_get_event_reading_type_code(NULL,
+                                            sdr_record,
+                                            sdr_record_len,
+                                            &event_reading_type_code) < 0)
+    goto cleanup;
+
+  sensor_class = sensor_classify (event_reading_type_code);
+
+  if (sensor_class != SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
+    {
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Attempting to checkout specific event in non-specific sensor\n");
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (sdr_cache_get_sensor_type(NULL,
+                                sdr_record,
+                                sdr_record_len,
+                                &sensor_type) < 0)
+    goto cleanup;
+
+  if (stristr(kv->key->key_name, "Deassertion"))
+    bits = &(data.deassertion);
+  else
+    bits = &(data.assertion);
+
+  switch (sensor_type)
+    {
+      /* 
+       * PHYSICAL SECURITY CHASSIS INTRUSION
+       */
+    case IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION:
+      if (stristr(kv->key->key_name, "General_Chassis_Intrusion")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Drive_Bay_Intrusion")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "IO_Card_Area_Intrusion")) 
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Processor_Area_Intrusion")) 
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "LAN_Leash_Lost")) 
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "Unauthorized_Dock")) 
+        val = bits->bit5;
+      else if (stristr(kv->key->key_name, "FAN_Area_Intrusion")) 
+        val = bits->bit6;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * PLATFORM SECURITY VIOLATION ATTEMPT
+       */
+    case IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT:
+      if (stristr(kv->key->key_name, "Secure_Mode_Violation_Attempt")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Pre_Boot_Password_Violation_User_Password")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Pre_Boot_Password_Violation_Attempt_Setup_Password")) 
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Pre_Boot_Password_Violation_Network_Boot_Password")) 
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "Other_Pre_Boot_Password_Violation")) 
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "Out_of_Band_Access_Password_Violation")) 
+        val = bits->bit5;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * PROCESSOR
+       */
+    case IPMI_SENSOR_TYPE_PROCESSOR:
+      if (stristr(kv->key->key_name, "IERR")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Thermal_Trip")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "FRB1_BIST_failure")) 
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "FRB2_Hang_in_POST_Failure")) 
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "FRB3_Processor_Startup_Initialization_Failure")) 
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "Configuration_Error")) 
+        val = bits->bit5;
+      else if (stristr(kv->key->key_name, "SM_BIOS_Uncorrectable_CPU_Complex_Error")) 
+        val = bits->bit6;
+      else if (stristr(kv->key->key_name, "Processor_Presence_detected")) 
+        val = bits->bit7;
+      else if (stristr(kv->key->key_name, "Processor_Disabled")) 
+        val = bits->bit8;
+      else if (stristr(kv->key->key_name, "Terminator_Presence_Detected")) 
+        val = bits->bit9;
+      else if (stristr(kv->key->key_name, "Processor_Automatically_Throttled")) 
+        val = bits->bit10;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * POWER SUPPLY
+       */
+    case IPMI_SENSOR_TYPE_POWER_SUPPLY:
+      if (stristr(kv->key->key_name, "Presence_Detected")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Power_Supply_Failure_Detected")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Predictive_Failure")) 
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Power_Supply_Input_Lost_AC_DC")) 
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "Power_Supply_Input_Lost_or_Out_of_Range")) 
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "Power_Supply_Input_Out_of_Range_but_Present")) 
+        val = bits->bit5;
+      else if (stristr(kv->key->key_name, "Configuration_Error")) 
+        val = bits->bit6;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * POWER UNIT
+       */
+    case IPMI_SENSOR_TYPE_POWER_UNIT:
+      if (stristr(kv->key->key_name, "Power_Off_or_Power_Down")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Power_Cycle")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "240VA_Power_Down")) 
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Interlock_Power_Down")) 
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "AC_Lost")) 
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "Soft_Power_Control_Failure")) 
+        val = bits->bit5;
+      else if (stristr(kv->key->key_name, "Power_Unit_Failure_Detected")) 
+        val = bits->bit6;
+      else if (stristr(kv->key->key_name, "Predictive_Failure")) 
+        val = bits->bit7;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * MEMORY
+       */
+    case IPMI_SENSOR_TYPE_MEMORY:
+      if (stristr(kv->key->key_name, "Correctable_ECC")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Uncorrectable_ECC")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Parity")) 
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Memory_Scrub_Failed")) 
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "Memory_Device_Disabled")) 
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "Correctable_ECC_Logging_Limit_Reached")) 
+        val = bits->bit5;
+      else if (stristr(kv->key->key_name, "Presence_Detected")) 
+        val = bits->bit6;
+      else if (stristr(kv->key->key_name, "Configuration_Error")) 
+        val = bits->bit7;
+      else if (stristr(kv->key->key_name, "Spare")) 
+        val = bits->bit8;
+      else if (stristr(kv->key->key_name, "Memory_Automatically_Throttled")) 
+        val = bits->bit9;
+      else if (stristr(kv->key->key_name, "Critical_Overtemperature")) 
+        val = bits->bit10;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * DRIVE SLOT
+       */
+    case IPMI_SENSOR_TYPE_DRIVE_SLOT:
+      if (stristr(kv->key->key_name, "Drive_Presence")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Drive_Fault")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Predictive_Failure")) 
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Hot_Spare")) 
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "Consistency_Check_In_Progress")) 
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "In_Critical_Array")) 
+        val = bits->bit5;
+      else if (stristr(kv->key->key_name, "In_Failed_Array")) 
+        val = bits->bit6;
+      else if (stristr(kv->key->key_name, "Rebuild_or_Remap_In_Progress")) 
+        val = bits->bit7;
+      else if (stristr(kv->key->key_name, "Rebuild_or_Remap_Aborted")) 
+        val = bits->bit8;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * SYSTEM FIRMWARE PROGRESS
+       */
+    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS:
+      if (stristr(kv->key->key_name, "System_Firmware_Error")) 
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "System_Firmware_Hang")) 
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "System_Firmware_Progress")) 
+        val = bits->bit2;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * EVENT LOGGING DISABLED
+       */
+    case IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED:
+      if (stristr(kv->key->key_name, "Correctable_Memory_Error_Logging_Disabled"))
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Event_Type_Logging_Disabled"))
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Log_Area_Reset_or_Cleared"))
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "All_Event_Logging_Disabled"))
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "SEL_Full"))
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "SEL_Almost_Full"))
+        val = bits->bit5;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * SYSTEM EVENT
+       */
+    case IPMI_SENSOR_TYPE_SYSTEM_EVENT:
+      if (stristr(kv->key->key_name, "System_Reconfigured"))
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "OEM_System_Boot_Event"))
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Undetermined_System_Hardware_Failure"))
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Entry_Added_to_Auxiliary_Log"))
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "PEF_Action"))
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "Timestamp_Clock_Synch"))
+        val = bits->bit5;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * CRITICAL INTERRUPT
+       */
+    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT:
+      if (stristr(kv->key->key_name, "Front_Panel_NMI_or_Diagnostic_Interrupt"))
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Bus_Timeout"))
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "IO_Channel_Check_NMI"))
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Software_NMI"))
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "PCI_PERR"))
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "PCI_SERR"))
+        val = bits->bit5;
+      else if (stristr(kv->key->key_name, "EISA_Fail_Safe_Timeout"))
+        val = bits->bit6;
+      else if (stristr(kv->key->key_name, "Bus_Correctable_Error"))
+        val = bits->bit7;
+      else if (stristr(kv->key->key_name, "Bus_Uncorrectable_Error"))
+        val = bits->bit8;
+      else if (stristr(kv->key->key_name, "Fatal_NMI"))
+        val = bits->bit9;
+      else if (stristr(kv->key->key_name, "Bus_Fatal_Error"))
+        val = bits->bit10;
+      else if (stristr(kv->key->key_name, "Bus_Degraded"))
+        val = bits->bit11;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * SLOT CONNECTOR
+       */
+    case IPMI_SENSOR_TYPE_SLOT_CONNECTOR:
+      if (stristr(kv->key->key_name, "Fault_Status_Asserted"))
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Identify_Status_Asserted"))
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Slot_Connector_Device_Installed_or_Attached"))
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Slot_Connector_Ready_for_Device_Installation"))
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "Slot_Connector_Ready_for_Device_Removal"))
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "Slot_Power_is_Off"))
+        val = bits->bit5;
+      else if (stristr(kv->key->key_name, "Slot_Connector_Device_Removal_Request"))
+        val = bits->bit6;
+      else if (stristr(kv->key->key_name, "Interlock_Asserted"))
+        val = bits->bit7;
+      else if (stristr(kv->key->key_name, "Slot_is_Disabled"))
+        val = bits->bit8;
+      else if (stristr(kv->key->key_name, "Slot_Holds_Spare_Device"))
+        val = bits->bit9;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * WATCHDOG2
+       */
+    case IPMI_SENSOR_TYPE_WATCHDOG2:
+      if (stristr(kv->key->key_name, "Timer_Expired"))
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Hard_Reset"))
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Power_Down"))
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Power_Cycle"))
+        val = bits->bit3;
+      /* event state 4-7 are "reserved" and useless */
+      else if (stristr(kv->key->key_name, "Timer_Interrupt"))
+        val = bits->bit8;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * ENTITY PRESENCE
+       */
+    case IPMI_SENSOR_TYPE_ENTITY_PRESENCE:
+      if (stristr(kv->key->key_name, "Entity_Present"))
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Entity_Absent"))
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Entity_Disabled"))
+        val = bits->bit2;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * MANAGEMENT SUBSYSTEM HEALTH
+       */
+    case IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH:
+      if (stristr(kv->key->key_name, "Sensor_Access_Degraded_or_Unavailable"))
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Controller_Access_Degraded_or_Unavailable"))
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Management_Controller_Off_Line"))
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "Management_Controller_Unavailable"))
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "Sensor_Failure"))
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "FRU_Failure"))
+        val = bits->bit5;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * BATTERY
+       */
+    case IPMI_SENSOR_TYPE_BATTERY:
+      if (stristr(kv->key->key_name, "Battery_Low"))
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "Battery_Failed"))
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "Battery_Presence_Detected"))
+        val = bits->bit2;
+      else
+        goto unrecognized_key_name;
+      break;
+      /* 
+       * FRU STATE
+       */
+    case IPMI_SENSOR_TYPE_FRU_STATE:
+      if (stristr(kv->key->key_name, "FRU_Not_Installed"))
+        val = bits->bit0;
+      else if (stristr(kv->key->key_name, "FRU_Inactive"))
+        val = bits->bit1;
+      else if (stristr(kv->key->key_name, "FRU_Activation_Requested"))
+        val = bits->bit2;
+      else if (stristr(kv->key->key_name, "FRU_Activation_In_Progress"))
+        val = bits->bit3;
+      else if (stristr(kv->key->key_name, "FRU_Active"))
+        val = bits->bit4;
+      else if (stristr(kv->key->key_name, "FRU_Deactivation_Requested"))
+        val = bits->bit5;
+      else if (stristr(kv->key->key_name, "FRU_Deactivation_In_Progress"))
+        val = bits->bit6;
+      else if (stristr(kv->key->key_name, "FRU_Communication_Lost"))
+        val = bits->bit7;
+      else
+        goto unrecognized_key_name;
+      break;
+    default:
+    unrecognized_key_name:
+      if (state_data->prog_data->args->config_args.verbose)
+        pstdout_printf (state_data->pstate,
+                        "## Unrecognized section:key_name: %s:%s\n",
+                        section_name,
+                        kv->key->key_name);
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv, 
+                                            val ? "Yes" : "No") < 0)
+    goto cleanup;
+  
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   return (rv);
