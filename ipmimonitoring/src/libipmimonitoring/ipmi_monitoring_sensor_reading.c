@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.16.2.3 2008-06-03 21:28:38 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.16.2.4 2008-08-01 23:40:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -950,6 +950,14 @@ _get_sensor_group(ipmi_monitoring_ctx_t c,
     return IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR;
   else if (sensor_type == IPMI_SENSOR_TYPE_WATCHDOG2)
     return IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2;
+  else if (sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
+    return IPMI_MONITORING_SENSOR_GROUP_ENTITY_PRESENCE;
+  else if (sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
+    return IPMI_MONITORING_SENSOR_GROUP_MANAGEMENT_SUBSYSTEM_HEALTH;
+  else if (sensor_type == IPMI_SENSOR_TYPE_BATTERY)
+    return IPMI_MONITORING_SENSOR_GROUP_BATTERY;
+  else if (sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
+    return IPMI_MONITORING_SENSOR_GROUP_FRU_STATE;
 
   IPMI_MONITORING_DEBUG(("sensor_type '0x%X' not supported", sensor_type));
   return IPMI_MONITORING_SENSOR_GROUP_UNKNOWN;

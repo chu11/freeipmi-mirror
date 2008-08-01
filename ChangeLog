@@ -1,3 +1,8 @@
+2008-08-01 Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(_get_sensor_group): Add forgotten groups.
+	
 2008-07-15 Albert Chu <chu11@llnl.gov>
 
 	* common/src/config-checkout.c (config_checkout_section): Fix
