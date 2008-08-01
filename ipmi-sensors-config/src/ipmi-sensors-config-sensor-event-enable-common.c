@@ -1018,6 +1018,79 @@ _setup_threshold_event_enable (ipmi_sensors_config_state_data_t *state_data,
   return rv;
 }
 
+static int
+_get_event_state_bitmask (ipmi_sensors_config_state_data_t *state_data,
+                          uint8_t *sdr_record,
+                          unsigned int sdr_record_len,
+                          Sdr_event_flags_func sdr_call,
+                          uint16_t *bitmask)
+{
+  uint8_t event_state_0 = 0;
+  uint8_t event_state_1 = 0;
+  uint8_t event_state_2 = 0;
+  uint8_t event_state_3 = 0;
+  uint8_t event_state_4 = 0;
+  uint8_t event_state_5 = 0;
+  uint8_t event_state_6 = 0;
+  uint8_t event_state_7 = 0;
+  uint8_t event_state_8 = 0;
+  uint8_t event_state_9 = 0;
+  uint8_t event_state_10 = 0;
+  uint8_t event_state_11 = 0;
+  uint8_t event_state_12 = 0;
+  uint8_t event_state_13 = 0;
+  uint8_t event_state_14 = 0;
+  int rv = -1;
+  int i;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+  assert(sdr_call);
+  assert(bitmask);
+
+  if (((*sdr_call)(state_data->pstate,
+                   sdr_record,
+                   sdr_record_len,
+                   &event_state_0,
+                   &event_state_1,
+                   &event_state_2,
+                   &event_state_3,
+                   &event_state_4,
+                   &event_state_5,
+                   &event_state_6,
+                   &event_state_7,
+                   &event_state_8,
+                   &event_state_9,
+                   &event_state_10,
+                   &event_state_11,
+                   &event_state_12,
+                   &event_state_13,
+                   &event_state_14)) < 0)
+    goto cleanup;
+  
+  (*bitmask) = 0;
+  (*bitmask) |= (event_state_0 & 0x1);
+  (*bitmask) |= ((event_state_1 & 0x1) << 1);
+  (*bitmask) |= ((event_state_2 & 0x1) << 2);
+  (*bitmask) |= ((event_state_3 & 0x1) << 3);
+  (*bitmask) |= ((event_state_4 & 0x1) << 4);
+  (*bitmask) |= ((event_state_5 & 0x1) << 5);
+  (*bitmask) |= ((event_state_6 & 0x1) << 6);
+  (*bitmask) |= ((event_state_7 & 0x1) << 7);
+  (*bitmask) |= ((event_state_8 & 0x1) << 8);
+  (*bitmask) |= ((event_state_9 & 0x1) << 9);
+  (*bitmask) |= ((event_state_10 & 0x1) << 10);
+  (*bitmask) |= ((event_state_11 & 0x1) << 11);
+  (*bitmask) |= ((event_state_12 & 0x1) << 12);
+  (*bitmask) |= ((event_state_13 & 0x1) << 13);
+  (*bitmask) |= ((event_state_14 & 0x1) << 14);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
 static config_err_t
 _generic_event_enable_verify (ipmi_sensors_config_state_data_t *state_data,
                               const char *section_name,
@@ -1068,6 +1141,46 @@ _generic_event_enable_verify (ipmi_sensors_config_state_data_t *state_data,
   return (rv);
 }
                                
+static char **
+_generic_event_enable_get_event_strings (ipmi_sensors_config_state_data_t *state_data,
+                                         uint8_t event_reading_type_code)
+{
+  assert(state_data);
+
+  /* achu: I'm sorry.  But these fields have no description in the
+   * IPMI spec, so there is no macro for them.  So I'm hard coding
+   * hex in.  Please see see Table 42-2 in the IPMI spec.
+   */
+
+  switch (event_reading_type_code)
+    {
+    case 0x02:
+      return &generic_event_strings_0x02[0];
+    case 0x03:
+      return &generic_event_strings_0x03[0];
+    case 0x04:
+      return &generic_event_strings_0x04[0];
+    case 0x05:
+      return &generic_event_strings_0x05[0];
+    case 0x06:
+      return &generic_event_strings_0x06[0];
+    case 0x07:
+      return &generic_event_strings_0x07[0];
+    case 0x08:
+      return &generic_event_strings_0x08[0];
+    case 0x09:
+      return &generic_event_strings_0x09[0];
+    case 0x0A:
+      return &generic_event_strings_0x0A[0];
+    case 0x0B:
+      return &generic_event_strings_0x0B[0];
+    case 0x0C:
+      return &generic_event_strings_0x0C[0];
+    }
+
+  return NULL;
+}
+                                         
 static config_err_t
 _generic_event_enable_get_data (ipmi_sensors_config_state_data_t *state_data,
                                 const char *section_name,
@@ -1103,47 +1216,10 @@ _generic_event_enable_get_data (ipmi_sensors_config_state_data_t *state_data,
   else
     (*bits) = data->assertion_bits;
 
-  /* achu: I'm sorry.  But these fields have no description in the
-   * IPMI spec, so there is no macro for them.  So I'm hard coding
-   * hex in.  Please see see Table 42-2 in the IPMI spec.
-   */
-
-  switch (event_reading_type_code)
+  event_strings = _generic_event_enable_get_event_strings (state_data,
+                                                           event_reading_type_code);
+  if (!event_strings)
     {
-    case 0x02:
-      event_strings = &generic_event_strings_0x02[0];
-      break;
-    case 0x03:
-      event_strings = &generic_event_strings_0x03[0];
-      break;
-    case 0x04:
-      event_strings = &generic_event_strings_0x04[0];
-      break;
-    case 0x05:
-      event_strings = &generic_event_strings_0x05[0];
-      break;
-    case 0x06:
-      event_strings = &generic_event_strings_0x06[0];
-      break;
-    case 0x07:
-      event_strings = &generic_event_strings_0x07[0];
-      break;
-    case 0x08:
-      event_strings = &generic_event_strings_0x08[0];
-      break;
-    case 0x09:
-      event_strings = &generic_event_strings_0x09[0];
-      break;
-    case 0x0A:
-      event_strings = &generic_event_strings_0x0A[0];
-      break;
-    case 0x0B:
-      event_strings = &generic_event_strings_0x0B[0];
-      break;
-    case 0x0C:
-      event_strings = &generic_event_strings_0x0C[0];
-      break;
-    default:
       if (state_data->prog_data->args->config_args.verbose)
         pstdout_printf (state_data->pstate,
                         "## Unable to handle event flags for event reading type code 0x%X\n",
@@ -1284,21 +1360,6 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                                      Sdr_event_flags_func sdr_call,
                                      uint8_t event_reading_type_code)
 {
-  uint8_t event_state_0 = 0;
-  uint8_t event_state_1 = 0;
-  uint8_t event_state_2 = 0;
-  uint8_t event_state_3 = 0;
-  uint8_t event_state_4 = 0;
-  uint8_t event_state_5 = 0;
-  uint8_t event_state_6 = 0;
-  uint8_t event_state_7 = 0;
-  uint8_t event_state_8 = 0;
-  uint8_t event_state_9 = 0;
-  uint8_t event_state_10 = 0;
-  uint8_t event_state_11 = 0;
-  uint8_t event_state_12 = 0;
-  uint8_t event_state_13 = 0;
-  uint8_t event_state_14 = 0;
   char key_name[KEY_NAME_MAX_LEN];
   char **event_strings = NULL;
   uint16_t bitmask = 0;
@@ -1312,79 +1373,17 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
   assert(type_str);
   assert(sdr_call);
 
-  if (((*sdr_call)(state_data->pstate,
-                   sdr_record,
-                   sdr_record_len,
-                   &event_state_0,
-                   &event_state_1,
-                   &event_state_2,
-                   &event_state_3,
-                   &event_state_4,
-                   &event_state_5,
-                   &event_state_6,
-                   &event_state_7,
-                   &event_state_8,
-                   &event_state_9,
-                   &event_state_10,
-                   &event_state_11,
-                   &event_state_12,
-                   &event_state_13,
-                   &event_state_14)) < 0)
+  if (_get_event_state_bitmask (state_data,
+                                sdr_record,
+                                sdr_record_len,
+                                sdr_call,
+                                &bitmask) < 0)
     goto cleanup;
   
-  /* create bitmask to make things easier */
-  bitmask |= (event_state_0 & 0x1);
-  bitmask |= ((event_state_1 & 0x1) << 1);
-  bitmask |= ((event_state_2 & 0x1) << 2);
-  bitmask |= ((event_state_3 & 0x1) << 3);
-  bitmask |= ((event_state_4 & 0x1) << 4);
-  bitmask |= ((event_state_5 & 0x1) << 5);
-  bitmask |= ((event_state_6 & 0x1) << 6);
-  bitmask |= ((event_state_7 & 0x1) << 7);
-  bitmask |= ((event_state_8 & 0x1) << 8);
-  bitmask |= ((event_state_9 & 0x1) << 9);
-  bitmask |= ((event_state_10 & 0x1) << 10);
-  bitmask |= ((event_state_11 & 0x1) << 11);
-  bitmask |= ((event_state_12 & 0x1) << 12);
-  bitmask |= ((event_state_13 & 0x1) << 13);
-  bitmask |= ((event_state_14 & 0x1) << 14);
-  
-  switch (event_reading_type_code)
+  event_strings = _generic_event_enable_get_event_strings (state_data,
+                                                           event_reading_type_code);
+  if (!event_strings)
     {
-    case 0x02:
-      event_strings = &generic_event_strings_0x02[0];
-      break;
-    case 0x03:
-      event_strings = &generic_event_strings_0x03[0];
-      break;
-    case 0x04:
-      event_strings = &generic_event_strings_0x04[0];
-      break;
-    case 0x05:
-      event_strings = &generic_event_strings_0x05[0];
-      break;
-    case 0x06:
-      event_strings = &generic_event_strings_0x06[0];
-      break;
-    case 0x07:
-      event_strings = &generic_event_strings_0x07[0];
-      break;
-    case 0x08:
-      event_strings = &generic_event_strings_0x08[0];
-      break;
-    case 0x09:
-      event_strings = &generic_event_strings_0x09[0];
-      break;
-    case 0x0A:
-      event_strings = &generic_event_strings_0x0A[0];
-      break;
-    case 0x0B:
-      event_strings = &generic_event_strings_0x0B[0];
-      break;
-    case 0x0C:
-      event_strings = &generic_event_strings_0x0C[0];
-      break;
-    default:
       if (state_data->prog_data->args->config_args.verbose)
         pstdout_printf (state_data->pstate,
                         "## Unable to handle event flags for event reading type code 0x%X\n",
@@ -1509,7 +1508,54 @@ _sensor_specific_event_enable_verify (ipmi_sensors_config_state_data_t *state_da
  cleanup:
   return (rv);
 }
-                               
+                
+static char **               
+_sensor_specific_event_enable_get_event_strings (ipmi_sensors_config_state_data_t *state_data,
+                                                 uint8_t sensor_type)
+{
+  assert(state_data);
+
+  switch (sensor_type)
+    {
+    case IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION:
+      return &sensor_specific_event_strings_physical_security_chassis_intrusion[0];
+    case IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT:
+      return &sensor_specific_event_strings_platform_security_violation_attempt[0];
+    case IPMI_SENSOR_TYPE_PROCESSOR:
+      return &sensor_specific_event_strings_processor[0];
+    case IPMI_SENSOR_TYPE_POWER_SUPPLY:
+      return &sensor_specific_event_strings_power_supply[0];
+    case IPMI_SENSOR_TYPE_POWER_UNIT:
+      return &sensor_specific_event_strings_power_unit[0];
+    case IPMI_SENSOR_TYPE_MEMORY:
+      return &sensor_specific_event_strings_memory[0];
+    case IPMI_SENSOR_TYPE_DRIVE_SLOT:
+      return &sensor_specific_event_strings_drive_slot[0];
+    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS:
+      return &sensor_specific_event_strings_system_firmware_progress[0];
+    case IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED:
+      return &sensor_specific_event_strings_event_logging_disabled[0];
+    case IPMI_SENSOR_TYPE_SYSTEM_EVENT:
+      return &sensor_specific_event_strings_system_event[0];
+    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT:
+      return &sensor_specific_event_strings_critical_interrupt[0];
+    case IPMI_SENSOR_TYPE_SLOT_CONNECTOR:
+      return &sensor_specific_event_strings_slot_connector[0];
+    case IPMI_SENSOR_TYPE_WATCHDOG2:
+      return &sensor_specific_event_strings_watchdog2[0];
+    case IPMI_SENSOR_TYPE_ENTITY_PRESENCE:
+      return &sensor_specific_event_strings_entity_presence[0];
+    case IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH:
+      return &sensor_specific_event_strings_management_subsystem_health[0];
+    case IPMI_SENSOR_TYPE_BATTERY:
+      return &sensor_specific_event_strings_battery[0];
+    case IPMI_SENSOR_TYPE_FRU_STATE:
+      return &sensor_specific_event_strings_fru_state[0];
+    }
+
+  return NULL;
+}
+
 static config_err_t
 _sensor_specific_event_enable_get_data (ipmi_sensors_config_state_data_t *state_data,
                                         const char *section_name,
@@ -1545,60 +1591,10 @@ _sensor_specific_event_enable_get_data (ipmi_sensors_config_state_data_t *state_
   else
     (*bits) = data->assertion_bits;
 
-  switch (sensor_type)
+  event_strings = _sensor_specific_event_enable_get_event_strings (state_data,
+                                                                   sensor_type);
+  if (!event_strings)
     {
-    case IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION:
-      event_strings = &sensor_specific_event_strings_physical_security_chassis_intrusion[0];
-      break;
-    case IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT:
-      event_strings = &sensor_specific_event_strings_platform_security_violation_attempt[0];
-      break;
-    case IPMI_SENSOR_TYPE_PROCESSOR:
-      event_strings = &sensor_specific_event_strings_processor[0];
-      break;
-    case IPMI_SENSOR_TYPE_POWER_SUPPLY:
-      event_strings = &sensor_specific_event_strings_power_supply[0];
-      break;
-    case IPMI_SENSOR_TYPE_POWER_UNIT:
-      event_strings = &sensor_specific_event_strings_power_unit[0];
-      break;
-    case IPMI_SENSOR_TYPE_MEMORY:
-      event_strings = &sensor_specific_event_strings_memory[0];
-      break;
-    case IPMI_SENSOR_TYPE_DRIVE_SLOT:
-      event_strings = &sensor_specific_event_strings_drive_slot[0];
-      break;
-    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS:
-      event_strings = &sensor_specific_event_strings_system_firmware_progress[0];
-      break;
-    case IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED:
-      event_strings = &sensor_specific_event_strings_event_logging_disabled[0];
-      break;
-    case IPMI_SENSOR_TYPE_SYSTEM_EVENT:
-      event_strings = &sensor_specific_event_strings_system_event[0];
-      break;
-    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT:
-      event_strings = &sensor_specific_event_strings_critical_interrupt[0];
-      break;
-    case IPMI_SENSOR_TYPE_SLOT_CONNECTOR:
-      event_strings = &sensor_specific_event_strings_slot_connector[0];
-      break;
-    case IPMI_SENSOR_TYPE_WATCHDOG2:
-      event_strings = &sensor_specific_event_strings_watchdog2[0];
-      break;
-    case IPMI_SENSOR_TYPE_ENTITY_PRESENCE:
-      event_strings = &sensor_specific_event_strings_entity_presence[0];
-      break;
-    case IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH:
-      event_strings = &sensor_specific_event_strings_management_subsystem_health[0];
-      break;
-    case IPMI_SENSOR_TYPE_BATTERY:
-      event_strings = &sensor_specific_event_strings_battery[0];
-      break;
-    case IPMI_SENSOR_TYPE_FRU_STATE:
-      event_strings = &sensor_specific_event_strings_fru_state[0];
-      break;
-    default:
       if (state_data->prog_data->args->config_args.verbose)
         pstdout_printf (state_data->pstate,
                         "## Unable to handle event flags for sensor type 0x%X\n",
@@ -1757,21 +1753,6 @@ _setup_sensor_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *s
                                              const char *type_str,
                                              Sdr_event_flags_func sdr_call)
 {
-  uint8_t event_state_0 = 0;
-  uint8_t event_state_1 = 0;
-  uint8_t event_state_2 = 0;
-  uint8_t event_state_3 = 0;
-  uint8_t event_state_4 = 0;
-  uint8_t event_state_5 = 0;
-  uint8_t event_state_6 = 0;
-  uint8_t event_state_7 = 0;
-  uint8_t event_state_8 = 0;
-  uint8_t event_state_9 = 0;
-  uint8_t event_state_10 = 0;
-  uint8_t event_state_11 = 0;
-  uint8_t event_state_12 = 0;
-  uint8_t event_state_13 = 0;
-  uint8_t event_state_14 = 0;
   char key_name[KEY_NAME_MAX_LEN];
   char **event_strings = NULL;
   uint16_t bitmask = 0;
@@ -1786,42 +1767,12 @@ _setup_sensor_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *s
   assert(type_str);
   assert(sdr_call);
 
-  if (((*sdr_call)(state_data->pstate,
-                   sdr_record,
-                   sdr_record_len,
-                   &event_state_0,
-                   &event_state_1,
-                   &event_state_2,
-                   &event_state_3,
-                   &event_state_4,
-                   &event_state_5,
-                   &event_state_6,
-                   &event_state_7,
-                   &event_state_8,
-                   &event_state_9,
-                   &event_state_10,
-                   &event_state_11,
-                   &event_state_12,
-                   &event_state_13,
-                   &event_state_14)) < 0)
+  if (_get_event_state_bitmask (state_data,
+                                sdr_record,
+                                sdr_record_len,
+                                sdr_call,
+                                &bitmask) < 0)
     goto cleanup;
-
-  /* create bitmask to make things easier */
-  bitmask |= (event_state_0 & 0x1);
-  bitmask |= ((event_state_1 & 0x1) << 1);
-  bitmask |= ((event_state_2 & 0x1) << 2);
-  bitmask |= ((event_state_3 & 0x1) << 3);
-  bitmask |= ((event_state_4 & 0x1) << 4);
-  bitmask |= ((event_state_5 & 0x1) << 5);
-  bitmask |= ((event_state_6 & 0x1) << 6);
-  bitmask |= ((event_state_7 & 0x1) << 7);
-  bitmask |= ((event_state_8 & 0x1) << 8);
-  bitmask |= ((event_state_9 & 0x1) << 9);
-  bitmask |= ((event_state_10 & 0x1) << 10);
-  bitmask |= ((event_state_11 & 0x1) << 11);
-  bitmask |= ((event_state_12 & 0x1) << 12);
-  bitmask |= ((event_state_13 & 0x1) << 13);
-  bitmask |= ((event_state_14 & 0x1) << 14);
 
   if (sdr_cache_get_sensor_type (state_data->pstate,
                                  sdr_record,
@@ -1829,64 +1780,16 @@ _setup_sensor_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *s
                                  &sensor_type) < 0)
     goto cleanup;
   
-  switch (sensor_type)
+  event_strings = _sensor_specific_event_enable_get_event_strings (state_data,
+                                                                   sensor_type);
+  if (!event_strings)
     {
-    case IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION:
-      event_strings = &sensor_specific_event_strings_physical_security_chassis_intrusion[0];
-      break;
-    case IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT:
-      event_strings = &sensor_specific_event_strings_platform_security_violation_attempt[0];
-      break;
-    case IPMI_SENSOR_TYPE_PROCESSOR:
-      event_strings = &sensor_specific_event_strings_processor[0];
-      break;
-    case IPMI_SENSOR_TYPE_POWER_SUPPLY:
-      event_strings = &sensor_specific_event_strings_power_supply[0];
-      break;
-    case IPMI_SENSOR_TYPE_POWER_UNIT:
-      event_strings = &sensor_specific_event_strings_power_unit[0];
-      break;
-    case IPMI_SENSOR_TYPE_MEMORY:
-      event_strings = &sensor_specific_event_strings_memory[0];
-      break;
-    case IPMI_SENSOR_TYPE_DRIVE_SLOT:
-      event_strings = &sensor_specific_event_strings_drive_slot[0];
-      break;
-    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS:
-      event_strings = &sensor_specific_event_strings_system_firmware_progress[0];
-      break;
-    case IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED:
-      event_strings = &sensor_specific_event_strings_event_logging_disabled[0];
-      break;
-    case IPMI_SENSOR_TYPE_SYSTEM_EVENT:
-      event_strings = &sensor_specific_event_strings_system_event[0];
-      break;
-    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT:
-      event_strings = &sensor_specific_event_strings_critical_interrupt[0];
-      break;
-    case IPMI_SENSOR_TYPE_SLOT_CONNECTOR:
-      event_strings = &sensor_specific_event_strings_slot_connector[0];
-      break;
-    case IPMI_SENSOR_TYPE_WATCHDOG2:
-      event_strings = &sensor_specific_event_strings_watchdog2[0];
-      break;
-    case IPMI_SENSOR_TYPE_ENTITY_PRESENCE:
-      event_strings = &sensor_specific_event_strings_entity_presence[0];
-      break;
-    case IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH:
-      event_strings = &sensor_specific_event_strings_management_subsystem_health[0];
-      break;
-    case IPMI_SENSOR_TYPE_BATTERY:
-      event_strings = &sensor_specific_event_strings_battery[0];
-      break;
-    case IPMI_SENSOR_TYPE_FRU_STATE:
-      event_strings = &sensor_specific_event_strings_fru_state[0];
-      break;
-    default:
       if (state_data->prog_data->args->config_args.verbose)
         pstdout_printf (state_data->pstate,
                         "## Unable to handle event flags for sensor type 0x%X\n",
                         sensor_type);
+      rv = 0;
+      goto cleanup;
     }
 
   i = 0;
