@@ -4,6 +4,9 @@
 
 	* ipmimonitoring/: Support cable interconnect and boot error
 	interpretations.
+
+	* ipmi-sensors-config/src/: Support cable interconnect and boot
+	error config.
 	
 2008-07-31 Albert Chu <chu11@llnl.gov>
 

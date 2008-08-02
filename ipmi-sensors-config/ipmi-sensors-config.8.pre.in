@@ -106,6 +106,11 @@ Show all difference between the current configuration and the sensor-data2.conf 
 Commit all configuration values from the sensor-data1.conf file.
 .PP
 #include <@top_srcdir@/common/man/manpage-common-known-issues.man>
+.LP
+Event enable support has not been written for all sensors types.  If
+additional sensor interpretation rules are needed, please contact the
+FreeIPMI maintainers.
+
 #include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2008 FreeIPMI Core Team.  

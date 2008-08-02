@@ -193,7 +193,7 @@ char *sensor_specific_event_strings_processor[] =
     "IERR", 
     "Thermal_Trip", 
     "FRB1_BIST_failure", 
-    "FRB2_Hang_in_POST_Failure", 
+    "FRB2_Hang_In_POST_Failure", 
     "FRB3_Processor_Startup_Initialization_Failure", 
     "Configuration_Error", 
     "SM_BIOS_Uncorrectable_CPU_Complex_Error", 
@@ -306,17 +306,34 @@ char *sensor_specific_event_strings_critical_interrupt[] =
     NULL,
   };
 
+char *sensor_specific_event_strings_cable_interconnect[] = 
+  {
+    "Cable_Interconnect_Is_Connected",
+    "Configuration_Error_Incorrect_Cable_Connected_or_Incorrect_Interconnection",
+    NULL,
+  };
+
+char *sensor_specific_event_strings_boot_error[] =
+  {
+    "No_Bootable_Media",
+    "Non_Bootable_Diskette_Left_In_Drive",
+    "PXE_Server_Not_Found",
+    "Invalid_Boot_Sector",
+    "Timeout_Waiting_For_User_Selection_Of_Boot_Source",
+    NULL,
+  };
+
 char *sensor_specific_event_strings_slot_connector[] =
   {
     "Fault_Status_Asserted",
     "Identify_Status_Asserted",
     "Slot_Connector_Device_Installed_or_Attached",
-    "Slot_Connector_Ready_for_Device_Installation",
-    "Slot_Connector_Ready_for_Device_Removal",
-    "Slot_Power_is_Off",
+    "Slot_Connector_Ready_For_Device_Installation",
+    "Slot_Connector_Ready_For_Device_Removal",
+    "Slot_Power_Is_Off",
     "Slot_Connector_Device_Removal_Request",
     "Interlock_Asserted",
-    "Slot_is_Disabled",
+    "Slot_Is_Disabled",
     "Slot_Holds_Spare_Device",
     NULL,
   };
@@ -1604,6 +1621,10 @@ _sensor_specific_event_enable_get_event_strings (ipmi_sensors_config_state_data_
       return &sensor_specific_event_strings_system_event[0];
     case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT:
       return &sensor_specific_event_strings_critical_interrupt[0];
+    case IPMI_SENSOR_TYPE_CABLE_INTERCONNECT:
+      return &sensor_specific_event_strings_cable_interconnect[0];
+    case IPMI_SENSOR_TYPE_BOOT_ERROR:
+      return &sensor_specific_event_strings_boot_error[0];
     case IPMI_SENSOR_TYPE_SLOT_CONNECTOR:
       return &sensor_specific_event_strings_slot_connector[0];
     case IPMI_SENSOR_TYPE_WATCHDOG2:
