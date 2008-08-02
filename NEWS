@@ -1,4 +1,4 @@
-0.6.5 - XX/XX/XX
+0.6.5 - 08/02/08
 ----------------
 o Fix ipmimonitoring group assignment bug.
 o Fix several invalid error outputs.
