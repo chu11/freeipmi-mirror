@@ -1,7 +1,8 @@
 0.7.1 - 00/00/00
 ----------------
-For Users - New Significant Features
-------------------------------------
+
+Tools - New Significant Additions/Features
+------------------------------------------
 o Add new tool bmc-device to support advanced BMC commands including
   cold reset, warm reset, setting BMC times, and more.
 o Support FreeIPMI configuration file for most tools (bmc-config,
@@ -11,9 +12,9 @@ o Support FreeIPMI configuration file for most tools (bmc-config,
   typing common options on the command line.  See
   freeipmi.conf(5) for more information.
 o Add hostrange support in bmc-config, ipmi-sensors-config, and
-  pef-config.
+  pef-config to support parallel configuration on a cluster.
 o Add additional "connection timeout" error message to tools to
-  differentiate between no IPMI communication at all vs. failed session
+  differentiate between no IPMI communication at all vs. session
   timeout in the middle of a command's operations.
 o Support hysteresis and sensor event configuration in
   ipmi-sensors-config.
@@ -26,8 +27,8 @@ o Support --sdr-cache-recreate in all SDR related tools for easier
 o Support --guid option in bmc-info to retrieve global ID.
 o Support build on Solaris.
 
-For Users - Enhancements/Changes/Bug Fixes
-------------------------------------------
+Tools - Enhancements/Changes/Bug Fixes
+--------------------------------------
 o Global in most tools
   - Rename --no-probing option to --disable-auto-probe for consistency
     in FreeIPMI.  Backwards compatability maintained.
@@ -114,8 +115,8 @@ o ipmimonitoring
 o bmc-watchdog
   - Remove legacy 'v' option for version.
 
-For Developers
---------------
+Libraries
+---------
 o libfreeipmi
   - Add additional IPMI commands.
   - Support new "connection timeout" error message.
