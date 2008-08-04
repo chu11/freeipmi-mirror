@@ -19,8 +19,9 @@ device support, and global IDs.
 .PP
 .B Bmc-config
 .PP
-A tool to configure usernames, passwords, networking information,
-security, and other relevant IPMI configuration fields.
+A tool to configure general BMC and IPMI information.  Supports
+configuration of usernames, passwords, networking information,
+security, Serial-over-LAN (SOL), and other core fields.
 .PP
 .B Bmc-watchdog
 .PP
@@ -74,11 +75,12 @@ mapped into Nominal, Warning, and Critical states.
 .PP
 .B Pef-config
 .PP
-A tool to configure IPMI Platform Event Filtering (PEF) configuration.
+A tool to configure Platform Event Filtering (PEF) information.
 .PP
 .B Ipmi-sensors-config
 .PP
-A tool to configure IPMI Sensors.
+A tool to configure IPMI sensors.  Supports configuration of sensor
+thresholds, sensor events, and other sensor related fields.
 .PP
 .B Bmc-device
 .PP

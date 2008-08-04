@@ -6,9 +6,11 @@ bmc-config \- configure BMC values
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Bmc-config
-is used to get and set BMC configuration parameters, such as the IP
-Address, Username, and Password.  This configuration is required before
-most IPMI tools can be used to access a machine remotely.
+is used to get and set BMC configuration parameters, such as
+usernames, passwords, networking information, security,
+Serial-over-LAN (SOL), and other core IPMI fields.  This configuration
+is required before most IPMI tools can be used to access a machine
+remotely.
 
 The majority of
 configuration operations require ADMIN privilege when using

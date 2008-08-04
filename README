@@ -23,8 +23,9 @@ device support, and global IDs.
 
 Bmc-config
 
-A tool to configure usernames, passwords, networking information,
-security, and other relevant IPMI configuration fields.
+A tool to configure general BMC and IPMI information.  Supports
+configuration of usernames, passwords, networking information,
+security, Serial-over-LAN (SOL), and other core fields.
 
 Bmc-watchdog
 
@@ -78,11 +79,12 @@ mapped into Nominal, Warning, and Critical states.
 
 Pef-config
 
-A tool to configure IPMI Platform Event Filtering (PEF) configuration.
+A tool to configure Platform Event Filtering (PEF) information.
 
 Ipmi-sensors-config
 
-A tool to configure IPMI Sensors.
+A tool to configure IPMI sensors.  Supports configuration of sensor
+thresholds, sensor events, and other sensor related fields.
 
 Bmc-device
 
