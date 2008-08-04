@@ -15,9 +15,10 @@ Show differences between stored information and a config file or key pairs.
 Specify a config file for checkout/commit/diff.
 .TP
 \fB\-e\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
-Specify KEY=VALUE pairs for checkout/commit/diff.  This option can be
-used multiple times.  On commit, any KEY=VALUE pairs will overwrite
-any pairs specified in a file with \fB\-\-filename\fR.
+Specify KEY=VALUE pairs for checkout/commit/diff.  Specify KEY by
+SectionName:FieldName.  This option can be used multiple times.  On
+commit, any KEY=VALUE pairs will overwrite any pairs specified in a
+file with \fB\-\-filename\fR.
 .TP
 \fB\-S\fR "SECTION", \fB\-\-section=\fR"SECTION"
 Specify a SECTION for checkout.  This option can be used multiple times.
