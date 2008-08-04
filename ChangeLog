@@ -12,6 +12,11 @@
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.h,
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.c: New files.
 
+	* bmc-config/src/: Remove default checkout of
+	"Power_Restore_Policy".
+
+	* ipmi-chassis/: Hide legacy chassis configuration commands.
+
 	* configure.ac, Makefile.am, freeipmi.spec.in: Update as needed
 	for new files.
 	
