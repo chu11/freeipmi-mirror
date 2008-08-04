@@ -48,7 +48,7 @@ const char *argp_program_bug_address =
   "<" PACKAGE_BUGREPORT ">";
 
 static char cmdline_doc[] = 
-  "ipmi-chassis-config - configure chassis fields;
+  "ipmi-chassis-config - configure chassis fields";
 
 static char cmdline_args_doc[] = "";
 
