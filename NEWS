@@ -4,7 +4,7 @@
 Tools - New Significant Additions/Features
 ------------------------------------------
 o Add new tool ipmi-chassis-config for chassis configuration, such as
-  boot device selection.
+  boot device and power restore policy configuration.
 o Add new tool bmc-device to support advanced BMC commands including
   cold reset, warm reset, setting BMC times, and more.
 o Support FreeIPMI configuration file for most tools (bmc-config,
