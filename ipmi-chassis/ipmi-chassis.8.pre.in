@@ -8,8 +8,11 @@ ipmi-chassis \- IPMI chassis management utility
 .B Ipmi-chassis
 is used for managing/monitoring an IPMI chassis, such as chassis
 power, indentification, and status.  See OPTIONS below for all chassis
-management options
-available.
+management options available.
+
+To perform IPMI chassis configuration, please see
+.B ipmi-chassis-config(8).
+
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
@@ -172,5 +175,5 @@ Power on a remote machine using IPMI over LAN.
 Copyright \(co 2007-2008 FreeIPMI Core Team
 #include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8)
+freeipmi(7), bmc-config(8), ipmi-chassis-config(8)
 #include <@top_srcdir@/common/man/manpage-common-homepage.man>

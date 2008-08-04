@@ -1,3 +1,14 @@
+2008-XX-XX Albert Chu <chu11@llnl.gov>
+
+	Merge contents from chassis_config_branch.
+	
+	* bmc-config/bmc-config.8.pre.in, pef-config/pef-config.8.pre.in,
+	ipmi-sensors-config/ipmi-sensors-config.8.pre.in,
+	ipmi-chassis/ipmi-chassis.8.pre.in, README, NEWS,
+	mans/freeipmi.7.pre.in, doc/freeipmi-faq.texi,
+	doc/freeipmi-coding.txt, doc/freeipmi-hostrange.txt: Update
+	appropriate with documentation updates.
+	
 2008-08-01 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/src/: Complete sensor event enable/disable support.

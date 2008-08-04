@@ -20,6 +20,7 @@ Currently, the tools that can be configured with the configuration file are:
 .B bmc-info(8),
 .B bmc-watchdog(8),
 .B ipmi-chassis(8),
+.B ipmi-chassis-config(8),
 .B ipmi-fru(8),
 .B ipmi-oem(8),
 .B ipmi-raw(8),

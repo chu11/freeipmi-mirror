@@ -19,6 +19,7 @@ ok vs. non-ok for threshold sensors
 
 ipmi-chassis-config
 -------------------
+* conf.5 manpage
 power cycle interval
 chassis boot params
 - new chassis config tool?
@@ -86,6 +87,11 @@ BSD
 - gethostbyname_r - still compiles
 - autoconf - no argp-standalone - config errors w/ argp library not found. argp-standalone required
 - autoconf - finds argp-standalone
+
+0.7.0 web
+---------
+add ipmi-chassis-config manpage
+add ipmi-chassis-config text on index
 
 RELEASE TODOS - Do on every release
 -----------------------------------

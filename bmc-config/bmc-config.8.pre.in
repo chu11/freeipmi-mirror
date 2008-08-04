@@ -17,11 +17,12 @@ out-of-band.  Although connecting via a user with ADMIN privileges is
 not required for out-of-band use, the vast majority of configuration
 options will not be retrieved or set.
 
-For configuration of platform event filtering (PEF) or sensors, please
-see the 
-.B pef-config(8)
-and 
-.B ipmi-sensors-config(8)
+For configuration of platform event filtering (PEF), sensors, or
+chassis, please see the
+.B pef-config(8),
+.B ipmi-sensors-config(8),
+or
+.B ipmi-chassis-config(8)
 tools respectively.
 
 .LP
@@ -112,5 +113,6 @@ Commit all configuration values from bmc-data-updt.conf and key 'lan_conf_misc:g
 Copyright \(co 2003-2008 FreeIPMI Core Team.  
 #include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-bmc-config.conf(5), freeipmi(7), pef-config(8), ipmi-sensors-config(8)
+bmc-config.conf(5), freeipmi(7), pef-config(8),
+ipmi-sensors-config(8), ipmi-chassis-config(8)
 #include <@top_srcdir@/common/man/manpage-common-homepage.man>
