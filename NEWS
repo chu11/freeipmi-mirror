@@ -34,11 +34,11 @@ o Global in most tools
     in FreeIPMI.  Backwards compatability maintained.
 o Global in config tools (bmc-config, pef-config, ipmi-sensors-config)
   - More carefully check for fatal vs. non-fatal errors when
-    configuring.  This change may result in slight behavior
-    differences.  For example, a session-timeout may have previously
-    been considered a non-fatal error, making the config tools
-    continue on attempting more configuration activities.  Now, it
-    would error out on the first session-timeout indication.
+    performing configuration.  This change may result in slight
+    behavior differences.  For example, a session-timeout may have
+    previously been considered a non-fatal error, making the config
+    tools continue on attempting more configuration activities.  Now,
+    it would error out on the first session-timeout indication.
 o bmc-config
   - By default, do not output unsupported authentication type enables
     when checking out the Lan_Conf_Auth section.  Output unsupported
