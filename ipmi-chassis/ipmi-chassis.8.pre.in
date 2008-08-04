@@ -118,7 +118,7 @@ Set console redirection type. Supported values: DEFAULT,
 SUPPRESS, ENABLE. Used with the
 \fB\-\-set\-boot\-flags\fR option.
 .TP
-\fB\-\-user\-password\-bypass\fR=\fIUSER_PASSWORD_BYPASSfR]
+\fB\-\-user\-password\-bypass\fR=\fIUSER_PASSWORD_BYPASS\fR]
 Modify user password bypass support.  When enabled, the managed
 client's BIOS boots the systema nd bypasses any user or boot password
 that might be set in teh system.  This option allows a system
