@@ -9,6 +9,10 @@
 	doc/freeipmi-coding.txt, doc/freeipmi-hostrange.txt: Update
 	appropriate with documentation updates.
 	
+2008-08-02 Albert Chu <chu11@llnl.gov>
+
+	* Various documentation and manpage updates.
+
 2008-08-01 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/src/: Complete sensor event enable/disable support.

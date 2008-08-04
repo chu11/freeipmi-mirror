@@ -549,8 +549,8 @@ provided by the checking of these values provides more than the
 negative implications.  Changes in the overall industry implementation
 could change this viewpoint later.
 
-9) Config tool callback design
-------------------------------
+9) Configuration tool callback design
+-------------------------------------
 
 Bmc-config, Pef-config, Ipmi-sensors-config, and Ipmi-chassis-config
 (henceforce together just called Bmc-config) are coded with a

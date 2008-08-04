@@ -2,10 +2,9 @@ libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
 
-sensors-config
+ipmi-sensors-config
 -----------------------------
-cable/interconnect
-boot error
+* conf.5 manpage
 
 solaris
 -------
