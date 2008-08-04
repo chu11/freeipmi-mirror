@@ -87,11 +87,6 @@ BSD
 - autoconf - no argp-standalone - config errors w/ argp library not found. argp-standalone required
 - autoconf - finds argp-standalone
 
-0.7.0 web
----------
-update index w/ bmc-config, ipmi-sensors-config, and pef-config description.
-reorder index
-
 RELEASE TODOS - Do on every release
 -----------------------------------
 Email freeipmi-users && freeipmi-devel
