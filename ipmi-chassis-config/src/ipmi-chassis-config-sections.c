@@ -16,11 +16,32 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _IPMI_SENSORS_CONFIG_ARGP_H
-#define _IPMI_SENSORS_CONFIG_ARGP_H
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif /* HAVE_CONFIG_H */
 
-#include "ipmi-sensors-config.h"
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+#include <assert.h>
 
-void ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_config_arguments *cmd_args);
+#include "ipmi-chassis-config.h"
+#include "ipmi-chassis-config-sections.h"
 
-#endif
+#include "freeipmi-portability.h"
+#include "pstdout.h"
+
+struct config_section *
+ipmi_chassis_config_sections_create (ipmi_chassis_config_state_data_t *state_data)
+{
+  struct config_section *sections = NULL;
+
+  return sections;
+
+ cleanup:
+  config_sections_destroy(state_data->pstate, sections);
+  return NULL;
+}

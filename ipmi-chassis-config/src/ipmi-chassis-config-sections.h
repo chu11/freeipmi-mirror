@@ -16,11 +16,11 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _IPMI_SENSORS_CONFIG_ARGP_H
-#define _IPMI_SENSORS_CONFIG_ARGP_H
+#ifndef _IPMI_CHASSIS_CONFIG_SECTIONS
+#define _IPMI_CHASSIS_CONFIG_SECTIONS
 
-#include "ipmi-sensors-config.h"
+#include "ipmi-chassis-config.h"
 
-void ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_config_arguments *cmd_args);
+struct config_section *ipmi_chassis_config_sections_create (ipmi_chassis_config_state_data_t *state_data);
 
-#endif
+#endif /* _IPMI_CHASSIS_CONFIG_SECTIONS */

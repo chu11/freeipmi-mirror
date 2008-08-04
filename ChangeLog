@@ -1,6 +1,19 @@
 2008-XX-XX Albert Chu <chu11@llnl.gov>
 
 	Merge contents from chassis_config_branch.
+
+	* ipmi-chassis-config/Makefile.am,
+	ipmi-chassis-config/ipmi-chassis-config.8.pre.in,
+	ipmi-chassis-config/src/Makefile.am,
+	ipmi-chassis-config/src/ipmi-chassis-config.h,
+	ipmi-chassis-config/src/ipmi-chassis-config.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-argp.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-argp.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-sections.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-sections.c: New files.
+
+	* configure.ac, Makefile.am, freeipmi.spec.in: Update as needed
+	for new files.
 	
 	* bmc-config/bmc-config.8.pre.in, pef-config/pef-config.8.pre.in,
 	ipmi-sensors-config/ipmi-sensors-config.8.pre.in,
