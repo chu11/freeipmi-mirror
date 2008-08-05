@@ -12,6 +12,17 @@
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.h,
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.c: New files.
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h,
+	libfreeipmi/src/cmds/ipmi-chassis-cmds.c
+	(fill_set_front_panel_enables,
+	tmpl_cmd_set_front_panel_enables_rq,
+	tmpl_cmd_set_front_panel_enables_rs): Support new templates and
+	functions.
+
+	* libfreeipmi/include/freeipmi/api/ipmi-chassis-cmds-api.h,
+	libfreeipmi/src/cmds/ipmi-chassis-cmds-api.c
+	(ipmi_cmd_set_front_panel_enables): New function.
+
 	* bmc-config/src/: Remove default checkout of
 	"Power_Restore_Policy".
 
@@ -26,6 +37,8 @@
 	mans/freeipmi.7.pre.in, doc/freeipmi-faq.texi,
 	doc/freeipmi-coding.txt, doc/freeipmi-hostrange.txt: Update
 	appropriate with documentation updates.
+
+	* Various code cleanup.
 	
 2008-08-02 Albert Chu <chu11@llnl.gov>
 

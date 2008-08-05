@@ -133,6 +133,24 @@ fiid_template_t tmpl_cmd_chassis_identify_rs =
     {0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_set_front_panel_enables_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "disable_power_off_button_for_power_off_only", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "disable_reset_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "disable_diagnostic_interrupt_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "disable_standby_button_for_entering_standby", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_front_panel_enables_rs = 
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_set_power_restore_policy_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -416,6 +434,33 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
 
   return 0;
 }  
+
+int8_t
+fill_cmd_set_front_panel_enables (uint8_t disable_power_off_button_for_power_off_only,
+                                  uint8_t disable_reset_button,
+                                  uint8_t disable_diagnostic_interrupt_button,
+                                  uint8_t disable_standby_button_for_entering_standby,
+                                  fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (IPMI_CHASSIS_FORCE_IDENTIFY_VALID(disable_power_off_button_for_power_off_only)
+              && IPMI_CHASSIS_FORCE_IDENTIFY_VALID(disable_reset_button)
+              && IPMI_CHASSIS_FORCE_IDENTIFY_VALID(disable_diagnostic_interrupt_button)
+              && IPMI_CHASSIS_FORCE_IDENTIFY_VALID(disable_standby_button_for_entering_standby)
+              && fiid_obj_valid (obj_cmd_rq));
+  
+  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_front_panel_enables_rq);
+
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_FRONT_PANEL_ENABLES);
+  FIID_OBJ_SET (obj_cmd_rq, "disable_power_off_button_for_power_off_only", disable_power_off_button_for_power_off_only);
+  FIID_OBJ_SET (obj_cmd_rq, "disable_reset_button", disable_reset_button);
+  FIID_OBJ_SET (obj_cmd_rq, "disable_diagnostic_interrupt_button", disable_diagnostic_interrupt_button);
+  FIID_OBJ_SET (obj_cmd_rq, "disable_standby_button_for_entering_standby", disable_standby_button_for_entering_standby);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  
+  return 0;
+}
 
 int8_t 
 fill_cmd_set_power_restore_policy (uint8_t power_restore_policy,

@@ -497,7 +497,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
 				   NULL, 
 				   &timeout)) < 0));
       if (status == 0)
-        return (0); // resend the request
+        return (0); /* resend the request */
     }
 
   API_ERR (!((recv_len = ipmi_lan_recvfrom (ctx->io.outofband.sockfd, 
@@ -1448,7 +1448,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
 				   NULL, 
 				   &timeout)) < 0));
       if (status == 0)
-        return (0); // resend the request
+        return (0); /* resend the request */
     }
 
   API_ERR (!((recv_len = ipmi_lan_recvfrom (ctx->io.outofband.sockfd, 

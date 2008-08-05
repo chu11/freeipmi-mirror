@@ -64,6 +64,14 @@ extern "C" {
 #define IPMI_CHASSIS_IDENTIFY_STATE_TEMPORARY_ON                            0x01
 #define IPMI_CHASSIS_IDENTIFY_STATE_INDEFINITE_ON                           0x02
 
+/* achu: it's backwards on buttons, I don't know why */
+#define IPMI_CHASSIS_BUTTON_ENABLE                                          0x00
+#define IPMI_CHASSIS_BUTTON_DISABLE                                         0x01
+
+#define IPMI_CHASSIS_BUTTON_VALID(__button) \
+        (((__button) == IPMI_CHASSIS_BUTTON_ENABLE \
+          || (__button) == IPMI_CHASSIS_BUTTON_DISABLE) ? 1 : 0)
+
 #define IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWERED_OFF                   0x00
 #define IPMI_POWER_RESTORE_POLICY_RESTORE_POWER_TO_STATE_WHEN_AC_WAS_LOST   0x01
 #define IPMI_POWER_RESTORE_POLICY_ALWAYS_POWER_UP_AFTER_AC_IS_LOST          0x02
@@ -175,6 +183,8 @@ extern fiid_template_t tmpl_cmd_chassis_control_rq;
 extern fiid_template_t tmpl_cmd_chassis_control_rs;
 extern fiid_template_t tmpl_cmd_chassis_identify_rq;
 extern fiid_template_t tmpl_cmd_chassis_identify_rs;
+extern fiid_template_t tmpl_cmd_set_front_panel_enables_rq;
+extern fiid_template_t tmpl_cmd_set_front_panel_enables_rs;
 extern fiid_template_t tmpl_cmd_set_power_restore_policy_rq;
 extern fiid_template_t tmpl_cmd_set_power_restore_policy_rs;
 extern fiid_template_t tmpl_cmd_set_power_cycle_interval_rq;
@@ -196,77 +206,70 @@ extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs
 extern fiid_template_t tmpl_cmd_get_power_on_hours_counter_rq;
 extern fiid_template_t tmpl_cmd_get_power_on_hours_counter_rs;
 
-int8_t 
-fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq);
 
-int8_t 
-fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq);
+  
+int8_t fill_cmd_chassis_control (uint8_t chassis_control,
+                                 fiid_obj_t obj_cmd_rq);
 
-int8_t
-fill_cmd_chassis_control (uint8_t chassis_control,
-                          fiid_obj_t obj_cmd_rq);
-
-int8_t
-fill_cmd_chassis_identify (uint8_t *identify_interval, 
-                           uint8_t *force_identify,
-                           fiid_obj_t obj_cmd_rq);
-
-int8_t 
-fill_cmd_set_power_restore_policy (uint8_t power_restore_policy,
-                                   fiid_obj_t obj_cmd_rq);
-
-int8_t 
-fill_cmd_set_power_cycle_interval (uint8_t interval, 
-                                   fiid_obj_t obj_cmd_rq);
-
-int8_t 
-fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq);
-
-int8_t 
-fill_cmd_set_system_boot_options (uint8_t parameter_selector,
-                                  uint8_t *configuration_parameter_data,
-                                  uint8_t data_len,
+int8_t fill_cmd_chassis_identify (uint8_t *identify_interval, 
+                                  uint8_t *force_identify,
                                   fiid_obj_t obj_cmd_rq);
 
-int8_t
-fill_cmd_set_system_boot_options_set_in_progress(uint8_t value,
-                                                 fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_set_front_panel_enables (uint8_t disable_power_off_button_for_power_off_only,
+                                         uint8_t disable_reset_button,
+                                         uint8_t disable_diagnostic_interrupt_button,
+                                         uint8_t disable_standby_button_for_entering_standby,
+                                         fiid_obj_t obj_cmd_rq);
 
-int8_t
-fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_handled_boot_info,
-                                                        uint8_t *os_loader_handled_boot_info,
-                                                        uint8_t *os_or_service_partition_handled_boot_info,
-                                                        uint8_t *sms_handled_boot_info,
-                                                        uint8_t *oem_handled_boot_info,
+int8_t fill_cmd_set_power_restore_policy (uint8_t power_restore_policy,
+                                          fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_power_cycle_interval (uint8_t interval, 
+                                          fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_system_boot_options (uint8_t parameter_selector,
+                                         uint8_t *configuration_parameter_data,
+                                         uint8_t data_len,
+                                         fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_system_boot_options_set_in_progress(uint8_t value,
                                                         fiid_obj_t obj_cmd_rq);
+  
+int8_t fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_handled_boot_info,
+                                                               uint8_t *os_loader_handled_boot_info,
+                                                               uint8_t *os_or_service_partition_handled_boot_info,
+                                                               uint8_t *sms_handled_boot_info,
+                                                               uint8_t *oem_handled_boot_info,
+                                                               fiid_obj_t obj_cmd_rq);
 
-int8_t
-fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
-                                             uint8_t boot_flags_persistent,
-                                             uint8_t boot_flags_valid,
-                                             uint8_t lock_out_reset_button,
-                                             uint8_t screen_blank,
-                                             uint8_t boot_device_selector,
-                                             uint8_t lock_keyboard,
-                                             uint8_t clear_cmos,
-                                             uint8_t console_redirection,
-                                             uint8_t lock_out_sleep_button,
-                                             uint8_t user_password_bypass,
-                                             uint8_t force_progress_event_traps,
-                                             uint8_t firmware_bios_verbosity,
-                                             uint8_t lock_out_via_power_button,
-                                             uint8_t bios_mux_control_override,
-                                             uint8_t bios_shared_mode_override,
-                                             fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
+                                                    uint8_t boot_flags_persistent,
+                                                    uint8_t boot_flags_valid,
+                                                    uint8_t lock_out_reset_button,
+                                                    uint8_t screen_blank,
+                                                    uint8_t boot_device_selector,
+                                                    uint8_t lock_keyboard,
+                                                    uint8_t clear_cmos,
+                                                    uint8_t console_redirection,
+                                                    uint8_t lock_out_sleep_button,
+                                                    uint8_t user_password_bypass,
+                                                    uint8_t force_progress_event_traps,
+                                                    uint8_t firmware_bios_verbosity,
+                                                    uint8_t lock_out_via_power_button,
+                                                    uint8_t bios_mux_control_override,
+                                                    uint8_t bios_shared_mode_override,
+                                                    fiid_obj_t obj_cmd_rq);
 
-int8_t 
-fill_cmd_get_system_boot_options (uint8_t parameter_selector,
-                                  uint8_t set_selector,
-                                  uint8_t block_selector,
-                                  fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_get_system_boot_options (uint8_t parameter_selector,
+                                         uint8_t set_selector,
+                                         uint8_t block_selector,
+                                         fiid_obj_t obj_cmd_rq);
 
-int8_t 
-fill_cmd_get_power_on_hours_counter (fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_get_power_on_hours_counter (fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

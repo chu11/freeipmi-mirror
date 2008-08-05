@@ -136,7 +136,6 @@ ipmi_cmd_chassis_identify (ipmi_ctx_t ctx,
                            uint8_t *force_identify,
                            fiid_obj_t obj_cmd_rs)
 {
-
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
@@ -154,6 +153,47 @@ ipmi_cmd_chassis_identify (ipmi_ctx_t ctx,
                                                 force_identify, 
                                                 obj_cmd_rq) < 0));
 
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+                            IPMI_BMC_IPMB_LUN_BMC, 
+                            IPMI_NET_FN_CHASSIS_RQ, 
+                            obj_cmd_rq, 
+                            obj_cmd_rs);
+
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY (obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
+ipmi_cmd_set_front_panel_enables (ipmi_ctx_t ctx,
+                                  uint8_t disable_power_off_button_for_power_off_only,
+                                  uint8_t disable_reset_button,
+                                  uint8_t disable_diagnostic_interrupt_button,
+                                  uint8_t disable_standby_button_for_entering_standby,
+                                  fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+  
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  
+  API_ERR_PARAMETERS (IPMI_CHASSIS_FORCE_IDENTIFY_VALID(disable_power_off_button_for_power_off_only)
+                      && IPMI_CHASSIS_FORCE_IDENTIFY_VALID(disable_reset_button)
+                      && IPMI_CHASSIS_FORCE_IDENTIFY_VALID(disable_diagnostic_interrupt_button)
+                      && IPMI_CHASSIS_FORCE_IDENTIFY_VALID(disable_standby_button_for_entering_standby)
+                      && fiid_obj_valid(obj_cmd_rs));
+  
+  API_FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_set_front_panel_enables_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_front_panel_enables_rq);
+  
+  API_ERR_CLEANUP (!(fill_cmd_set_front_panel_enables (disable_power_off_button_for_power_off_only,
+                                                       disable_reset_button,
+                                                       disable_diagnostic_interrupt_button,
+                                                       disable_standby_button_for_entering_standby,
+                                                       obj_cmd_rq) < 0));
+  
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
                             IPMI_NET_FN_CHASSIS_RQ, 

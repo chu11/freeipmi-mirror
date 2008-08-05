@@ -28,7 +28,7 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
-#define RMCP_VERSION_1_0              0x06 // RMCP Version 1.0
+#define RMCP_VERSION_1_0              0x06 /* RMCP Version 1.0 */
 
 #define RMCP_AUX_BUS_SHUNT            0x26F
 #define RMCP_PRIMARY_RMCP_PORT        RMCP_AUX_BUS_SHUNT
