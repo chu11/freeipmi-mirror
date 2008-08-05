@@ -78,6 +78,7 @@ dcmi-chassis like command to get power stuff
 - or all in one tool? (ipmi-dcmi ??)
 - or in FreeIPMI but add --dcmi options??
 - part of FreeIPMI? or a separate project?
+- contrib project?
 
 0.7.0 porting ensure works
 --------------------------
