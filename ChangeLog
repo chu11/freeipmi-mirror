@@ -1,3 +1,8 @@
+2008-08-05 Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/: Support configurable Lan_Session_Limit and
+	Serial_Session_Limit.  Update documentation as needed.
+	
 2008-08-02 Albert Chu <chu11@llnl.gov>
 
 	* Various documentation and manpage updates.

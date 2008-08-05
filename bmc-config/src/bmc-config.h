@@ -57,6 +57,12 @@ typedef struct bmc_config_state_data
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
 
+  /* achu: workaround for IPMI limitation */
+  int lan_user_session_limit_len;
+  uint8_t *lan_user_session_limit;
+  int serial_user_session_limit_len;
+  uint8_t *serial_user_session_limit;
+
   /* achu: caching to make lan authentication enables go faster */
   int authentication_type_initialized;
   uint8_t authentication_type_none;

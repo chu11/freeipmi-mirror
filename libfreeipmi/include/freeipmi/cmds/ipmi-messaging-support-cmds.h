@@ -283,7 +283,7 @@ int8_t fill_cmd_set_user_access (uint8_t channel_number,
                                  uint8_t user_restricted_to_callback,
                                  uint8_t user_id,
                                  uint8_t user_privilege_level_limit,
-                                 uint8_t user_session_number_limit,
+                                 uint8_t user_session_limit,
                                  fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_user_access (uint8_t channel_number,

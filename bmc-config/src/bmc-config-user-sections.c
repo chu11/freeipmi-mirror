@@ -127,7 +127,7 @@ _get_user_access(bmc_config_state_data_t *state_data,
   _FIID_OBJ_GET (obj_cmd_rs, "user_privilege_level_limit", &val);
   ua->privilege_limit = val;
 
-  /* XXX: no way to retrieve, deal with this later */
+  /* XXX: no way to retrieve */
   ua->session_limit = 0;
 
   _FIID_OBJ_GET (obj_cmd_rs, "user_id_enable_status", &val);
@@ -165,6 +165,21 @@ _set_user_access (bmc_config_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_access_rs);
 
+  /* achu: special case, because the session limit cannot be
+   * retrieved.  So if we're committing, we have to get the pre-loaded
+   * value and commit it each time.
+   */
+  if (stristr(key_name, "Serial"))
+    {    
+      if (state_data->serial_user_session_limit_len)
+        ua->session_limit = state_data->serial_user_session_limit[userid];
+    }
+  if (stristr(key_name, "Lan"))
+    {
+      if (state_data->lan_user_session_limit_len)
+        ua->session_limit = state_data->lan_user_session_limit[userid];
+    }
+  
   if (ipmi_cmd_set_user_access (state_data->ipmi_ctx,
                                 channel_number,
                                 ua->user_ipmi_messaging,
@@ -961,18 +976,11 @@ lan_session_limit_checkout (const char *section_name,
                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  struct user_access ua;
-  config_err_t ret;
 
-  if ((ret = _get_user_access(state_data, 
-                              section_name,
-                              kv->key->key_name,
-                              &ua)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output_int(state_data->pstate,
-                                                kv,
-                                                ua.session_limit) < 0)
+  /* Special case: There is no way to check out this value */
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            "") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -993,8 +1001,7 @@ lan_session_limit_commit (const char *section_name,
                               &ua)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  ua.session_limit = atoi(kv->value_input);
-
+  /* Session limit field will be grabbed/set in _set_user_access */
   return _set_user_access (state_data,
                            section_name,
                            kv->key->key_name,
@@ -1304,20 +1311,13 @@ serial_session_limit_checkout (const char *section_name,
                                void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  struct user_access ua;
-  config_err_t ret;
 
-  if ((ret = _get_user_access(state_data, 
-                              section_name,
-                              kv->key->key_name,
-                              &ua)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output_int(state_data->pstate,
-                                                kv,
-                                                ua.session_limit) < 0)
+  /* Special case: There is no way to check out this value */
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            "") < 0)
     return CONFIG_ERR_FATAL_ERROR;
-  
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -1336,8 +1336,7 @@ serial_session_limit_commit (const char *section_name,
                               &ua)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  ua.session_limit = atoi(kv->value_input);
-
+  /* Session limit field will be grabbed/set in _set_user_access */
   return _set_user_access (state_data,
                            section_name,
                            kv->key->key_name,
@@ -1363,7 +1362,9 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
     "created with a privilege limit \"Administrator\", so all system "
     "functions are available to atleast one username via IPMI over LAN.  "
     "For security reasons, we recommend not enabling the \"anonymous\" "
-    "User1."
+    "User1.  For most users, \"Lan_Session_Limit\" can be set to 0 "
+    "(or ignored) to support an unlimited number of simultaneous "
+    "IPMI over LAN sessions. "
     "\n"
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), a "
     "\"Password20\" and \"SOL_Payload_Access\" field may be listed below.  "
@@ -1506,11 +1507,11 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
   if (config_section_add_key (state_data->pstate,
                               user_section,
                               "Lan_Session_Limit",
-                              "Possible values: 0-255, 0 is unlimited",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              "Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               lan_session_limit_checkout,
                               lan_session_limit_commit,
-                              config_number_range_one_byte) < 0)
+                              config_number_range_four_bits) < 0)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
@@ -1577,8 +1578,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
   if (config_section_add_key (state_data->pstate,
                               user_section,
                               "Serial_Session_Limit",
-                              "Possible values: 0-255, 0 is unlimited",
-                              CONFIG_DO_NOT_CHECKOUT,
+                              "Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY | verbose_flags,
                               serial_session_limit_checkout,
                               serial_session_limit_commit,
                               config_number_range_one_byte) < 0)

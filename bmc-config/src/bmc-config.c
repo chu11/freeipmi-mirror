@@ -47,6 +47,11 @@ _bmc_config_state_data_init(bmc_config_state_data_t *state_data)
   state_data->prog_data = NULL;
   state_data->ipmi_ctx = NULL;
 
+  state_data->lan_user_session_limit_len = 0;
+  state_data->lan_user_session_limit = NULL;
+  state_data->serial_user_session_limit_len = 0;
+  state_data->serial_user_session_limit = NULL;
+
   state_data->authentication_type_initialized = 0;
 
   state_data->cipher_suite_entry_count = 0;
@@ -235,6 +240,78 @@ _bmc_config (pstdout_state_t pstate,
         }
     }
 
+  /* Special case: There is no way to checkout the user session limit,
+   * so we have to store before hand it if we intend to commit it
+   * (along with the other calls to set user access that commit things)
+   */
+  if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT)
+    {
+      struct config_section *section;
+      unsigned int user_count = 0;
+
+      /* First, see how many user sections there are */
+      section = sections;
+      while (section)
+        {
+          if (stristr(section->section_name, "User"))
+            user_count++;
+          section = section->next;
+        }
+
+      /* Second, make the arrays of stored values */
+      if (user_count)
+        {
+          unsigned int datasize = sizeof(uint8_t) * user_count;
+
+          if (!(state_data.lan_user_session_limit = (uint8_t *)malloc(datasize)))
+            {
+              pstdout_perror(pstate,
+                             "malloc");
+              goto cleanup;
+            }
+          memset(state_data.lan_user_session_limit, '\0', datasize);
+
+          if (!(state_data.serial_user_session_limit = (uint8_t *)malloc(datasize)))
+            {
+              pstdout_perror(pstate,
+                             "malloc");
+              goto cleanup;
+            }
+          memset(state_data.serial_user_session_limit, '\0', datasize);
+          
+          state_data.lan_user_session_limit_len = user_count;
+          state_data.serial_user_session_limit_len = user_count;
+
+          /* Third, store the info */
+          section = sections;
+          while (section)
+            {
+              struct config_keyvalue *kv;
+
+              if (stristr(section->section_name, "User"))
+                {
+                  uint8_t userid;
+                  
+                  userid = atoi (section->section_name + strlen ("User"));
+
+                  if (userid < user_count)
+                    {
+                      if ((kv = config_find_keyvalue(pstate,
+                                                     section,
+                                                     "Lan_Session_Limit")))
+                        state_data.lan_user_session_limit[userid] = atoi(kv->value_input);
+                      
+                      if ((kv = config_find_keyvalue(pstate,
+                                                     section,
+                                                     "Serial_Session_Limit")))
+                        state_data.serial_user_session_limit[userid] = atoi(kv->value_input);
+                    }
+                }
+              section = section->next;
+            }
+        }
+    }
+          
   /* Special case: IP addresses and MAC addresses cannot be configured
    * in parallel.  Reject input if user attempts to configure the same
    * IP or MAC on multiple hosts.
@@ -360,6 +437,10 @@ _bmc_config (pstdout_state_t pstate,
       ipmi_ctx_close (state_data.ipmi_ctx);
       ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
+  if (state_data.lan_user_session_limit)
+    free(state_data.lan_user_session_limit);
+  if (state_data.serial_user_session_limit)
+    free(state_data.serial_user_session_limit);
   if (file_opened)
     fclose(fp);
   if (sections)

@@ -40,6 +40,8 @@ o Global in config tools (bmc-config, pef-config, ipmi-sensors-config)
     tools continue on attempting more configuration activities.  Now,
     it would error out on the first session-timeout indication.
 o bmc-config
+  - Support configuration of UserN:Lan_Session_Limit and
+    UserN:Serial_Session_Limit (where N is a user id number).
   - By default, do not output unsupported authentication type enables
     when checking out the Lan_Conf_Auth section.  Output unsupported
     authentication type enables under verbose output.

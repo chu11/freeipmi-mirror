@@ -47,6 +47,8 @@ Future versions of this manpage will try to include more information.
      	Lan_Enable_Ipmi_Msgs                         Yes
      	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
      	Lan_Privilege_Limit                          Administrator
+        ## Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified
+        ## Lan_Session_Limit
      	## Possible values: Yes/No
      	SOL_Payload_Access                           Yes
      EndSection
@@ -63,6 +65,8 @@ Future versions of this manpage will try to include more information.
      	Lan_Enable_Ipmi_Msgs                         No
      	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
      	Lan_Privilege_Limit                          No_Access
+        ## Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified
+        ## Lan_Session_Limit
         ## Possible values: Yes/No
         SOL_Payload_Access                           No
      EndSection
@@ -264,8 +268,15 @@ requires the "Operator" privilege.  Typically, you will want to assign
 atleast one user with a privilege limit of "Administrator" so that all
 system functions are available to atleast one user via IPMI over LAN.
 .LP
+\fILan_Session_Limit\fR specifies the number of simultaneous IPMI
+sessions allowed for the user.  Most users will wish to set this to
+"0" to allow unlimited simultaneous IPMI sessions.  This field is
+considered optional by IPMI standards, and may result in errors when
+attempting to configure it to a non-zero value.  If errors to occur,
+setting the value back to 0 should resolve problems.
+.LP
 \fISOL_Payload_Access\fR specifies if a particular user is allowed to
-connect with Serial-Over-LAN (SOL).  This should be set to "Yes"R
+connect with Serial-Over-LAN (SOL).  This should be set to "Yes"
 to allow this username to use SOL.
 .LP
 The example configuration above disables "User2" but enables the

@@ -72,6 +72,43 @@ a cluster with the same BMC config file.  The script only needs to
 determine the correct IP address and MAC address to use.
 .LP
 .B # bmc-config --commit -k "Lan_Conf:Ip_Address=$MY_IP" -k "Lan_Conf:Mac_Address=$MY_MAC" -n my_bmc.conf
+.SH "BMC-CONFIG SPECIAL CASE CONFIGURATION INFORMATION"
+The 
+.B UserN:Password 
+and 
+.B UserN:Password20
+fields (where N is a number) cannot be checked out.  Therefore the
+checked out value will always be blank.
+
+The
+.B UserN:Enable_User
+field (where N is a number) cannot be checked out on older IPMI
+systems.  Therefore the checked out value will sometime be blank.
+
+The 
+.B UserN:Lan_Session_Limit 
+and 
+.B UserN:Serial_Session_Limit
+fields (where N is a number) cannot be checked out.  Therefore the
+checked out value will always be blank.  If not specified in later
+commits of configurations, the field may be reset to 0 due to a
+requirement that other fields (configured along with the session
+limit) will require an input value for the session limit.  Under most
+conditions, it is not necessary to set this field and most users may
+choose to ignore it.  This field is considered optional by IPMI
+standards, and may result in errors when attempting to configure it
+to a non-zero value.  If errors to occur, setting the value back to
+0 should resolve problems.
+
+The fields 
+.B Lan_Conf:IP_Address 
+and 
+.B Lan_Conf:MAC_Address 
+cannot be committed in parallel via hostrange support.  Each machine
+must be configured with a unique IP Address and MAC Address tuple,
+therefore we disallow this configuration in
+.B bmc-config.
+
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>

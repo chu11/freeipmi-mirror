@@ -389,7 +389,7 @@ fiid_template_t tmpl_cmd_set_user_access_rq =
     {2, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "user_privilege_level_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4, "user_session_number_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "user_session_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
@@ -799,7 +799,7 @@ fill_cmd_set_user_access (uint8_t channel_number,
 			  uint8_t user_restricted_to_callback,
 			  uint8_t user_id,
 			  uint8_t user_privilege_level_limit,
-			  uint8_t user_session_number_limit,
+			  uint8_t user_session_limit,
                           fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -822,7 +822,7 @@ fill_cmd_set_user_access (uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "user_privilege_level_limit", user_privilege_level_limit);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "user_session_number_limit", user_session_number_limit);
+  FIID_OBJ_SET (obj_cmd_rq, "user_session_limit", user_session_limit);
   FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
 
   return 0;

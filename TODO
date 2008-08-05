@@ -24,10 +24,6 @@ chassis boot params
 - move power restore polcy over from bmc-config
 chassis front-panel enables
 
-bmc-config
-----------
-session-limit checkin
-
 general
 -------
 beginning doc for developers
