@@ -378,7 +378,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                           " Diagnostic Interrupt Button disabled");
         }
 
-      _FIID_OBJ_GET (cmd_rs, "front_panel.standy_button_disabled", &val);
+      _FIID_OBJ_GET (cmd_rs, "front_panel.standby_button_disabled", &val);
       if (val)
         {
           if (front_panel_capabilities)

@@ -9,6 +9,8 @@
 	ipmi-chassis-config/src/ipmi-chassis-config.c,
 	ipmi-chassis-config/src/ipmi-chassis-config-argp.h,
 	ipmi-chassis-config/src/ipmi-chassis-config-argp.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-front-panel-buttons.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-front-panel-buttons.c,
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.h,
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.c: New files.
 

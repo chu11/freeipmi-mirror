@@ -72,6 +72,9 @@ extern "C" {
         (((__button) == IPMI_CHASSIS_BUTTON_ENABLE \
           || (__button) == IPMI_CHASSIS_BUTTON_DISABLE) ? 1 : 0)
 
+#define IPMI_CHASSIS_BUTTON_DISABLE_ALLOWED                                 0x1
+#define IPMI_CHASSIS_BUTTON_DISABLE_NOT_ALLOWED                             0x0
+
 #define IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWERED_OFF                   0x00
 #define IPMI_POWER_RESTORE_POLICY_RESTORE_POWER_TO_STATE_WHEN_AC_WAS_LOST   0x01
 #define IPMI_POWER_RESTORE_POLICY_ALWAYS_POWER_UP_AFTER_AC_IS_LOST          0x02
