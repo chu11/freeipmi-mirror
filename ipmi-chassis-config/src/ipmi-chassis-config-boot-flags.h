@@ -16,29 +16,13 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _BMC_CONFIG_MAP_H
-#define _BMC_CONFIG_MAP_H
+
+#ifndef _IPMI_CHASSIS_CONFIG_BOOT_FLAGS_H_
+#define _IPMI_CHASSIS_CONFIG_BOOT_FLAGS_H_
 
 #include "ipmi-chassis-config.h"
+#include "ipmi-chassis-config-sections.h"
 
-int power_restore_policy_number (const char *string);
+struct config_section * ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data);
 
-char *power_restore_policy_string (uint8_t value);
-
-int bios_boot_type_number (const char *string);
-
-char *bios_boot_type_string (uint8_t value);
-
-int boot_device_number (const char *string);
-
-char *boot_device_string (uint8_t value);
-
-int firmware_bios_verbosity_number (const char *string);
-
-char *firmware_bios_verbosity_string (uint8_t value);
-
-int console_redirection_number (const char *string);
-
-char *console_redirection_string (uint8_t value);
-
-#endif
+#endif /* _IPMI_CHASSIS_CONFIG_BOOT_FLAGS_H_ */

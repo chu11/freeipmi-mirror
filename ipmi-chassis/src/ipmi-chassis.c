@@ -841,7 +841,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "clear_cmos", &val);
+  _FIID_OBJ_GET (cmd_rs, "cmos_clear", &val);
   sprintf (tmp, "Clear CMOS                    : ");
   switch (val)
     {
@@ -867,7 +867,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       strcat (tmp, "System default");
       break;
 
-    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPRESS:
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPPRESS:
       strcat (tmp, "Suppressed");
       break;
 
@@ -1007,7 +1007,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   uint8_t boot_info_acknowledge = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE;
   uint8_t bios_boot_type, boot_flags_persistent, boot_flags_valid, 
     lock_out_reset_button, screen_blank, boot_device_selector, 
-    lock_keyboard, clear_cmos, console_redirection, lock_out_sleep_button, 
+    lock_keyboard, cmos_clear, console_redirection, lock_out_sleep_button, 
     user_password_bypass, force_progress_event_traps, firmware_bios_verbosity, 
     lock_out_via_power_button, bios_mux_control_override, bios_shared_mode_override;
   uint64_t val =0;
@@ -1077,13 +1077,13 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   else
     lock_keyboard = args->args.boot_option_args.lock_keyboard;
 
-  if (args->args.boot_option_args.clear_cmos == -1)
+  if (args->args.boot_option_args.cmos_clear == -1)
     {
-      _FIID_OBJ_GET (get_boot_flags_rs, "clear_cmos", &val);
-      clear_cmos = val;
+      _FIID_OBJ_GET (get_boot_flags_rs, "cmos_clear", &val);
+      cmos_clear = val;
     }
   else
-    clear_cmos = args->args.boot_option_args.clear_cmos;
+    cmos_clear = args->args.boot_option_args.cmos_clear;
 
   if (args->args.boot_option_args.console_redirection == -1)
     {
@@ -1137,7 +1137,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
                                                    screen_blank,
                                                    boot_device_selector,
                                                    lock_keyboard,
-                                                   clear_cmos,
+                                                   cmos_clear,
                                                    console_redirection,
                                                    lock_out_sleep_button,
                                                    user_password_bypass,

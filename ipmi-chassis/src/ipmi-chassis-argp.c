@@ -96,7 +96,7 @@ static struct argp_option cmdline_options[] =
      "Set device to boot from to BOOT_DEVICE.", 43},
     {"lock-keyboard", SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Modify lock keyboard support.", 44},
-    {"clear-cmos", SET_BOOT_FLAGS_CLEAR_CMOS_KEY, "CMOS_CLEAR", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
+    {"clear-cmos", SET_BOOT_FLAGS_CMOS_CLEAR_KEY, "CMOS_CLEAR", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Modify clear CMOS support.", 45},
     {"console-redirection", SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY, "CONSOLE_REDIRECTION", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Set console redirection type.", 46},
@@ -217,7 +217,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.lock_keyboard = value;
       break;
 
-    case SET_BOOT_FLAGS_CLEAR_CMOS_KEY:
+    case SET_BOOT_FLAGS_CMOS_CLEAR_KEY:
       if (!strcasecmp (arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
       else if (!strcasecmp (arg, "no"))
@@ -228,14 +228,14 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit(1);
         }
 
-      cmd_args->args.boot_option_args.clear_cmos = value;
+      cmd_args->args.boot_option_args.cmos_clear = value;
       break;
 
     case SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY:
       if (!strcasecmp (arg, "default"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT;
       else if (!strcasecmp (arg, "suppress"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPRESS;
+        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPPRESS;
       else if (!strcasecmp (arg, "enable"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE;
       else
@@ -537,7 +537,7 @@ ipmi_chassis_argp_parse (int argc,
   cmd_args->args.boot_option_args.screen_blank = -1;
   cmd_args->args.boot_option_args.boot_device_selector = -1;
   cmd_args->args.boot_option_args.lock_keyboard = -1;
-  cmd_args->args.boot_option_args.clear_cmos = -1;
+  cmd_args->args.boot_option_args.cmos_clear = -1;
   cmd_args->args.boot_option_args.console_redirection = -1;
   cmd_args->args.boot_option_args.user_password_bypass = -1;
   cmd_args->args.boot_option_args.force_progress_event_traps = -1;

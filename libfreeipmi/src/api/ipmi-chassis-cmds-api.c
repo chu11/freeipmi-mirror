@@ -415,7 +415,7 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                              uint8_t screen_blank,
                                              uint8_t boot_device_selector,
                                              uint8_t lock_keyboard,
-                                             uint8_t clear_cmos,
+                                             uint8_t cmos_clear,
                                              uint8_t console_redirection,
                                              uint8_t lock_out_sleep_button,
                                              uint8_t user_password_bypass,
@@ -433,7 +433,7 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
 
   API_ERR_PARAMETERS (IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_valid)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_persistent)
-                      && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (clear_cmos)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (cmos_clear)
                       && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BIOS_BOOT_TYPE_VALID (bios_boot_type)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_keyboard)
                       && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_VALID (boot_device_selector)
@@ -460,7 +460,7 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                                                   screen_blank,
                                                                   boot_device_selector,
                                                                   lock_keyboard,
-                                                                  clear_cmos,
+                                                                  cmos_clear,
                                                                   console_redirection,
                                                                   lock_out_sleep_button,
                                                                   user_password_bypass,

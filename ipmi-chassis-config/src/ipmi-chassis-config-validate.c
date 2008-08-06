@@ -43,3 +43,47 @@ power_restore_policy_number_validate (const char *section_name,
     return CONFIG_VALIDATE_VALID_VALUE;
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
+
+config_validate_t
+bios_boot_type_number_validate (const char *section_name,
+                                const char *key_name,
+                                const char *value,
+                                void *arg)
+{
+  if (bios_boot_type_number (value) != -1)
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
+}
+
+config_validate_t
+boot_device_number_validate (const char *section_name,
+                             const char *key_name,
+                             const char *value,
+                             void *arg)
+{
+  if (boot_device_number (value) != -1)
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
+}
+
+config_validate_t
+firmware_bios_verbosity_number_validate (const char *section_name,
+                                         const char *key_name,
+                                         const char *value,
+                                         void *arg)
+{
+  if (firmware_bios_verbosity_number (value) != -1)
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
+}
+
+config_validate_t
+console_redirection_number_validate (const char *section_name,
+                                     const char *key_name,
+                                     const char *value,
+                                     void *arg)
+{
+  if (console_redirection_number (value) != -1)
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
+}

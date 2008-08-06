@@ -248,6 +248,19 @@ fiid_template_t tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq =
     {0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+  };
+
 fiid_template_t tmpl_cmd_set_system_boot_options_boot_flags_rq = 
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -261,7 +274,7 @@ fiid_template_t tmpl_cmd_set_system_boot_options_boot_flags_rq =
     {1, "screen_blank", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {4, "boot_device_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "lock_keyboard", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "clear_cmos", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "cmos_clear", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {2, "console_redirection", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "lock_out_sleep_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "user_password_bypass", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
@@ -322,6 +335,22 @@ fiid_template_t tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs =
     {0, "", 0}
  };
 
+fiid_template_t tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "parameter_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+  };
+
 fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -338,7 +367,7 @@ fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs =
     {1, "screen_blank", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {4, "boot_device_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "lock_keyboard", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "clear_cmos", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "cmos_clear", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {2, "console_redirection", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "lock_out_sleep_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "user_password_bypass", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
@@ -653,7 +682,7 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
                                              uint8_t screen_blank,
                                              uint8_t boot_device_selector,
                                              uint8_t lock_keyboard,
-                                             uint8_t clear_cmos,
+                                             uint8_t cmos_clear,
                                              uint8_t console_redirection,
                                              uint8_t lock_out_sleep_button,
                                              uint8_t user_password_bypass,
@@ -666,7 +695,7 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
 {
   ERR_EINVAL (IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_valid)
               && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_persistent)
-              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (clear_cmos)
+              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (cmos_clear)
               && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BIOS_BOOT_TYPE_VALID (bios_boot_type)
               && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_keyboard)
               && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_VALID (boot_device_selector)
@@ -696,7 +725,7 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
   FIID_OBJ_SET (obj_cmd_rq, "screen_blank", screen_blank);
   FIID_OBJ_SET (obj_cmd_rq, "boot_device_selector", boot_device_selector);
   FIID_OBJ_SET (obj_cmd_rq, "lock_keyboard", lock_keyboard);
-  FIID_OBJ_SET (obj_cmd_rq, "clear_cmos", clear_cmos);
+  FIID_OBJ_SET (obj_cmd_rq, "cmos_clear", cmos_clear);
   FIID_OBJ_SET (obj_cmd_rq, "console_redirection", console_redirection);
   FIID_OBJ_SET (obj_cmd_rq, "lock_out_sleep_button", lock_out_sleep_button);
   FIID_OBJ_SET (obj_cmd_rq, "user_password_bypass", user_password_bypass);
