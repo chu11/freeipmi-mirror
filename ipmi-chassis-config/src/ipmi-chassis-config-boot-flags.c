@@ -93,7 +93,7 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
   _FIID_OBJ_GET (obj_cmd_rs, "bios_boot_type", &val);
   data->bios_boot_type = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "clear_cmos", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "cmos_clear", &val);
   data->cmos_clear = val;
 
   _FIID_OBJ_GET (obj_cmd_rs, "lock_keyboard", &val);
@@ -126,11 +126,11 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
   _FIID_OBJ_GET (obj_cmd_rs, "console_redirection", &val);
   data->console_redirection = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "", &val);
-  data->bios_shared_mode_override = val;
-
-  _FIID_OBJ_GET (obj_cmd_rs, "", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "bios_mux_control_override", &val);
   data->bios_mux_control_override = val; 
+
+  _FIID_OBJ_GET (obj_cmd_rs, "bios_shared_mode_override", &val);
+  data->bios_shared_mode_override = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -144,7 +144,6 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
 { 
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  uint64_t val;
 
   assert(state_data);
   assert(data);
@@ -184,6 +183,206 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
  cleanup:
   _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
+}
+
+static config_err_t
+boot_flags_valid_checkout (const char *section_name,
+                           struct config_keyvalue *kv,
+                           void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            data.boot_flags_valid ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+boot_flags_valid_commit (const char *section_name,
+                         const struct config_keyvalue *kv,
+                         void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  data.boot_flags_valid = same (kv->value_input, "yes");
+
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+boot_flags_persistent_checkout (const char *section_name,
+                                struct config_keyvalue *kv,
+                                void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            data.boot_flags_persistent ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+boot_flags_persistent_commit (const char *section_name,
+                              const struct config_keyvalue *kv,
+                              void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  data.boot_flags_persistent = same (kv->value_input, "yes");
+
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+cmos_clear_checkout (const char *section_name,
+                     struct config_keyvalue *kv,
+                     void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            data.cmos_clear ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+cmos_clear_commit (const char *section_name,
+                   const struct config_keyvalue *kv,
+                   void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  data.cmos_clear = same (kv->value_input, "yes");
+
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+lock_keyboard_checkout (const char *section_name,
+                        struct config_keyvalue *kv,
+                        void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            data.lock_keyboard ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+lock_keyboard_commit (const char *section_name,
+                      const struct config_keyvalue *kv,
+                      void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  data.lock_keyboard = same (kv->value_input, "yes");
+
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+screen_blank_checkout (const char *section_name,
+                       struct config_keyvalue *kv,
+                       void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            data.screen_blank ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+screen_blank_commit (const char *section_name,
+                     const struct config_keyvalue *kv,
+                     void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  data.screen_blank = same (kv->value_input, "yes");
+
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
 }
 
 static config_err_t
@@ -231,7 +430,13 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
   struct config_section *section = NULL;
   char *section_comment = 
     "The following configuration options are for configuring "
-    "chassis boot behavior.";
+    "chassis boot behavior.  Please note that some fields may apply to "
+    "all future boots while some may only apply to the next system boot."
+    "\n"
+    "\"Boot_Flags_Valid\" should normally be set to \"Yes\""
+    "\n"
+    "\"Boot_Flags_Persistent\" determines if flags apply to the next boot only "
+    "or all future boots.";
 
   if (!(section = config_section_create (state_data->pstate,
                                          "Chassis_Boot_Flags",
@@ -242,18 +447,56 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
                                          chassis_boot_flags_post)))
     goto cleanup;
 
-#if 0
   if (config_section_add_key (state_data->pstate,
                               section,
-                              "Power_Restore_Policy",
-                              "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                              power_restore_policy_checkout,
-                              power_restore_policy_commit,
-                              power_restore_policy_number_validate) < 0)
+                              "Boot_Flags_Valid",
+                              "Possible values: Yes/No",
+                              0,
+                              boot_flags_valid_checkout,
+                              boot_flags_valid_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
-#endif
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Boot_Flags_Persistent",
+                              "Possible values: Yes/No (Yes = All Future Boots; No = Next Boot Only)",
+                              0,
+                              boot_flags_persistent_checkout,
+                              boot_flags_persistent_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "CMOS_Clear",
+                              "Possible values: Yes/No (Only applies to Next Boot)",
+                              0,
+                              cmos_clear_checkout,
+                              cmos_clear_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Lock_Keyboard",
+                              "Possible values: Yes/No (Only applies to Next Boot)",
+                              0,
+                              lock_keyboard_checkout,
+                              lock_keyboard_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup;
   
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Screen_Blank",
+                              "Possible values: Yes/No (Only applies to Next Boot)",
+                              0,
+                              screen_blank_checkout,
+                              screen_blank_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup;
+
   return section;
 
  cleanup:
