@@ -642,7 +642,9 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                          buf, 
                                          NULL, 
                                          NULL, 
-                                         0)))
+                                         0,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate, 

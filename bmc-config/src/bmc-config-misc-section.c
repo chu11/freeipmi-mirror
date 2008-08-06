@@ -121,7 +121,9 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
                                               "Misc",
                                               "Misc",
                                               section_comment,
-                                              CONFIG_DO_NOT_CHECKOUT)))
+                                              CONFIG_DO_NOT_CHECKOUT,
+                                              NULL,
+                                              NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

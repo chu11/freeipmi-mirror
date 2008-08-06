@@ -149,7 +149,9 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
                                          "Community_String",
                                          NULL, 
                                          NULL, 
-                                         0)))
+                                         0,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate, 

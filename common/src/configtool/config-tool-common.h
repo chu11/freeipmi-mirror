@@ -144,6 +144,14 @@ typedef config_validate_t (*Key_Validate) (const char *section_name,
                                            const char *value,
                                            void *arg);
 
+/* Sectional pre commit call */
+typedef config_err_t (*Section_Pre_Commit) (const char *section_name,
+                                            void *arg);
+
+/* Sectional post commit call */
+typedef config_err_t (*Section_Post_Commit) (const char *section_name,
+                                             void *arg);
+
 struct config_key {
   char *key_name;
   char *description;
@@ -159,6 +167,8 @@ struct config_section {
   char *section_comment_section_name;
   char *section_comment;
   unsigned int flags;
+  Section_Pre_Commit section_pre_commit;
+  Section_Post_Commit section_post_commit;
   /* keys in this section */
   struct config_key *keys;
   /* key and values for checkout/commit/diff */

@@ -35,7 +35,9 @@ struct config_section *config_section_create (pstdout_state_t pstate,
                                               char *section_name,
                                               char *section_comment_section_name,
                                               char *section_comment,
-                                              unsigned int flags);
+                                              unsigned int flags,
+                                              Section_Pre_Commit section_pre_commit,
+                                              Section_Post_Commit section_post_commit);
 
 void config_section_destroy (pstdout_state_t pstate,
                              struct config_section *section);

@@ -401,7 +401,9 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
                                          buf, 
                                          NULL, 
                                          NULL, 
-                                         0)))
+                                         0,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate, 

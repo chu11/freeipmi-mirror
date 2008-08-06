@@ -339,7 +339,9 @@ ipmi_chassis_config_front_panel_buttons_get (ipmi_chassis_config_state_data_t *s
                                          "Front_Panel_Buttons",
                                          "Front_Panel_Buttons",
                                          section_comment,
-                                         0)))
+                                         0,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

@@ -14,6 +14,16 @@
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.h,
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.c: New files.
 
+	* common/src/configtool/config-tool-common.h,
+	common/src/configtool/config-tool-section.h,
+	common/src/configtool/config-tool-section.c,
+	common/src/configtool/config-tool-commit.c,
+	(config_section_create, config_commit_section): Add sectional pre
+	and post commit callback definitions and functions.
+
+	* bmc-config/src/, pef-config/src/, ipmi-sensors-config/src/:
+	Update for function call changes.
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h,
 	libfreeipmi/src/cmds/ipmi-chassis-cmds.c
 	(fill_set_front_panel_enables,

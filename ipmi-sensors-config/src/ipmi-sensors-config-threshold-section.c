@@ -1161,7 +1161,9 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                          section_name,
                                          NULL,
                                          NULL,
-                                         0)))
+                                         0,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (sdr_cache_get_sensor_capabilities (state_data->pstate,
