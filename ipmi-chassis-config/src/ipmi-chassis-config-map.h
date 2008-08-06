@@ -16,13 +16,13 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-
-#ifndef _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H_
-#define _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H_
+#ifndef _BMC_CONFIG_MAP_H
+#define _BMC_CONFIG_MAP_H
 
 #include "ipmi-chassis-config.h"
-#include "ipmi-chassis-config-sections.h"
 
-struct config_section * ipmi_chassis_config_front_panel_buttons_get (ipmi_chassis_config_state_data_t *state_data);
+int power_restore_policy_number (const char *string);
 
-#endif /* _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H_ */
+char *power_restore_policy_string (uint8_t value);
+
+#endif

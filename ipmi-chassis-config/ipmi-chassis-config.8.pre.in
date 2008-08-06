@@ -59,14 +59,20 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/common/man/manpage-common-config-tool-general-use.man>
 .SH "IPMI-CHASSIS-CONFIG SPECIAL CASE CONFIGURATION INFORMATION"
 The
-.B Front_Panel_Buttons:Enable_Standby_Button_For_Entering_Standy,
-.B Front_Panel_Buttons:Enable_Diagnostic_Interrupt_Button
-.B Front_Panel_Buttons:Enable_Reset_Button,
+.B Chassis_Front_Panel_Buttons:Enable_Standby_Button_For_Entering_Standy,
+.B Chassis_Front_Panel_Buttons:Enable_Diagnostic_Interrupt_Button
+.B Chassis_Front_Panel_Buttons:Enable_Reset_Button,
 and
-.B Front_Panel_Buttons:Enable_Power_Off_Button_For_Power_Off_Only
+.B Chassis_Front_Panel_Buttons:Enable_Power_Off_Button_For_Power_Off_Only
 fields may not be able to be checked out on some IPMI systems, therefore
 the checked out value may be blank.  Some of these fields may be 
 disableable, while some are not.
+
+The
+.B Chassis_Power_Conf:Power_Control_Interval 
+field cannot be checked out.  Therefore the checked out value will
+always be blank.
+
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>

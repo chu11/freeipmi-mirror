@@ -16,13 +16,30 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif /* HAVE_CONFIG_H */
 
-#ifndef _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H_
-#define _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H_
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "ipmi-chassis-config.h"
-#include "ipmi-chassis-config-sections.h"
+#include "ipmi-chassis-config-map.h"
+#include "ipmi-chassis-config-validate.h"
 
-struct config_section * ipmi_chassis_config_front_panel_buttons_get (ipmi_chassis_config_state_data_t *state_data);
+#include "freeipmi-portability.h"
 
-#endif /* _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H_ */
+config_validate_t 
+power_restore_policy_number_validate (const char *section_name,
+                                      const char *key_name,
+                                      const char *value,
+                                      void *arg)
+{
+  if (power_restore_policy_number (value) != -1)
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
+}

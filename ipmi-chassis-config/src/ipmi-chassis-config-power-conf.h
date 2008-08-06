@@ -17,12 +17,12 @@
 */
 
 
-#ifndef _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H_
-#define _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H_
+#ifndef _IPMI_CHASSIS_CONFIG_POWER_CONF_H_
+#define _IPMI_CHASSIS_CONFIG_POWER_CONF_H_
 
 #include "ipmi-chassis-config.h"
 #include "ipmi-chassis-config-sections.h"
 
-struct config_section * ipmi_chassis_config_front_panel_buttons_get (ipmi_chassis_config_state_data_t *state_data);
+struct config_section * ipmi_chassis_config_power_conf_get (ipmi_chassis_config_state_data_t *state_data);
 
-#endif /* _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H_ */
+#endif /* _IPMI_CHASSIS_CONFIG_POWER_CONF_H_ */

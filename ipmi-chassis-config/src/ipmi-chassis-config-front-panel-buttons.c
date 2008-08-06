@@ -336,8 +336,8 @@ ipmi_chassis_config_front_panel_buttons_get (ipmi_chassis_config_state_data_t *s
     "system chassis.";
 
   if (!(section = config_section_create (state_data->pstate,
-                                         "Front_Panel_Buttons",
-                                         "Front_Panel_Buttons",
+                                         "Chassis_Front_Panel_Buttons",
+                                         "Chassis_Front_Panel_Buttons",
                                          section_comment,
                                          0,
                                          NULL,

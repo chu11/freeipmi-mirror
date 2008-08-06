@@ -11,6 +11,12 @@
 	ipmi-chassis-config/src/ipmi-chassis-config-argp.c,
 	ipmi-chassis-config/src/ipmi-chassis-config-front-panel-buttons.h,
 	ipmi-chassis-config/src/ipmi-chassis-config-front-panel-buttons.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-power-conf.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-power-conf.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-validate.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-validate.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-map.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-map.c,
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.h,
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.c: New files.
 
