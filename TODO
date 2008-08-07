@@ -22,6 +22,9 @@ ipmi-chassis-config
 power cycle interval
 chassis boot params
 - move power restore polcy over from bmc-config
+has never been tested
+- boot device config
+- panel button config
 
 general
 -------
