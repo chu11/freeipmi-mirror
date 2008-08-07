@@ -29,6 +29,9 @@
 	(config_section_create, config_commit_section): Add sectional pre
 	and post commit callback definitions and functions.
 
+	* common/src/configtool/config-tool-checkout.c
+	(config_checkout_section): Support multiline descriptions.
+
 	* bmc-config/src/, pef-config/src/, ipmi-sensors-config/src/:
 	Update for function call changes.
 
