@@ -546,8 +546,8 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
   if (config_section_add_key (state_data->pstate,
                               section,
                               "Boot_Device",
-                              "Possible values: NO-OVERRIDE, PXE, HARD-DRIVE, HARD-DRIVE-SAFE-MODE,\n"
-                              "                 DIAGNOSTIC_PARTITION, CD-DVD, BIOS-SETUP, FLOPPY",
+                              "Possible values: NO-OVERRIDE/PXE/HARD-DRIVE/HARD-DRIVE-SAFE-MODE/\n"
+                              "                 DIAGNOSTIC_PARTITION/CD-DVD/BIOS-SETUP/FLOPPY",
                               0,
                               boot_device_checkout,
                               boot_device_commit,
