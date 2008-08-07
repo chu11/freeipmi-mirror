@@ -22,9 +22,6 @@
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.h,
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.c: New files.
 
-	* libfreeipmi/: Support new IPMI commands, macros, fill functions,
-	API, etc. necessary for chassis configuration support.
-	
 	* common/src/configtool/config-tool-common.h,
 	common/src/configtool/config-tool-section.h,
 	common/src/configtool/config-tool-section.c,
@@ -42,17 +39,23 @@
 	libfreeipmi/src/cmds/ipmi-chassis-cmds.c
 	(fill_set_front_panel_enables,
 	tmpl_cmd_set_front_panel_enables_rq,
-	tmpl_cmd_set_front_panel_enables_rs): Support new templates and
-	functions.
+	tmpl_cmd_set_front_panel_enables_rs,
+	fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing,
+	tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq,
+	tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs):
+	Support new templates and functions.
 
 	* libfreeipmi/include/freeipmi/api/ipmi-chassis-cmds-api.h,
 	libfreeipmi/src/cmds/ipmi-chassis-cmds-api.c
-	(ipmi_cmd_set_front_panel_enables): New function.
+	(ipmi_cmd_set_front_panel_enables,
+	ipmi_cmd_set_system_boot_options_boot_BMC_boot_flag_valid_bit_clearing
+	ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing):
+	New functions.
 
 	* bmc-config/src/: Remove default checkout of
 	"Power_Restore_Policy".
 
-	* ipmi-chassis/: Hide legacy chassis configuration commands.
+	* ipmi-chassis/: Hide legacy chassis configuration commands/options.
 
 	* configure.ac, Makefile.am, freeipmi.spec.in: Update as needed
 	for new files.
@@ -62,7 +65,7 @@
 	ipmi-chassis/ipmi-chassis.8.pre.in, README, NEWS,
 	mans/freeipmi.7.pre.in, doc/freeipmi-faq.texi,
 	doc/freeipmi-coding.txt, doc/freeipmi-hostrange.txt: Update
-	appropriate with documentation updates.
+	appropriately with documentation updates.
 
 	* Various code cleanup.
 	
