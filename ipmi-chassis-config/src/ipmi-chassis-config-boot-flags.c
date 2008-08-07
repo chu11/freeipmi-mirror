@@ -594,7 +594,7 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
     "all future boots while some may only apply to the next system boot."
     "\n"
     "\"Boot_Flags_Valid\" should be set to \"Yes\" to inform the BIOS to "
-    "use the following settings."
+    "use the configured settings."
     "\n"
     "\"Boot_Flags_Persistent\" determines if flags apply to the next boot only "
     "or all future boots."
