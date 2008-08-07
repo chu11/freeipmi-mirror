@@ -70,6 +70,14 @@ int8_t ipmi_cmd_set_system_boot_options_set_in_progress(ipmi_ctx_t ctx,
                                                         uint8_t value,
                                                         fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_set_system_boot_options_boot_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
+                                                                               uint8_t dont_clear_on_power_up,
+                                                                               uint8_t dont_clear_on_pushbutton_reset,
+                                                                               uint8_t dont_clear_on_watchdog_timeout,
+                                                                               uint8_t dont_clear_on_chassis_control,
+                                                                               uint8_t dont_clear_on_PEF,
+                                                                               fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                                     uint8_t bios_boot_type,
                                                     uint8_t boot_flags_persistent,
@@ -102,6 +110,11 @@ int8_t ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
                                          uint8_t set_selector,
                                          uint8_t block_selector,
                                          fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
+                                                                          uint8_t set_selector,
+                                                                          uint8_t boot_selector,
+                                                                          fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_get_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                                     uint8_t set_selector,

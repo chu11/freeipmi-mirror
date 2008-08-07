@@ -158,9 +158,6 @@ extern "C" {
     || (__verbosity) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_QUIET \
     || (__verbosity) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VERBOSE) ? 1 : 0)
 
-#define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_ACKNOWLEDGE                     0x00
-#define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE                   0x01
-
 #define IPMI_CHASSIS_BOOT_OPTIONS_SET_COMPLETE                              0x00
 #define IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS                           0x01
 #define IPMI_CHASSIS_BOOT_OPTIONS_SET_COMMIT_WRITE                          0x03
@@ -168,6 +165,16 @@ extern "C" {
   (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_SET_COMPLETE \
      || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS \
      || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_SET_COMMIT_WRITE) ? 1 : 0 )
+
+#define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_ACKNOWLEDGE                     0x00
+#define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE                   0x01
+
+#define IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT                      0x01
+#define IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT                           0x00
+
+#define IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID(__value) \
+  (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT \
+     || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT) ? 1 : 0 )
 
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_SET_MUX_TO_RECOMENDED_AT_END_OF_POST  0x00
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_SET_MUX_TO_BMC                        0x01
@@ -199,12 +206,14 @@ extern fiid_template_t tmpl_cmd_set_system_boot_options_rq;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_rs;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_set_in_progress_rq;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq;
+extern fiid_template_t tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_flags_rq;
 
 extern fiid_template_t tmpl_cmd_get_system_boot_options_rq;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_rs;
-extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs;
 
 extern fiid_template_t tmpl_cmd_get_power_on_hours_counter_rq;
 extern fiid_template_t tmpl_cmd_get_power_on_hours_counter_rs;
@@ -248,6 +257,13 @@ int8_t fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_
                                                                uint8_t *sms_handled_boot_info,
                                                                uint8_t *oem_handled_boot_info,
                                                                fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
+                                                                          uint8_t dont_clear_on_pushbutton_reset,
+                                                                          uint8_t dont_clear_on_watchdog_timeout,
+                                                                          uint8_t dont_clear_on_chassis_control,
+                                                                          uint8_t dont_clear_on_PEF,
+                                                                          fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
                                                     uint8_t boot_flags_persistent,

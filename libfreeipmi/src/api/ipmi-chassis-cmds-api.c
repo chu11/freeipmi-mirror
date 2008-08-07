@@ -407,6 +407,49 @@ ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
 }
 
 int8_t 
+ipmi_cmd_set_system_boot_options_boot_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
+                                                                        uint8_t dont_clear_on_power_up,
+                                                                        uint8_t dont_clear_on_pushbutton_reset,
+                                                                        uint8_t dont_clear_on_watchdog_timeout,
+                                                                        uint8_t dont_clear_on_chassis_control,
+                                                                        uint8_t dont_clear_on_PEF,
+                                                                        fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_power_up)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_pushbutton_reset)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_watchdog_timeout)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_chassis_control)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_PEF)
+                      && fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
+
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (dont_clear_on_power_up,
+                                                                                        dont_clear_on_pushbutton_reset,
+                                                                                        dont_clear_on_watchdog_timeout,
+                                                                                        dont_clear_on_chassis_control,
+                                                                                        dont_clear_on_PEF,
+                                                                                        obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+                            IPMI_BMC_IPMB_LUN_BMC, 
+                            IPMI_NET_FN_CHASSIS_RQ, 
+                            obj_cmd_rq, 
+                            obj_cmd_rs);
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY (obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
 ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                              uint8_t bios_boot_type,
                                              uint8_t boot_flags_persistent,
@@ -501,6 +544,39 @@ ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_boot_options_rq);
 
   API_ERR_CLEANUP (!(fill_cmd_get_system_boot_options (parameter_selector, 
+                                                       set_selector, 
+                                                       block_selector, 
+                                                       obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+                            IPMI_BMC_IPMB_LUN_BMC, 
+                            IPMI_NET_FN_CHASSIS_RQ, 
+                            obj_cmd_rq, 
+                            obj_cmd_rs);
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY (obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
+ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
+                                                                   uint8_t set_selector,
+                                                                   uint8_t block_selector,
+                                                                   fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs);
+
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_boot_options_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_get_system_boot_options (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_FLAGS, 
                                                        set_selector, 
                                                        block_selector, 
                                                        obj_cmd_rq) < 0));

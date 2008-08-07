@@ -675,6 +675,37 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_ha
 }
 
 int8_t
+fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
+                                                                   uint8_t dont_clear_on_pushbutton_reset,
+                                                                   uint8_t dont_clear_on_watchdog_timeout,
+                                                                   uint8_t dont_clear_on_chassis_control,
+                                                                   uint8_t dont_clear_on_PEF,
+                                                                   fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_power_up)
+              && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_pushbutton_reset)
+              && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_watchdog_timeout)
+              && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_chassis_control)
+              && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_PEF)
+              && fiid_obj_valid (obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq);
+  
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_FLAGS);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", dont_clear_on_power_up);
+  FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", dont_clear_on_pushbutton_reset);
+  FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", dont_clear_on_watchdog_timeout);
+  FIID_OBJ_SET (obj_cmd_rq, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", dont_clear_on_chassis_control);
+  FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", dont_clear_on_PEF);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  
+  return 0;
+}
+
+int8_t
 fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
                                              uint8_t boot_flags_persistent,
                                              uint8_t boot_flags_valid,

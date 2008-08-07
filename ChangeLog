@@ -22,6 +22,9 @@
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.h,
 	ipmi-chassis-config/src/ipmi-chassis-config-sections.c: New files.
 
+	* libfreeipmi/: Support new IPMI commands, macros, fill functions,
+	API, etc. necessary for chassis configuration support.
+	
 	* common/src/configtool/config-tool-common.h,
 	common/src/configtool/config-tool-section.h,
 	common/src/configtool/config-tool-section.c,
