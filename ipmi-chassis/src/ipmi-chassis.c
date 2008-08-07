@@ -781,7 +781,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "boot_device_selector", &val);
+  _FIID_OBJ_GET (cmd_rs, "boot_device", &val);
   sprintf (tmp, "Boot device selector          : ");
   switch (val)
     {
@@ -1006,7 +1006,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   fiid_obj_t get_boot_flags_rs = NULL;
   uint8_t boot_info_acknowledge = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE;
   uint8_t bios_boot_type, boot_flags_persistent, boot_flags_valid, 
-    lock_out_reset_button, screen_blank, boot_device_selector, 
+    lock_out_reset_button, screen_blank, boot_device, 
     lock_keyboard, cmos_clear, console_redirection, lock_out_sleep_button, 
     user_password_bypass, force_progress_event_traps, firmware_bios_verbosity, 
     lock_out_via_power_button, bios_mux_control_override, bios_shared_mode_override;
@@ -1061,13 +1061,13 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   else
     screen_blank = args->args.boot_option_args.screen_blank;
 
-  if (args->args.boot_option_args.boot_device_selector == -1)
+  if (args->args.boot_option_args.boot_device == -1)
     {
-      _FIID_OBJ_GET (get_boot_flags_rs, "boot_device_selector", &val);
-      boot_device_selector = val;
+      _FIID_OBJ_GET (get_boot_flags_rs, "boot_device", &val);
+      boot_device = val;
     }
   else
-    boot_device_selector = args->args.boot_option_args.boot_device_selector;
+    boot_device = args->args.boot_option_args.boot_device;
 
   if (args->args.boot_option_args.lock_keyboard == -1)
     {
@@ -1135,7 +1135,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
                                                    boot_flags_valid,
                                                    lock_out_reset_button,
                                                    screen_blank,
-                                                   boot_device_selector,
+                                                   boot_device,
                                                    lock_keyboard,
                                                    cmos_clear,
                                                    console_redirection,

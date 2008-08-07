@@ -38,7 +38,7 @@ enum ipmi_chassis_argp_option_keys
     SET_BOOT_FLAGS_BOOT_TYPE_KEY = 160,
     SET_BOOT_FLAGS_LOCK_OUT_RESET_BUTTON_KEY = 161,
     SET_BOOT_FLAGS_SCREEN_BLANK_KEY = 162,
-    SET_BOOT_FLAGS_BOOT_DEVICE_SELECTOR_KEY = 163,
+    SET_BOOT_FLAGS_BOOT_DEVICE_KEY = 163,
     SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY = 164,
     SET_BOOT_FLAGS_CMOS_CLEAR_KEY = 165,
     SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY = 166,
@@ -67,7 +67,7 @@ struct cmd_boot_option
   int8_t bios_boot_type;
   int8_t lock_out_reset_button;
   int8_t screen_blank;
-  int8_t boot_device_selector;
+  int8_t boot_device;
   int8_t lock_keyboard;
   int8_t cmos_clear;
   int8_t console_redirection;

@@ -272,7 +272,7 @@ fiid_template_t tmpl_cmd_set_system_boot_options_boot_flags_rq =
     {1, "boot_flags_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "lock_out_reset_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "screen_blank", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {4, "boot_device_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {4, "boot_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "lock_keyboard", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "cmos_clear", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {2, "console_redirection", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
@@ -365,7 +365,7 @@ fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs =
     {1, "boot_flags_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "lock_out_reset_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "screen_blank", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {4, "boot_device_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {4, "boot_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "lock_keyboard", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {1, "cmos_clear", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
     {2, "console_redirection", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
@@ -680,7 +680,7 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
                                              uint8_t boot_flags_valid,
                                              uint8_t lock_out_reset_button,
                                              uint8_t screen_blank,
-                                             uint8_t boot_device_selector,
+                                             uint8_t boot_device,
                                              uint8_t lock_keyboard,
                                              uint8_t cmos_clear,
                                              uint8_t console_redirection,
@@ -698,7 +698,7 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
               && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (cmos_clear)
               && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BIOS_BOOT_TYPE_VALID (bios_boot_type)
               && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_keyboard)
-              && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_VALID (boot_device_selector)
+              && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_VALID (boot_device)
               && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (screen_blank)
               && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_reset_button)
               && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_via_power_button)
@@ -723,7 +723,7 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
   FIID_OBJ_SET (obj_cmd_rq, "boot_flags_valid", boot_flags_valid);
   FIID_OBJ_SET (obj_cmd_rq, "lock_out_reset_button", lock_out_reset_button);
   FIID_OBJ_SET (obj_cmd_rq, "screen_blank", screen_blank);
-  FIID_OBJ_SET (obj_cmd_rq, "boot_device_selector", boot_device_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "boot_device", boot_device);
   FIID_OBJ_SET (obj_cmd_rq, "lock_keyboard", lock_keyboard);
   FIID_OBJ_SET (obj_cmd_rq, "cmos_clear", cmos_clear);
   FIID_OBJ_SET (obj_cmd_rq, "console_redirection", console_redirection);

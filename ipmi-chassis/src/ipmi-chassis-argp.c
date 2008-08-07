@@ -92,7 +92,7 @@ static struct argp_option cmdline_options[] =
      "Modify lock out reset button support.", 41},
     {"blank-screen", SET_BOOT_FLAGS_SCREEN_BLANK_KEY, "BLANK_SCREEN", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Modify blank screen support.", 42},
-    {"boot-device", SET_BOOT_FLAGS_BOOT_DEVICE_SELECTOR_KEY, "BOOT_DEVICE", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
+    {"boot-device", SET_BOOT_FLAGS_BOOT_DEVICE_KEY, "BOOT_DEVICE", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Set device to boot from to BOOT_DEVICE.", 43},
     {"lock-keyboard", SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Modify lock keyboard support.", 44},
@@ -173,7 +173,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.screen_blank = value;
       break;
 
-    case SET_BOOT_FLAGS_BOOT_DEVICE_SELECTOR_KEY:
+    case SET_BOOT_FLAGS_BOOT_DEVICE_KEY:
       /* achu: many legacy inputs are preserved */
       if (!strcasecmp(arg, "no-override")
           || !strcasecmp(arg, "none")) /* legacy */
@@ -200,7 +200,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit(1);
         }
 
-      cmd_args->args.boot_option_args.boot_device_selector = value;
+      cmd_args->args.boot_option_args.boot_device = value;
       break;
 
     case SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY:
@@ -535,7 +535,7 @@ ipmi_chassis_argp_parse (int argc,
   cmd_args->args.boot_option_args.bios_boot_type = -1;
   cmd_args->args.boot_option_args.lock_out_reset_button = -1;
   cmd_args->args.boot_option_args.screen_blank = -1;
-  cmd_args->args.boot_option_args.boot_device_selector = -1;
+  cmd_args->args.boot_option_args.boot_device = -1;
   cmd_args->args.boot_option_args.lock_keyboard = -1;
   cmd_args->args.boot_option_args.cmos_clear = -1;
   cmd_args->args.boot_option_args.console_redirection = -1;
