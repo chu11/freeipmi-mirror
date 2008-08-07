@@ -266,6 +266,46 @@ boot_flags_persistent_commit (const char *section_name,
 }
 
 static config_err_t
+bios_boot_type_checkout (const char *section_name,
+                         struct config_keyvalue *kv,
+                         void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+  
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            bios_boot_type_string(data.bios_boot_type)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+bios_boot_type_commit (const char *section_name,
+                       const struct config_keyvalue *kv,
+                       void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+  
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+  
+  data.bios_boot_type = bios_boot_type_number (kv->value_input);
+  
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
 cmos_clear_checkout (const char *section_name,
                      struct config_keyvalue *kv,
                      void *arg)
@@ -584,6 +624,166 @@ chassis_boot_flags_post (const char *section_name,
   return (rv);
 }
 
+static config_err_t
+firmware_bios_verbosity_checkout (const char *section_name,
+                                  struct config_keyvalue *kv,
+                                  void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+  
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+  
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            firmware_bios_verbosity_string(data.firmware_bios_verbosity)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+firmware_bios_verbosity_commit (const char *section_name,
+                                const struct config_keyvalue *kv,
+                                void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+  
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+  
+  data.firmware_bios_verbosity = firmware_bios_verbosity_number (kv->value_input);
+  
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+force_progress_event_traps_checkout (const char *section_name,
+                                     struct config_keyvalue *kv,
+                                     void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            data.force_progress_event_traps ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+force_progress_event_traps_commit (const char *section_name,
+                                   const struct config_keyvalue *kv,
+                                   void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  data.force_progress_event_traps = same (kv->value_input, "yes");
+
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+user_password_bypass_checkout (const char *section_name,
+                               struct config_keyvalue *kv,
+                               void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            data.user_password_bypass ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+user_password_bypass_commit (const char *section_name,
+                             const struct config_keyvalue *kv,
+                             void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  data.user_password_bypass = same (kv->value_input, "yes");
+
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+console_redirection_checkout (const char *section_name,
+                              struct config_keyvalue *kv,
+                              void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+  
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+  
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            console_redirection_string(data.console_redirection)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+console_redirection_commit (const char *section_name,
+                            const struct config_keyvalue *kv,
+                            void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+  
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+  
+  data.console_redirection = console_redirection_number (kv->value_input);
+  
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
 struct config_section *
 ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data)
 {
@@ -634,6 +834,16 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
                               config_yes_no_validate) < 0)
     goto cleanup;
 
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "BIOS_Boot_Type",
+                              "Possible values: PC-COMPATIBLE/EFI",
+                              0,
+                              bios_boot_type_checkout,
+                              bios_boot_type_commit,
+                              bios_boot_type_number_validate) < 0)
+    goto cleanup;
+  
   if (config_section_add_key (state_data->pstate,
                               section,
                               "CMOS_Clear",
@@ -704,6 +914,46 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
                               lock_out_sleep_button_commit,
                               config_yes_no_validate) < 0)
     goto cleanup; 
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Firmware_Bios_Verbosity",
+                              "Possible values: DEFAULT/QUIET/VERBOSE",
+                              0,
+                              firmware_bios_verbosity_checkout,
+                              firmware_bios_verbosity_commit,
+                              firmware_bios_verbosity_number_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Force_Progress_Event_Traps",
+                              "Possible values: Yes/No",
+                              0,
+                              force_progress_event_traps_checkout,
+                              force_progress_event_traps_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup; 
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "User_Password_Bypass",
+                              "Possible values: Yes/No",
+                              0,
+                              user_password_bypass_checkout,
+                              user_password_bypass_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup; 
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Console_Redirection",
+                              "Possible values: BIOS-SETTING/SUPPRESS/ENABLE",
+                              0,
+                              console_redirection_checkout,
+                              console_redirection_commit,
+                              console_redirection_number_validate) < 0)
+    goto cleanup;
 
   return section;
 

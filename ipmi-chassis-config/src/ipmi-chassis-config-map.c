@@ -159,8 +159,8 @@ firmware_bios_verbosity_string (uint8_t value)
 int 
 console_redirection_number (const char *string)
 {
-  if (same (string, "DEFAULT"))
-    return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT;
+  if (same (string, "BIOS-SETTING"))
+    return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_BIOS_SETTING;
   if (same (string, "SUPPRESS"))
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPPRESS;
   if (same (string, "ENABLE"))
@@ -173,8 +173,8 @@ console_redirection_string (uint8_t value)
 {
   switch (value)
     {
-    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT:
-      return "DEFAULT";
+    case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_BIOS_SETTING:
+      return "BIOS-SETTING";
     case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPPRESS:
       return "SUPPRESS";
     case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE:
