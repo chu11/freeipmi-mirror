@@ -66,6 +66,7 @@ bios_boot_type_number (const char *string)
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_PC_COMPATIBLE;
   if (same (string, "EFI"))
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_EFI;
+  return -1;
 }
 
 char *
@@ -96,7 +97,7 @@ boot_device_number (const char *string)
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_DIAGNOSTIC_PARTITION;
   if (same (string, "CD-DVD"))
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_CD_DVD;
-  if (same (string, "BIOS"))
+  if (same (string, "BIOS-SETUP"))
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_BIOS_SETUP;
   if (same (string, "FLOPPY"))
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA;
@@ -121,7 +122,7 @@ boot_device_string (uint8_t value)
     case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_CD_DVD:
       return "CD-DVD";
     case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_BIOS_SETUP:
-      return "BIOS";
+      return "BIOS-SETUP";
     case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA:
       return "FLOOPY";
     }

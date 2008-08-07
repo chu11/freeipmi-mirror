@@ -44,7 +44,7 @@ struct boot_flags_data
   uint8_t cmos_clear;
   uint8_t lock_keyboard;
   uint8_t screen_blank;
-  uint8_t boot_device_selector;
+  uint8_t boot_device;
   uint8_t lock_out_reset_button;
   uint8_t lock_out_via_power_button;
   uint8_t lock_out_sleep_button;
@@ -102,8 +102,8 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
   _FIID_OBJ_GET (obj_cmd_rs, "screen_blank", &val);
   data->screen_blank = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "boot_device_selector", &val);
-  data->boot_device_selector = val;
+  _FIID_OBJ_GET (obj_cmd_rs, "boot_device", &val);
+  data->boot_device = val;
 
   _FIID_OBJ_GET (obj_cmd_rs, "lock_out_reset_button", &val);
   data->lock_out_reset_button = val;
@@ -156,7 +156,7 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
                                                    data->boot_flags_valid,
                                                    data->lock_out_reset_button,
                                                    data->screen_blank,
-                                                   data->boot_device_selector,
+                                                   data->boot_device,
                                                    data->lock_keyboard,
                                                    data->cmos_clear,
                                                    data->console_redirection,
@@ -386,6 +386,46 @@ screen_blank_commit (const char *section_name,
 }
 
 static config_err_t
+boot_device_checkout (const char *section_name,
+                       struct config_keyvalue *kv,
+                       void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            boot_device_string(data.boot_device)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+boot_device_commit (const char *section_name,
+                     const struct config_keyvalue *kv,
+                     void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  data.boot_device = boot_device_number (kv->value_input);
+
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
 chassis_boot_flags_post (const char *section_name,
                          void *arg)
 {
@@ -436,7 +476,13 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
     "\"Boot_Flags_Valid\" should normally be set to \"Yes\""
     "\n"
     "\"Boot_Flags_Persistent\" determines if flags apply to the next boot only "
-    "or all future boots.";
+    "or all future boots."
+    "\n"
+    "\"Boot_Device\" allows the user to configure which device the BIOS should "
+    "boot off of.  Most users may wish to select NO-OVERRIDE to select the "
+    "configuration currently determined by the BIOS.  Note that the configuration "
+    "value BIOS-SETUP refers to booting *into* the BIOS Setup, not from it.  FLOPPY "
+    "may refer to any type of removeable media.";
 
   if (!(section = config_section_create (state_data->pstate,
                                          "Chassis_Boot_Flags",
@@ -495,6 +541,17 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
                               screen_blank_checkout,
                               screen_blank_commit,
                               config_yes_no_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Boot_Device",
+                              "Possible values: NO-OVERRIDE, PXE, HARD-DRIVE, HARD-DRIVE-SAFE-MODE,\n"
+                              "                 DIAGNOSTIC_PARTITION, CD-DVD, BIOS-SETUP, FLOPPY",
+                              0,
+                              boot_device_checkout,
+                              boot_device_commit,
+                              boot_device_number_validate) < 0)
     goto cleanup;
 
   return section;
