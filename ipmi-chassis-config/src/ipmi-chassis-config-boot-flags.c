@@ -46,7 +46,7 @@ struct boot_flags_data
   uint8_t screen_blank;
   uint8_t boot_device;
   uint8_t lock_out_reset_button;
-  uint8_t lock_out_via_power_button;
+  uint8_t lock_out_power_button;
   uint8_t lock_out_sleep_button;
   uint8_t firmware_bios_verbosity;
   uint8_t force_progress_event_traps;
@@ -109,7 +109,7 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
   data->lock_out_reset_button = val;
 
   _FIID_OBJ_GET (obj_cmd_rs, "lock_out_via_power_button", &val);
-  data->lock_out_via_power_button = val;
+  data->lock_out_power_button = val;
 
   _FIID_OBJ_GET (obj_cmd_rs, "lock_out_sleep_button", &val);
   data->lock_out_sleep_button = val;
@@ -164,7 +164,7 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
                                                    data->user_password_bypass,
                                                    data->force_progress_event_traps,
                                                    data->firmware_bios_verbosity,
-                                                   data->lock_out_via_power_button,
+                                                   data->lock_out_power_button,
                                                    data->bios_mux_control_override,
                                                    data->bios_shared_mode_override,
                                                    obj_cmd_rs) < 0)
@@ -387,8 +387,8 @@ screen_blank_commit (const char *section_name,
 
 static config_err_t
 boot_device_checkout (const char *section_name,
-                       struct config_keyvalue *kv,
-                       void *arg)
+                      struct config_keyvalue *kv,
+                      void *arg)
 {
   ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
   struct boot_flags_data data;
@@ -407,8 +407,8 @@ boot_device_checkout (const char *section_name,
 
 static config_err_t
 boot_device_commit (const char *section_name,
-                     const struct config_keyvalue *kv,
-                     void *arg)
+                    const struct config_keyvalue *kv,
+                    void *arg)
 {
   ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
   struct boot_flags_data data;
@@ -418,6 +418,126 @@ boot_device_commit (const char *section_name,
     return ret;
 
   data.boot_device = boot_device_number (kv->value_input);
+
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+lock_out_reset_button_checkout (const char *section_name,
+                                struct config_keyvalue *kv,
+                                void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            data.lock_out_reset_button ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+lock_out_reset_button_commit (const char *section_name,
+                              const struct config_keyvalue *kv,
+                              void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  data.lock_out_reset_button = same (kv->value_input, "yes");
+
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+lock_out_power_button_checkout (const char *section_name,
+                                struct config_keyvalue *kv,
+                                void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            data.lock_out_power_button ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+lock_out_power_button_commit (const char *section_name,
+                              const struct config_keyvalue *kv,
+                              void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  data.lock_out_power_button = same (kv->value_input, "yes");
+
+  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+lock_out_sleep_button_checkout (const char *section_name,
+                                struct config_keyvalue *kv,
+                                void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (config_section_update_keyvalue_output(state_data->pstate,
+                                            kv,
+                                            data.lock_out_sleep_button ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+lock_out_sleep_button_commit (const char *section_name,
+                              const struct config_keyvalue *kv,
+                              void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  data.lock_out_sleep_button = same (kv->value_input, "yes");
 
   if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
     return ret;
@@ -473,7 +593,8 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
     "chassis boot behavior.  Please note that some fields may apply to "
     "all future boots while some may only apply to the next system boot."
     "\n"
-    "\"Boot_Flags_Valid\" should normally be set to \"Yes\""
+    "\"Boot_Flags_Valid\" should be set to \"Yes\" to inform the BIOS to "
+    "use the following settings."
     "\n"
     "\"Boot_Flags_Persistent\" determines if flags apply to the next boot only "
     "or all future boots."
@@ -553,6 +674,36 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
                               boot_device_commit,
                               boot_device_number_validate) < 0)
     goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Lock_Out_Reset_Button",
+                              "Possible values: Yes/No",
+                              0,
+                              lock_out_reset_button_checkout,
+                              lock_out_reset_button_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Lock_Out_Power_Button",
+                              "Possible values: Yes/No",
+                              0,
+                              lock_out_power_button_checkout,
+                              lock_out_power_button_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Lock_Out_Sleep_Button",
+                              "Possible values: Yes/No",
+                              0,
+                              lock_out_sleep_button_checkout,
+                              lock_out_sleep_button_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup; 
 
   return section;
 

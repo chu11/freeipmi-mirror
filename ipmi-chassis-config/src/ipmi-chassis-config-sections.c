@@ -30,6 +30,7 @@
 
 #include "ipmi-chassis-config.h"
 #include "ipmi-chassis-config-sections.h"
+#include "ipmi-chassis-config-boot-flags.h"
 #include "ipmi-chassis-config-front-panel-buttons.h"
 #include "ipmi-chassis-config-power-conf.h"
 
