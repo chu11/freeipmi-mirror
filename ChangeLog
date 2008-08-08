@@ -67,6 +67,12 @@
 	doc/freeipmi-coding.txt, doc/freeipmi-hostrange.txt: Update
 	appropriately with documentation updates.
 
+        * libfreeipmi/src/cmds/ipmi-chassis-cmds.c
+        (fill_cmd_set_system_boot_options_boot_flags),
+        libfreeipmi/src/api/ipmi-chassis-cmds-api.c
+        (ipmi_cmd_set_system_boot_options_boot_flags): Fix input parameter
+        check.
+
 	* Various code cleanup.
 	
 2008-08-02 Albert Chu <chu11@llnl.gov>
