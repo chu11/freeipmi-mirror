@@ -487,7 +487,7 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (force_progress_event_traps)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (user_password_bypass)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_sleep_button)
-                      && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (console_redirection)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_VALID (console_redirection)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (bios_shared_mode_override)
                       && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_BIOS_MUX_CONTROL_OVERRIDE_VALID (bios_mux_control_override)
                       && fiid_obj_valid(obj_cmd_rs));
