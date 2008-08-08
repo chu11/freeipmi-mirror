@@ -58,15 +58,15 @@ fiid_template_t tmpl_sel_system_event_record =
     {7, "event_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "event_dir", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     
-    //Event Data 1
+    /* Event Data 1 */
     {4, "offset_from_event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {2, "event_data3_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {2, "event_data2_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    //Event Data 2
+    /* Event Data 2 */
     {8, "event_data2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    //Event Data 3
+    /* Event Data 3 */
     {8, "event_data3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
     {0, "", 0}

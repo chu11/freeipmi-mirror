@@ -11,11 +11,12 @@ This configuration tool is for advanced IPMI users and
 generally not-required for IPMI to function.  Most IPMI users
 will not need to use this tool.
 
-For configuration of general BMC parameters or sensors, please
-see the 
-.B bmc-config(8)
-and 
-.B ipmi-sensors-config(8)
+For configuration of general BMC parameters, sensors, or chassis,
+please see the
+.B bmc-config(8),
+.B ipmi-sensors-config(8),
+and
+.B ipmi-chassis-config(8)
 tools respectively.
 .LP
 See GENERAL USE below for a description on how most will want to use
@@ -98,5 +99,6 @@ Commit all configuration values from the pef-data1.conf file.
 Copyright \(co 2007-2008 FreeIPMI Core Team.  
 #include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8), ipmi-sensors-config(8)
+freeipmi(7), bmc-config(8), ipmi-sensors-config(8),
+ipmi-chassis-config(8)
 #include <@top_srcdir@/common/man/manpage-common-homepage.man>

@@ -233,6 +233,7 @@ fi
 %{_sbindir}/ipmiconsole
 %{_sbindir}/ipmimonitoring
 %{_sbindir}/ipmi-chassis
+%{_sbindir}/ipmi-chassis-config
 %{_sbindir}/ipmidetect
 %{_mandir}/man8/bmc-config.8*
 %{_mandir}/man5/bmc-config.conf.5*
@@ -254,6 +255,7 @@ fi
 %{_mandir}/man5/ipmiconsole.conf.5*
 %{_mandir}/man8/ipmimonitoring.8*
 %{_mandir}/man8/ipmi-chassis.8*
+%{_mandir}/man8/ipmi-chassis-config.8*
 %{_mandir}/man8/ipmidetect.8*
 %{_mandir}/man5/freeipmi.conf.5*
 %{_mandir}/man5/ipmidetect.conf.5*
@@ -315,6 +317,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Mon Aug 04 2008 Albert Chu <chu11@llnl.gov> 0.7.0
+- Add ipmi-chassis-config.
+
 * Thu Jul 10 2008 Albert Chu <chu11@llnl.gov> 0.7.0
 - Add freeipmi.conf default file. 
 - Make 0644 perms default for config files.

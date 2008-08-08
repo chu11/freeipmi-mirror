@@ -43,9 +43,28 @@ config_commit_section(pstdout_state_t pstate,
   struct config_keyvalue *kv;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
+  config_err_t this_ret;
+  unsigned int commit_count = 0;
 
   assert(section);
   assert(cmd_args);
+
+  if (section->section_pre_commit)
+    {
+      if ((this_ret = section->section_pre_commit (section->section_name, 
+                                                   arg)) == CONFIG_ERR_FATAL_ERROR)
+        goto cleanup;
+
+      if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr, 
+                           "ERROR: Section pre-commit `%s:%s'\n", 
+                           section->section_name,
+                           kv->key->key_name);
+          ret = CONFIG_ERR_NON_FATAL_ERROR;
+        }
+    }
 
   kv = section->keyvalues;
   while (kv) 
@@ -55,12 +74,15 @@ config_commit_section(pstdout_state_t pstate,
       if (!(kv->key->flags & CONFIG_READABLE_ONLY)
           && !(kv->key->flags & CONFIG_UNDEFINED))
         {
-          if ((ret = kv->key->commit (section->section_name,
-                                      kv,
-                                      arg)) == CONFIG_ERR_FATAL_ERROR)
+          if ((this_ret = kv->key->commit (section->section_name,
+                                           kv,
+                                           arg)) == CONFIG_ERR_FATAL_ERROR)
             goto cleanup;
+
+          if (this_ret == CONFIG_ERR_SUCCESS)
+            commit_count++;
           
-          if (ret == CONFIG_ERR_NON_FATAL_ERROR)
+          if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
             {
               PSTDOUT_FPRINTF (pstate,
                                stderr, 
@@ -86,6 +108,23 @@ config_commit_section(pstdout_state_t pstate,
                      "Completed commit of Section: %s\n",
                      section->section_name);
   
+  if (commit_count && section->section_post_commit)
+    {
+      if ((this_ret = section->section_post_commit (section->section_name,
+                                                    arg)) == CONFIG_ERR_FATAL_ERROR)
+        goto cleanup;
+
+      if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr, 
+                           "ERROR: Section post-commit `%s:%s'\n", 
+                           section->section_name,
+                           kv->key->key_name);
+          ret = CONFIG_ERR_NON_FATAL_ERROR;
+        }
+    }
+
   rv = ret;
  cleanup:
   return rv;

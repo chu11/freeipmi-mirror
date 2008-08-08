@@ -411,7 +411,7 @@ output (each line of output is prepended with "hostname: ").  In this
 mode, you can easily grep for "Warning" and "Critical" and determine
 which nodes have problems via scripts.
 
-bmc-config/ipmi-sensors-config/pef-config:
+bmc-config/pef-config/ipmi-sensors-config/ipmi-chassis-config:
 
 The typical use of one of the above config tools is to run w/
 --checkout to checkout a configuration, modify that file with new

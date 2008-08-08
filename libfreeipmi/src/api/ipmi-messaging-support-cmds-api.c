@@ -692,7 +692,7 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
       switch (manufacturer_id)
 	{
 	case IPMI_MANUFACTURER_ID_INTEL:
-	case 0xB000157: // Intel 
+	case 0xB000157: /* Intel */
 	  switch (product_id)
 	    {
 	    case IPMI_PRODUCT_ID_SE7501WV2:

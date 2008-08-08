@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.alpha1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.145 2008-07-20 19:56:01 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.146 2008-08-08 22:56:54 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -67,6 +67,9 @@ AC_CONFIG_FILES([
 	ipmi-chassis/Makefile
 	ipmi-chassis/ipmi-chassis.8.pre
 	ipmi-chassis/src/Makefile
+        ipmi-chassis-config/Makefile 
+	ipmi-chassis-config/ipmi-chassis-config.8.pre
+        ipmi-chassis-config/src/Makefile 
         ipmi-fru/Makefile 
 	ipmi-fru/ipmi-fru.8.pre
         ipmi-fru/src/Makefile

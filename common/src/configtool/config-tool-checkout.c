@@ -148,10 +148,36 @@ config_checkout_section(pstdout_state_t pstate,
 
           assert(kv->value_output);
 
-          PSTDOUT_FPRINTF(pstate,
-                          fp, 
-                          "\t## %s\n", 
-                          kv->key->description);
+          if (strchr(kv->key->description, '\n'))
+            {
+              char *cptr;
+
+              cptr = kv->key->description;
+              PSTDOUT_FPRINTF(pstate,
+                              fp,
+                              "\t## ");
+              while (*cptr)
+                {
+                  if (*cptr == '\n')
+                    PSTDOUT_FPRINTF(pstate,
+                                    fp,
+                                    "\n\t## ");
+                  else
+                    PSTDOUT_FPRINTF(pstate,
+                                    fp,
+                                    "%c",
+                                    *cptr);
+                  cptr++;
+                }
+              PSTDOUT_FPRINTF(pstate,
+                              fp,
+                              "\n");
+            }
+          else
+            PSTDOUT_FPRINTF(pstate,
+                            fp, 
+                            "\t## %s\n", 
+                            kv->key->description);
 
           /* achu: Certain keys should have their checked out
            * value automatically commented out.  Sometimes (in the

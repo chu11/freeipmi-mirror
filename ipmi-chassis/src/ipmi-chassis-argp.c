@@ -74,37 +74,37 @@ static struct argp_option cmdline_options[] =
      "Control the chassis.", 32},
     {"chassis-identify", CHASSIS_IDENTIFY_KEY, "IDENTIFY", 0,
      "Set chassis Identification.", 33},
-    {"set-power-restore-policy", SET_POWER_RESTORE_POLICY_KEY, "POLICY", 0, 
+    {"set-power-restore-policy", SET_POWER_RESTORE_POLICY_KEY, "POLICY", OPTION_HIDDEN, 
      "Set power restore policy.", 34},
-    {"set-power-cycle-interval", SET_POWER_CYCLE_INTERVAL_KEY, "SECONDS", 0, 
+    {"set-power-cycle-interval", SET_POWER_CYCLE_INTERVAL_KEY, "SECONDS", OPTION_HIDDEN, 
      "Set Power cycle interval in seconds.", 35},
     {"get-system-restart-cause", GET_SYSTEM_RESTART_CAUSE_KEY, NULL, 0, 
      "Get system restart cause.", 36},
     {"get-power-on-hours-counter", GET_POWER_ON_HOURS_COUNTER_KEY, NULL, 0,
      "Get power on hours (POH) counter.", 37},
-    {"get-boot-flags", GET_BOOT_FLAGS_KEY, NULL, 0, 
+    {"get-boot-flags", GET_BOOT_FLAGS_KEY, NULL, OPTION_HIDDEN, 
      "Get system boot-flags.", 38},
-    {"set-boot-flags", SET_BOOT_FLAGS_KEY, NULL, 0, 
+    {"set-boot-flags", SET_BOOT_FLAGS_KEY, NULL, OPTION_HIDDEN, 
      "Set system boot flags.", 39},
-    {"boot-type", SET_BOOT_FLAGS_BOOT_TYPE_KEY, "BOOT_TYPE", OPTION_ARG_OPTIONAL, 
+    {"boot-type", SET_BOOT_FLAGS_BOOT_TYPE_KEY, "BOOT_TYPE", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Set BIOS boot type to BOOT_TYPE.", 40},
-    {"lock-out-reset-button", SET_BOOT_FLAGS_LOCK_OUT_RESET_BUTTON_KEY, "LOCK_OUT_RESET_BUTTON", OPTION_ARG_OPTIONAL, 
+    {"lock-out-reset-button", SET_BOOT_FLAGS_LOCK_OUT_RESET_BUTTON_KEY, "LOCK_OUT_RESET_BUTTON", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Modify lock out reset button support.", 41},
-    {"blank-screen", SET_BOOT_FLAGS_SCREEN_BLANK_KEY, "BLANK_SCREEN", OPTION_ARG_OPTIONAL, 
+    {"blank-screen", SET_BOOT_FLAGS_SCREEN_BLANK_KEY, "BLANK_SCREEN", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Modify blank screen support.", 42},
-    {"boot-device", SET_BOOT_FLAGS_BOOT_DEVICE_SELECTOR_KEY, "BOOT_DEVICE", OPTION_ARG_OPTIONAL, 
+    {"boot-device", SET_BOOT_FLAGS_BOOT_DEVICE_KEY, "BOOT_DEVICE", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Set device to boot from to BOOT_DEVICE.", 43},
-    {"lock-keyboard", SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL, 
+    {"lock-keyboard", SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Modify lock keyboard support.", 44},
-    {"clear-cmos", SET_BOOT_FLAGS_CLEAR_CMOS_KEY, "CMOS_CLEAR", OPTION_ARG_OPTIONAL, 
+    {"clear-cmos", SET_BOOT_FLAGS_CMOS_CLEAR_KEY, "CMOS_CLEAR", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Modify clear CMOS support.", 45},
-    {"console-redirection", SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY, "CONSOLE_REDIRECTION", OPTION_ARG_OPTIONAL, 
+    {"console-redirection", SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY, "CONSOLE_REDIRECTION", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Set console redirection type.", 46},
-    {"user-password-bypass", SET_BOOT_FLAGS_USER_PASSWORD_BYPASS_KEY, "USER_PASSWORD_BYPASS", OPTION_ARG_OPTIONAL, 
+    {"user-password-bypass", SET_BOOT_FLAGS_USER_PASSWORD_BYPASS_KEY, "USER_PASSWORD_BYPASS", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Modify user password bypass support.", 47},
-    {"force-progress-event-traps", SET_BOOT_FLAGS_FORCE_PROGRESS_EVENT_TRAPS_KEY, "FORCE_PROGRESS_EVENT_TRAPS", OPTION_ARG_OPTIONAL, 
+    {"force-progress-event-traps", SET_BOOT_FLAGS_FORCE_PROGRESS_EVENT_TRAPS_KEY, "FORCE_PROGRESS_EVENT_TRAPS", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Modify force progress event traps support.", 48},
-    {"firmware-bios-verbosity", SET_BOOT_FLAGS_FIRMWARE_BIOS_VERBOSITY_KEY, "FIRMWARE_BIOS_VERBOSITY", OPTION_ARG_OPTIONAL, 
+    {"firmware-bios-verbosity", SET_BOOT_FLAGS_FIRMWARE_BIOS_VERBOSITY_KEY, "FIRMWARE_BIOS_VERBOSITY", OPTION_ARG_OPTIONAL | OPTION_HIDDEN, 
      "Set firmware verbosity.", 49},
     { 0 }
   };
@@ -173,7 +173,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.screen_blank = value;
       break;
 
-    case SET_BOOT_FLAGS_BOOT_DEVICE_SELECTOR_KEY:
+    case SET_BOOT_FLAGS_BOOT_DEVICE_KEY:
       /* achu: many legacy inputs are preserved */
       if (!strcasecmp(arg, "no-override")
           || !strcasecmp(arg, "none")) /* legacy */
@@ -200,7 +200,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit(1);
         }
 
-      cmd_args->args.boot_option_args.boot_device_selector = value;
+      cmd_args->args.boot_option_args.boot_device = value;
       break;
 
     case SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY:
@@ -217,7 +217,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.lock_keyboard = value;
       break;
 
-    case SET_BOOT_FLAGS_CLEAR_CMOS_KEY:
+    case SET_BOOT_FLAGS_CMOS_CLEAR_KEY:
       if (!strcasecmp (arg, "yes"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
       else if (!strcasecmp (arg, "no"))
@@ -228,14 +228,14 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit(1);
         }
 
-      cmd_args->args.boot_option_args.clear_cmos = value;
+      cmd_args->args.boot_option_args.cmos_clear = value;
       break;
 
     case SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY:
       if (!strcasecmp (arg, "default"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT;
       else if (!strcasecmp (arg, "suppress"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPRESS;
+        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPPRESS;
       else if (!strcasecmp (arg, "enable"))
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE;
       else
@@ -535,9 +535,9 @@ ipmi_chassis_argp_parse (int argc,
   cmd_args->args.boot_option_args.bios_boot_type = -1;
   cmd_args->args.boot_option_args.lock_out_reset_button = -1;
   cmd_args->args.boot_option_args.screen_blank = -1;
-  cmd_args->args.boot_option_args.boot_device_selector = -1;
+  cmd_args->args.boot_option_args.boot_device = -1;
   cmd_args->args.boot_option_args.lock_keyboard = -1;
-  cmd_args->args.boot_option_args.clear_cmos = -1;
+  cmd_args->args.boot_option_args.cmos_clear = -1;
   cmd_args->args.boot_option_args.console_redirection = -1;
   cmd_args->args.boot_option_args.user_password_bypass = -1;
   cmd_args->args.boot_option_args.force_progress_event_traps = -1;

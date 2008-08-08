@@ -56,7 +56,9 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                                      "Lan_Channel",
                                                      "Lan_Channel",
                                                      section_comment,
-                                                     0)))
+                                                     0,
+                                                     NULL,
+                                                     NULL)))
     goto cleanup;
 
   if (bmc_config_channel_common_section_get(state_data, 

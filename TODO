@@ -18,11 +18,9 @@ ok vs. non-ok for threshold sensors
 
 ipmi-chassis-config
 -------------------
-power cycle interval
-chassis boot params
-- new chassis config tool?
-- move power restore polcy over from bmc-config
-chassis front-panel enables
+* conf.5 manpage
+has never been tested
+- panel button config
 
 general
 -------
@@ -86,6 +84,11 @@ BSD
 - gethostbyname_r - still compiles
 - autoconf - no argp-standalone - config errors w/ argp library not found. argp-standalone required
 - autoconf - finds argp-standalone
+
+0.7.0 web
+---------
+add ipmi-chassis-config manpage
+add ipmi-chassis-config text on index
 
 RELEASE TODOS - Do on every release
 -----------------------------------

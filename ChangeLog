@@ -1,3 +1,82 @@
+2008-08-08 Albert Chu <chu11@llnl.gov>
+
+	Merge contents from chassis_config_branch.
+
+	* ipmi-chassis-config/Makefile.am,
+	ipmi-chassis-config/ipmi-chassis-config.8.pre.in,
+	ipmi-chassis-config/src/Makefile.am,
+	ipmi-chassis-config/src/ipmi-chassis-config.h,
+	ipmi-chassis-config/src/ipmi-chassis-config.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-argp.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-argp.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-boot-flags.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-boot-flags.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-boot-flags-valid-bit-clearing.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-boot-flags-valid-bit-clearing.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-front-panel-buttons.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-front-panel-buttons.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-power-conf.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-power-conf.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-validate.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-validate.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-map.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-map.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-sections.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-sections.c: New files.
+
+	* common/src/configtool/config-tool-common.h,
+	common/src/configtool/config-tool-section.h,
+	common/src/configtool/config-tool-section.c,
+	common/src/configtool/config-tool-commit.c,
+	(config_section_create, config_commit_section): Add sectional pre
+	and post commit callback definitions and functions.
+
+	* common/src/configtool/config-tool-checkout.c
+	(config_checkout_section): Support multiline descriptions.
+
+	* bmc-config/src/, pef-config/src/, ipmi-sensors-config/src/:
+	Update for function call changes.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h,
+	libfreeipmi/src/cmds/ipmi-chassis-cmds.c
+	(fill_set_front_panel_enables,
+	tmpl_cmd_set_front_panel_enables_rq,
+	tmpl_cmd_set_front_panel_enables_rs,
+	fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing,
+	tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq,
+	tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs):
+	Support new templates and functions.
+
+	* libfreeipmi/include/freeipmi/api/ipmi-chassis-cmds-api.h,
+	libfreeipmi/src/cmds/ipmi-chassis-cmds-api.c
+	(ipmi_cmd_set_front_panel_enables,
+	ipmi_cmd_set_system_boot_options_boot_BMC_boot_flag_valid_bit_clearing
+	ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing):
+	New functions.
+
+	* bmc-config/src/: Remove default checkout of
+	"Power_Restore_Policy".
+
+	* ipmi-chassis/: Hide legacy chassis configuration commands/options.
+
+	* configure.ac, Makefile.am, freeipmi.spec.in: Update as needed
+	for new files.
+	
+	* bmc-config/bmc-config.8.pre.in, pef-config/pef-config.8.pre.in,
+	ipmi-sensors-config/ipmi-sensors-config.8.pre.in,
+	ipmi-chassis/ipmi-chassis.8.pre.in, README, NEWS,
+	mans/freeipmi.7.pre.in, doc/freeipmi-faq.texi,
+	doc/freeipmi-coding.txt, doc/freeipmi-hostrange.txt: Update
+	appropriately with documentation updates.
+
+        * libfreeipmi/src/cmds/ipmi-chassis-cmds.c
+        (fill_cmd_set_system_boot_options_boot_flags),
+        libfreeipmi/src/api/ipmi-chassis-cmds-api.c
+        (ipmi_cmd_set_system_boot_options_boot_flags): Fix input parameter
+        check.
+
+	* Various code cleanup.
+	
 2008-08-05 Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Support configurable Lan_Session_Limit and

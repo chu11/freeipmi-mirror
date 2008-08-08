@@ -329,7 +329,9 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
                                              "PEF_Conf",
                                              NULL,
                                              NULL,
-                                             CONFIG_DO_NOT_CHECKOUT)))
+                                             CONFIG_DO_NOT_CHECKOUT,
+                                             NULL,
+                                             NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

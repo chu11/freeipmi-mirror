@@ -1394,7 +1394,9 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                                  section_name,
                                                  "UserX",
                                                  section_comment,
-                                                 0)))
+                                                 0,
+                                                 NULL,
+                                                 NULL)))
         goto cleanup;
     }
   else
@@ -1403,7 +1405,9 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                                  section_name,
                                                  NULL,
                                                  NULL,
-                                                 0)))
+                                                 0,
+                                                 NULL,
+                                                 NULL)))
         goto cleanup;
     }
 

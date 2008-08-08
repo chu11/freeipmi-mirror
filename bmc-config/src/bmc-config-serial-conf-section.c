@@ -710,7 +710,9 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                                         "Serial_Conf", 
                                                         "Serial_Conf", 
                                                         section_comment,
-                                                        verbose_flags)))
+                                                        verbose_flags,
+                                                        NULL,
+                                                        NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

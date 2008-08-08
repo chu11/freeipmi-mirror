@@ -136,7 +136,6 @@ ipmi_cmd_chassis_identify (ipmi_ctx_t ctx,
                            uint8_t *force_identify,
                            fiid_obj_t obj_cmd_rs)
 {
-
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
@@ -154,6 +153,47 @@ ipmi_cmd_chassis_identify (ipmi_ctx_t ctx,
                                                 force_identify, 
                                                 obj_cmd_rq) < 0));
 
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+                            IPMI_BMC_IPMB_LUN_BMC, 
+                            IPMI_NET_FN_CHASSIS_RQ, 
+                            obj_cmd_rq, 
+                            obj_cmd_rs);
+
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY (obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
+ipmi_cmd_set_front_panel_enables (ipmi_ctx_t ctx,
+                                  uint8_t disable_power_off_button_for_power_off_only,
+                                  uint8_t disable_reset_button,
+                                  uint8_t disable_diagnostic_interrupt_button,
+                                  uint8_t disable_standby_button_for_entering_standby,
+                                  fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+  
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  
+  API_ERR_PARAMETERS (IPMI_CHASSIS_BUTTON_VALID(disable_power_off_button_for_power_off_only)
+                      && IPMI_CHASSIS_BUTTON_VALID(disable_reset_button)
+                      && IPMI_CHASSIS_BUTTON_VALID(disable_diagnostic_interrupt_button)
+                      && IPMI_CHASSIS_BUTTON_VALID(disable_standby_button_for_entering_standby)
+                      && fiid_obj_valid(obj_cmd_rs));
+  
+  API_FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_set_front_panel_enables_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_front_panel_enables_rq);
+  
+  API_ERR_CLEANUP (!(fill_cmd_set_front_panel_enables (disable_power_off_button_for_power_off_only,
+                                                       disable_reset_button,
+                                                       disable_diagnostic_interrupt_button,
+                                                       disable_standby_button_for_entering_standby,
+                                                       obj_cmd_rq) < 0));
+  
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
                             IPMI_NET_FN_CHASSIS_RQ, 
@@ -367,15 +407,58 @@ ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
 }
 
 int8_t 
+ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
+                                                                   uint8_t dont_clear_on_power_up,
+                                                                   uint8_t dont_clear_on_pushbutton_rest_soft_reset,
+                                                                   uint8_t dont_clear_on_watchdog_timeout,
+                                                                   uint8_t dont_clear_on_chassis_control,
+                                                                   uint8_t dont_clear_on_PEF,
+                                                                   fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_power_up)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_pushbutton_rest_soft_reset)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_watchdog_timeout)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_chassis_control)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_PEF)
+                      && fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
+
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (dont_clear_on_power_up,
+                                                                                        dont_clear_on_pushbutton_rest_soft_reset,
+                                                                                        dont_clear_on_watchdog_timeout,
+                                                                                        dont_clear_on_chassis_control,
+                                                                                        dont_clear_on_PEF,
+                                                                                        obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+                            IPMI_BMC_IPMB_LUN_BMC, 
+                            IPMI_NET_FN_CHASSIS_RQ, 
+                            obj_cmd_rq, 
+                            obj_cmd_rs);
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY (obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
 ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                              uint8_t bios_boot_type,
                                              uint8_t boot_flags_persistent,
                                              uint8_t boot_flags_valid,
                                              uint8_t lock_out_reset_button,
                                              uint8_t screen_blank,
-                                             uint8_t boot_device_selector,
+                                             uint8_t boot_device,
                                              uint8_t lock_keyboard,
-                                             uint8_t clear_cmos,
+                                             uint8_t cmos_clear,
                                              uint8_t console_redirection,
                                              uint8_t lock_out_sleep_button,
                                              uint8_t user_password_bypass,
@@ -393,10 +476,10 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
 
   API_ERR_PARAMETERS (IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_valid)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_persistent)
-                      && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (clear_cmos)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (cmos_clear)
                       && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BIOS_BOOT_TYPE_VALID (bios_boot_type)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_keyboard)
-                      && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_VALID (boot_device_selector)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_VALID (boot_device)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (screen_blank)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_reset_button)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_via_power_button)
@@ -404,7 +487,7 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (force_progress_event_traps)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (user_password_bypass)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_sleep_button)
-                      && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (console_redirection)
+                      && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_VALID (console_redirection)
                       && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (bios_shared_mode_override)
                       && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_BIOS_MUX_CONTROL_OVERRIDE_VALID (bios_mux_control_override)
                       && fiid_obj_valid(obj_cmd_rs));
@@ -418,9 +501,9 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                                                   boot_flags_valid,
                                                                   lock_out_reset_button,
                                                                   screen_blank,
-                                                                  boot_device_selector,
+                                                                  boot_device,
                                                                   lock_keyboard,
-                                                                  clear_cmos,
+                                                                  cmos_clear,
                                                                   console_redirection,
                                                                   lock_out_sleep_button,
                                                                   user_password_bypass,
@@ -461,6 +544,39 @@ ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_boot_options_rq);
 
   API_ERR_CLEANUP (!(fill_cmd_get_system_boot_options (parameter_selector, 
+                                                       set_selector, 
+                                                       block_selector, 
+                                                       obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+                            IPMI_BMC_IPMB_LUN_BMC, 
+                            IPMI_NET_FN_CHASSIS_RQ, 
+                            obj_cmd_rq, 
+                            obj_cmd_rs);
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY (obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
+ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
+                                                                   uint8_t set_selector,
+                                                                   uint8_t block_selector,
+                                                                   fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs);
+
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_boot_options_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_get_system_boot_options (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING, 
                                                        set_selector, 
                                                        block_selector, 
                                                        obj_cmd_rq) < 0));

@@ -74,7 +74,9 @@ config_section_create (pstdout_state_t pstate,
                        char *section_name,
                        char *section_comment_section_name,
                        char *section_comment,
-                       unsigned int flags)
+                       unsigned int flags,
+                       Section_Pre_Commit section_pre_commit,
+                       Section_Post_Commit section_post_commit)
 {
   struct config_section *section = NULL;
 
@@ -116,6 +118,8 @@ config_section_create (pstdout_state_t pstate,
     }
 
   section->flags = flags;
+  section->section_pre_commit = section_pre_commit;
+  section->section_post_commit = section_post_commit;
 
   return section;
  cleanup:

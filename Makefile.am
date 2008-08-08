@@ -9,6 +9,7 @@ SUBDIRS = \
 	bmc-device \
 	bmc-watchdog \
 	ipmi-chassis \
+	ipmi-chassis-config \
 	ipmi-fru \
 	ipmi-oem \
 	ipmi-raw \

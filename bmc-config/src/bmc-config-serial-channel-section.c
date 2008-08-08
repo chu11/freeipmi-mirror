@@ -62,7 +62,9 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
                                                         "Serial_Channel",
                                                         "Serial_Channel",
                                                         section_comment,
-                                                        verbose_flags)))
+                                                        verbose_flags,
+                                                        NULL,
+                                                        NULL)))
     goto cleanup;
 
   if (bmc_config_channel_common_section_get(state_data, 

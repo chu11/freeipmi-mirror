@@ -1,0 +1,108 @@
+.TH IPMI-CHASSIS-CONFIG 8 "@ISODATE@" "ipmi-chassis-config @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+ipmi-chassis-config \- configure chassis fields
+.SH "SYNOPSIS"
+.B ipmi-chassis-config
+[\fIOPTION\fR...]
+.SH "DESCRIPTION"
+.B Ipmi-chassis-config
+is used to get and set chassis configuration parameters, such as boot
+device and power restore policy configuration.  Most IPMI users will
+not need to use this tool, although some may need it for advanced
+configuration.  For more general chassis management such as power
+control or identification, please see
+.B ipmi-chassis(8) 
+or 
+.B ipmipower(8).
+
+Some chassis configuration may not be stored in non-volatile memory, so
+users may wish to veryify that new configurations exist after system
+reboots or to always run
+.B ipmi-chassis-config
+during system initialization.
+
+For configuration of general BMC parameters, platform event filtering
+(PEF), or sensors, please see the
+.B bmc-config(8),
+.B pef-config(8),
+or
+.B ipmi-sensors-config(8)
+tools respectively.
+
+.LP
+See GENERAL USE below for a description on how most will want to use
+.B Ipmi-chassis-config.
+#include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/common/man/manpage-common-driver.man>
+#include <@top_srcdir@/common/man/manpage-common-inband.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-username-admin.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/common/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/common/man/manpage-common-privilege-level-admin.man>
+#include <@top_srcdir@/common/man/manpage-common-config-file.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/common/man/manpage-common-debug.man>
+#include <@top_srcdir@/common/man/manpage-common-misc.man>
+#include <@top_srcdir@/common/man/manpage-common-config-tool-options.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/common/man/manpage-common-config-tool-general-use.man>
+.SH "IPMI-CHASSIS-CONFIG SPECIAL CASE CONFIGURATION INFORMATION"
+The
+.B Chassis_Front_Panel_Buttons:Enable_Standby_Button_For_Entering_Standy,
+.B Chassis_Front_Panel_Buttons:Enable_Diagnostic_Interrupt_Button
+.B Chassis_Front_Panel_Buttons:Enable_Reset_Button,
+and
+.B Chassis_Front_Panel_Buttons:Enable_Power_Off_Button_For_Power_Off_Only
+fields may not be able to be checked out on some IPMI systems, therefore
+the checked out value may be blank.  Some of these fields may be 
+disableable, while some are not.
+
+The
+.B Chassis_Power_Conf:Power_Control_Interval 
+field cannot be checked out.  Therefore the checked out value will
+always be blank.
+
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
+.SH "EXAMPLES"
+.B # ipmi-chassis-config --checkout 
+.PP
+Output all configuration information to the console.
+.PP
+.B # ipmi-chassis-config --checkout --filename=chassis-data1.conf
+.PP
+Store all BMC configuration information in chassis-data1.conf.
+.PP
+.B # ipmi-chassis-config --diff --filename=chassis-data2.conf
+.PP
+Show all difference between the current configuration and the chassis-data2.conf file.
+.PP
+.B # ipmi-chassis-config --commit --filename=chassis-data1.conf
+.PP
+Commit all configuration values from the chassis-data1.conf file.
+.PP
+#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
+.SH "COPYRIGHT"
+Copyright \(co 2008 FreeIPMI Core Team.  
+#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
+.SH "SEE ALSO"
+freeipmi(7), bmc-config(8), pef-config(8), ipmi-sensors-config(8),
+ipmi-chassis(8), ipmipower(8)
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>

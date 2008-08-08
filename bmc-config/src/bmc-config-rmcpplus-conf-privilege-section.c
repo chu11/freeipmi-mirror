@@ -371,7 +371,9 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                                                  "Rmcpplus_Conf_Privilege",
                                                                  "Rmcpplus_Conf_Privilege",
                                                                  section_comment,
-                                                                 0)))
+                                                                 0,
+                                                                 NULL,
+                                                                 NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

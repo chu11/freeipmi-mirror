@@ -507,7 +507,9 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                                       "Lan_Conf_Auth",
                                                       "Lan_Conf_Auth",
                                                       section_comment,
-                                                      0)))
+                                                      0,
+                                                      NULL,
+                                                      NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
