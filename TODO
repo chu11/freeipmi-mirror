@@ -19,11 +19,7 @@ ok vs. non-ok for threshold sensors
 ipmi-chassis-config
 -------------------
 * conf.5 manpage
-power cycle interval
-chassis boot params
-- move power restore polcy over from bmc-config
 has never been tested
-- boot device config
 - panel button config
 
 general

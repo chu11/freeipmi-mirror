@@ -44,6 +44,7 @@ config_commit_section(pstdout_state_t pstate,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
   config_err_t this_ret;
+  unsigned int commit_count = 0;
 
   assert(section);
   assert(cmd_args);
@@ -77,6 +78,9 @@ config_commit_section(pstdout_state_t pstate,
                                            kv,
                                            arg)) == CONFIG_ERR_FATAL_ERROR)
             goto cleanup;
+
+          if (this_ret == CONFIG_ERR_SUCCESS)
+            commit_count++;
           
           if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
             {
@@ -104,7 +108,7 @@ config_commit_section(pstdout_state_t pstate,
                      "Completed commit of Section: %s\n",
                      section->section_name);
   
-  if (section->section_post_commit)
+  if (commit_count && section->section_post_commit)
     {
       if ((this_ret = section->section_post_commit (section->section_name,
                                                     arg)) == CONFIG_ERR_FATAL_ERROR)
