@@ -301,9 +301,9 @@ front_panel_buttons_commit (const char *section_name,
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-  
-  if (enable_or_disable == BUTTON_DISABLE_NOT_ALLOWED
-      && disable_allowed == BUTTON_DISABLED)
+ 
+  if (enable_or_disable == BUTTON_DISABLED
+      && disable_allowed == BUTTON_DISABLE_NOT_ALLOWED)
     {
       if (state_data->prog_data->args->config_args.verbose)
         pstdout_printf (state_data->pstate,
@@ -312,6 +312,35 @@ front_panel_buttons_commit (const char *section_name,
                         kv->key->key_name);
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
+    }
+
+  if (data.standby == BUTTON_UNKNOWN)
+    {
+      if (state_data->front_panel_enable_standby_button_for_entering_standby_initialized)
+        data.standby = state_data->front_panel_enable_standby_button_for_entering_standby;
+      else
+        data.standby = BUTTON_ENABLED;
+    }
+  if (data.diagnostic_interrupt == BUTTON_UNKNOWN)
+    {
+      if (state_data->front_panel_enable_diagnostic_interrupt_button_initialized)
+        data.diagnostic_interrupt = state_data->front_panel_enable_diagnostic_interrupt_button;
+      else
+        data.diagnostic_interrupt = BUTTON_ENABLED;
+    }
+  if (data.reset == BUTTON_UNKNOWN)
+    {
+      if (state_data->front_panel_enable_reset_button_initialized)
+        data.reset = state_data->front_panel_enable_reset_button;
+      else
+        data.reset = BUTTON_ENABLED;
+    }
+  if (data.power_off == BUTTON_UNKNOWN)
+    {
+      if (state_data->front_panel_enable_power_off_button_for_power_off_only_initialized)
+        data.power_off = state_data->front_panel_enable_power_off_button_for_power_off_only;
+      else
+        data.power_off = BUTTON_ENABLED;
     }
 
   if ((ret = _set_front_panel_buttons (state_data, &data)) != CONFIG_ERR_SUCCESS)
@@ -333,7 +362,11 @@ ipmi_chassis_config_front_panel_buttons_get (ipmi_chassis_config_state_data_t *s
     "The following configuration options are for enabling or disabling "
     "button functionality on the chassis.  Button may refer to a "
     "pushbutton, switch, or other front panel control built into the "
-    "system chassis.";
+    "system chassis."
+    "\n"
+    "The value of the below may not be able to be checked out.  Therefore "
+    "we recommend the user configure all four fields rather than a subset "
+    "of them, otherwise some assumptions on configure may be made.";
 
   if (!(section = config_section_create (state_data->pstate,
                                          "Chassis_Front_Panel_Buttons",

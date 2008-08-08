@@ -178,6 +178,17 @@ ipmi_cmd_set_front_panel_enables (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
   
+  printf("%d %d %d %d %d\n",
+         IPMI_CHASSIS_BUTTON_VALID(disable_power_off_button_for_power_off_only),
+         IPMI_CHASSIS_BUTTON_VALID(disable_reset_button),
+         IPMI_CHASSIS_BUTTON_VALID(disable_diagnostic_interrupt_button),
+         IPMI_CHASSIS_BUTTON_VALID(disable_standby_button_for_entering_standby),
+         fiid_obj_valid(obj_cmd_rs));
+  printf("%d %d %d %d %d\n",
+         disable_power_off_button_for_power_off_only,
+         disable_reset_button,
+         disable_diagnostic_interrupt_button,
+         disable_standby_button_for_entering_standby);
   API_ERR_PARAMETERS (IPMI_CHASSIS_BUTTON_VALID(disable_power_off_button_for_power_off_only)
                       && IPMI_CHASSIS_BUTTON_VALID(disable_reset_button)
                       && IPMI_CHASSIS_BUTTON_VALID(disable_diagnostic_interrupt_button)

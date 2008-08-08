@@ -53,6 +53,16 @@ typedef struct ipmi_chassis_config_state_data
   ipmi_chassis_config_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
+  
+  /* achu: workaround for IPMI limitation */
+  int front_panel_enable_standby_button_for_entering_standby_initialized;
+  uint8_t front_panel_enable_standby_button_for_entering_standby;
+  int front_panel_enable_diagnostic_interrupt_button_initialized;
+  uint8_t front_panel_enable_diagnostic_interrupt_button;
+  int front_panel_enable_reset_button_initialized;
+  uint8_t front_panel_enable_reset_button;
+  int front_panel_enable_power_off_button_for_power_off_only_initialized;
+  uint8_t front_panel_enable_power_off_button_for_power_off_only;
 } ipmi_chassis_config_state_data_t;
 
 #endif
