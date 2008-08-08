@@ -1,3 +1,7 @@
+0.6.6 - 00/00/00
+----------------
+o libfreeipmi/ipmi-chassis fix invalid console redirection input check.
+
 0.6.5 - 08/02/08
 ----------------
 o Fix ipmimonitoring group assignment bug.
