@@ -260,7 +260,7 @@ int8_t fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_
                                                                fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
-                                                                          uint8_t dont_clear_on_pushbutton_reset,
+                                                                          uint8_t dont_clear_on_pushbutton_or_soft_reset,
                                                                           uint8_t dont_clear_on_watchdog_timeout,
                                                                           uint8_t dont_clear_on_chassis_control,
                                                                           uint8_t dont_clear_on_PEF,

@@ -173,7 +173,7 @@ fiid_template_t tmpl_cmd_set_power_restore_policy_rs =
 fiid_template_t tmpl_cmd_set_power_cycle_interval_rq = 
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {8, "interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0},
   };
 
@@ -203,7 +203,7 @@ fiid_template_t tmpl_cmd_get_system_restart_cause_rs =
 fiid_template_t tmpl_cmd_set_system_boot_options_rq = 
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "parameter_valid",  FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {296, "configuration_parameter_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE },
     {0, "", 0},
@@ -219,72 +219,73 @@ fiid_template_t tmpl_cmd_set_system_boot_options_rs =
 fiid_template_t tmpl_cmd_set_system_boot_options_set_in_progress_rq = 
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {2, "set_in_progress", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "set_in_progress", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0},
   };
 
 fiid_template_t tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_0", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_7", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "bios_or_post_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "os_loader_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "os_or_service_partition_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "sms_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "oem_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_0", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_7", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "bios_or_post_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "os_loader_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "os_or_service_partition_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "sms_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "oem_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_set_system_boot_options_boot_flags_rq = 
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "bios_boot_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "boot_flags_persistent", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "boot_flags_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "lock_out_reset_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "screen_blank", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {4, "boot_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "lock_keyboard", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "cmos_clear", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {2, "console_redirection", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "lock_out_sleep_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "user_password_bypass", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "force_progress_event_traps", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {2, "firmware_bios_verbosity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "lock_out_via_power_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {3, "bios_mux_control_override", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "bios_shared_mode_override", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {8, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "bios_boot_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "boot_flags_persistent", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "boot_flags_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "lock_out_reset_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "screen_blank", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "boot_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "lock_keyboard", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "cmos_clear", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "console_redirection", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "lock_out_sleep_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "user_password_bypass", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "force_progress_event_traps", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "firmware_bios_verbosity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "lock_out_via_power_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "bios_mux_control_override", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "bios_shared_mode_override", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -318,20 +319,20 @@ fiid_template_t tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs =
     {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "enable_write_bit_0", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "enable_write_bit_7", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "bios_or_post_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "os_loader_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "os_or_service_partition_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "sms_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "oem_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "enable_write_bit_0", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "enable_write_bit_7", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "bios_or_post_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "os_loader_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "os_or_service_partition_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "sms_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "oem_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
  };
 
@@ -343,12 +344,13 @@ fiid_template_t tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearin
     {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {1, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs =
@@ -359,25 +361,25 @@ fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs =
     {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "bios_boot_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "boot_flags_persistent", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "boot_flags_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "lock_out_reset_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "screen_blank", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {4, "boot_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "lock_keyboard", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "cmos_clear", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {2, "console_redirection", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "lock_out_sleep_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "user_password_bypass", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "force_progress_event_traps", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {2, "firmware_bios_verbosity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "lock_out_via_power_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {3, "bios_mux_control_override", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {1, "bios_shared_mode_override", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
-    {8, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "bios_boot_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "boot_flags_persistent", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "boot_flags_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "lock_out_reset_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "screen_blank", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "boot_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "lock_keyboard", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "cmos_clear", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "console_redirection", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "lock_out_sleep_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "user_password_bypass", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "force_progress_event_traps", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "firmware_bios_verbosity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "lock_out_via_power_button", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "bios_mux_control_override", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "bios_shared_mode_override", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0},
   };
 
@@ -392,7 +394,7 @@ fiid_template_t tmpl_cmd_get_power_on_hours_counter_rs =
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "minutes_per_counter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {32, "counter_reading", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED },
+    {32, "counter_reading", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0},
   };
 
@@ -676,14 +678,14 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_ha
 
 int8_t
 fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
-                                                                   uint8_t dont_clear_on_pushbutton_reset,
+                                                                   uint8_t dont_clear_on_pushbutton_reset_soft_reset,
                                                                    uint8_t dont_clear_on_watchdog_timeout,
                                                                    uint8_t dont_clear_on_chassis_control,
                                                                    uint8_t dont_clear_on_PEF,
                                                                    fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_power_up)
-              && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_pushbutton_reset)
+              && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_pushbutton_reset_soft_reset)
               && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_watchdog_timeout)
               && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_chassis_control)
               && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_PEF)
@@ -693,10 +695,10 @@ fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_FLAGS);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING);
   FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
   FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", dont_clear_on_power_up);
-  FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", dont_clear_on_pushbutton_reset);
+  FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", dont_clear_on_pushbutton_reset_soft_reset);
   FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", dont_clear_on_watchdog_timeout);
   FIID_OBJ_SET (obj_cmd_rq, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", dont_clear_on_chassis_control);
   FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", dont_clear_on_PEF);

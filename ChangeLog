@@ -11,6 +11,8 @@
 	ipmi-chassis-config/src/ipmi-chassis-config-argp.c,
 	ipmi-chassis-config/src/ipmi-chassis-config-boot-flags.h,
 	ipmi-chassis-config/src/ipmi-chassis-config-boot-flags.c,
+	ipmi-chassis-config/src/ipmi-chassis-config-boot-flags-valid-bit-clearing.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-boot-flags-valid-bit-clearing.c,
 	ipmi-chassis-config/src/ipmi-chassis-config-front-panel-buttons.h,
 	ipmi-chassis-config/src/ipmi-chassis-config-front-panel-buttons.c,
 	ipmi-chassis-config/src/ipmi-chassis-config-power-conf.h,
