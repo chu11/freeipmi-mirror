@@ -178,10 +178,10 @@ ipmi_cmd_set_front_panel_enables (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
   
-  API_ERR_PARAMETERS (IPMI_CHASSIS_FORCE_IDENTIFY_VALID(disable_power_off_button_for_power_off_only)
-                      && IPMI_CHASSIS_FORCE_IDENTIFY_VALID(disable_reset_button)
-                      && IPMI_CHASSIS_FORCE_IDENTIFY_VALID(disable_diagnostic_interrupt_button)
-                      && IPMI_CHASSIS_FORCE_IDENTIFY_VALID(disable_standby_button_for_entering_standby)
+  API_ERR_PARAMETERS (IPMI_CHASSIS_BUTTON_VALID(disable_power_off_button_for_power_off_only)
+                      && IPMI_CHASSIS_BUTTON_VALID(disable_reset_button)
+                      && IPMI_CHASSIS_BUTTON_VALID(disable_diagnostic_interrupt_button)
+                      && IPMI_CHASSIS_BUTTON_VALID(disable_standby_button_for_entering_standby)
                       && fiid_obj_valid(obj_cmd_rs));
   
   API_FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_set_front_panel_enables_rs);
