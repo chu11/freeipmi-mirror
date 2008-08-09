@@ -1,5 +1,9 @@
 2008-08-08 Albert Chu <chu11@llnl.gov>
 
+	* Documentation cleanup.
+	
+2008-08-08 Albert Chu <chu11@llnl.gov>
+
 	Merge contents from chassis_config_branch.
 
 	* ipmi-chassis-config/Makefile.am,

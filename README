@@ -6,15 +6,8 @@ FreeIPMI
 FreeIPMI provides in-band and out-of-band IPMI software based on the
 IPMI v1.5/2.0 specification.
 
-Project Libraries and Tools
----------------------------
-
-Libfreeipmi
-
-A C library that includes KCS, SSIF, and OpenIPMI drivers, IPMI
-1.5 and IPMI 2.0 LAN communication interfaces, IPMI packet building
-utilities, IPMI command utilities, and utilities for
-reading/interpreting/managing IPMI.
+Project Libraries
+-----------------
 
 Bmc-info
 
@@ -58,9 +51,9 @@ Ipmipower
 
 A tool for remote power control.
 
-Ipmiconsole/Libipmiconsole
+Ipmiconsole
 
-A tool and library for Serial-over-Lan (SOL) console access.
+A tool for Serial-over-Lan (SOL) console access.
 
 Ipmi-raw
 
@@ -71,11 +64,11 @@ Ipmi-locate
 A tool that can probe for information about the location of a BMC
 device, such as device addresses.
 
-Ipmimonitoring/Libipmimonitoring
+Ipmimonitoring
 
-A tool and library for used for sensor interpretation/monitoring. The
-tool is similar to ipmi-sensors, but sensor readings are analyzed and
-mapped into Nominal, Warning, and Critical states.
+A tool for sensor monitoring and interpretation.  The tool is similar
+to ipmi-sensors, but sensor readings are analyzed and mapped into
+Nominal, Warning, and Critical states.
 
 Pef-config
 
@@ -108,9 +101,35 @@ Ipmi-oem
 
 An IPMI tool for OEM specific commands.
 
-Ipmidetect/Ipmidetectd/libipmidetect
+Ipmidetect/Ipmidetectd
 
-A tool, daemon, and library for IPMI node detection.
+A tool and daemon for IPMI node detection.
+
+Project Libraries
+-----------------
+
+Libfreeipmi
+
+A C library that includes KCS, SSIF, and OpenIPMI drivers, IPMI
+1.5 and IPMI 2.0 LAN communication interfaces, IPMI packet building
+utilities, IPMI command utilities, and utilities for
+reading/interpreting/managing IPMI.
+
+Libipmiconsole
+
+A library for Serial-over-Lan (SOL) console access.  SOL console
+access is abstracted into a file descriptor interface, so users may
+read and write console data through a file descriptor.
+
+Libipmimonitoring
+
+A library for sensor monitoring and interpretation.  Sensor monitoring
+and interpretation of those sensors is abstracted into an API with
+an iterator interface.
+
+Libipmidetect
+
+A library for IPMI node detection.
 
 Getting Started with IPMI
 -------------------------

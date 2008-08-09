@@ -4,14 +4,7 @@ FreeIPMI - FreeIPMI overview
 .SH "Introduction"
 FreeIPMI provides in-band and out-of-band IPMI software based on the
 IPMI v1.5/2.0 specification.
-.SH "Project Libraries and Tools"
-.B Libfreeipmi
-.PP
-A C library that includes KCS, SSIF, and OpenIPMI drivers, IPMI
-1.5 and IPMI 2.0 LAN communication interfaces, IPMI packet building
-utilities, IPMI command utilities, and utilities for
-reading/interpreting/managing IPMI.
-.PP
+.SH "Project Tools"
 .B Bmc-info
 .PP
 A tool to read information about a BMC such as device version numbers,
@@ -54,9 +47,15 @@ information.
 .PP
 A tool for remote power control.
 .PP
-.B Ipmiconsole/Libipmiconsole
+.B Ipmiconsole
 .PP
-A tool and library for Serial-over-Lan (SOL) console access.
+A tool for Serial-over-Lan (SOL) console access.
+.PP
+.B Ipmimonitoring
+.PP
+A tool for sensor monitoring and interpretation. The tool is similar
+to ipmi-sensors, but sensor readings are analyzed and mapped into
+Nominal, Warning, and Critical states.
 .PP
 .B Ipmi-raw
 .PP
@@ -66,12 +65,6 @@ A tool that provides hex input/output of IPMI commands.
 .PP
 A tool that can probe for information about the location of a BMC
 device, such as device addresses.
-.PP
-.B Ipmimonitoring/Libipmimonitoring
-.PP
-A tool and library for used for sensor interpretation/monitoring. The
-tool is similar to ipmi-sensors, but sensor readings are analyzed and
-mapped into Nominal, Warning, and Critical states.
 .PP
 .B Pef-config
 .PP
@@ -104,9 +97,33 @@ A RMCP ping tool for debugging.
 .PP
 An IPMI tool for OEM specific commands.
 .PP
-.B Ipmidetect/Ipmidetectd/libipmidetect
+.B Ipmidetect/Ipmidetectd
 .PP
-A tool, daemon, and library for IPMI node detection.
+A tool and daemon for IPMI node detection.
+.PP
+.SH "Project Libraries"
+.B Libfreeipmi
+.PP
+A C library that includes KCS, SSIF, and OpenIPMI drivers, IPMI
+1.5 and IPMI 2.0 LAN communication interfaces, IPMI packet building
+utilities, IPMI command utilities, and utilities for
+reading/interpreting/managing IPMI.
+.PP
+.B Libipmiconsole
+.PP
+A library for Serial-over-Lan (SOL) console access.  SOL console
+access is abstracted into a file descriptor interface, so users may
+read and write console data through a file descriptor.
+.PP
+.B Libipmimonitoring
+.PP
+A library for sensor monitoring and interpretation.  Sensor monitoring
+and interpretation of those sensors is abstracted into an API with
+an iterator interface.
+.PP
+.B Libipmidetect
+.PP
+A library for IPMI node detection.
 .PP
 .SH "Getting Started with IPMI"
 IPMI can be used in-band (i.e. running on a machine locally) or
