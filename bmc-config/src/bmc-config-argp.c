@@ -117,7 +117,7 @@ _bmc_config_config_file_parse(struct bmc_config_arguments *cmd_args)
                          NULL,
                          &(cmd_args->config_args.hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
-                         0,
+                         CONFIG_FILE_TOOL_BMC_CONFIG,
                          NULL) < 0)
     {
       fprintf(stderr, "config_file_parse: %s\n", strerror(errno));

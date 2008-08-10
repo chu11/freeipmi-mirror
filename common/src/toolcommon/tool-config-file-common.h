@@ -32,13 +32,23 @@
 #define CONFIG_FILE_SDR         0x04
 #define CONFIG_FILE_HOSTRANGE   0x08
 
-#define CONFIG_FILE_TOOL_NONE           0x00
-#define CONFIG_FILE_TOOL_BMC_WATCHDOG   0x01
-#define CONFIG_FILE_TOOL_IPMI_FRU       0x02
-#define CONFIG_FILE_TOOL_IPMI_SENSORS   0x04
-#define CONFIG_FILE_TOOL_IPMICONSOLE    0x08
-#define CONFIG_FILE_TOOL_IPMIMONITORING 0x10
-#define CONFIG_FILE_TOOL_IPMIPOWER      0x20
+#define CONFIG_FILE_TOOL_NONE                0x00000000
+#define CONFIG_FILE_TOOL_BMC_CONFIG          0x00000001
+#define CONFIG_FILE_TOOL_BMC_DEVICE          0x00000002
+#define CONFIG_FILE_TOOL_BMC_INFO            0x00000004 
+#define CONFIG_FILE_TOOL_BMC_WATCHDOG        0x00000008
+#define CONFIG_FILE_TOOL_IPMI_CHASSIS        0x00000010
+#define CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG 0x00000020
+#define CONFIG_FILE_TOOL_IPMI_FRU            0x00000040
+#define CONFIG_FILE_TOOL_IPMI_OEM            0x00000080
+#define CONFIG_FILE_TOOL_IPMI_RAW            0x00000100
+#define CONFIG_FILE_TOOL_IPMI_SEL            0x00000200
+#define CONFIG_FILE_TOOL_IPMI_SENSORS        0x00000400
+#define CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG 0x00000800
+#define CONFIG_FILE_TOOL_IPMICONSOLE         0x00001000
+#define CONFIG_FILE_TOOL_IPMIMONITORING      0x00002000
+#define CONFIG_FILE_TOOL_IPMIPOWER           0x00004000
+#define CONFIG_FILE_TOOL_PEF_CONFIG          0x00008000
 
 #define CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS               256
 #define CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH 256
@@ -120,6 +130,6 @@ int config_file_parse(const char *filename,
                       struct hostrange_cmd_args *hostrange_args, 
                       unsigned int support,
                       unsigned int tool_support,
-                      void *data);
+                      void *tool_data);
 
 #endif

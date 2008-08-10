@@ -2,6 +2,12 @@
 
 	* bmc-config/, ipmi-chassis-config/, ipmi-sensors-config/,
 	pef-config/: Support hostrange config file options.
+
+	* common/src/toolcommon/tool-config-file-common.h,
+	common/src/toolcommon/tool-config-file-common.c: Support tool
+	specific out of band configuration.
+
+	* Globally update documentation and tools as needed.
 	
 2008-08-08 Albert Chu <chu11@llnl.gov>
 

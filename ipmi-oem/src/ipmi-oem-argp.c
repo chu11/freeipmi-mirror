@@ -144,7 +144,7 @@ _ipmi_oem_config_file_parse(struct ipmi_oem_arguments *cmd_args)
                          NULL,
                          &(cmd_args->hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
-                         0,
+                         CONFIG_FILE_TOOL_IPMI_OEM,
                          NULL) < 0)
     {
       fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
