@@ -115,8 +115,8 @@ _bmc_config_config_file_parse(struct bmc_config_arguments *cmd_args)
                          0,
                          &(cmd_args->config_args.common),
                          NULL,
-                         NULL,
-                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND,
+                         &(cmd_args->config_args.hostrange),
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          0,
                          NULL) < 0)
     {

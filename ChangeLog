@@ -1,3 +1,8 @@
+2008-08-10 Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/, ipmi-chassis-config/, ipmi-sensors-config/,
+	pef-config/: Support hostrange config file options.
+	
 2008-08-08 Albert Chu <chu11@llnl.gov>
 
 	* Documentation cleanup.

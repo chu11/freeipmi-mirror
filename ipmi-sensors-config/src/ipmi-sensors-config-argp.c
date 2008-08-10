@@ -114,8 +114,8 @@ _ipmi_sensors_config_config_file_parse(struct ipmi_sensors_config_arguments *cmd
                          0,
                          &(cmd_args->config_args.common),
                          &(cmd_args->sdr),
-                         NULL,
-                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR,
+                         &(cmd_args->config_args.hostrange),
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
                          0,
                          NULL) < 0)
     {

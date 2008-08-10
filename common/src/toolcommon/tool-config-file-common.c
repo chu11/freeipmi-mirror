@@ -676,8 +676,7 @@ config_file_parse(const char *filename,
         &username_count, 
         &(cmd_args->username),
         IPMI_MAX_USER_NAME_LENGTH
- 
-      },
+       },
       {
         "password", 
         CONFFILE_OPTION_STRING, 
