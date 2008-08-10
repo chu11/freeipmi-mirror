@@ -194,6 +194,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBbmc-config-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B bmc-config(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 
 .SH "BMC-DEVICE OPTIONS"
 The following options are specific to 
@@ -244,6 +252,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBbmc-device-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B bmc-device(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 
 .SH "BMC-INFO OPTIONS"
 The following options are specific to 
@@ -294,11 +310,27 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBbmc-info-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B bmc-info(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 
 .SH "BMC-WATCHDOG OPTIONS"
 The following options are specific to 
 .B bmc-watchdog(8).
 They will be ignored by other tools.
+.TP
+\fBbmc-watchdog-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B bmc-watchdog(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 .TP
 \fBbmc-watchdog-logfile\fR \fIFILE\fR
 Specify the default logfile.
@@ -355,6 +387,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBipmi-chassis-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmi-chassis(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 
 .SH "IPMI-CHASSIS-CONFIG OPTIONS"
 The following options are specific to 
@@ -405,6 +445,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBipmi-chassis-config-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmi-chassis-config(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 
 .SH "IPMI-FRU OPTIONS"
 The following options are specific to 
@@ -455,6 +503,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBipmi-fru-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmi-fru(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 .TP
 \fBipmi-fru-skip-checks\fR \fIENABLE|DISABLE\fR
 Specify if checksum checks will be skipped by default.
@@ -508,6 +564,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBipmi-oem-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmi-oem(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 
 .SH "IPMI-RAW OPTIONS"
 The following options are specific to 
@@ -558,6 +622,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBipmi-raw-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmi-raw(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 
 .SH "IPMI-SEL OPTIONS"
 The following options are specific to 
@@ -608,6 +680,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBipmi-sel-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmi-sel(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 
 .SH "IPMI-SENSORS OPTIONS"
 The following options are specific to 
@@ -658,6 +738,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBipmi-sensors-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmi-sensors(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 .TP
 \fBipmi-sensors-quiet-readings\fR \fIENABLE|DISABLE\fR
 Specify if sensor reading values and thresholds should not be
@@ -719,6 +807,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBipmi-sensors-config-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmi-sensors-config(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 
 .SH "IPMICONSOLE OPTIONS"
 The following options are specific to 
@@ -769,6 +865,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBipmiconsole-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmiconsole(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 .TP
 \fBipmiconsole-escape-char\fR \fICHAR\fR
 Specify the default escape character.
@@ -828,6 +932,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBipmimonitoring-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmimonitoring(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 .TP
 \fBipmimonitoring-quiet-readings\fR \fIENABLE|DISABLE\fR
 Specify if sensor reading values and thresholds should not be
@@ -889,6 +1001,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBipmipower-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmipower(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 .TP
 \fBipmipower-on-if-off\fR \fIENABLE|DISABLE\fR
 Specify if on-if-off functionality is enabled or disabled by default.
@@ -971,6 +1091,14 @@ If specified, will override the general option
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
+.TP
+\fBpef-config-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B pef-config(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see tool manpages for details about workarounds.
 
 .SH "FILES"
 @FREEIPMI_CONFIG_FILE_DEFAULT@

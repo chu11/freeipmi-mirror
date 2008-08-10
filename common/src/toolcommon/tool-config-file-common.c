@@ -61,6 +61,9 @@ struct cmd_args_config
   int privilege_level;
   int privilege_level_set;
   int tool_specific_privilege_level_set;
+  int workaround_flags;
+  int workaround_flags_set;
+  int tool_specific_workaround_flags_set;
 };
 
 int 
@@ -190,37 +193,6 @@ config_file_driver_type(conffile_t cf,
   else
     cmd_args->driver_type = tmp;
 
-  return 0;
-}
-
-int 
-config_file_workaround_flags(conffile_t cf,
-                             struct conffile_data *data,
-                             char *optionname,
-                             int option_type,
-                             void *option_ptr,
-                             int option_data,
-                             void *app_ptr,
-                             int app_data)
-{
-  struct common_cmd_args *cmd_args;
-  int i, tmp;
-
-  assert(option_ptr);
-
-  cmd_args = (struct common_cmd_args *)option_ptr;
-
-  cmd_args->workaround_flags = 0;
-  
-  for (i = 0; i < data->stringlist_len; i++)
-    {
-      if ((tmp = parse_workaround_flags(data->stringlist[i])) < 0)
-        {
-          fprintf(stderr, "Config File Error: invalid value for %s\n", optionname);
-          exit(1);
-        }
-      cmd_args->workaround_flags |= tmp;
-    }
   return 0;
 }
 
@@ -431,6 +403,42 @@ config_file_privilege_level(conffile_t cf,
 }
 
 int 
+config_file_workaround_flags(conffile_t cf,
+                             struct conffile_data *data,
+                             char *optionname,
+                             int option_type,
+                             void *option_ptr,
+                             int option_data,
+                             void *app_ptr,
+                             int app_data)
+{
+  struct cmd_args_config *cmd_args_config;
+  int i, tmp;
+
+  assert(option_ptr);
+
+  cmd_args_config = (struct cmd_args_config *)option_ptr;
+
+  if (cmd_args_config->tool_specific_workaround_flags_set)
+    return 0;
+
+  cmd_args_config->workaround_flags = 0;
+  
+  for (i = 0; i < data->stringlist_len; i++)
+    {
+      if ((tmp = parse_workaround_flags(data->stringlist[i])) < 0)
+        {
+          fprintf(stderr, "Config File Error: invalid value for %s\n", optionname);
+          exit(1);
+        }
+      cmd_args_config->workaround_flags |= tmp;
+    }
+  cmd_args_config->workaround_flags_set++;
+
+  return 0;
+}
+
+int 
 config_file_tool_specific_username(conffile_t cf,
                                    struct conffile_data *data,
                                    char *optionname,
@@ -629,6 +637,40 @@ config_file_tool_specific_privilege_level(conffile_t cf,
 
   cmd_args_config->privilege_level_set++;
   cmd_args_config->tool_specific_privilege_level_set++;
+
+  return 0;
+}
+
+int 
+config_file_tool_specific_workaround_flags(conffile_t cf,
+                                           struct conffile_data *data,
+                                           char *optionname,
+                                           int option_type,
+                                           void *option_ptr,
+                                           int option_data,
+                                           void *app_ptr,
+                                           int app_data)
+{
+  struct cmd_args_config *cmd_args_config;
+  int i, tmp;
+
+  assert(option_ptr);
+
+  cmd_args_config = (struct cmd_args_config *)option_ptr;
+
+  cmd_args_config->workaround_flags = 0;
+  
+  for (i = 0; i < data->stringlist_len; i++)
+    {
+      if ((tmp = parse_workaround_flags(data->stringlist[i])) < 0)
+        {
+          fprintf(stderr, "Config File Error: invalid value for %s\n", optionname);
+          exit(1);
+        }
+      cmd_args_config->workaround_flags |= tmp;
+    }
+  cmd_args_config->workaround_flags_set++;
+  cmd_args_config->tool_specific_workaround_flags_set++;
 
   return 0;
 }
@@ -864,63 +906,80 @@ config_file_parse(const char *filename,
 
   int bmc_config_username_count = 0, bmc_config_password_count = 0, 
     bmc_config_k_g_count = 0, bmc_config_authentication_type_count = 0, 
-    bmc_config_cipher_suite_id_count = 0, bmc_config_privilege_level_count = 0;
+    bmc_config_cipher_suite_id_count = 0, bmc_config_privilege_level_count = 0,
+    bmc_config_workaround_flags_count = 0;
 
   int bmc_device_username_count = 0, bmc_device_password_count = 0, 
     bmc_device_k_g_count = 0, bmc_device_authentication_type_count = 0, 
-    bmc_device_cipher_suite_id_count = 0, bmc_device_privilege_level_count = 0;
+    bmc_device_cipher_suite_id_count = 0, bmc_device_privilege_level_count = 0,
+    bmc_device_workaround_flags_count = 0;
 
   int bmc_info_username_count = 0, bmc_info_password_count = 0, 
     bmc_info_k_g_count = 0, bmc_info_authentication_type_count = 0, 
-    bmc_info_cipher_suite_id_count = 0, bmc_info_privilege_level_count = 0;
+    bmc_info_cipher_suite_id_count = 0, bmc_info_privilege_level_count = 0,
+    bmc_info_workaround_flags_count = 0;
+
+  int bmc_watchdog_workaround_flags_count = 0;
 
   int ipmi_chassis_username_count = 0, ipmi_chassis_password_count = 0, 
     ipmi_chassis_k_g_count = 0, ipmi_chassis_authentication_type_count = 0, 
-    ipmi_chassis_cipher_suite_id_count = 0, ipmi_chassis_privilege_level_count = 0;
+    ipmi_chassis_cipher_suite_id_count = 0, ipmi_chassis_privilege_level_count = 0,
+    ipmi_chassis_workaround_flags_count = 0;
 
   int ipmi_chassis_config_username_count = 0, ipmi_chassis_config_password_count = 0, 
     ipmi_chassis_config_k_g_count = 0, ipmi_chassis_config_authentication_type_count = 0, 
-    ipmi_chassis_config_cipher_suite_id_count = 0, ipmi_chassis_config_privilege_level_count = 0;
+    ipmi_chassis_config_cipher_suite_id_count = 0, ipmi_chassis_config_privilege_level_count = 0,
+    ipmi_chassis_config_workaround_flags_count = 0;
 
   int ipmi_fru_username_count = 0, ipmi_fru_password_count = 0, 
     ipmi_fru_k_g_count = 0, ipmi_fru_authentication_type_count = 0, 
-    ipmi_fru_cipher_suite_id_count = 0, ipmi_fru_privilege_level_count = 0;
+    ipmi_fru_cipher_suite_id_count = 0, ipmi_fru_privilege_level_count = 0,
+    ipmi_fru_workaround_flags_count = 0;
 
   int ipmi_oem_username_count = 0, ipmi_oem_password_count = 0, 
     ipmi_oem_k_g_count = 0, ipmi_oem_authentication_type_count = 0, 
-    ipmi_oem_cipher_suite_id_count = 0, ipmi_oem_privilege_level_count = 0;
+    ipmi_oem_cipher_suite_id_count = 0, ipmi_oem_privilege_level_count = 0,
+    ipmi_oem_workaround_flags_count = 0;
 
   int ipmi_raw_username_count = 0, ipmi_raw_password_count = 0, 
     ipmi_raw_k_g_count = 0, ipmi_raw_authentication_type_count = 0, 
-    ipmi_raw_cipher_suite_id_count = 0, ipmi_raw_privilege_level_count = 0;
+    ipmi_raw_cipher_suite_id_count = 0, ipmi_raw_privilege_level_count = 0,
+    ipmi_raw_workaround_flags_count = 0;
 
   int ipmi_sel_username_count = 0, ipmi_sel_password_count = 0, 
     ipmi_sel_k_g_count = 0, ipmi_sel_authentication_type_count = 0, 
-    ipmi_sel_cipher_suite_id_count = 0, ipmi_sel_privilege_level_count = 0;
-
+    ipmi_sel_cipher_suite_id_count = 0, ipmi_sel_privilege_level_count = 0,
+    ipmi_sel_workaround_flags_count = 0;
+  
   int ipmi_sensors_username_count = 0, ipmi_sensors_password_count = 0, 
     ipmi_sensors_k_g_count = 0, ipmi_sensors_authentication_type_count = 0, 
-    ipmi_sensors_cipher_suite_id_count = 0, ipmi_sensors_privilege_level_count = 0;
+    ipmi_sensors_cipher_suite_id_count = 0, ipmi_sensors_privilege_level_count = 0,
+    ipmi_sensors_workaround_flags_count = 0;
 
   int ipmi_sensors_config_username_count = 0, ipmi_sensors_config_password_count = 0, 
     ipmi_sensors_config_k_g_count = 0, ipmi_sensors_config_authentication_type_count = 0, 
-    ipmi_sensors_config_cipher_suite_id_count = 0, ipmi_sensors_config_privilege_level_count = 0;
-
+    ipmi_sensors_config_cipher_suite_id_count = 0, ipmi_sensors_config_privilege_level_count = 0,
+    ipmi_sensors_config_workaround_flags_count = 0;
+  
   int ipmiconsole_username_count = 0, ipmiconsole_password_count = 0, 
     ipmiconsole_k_g_count = 0, ipmiconsole_authentication_type_count = 0, 
-    ipmiconsole_cipher_suite_id_count = 0, ipmiconsole_privilege_level_count = 0;
+    ipmiconsole_cipher_suite_id_count = 0, ipmiconsole_privilege_level_count = 0,
+    ipmiconsole_workaround_flags_count = 0;
 
   int ipmimonitoring_username_count = 0, ipmimonitoring_password_count = 0, 
     ipmimonitoring_k_g_count = 0, ipmimonitoring_authentication_type_count = 0, 
-    ipmimonitoring_cipher_suite_id_count = 0, ipmimonitoring_privilege_level_count = 0;
+    ipmimonitoring_cipher_suite_id_count = 0, ipmimonitoring_privilege_level_count = 0,
+    ipmimonitoring_workaround_flags_count = 0;
 
   int ipmipower_username_count = 0, ipmipower_password_count = 0, 
     ipmipower_k_g_count = 0, ipmipower_authentication_type_count = 0, 
-    ipmipower_cipher_suite_id_count = 0, ipmipower_privilege_level_count = 0;
+    ipmipower_cipher_suite_id_count = 0, ipmipower_privilege_level_count = 0,
+    ipmipower_workaround_flags_count = 0;
 
   int pef_config_username_count = 0, pef_config_password_count = 0, 
     pef_config_k_g_count = 0, pef_config_authentication_type_count = 0, 
-    pef_config_cipher_suite_id_count = 0, pef_config_privilege_level_count = 0;
+    pef_config_cipher_suite_id_count = 0, pef_config_privilege_level_count = 0,
+    pef_config_workaround_flags_count = 0;
 
   struct config_file_data_bmc_watchdog bmc_watchdog_data;
   struct config_file_data_bmc_watchdog *bmc_watchdog_data_ptr;
@@ -963,7 +1022,7 @@ config_file_parse(const char *filename,
         1, 
         0,
         &workaround_flags_count, 
-        cmd_args, 
+        &cmd_args_config,
         0
       }
     };
@@ -1316,6 +1375,17 @@ config_file_parse(const char *filename,
         &cmd_args_config,
         0,
       },
+      {
+        "bmc-config-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &bmc_config_workaround_flags_count, 
+        &cmd_args_config,
+        0
+      },
     };
 
   /* 
@@ -1388,6 +1458,17 @@ config_file_parse(const char *filename,
         &bmc_device_privilege_level_count, 
         &cmd_args_config,
         0,
+      },
+      {
+        "bmc-device-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &bmc_device_workaround_flags_count, 
+        &cmd_args_config,
+        0
       },
     };
 
@@ -1462,6 +1543,17 @@ config_file_parse(const char *filename,
         &cmd_args_config,
         0,
       },
+      {
+        "bmc-info-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &bmc_info_workaround_flags_count, 
+        &cmd_args_config,
+        0
+      },
     };
 
   /* 
@@ -1470,6 +1562,17 @@ config_file_parse(const char *filename,
 
   struct conffile_option bmc_watchdog_options[] =
     {
+      {
+        "bmc-watchdog-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &bmc_watchdog_workaround_flags_count, 
+        &cmd_args_config,
+        0
+      },
       {
         "bmc-watchdog-logfile", 
         CONFFILE_OPTION_STRING, 
@@ -1565,6 +1668,17 @@ config_file_parse(const char *filename,
         &cmd_args_config,
         0,
       },
+      {
+        "ipmi-chassis-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &ipmi_chassis_workaround_flags_count, 
+        &cmd_args_config,
+        0
+      },
     };
 
   /* 
@@ -1637,6 +1751,17 @@ config_file_parse(const char *filename,
         &ipmi_chassis_config_privilege_level_count, 
         &cmd_args_config,
         0,
+      },
+      {
+        "ipmi-chassis-config-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &ipmi_chassis_config_workaround_flags_count, 
+        &cmd_args_config,
+        0
       },
     };
 
@@ -1711,6 +1836,17 @@ config_file_parse(const char *filename,
         &ipmi_fru_privilege_level_count, 
         &cmd_args_config,
         0,
+      },
+      {
+        "ipmi-fru-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &ipmi_fru_workaround_flags_count, 
+        &cmd_args_config,
+        0
       },
       {
         "ipmi-fru-skip-checks",
@@ -1796,6 +1932,17 @@ config_file_parse(const char *filename,
         &cmd_args_config,
         0,
       },
+      {
+        "ipmi-oem-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &ipmi_oem_workaround_flags_count, 
+        &cmd_args_config,
+        0
+      },
     };
 
   /* 
@@ -1868,6 +2015,17 @@ config_file_parse(const char *filename,
         &ipmi_raw_privilege_level_count, 
         &cmd_args_config,
         0,
+      },
+      {
+        "ipmi-raw-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &ipmi_raw_workaround_flags_count, 
+        &cmd_args_config,
+        0
       },
     };
 
@@ -1942,6 +2100,17 @@ config_file_parse(const char *filename,
         &cmd_args_config,
         0,
       },
+      {
+        "ipmi-sel-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &ipmi_sel_workaround_flags_count, 
+        &cmd_args_config,
+        0
+      },
     };
 
   /* 
@@ -2015,6 +2184,17 @@ config_file_parse(const char *filename,
         &ipmi_sensors_privilege_level_count, 
         &cmd_args_config,
         0,
+      },
+      {
+        "ipmi-sensors-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &ipmi_sensors_workaround_flags_count, 
+        &cmd_args_config,
+        0
       },
       {
         "ipmi-sensors-quiet-readings",
@@ -2111,6 +2291,17 @@ config_file_parse(const char *filename,
         &cmd_args_config,
         0,
       },
+      {
+        "ipmi-sensors-config-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &ipmi_sensors_config_workaround_flags_count, 
+        &cmd_args_config,
+        0
+      },
     };
 
   /* 
@@ -2189,6 +2380,17 @@ config_file_parse(const char *filename,
         &ipmiconsole_privilege_level_count, 
         &cmd_args_config,
         0,
+      },
+      {
+        "ipmiconsole-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &ipmiconsole_workaround_flags_count, 
+        &cmd_args_config,
+        0
       },
       /* legacy - no ipmiconsole prefix */
       {
@@ -2334,6 +2536,17 @@ config_file_parse(const char *filename,
         0,
       },
       {
+        "ipmimonitoring-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &ipmimonitoring_workaround_flags_count, 
+        &cmd_args_config,
+        0
+      },
+      {
         "ipmimonitoring-quiet-readings",
         CONFFILE_OPTION_BOOL,
         -1,
@@ -2428,6 +2641,17 @@ config_file_parse(const char *filename,
         &ipmipower_privilege_level_count, 
         &cmd_args_config,
         0,
+      },
+      {
+        "ipmipower-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &ipmipower_workaround_flags_count, 
+        &cmd_args_config,
+        0
       },
       /* ipmi-version maintained for backwards compatability */
       {
@@ -2767,6 +2991,17 @@ config_file_parse(const char *filename,
         &pef_config_privilege_level_count, 
         &cmd_args_config,
         0,
+      },
+      {
+        "pef-config-workaround-flags", 
+        CONFFILE_OPTION_LIST_STRING, 
+        -1,
+        config_file_tool_specific_workaround_flags, 
+        1, 
+        0,
+        &pef_config_workaround_flags_count, 
+        &cmd_args_config,
+        0
       },
     };
 
@@ -3121,6 +3356,9 @@ config_file_parse(const char *filename,
 
   if (cmd_args_config.privilege_level_set)
     cmd_args->privilege_level = cmd_args_config.privilege_level;
+
+  if (cmd_args_config.workaround_flags_set)
+    cmd_args->workaround_flags = cmd_args_config.workaround_flags;
          
   /* copy tool specific stuff */
 
