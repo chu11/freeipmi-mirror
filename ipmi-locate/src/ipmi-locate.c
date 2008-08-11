@@ -128,9 +128,9 @@ dmidecode_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -145,9 +145,9 @@ dmidecode_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -162,9 +162,9 @@ dmidecode_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -179,9 +179,9 @@ dmidecode_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -205,9 +205,9 @@ smbios_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -222,9 +222,9 @@ smbios_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -239,9 +239,9 @@ smbios_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -256,9 +256,9 @@ smbios_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -282,9 +282,9 @@ acpi_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -299,9 +299,9 @@ acpi_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -316,9 +316,9 @@ acpi_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -333,9 +333,9 @@ acpi_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -359,9 +359,9 @@ pci_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -376,9 +376,9 @@ pci_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -393,9 +393,9 @@ pci_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -410,9 +410,9 @@ pci_probe_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -436,9 +436,9 @@ defaults_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -453,9 +453,9 @@ defaults_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -474,9 +474,9 @@ defaults_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
@@ -497,9 +497,9 @@ defaults_display (void)
   else 
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s", ipmi_locate_strerror(rv));
+      printf ("FAILED: %s\n", ipmi_locate_strerror(rv));
 #else
-      printf ("FAILED");
+      printf ("FAILED\n");
 #endif
     }
   printf ("\n");
