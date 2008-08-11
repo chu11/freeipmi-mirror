@@ -112,9 +112,10 @@ levels are supported: USER, OPERATOR, ADMIN.
 \fBworkaround-flags\fR \fIWORKAROUNDS\fR
 Specify default workaround flags to use.  Multiple workarounds can be
 specified separated by whitespace.  Please see tool manpages for
-details about workarounds.  The following workarounds are supported:
-idzero, forcepermsg, unexpectedauth, endianseq, authcap,
-solpayloadsize, solport, intel20, supermicro20, sun20.
+details about available workarounds for each tool.  The following
+workarounds are supported: idzero, forcepermsg, unexpectedauth,
+endianseq, authcap, solpayloadsize, solport, intel20, supermicro20,
+sun20.
 
 .SH "SDR OPTIONS"
 The following options are specific to tools that use the sensor 
@@ -201,7 +202,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B bmc-config(8) 
+manpage for available workarounds.
 
 .SH "BMC-DEVICE OPTIONS"
 The following options are specific to 
@@ -259,7 +262,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B bmc-device(8) 
+manpage for available workarounds.
 
 .SH "BMC-INFO OPTIONS"
 The following options are specific to 
@@ -317,7 +322,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B bmc-info(8) 
+manpage for available workarounds.
 
 .SH "BMC-WATCHDOG OPTIONS"
 The following options are specific to 
@@ -330,7 +337,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B bmc-watchdog(8) 
+manpage for available workarounds.
 .TP
 \fBbmc-watchdog-logfile\fR \fIFILE\fR
 Specify the default logfile.
@@ -394,7 +403,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B ipmi-chassis(8) 
+manpage for available workarounds.
 
 .SH "IPMI-CHASSIS-CONFIG OPTIONS"
 The following options are specific to 
@@ -452,7 +463,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B ipmi-chassis-config(8) 
+manpage for available workarounds.
 
 .SH "IPMI-FRU OPTIONS"
 The following options are specific to 
@@ -510,7 +523,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B ipmi-fru(8) 
+manpage for available workarounds.
 .TP
 \fBipmi-fru-skip-checks\fR \fIENABLE|DISABLE\fR
 Specify if checksum checks will be skipped by default.
@@ -571,7 +586,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B ipmi-oem(8) 
+manpage for available workarounds.
 
 .SH "IPMI-RAW OPTIONS"
 The following options are specific to 
@@ -629,7 +646,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B ipmi-raw(8) 
+manpage for available workarounds.
 
 .SH "IPMI-SEL OPTIONS"
 The following options are specific to 
@@ -687,7 +706,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B ipmi-sel(8) 
+manpage for available workarounds.
 
 .SH "IPMI-SENSORS OPTIONS"
 The following options are specific to 
@@ -745,7 +766,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B ipmi-sensors(8) 
+manpage for available workarounds.
 .TP
 \fBipmi-sensors-quiet-readings\fR \fIENABLE|DISABLE\fR
 Specify if sensor reading values and thresholds should not be
@@ -814,7 +837,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B ipmi-sensors-config(8) 
+manpage for available workarounds.
 
 .SH "IPMICONSOLE OPTIONS"
 The following options are specific to 
@@ -872,7 +897,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B ipmiconsole(8) 
+manpage for available workarounds.
 .TP
 \fBipmiconsole-escape-char\fR \fICHAR\fR
 Specify the default escape character.
@@ -939,7 +966,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B ipmimonitoring(8) 
+manpage for available workarounds.
 .TP
 \fBipmimonitoring-quiet-readings\fR \fIENABLE|DISABLE\fR
 Specify if sensor reading values and thresholds should not be
@@ -1008,7 +1037,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B ipmipower(8) 
+manpage for available workarounds.
 .TP
 \fBipmipower-on-if-off\fR \fIENABLE|DISABLE\fR
 Specify if on-if-off functionality is enabled or disabled by default.
@@ -1098,7 +1129,9 @@ Specify default workaround flags to use for
 If specified, will override the general options
 \fBworkaround-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
-Please see tool manpages for details about workarounds.
+Please see 
+.B pef-config(8) 
+manpage for available workarounds.
 
 .SH "FILES"
 @FREEIPMI_CONFIG_FILE_DEFAULT@

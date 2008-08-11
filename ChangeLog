@@ -1,3 +1,7 @@
+2008-08-11 Albert Chu <chu11@llnl.gov>
+
+	* man/freeipmi.conf.5.pre.in: Fix text.
+	
 2008-08-10 Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/, ipmi-chassis-config/, ipmi-sensors-config/,
