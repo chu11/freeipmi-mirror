@@ -2,25 +2,14 @@ libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
 
-ipmi-sensors-config
------------------------------
-* conf.5 manpage
-
 solaris
 -------
 - solaris inband driver (solaris 9? solaris 10? solaris 11?)
 
-ipmi-sensors/ipmimonitoring
----------------------------
-ok vs. non-ok for threshold sensors
-- should depend on "comparison" stored in SDR?
-- probably not
-
 ipmi-chassis-config
 -------------------
 * conf.5 manpage
-has never been tested
-- panel button config
+- panel button config (need to test against hardware)
 
 general
 -------
@@ -48,14 +37,11 @@ get auxiliary log status
 pef-config
 -----------
 * conf.5 manpage
-* how to specify event reading type codes easily
-- support get/set last processed event/id?
-- alert immediate support?
-- PET acknowledge support?
 
 ipmi-sensors-config
 -------------------
 * conf.5 manpage
+* instructions for each section??
 
 libs
 ----
