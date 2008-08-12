@@ -49,16 +49,24 @@ merge all libs into one?  would aid debian packaging.
 DCMI functionality
 ------------------
 http://www.intel.com/technology/product/DCMI/index.htm
-dcmi-info to output capabilities
-dcmi-fru like command to get asset tags
-- move ipmi-fru code into libfreeipmi??
-dcmi-sensor like command to get sensor stuff
-- move ipmi-sensor code into libfreeipmi??
-dcmi-chassis like command to get power stuff 
-- or all in one tool? (ipmi-dcmi ??)
-- or in FreeIPMI but add --dcmi options??
-- part of FreeIPMI? or a separate project?
-- contrib project?
+- new FreeIPMI tool? or separate project? or contrib project?
+- nothing special as a whole, mostly already IPMI 2.0 with a few new
+additions.
+- get dcmi capabilities info
+  - the typical what is dcmi supported and version info junk
+- get asset tag
+  - seems useless.  gets asset tag, but the asset tag is already
+    stored in the FRU (and output via normal FRU output in ipmi-fru.)
+- get dcmi sensor info command
+  - seems useless, only gets the SDR #s of specific sensors
+    DCMI cares about?  But sensors already should be output by
+    ipmi-sensors/ipmimonitoring/etc.
+- get power reading
+- get power limit
+- set power limit
+- activate/deactive power limit
+  - these 4 commands seem like the only maybe potentially useful
+    additions.
 
 0.7.0 porting ensure works
 --------------------------
