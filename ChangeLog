@@ -1,5 +1,9 @@
 2008-08-12 Albert Chu <chu11@llnl.gov>
 
+	* Tagged sunbmc_pre_experimental
+
+2008-08-12 Albert Chu <chu11@llnl.gov>
+
 	Add Solaris BMC interface.
 
 	* libfreeipmi/include/freeipmi/driver/ipmi-sunbmc-driver.h: New file.
