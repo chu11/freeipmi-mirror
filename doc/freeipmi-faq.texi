@@ -70,6 +70,7 @@ release @value{VERSION} of the FreeIPMI.
 * What is special about FreeIPMI::  
 * SSIF Driver Configuration::   
 * x86-64 Compilation::          
+* SUNBMC Driver Compilation::
 @end menu
 
 @c Output the table of contents at the beginning.
@@ -299,7 +300,7 @@ BMC address Locator:
     Usual values for record 08h -> 0x400
 @end example
 
-@node x86-64 Compilation, , SSIF Driver Configuration, Top
+@node x86-64 Compilation, SUNBMC Driver Compilation, SSIF Driver Configuration, Top
 @section x86-64 Compilation
 
 Under some x86-64 platforms such as SUSE GNU/Linux, native 64
@@ -313,5 +314,29 @@ Example:
 @example
   # ./configure  --prefix=/usr --libdir=/usr/lib64
 @end example
+
+@node SUNBMC Driver Compilation, , x86-64 Compilation, Top
+@section SUNBMC Driver Compilation
+
+In order to compile the sunbmc driver, the bmc_intf.h header file must
+be in your include path.  This can be added by to the include search
+path by adding the path to the CPPFLAGS environment variable.  i.e.
+
+in bash
+
+@example
+export CPPFLAGS=''-I/my/bmc_intf_path/''
+@end example
+
+in csh/tcsh
+
+@example
+setenv CPPFLAGS ``-I/my/bmc_intf_path/''
+@end example
+
+If the file is not on your system, the bmc_intf.h file may simply be
+downloaded from 
+(@uref{http://opensolaris.org/}) 
+and installed into any location.
 
 @bye

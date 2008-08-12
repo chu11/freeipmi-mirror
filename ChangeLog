@@ -30,6 +30,9 @@
 	* ipmimonitoring/, bmc-watchdog/: Support sunbmc driver.
 
 	* README.sunbmc: New file.
+	
+	* doc/freeipmi-faq.texi: Update w/ SUNBMC driver compilation
+	support.
 
 	* freeipmi.spec.in: Add README.sunbmc.
 
