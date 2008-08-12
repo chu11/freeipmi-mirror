@@ -2,6 +2,10 @@
 
 	* Tagged sunbmc_pre_experimental
 
+	* Document that sunbmc driver is experimental.
+
+	* Tagged sunbmc_post_experimental
+
 2008-08-12 Albert Chu <chu11@llnl.gov>
 
 	Add Solaris BMC interface.
