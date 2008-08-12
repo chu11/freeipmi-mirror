@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.8 2008-06-21 17:14:26 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.9 2008-08-12 18:14:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.

@@ -98,6 +98,13 @@ do {                                                                    \
   __TRACE_CTX_OUTPUT;                                                   \
 } while (0)
 
+#define __SUNBMC_TRACE                                                  \
+do {                                                                    \
+  int __ctxerrnum = ipmi_sunbmc_ctx_errnum(ctx);                        \
+  char *__ctxerrstr = ipmi_sunbmc_ctx_strerror(__ctxerrnum);            \
+  __TRACE_CTX_OUTPUT;                                                   \
+} while (0)
+
 #define __LOCATE_TRACE                                                  \
 do {                                                                    \
   int __ctxerrnum = *locate_errnum;                                     \
@@ -117,6 +124,7 @@ do {                                                                    \
 #define __KCS_TRACE
 #define __SSIF_TRACE
 #define __OPENIPMI_TRACE
+#define __SUNBMC_TRACE
 #define __LOCATE_TRACE
 #define __SDR_CACHE_TRACE
 #endif /* IPMI_TRACE */
@@ -707,6 +715,159 @@ do {                                                                    \
       {                                                                 \
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR;             \
         __OPENIPMI_TRACE;                                               \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define __SUNBMC_ERRNO_TO_ERRNUM                                        \
+do {                                                                    \
+  if (errno == 0)                                                       \
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;                          \
+  else if (errno == EPERM)                                              \
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_PERMISSION;                       \
+  else if (errno == EACCES)                                             \
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_PERMISSION;                       \
+  else if (errno == ENOENT)                                             \
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_DEVICE_NOT_FOUND;                 \
+  else if (errno == ENOMEM)                                             \
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY;                    \
+  else if (errno == EINVAL)                                             \
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR;                   \
+  else if (errno == ETIMEDOUT)                                          \
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_DRIVER_TIMEOUT;                   \
+  else                                                                  \
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR;                     \
+} while (0)
+
+#define SUNBMC_ERR(expr)                                                \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        __SUNBMC_ERRNO_TO_ERRNUM;                                       \
+        __SUNBMC_TRACE;                                                 \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SUNBMC_ERR_CLEANUP(expr)                                        \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        __SUNBMC_ERRNO_TO_ERRNUM;                                       \
+        __SUNBMC_TRACE;                                                 \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SUNBMC_ERRNUM_SET(__errnum)                                     \
+  do {                                                                  \
+    ctx->errnum = (__errnum);                                           \
+    __SUNBMC_TRACE;                                                     \
+  } while (0)
+
+#define SUNBMC_ERRNUM_SET_CLEANUP(__errnum)                             \
+  do {                                                                  \
+    ctx->errnum = (__errnum);                                           \
+    __SUNBMC_TRACE;                                                     \
+    goto cleanup;                                                       \
+  } while (0)
+
+#define SUNBMC_ERR_PARAMETERS(expr)                                     \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SUNBMC_CTX_ERR_PARAMETERS;                   \
+        __SUNBMC_TRACE;                                                 \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SUNBMC_ERR_PARAMETERS_CLEANUP(expr)                             \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SUNBMC_CTX_ERR_PARAMETERS;                   \
+        __SUNBMC_TRACE;                                                 \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SUNBMC_ERR_IO_NOT_INITIALIZED(expr)                             \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SUNBMC_CTX_ERR_IO_NOT_INITIALIZED;           \
+        __SUNBMC_TRACE;                                                 \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SUNBMC_ERR_IO_NOT_INITIALIZED_CLEANUP(expr)                     \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SUNBMC_CTX_ERR_IO_NOT_INITIALIZED;           \
+        __SUNBMC_TRACE;                                                 \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SUNBMC_ERR_OUT_OF_MEMORY(expr)                                  \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY;                \
+        __SUNBMC_TRACE;                                                 \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SUNBMC_ERR_OUT_OF_MEMORY_CLEANUP(expr)                          \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY;                \
+        __SUNBMC_TRACE;                                                 \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SUNBMC_ERR_SYSTEM_ERROR(expr)                                   \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR;                 \
+        __SUNBMC_TRACE;                                                 \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SUNBMC_ERR_SYSTEM_ERROR_CLEANUP(expr)                           \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR;                 \
+        __SUNBMC_TRACE;                                                 \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SUNBMC_ERR_INTERNAL_ERROR(expr)                                 \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR;               \
+        __SUNBMC_TRACE;                                                 \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SUNBMC_ERR_INTERNAL_ERROR_CLEANUP(expr)                         \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR;               \
+        __SUNBMC_TRACE;                                                 \
         goto cleanup;                                                   \
       }                                                                 \
   } while (0)

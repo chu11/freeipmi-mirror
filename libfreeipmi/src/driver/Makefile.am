@@ -21,4 +21,5 @@ libdriver_la_SOURCES = \
 	ipmi-semaphores.c \
 	ipmi-kcs-driver.c \
 	ipmi-openipmi-driver.c \
+	ipmi-sunbmc-driver.c \
 	ipmi-ssif-driver.c

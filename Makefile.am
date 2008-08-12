@@ -38,6 +38,7 @@ EXTRA = \
 	NEWS \
 	README \
 	README.argp \
+	README.sunbmc \
 	TODO \
 	COPYING.bmc-watchdog \
 	COPYING.ipmipower \

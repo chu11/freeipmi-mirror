@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.4 2008-06-21 14:34:14 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.5 2008-08-12 18:14:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.

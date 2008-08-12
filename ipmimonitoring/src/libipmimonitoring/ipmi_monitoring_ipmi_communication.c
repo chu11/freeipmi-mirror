@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.21 2008-07-14 01:22:41 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.22 2008-08-12 18:14:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -81,13 +81,13 @@ _inband_init(ipmi_monitoring_ctx_t c,
       && (config->driver_type >= 0
           && (config->driver_type != IPMI_MONITORING_DRIVER_TYPE_KCS
               && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_SSIF
-              && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_OPENIPMI)))
+              && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_OPENIPMI
+              && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_SUNBMC)))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return -1;
     }
   
-
   workaround_flags = 0;
   if (config && config->workaround_flags)
     {
@@ -103,7 +103,7 @@ _inband_init(ipmi_monitoring_ctx_t c,
   if (!config || config->driver_type < 0)
     {
       if (ipmi_ctx_open_inband (c->ipmi_ctx,
-                                IPMI_DEVICE_OPENIPMI,
+                                IPMI_DEVICE_SUNBMC,
                                 (config) ? config->disable_auto_probe : 0,
                                 (config) ? config->driver_address : 0,
                                 (config) ? config->register_spacing : 0,
@@ -111,10 +111,8 @@ _inband_init(ipmi_monitoring_ctx_t c,
                                 workaround_flags,
                                 flags) < 0)
         {
-          IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->ipmi_ctx))));
-          
           if (ipmi_ctx_open_inband (c->ipmi_ctx,
-                                    IPMI_DEVICE_KCS,
+                                    IPMI_DEVICE_OPENIPMI,
                                     (config) ? config->disable_auto_probe : 0,
                                     (config) ? config->driver_address : 0,
                                     (config) ? config->register_spacing : 0,
@@ -125,7 +123,7 @@ _inband_init(ipmi_monitoring_ctx_t c,
               IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->ipmi_ctx))));
               
               if (ipmi_ctx_open_inband (c->ipmi_ctx,
-                                        IPMI_DEVICE_SSIF,
+                                        IPMI_DEVICE_KCS,
                                         (config) ? config->disable_auto_probe : 0,
                                         (config) ? config->driver_address : 0,
                                         (config) ? config->register_spacing : 0,
@@ -135,28 +133,40 @@ _inband_init(ipmi_monitoring_ctx_t c,
                 {
                   IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->ipmi_ctx))));
                   
-                  if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BMC_BUSY)
-                    c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
-                  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
-                           || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
-                           || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-                           || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_IPMI_ERROR)
-                    c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-                  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_OUT_OF_MEMORY)
-                    c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-                  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR
-                           || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_DEVICE_NOT_FOUND)
-                    c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
-                  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_DRIVER_PATH_REQUIRED)
-                    c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-                  else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_DRIVER_TIMEOUT)
-                    c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
-                  else
-                    c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-                  return -1;
+                  if (ipmi_ctx_open_inband (c->ipmi_ctx,
+                                            IPMI_DEVICE_SSIF,
+                                            (config) ? config->disable_auto_probe : 0,
+                                            (config) ? config->driver_address : 0,
+                                            (config) ? config->register_spacing : 0,
+                                            (config) ? config->driver_device : NULL,
+                                            workaround_flags,
+                                            flags) < 0)
+                    {
+                      IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->ipmi_ctx))));
+                      
+                      if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BMC_BUSY)
+                        c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
+                      else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
+                               || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+                               || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                               || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_IPMI_ERROR)
+                        c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
+                      else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_OUT_OF_MEMORY)
+                        c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
+                      else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_SYSTEM_ERROR
+                               || ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_DEVICE_NOT_FOUND)
+                        c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
+                      else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_DRIVER_PATH_REQUIRED)
+                        c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+                      else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_DRIVER_TIMEOUT)
+                        c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
+                      else
+                        c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+                      return -1;
+                    }
                 }
-            }
-        } 
+            } 
+        }
     }
   else
     {
@@ -166,8 +176,10 @@ _inband_init(ipmi_monitoring_ctx_t c,
         driver_type = IPMI_DEVICE_KCS;
       else if (config->driver_type == IPMI_MONITORING_DRIVER_TYPE_SSIF)
         driver_type = IPMI_DEVICE_SSIF;
-      else
+      else if (config->driver_type == IPMI_MONITORING_DRIVER_TYPE_OPENIPMI)
         driver_type = IPMI_DEVICE_OPENIPMI;
+      else
+        driver_type = IPMI_DEVICE_SUNBMC;
 
       if (ipmi_ctx_open_inband (c->ipmi_ctx,
                                 driver_type,

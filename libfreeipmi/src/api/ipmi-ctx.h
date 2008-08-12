@@ -10,6 +10,7 @@
 #include "freeipmi/driver/ipmi-kcs-driver.h"
 #include "freeipmi/driver/ipmi-openipmi-driver.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
+#include "freeipmi/driver/ipmi-sunbmc-driver.h"
 
 #include "freeipmi/api/ipmi-api.h"
 
@@ -43,6 +44,7 @@ struct ipmi_ctx
       ipmi_kcs_ctx_t          kcs_ctx;
       ipmi_ssif_ctx_t         ssif_ctx;
       ipmi_openipmi_ctx_t     openipmi_ctx;
+      ipmi_sunbmc_ctx_t       sunbmc_ctx;
 
       struct
       {

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.33 2008-06-20 03:15:00 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.34 2008-08-12 18:14:36 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.

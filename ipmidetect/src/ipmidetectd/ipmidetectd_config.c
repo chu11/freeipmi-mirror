@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_config.c,v 1.9 2008-06-21 15:09:43 chu11 Exp $
+ *  $Id: ipmidetectd_config.c,v 1.10 2008-08-12 18:14:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.107 2008-08-08 22:56:55 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.108 2008-08-12 18:14:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -105,6 +105,7 @@ char *err_progname = NULL;
 ipmi_kcs_ctx_t kcs_ctx = NULL;
 ipmi_ssif_ctx_t ssif_ctx = NULL;
 ipmi_openipmi_ctx_t openipmi_ctx = NULL;
+ipmi_sunbmc_ctx_t sunbmc_ctx = NULL;
 int driver_type_used = -1;
 
 int shutdown_flag = 1;
@@ -380,6 +381,36 @@ _init_openipmi_ipmi(void)
   return 0;
 }
 
+static int
+_init_sunbmc_ipmi(void)
+{
+  if (!(sunbmc_ctx = ipmi_sunbmc_ctx_create()))
+    {
+      _bmclog("ipmi_sunbmc_ctx_create: %s", strerror(errno));
+      return -1;
+    }
+  
+  if (cmd_args.common.driver_device)
+    {
+      if (ipmi_sunbmc_ctx_set_driver_device(sunbmc_ctx, 
+                                            cmd_args.common.driver_device) < 0)
+        {
+          _bmclog("ipmi_sunbmc_ctx_set_driver_device: %s", 
+                  ipmi_sunbmc_ctx_strerror(ipmi_sunbmc_ctx_errnum(sunbmc_ctx)));
+          return -1;
+        }
+    }
+  
+  if (ipmi_sunbmc_ctx_io_init(sunbmc_ctx) < 0)
+    {
+      _bmclog("ipmi_sunbmc_ctx_io_init: %s",
+              ipmi_sunbmc_ctx_strerror(ipmi_sunbmc_ctx_errnum(sunbmc_ctx)));
+      return -1;
+    }
+  
+  return 0;
+}
+
 /* Must be called after cmdline parsed b/c user may pass in io port */
 static int
 _init_ipmi(void)
@@ -408,6 +439,12 @@ _init_ipmi(void)
 	  if (_init_openipmi_ipmi() < 0)
 	    _err_exit("Error initializing OPENIPMI IPMI driver");
 	  driver_type_used = IPMI_DEVICE_OPENIPMI;
+	}
+      if (cmd_args.common.driver_type == IPMI_DEVICE_SUNBMC)
+	{
+	  if (_init_sunbmc_ipmi() < 0)
+	    _err_exit("Error initializing SUNBMC IPMI driver");
+	  driver_type_used = IPMI_DEVICE_SUNBMC;
 	}
     }
   else
@@ -445,20 +482,25 @@ _init_ipmi(void)
             }
         }
 
-      if (_init_openipmi_ipmi() < 0)
+      if (_init_sunbmc_ipmi() < 0)
         {
-          if (_init_kcs_ipmi() < 0)
+          if (_init_openipmi_ipmi() < 0)
             {
-              if (_init_ssif_ipmi() < 0)
-                _err_exit("Error initializing IPMI driver");
+              if (_init_kcs_ipmi() < 0)
+                {
+                  if (_init_ssif_ipmi() < 0)
+                    _err_exit("Error initializing IPMI driver");
+                  else
+                    driver_type_used = IPMI_DEVICE_SSIF;
+                }
               else
-                driver_type_used = IPMI_DEVICE_SSIF;
+                driver_type_used = IPMI_DEVICE_KCS;
             }
           else
-            driver_type_used = IPMI_DEVICE_KCS;
+            driver_type_used = IPMI_DEVICE_OPENIPMI;
         }
       else
-        driver_type_used = IPMI_DEVICE_OPENIPMI;
+        driver_type_used = IPMI_DEVICE_SUNBMC;
     }
 
  out:
@@ -660,6 +702,30 @@ _cmd(char *str,
               else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY)
                 errno = ENOMEM;
               else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED)
+                errno = EIO;
+              else
+                errno = EINVAL;
+              return -1;
+	    }
+	}
+      else if (driver_type_used == IPMI_DEVICE_SUNBMC)
+	{
+	  if ((ret = ipmi_sunbmc_cmd (sunbmc_ctx,
+                                      IPMI_BMC_IPMB_LUN_BMC, 
+                                      netfn, 
+                                      cmd_rq, 
+                                      cmd_rs)) < 0)
+	    {
+              _bmclog("%s: ipmi_sunbmc_cmd: %s", 
+                      str,
+                      ipmi_sunbmc_ctx_strerror(ipmi_sunbmc_ctx_errnum(sunbmc_ctx)));
+              if (ipmi_sunbmc_ctx_errnum(sunbmc_ctx) == IPMI_SUNBMC_CTX_ERR_PARAMETERS)
+                errno = EINVAL;
+              else if (ipmi_sunbmc_ctx_errnum(sunbmc_ctx) == IPMI_SUNBMC_CTX_ERR_PERMISSION)
+                errno = EPERM;
+              else if (ipmi_sunbmc_ctx_errnum(sunbmc_ctx) == IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY)
+                errno = ENOMEM;
+              else if (ipmi_sunbmc_ctx_errnum(sunbmc_ctx) == IPMI_SUNBMC_CTX_ERR_IO_NOT_INITIALIZED)
                 errno = EIO;
               else
                 errno = EINVAL;
@@ -1979,6 +2045,8 @@ main(int argc, char **argv)
     ipmi_ssif_ctx_destroy(ssif_ctx);
   if (openipmi_ctx)
     ipmi_openipmi_ctx_destroy(openipmi_ctx);
+  if (sunbmc_ctx)
+    ipmi_sunbmc_ctx_destroy(sunbmc_ctx);
   close(logfile_fd);
   closelog();
   exit(0);

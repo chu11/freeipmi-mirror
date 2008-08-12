@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: debug.c,v 1.6 2008-06-21 17:24:51 chu11 Exp $
+ *  $Id: debug.c,v 1.7 2008-08-12 18:14:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

@@ -54,6 +54,7 @@ extern "C" {
 #include <freeipmi/driver/ipmi-kcs-driver.h>
 #include <freeipmi/driver/ipmi-ssif-driver.h>
 #include <freeipmi/driver/ipmi-openipmi-driver.h>
+#include <freeipmi/driver/ipmi-sunbmc-driver.h>
 #include <freeipmi/fiid/fiid.h>
 #include <freeipmi/interface/ipmi-kcs-interface.h>
 #include <freeipmi/interface/ipmi-lan-interface.h>

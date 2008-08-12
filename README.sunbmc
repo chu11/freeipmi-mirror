@@ -1,0 +1,14 @@
+In order to compile the sunbmc driver, the bmc_intf.h header file must
+be in your include path.  This can be added by to the include search
+path by adding the path to the CPPFLAGS environment variable.  i.e.
+
+in bash
+
+export CPPFLAGS="-I/my/bmc_intf_path/"
+
+in csh/tcsh
+
+setenv CPPFLAGS "-I/my/bmc_intf_path/"
+
+If the file is not on your system, the bmc_intf.h file may simply be
+downloaded from opensolaris.org and installed into any location.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.15 2008-06-21 17:19:08 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.16 2008-08-12 18:14:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.

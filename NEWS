@@ -29,6 +29,7 @@ o Support --sdr-cache-recreate in all SDR related tools for easier
   scripting.
 o Support --guid option in bmc-info to retrieve global ID.
 o Support build on Solaris.
+o Support "SUNBMC" in-band driver.
 
 Tools - Enhancements/Changes/Bug Fixes
 --------------------------------------
