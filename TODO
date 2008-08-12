@@ -1,6 +1,8 @@
 libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
+* abstract FRU parsing into lib
+* abstract SEL parsing into lib
 
 ipmi-chassis-config
 -------------------
