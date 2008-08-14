@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.9 2008-06-07 16:09:56 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.10 2008-08-14 22:26:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -282,7 +282,8 @@ _ipmi_ping_build(struct ipmidetectd_info *info, char *buf, unsigned int buflen)
                            obj_lan_session_hdr) < 0)
     ERR_EXIT(("fill_lan_session_hdr: %s", strerror(errno)));
 
-  if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
+  if (fill_lan_msg_hdr(IPMI_LAN_SLAVE_ADDRESS_BMC,
+		       IPMI_NET_FN_APP_RQ, 
                        IPMI_BMC_IPMB_LUN_BMC,
                        info->sequence_number % (IPMI_RQ_SEQ_MAX+1), 
                        obj_lan_msg_hdr) < 0)

@@ -1,3 +1,11 @@
+2008-08-14 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/interface/ipmi-lan-interface.h,
+	libfreeipmi/src/interface/ipmi-lan-interface.c (fill_lan_msg_hdr):
+	Take rs_addr argument.
+
+	* Adjust calls to fill_lan_msg_hdr globally as needed.
+	
 2008-08-12 Albert Chu <chu11@llnl.gov>
 
 	* Tagged sunbmc_pre_experimental

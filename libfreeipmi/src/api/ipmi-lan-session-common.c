@@ -60,6 +60,7 @@
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
 #include "freeipmi/spec/ipmi-rmcpplus-status-spec.h"
+#include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 #include "freeipmi/util/ipmi-lan-util.h"
 #include "freeipmi/util/ipmi-rmcpplus-util.h"
@@ -421,7 +422,8 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
     
   API_ERR (fill_rmcp_hdr_ipmi (ctx->io.outofband.rq.obj_rmcp_hdr) != -1);
 
-  API_ERR (fill_lan_msg_hdr (net_fn,
+  API_ERR (fill_lan_msg_hdr (IPMI_LAN_SLAVE_ADDRESS_BMC,
+			     net_fn,
                              lun,
 			     rq_seq,
 			     ctx->io.outofband.rq.obj_lan_msg_hdr) != -1);
@@ -1342,7 +1344,8 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                                       session_sequence_number,
                                       ctx->io.outofband.rq.obj_rmcpplus_session_hdr) != -1);
 
-  API_ERR (fill_lan_msg_hdr (net_fn,
+  API_ERR (fill_lan_msg_hdr (IPMI_LAN_SLAVE_ADDRESS_BMC,
+			     net_fn,
                              lun,
 			     rq_seq,
 			     ctx->io.outofband.rq.obj_lan_msg_hdr) != -1);

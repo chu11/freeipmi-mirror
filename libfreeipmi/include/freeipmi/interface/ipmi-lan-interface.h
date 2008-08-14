@@ -41,7 +41,8 @@ int8_t fill_lan_session_hdr  (uint8_t authentication_type,
                               uint32_t session_id,
                               fiid_obj_t obj_lan_session_hdr);
 
-int8_t fill_lan_msg_hdr (uint8_t net_fn, 
+int8_t fill_lan_msg_hdr (uint8_t rs_addr,
+			 uint8_t net_fn, 
 			 uint8_t rs_lun, 
 			 uint8_t rq_seq, 
 			 fiid_obj_t obj_lan_msg_hdr);

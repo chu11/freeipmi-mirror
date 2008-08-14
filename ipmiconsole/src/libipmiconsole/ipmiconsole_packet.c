@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.24 2008-08-12 18:14:37 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.25 2008-08-14 22:26:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -589,7 +589,8 @@ _ipmi_1_5_packet_assemble(ipmiconsole_ctx_t c,
       return -1;
     }
 
-  if (fill_lan_msg_hdr(net_fn,
+  if (fill_lan_msg_hdr(IPMI_LAN_SLAVE_ADDRESS_BMC,
+		       net_fn,
 		       IPMI_BMC_IPMB_LUN_BMC,
 		       c->session.requester_sequence_number,
 		       c->connection.obj_lan_msg_hdr_rq) < 0)
@@ -676,7 +677,8 @@ _ipmi_2_0_packet_assemble(ipmiconsole_ctx_t c,
       return -1;
     }
       
-  if (fill_lan_msg_hdr(net_fn,
+  if (fill_lan_msg_hdr(IPMI_LAN_SLAVE_ADDRESS_BMC,
+		       net_fn,
 		       IPMI_BMC_IPMB_LUN_BMC,
 		       c->session.requester_sequence_number,
 		       c->connection.obj_lan_msg_hdr_rq) < 0)
