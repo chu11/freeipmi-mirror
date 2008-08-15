@@ -27,6 +27,19 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
+int8_t ipmi_cmd_get_system_interface_capabilities (ipmi_ctx_t ctx,
+                                                   uint8_t system_interface,
+                                                   fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_system_interface_capabilities_ssif (ipmi_ctx_t ctx,
+                                                        fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_system_interface_capabilities_kcs (ipmi_ctx_t ctx,
+                                                       fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_bt_interface_capabilities (ipmi_ctx_t ctx,
+                                               fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx, 
                                                          uint8_t channel_number,
                                                          uint8_t maximum_privilege_level,

@@ -34,6 +34,26 @@ extern "C" {
 #define IPMI_MAX_K_R_LENGTH                 20
 #define IPMI_MAX_K_G_LENGTH                 20
 
+#define IPMI_SYSTEM_INTERFACE_SSIF          0x00
+#define IPMI_SYSTEM_INTERFACE_KCS           0x01
+#define IPMI_SYSTEM_INTERFACE_SMIC          0x02
+
+#define IPMI_SYSTEM_INTERFACE_VALID(__val) \
+        (((__val) == IPMI_SYSTEM_INTERFACE_SSIF \
+          || (__val) == IPMI_SYSTEM_INTERFACE_KCS \
+          || (__val) == IPMI_SYSTEM_INTERFACE_SMIC) ? 1 : 0)
+
+#define IPMI_SSIF_SYSTEM_INTERFACE_VERSION_1            0x0
+
+#define IPMI_SSIF_SYSTEM_INTERFACE_IMPLEMENTS_PEC       0x1
+#define IPMI_SSIF_SYSTEM_INTERFACE_DOES_NOT_SUPPORT_PEC 0x0
+
+#define IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_SINGLE_PART_READS_WRITES_SUPPORTED                   0x0
+#define IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_MULTI_PART_READS_WRITES_SUPPORTED_START_AND_END_ONLY 0x1
+#define IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_MULTI_PART_READS_WRITES_SUPPORTED_START_MIDDLE_END   0x2
+
+#define IPMI_KCS_SYSTEM_INTERFACE_VERSION_1             0x0
+
 #define IPMI_GET_IPMI_V20_EXTENDED_DATA     0x01
 #define IPMI_GET_IPMI_V15_DATA              0x00
 
@@ -178,6 +198,13 @@ extern "C" {
 #define IPMI_USER_ID_ENABLE_STATUS_ENABLED     0x1
 #define IPMI_USER_ID_ENABLE_STATUS_DISABLED    0x2
   
+extern fiid_template_t tmpl_cmd_get_system_interface_capabilities_rq;
+extern fiid_template_t tmpl_cmd_get_system_interface_capabilities_rs;
+extern fiid_template_t tmpl_cmd_get_system_interface_capabilities_ssif_rs;
+extern fiid_template_t tmpl_cmd_get_system_interface_capabilities_kcs_rs;
+extern fiid_template_t tmpl_cmd_get_bt_interface_capabilities_rq;
+extern fiid_template_t tmpl_cmd_get_bt_interface_capabilities_rs;
+
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rq;
@@ -220,6 +247,11 @@ extern fiid_template_t tmpl_cmd_get_user_name_rs;
 extern fiid_template_t tmpl_cmd_set_user_password_rq;
 extern fiid_template_t tmpl_cmd_set_user_password_v20_rq;
 extern fiid_template_t tmpl_cmd_set_user_password_rs;
+
+int8_t fill_cmd_get_system_interface_capabilities (uint8_t system_interface,
+                                                   fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_bt_interface_capabilities (fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                          uint8_t maximum_privilege_level, 

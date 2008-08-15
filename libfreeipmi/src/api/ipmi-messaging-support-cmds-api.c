@@ -54,6 +54,125 @@
 
 #include "freeipmi-portability.h"
 
+int8_t
+ipmi_cmd_get_system_interface_capabilities (ipmi_ctx_t ctx,
+                                            uint8_t system_interface,
+                                            fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (IPMI_SYSTEM_INTERFACE_VALID(system_interface)
+                      && fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_system_interface_capabilities_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_interface_capabilities_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_get_system_interface_capabilities (system_interface,
+                                                                 obj_cmd_rq) < 0));
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_APP_RQ, 
+			    obj_cmd_rq,
+			    obj_cmd_rs);
+                       
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t
+ipmi_cmd_get_system_interface_capabilities_ssif (ipmi_ctx_t ctx,
+                                                 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_system_interface_capabilities_ssif_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_interface_capabilities_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_get_system_interface_capabilities (IPMI_SYSTEM_INTERFACE_SSIF,
+                                                                 obj_cmd_rq) < 0));
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_APP_RQ, 
+			    obj_cmd_rq,
+			    obj_cmd_rs);
+                       
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t
+ipmi_cmd_get_system_interface_capabilities_kcs (ipmi_ctx_t ctx,
+                                                fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_system_interface_capabilities_kcs_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_interface_capabilities_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_get_system_interface_capabilities (IPMI_SYSTEM_INTERFACE_KCS,
+                                                                 obj_cmd_rq) < 0));
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_APP_RQ, 
+			    obj_cmd_rq,
+			    obj_cmd_rs);
+                       
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t
+ipmi_cmd_get_bt_interface_capabilities (ipmi_ctx_t ctx,
+                                        fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_bt_interface_capabilities_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_bt_interface_capabilities_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_get_bt_interface_capabilities (obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_APP_RQ, 
+			    obj_cmd_rq,
+			    obj_cmd_rs);
+                       
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+
 int8_t 
 ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx, 
                                                   uint8_t channel_number,
