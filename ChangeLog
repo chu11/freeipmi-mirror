@@ -1,5 +1,10 @@
 2008-08-14 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/src/: If sensor slave address is not BMC, do not
+	read/output sensor reading.
+	
+2008-08-14 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/interface/ipmi-lan-interface.h,
 	libfreeipmi/src/interface/ipmi-lan-interface.c (fill_lan_msg_hdr):
 	Take rs_addr argument.

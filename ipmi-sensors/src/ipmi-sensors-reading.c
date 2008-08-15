@@ -71,6 +71,9 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   uint64_t sensor_event_bitmask = 0;
   int8_t sensor_event_bitmask1_len;
   int8_t sensor_event_bitmask2_len;
+  uint8_t sensor_owner_id_type;
+  uint8_t sensor_owner_id;
+  uint8_t slave_address;
 
   assert(state_data);
   assert(sdr_record);
@@ -115,6 +118,45 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                              sdr_record_len,
                                              &event_reading_type_code) < 0)
     return -1;
+
+  if (sdr_cache_get_sensor_owner_id (state_data->pstate,
+                                     sdr_record,
+                                     sdr_record_len,
+                                     &sensor_owner_id_type,
+                                     &sensor_owner_id) < 0)
+    return -1;
+
+  if (sensor_owner_id_type == IPMI_SDR_SENSOR_OWNER_ID_TYPE_SYSTEM_SOFTWARE_ID)
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Sensor number 0x%X is a system software sensor\n",
+                        sensor_number);
+      rv = 0;
+      goto cleanup;
+    }
+
+  slave_address = (sensor_owner_id << 1) | sensor_owner_id_type;
+
+  if (slave_address != IPMI_LAN_SLAVE_ADDRESS_BMC)
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Sensor number 0x%X slave address is not BMC\n",
+                        sensor_number);
+
+      /* make status message "na" so "unknown" isn't output */
+      if (get_msg_message_list (state_data,
+                                event_message_list,
+                                event_message_list_len,
+                                "NA") < 0)
+        goto cleanup;
+
+      rv = 0;
+      goto cleanup;
+    }
 
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_rs);
 
