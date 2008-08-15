@@ -1,3 +1,8 @@
+2008-08-15 Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/: If sensor slave address
+	is not BMC, considering sensor unavailable.
+
 2008-08-14 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/src/: If sensor slave address is not BMC, do not

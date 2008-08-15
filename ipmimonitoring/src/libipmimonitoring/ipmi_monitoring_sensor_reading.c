@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.26 2008-08-01 23:53:56 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.27 2008-08-15 13:28:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -408,6 +408,9 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
   uint64_t sensor_event_bitmask1;
   uint64_t sensor_event_bitmask2;
   int8_t sensor_event_bitmask1_len, sensor_event_bitmask2_len;
+  uint8_t sensor_owner_id_type;
+  uint8_t sensor_owner_id;
+  uint8_t slave_address;
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
@@ -416,6 +419,42 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
   assert(sensor_number);
   assert(sensor_reading);
   assert(sensor_event_bitmask);
+  
+  if (Fiid_obj_get(c,
+                   obj_sdr_record,
+                   "sensor_owner_id.type",
+                   &val) < 0)
+    return -1;
+  sensor_owner_id_type = val;
+
+  if (Fiid_obj_get(c,
+                   obj_sdr_record,
+                   "sensor_owner_id",
+                   &val) < 0)
+    return -1;
+  sensor_owner_id = val;
+
+  if (sensor_owner_id_type == IPMI_SDR_SENSOR_OWNER_ID_TYPE_SYSTEM_SOFTWARE_ID)
+    {
+      /* sensor reading not available.  Tell the caller to store this
+       * as an unreadable sensor
+       */
+      IPMI_MONITORING_DEBUG(("sensor is system software sensor"));
+      rv = 0;
+      goto cleanup;
+    }
+
+  slave_address = (sensor_owner_id << 1) | sensor_owner_id_type;
+
+  if (slave_address != IPMI_LAN_SLAVE_ADDRESS_BMC)
+    {
+      /* sensor reading not available.  Tell the caller to store this
+       * as an unreadable sensor
+       */
+      IPMI_MONITORING_DEBUG(("sensor slave address is not BMC"));
+      rv = 0;
+      goto cleanup;
+    }
 
   if (!(obj_cmd_rs = Fiid_obj_create(c, tmpl_cmd_get_sensor_reading_rs)))
     goto cleanup;
