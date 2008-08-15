@@ -133,10 +133,10 @@ Corp. are now at Zresearch Inc.)
 @node Who maintains FreeIPMI?, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, How did it start?, Top
 @section Who maintains FreeIPMI?
 
-Primary maintenance of FreeIPMI is currently managed by Albert Chu at
-Lawrence Livermore National Laboratory (LLNL).  Overall maintenance of
-FreeIPMI has been handled by staff at CDC, Zresearch, and LLNL during
-the lifetime of FreeIPMI.
+Primary maintenance of FreeIPMI is currently managed by Lawrence
+Livermore National Laboratory (LLNL).  Overall maintenance of FreeIPMI
+has been handled by staff at CDC, Zresearch, and LLNL during the
+lifetime of FreeIPMI.
 
 @node FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about FreeIPMI, Who maintains FreeIPMI?, Top
 @section What is the relationship between FreeIPMI, OpenIPMI, Ipmitool, and Ipmiutil? 
