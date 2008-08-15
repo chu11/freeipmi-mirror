@@ -54,7 +54,7 @@ fiid_template_t tmpl_cmd_get_system_interface_capabilities_rs =
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {32, "data", FIID_FIELD_OPTIONAL, FIID_FIELD_LENGTH_VARIABLE},
+    {32, "data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     {0, "", 0}
   };
 
