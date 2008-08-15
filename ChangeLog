@@ -1,8 +1,23 @@
 2008-08-15 Albert Chu <chu11@llnl.gov>
 
-	* ipmimonitoring/src/libipmimonitoring/: If sensor slave address
-	is not BMC, considering sensor unavailable.
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(_get_sensor_reading): If sensor slave address is not BMC,
+	considering sensor unavailable.
 
+	* libfreeipmi/include/freeipmi/sdr-cache/ipmi-sdr-cache.h,
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-read.c
+	(ipmi_sdr_cache_search_sensor_number): Rename to
+	ipmi_sdr_cache_search_sensor.  Search for sensor via sensor owner
+	id and sensor number.
+
+	* ipmi-sel/src/ipmi-sel-entry.c (_find_sdr_record,
+	_get_sel_system_event_record): Find sensor via sensor number and
+	id.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-slave-address-spec.h:
+	Rename IPMI_LAN_SLAVE_ADDRESS_BMC to IPMI_SLAVE_ADDRESS_BMC
+	(support IPMI_LAN_SLAVE_ADDRESS_BMC w/ legacy macro).
+	
 2008-08-14 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/src/: If sensor slave address is not BMC, do not

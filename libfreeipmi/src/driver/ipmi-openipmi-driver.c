@@ -272,7 +272,7 @@ ipmi_openipmi_ctx_set_flags(ipmi_openipmi_ctx_t ctx, uint32_t flags)
 int8_t
 ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
 {
-  unsigned int addr = IPMI_LAN_SLAVE_ADDRESS_BMC;
+  unsigned int addr = IPMI_SLAVE_ADDRESS_BMC;
   char *device;
 
   ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);

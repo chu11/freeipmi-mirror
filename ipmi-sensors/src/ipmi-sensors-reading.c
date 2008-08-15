@@ -139,7 +139,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
 
   slave_address = (sensor_owner_id << 1) | sensor_owner_id_type;
 
-  if (slave_address != IPMI_LAN_SLAVE_ADDRESS_BMC)
+  if (slave_address != IPMI_SLAVE_ADDRESS_BMC)
     {
       if (state_data->prog_data->args->common.debug)
         pstdout_fprintf(state_data->pstate,

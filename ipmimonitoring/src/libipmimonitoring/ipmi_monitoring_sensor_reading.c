@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.27 2008-08-15 13:28:20 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.28 2008-08-15 16:04:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -446,7 +446,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
 
   slave_address = (sensor_owner_id << 1) | sensor_owner_id_type;
 
-  if (slave_address != IPMI_LAN_SLAVE_ADDRESS_BMC)
+  if (slave_address != IPMI_SLAVE_ADDRESS_BMC)
     {
       /* sensor reading not available.  Tell the caller to store this
        * as an unreadable sensor

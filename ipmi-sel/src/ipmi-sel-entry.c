@@ -65,6 +65,8 @@
 static int
 _find_sdr_record(ipmi_sel_state_data_t *state_data,
                  uint8_t sensor_number,
+                 uint8_t generator_id_type,
+                 uint8_t generator_id,
                  uint8_t *sdr_record,
                  unsigned int *sdr_record_len,
                  uint8_t *sdr_record_type,
@@ -81,7 +83,9 @@ _find_sdr_record(ipmi_sel_state_data_t *state_data,
   assert(sdr_record_type);
   assert(sdr_event_reading_type_code);
 
-  if (ipmi_sdr_cache_search_sensor_number(state_data->ipmi_sdr_cache_ctx, sensor_number) < 0)
+  if (ipmi_sdr_cache_search_sensor(state_data->ipmi_sdr_cache_ctx, 
+                                   sensor_number,
+                                   (generator_id << 1) | generator_id_type) < 0)
     {
       if (ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx) != IPMI_SDR_CACHE_CTX_ERR_NOT_FOUND)
         { 
@@ -358,6 +362,8 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
       sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
       if ((sdr_record_found = _find_sdr_record(state_data, 
                                                sensor_number,
+                                               generator_id_type,
+                                               generator_id,
                                                sdr_record,
                                                &sdr_record_len,
                                                &sdr_record_type,

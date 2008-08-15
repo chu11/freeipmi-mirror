@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.16 2008-08-12 18:14:45 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.17 2008-08-15 16:04:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -350,7 +350,7 @@ ipmi_sdr_cache_search_record_id(ipmi_sdr_cache_ctx_t ctx, uint16_t record_id)
 }
 
 int 
-ipmi_sdr_cache_search_sensor_number(ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_number)
+ipmi_sdr_cache_search_sensor(ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_number, uint8_t sensor_owner_id)
 {
   off_t offset;
   int found = 0;
@@ -373,10 +373,13 @@ ipmi_sdr_cache_search_sensor_number(ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_num
           || record_type_current == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
         {
           uint8_t sensor_number_current;
+          uint8_t sensor_owner_id_current;
 
+          sensor_owner_id_current = ptr[IPMI_SDR_CACHE_SDR_RECORD_SENSOR_OWNER_ID_INDEX];
           sensor_number_current = ptr[IPMI_SDR_CACHE_SDR_RECORD_SENSOR_NUMBER_INDEX];
 
-          if (sensor_number_current == sensor_number)
+          if (sensor_owner_id_current == sensor_owner_id
+              && sensor_number_current == sensor_number)
             {
               found++;
               ctx->current_offset = offset;

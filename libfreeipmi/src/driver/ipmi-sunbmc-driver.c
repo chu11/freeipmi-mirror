@@ -308,12 +308,12 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
   bmc_msg_t *msg = NULL;
   bmc_req_t *req = NULL;
   unsigned int msg_len;
-#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   uint8_t rq_buf_temp[IPMI_SUNBMC_BUFLEN];
   uint8_t rq_buf[IPMI_SUNBMC_BUFLEN];
   uint8_t rq_cmd;
   int32_t rq_buf_len;
   int32_t len;
+#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   int rv = -1;
 
   assert(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
@@ -370,6 +370,8 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   /* otherwise, we always return an internal error - we shouldn't reach this point */
   SUNBMC_ERR_INTERNAL_ERROR(0);
+
+  goto cleanup;                 /* to remove warnings */
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
   rv = 0;
@@ -390,10 +392,10 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   bmc_msg_t *msg = NULL;
   bmc_rsp_t *rsp = NULL;
   int flags = 0;
-#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   uint8_t rs_buf_temp[IPMI_SUNBMC_BUFLEN];
   uint8_t rs_buf[IPMI_SUNBMC_BUFLEN];
   unsigned int rs_buf_len = 0;
+#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   fd_set read_fds;
   struct timeval tv;
   int n;

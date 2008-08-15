@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.101 2008-08-14 22:26:23 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.102 2008-08-15 16:04:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -423,7 +423,7 @@ _ipmi_1_5_packet_create(ipmipower_powercmd_t ip,
     ierr_exit("_ipmi_1_5_packet_create(%s: %d): fill_lan_session_hdr: %s", 
               ip->ic->hostname, ip->protocol_state, strerror(errno));
   
-  if (fill_lan_msg_hdr(IPMI_LAN_SLAVE_ADDRESS_BMC,
+  if (fill_lan_msg_hdr(IPMI_SLAVE_ADDRESS_BMC,
 		       net_fn, 
                        IPMI_BMC_IPMB_LUN_BMC, 
                        (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
@@ -496,7 +496,7 @@ _ipmi_2_0_packet_create(ipmipower_powercmd_t ip,
     ierr_exit("_ipmi_2_0_packet_create(%s:%d: fill_rmcpplus_session_hdr: %s",
               ip->ic->hostname, ip->protocol_state, strerror(errno));
   
-  if (fill_lan_msg_hdr(IPMI_LAN_SLAVE_ADDRESS_BMC,
+  if (fill_lan_msg_hdr(IPMI_SLAVE_ADDRESS_BMC,
 		       net_fn, 
                        IPMI_BMC_IPMB_LUN_BMC, 
                        (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 

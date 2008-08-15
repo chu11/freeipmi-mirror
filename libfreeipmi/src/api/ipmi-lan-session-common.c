@@ -422,7 +422,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
     
   API_ERR (fill_rmcp_hdr_ipmi (ctx->io.outofband.rq.obj_rmcp_hdr) != -1);
 
-  API_ERR (fill_lan_msg_hdr (IPMI_LAN_SLAVE_ADDRESS_BMC,
+  API_ERR (fill_lan_msg_hdr (IPMI_SLAVE_ADDRESS_BMC,
 			     net_fn,
                              lun,
 			     rq_seq,
@@ -1344,7 +1344,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                                       session_sequence_number,
                                       ctx->io.outofband.rq.obj_rmcpplus_session_hdr) != -1);
 
-  API_ERR (fill_lan_msg_hdr (IPMI_LAN_SLAVE_ADDRESS_BMC,
+  API_ERR (fill_lan_msg_hdr (IPMI_SLAVE_ADDRESS_BMC,
 			     net_fn,
                              lun,
 			     rq_seq,
