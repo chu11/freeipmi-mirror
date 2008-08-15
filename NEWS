@@ -101,8 +101,9 @@ o ipmi-sensors
     sensor is disabled on the motherboard, ipmi-sensors would likely
     report "NA".  Previously, "OK" would have been reported under both
     conditions.
-  - Output "NA" for sensors whose slave addresses are not the BMC.  May
-    result in different output than before.
+  - Output "NA" for sensors whose slave addresses are not the BMC because
+    the accuracy of the reading is not reliable.  May result in different
+    output than before.
   - Output multiple sensor status messages on separate lines, rather
     than all on one line under verbose modes.
   - When fields are not relevant, do not output as much information in
@@ -120,8 +121,8 @@ o ipmimonitoring
     ipmimonitoring would normally not output a sensor state (it would
     output "N/A" under verbose mode). Previously, "Nominal" would have
     been reported under both conditions.
-  - Check for sensors whose slave addresses are not the BMC.  May
-    result in different output than before.
+  - Consider sensors without BMC slave addresses unreadable.  May
+    result in sensors not being output like before.
   - Output multiple bitmask strings if multiple bits are set.
   - Output "OK", similarly to ipmi-sensors when no bitmask strings are
     returned from a sensor reading.
