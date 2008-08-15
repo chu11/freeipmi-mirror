@@ -120,6 +120,8 @@ o ipmimonitoring
     ipmimonitoring would normally not output a sensor state (it would
     output "N/A" under verbose mode). Previously, "Nominal" would have
     been reported under both conditions.
+  - Check for sensors whose slave addresses are not the BMC.  May
+    result in different output than before.
   - Output multiple bitmask strings if multiple bits are set.
   - Output "OK", similarly to ipmi-sensors when no bitmask strings are
     returned from a sensor reading.
