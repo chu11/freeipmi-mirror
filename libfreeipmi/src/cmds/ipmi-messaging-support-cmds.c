@@ -96,7 +96,7 @@ fiid_template_t tmpl_cmd_get_bt_interface_capabilities_rs =
     {8, "number_of_outstanding_requests_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "input_buffer_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* in bytes */
     {8, "output_buffer_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* in bytes */
-    {8, "BMC_Request_to_Response_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* in seconds */
+    {8, "bmc_request_to_response_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* in seconds */
     {8, "recommended_retries", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
