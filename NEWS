@@ -101,6 +101,8 @@ o ipmi-sensors
     sensor is disabled on the motherboard, ipmi-sensors would likely
     report "NA".  Previously, "OK" would have been reported under both
     conditions.
+  - Output "NA" for sensors whose slave addresses are not the BMC.  May
+    result in different output than before.
   - Output multiple sensor status messages on separate lines, rather
     than all on one line under verbose modes.
   - When fields are not relevant, do not output as much information in
