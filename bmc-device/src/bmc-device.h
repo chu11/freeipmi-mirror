@@ -38,7 +38,10 @@ enum bmc_device_argp_option_keys
     CMD_GET_SEL_TIME_KEY = 169,
     CMD_SET_SEL_TIME_KEY = 170,
     CMD_GET_MCA_AUXILIARY_LOG_STATUS_KEY = 171,
-    VERBOSE_KEY = 172,
+    CMD_GET_SSIF_INTERFACE_CAPABILITIES_KEY = 172,
+    CMD_GET_KCS_INTERFACE_CAPABILITIES_KEY = 173,
+    CMD_GET_BT_INTERFACE_CAPABILITIES_KEY = 174,
+    VERBOSE_KEY = 175,
   };
 
 enum bmc_device_set_acpi_power_state_options
@@ -72,6 +75,9 @@ struct bmc_device_arguments
   int set_sel_time;
   char *set_sel_time_arg;
   int get_mca_auxiliary_log_status;
+  int get_ssif_interface_capabilities;
+  int get_kcs_interface_capabilities;
+  int get_bt_interface_capabilities;
   int verbose;
 };
 

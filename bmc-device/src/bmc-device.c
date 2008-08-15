@@ -786,6 +786,192 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
   return rv;
 }
 
+static int
+get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_get_system_interface_capabilities_ssif_rs);
+
+  if (ipmi_cmd_get_system_interface_capabilities_ssif (state_data->ipmi_ctx, 
+                                                       cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_system_interface_capabilities_ssif: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET(cmd_rs, "ssif_version", &val);
+
+  /* achu: for some stupid reason 000b == "version 1" */
+  if (val == IPMI_SSIF_SYSTEM_INTERFACE_VERSION_1)
+    pstdout_printf(state_data->pstate,
+                   "SSIF Version:                     %X (version 1)\n", (unsigned int) val);
+  else
+    pstdout_printf(state_data->pstate,
+                   "SSIF Version:                     %X\n", (unsigned int) val);
+  
+  _FIID_OBJ_GET(cmd_rs, "pec_support", &val);
+  
+  pstdout_printf(state_data->pstate,
+                 "SSIF PEC Support:                 ");
+  switch (val)
+    {
+    case IPMI_SSIF_SYSTEM_INTERFACE_IMPLEMENTS_PEC:
+      pstdout_printf (state_data->pstate, "Yes\n");
+      break;
+    case IPMI_SSIF_SYSTEM_INTERFACE_DOES_NOT_SUPPORT_PEC:
+      pstdout_printf (state_data->pstate, "No\n");
+      break;
+    default:
+      pstdout_printf (state_data->pstate, "Unknown\n");
+      break;
+    }
+
+  _FIID_OBJ_GET(cmd_rs, "transaction_support", &val);
+
+  pstdout_printf(state_data->pstate,
+                 "SSIF Transaction Support:         ");
+  switch (val)
+    {
+    case IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_SINGLE_PART_READS_WRITES_SUPPORTED:
+      pstdout_printf (state_data->pstate, "Only single-part reads/writes supported.\n");
+      break;
+    case IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_MULTI_PART_READS_WRITES_SUPPORTED_START_AND_END_ONLY:
+      pstdout_printf (state_data->pstate, "multi-part reads/writes upported.  Start and End transactions only.\n");
+      break;
+    case IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_MULTI_PART_READS_WRITES_SUPPORTED_START_MIDDLE_END:
+      pstdout_printf (state_data->pstate, "multi-part reads/writes upported.  Start, Middle, and End transactions supported.\n");
+      break;
+    default:
+      pstdout_printf (state_data->pstate, "Unknown\n");
+      break;
+    }
+
+  _FIID_OBJ_GET(cmd_rs, "input_message_size", &val);
+
+  pstdout_printf (state_data->pstate,
+                  "SSIF Maximum Input Message Size:  %u bytes\n",
+                  val);
+
+  _FIID_OBJ_GET(cmd_rs, "output_message_size", &val);
+
+  pstdout_printf (state_data->pstate,
+                  "SSIF Maximum Output Message Size: %u bytes\n",
+                  val);
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return (rv);
+}
+
+static int
+get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_get_system_interface_capabilities_kcs_rs);
+
+  if (ipmi_cmd_get_system_interface_capabilities_kcs (state_data->ipmi_ctx, 
+                                                       cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_system_interface_capabilities_kcs: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET(cmd_rs, "system_interface_version", &val);
+
+  /* achu: for some stupid reason 000b == "version 1" */
+  if (val == IPMI_KCS_SYSTEM_INTERFACE_VERSION_1)
+    pstdout_printf(state_data->pstate,
+                   "KCS Version:                    %X (version 1)\n", (unsigned int) val);
+  else
+    pstdout_printf(state_data->pstate,
+                   "KCS Version:                    %X\n", (unsigned int) val);
+  
+  _FIID_OBJ_GET(cmd_rs, "input_maximum_message_size", &val);
+
+  pstdout_printf (state_data->pstate,
+                  "KCS Maximum Input Message Size: %u bytes\n",
+                  val);
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return (rv);
+}
+
+static int
+get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  assert(state_data);
+
+  _FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_get_bt_interface_capabilities_rs);
+
+  if (ipmi_cmd_get_bt_interface_capabilities (state_data->ipmi_ctx, 
+                                              cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_bt_interface_capabilities: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET(cmd_rs, "number_of_outstanding_requests_supported", &val);
+
+  pstdout_printf (state_data->pstate,
+                  "BT Number of Outstanding Requests Supported: %u\n",
+                  val);
+
+  _FIID_OBJ_GET(cmd_rs, "input_buffer_size", &val);
+
+  pstdout_printf (state_data->pstate,
+                  "BT Input Buffer Size:                        %u bytes\n",
+                  val);
+
+  _FIID_OBJ_GET(cmd_rs, "output_buffer_size", &val);
+
+  pstdout_printf (state_data->pstate,
+                  "BT Output Buffer Size:                       %u bytes\n",
+                  val);
+
+  _FIID_OBJ_GET(cmd_rs, "bmc_request_to_response_time", &val);
+
+  pstdout_printf (state_data->pstate,
+                  "BT Request to Response Time:                 %u seconds\n",
+                  val);
+
+  _FIID_OBJ_GET(cmd_rs, "recommended_retries", &val);
+
+  pstdout_printf (state_data->pstate,
+                  "BT Recommended Retries:                      %u\n",
+                  val);
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(cmd_rs);
+  return (rv);
+}
+
 int
 run_cmd_args (bmc_device_state_data_t *state_data)
 {
@@ -831,6 +1017,15 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->get_mca_auxiliary_log_status)
     return get_mca_auxiliary_log_status (state_data);
+
+  if (args->get_ssif_interface_capabilities)
+    return get_ssif_interface_capabilities (state_data);
+
+  if (args->get_kcs_interface_capabilities)
+    return get_kcs_interface_capabilities (state_data);
+
+  if (args->get_bt_interface_capabilities)
+    return get_bt_interface_capabilities (state_data);
 
   rv = 0;
   return (rv);

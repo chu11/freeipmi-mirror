@@ -86,6 +86,15 @@ system time can be specified with "now".
 \fB\-\-get\-mca\-auxiliary\-log\-status\fR
 Get machine check architecture (MCA) auxiliary log status information.
 .TP
+\fB\-\-get\-ssif\-interface\-capabilities\fR
+Get SSIF interface capabilities.
+.TP
+\fB\-\-get\-kcs\-interface\-capabilities\fR
+Get KCS interface capabilities.
+.TP
+\fB\-\-get\-bt\-interface\-capabilities\fR
+Get BT interface capabilities.
+.TP
 \fB\-\-verbose\fR
 Increase verbosity in output.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
