@@ -54,6 +54,221 @@
 
 #include "freeipmi-portability.h"
 
+int8_t 
+ipmi_cmd_clear_message_flags (ipmi_ctx_t ctx,
+                              uint8_t receive_message_queue,
+                              uint8_t event_message_buffer,
+                              uint8_t watchdog_pre_timeout_interrupt_flag,
+                              uint8_t oem_0,
+                              uint8_t oem_1,
+                              uint8_t oem_2,
+                              fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (IPMI_MESSAGE_FLAGS_VALID(receive_message_queue)
+                      && IPMI_MESSAGE_FLAGS_VALID(event_message_buffer)
+                      && IPMI_MESSAGE_FLAGS_VALID(watchdog_pre_timeout_interrupt_flag)
+                      && IPMI_MESSAGE_FLAGS_VALID(oem_0)
+                      && IPMI_MESSAGE_FLAGS_VALID(oem_1)
+                      && IPMI_MESSAGE_FLAGS_VALID(oem_2)
+                      && fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_clear_message_flags_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_clear_message_flags_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_clear_message_flags (receive_message_queue,
+                                                   event_message_buffer,
+                                                   watchdog_pre_timeout_interrupt_flag,
+                                                   oem_0,
+                                                   oem_1,
+                                                   oem_2,
+                                                   obj_cmd_rq) < 0));
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_APP_RQ, 
+			    obj_cmd_rq,
+			    obj_cmd_rs);
+                       
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
+ipmi_cmd_get_message_flags (ipmi_ctx_t ctx,
+                            fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_message_flags_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_message_flags_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_get_message_flags (obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_APP_RQ, 
+			    obj_cmd_rq,
+			    obj_cmd_rs);
+                       
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
+ipmi_cmd_enable_message_channel_receive (ipmi_ctx_t ctx,
+                                         uint8_t channel_number,
+                                         uint8_t channel_operation,
+                                         fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+                      && IPMI_CHANNEL_OPERATION_VALID (channel_operation)
+                      && fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_enable_message_channel_receive_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_enable_message_channel_receive_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_enable_message_channel_receive (channel_number,
+                                                              channel_operation,
+                                                              obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_APP_RQ, 
+			    obj_cmd_rq,
+			    obj_cmd_rs);
+                       
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
+ipmi_cmd_get_message (ipmi_ctx_t ctx,
+                      fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_message_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_message_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_get_message (obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_APP_RQ, 
+			    obj_cmd_rq,
+			    obj_cmd_rs);
+                       
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
+ipmi_cmd_send_message (ipmi_ctx_t ctx,
+                       uint8_t channel_number,
+                       uint8_t message_authentication,
+                       uint8_t message_encryption,
+                       uint8_t tracking_operation,
+                       uint8_t *message_data,
+                       uint32_t message_data_len,
+                       fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+                      && IPMI_SEND_MESSAGE_AUTHENTICATION_VALID(message_authentication)
+                      && IPMI_SEND_MESSAGE_ENCRYPTION_VALID(message_encryption)
+                      && IPMI_SEND_MESSAGE_TRACKING_VALID(tracking_operation)
+                      && message_data
+                      && message_data_len
+                      && fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_send_message_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_send_message_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_send_message (channel_number,
+                                            message_authentication,
+                                            message_encryption,
+                                            tracking_operation,
+                                            message_data,
+                                            message_data_len,
+                                            obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_APP_RQ, 
+			    obj_cmd_rq,
+			    obj_cmd_rs);
+                       
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
+ipmi_cmd_read_event_message_buffer (ipmi_ctx_t ctx,
+                                    fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_read_event_message_buffer_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_read_event_message_buffer_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_read_event_message_buffer (obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_CLEANUP (ctx, 
+			    IPMI_BMC_IPMB_LUN_BMC, 
+			    IPMI_NET_FN_APP_RQ, 
+			    obj_cmd_rq,
+			    obj_cmd_rs);
+                       
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
 int8_t
 ipmi_cmd_get_system_interface_capabilities (ipmi_ctx_t ctx,
                                             uint8_t system_interface,

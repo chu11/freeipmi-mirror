@@ -1,5 +1,10 @@
 2008-08-15 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/: Support various new ipmi cmds from messaging
+	support section.
+	
+2008-08-15 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/: Support get system interface capabilities and get
 	bt interface capabilities commands, templates, and api calls.
 

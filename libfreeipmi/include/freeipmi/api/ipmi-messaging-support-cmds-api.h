@@ -27,6 +27,38 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
+int8_t ipmi_cmd_clear_message_flags (ipmi_ctx_t ctx,
+                                     uint8_t receive_message_queue,
+                                     uint8_t event_message_buffer,
+                                     uint8_t watchdog_pre_timeout_interrupt_flag,
+                                     uint8_t oem_0,
+                                     uint8_t oem_1,
+                                     uint8_t oem_2,
+                                     fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_message_flags (ipmi_ctx_t ctx,
+                                   fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_enable_message_channel_receive (ipmi_ctx_t ctx,
+                                                uint8_t channel_number,
+                                                uint8_t channel_operation,
+                                                fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_message (ipmi_ctx_t ctx,
+                             fiid_obj_t obj_cmd_rs);
+  
+int8_t ipmi_cmd_send_message (ipmi_ctx_t ctx,
+                              uint8_t channel_number,
+                              uint8_t message_authentication,
+                              uint8_t message_encryption,
+                              uint8_t tracking_operation,
+                              uint8_t *message_data,
+                              uint32_t message_data_len,
+                              fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_read_event_message_buffer (ipmi_ctx_t ctx,
+                                           fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_system_interface_capabilities (ipmi_ctx_t ctx,
                                                    uint8_t system_interface,
                                                    fiid_obj_t obj_cmd_rs);
