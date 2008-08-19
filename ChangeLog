@@ -1,3 +1,12 @@
+2008-08-18 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/ipmi-ipmb-interface.h,
+	libfreeipmi/src/interface/ipmi-ipmb-interface.c: New files.
+
+	* libfreeipmi/include/freeipmi/freeipmi.h: Update for new .h file.
+
+	* Update Makefiles as needed for new files.
+	
 2008-08-15 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Support various new ipmi cmds from messaging

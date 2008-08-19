@@ -9,6 +9,7 @@ libinterface_la_CPPFLAGS = \
 	-D_REENTRANT
 
 libinterface_la_SOURCES = \
+	ipmi-ipmb-interface.c \
 	ipmi-kcs-interface.c \
 	ipmi-lan-interface.c \
 	ipmi-rmcpplus-interface.c \
