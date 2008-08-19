@@ -88,8 +88,8 @@ fill_ipmb_msg_hdr (uint8_t rs_addr,
                    uint8_t net_fn, 
                    uint8_t rs_lun, 
                    uint8_t rq_addr,
-                   uint8_t rq_seq, 
                    uint8_t rq_lun,
+                   uint8_t rq_seq, 
                    fiid_obj_t obj_ipmb_msg_hdr)
 {
   uint8_t checksum_buf[1024];
