@@ -890,7 +890,14 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                      
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
-      /* XXX: come back to this */
+      ctx->ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
+
+      /* lan packets are dumped in ipmi lan code */
+      if (ctx->type != IPMI_DEVICE_LAN
+          && ctx->type != IPMI_DEVICE_LAN_2_0)
+        {
+          /* XXX: come back to this */
+        }
     }
 
   if (ipmi_cmd_send_message (ctx,
@@ -931,7 +938,15 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
+      ctx->ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
+
       /* XXX: come back to this */
+      /* lan packets are dumped in ipmi lan code */
+      if (ctx->type != IPMI_DEVICE_LAN
+          && ctx->type != IPMI_DEVICE_LAN_2_0)
+        {
+          /* XXX: come back to this */
+        }
     }
 
   rv = 0;
@@ -944,6 +959,10 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   API_FIID_OBJ_DESTROY(obj_ipmb_msg_trlr);
   API_FIID_OBJ_DESTROY(obj_send_cmd_rs);
   API_FIID_OBJ_DESTROY(obj_get_cmd_rs);
+  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rq);
+  ctx->ipmb_cmd_rq = NULL;
+  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rs);
+  ctx->ipmb_cmd_rs = NULL;
   return (rv);
 }              
 

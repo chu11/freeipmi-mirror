@@ -51,6 +51,7 @@
 
 #include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
 #include "freeipmi/debug/ipmi-debug.h"
+#include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
@@ -184,14 +185,27 @@ _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
                     hdrbuf,
                     DEBUG_UTIL_HDR_BUFLEN);
 
-      ipmi_dump_lan_packet (STDERR_FILENO,
-                            ctx->io.outofband.hostname,
-                            hdrbuf,
-                            NULL,
-                            pkt,
-                            pkt_len,
-                            tmpl_lan_msg_hdr_rq,
-                            tmpl_cmd);
+      if (ctx->ipmb_cmd_rq)
+        ipmi_dump_lan_packet_ipmb (STDERR_FILENO,
+                                   ctx->io.outofband.hostname,
+                                   hdrbuf,
+                                   NULL,
+                                   pkt,
+                                   pkt_len,
+                                   tmpl_lan_msg_hdr_rq,
+                                   tmpl_cmd,
+                                   tmpl_ipmb_msg_hdr_rq,
+                                   ctx->ipmb_cmd_rq);
+      else
+        ipmi_dump_lan_packet (STDERR_FILENO,
+                              ctx->io.outofband.hostname,
+                              hdrbuf,
+                              NULL,
+                              pkt,
+                              pkt_len,
+                              tmpl_lan_msg_hdr_rq,
+                              tmpl_cmd);
+
       fiid_template_free (tmpl_cmd);
     }
 }
@@ -226,14 +240,27 @@ _ipmi_lan_dump_rs (ipmi_ctx_t ctx,
                     hdrbuf,
                     DEBUG_UTIL_HDR_BUFLEN);
 
-      ipmi_dump_lan_packet (STDERR_FILENO,
-                            ctx->io.outofband.hostname,
-                            hdrbuf,
-                            NULL,
-                            pkt,
-                            pkt_len,
-                            tmpl_lan_msg_hdr_rs,
-                            tmpl_cmd);
+      if (ctx->ipmb_cmd_rs)
+        ipmi_dump_lan_packet_ipmb (STDERR_FILENO,
+                                   ctx->io.outofband.hostname,
+                                   hdrbuf,
+                                   NULL,
+                                   pkt,
+                                   pkt_len,
+                                   tmpl_lan_msg_hdr_rs,
+                                   tmpl_cmd,
+                                   tmpl_ipmb_msg_hdr_rs,
+                                   ctx->ipmb_cmd_rs);
+      else
+        ipmi_dump_lan_packet (STDERR_FILENO,
+                              ctx->io.outofband.hostname,
+                              hdrbuf,
+                              NULL,
+                              pkt,
+                              pkt_len,
+                              tmpl_lan_msg_hdr_rs,
+                              tmpl_cmd);
+
       fiid_template_free (tmpl_cmd);
     }
 }
@@ -1166,6 +1193,8 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
 
   /* Don't cleanup/return an error here.  It's just debug code. */
 
+  /* XXX deal w/ ipmb */
+
   if ((tmpl_cmd = fiid_obj_template(obj_cmd_rq)))
     {
       const char *cmd_str;
@@ -1203,6 +1232,7 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
                                      pkt_len,
                                      tmpl_lan_msg_hdr_rq,
                                      tmpl_cmd);
+
           fiid_template_free (tmpl_cmd);
         }
     }
@@ -1236,6 +1266,8 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
 	  && fiid_obj_valid(obj_cmd_rs));
 
   /* Don't cleanup/return an error here.  It's just debug code. */
+
+  /* XXX deal w/ ipmb */
 
   if ((tmpl_cmd = fiid_obj_template(obj_cmd_rs)))
     {
@@ -1274,6 +1306,7 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
                                      pkt_len,
                                      tmpl_lan_msg_hdr_rs,
                                      tmpl_cmd);
+
           fiid_template_free (tmpl_cmd);
         }
     }

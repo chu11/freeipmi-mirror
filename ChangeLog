@@ -8,6 +8,8 @@
 	libfreeipmi/include/freeipmi/debug/ipmi-debug.h
 	(ipmi_dump_lan_packet_ipmb): New function.
 
+	* libfreeipmi/src/api/ipmi-lan-session-common.c: Support ipmb dumping.
+
 	* Various code cleanup and minor enhancements.
 	
 2008-08-18 Albert Chu <chu11@llnl.gov>
