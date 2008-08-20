@@ -91,7 +91,7 @@ _ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *
   assert(tmpl_lan_msg_hdr);
   assert(tmpl_cmd);
   assert((!tmpl_ipmb_msg_hdr && !tmpl_ipmb_cmd)
-         && (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd));
+         || (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd));
 
   ERR(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
 

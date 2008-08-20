@@ -88,6 +88,9 @@ need ipmb timeout
 
 rq-seq ipmb sequencing
 
+debug dump for inband
+debug dump for rmcpplus
+
 0.7.0 porting ensure works
 --------------------------
 BSD
