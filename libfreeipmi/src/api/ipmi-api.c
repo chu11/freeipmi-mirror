@@ -53,13 +53,17 @@
 #include "freeipmi/driver/ipmi-openipmi-driver.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 #include "freeipmi/driver/ipmi-sunbmc-driver.h"
+#include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/locate/ipmi-locate.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
+#include "freeipmi/spec/ipmi-channel-spec.h"
+#include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
+#include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
@@ -255,6 +259,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   ctx->workaround_flags = workaround_flags;
   ctx->flags = flags;
 
+  ctx->ipmb_seq = (double)(IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand()/(RAND_MAX + 1.0));
+
   memset(&hent, '\0', sizeof(struct hostent));
 #if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
   API_ERR_HOSTNAME_INVALID_CLEANUP(!gethostbyname_r(hostname,
@@ -401,6 +407,8 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   ctx->type = IPMI_DEVICE_LAN_2_0;
   ctx->workaround_flags = workaround_flags;
   ctx->flags = flags;
+
+  ctx->ipmb_seq = (double)(IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand()/(RAND_MAX + 1.0));
 
   memset(&hent, '\0', sizeof(struct hostent));
 #if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
@@ -550,6 +558,11 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
   /* No workaround flags currently supported */
   API_ERR_PARAMETERS(!(workaround_flags));
 
+  ctx->workaround_flags = workaround_flags;
+  ctx->flags = flags;
+
+  ctx->ipmb_seq = (double)(IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand()/(RAND_MAX + 1.0));
+
   ctx->io.inband.kcs_ctx = NULL;
   ctx->io.inband.ssif_ctx = NULL;
   ctx->io.inband.openipmi_ctx = NULL;
@@ -592,8 +605,6 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 	    locate_info.register_spacing = register_spacing;
 	}
       ctx->type = driver_type;
-      ctx->workaround_flags = workaround_flags;
-      ctx->flags = flags;
       
       /* At this point we only support SYSTEM_IO, i.e. inb/outb style IO. 
 	 If we cant find the bass address, we better exit. -- Anand Babu */
@@ -659,8 +670,6 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 	    locate_info.register_spacing = register_spacing;
 	}
       ctx->type = driver_type;
-      ctx->workaround_flags = workaround_flags;
-      ctx->flags = flags;
 
       API_ERR_CLEANUP ((ctx->io.inband.ssif_ctx = ipmi_ssif_ctx_create()));
       
@@ -682,8 +691,6 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 
     case IPMI_DEVICE_OPENIPMI:
       ctx->type = driver_type;
-      ctx->workaround_flags = workaround_flags;
-      ctx->flags = flags;
 
       API_ERR_CLEANUP ((ctx->io.inband.openipmi_ctx = ipmi_openipmi_ctx_create()));
       
@@ -697,8 +704,6 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 
     case IPMI_DEVICE_SUNBMC:
       ctx->type = driver_type;
-      ctx->workaround_flags = workaround_flags;
-      ctx->flags = flags;
 
       API_ERR_CLEANUP ((ctx->io.inband.sunbmc_ctx = ipmi_sunbmc_ctx_create()));
       
@@ -821,6 +826,126 @@ ipmi_cmd (ipmi_ctx_t ctx,
   /* errnum set in ipmi_*_cmd functions */
   return (status);
 }
+
+int
+ipmi_cmd_ipmb (ipmi_ctx_t ctx,
+               uint8_t rs_addr,
+               uint8_t lun,
+               uint8_t net_fn,
+               fiid_obj_t obj_cmd_rq, 
+               fiid_obj_t obj_cmd_rs)
+{
+  uint8_t buf[IPMI_MAX_PKT_LEN];
+  fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
+  fiid_obj_t obj_ipmb_msg_hdr_rs = NULL;
+  fiid_obj_t obj_ipmb_msg_rq = NULL;
+  fiid_obj_t obj_ipmb_msg_rs = NULL;
+  fiid_obj_t obj_ipmb_msg_trlr = NULL;
+  fiid_obj_t obj_send_cmd_rs = NULL;
+  fiid_obj_t obj_get_cmd_rs = NULL;
+  int32_t len;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_DEVICE_NOT_OPEN(ctx->type != IPMI_DEVICE_UNKNOWN);
+
+  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_LAN
+                         || ctx->type == IPMI_DEVICE_LAN_2_0
+			 || ctx->type == IPMI_DEVICE_KCS
+			 || ctx->type == IPMI_DEVICE_SSIF
+			 || ctx->type == IPMI_DEVICE_OPENIPMI
+			 || ctx->type == IPMI_DEVICE_SUNBMC);
+
+  API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
+
+  ctx->lun = lun;
+  ctx->net_fn = net_fn;
+  
+  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rq, tmpl_ipmb_msg_hdr_rq);
+  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rs, tmpl_ipmb_msg_hdr_rs);
+  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_rq, tmpl_ipmb_msg);
+  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_rs, tmpl_ipmb_msg);
+  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
+  API_FIID_OBJ_CREATE_CLEANUP(obj_send_cmd_rs, tmpl_cmd_send_message_rs);
+  API_FIID_OBJ_CREATE_CLEANUP(obj_get_cmd_rs, tmpl_cmd_get_message_rs);
+
+  API_ERR_CLEANUP (fill_ipmb_msg_hdr (rs_addr,
+                                      ctx->lun,
+                                      ctx->net_fn,
+                                      IPMI_SLAVE_ADDRESS_BMC,
+                                      IPMI_BMC_IPMB_LUN_SMS_MSG_LUN,
+                                      ctx->ipmb_seq,
+                                      obj_ipmb_msg_hdr_rq) != -1);
+  
+  API_ERR_CLEANUP (assemble_ipmi_ipmb_msg (obj_ipmb_msg_hdr_rq,
+                                           obj_cmd_rq,
+                                           obj_ipmb_msg_rq) != -1);
+
+  memset(buf, '\0', IPMI_MAX_PKT_LEN);
+  API_FIID_OBJ_GET_ALL_LEN_CLEANUP (len, 
+                                    obj_ipmb_msg_rq,
+                                    buf,
+                                    IPMI_MAX_PKT_LEN);
+                     
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    {
+      /* XXX: come back to this */
+    }
+
+  if (ipmi_cmd_send_message (ctx,
+                             IPMI_CHANNEL_NUMBER_PRIMARY_IPMB,
+                             IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
+                             IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
+                             IPMI_SEND_MESSAGE_TRACKING_OPERATION_TRACKING_REQUEST,
+                             buf,
+                             len,
+                             obj_send_cmd_rs) < 0)
+    {
+      API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_send_cmd_rs);
+      goto cleanup;
+    }
+                         
+  if (ipmi_cmd_get_message (ctx, obj_get_cmd_rs) < 0)
+    {
+      API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_send_cmd_rs);
+      goto cleanup;
+    }
+
+  API_FIID_OBJ_GET_DATA_LEN_CLEANUP (len,
+                                     obj_get_cmd_rs,
+                                     "message_data",
+                                     buf,
+                                     IPMI_MAX_PKT_LEN);
+
+  API_FIID_OBJ_SET_ALL_CLEANUP (obj_ipmb_msg_rs,
+                                buf,
+                                len);
+
+  API_ERR_CLEANUP (unassemble_ipmi_ipmb_msg (obj_ipmb_msg_rs,
+                                             obj_ipmb_msg_hdr_rs,
+                                             obj_cmd_rs,
+                                             obj_ipmb_msg_trlr) != -1); 
+
+  /* TODO: check rq_seq, deal with it appropriately */
+
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    {
+      /* XXX: come back to this */
+    }
+
+  rv = 0;
+ cleanup:
+  /* errnum set in ipmi_*_cmd functions */
+  API_FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rq);
+  API_FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rs);
+  API_FIID_OBJ_DESTROY(obj_ipmb_msg_rq);
+  API_FIID_OBJ_DESTROY(obj_ipmb_msg_rs);
+  API_FIID_OBJ_DESTROY(obj_ipmb_msg_trlr);
+  API_FIID_OBJ_DESTROY(obj_send_cmd_rs);
+  API_FIID_OBJ_DESTROY(obj_get_cmd_rs);
+  return (rv);
+}              
 
 int 
 ipmi_cmd_raw (ipmi_ctx_t ctx, 

@@ -19,6 +19,8 @@
 #define IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH               64
 #define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH  64
 
+#define IPMI_MAX_PKT_LEN                                4096
+
 #define IPMI_CTX_MAGIC 0xfafab0b0
 
 #ifndef MAXHOSTNAMELEN
@@ -35,6 +37,9 @@ struct ipmi_ctx
 
   uint8_t            lun;
   uint8_t            net_fn;
+
+  uint8_t            ipmb_seq;
+  
   ipmi_errnum_type_t errnum;
 
   union

@@ -73,7 +73,6 @@
 #include "freeipmi-portability.h"
 #include "debug-util.h"
 
-#define IPMI_PKT_LEN                   1024
 #define IPMI_LAN_BACKOFF_COUNT         2
 
 #define IPMI_SEQUENCE_NUMBER_WINDOW    8
@@ -545,7 +544,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
   int retval = -1;
   int ret;
   unsigned int retransmission_count = 0;
-  uint8_t pkt[IPMI_PKT_LEN];
+  uint8_t pkt[IPMI_MAX_PKT_LEN];
   int32_t recv_len;
   struct socket_to_close *sockets = NULL;
   uint64_t rs_session_id;
@@ -597,10 +596,10 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
         }
      
       /* its ok to use the "request" net_fn, dump code doesn't care */
-      memset(pkt, '\0', IPMI_PKT_LEN);
+      memset(pkt, '\0', IPMI_MAX_PKT_LEN);
       if ((recv_len = _ipmi_lan_cmd_recv (ctx, 
                                           pkt,
-                                          IPMI_PKT_LEN,
+                                          IPMI_MAX_PKT_LEN,
                                           retransmission_count,			  
 					  cmd, /* for debug dumping */
 					  net_fn, /* for debug dumping */
@@ -1522,7 +1521,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
   int retval = -1;
   int ret;
   unsigned int retransmission_count = 0;
-  uint8_t pkt[IPMI_PKT_LEN];
+  uint8_t pkt[IPMI_MAX_PKT_LEN];
   int32_t recv_len;
   uint64_t val;
   uint64_t rs_session_sequence_number;
@@ -1589,7 +1588,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
         }
      
       /* its ok to use the "request" net_fn, dump code doesn't care */
-      memset(pkt, '\0', IPMI_PKT_LEN);
+      memset(pkt, '\0', IPMI_MAX_PKT_LEN);
       if ((recv_len = _ipmi_lan_2_0_cmd_recv (ctx, 
                                               authentication_algorithm,
                                               integrity_algorithm,
@@ -1599,7 +1598,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                               confidentiality_key,
                                               confidentiality_key_len,
                                               pkt,
-                                              IPMI_PKT_LEN,
+                                              IPMI_MAX_PKT_LEN,
                                               retransmission_count,
 					      cmd, /* for debug dumping */
 					      net_fn, /* for debug dumping */
@@ -2247,7 +2246,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 
   if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     {
-      uint8_t keybuf[IPMI_PKT_LEN];
+      uint8_t keybuf[IPMI_MAX_PKT_LEN];
       int32_t keybuf_len;
 
       /* IPMI Workaround (achu)
@@ -2265,7 +2264,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                          obj_cmd_rs,
                                          "key_exchange_authentication_code",
                                          keybuf,
-                                         IPMI_PKT_LEN);
+                                         IPMI_MAX_PKT_LEN);
 
       if (ctx->io.outofband.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
           && keybuf_len == 1)

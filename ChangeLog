@@ -1,3 +1,11 @@
+2008-XX-XX Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/api/ipmi-api.c,
+	libfreeipmi/include/freeipmi/api/ipmi-api.h (ipmi_cmd_ipmb): New
+	function.
+
+	* Various code cleanup and minor enhancements.
+	
 2008-08-18 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-ipmb-interface.h,

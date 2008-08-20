@@ -73,6 +73,21 @@ additions.
   - these 4 commands seem like the only maybe potentially useful
     additions.
 
+ipmb
+----
+ipmi-sensors
+ipmimonitoring
+for all interfaces
+--no-ipmb option
+debug
+slave addres in in ipmi-raw?
+
+need ipmb timeout
+- 5 secs fin spec
+- timeout code
+
+rq-seq ipmb sequencing
+
 0.7.0 porting ensure works
 --------------------------
 BSD
