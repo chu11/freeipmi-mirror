@@ -405,6 +405,25 @@ do {                                                                            
     }                                                                                                      \
 } while (0)
 
+/* Note: ctx->errnum set in call to ipmi_cmd() - don't call wrapper */
+#define API_ERR_IPMI_CMD_IPMB_CLEANUP(__ctx, __slave_address, __lun, __netfn, __rq, __rs)                  \
+do {                                                                                                       \
+  int8_t __rv;                                                                                             \
+  if (ipmi_cmd_ipmb ((__ctx),                                                                              \
+                     (__slave_address),                                                                    \
+                     (__lun),                                                                              \
+                     (__netfn),                                                                            \
+                     (__rq),                                                                               \
+                     (__rs)) < 0)                                                                          \
+    goto cleanup;                                                                                          \
+  API_ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));                           \
+  if (!__rv)                                                                                               \
+    {                                                                                                      \
+      API_BAD_COMPLETION_CODE_TO_API_ERRNUM((__ctx), (__rs));                                              \
+      __API_TRACE_ERRMSG_CLEANUP(__ctx, __rs);                                                             \
+    }                                                                                                      \
+} while (0)
+
 #define __KCS_ERRNUM_TO_API_ERRNUM                                \
 do {                                                              \
   int32_t __errnum = ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx); \

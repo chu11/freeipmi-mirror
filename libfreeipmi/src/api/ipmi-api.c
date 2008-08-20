@@ -871,8 +871,8 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   API_FIID_OBJ_CREATE_CLEANUP(obj_get_cmd_rs, tmpl_cmd_get_message_rs);
 
   API_ERR_CLEANUP (fill_ipmb_msg_hdr (rs_addr,
-                                      ctx->lun,
                                       ctx->net_fn,
+                                      ctx->lun,
                                       IPMI_SLAVE_ADDRESS_BMC,
                                       IPMI_BMC_IPMB_LUN_SMS_MSG_LUN,
                                       ctx->ipmb_seq,

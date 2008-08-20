@@ -264,7 +264,7 @@ _ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *
           int32_t ipmb_cmd_len;
          
           FIID_OBJ_SET_ALL_LEN_CLEANUP (ipmb_hdr_len,
-                                        obj_ipmb_cmd,
+                                        obj_ipmb_msg_hdr,
                                         ipmb_buf,
                                         ipmb_buf_len);
 
