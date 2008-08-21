@@ -866,6 +866,17 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   API_FIID_OBJ_CREATE_CLEANUP(obj_send_cmd_rs, tmpl_cmd_send_message_rs);
   API_FIID_OBJ_CREATE_CLEANUP(obj_get_cmd_rs, tmpl_cmd_get_message_rs);
 
+  /* XXX */
+#if 0
+  SENDING A PACKET
+6 0 FF 7 2 B2 4 0
+0 EB CC 3E 0 1C C5 1C
+A9 FE A6 57 6D 9F 9D BF
+6B 58 6D F6 19 10 20 18
+C8 81 FC 34 40 C0 10 30
+20 FE 2D 3 B2 F
+  ctx->io.outofband.rq_seq = 0x3F;
+#endif
   rq_seq_orig = ctx->io.outofband.rq_seq;
 
   /* XXX: fix rq_seq usage later */
