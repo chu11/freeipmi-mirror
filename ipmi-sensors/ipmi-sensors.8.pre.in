@@ -77,9 +77,9 @@ separated by commas or spaces.
 By default, 
 .B ipmi-sensors
 will not read sensors from non-BMC owners.  Setting this option
-will force 
+will make
 .B ipmi-sensors
-to attempt to bridge sensor commands to alternate owners (experimental). 
+attempt to bridge sensor commands to alternate owners (experimental). 
 
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
