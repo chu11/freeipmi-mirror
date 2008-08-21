@@ -609,6 +609,8 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                               obj_cmd_rq) < 0)
         goto cleanup;
     }
+  else
+    API_ERR (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
 
   while (1)
     {
@@ -632,7 +634,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
           retval = -1;
           break;
         }
-      
+
       if (!recv_len && !recv_only)
         {
           if (session_sequence_number)
@@ -700,6 +702,8 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
           
           continue;
         }
+      else if (!recv_len)
+        continue;
 
       /* else received a packet */
 
