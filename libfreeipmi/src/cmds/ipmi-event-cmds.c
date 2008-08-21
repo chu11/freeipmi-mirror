@@ -76,7 +76,7 @@ fill_cmd_set_event_receiver (uint8_t event_receiver_slave_address,
                              uint8_t event_receiver_lun,
                              fiid_obj_t obj_cmd_rq)
 { 
-  ERR_EINVAL (IPMI_BMC_LUN_VALID(lun)
+  ERR_EINVAL (IPMI_BMC_LUN_VALID(event_receiver_lun)
               && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_event_receiver_rq);

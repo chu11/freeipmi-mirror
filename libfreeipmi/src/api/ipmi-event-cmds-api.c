@@ -49,7 +49,7 @@ ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_BMC_LUN_VALID(lun)
+  API_ERR_PARAMETERS (IPMI_BMC_LUN_VALID(event_receiver_lun)
                       && fiid_obj_valid(obj_cmd_rs));
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_event_receiver_rs);
