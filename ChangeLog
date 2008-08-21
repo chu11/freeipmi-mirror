@@ -1,5 +1,12 @@
 2008-XX-XX Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-event-commands.h,
+	libfreeipmi/src/cmds/ipmi-event-cmds.c,
+	libfreeipmi/src/api/ipmi-event-cmds.c,
+	libfreeipmi/include/freeipmi/api/ipmi-event-cmds-api.h: New files.
+
+	* libfreeipmi/include/freeipmi/freeipmi.h: Update for new files.
+
 	* libfreeipmi/src/api/ipmi-api.c,
 	libfreeipmi/include/freeipmi/api/ipmi-api.h (ipmi_cmd_ipmb): New
 	function.

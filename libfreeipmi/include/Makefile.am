@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.26 2008-08-19 00:40:27 chu11 Exp $
+## $Id: Makefile.am,v 1.26.2.1 2008-08-21 17:05:42 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -7,6 +7,7 @@ nobase_include_HEADERS = \
 	freeipmi/api/ipmi-api.h \
 	freeipmi/api/ipmi-chassis-cmds-api.h \
 	freeipmi/api/ipmi-device-global-cmds-api.h \
+	freeipmi/api/ipmi-event-cmds-api.h \
 	freeipmi/api/ipmi-fru-inventory-device-cmds-api.h \
 	freeipmi/api/ipmi-lan-cmds-api.h \
 	freeipmi/api/ipmi-messaging-support-cmds-api.h \
@@ -20,6 +21,7 @@ nobase_include_HEADERS = \
 	freeipmi/cmds/ipmi-bmc-watchdog-timer-cmds.h \
 	freeipmi/cmds/ipmi-chassis-cmds.h \
 	freeipmi/cmds/ipmi-device-global-cmds.h \
+	freeipmi/cmds/ipmi-event-cmds.h \
 	freeipmi/cmds/ipmi-fru-inventory-device-cmds.h \
 	freeipmi/cmds/ipmi-lan-cmds.h \
 	freeipmi/cmds/ipmi-messaging-support-cmds.h \

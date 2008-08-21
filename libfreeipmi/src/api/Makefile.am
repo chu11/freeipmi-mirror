@@ -28,6 +28,7 @@ libapi_la_SOURCES = \
 	ipmi-sunbmc-driver-api.c \
 	ipmi-chassis-cmds-api.c \
 	ipmi-device-global-cmds-api.c \
+	ipmi-event-cmds-api.c \
 	ipmi-fru-inventory-device-cmds-api.c \
 	ipmi-lan-cmds-api.c \
 	ipmi-lan-interface-api.c \
