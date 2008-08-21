@@ -19,6 +19,14 @@ because sensor readings are not analyzed.  Users may wish to consider
 .B ipmimonitoring(8)
 for sensor analysis.
 
+Some sensors may have an output reading of "NA" if the sensor reading
+is unavailable.  This is typical of a sensor that is not enabled or
+not owned by a BMC.  Please see \fB\-\-bridge\-sensors\fR option below
+to deal with sensors not owned by a BMC.  Sensors may output a reading
+of "Unknown" if the sensor reading cannot be retrieved.  This is
+typical of a sensor that is busy and cannot be retrieved or of a
+sensor that is enabled but cannot be retrieved.
+
 To perform IPMI sensor configuration, please see
 .B ipmi-sensors-config(8).
 
