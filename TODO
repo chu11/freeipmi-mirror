@@ -41,6 +41,10 @@ ipmi-sensors-config
 * conf.5 manpage
 * instructions for each section??
 
+ipmb
+----
+ipmi 2.0 bridging - untested
+
 libs
 ----
 merge all libs into one?  would aid debian packaging.

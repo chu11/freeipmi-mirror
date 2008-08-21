@@ -49,6 +49,150 @@
 #define IPMI_SENSORS_OK_MSG   "OK"
 
 int
+_get_sensor_reading (struct ipmi_sensors_state_data *state_data,
+                     char ***event_message_list,
+                     unsigned int *event_message_list_len,
+                     uint8_t sensor_number,
+                     uint8_t record_id,
+                     fiid_obj_t obj_get_sensor_reading_rs)
+{
+  int rv = -1;
+
+  assert(state_data);
+  assert(event_message_list);
+  assert(event_message_list_len);
+  assert(obj_get_sensor_reading_rs);
+
+  if (ipmi_cmd_get_sensor_reading (state_data->ipmi_ctx, 
+                                   sensor_number, 
+                                   obj_get_sensor_reading_rs) < 0)
+    {
+      /* A sensor listed by the SDR is not present.  Skip it's
+       * output, don't error out.
+       */
+      if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                     IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+        {
+          if (state_data->prog_data->args->common.debug)
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "Sensor number 0x%X data in record %u not present\n",
+                            sensor_number,
+                            record_id);
+          rv = 0;
+        }
+      else
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_get_sensor_reading: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+  
+  rv = 1;
+ cleanup:
+  return rv;
+}
+
+int
+_get_sensor_reading_ipmb (struct ipmi_sensors_state_data *state_data,
+                          char ***event_message_list,
+                          unsigned int *event_message_list_len,
+                          uint8_t slave_address,
+                          uint8_t sensor_number,
+                          uint8_t record_id,
+                          fiid_obj_t obj_get_sensor_reading_rs)
+{
+  int rv = -1;
+
+  assert(state_data);
+  assert(event_message_list);
+  assert(event_message_list_len);
+  assert(obj_get_sensor_reading_rs);
+
+  if (state_data->prog_data->args->bridge_sensors)
+    {
+      if (ipmi_cmd_get_sensor_reading_ipmb (state_data->ipmi_ctx,
+                                            slave_address,
+                                            sensor_number,
+                                            obj_get_sensor_reading_rs) < 0)
+        {
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE)
+            {
+              if (state_data->prog_data->args->common.debug)
+                pstdout_fprintf(state_data->pstate,
+                                stderr,
+                                "Sensor number 0x%X data in record %u cannot be bridged on the selected interface\n",
+                                sensor_number,
+                                record_id);
+              
+              /* make status message "na" so "unknown" isn't output */
+              if (get_msg_message_list (state_data,
+                                        event_message_list,
+                                        event_message_list_len,
+                                        "NA") < 0)
+                goto cleanup;
+              
+              rv = 0;
+            }
+          else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                              IPMI_COMP_CODE_NODE_BUSY) == 1)
+            {
+              if (state_data->prog_data->args->common.debug)
+                pstdout_fprintf(state_data->pstate,
+                                stderr,
+                                "Sensor number 0x%X data in record %u is busy, can't retrieve\n",
+                                sensor_number,
+                                record_id);
+              rv = 0;
+            }
+          /* A sensor listed by the SDR is not present.  Skip it's
+           * output, don't error out.
+           */
+          else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                              IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+            {
+              if (state_data->prog_data->args->common.debug)
+                pstdout_fprintf(state_data->pstate,
+                                stderr,
+                                "Sensor number 0x%X data in record %u not present\n",
+                                sensor_number,
+                                record_id);
+              rv = 0;
+            }
+          else
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "ipmi_cmd_get_sensor_reading_ipmb: %s\n",
+                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+          goto cleanup;
+        }
+    }
+  else
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Sensor number 0x%X slave address is not BMC\n",
+                        sensor_number);
+      
+      /* make status message "na" so "unknown" isn't output */
+      if (get_msg_message_list (state_data,
+                                event_message_list,
+                                event_message_list_len,
+                                "NA") < 0)
+        goto cleanup;
+      
+      rv = 0;
+      goto cleanup;
+    }
+
+  rv = 1;
+ cleanup:
+  return rv;
+}
+
+int
 sensor_reading (struct ipmi_sensors_state_data *state_data,
                 uint8_t *sdr_record,
                 unsigned int sdr_record_len,
@@ -62,10 +206,10 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   uint8_t sensor_type;
   uint8_t event_reading_type_code;
   int sensor_class;
-  fiid_obj_t obj_get_sensor_reading_rs = NULL;  
   double *tmp_reading = NULL;
   uint64_t val;
   int rv = -1;
+  fiid_obj_t obj_get_sensor_reading_rs = NULL;  
   uint64_t sensor_event_bitmask1 = 0;
   uint64_t sensor_event_bitmask2 = 0;
   uint64_t sensor_event_bitmask = 0;
@@ -74,6 +218,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   uint8_t sensor_owner_id_type;
   uint8_t sensor_owner_id;
   uint8_t slave_address;
+  int ret;
 
   assert(state_data);
   assert(sdr_record);
@@ -141,94 +286,36 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
 
   _FIID_OBJ_CREATE(obj_get_sensor_reading_rs, tmpl_cmd_get_sensor_reading_rs);
 
-  /* XXX clean this up */
-
-  if (slave_address != IPMI_SLAVE_ADDRESS_BMC)
+  if (slave_address == IPMI_SLAVE_ADDRESS_BMC)
     {
-      if (state_data->prog_data->args->bridge_sensors)
+      if ((ret = _get_sensor_reading (state_data,
+                                      event_message_list,
+                                      event_message_list_len,
+                                      sensor_number,
+                                      record_id,
+                                      obj_get_sensor_reading_rs)) < 0)
+        goto cleanup;
+
+      if (!ret)
         {
-          if (ipmi_cmd_get_sensor_reading_ipmb (state_data->ipmi_ctx,
-                                                slave_address,
-                                                sensor_number,
-                                                obj_get_sensor_reading_rs) < 0)
-            {
-              if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                             IPMI_COMP_CODE_NODE_BUSY) == 1)
-                {
-                  if (state_data->prog_data->args->common.debug)
-                    pstdout_fprintf(state_data->pstate,
-                                    stderr,
-                                    "Sensor number 0x%X data in record %u is busy, can't retrieve\n",
-                                    sensor_number,
-                                    record_id);
-                  rv = 0;
-                }
-              /* A sensor listed by the SDR is not present.  Skip it's
-               * output, don't error out.
-               */
-              else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                                  IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-                {
-                  if (state_data->prog_data->args->common.debug)
-                    pstdout_fprintf(state_data->pstate,
-                                    stderr,
-                                    "Sensor number 0x%X data in record %u not present\n",
-                                    sensor_number,
-                                    record_id);
-                  rv = 0;
-                }
-              else
-                pstdout_fprintf(state_data->pstate,
-                                stderr,
-                                "ipmi_cmd_get_sensor_reading_ipmb: %s\n",
-                                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-              goto cleanup;
-            }
-        }
-      else
-        {
-          if (state_data->prog_data->args->common.debug)
-            pstdout_fprintf(state_data->pstate,
-                            stderr,
-                            "Sensor number 0x%X slave address is not BMC\n",
-                            sensor_number);
-          
-          /* make status message "na" so "unknown" isn't output */
-          if (get_msg_message_list (state_data,
-                                    event_message_list,
-                                    event_message_list_len,
-                                    "NA") < 0)
-            goto cleanup;
-          
           rv = 0;
           goto cleanup;
         }
     }
   else
     {
-      if (ipmi_cmd_get_sensor_reading (state_data->ipmi_ctx, 
-                                       sensor_number, 
-                                       obj_get_sensor_reading_rs) < 0)
+      if ((ret = _get_sensor_reading_ipmb (state_data,
+                                           event_message_list,
+                                           event_message_list_len,
+                                           slave_address,
+                                           sensor_number,
+                                           record_id,
+                                           obj_get_sensor_reading_rs)) < 0)
+        goto cleanup;
+
+      if (!ret)
         {
-          /* A sensor listed by the SDR is not present.  Skip it's
-           * output, don't error out.
-           */
-          if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                         IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-            {
-              if (state_data->prog_data->args->common.debug)
-                pstdout_fprintf(state_data->pstate,
-                                stderr,
-                                "Sensor number 0x%X data in record %u not present\n",
-                                sensor_number,
-                                record_id);
-              rv = 0;
-            }
-          else
-            pstdout_fprintf(state_data->pstate,
-                            stderr,
-                            "ipmi_cmd_get_sensor_reading: %s\n",
-                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+          rv = 0;
           goto cleanup;
         }
     }

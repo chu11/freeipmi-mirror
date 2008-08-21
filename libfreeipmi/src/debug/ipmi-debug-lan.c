@@ -47,7 +47,16 @@
 #include "freeipmi-portability.h"
 
 static int8_t
-_ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *trlr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_lan_msg_hdr, fiid_template_t tmpl_cmd, fiid_template_t tmpl_ipmb_msg_hdr, fiid_template_t tmpl_ipmb_cmd)
+_ipmi_dump_lan_packet (int fd, 
+                       const char *prefix, 
+                       const char *hdr,
+                       const char *trlr, 
+                       uint8_t *pkt, 
+                       uint32_t pkt_len,
+                       fiid_template_t tmpl_lan_msg_hdr, 
+                       fiid_template_t tmpl_cmd, 
+                       fiid_template_t tmpl_ipmb_msg_hdr, 
+                       fiid_template_t tmpl_ipmb_cmd)
 {
   uint32_t indx = 0;
   int32_t obj_cmd_len, obj_lan_msg_trlr_len;
@@ -70,7 +79,7 @@ _ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *
   char *ipmb_cmd_hdr =
     "IPMB Message Data:\n"
     "------------------";
-  char *ipmb_msg_trlr =
+  char *ipmb_msg_trlr_hdr =
     "IPMB Message Trailer:\n"
     "---------------------";
   char *trlr_hdr =
@@ -310,7 +319,7 @@ _ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *
           
           ERR_CLEANUP (!(ipmi_obj_dump(fd, 
                                        prefix, 
-                                       ipmb_msg_trlr,
+                                       ipmb_msg_trlr_hdr,
                                        NULL, 
                                        obj_ipmb_msg_trlr) < 0));
         }
@@ -363,7 +372,14 @@ _ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *
 }
 
 int8_t
-ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *trlr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_lan_msg_hdr, fiid_template_t tmpl_cmd)
+ipmi_dump_lan_packet (int fd, 
+                      const char *prefix,
+                      const char *hdr, 
+                      const char *trlr, 
+                      uint8_t *pkt, 
+                      uint32_t pkt_len, 
+                      fiid_template_t tmpl_lan_msg_hdr, 
+                      fiid_template_t tmpl_cmd)
 {
   ERR_EINVAL (pkt && tmpl_lan_msg_hdr && tmpl_cmd);
 
@@ -380,7 +396,16 @@ ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *t
 }
 
 int8_t
-ipmi_dump_lan_packet_ipmb (int fd, const char *prefix, const char *hdr, const char *trlr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_lan_msg_hdr, fiid_template_t tmpl_cmd, fiid_template_t tmpl_ipmb_msg_hdr, fiid_template_t tmpl_ipmb_cmd)
+ipmi_dump_lan_packet_ipmb (int fd,
+                           const char *prefix, 
+                           const char *hdr, 
+                           const char *trlr, 
+                           uint8_t *pkt,
+                           uint32_t pkt_len, 
+                           fiid_template_t tmpl_lan_msg_hdr, 
+                           fiid_template_t tmpl_cmd,
+                           fiid_template_t tmpl_ipmb_msg_hdr, 
+                           fiid_template_t tmpl_ipmb_cmd)
 {
   int ret1, ret2;
 

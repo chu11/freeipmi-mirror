@@ -49,6 +49,7 @@ int8_t ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                  uint32_t confidentiality_key_len,
                                  char *password,
                                  uint32_t password_len,
+                                 uint8_t recv_only,
                                  fiid_obj_t obj_cmd_rq,
                                  fiid_obj_t obj_cmd_rs);
 

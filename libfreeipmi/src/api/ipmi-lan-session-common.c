@@ -605,7 +605,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
         goto cleanup;
     }
   else
-    API_ERR (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
+    API_ERR_CLEANUP (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
 
   while (1)
     {
@@ -699,7 +699,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
         }
       else if (!recv_len)
         {
-          API_ERR (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
+          API_ERR_CLEANUP (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
           continue;
         }
 
@@ -1195,8 +1195,6 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
 
   /* Don't cleanup/return an error here.  It's just debug code. */
 
-  /* XXX deal w/ ipmb */
-
   if ((tmpl_cmd = fiid_obj_template(obj_cmd_rq)))
     {
       const char *cmd_str;
@@ -1219,21 +1217,40 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
                         hdrbuf,
                         DEBUG_UTIL_HDR_BUFLEN);
           
-          ipmi_dump_rmcpplus_packet (STDERR_FILENO,
-                                     ctx->io.outofband.hostname,
-                                     hdrbuf,
-                                     NULL,
-                                     authentication_algorithm,
-                                     integrity_algorithm,
-                                     confidentiality_algorithm,
-                                     integrity_key,
-                                     integrity_key_len,
-                                     confidentiality_key,
-                                     confidentiality_key_len,
-                                     pkt,
-                                     pkt_len,
-                                     tmpl_lan_msg_hdr_rq,
-                                     tmpl_cmd);
+          if (ctx->ipmb_cmd_rq)
+            ipmi_dump_rmcpplus_packet_ipmb (STDERR_FILENO,
+                                            ctx->io.outofband.hostname,
+                                            hdrbuf,
+                                            NULL,
+                                            authentication_algorithm,
+                                            integrity_algorithm,
+                                            confidentiality_algorithm,
+                                            integrity_key,
+                                            integrity_key_len,
+                                            confidentiality_key,
+                                            confidentiality_key_len,
+                                            pkt,
+                                            pkt_len,
+                                            tmpl_lan_msg_hdr_rs,
+                                            tmpl_cmd,
+                                            tmpl_ipmb_msg_hdr_rq,
+                                            ctx->ipmb_cmd_rq);
+          else
+            ipmi_dump_rmcpplus_packet (STDERR_FILENO,
+                                       ctx->io.outofband.hostname,
+                                       hdrbuf,
+                                       NULL,
+                                       authentication_algorithm,
+                                       integrity_algorithm,
+                                       confidentiality_algorithm,
+                                       integrity_key,
+                                       integrity_key_len,
+                                       confidentiality_key,
+                                       confidentiality_key_len,
+                                       pkt,
+                                       pkt_len,
+                                       tmpl_lan_msg_hdr_rq,
+                                       tmpl_cmd);
 
           fiid_template_free (tmpl_cmd);
         }
@@ -1268,8 +1285,6 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
 	  && fiid_obj_valid(obj_cmd_rs));
 
   /* Don't cleanup/return an error here.  It's just debug code. */
-
-  /* XXX deal w/ ipmb */
 
   if ((tmpl_cmd = fiid_obj_template(obj_cmd_rs)))
     {
@@ -1308,7 +1323,7 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
                                      pkt_len,
                                      tmpl_lan_msg_hdr_rs,
                                      tmpl_cmd);
-
+          
           fiid_template_free (tmpl_cmd);
         }
     }
@@ -1550,6 +1565,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                           uint32_t confidentiality_key_len,
                           char *password,
                           uint32_t password_len,
+                          uint8_t recv_only,
                           fiid_obj_t obj_cmd_rq,
                           fiid_obj_t obj_cmd_rs)
 {
@@ -1591,27 +1607,32 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
 
-  if (_ipmi_lan_2_0_cmd_send (ctx, 
-                              lun, 
-                              net_fn,
-                              payload_type,
-                              payload_authenticated,
-                              payload_encrypted,
-                              (session_sequence_number) ? *session_sequence_number : 0,
-                              session_id,
-                              (rq_seq) ? *rq_seq : 0,
-                              authentication_algorithm,
-                              integrity_algorithm,
-                              confidentiality_algorithm,
-                              integrity_key,
-                              integrity_key_len,
-                              confidentiality_key,
-                              confidentiality_key_len,
-                              password,
-                              password_len,
-			      cmd, /* for debug dumping */
-                              obj_cmd_rq) < 0)
-    goto cleanup;
+  if (!recv_only)
+    {
+      if (_ipmi_lan_2_0_cmd_send (ctx, 
+                                  lun, 
+                                  net_fn,
+                                  payload_type,
+                                  payload_authenticated,
+                                  payload_encrypted,
+                                  (session_sequence_number) ? *session_sequence_number : 0,
+                                  session_id,
+                                  (rq_seq) ? *rq_seq : 0,
+                                  authentication_algorithm,
+                                  integrity_algorithm,
+                                  confidentiality_algorithm,
+                                  integrity_key,
+                                  integrity_key_len,
+                                  confidentiality_key,
+                                  confidentiality_key_len,
+                                  password,
+                                  password_len,
+                                  cmd, /* for debug dumping */
+                                  obj_cmd_rq) < 0)
+        goto cleanup;
+    }
+  else
+    API_ERR_CLEANUP (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
 
   while (1)
     {
@@ -1643,7 +1664,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
           break;
         }
 
-      if (!recv_len)
+      if (!recv_len && !recv_only)
         {
           if (message_tag)
             (*message_tag)++;
@@ -1692,6 +1713,11 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                       obj_cmd_rq) < 0)
             goto cleanup;
           
+          continue;
+        }
+      else if (!recv_len)
+        {
+          API_ERR_CLEANUP (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
           continue;
         }
 
@@ -2062,6 +2088,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                 0,
                                 NULL,
                                 0,
+                                0,
                                 obj_cmd_rq,
                                 obj_cmd_rs) < 0)
     goto cleanup;
@@ -2188,6 +2215,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                 NULL,
                                 0,
                                 NULL,
+                                0,
                                 0,
                                 obj_cmd_rq,
                                 obj_cmd_rs) < 0)
@@ -2467,6 +2495,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                 NULL,
                                 0,
                                 NULL,
+                                0,
                                 0,
                                 obj_cmd_rq,
                                 obj_cmd_rs) < 0)

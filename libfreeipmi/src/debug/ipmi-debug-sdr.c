@@ -40,7 +40,12 @@
 #include "freeipmi-portability.h"
 
 int32_t
-ipmi_dump_sdr_record (int fd, const char *prefix, const char *hdr, const char *trlr, uint8_t *sdr_record, uint32_t sdr_record_len)
+ipmi_dump_sdr_record (int fd, 
+                      const char *prefix, 
+                      const char *hdr, 
+                      const char *trlr, 
+                      uint8_t *sdr_record, 
+                      uint32_t sdr_record_len)
 {
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   fiid_obj_t obj_sdr_record_header = NULL;

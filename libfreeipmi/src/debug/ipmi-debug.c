@@ -55,7 +55,11 @@ fiid_template_t tmpl_unexpected_data =
   };
 
 int8_t
-ipmi_obj_dump (int fd, const char *prefix, const char *hdr, const char *trlr, fiid_obj_t obj)
+ipmi_obj_dump (int fd,
+               const char *prefix, 
+               const char *hdr,
+               const char *trlr, 
+               fiid_obj_t obj)
 {
 #if 0
   char *default_hdr = 

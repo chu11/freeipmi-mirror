@@ -42,7 +42,13 @@
 #include "freeipmi-portability.h"
 
 int8_t 
-ipmi_dump_rmcp_packet (int fd, const char *prefix, const char *hdr, const char *trlr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)
+ipmi_dump_rmcp_packet (int fd, 
+                       const char *prefix, 
+                       const char *hdr, 
+                       const char *trlr,
+                       uint8_t *pkt,
+                       uint32_t pkt_len,
+                       fiid_template_t tmpl_cmd)
 {
   uint32_t indx = 0;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];

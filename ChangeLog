@@ -12,10 +12,13 @@
 	function.
 
 	* libfreeipmi/src/debug/ipmi-debug-lan.c,
+	libfreeipmi/src/debug/ipmi-debug-rmcpplus.c,
 	libfreeipmi/include/freeipmi/debug/ipmi-debug.h
-	(ipmi_dump_lan_packet_ipmb): New function.
+	(ipmi_dump_lan_packet_ipmb, ipmi_dump_rmcpplus_packet_ipmb): New
+	functions.
 
-	* libfreeipmi/src/api/ipmi-lan-session-common.c: Support ipmb dumping.
+	* libfreeipmi/src/api/ipmi-lan-session-common.c: Support ipmb
+	dumping.  Support ipmb receiving.
 
 	* ipmi-sensors/: Support ipmb bridging.  Support --bridge-sensors
 	option.  Change default privilege to operator.
