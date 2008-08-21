@@ -162,6 +162,17 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                     record_id);
                   rv = 0;
                 }
+              else if (ipmi_check_completion_code(obj_cmd_rs,
+                                                  IPMI_COMP_CODE_NODE_BUSY) == 1)
+                {
+                  if (state_data->prog_data->args->common.debug)
+                    pstdout_fprintf(state_data->pstate,
+                                    stderr,
+                                    "Sensor number 0x%X data in record %u is busy, can't retrieve\n",
+                                    sensor_number,
+                                    record_id);
+                  rv = 0;
+                }
               /* A sensor listed by the SDR is not present.  Skip it's
                * output, don't error out.
                */
