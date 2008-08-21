@@ -91,6 +91,8 @@ rq-seq ipmb sequencing
 debug dump for inband
 debug dump for rmcpplus
 
+get message and bunch others inband only???
+
 0.7.0 porting ensure works
 --------------------------
 BSD
