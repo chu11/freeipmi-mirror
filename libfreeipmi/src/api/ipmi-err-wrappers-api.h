@@ -239,6 +239,26 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE(expr)            \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      ctx->errnum = IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE;    \
+      __API_TRACE;                                                      \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE_CLEANUP(expr)    \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      ctx->errnum = IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE;    \
+      __API_TRACE;                                                      \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
 #define API_ERR_HOSTNAME_INVALID(expr)                                  \
 do {                                                                    \
   if (!(expr))                                                          \

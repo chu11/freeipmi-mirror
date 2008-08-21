@@ -2218,6 +2218,17 @@ config_file_parse(const char *filename,
         &(ipmi_sensors_data),
         0,
       },
+      {
+        "ipmi-sensors-bridge-sensors",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.bridge_sensors_count),
+        &(ipmi_sensors_data.bridge_sensors),
+        0,
+      },
     };
 
   /* 

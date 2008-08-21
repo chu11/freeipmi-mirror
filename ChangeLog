@@ -10,7 +10,13 @@
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c: Support ipmb dumping.
 
-	* Various code cleanup and minor enhancements.
+	* ipmi-sensors/: Support ipmb bridging.  Support --bridge-sensors
+	option.
+
+	Various code cleanup and minor enhancements.
+
+	* libfreeipmi/src/api/: Create and support new error message
+	IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE.
 	
 2008-08-18 Albert Chu <chu11@llnl.gov>
 

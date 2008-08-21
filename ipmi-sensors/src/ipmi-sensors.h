@@ -38,6 +38,7 @@ enum ipmi_sensors_argp_option_keys
     GROUP_KEY = 160,            /* legacy */
     GROUPS_KEY = 'g', 
     SENSORS_KEY = 's', 
+    BRIDGE_SENSORS_KEY = 'b',
   };
 
 struct ipmi_sensors_arguments
@@ -56,6 +57,7 @@ struct ipmi_sensors_arguments
   int sensors_wanted;
   unsigned int sensors[IPMI_SENSORS_MAX_RECORD_IDS];
   unsigned int sensors_length;
+  int bridge_sensors;
 };
 
 typedef struct ipmi_sensors_prog_data

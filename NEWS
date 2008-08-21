@@ -134,6 +134,7 @@ Libraries
 o libfreeipmi
   - Add additional IPMI commands.
   - Support new "connection timeout" error message.
+  - Support new "command invalid for selected interface" error message.
 o libipmimonitoring
   - Support new "connection timeout" error message.
   - Handle variety of corner case situations better, such as dealing

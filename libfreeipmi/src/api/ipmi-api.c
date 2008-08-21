@@ -112,21 +112,22 @@ static char *ipmi_errmsg[] =
     "device not supported",	                                      /* 17 */
     "device not found",                                               /* 18 */
     "driver timeout",                                                 /* 19 */
-    "bad completion code: node busy/out of resources",                /* 20 */
-    "bad completion code: command invalid/not supported",             /* 21 */
-    "bad completion code: request data/parameter invalid", 	      /* 22 */
-    "bad completion code",	                                      /* 23 */
-    "bad rmcpplus status code",                                       /* 24 */
-    "BMC busy",			                                      /* 25 */
-    "out of memory",		                                      /* 26 */
-    "invalid hostname",                                               /* 27 */
-    "invalid parameters",	                                      /* 28 */
-    "driver path required",                                           /* 29 */
-    "internal IPMI error",	                                      /* 30 */
-    "internal system error",	                                      /* 31 */
-    "internal library error",	                                      /* 32 */
-    "internal error",		                                      /* 33 */
-    "errnum out of range",	                                      /* 34 */
+    "command invalid for selected interface",                         /* 20 */
+    "bad completion code: node busy/out of resources",                /* 21 */
+    "bad completion code: command invalid/not supported",             /* 22 */
+    "bad completion code: request data/parameter invalid", 	      /* 23 */
+    "bad completion code",	                                      /* 24 */
+    "bad rmcpplus status code",                                       /* 25 */
+    "BMC busy",			                                      /* 26 */
+    "out of memory",		                                      /* 27 */
+    "invalid hostname",                                               /* 28 */
+    "invalid parameters",	                                      /* 29 */
+    "driver path required",                                           /* 30 */
+    "internal IPMI error",	                                      /* 31 */
+    "internal system error",	                                      /* 32 */
+    "internal library error",	                                      /* 33 */
+    "internal error",		                                      /* 34 */
+    "errnum out of range",	                                      /* 35 */
   };
 
 static void
@@ -258,8 +259,6 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   ctx->type = IPMI_DEVICE_LAN;
   ctx->workaround_flags = workaround_flags;
   ctx->flags = flags;
-
-  ctx->ipmb_seq = (double)(IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand()/(RAND_MAX + 1.0));
 
   memset(&hent, '\0', sizeof(struct hostent));
 #if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
@@ -407,8 +406,6 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   ctx->type = IPMI_DEVICE_LAN_2_0;
   ctx->workaround_flags = workaround_flags;
   ctx->flags = flags;
-
-  ctx->ipmb_seq = (double)(IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand()/(RAND_MAX + 1.0));
 
   memset(&hent, '\0', sizeof(struct hostent));
 #if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
@@ -560,8 +557,6 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 
   ctx->workaround_flags = workaround_flags;
   ctx->flags = flags;
-
-  ctx->ipmb_seq = (double)(IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand()/(RAND_MAX + 1.0));
 
   ctx->io.inband.kcs_ctx = NULL;
   ctx->io.inband.ssif_ctx = NULL;
@@ -844,6 +839,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   fiid_obj_t obj_send_cmd_rs = NULL;
   fiid_obj_t obj_get_cmd_rs = NULL;
   int32_t len;
+  uint8_t rq_seq_orig;
   int8_t rv = -1;
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
@@ -870,12 +866,16 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   API_FIID_OBJ_CREATE_CLEANUP(obj_send_cmd_rs, tmpl_cmd_send_message_rs);
   API_FIID_OBJ_CREATE_CLEANUP(obj_get_cmd_rs, tmpl_cmd_get_message_rs);
 
+  rq_seq_orig = ctx->io.outofband.rq_seq;
+
+  /* XXX: fix rq_seq usage later */
+
   API_ERR_CLEANUP (fill_ipmb_msg_hdr (rs_addr,
                                       ctx->net_fn,
                                       ctx->lun,
                                       IPMI_SLAVE_ADDRESS_BMC,
                                       IPMI_BMC_IPMB_LUN_SMS_MSG_LUN,
-                                      ctx->ipmb_seq,
+                                      ctx->io.outofband.rq_seq,
                                       obj_ipmb_msg_hdr_rq) != -1);
   
   API_ERR_CLEANUP (assemble_ipmi_ipmb_msg (obj_ipmb_msg_hdr_rq,
@@ -912,7 +912,41 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_send_cmd_rs);
       goto cleanup;
     }
+
+  if (ctx->type == IPMI_DEVICE_LAN)
+    {
+      uint8_t authentication_type;
+      uint32_t internal_workaround_flags = 0;
+
+      if (ctx->io.outofband.per_msg_auth_disabled)
+        {
+          authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+          if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+            internal_workaround_flags |= IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
+        }
+      else
+        authentication_type = ctx->io.outofband.authentication_type;
+
+      if (ipmi_lan_cmd_wrapper (ctx,
+                                internal_workaround_flags,
+                                ctx->lun,
+                                ctx->net_fn,
+                                authentication_type,
+                                &(ctx->io.outofband.session_sequence_number),
+                                ctx->io.outofband.session_id,
+                                &rq_seq_orig,
+                                ctx->io.outofband.password,
+                                IPMI_1_5_MAX_PASSWORD_LENGTH,
+                                1, /* don't send anything, recv only */
+                                NULL,
+                                obj_cmd_rs) < 0)
+        goto cleanup;
+    }
+  else if (ctx->type == IPMI_DEVICE_LAN_2_0)
+    {
+    }
                          
+#if 0
   if (ipmi_cmd_get_message (ctx, obj_get_cmd_rs) < 0)
     {
       API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_send_cmd_rs);
@@ -935,11 +969,10 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                                              obj_ipmb_msg_trlr) != -1); 
 
   /* TODO: check rq_seq, deal with it appropriately */
+#endif
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
-      ctx->ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
-
       /* XXX: come back to this */
       /* lan packets are dumped in ipmi lan code */
       if (ctx->type != IPMI_DEVICE_LAN
@@ -948,6 +981,8 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
           /* XXX: come back to this */
         }
     }
+
+  /* XXX - should check checksusms and stuff */
 
   rv = 0;
  cleanup:
@@ -961,8 +996,6 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   API_FIID_OBJ_DESTROY(obj_get_cmd_rs);
   API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rq);
   ctx->ipmb_cmd_rq = NULL;
-  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rs);
-  ctx->ipmb_cmd_rs = NULL;
   return (rv);
 }              
 

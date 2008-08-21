@@ -72,6 +72,14 @@ separated by commas or spaces.
 \fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"
 Specify sensors to show by record id.  Multiple record ids can be
 separated by commas or spaces.
+.TP
+\fB\-b\fR, \fB\-\-bridge\-sensors
+By default, 
+.B ipmi-sensors
+will not read sensors from non-BMC addresses.  Setting this option
+will force 
+.B ipmi-sensors
+to attempt to bridge sensor commands to alternate addresses. 
 
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>

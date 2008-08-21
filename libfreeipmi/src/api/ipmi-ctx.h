@@ -38,10 +38,7 @@ struct ipmi_ctx
   uint8_t            lun;
   uint8_t            net_fn;
 
-  uint8_t            ipmb_seq;
-
   fiid_field_t      *ipmb_cmd_rq;
-  fiid_field_t      *ipmb_cmd_rs;
   
   ipmi_errnum_type_t errnum;
 

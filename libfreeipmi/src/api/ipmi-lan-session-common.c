@@ -240,26 +240,14 @@ _ipmi_lan_dump_rs (ipmi_ctx_t ctx,
                     hdrbuf,
                     DEBUG_UTIL_HDR_BUFLEN);
 
-      if (ctx->ipmb_cmd_rs)
-        ipmi_dump_lan_packet_ipmb (STDERR_FILENO,
-                                   ctx->io.outofband.hostname,
-                                   hdrbuf,
-                                   NULL,
-                                   pkt,
-                                   pkt_len,
-                                   tmpl_lan_msg_hdr_rs,
-                                   tmpl_cmd,
-                                   tmpl_ipmb_msg_hdr_rs,
-                                   ctx->ipmb_cmd_rs);
-      else
-        ipmi_dump_lan_packet (STDERR_FILENO,
-                              ctx->io.outofband.hostname,
-                              hdrbuf,
-                              NULL,
-                              pkt,
-                              pkt_len,
-                              tmpl_lan_msg_hdr_rs,
-                              tmpl_cmd);
+      ipmi_dump_lan_packet (STDERR_FILENO,
+                            ctx->io.outofband.hostname,
+                            hdrbuf,
+                            NULL,
+                            pkt,
+                            pkt_len,
+                            tmpl_lan_msg_hdr_rs,
+                            tmpl_cmd);
 
       fiid_template_free (tmpl_cmd);
     }
@@ -565,6 +553,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                       uint8_t *rq_seq,
                       char *password,
                       uint32_t password_len,
+                      uint8_t recv_only,
                       fiid_obj_t obj_cmd_rq,
                       fiid_obj_t obj_cmd_rs)
 {
@@ -587,8 +576,8 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
          && IPMI_NET_FN_VALID(net_fn)
          && IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type)
          && !(password && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
-	 && fiid_obj_valid(obj_cmd_rq)
-	 && fiid_obj_packet_valid(obj_cmd_rq)
+	 && (fiid_obj_valid(obj_cmd_rq) || recv_only)
+	 && (fiid_obj_packet_valid(obj_cmd_rq) || recv_only)
          && fiid_obj_valid(obj_cmd_rs));
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
@@ -598,20 +587,28 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
     API_ERR (!(gettimeofday(&ctx->io.outofband.last_received, NULL) < 0));
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
-    API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
+    {
+      if (recv_only)
+        API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rs, "cmd", &cmd);
+      else
+        API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
+    }
 
-  if (_ipmi_lan_cmd_send (ctx, 
-                          lun, 
-                          net_fn,
-                          authentication_type,
-                          (session_sequence_number) ? *session_sequence_number : 0,
-                          session_id,
-                          (rq_seq) ? *rq_seq : 0,
-                          password,
-                          password_len,
-			  cmd,	/* for debug dumping */
-                          obj_cmd_rq) < 0)
-    goto cleanup;
+  if (!recv_only)
+    {
+      if (_ipmi_lan_cmd_send (ctx, 
+                              lun, 
+                              net_fn,
+                              authentication_type,
+                              (session_sequence_number) ? *session_sequence_number : 0,
+                              session_id,
+                              (rq_seq) ? *rq_seq : 0,
+                              password,
+                              password_len,
+                              cmd,	/* for debug dumping */
+                              obj_cmd_rq) < 0)
+        goto cleanup;
+    }
 
   while (1)
     {
@@ -636,7 +633,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
           break;
         }
       
-      if (!recv_len)
+      if (!recv_len && !recv_only)
         {
           if (session_sequence_number)
             (*session_sequence_number)++;
@@ -856,6 +853,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             &(ctx->io.outofband.rq_seq),
                             NULL,
                             0,
+                            0,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
     {
@@ -969,6 +967,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             &(ctx->io.outofband.rq_seq),
                             NULL,
                             0,
+                            0,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
     goto cleanup;
@@ -1019,6 +1018,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             &(ctx->io.outofband.rq_seq),
                             ctx->io.outofband.password,
                             IPMI_1_5_MAX_PASSWORD_LENGTH,
+                            0,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
     {
@@ -1928,6 +1928,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                             0,
                             &(ctx->io.outofband.rq_seq),
                             NULL,
+                            0,
                             0,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)

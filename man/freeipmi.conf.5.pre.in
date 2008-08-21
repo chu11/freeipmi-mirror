@@ -780,6 +780,9 @@ can be specified separated by whitespace.  Please run
 .B ipmi-sensors(8)'s
 \fI--list-groups\fR
 option to see possible groups.
+.TP
+\fBipmi-sensors-bridge-sensors\fR \fIENABLE|DISABLE\fR
+Specify if non-BMC sensors should be bridged by default or not.
 
 .SH "IPMI-SENSORS-CONFIG OPTIONS"
 The following options are specific to 
