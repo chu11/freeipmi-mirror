@@ -703,7 +703,10 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
           continue;
         }
       else if (!recv_len)
-        continue;
+        {
+          API_ERR (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
+          continue;
+        }
 
       /* else received a packet */
 
