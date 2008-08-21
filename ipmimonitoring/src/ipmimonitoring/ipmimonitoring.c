@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.61 2008-08-01 23:53:56 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.61.4.1 2008-08-21 23:04:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -474,7 +474,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                                              IPMIMONITORING_BUFLEN) < 0)
                             {
                               /* If parameters error, assume remote machine has given us some
-                               * bogus offset.  We'll fall through and output nothing.
+                               * bogus offset.  We'll fall through and output an appropriate string.
                                */
                               if (ipmi_monitoring_ctx_errnum(state_data->ctx) != IPMI_MONITORING_ERR_PARAMETERS)
                                 {
@@ -492,6 +492,8 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                                 "ipmi_monitoring_bitmask_string: %s: invalid bitmask likely: %X\n", 
                                                 ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)),
                                                 *((uint16_t *)sensor_reading));
+
+                              snprintf(buffer, IPMIMONITORING_BUFLEN, "Unknown State");
                             }
                       
                           pstdout_printf(state_data->pstate,

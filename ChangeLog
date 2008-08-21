@@ -24,6 +24,8 @@
 	option.  Change default privilege to operator.  Output "Unknown
 	State" if an unrecognized bit is set.
 
+	* ipmimonitoring/: Output "Unknown State" if an unrecognized bit is set.
+
 	Various code cleanup and minor enhancements.
 
 	* libfreeipmi/src/api/: Create and support new error message

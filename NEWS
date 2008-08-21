@@ -128,6 +128,8 @@ o ipmimonitoring
     been reported under both conditions.
   - Consider sensors without BMC slave addresses unreadable.  May
     result in sensors not being output like before.
+  - Output "Unknown State" if the sensor specifies a state that is
+    unknown.
   - Output multiple bitmask strings if multiple bits are set.
   - Output "OK", similarly to ipmi-sensors when no bitmask strings are
     returned from a sensor reading.
