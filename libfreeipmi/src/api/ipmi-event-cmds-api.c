@@ -73,6 +73,41 @@ ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
 }
 
 int8_t 
+ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx, 
+                                  uint8_t slave_address,
+                                  uint8_t event_receiver_slave_address,
+                                  uint8_t event_receiver_lun,
+                                  fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_event_receiver_rs);
+
+  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_event_receiver_rq);
+  
+  API_ERR_CLEANUP (!(fill_cmd_set_event_receiver (event_receiver_slave_address,
+                                                  event_receiver_lun,
+						  obj_cmd_rq) < 0));
+
+  API_ERR_IPMI_CMD_IPMB_CLEANUP (ctx, 
+                                 slave_address,
+                                 IPMI_BMC_IPMB_LUN_BMC, 
+                                 IPMI_NET_FN_SENSOR_EVENT_RQ, 
+                                 obj_cmd_rq, 
+                                 obj_cmd_rs);
+
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
 ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;

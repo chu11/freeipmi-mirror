@@ -62,7 +62,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   uint8_t sensor_type;
   uint8_t event_reading_type_code;
   int sensor_class;
-  fiid_obj_t obj_cmd_rs = NULL;  
+  fiid_obj_t obj_get_sensor_reading_rs = NULL;  
   double *tmp_reading = NULL;
   uint64_t val;
   int rv = -1;
@@ -139,7 +139,9 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
 
   slave_address = (sensor_owner_id << 1) | sensor_owner_id_type;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_reading_rs);
+  _FIID_OBJ_CREATE(obj_get_sensor_reading_rs, tmpl_cmd_get_sensor_reading_rs);
+
+  /* XXX clean this up */
 
   if (slave_address != IPMI_SLAVE_ADDRESS_BMC)
     {
@@ -148,22 +150,10 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
           if (ipmi_cmd_get_sensor_reading_ipmb (state_data->ipmi_ctx,
                                                 slave_address,
                                                 sensor_number,
-                                                obj_cmd_rs) < 0)
+                                                obj_get_sensor_reading_rs) < 0)
             {
-              /* Can't bridge IPMB addresses.  Output unknown  
-               */
-              if (ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND)
-                {
-                  if (state_data->prog_data->args->common.debug)
-                    pstdout_fprintf(state_data->pstate,
-                                    stderr,
-                                    "Sensor number 0x%X data in record %u cannot be bridged.\n",
-                                    sensor_number,
-                                    record_id);
-                  rv = 0;
-                }
-              else if (ipmi_check_completion_code(obj_cmd_rs,
-                                                  IPMI_COMP_CODE_NODE_BUSY) == 1)
+              if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                             IPMI_COMP_CODE_NODE_BUSY) == 1)
                 {
                   if (state_data->prog_data->args->common.debug)
                     pstdout_fprintf(state_data->pstate,
@@ -176,7 +166,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
               /* A sensor listed by the SDR is not present.  Skip it's
                * output, don't error out.
                */
-              else if (ipmi_check_completion_code(obj_cmd_rs,
+              else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
                                                   IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
                 {
                   if (state_data->prog_data->args->common.debug)
@@ -218,12 +208,12 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
     {
       if (ipmi_cmd_get_sensor_reading (state_data->ipmi_ctx, 
                                        sensor_number, 
-                                       obj_cmd_rs) < 0)
+                                       obj_get_sensor_reading_rs) < 0)
         {
           /* A sensor listed by the SDR is not present.  Skip it's
            * output, don't error out.
            */
-          if (ipmi_check_completion_code(obj_cmd_rs,
+          if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
                                          IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
             {
               if (state_data->prog_data->args->common.debug)
@@ -243,7 +233,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
         }
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs,
+  _FIID_OBJ_GET (obj_get_sensor_reading_rs,
                  "reading_state",
                  &val);
   
@@ -274,12 +264,12 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
    * Hopefully this doesn't bite me later on.
    */
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
+  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_get_sensor_reading_rs,
                                    "sensor_event_bitmask1",
                                    &sensor_event_bitmask1,
                                    sensor_event_bitmask1_len);
   
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
+  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_get_sensor_reading_rs,
                                    "sensor_event_bitmask2",
                                    &sensor_event_bitmask2,
                                    sensor_event_bitmask2_len);
@@ -314,7 +304,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
 
   if (sensor_class == SENSOR_CLASS_THRESHOLD)
     {
-      _FIID_OBJ_GET (obj_cmd_rs, "sensor_reading", &val);
+      _FIID_OBJ_GET (obj_get_sensor_reading_rs, "sensor_reading", &val);
 
       if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
         {
@@ -477,7 +467,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   if (rv > 0)
     *reading = tmp_reading;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_get_sensor_reading_rs);
   if (rv <= 0)
     {
       if (tmp_reading)

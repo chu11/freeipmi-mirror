@@ -576,8 +576,8 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
          && IPMI_NET_FN_VALID(net_fn)
          && IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type)
          && !(password && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
-	 && (fiid_obj_valid(obj_cmd_rq) || recv_only)
-	 && (fiid_obj_packet_valid(obj_cmd_rq) || recv_only)
+	 && fiid_obj_valid(obj_cmd_rq)
+	 && fiid_obj_packet_valid(obj_cmd_rq)
          && fiid_obj_valid(obj_cmd_rs));
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
@@ -587,12 +587,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
     API_ERR (!(gettimeofday(&ctx->io.outofband.last_received, NULL) < 0));
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
-    {
-      if (recv_only)
-        API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rs, "cmd", &cmd);
-      else
-        API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
-    }
+    API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
 
   if (!recv_only)
     {

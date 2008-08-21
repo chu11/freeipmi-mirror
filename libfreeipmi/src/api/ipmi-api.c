@@ -47,6 +47,7 @@
 
 #include "freeipmi/api/ipmi-api.h"
 #include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
+#include "freeipmi/cmds/ipmi-event-cmds.h"
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/driver/ipmi-kcs-driver.h"
@@ -842,6 +843,12 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   uint8_t rq_seq_orig;
   int8_t rv = -1;
 
+  /* achu:
+   *
+   * Thanks to the OpenIPMI folks and tcpdumps from their project. I
+   * had trouble figuring out a few chunks of the bridging code.
+   */
+
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   API_ERR_DEVICE_NOT_OPEN(ctx->type != IPMI_DEVICE_UNKNOWN);
@@ -857,7 +864,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
 
   ctx->lun = lun;
   ctx->net_fn = net_fn;
-  
+
   API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rq, tmpl_ipmb_msg_hdr_rq);
   API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rs, tmpl_ipmb_msg_hdr_rs);
   API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_rq, tmpl_ipmb_msg);
@@ -866,17 +873,6 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   API_FIID_OBJ_CREATE_CLEANUP(obj_send_cmd_rs, tmpl_cmd_send_message_rs);
   API_FIID_OBJ_CREATE_CLEANUP(obj_get_cmd_rs, tmpl_cmd_get_message_rs);
 
-  /* XXX */
-#if 0
-  SENDING A PACKET
-6 0 FF 7 2 B2 4 0
-0 EB CC 3E 0 1C C5 1C
-A9 FE A6 57 6D 9F 9D BF
-6B 58 6D F6 19 10 20 18
-C8 81 FC 34 40 C0 10 30
-20 FE 2D 3 B2 F
-  ctx->io.outofband.rq_seq = 0x3F;
-#endif
   rq_seq_orig = ctx->io.outofband.rq_seq;
 
   /* XXX: fix rq_seq usage later */
@@ -924,6 +920,10 @@ C8 81 FC 34 40 C0 10 30
       goto cleanup;
     }
 
+  /* reset */
+  ctx->lun = lun;
+  ctx->net_fn = net_fn;
+
   if (ctx->type == IPMI_DEVICE_LAN)
     {
       uint8_t authentication_type;
@@ -949,7 +949,7 @@ C8 81 FC 34 40 C0 10 30
                                 ctx->io.outofband.password,
                                 IPMI_1_5_MAX_PASSWORD_LENGTH,
                                 1, /* don't send anything, recv only */
-                                NULL,
+                                obj_cmd_rq, /* pass for debug, actually unused */
                                 obj_cmd_rs) < 0)
         goto cleanup;
     }
@@ -993,7 +993,8 @@ C8 81 FC 34 40 C0 10 30
         }
     }
 
-  /* XXX - should check checksusms and stuff */
+  /* XXX - should check checksusms and stuff? */
+  /* XXX - deal w/ retries if checksusm/rq-seq wrong and stuff */
 
   rv = 0;
  cleanup:

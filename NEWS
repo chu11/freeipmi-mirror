@@ -19,6 +19,8 @@ o Add hostrange support to all config tools (bmc-config, pef-config,
 o Add additional "connection timeout" error message to tools to
   differentiate between no IPMI communication at all vs. session
   timeout in the middle of a command's operations.
+o Support --bridge-sensors on ipmi-sensors and ipmimonitoring to 
+  access non-BMC sensors.
 o Support hysteresis and sensor event configuration in
   ipmi-sensors-config.
 o Support additional sensor monitoring interpretations in ipmimonitoring.
@@ -65,7 +67,7 @@ o ipmi-fru
   - Output more information by default.  Change the output of verbose
     vs. very verbose output.
 o ipmi-sel
-  - Change default privilege from user to operator in ipmi-sel.
+  - Change default privilege from user to operator.
 o ipmiconsole
   - Support --session-timeout and --retransmission-timeout options.
   - Removed -C short option for consistency to other tools.
@@ -110,6 +112,7 @@ o ipmi-sensors
     verbose and very verbose mode.  For example, don't output
     hysteresis or threshold information for power supply sensors.
   - Alter some output ordering for consistency to IPMI spec.
+  - Change default privilege from user to operator.
 o ipmimonitoring
   - Support -v verbose option to output sensors readings that aren't
     readable.
@@ -133,6 +136,7 @@ Libraries
 ---------
 o libfreeipmi
   - Add additional IPMI commands.
+  - Support ipmb interface.
   - Support new "connection timeout" error message.
   - Support new "command invalid for selected interface" error message.
 o libipmimonitoring

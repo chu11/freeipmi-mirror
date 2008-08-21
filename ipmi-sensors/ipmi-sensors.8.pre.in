@@ -26,7 +26,7 @@ To perform IPMI sensor configuration, please see
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
 #include <@top_srcdir@/common/man/manpage-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-username-operator.man>
 #include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
 #include <@top_srcdir@/common/man/manpage-common-outofband-session-timeout.man>
@@ -34,7 +34,7 @@ To perform IPMI sensor configuration, please see
 #include <@top_srcdir@/common/man/manpage-common-authentication-type.man>
 #include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-main.man>
 #include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/man/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/man/manpage-common-privilege-level-operator.man>
 #include <@top_srcdir@/common/man/manpage-common-config-file.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/man/manpage-common-debug.man>
