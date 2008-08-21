@@ -18,7 +18,7 @@
 	* libfreeipmi/src/api/ipmi-lan-session-common.c: Support ipmb dumping.
 
 	* ipmi-sensors/: Support ipmb bridging.  Support --bridge-sensors
-	option.
+	option.  Change default privilege to operator.
 
 	Various code cleanup and minor enhancements.
 
