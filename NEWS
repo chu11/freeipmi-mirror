@@ -110,6 +110,8 @@ o ipmi-sensors
     than all on one line under verbose modes.
   - Output "Unrecognized State" if the sensor specifies a state that is
     unrecognized.
+  - Busy sensors are now output with "Unknown" instead of causing
+    errors.
   - When fields are not relevant, do not output as much information in
     verbose and very verbose mode.  For example, don't output
     hysteresis or threshold information for power supply sensors.
@@ -128,6 +130,8 @@ o ipmimonitoring
     been reported under both conditions.
   - Consider sensors without BMC slave addresses unreadable.  May
     result in sensors not being output like before.
+  - Busy sensors may result in sensors not being output rather than
+    causing errors.
   - Output "Unrecognized State" if the sensor specifies a state that is
     unrecognized.
   - Output multiple bitmask strings if multiple bits are set.

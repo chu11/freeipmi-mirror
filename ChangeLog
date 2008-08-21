@@ -22,9 +22,10 @@
 
 	* ipmi-sensors/: Support ipmb bridging.  Support --bridge-sensors
 	option.  Change default privilege to operator.  Output "Unknown
-	State" if an unrecognized bit is set.
+	State" if an unrecognized bit is set.  Output busy sensors as "Unknown".
 
-	* ipmimonitoring/: Output "Unknown State" if an unrecognized bit is set.
+	* ipmimonitoring/: Output "Unknown State" if an unrecognized bit
+	is set.  Handle and recognize busy sensors.
 
 	Various code cleanup and minor enhancements.
 

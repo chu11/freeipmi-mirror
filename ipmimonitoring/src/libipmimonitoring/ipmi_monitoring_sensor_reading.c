@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.28 2008-08-15 16:04:25 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.28.2.1 2008-08-21 23:14:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -470,6 +470,15 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
                                   *sensor_number, 
                                   obj_cmd_rs) < 0)
     {
+      if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                     IPMI_COMP_CODE_NODE_BUSY) == 1)
+        {
+          /* The sensor is busy.  Tell the caller to store this as an
+           * unreadable sensor
+           */
+          rv = 0;
+          goto cleanup;
+        }
       if (ipmi_check_completion_code(obj_cmd_rs, 
                                      IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
         {
