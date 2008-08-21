@@ -21,7 +21,8 @@
 	dumping.  Support ipmb receiving.
 
 	* ipmi-sensors/: Support ipmb bridging.  Support --bridge-sensors
-	option.  Change default privilege to operator.
+	option.  Change default privilege to operator.  Output "Unknown
+	State" if an unrecognized bit is set.
 
 	Various code cleanup and minor enhancements.
 

@@ -108,6 +108,8 @@ o ipmi-sensors
     output than before.
   - Output multiple sensor status messages on separate lines, rather
     than all on one line under verbose modes.
+  - Output "Unknown State" if the sensor specifies a state that is
+    unknown.
   - When fields are not relevant, do not output as much information in
     verbose and very verbose mode.  For example, don't output
     hysteresis or threshold information for power supply sensors.

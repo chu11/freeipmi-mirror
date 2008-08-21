@@ -35,6 +35,8 @@
 #define IPMI_SENSORS_BUFLEN   1024
 #define IPMI_SENSORS_MAX_LIST   32
 
+#define UNKNOWN_STATE "Unknown State"
+
 int
 get_msg_message_list (struct ipmi_sensors_state_data *state_data,
                       char ***event_message_list,
@@ -207,15 +209,20 @@ get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
 					      i,
 					      buf,
 					      IPMI_SENSORS_BUFLEN) < 0)
-            continue;
+            {
+              if (!(tmp_message_list[num_messages++] = strdup(UNKNOWN_STATE)))
+                {
+                  pstdout_perror(state_data->pstate, "strdup");
+                  goto cleanup;
+                }
+              continue;
+            }
 
-	  if (!(tmp_message_list[num_messages] = strdup(buf)))
+	  if (!(tmp_message_list[num_messages++] = strdup(buf)))
             {
               pstdout_perror(state_data->pstate, "strdup");
               goto cleanup;
             }
-
-          num_messages++; 
 	}
     }
   
@@ -290,15 +297,20 @@ get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_da
 						 i,
 						 buf,
 						 IPMI_SENSORS_BUFLEN) < 0)
-            continue;
+            {
+              if (!(tmp_message_list[num_messages++] = strdup(UNKNOWN_STATE)))
+                {
+                  pstdout_perror(state_data->pstate, "strdup");
+                  goto cleanup;
+                }
+              continue;
+            }
 
-	  if (!(tmp_message_list[num_messages] = strdup(buf)))
+	  if (!(tmp_message_list[num_messages++] = strdup(buf)))
             {
               pstdout_perror(state_data->pstate, "strdup");
               goto cleanup;
             }
-
-          num_messages++;
 	}
     }
   
