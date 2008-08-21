@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.61.4.1 2008-08-21 23:04:39 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.61.4.2 2008-08-21 23:05:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -493,7 +493,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                                 ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)),
                                                 *((uint16_t *)sensor_reading));
 
-                              snprintf(buffer, IPMIMONITORING_BUFLEN, "Unknown State");
+                              snprintf(buffer, IPMIMONITORING_BUFLEN, "Unrecognized State");
                             }
                       
                           pstdout_printf(state_data->pstate,

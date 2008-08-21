@@ -35,7 +35,7 @@
 #define IPMI_SENSORS_BUFLEN   1024
 #define IPMI_SENSORS_MAX_LIST   32
 
-#define UNKNOWN_STATE "Unknown State"
+#define UNRECOGNIZED_STATE "Unrecognized State"
 
 int
 get_msg_message_list (struct ipmi_sensors_state_data *state_data,
@@ -210,7 +210,7 @@ get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
 					      buf,
 					      IPMI_SENSORS_BUFLEN) < 0)
             {
-              if (!(tmp_message_list[num_messages++] = strdup(UNKNOWN_STATE)))
+              if (!(tmp_message_list[num_messages++] = strdup(UNRECOGNIZED_STATE)))
                 {
                   pstdout_perror(state_data->pstate, "strdup");
                   goto cleanup;
@@ -298,7 +298,7 @@ get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_da
 						 buf,
 						 IPMI_SENSORS_BUFLEN) < 0)
             {
-              if (!(tmp_message_list[num_messages++] = strdup(UNKNOWN_STATE)))
+              if (!(tmp_message_list[num_messages++] = strdup(UNRECOGNIZED_STATE)))
                 {
                   pstdout_perror(state_data->pstate, "strdup");
                   goto cleanup;
