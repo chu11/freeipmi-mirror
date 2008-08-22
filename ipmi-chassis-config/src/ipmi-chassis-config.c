@@ -30,6 +30,7 @@
 #include "ipmi-chassis-config.h"
 #include "ipmi-chassis-config-argp.h"
 #include "ipmi-chassis-config-sections.h"
+#include "ipmi-chassis-config-map.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -50,6 +51,21 @@ _ipmi_chassis_config_state_data_init(ipmi_chassis_config_state_data_t *state_dat
   state_data->front_panel_enable_diagnostic_interrupt_button_initialized = 0;
   state_data->front_panel_enable_reset_button_initialized = 0;
   state_data->front_panel_enable_power_off_button_for_power_off_only_initialized = 0;
+
+  state_data->boot_flags_valid_initialized = 0;
+  state_data->boot_flags_persistent_initialized = 0;
+  state_data->bios_boot_type_initialized = 0;
+  state_data->cmos_clear_initialized = 0;
+  state_data->lock_keyboard_initialized = 0;
+  state_data->screen_blank_initialized = 0;
+  state_data->boot_device_initialized = 0;
+  state_data->lock_out_reset_button_initialized = 0;
+  state_data->lock_out_power_button_initialized = 0;
+  state_data->lock_out_sleep_button_initialized = 0;
+  state_data->firmware_bios_verbosity_initialized = 0;
+  state_data->force_progress_event_traps_initialized = 0;
+  state_data->user_password_bypass_initialized = 0;
+  state_data->console_redirection_initialized = 0;
 }
 
 static int 
@@ -273,6 +289,122 @@ _ipmi_chassis_config (pstdout_state_t pstate,
                 {
                   state_data.front_panel_enable_power_off_button_for_power_off_only_initialized++;
                   state_data.front_panel_enable_power_off_button_for_power_off_only = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
+                }
+            }
+          section = section->next;
+        }
+    }
+
+  /* achu: workaround - see comments in ipmi-chassis-config-boot-flags.c.
+   */
+  if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT)
+    {
+      struct config_section *section;
+
+      section = sections;
+      while (section)
+        {
+          struct config_keyvalue *kv;
+          
+          if (!strcasecmp(section->section_name, "Chassis_Boot_Flags"))
+            {
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "Boot_Flags_Valid")))
+                {
+                  state_data.boot_flags_valid_initialized++;
+                  state_data.boot_flags_valid = same (kv->value_input, "yes");
+                }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "Boot_Flags_Persistent")))
+                {
+                  state_data.boot_flags_persistent_initialized++;
+                  state_data.boot_flags_persistent = same (kv->value_input, "yes");
+                 }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "BIOS_Boot_Type")))
+                {
+                  state_data.bios_boot_type_initialized++;
+                  state_data.bios_boot_type = bios_boot_type_number (kv->value_input);
+                }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "CMOS_Clear")))
+                {
+                  state_data.cmos_clear_initialized++;
+                  state_data.cmos_clear = same (kv->value_input, "yes");
+                }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "Lock_Keyboard")))
+                {
+                  state_data.lock_keyboard_initialized++;
+                  state_data.lock_keyboard = same (kv->value_input, "yes");
+                }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "Screen_Blank")))
+                {
+                  state_data.screen_blank_initialized++;
+                  state_data.screen_blank = same (kv->value_input, "yes");
+                }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "Boot_Device")))
+                {
+                  state_data.boot_device_initialized++;
+                  state_data.boot_device = boot_device_number (kv->value_input);
+                }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "Lock_Out_Reset_Button")))
+                {
+                  state_data.lock_out_reset_button_initialized++;
+                  state_data.lock_out_reset_button = same (kv->value_input, "yes");
+                }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "Lock_Out_Power_Button")))
+                {
+                  state_data.lock_out_power_button_initialized++;
+                  state_data.lock_out_power_button = same (kv->value_input, "yes");
+                }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "Lock_Out_Sleep_Button")))
+                {
+                  state_data.lock_out_sleep_button_initialized++;
+                  state_data.lock_out_sleep_button = same (kv->value_input, "yes");
+                }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "Firmware_Bios_Verbosity")))
+                {
+                  state_data.firmware_bios_verbosity_initialized++;
+                  state_data.firmware_bios_verbosity = firmware_bios_verbosity_number (kv->value_input);
+                }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "Force_Progress_Event_Traps")))
+                {
+                  state_data.force_progress_event_traps_initialized++;
+                  state_data.force_progress_event_traps = same (kv->value_input, "yes");
+                }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "User_Password_Bypass")))
+                {
+                  state_data.user_password_bypass_initialized++;
+                  state_data.user_password_bypass = same (kv->value_input, "yes");
+                }
+              if ((kv = config_find_keyvalue(pstate,
+                                             section,
+                                             "Console_Redirection")))
+                {
+                  state_data.console_redirection_initialized++;
+                  state_data.console_redirection = console_redirection_number (kv->value_input);
                 }
             }
           section = section->next;

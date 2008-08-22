@@ -1,3 +1,11 @@
+2008-08-22 Albert Chu <chu11@llnl.gov>
+
+	* tagged ipmi_chassi_boot_flags_workaround_pre
+
+	* ipmi-chassis-config/: Support workaround for boot flags.
+	
+	* tagged ipmi_chassi_boot_flags_workaround_post
+
 2008-08-18 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-ipmb-interface.h,

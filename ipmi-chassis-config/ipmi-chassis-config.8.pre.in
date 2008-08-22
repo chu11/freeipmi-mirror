@@ -73,6 +73,15 @@ The
 field cannot be checked out.  Therefore the checked out value will
 always be blank.
 
+Each field of the
+.B Chassis_Boot_Flags
+section will be committed together rather than one at a time.
+Therefore, it is possible that one invalid input to the remote
+motherboard may lead to all fields being committed with errors.  If
+this occurs, users should experiment with different configuration
+options.  Commenting out some fields to not configure them may also
+help.
+
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
