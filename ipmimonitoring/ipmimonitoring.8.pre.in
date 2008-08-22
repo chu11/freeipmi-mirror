@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.39.4.1 2008-08-22 00:02:45 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.39.4.2 2008-08-22 15:52:47 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -99,6 +99,7 @@ will not read sensors from non-BMC owners.  Setting this option
 will make
 .B ipmimonitoring
 attempt to bridge sensor commands to alternate owners (experimental).
+Bridging may not work on some interfaces/driver types.
 
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>

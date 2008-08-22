@@ -88,6 +88,7 @@ will not read sensors from non-BMC owners.  Setting this option
 will make
 .B ipmi-sensors
 attempt to bridge sensor commands to alternate owners (experimental). 
+Bridging may not work on some interfaces/driver types.
 
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
