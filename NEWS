@@ -44,55 +44,6 @@ o Global in config tools (bmc-config, pef-config, ipmi-sensors-config)
     previously been considered a non-fatal error, making the config
     tools continue on attempting more configuration activities.  Now,
     it would error out on the first session-timeout indication.
-o bmc-config
-  - Support configuration of UserN:Lan_Session_Limit and
-    UserN:Serial_Session_Limit (where N is a user id number).
-  - By default, do not output unsupported authentication type enables
-    when checking out the Lan_Conf_Auth section.  Output unsupported
-    authentication type enables under verbose output.
-  - By default, do not output serial configuration parameters on checkout.
-    Output serial configuration under verbose output.
-  - Remove checkout of "Misc" section and "Power_Restore_Policy"
-    field, which is now handled by ipmi-chassis-config.  Backwards
-    compatability commit and diff maintained.
-  - Remove case sensitivity when checking a number of fields.
-o ipmi-chassis
-  - Alter ipmi-chassis output to print "unknown" when field is not known.
-  - Alter some ipmi-chassis output text to be more consistent to IPMI
-    spec.
-  - Hide configuration options now supported in ipmi-chassis-config.  
-o ipmi-fru
-  - Output FRU device names along with IDs in ipmi-fru.
-  - Reduce excessive newline outputs in ipmi-fru.
-  - Output more information by default.  Change the output of verbose
-    vs. very verbose output.
-o ipmi-sel
-  - Change default privilege from user to operator.
-o ipmiconsole
-  - Support --session-timeout and --retransmission-timeout options.
-  - Removed -C short option for consistency to other tools.
-  - Removed hostname config file option.  Require users to always input
-    atleast hostname.
-  - Changed primary config file to /etc/freeipmi.conf.  Legacy config
-    file searched for and still supported.
-  - Prefixed config file options with 'ipmiconsole' for consistency to
-    new global FreeIPMI config file.  Old options still supported.
-o ipmipower
-  - Removed many early experimental features from ipmipower so
-    ipmipower is more like other tools.  Removed ipmi-version,
-    cipher-suite-id, privilege-level, and authentication-type auto
-    discovery. Removed ability to enable/disable a number of experimental
-    features.
-  - Changed --config to --config-file in ipmipower for consistency to
-    other tools.  Backwards compatability maintiained.
-  - Replace --ipmi-version option with --driver-type.  Backwards
-    compatability maintained.
-  - Removed hostname config file option.  Require users to always input
-    atleast hostname.
-  - Changed primary config file to /etc/freeipmi.conf.  Legacy config
-    file searched for and still supported.
-  - Prefixed config file options with 'ipmipower' for consistency to
-    new global FreeIPMI config file.  Old options still supported.
 o ipmi-sensors
   - Check variety of corner cases such as whether sensor readings,
     hysteresis, thresholds, etc. are even available before reading
@@ -137,6 +88,55 @@ o ipmimonitoring
   - Output "OK", similarly to ipmi-sensors when no bitmask strings are
     returned from a sensor reading.
   - Change default privilege from user to operator.
+o ipmipower
+  - Removed many early experimental features from ipmipower so
+    ipmipower is more like other tools.  Removed ipmi-version,
+    cipher-suite-id, privilege-level, and authentication-type auto
+    discovery. Removed ability to enable/disable a number of experimental
+    features.
+  - Changed --config to --config-file in ipmipower for consistency to
+    other tools.  Backwards compatability maintiained.
+  - Replace --ipmi-version option with --driver-type.  Backwards
+    compatability maintained.
+  - Removed hostname config file option.  Require users to always input
+    atleast hostname.
+  - Changed primary config file to /etc/freeipmi.conf.  Legacy config
+    file searched for and still supported.
+  - Prefixed config file options with 'ipmipower' for consistency to
+    new global FreeIPMI config file.  Old options still supported.
+o bmc-config
+  - Support configuration of UserN:Lan_Session_Limit and
+    UserN:Serial_Session_Limit (where N is a user id number).
+  - By default, do not output unsupported authentication type enables
+    when checking out the Lan_Conf_Auth section.  Output unsupported
+    authentication type enables under verbose output.
+  - By default, do not output serial configuration parameters on checkout.
+    Output serial configuration under verbose output.
+  - Remove checkout of "Misc" section and "Power_Restore_Policy"
+    field, which is now handled by ipmi-chassis-config.  Backwards
+    compatability commit and diff maintained.
+  - Remove case sensitivity when checking a number of fields.
+o ipmi-chassis
+  - Alter ipmi-chassis output to print "unknown" when field is not known.
+  - Alter some ipmi-chassis output text to be more consistent to IPMI
+    spec.
+  - Hide configuration options now supported in ipmi-chassis-config.  
+o ipmi-fru
+  - Output FRU device names along with IDs in ipmi-fru.
+  - Reduce excessive newline outputs in ipmi-fru.
+  - Output more information by default.  Change the output of verbose
+    vs. very verbose output.
+o ipmi-sel
+  - Change default privilege from user to operator.
+o ipmiconsole
+  - Support --session-timeout and --retransmission-timeout options.
+  - Removed -C short option for consistency to other tools.
+  - Removed hostname config file option.  Require users to always input
+    atleast hostname.
+  - Changed primary config file to /etc/freeipmi.conf.  Legacy config
+    file searched for and still supported.
+  - Prefixed config file options with 'ipmiconsole' for consistency to
+    new global FreeIPMI config file.  Old options still supported.
 o bmc-watchdog
   - Remove legacy 'v' option for version.
 
