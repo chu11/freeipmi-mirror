@@ -136,6 +136,7 @@ o ipmimonitoring
   - Output multiple bitmask strings if multiple bits are set.
   - Output "OK", similarly to ipmi-sensors when no bitmask strings are
     returned from a sensor reading.
+  - Change default privilege from user to operator.
 o bmc-watchdog
   - Remove legacy 'v' option for version.
 
@@ -146,12 +147,15 @@ o libfreeipmi
   - Support ipmb interface.
   - Support new "connection timeout" error message.
   - Support new "command invalid for selected interface" error message.
+  - Support SUNBMC driver.
 o libipmimonitoring
   - Support new "connection timeout" error message.
   - Handle variety of corner case situations better, such as dealing
     with sensor readings that are unavailable.
   - Provide more information to user on unreadable/uninterpretable
     sensor readings.
+  - Support SUNBMC driver.
+  - Provide new IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS flag.
 o Various naming consistency fixes to IPMI specification.
 o Various minor bug fixes.
 

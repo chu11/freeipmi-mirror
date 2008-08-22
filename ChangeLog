@@ -24,8 +24,16 @@
 	option.  Change default privilege to operator.  Output "Unknown
 	State" if an unrecognized bit is set.  Output busy sensors as "Unknown".
 
+	* ipmimonitoring/src/libipmimonitoring/: Support
+	IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS flag.
+	
 	* ipmimonitoring/: Output "Unknown State" if an unrecognized bit
-	is set.  Handle and recognize busy sensors.
+	is set.  Handle and recognize busy sensors.  Support
+	--bridge-sensors option.  Change default privilege to operator.
+
+	* common/src/toolcommon/tool-config-file-common.h,
+	common/src/toolcommon/tool-config-file-common.c: Support config
+	file configuration of --bridge-sensors.
 
 	Various code cleanup and minor enhancements.
 

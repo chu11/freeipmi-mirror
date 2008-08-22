@@ -87,7 +87,7 @@ static struct argp_option cmdline_options[] =
     {"sensors",        SENSORS_KEY, "SENSORS-LIST", 0, 
      "Show sensors by record id.  Accepts space or comma separated lists", 36}, 
     {"bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
-     "Brdige addresses to read non-BMC sensors.", 37},
+     "Bridge addresses to read non-BMC owned sensors.", 37},
     { 0 }
   };
 

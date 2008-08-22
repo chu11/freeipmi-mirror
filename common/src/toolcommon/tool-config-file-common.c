@@ -2579,6 +2579,17 @@ config_file_parse(const char *filename,
         &(ipmimonitoring_data),
         0,
       },
+      {
+        "ipmimonitoring-bridge-sensors",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmimonitoring_data.bridge_sensors_count),
+        &(ipmimonitoring_data.bridge_sensors),
+        0,
+      },
     };
 
   /* 

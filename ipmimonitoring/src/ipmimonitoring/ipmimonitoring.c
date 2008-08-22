@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.61.4.2 2008-08-21 23:05:36 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.61.4.3 2008-08-22 00:02:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -212,6 +212,9 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
 
   if (args->regenerate_sdr_cache)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;
+
+  if (args->bridge_sensors)
+    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS;
   
   if (!args->sensors_length && !args->ipmimonitoring_groups_length)
     {

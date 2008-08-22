@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.14 2008-03-28 00:14:43 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.14.14.1 2008-08-22 00:02:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -104,7 +104,8 @@
 
 #define IPMI_MONITORING_SENSOR_READING_FLAGS_MASK \
   (IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE \
-   | IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS)
+   | IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS \
+   | IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS)
 
 #define IPMI_MONITORING_AUTHENTICATION_TYPE_DEFAULT           IPMI_AUTHENTICATION_TYPE_MD5
 #define IPMI_MONITORING_PRIVILEGE_LEVEL_DEFAULT               IPMI_PRIVILEGE_LEVEL_USER
