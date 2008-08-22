@@ -11,11 +11,15 @@
 	libfreeipmi/include/freeipmi/api/ipmi-api.h (ipmi_cmd_ipmb): New
 	function.
 
-	* libfreeipmi/src/debug/ipmi-debug-lan.c,
+	* libfreeipmi/src/debug/ipmi-debug.c,
+	libfreeipmi/src/debug/ipmi-debug-lan.c,
 	libfreeipmi/src/debug/ipmi-debug-rmcpplus.c,
 	libfreeipmi/include/freeipmi/debug/ipmi-debug.h
-	(ipmi_dump_lan_packet_ipmb, ipmi_dump_rmcpplus_packet_ipmb): New
-	functions.
+	(ipmi_dump_obj_ipmb, ipmi_dump_lan_packet_ipmb,
+	ipmi_dump_rmcpplus_packet_ipmb): New functions.
+
+	* libfreeipmi/src/api/ipmi-api.c, libfreeipmi/src/api/ipmi-ctx.h:
+	Support ipmb debugging.
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c: Support ipmb
 	dumping.  Support ipmb receiving.

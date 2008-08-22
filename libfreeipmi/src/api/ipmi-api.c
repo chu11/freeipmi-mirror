@@ -62,7 +62,9 @@
 #include "freeipmi/locate/ipmi-locate.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
+#include "freeipmi/spec/ipmi-cmd-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
+#include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
@@ -771,11 +773,24 @@ ipmi_cmd (ipmi_ctx_t ctx,
                         hdrbuf,
                         DEBUG_UTIL_HDR_BUFLEN);
 
-          ipmi_obj_dump (STDERR_FILENO, 
-                         NULL,
-                         hdrbuf, 
-                         NULL, 
-                         obj_cmd_rq);
+          if (ctx->ipmb_cmd_rq
+              && cmd == IPMI_CMD_SEND_MESSAGE
+              && ctx->net_fn == IPMI_NET_FN_APP_RQ)
+            {
+              ipmi_obj_dump_ipmb (STDERR_FILENO,
+                                  NULL,
+                                  hdrbuf,
+                                  NULL,
+                                  obj_cmd_rq,
+                                  tmpl_ipmb_msg_hdr_rq,
+                                  ctx->ipmb_cmd_rq);
+            }
+          else
+            ipmi_obj_dump (STDERR_FILENO, 
+                           NULL,
+                           hdrbuf, 
+                           NULL, 
+                           obj_cmd_rq);
         }
     }
 
@@ -811,11 +826,24 @@ ipmi_cmd (ipmi_ctx_t ctx,
                         hdrbuf,
                         DEBUG_UTIL_HDR_BUFLEN);
           
-          ipmi_obj_dump (STDERR_FILENO, 
-                         NULL,
-                         hdrbuf, 
-                         NULL, 
-                         obj_cmd_rs);
+          if (ctx->ipmb_cmd_rq
+              && cmd == IPMI_CMD_GET_MESSAGE
+              && ctx->net_fn == IPMI_NET_FN_APP_RS)
+            {
+              ipmi_obj_dump_ipmb (STDERR_FILENO,
+                                  NULL,
+                                  hdrbuf,
+                                  NULL,
+                                  obj_cmd_rs,
+                                  tmpl_ipmb_msg_hdr_rs,
+                                  ctx->ipmb_cmd_rs);
+            }
+          else
+            ipmi_obj_dump (STDERR_FILENO, 
+                           NULL,
+                           hdrbuf, 
+                           NULL, 
+                           obj_cmd_rs);
         }
     }
 
@@ -839,8 +867,6 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   fiid_obj_t obj_send_cmd_rs = NULL;
   fiid_obj_t obj_get_cmd_rs = NULL;
-  int32_t len;
-  uint8_t rq_seq_orig;
   int8_t rv = -1;
 
   /* achu:
@@ -873,8 +899,15 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   API_FIID_OBJ_CREATE_CLEANUP(obj_send_cmd_rs, tmpl_cmd_send_message_rs);
   API_FIID_OBJ_CREATE_CLEANUP(obj_get_cmd_rs, tmpl_cmd_get_message_rs);
 
+  /* for debugging */
+  ctx->ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
+  ctx->ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
+
   while (1)
     {
+      uint8_t rq_seq_orig;
+      int32_t len;
+
       rq_seq_orig = ctx->io.outofband.rq_seq;
       
       API_ERR_CLEANUP (fill_ipmb_msg_hdr (rs_addr,
@@ -894,35 +927,6 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                                         obj_ipmb_msg_rq,
                                         buf,
                                         IPMI_MAX_PKT_LEN);
-  
-      if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
-        {
-          ctx->ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
-          
-          /* lan packets are dumped in ipmi lan code */
-          if (ctx->type != IPMI_DEVICE_LAN
-              && ctx->type != IPMI_DEVICE_LAN_2_0)
-            {
-              /* XXX come back to this */
-              char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
-              uint64_t cmd = 0;
-              
-              API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
-              
-              debug_hdr_cmd(DEBUG_UTIL_TYPE_INBAND,
-                            DEBUG_UTIL_DIRECTION_REQUEST,
-                            ctx->net_fn,
-                            cmd,
-                            hdrbuf,
-                            DEBUG_UTIL_HDR_BUFLEN);
-              
-              ipmi_obj_dump (STDERR_FILENO, 
-                             NULL,
-                             hdrbuf, 
-                             NULL, 
-                             obj_cmd_rq);
-            }
-        }
   
       if (ipmi_cmd_send_message (ctx,
                                  IPMI_CHANNEL_NUMBER_PRIMARY_IPMB,
@@ -1042,35 +1046,6 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       /* XXX - should check checksusms and stuff? */
       /* XXX - deal w/ retries if checksusm/rq-seq wrong and stuff */
 #endif
-
-      if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
-        {
-          ctx->ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
-          
-          /* lan packets are dumped in ipmi lan code */
-          if (ctx->type != IPMI_DEVICE_LAN
-              && ctx->type != IPMI_DEVICE_LAN_2_0)
-            {
-              char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
-              uint64_t cmd = 0;
-              
-              API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
-              
-              /* its ok to use the "request" net_fn */
-              debug_hdr_cmd(DEBUG_UTIL_TYPE_INBAND,
-                            DEBUG_UTIL_DIRECTION_RESPONSE,
-                            ctx->net_fn,
-                            cmd,
-                            hdrbuf,
-                            DEBUG_UTIL_HDR_BUFLEN);
-              
-              ipmi_obj_dump (STDERR_FILENO, 
-                             NULL,
-                             hdrbuf, 
-                             NULL, 
-                             obj_cmd_rs);
-            }
-        }
     }
 
   rv = 0;

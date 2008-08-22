@@ -34,6 +34,14 @@ int8_t ipmi_obj_dump (int fd,
                       const char *trlr, 
                       fiid_obj_t obj);
 
+int8_t ipmi_obj_dump_ipmb (int fd,
+                           const char *prefix, 
+                           const char *hdr,
+                           const char *trlr, 
+                           fiid_obj_t obj,
+                           fiid_template_t tmpl_ipmb_msg_hdr,
+                           fiid_template_t tmpl_ipmb_cmd);
+
 int8_t ipmi_dump_rmcp_packet (int fd, 
                               const char *prefix,
                               const char *hdr,

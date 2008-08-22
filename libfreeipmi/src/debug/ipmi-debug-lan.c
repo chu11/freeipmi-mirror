@@ -240,7 +240,6 @@ _ipmi_dump_lan_packet (int fd,
 
   if (obj_cmd_len)
     {
-      int32_t obj_ipmb_msg_trlr_len;
       uint8_t ipmb_buf[IPMI_DEBUG_MAX_PKT_LEN];
       int32_t ipmb_buf_len;
 
@@ -276,6 +275,7 @@ _ipmi_dump_lan_packet (int fd,
 
       if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
         {
+          int32_t obj_ipmb_msg_trlr_len;
           int32_t obj_ipmb_cmd_len;
           int32_t ipmb_hdr_len;
           int32_t ipmb_cmd_len;
