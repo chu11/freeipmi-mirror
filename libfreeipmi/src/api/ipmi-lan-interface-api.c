@@ -119,14 +119,9 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_SET_ALL_CLEANUP (obj_cmd_rq, buf_rq, buf_rq_len);
 
-  if (ctx->io.outofband.per_msg_auth_disabled)
-    {
-      authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
-      if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
-        internal_workaround_flags |= IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-    }
-  else
-    authentication_type = ctx->io.outofband.authentication_type;
+  ipmi_lan_cmd_get_session_parameters (ctx,
+				       &authentication_type,
+				       &internal_workaround_flags);
 
   if (ipmi_lan_cmd_wrapper (ctx, 
                             internal_workaround_flags,
@@ -169,15 +164,9 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
   
   API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
   
-  if (ctx->io.outofband.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
-    payload_authenticated = IPMI_PAYLOAD_FLAG_UNAUTHENTICATED;
-  else
-    payload_authenticated = IPMI_PAYLOAD_FLAG_AUTHENTICATED;
-
-  if (ctx->io.outofband.confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
-    payload_encrypted = IPMI_PAYLOAD_FLAG_UNENCRYPTED;
-  else
-    payload_encrypted = IPMI_PAYLOAD_FLAG_ENCRYPTED;
+  ipmi_lan_2_0_cmd_get_session_parameters (ctx,
+					   &payload_authenticated,
+					   &payload_encrypted);
 
   return ipmi_lan_2_0_cmd_wrapper (ctx, 
                                    ctx->lun,
@@ -231,15 +220,9 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_SET_ALL_CLEANUP (obj_cmd_rq, buf_rq, buf_rq_len);
 
-  if (ctx->io.outofband.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
-    payload_authenticated = IPMI_PAYLOAD_FLAG_UNAUTHENTICATED;
-  else
-    payload_authenticated = IPMI_PAYLOAD_FLAG_AUTHENTICATED;
-
-  if (ctx->io.outofband.confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
-    payload_encrypted = IPMI_PAYLOAD_FLAG_UNENCRYPTED;
-  else
-    payload_encrypted = IPMI_PAYLOAD_FLAG_ENCRYPTED;
+  ipmi_lan_2_0_cmd_get_session_parameters (ctx,
+					   &payload_authenticated,
+					   &payload_encrypted);
 
   if (ipmi_lan_2_0_cmd_wrapper (ctx, 
                                 ctx->lun,

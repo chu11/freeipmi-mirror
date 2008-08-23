@@ -16,6 +16,10 @@ void ipmi_lan_cmd_get_session_parameters (ipmi_ctx_t ctx,
 					  uint8_t *authentication_type,
 					  uint32_t *internal_workaround_flags);
 
+void ipmi_lan_2_0_cmd_get_session_parameters (ipmi_ctx_t ctx,
+					      uint8_t *payload_authenticated,
+					      uint8_t *payload_encrypted);
+
 int8_t ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                              uint32_t internal_workaround_flags,
                              uint8_t lun,

@@ -108,6 +108,28 @@ ipmi_lan_cmd_get_session_parameters (ipmi_ctx_t ctx,
     (*authentication_type) = ctx->io.outofband.authentication_type;
 }
 
+void
+ipmi_lan_2_0_cmd_get_session_parameters (ipmi_ctx_t ctx,
+					 uint8_t *payload_authenticated,
+					 uint8_t *payload_encrypted)
+{
+  assert(ctx 
+         && ctx->magic == IPMI_CTX_MAGIC
+         && ctx->type == IPMI_DEVICE_LAN_2_0
+	 && payload_authenticated
+	 && payload_encrypted);
+  
+  if (ctx->io.outofband.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+    (*payload_authenticated) = IPMI_PAYLOAD_FLAG_UNAUTHENTICATED;
+  else
+    (*payload_authenticated) = IPMI_PAYLOAD_FLAG_AUTHENTICATED;
+
+  if (ctx->io.outofband.confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
+    (*payload_encrypted) = IPMI_PAYLOAD_FLAG_UNENCRYPTED;
+  else
+    (*payload_encrypted) = IPMI_PAYLOAD_FLAG_ENCRYPTED;
+}
+
 static int
 _session_timed_out(ipmi_ctx_t ctx)
 {
