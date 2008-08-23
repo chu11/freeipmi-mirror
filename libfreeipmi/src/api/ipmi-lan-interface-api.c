@@ -69,14 +69,9 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
   
   API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
   
-  if (ctx->io.outofband.per_msg_auth_disabled)
-    {
-      authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
-      if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
-        internal_workaround_flags |= IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-    }
-  else
-    authentication_type = ctx->io.outofband.authentication_type;
+  ipmi_lan_cmd_get_session_parameters (ctx,
+				       &authentication_type,
+				       &internal_workaround_flags);
 
   /* if auth type NONE, still pass password.  Needed for
    * check_unexpected_authcode workaround 

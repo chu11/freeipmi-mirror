@@ -84,6 +84,30 @@ struct socket_to_close {
   struct socket_to_close *next;
 };
 
+void
+ipmi_lan_cmd_get_session_parameters (ipmi_ctx_t ctx,
+				     uint8_t *authentication_type,
+				     uint32_t *internal_workaround_flags)
+{
+  assert(ctx 
+         && ctx->magic == IPMI_CTX_MAGIC
+         && ctx->type == IPMI_DEVICE_LAN
+	 && authentication_type
+	 && internal_workaround_flags);
+  
+  (*authentication_type) = IPMI_AUTHENTICATION_TYPE_NONE;
+  (*internal_workaround_flags) = 0;
+  
+  if (ctx->io.outofband.per_msg_auth_disabled)
+    {
+      (*authentication_type) = IPMI_AUTHENTICATION_TYPE_NONE;
+      if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+        (*internal_workaround_flags) |= IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
+    }
+  else
+    (*authentication_type) = ctx->io.outofband.authentication_type;
+}
+
 static int
 _session_timed_out(ipmi_ctx_t ctx)
 {
@@ -1016,15 +1040,9 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
       /* else received a packet */
 
-      /* XXX put this in a function and share w/ other places */
-      if (ctx->io.outofband.per_msg_auth_disabled)
-	{
-	  authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
-	  if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
-	    internal_workaround_flags |= IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-	}
-      else
-	authentication_type = ctx->io.outofband.authentication_type;
+      ipmi_lan_cmd_get_session_parameters (ctx,
+					   &authentication_type,
+					   &internal_workaround_flags);
 
       if ((ret = _ipmi_lan_cmd_wrapper_verify_packet (ctx,
 						      internal_workaround_flags,

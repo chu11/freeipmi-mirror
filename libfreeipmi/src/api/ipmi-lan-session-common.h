@@ -12,6 +12,10 @@ extern "C" {
 #define IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_GET_SESSION_CHALLENGE     0x00000001
 #define IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE 0x00000002
 
+void ipmi_lan_cmd_get_session_parameters (ipmi_ctx_t ctx,
+					  uint8_t *authentication_type,
+					  uint32_t *internal_workaround_flags);
+
 int8_t ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                              uint32_t internal_workaround_flags,
                              uint8_t lun,
