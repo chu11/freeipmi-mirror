@@ -91,7 +91,6 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
                                &(ctx->io.outofband.rq_seq),
                                ctx->io.outofband.password,
                                IPMI_1_5_MAX_PASSWORD_LENGTH,
-                               0,
                                obj_cmd_rq,
                                obj_cmd_rs);
 }
@@ -144,7 +143,6 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
                             &(ctx->io.outofband.rq_seq),
                             ctx->io.outofband.password,
                             IPMI_1_5_MAX_PASSWORD_LENGTH,
-                            0,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
     goto cleanup;
@@ -205,7 +203,6 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
                                    ctx->io.outofband.confidentiality_key_len,
                                    strlen(ctx->io.outofband.password) ? ctx->io.outofband.password : NULL,
                                    strlen(ctx->io.outofband.password),
-                                   0,
                                    obj_cmd_rq,
                                    obj_cmd_rs);
 }
@@ -268,7 +265,6 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
                                 ctx->io.outofband.confidentiality_key_len,
                                 strlen(ctx->io.outofband.password) ? ctx->io.outofband.password : NULL,
                                 strlen(ctx->io.outofband.password),
-                                0,
                                 obj_cmd_rq,
                                 obj_cmd_rs) < 0)
     goto cleanup;

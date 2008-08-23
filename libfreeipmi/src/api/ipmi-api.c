@@ -859,14 +859,6 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                fiid_obj_t obj_cmd_rq, 
                fiid_obj_t obj_cmd_rs)
 {
-  uint8_t buf[IPMI_MAX_PKT_LEN];
-  fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
-  fiid_obj_t obj_ipmb_msg_hdr_rs = NULL;
-  fiid_obj_t obj_ipmb_msg_rq = NULL;
-  fiid_obj_t obj_ipmb_msg_rs = NULL;
-  fiid_obj_t obj_ipmb_msg_trlr = NULL;
-  fiid_obj_t obj_send_cmd_rs = NULL;
-  fiid_obj_t obj_get_cmd_rs = NULL;
   int8_t rv = -1;
 
   /* achu:
@@ -888,8 +880,35 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
 
+  ctx->rs_addr = rs_addr;
   ctx->lun = lun;
   ctx->net_fn = net_fn;
+
+  while (1)
+    {      
+      if (ctx->type == IPMI_DEVICE_LAN)
+        {
+	  if (ipmi_lan_cmd_wrapper_ipmb (ctx,
+					 obj_cmd_rq,
+					 obj_cmd_rs) < 0)
+	    goto cleanup;
+
+	  break;
+        }
+      else
+        API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE_CLEANUP(0);
+    }
+                         
+#if 0
+  uint8_t buf[IPMI_MAX_PKT_LEN];
+
+  fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
+  fiid_obj_t obj_ipmb_msg_hdr_rs = NULL;
+  fiid_obj_t obj_ipmb_msg_rq = NULL;
+  fiid_obj_t obj_ipmb_msg_rs = NULL;
+  fiid_obj_t obj_ipmb_msg_trlr = NULL;
+  fiid_obj_t obj_send_cmd_rs = NULL;
+  fiid_obj_t obj_get_cmd_rs = NULL;
 
   API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rq, tmpl_ipmb_msg_hdr_rq);
   API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rs, tmpl_ipmb_msg_hdr_rs);
@@ -903,8 +922,6 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   ctx->ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
   ctx->ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
 
-  while (1)
-    {
       uint8_t rq_seq_orig;
       int32_t len;
 
@@ -944,83 +961,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       /* reset to original, would have been changed in send_message call */
       ctx->lun = lun;
       ctx->net_fn = net_fn;
-      
-      if (ctx->type == IPMI_DEVICE_LAN)
-        {
-          uint8_t authentication_type;
-          uint32_t internal_workaround_flags = 0;
-          
-          if (ctx->io.outofband.per_msg_auth_disabled)
-            {
-              authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
-              if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
-                internal_workaround_flags |= IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-            }
-          else
-            authentication_type = ctx->io.outofband.authentication_type;
-          
-          if (ipmi_lan_cmd_wrapper (ctx,
-                                    internal_workaround_flags,
-                                    ctx->lun,
-                                    ctx->net_fn,
-                                    authentication_type,
-                                    &(ctx->io.outofband.session_sequence_number),
-                                    ctx->io.outofband.session_id,
-                                    &rq_seq_orig,
-                                    ctx->io.outofband.password,
-                                    IPMI_1_5_MAX_PASSWORD_LENGTH,
-                                    1, /* don't send anything, recv only */
-                                    obj_cmd_rq, /* pass for debug, actually unused */
-                                    obj_cmd_rs) < 0)
-            goto cleanup;
 
-          break;
-        }
-      else if (ctx->type == IPMI_DEVICE_LAN_2_0)
-        {
-          uint8_t payload_authenticated;
-          uint8_t payload_encrypted;
-          
-          if (ctx->io.outofband.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
-            payload_authenticated = IPMI_PAYLOAD_FLAG_UNAUTHENTICATED;
-          else
-            payload_authenticated = IPMI_PAYLOAD_FLAG_AUTHENTICATED;
-          
-          if (ctx->io.outofband.confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
-            payload_encrypted = IPMI_PAYLOAD_FLAG_UNENCRYPTED;
-          else
-            payload_encrypted = IPMI_PAYLOAD_FLAG_ENCRYPTED;
-          
-          if (ipmi_lan_2_0_cmd_wrapper (ctx,
-                                        ctx->lun,
-                                        ctx->net_fn,
-                                        IPMI_PAYLOAD_TYPE_IPMI,
-                                        payload_authenticated,
-                                        payload_encrypted,
-                                        NULL,
-                                        &(ctx->io.outofband.session_sequence_number),
-                                        ctx->io.outofband.managed_system_session_id,
-                                        &rq_seq_orig,
-                                        ctx->io.outofband.authentication_algorithm,
-                                        ctx->io.outofband.integrity_algorithm,
-                                        ctx->io.outofband.confidentiality_algorithm,
-                                        ctx->io.outofband.integrity_key_ptr,
-                                        ctx->io.outofband.integrity_key_len,
-                                        ctx->io.outofband.confidentiality_key_ptr,
-                                        ctx->io.outofband.confidentiality_key_len,
-                                        strlen(ctx->io.outofband.password) ? ctx->io.outofband.password : NULL,
-                                        strlen(ctx->io.outofband.password),
-                                        1, /* don't send anything, recv only */
-                                        obj_cmd_rq, /* pass for debug, actually unused */
-                                        obj_cmd_rs) < 0)
-            goto cleanup;
-          
-          break;
-        }
-      else
-        API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE_CLEANUP(0);
-                         
-#if 0
       if (ipmi_cmd_get_message (ctx, obj_get_cmd_rs) < 0)
         {
           API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_send_cmd_rs);
@@ -1045,12 +986,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       /* TODO: check rq_seq, deal with it appropriately */
       /* XXX - should check checksusms and stuff? */
       /* XXX - deal w/ retries if checksusm/rq-seq wrong and stuff */
-#endif
-    }
 
-  rv = 0;
- cleanup:
-  /* errnum set in ipmi_*_cmd functions */
   API_FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rq);
   API_FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rs);
   API_FIID_OBJ_DESTROY(obj_ipmb_msg_rq);
@@ -1062,6 +998,11 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   ctx->ipmb_cmd_rq = NULL;
   API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rs);
   ctx->ipmb_cmd_rs = NULL;
+
+#endif
+
+  rv = 0;
+ cleanup:
   return (rv);
 }              
 

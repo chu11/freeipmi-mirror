@@ -35,6 +35,7 @@ struct ipmi_ctx
   uint32_t           workaround_flags;
   uint32_t           flags;
 
+  uint8_t            rs_addr;	/* for ipmb */
   uint8_t            lun;
   uint8_t            net_fn;
 

@@ -22,9 +22,12 @@ int8_t ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                              uint8_t *rq_seq,
                              char *password,
                              uint32_t password_len,
-                             uint8_t recv_only,
                              fiid_obj_t obj_cmd_rq,
                              fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
+				  fiid_obj_t obj_cmd_rq,
+				  fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_lan_open_session (ipmi_ctx_t ctx);
 
@@ -49,7 +52,6 @@ int8_t ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                  uint32_t confidentiality_key_len,
                                  char *password,
                                  uint32_t password_len,
-                                 uint8_t recv_only,
                                  fiid_obj_t obj_cmd_rq,
                                  fiid_obj_t obj_cmd_rs);
 

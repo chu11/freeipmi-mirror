@@ -542,6 +542,136 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
   return (recv_len);
 }
 
+/* < 0 - error
+ * == 1 good packet
+ * == 0 bad packet
+ */
+int8_t
+_ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
+				     uint8_t internal_workaround_flags,
+				     uint8_t authentication_type,
+				     uint32_t *session_sequence_number,
+				     uint32_t session_id,
+				     uint8_t *rq_seq,
+				     char *password,
+				     uint32_t password_len,
+				     fiid_obj_t obj_cmd_rs)
+{
+  uint64_t rs_session_id;
+  uint64_t rs_session_sequence_number;
+  int8_t rv = -1;
+  int ret;
+
+  assert(ctx
+	 && ctx->magic == IPMI_CTX_MAGIC
+         && (ctx->type == IPMI_DEVICE_LAN
+             || ctx->type == IPMI_DEVICE_LAN_2_0)
+	 && ctx->io.outofband.sockfd
+         && IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type)
+         && !(password && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
+         && fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_GET_CLEANUP (ctx->io.outofband.rs.obj_lan_session_hdr, "session_id", &rs_session_id);
+
+  if (session_id != rs_session_id)
+    {
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on Tyan S2882 w/ m3289 BMC
+       *
+       * The remote BMC returns zeroes for the session id instead of the
+       * actual session id.  To work around this problem, we'll assume the
+       * session id is correct if it is equal to zero.
+       */
+      if ((ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+	  && !rs_session_id)
+	/* you get a second chance - continue on checking */
+	;
+      else
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
+    }
+
+  API_ERR_CLEANUP (!((ret = ipmi_lan_check_checksum (ctx->io.outofband.rs.obj_lan_msg_hdr,
+						     obj_cmd_rs,
+						     ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0));
+  
+  if (!ret)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Dell PowerEdge 2850
+   *
+   * When per-message authentication is disabled, and we send a
+   * message to a remote machine with auth-type none, the Dell
+   * motherboard will respond with a message with the auth-type used
+   * in the activate session stage and the appropriate authcode. So
+   * here is our second session-authcode check attempt under these
+   * circumstances.
+   */
+
+  API_ERR_CLEANUP (!((ret = ipmi_lan_check_session_authentication_code (ctx->io.outofband.rs.obj_lan_session_hdr,
+									ctx->io.outofband.rs.obj_lan_msg_hdr,
+									obj_cmd_rs,
+									ctx->io.outofband.rs.obj_lan_msg_trlr,
+									authentication_type,
+									(uint8_t *)password,
+									password_len)) < 0));
+
+  if ((internal_workaround_flags & IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+      && !ret)
+    {
+      API_ERR_CLEANUP (!((ret = ipmi_lan_check_session_authentication_code (ctx->io.outofband.rs.obj_lan_session_hdr,
+									    ctx->io.outofband.rs.obj_lan_msg_hdr,
+									    obj_cmd_rs,
+									    ctx->io.outofband.rs.obj_lan_msg_trlr,
+									    ctx->io.outofband.authentication_type,
+									    (uint8_t *)password,
+									    password_len)) < 0));
+    }
+  
+  if (!ret)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+  
+  if (session_sequence_number)
+    {
+      API_FIID_OBJ_GET_CLEANUP (ctx->io.outofband.rs.obj_lan_session_hdr,
+				"session_sequence_number",
+				&rs_session_sequence_number);
+      
+      API_ERR_CLEANUP (!((ret = _ipmi_check_session_sequence_number(ctx, 
+								    (uint32_t)rs_session_sequence_number)) < 0));
+      
+      if (!ret)
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
+    }
+          
+  API_ERR_CLEANUP (!((ret = ipmi_lan_check_rq_seq(ctx->io.outofband.rs.obj_lan_msg_hdr, 
+						  (rq_seq) ? *rq_seq : 0)) < 0));
+  
+  if (!ret)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  rv = 1;
+ cleanup:
+  return (rv);
+}
+
 int8_t 
 ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx, 
                       uint32_t internal_workaround_flags,
@@ -553,7 +683,6 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                       uint8_t *rq_seq,
                       char *password,
                       uint32_t password_len,
-                      uint8_t recv_only,
                       fiid_obj_t obj_cmd_rq,
                       fiid_obj_t obj_cmd_rs)
 {
@@ -563,8 +692,6 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
   uint8_t pkt[IPMI_MAX_PKT_LEN];
   int32_t recv_len;
   struct socket_to_close *sockets = NULL;
-  uint64_t rs_session_id;
-  uint64_t rs_session_sequence_number;
   uint64_t cmd = 0;		/* used for debugging */
   
   assert(ctx
@@ -589,23 +716,18 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
 
-  if (!recv_only)
-    {
-      if (_ipmi_lan_cmd_send (ctx, 
-                              lun, 
-                              net_fn,
-                              authentication_type,
-                              (session_sequence_number) ? *session_sequence_number : 0,
-                              session_id,
-                              (rq_seq) ? *rq_seq : 0,
-                              password,
-                              password_len,
-                              cmd,	/* for debug dumping */
-                              obj_cmd_rq) < 0)
-        goto cleanup;
-    }
-  else
-    API_ERR_CLEANUP (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
+  if (_ipmi_lan_cmd_send (ctx, 
+			  lun, 
+			  net_fn,
+			  authentication_type,
+			  (session_sequence_number) ? *session_sequence_number : 0,
+			  session_id,
+			  (rq_seq) ? *rq_seq : 0,
+			  password,
+			  password_len,
+			  cmd,	/* for debug dumping */
+			  obj_cmd_rq) < 0)
+    goto cleanup;
 
   while (1)
     {
@@ -630,7 +752,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
           break;
         }
 
-      if (!recv_len && !recv_only)
+      if (!recv_len)
         {
           if (session_sequence_number)
             (*session_sequence_number)++;
@@ -697,94 +819,22 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
           
           continue;
         }
-      else if (!recv_len)
-        {
-          API_ERR_CLEANUP (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
-          continue;
-        }
 
       /* else received a packet */
 
-      API_FIID_OBJ_GET_CLEANUP (ctx->io.outofband.rs.obj_lan_session_hdr, "session_id", &rs_session_id);
-
-      if (session_id != rs_session_id)
-        {
-          /* IPMI Workaround (achu)
-           *
-           * Discovered on Tyan S2882 w/ m3289 BMC
-           *
-           * The remote BMC returns zeroes for the session id instead of the
-           * actual session id.  To work around this problem, we'll assume the
-           * session id is correct if it is equal to zero.
-           */
-          if ((ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
-              && !rs_session_id)
-            /* you get a second chance */
-            ;
-          else
-            continue;
-        }
-
-      API_ERR_CLEANUP (!((ret = ipmi_lan_check_checksum (ctx->io.outofband.rs.obj_lan_msg_hdr,
-                                                         obj_cmd_rs,
-                                                         ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0));
+      if ((ret = _ipmi_lan_cmd_wrapper_verify_packet (ctx,
+						      internal_workaround_flags,
+						      authentication_type,
+						      session_sequence_number,
+						      session_id,
+						      rq_seq,
+						      password,
+						      password_len,
+						      obj_cmd_rs)) < 0)
+	goto cleanup;
       
       if (!ret)
-        continue;
-
-      /* IPMI Workaround (achu)
-       *
-       * Discovered on Dell PowerEdge 2850
-       *
-       * When per-message authentication is disabled, and we send a
-       * message to a remote machine with auth-type none, the Dell
-       * motherboard will respond with a message with the auth-type used
-       * in the activate session stage and the appropriate authcode. So
-       * here is our second session-authcode check attempt under these
-       * circumstances.
-       */
-
-      API_ERR_CLEANUP (!((ret = ipmi_lan_check_session_authentication_code (ctx->io.outofband.rs.obj_lan_session_hdr,
-                                                                            ctx->io.outofband.rs.obj_lan_msg_hdr,
-                                                                            obj_cmd_rs,
-                                                                            ctx->io.outofband.rs.obj_lan_msg_trlr,
-                                                                            authentication_type,
-                                                                            (uint8_t *)password,
-                                                                            password_len)) < 0));
-
-      if ((internal_workaround_flags & IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
-          && !ret)
-        {
-          API_ERR_CLEANUP (!((ret = ipmi_lan_check_session_authentication_code (ctx->io.outofband.rs.obj_lan_session_hdr,
-                                                                                ctx->io.outofband.rs.obj_lan_msg_hdr,
-                                                                                obj_cmd_rs,
-                                                                                ctx->io.outofband.rs.obj_lan_msg_trlr,
-                                                                                ctx->io.outofband.authentication_type,
-                                                                                (uint8_t *)password,
-                                                                                password_len)) < 0));
-        }
-
-      if (!ret)
-        continue;
-  
-      if (session_sequence_number)
-        {
-          API_FIID_OBJ_GET_CLEANUP (ctx->io.outofband.rs.obj_lan_session_hdr,
-                                    "session_sequence_number",
-                                    &rs_session_sequence_number);
-
-          API_ERR_CLEANUP (!((ret = _ipmi_check_session_sequence_number(ctx, 
-                                                                        (uint32_t)rs_session_sequence_number)) < 0));
-
-          if (!ret)
-            continue;         
-        }
-          
-      API_ERR_CLEANUP (!((ret = ipmi_lan_check_rq_seq(ctx->io.outofband.rs.obj_lan_msg_hdr, 
-                                                      (rq_seq) ? *rq_seq : 0)) < 0));
-      
-      if (!ret)
-        continue;
+	continue;
 
       API_ERR_CLEANUP (!(gettimeofday(&(ctx->io.outofband.last_received), NULL) < 0));
       retval = recv_len;
@@ -801,6 +851,207 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
       close(sockets->fd);
       sockets = sockets->next;
     }
+  return (retval);
+}
+
+int8_t
+_ipmi_lan_cmd_send_ipmb (ipmi_ctx_t ctx,
+			 uint8_t rs_addr,
+			 uint8_t lun,
+			 uint8_t net_fn,
+			 fiid_obj_t obj_cmd_rq)
+{
+  uint8_t tbuf[IPMI_MAX_PKT_LEN];
+  fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
+  fiid_obj_t obj_ipmb_msg_rq = NULL;
+  fiid_obj_t obj_send_cmd_rs = NULL;
+  int8_t rv = -1;
+  int32_t len;
+
+  assert(ctx
+	 && ctx->magic == IPMI_CTX_MAGIC
+	 && (ctx->type == IPMI_DEVICE_LAN
+	     || ctx->type == IPMI_DEVICE_LAN_2_0)
+	 && ctx->io.outofband.sockfd 
+	 && IPMI_BMC_LUN_VALID(lun)
+	 && IPMI_NET_FN_VALID(net_fn)
+	 && fiid_obj_valid(obj_cmd_rq)
+	 && fiid_obj_packet_valid(obj_cmd_rq));
+
+  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rq, tmpl_ipmb_msg_hdr_rq);
+  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_rq, tmpl_ipmb_msg);
+  API_FIID_OBJ_CREATE_CLEANUP(obj_send_cmd_rs, tmpl_cmd_send_message_rs);
+
+  API_ERR_CLEANUP (fill_ipmb_msg_hdr (rs_addr,
+				      net_fn,
+				      lun,
+				      IPMI_SLAVE_ADDRESS_BMC,
+				      IPMI_BMC_IPMB_LUN_SMS_MSG_LUN,
+				      ctx->io.outofband.rq_seq,
+				      obj_ipmb_msg_hdr_rq) != -1);
+
+  API_ERR_CLEANUP (assemble_ipmi_ipmb_msg (obj_ipmb_msg_hdr_rq,
+					   obj_cmd_rq,
+					   obj_ipmb_msg_rq) != -1);
+
+  memset(tbuf, '\0', IPMI_MAX_PKT_LEN);
+  API_FIID_OBJ_GET_ALL_LEN_CLEANUP (len,
+				    obj_ipmb_msg_rq,
+				    tbuf,
+				    IPMI_MAX_PKT_LEN);
+  
+
+  if (ipmi_cmd_send_message (ctx,
+			     IPMI_CHANNEL_NUMBER_PRIMARY_IPMB,
+			     IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
+			     IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
+			     IPMI_SEND_MESSAGE_TRACKING_OPERATION_TRACKING_REQUEST,
+			     tbuf,
+			     len,
+			     obj_send_cmd_rs) < 0)
+    {
+      API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_send_cmd_rs);
+      goto cleanup;
+    }
+
+  /* reset to original, would have been changed in send_message call */
+  ctx->lun = lun;
+  ctx->net_fn = net_fn;
+
+  /* "pretend" a request was just sent */
+  API_ERR_CLEANUP (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
+
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rq);
+  API_FIID_OBJ_DESTROY(obj_ipmb_msg_rq);
+  API_FIID_OBJ_DESTROY(obj_send_cmd_rs);
+  return (rv);
+}
+
+int8_t 
+ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx, 
+			   fiid_obj_t obj_cmd_rq,
+			   fiid_obj_t obj_cmd_rs)
+{
+  int retval = -1;
+  int ret;
+  unsigned int retransmission_count = 0;
+  uint8_t pkt[IPMI_MAX_PKT_LEN];
+  int32_t recv_len;
+  uint64_t cmd = 0;		/* used for debugging */
+  uint8_t rq_seq_orig;
+
+  assert(ctx
+	 && ctx->magic == IPMI_CTX_MAGIC
+         && (ctx->type == IPMI_DEVICE_LAN
+             || ctx->type == IPMI_DEVICE_LAN_2_0)
+	 && ctx->io.outofband.sockfd 
+	 && fiid_obj_valid(obj_cmd_rq)
+	 && fiid_obj_packet_valid(obj_cmd_rq)
+         && fiid_obj_valid(obj_cmd_rs));
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+ 
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
+
+  /* for debugging */
+  ctx->ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
+  ctx->ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
+
+  /* ipmb response packet will use the request sequence number from
+   * the earlier packet.  Save it for verification.
+   */
+
+  rq_seq_orig = ctx->io.outofband.rq_seq;
+
+  if (_ipmi_lan_cmd_send_ipmb (ctx,
+			       ctx->rs_addr,
+			       ctx->lun,
+			       ctx->net_fn,
+			       obj_cmd_rq) < 0)
+    goto cleanup;
+
+  while (1)
+    {
+      uint8_t authentication_type;
+      uint32_t internal_workaround_flags = 0;
+
+      if (_session_timed_out(ctx))
+        {
+	  API_ERR_SET_ERRNUM (IPMI_ERR_SESSION_TIMEOUT);
+          retval = -1;
+          break;
+        }
+     
+      /* its ok to use the "request" net_fn, dump code doesn't care */
+      memset(pkt, '\0', IPMI_MAX_PKT_LEN);
+      if ((recv_len = _ipmi_lan_cmd_recv (ctx, 
+                                          pkt,
+                                          IPMI_MAX_PKT_LEN,
+                                          retransmission_count,			  
+					  cmd, /* for debug dumping */
+					  ctx->net_fn, /* for debug dumping */
+                                          obj_cmd_rs)) < 0)
+        {
+          retval = -1;
+          break;
+        }
+
+      if (!recv_len)
+        {
+          retransmission_count++;
+          
+	  rq_seq_orig = ctx->io.outofband.rq_seq;
+
+	  API_ERR_CLEANUP (!(_ipmi_lan_cmd_send_ipmb (ctx,
+						      ctx->rs_addr,
+						      ctx->lun,
+						      ctx->net_fn,
+						      obj_cmd_rq) < 0));
+
+          continue;
+        }
+
+      /* else received a packet */
+
+      /* XXX put this in a function and share w/ other places */
+      if (ctx->io.outofband.per_msg_auth_disabled)
+	{
+	  authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+	  if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+	    internal_workaround_flags |= IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
+	}
+      else
+	authentication_type = ctx->io.outofband.authentication_type;
+
+      if ((ret = _ipmi_lan_cmd_wrapper_verify_packet (ctx,
+						      internal_workaround_flags,
+						      authentication_type,
+						      &(ctx->io.outofband.session_sequence_number),
+						      ctx->io.outofband.session_id,
+						      &rq_seq_orig,
+						      ctx->io.outofband.password,
+						      IPMI_1_5_MAX_PASSWORD_LENGTH,
+						      obj_cmd_rs)) < 0)
+	goto cleanup;
+	
+      if (!ret)
+	continue;
+
+      API_ERR_CLEANUP (!(gettimeofday(&(ctx->io.outofband.last_received), NULL) < 0));
+      retval = recv_len;
+      break;
+    }
+  
+ cleanup:
+  ctx->io.outofband.session_sequence_number++;
+  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rq);
+  ctx->ipmb_cmd_rq = NULL;
+  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rs);
+  ctx->ipmb_cmd_rs = NULL;
+
   return (retval);
 }
 
@@ -854,7 +1105,6 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             0,
                             &(ctx->io.outofband.rq_seq),
                             NULL,
-                            0,
                             0,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
@@ -969,7 +1219,6 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             &(ctx->io.outofband.rq_seq),
                             NULL,
                             0,
-                            0,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
     goto cleanup;
@@ -1020,7 +1269,6 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             &(ctx->io.outofband.rq_seq),
                             ctx->io.outofband.password,
                             IPMI_1_5_MAX_PASSWORD_LENGTH,
-                            0,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
     {
@@ -1565,7 +1813,6 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                           uint32_t confidentiality_key_len,
                           char *password,
                           uint32_t password_len,
-                          uint8_t recv_only,
                           fiid_obj_t obj_cmd_rq,
                           fiid_obj_t obj_cmd_rs)
 {
@@ -1607,32 +1854,27 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
 
-  if (!recv_only)
-    {
-      if (_ipmi_lan_2_0_cmd_send (ctx, 
-                                  lun, 
-                                  net_fn,
-                                  payload_type,
-                                  payload_authenticated,
-                                  payload_encrypted,
-                                  (session_sequence_number) ? *session_sequence_number : 0,
-                                  session_id,
-                                  (rq_seq) ? *rq_seq : 0,
-                                  authentication_algorithm,
-                                  integrity_algorithm,
-                                  confidentiality_algorithm,
-                                  integrity_key,
-                                  integrity_key_len,
-                                  confidentiality_key,
-                                  confidentiality_key_len,
-                                  password,
-                                  password_len,
-                                  cmd, /* for debug dumping */
-                                  obj_cmd_rq) < 0)
-        goto cleanup;
-    }
-  else
-    API_ERR_CLEANUP (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
+  if (_ipmi_lan_2_0_cmd_send (ctx, 
+			      lun, 
+			      net_fn,
+			      payload_type,
+			      payload_authenticated,
+			      payload_encrypted,
+			      (session_sequence_number) ? *session_sequence_number : 0,
+			      session_id,
+			      (rq_seq) ? *rq_seq : 0,
+			      authentication_algorithm,
+			      integrity_algorithm,
+			      confidentiality_algorithm,
+			      integrity_key,
+			      integrity_key_len,
+			      confidentiality_key,
+			      confidentiality_key_len,
+			      password,
+			      password_len,
+			      cmd, /* for debug dumping */
+			      obj_cmd_rq) < 0)
+    goto cleanup;
 
   while (1)
     {
@@ -1664,7 +1906,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
           break;
         }
 
-      if (!recv_len && !recv_only)
+      if (!recv_len)
         {
           if (message_tag)
             (*message_tag)++;
@@ -1713,11 +1955,6 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                       obj_cmd_rq) < 0)
             goto cleanup;
           
-          continue;
-        }
-      else if (!recv_len)
-        {
-          API_ERR_CLEANUP (!(gettimeofday(&ctx->io.outofband.last_send, NULL) < 0));
           continue;
         }
 
@@ -1957,7 +2194,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                             &(ctx->io.outofband.rq_seq),
                             NULL,
                             0,
-                            0,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
     {
@@ -2088,7 +2324,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                 0,
                                 NULL,
                                 0,
-                                0,
                                 obj_cmd_rq,
                                 obj_cmd_rs) < 0)
     goto cleanup;
@@ -2215,7 +2450,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                 NULL,
                                 0,
                                 NULL,
-                                0,
                                 0,
                                 obj_cmd_rq,
                                 obj_cmd_rs) < 0)
@@ -2495,7 +2729,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                 NULL,
                                 0,
                                 NULL,
-                                0,
                                 0,
                                 obj_cmd_rq,
                                 obj_cmd_rs) < 0)
