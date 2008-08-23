@@ -462,8 +462,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
 
   assert(ctx
 	 && ctx->magic == IPMI_CTX_MAGIC
-         && (ctx->type == IPMI_DEVICE_LAN
-             || ctx->type == IPMI_DEVICE_LAN_2_0)
+         && ctx->type == IPMI_DEVICE_LAN
 	 && ctx->io.outofband.sockfd 
          && IPMI_BMC_LUN_VALID(lun)
          && IPMI_NET_FN_VALID(net_fn)
@@ -534,8 +533,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
 
   assert(ctx
 	 && ctx->magic == IPMI_CTX_MAGIC
-         && (ctx->type == IPMI_DEVICE_LAN
-             || ctx->type == IPMI_DEVICE_LAN_2_0)
+         && ctx->type == IPMI_DEVICE_LAN
 	 && ctx->io.outofband.sockfd 
          && pkt
          && pkt_len
@@ -741,8 +739,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
   
   assert(ctx
 	 && ctx->magic == IPMI_CTX_MAGIC
-         && (ctx->type == IPMI_DEVICE_LAN
-             || ctx->type == IPMI_DEVICE_LAN_2_0)
+         && ctx->type == IPMI_DEVICE_LAN
 	 && ctx->io.outofband.sockfd 
          && IPMI_BMC_LUN_VALID(lun)
          && IPMI_NET_FN_VALID(net_fn)
@@ -752,8 +749,6 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 	 && fiid_obj_packet_valid(obj_cmd_rq)
          && fiid_obj_valid(obj_cmd_rs));
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
- 
   if (!ctx->io.outofband.last_received.tv_sec
       && !ctx->io.outofband.last_received.tv_usec)
     API_ERR (!(gettimeofday(&ctx->io.outofband.last_received, NULL) < 0));
@@ -900,11 +895,11 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 }
 
 int8_t
-_ipmi_lan_cmd_send_ipmb (ipmi_ctx_t ctx,
-			 uint8_t rs_addr,
-			 uint8_t lun,
-			 uint8_t net_fn,
-			 fiid_obj_t obj_cmd_rq)
+_ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
+		     uint8_t rs_addr,
+		     uint8_t lun,
+		     uint8_t net_fn,
+		     fiid_obj_t obj_cmd_rq)
 {
   uint8_t tbuf[IPMI_MAX_PKT_LEN];
   fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
@@ -989,15 +984,12 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
   assert(ctx
 	 && ctx->magic == IPMI_CTX_MAGIC
-         && (ctx->type == IPMI_DEVICE_LAN
-             || ctx->type == IPMI_DEVICE_LAN_2_0)
+         && ctx->type == IPMI_DEVICE_LAN
 	 && ctx->io.outofband.sockfd 
 	 && fiid_obj_valid(obj_cmd_rq)
 	 && fiid_obj_packet_valid(obj_cmd_rq)
          && fiid_obj_valid(obj_cmd_rs));
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
- 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
 
@@ -1011,11 +1003,11 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
   rq_seq_orig = ctx->io.outofband.rq_seq;
 
-  if (_ipmi_lan_cmd_send_ipmb (ctx,
-			       ctx->rs_addr,
-			       ctx->lun,
-			       ctx->net_fn,
-			       obj_cmd_rq) < 0)
+  if (_ipmi_cmd_send_ipmb (ctx,
+			   ctx->rs_addr,
+			   ctx->lun,
+			   ctx->net_fn,
+			   obj_cmd_rq) < 0)
     goto cleanup;
 
   while (1)
@@ -1047,14 +1039,20 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       if (!recv_len)
         {
           retransmission_count++;
+
+	  /* don't increment sequence numbers, will be done in _ipmi_cmd_send_ipmb */
           
+	  /* ipmb response packet will use the request sequence number from
+	   * the earlier packet.  Save it for verification.
+	   */
+
 	  rq_seq_orig = ctx->io.outofband.rq_seq;
 
-	  API_ERR_CLEANUP (!(_ipmi_lan_cmd_send_ipmb (ctx,
-						      ctx->rs_addr,
-						      ctx->lun,
-						      ctx->net_fn,
-						      obj_cmd_rq) < 0));
+	  API_ERR_CLEANUP (!(_ipmi_cmd_send_ipmb (ctx,
+						  ctx->rs_addr,
+						  ctx->lun,
+						  ctx->net_fn,
+						  obj_cmd_rq) < 0));
 
           continue;
         }
@@ -1086,6 +1084,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   
  cleanup:
   ctx->io.outofband.session_sequence_number++;
+  /* rq_seq already incremented via _ipmi_cmd_send_ipmb call */
   API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rq);
   ctx->ipmb_cmd_rq = NULL;
   API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rs);
@@ -2105,8 +2104,6 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
 	 && fiid_obj_packet_valid(obj_cmd_rq)
          && fiid_obj_valid(obj_cmd_rs));
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
- 
   if (!ctx->io.outofband.last_received.tv_sec
       && !ctx->io.outofband.last_received.tv_usec)
     API_ERR (!(gettimeofday(&ctx->io.outofband.last_received, NULL) < 0));
@@ -2256,6 +2253,143 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
     }
   if (rq_seq)
     *rq_seq = ((*rq_seq) + 1) % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
+  return (retval);
+}
+
+int8_t 
+ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
+			       fiid_obj_t obj_cmd_rq,
+			       fiid_obj_t obj_cmd_rs)
+{
+  int retval = -1;
+  int ret;
+  unsigned int retransmission_count = 0;
+  uint8_t pkt[IPMI_MAX_PKT_LEN];
+  int32_t recv_len;
+  uint64_t cmd = 0;		/* used for debugging */
+  uint8_t rq_seq_orig;
+
+  assert(ctx
+	 && ctx->magic == IPMI_CTX_MAGIC
+         && ctx->type == IPMI_DEVICE_LAN_2_0
+	 && ctx->io.outofband.sockfd 
+	 && fiid_obj_valid(obj_cmd_rq)
+	 && fiid_obj_packet_valid(obj_cmd_rq)
+         && fiid_obj_valid(obj_cmd_rs));
+
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
+
+  /* for debugging */
+  ctx->ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
+  ctx->ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
+
+  /* ipmb response packet will use the request sequence number from
+   * the earlier packet.  Save it for verification.
+   */
+
+  rq_seq_orig = ctx->io.outofband.rq_seq;
+
+  if (_ipmi_cmd_send_ipmb (ctx,
+			   ctx->rs_addr,
+			   ctx->lun,
+			   ctx->net_fn,
+			   obj_cmd_rq) < 0)
+    goto cleanup;
+
+  while (1)
+    {
+      uint8_t payload_authenticated;
+      uint8_t payload_encrypted;
+
+      if (_session_timed_out(ctx))
+        {
+	  API_ERR_SET_ERRNUM (IPMI_ERR_SESSION_TIMEOUT);
+          retval = -1;
+          break;
+        }
+     
+      /* its ok to use the "request" net_fn, dump code doesn't care */
+      memset(pkt, '\0', IPMI_MAX_PKT_LEN);
+      if ((recv_len = _ipmi_lan_2_0_cmd_recv (ctx, 
+					      ctx->io.outofband.authentication_algorithm,
+					      ctx->io.outofband.integrity_algorithm,
+					      ctx->io.outofband.confidentiality_algorithm,
+					      ctx->io.outofband.integrity_key_ptr,
+					      ctx->io.outofband.integrity_key_len,
+					      ctx->io.outofband.confidentiality_key_ptr,
+					      ctx->io.outofband.confidentiality_key_len,
+                                              pkt,
+                                              IPMI_MAX_PKT_LEN,
+                                              retransmission_count,
+					      cmd, /* for debug dumping */
+					      ctx->net_fn, /* for debug dumping */
+                                              obj_cmd_rs)) < 0)
+        {
+          retval = -1;
+          break;
+        }
+
+      if (!recv_len)
+        {
+          retransmission_count++;
+          
+	  /* don't increment sequence numbers, will be done in _ipmi_cmd_send_ipmb */
+
+	  /* ipmb response packet will use the request sequence number from
+	   * the earlier packet.  Save it for verification.
+	   */
+
+	  rq_seq_orig = ctx->io.outofband.rq_seq;
+	  
+	  API_ERR_CLEANUP (!(_ipmi_cmd_send_ipmb (ctx,
+						  ctx->rs_addr,
+						  ctx->lun,
+						  ctx->net_fn,
+						  obj_cmd_rq) < 0));
+
+          continue;
+        }
+
+      /* else received a packet */
+
+      ipmi_lan_2_0_cmd_get_session_parameters (ctx,
+					       &payload_authenticated,
+					       &payload_encrypted);
+      
+      if ((ret = _ipmi_lan_2_0_cmd_wrapper_verify_packet (ctx,
+							  IPMI_PAYLOAD_TYPE_IPMI,
+							  NULL,
+							  &(ctx->io.outofband.session_sequence_number),
+							  ctx->io.outofband.managed_system_session_id,
+							  &rq_seq_orig,
+							  ctx->io.outofband.integrity_algorithm,
+							  ctx->io.outofband.integrity_key_ptr,
+							  ctx->io.outofband.integrity_key_len,
+							  strlen(ctx->io.outofband.password) ? ctx->io.outofband.password : NULL,
+							  strlen(ctx->io.outofband.password),
+							  
+							  obj_cmd_rs,
+							  pkt,
+							  recv_len)) < 0)
+	goto cleanup;
+      
+      if (!ret)
+	continue;
+
+      API_ERR_CLEANUP (!(gettimeofday(&(ctx->io.outofband.last_received), NULL) < 0));
+      retval = recv_len;
+      break;
+    }
+  
+ cleanup:
+  ctx->io.outofband.session_sequence_number++;
+  /* rq_seq already incremented via _ipmi_cmd_send_ipmb call */
+  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rq);
+  ctx->ipmb_cmd_rq = NULL;
+  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rs);
+  ctx->ipmb_cmd_rs = NULL;
+
   return (retval);
 }
 

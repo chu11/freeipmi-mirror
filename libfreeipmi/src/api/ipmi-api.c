@@ -859,7 +859,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                fiid_obj_t obj_cmd_rq, 
                fiid_obj_t obj_cmd_rs)
 {
-  int8_t rv = -1;
+  int8_t status = 0;
 
   /* achu:
    *
@@ -884,20 +884,16 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   ctx->lun = lun;
   ctx->net_fn = net_fn;
 
-  while (1)
-    {      
-      if (ctx->type == IPMI_DEVICE_LAN)
-        {
-	  if (ipmi_lan_cmd_wrapper_ipmb (ctx,
-					 obj_cmd_rq,
-					 obj_cmd_rs) < 0)
-	    goto cleanup;
-
-	  break;
-        }
-      else
-        API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE_CLEANUP(0);
-    }
+  if (ctx->type == IPMI_DEVICE_LAN)
+    status = ipmi_lan_cmd_wrapper_ipmb (ctx,
+					obj_cmd_rq,
+					obj_cmd_rs);
+  else if (ctx->type == IPMI_DEVICE_LAN_2_0)
+    status = ipmi_lan_2_0_cmd_wrapper_ipmb (ctx,
+					    obj_cmd_rq,
+					    obj_cmd_rs);
+  else
+    API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE(0);
                          
 #if 0
   uint8_t buf[IPMI_MAX_PKT_LEN];
@@ -1001,9 +997,8 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
 
 #endif
 
-  rv = 0;
- cleanup:
-  return (rv);
+  /* errnum set in ipmi_*_cmd functions */
+  return (status);
 }              
 
 int 

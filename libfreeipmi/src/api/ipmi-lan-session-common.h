@@ -63,6 +63,10 @@ int8_t ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                  fiid_obj_t obj_cmd_rq,
                                  fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
+				      fiid_obj_t obj_cmd_rq,
+				      fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_lan_2_0_open_session (ipmi_ctx_t ctx);
 
 int8_t ipmi_lan_2_0_close_session (ipmi_ctx_t ctx);
