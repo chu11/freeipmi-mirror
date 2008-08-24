@@ -543,6 +543,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
                       uint32_t flags)
 {
   struct ipmi_locate_info locate_info;
+  unsigned int seedp;
   uint32_t temp_flags = 0;
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
@@ -566,6 +567,10 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
   ctx->io.inband.ssif_ctx = NULL;
   ctx->io.inband.openipmi_ctx = NULL;
   ctx->io.inband.sunbmc_ctx = NULL;
+
+  /* Random number generation */
+  seedp = (unsigned int) clock () + (unsigned int) time (NULL);
+  srand (seedp);
 
   ctx->io.inband.rq_seq = (double)(IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand()/(RAND_MAX + 1.0));
 
@@ -777,8 +782,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
                         DEBUG_UTIL_HDR_BUFLEN);
 
           if (ctx->tmpl_ipmb_cmd_rq
-              && cmd == IPMI_CMD_SEND_MESSAGE
-              && ctx->net_fn == IPMI_NET_FN_APP_RQ)
+              && cmd == IPMI_CMD_SEND_MESSAGE)
             {
               ipmi_obj_dump_ipmb (STDERR_FILENO,
                                   NULL,
@@ -830,8 +834,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
                         DEBUG_UTIL_HDR_BUFLEN);
           
           if (ctx->tmpl_ipmb_cmd_rs
-              && cmd == IPMI_CMD_GET_MESSAGE
-              && ctx->net_fn == IPMI_NET_FN_APP_RS)
+              && cmd == IPMI_CMD_GET_MESSAGE)
             {
               ipmi_obj_dump_ipmb (STDERR_FILENO,
                                   NULL,
@@ -902,108 +905,6 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   else
     API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE(0);
                          
-#if 0
-  uint8_t buf[IPMI_MAX_PKT_LEN];
-
-  fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
-  fiid_obj_t obj_ipmb_msg_hdr_rs = NULL;
-  fiid_obj_t obj_ipmb_msg_rq = NULL;
-  fiid_obj_t obj_ipmb_msg_rs = NULL;
-  fiid_obj_t obj_ipmb_msg_trlr = NULL;
-  fiid_obj_t obj_send_cmd_rs = NULL;
-  fiid_obj_t obj_get_cmd_rs = NULL;
-
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rq, tmpl_ipmb_msg_hdr_rq);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rs, tmpl_ipmb_msg_hdr_rs);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_rq, tmpl_ipmb_msg);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_rs, tmpl_ipmb_msg);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_send_cmd_rs, tmpl_cmd_send_message_rs);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_get_cmd_rs, tmpl_cmd_get_message_rs);
-
-  /* for debugging */
-  ctx->tmpl_ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
-  ctx->tmpl_ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
-
-      uint8_t rq_seq_orig;
-      int32_t len;
-
-      rq_seq_orig = ctx->io.outofband.rq_seq;
-      
-      API_ERR_CLEANUP (fill_ipmb_msg_hdr (rs_addr,
-                                          ctx->net_fn,
-                                          ctx->lun,
-                                          IPMI_SLAVE_ADDRESS_BMC,
-                                          IPMI_BMC_IPMB_LUN_SMS_MSG_LUN,
-                                          ctx->io.outofband.rq_seq,
-                                          obj_ipmb_msg_hdr_rq) != -1);
-  
-      API_ERR_CLEANUP (assemble_ipmi_ipmb_msg (obj_ipmb_msg_hdr_rq,
-                                               obj_cmd_rq,
-                                               obj_ipmb_msg_rq) != -1);
-
-      memset(buf, '\0', IPMI_MAX_PKT_LEN);
-      API_FIID_OBJ_GET_ALL_LEN_CLEANUP (len, 
-                                        obj_ipmb_msg_rq,
-                                        buf,
-                                        IPMI_MAX_PKT_LEN);
-  
-      if (ipmi_cmd_send_message (ctx,
-                                 IPMI_CHANNEL_NUMBER_PRIMARY_IPMB,
-                                 IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
-                                 IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
-                                 IPMI_SEND_MESSAGE_TRACKING_OPERATION_TRACKING_REQUEST,
-                                 buf,
-                                 len,
-                                 obj_send_cmd_rs) < 0)
-        {
-          API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_send_cmd_rs);
-          goto cleanup;
-        }
-      
-      /* reset to original, would have been changed in send_message call */
-      ctx->lun = lun;
-      ctx->net_fn = net_fn;
-
-      if (ipmi_cmd_get_message (ctx, obj_get_cmd_rs) < 0)
-        {
-          API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_send_cmd_rs);
-          goto cleanup;
-        }
-      
-      API_FIID_OBJ_GET_DATA_LEN_CLEANUP (len,
-                                         obj_get_cmd_rs,
-                                         "message_data",
-                                         buf,
-                                         IPMI_MAX_PKT_LEN);
-      
-      API_FIID_OBJ_SET_ALL_CLEANUP (obj_ipmb_msg_rs,
-                                    buf,
-                                    len);
-      
-      API_ERR_CLEANUP (unassemble_ipmi_ipmb_msg (obj_ipmb_msg_rs,
-                                                 obj_ipmb_msg_hdr_rs,
-                                                 obj_cmd_rs,
-                                                 obj_ipmb_msg_trlr) != -1); 
-      
-      /* TODO: check rq_seq, deal with it appropriately */
-      /* XXX - should check checksusms and stuff? */
-      /* XXX - deal w/ retries if checksusm/rq-seq wrong and stuff */
-
-  API_FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rq);
-  API_FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rs);
-  API_FIID_OBJ_DESTROY(obj_ipmb_msg_rq);
-  API_FIID_OBJ_DESTROY(obj_ipmb_msg_rs);
-  API_FIID_OBJ_DESTROY(obj_ipmb_msg_trlr);
-  API_FIID_OBJ_DESTROY(obj_send_cmd_rs);
-  API_FIID_OBJ_DESTROY(obj_get_cmd_rs);
-  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
-  ctx->tmpl_ipmb_cmd_rq = NULL;
-  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
-  ctx->tmpl_ipmb_cmd_rs = NULL;
-
-#endif
-
   /* errnum set in ipmi_*_cmd functions */
   return (status);
 }              

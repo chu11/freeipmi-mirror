@@ -238,6 +238,13 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG_STR);
                 }
               break;
+	    case IPMI_CMD_GET_MESSAGE:
+	      switch (comp_code)
+		{
+		case IPMI_COMP_CODE_DATA_NOT_AVAILABLE:
+		  SNPRINTF_RETURN (IPMI_COMP_CODE_DATA_NOT_AVAILABLE_STR);
+		}
+	      break;
             case IPMI_CMD_GET_SESSION_CHALLENGE:
               switch (comp_code)
                 {

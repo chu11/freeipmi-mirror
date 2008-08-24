@@ -180,6 +180,12 @@ extern "C" {
    * BMC Device and Messaging Commands
    */
 
+/* IPMI_CMD_GET_MESSAGE */
+
+#define IPMI_COMP_CODE_DATA_NOT_AVAILABLE                                 0x80
+#define IPMI_COMP_CODE_DATA_NOT_AVAILABLE_STR \
+"data not available (queue/buffer empty)"
+
 /* IPMI_CMD_GET_SESSION_CHALLENGE */
 
 #define IPMI_COMP_CODE_INVALID_USERNAME                                   0x81

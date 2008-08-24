@@ -284,7 +284,8 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
       if (!ret)
 	continue;
 
-      API_ERR_CLEANUP (!((ret = ipmi_ipmb_check_checksum (obj_ipmb_msg_hdr_rs,
+      API_ERR_CLEANUP (!((ret = ipmi_ipmb_check_checksum (IPMI_SLAVE_ADDRESS_BMC,
+							  obj_ipmb_msg_hdr_rs,
 							  obj_cmd_rs,
 							  obj_ipmb_msg_trlr)) < 0));
 

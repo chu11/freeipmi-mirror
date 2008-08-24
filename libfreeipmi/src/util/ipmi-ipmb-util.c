@@ -60,7 +60,8 @@ ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq)
 }
 
 int8_t
-ipmi_ipmb_check_checksum (fiid_obj_t obj_ipmb_msg_hdr,
+ipmi_ipmb_check_checksum (uint8_t rq_addr,
+			  fiid_obj_t obj_ipmb_msg_hdr,
 			  fiid_obj_t obj_cmd,
 			  fiid_obj_t obj_ipmb_msg_trlr)
 {
@@ -90,9 +91,17 @@ ipmi_ipmb_check_checksum (fiid_obj_t obj_ipmb_msg_hdr,
 
   FIID_OBJ_GET (obj_ipmb_msg_hdr, "checksum1", &val);
   checksum1_recv = val;
-  ERR ((buf = (uint8_t *)alloca(obj_ipmb_msg_hdr_len)));
-  FIID_OBJ_GET_BLOCK_LEN(len, obj_ipmb_msg_hdr, "rq_addr", "net_fn", buf, obj_ipmb_msg_hdr_len);
-  checksum1_calc = ipmi_checksum(buf, len);
+
+  ERR ((buf = (uint8_t *)alloca(obj_ipmb_msg_hdr_len + 1)));
+
+  /* achu: The rq_addr isn't in the ipmb_msg_hdr response, but it's
+   * part of the calculated checksum stored in the header.  If you're
+   * thinking that's dumb.  I think so too.
+   */
+  buf[0] = rq_addr;
+  
+  FIID_OBJ_GET_BLOCK_LEN(len, obj_ipmb_msg_hdr, "rq_lun", "net_fn", buf + 1, obj_ipmb_msg_hdr_len);
+  checksum1_calc = ipmi_checksum(buf, len + 1);
 
   if (checksum1_recv != checksum1_calc)
     return (0);
@@ -110,6 +119,7 @@ ipmi_ipmb_check_checksum (fiid_obj_t obj_ipmb_msg_hdr,
   len += obj_len;
 
   checksum2_calc = ipmi_checksum(buf, len);
+
   if (checksum2_recv != checksum2_calc)
     return (0);
 

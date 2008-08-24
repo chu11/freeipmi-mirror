@@ -14,6 +14,10 @@
 	libfreeipmi/include/freeipmi/api/ipmi-api.h (ipmi_cmd_ipmb): New
 	function.
 
+	* libfreeipmi/include/freeipmi/util/ipmi-error-util.c,
+	libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h: Support
+	error codes for get message command.
+
 	* libfreeipmi/src/api/ipmi-kcs-interface-api.h,
 	libfreeipmi/src/api/ipmi-kcs-interface-api.c
 	(ipmi_kcs_cmd_api_ipmb): New function.

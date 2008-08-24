@@ -59,7 +59,6 @@ fiid_template_t tmpl_ipmb_msg_hdr_rq =
 
 fiid_template_t tmpl_ipmb_msg_hdr_rs =
   {
-    {8, "rq_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2, "rq_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "checksum1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

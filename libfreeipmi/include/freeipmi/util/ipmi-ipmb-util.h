@@ -28,7 +28,8 @@ extern "C" {
 
 int8_t ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq);
 
-int8_t ipmi_ipmb_check_checksum (fiid_obj_t obj_ipmb_msg_hdr,
+int8_t ipmi_ipmb_check_checksum (uint8_t rq_addr,
+				 fiid_obj_t obj_ipmb_msg_hdr,
 				 fiid_obj_t obj_cmd,
 				 fiid_obj_t obj_ipmb_msg_trlr);
  
