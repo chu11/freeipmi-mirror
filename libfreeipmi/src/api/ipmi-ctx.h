@@ -39,8 +39,8 @@ struct ipmi_ctx
   uint8_t            lun;
   uint8_t            net_fn;
 
-  fiid_field_t      *ipmb_cmd_rq;
-  fiid_field_t      *ipmb_cmd_rs;
+  fiid_field_t      *tmpl_ipmb_cmd_rq;
+  fiid_field_t      *tmpl_ipmb_cmd_rs;
   
   ipmi_errnum_type_t errnum;
 
@@ -52,6 +52,8 @@ struct ipmi_ctx
       ipmi_ssif_ctx_t         ssif_ctx;
       ipmi_openipmi_ctx_t     openipmi_ctx;
       ipmi_sunbmc_ctx_t       sunbmc_ctx;
+
+      uint8_t                 rq_seq;
 
       struct
       {

@@ -91,6 +91,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-system-software-id-spec.h>
 #include <freeipmi/util/ipmi-cipher-suite-util.h>
 #include <freeipmi/util/ipmi-error-util.h>
+#include <freeipmi/util/ipmi-ipmb-util.h>
 #include <freeipmi/util/ipmi-lan-util.h>
 #include <freeipmi/util/ipmi-rmcpplus-util.h>
 #include <freeipmi/util/ipmi-sensor-and-event-code-tables-util.h>

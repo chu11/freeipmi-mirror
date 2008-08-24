@@ -115,22 +115,23 @@ static char *ipmi_errmsg[] =
     "device not supported",	                                      /* 17 */
     "device not found",                                               /* 18 */
     "driver timeout",                                                 /* 19 */
-    "command invalid for selected interface",                         /* 20 */
-    "bad completion code: node busy/out of resources",                /* 21 */
-    "bad completion code: command invalid/not supported",             /* 22 */
-    "bad completion code: request data/parameter invalid", 	      /* 23 */
-    "bad completion code",	                                      /* 24 */
-    "bad rmcpplus status code",                                       /* 25 */
-    "BMC busy",			                                      /* 26 */
-    "out of memory",		                                      /* 27 */
-    "invalid hostname",                                               /* 28 */
-    "invalid parameters",	                                      /* 29 */
-    "driver path required",                                           /* 30 */
-    "internal IPMI error",	                                      /* 31 */
-    "internal system error",	                                      /* 32 */
-    "internal library error",	                                      /* 33 */
-    "internal error",		                                      /* 34 */
-    "errnum out of range",	                                      /* 35 */
+    "message timeout",		                                      /* 20 */
+    "command invalid for selected interface",                         /* 21 */
+    "bad completion code: node busy/out of resources",                /* 22 */
+    "bad completion code: command invalid/not supported",             /* 23 */
+    "bad completion code: request data/parameter invalid", 	      /* 24 */
+    "bad completion code",	                                      /* 25 */
+    "bad rmcpplus status code",                                       /* 26 */
+    "BMC busy",			                                      /* 27 */
+    "out of memory",		                                      /* 28 */
+    "invalid hostname",                                               /* 29 */
+    "invalid parameters",	                                      /* 30 */
+    "driver path required",                                           /* 31 */
+    "internal IPMI error",	                                      /* 32 */
+    "internal system error",	                                      /* 33 */
+    "internal library error",	                                      /* 34 */
+    "internal error",		                                      /* 35 */
+    "errnum out of range",	                                      /* 36 */
   };
 
 static void
@@ -566,6 +567,8 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
   ctx->io.inband.openipmi_ctx = NULL;
   ctx->io.inband.sunbmc_ctx = NULL;
 
+  ctx->io.inband.rq_seq = (double)(IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand()/(RAND_MAX + 1.0));
+
   switch (driver_type)
     {
     case IPMI_DEVICE_KCS:
@@ -773,7 +776,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
                         hdrbuf,
                         DEBUG_UTIL_HDR_BUFLEN);
 
-          if (ctx->ipmb_cmd_rq
+          if (ctx->tmpl_ipmb_cmd_rq
               && cmd == IPMI_CMD_SEND_MESSAGE
               && ctx->net_fn == IPMI_NET_FN_APP_RQ)
             {
@@ -783,7 +786,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
                                   NULL,
                                   obj_cmd_rq,
                                   tmpl_ipmb_msg_hdr_rq,
-                                  ctx->ipmb_cmd_rq);
+                                  ctx->tmpl_ipmb_cmd_rq);
             }
           else
             ipmi_obj_dump (STDERR_FILENO, 
@@ -826,7 +829,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
                         hdrbuf,
                         DEBUG_UTIL_HDR_BUFLEN);
           
-          if (ctx->ipmb_cmd_rq
+          if (ctx->tmpl_ipmb_cmd_rs
               && cmd == IPMI_CMD_GET_MESSAGE
               && ctx->net_fn == IPMI_NET_FN_APP_RS)
             {
@@ -836,7 +839,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
                                   NULL,
                                   obj_cmd_rs,
                                   tmpl_ipmb_msg_hdr_rs,
-                                  ctx->ipmb_cmd_rs);
+                                  ctx->tmpl_ipmb_cmd_rs);
             }
           else
             ipmi_obj_dump (STDERR_FILENO, 
@@ -892,6 +895,10 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
     status = ipmi_lan_2_0_cmd_wrapper_ipmb (ctx,
 					    obj_cmd_rq,
 					    obj_cmd_rs);
+  else if (ctx->type == IPMI_DEVICE_KCS)
+    status = ipmi_kcs_cmd_api_ipmb (ctx,
+				    obj_cmd_rq,
+				    obj_cmd_rs);
   else
     API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE(0);
                          
@@ -915,8 +922,8 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   API_FIID_OBJ_CREATE_CLEANUP(obj_get_cmd_rs, tmpl_cmd_get_message_rs);
 
   /* for debugging */
-  ctx->ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
-  ctx->ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
+  ctx->tmpl_ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
+  ctx->tmpl_ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
 
       uint8_t rq_seq_orig;
       int32_t len;
@@ -990,10 +997,10 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   API_FIID_OBJ_DESTROY(obj_ipmb_msg_trlr);
   API_FIID_OBJ_DESTROY(obj_send_cmd_rs);
   API_FIID_OBJ_DESTROY(obj_get_cmd_rs);
-  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rq);
-  ctx->ipmb_cmd_rq = NULL;
-  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rs);
-  ctx->ipmb_cmd_rs = NULL;
+  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
+  ctx->tmpl_ipmb_cmd_rq = NULL;
+  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
+  ctx->tmpl_ipmb_cmd_rs = NULL;
 
 #endif
 

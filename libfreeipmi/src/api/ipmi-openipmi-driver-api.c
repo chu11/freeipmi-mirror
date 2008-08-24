@@ -56,6 +56,8 @@ ipmi_openipmi_cmd_api (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
 
+  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_OPENIPMI);
+
   API_ERR_OPENIPMI (!(ipmi_openipmi_cmd (ctx->io.inband.openipmi_ctx,
 					 ctx->lun,
 					 ctx->net_fn,
@@ -83,6 +85,8 @@ ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx,
                       && buf_rq_len > 0
                       && buf_rs 
                       && buf_rs_len > 0);
+
+  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_OPENIPMI);
 
   API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_openipmi_raw);
   API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_openipmi_raw);

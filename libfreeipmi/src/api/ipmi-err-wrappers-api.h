@@ -299,6 +299,26 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define API_ERR_MESSAGE_TIMEOUT(expr)                                   \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      ctx->errnum = IPMI_ERR_MESSAGE_TIMEOUT;                           \
+      __API_TRACE;                                                      \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define API_ERR_MESSAGE_TIMEOUT_CLEANUP(expr)                           \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      ctx->errnum = IPMI_ERR_MESSAGE_TIMEOUT;                           \
+      __API_TRACE;                                                      \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
 #define API_ERR_DRIVER_PATH_REQUIRED(expr)                              \
 do {                                                                    \
   if (!(expr))                                                          \

@@ -11,6 +11,7 @@ libutil_la_CPPFLAGS = \
 libutil_la_SOURCES = \
 	ipmi-cipher-suite-util.c \
 	ipmi-error-util.c \
+	ipmi-ipmb-util.c \
 	ipmi-lan-util.c \
 	ipmi-sensor-and-event-code-tables-util.c \
 	ipmi-sensor-util.c \

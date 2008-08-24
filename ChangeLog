@@ -5,11 +5,23 @@
 	libfreeipmi/src/api/ipmi-event-cmds.c,
 	libfreeipmi/include/freeipmi/api/ipmi-event-cmds-api.h: New files.
 
+	* libfreeipmi/include/freeipmi/util/ipmi-ipmb-util.h,
+	libfreeipmi/src/util/ipmi-ipmb-util.c: New files.
+
 	* libfreeipmi/include/freeipmi/freeipmi.h: Update for new files.
 
 	* libfreeipmi/src/api/ipmi-api.c,
 	libfreeipmi/include/freeipmi/api/ipmi-api.h (ipmi_cmd_ipmb): New
 	function.
+
+	* libfreeipmi/src/api/ipmi-kcs-interface-api.h,
+	libfreeipmi/src/api/ipmi-kcs-interface-api.c
+	(ipmi_kcs_cmd_api_ipmb): New function.
+
+	* libfreeipmi/src/api/ipmi-lan-session-common.h,
+	libfreeipmi/src/api/ipmi-lan-session-common.c
+	(ipmi_lan_cmd_wrapper_ipmb, ipmi_lan_2_0_cmd_wrapper_ipmb): New
+	functions.
 
 	* libfreeipmi/src/debug/ipmi-debug.c,
 	libfreeipmi/src/debug/ipmi-debug-lan.c,
@@ -20,9 +32,6 @@
 
 	* libfreeipmi/src/api/ipmi-api.c, libfreeipmi/src/api/ipmi-ctx.h:
 	Support ipmb debugging.
-
-	* libfreeipmi/src/api/ipmi-lan-session-common.c: Support ipmb
-	dumping.  Support ipmb receiving.
 
 	* ipmi-sensors/: Support ipmb bridging.  Support --bridge-sensors
 	option.  Change default privilege to operator.  Output "Unknown

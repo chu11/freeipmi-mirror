@@ -231,7 +231,7 @@ _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
                     hdrbuf,
                     DEBUG_UTIL_HDR_BUFLEN);
 
-      if (ctx->ipmb_cmd_rq)
+      if (ctx->tmpl_ipmb_cmd_rq)
         ipmi_dump_lan_packet_ipmb (STDERR_FILENO,
                                    ctx->io.outofband.hostname,
                                    hdrbuf,
@@ -241,7 +241,7 @@ _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
                                    tmpl_lan_msg_hdr_rq,
                                    tmpl_cmd,
                                    tmpl_ipmb_msg_hdr_rq,
-                                   ctx->ipmb_cmd_rq);
+                                   ctx->tmpl_ipmb_cmd_rq);
       else
         ipmi_dump_lan_packet (STDERR_FILENO,
                               ctx->io.outofband.hostname,
@@ -994,8 +994,8 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
     API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
 
   /* for debugging */
-  ctx->ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
-  ctx->ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
+  ctx->tmpl_ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
+  ctx->tmpl_ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
 
   /* ipmb response packet will use the request sequence number from
    * the earlier packet.  Save it for verification.
@@ -1085,10 +1085,10 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
  cleanup:
   ctx->io.outofband.session_sequence_number++;
   /* rq_seq already incremented via _ipmi_cmd_send_ipmb call */
-  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rq);
-  ctx->ipmb_cmd_rq = NULL;
-  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rs);
-  ctx->ipmb_cmd_rs = NULL;
+  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
+  ctx->tmpl_ipmb_cmd_rq = NULL;
+  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
+  ctx->tmpl_ipmb_cmd_rs = NULL;
 
   return (retval);
 }
@@ -1503,7 +1503,7 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
                         hdrbuf,
                         DEBUG_UTIL_HDR_BUFLEN);
           
-          if (ctx->ipmb_cmd_rq)
+          if (ctx->tmpl_ipmb_cmd_rq)
             ipmi_dump_rmcpplus_packet_ipmb (STDERR_FILENO,
                                             ctx->io.outofband.hostname,
                                             hdrbuf,
@@ -1520,7 +1520,7 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
                                             tmpl_lan_msg_hdr_rs,
                                             tmpl_cmd,
                                             tmpl_ipmb_msg_hdr_rq,
-                                            ctx->ipmb_cmd_rq);
+                                            ctx->tmpl_ipmb_cmd_rq);
           else
             ipmi_dump_rmcpplus_packet (STDERR_FILENO,
                                        ctx->io.outofband.hostname,
@@ -2281,8 +2281,8 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
     API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
 
   /* for debugging */
-  ctx->ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
-  ctx->ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
+  ctx->tmpl_ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
+  ctx->tmpl_ipmb_cmd_rs = fiid_obj_template(obj_cmd_rs);
 
   /* ipmb response packet will use the request sequence number from
    * the earlier packet.  Save it for verification.
@@ -2385,10 +2385,10 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
  cleanup:
   ctx->io.outofband.session_sequence_number++;
   /* rq_seq already incremented via _ipmi_cmd_send_ipmb call */
-  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rq);
-  ctx->ipmb_cmd_rq = NULL;
-  API_FIID_TEMPLATE_FREE (ctx->ipmb_cmd_rs);
-  ctx->ipmb_cmd_rs = NULL;
+  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
+  ctx->tmpl_ipmb_cmd_rq = NULL;
+  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
+  ctx->tmpl_ipmb_cmd_rs = NULL;
 
   return (retval);
 }
