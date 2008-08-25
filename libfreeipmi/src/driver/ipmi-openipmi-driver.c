@@ -497,12 +497,12 @@ ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
   
   OPENIPMI_ERR_IO_NOT_INITIALIZED(ctx->io_init);
 
-  if (_openipmi_write_ipmi(ctx,
-			   rs_addr,
-			   lun,
-			   net_fn,
-			   obj_cmd_rq,
-			   1) < 0)
+  if (_openipmi_write(ctx,
+		      rs_addr,
+		      lun,
+		      net_fn,
+		      obj_cmd_rq,
+		      1) < 0)
     return (-1);
 
   if (_openipmi_read(ctx,
