@@ -44,7 +44,6 @@ ipmi-sensors-config
 ipmb
 ----
 ipmi 2.0 bridging - untested
-ipmi 2.0 - didn't break it
 openipmi ipmb - untested
 
 libs
