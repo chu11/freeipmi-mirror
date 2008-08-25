@@ -1,4 +1,8 @@
 2008-08-25 Albert Chu <chu11@llnl.gov>
+
+	* tagged ipmi_chassis_boot_flags_valid_remove_pre
+
+2008-08-25 Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-chassis-config/: Remove ipmi chassis boot flags workaround.
 
