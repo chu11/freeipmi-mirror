@@ -31,7 +31,6 @@
 #include "ipmi-chassis-config.h"
 #include "ipmi-chassis-config-sections.h"
 #include "ipmi-chassis-config-boot-flags.h"
-#include "ipmi-chassis-config-boot-flags-valid-bit-clearing.h"
 #include "ipmi-chassis-config-front-panel-buttons.h"
 #include "ipmi-chassis-config-power-conf.h"
 
@@ -55,11 +54,6 @@ ipmi_chassis_config_sections_create (ipmi_chassis_config_state_data_t *state_dat
     goto cleanup;
 
   if (!(section = ipmi_chassis_config_boot_flags_get (state_data)))
-    goto cleanup;
-  if (config_section_append (state_data->pstate, &sections, section) < 0)
-    goto cleanup;
-
-  if (!(section = ipmi_chassis_config_boot_flags_valid_bit_clearing_get (state_data)))
     goto cleanup;
   if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;

@@ -2,6 +2,16 @@
 
 	* tagged ipmi_chassis_boot_flags_valid_remove_pre
 
+	* ipmi-chassis-config/: Do not allow configuration of
+	boot_flags_valid and its bit clearing.  Always set
+	boot_flags_valid to 1 (i.e. "Yes").
+
+	* ipmi-chassis-config/src/ipmi-chassis-config-boot-flags-valid-bit-clearing.h,
+	ipmi-chassis-config/src/ipmi-chassis-config-boot-flags-valid-bit-clearing.c:
+	Removed files.
+
+	* tagged ipmi_chassis_boot_flags_valid_remove_post
+
 2008-08-25 Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-chassis-config/: Remove ipmi chassis boot flags workaround.

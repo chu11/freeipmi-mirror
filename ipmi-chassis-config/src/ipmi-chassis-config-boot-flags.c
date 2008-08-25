@@ -38,7 +38,6 @@
 /* convenience struct */
 struct boot_flags_data
 {
-  uint8_t boot_flags_valid;
   uint8_t boot_flags_persistent;
   uint8_t bios_boot_type;
   uint8_t cmos_clear;
@@ -83,9 +82,6 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-
-  _FIID_OBJ_GET (obj_cmd_rs, "boot_flags_valid", &val);
-  data->boot_flags_valid = val;
 
   _FIID_OBJ_GET (obj_cmd_rs, "boot_flags_persistent", &val);
   data->boot_flags_persistent = val;
@@ -150,10 +146,17 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
 
+  /* achu (workaround)
+   *
+   * Some motherboards seem to require that boot_flags_valid always be "Yes".
+   * So we'll enforce it.
+   *
+   */
+
   if (ipmi_cmd_set_system_boot_options_boot_flags (state_data->ipmi_ctx, 
                                                    data->bios_boot_type,
                                                    data->boot_flags_persistent,
-                                                   data->boot_flags_valid,
+                                                   IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_VALID,
                                                    data->lock_out_reset_button,
                                                    data->screen_blank,
                                                    data->boot_device,
@@ -183,46 +186,6 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
  cleanup:
   _FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
-}
-
-static config_err_t
-boot_flags_valid_checkout (const char *section_name,
-                           struct config_keyvalue *kv,
-                           void *arg)
-{
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
-  struct boot_flags_data data;
-  config_err_t ret;
-
-  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output(state_data->pstate,
-                                            kv,
-                                            data.boot_flags_valid ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-  
-  return CONFIG_ERR_SUCCESS;
-}
-
-static config_err_t
-boot_flags_valid_commit (const char *section_name,
-                         const struct config_keyvalue *kv,
-                         void *arg)
-{
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
-  struct boot_flags_data data;
-  config_err_t ret;
-
-  if ((ret = _get_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  data.boot_flags_valid = same (kv->value_input, "yes");
-
-  if ((ret = _set_boot_flags(state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return CONFIG_ERR_SUCCESS;
 }
 
 static config_err_t
@@ -793,9 +756,6 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
     "chassis boot behavior.  Please note that some fields may apply to "
     "all future boots while some may only apply to the next system boot."
     "\n"
-    "\"Boot_Flags_Valid\" should be set to \"Yes\" to inform the BIOS to "
-    "use the configured settings."
-    "\n"
     "\"Boot_Flags_Persistent\" determines if flags apply to the next boot only "
     "or all future boots."
     "\n"
@@ -812,16 +772,6 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
                                          0,
                                          NULL,
                                          chassis_boot_flags_post)))
-    goto cleanup;
-
-  if (config_section_add_key (state_data->pstate,
-                              section,
-                              "Boot_Flags_Valid",
-                              "Possible values: Yes/No",
-                              0,
-                              boot_flags_valid_checkout,
-                              boot_flags_valid_commit,
-                              config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
