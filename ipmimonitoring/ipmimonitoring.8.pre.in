@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.39 2008-07-14 01:22:41 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.40 2008-08-25 17:26:23 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -42,11 +42,18 @@ sensor readings into NOMINAL, WARNING, or CRITICAL states, it makes
 monitoring easier across large numbers of nodes.  For more general
 sensor reading use, it is recommended that users use
 .B ipmi-sensors(8).
+
+Some sensors may not be output by default.  Those sensors may not be
+readable or interpretable for a number of reasons.  The
+\fB\-\-verbose\fR may be used to see what sensors cannot be read or
+interpreted.  Please see KNOWN ISSUES below for interpretation rule
+issues.
+
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
 #include <@top_srcdir@/common/man/manpage-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/common/man/manpage-common-outofband-username-operator.man>
 #include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
 #include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
 #include <@top_srcdir@/common/man/manpage-common-outofband-session-timeout.man>
@@ -54,7 +61,7 @@ sensor reading use, it is recommended that users use
 #include <@top_srcdir@/common/man/manpage-common-authentication-type.man>
 #include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-main.man>
 #include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/man/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/man/manpage-common-privilege-level-operator.man>
 #include <@top_srcdir@/common/man/manpage-common-config-file.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/man/manpage-common-debug.man>
@@ -84,6 +91,16 @@ be separated by commas or spaces.
 \fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"
 Specify sensors to monitor by record id.  Multiple record ids can be
 separated by commas or spaces.
+.TP
+\fB\-b\fR, \fB\-\-bridge\-sensors
+By default,
+.B ipmimonitoring
+will not read sensors from non-BMC owners.  Setting this option
+will make
+.B ipmimonitoring
+attempt to bridge sensor commands to alternate owners (experimental).
+Bridging may not work on some interfaces/driver types.
+
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
@@ -137,6 +154,11 @@ does not output in
 .B ipmimonitoring.
 If additional sensor interpretation rules are needed,
 please contact the FreeIPMI maintainers.
+.LP
+Some sensors may be output because the owner of the sensor is not the
+BMC.  To attempt to bridge sensors and access sensors not on the BMC,
+users may wish to try the \fB\-b\fR or \fB\-\-bridge\-sensors\fR
+options.
 .LP
 .if @WITH_DEBUG@ \{
 This version of ipmimonitoring was compiled with debugging.  When compiled

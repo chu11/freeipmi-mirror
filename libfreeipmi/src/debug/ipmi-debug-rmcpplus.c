@@ -29,7 +29,9 @@
 #include <errno.h>
 
 #include "freeipmi/debug/ipmi-debug.h"
+#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/cmds/ipmi-sol-cmds.h"
+#include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
@@ -149,15 +151,23 @@ _dump_rmcpplus_payload_data(int fd,
                             const char *prefix, 
                             const char *msg_hdr,
                             const char *cmd_hdr,
+                            const char *ipmb_msg_hdr,
+                            const char *ipmb_cmd_hdr,
+                            const char *ipmb_msg_trlr_hdr,
                             const char *trailer_hdr,
                             uint8_t payload_type,
                             fiid_template_t tmpl_lan_msg_hdr,
                             fiid_template_t tmpl_cmd,
+                            fiid_template_t tmpl_ipmb_msg_hdr,
+                            fiid_template_t tmpl_ipmb_cmd,
                             uint8_t *pkt,
                             uint32_t ipmi_payload_len)
 {
   fiid_obj_t obj_lan_msg_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
+  fiid_obj_t obj_ipmb_msg_hdr = NULL;
+  fiid_obj_t obj_ipmb_cmd = NULL;
+  fiid_obj_t obj_ipmb_msg_trlr = NULL;
   fiid_obj_t obj_lan_msg_trlr = NULL;
   int32_t len, obj_cmd_len, obj_lan_msg_trlr_len;
   unsigned int indx = 0;
@@ -210,32 +220,123 @@ _dump_rmcpplus_payload_data(int fd,
         obj_cmd_len = (ipmi_payload_len - indx) - obj_lan_msg_trlr_len;
       else
         obj_cmd_len = 0;
+
+      if (obj_cmd_len)
+        {
+          uint8_t ipmb_buf[IPMI_DEBUG_MAX_PKT_LEN];
+          int32_t ipmb_buf_len;
+
+          FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_cmd);
+          
+          FIID_OBJ_CLEAR_CLEANUP (obj_cmd);
+          FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
+                                        obj_cmd,
+                                        pkt + indx,
+                                        obj_cmd_len);
+          indx += len;
+
+          if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd)
+            {
+              memset(ipmb_buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
+              FIID_OBJ_GET_DATA_LEN_CLEANUP (ipmb_buf_len,
+                                             obj_cmd,
+                                             "message_data",
+                                             ipmb_buf,
+                                             IPMI_DEBUG_MAX_PKT_LEN);
+              
+              FIID_OBJ_CLEAR_FIELD_CLEANUP (obj_cmd, "message_data");
+            }
+
+          ERR_CLEANUP (!(ipmi_obj_dump (fd, 
+                                        prefix, 
+                                        cmd_hdr, 
+                                        NULL, 
+                                        obj_cmd) < 0));
+          
+          if (ipmi_payload_len <= indx)
+            {
+              rv = 0;
+              goto cleanup;
+            }
+
+          if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
+            {
+              int32_t obj_ipmb_msg_trlr_len;
+              int32_t obj_ipmb_cmd_len;
+              int32_t ipmb_hdr_len;
+              int32_t ipmb_cmd_len;
+              
+              FIID_TEMPLATE_LEN_BYTES (obj_ipmb_msg_trlr_len, tmpl_ipmb_msg_trlr);
+              
+              FIID_OBJ_SET_ALL_LEN_CLEANUP (ipmb_hdr_len,
+                                            obj_ipmb_msg_hdr,
+                                            ipmb_buf,
+                                            ipmb_buf_len);
+              
+              ERR_CLEANUP (!(ipmi_obj_dump(fd,
+                                           prefix,
+                                           ipmb_msg_hdr,
+                                           NULL,
+                                           obj_ipmb_msg_hdr) < 0));
+              
+              if ((ipmb_buf_len - ipmb_hdr_len) >= obj_ipmb_msg_trlr_len)
+                obj_ipmb_cmd_len = (ipmb_buf_len - ipmb_hdr_len) - obj_ipmb_msg_trlr_len;
+              else if ((ipmb_buf_len - ipmb_hdr_len) < obj_ipmb_msg_trlr_len)
+                obj_ipmb_cmd_len = 0;
+              
+              if (obj_ipmb_cmd_len)
+                {
+                  FIID_OBJ_SET_ALL_LEN_CLEANUP (ipmb_cmd_len,
+                                                obj_ipmb_cmd,
+                                                ipmb_buf + ipmb_hdr_len,
+                                                obj_ipmb_cmd_len);
+                  
+                  ERR_CLEANUP (!(ipmi_obj_dump(fd,
+                                               prefix,
+                                               ipmb_cmd_hdr,
+                                               NULL,
+                                               obj_ipmb_cmd) < 0));
+                }
+              
+              FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
+                                            obj_ipmb_msg_trlr,
+                                            ipmb_buf + ipmb_hdr_len + ipmb_cmd_len,
+                                            (ipmb_buf_len - ipmb_hdr_len - ipmb_cmd_len));
+              
+              ERR_CLEANUP (!(ipmi_obj_dump(fd,
+                                           prefix,
+                                           ipmb_msg_trlr_hdr,
+                                           NULL,
+                                           obj_ipmb_msg_trlr) < 0));
+            }
+        }
     }
   else /* payload_type == IPMI_PAYLOAD_TYPE_SOL */
-    obj_cmd_len = ipmi_payload_len;
-
-  /* Dump command data */
-  if (obj_cmd_len)
     {
-      FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_cmd);
-      
-      FIID_OBJ_CLEAR_CLEANUP (obj_cmd);
-      FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
-				    obj_cmd,
-				    pkt + indx,
-				    obj_cmd_len);
-      indx += len;
-      ERR_CLEANUP (!(ipmi_obj_dump (fd, 
-                                    prefix, 
-                                    cmd_hdr, 
-                                    NULL, 
-                                    obj_cmd) < 0));
-      
-      if (ipmi_payload_len <= indx)
-	{
-	  rv = 0;
-	  goto cleanup;
-	}
+      obj_cmd_len = ipmi_payload_len;
+
+      if (obj_cmd_len)
+        {
+          FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_cmd);
+          
+          FIID_OBJ_CLEAR_CLEANUP (obj_cmd);
+          FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
+                                        obj_cmd,
+                                        pkt + indx,
+                                        obj_cmd_len);
+          indx += len;
+          ERR_CLEANUP (!(ipmi_obj_dump (fd, 
+                                        prefix, 
+                                        cmd_hdr, 
+                                        NULL, 
+                                        obj_cmd) < 0));
+          
+          if (ipmi_payload_len <= indx)
+            {
+              rv = 0;
+              goto cleanup;
+            }
+        }
     }
   
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
@@ -259,6 +360,9 @@ _dump_rmcpplus_payload_data(int fd,
  cleanup:
   FIID_OBJ_DESTROY(obj_lan_msg_hdr);
   FIID_OBJ_DESTROY(obj_cmd);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_hdr);
+  FIID_OBJ_DESTROY(obj_ipmb_cmd);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_trlr);
   FIID_OBJ_DESTROY(obj_lan_msg_trlr);
   return (rv);
 }
@@ -269,10 +373,15 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
                                             const char *payload_hdr, 
                                             const char *msg_hdr,
                                             const char *cmd_hdr,
+                                            const char *ipmb_msg_hdr,
+                                            const char *ipmb_cmd_hdr,
+                                            const char *ipmb_msg_trlr_hdr,
                                             const char *trailer_hdr,
                                             uint8_t payload_type,
                                             fiid_template_t tmpl_lan_msg_hdr,
                                             fiid_template_t tmpl_cmd,
+                                            fiid_template_t tmpl_ipmb_msg_hdr,
+                                            fiid_template_t tmpl_ipmb_cmd,
                                             uint8_t *pkt,
                                             uint32_t ipmi_payload_len)
 {
@@ -316,10 +425,15 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
                                              prefix,
                                              msg_hdr,
                                              cmd_hdr,
+                                             ipmb_msg_hdr,
+                                             ipmb_cmd_hdr,
+                                             ipmb_msg_trlr_hdr,
                                              trailer_hdr,
                                              payload_type,
                                              tmpl_lan_msg_hdr,
                                              tmpl_cmd,
+                                             tmpl_ipmb_msg_hdr,
+                                             tmpl_ipmb_cmd,
                                              pkt,
                                              ipmi_payload_len) < 0));
 
@@ -335,10 +449,15 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
                                                    const char *payload_hdr,
                                                    const char *msg_hdr,
                                                    const char *cmd_hdr,
+                                                   const char *ipmb_msg_hdr,
+                                                   const char *ipmb_cmd_hdr,
+                                                   const char *ipmb_msg_trlr_hdr,
                                                    const char *trailer_hdr,
                                                    uint8_t payload_type,
                                                    fiid_template_t tmpl_lan_msg_hdr,
                                                    fiid_template_t tmpl_cmd,
+                                                   fiid_template_t tmpl_ipmb_msg_hdr,
+                                                   fiid_template_t tmpl_ipmb_cmd,
                                                    uint8_t *confidentiality_key,
                                                    uint32_t confidentiality_key_len,
                                                    uint8_t *pkt,
@@ -436,10 +555,15 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
                                              prefix,
                                              msg_hdr,
                                              cmd_hdr,
+                                             ipmb_msg_hdr,
+                                             ipmb_cmd_hdr,
+                                             ipmb_msg_trlr_hdr,
                                              trailer_hdr,
                                              payload_type,
                                              tmpl_lan_msg_hdr,
                                              tmpl_cmd,
+                                             tmpl_ipmb_msg_hdr,
+                                             tmpl_ipmb_cmd,
                                              payload_buf,
                                              cmd_data_len) < 0));
   rv = 0;
@@ -539,12 +663,17 @@ _dump_rmcpplus_payload(int fd,
                        const char *payload_hdr, 
                        const char *msg_hdr,
                        const char *cmd_hdr,
+                       const char *ipmb_msg_hdr,
+                       const char *ipmb_cmd_hdr,
+                       const char *ipmb_msg_trlr_hdr,
                        const char *trailer_hdr,
                        uint8_t payload_type,
                        uint8_t authentication_algorithm,
                        uint8_t confidentiality_algorithm,
                        fiid_template_t tmpl_lan_msg_hdr, 
                        fiid_template_t tmpl_cmd,
+                       fiid_template_t tmpl_ipmb_msg_hdr,
+                       fiid_template_t tmpl_ipmb_cmd,
                        uint8_t *confidentiality_key,
                        uint32_t confidentiality_key_len,
                        uint8_t *pkt, 
@@ -591,10 +720,15 @@ _dump_rmcpplus_payload(int fd,
                                                            payload_hdr,
                                                            msg_hdr,
                                                            cmd_hdr,
+                                                           ipmb_msg_hdr,
+                                                           ipmb_cmd_hdr,
+                                                           ipmb_msg_trlr_hdr,
                                                            trailer_hdr,
                                                            payload_type,
                                                            tmpl_lan_msg_hdr,
                                                            tmpl_cmd,
+                                                           tmpl_ipmb_msg_hdr,
+                                                           tmpl_ipmb_cmd,
                                                            pkt,
                                                            ipmi_payload_len);
       else /* IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 */
@@ -603,10 +737,15 @@ _dump_rmcpplus_payload(int fd,
                                                                   payload_hdr,
                                                                   msg_hdr,
                                                                   cmd_hdr,
+                                                                  ipmb_msg_hdr,
+                                                                  ipmb_cmd_hdr,
+                                                                  ipmb_msg_trlr_hdr,
                                                                   trailer_hdr,
                                                                   payload_type,
                                                                   tmpl_lan_msg_hdr,
                                                                   tmpl_cmd,
+                                                                  tmpl_ipmb_msg_hdr,
+                                                                  tmpl_ipmb_cmd,
                                                                   confidentiality_key,
                                                                   confidentiality_key_len,
                                                                   pkt,
@@ -726,22 +865,24 @@ _dump_rmcpplus_session_trlr(int fd,
   return (rv);
 }
 
-int32_t
-ipmi_dump_rmcpplus_packet (int fd, 
-                           const char *prefix, 
-                           const char *hdr, 
-                           const char *trlr,
-                           uint8_t authentication_algorithm,
-                           uint8_t integrity_algorithm,
-                           uint8_t confidentiality_algorithm,
-                           uint8_t *integrity_key,
-                           uint32_t integrity_key_len,
-                           uint8_t *confidentiality_key,
-                           uint32_t confidentiality_key_len,
-                           uint8_t *pkt, 
-                           uint32_t pkt_len, 
-                           fiid_template_t tmpl_lan_msg_hdr, 
-                           fiid_template_t tmpl_cmd)
+static int32_t
+_ipmi_dump_rmcpplus_packet (int fd, 
+                            const char *prefix, 
+                            const char *hdr, 
+                            const char *trlr,
+                            uint8_t authentication_algorithm,
+                            uint8_t integrity_algorithm,
+                            uint8_t confidentiality_algorithm,
+                            uint8_t *integrity_key,
+                            uint32_t integrity_key_len,
+                            uint8_t *confidentiality_key,
+                            uint32_t confidentiality_key_len,
+                            uint8_t *pkt, 
+                            uint32_t pkt_len, 
+                            fiid_template_t tmpl_lan_msg_hdr, 
+                            fiid_template_t tmpl_cmd,
+                            fiid_template_t tmpl_ipmb_msg_hdr,
+                            fiid_template_t tmpl_ipmb_cmd)
 {
   int32_t obj_rmcp_hdr_len, obj_len;
   uint64_t payload_type=0, payload_authenticated=0, payload_encrypted, session_id=0, ipmi_payload_len=0;
@@ -763,6 +904,15 @@ ipmi_dump_rmcpplus_packet (int fd,
   char *cmd_hdr =
     "IPMI Command Data:\n"
     "------------------";
+  char *ipmb_msg_hdr =
+    "IPMB Message Header:\n"
+    "--------------------";
+  char *ipmb_cmd_hdr =
+    "IPMB Message Data:\n"
+    "------------------";
+  char *ipmb_msg_trlr_hdr =
+    "IPMB Message Trailer:\n"
+    "---------------------";
   char *trailer_hdr =
     "IPMI Trailer:\n"
     "-------------";
@@ -775,15 +925,15 @@ ipmi_dump_rmcpplus_packet (int fd,
   unsigned int indx = 0;
   int32_t rv = -1;
 
-  ERR_EINVAL (pkt
-              && IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
-              && IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
-              && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-                  || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
-              && !(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
-                   && !(confidentiality_key
-                        && confidentiality_key_len))
-	      && tmpl_cmd);
+  assert(pkt);
+  assert(IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm));
+  assert(IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm));
+  assert(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
+         || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128);
+  assert(!(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
+           && !(confidentiality_key
+                && confidentiality_key_len)));
+  assert(tmpl_cmd);
 
   ERR_CLEANUP(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
 
@@ -880,12 +1030,17 @@ ipmi_dump_rmcpplus_packet (int fd,
                                         payload_hdr, 
                                         msg_hdr,
                                         cmd_hdr,
+                                        ipmb_msg_hdr,
+                                        ipmb_cmd_hdr,
+                                        ipmb_msg_trlr_hdr,
                                         trailer_hdr,
                                         payload_type,
                                         authentication_algorithm,
                                         confidentiality_algorithm,
                                         tmpl_lan_msg_hdr, 
                                         tmpl_cmd,
+                                        tmpl_ipmb_msg_hdr,
+                                        tmpl_ipmb_cmd,
                                         confidentiality_key,
                                         confidentiality_key_len,
                                         pkt + indx, 
@@ -939,4 +1094,110 @@ ipmi_dump_rmcpplus_packet (int fd,
   FIID_OBJ_DESTROY(obj_rmcp_hdr);
   FIID_OBJ_DESTROY(obj_unexpected_data);
   return (rv);
+}
+
+int32_t
+ipmi_dump_rmcpplus_packet (int fd, 
+                           const char *prefix, 
+                           const char *hdr, 
+                           const char *trlr,
+                           uint8_t authentication_algorithm,
+                           uint8_t integrity_algorithm,
+                           uint8_t confidentiality_algorithm,
+                           uint8_t *integrity_key,
+                           uint32_t integrity_key_len,
+                           uint8_t *confidentiality_key,
+                           uint32_t confidentiality_key_len,
+                           uint8_t *pkt, 
+                           uint32_t pkt_len, 
+                           fiid_template_t tmpl_lan_msg_hdr, 
+                           fiid_template_t tmpl_cmd)
+{
+  ERR_EINVAL (pkt
+              && IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+              && IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+              && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
+                  || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+              && !(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
+                   && !(confidentiality_key
+                        && confidentiality_key_len))
+	      && tmpl_cmd);
+
+  return _ipmi_dump_rmcpplus_packet (fd,
+                                     prefix,
+                                     hdr,
+                                     trlr,
+                                     authentication_algorithm,
+                                     integrity_algorithm,
+                                     confidentiality_algorithm,
+                                     integrity_key,
+                                     integrity_key_len,
+                                     confidentiality_key,
+                                     confidentiality_key_len,
+                                     pkt,
+                                     pkt_len,
+                                     tmpl_lan_msg_hdr,
+                                     tmpl_cmd,
+                                     NULL,
+                                     NULL);
+}
+
+int32_t
+ipmi_dump_rmcpplus_packet_ipmb (int fd, 
+                                const char *prefix, 
+                                const char *hdr, 
+                                const char *trlr,
+                                uint8_t authentication_algorithm,
+                                uint8_t integrity_algorithm,
+                                uint8_t confidentiality_algorithm,
+                                uint8_t *integrity_key,
+                                uint32_t integrity_key_len,
+                                uint8_t *confidentiality_key,
+                                uint32_t confidentiality_key_len,
+                                uint8_t *pkt, 
+                                uint32_t pkt_len, 
+                                fiid_template_t tmpl_lan_msg_hdr, 
+                                fiid_template_t tmpl_cmd,
+                                fiid_template_t tmpl_ipmb_msg_hdr,
+                                fiid_template_t tmpl_ipmb_cmd)
+{
+  int ret1, ret2;
+
+  ERR_EINVAL (pkt
+              && IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+              && IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+              && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
+                  || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+              && !(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
+                   && !(confidentiality_key
+                        && confidentiality_key_len))
+	      && tmpl_cmd
+              && tmpl_ipmb_msg_hdr
+              && tmpl_ipmb_cmd);
+
+  if ((ret1 = fiid_template_compare(tmpl_cmd, tmpl_cmd_send_message_rq)) < 0)
+    return -1;
+
+  if ((ret2 = fiid_template_compare(tmpl_cmd, tmpl_cmd_get_message_rs)) < 0)
+    return -1;
+
+  ERR_EINVAL ((ret1 || ret2));
+
+  return _ipmi_dump_rmcpplus_packet (fd,
+                                     prefix,
+                                     hdr,
+                                     trlr,
+                                     authentication_algorithm,
+                                     integrity_algorithm,
+                                     confidentiality_algorithm,
+                                     integrity_key,
+                                     integrity_key_len,
+                                     confidentiality_key,
+                                     confidentiality_key_len,
+                                     pkt,
+                                     pkt_len,
+                                     tmpl_lan_msg_hdr,
+                                     tmpl_cmd,
+                                     tmpl_ipmb_msg_hdr,
+                                     tmpl_ipmb_cmd);
 }

@@ -37,6 +37,8 @@
 #include "libcommon/ipmi-bit-ops.h"
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
+#include "freeipmi/interface/ipmi-ipmb-interface.h"
+#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 
 #include "freeipmi-portability.h"
 
@@ -55,7 +57,11 @@ fiid_template_t tmpl_unexpected_data =
   };
 
 int8_t
-ipmi_obj_dump (int fd, const char *prefix, const char *hdr, const char *trlr, fiid_obj_t obj)
+ipmi_obj_dump (int fd,
+               const char *prefix, 
+               const char *hdr,
+               const char *trlr, 
+               fiid_obj_t obj)
 {
 #if 0
   char *default_hdr = 
@@ -67,6 +73,7 @@ ipmi_obj_dump (int fd, const char *prefix, const char *hdr, const char *trlr, fi
 #endif
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   fiid_iterator_t iter = NULL;
+  int rv = -1;
 
   ERR_EINVAL (fiid_obj_valid(obj));
   
@@ -119,11 +126,135 @@ ipmi_obj_dump (int fd, const char *prefix, const char *hdr, const char *trlr, fi
 
   ERR_CLEANUP (!(ipmi_debug_output_str(fd, prefix_buf, trlr) < 0));
 
-  fiid_iterator_destroy(iter);
-  return (0);
-
+  rv = 0;
  cleanup:
   if (iter)
     fiid_iterator_destroy(iter);
-  return (-1);
+  return (rv);
+}
+
+int8_t
+ipmi_obj_dump_ipmb (int fd,
+                    const char *prefix, 
+                    const char *hdr,
+                    const char *trlr, 
+                    fiid_obj_t obj,
+                    fiid_template_t tmpl_ipmb_msg_hdr,
+                    fiid_template_t tmpl_ipmb_cmd)
+{
+  char *cmd_hdr =
+    "IPMI Command Data:\n"
+    "------------------";
+  char *ipmb_msg_hdr =
+    "IPMB Message Header:\n"
+    "--------------------";
+  char *ipmb_cmd_hdr =
+    "IPMB Message Data:\n"
+    "------------------";
+  char *ipmb_msg_trlr_hdr =
+    "IPMB Message Trailer:\n"
+    "---------------------";
+  char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
+  uint8_t ipmb_buf[IPMI_DEBUG_MAX_PKT_LEN];
+  int32_t ipmb_buf_len;
+  fiid_obj_t obj_cmd = NULL;
+  fiid_obj_t obj_ipmb_msg_hdr = NULL;
+  fiid_obj_t obj_ipmb_cmd = NULL;
+  fiid_obj_t obj_ipmb_msg_trlr = NULL;
+  int32_t obj_ipmb_msg_trlr_len;
+  int32_t obj_ipmb_cmd_len;
+  int32_t ipmb_hdr_len;
+  int32_t ipmb_cmd_len;
+  int ret1, ret2;
+  int rv = -1;
+
+  ERR_EINVAL (fiid_obj_valid(obj) 
+              && tmpl_ipmb_msg_hdr
+              && tmpl_ipmb_cmd);
+
+  if ((ret1 = fiid_obj_template_compare(obj, tmpl_cmd_send_message_rq)) < 0)
+    return -1;
+
+  if ((ret2 = fiid_obj_template_compare(obj, tmpl_cmd_get_message_rs)) < 0)
+    return -1;
+
+  ERR_EINVAL ((ret1 || ret2));
+  
+  ERR(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
+
+  ERR(!(ipmi_debug_output_str (fd, prefix_buf, hdr) < 0));
+
+  FIID_OBJ_DUP_CLEANUP (obj_cmd, obj);
+  FIID_OBJ_CREATE_CLEANUP (obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr);
+  FIID_OBJ_CREATE_CLEANUP (obj_ipmb_cmd, tmpl_ipmb_cmd);
+  FIID_OBJ_CREATE_CLEANUP (obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
+  
+  memset(ipmb_buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
+  FIID_OBJ_GET_DATA_LEN_CLEANUP (ipmb_buf_len,
+                                 obj_cmd,
+                                 "message_data",
+                                 ipmb_buf,
+                                 IPMI_DEBUG_MAX_PKT_LEN);
+  
+  FIID_OBJ_CLEAR_FIELD_CLEANUP (obj_cmd, "message_data");
+  
+  ERR_CLEANUP (!(ipmi_obj_dump(fd,
+                               prefix,
+                               cmd_hdr,
+                               NULL,
+                               obj_cmd) < 0));
+
+  FIID_TEMPLATE_LEN_BYTES (obj_ipmb_msg_trlr_len, tmpl_ipmb_msg_trlr);
+
+  FIID_OBJ_SET_ALL_LEN_CLEANUP (ipmb_hdr_len,
+                                obj_ipmb_msg_hdr,
+                                ipmb_buf,
+                                ipmb_buf_len);
+
+  ERR_CLEANUP (!(ipmi_obj_dump(fd,
+                               prefix,
+                               ipmb_msg_hdr,
+                               NULL,
+                               obj_ipmb_msg_hdr) < 0));
+
+  if (ipmb_buf_len)
+    {
+      if ((ipmb_buf_len - ipmb_hdr_len) >= obj_ipmb_msg_trlr_len)
+        obj_ipmb_cmd_len = (ipmb_buf_len - ipmb_hdr_len) - obj_ipmb_msg_trlr_len;
+      else if ((ipmb_buf_len - ipmb_hdr_len) < obj_ipmb_msg_trlr_len)
+        obj_ipmb_cmd_len = 0;
+      
+      if (obj_ipmb_cmd_len)
+        {
+          FIID_OBJ_SET_ALL_LEN_CLEANUP (ipmb_cmd_len,
+                                        obj_ipmb_cmd,
+                                        ipmb_buf + ipmb_hdr_len,
+                                        obj_ipmb_cmd_len);
+          
+          ERR_CLEANUP (!(ipmi_obj_dump(fd,
+                                       prefix,
+                                       ipmb_cmd_hdr,
+                                       NULL,
+                                       obj_ipmb_cmd) < 0));
+        }
+      
+      FIID_OBJ_SET_ALL_CLEANUP (obj_ipmb_msg_trlr,
+                                ipmb_buf + ipmb_hdr_len + ipmb_cmd_len,
+                                (ipmb_buf_len - ipmb_hdr_len - ipmb_cmd_len));
+      
+      ERR_CLEANUP (!(ipmi_obj_dump(fd,
+                                   prefix,
+                                   ipmb_msg_trlr_hdr,
+                                   NULL,
+                                   obj_ipmb_msg_trlr) < 0));
+    }
+
+
+  rv = 0;
+ cleanup:
+  FIID_OBJ_DESTROY(obj_cmd);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_hdr);
+  FIID_OBJ_DESTROY(obj_ipmb_cmd);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_trlr);
+  return (rv);
 }

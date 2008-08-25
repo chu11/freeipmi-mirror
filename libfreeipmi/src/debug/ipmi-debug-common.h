@@ -29,6 +29,7 @@ extern "C" {
 
 #define IPMI_DEBUG_MAX_PREFIX_LEN 32
 #define IPMI_DEBUG_MAX_HDR_LEN 1024
+#define IPMI_DEBUG_MAX_PKT_LEN 65536
 
 #define IPMI_DEBUG_DPRINTF(args) \
         do { \

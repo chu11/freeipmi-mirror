@@ -41,6 +41,7 @@
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_DEVICE_NOT_SUPPORTED \
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_DEVICE_NOT_FOUND \
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_DRIVER_TIMEOUT \
+  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE \
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE \
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_OUT_OF_MEMORY \
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_HOSTNAME_INVALID \

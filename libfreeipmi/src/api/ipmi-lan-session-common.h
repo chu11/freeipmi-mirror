@@ -12,6 +12,14 @@ extern "C" {
 #define IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_GET_SESSION_CHALLENGE     0x00000001
 #define IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE 0x00000002
 
+void ipmi_lan_cmd_get_session_parameters (ipmi_ctx_t ctx,
+					  uint8_t *authentication_type,
+					  uint32_t *internal_workaround_flags);
+
+void ipmi_lan_2_0_cmd_get_session_parameters (ipmi_ctx_t ctx,
+					      uint8_t *payload_authenticated,
+					      uint8_t *payload_encrypted);
+
 int8_t ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                              uint32_t internal_workaround_flags,
                              uint8_t lun,
@@ -24,6 +32,10 @@ int8_t ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                              uint32_t password_len,
                              fiid_obj_t obj_cmd_rq,
                              fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
+				  fiid_obj_t obj_cmd_rq,
+				  fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_lan_open_session (ipmi_ctx_t ctx);
 
@@ -50,6 +62,10 @@ int8_t ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                  uint32_t password_len,
                                  fiid_obj_t obj_cmd_rq,
                                  fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
+				      fiid_obj_t obj_cmd_rq,
+				      fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_lan_2_0_open_session (ipmi_ctx_t ctx);
 

@@ -29,9 +29,12 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <assert.h>
 #include <errno.h>
 
+#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/debug/ipmi-debug.h"
+#include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
@@ -43,8 +46,17 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
-ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *trlr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_lan_msg_hdr, fiid_template_t tmpl_cmd)
+static int8_t
+_ipmi_dump_lan_packet (int fd, 
+                       const char *prefix, 
+                       const char *hdr,
+                       const char *trlr, 
+                       uint8_t *pkt, 
+                       uint32_t pkt_len,
+                       fiid_template_t tmpl_lan_msg_hdr, 
+                       fiid_template_t tmpl_cmd, 
+                       fiid_template_t tmpl_ipmb_msg_hdr, 
+                       fiid_template_t tmpl_ipmb_cmd)
 {
   uint32_t indx = 0;
   int32_t obj_cmd_len, obj_lan_msg_trlr_len;
@@ -61,6 +73,15 @@ ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *t
   char *cmd_hdr =
     "IPMI Command Data:\n"
     "------------------";
+  char *ipmb_msg_hdr =
+    "IPMB Message Header:\n"
+    "--------------------";
+  char *ipmb_cmd_hdr =
+    "IPMB Message Data:\n"
+    "------------------";
+  char *ipmb_msg_trlr_hdr =
+    "IPMB Message Trailer:\n"
+    "---------------------";
   char *trlr_hdr =
     "IPMI Trailer:\n"
     "--------------";
@@ -71,13 +92,20 @@ ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *t
   fiid_obj_t obj_session_hdr = NULL;
   fiid_obj_t obj_lan_msg_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
+  fiid_obj_t obj_ipmb_msg_hdr = NULL;
+  fiid_obj_t obj_ipmb_cmd = NULL;
+  fiid_obj_t obj_ipmb_msg_trlr = NULL;
   fiid_obj_t obj_lan_msg_trlr = NULL;
   fiid_obj_t obj_unexpected_data = NULL;
   int32_t len;
   int8_t rv = -1;
   uint64_t authentication_type;
 
-  ERR_EINVAL (pkt && tmpl_lan_msg_hdr && tmpl_cmd);
+  assert(pkt);
+  assert(tmpl_lan_msg_hdr);
+  assert(tmpl_cmd);
+  assert((!tmpl_ipmb_msg_hdr && !tmpl_ipmb_cmd)
+         || (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd));
 
   ERR(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
 
@@ -195,6 +223,12 @@ ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *t
   /* Dump command data */
 
   FIID_OBJ_CREATE_CLEANUP (obj_cmd, tmpl_cmd);
+  if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd)
+    {
+      FIID_OBJ_CREATE_CLEANUP (obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr);
+      FIID_OBJ_CREATE_CLEANUP (obj_ipmb_cmd, tmpl_ipmb_cmd);
+      FIID_OBJ_CREATE_CLEANUP (obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
+    }
   FIID_OBJ_CREATE_CLEANUP (obj_lan_msg_trlr, tmpl_lan_msg_trlr);
   
   FIID_TEMPLATE_LEN_BYTES (obj_lan_msg_trlr_len, tmpl_lan_msg_trlr);
@@ -206,13 +240,27 @@ ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *t
 
   if (obj_cmd_len)
     {
-      
+      uint8_t ipmb_buf[IPMI_DEBUG_MAX_PKT_LEN];
+      int32_t ipmb_buf_len;
+
       FIID_OBJ_SET_ALL_LEN_CLEANUP (len, 
 				    obj_cmd,
 				    pkt + indx, 
 				    obj_cmd_len);
       indx += len;
       
+      if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd)
+        {
+          memset(ipmb_buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
+          FIID_OBJ_GET_DATA_LEN_CLEANUP (ipmb_buf_len,
+                                         obj_cmd,
+                                         "message_data",
+                                         ipmb_buf,
+                                         IPMI_DEBUG_MAX_PKT_LEN);
+          
+          FIID_OBJ_CLEAR_FIELD_CLEANUP (obj_cmd, "message_data");
+        }
+
       ERR_CLEANUP (!(ipmi_obj_dump(fd, 
                                    prefix, 
                                    cmd_hdr, 
@@ -224,6 +272,57 @@ ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *t
 	  rv = 0;
 	  goto cleanup;
 	}
+
+      if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
+        {
+          int32_t obj_ipmb_msg_trlr_len;
+          int32_t obj_ipmb_cmd_len;
+          int32_t ipmb_hdr_len;
+          int32_t ipmb_cmd_len;
+         
+          FIID_TEMPLATE_LEN_BYTES (obj_ipmb_msg_trlr_len, tmpl_ipmb_msg_trlr);
+
+          FIID_OBJ_SET_ALL_LEN_CLEANUP (ipmb_hdr_len,
+                                        obj_ipmb_msg_hdr,
+                                        ipmb_buf,
+                                        ipmb_buf_len);
+
+          ERR_CLEANUP (!(ipmi_obj_dump(fd, 
+                                       prefix, 
+                                       ipmb_msg_hdr,
+                                       NULL, 
+                                       obj_ipmb_msg_hdr) < 0));
+
+          if ((ipmb_buf_len - ipmb_hdr_len) >= obj_ipmb_msg_trlr_len)
+            obj_ipmb_cmd_len = (ipmb_buf_len - ipmb_hdr_len) - obj_ipmb_msg_trlr_len;
+          else if ((ipmb_buf_len - ipmb_hdr_len) < obj_ipmb_msg_trlr_len)
+            obj_ipmb_cmd_len = 0;
+
+          if (obj_ipmb_cmd_len) 
+            {
+              FIID_OBJ_SET_ALL_LEN_CLEANUP (ipmb_cmd_len,
+                                            obj_ipmb_cmd,
+                                            ipmb_buf + ipmb_hdr_len,
+                                            obj_ipmb_cmd_len);
+              
+              ERR_CLEANUP (!(ipmi_obj_dump(fd, 
+                                           prefix, 
+                                           ipmb_cmd_hdr,
+                                           NULL, 
+                                           obj_ipmb_cmd) < 0));
+            }
+
+          FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
+                                        obj_ipmb_msg_trlr, 
+                                        ipmb_buf + ipmb_hdr_len + ipmb_cmd_len,
+                                        (ipmb_buf_len - ipmb_hdr_len - ipmb_cmd_len));
+          
+          ERR_CLEANUP (!(ipmi_obj_dump(fd, 
+                                       prefix, 
+                                       ipmb_msg_trlr_hdr,
+                                       NULL, 
+                                       obj_ipmb_msg_trlr) < 0));
+        }
     }
 
   /* Dump trailer */
@@ -264,8 +363,74 @@ ipmi_dump_lan_packet (int fd, const char *prefix, const char *hdr, const char *t
   FIID_OBJ_DESTROY(obj_session_hdr);
   FIID_OBJ_DESTROY(obj_lan_msg_hdr);
   FIID_OBJ_DESTROY(obj_cmd);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_hdr);
+  FIID_OBJ_DESTROY(obj_ipmb_cmd);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_trlr);
   FIID_OBJ_DESTROY(obj_lan_msg_trlr);
   FIID_OBJ_DESTROY(obj_unexpected_data);
   return (rv);
 }
 
+int8_t
+ipmi_dump_lan_packet (int fd, 
+                      const char *prefix,
+                      const char *hdr, 
+                      const char *trlr, 
+                      uint8_t *pkt, 
+                      uint32_t pkt_len, 
+                      fiid_template_t tmpl_lan_msg_hdr, 
+                      fiid_template_t tmpl_cmd)
+{
+  ERR_EINVAL (pkt && tmpl_lan_msg_hdr && tmpl_cmd);
+
+  return _ipmi_dump_lan_packet (fd, 
+                                prefix, 
+                                hdr, 
+                                trlr, 
+                                pkt, 
+                                pkt_len, 
+                                tmpl_lan_msg_hdr, 
+                                tmpl_cmd,
+                                NULL,
+                                NULL);
+}
+
+int8_t
+ipmi_dump_lan_packet_ipmb (int fd,
+                           const char *prefix, 
+                           const char *hdr, 
+                           const char *trlr, 
+                           uint8_t *pkt,
+                           uint32_t pkt_len, 
+                           fiid_template_t tmpl_lan_msg_hdr, 
+                           fiid_template_t tmpl_cmd,
+                           fiid_template_t tmpl_ipmb_msg_hdr, 
+                           fiid_template_t tmpl_ipmb_cmd)
+{
+  int ret1, ret2;
+
+  ERR_EINVAL (pkt
+              && tmpl_lan_msg_hdr
+              && tmpl_cmd
+              && tmpl_ipmb_msg_hdr
+              && tmpl_ipmb_cmd);
+
+  if ((ret1 = fiid_template_compare(tmpl_cmd, tmpl_cmd_send_message_rq)) < 0)
+    return -1;
+
+  if ((ret2 = fiid_template_compare(tmpl_cmd, tmpl_cmd_get_message_rs)) < 0)
+    return -1;
+
+  ERR_EINVAL ((ret1 || ret2));
+
+  return _ipmi_dump_lan_packet (fd, 
+                                prefix, 
+                                hdr, 
+                                trlr, 
+                                pkt, 
+                                pkt_len, 
+                                tmpl_lan_msg_hdr, 
+                                tmpl_cmd,
+                                tmpl_ipmb_msg_hdr,
+                                tmpl_ipmb_cmd);
+}

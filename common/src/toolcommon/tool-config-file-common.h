@@ -77,6 +77,8 @@ struct config_file_data_ipmi_sensors
   char groups[CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS][CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
   int groups_count;
+  int bridge_sensors;
+  int bridge_sensors_count;
 };
 
 struct config_file_data_ipmiconsole
@@ -96,6 +98,8 @@ struct config_file_data_ipmimonitoring
   char groups[CONFIG_FILE_IPMIMONITORING_MAX_GROUPS][CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
   int groups_count;
+  int bridge_sensors;
+  int bridge_sensors_count;
 };
 
 struct config_file_data_ipmipower

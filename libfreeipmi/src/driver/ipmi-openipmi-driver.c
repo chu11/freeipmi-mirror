@@ -53,6 +53,7 @@
 #include <errno.h>
 
 #include "freeipmi/driver/ipmi-openipmi-driver.h"
+#include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
@@ -70,7 +71,7 @@
 #include <linux/ipmi.h>
 #elif HAVE_SYS_IPMI_H
 #include <sys/ipmi.h>
-#else  /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_LINUX_H */
+#else  /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_IPMI_H */
 /* 
  * achu: Most of the definitions below are taken from linux/ipmi.h.
  *
@@ -79,12 +80,20 @@
  */
 
 #define IPMI_SYSTEM_INTERFACE_ADDR_TYPE 0x0c
-#define IPMI_BMC_CHANNEL                0xf
+#define IPMI_IPMB_ADDR_TYPE             0x01
 
 struct ipmi_system_interface_addr
 {
   int           addr_type;
   short         channel;
+  unsigned char lun;
+};
+
+struct ipmi_ipmb_addr
+{
+  int           addr_type;
+  short         channel;
+  unsigned char slave_addr;
   unsigned char lun;
 };
 
@@ -124,7 +133,7 @@ struct ipmi_recv
 #define IPMICTL_SET_MY_ADDRESS_CMD _IOR(IPMI_IOC_MAGIC,  17, unsigned int)
 #endif
 #define IPMICTL_GET_MY_ADDRESS_CMD _IOR(IPMI_IOC_MAGIC,  18, unsigned int)
-#endif /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_LINUX_H */
+#endif /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_IPMI_H */
 
 static char * ipmi_openipmi_ctx_errmsg[] =
   {
@@ -305,16 +314,19 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
 
 static int8_t
 _openipmi_write(ipmi_openipmi_ctx_t ctx, 
+		uint8_t rs_addr,
                 uint8_t lun,
                 uint8_t net_fn,
-                fiid_obj_t obj_cmd_rq)
+                fiid_obj_t obj_cmd_rq,
+		unsigned int is_ipmb)
 {
   uint8_t rq_buf_temp[IPMI_OPENIPMI_BUFLEN];
   uint8_t rq_buf[IPMI_OPENIPMI_BUFLEN];
   uint8_t rq_cmd;
   int32_t rq_buf_len;
   int32_t len;
-  struct ipmi_system_interface_addr rq_addr;
+  struct ipmi_system_interface_addr system_interface_addr;
+  struct ipmi_ipmb_addr ipmb_addr;
   struct ipmi_req rq_packet;
 
   assert(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
@@ -342,12 +354,26 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
   else
     rq_buf_len = 0;
 
-  rq_addr.addr_type = IPMI_SYSTEM_INTERFACE_ADDR_TYPE;
-  rq_addr.channel = IPMI_BMC_CHANNEL;
-  rq_addr.lun = lun;
+  if (!is_ipmb)
+    {
+      system_interface_addr.addr_type = IPMI_SYSTEM_INTERFACE_ADDR_TYPE; /* openipmi macro */
+      system_interface_addr.channel = IPMI_CHANNEL_NUMBER_SYSTEM_INTERFACE; /* freeipmi macro */
+      system_interface_addr.lun = lun;
 
-  rq_packet.addr = (unsigned char *)&rq_addr;
-  rq_packet.addr_len = sizeof(struct ipmi_system_interface_addr);
+      rq_packet.addr = (unsigned char *)&system_interface_addr;
+      rq_packet.addr_len = sizeof(struct ipmi_system_interface_addr);
+    }
+  else
+    {
+      ipmb_addr.addr_type = IPMI_IPMB_ADDR_TYPE; /* openipmi macro */
+      ipmb_addr.channel = IPMI_CHANNEL_NUMBER_PRIMARY_IPMB; /* freeipmi macro */
+      ipmb_addr.slave_addr = rs_addr;
+      ipmb_addr.lun = lun;
+
+      rq_packet.addr = (unsigned char *)&ipmb_addr;
+      rq_packet.addr_len = sizeof(struct ipmi_ipmb_addr);
+    }
+
   rq_packet.msgid = 0;             
   rq_packet.msg.netfn = net_fn;
   rq_packet.msg.cmd = rq_cmd;
@@ -439,9 +465,44 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
   OPENIPMI_ERR_IO_NOT_INITIALIZED(ctx->io_init);
 
   if (_openipmi_write(ctx,
+		      0,
                       lun,
                       net_fn,
-                      obj_cmd_rq) < 0)
+                      obj_cmd_rq,
+		      0) < 0)
+    return (-1);
+
+  if (_openipmi_read(ctx,
+                     obj_cmd_rs) < 0)
+    return (-1);
+
+  return (0);
+}
+
+int8_t
+ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx, 
+			uint8_t rs_addr,
+			uint8_t lun,
+			uint8_t net_fn,
+			fiid_obj_t obj_cmd_rq,
+			fiid_obj_t obj_cmd_rs)
+{
+  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+ 
+  OPENIPMI_ERR_PARAMETERS(IPMI_BMC_LUN_VALID(lun)
+                          && IPMI_NET_FN_RQ_VALID(net_fn)
+                          && fiid_obj_valid(obj_cmd_rq)
+                          && fiid_obj_valid(obj_cmd_rs)
+                          && fiid_obj_packet_valid(obj_cmd_rq));
+  
+  OPENIPMI_ERR_IO_NOT_INITIALIZED(ctx->io_init);
+
+  if (_openipmi_write(ctx,
+		      rs_addr,
+		      lun,
+		      net_fn,
+		      obj_cmd_rq,
+		      1) < 0)
     return (-1);
 
   if (_openipmi_read(ctx,

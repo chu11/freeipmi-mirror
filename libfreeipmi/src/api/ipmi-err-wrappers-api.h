@@ -239,6 +239,26 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE(expr)            \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      ctx->errnum = IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE;    \
+      __API_TRACE;                                                      \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE_CLEANUP(expr)    \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      ctx->errnum = IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE;    \
+      __API_TRACE;                                                      \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
 #define API_ERR_HOSTNAME_INVALID(expr)                                  \
 do {                                                                    \
   if (!(expr))                                                          \
@@ -274,6 +294,26 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_PARAMETERS;                                \
+      __API_TRACE;                                                      \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define API_ERR_MESSAGE_TIMEOUT(expr)                                   \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      ctx->errnum = IPMI_ERR_MESSAGE_TIMEOUT;                           \
+      __API_TRACE;                                                      \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define API_ERR_MESSAGE_TIMEOUT_CLEANUP(expr)                           \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      ctx->errnum = IPMI_ERR_MESSAGE_TIMEOUT;                           \
       __API_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -396,6 +436,25 @@ do {                                                                            
                 (__netfn),                                                                                 \
                 (__rq),                                                                                    \
                 (__rs)) < 0)                                                                               \
+    goto cleanup;                                                                                          \
+  API_ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));                           \
+  if (!__rv)                                                                                               \
+    {                                                                                                      \
+      API_BAD_COMPLETION_CODE_TO_API_ERRNUM((__ctx), (__rs));                                              \
+      __API_TRACE_ERRMSG_CLEANUP(__ctx, __rs);                                                             \
+    }                                                                                                      \
+} while (0)
+
+/* Note: ctx->errnum set in call to ipmi_cmd() - don't call wrapper */
+#define API_ERR_IPMI_CMD_IPMB_CLEANUP(__ctx, __slave_address, __lun, __netfn, __rq, __rs)                  \
+do {                                                                                                       \
+  int8_t __rv;                                                                                             \
+  if (ipmi_cmd_ipmb ((__ctx),                                                                              \
+                     (__slave_address),                                                                    \
+                     (__lun),                                                                              \
+                     (__netfn),                                                                            \
+                     (__rq),                                                                               \
+                     (__rs)) < 0)                                                                          \
     goto cleanup;                                                                                          \
   API_ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));                           \
   if (!__rv)                                                                                               \

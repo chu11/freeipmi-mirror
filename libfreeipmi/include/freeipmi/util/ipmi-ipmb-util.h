@@ -13,37 +13,30 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _IPMI_OPENIPMI_DRIVER_API_H
-#define _IPMI_OPENIPMI_DRIVER_API_H 1
+#ifndef _IPMI_IPMB_UTIL_H
+#define	_IPMI_IPMB_UTIL_H	1
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-int8_t ipmi_openipmi_cmd_api (ipmi_ctx_t ctx, 
-			      fiid_obj_t obj_cmd_rq, 
-			      fiid_obj_t obj_cmd_rs);
+int8_t ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq);
 
-int8_t ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx, 
-				   fiid_obj_t obj_cmd_rq, 
-				   fiid_obj_t obj_cmd_rs);
-
-int32_t ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx, 
-				   uint8_t *buf_rq, 
-				   size_t buf_rq_len, 
-				   uint8_t *buf_rs, 
-				   size_t buf_rs_len);
-
+int8_t ipmi_ipmb_check_checksum (uint8_t rq_addr,
+				 fiid_obj_t obj_ipmb_msg_hdr,
+				 fiid_obj_t obj_cmd,
+				 fiid_obj_t obj_ipmb_msg_trlr);
+ 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ipmi-openipmi-driver-api.h */
+#endif /* ipmi-ipmb-util.h */
+
 

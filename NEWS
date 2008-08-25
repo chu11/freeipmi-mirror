@@ -19,6 +19,8 @@ o Add hostrange support to all config tools (bmc-config, pef-config,
 o Add additional "connection timeout" error message to tools to
   differentiate between no IPMI communication at all vs. session
   timeout in the middle of a command's operations.
+o Support --bridge-sensors on ipmi-sensors and ipmimonitoring to 
+  access non-BMC sensors (experimental).
 o Support hysteresis and sensor event configuration in
   ipmi-sensors-config.
 o Support additional sensor monitoring interpretations in ipmimonitoring.
@@ -28,7 +30,7 @@ o Support --always-prefix option in most tools for easier scripting.
 o Support --sdr-cache-recreate in all SDR related tools for easier
   scripting.
 o Support --guid option in bmc-info to retrieve global ID.
-o Support "SUNBMC" in-band driver for Solaris.
+o Support "SUNBMC" in-band driver for Solaris (experimental).
 
 Tools - Enhancements/Changes/Bug Fixes
 --------------------------------------
@@ -42,6 +44,66 @@ o Global in config tools (bmc-config, pef-config, ipmi-sensors-config)
     previously been considered a non-fatal error, making the config
     tools continue on attempting more configuration activities.  Now,
     it would error out on the first session-timeout indication.
+o ipmi-sensors
+  - Check variety of corner cases such as whether sensor readings,
+    hysteresis, thresholds, etc. are even available before reading
+    them.  Some sensors may output slightly different information than
+    before.  For example, suppose a power supply sensor exists for a
+    power supply that is not installed.  If the sensor is enabled on
+    the motherboard, ipmi-sensors would likely report "OK".  If the
+    sensor is disabled on the motherboard, ipmi-sensors would likely
+    report "NA".  Previously, "OK" would have been reported under both
+    conditions.
+  - Output "NA" for sensors whose slave addresses are not the BMC because
+    the accuracy of the reading is not reliable.
+  - Output multiple sensor status messages on separate lines, rather
+    than all on one line under verbose modes.
+  - Output "Unrecognized State" if the sensor specifies a state that is
+    unrecognized.
+  - Busy sensors are now output with "Unknown" instead of causing
+    errors.
+  - When fields are not relevant, do not output as much information in
+    verbose and very verbose mode.  For example, don't output
+    hysteresis or threshold information for power supply sensors.
+  - Alter some output ordering for consistency to IPMI spec.
+  - Change default privilege from user to operator.
+o ipmimonitoring
+  - Support -v verbose option to output sensors readings that aren't
+    readable.
+  - Check corner case for sensor readability.  May lead to slightly
+    different output in ipmimonitoring.  For example, suppose a power
+    supply sensor exists for a power supply that is not installed.  If
+    the sensor is enabled on the motherboard, ipmimonitoring would
+    normally report "Nominal".  If the sensor is disabled on the motherboard, 
+    ipmimonitoring would normally not output a sensor state (it would
+    output "N/A" under verbose mode). Previously, "Nominal" would have
+    been reported under both conditions.
+  - Consider sensors without BMC slave addresses unreadable.  May
+    result in sensors not being output like before.
+  - Busy sensors may result in sensors not being output rather than
+    causing errors.
+  - Output "Unrecognized State" if the sensor specifies a state that is
+    unrecognized.
+  - Output multiple bitmask strings if multiple bits are set.
+  - Output "OK", similarly to ipmi-sensors when no bitmask strings are
+    returned from a sensor reading.
+  - Change default privilege from user to operator.
+o ipmipower
+  - Removed many early experimental features from ipmipower so
+    ipmipower is more like other tools.  Removed ipmi-version,
+    cipher-suite-id, privilege-level, and authentication-type auto
+    discovery. Removed ability to enable/disable a number of experimental
+    features.
+  - Changed --config to --config-file in ipmipower for consistency to
+    other tools.  Backwards compatability maintiained.
+  - Replace --ipmi-version option with --driver-type.  Backwards
+    compatability maintained.
+  - Removed hostname config file option.  Require users to always input
+    atleast hostname.
+  - Changed primary config file to /etc/freeipmi.conf.  Legacy config
+    file searched for and still supported.
+  - Prefixed config file options with 'ipmipower' for consistency to
+    new global FreeIPMI config file.  Old options still supported.
 o bmc-config
   - Support configuration of UserN:Lan_Session_Limit and
     UserN:Serial_Session_Limit (where N is a user id number).
@@ -65,7 +127,7 @@ o ipmi-fru
   - Output more information by default.  Change the output of verbose
     vs. very verbose output.
 o ipmi-sel
-  - Change default privilege from user to operator in ipmi-sel.
+  - Change default privilege from user to operator.
 o ipmiconsole
   - Support --session-timeout and --retransmission-timeout options.
   - Removed -C short option for consistency to other tools.
@@ -75,57 +137,6 @@ o ipmiconsole
     file searched for and still supported.
   - Prefixed config file options with 'ipmiconsole' for consistency to
     new global FreeIPMI config file.  Old options still supported.
-o ipmipower
-  - Removed many early experimental features from ipmipower so
-    ipmipower is more like other tools.  Removed ipmi-version,
-    cipher-suite-id, privilege-level, and authentication-type auto
-    discovery. Removed ability to enable/disable a number of experimental
-    features.
-  - Changed --config to --config-file in ipmipower for consistency to
-    other tools.  Backwards compatability maintiained.
-  - Replace --ipmi-version option with --driver-type.  Backwards
-    compatability maintained.
-  - Removed hostname config file option.  Require users to always input
-    atleast hostname.
-  - Changed primary config file to /etc/freeipmi.conf.  Legacy config
-    file searched for and still supported.
-  - Prefixed config file options with 'ipmipower' for consistency to
-    new global FreeIPMI config file.  Old options still supported.
-o ipmi-sensors
-  - Check variety of corner cases such as whether sensor readings,
-    hysteresis, thresholds, etc. are even available before reading
-    them.  Some sensors may output slightly different information than
-    before.  For example, suppose a power supply sensor exists for a
-    power supply that is not installed.  If the sensor is enabled on
-    the motherboard, ipmi-sensors would likely report "OK".  If the
-    sensor is disabled on the motherboard, ipmi-sensors would likely
-    report "NA".  Previously, "OK" would have been reported under both
-    conditions.
-  - Output "NA" for sensors whose slave addresses are not the BMC because
-    the accuracy of the reading is not reliable.  May result in different
-    output than before.
-  - Output multiple sensor status messages on separate lines, rather
-    than all on one line under verbose modes.
-  - When fields are not relevant, do not output as much information in
-    verbose and very verbose mode.  For example, don't output
-    hysteresis or threshold information for power supply sensors.
-  - Alter some output ordering for consistency to IPMI spec.
-o ipmimonitoring
-  - Support -v verbose option to output sensors readings that aren't
-    readable.
-  - Check corner case for sensor readability.  May lead to slightly
-    different output in ipmimonitoring.  For example, suppose a power
-    supply sensor exists for a power supply that is not installed.  If
-    the sensor is enabled on the motherboard, ipmimonitoring would
-    normally report "Nominal".  If the sensor is disabled on the motherboard, 
-    ipmimonitoring would normally not output a sensor state (it would
-    output "N/A" under verbose mode). Previously, "Nominal" would have
-    been reported under both conditions.
-  - Consider sensors without BMC slave addresses unreadable.  May
-    result in sensors not being output like before.
-  - Output multiple bitmask strings if multiple bits are set.
-  - Output "OK", similarly to ipmi-sensors when no bitmask strings are
-    returned from a sensor reading.
 o bmc-watchdog
   - Remove legacy 'v' option for version.
 
@@ -133,13 +144,18 @@ Libraries
 ---------
 o libfreeipmi
   - Add additional IPMI commands.
+  - Support ipmb interface.
   - Support new "connection timeout" error message.
+  - Support new "command invalid for selected interface" error message.
+  - Support SUNBMC driver.
 o libipmimonitoring
   - Support new "connection timeout" error message.
   - Handle variety of corner case situations better, such as dealing
     with sensor readings that are unavailable.
   - Provide more information to user on unreadable/uninterpretable
     sensor readings.
+  - Support SUNBMC driver.
+  - Provide new IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS flag.
 o Various naming consistency fixes to IPMI specification.
 o Various minor bug fixes.
 

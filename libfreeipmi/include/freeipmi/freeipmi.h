@@ -26,6 +26,7 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/api/ipmi-chassis-cmds-api.h>
 #include <freeipmi/api/ipmi-device-global-cmds-api.h>
+#include <freeipmi/api/ipmi-event-cmds-api.h>
 #include <freeipmi/api/ipmi-fru-inventory-device-cmds-api.h>
 #include <freeipmi/api/ipmi-lan-cmds-api.h>
 #include <freeipmi/api/ipmi-messaging-support-cmds-api.h>
@@ -39,6 +40,7 @@ extern "C" {
 #include <freeipmi/cmds/ipmi-bmc-watchdog-timer-cmds.h>
 #include <freeipmi/cmds/ipmi-chassis-cmds.h>
 #include <freeipmi/cmds/ipmi-device-global-cmds.h>
+#include <freeipmi/cmds/ipmi-event-cmds.h>
 #include <freeipmi/cmds/ipmi-fru-inventory-device-cmds.h>
 #include <freeipmi/cmds/ipmi-lan-cmds.h>
 #include <freeipmi/cmds/ipmi-messaging-support-cmds.h>
@@ -89,6 +91,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-system-software-id-spec.h>
 #include <freeipmi/util/ipmi-cipher-suite-util.h>
 #include <freeipmi/util/ipmi-error-util.h>
+#include <freeipmi/util/ipmi-ipmb-util.h>
 #include <freeipmi/util/ipmi-lan-util.h>
 #include <freeipmi/util/ipmi-rmcpplus-util.h>
 #include <freeipmi/util/ipmi-sensor-and-event-code-tables-util.h>

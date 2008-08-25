@@ -1,3 +1,72 @@
+2008-08-25 Albert Chu <chu11@llnl.gov>
+
+	* merge in ipmb_branch
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-event-commands.h,
+	libfreeipmi/src/cmds/ipmi-event-cmds.c,
+	libfreeipmi/src/api/ipmi-event-cmds.c,
+	libfreeipmi/include/freeipmi/api/ipmi-event-cmds-api.h: New files.
+
+	* libfreeipmi/include/freeipmi/util/ipmi-ipmb-util.h,
+	libfreeipmi/src/util/ipmi-ipmb-util.c: New files.
+
+	* libfreeipmi/include/freeipmi/freeipmi.h: Update for new files.
+
+	* libfreeipmi/src/api/ipmi-api.c,
+	libfreeipmi/include/freeipmi/api/ipmi-api.h (ipmi_cmd_ipmb): New
+	function.
+
+	* libfreeipmi/include/freeipmi/util/ipmi-error-util.c,
+	libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h: Support
+	error codes for get message command.
+
+	* libfreeipmi/src/api/ipmi-kcs-interface-api.h,
+	libfreeipmi/src/api/ipmi-kcs-interface-api.c
+	(ipmi_kcs_cmd_api_ipmb): New function.
+
+	* libfreeipmi/include/freeipmi/driver/ipmi-openipmi-driver.h,
+	libfreeipmi/src/driver/ipmi-openipmi-driver.c
+	(ipmi_openipmi_cmd_ipmb): New function.
+
+	* libfreeipmi/src/api/ipmi-openipmi-interface-api.h,
+	libfreeipmi/src/api/ipmi-openipmi-interface-api.c
+	(ipmi_openipmi_cmd_api_ipmb): New function.
+	
+	* libfreeipmi/src/api/ipmi-lan-session-common.h,
+	libfreeipmi/src/api/ipmi-lan-session-common.c
+	(ipmi_lan_cmd_wrapper_ipmb, ipmi_lan_2_0_cmd_wrapper_ipmb): New
+	functions.
+
+	* libfreeipmi/src/debug/ipmi-debug.c,
+	libfreeipmi/src/debug/ipmi-debug-lan.c,
+	libfreeipmi/src/debug/ipmi-debug-rmcpplus.c,
+	libfreeipmi/include/freeipmi/debug/ipmi-debug.h
+	(ipmi_dump_obj_ipmb, ipmi_dump_lan_packet_ipmb,
+	ipmi_dump_rmcpplus_packet_ipmb): New functions.
+
+	* libfreeipmi/src/api/ipmi-api.c, libfreeipmi/src/api/ipmi-ctx.h:
+	Support ipmb debugging.
+
+	* ipmi-sensors/: Support ipmb bridging.  Support --bridge-sensors
+	option.  Change default privilege to operator.  Output "Unknown
+	State" if an unrecognized bit is set.  Output busy sensors as "Unknown".
+
+	* ipmimonitoring/src/libipmimonitoring/: Support
+	IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS flag.
+	
+	* ipmimonitoring/: Output "Unknown State" if an unrecognized bit
+	is set.  Handle and recognize busy sensors.  Support
+	--bridge-sensors option.  Change default privilege to operator.
+
+	* common/src/toolcommon/tool-config-file-common.h,
+	common/src/toolcommon/tool-config-file-common.c: Support config
+	file configuration of --bridge-sensors.
+
+	Various code cleanup and minor enhancements.
+
+	* libfreeipmi/src/api/: Create and support new error message
+	IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE.
+
 2008-08-22 Albert Chu <chu11@llnl.gov>
 
 	* tagged ipmi_chassi_boot_flags_workaround_pre

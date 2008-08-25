@@ -116,6 +116,7 @@ fiid_template_t tmpl_cmd_get_message_rs =
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "inferred_privilege_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1024, "message_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     {0, "", 0}
   };
 
@@ -126,7 +127,7 @@ fiid_template_t tmpl_cmd_send_message_rq =
     {1, "send_message_with_authentication", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "send_message_with_encryption", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2, "tracking_operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1024, "message_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1024, "message_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     {0, "", 0}
   };
 

@@ -58,6 +58,8 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
 
+  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_SSIF);
+
   {
     uint8_t *pkt;
     uint32_t pkt_len;
@@ -138,6 +140,8 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
                       && buf_rq_len > 0
                       && buf_rs 
                       && buf_rs_len > 0);
+
+  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_SSIF);
 
   API_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
   pkt_len = hdr_len + buf_rq_len;

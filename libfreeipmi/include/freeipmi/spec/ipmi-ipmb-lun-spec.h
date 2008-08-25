@@ -60,4 +60,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-ipmb-interface.h */
+#endif /* ipmi-ipmb-lun-spec.h */

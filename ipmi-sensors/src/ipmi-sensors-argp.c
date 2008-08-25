@@ -66,7 +66,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
-    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
@@ -86,6 +86,8 @@ static struct argp_option cmdline_options[] =
      "Show sensors belonging to a specific group.", 35}, 
     {"sensors",        SENSORS_KEY, "SENSORS-LIST", 0, 
      "Show sensors by record id.  Accepts space or comma separated lists", 36}, 
+    {"bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
+     "Bridge addresses to read non-BMC owned sensors.", 37},
     { 0 }
   };
 
@@ -160,6 +162,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           tok = strtok(NULL, " ,");
         }
       break;
+    case BRIDGE_SENSORS_KEY:
+      cmd_args->bridge_sensors = 1;
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -216,7 +221,8 @@ _ipmi_sensors_config_file_parse(struct ipmi_sensors_arguments *cmd_args)
       cmd_args->groups_wanted++;
       cmd_args->groups_length = config_file_data.groups_length;
     }
-
+  if (config_file_data.bridge_sensors_count)
+    cmd_args->bridge_sensors = config_file_data.bridge_sensors;
 }
 
 void
@@ -262,7 +268,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
 {
   int i;
 
-  init_common_cmd_args_user (&(cmd_args->common));
+  init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->verbose = 0;
@@ -281,6 +287,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
          '\0', 
          sizeof(unsigned int)*IPMI_SENSORS_MAX_RECORD_IDS);
   cmd_args->sensors_length = 0;
+  cmd_args->bridge_sensors = 0;
   
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
 

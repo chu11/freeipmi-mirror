@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.26 2008-08-19 00:40:27 chu11 Exp $
+## $Id: Makefile.am,v 1.27 2008-08-25 17:26:24 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -7,6 +7,7 @@ nobase_include_HEADERS = \
 	freeipmi/api/ipmi-api.h \
 	freeipmi/api/ipmi-chassis-cmds-api.h \
 	freeipmi/api/ipmi-device-global-cmds-api.h \
+	freeipmi/api/ipmi-event-cmds-api.h \
 	freeipmi/api/ipmi-fru-inventory-device-cmds-api.h \
 	freeipmi/api/ipmi-lan-cmds-api.h \
 	freeipmi/api/ipmi-messaging-support-cmds-api.h \
@@ -20,6 +21,7 @@ nobase_include_HEADERS = \
 	freeipmi/cmds/ipmi-bmc-watchdog-timer-cmds.h \
 	freeipmi/cmds/ipmi-chassis-cmds.h \
 	freeipmi/cmds/ipmi-device-global-cmds.h \
+	freeipmi/cmds/ipmi-event-cmds.h \
 	freeipmi/cmds/ipmi-fru-inventory-device-cmds.h \
 	freeipmi/cmds/ipmi-lan-cmds.h \
 	freeipmi/cmds/ipmi-messaging-support-cmds.h \
@@ -70,6 +72,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-system-software-id-spec.h \
 	freeipmi/util/ipmi-cipher-suite-util.h \
 	freeipmi/util/ipmi-error-util.h \
+	freeipmi/util/ipmi-ipmb-util.h \
 	freeipmi/util/ipmi-lan-util.h \
 	freeipmi/util/ipmi-rmcpplus-util.h \
 	freeipmi/util/ipmi-sensor-and-event-code-tables-util.h \
