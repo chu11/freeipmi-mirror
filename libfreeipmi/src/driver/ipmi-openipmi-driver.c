@@ -70,7 +70,7 @@
 #include <linux/ipmi.h>
 #elif HAVE_SYS_IPMI_H
 #include <sys/ipmi.h>
-#else  /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_LINUX_H */
+#else  /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_IPMI_H */
 /* 
  * achu: Most of the definitions below are taken from linux/ipmi.h.
  *
@@ -124,7 +124,7 @@ struct ipmi_recv
 #define IPMICTL_SET_MY_ADDRESS_CMD _IOR(IPMI_IOC_MAGIC,  17, unsigned int)
 #endif
 #define IPMICTL_GET_MY_ADDRESS_CMD _IOR(IPMI_IOC_MAGIC,  18, unsigned int)
-#endif /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_LINUX_H */
+#endif /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_IPMI_H */
 
 static char * ipmi_openipmi_ctx_errmsg[] =
   {
