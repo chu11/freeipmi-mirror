@@ -902,6 +902,10 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
     status = ipmi_kcs_cmd_api_ipmb (ctx,
 				    obj_cmd_rq,
 				    obj_cmd_rs);
+  else if (ctx->type == IPMI_DEVICE_OPENIPMI)
+    status = ipmi_openipmi_cmd_api_ipmb (ctx,
+					 obj_cmd_rq,
+					 obj_cmd_rs);
   else
     API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE(0);
                          

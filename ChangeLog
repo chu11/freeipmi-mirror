@@ -22,6 +22,14 @@
 	libfreeipmi/src/api/ipmi-kcs-interface-api.c
 	(ipmi_kcs_cmd_api_ipmb): New function.
 
+	* libfreeipmi/include/freeipmi/driver/ipmi-openipmi-driver.h,
+	libfreeipmi/src/driver/ipmi-openipmi-driver.c
+	(ipmi_openipmi_cmd_ipmb): New function.
+
+	* libfreeipmi/src/api/ipmi-openipmi-interface-api.h,
+	libfreeipmi/src/api/ipmi-openipmi-interface-api.c
+	(ipmi_openipmi_cmd_api_ipmb): New function.
+	
 	* libfreeipmi/src/api/ipmi-lan-session-common.h,
 	libfreeipmi/src/api/ipmi-lan-session-common.c
 	(ipmi_lan_cmd_wrapper_ipmb, ipmi_lan_2_0_cmd_wrapper_ipmb): New

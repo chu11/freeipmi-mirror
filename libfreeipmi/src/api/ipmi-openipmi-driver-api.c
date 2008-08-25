@@ -67,6 +67,30 @@ ipmi_openipmi_cmd_api (ipmi_ctx_t ctx,
   return (0);
 }
 
+int8_t 
+ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx,
+			    fiid_obj_t obj_cmd_rq,
+			    fiid_obj_t obj_cmd_rs)
+{
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rq)
+                      && fiid_obj_valid(obj_cmd_rs));
+
+  API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
+
+  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_OPENIPMI);
+
+  API_ERR_OPENIPMI (!(ipmi_openipmi_cmd_ipmb (ctx->io.inband.openipmi_ctx,
+					      ctx->rs_addr,
+					      ctx->lun,
+					      ctx->net_fn,
+					      obj_cmd_rq,
+					      obj_cmd_rs) < 0));
+
+  return (0);
+}
+
 int32_t
 ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx,
                            uint8_t *buf_rq,
