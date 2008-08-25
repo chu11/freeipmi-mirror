@@ -128,6 +128,7 @@ o ipmi-fru
     vs. very verbose output.
 o ipmi-sel
   - Change default privilege from user to operator.
+  - Support SEL Event Record debug dumping.
 o ipmiconsole
   - Support --session-timeout and --retransmission-timeout options.
   - Removed -C short option for consistency to other tools.

@@ -4,6 +4,7 @@ noinst_HEADERS = \
 	ipmi-sel-entry.h 
 
 AM_CPPFLAGS = \
+	-I$(top_builddir)/common/src/debugutil \
 	-I$(top_builddir)/common/src/miscutil \
 	-I$(top_builddir)/common/src/portability \
 	-I$(top_builddir)/common/src/toolcommon \
@@ -14,6 +15,7 @@ AM_CPPFLAGS = \
 sbin_PROGRAMS = ipmi-sel
 
 ipmi_sel_LDADD = \
+	$(top_builddir)/common/src/debugutil/libdebugutil.la \
 	$(top_builddir)/common/src/toolcommon/libtoolcommon.la
  
 ipmi_sel_SOURCES = \

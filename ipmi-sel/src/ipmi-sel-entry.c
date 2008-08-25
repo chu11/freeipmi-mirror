@@ -52,6 +52,7 @@
 
 #include "ipmi-sel-entry.h"
 
+#include "debug-util.h"
 #include "freeipmi-portability.h"
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
@@ -295,6 +296,29 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
   _FIID_OBJ_CREATE (obj, tmpl_sel_system_event_record);
 
   _FIID_OBJ_SET_ALL(obj, record_data, record_data_len);
+
+  if (state_data->prog_data->args->common.debug)
+    {
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      char *prefix = NULL;
+
+      debug_hdr_str(DEBUG_UTIL_TYPE_NONE,
+                    DEBUG_UTIL_DIRECTION_NONE,
+                    "SEL Event Record",
+                    hdrbuf,
+                    DEBUG_UTIL_HDR_BUFLEN);
+
+      if (state_data->hostname)
+        prefix = state_data->hostname;
+      if (state_data->prog_data->args->hostrange.always_prefix && !state_data->hostname)
+        prefix = "localhost";
+
+      ipmi_obj_dump (STDERR_FILENO,
+                     prefix,
+                     hdrbuf,
+                     NULL,
+                     obj);
+    }
 
   _FIID_OBJ_GET (obj, "record_id", &val);
   record_id = val;

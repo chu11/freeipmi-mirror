@@ -103,11 +103,11 @@ _output_verbose_header (ipmi_sensors_state_data_t *state_data,
   if (sensor_owner_id_type)
     pstdout_printf (state_data->pstate,
                     "System Software ID: %Xh\n",
-                    sensor_owner_id);
+                    (sensor_owner_id << 1) | sensor_owner_id_type);
   else
     pstdout_printf (state_data->pstate,
                     "IPMB Slave Address: %Xh\n",
-                    sensor_owner_id);
+                    (sensor_owner_id << 1) | sensor_owner_id_type);
   pstdout_printf (state_data->pstate, 
                   "Event/Reading Type Code: %Xh\n", 
                   event_reading_type_code);
