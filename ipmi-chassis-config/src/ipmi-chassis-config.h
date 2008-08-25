@@ -63,37 +63,6 @@ typedef struct ipmi_chassis_config_state_data
   uint8_t front_panel_enable_reset_button;
   int front_panel_enable_power_off_button_for_power_off_only_initialized;
   uint8_t front_panel_enable_power_off_button_for_power_off_only;
-
-  /* achu: workaround, see ipmi-chassis-config-boot-flags.c */
-  int boot_flags_valid_initialized;
-  uint8_t boot_flags_valid;
-  int boot_flags_persistent_initialized;
-  uint8_t boot_flags_persistent;
-  int bios_boot_type_initialized;
-  uint8_t bios_boot_type;
-  int cmos_clear_initialized;
-  uint8_t cmos_clear;
-  int lock_keyboard_initialized;
-  uint8_t lock_keyboard;
-  int screen_blank_initialized;
-  uint8_t screen_blank;
-  int boot_device_initialized;
-  uint8_t boot_device;
-  int lock_out_reset_button_initialized;
-  uint8_t lock_out_reset_button;
-  int lock_out_power_button_initialized;
-  uint8_t lock_out_power_button;
-  int lock_out_sleep_button_initialized;
-  uint8_t lock_out_sleep_button;
-  int firmware_bios_verbosity_initialized;
-  uint8_t firmware_bios_verbosity;
-  int force_progress_event_traps_initialized;
-  uint8_t force_progress_event_traps;
-  int user_password_bypass_initialized;
-  uint8_t user_password_bypass;
-  int console_redirection_initialized;
-  uint8_t console_redirection;
-
 } ipmi_chassis_config_state_data_t;
 
 #endif

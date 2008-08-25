@@ -150,48 +150,6 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
 
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
 
-  /* achu: Workaround
-   * 
-   * On some motherboards, it appears that chassis configuration of boot
-   * flags doesn't get stored until after the 
-   * boot_info_acknowledge command is executed.  But even after that, I'm
-   * unsure if the values are stored "quickly enough" to be retrieved
-   * on the next checkout attempt.
-   * 
-   * Therefore we do this workaround.  Where we load all of the values
-   * ahead of time and check them in all in at once.  Hopefully the
-   * user has not input something that the remote machine won't like.
-   */
-
-  if (state_data->boot_flags_valid_initialized)
-    data->boot_flags_valid = state_data->boot_flags_valid;
-  if (state_data->boot_flags_persistent_initialized)
-    data->boot_flags_persistent = state_data->boot_flags_persistent;
-  if (state_data->bios_boot_type_initialized)
-    data->bios_boot_type = state_data->bios_boot_type;
-  if (state_data->cmos_clear_initialized)
-    data->cmos_clear = state_data->cmos_clear;
-  if (state_data->lock_keyboard_initialized)
-    data->lock_keyboard = state_data->lock_keyboard;
-  if (state_data->screen_blank_initialized)
-    data->screen_blank = state_data->screen_blank;
-  if (state_data->boot_device_initialized)
-    data->boot_device = state_data->boot_device;
-  if (state_data->lock_out_reset_button_initialized)
-    data->lock_out_reset_button = state_data->lock_out_reset_button;
-  if (state_data->lock_out_power_button_initialized)
-    data->lock_out_power_button = state_data->lock_out_power_button;
-  if (state_data->lock_out_sleep_button_initialized)
-    data->lock_out_sleep_button = state_data->lock_out_sleep_button;
-  if (state_data->firmware_bios_verbosity_initialized)
-    data->firmware_bios_verbosity = state_data->firmware_bios_verbosity;
-  if (state_data->force_progress_event_traps_initialized)
-    data->force_progress_event_traps = state_data->force_progress_event_traps;
-  if (state_data->user_password_bypass_initialized)
-    data->user_password_bypass = state_data->user_password_bypass;
-  if (state_data->console_redirection_initialized)
-    data->console_redirection = state_data->console_redirection;
-
   if (ipmi_cmd_set_system_boot_options_boot_flags (state_data->ipmi_ctx, 
                                                    data->bios_boot_type,
                                                    data->boot_flags_persistent,
@@ -628,6 +586,45 @@ lock_out_sleep_button_commit (const char *section_name,
 }
 
 static config_err_t
+chassis_boot_flags_post (const char *section_name,
+                         void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  uint8_t boot_info_acknowledge = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  fiid_obj_t obj_cmd_rs = NULL;
+
+  /* Following should be called to inform remaining chassis subsystems
+   * that a boot configuration change has taken place.
+   */
+
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
+
+  if (ipmi_cmd_set_system_boot_options_boot_info_acknowledge (state_data->ipmi_ctx,
+                                                              &boot_info_acknowledge,
+                                                              &boot_info_acknowledge,
+                                                              &boot_info_acknowledge,
+                                                              &boot_info_acknowledge,
+                                                              &boot_info_acknowledge,
+                                                              obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_system_boot_options_boot_info_acknowledge: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  return (rv);
+}
+
+static config_err_t
 firmware_bios_verbosity_checkout (const char *section_name,
                                   struct config_keyvalue *kv,
                                   void *arg)
@@ -787,45 +784,6 @@ console_redirection_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_err_t
-chassis_boot_flags_post (const char *section_name,
-                         void *arg)
-{
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
-  uint8_t boot_info_acknowledge = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  fiid_obj_t obj_cmd_rs = NULL;
-
-  /* Following should be called to inform remaining chassis subsystems
-   * that a boot configuration change has taken place.
-   */
-
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
-
-  if (ipmi_cmd_set_system_boot_options_boot_info_acknowledge (state_data->ipmi_ctx,
-                                                              &boot_info_acknowledge,
-                                                              &boot_info_acknowledge,
-                                                              &boot_info_acknowledge,
-                                                              &boot_info_acknowledge,
-                                                              &boot_info_acknowledge,
-                                                              obj_cmd_rs) < 0)
-    {
-      if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_set_system_boot_options_boot_info_acknowledge: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-  
-  rv = CONFIG_ERR_SUCCESS;
- cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
-  return (rv);
-}
-
 struct config_section *
 ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data)
 {
@@ -845,13 +803,7 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
     "boot off of.  Most users may wish to select NO-OVERRIDE to select the "
     "configuration currently determined by the BIOS.  Note that the configuration "
     "value BIOS-SETUP refers to booting *into* the BIOS Setup, not from it.  FLOPPY "
-    "may refer to any type of removeable media."
-    "\n"
-    "Each field of this section will be committed together rather than one at a time. "
-    "Therefore, it is possible that one invalid input to the remote motherboard may "
-    "lead to all fields being committed with errors.  If this occurs, users should "
-    "experiment with different configuration options.  Commenting out some fields "
-    "to not configure them may also help.";
+    "may refer to any type of removeable media.";
 
   if (!(section = config_section_create (state_data->pstate,
                                          "Chassis_Boot_Flags",

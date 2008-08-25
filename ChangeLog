@@ -1,4 +1,8 @@
 2008-08-25 Albert Chu <chu11@llnl.gov>
+	
+	* ipmi-chassis-config/: Remove ipmi chassis boot flags workaround.
+
+2008-08-25 Albert Chu <chu11@llnl.gov>
 
 	* merge in ipmb_branch
 
