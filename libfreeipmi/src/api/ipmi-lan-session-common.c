@@ -462,7 +462,8 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
 
   assert(ctx
 	 && ctx->magic == IPMI_CTX_MAGIC
-         && ctx->type == IPMI_DEVICE_LAN
+         && (ctx->type == IPMI_DEVICE_LAN
+             || ctx->type == IPMI_DEVICE_LAN_2_0)
 	 && ctx->io.outofband.sockfd 
          && IPMI_BMC_LUN_VALID(lun)
          && IPMI_NET_FN_VALID(net_fn)
@@ -533,7 +534,8 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
 
   assert(ctx
 	 && ctx->magic == IPMI_CTX_MAGIC
-         && ctx->type == IPMI_DEVICE_LAN
+         && (ctx->type == IPMI_DEVICE_LAN
+             || ctx->type == IPMI_DEVICE_LAN_2_0)
 	 && ctx->io.outofband.sockfd 
          && pkt
          && pkt_len
@@ -608,7 +610,8 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 
   assert(ctx
 	 && ctx->magic == IPMI_CTX_MAGIC
-         && ctx->type == IPMI_DEVICE_LAN
+         && (ctx->type == IPMI_DEVICE_LAN
+             || ctx->type == IPMI_DEVICE_LAN_2_0)
 	 && ctx->io.outofband.sockfd
          && IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type)
          && !(password && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
@@ -739,7 +742,8 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
   
   assert(ctx
 	 && ctx->magic == IPMI_CTX_MAGIC
-         && ctx->type == IPMI_DEVICE_LAN
+         && (ctx->type == IPMI_DEVICE_LAN
+             || ctx->type == IPMI_DEVICE_LAN_2_0)
 	 && ctx->io.outofband.sockfd 
          && IPMI_BMC_LUN_VALID(lun)
          && IPMI_NET_FN_VALID(net_fn)
@@ -984,7 +988,8 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
   assert(ctx
 	 && ctx->magic == IPMI_CTX_MAGIC
-         && ctx->type == IPMI_DEVICE_LAN
+         && (ctx->type == IPMI_DEVICE_LAN
+             || ctx->type == IPMI_DEVICE_LAN_2_0)
 	 && ctx->io.outofband.sockfd 
 	 && fiid_obj_valid(obj_cmd_rq)
 	 && fiid_obj_packet_valid(obj_cmd_rq)
