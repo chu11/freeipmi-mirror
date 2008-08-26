@@ -1,4 +1,10 @@
 2008-08-26  Albert Chu <chu11@llnl.gov>
+	
+	* configure.ac, NEWS: Update for release.
+
+	* Tagged Release-0_6_6.
+
+2008-08-26  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, ipmimonitoring/: Do not read non-BMC owned sensors.
 	
