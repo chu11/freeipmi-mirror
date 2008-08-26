@@ -146,9 +146,9 @@ Libraries
 ---------
 o libfreeipmi
   - Add additional IPMI commands.
-  - Support ipmb interface.
   - Support new "connection timeout" error message.
   - Support new "command invalid for selected interface" error message.
+  - Support ipmb bridging in KCS, OPENIPMI, LAN, and LAN_2_0 interfaces.
   - Support SUNBMC driver.
 o libipmimonitoring
   - Support new "connection timeout" error message.
@@ -158,6 +158,7 @@ o libipmimonitoring
     sensor readings.
   - Support SUNBMC driver.
   - Provide new IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS flag.
+  - Support several new sensor interpretation rules.
 o Various naming consistency fixes to IPMI specification.
 o Various minor bug fixes.
 
