@@ -196,8 +196,9 @@ _get_sensor_reading_ipmb (struct ipmi_sensors_state_data *state_data,
       if (state_data->prog_data->args->common.debug)
         pstdout_fprintf(state_data->pstate,
                         stderr,
-                        "Sensor number 0x%X slave address is not BMC\n",
-                        sensor_number);
+                        "Sensor number 0x%X in record %u is not owned by the BMC\n",
+                        sensor_number,
+                        record_id);
       
       /* make status message "na" so "unknown" isn't output */
       if (get_msg_message_list (state_data,
