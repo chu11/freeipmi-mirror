@@ -285,6 +285,8 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 
                   if (retransmission_count > IPMI_KCS_IPMB_REREAD_COUNT)
                     API_ERR_MESSAGE_TIMEOUT_CLEANUP(0);
+
+		  continue;
                 }
             }
           goto cleanup;
