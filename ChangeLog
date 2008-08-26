@@ -1,3 +1,7 @@
+2008-08-26  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/, ipmimonitoring/: Do not read non-BMC owned sensors.
+	
 2008-08-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/cmds/ipmi-chassis-cmds.c

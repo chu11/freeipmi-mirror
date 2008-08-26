@@ -1,5 +1,7 @@
 0.6.6 - 00/00/00
 ----------------
+o Output NA/Unknown for non-BMC owned sensors in ipmi-sensors.
+o Do not output readings for non-BMC owned sensors in ipmimonitoring.
 o libfreeipmi/ipmi-chassis fix invalid console redirection input check.
 
 0.6.5 - 08/02/08
