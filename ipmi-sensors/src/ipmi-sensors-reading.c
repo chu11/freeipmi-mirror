@@ -146,6 +146,18 @@ _get_sensor_reading_ipmb (struct ipmi_sensors_state_data *state_data,
               
               rv = 0;
             }
+          else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
+            {
+              /* ipmb message timed out, but we can still continue, not a fatal error */
+              if (state_data->prog_data->args->common.debug)
+                pstdout_fprintf(state_data->pstate,
+                                stderr,
+                                "Sensor number 0x%X data in record %u ipmb message timed out\n",
+                                sensor_number,
+                                record_id);
+              
+              rv = 0;
+            }
           else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
                                               IPMI_COMP_CODE_NODE_BUSY) == 1)
             {

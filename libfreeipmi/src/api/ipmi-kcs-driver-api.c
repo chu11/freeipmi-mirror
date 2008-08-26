@@ -52,7 +52,8 @@
  * inband "TIMEOUT", the purpose is to just not hang any user code
  * trying to do ipmb.  You gotta give up at some point.
  */
-#define IPMI_KCS_IPMB_RETRY_COUNT   10
+#define IPMI_KCS_IPMB_RETRANSMISSION_COUNT   10
+#define IPMI_KCS_IPMB_REREAD_COUNT           10
 
 int8_t 
 ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
@@ -246,6 +247,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
   fiid_obj_t obj_ipmb_msg_hdr_rs = NULL;
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   unsigned retransmission_count = 0;
+  unsigned reread_count = 0;
   int8_t rv = -1;
   int ret;
 
@@ -274,7 +276,19 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 			       obj_ipmb_msg_hdr_rs,
 			       obj_ipmb_msg_trlr,
 			       obj_cmd_rs) < 0)
-	goto cleanup;
+        {
+          if (ctx->errnum == IPMI_ERR_BAD_COMPLETION_CODE)
+            {
+              if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_DATA_NOT_AVAILABLE) == 1)
+                {
+                  reread_count++;
+
+                  if (retransmission_count > IPMI_KCS_IPMB_REREAD_COUNT)
+                    API_ERR_MESSAGE_TIMEOUT_CLEANUP(0);
+                }
+            }
+          goto cleanup;
+        }
 
 
       API_ERR_CLEANUP (!((ret = ipmi_ipmb_check_rq_seq (obj_ipmb_msg_hdr_rs, 
@@ -294,7 +308,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 	{
 	  retransmission_count++;
 
-	  if (retransmission_count > IPMI_KCS_IPMB_RETRY_COUNT)
+	  if (retransmission_count > IPMI_KCS_IPMB_RETRANSMISSION_COUNT)
 	    API_ERR_MESSAGE_TIMEOUT_CLEANUP(0);
 	  
 	  ctx->io.inband.rq_seq = ((ctx->io.inband.rq_seq) + 1) % (IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX + 1);

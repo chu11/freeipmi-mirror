@@ -2,6 +2,12 @@
 
 	* ipmimonitoring/: Support power supply redundancy interpretation.
 
+	* libfreeipmi/src/api/ipmi-kcs-interface-api.c: Re-read if get
+	message queue is empty.
+	
+	* ipmi-sensors/, ipmimonitoring/: Continue on if a message timeout
+	occured.  It is not a fatal error.
+
 	* Tweak documentation.
 	
 2008-08-25 Albert Chu <chu11@llnl.gov>
