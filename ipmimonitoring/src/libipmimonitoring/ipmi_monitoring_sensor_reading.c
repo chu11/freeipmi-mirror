@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.31 2008-08-26 17:05:48 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.32 2008-08-26 17:26:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -503,7 +503,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
               goto cleanup;
             }
 
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
+          if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
             {
               /* ipmb message timed out, but we can still continue, not a fatal error */
               IPMI_MONITORING_DEBUG(("sensor ipmb message timed out"));
