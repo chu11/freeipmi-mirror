@@ -1,8 +1,8 @@
 libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
-* abstract FRU parsing into lib
-* abstract SEL parsing into lib
+* abstract FRU parsing into lib?
+* abstract SEL parsing into lib?
 
 ipmi-chassis-config
 -------------------
@@ -77,26 +77,6 @@ additions.
 - activate/deactive power limit
   - these 4 commands seem like the only maybe potentially useful
     additions.
-
-ipmb
-----
-ipmi-sensors
-ipmimonitoring
-for all interfaces
---no-ipmb option
-debug
-slave addres in in ipmi-raw?
-
-need ipmb timeout
-- 5 secs fin spec
-- timeout code
-
-rq-seq ipmb sequencing
-
-debug dump for inband
-debug dump for rmcpplus
-
-get message and bunch others inband only???
 
 0.7.0 porting ensure works
 --------------------------
