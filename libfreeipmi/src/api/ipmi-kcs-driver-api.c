@@ -213,7 +213,10 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
 
   if (ipmi_cmd_get_message (ctx, obj_get_cmd_rs) < 0)
     {
-      API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_get_cmd_rs);
+      if (ipmi_check_completion_code (obj_get_cmd_rs, IPMI_COMP_CODE_DATA_NOT_AVAILABLE) == 1)
+	API_ERR_MESSAGE_TIMEOUT_CLEANUP(0);
+      else
+	API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_get_cmd_rs);
       goto cleanup;
     }
 
@@ -277,43 +280,40 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 			       obj_ipmb_msg_trlr,
 			       obj_cmd_rs) < 0)
         {
-          if (ctx->errnum == IPMI_ERR_BAD_COMPLETION_CODE)
+          if (ctx->errnum == IPMI_ERR_MESSAGE_TIMEOUT)
             {
-              if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_DATA_NOT_AVAILABLE) == 1)
-                {
-                  reread_count++;
-
-                  if (retransmission_count > IPMI_KCS_IPMB_REREAD_COUNT)
-                    API_ERR_MESSAGE_TIMEOUT_CLEANUP(0);
-
-		  continue;
-                }
+	      reread_count++;
+	      
+	      if (reread_count > IPMI_KCS_IPMB_REREAD_COUNT)
+		API_ERR_MESSAGE_TIMEOUT_CLEANUP(0);
+	      
+	      continue;
             }
           goto cleanup;
         }
-
-
+      
       API_ERR_CLEANUP (!((ret = ipmi_ipmb_check_rq_seq (obj_ipmb_msg_hdr_rs, 
 							ctx->io.inband.rq_seq)) < 0));
 
       /* if it's the wrong rq_seq, get another packet */
       if (!ret)
 	continue;
-
+      
       API_ERR_CLEANUP (!((ret = ipmi_ipmb_check_checksum (IPMI_SLAVE_ADDRESS_BMC,
 							  obj_ipmb_msg_hdr_rs,
 							  obj_cmd_rs,
 							  obj_ipmb_msg_trlr)) < 0));
-
+      
       /* if the checksum is wrong, assume an error and resend */
       if (!ret)
 	{
 	  retransmission_count++;
-
+	  
 	  if (retransmission_count > IPMI_KCS_IPMB_RETRANSMISSION_COUNT)
 	    API_ERR_MESSAGE_TIMEOUT_CLEANUP(0);
 	  
 	  ctx->io.inband.rq_seq = ((ctx->io.inband.rq_seq) + 1) % (IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
+
 	  if (_ipmi_kcs_ipmb_send (ctx, obj_cmd_rq) < 0)
 	    goto cleanup;
 

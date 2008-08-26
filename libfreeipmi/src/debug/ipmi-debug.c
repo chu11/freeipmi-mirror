@@ -204,21 +204,21 @@ ipmi_obj_dump_ipmb (int fd,
                                NULL,
                                obj_cmd) < 0));
 
-  FIID_TEMPLATE_LEN_BYTES (obj_ipmb_msg_trlr_len, tmpl_ipmb_msg_trlr);
-
-  FIID_OBJ_SET_ALL_LEN_CLEANUP (ipmb_hdr_len,
-                                obj_ipmb_msg_hdr,
-                                ipmb_buf,
-                                ipmb_buf_len);
-
-  ERR_CLEANUP (!(ipmi_obj_dump(fd,
-                               prefix,
-                               ipmb_msg_hdr,
-                               NULL,
-                               obj_ipmb_msg_hdr) < 0));
-
   if (ipmb_buf_len)
     {
+      FIID_TEMPLATE_LEN_BYTES (obj_ipmb_msg_trlr_len, tmpl_ipmb_msg_trlr);
+
+      FIID_OBJ_SET_ALL_LEN_CLEANUP (ipmb_hdr_len,
+				    obj_ipmb_msg_hdr,
+				    ipmb_buf,
+				    ipmb_buf_len);
+
+      ERR_CLEANUP (!(ipmi_obj_dump(fd,
+				   prefix,
+				   ipmb_msg_hdr,
+				   NULL,
+				   obj_ipmb_msg_hdr) < 0));
+      
       if ((ipmb_buf_len - ipmb_hdr_len) >= obj_ipmb_msg_trlr_len)
         obj_ipmb_cmd_len = (ipmb_buf_len - ipmb_hdr_len) - obj_ipmb_msg_trlr_len;
       else if ((ipmb_buf_len - ipmb_hdr_len) < obj_ipmb_msg_trlr_len)
