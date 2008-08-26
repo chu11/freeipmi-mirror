@@ -1,6 +1,8 @@
 2008-08-26 Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/: Support power supply redundancy interpretation.
+
+	* Tweak documentation.
 	
 2008-08-25 Albert Chu <chu11@llnl.gov>
 

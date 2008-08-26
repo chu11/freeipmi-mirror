@@ -1,5 +1,5 @@
 .SH "KNOWN ISSUES"
-On certain operating systems, if you input your username, password,
+On older operating systems, if you input your username, password,
 and other potentially security relevant information on the command
 line, this information may be discovered by other users when using
 tools like the
