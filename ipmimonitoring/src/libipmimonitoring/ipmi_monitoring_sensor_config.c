@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.18 2008-08-26 16:30:41 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.19 2008-08-26 21:06:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -52,6 +52,13 @@ struct ipmi_sensor_config ipmi_threshold_sensor_config[] =
     {"IPMI_Threshold_Sensor_At_Or_Above_Upper_Non_Critical_Threshold", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     {"IPMI_Threshold_Sensor_At_Or_Above_Upper_Critical_Threshold", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     {"IPMI_Threshold_Sensor_At_Or_Above_Upper_Non_Recoverable_Threshold", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_voltage_assertion_config[] =
+  {
+    {"IPMI_Voltage_State_Asserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_Voltage_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     {NULL, -1},
   };
 
@@ -407,6 +414,7 @@ ipmi_monitoring_sensor_config(int *errnum)
 {
   int threshold_sensor_flag0, threshold_sensor_flag1, threshold_sensor_flag2,
     threshold_sensor_flag3, threshold_sensor_flag4, threshold_sensor_flag5;
+  int voltage_assertion_flag0, voltage_assertion_flag1;
   int voltage_performance_flag0, voltage_performance_flag1;
   int fan_device_install_flag0, fan_device_install_flag1;
   int module_board_state_flag0, module_board_state_flag1;
@@ -534,6 +542,31 @@ ipmi_monitoring_sensor_config(int *errnum)
         0,
         &threshold_sensor_flag5,
         ipmi_threshold_sensor_config,
+        0
+      },
+      /* 
+       * IPMI_Voltage_Assertion
+       */
+      {
+        ipmi_voltage_assertion_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &voltage_assertion_flag0,
+        ipmi_voltage_assertion_config,
+        0
+      },
+      {
+        ipmi_voltage_assertion_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &voltage_assertion_flag1,
+        ipmi_voltage_assertion_config,
         0
       },
       /* 

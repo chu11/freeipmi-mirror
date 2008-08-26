@@ -1,6 +1,7 @@
 2008-08-26 Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/: Support power supply redundancy interpretation.
+	Support voltage assertion interpretation.
 
 	* libfreeipmi/src/api/ipmi-kcs-interface-api.c: Re-read if get
 	message queue is empty error.
