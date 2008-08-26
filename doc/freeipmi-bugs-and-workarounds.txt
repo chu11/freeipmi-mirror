@@ -221,6 +221,13 @@ Dell 2950: Some sensors return sensor states that are invalid
 (i.e. return 0xC0 if only 0x1 through 0x20 are supported).  Resolved
 ignoring sensor states that are unknown.
 
+ipmi-sel
+--------
+
+Supermicro H8QME with SIMSO daughter card: It appears that SEL records
+incorrectly report the generator_id slave address.  Resolved with
+special case handling.
+
 Misc
 ----
 

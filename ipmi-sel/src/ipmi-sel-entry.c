@@ -395,6 +395,27 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
         goto cleanup;
     }
 
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Supermicro H8QME with SIMSO daughter card.
+   *
+   * The slave address is reportedly incorrectly by having the 
+   * generator_id be shifted over by one.  This is a special
+   * "try again" corner case.
+   */
+  if (!sdr_record_found && generator_id == IPMI_SLAVE_ADDRESS_BMC)
+    {
+      if ((sdr_record_found = _find_sdr_record(state_data, 
+                                               sensor_number,
+                                               generator_id_type,
+                                               (generator_id >> 1),
+                                               sdr_record,
+                                               &sdr_record_len,
+                                               &sdr_record_type,
+                                               &sdr_event_reading_type_code)) < 0)
+        goto cleanup;
+    }
+
   if (sdr_record_found)
     {
       char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
