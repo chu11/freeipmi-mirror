@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.28 2008-08-27 21:14:10 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.29 2008-08-27 21:23:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -665,25 +665,14 @@ struct ipmi_monitoring_ipmi_config
 
 typedef struct ipmi_monitoring_ctx *ipmi_monitoring_ctx_t;
 
-/* 
- * ipmi_monitoring_init
- *
- * Initialize the ipmi monitoring library.  Needs to be called only
- * once before any ipmi monitoring functions are called.  Threaded
- * applications are responsible for calling this function before any
- * thread may call another function in the library.
- *
- * Returns 0 on success, -1 on error
- */
-int ipmi_monitoring_init(unsigned int flags, int *errnum);
-
 /*
  * ipmi_monitoring_sensor_config_file
  *
  * Initialize the ipmi monitoring library with a different default
  * sensor configuration file.  Threaded applications are responsible
  * for calling this function before any thread may call another
- * function in the library.
+ * function in the library.  Should be called before
+ * ipmi_monitoring_init().
  *
  * Returns 0 on success, -1 on error
  */
@@ -695,7 +684,7 @@ int ipmi_monitoring_sensor_config_file(char *file, int *errnum);
  * Initialize the ipmi monitoring library with a different SDR cache
  * directory.  Threaded applications are responsible for calling this
  * function before any thread may call another function in the
- * library.
+ * library.  Should be called before ipmi_monitoring_init().
  *
  * Returns 0 on success, -1 on error
  */
@@ -707,7 +696,7 @@ int ipmi_monitoring_sdr_cache_directory(char *dir, int *errnum);
  * Initialize how sdr cache filenames will be formatted when
  * written/read.  Threaded applications are responsible for calling
  * this function before any thread may call another function in the
- * library.
+ * library.  Should be called before ipmi_monitoring_init().
  *
  * The following may be included in the format.
  *
@@ -719,6 +708,18 @@ int ipmi_monitoring_sdr_cache_directory(char *dir, int *errnum);
  * Returns 0 on success, -1 on error
  */
 int ipmi_monitoring_sdr_cache_filenames(char *format, int *errnum);
+
+/* 
+ * ipmi_monitoring_init
+ *
+ * Initialize the ipmi monitoring library.  Needs to be called only
+ * once before any ipmi monitoring functions are called.  Threaded
+ * applications are responsible for calling this function before any
+ * thread may call another function in the library.
+ *
+ * Returns 0 on success, -1 on error
+ */
+int ipmi_monitoring_init(unsigned int flags, int *errnum);
 
 /* 
  * ipmi_monitoring_ctx_create

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.63 2008-08-27 21:14:10 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.64 2008-08-27 21:23:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -127,12 +127,6 @@ _setup_ipmimonitoring_lib (struct ipmimonitoring_arguments *args)
 
   assert(args);
 
-  if (ipmi_monitoring_init(args->ipmimonitoring_flags, &errnum) < 0)
-    {
-      fprintf(stderr, "ipmi_monitoring_init: %s\n", ipmi_monitoring_ctx_strerror(errnum));
-      return -1;
-    }
-
   /* Force use of same directory used for other FreeIPMI tools. 
    * 
    * call sdr_cache_create_directory() to create it first, otherwise
@@ -177,6 +171,12 @@ _setup_ipmimonitoring_lib (struct ipmimonitoring_arguments *args)
         }
     }
   
+  if (ipmi_monitoring_init(args->ipmimonitoring_flags, &errnum) < 0)
+    {
+      fprintf(stderr, "ipmi_monitoring_init: %s\n", ipmi_monitoring_ctx_strerror(errnum));
+      return -1;
+    }
+
   return 0;
 }
 
