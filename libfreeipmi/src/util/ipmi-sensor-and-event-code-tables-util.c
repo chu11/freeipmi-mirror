@@ -950,7 +950,7 @@ static int ipmi_sensor_type_code_19_short_desc_max = 0x00;
 static char * ipmi_sensor_type_code_1B_short_desc[] =
   {
     "Cable/Interconnect is connected",
-    "Cable/Interconnect configuration error",
+    "Configuration Error - Incorrect cable connected",
     NULL
   };
 static int ipmi_sensor_type_code_1B_short_desc_max = 0x01;
