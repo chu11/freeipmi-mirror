@@ -110,6 +110,7 @@ _get_sensor_reading_ipmb (struct ipmi_sensors_state_data *state_data,
                           char ***event_message_list,
                           unsigned int *event_message_list_len,
                           uint8_t slave_address,
+                          uint8_t lun,
                           uint8_t channel_number,
                           uint8_t sensor_number,
                           uint8_t record_id,
@@ -122,10 +123,12 @@ _get_sensor_reading_ipmb (struct ipmi_sensors_state_data *state_data,
   assert(event_message_list_len);
   assert(obj_get_sensor_reading_rs);
 
-  if (state_data->prog_data->args->bridge_sensors)
+  if (state_data->prog_data->args->bridge_sensors
+      && channel_number == IPMI_CHANNEL_NUMBER_PRIMARY_IPMB)
     {
       if (ipmi_cmd_get_sensor_reading_ipmb (state_data->ipmi_ctx,
                                             slave_address,
+                                            lun,
                                             sensor_number,
                                             obj_get_sensor_reading_rs) < 0)
         {
@@ -242,6 +245,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   int8_t sensor_event_bitmask2_len;
   uint8_t sensor_owner_id_type;
   uint8_t sensor_owner_id;
+  uint8_t sensor_owner_lun;
   uint8_t channel_number;
   uint8_t slave_address;
   int ret;
@@ -300,7 +304,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   if (sdr_cache_get_sensor_owner_lun (state_data->pstate,
                                       sdr_record,
                                       sdr_record_len,
-                                      NULL,
+                                      &sensor_owner_lun,
                                       &channel_number) < 0)
     return -1;
 
@@ -341,6 +345,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                            event_message_list,
                                            event_message_list_len,
                                            slave_address,
+                                           sensor_owner_lun,
                                            channel_number,
                                            sensor_number,
                                            record_id,

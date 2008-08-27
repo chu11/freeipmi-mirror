@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.35 2008-08-27 17:21:44 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.36 2008-08-27 17:32:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -414,6 +414,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
   int8_t sensor_event_bitmask1_len, sensor_event_bitmask2_len;
   uint8_t sensor_owner_id_type;
   uint8_t sensor_owner_id;
+  uint8_t sensor_owner_lun;
   uint8_t channel_number;
   uint8_t slave_address;
 
@@ -438,6 +439,13 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
                    &val) < 0)
     return -1;
   sensor_owner_id = val;
+
+  if (Fiid_obj_get(c,
+                   obj_sdr_record,
+                   "sensor_owner_lun",
+                   &val) < 0)
+    return -1;
+  sensor_owner_lun = val;
 
   if (Fiid_obj_get(c,
                    obj_sdr_record,
@@ -503,6 +511,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
     {
       if (ipmi_cmd_get_sensor_reading_ipmb (c->ipmi_ctx,
                                             slave_address,
+                                            sensor_owner_lun,
                                             *sensor_number,
                                             obj_cmd_rs) < 0)
         {

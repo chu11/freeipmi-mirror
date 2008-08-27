@@ -8,6 +8,13 @@
 
 	* ipmi-sensors/, ipmimonitoring/: Only call bridging if specified
 	channel is IPMB.
+
+	* libfreeipmi/src/api/ipmi-sensors-cmds-api.c,
+	libfreeipmi/include/freeipmi/ipmi-sensors-cmds-api.h
+	(ipmi_cmd_get_sensor_reading_ipmb): Take lun parameter.
+
+	* ipmi-sensors/, ipmimonitoring/: Pass SDR lun as well as slave
+	address for ipmb bridging.
 	
 2008-08-26 Albert Chu <chu11@llnl.gov>
 
