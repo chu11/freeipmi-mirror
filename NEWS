@@ -167,6 +167,12 @@ Contributions
 o Ganglia plugin scripts ganglia_ipmimonitoring.pl and ganglia_ipmi_sensors.pl.
 o Nagios plugin script nagios_ipmimonitoring.pl.
 
+0.6.6 - 08/26/08
+----------------
+o Output NA/Unknown for non-BMC owned sensors in ipmi-sensors.
+o Do not output readings for non-BMC owned sensors in ipmimonitoring.
+o libfreeipmi/ipmi-chassis fix invalid console redirection input check.
+
 0.6.5 - 08/02/08
 ----------------
 o Fix ipmimonitoring group assignment bug.
