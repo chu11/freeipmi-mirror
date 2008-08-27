@@ -17,6 +17,9 @@
 	address for ipmb bridging.
 
 	* ipmimonitoring/: Add fan redundancy interpretation.
+
+	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c:
+	Tweak text for redundancy strings.
 	
 2008-08-26 Albert Chu <chu11@llnl.gov>
 
