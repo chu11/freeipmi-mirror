@@ -167,6 +167,7 @@ o libipmimonitoring
   - Support SUNBMC driver.
   - Provide new IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS flag.
   - Support several new sensor interpretation rules.
+  - Return short message strings in ipmi_monitoring_bitmask_string().
 o Various naming consistency fixes to IPMI specification.
 o Various minor bug fixes.
 
