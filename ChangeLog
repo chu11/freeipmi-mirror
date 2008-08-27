@@ -21,6 +21,8 @@
 	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c:
 	Tweak text for redundancy strings.
 	
+	* Tweak documentation.
+
 2008-08-26 Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/: Support power supply redundancy interpretation.
