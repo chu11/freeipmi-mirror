@@ -49,6 +49,7 @@ _output_verbose_header (ipmi_sensors_state_data_t *state_data,
   uint8_t sensor_type;
   uint8_t event_reading_type_code;
   uint8_t sensor_owner_id_type, sensor_owner_id;
+  uint8_t sensor_owner_lun, channel_number;
 
   assert(state_data);
   assert(sdr_record);
@@ -88,6 +89,13 @@ _output_verbose_header (ipmi_sensors_state_data_t *state_data,
                                      &sensor_owner_id) < 0)
     return -1;
 
+  if (sdr_cache_get_sensor_owner_lun (state_data->pstate,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      &sensor_owner_lun,
+                                      &channel_number) < 0)
+    return -1;
+
   pstdout_printf (state_data->pstate, 
                   "Record ID: %d\n", 
                   record_id);
@@ -108,6 +116,12 @@ _output_verbose_header (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate,
                     "IPMB Slave Address: %Xh\n",
                     (sensor_owner_id << 1) | sensor_owner_id_type);
+  pstdout_printf (state_data->pstate,
+                  "Sensor Owner LUN: %Xh\n",
+                  sensor_owner_lun);
+  pstdout_printf (state_data->pstate,
+                  "Channel Number: %Xh\n",
+                  channel_number);
   pstdout_printf (state_data->pstate, 
                   "Event/Reading Type Code: %Xh\n", 
                   event_reading_type_code);

@@ -78,6 +78,12 @@ int sdr_cache_get_sensor_owner_id (pstdout_state_t pstate,
                                    uint8_t *sensor_owner_id_type,
                                    uint8_t *sensor_owner_id);
 
+int sdr_cache_get_sensor_owner_lun (pstdout_state_t pstate,
+                                    uint8_t *sdr_record,
+                                    unsigned int sdr_record_len,
+                                    uint8_t *sensor_owner_lun,
+                                    uint8_t *channel_number);
+
 int sdr_cache_get_sensor_number (pstdout_state_t pstate,
                                  uint8_t *sdr_record,
                                  unsigned int sdr_record_len,

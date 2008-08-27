@@ -24,8 +24,8 @@ o Support --bridge-sensors on ipmi-sensors and ipmimonitoring to
 o Support hysteresis and sensor event configuration in
   ipmi-sensors-config.
 o Support additional sensor monitoring interpretations in ipmimonitoring.
-o Output additional sensor information in ipmi-sensors under very verbose
-  mode, such as event enable information.
+o Output additional sensor information in ipmi-sensors under verbose
+  modes, such as lun, channel and event enable information.
 o Support --always-prefix option in most tools for easier scripting.
 o Support --sdr-cache-recreate in all SDR related tools for easier
   scripting.

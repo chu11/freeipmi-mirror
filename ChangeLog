@@ -1,3 +1,11 @@
+2008-08-27 Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+	common/src/toolcommon/tool-sdr-cache-common.c
+	(sdr_cache_get_sensor_owner_lun): New function.
+
+	* ipmi-sensors/: Add channel and lun info to verbose output.
+	
 2008-08-26 Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/: Support power supply redundancy interpretation.

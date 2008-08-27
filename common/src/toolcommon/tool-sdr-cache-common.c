@@ -935,6 +935,49 @@ sdr_cache_get_sensor_owner_id (pstdout_state_t pstate,
 }
 
 int 
+sdr_cache_get_sensor_owner_lun (pstdout_state_t pstate,
+                                uint8_t *sdr_record,
+                                unsigned int sdr_record_len,
+                                uint8_t *sensor_owner_lun,
+                                uint8_t *channel_number)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+
+  if (sensor_owner_lun)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "sensor_owner_lun", &val);
+      *sensor_owner_lun = val;
+    }
+
+  if (channel_number)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "channel_number", &val);
+      *channel_number = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int 
 sdr_cache_get_sensor_number (pstdout_state_t pstate,
                              uint8_t *sdr_record,
                              unsigned int sdr_record_len,
