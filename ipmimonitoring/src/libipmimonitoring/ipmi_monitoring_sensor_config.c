@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.20 2008-08-27 18:11:46 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.21 2008-08-27 21:14:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -43,6 +43,9 @@
 
 #include "freeipmi-portability.h"
 #include "conffile.h"
+
+char sensor_config_file[MAXPATHLEN+1];
+int sensor_config_file_set = 0;
 
 struct ipmi_sensor_config ipmi_threshold_sensor_config[] =
   {
@@ -2471,6 +2474,7 @@ ipmi_monitoring_sensor_config(int *errnum)
         0
       },
     };
+  char *config_file = NULL;
 
   if (_ipmi_monitoring_sensor_config_loaded)
     return 0;
@@ -2481,9 +2485,14 @@ ipmi_monitoring_sensor_config(int *errnum)
       return -1;
     }
 
+  if (sensor_config_file_set)
+    config_file = sensor_config_file;
+  else
+    config_file = IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT;
+
   num = sizeof(options)/sizeof(struct conffile_option);
   if (conffile_parse(cf, 
-                     IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT, 
+                     config_file, 
                      options, 
                      num,
                      NULL, 

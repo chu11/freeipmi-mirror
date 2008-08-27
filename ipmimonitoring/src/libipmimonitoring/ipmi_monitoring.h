@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.27 2008-08-25 17:26:24 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.28 2008-08-27 21:14:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -676,6 +676,18 @@ typedef struct ipmi_monitoring_ctx *ipmi_monitoring_ctx_t;
  * Returns 0 on success, -1 on error
  */
 int ipmi_monitoring_init(unsigned int flags, int *errnum);
+
+/*
+ * ipmi_monitoring_sensor_config_file
+ *
+ * Initialize the ipmi monitoring library with a different default
+ * sensor configuration file.  Threaded applications are responsible
+ * for calling this function before any thread may call another
+ * function in the library.
+ *
+ * Returns 0 on success, -1 on error
+ */
+int ipmi_monitoring_sensor_config_file(char *file, int *errnum);
 
 /* 
  * ipmi_monitoring_sdr_cache_directory

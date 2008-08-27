@@ -21,6 +21,8 @@ o Add additional "connection timeout" error message to tools to
   timeout in the middle of a command's operations.
 o Support --bridge-sensors on ipmi-sensors and ipmimonitoring to 
   access non-BMC sensors (experimental).
+o Support --sensor-config-file on ipmimonitoring to support 
+  multiple interpretation rules.
 o Support hysteresis and sensor event configuration in
   ipmi-sensors-config.
 o Support additional sensor monitoring interpretations in ipmimonitoring.

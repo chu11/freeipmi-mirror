@@ -468,7 +468,6 @@ sdr_cache_get_cache_filename (pstdout_state_t pstate,
 
 static int 
 _setup_sdr_cache_directory (pstdout_state_t pstate,
-                            const char *hostname,
                             const char *cache_dir)
 {
   char configbuf[MAXPATHLEN+1];
@@ -544,7 +543,29 @@ _sdr_cache_create_callback(uint8_t sdr_version,
            record_id);
 }
 
+int
+sdr_cache_create_directory (pstdout_state_t pstate,
+                            const char *cache_dir)
+{
+  char cachedirectorybuf[MAXPATHLEN+1];
+  struct stat buf;
 
+  if (sdr_cache_get_cache_directory (pstate,
+                                     cache_dir,
+                                     cachedirectorybuf,
+                                     MAXPATHLEN) < 0)
+    return -1;
+
+  if (stat(cachedirectorybuf, &buf) < 0)
+    {
+      if (_setup_sdr_cache_directory (pstate,
+                                      cache_dir) < 0)
+        return -1;
+    }
+
+  return 0;
+}
+                            
 int 
 sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                   pstdout_state_t pstate,
@@ -554,9 +575,7 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                   const char *hostname,
                   const char *cache_dir)
 {
-  char cachedirectorybuf[MAXPATHLEN+1];
   char cachefilenamebuf[MAXPATHLEN+1];
-  struct stat buf;
   int count = 0;
   int create_flags = 0;
   int rv = -1;
@@ -564,19 +583,8 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   assert(ctx);
   assert(ipmi_ctx);
   
-  if (sdr_cache_get_cache_directory (pstate,
-                                     cache_dir,
-                                     cachedirectorybuf,
-                                     MAXPATHLEN) < 0)
+  if (sdr_cache_create_directory (pstate, cache_dir) < 0)
     goto cleanup;
-
-  if (stat(cachedirectorybuf, &buf) < 0)
-    {
-      if (_setup_sdr_cache_directory (pstate,
-                                      hostname,
-                                      cache_dir) < 0)
-        goto cleanup;
-    }
 
   memset(cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (sdr_cache_get_cache_filename(pstate,

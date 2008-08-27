@@ -983,6 +983,12 @@ can be specified separated by whitespace.  Please run
 .B ipmimonitoring(8)'s
 \fI--list-groups\fR
 option to see possible groups.
+.TP
+\fBipmimonitoring-bridge-sensors\fR \fIENABLE|DISABLE\fR
+Specify if non-BMC sensors should be bridged by default or not.
+.TP
+\fBipmimonitoring-sensor-config-file\fR \fIFILE\fR
+Specify the default sensor configuration file.
 
 .SH "IPMIPOWER OPTIONS"
 The following options are specific to

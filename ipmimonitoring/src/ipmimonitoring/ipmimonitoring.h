@@ -40,6 +40,7 @@ enum ipmimonitoring_argp_option_keys
     SENSORS_KEY = 's', 
     CACHE_DIR_KEY = 'c',            /* legacy */
     BRIDGE_SENSORS_KEY = 'b',
+    SENSOR_CONFIG_FILE_KEY = 160,
   };
 
 struct ipmimonitoring_arguments
@@ -58,6 +59,7 @@ struct ipmimonitoring_arguments
   unsigned int sensors[IPMIMONITORING_MAX_RECORD_IDS];
   unsigned int sensors_length;
   int bridge_sensors;
+  char *sensor_config_file;
 
   struct ipmi_monitoring_ipmi_config conf;
   int ipmimonitoring_flags;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.30 2008-08-01 23:53:56 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.31 2008-08-27 21:14:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -91,6 +91,9 @@ static char *ipmi_monitoring_errmsgs[] =
 static int _ipmi_monitoring_initialized = 0;
 
 uint32_t _ipmi_monitoring_flags = 0;
+
+extern char sensor_config_file[MAXPATHLEN+1];
+extern int sensor_config_file_set;
 
 extern char sdr_cache_directory[MAXPATHLEN+1];
 extern int sdr_cache_directory_set;
@@ -220,6 +223,38 @@ ipmi_monitoring_init(unsigned int flags, int *errnum)
 
   _ipmi_monitoring_flags = flags;
   _ipmi_monitoring_initialized++;
+  if (errnum)
+    *errnum = IPMI_MONITORING_ERR_SUCCESS;
+  return 0;
+}
+
+int
+ipmi_monitoring_sensor_config_file(char *file, int *errnum)
+{
+  struct stat buf;
+
+  if (!file || (strlen(file) > MAXPATHLEN))
+    {
+      if (errnum)
+        *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (stat(file, &buf) < 0)
+    {
+      if (errnum)
+        {
+          if (errno == EACCES || errno == EPERM)
+            *errnum = IPMI_MONITORING_ERR_PERMISSION;
+          else
+            *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+        }
+      return -1;
+    }
+  
+  strncpy(sensor_config_file, file, MAXPATHLEN);
+  sensor_config_file_set = 1;
+
   if (errnum)
     *errnum = IPMI_MONITORING_ERR_SUCCESS;
   return 0;

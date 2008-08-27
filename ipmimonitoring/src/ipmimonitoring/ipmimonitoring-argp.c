@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.20 2008-08-25 17:26:23 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.21 2008-08-27 21:14:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -96,6 +96,8 @@ static struct argp_option cmdline_options[] =
      "Show sensors by record id.  Accepts space or comma separated lists", 36}, 
     {"bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
      "Bridge addresses to read non-BMC owned sensors.", 37},
+    {"sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
+     "Specify an alternate sensor configuration file.", 38},
     { 0 }
   };
 
@@ -172,6 +174,15 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
       break;
+    case SENSOR_CONFIG_FILE_KEY:
+      if (cmd_args->sensor_config_file)
+        free (cmd_args->sensor_config_file);
+      if (!(cmd_args->sensor_config_file = strdup(arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -230,6 +241,8 @@ _ipmimonitoring_config_file_parse(struct ipmimonitoring_arguments *cmd_args)
     }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
+  if (config_file_data.sensor_config_file_count)
+    cmd_args->sensor_config_file = config_file_data.sensor_config_file;
 }
 
 void 
@@ -256,6 +269,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
          sizeof(unsigned int)*IPMIMONITORING_MAX_RECORD_IDS);
   cmd_args->sensors_length = 0;
   cmd_args->bridge_sensors = 0;
+  cmd_args->sensor_config_file = NULL;
 
   memset(&(cmd_args->conf), '\0', sizeof(struct ipmi_monitoring_ipmi_config));
   cmd_args->ipmimonitoring_flags = 0;

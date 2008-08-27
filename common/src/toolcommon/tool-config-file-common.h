@@ -100,6 +100,8 @@ struct config_file_data_ipmimonitoring
   int groups_count;
   int bridge_sensors;
   int bridge_sensors_count;
+  char *sensor_config_file;
+  int sensor_config_file_count;
 };
 
 struct config_file_data_ipmipower
