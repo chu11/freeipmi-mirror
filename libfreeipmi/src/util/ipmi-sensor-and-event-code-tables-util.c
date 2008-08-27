@@ -148,10 +148,7 @@ static int ipmi_generic_event_reading_type_code_0A_desc_max = 0x08;
 
 static char * ipmi_generic_event_reading_type_code_0B_desc[] =
   {
-#if 0
     "Fully Redundant (formerly \"Redundancy Regained\")",
-#endif
-    "Fully Redundant",
     "Redundancy Lost",
     "Redundancy Degraded",
     "Entered from Redundancy Degraded or Fully Redundant",
