@@ -670,8 +670,8 @@ static int ipmi_generic_event_reading_type_code_07_short_desc_max = 0x08;
 
 static char * ipmi_generic_event_reading_type_code_08_short_desc[] =
   {
-    "Device Removed",
-    "Device Inserted",
+    "Device Removed/Device Absent",
+    "Device Inserted/Device Present",
     NULL
   };
 static int ipmi_generic_event_reading_type_code_08_short_desc_max = 0x01;
