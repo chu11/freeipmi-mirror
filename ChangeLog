@@ -18,9 +18,6 @@
 
 	* ipmimonitoring/: Add fan redundancy interpretation.
 
-	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c:
-	Tweak text for redundancy strings.
-
 	* ipmimonitoring/: Support alternate sensors config file.
 
 	* common/src/toolcommon/tool-sdr-cache-common.h,
@@ -30,6 +27,14 @@
 	* common/src/toolcommon/tool-sdr-cache-common.c: Code cleanup.
 	
 	* ipmimonitoring/src/ipmimonitoring/: Code cleanup.
+	
+	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c,
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-and-event-code-tables.h
+	(ipmi_get_sensor_type_code_message_short,
+	ipmi_get_generic_event_message_short): New functions.
+	
+	* ipmi-sensors/, ipmimonitoring/: Use short message versions
+	instead of long message versions under non-verbose output.
 	
 	* Tweak documentation.
 

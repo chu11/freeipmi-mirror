@@ -201,14 +201,23 @@ get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
     {
       char buf[IPMI_SENSORS_BUFLEN];
       uint16_t bit; 
-
+      int ret;
+      
       bit = 0x1 << i;
       if (sensor_event_bitmask & bit)
 	{
-	  if (ipmi_get_generic_event_message (event_reading_type_code,
-					      i,
-					      buf,
-					      IPMI_SENSORS_BUFLEN) < 0)
+          if (!state_data->prog_data->args->verbose_count)
+            ret = ipmi_get_generic_event_message_short (event_reading_type_code,
+                                                        i,
+                                                        buf,
+                                                        IPMI_SENSORS_BUFLEN);
+          else
+            ret = ipmi_get_generic_event_message (event_reading_type_code,
+                                                  i,
+                                                  buf,
+                                                  IPMI_SENSORS_BUFLEN);
+
+          if (ret < 0)
             {
               if (!(tmp_message_list[num_messages++] = strdup(UNRECOGNIZED_STATE)))
                 {
@@ -288,15 +297,24 @@ get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_da
     {
       char buf[IPMI_SENSORS_BUFLEN];
       uint16_t bit; 
+      int ret;
 
       bit = 0x1 << i;
 
       if (sensor_event_bitmask & bit)
 	{
-	  if (ipmi_get_sensor_type_code_message (sensor_type,
-						 i,
-						 buf,
-						 IPMI_SENSORS_BUFLEN) < 0)
+          if (!state_data->prog_data->args->verbose_count)
+            ret = ipmi_get_sensor_type_code_message_short (sensor_type,
+                                                           i,
+                                                           buf,
+                                                           IPMI_SENSORS_BUFLEN);
+          else
+            ret = ipmi_get_sensor_type_code_message (sensor_type,
+                                                     i,
+                                                     buf,
+                                                     IPMI_SENSORS_BUFLEN);
+
+          if (ret < 0)
             {
               if (!(tmp_message_list[num_messages++] = strdup(UNRECOGNIZED_STATE)))
                 {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.31 2008-08-27 21:14:10 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.32 2008-08-27 23:19:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -879,10 +879,10 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
             }
         }
  
-      if (ipmi_get_generic_event_message (event_reading_type_code,
-                                          offset,
-                                          buffer,
-                                          buflen) < 0)
+      if (ipmi_get_generic_event_message_short (event_reading_type_code,
+                                                offset,
+                                                buffer,
+                                                buflen) < 0)
         {
           if (errno == EINVAL)
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
@@ -976,10 +976,10 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
             }
         }
 
-      if (ipmi_get_sensor_type_code_message (sensor_type_code,
-                                             offset,
-                                             buffer,
-                                             buflen) < 0)
+      if (ipmi_get_sensor_type_code_message_short (sensor_type_code,
+                                                   offset,
+                                                   buffer,
+                                                   buflen) < 0)
         {
           if (errno == EINVAL)
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;

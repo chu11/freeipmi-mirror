@@ -68,6 +68,9 @@ o ipmi-sensors
     verbose and very verbose mode.  For example, don't output
     hysteresis or threshold information for power supply sensors.
   - Alter some output ordering for consistency to IPMI spec.
+  - Shorten/adjust some state strings for readability under
+    non-verbose output.  For example, "Fully Redundant (formerly
+    "Redundancy Regained")" is now just "Fully Redundant".
   - Change default privilege from user to operator.
 o ipmimonitoring
   - Support -v verbose option to output sensors readings that aren't
@@ -89,6 +92,9 @@ o ipmimonitoring
   - Output multiple bitmask strings if multiple bits are set.
   - Output "OK", similarly to ipmi-sensors when no bitmask strings are
     returned from a sensor reading.
+  - Shorten/adjust some state strings for readability.  For example,
+    "Fully Redundant (formerly "Redundancy Regained")" is now just
+    "Fully Redundant".
   - Change default privilege from user to operator.
 o ipmipower
   - Removed many early experimental features from ipmipower so
