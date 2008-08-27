@@ -36,6 +36,10 @@ pef-config
 -----------
 * conf.5 manpage
 
+inband code
+-----------
+retry/resent code?
+
 ipmi-sensors-config
 -------------------
 * conf.5 manpage
