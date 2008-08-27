@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.34 2008-08-27 17:21:05 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.35 2008-08-27 17:21:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -468,8 +468,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
     return -1;
   *sensor_number = val;
 
-  if (slave_address == IPMI_SLAVE_ADDRESS_BMC
-      && channel_number == IPMI_CHANNEL_NUMBER_PRIMARY_IPMB)
+  if (slave_address == IPMI_SLAVE_ADDRESS_BMC)
     {
       if (ipmi_cmd_get_sensor_reading(c->ipmi_ctx, 
                                       *sensor_number, 
@@ -499,7 +498,8 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
           goto cleanup;
         }
     }
-  else if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS)
+  else if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS
+           && channel_number == IPMI_CHANNEL_NUMBER_PRIMARY_IPMB)
     {
       if (ipmi_cmd_get_sensor_reading_ipmb (c->ipmi_ctx,
                                             slave_address,
