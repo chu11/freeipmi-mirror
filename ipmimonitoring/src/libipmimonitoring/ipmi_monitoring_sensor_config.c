@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.19 2008-08-26 21:06:50 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.20 2008-08-27 18:11:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -87,6 +87,19 @@ struct ipmi_sensor_config ipmi_module_board_device_install_config[] =
   {
     {"IPMI_Module_Board_Device_Install_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     {"IPMI_Module_Board_Device_Install_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_fan_redundancy_config[] =
+  {
+    {"IPMI_Fan_Redundancy_Fully_Redundant", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Fan_Redundancy_Redundancy_Lost", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Fan_Redundancy_Redundancy_Degraded", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_Fan_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Fan_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Fan_Redundancy_Non_Redundant_Insufficient_Resources", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Fan_Redundancy_Redundancy_Degraded_From_Fully_Redundant", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_Fan_Redundancy_Redundancy_Degraded_From_Non_Redundant", IPMI_MONITORING_SENSOR_STATE_WARNING},
     {NULL, -1},
   };
 
@@ -419,6 +432,9 @@ ipmi_monitoring_sensor_config(int *errnum)
   int fan_device_install_flag0, fan_device_install_flag1;
   int module_board_state_flag0, module_board_state_flag1;
   int module_board_device_install_flag0, module_board_device_install_flag1;
+  int fan_redundancy_flag0, fan_redundancy_flag1, fan_redundancy_flag2, 
+    fan_redundancy_flag3, fan_redundancy_flag4, fan_redundancy_flag5, 
+    fan_redundancy_flag6, fan_redundancy_flag7;
   int power_supply_redundancy_flag0, power_supply_redundancy_flag1, power_supply_redundancy_flag2, 
     power_supply_redundancy_flag3, power_supply_redundancy_flag4, power_supply_redundancy_flag5, 
     power_supply_redundancy_flag6, power_supply_redundancy_flag7;
@@ -667,6 +683,97 @@ ipmi_monitoring_sensor_config(int *errnum)
         0,
         &module_board_device_install_flag1,
         ipmi_module_board_device_install_config,
+        0
+      },
+      /* 
+       * IPMI_Fan_Redundancy
+       */
+      {
+        ipmi_fan_redundancy_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_redundancy_flag0,
+        ipmi_fan_redundancy_config,
+        0
+      },
+      {
+        ipmi_fan_redundancy_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_redundancy_flag1,
+        ipmi_fan_redundancy_config,
+        0
+      },
+      {
+        ipmi_fan_redundancy_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_redundancy_flag2,
+        ipmi_fan_redundancy_config,
+        0
+      },
+      {
+        ipmi_fan_redundancy_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_redundancy_flag3,
+        ipmi_fan_redundancy_config,
+        0
+      },
+      {
+        ipmi_fan_redundancy_config[4].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_redundancy_flag4,
+        ipmi_fan_redundancy_config,
+        0
+      },
+      {
+        ipmi_fan_redundancy_config[5].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_redundancy_flag5,
+        ipmi_fan_redundancy_config,
+        0
+      },
+      {
+        ipmi_fan_redundancy_config[6].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_redundancy_flag6,
+        ipmi_fan_redundancy_config,
+        0
+      },
+      {
+        ipmi_fan_redundancy_config[7].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_redundancy_flag7,
+        ipmi_fan_redundancy_config,
         0
       },
       /* 
