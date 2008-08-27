@@ -110,6 +110,7 @@ _get_sensor_reading_ipmb (struct ipmi_sensors_state_data *state_data,
                           char ***event_message_list,
                           unsigned int *event_message_list_len,
                           uint8_t slave_address,
+                          uint8_t channel_number,
                           uint8_t sensor_number,
                           uint8_t record_id,
                           fiid_obj_t obj_get_sensor_reading_rs)
@@ -241,6 +242,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   int8_t sensor_event_bitmask2_len;
   uint8_t sensor_owner_id_type;
   uint8_t sensor_owner_id;
+  uint8_t channel_number;
   uint8_t slave_address;
   int ret;
 
@@ -295,6 +297,13 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                      &sensor_owner_id) < 0)
     return -1;
 
+  if (sdr_cache_get_sensor_owner_lun (state_data->pstate,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      NULL,
+                                      &channel_number) < 0)
+    return -1;
+
   if (sensor_owner_id_type == IPMI_SDR_SENSOR_OWNER_ID_TYPE_SYSTEM_SOFTWARE_ID)
     {
       if (state_data->prog_data->args->common.debug)
@@ -332,6 +341,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                            event_message_list,
                                            event_message_list_len,
                                            slave_address,
+                                           channel_number,
                                            sensor_number,
                                            record_id,
                                            obj_get_sensor_reading_rs)) < 0)

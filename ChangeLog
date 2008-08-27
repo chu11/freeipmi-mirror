@@ -5,6 +5,9 @@
 	(sdr_cache_get_sensor_owner_lun): New function.
 
 	* ipmi-sensors/: Add channel and lun info to verbose output.
+
+	* ipmi-sensors/, ipmimonitoring/: Only call bridging if specified
+	channel is IPMB.
 	
 2008-08-26 Albert Chu <chu11@llnl.gov>
 
