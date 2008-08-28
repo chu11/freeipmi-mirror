@@ -1824,7 +1824,7 @@ sdr_cache_get_fru_device_locator_parameters (pstdout_state_t pstate,
                                              uint8_t *direct_access_address,
                                              uint8_t *logical_fru_device_device_slave_address,
                                              uint8_t *private_bus_id,
-                                             uint8_t *lun_for_master_write_read_command,
+                                             uint8_t *lun_for_master_write_read_fru_command,
                                              uint8_t *logical_physical_fru_device,
                                              uint8_t *channel_number)
 {
@@ -1859,10 +1859,10 @@ sdr_cache_get_fru_device_locator_parameters (pstdout_state_t pstate,
       _SDR_FIID_OBJ_GET(obj_sdr_record, "private_bus_id", &val);
       *private_bus_id = val;
     }
-  if (lun_for_master_write_read_command)
+  if (lun_for_master_write_read_fru_command)
     {
-      _SDR_FIID_OBJ_GET(obj_sdr_record, "lun_for_master_write_read_command", &val);
-      *lun_for_master_write_read_command = val;
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "lun_for_master_write_read_fru_command", &val);
+      *lun_for_master_write_read_fru_command = val;
     }
   if (logical_physical_fru_device)
     {

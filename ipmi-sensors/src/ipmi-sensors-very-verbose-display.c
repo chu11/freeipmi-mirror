@@ -997,7 +997,7 @@ sensors_display_very_verbose_general_device_locator_record (ipmi_sensors_state_d
                   "LUN for Master Write-Read Command: %Xh\n", 
                   lun_for_master_write_read_command);
   pstdout_printf (state_data->pstate, 
-                  "Address Span: %Xh\n", 
+                  "Address Span: %d\n", 
                   address_span);
 
   if (_output_device_type_and_modifier (state_data,
@@ -1025,7 +1025,7 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
   uint8_t direct_access_address;
   uint8_t logical_fru_device_device_slave_address;
   uint8_t private_bus_id;
-  uint8_t lun_for_master_write_read_command;
+  uint8_t lun_for_master_write_read_fru_command;
   uint8_t logical_physical_fru_device;
   uint8_t channel_number;
   uint8_t fru_entity_id;
@@ -1048,7 +1048,7 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                                                    &direct_access_address,
                                                    &logical_fru_device_device_slave_address,
                                                    &private_bus_id,
-                                                   &lun_for_master_write_read_command,
+                                                   &lun_for_master_write_read_fru_command,
                                                    &logical_physical_fru_device,
                                                    &channel_number) < 0)
     return -1;
@@ -1071,8 +1071,8 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                   private_bus_id);
 
   pstdout_printf (state_data->pstate, 
-                  "LUN for Master Write-Read Command: %Xh\n", 
-                  lun_for_master_write_read_command);
+                  "LUN for Master Write-Read or FRU Command: %Xh\n", 
+                  lun_for_master_write_read_fru_command);
 
   pstdout_printf (state_data->pstate, 
                   "Channel Number: %Xh\n", 

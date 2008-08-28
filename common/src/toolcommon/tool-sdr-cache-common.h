@@ -182,7 +182,7 @@ int sdr_cache_get_fru_device_locator_parameters (pstdout_state_t pstate,
                                                  uint8_t *direct_access_address,
                                                  uint8_t *logical_fru_device_device_slave_address,
                                                  uint8_t *private_bus_id,
-                                                 uint8_t *lun_for_master_write_read_command,
+                                                 uint8_t *lun_for_master_write_read_fru_command,
                                                  uint8_t *logical_physical_fru_device,
                                                  uint8_t *channel_number);
 
