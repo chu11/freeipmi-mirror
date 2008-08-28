@@ -1752,17 +1752,19 @@ sdr_cache_get_container_entity (pstdout_state_t pstate,
 }
 
 int
-sdr_cache_get_general_device_parameters (pstdout_state_t pstate,
-                                         uint8_t *sdr_record,
-                                         unsigned int sdr_record_len,
-                                         uint8_t *direct_access_address,
-                                         uint8_t *channel_number,
-                                         uint8_t *device_slave_address,
-                                         uint8_t *lun_for_master_write_read_command,
-                                         uint8_t *address_span)
+sdr_cache_get_general_device_locator_parameters (pstdout_state_t pstate,
+                                                 uint8_t *sdr_record,
+                                                 unsigned int sdr_record_len,
+                                                 uint8_t *direct_access_address,
+                                                 uint8_t *channel_number,
+                                                 uint8_t *device_slave_address,
+                                                 uint8_t *private_bus_id,
+                                                 uint8_t *lun_for_master_write_read_command,
+                                                 uint8_t *address_span)
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
+  uint64_t val1, val2;
   uint64_t val;
   int rv = -1;
 
@@ -1784,13 +1786,19 @@ sdr_cache_get_general_device_parameters (pstdout_state_t pstate,
     }
   if (channel_number)
     {
-      _SDR_FIID_OBJ_GET(obj_sdr_record, "channel_number", &val);
-      *channel_number = val;
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "channel_number_ls", &val1);
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "channel_number_ms", &val2);
+      *channel_number = (val1 << 3) | val2;
     }
   if (device_slave_address)
     {
       _SDR_FIID_OBJ_GET(obj_sdr_record, "device_slave_address", &val);
       *device_slave_address = val;
+    }
+  if (private_bus_id)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "private_bus_id", &val);
+      *private_bus_id = val;
     }
   if (lun_for_master_write_read_command)
     {
@@ -1810,11 +1818,15 @@ sdr_cache_get_general_device_parameters (pstdout_state_t pstate,
 }
 
 int 
-sdr_cache_get_logical_fru_info (pstdout_state_t pstate,
-                                uint8_t *sdr_record,
-                                unsigned int sdr_record_len,
-                                uint8_t *logical_physical_fru_device,
-                                uint8_t *logical_fru_device_device_slave_address)
+sdr_cache_get_fru_device_locator_parameters (pstdout_state_t pstate,
+                                             uint8_t *sdr_record,
+                                             unsigned int sdr_record_len,
+                                             uint8_t *direct_access_address,
+                                             uint8_t *logical_fru_device_device_slave_address,
+                                             uint8_t *private_bus_id,
+                                             uint8_t *lun_for_master_write_read_command,
+                                             uint8_t *logical_physical_fru_device,
+                                             uint8_t *channel_number)
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
@@ -1832,22 +1844,81 @@ sdr_cache_get_logical_fru_info (pstdout_state_t pstate,
                                                acceptable_record_types)))
     goto cleanup;
   
-  if (logical_physical_fru_device)
+  if (direct_access_address)
     {
-      _SDR_FIID_OBJ_GET(obj_sdr_record, "logical_physical_fru_device", &val);
-      *logical_physical_fru_device = val;
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "direct_access_address", &val);
+      *direct_access_address = val;
     }
   if (logical_fru_device_device_slave_address)
     {
       _SDR_FIID_OBJ_GET(obj_sdr_record, "logical_fru_device_device_slave_address", &val);
       *logical_fru_device_device_slave_address = val;
     }
+  if (private_bus_id)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "private_bus_id", &val);
+      *private_bus_id = val;
+    }
+  if (lun_for_master_write_read_command)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "lun_for_master_write_read_command", &val);
+      *lun_for_master_write_read_command = val;
+    }
+  if (logical_physical_fru_device)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "logical_physical_fru_device", &val);
+      *logical_physical_fru_device = val;
+    }
+  if (channel_number)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "channel_number", &val);
+      *channel_number = val;
+    }
   
   rv = 0;
  cleanup:
   _FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
- 
+}
+
+int 
+sdr_cache_get_management_controller_device_locator_parameters (pstdout_state_t pstate,
+                                                               uint8_t *sdr_record,
+                                                               unsigned int sdr_record_len,
+                                                               uint8_t *device_slave_address,
+                                                               uint8_t *channel_number)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+  
+  assert(sdr_record);
+  assert(sdr_record_len);
+  
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
+  
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  if (device_slave_address)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "device_slave_address", &val);
+      *device_slave_address = val;
+    }
+  if (channel_number)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "channel_number", &val);
+      *channel_number = val;
+    }
+  
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
 }
 
 int

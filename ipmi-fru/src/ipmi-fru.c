@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.30 2008-08-12 18:14:36 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.31 2008-08-28 18:34:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -373,11 +373,15 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
               if (record_type != IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
                 continue;
 
-              if (sdr_cache_get_logical_fru_info (state_data->pstate,
-                                                  sdr_record,
-                                                  sdr_record_len,
-                                                  &logical_physical_fru_device,
-                                                  &logical_fru_device_device_slave_address) < 0)
+              if (sdr_cache_get_fru_device_locator_parameters (state_data->pstate,
+                                                               sdr_record,
+                                                               sdr_record_len,
+                                                               NULL,
+                                                               &logical_fru_device_device_slave_address,
+                                                               NULL,
+                                                               NULL,
+                                                               &logical_physical_fru_device,
+                                                               NULL) < 0)
                 return -1;
               
               if (logical_physical_fru_device
@@ -452,13 +456,17 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
           if (record_type != IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
             continue;
           
-          if (sdr_cache_get_logical_fru_info (state_data->pstate,
-                                              sdr_record,
-                                              sdr_record_len,
-                                              &logical_physical_fru_device,
-                                              &logical_fru_device_device_slave_address) < 0)
+          if (sdr_cache_get_fru_device_locator_parameters (state_data->pstate,
+                                                           sdr_record,
+                                                           sdr_record_len,
+                                                           NULL,
+                                                           &logical_fru_device_device_slave_address,
+                                                           NULL,
+                                                           NULL,
+                                                           &logical_physical_fru_device,
+                                                           NULL) < 0)
             return -1;
-          
+
           if (logical_physical_fru_device
               && logical_fru_device_device_slave_address != IPMI_FRU_DEVICE_ID_DEFAULT)
             {

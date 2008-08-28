@@ -166,20 +166,31 @@ int sdr_cache_get_container_entity (pstdout_state_t pstate,
                                     uint8_t *container_entity_id,
                                     uint8_t *container_entity_instance);
 
-int sdr_cache_get_general_device_parameters (pstdout_state_t pstate,
-                                             uint8_t *sdr_record,
-                                             unsigned int sdr_record_len,
-                                             uint8_t *direct_access_address,
-                                             uint8_t *channel_number,
-                                             uint8_t *device_slave_address,
-                                             uint8_t *lun_for_master_write_read_command,
-                                             uint8_t *address_span);
+int sdr_cache_get_general_device_locator_parameters (pstdout_state_t pstate,
+                                                     uint8_t *sdr_record,
+                                                     unsigned int sdr_record_len,
+                                                     uint8_t *direct_access_address,
+                                                     uint8_t *channel_number,
+                                                     uint8_t *device_slave_address,
+                                                     uint8_t *private_bus_id,
+                                                     uint8_t *lun_for_master_write_read_command,
+                                                     uint8_t *address_span);
 
-int sdr_cache_get_logical_fru_info (pstdout_state_t pstate,
-                                    uint8_t *sdr_record,
-                                    unsigned int sdr_record_len,
-                                    uint8_t *logical_physical_fru_device,
-                                    uint8_t *logical_fru_device_device_slave_address);
+int sdr_cache_get_fru_device_locator_parameters (pstdout_state_t pstate,
+                                                 uint8_t *sdr_record,
+                                                 unsigned int sdr_record_len,
+                                                 uint8_t *direct_access_address,
+                                                 uint8_t *logical_fru_device_device_slave_address,
+                                                 uint8_t *private_bus_id,
+                                                 uint8_t *lun_for_master_write_read_command,
+                                                 uint8_t *logical_physical_fru_device,
+                                                 uint8_t *channel_number);
+
+int sdr_cache_get_management_controller_device_locator_parameters (pstdout_state_t pstate,
+                                                                   uint8_t *sdr_record,
+                                                                   unsigned int sdr_record_len,
+                                                                   uint8_t *device_slave_address,
+                                                                   uint8_t *channel_number);
 
 int sdr_cache_get_device_type (pstdout_state_t pstate,
                                uint8_t *sdr_record,

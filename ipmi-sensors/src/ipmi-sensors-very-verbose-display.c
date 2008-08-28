@@ -955,6 +955,7 @@ sensors_display_very_verbose_general_device_locator_record (ipmi_sensors_state_d
   uint8_t direct_access_address;
   uint8_t channel_number;
   uint8_t device_slave_address;
+  uint8_t private_bus_id;
   uint8_t lun_for_master_write_read_command;
   uint8_t address_span;
 
@@ -969,14 +970,15 @@ sensors_display_very_verbose_general_device_locator_record (ipmi_sensors_state_d
                                     record_id) < 0)
     return -1;
 
-  if (sdr_cache_get_general_device_parameters (state_data->pstate,
-                                               sdr_record,
-                                               sdr_record_len,
-                                               &direct_access_address,
-                                               &channel_number,
-                                               &device_slave_address,
-                                               &lun_for_master_write_read_command,
-                                               &address_span) < 0)
+  if (sdr_cache_get_general_device_locator_parameters (state_data->pstate,
+                                                       sdr_record,
+                                                       sdr_record_len,
+                                                       &direct_access_address,
+                                                       &channel_number,
+                                                       &device_slave_address,
+                                                       &private_bus_id,
+                                                       &lun_for_master_write_read_command,
+                                                       &address_span) < 0)
     return -1;
 
   pstdout_printf (state_data->pstate, 
@@ -988,8 +990,11 @@ sensors_display_very_verbose_general_device_locator_record (ipmi_sensors_state_d
   pstdout_printf (state_data->pstate, 
                   "Direct Slave Address: %Xh\n", 
                   device_slave_address);
+  pstdout_printf (state_data->pstate,
+                  "Private Bus ID: %Xh\n",
+                  private_bus_id);
   pstdout_printf (state_data->pstate, 
-                  "Access LUN/Bus ID: %Xh\n", 
+                  "LUN for Master Write-Read Command: %Xh\n", 
                   lun_for_master_write_read_command);
   pstdout_printf (state_data->pstate, 
                   "Address Span: %Xh\n", 
@@ -1017,10 +1022,14 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                                                         uint8_t record_type,
                                                         uint16_t record_id)
 {
+  uint8_t direct_access_address;
+  uint8_t logical_fru_device_device_slave_address;
+  uint8_t private_bus_id;
+  uint8_t lun_for_master_write_read_command;
+  uint8_t logical_physical_fru_device;
+  uint8_t channel_number;
   uint8_t fru_entity_id;
   uint8_t fru_entity_instance;
-  uint8_t logical_physical_fru_device;
-  uint8_t logical_fru_device_device_slave_address;
 
   assert(state_data);
   assert(sdr_record);
@@ -1032,6 +1041,42 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                                     record_type,
                                     record_id) < 0)
     return -1;
+
+  if (sdr_cache_get_fru_device_locator_parameters (state_data->pstate,
+                                                   sdr_record,
+                                                   sdr_record_len,
+                                                   &direct_access_address,
+                                                   &logical_fru_device_device_slave_address,
+                                                   &private_bus_id,
+                                                   &lun_for_master_write_read_command,
+                                                   &logical_physical_fru_device,
+                                                   &channel_number) < 0)
+    return -1;
+
+  pstdout_printf (state_data->pstate, 
+                  "Direct Access Address: %Xh\n", 
+                  direct_access_address);
+
+  if (logical_physical_fru_device)
+    pstdout_printf (state_data->pstate, 
+                    "FRU Device ID: %Xh\n", 
+                    logical_fru_device_device_slave_address);
+  else
+    pstdout_printf (state_data->pstate, 
+                    "Device Slave Address: %Xh\n", 
+                    logical_fru_device_device_slave_address);
+
+  pstdout_printf (state_data->pstate,
+                  "Private Bus ID: %Xh\n",
+                  private_bus_id);
+
+  pstdout_printf (state_data->pstate, 
+                  "LUN for Master Write-Read Command: %Xh\n", 
+                  lun_for_master_write_read_command);
+
+  pstdout_printf (state_data->pstate, 
+                  "Channel Number: %Xh\n", 
+                  channel_number);
 
   if (_output_device_type_and_modifier (state_data,
                                         sdr_record,
@@ -1053,20 +1098,6 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                   "FRU Entity Instance: %d\n", 
                   fru_entity_instance);
 
-  if (sdr_cache_get_logical_fru_info (state_data->pstate,
-				      sdr_record,
-				      sdr_record_len,
-				      &logical_physical_fru_device,
-				      &logical_fru_device_device_slave_address) < 0)
-    return -1;
-
-  pstdout_printf (state_data->pstate, 
-                  "Logical Physical FRU Device: %d\n", 
-                  logical_physical_fru_device);
-  
-  pstdout_printf (state_data->pstate, 
-                  "FRU Device ID / Device Slave Address: %Xh\n", 
-                  logical_fru_device_device_slave_address);
     
   pstdout_printf (state_data->pstate, "\n");
 
@@ -1080,6 +1111,9 @@ sensors_display_very_verbose_management_controller_device_locator_record (ipmi_s
                                                                           uint8_t record_type,
                                                                           uint16_t record_id)
 {
+  uint8_t device_slave_address;
+  uint8_t channel_number;
+
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
@@ -1090,6 +1124,21 @@ sensors_display_very_verbose_management_controller_device_locator_record (ipmi_s
                                     record_type,
                                     record_id) < 0)
     return -1;
+
+  if (sdr_cache_get_management_controller_device_locator_parameters (state_data->pstate,
+                                                                     sdr_record,
+                                                                     sdr_record_len,
+                                                                     &device_slave_address,
+                                                                     &channel_number) < 0)
+    return -1;
+
+  pstdout_printf (state_data->pstate, 
+                  "Device Slave Address: %Xh\n", 
+                  device_slave_address);
+
+  pstdout_printf (state_data->pstate, 
+                  "Channel Number: %Xh\n", 
+                  channel_number);
 
   if (_output_entity_id_and_instance (state_data,
                                       sdr_record,
