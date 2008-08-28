@@ -74,6 +74,7 @@ _output_very_verbose_header (ipmi_sensors_state_data_t *state_data,
   uint8_t event_reading_type_code;
   uint8_t sensor_owner_id_type, sensor_owner_id;
   uint8_t sensor_owner_lun, channel_number;
+  uint8_t entity_id, entity_instance;
 
   assert(state_data);
   assert(sdr_record);
@@ -119,6 +120,14 @@ _output_very_verbose_header (ipmi_sensors_state_data_t *state_data,
                                       &sensor_owner_lun,
                                       &channel_number) < 0)
     return -1;
+  
+  if (sdr_cache_get_entity_id_instance_type (state_data->pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &entity_id,
+                                             &entity_instance,
+                                             NULL) < 0)
+    return -1;
 
   if (_output_very_verbose_record_type_and_id (state_data,
                                                record_type,
@@ -149,8 +158,15 @@ _output_very_verbose_header (ipmi_sensors_state_data_t *state_data,
                   "Channel Number: %Xh\n",
                   channel_number);
   pstdout_printf (state_data->pstate, 
+                  "Entity ID: %d\n", 
+                  entity_id);
+  pstdout_printf (state_data->pstate, 
+                  "Entity Instance: %d\n", 
+                  entity_instance);
+  pstdout_printf (state_data->pstate, 
                   "Event/Reading Type Code: %Xh\n", 
                   event_reading_type_code);
+  
 
   return 0;
 }
@@ -786,10 +802,10 @@ sensors_display_very_verbose_entity_association_record (ipmi_sensors_state_data_
     return -1;
 
   pstdout_printf (state_data->pstate, 
-                  "Container Entity ID: %Xh\n", 
+                  "Container Entity ID: %d\n", 
                   container_entity_id);
   pstdout_printf (state_data->pstate, 
-                  "Container Entity Instance: %Xh\n", 
+                  "Container Entity Instance: %d\n", 
                   container_entity_instance);
 
   pstdout_printf (state_data->pstate, "\n");
@@ -824,10 +840,10 @@ sensors_display_very_verbose_device_relative_entity_association_record (ipmi_sen
     return -1;
 
   pstdout_printf (state_data->pstate, 
-                  "Container Entity ID: %Xh\n", 
+                  "Container Entity ID: %d\n", 
                   container_entity_id);
   pstdout_printf (state_data->pstate, 
-                  "Container Entity Instance: %Xh\n", 
+                  "Container Entity Instance: %d\n", 
                   container_entity_instance);
 
   pstdout_printf (state_data->pstate, "\n");
@@ -919,11 +935,11 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
     return -1;
 
   pstdout_printf (state_data->pstate, 
-                  "Entity ID: %Xh\n", 
+                  "Entity ID: %d\n", 
                   entity_id);
   
   pstdout_printf (state_data->pstate, 
-                  "Entity Instance: %Xh\n", 
+                  "Entity Instance: %d\n", 
                   entity_instance);
 
   return 0;
@@ -1030,11 +1046,11 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
     return -1;
 
   pstdout_printf (state_data->pstate, 
-                  "FRU Entity ID: %Xh\n", 
+                  "FRU Entity ID: %d\n", 
                   fru_entity_id);
   
   pstdout_printf (state_data->pstate, 
-                  "FRU Entity Instance: %Xh\n", 
+                  "FRU Entity Instance: %d\n", 
                   fru_entity_instance);
 
   if (sdr_cache_get_logical_fru_info (state_data->pstate,

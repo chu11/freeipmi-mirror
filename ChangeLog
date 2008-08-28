@@ -3,6 +3,8 @@
 	* libfreeipmi/src/record-format/ipmi-sdr-record-format.c: Fix field names.
 
 	* ipmi-sensors/, common/src/toolcommon/: Adjust for new field names.
+
+	* common/src/toolcommon/, ipmi-sensors/: Add additional output in very verbose mode.
 	
 2008-08-27 Albert Chu <chu11@llnl.gov>
 
