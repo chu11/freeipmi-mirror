@@ -911,11 +911,11 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  if (sdr_cache_get_entity_id (state_data->pstate,
-                               sdr_record,
-                               sdr_record_len,
-                               &entity_id,
-                               &entity_instance) < 0)
+  if (sdr_cache_get_entity_id_and_instance (state_data->pstate,
+                                            sdr_record,
+                                            sdr_record_len,
+                                            &entity_id,
+                                            &entity_instance) < 0)
     return -1;
 
   pstdout_printf (state_data->pstate, 
@@ -1022,11 +1022,11 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                                         sdr_record_len) < 0)
     return -1;
 
-  if (sdr_cache_get_fru_entity_id (state_data->pstate,
-                                   sdr_record,
-                                   sdr_record_len,
-                                   &fru_entity_id,
-                                   &fru_entity_instance) < 0)
+  if (sdr_cache_get_fru_entity_id_and_instance (state_data->pstate,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                &fru_entity_id,
+                                                &fru_entity_instance) < 0)
     return -1;
 
   pstdout_printf (state_data->pstate, 

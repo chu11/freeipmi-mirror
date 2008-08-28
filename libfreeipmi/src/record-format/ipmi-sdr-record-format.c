@@ -70,8 +70,8 @@ fiid_template_t tmpl_sdr_full_sensor_record =
     /* Entity ID */
     {8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Entity Instance */
-    {7, "instance_number_for_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1, "treat_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "entity_instance.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Sensor Initialization */
     {1, "sensor_initialization.sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "sensor_initialization.event_generation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -178,8 +178,8 @@ fiid_template_t tmpl_sdr_full_sensor_record_non_threshold_based_sensors =
     /* Entity ID */
     {8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Entity Instance */
-    {7, "instance_number_for_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1, "treat_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "entity_instance.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Sensor Initialization */
     {1, "sensor_initialization.sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "sensor_initialization.event_generation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -334,8 +334,8 @@ fiid_template_t tmpl_sdr_full_sensor_record_threshold_based_sensors =
     /* Entity ID */
     {8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Entity Instance */
-    {7, "instance_number_for_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1, "treat_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "entity_instance.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Sensor Initialization */
     {1, "sensor_initialization.sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "sensor_initialization.event_generation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -490,8 +490,8 @@ fiid_template_t tmpl_sdr_compact_sensor_record =
     /* Entity ID */
     {8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Entity Instance */
-    {7, "instance_number_for_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1, "treat_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "entity_instance.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Sensor Initialization */
     {1, "sensor_initialization.sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "sensor_initialization.event_generation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -569,8 +569,8 @@ fiid_template_t tmpl_sdr_compact_sensor_record_non_threshold_based_sensors =
     /* Entity ID */
     {8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Entity Instance */
-    {7, "instance_number_for_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1, "treat_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "entity_instance.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Sensor Initialization */
     {1, "sensor_initialization.sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "sensor_initialization.event_generation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -695,8 +695,8 @@ fiid_template_t tmpl_sdr_compact_sensor_record_threshold_based_sensors =
     /* Entity ID */
     {8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Entity Instance */
-    {7, "instance_number_for_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1, "treat_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "entity_instance.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Sensor Initialization */
     {1, "sensor_initialization.sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "sensor_initialization.event_generation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -821,8 +821,8 @@ fiid_template_t tmpl_sdr_event_only_record =
     /* Entity ID */
     {8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Entity Instance */
-    {7, "instance_number_for_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1, "treat_entity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "entity_instance.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
     {8, "sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 

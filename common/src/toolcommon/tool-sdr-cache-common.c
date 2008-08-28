@@ -1844,11 +1844,11 @@ sdr_cache_get_device_type (pstdout_state_t pstate,
 }
 
 int
-sdr_cache_get_entity_id (pstdout_state_t pstate,
-                         uint8_t *sdr_record,
-                         unsigned int sdr_record_len,
-                         uint8_t *entity_id,
-                         uint8_t *entity_instance)
+sdr_cache_get_entity_id_and_instance (pstdout_state_t pstate,
+                                      uint8_t *sdr_record,
+                                      unsigned int sdr_record_len,
+                                      uint8_t *entity_id,
+                                      uint8_t *entity_instance)
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
@@ -1885,11 +1885,11 @@ sdr_cache_get_entity_id (pstdout_state_t pstate,
 }
 
 int
-sdr_cache_get_fru_entity_id (pstdout_state_t pstate,
-                             uint8_t *sdr_record,
-                             unsigned int sdr_record_len,
-                             uint8_t *fru_entity_id,
-                             uint8_t *fru_entity_instance)
+sdr_cache_get_fru_entity_id_and_instance (pstdout_state_t pstate,
+                                          uint8_t *sdr_record,
+                                          unsigned int sdr_record_len,
+                                          uint8_t *fru_entity_id,
+                                          uint8_t *fru_entity_instance)
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
