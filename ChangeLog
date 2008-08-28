@@ -1,3 +1,9 @@
+2008-08-28 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/record-format/ipmi-sdr-record-format.c: Fix field names.
+
+	* ipmi-sensors/, common/src/toolcommon/: Adjust for new field names.
+	
 2008-08-27 Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolcommon/tool-sdr-cache-common.h,

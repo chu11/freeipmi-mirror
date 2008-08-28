@@ -1859,7 +1859,6 @@ sdr_cache_get_entity_id (pstdout_state_t pstate,
   assert(sdr_record_len);
 
   acceptable_record_types = IPMI_SDR_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
   acceptable_record_types |= IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
@@ -1877,6 +1876,46 @@ sdr_cache_get_entity_id (pstdout_state_t pstate,
     {
       _SDR_FIID_OBJ_GET(obj_sdr_record, "entity_instance", &val);
       *entity_instance = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+sdr_cache_get_fru_entity_id (pstdout_state_t pstate,
+                             uint8_t *sdr_record,
+                             unsigned int sdr_record_len,
+                             uint8_t *fru_entity_id,
+                             uint8_t *fru_entity_instance)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  if (fru_entity_id)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "fru_entity_id", &val);
+      *fru_entity_id = val;
+    }
+  if (fru_entity_instance)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record, "fru_entity_instance", &val);
+      *fru_entity_instance = val;
     }
 
   rv = 0;

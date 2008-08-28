@@ -1001,8 +1001,8 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                                                         uint8_t record_type,
                                                         uint16_t record_id)
 {
-  uint8_t entity_id;
-  uint8_t entity_instance;
+  uint8_t fru_entity_id;
+  uint8_t fru_entity_instance;
   uint8_t logical_physical_fru_device;
   uint8_t logical_fru_device_device_slave_address;
 
@@ -1022,20 +1022,20 @@ sensors_display_very_verbose_fru_device_locator_record (ipmi_sensors_state_data_
                                         sdr_record_len) < 0)
     return -1;
 
-  if (sdr_cache_get_entity_id (state_data->pstate,
-                               sdr_record,
-                               sdr_record_len,
-                               &entity_id,
-                               &entity_instance) < 0)
+  if (sdr_cache_get_fru_entity_id (state_data->pstate,
+                                   sdr_record,
+                                   sdr_record_len,
+                                   &fru_entity_id,
+                                   &fru_entity_instance) < 0)
     return -1;
 
   pstdout_printf (state_data->pstate, 
                   "FRU Entity ID: %Xh\n", 
-                  entity_id);
+                  fru_entity_id);
   
   pstdout_printf (state_data->pstate, 
                   "FRU Entity Instance: %Xh\n", 
-                  entity_instance);
+                  fru_entity_instance);
 
   if (sdr_cache_get_logical_fru_info (state_data->pstate,
 				      sdr_record,
