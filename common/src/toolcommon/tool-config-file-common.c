@@ -2591,7 +2591,7 @@ config_file_parse(const char *filename,
         0,
       },
       {
-        "ipmimonitoring-sensors-config-file", 
+        "ipmimonitoring-sensor-config-file", 
         CONFFILE_OPTION_STRING, 
         -1,
         config_file_string, 
