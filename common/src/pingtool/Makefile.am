@@ -17,9 +17,9 @@ libpingtoolcommon_la_SOURCES = \
 	ping-tool-common.c
 
 $(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:

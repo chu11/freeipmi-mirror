@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.20 2008-08-12 18:14:36 chu11 Exp $
+## $Id: Makefile.am,v 1.21 2008-09-02 16:12:14 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -28,9 +28,9 @@ ipmiconsole_SOURCES = \
 	ipmiconsole-argp.c
 
 $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/ipmiconsole/src/libipmiconsole/libipmiconsole.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:

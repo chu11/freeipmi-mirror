@@ -1,3 +1,7 @@
+2008-09-02 Dmitry Frolov <frolov@riss-telecom.ru>
+
+	* configure.ac, all Makefile.am: Fix porting for BSD.
+	
 2008-08-29 Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolcommon/tool-config-file-common.c: Fix typo in

@@ -38,15 +38,15 @@ libtoolcommon_la_SOURCES = \
 	tool-sensor-common.c
 
 $(top_builddir)/common/src/miscutil/libmiscutils.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:

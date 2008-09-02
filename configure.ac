@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.7.0.alpha6],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.151 2008-08-25 21:08:24 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.152 2008-09-02 16:12:12 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -535,7 +535,7 @@ AC_CHECK_FUNC([argp_parse],
               [have_argp=yes],
 	      AC_CHECK_LIB([argp], 
                            [argp_parse], 
-                           [have_argp=yes],
+                           [have_argp=yes; LIBS="-largp $LIBS"],
                            [have_argp=no]))
 
 if test "x$have_argp" = "xyes"; then

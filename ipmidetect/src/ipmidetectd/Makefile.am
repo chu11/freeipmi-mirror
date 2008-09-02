@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.9 2008-08-12 18:14:38 chu11 Exp $
+## $Id: Makefile.am,v 1.10 2008-09-02 16:12:14 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -31,13 +31,13 @@ ipmidetectd_SOURCES = \
 	ipmidetectd_loop.c
 
 $(top_builddir)/common/src/miscutil/libmiscutils.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:
 

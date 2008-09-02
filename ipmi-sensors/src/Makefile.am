@@ -32,6 +32,6 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-util.c
 
 $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:

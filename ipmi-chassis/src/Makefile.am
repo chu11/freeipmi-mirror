@@ -20,6 +20,6 @@ ipmi_chassis_SOURCES = \
 	ipmi-chassis-argp.c
 
 $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:

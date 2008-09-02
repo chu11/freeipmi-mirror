@@ -43,6 +43,6 @@ pef_config_SOURCES = \
 	pef-config-validate.c
 
 $(top_builddir)/common/src/configtool/libconfigtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:

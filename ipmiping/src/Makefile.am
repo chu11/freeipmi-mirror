@@ -14,9 +14,9 @@ ipmiping_LDADD = \
 ipmiping_SOURCES = ipmiping.c
 
 $(top_builddir)/common/src/debugutil/libdebugutil.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/pingtool/libpingtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:

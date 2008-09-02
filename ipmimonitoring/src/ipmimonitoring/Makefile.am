@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.19 2008-08-12 18:14:39 chu11 Exp $
+## $Id: Makefile.am,v 1.20 2008-09-02 16:12:14 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -28,9 +28,9 @@ ipmimonitoring_SOURCES = \
 	ipmimonitoring-argp.c
 
 $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/ipmimonitoring/src/libipmimonitoring/libipmimonitoring.la : force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:
