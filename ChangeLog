@@ -1,3 +1,9 @@
+2008-09-10 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/, ipmimonitoring/: Handle sensor completion code of
+	IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE as a
+	special case.
+	
 2008-08-26  Albert Chu <chu11@llnl.gov>
 	
 	* configure.ac, NEWS: Update for release.

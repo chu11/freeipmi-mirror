@@ -1,3 +1,8 @@
+0.6.7 - 09/XX/08
+----------------
+o Handle "illegal sensor" corner case in ipmi-sensors and
+ipmimonitoring/libipmimonitoring.
+
 0.6.6 - 08/26/08
 ----------------
 o Output NA/Unknown for non-BMC owned sensors in ipmi-sensors.

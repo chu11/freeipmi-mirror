@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.16.2.5 2008-08-26 22:38:45 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.16.2.6 2008-09-10 16:49:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -453,6 +453,18 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
           rv = 0;
           goto cleanup;
         }
+
+      if (ipmi_check_completion_code(obj_cmd_rs,
+                                     IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
+        {
+          /* The sensor data cannot be retrieved.  Probably a
+           * motherboard error.  Tell the caller to store this as
+           * an unreadable sensor
+           */
+          rv = 0;
+          goto cleanup;
+        }
+
       ipmi_monitoring_ipmi_ctx_error_convert(c);
       goto cleanup;
     }
