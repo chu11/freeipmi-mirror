@@ -16,13 +16,13 @@ o Support FreeIPMI configuration file for most tools (bmc-config,
 o Add hostrange support to all config tools (bmc-config, pef-config,
   ipmi-sensors-config, ipmi-chassis-config) to support parallel
   configuration on a cluster.
-o Add additional "connection timeout" error message to tools to
-  differentiate between no IPMI communication at all vs. session
-  timeout in the middle of a command's operations.
 o Support --bridge-sensors in ipmi-sensors and ipmimonitoring to 
   access non-BMC owned sensors.
 o Support --sensor-config-file on ipmimonitoring to support 
   alternate interpretation rules.
+o Add additional "connection timeout" error message to tools to
+  differentiate between no IPMI communication at all vs. session
+  timeout in the middle of a command's operations.
 o Support hysteresis and sensor event configuration in
   ipmi-sensors-config.
 o Support additional sensor monitoring interpretations in ipmimonitoring.
