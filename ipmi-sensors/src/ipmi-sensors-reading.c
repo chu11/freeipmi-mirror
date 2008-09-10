@@ -92,6 +92,17 @@ _get_sensor_reading (struct ipmi_sensors_state_data *state_data,
                             record_id);
           rv = 0;
         }
+      else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                          IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
+        {
+          if (state_data->prog_data->args->common.debug)
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "Sensor number 0x%X data in record %u cannot be retrieved\n",
+                            sensor_number,
+                            record_id);
+          rv = 0;
+        }
       else
         pstdout_fprintf(state_data->pstate,
                         stderr,
@@ -183,6 +194,17 @@ _get_sensor_reading_ipmb (struct ipmi_sensors_state_data *state_data,
                 pstdout_fprintf(state_data->pstate,
                                 stderr,
                                 "Sensor number 0x%X data in record %u not present\n",
+                                sensor_number,
+                                record_id);
+              rv = 0;
+            }
+          else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                              IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
+            {
+              if (state_data->prog_data->args->common.debug)
+                pstdout_fprintf(state_data->pstate,
+                                stderr,
+                                "Sensor number 0x%X data in record %u cannot be retrieved\n",
                                 sensor_number,
                                 record_id);
               rv = 0;

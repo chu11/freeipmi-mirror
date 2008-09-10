@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.37 2008-08-27 18:11:46 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.38 2008-09-10 16:40:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -504,6 +504,17 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
               goto cleanup;
             }
 
+          if (ipmi_check_completion_code(obj_cmd_rs,
+                                         IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
+            {
+              /* The sensor data cannot be retrieved.  Probably a
+               * motherboard error.  Tell the caller to store this as
+               * an unreadable sensor
+               */
+              rv = 0;
+              goto cleanup;
+            }
+
           ipmi_monitoring_ipmi_ctx_error_convert(c);
           goto cleanup;
         }
@@ -548,6 +559,17 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
             {
               /* A sensor listed by the SDR is not present.  Tell the
                * caller to store this as an unreadable sensor
+               */
+              rv = 0;
+              goto cleanup;
+            }
+
+          if (ipmi_check_completion_code(obj_cmd_rs,
+                                         IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
+            {
+              /* The sensor data cannot be retrieved.  Probably a
+               * motherboard error.  Tell the caller to store this as
+               * an unreadable sensor
                */
               rv = 0;
               goto cleanup;
