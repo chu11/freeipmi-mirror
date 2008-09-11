@@ -206,8 +206,8 @@ ipmi-fru
 --------
 
 Forgotten/Undocumented Motherboard(s): Some FRU data has invalid
-checksums.  Resolved with workaround to ignore the checksum (pray for
-the best).
+checksums.  Resolved with workaround to ignore the checksum (and pray
+for the best).
 
 ipmi-sensors/ipmimonitoring
 ---------------------------
