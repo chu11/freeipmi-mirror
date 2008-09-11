@@ -9,7 +9,10 @@ bmc-device \- perform advanced BMC commands
 supports a variety of IPMI commands to perform advanced BMC functions.
 This tool is primarily used for development debugging, BMC error
 recory, retrieving detailed technical information, and other advanced
-purposes.  Most IPMI users will not need to use this tool.
+purposes.  Most IPMI users will not need to use this tool.  Some of
+the
+.B bmc-device
+are not supported on all motherboards.
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
