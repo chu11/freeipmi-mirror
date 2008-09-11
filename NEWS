@@ -17,7 +17,7 @@ o Add hostrange support to all config tools (bmc-config, pef-config,
   ipmi-sensors-config, ipmi-chassis-config) to support parallel
   configuration on a cluster.
 o Support --bridge-sensors in ipmi-sensors and ipmimonitoring to 
-  access non-BMC owned sensors.
+  access non-BMC owned sensors (experimental).
 o Support --sensor-config-file on ipmimonitoring to support 
   alternate interpretation rules.
 o Add additional "connection timeout" error message to tools to
