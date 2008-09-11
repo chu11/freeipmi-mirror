@@ -1,3 +1,9 @@
+2008-09-11  Albert Chu <chu11@llnl.gov>
+	
+	* configure.ac, NEWS: Update for release.
+
+	* Tagged Release-0_6_7.
+
 2008-09-10 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, ipmimonitoring/: Handle sensor completion code of
