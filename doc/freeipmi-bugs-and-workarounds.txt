@@ -218,8 +218,12 @@ Resolved by assuming the sensor state is 0 (i.e. no sensor states have
 been asserted).
 
 Dell 2950: Some sensors return sensor states that are invalid
-(i.e. return 0xC0 if only 0x1 through 0x20 are supported).  Resolved
+(i.e. return 0xC0 if only 0x1 through 0x20 are supported).  Resolved by
 ignoring sensor states that are unknown.
+
+Sun V20Z: Some sensors return illegal sensor completion codes (0xCD)
+for unknown reasons.  Resolved by ignoring sensors that return this
+return code.
 
 ipmi-sel
 --------
