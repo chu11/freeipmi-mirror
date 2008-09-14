@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.16.2.6 2008-09-10 16:49:44 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.16.2.7 2008-09-14 02:36:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -460,6 +460,18 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
           /* The sensor data cannot be retrieved.  Probably a
            * motherboard error.  Tell the caller to store this as
            * an unreadable sensor
+           */
+          rv = 0;
+          goto cleanup;
+        }
+
+      if ((ipmi_check_completion_code(obj_cmd_rs,
+                                      IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
+          || (ipmi_check_completion_code(obj_cmd_rs,
+                                         IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+        {
+          /* The sdr seems to have invalid data. Tell the caller
+           * to store this as an unreadable sensor
            */
           rv = 0;
           goto cleanup;

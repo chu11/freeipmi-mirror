@@ -443,6 +443,18 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                             record_id);
           rv = 0;
         }
+      else if ((ipmi_check_completion_code(obj_cmd_rs,
+                                           IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
+               || (ipmi_check_completion_code(obj_cmd_rs,
+                                              IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+        {
+          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "SDR record %u contains invalid data\n",
+                            record_id);
+          rv = 0;
+        }
       else
         pstdout_fprintf(state_data->pstate,
                         stderr,

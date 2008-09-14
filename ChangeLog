@@ -1,3 +1,9 @@
+2008-09-13 Albert Chu <chu11@llnl.gov>
+
+        * ipmi-sensors/, ipmimonitoring/: Handle sensor completion code of
+        IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE and
+        IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD as special case.
+
 2008-09-11  Albert Chu <chu11@llnl.gov>
 	
 	* configure.ac, NEWS: Update for release.
