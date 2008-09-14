@@ -103,6 +103,18 @@ _get_sensor_reading (struct ipmi_sensors_state_data *state_data,
                             record_id);
           rv = 0;
         }
+      else if ((ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                           IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
+               || (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                              IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+        {
+          if (state_data->prog_data->args->common.debug)
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "SDR record %u contains invalid data\n",
+                            record_id);
+          rv = 0;
+        }
       else
         pstdout_fprintf(state_data->pstate,
                         stderr,
@@ -206,6 +218,18 @@ _get_sensor_reading_ipmb (struct ipmi_sensors_state_data *state_data,
                                 stderr,
                                 "Sensor number 0x%X data in record %u cannot be retrieved\n",
                                 sensor_number,
+                                record_id);
+              rv = 0;
+            }
+          else if ((ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                               IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
+                   || (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                                  IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+            {
+              if (state_data->prog_data->args->common.debug)
+                pstdout_fprintf(state_data->pstate,
+                                stderr,
+                                "SDR record %u contains invalid data\n",
                                 record_id);
               rv = 0;
             }

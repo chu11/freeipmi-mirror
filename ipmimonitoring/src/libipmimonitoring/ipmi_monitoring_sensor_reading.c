@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.38 2008-09-10 16:40:21 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.39 2008-09-14 02:28:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -515,6 +515,18 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
               goto cleanup;
             }
 
+          if ((ipmi_check_completion_code(obj_cmd_rs,
+                                          IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
+              || (ipmi_check_completion_code(obj_cmd_rs,
+                                             IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+            {
+              /* The sdr seems to have invalid data. Tell the caller
+               * to store this as an unreadable sensor
+               */
+              rv = 0;
+              goto cleanup;
+            }
+
           ipmi_monitoring_ipmi_ctx_error_convert(c);
           goto cleanup;
         }
@@ -575,6 +587,18 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
               goto cleanup;
             }
 
+          if ((ipmi_check_completion_code(obj_cmd_rs,
+                                          IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
+              || (ipmi_check_completion_code(obj_cmd_rs,
+                                             IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+            {
+              /* The sdr seems to have invalid data. Tell the caller
+               * to store this as an unreadable sensor
+               */
+              rv = 0;
+              goto cleanup;
+            }
+          
           ipmi_monitoring_ipmi_ctx_error_convert(c);
           goto cleanup;
         }
