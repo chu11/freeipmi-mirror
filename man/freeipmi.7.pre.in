@@ -160,7 +160,6 @@ communication.  Typically, this involves setting a username, password,
 IP address, MAC address, and a few other parameters.  This can be done
 using the tool
 .B bmc-config(8).  
-
 Additional information on how to configure with
 .B bmc-config(8) 
 can be found
