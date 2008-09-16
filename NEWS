@@ -31,7 +31,7 @@ o Output additional sensor information in ipmi-sensors under verbose
 o Support --always-prefix option in most tools for easier scripting.
 o Support --sdr-cache-recreate in all SDR related tools for easier
   scripting.
-o Support --guid option in bmc-info to retrieve global ID.
+o Support --guid option in bmc-info to retrieve global ID (guid).
 o Support "SUNBMC" in-band driver for Solaris (experimental).
 
 Tools - Enhancements/Changes/Bug Fixes
