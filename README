@@ -12,7 +12,7 @@ Project Tools
 Bmc-info
 
 A tool to read information about a BMC such as device version numbers,
-device support, and global IDs.
+device support, and global IDs (guids).
 
 Bmc-config
 

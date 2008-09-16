@@ -7,7 +7,7 @@ bmc-info \- display BMC information
 .SH "DESCRIPTION"
 .B Bmc-info 
 displays BMC information, such as device version numbers, device
-support, and global IDs.
+support, and global IDs (guids).
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>

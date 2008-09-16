@@ -8,7 +8,7 @@ IPMI v1.5/2.0 specification.
 .B Bmc-info
 .PP
 A tool to read information about a BMC such as device version numbers,
-device support, and global IDs.
+device support, and global IDs (guids).
 .PP
 .B Bmc-config
 .PP
