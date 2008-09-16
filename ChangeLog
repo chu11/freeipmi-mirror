@@ -1,3 +1,8 @@
+2008-09-16 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-defs.h: Fix potential
+	portability issue.
+	
 2008-09-13 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, ipmimonitoring/: Handle sensor completion code of

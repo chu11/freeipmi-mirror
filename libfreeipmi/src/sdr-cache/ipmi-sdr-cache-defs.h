@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-defs.h,v 1.7 2008-08-15 16:04:26 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-defs.h,v 1.8 2008-09-16 17:22:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -27,8 +27,16 @@
 #ifndef _IPMI_SDR_CACHE_DEFS_H
 #define _IPMI_SDR_CACHE_DEFS_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif /* HAVE_CONFIG_H */
+
 #include <stdint.h>
+#include <sys/types.h>          /* off_t */
 #include <sys/param.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>             /* off_t */
+#endif /* HAVE_UNISTD_H */
 
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
 
