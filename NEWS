@@ -157,6 +157,7 @@ o libfreeipmi
   - Support new "connection timeout" error message.
   - Support new "command invalid for selected interface" error message.
   - Support ipmb bridging in KCS, OPENIPMI, LAN, and LAN_2_0 interfaces.
+  - Check for additional corner cases in fiid API.
   - Support SUNBMC driver.
 o libipmimonitoring
   - Support new "connection timeout" error message.
