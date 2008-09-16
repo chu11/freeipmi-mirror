@@ -4,6 +4,10 @@ libfreeipmi
 * abstract FRU parsing into lib?
 * abstract SEL parsing into lib?
 
+sunbmc driver
+-------------
+untested - need solaris hardware
+
 ipmi-chassis-config
 -------------------
 * conf.5 manpage
