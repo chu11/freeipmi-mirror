@@ -97,6 +97,45 @@ static char * fiid_errmsg[] =
     "errnum out of range",
   };
 
+static int
+_fiid_template_check_valid_keys (fiid_template_t tmpl)
+{
+  int i;
+
+  assert(tmpl);
+
+  for (i = 0; tmpl[i].max_field_len != 0; i++)
+    {
+      unsigned int len;
+
+      if (!tmpl[i].key)
+        return -1;
+
+      len = strlen(tmpl[i].key);
+      if (!len || len > FIID_FIELD_MAX_KEY_LEN)
+        return -1;
+    }
+  
+  return 0;
+}
+
+static int
+_fiid_template_check_valid_flags (fiid_template_t tmpl)
+{
+  int i;
+
+  assert(tmpl);
+
+  for (i = 0; tmpl[i].max_field_len != 0; i++)
+    {
+      if (!FIID_FIELD_REQUIRED_FLAG_VALID(tmpl[i].flags)
+          || !FIID_FIELD_LENGTH_FLAG_VALID(tmpl[i].flags))
+        return -1;
+    }
+  
+  return 0;
+}
+
 static int32_t
 _fiid_template_len (fiid_template_t tmpl, 
                     unsigned int *tmpl_len)
@@ -149,6 +188,13 @@ fiid_template_field_lookup (fiid_template_t tmpl,
   int i;
   
   if (!(tmpl && field))
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -252,6 +298,13 @@ fiid_template_field_start (fiid_template_t tmpl,
       return (-1);
     }
   
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
   if (_fiid_template_field_start_end (tmpl, 
                                       field, 
                                       &start, 
@@ -268,6 +321,13 @@ fiid_template_field_start_bytes (fiid_template_t tmpl,
   int32_t start = 0;
   
   if (!(tmpl && field))
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -302,6 +362,13 @@ fiid_template_field_end (fiid_template_t tmpl,
       return (-1);
     }
 
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
   if (_fiid_template_field_start_end (tmpl, 
                                       field, 
                                       &start, 
@@ -318,6 +385,13 @@ fiid_template_field_end_bytes (fiid_template_t tmpl,
   int32_t end = 0;
   
   if (!(tmpl && field))
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -351,6 +425,13 @@ fiid_template_field_len (fiid_template_t tmpl,
       return (-1);
     }
   
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
   for (i=0; tmpl[i].max_field_len != 0; i++)
     {
       if (!strcmp (tmpl[i].key, (char *)field))
@@ -369,6 +450,13 @@ fiid_template_field_len_bytes (fiid_template_t tmpl,
   int32_t len;
   
   if (!(tmpl && field))
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -398,6 +486,13 @@ fiid_template_block_len (fiid_template_t tmpl,
   int32_t end;
   
   if (!(tmpl && field_start && field_end))
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -436,6 +531,13 @@ fiid_template_block_len_bytes (fiid_template_t tmpl,
       return (-1);
     }
 
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
   if ((len = fiid_template_block_len (tmpl, 
                                       field_start, 
                                       field_end)) < 0)
@@ -458,6 +560,20 @@ fiid_template_compare(fiid_template_t tmpl1,
   int i;
 
   if (!tmpl1 || !tmpl2)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (_fiid_template_check_valid_keys (tmpl1) < 0)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (_fiid_template_check_valid_keys (tmpl2) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -585,6 +701,20 @@ fiid_obj_create (fiid_template_t tmpl)
       goto cleanup;
     }
  
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
+    {
+      /* FIID_ERR_TEMPLATE_INVALID */
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (_fiid_template_check_valid_flags (tmpl) < 0)
+    {
+      /* FIID_ERR_TEMPLATE_INVALID */
+      errno = EINVAL;
+      goto cleanup;
+    }
+
   if (!(obj = (fiid_obj_t)malloc(sizeof(struct fiid_obj))))
     {
       /* FIID_ERR_OUT_OF_MEMORY */
@@ -624,30 +754,22 @@ fiid_obj_create (fiid_template_t tmpl)
 
   for (i = 0; i < obj->field_data_len; i++)
     {
+#ifndef NDEBUG
       if (tmpl[i].max_field_len)
         {
-#ifndef NDEBUG
           int j;
-
+          
           for (j = 0; j < i; j++)
             {
               if (!strncmp(obj->field_data[j].key, tmpl[i].key, FIID_FIELD_MAX_KEY_LEN))
                 {
-                  /* FIID_ERR_INTERNAL_ERROR */
+                  /* FIID_ERR_TEMPLATE_INVALID */
                   errno = EINVAL;
                   goto cleanup;
                 }
             }
-#endif /* !NDEBUG */
-
-          if (!FIID_FIELD_REQUIRED_FLAG_VALID(tmpl[i].flags)
-              || !FIID_FIELD_LENGTH_FLAG_VALID(tmpl[i].flags))
-            {
-              /* FIID_ERR_TEMPLATE_INVALID */
-              errno = EINVAL;
-              goto cleanup;
-            }
         }
+#endif /* !NDEBUG */
       obj->field_data[i].max_field_len = tmpl[i].max_field_len;
       strncpy(obj->field_data[i].key, tmpl[i].key, FIID_FIELD_MAX_KEY_LEN);
       obj->field_data[i].key[FIID_FIELD_MAX_KEY_LEN - 1] = '\0';
@@ -946,6 +1068,18 @@ fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl)
   if (!tmpl)
     {
       obj->errnum = FIID_ERR_PARAMETERS;
+      return (-1);
+    }
+
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
+    {
+      obj->errnum = FIID_ERR_TEMPLATE_INVALID;
+      return (-1);
+    }
+
+  if (_fiid_template_check_valid_flags (tmpl) < 0)
+    {
+      obj->errnum = FIID_ERR_TEMPLATE_INVALID;
       return (-1);
     }
 

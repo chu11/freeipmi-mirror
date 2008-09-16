@@ -2,6 +2,9 @@
 
 	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-defs.h: Fix potential
 	portability issue.
+
+	* libfreeipmi/src/fiid/fiid.c: Add template checks for valid key
+	name and key length.  Add template checks for valid flags.
 	
 2008-09-13 Albert Chu <chu11@llnl.gov>
 

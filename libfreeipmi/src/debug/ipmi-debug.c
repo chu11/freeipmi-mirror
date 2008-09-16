@@ -86,7 +86,7 @@ ipmi_obj_dump (int fd,
   while (!fiid_iterator_end(iter))
     {
       int32_t field_len;
-      char *key;
+      char *key = NULL;
 
       FIID_ITERATOR_KEY_CLEANUP(key, iter);
 
