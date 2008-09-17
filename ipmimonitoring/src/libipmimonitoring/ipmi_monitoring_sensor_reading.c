@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.39 2008-09-14 02:28:15 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40 2008-09-17 20:50:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -397,6 +397,42 @@ _get_sensor_name(ipmi_monitoring_ctx_t c,
   return 0;
 }
 
+static int
+_sensor_reading_corner_case_checks(ipmi_monitoring_ctx_t c, fiid_obj_t obj_cmd_rs)
+{
+  assert(c);
+  assert(c->magic == IPMI_MONITORING_MAGIC);
+  assert(obj_cmd_rs);
+
+  /* Tell the caller to store as an unreadable sensor b/c:
+   *
+   * IPMI_COMP_CODE_NODE_BUSY: The sensor is busy.  
+   *
+   * IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT: A sensor listed by the SDR is not present.
+   *
+   * IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE: The
+   * sensor data cannot be retrieved.  Probably a motherboard error.
+   *
+   * IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE or
+   * IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD: The sdr seems to have
+   * invalid data.
+   */
+  
+  if (ipmi_check_completion_code(obj_cmd_rs,
+                                 IPMI_COMP_CODE_NODE_BUSY) == 1
+      || ipmi_check_completion_code(obj_cmd_rs, 
+                                    IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1
+      || ipmi_check_completion_code(obj_cmd_rs,
+                                    IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
+      || ipmi_check_completion_code(obj_cmd_rs,
+                                    IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1
+      || ipmi_check_completion_code(obj_cmd_rs,
+                                    IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1)
+    return 0;
+
+  return -1;
+}
+
 /*
  * return value -1 = error, 0 = unreadable sensor reading, 1 = sensor reading success
  */
@@ -484,45 +520,8 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
                                       *sensor_number, 
                                       obj_cmd_rs) < 0)
         {
-          if (ipmi_check_completion_code(obj_cmd_rs,
-                                         IPMI_COMP_CODE_NODE_BUSY) == 1)
+          if (!_sensor_reading_corner_case_checks(c, obj_cmd_rs))
             {
-              /* The sensor is busy.  Tell the caller to store this as an
-               * unreadable sensor
-               */
-              rv = 0;
-              goto cleanup;
-            }
-
-          if (ipmi_check_completion_code(obj_cmd_rs, 
-                                         IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-            {
-              /* A sensor listed by the SDR is not present.  Tell the
-               * caller to store this as an unreadable sensor
-               */
-              rv = 0;
-              goto cleanup;
-            }
-
-          if (ipmi_check_completion_code(obj_cmd_rs,
-                                         IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
-            {
-              /* The sensor data cannot be retrieved.  Probably a
-               * motherboard error.  Tell the caller to store this as
-               * an unreadable sensor
-               */
-              rv = 0;
-              goto cleanup;
-            }
-
-          if ((ipmi_check_completion_code(obj_cmd_rs,
-                                          IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
-              || (ipmi_check_completion_code(obj_cmd_rs,
-                                             IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
-            {
-              /* The sdr seems to have invalid data. Tell the caller
-               * to store this as an unreadable sensor
-               */
               rv = 0;
               goto cleanup;
             }
@@ -556,45 +555,8 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
               goto cleanup;
             }
           
-          if (ipmi_check_completion_code(obj_cmd_rs,
-                                         IPMI_COMP_CODE_NODE_BUSY) == 1)
+          if (!_sensor_reading_corner_case_checks(c, obj_cmd_rs))
             {
-              /* The sensor is busy.  Tell the caller to store this as an
-               * unreadable sensor
-               */
-              rv = 0;
-              goto cleanup;
-            }
-
-          if (ipmi_check_completion_code(obj_cmd_rs, 
-                                         IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-            {
-              /* A sensor listed by the SDR is not present.  Tell the
-               * caller to store this as an unreadable sensor
-               */
-              rv = 0;
-              goto cleanup;
-            }
-
-          if (ipmi_check_completion_code(obj_cmd_rs,
-                                         IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
-            {
-              /* The sensor data cannot be retrieved.  Probably a
-               * motherboard error.  Tell the caller to store this as
-               * an unreadable sensor
-               */
-              rv = 0;
-              goto cleanup;
-            }
-
-          if ((ipmi_check_completion_code(obj_cmd_rs,
-                                          IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
-              || (ipmi_check_completion_code(obj_cmd_rs,
-                                             IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
-            {
-              /* The sdr seems to have invalid data. Tell the caller
-               * to store this as an unreadable sensor
-               */
               rv = 0;
               goto cleanup;
             }

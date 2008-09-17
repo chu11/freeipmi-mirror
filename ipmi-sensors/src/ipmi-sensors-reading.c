@@ -49,6 +49,67 @@
 #define IPMI_SENSORS_OK_MSG   "OK"
 
 int
+_sensor_reading_corner_case_checks (struct ipmi_sensors_state_data *state_data,
+                                    uint8_t sensor_number,
+                                    uint8_t record_id,
+                                    fiid_obj_t obj_get_sensor_reading_rs)
+{
+  assert(state_data);
+  assert(obj_get_sensor_reading_rs);
+
+  if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                 IPMI_COMP_CODE_NODE_BUSY) == 1)
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Sensor number 0x%X data in record %u is busy, can't retrieve\n",
+                        sensor_number,
+                        record_id);
+      return 0;
+    }
+  else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                      IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+    {
+      /* A sensor listed by the SDR is not present.  Skip it's
+       * output, don't error out.
+       */
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Sensor number 0x%X data in record %u not present\n",
+                        sensor_number,
+                        record_id);
+      return 0;
+    }
+  else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                      IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Sensor number 0x%X data in record %u cannot be retrieved\n",
+                        sensor_number,
+                        record_id);
+      return 0;
+    }
+  else if ((ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                       IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
+           || (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                          IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "SDR record %u contains invalid data\n",
+                        record_id);
+      return 0;
+    }
+
+  return -1;
+}
+
+int
 _get_sensor_reading (struct ipmi_sensors_state_data *state_data,
                      char ***event_message_list,
                      unsigned int *event_message_list_len,
@@ -67,54 +128,11 @@ _get_sensor_reading (struct ipmi_sensors_state_data *state_data,
                                    sensor_number, 
                                    obj_get_sensor_reading_rs) < 0)
     {
-      if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                     IPMI_COMP_CODE_NODE_BUSY) == 1)
-        {
-          if (state_data->prog_data->args->common.debug)
-            pstdout_fprintf(state_data->pstate,
-                            stderr,
-                            "Sensor number 0x%X data in record %u is busy, can't retrieve\n",
-                            sensor_number,
-                            record_id);
-          rv = 0;
-        }
-      /* A sensor listed by the SDR is not present.  Skip it's
-       * output, don't error out.
-       */
-      else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                          IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-        {
-          if (state_data->prog_data->args->common.debug)
-            pstdout_fprintf(state_data->pstate,
-                            stderr,
-                            "Sensor number 0x%X data in record %u not present\n",
-                            sensor_number,
-                            record_id);
-          rv = 0;
-        }
-      else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                          IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
-        {
-          if (state_data->prog_data->args->common.debug)
-            pstdout_fprintf(state_data->pstate,
-                            stderr,
-                            "Sensor number 0x%X data in record %u cannot be retrieved\n",
-                            sensor_number,
-                            record_id);
-          rv = 0;
-        }
-      else if ((ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                           IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
-               || (ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                              IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
-        {
-          if (state_data->prog_data->args->common.debug)
-            pstdout_fprintf(state_data->pstate,
-                            stderr,
-                            "SDR record %u contains invalid data\n",
-                            record_id);
-          rv = 0;
-        }
+      if (!_sensor_reading_corner_case_checks(state_data, 
+                                              sensor_number,
+                                              record_id,
+                                              obj_get_sensor_reading_rs))
+        rv = 0;
       else
         pstdout_fprintf(state_data->pstate,
                         stderr,
@@ -185,54 +203,11 @@ _get_sensor_reading_ipmb (struct ipmi_sensors_state_data *state_data,
               
               rv = 0;
             }
-          else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                              IPMI_COMP_CODE_NODE_BUSY) == 1)
-            {
-              if (state_data->prog_data->args->common.debug)
-                pstdout_fprintf(state_data->pstate,
-                                stderr,
-                                "Sensor number 0x%X data in record %u is busy, can't retrieve\n",
-                                sensor_number,
-                                record_id);
-              rv = 0;
-            }
-          /* A sensor listed by the SDR is not present.  Skip it's
-           * output, don't error out.
-           */
-          else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                              IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-            {
-              if (state_data->prog_data->args->common.debug)
-                pstdout_fprintf(state_data->pstate,
-                                stderr,
-                                "Sensor number 0x%X data in record %u not present\n",
-                                sensor_number,
-                                record_id);
-              rv = 0;
-            }
-          else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                              IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
-            {
-              if (state_data->prog_data->args->common.debug)
-                pstdout_fprintf(state_data->pstate,
-                                stderr,
-                                "Sensor number 0x%X data in record %u cannot be retrieved\n",
-                                sensor_number,
-                                record_id);
-              rv = 0;
-            }
-          else if ((ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                               IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
-                   || (ipmi_check_completion_code(obj_get_sensor_reading_rs,
-                                                  IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
-            {
-              if (state_data->prog_data->args->common.debug)
-                pstdout_fprintf(state_data->pstate,
-                                stderr,
-                                "SDR record %u contains invalid data\n",
-                                record_id);
-              rv = 0;
-            }
+          else if (!_sensor_reading_corner_case_checks(state_data, 
+                                                       sensor_number,
+                                                       record_id,
+                                                       obj_get_sensor_reading_rs))
+            rv = 0;
           else
             pstdout_fprintf(state_data->pstate,
                             stderr,
