@@ -32,7 +32,8 @@ o Support --always-prefix option in most tools for easier scripting.
 o Support --sdr-cache-recreate in all SDR related tools for easier
   scripting.
 o Support --guid option in bmc-info to retrieve global ID (guid).
-o Support "SUNBMC" in-band driver for Solaris (experimental).
+o Support "SUNBMC" in-band driver for Solaris (experimental).  Please
+see README.sunbmc for compilation instructions.
 
 Tools - Enhancements/Changes/Bug Fixes
 --------------------------------------
