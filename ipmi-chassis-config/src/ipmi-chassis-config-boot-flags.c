@@ -148,9 +148,9 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
 
   /* achu (workaround)
    *
-   * Some motherboards seem to require that boot_flags_valid always be "Yes".
-   * So we'll enforce it.
-   *
+   * Some motherboards seem to require that boot_flags_valid always be
+   * "Yes".  So we'll enforce it.  It also doesn't make much sense
+   * that we ever set it to "no".
    */
 
   if (ipmi_cmd_set_system_boot_options_boot_flags (state_data->ipmi_ctx, 
