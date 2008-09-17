@@ -1,7 +1,11 @@
 2008-09-17 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, ipmimonitoring/: Code cleanup.
-	
+
+	* configure.ac: update for beta release.
+
+	* Tagged Release-0_7_0_beta0.
+
 2008-09-16 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-defs.h: Fix potential
