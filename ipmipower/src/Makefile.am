@@ -17,12 +17,12 @@ noinst_HEADERS = \
 sbin_PROGRAMS = ipmipower
 
 ipmipower_CPPFLAGS = \
-	-I$(top_builddir)/common/src/debugutil \
-	-I$(top_builddir)/common/src/miscutil \
-	-I$(top_builddir)/common/src/portability \
-	-I$(top_builddir)/common/src/toolcommon \
-	-I$(top_builddir)/ipmidetect/src/libipmidetect \
-	-I$(top_builddir)/libfreeipmi/include \
+	-I$(top_srcdir)/common/src/debugutil \
+	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/src/toolcommon \
+	-I$(top_srcdir)/ipmidetect/src/libipmidetect \
+	-I$(top_srcdir)/libfreeipmi/include \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
 	-DWITH_LSD_NOMEM_ERROR_FUNC=1 \
 	-D_GNU_SOURCE \

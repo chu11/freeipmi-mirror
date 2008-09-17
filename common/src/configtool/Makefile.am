@@ -18,9 +18,9 @@ libconfigtoolcommon_la_LIBADD = \
 	$(top_builddir)/common/src/toolcommon/libtoolcommon.la
 
 libconfigtoolcommon_la_CPPFLAGS = \
-	-I$(top_builddir)/common/src/portability \
-	-I$(top_builddir)/common/src/toolcommon \
-	-I$(top_builddir)/libfreeipmi/include
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/src/toolcommon \
+	-I$(top_srcdir)/libfreeipmi/include
 
 libconfigtoolcommon_la_SOURCES = \
 	config-tool-argp.c \

@@ -1,10 +1,10 @@
 sbin_PROGRAMS = rmcpping
 
 AM_CPPFLAGS = \
-	-I$(top_builddir)/common/src/debugutil \
-	-I$(top_builddir)/common/src/pingtool \
-	-I$(top_builddir)/common/src/portability \
-	-I$(top_builddir)/libfreeipmi/include \
+	-I$(top_srcdir)/common/src/debugutil \
+	-I$(top_srcdir)/common/src/pingtool \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE
 
 rmcpping_LDADD = \

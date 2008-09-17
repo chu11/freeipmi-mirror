@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.9 2008-09-02 16:12:14 chu11 Exp $
+## $Id: Makefile.am,v 1.10 2008-09-17 22:56:04 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -14,8 +14,8 @@ include_HEADERS = ipmidetect.h
 lib_LTLIBRARIES = libipmidetect.la 
 
 libipmidetect_la_CPPFLAGS = \
-	-I$(top_builddir)/common/src/miscutil \
-	-I$(top_builddir)/common/src/portability
+	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/portability
 
 libipmidetect_la_LDFLAGS = \
 	-version-info @LIBIPMIDETECT_VERSION_INFO@ \

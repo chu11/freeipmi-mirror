@@ -18,9 +18,6 @@ endif
 noinst_LTLIBRARIES = \
 	libfreeipmiportability.la
 
-libfreeipmiportability_la_CPPFLAGS = \
-	-I$(srcdir)/../../libfreeipmi/include 
-
 libfreeipmiportability_la_SOURCES = \
 	freeipmi-portability.c \
 	$(FREEIPMI_ARG_SOURCES)

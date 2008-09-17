@@ -3,10 +3,10 @@ noinst_HEADERS = \
 	bmc-info-argp.h 
 
 AM_CPPFLAGS = \
-	-I$(top_builddir)/common/src/miscutil \
-	-I$(top_builddir)/common/src/portability \
-	-I$(top_builddir)/common/src/toolcommon \
-	-I$(top_builddir)/libfreeipmi/include \
+	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/src/toolcommon \
+	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT 
 

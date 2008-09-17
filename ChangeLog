@@ -1,5 +1,7 @@
 2008-09-17 Albert Chu <chu11@llnl.gov>
 
+	* Fix distcheck globally.
+
 	* ipmi-sensors/, ipmimonitoring/: Code cleanup.
 
 	* configure.ac: update for beta release.

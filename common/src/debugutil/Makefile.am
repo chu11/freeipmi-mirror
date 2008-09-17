@@ -5,9 +5,9 @@ noinst_LTLIBRARIES = \
 	libdebugutil.la
 
 libdebugutil_la_CPPFLAGS = \
-	-I$(top_builddir)/common/src \
-	-I$(top_builddir)/common/src/portability \
-	-I$(top_builddir)/libfreeipmi/include 
+	-I$(top_srcdir)/common/src \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/libfreeipmi/include 
 
 libdebugutil_la_SOURCES = \
 	debug-util.c

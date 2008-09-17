@@ -23,10 +23,10 @@ libtoolcommon_la_LDFLAGS = \
 libtoolcommon_la_CPPFLAGS = \
 	-D_GNU_SOURCE \
 	-D_REENTRANT \
-	-I$(top_builddir)/common/src/miscutil \
-	-I$(top_builddir)/common/src/portability \
-	-I$(top_builddir)/ipmidetect/src/libipmidetect/ \
-	-I$(top_builddir)/libfreeipmi/include 
+	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/ipmidetect/src/libipmidetect/ \
+	-I$(top_srcdir)/libfreeipmi/include 
 
 libtoolcommon_la_SOURCES = \
 	pstdout.c \
