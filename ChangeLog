@@ -1,3 +1,9 @@
+2008-09-19 Albert Chu <chu11@llnl.gov>
+
+	*
+	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensors_config.c
+	(_cb_sensor_state_parse): Fix corner case.
+	
 2008-09-17 Albert Chu <chu11@llnl.gov>
 
 	* Fix distcheck globally.

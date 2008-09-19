@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.21 2008-08-27 21:14:10 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.22 2008-09-19 19:52:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -419,6 +419,7 @@ _cb_sensor_state_parse(conffile_t cf,
           sensor_config[i].sensor_state = sensor_state;
           return 0;
         }
+      i++;
     }
 
   conffile_seterrnum(cf, CONFFILE_ERR_INTERNAL);
@@ -2531,7 +2532,6 @@ ipmi_monitoring_sensor_config(int *errnum)
 
       goto cleanup;
     }
-  
   rv = 0;
   _ipmi_monitoring_sensor_config_loaded++;
  cleanup:
