@@ -2,6 +2,7 @@
 ----------------
 o Handle "invalid parameters" error codes in ipmi-sensors and
 ipmimonitoring/libipmimonitoring to work around some motherboards.
+o Fix bug in ipmimonitoring sensors configuration file parsing.
 
 0.6.7 - 09/11/08
 ----------------
