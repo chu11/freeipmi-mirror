@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.16 2008-06-07 16:09:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.17 2008-09-19 20:37:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -140,6 +140,7 @@ _ipmi_monitoring_sdr_cache_filename(ipmi_monitoring_ctx_t c,
               else if (*str == 'L')
                 {
                   char local_hostname[MAXHOSTNAMELEN+1];
+                  char *ptr;
                   
                   memset(local_hostname, '\0', MAXHOSTNAMELEN+1);
                   if (gethostname(local_hostname, MAXHOSTNAMELEN) < 0)
@@ -148,6 +149,10 @@ _ipmi_monitoring_sdr_cache_filename(ipmi_monitoring_ctx_t c,
                       c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
                       return -1;
                     }
+
+                  /* shorten hostname if necessary */
+                  if ((ptr = strchr(local_hostname, '.')))
+                    *ptr = '\0';
 
                   if ((index + strlen(local_hostname)) >= MAXPATHLEN)
                     {
