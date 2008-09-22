@@ -1,4 +1,4 @@
-0.6.8 - 09/XX/08
+0.6.8 - 09/22/08
 ----------------
 o Handle "invalid parameters" error codes in ipmi-sensors and
 ipmimonitoring/libipmimonitoring to work around some motherboards.

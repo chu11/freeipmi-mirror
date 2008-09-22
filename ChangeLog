@@ -3,6 +3,10 @@
 	* common/src/config-commit.c
 	(config_commit_section): Fix return code corner case.
 	
+	* configure.ac, NEWS: Update for release.
+
+	* Tagged Release-0_6_8.
+
 2008-09-19 Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sdr_cache.c
