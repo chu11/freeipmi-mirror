@@ -93,11 +93,14 @@ config_commit_section(pstdout_state_t pstate,
             }
         }
       else
-        PSTDOUT_FPRINTF (pstate,
-                         stderr, 
-                         "ERROR: `%s:%s' is not writeable\n", 
-                         section->section_name, 
-                         kv->key->key_name);
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr, 
+                           "ERROR: `%s:%s' is not writeable\n", 
+                           section->section_name, 
+                           kv->key->key_name);
+          ret = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       
       kv = kv->next;
     }

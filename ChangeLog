@@ -1,3 +1,8 @@
+2008-09-22 Albert Chu <chu11@llnl.gov>
+
+	* common/src/configtool/config-tool-commit.c
+	(config_commit_section): Fix return code corner case.
+	
 2008-09-19 Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sdr_cache.c
