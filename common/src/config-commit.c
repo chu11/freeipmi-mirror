@@ -66,8 +66,11 @@ config_commit_section(struct config_section *section,
             }
         }
       else
-        fprintf (stderr, "ERROR: `%s:%s' is not writeable\n", 
-                 section->section_name, kv->key->key_name);
+        {
+          fprintf (stderr, "ERROR: `%s:%s' is not writeable\n", 
+                   section->section_name, kv->key->key_name);
+          ret = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       
       kv = kv->next;
     }
