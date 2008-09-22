@@ -54,7 +54,7 @@ o ipmi-sensors
     before.  For example, suppose a power supply sensor exists for a
     power supply that is not installed.  If the sensor is enabled on
     the motherboard, ipmi-sensors would likely report "OK".  If the
-    sensor is disabled on the motherboard, ipmi-sensors would likely
+    sensor is disabled on the motherboard, ipmi-sensors would now likely
     report "NA".  Previously, "OK" would have been reported under both
     conditions.
   - Output "NA" for sensors whose slave addresses are not the BMC.
