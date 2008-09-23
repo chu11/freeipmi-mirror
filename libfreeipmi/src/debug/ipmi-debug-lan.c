@@ -235,13 +235,13 @@ _ipmi_dump_lan_packet (int fd,
 
   if ((pkt_len - indx) >= obj_lan_msg_trlr_len)
     obj_cmd_len = (pkt_len - indx) - obj_lan_msg_trlr_len;
-  else if ((pkt_len - indx) < obj_lan_msg_trlr_len)
+  else
     obj_cmd_len = 0;
 
   if (obj_cmd_len)
     {
       uint8_t ipmb_buf[IPMI_DEBUG_MAX_PKT_LEN];
-      int32_t ipmb_buf_len;
+      int32_t ipmb_buf_len = 0;
 
       FIID_OBJ_SET_ALL_LEN_CLEANUP (len, 
 				    obj_cmd,
@@ -295,7 +295,7 @@ _ipmi_dump_lan_packet (int fd,
 
           if ((ipmb_buf_len - ipmb_hdr_len) >= obj_ipmb_msg_trlr_len)
             obj_ipmb_cmd_len = (ipmb_buf_len - ipmb_hdr_len) - obj_ipmb_msg_trlr_len;
-          else if ((ipmb_buf_len - ipmb_hdr_len) < obj_ipmb_msg_trlr_len)
+          else
             obj_ipmb_cmd_len = 0;
 
           if (obj_ipmb_cmd_len) 

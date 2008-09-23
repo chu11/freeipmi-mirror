@@ -221,7 +221,7 @@ ipmi_obj_dump_ipmb (int fd,
       
       if ((ipmb_buf_len - ipmb_hdr_len) >= obj_ipmb_msg_trlr_len)
         obj_ipmb_cmd_len = (ipmb_buf_len - ipmb_hdr_len) - obj_ipmb_msg_trlr_len;
-      else if ((ipmb_buf_len - ipmb_hdr_len) < obj_ipmb_msg_trlr_len)
+      else
         obj_ipmb_cmd_len = 0;
       
       if (obj_ipmb_cmd_len)
