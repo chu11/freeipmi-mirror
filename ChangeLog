@@ -1,8 +1,4 @@
 2008-09-22 Albert Chu <chu11@llnl.gov>
-	
-	* Tagged Release-0_7_0_beta0.
-
-2008-09-22 Albert Chu <chu11@llnl.gov>
 
 	* common/src/configtool/config-tool-commit.c
 	(config_commit_section): Fix return code corner case.
