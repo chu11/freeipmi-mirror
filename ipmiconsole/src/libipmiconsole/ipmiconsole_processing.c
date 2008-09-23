@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.71 2008-06-07 16:09:55 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.72 2008-09-23 16:58:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -2142,7 +2142,6 @@ _check_try_new_port(ipmiconsole_ctx_t c)
           ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_BMC_IMPLEMENTATION);
           return -1;
         }
-      return 1;
     }
   return 0;
 }
