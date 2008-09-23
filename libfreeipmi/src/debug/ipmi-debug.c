@@ -28,6 +28,9 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#if HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif /* HAVE_INTTYPES_H */
 #include <errno.h>
 
 #include "freeipmi/debug/ipmi-debug.h"
@@ -107,7 +110,7 @@ ipmi_obj_dump (int fd,
 
 	  FIID_ITERATOR_GET_CLEANUP (iter, &val);
 
-          IPMI_DEBUG_DPRINTF_CLEANUP ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, key, field_len));
+          IPMI_DEBUG_DPRINTF_CLEANUP ((fd, "[%16"PRIX64"h] = %s[%2db]\n", (uint64_t) val, key, field_len));
         }
       else
         {
