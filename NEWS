@@ -1,6 +1,7 @@
 0.6.9 - XX/XX/XX
 ----------------
 o Handle ipmiconsole/libipmiconsole non-default port corner case.
+o Fix --debug portability.
 
 0.6.8 - 09/22/08
 ----------------
