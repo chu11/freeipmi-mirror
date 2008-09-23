@@ -1,3 +1,8 @@
+2008-09-23 Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
+	(_check_try_new_port): Fix corner case.
+	
 2008-09-22 Albert Chu <chu11@llnl.gov>
 
 	* common/src/config-commit.c
