@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.h,v 1.1 2008-05-28 21:09:32 chu11 Exp $
+ *  $Id: bmc-watchdog.h,v 1.2 2008-09-24 04:00:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -31,7 +31,6 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
-#include "pstdout.h"
 
 /* Pre Timeout Interval is 1 byte */
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS  0

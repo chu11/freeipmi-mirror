@@ -4,4 +4,5 @@ SUBDIRS = \
 	miscutil \
 	pingtool \
 	portability \
-	toolcommon
+	toolcommon \
+	toolhostrange

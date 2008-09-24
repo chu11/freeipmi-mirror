@@ -1,3 +1,12 @@
+2008-09-23 Albert Chu <chu11@llnl.gov>
+
+	* Fix parallel build bugs due to cycles in Makefile dependencies.
+
+	* common/src/toolhostrange/: Split off tool hostrange into
+	separate lib from common/src/toolcommon/.
+
+	* Fix minor bugs.
+	
 2008-09-23 Dmitry Frolov <frolov@riss-telecom.ru>
 
 	* libfreeipmi/src/debug/ipmi-debug.c (ipmi_obj_dump): Fix printf
