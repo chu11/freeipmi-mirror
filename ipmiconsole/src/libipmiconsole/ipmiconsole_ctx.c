@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.31 2008-04-18 01:30:09 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.31.2.1 2008-09-24 18:40:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -873,9 +873,6 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  /* Note: May be modified later based on results from Activate
-   * Payload packet received
-   */
   c->session.console_port = RMCP_PRIMARY_RMCP_PORT;
 
   memset(&(c->session.addr), '\0', sizeof(struct sockaddr_in));
