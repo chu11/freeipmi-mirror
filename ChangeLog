@@ -1,5 +1,10 @@
 2008-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/src/libipmiconsole/: Fix incorrect port usage on
+	non-default port conditions.
+	
+2008-09-24 Albert Chu <chu11@llnl.gov>
+
 	* common/src/toolhostrange/tool-hostrange-common.c
 	(pstdout_setup): Fix potential segfault scenario.
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.72 2008-09-23 16:58:41 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.73 2008-09-24 18:39:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -2964,7 +2964,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
        * behavior?
        */
 
-      IPMICONSOLE_CTX_DEBUG(c, ("trying new port: %X", c->session.console_port));
+      IPMICONSOLE_CTX_DEBUG(c, ("new port indicated: %X", c->session.console_port));
       c->session.try_new_port_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         {
@@ -3373,14 +3373,21 @@ _process_protocol_state_close_session_sent(ipmiconsole_ctx_t c)
 
   if (c->session.try_new_port_flag)
     {
+      int16_t console_port;
+
       /* Yippee, we get to start over! */
       assert(c->session.console_port != RMCP_PRIMARY_RMCP_PORT);
 
-      c->session.try_new_port_flag = 0;
+      console_port = c->session.console_port;
 
+      /* try_new_port_flag reset in ipmiconsole_ctx_session_setup() */
       if (ipmiconsole_ctx_session_setup(c) < 0)
         /* Session is closed, just exit on error */
         return -1;
+
+      c->session.console_port = console_port;
+
+      IPMICONSOLE_CTX_DEBUG(c, ("trying new port: %X", c->session.console_port));
 
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ) < 0)
         /* Session is closed, just exit on error */
