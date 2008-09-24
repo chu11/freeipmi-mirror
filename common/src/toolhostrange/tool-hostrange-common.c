@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: tool-hostrange-common.c,v 1.2 2008-09-24 17:15:22 chu11 Exp $
+ *  $Id: tool-hostrange-common.c,v 1.3 2008-09-24 17:28:32 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -196,6 +196,17 @@ pstdout_setup(char **hosts,
         output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
       else
         output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+
+      if (fanout)
+        {
+          if (pstdout_set_fanout(fanout) < 0)
+            {
+              fprintf(stderr,
+                      "pstdout_set_fanout: %s\n",
+                      pstdout_strerror(pstdout_errnum));
+              goto cleanup;
+            }
+        }
     }
   else if (hosts_count == 1 && always_prefix)
     output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
@@ -210,25 +221,11 @@ pstdout_setup(char **hosts,
           goto cleanup;
         }
     }
-
-  if (hosts_count > 1)
+  
+  if (*hosts && eliminate)
     {
-      if (fanout)
-        {
-          if (pstdout_set_fanout(fanout) < 0)
-            {
-          fprintf(stderr,
-                  "pstdout_set_fanout: %s\n",
-                  pstdout_strerror(pstdout_errnum));
-          goto cleanup;
-            }
-        }
-      
-      if (eliminate)
-        {
-          if (eliminate_nodes(hosts) < 0)
-            goto cleanup;
-        }
+      if (eliminate_nodes(hosts) < 0)
+        goto cleanup;
     }
 
   return hosts_count;
