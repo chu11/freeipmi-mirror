@@ -1,3 +1,8 @@
+2008-09-24 Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolhostrange/tool-hostrange-common.c
+	(pstdout_setup): Fix potential segfault scenario.
+	
 2008-09-23 Albert Chu <chu11@llnl.gov>
 
 	* Fix parallel build bugs due to cycles in Makefile dependencies.

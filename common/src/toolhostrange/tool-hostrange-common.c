@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: tool-hostrange-common.c,v 1.1 2008-09-24 04:00:28 chu11 Exp $
+ *  $Id: tool-hostrange-common.c,v 1.2 2008-09-24 17:15:22 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -179,7 +179,6 @@ pstdout_setup(char **hosts,
       /* if always prefix - turn hostname into "localhost" for prefixing */
       if (always_prefix)
         {
-          free(*hosts);
           if (!(*hosts = strdup("localhost")))
             {
               fprintf(stderr, "strdup: %s\n", strerror(errno));
