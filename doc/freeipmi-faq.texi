@@ -71,6 +71,7 @@ release @value{VERSION} of the FreeIPMI.
 * SSIF Driver Configuration::   
 * x86-64 Compilation::          
 * SUNBMC Driver Compilation::
+* Installing FreeIPMI on FreeBSD::
 @end menu
 
 @c Output the table of contents at the beginning.
@@ -315,7 +316,7 @@ Example:
   # ./configure  --prefix=/usr --libdir=/usr/lib64
 @end example
 
-@node SUNBMC Driver Compilation, , x86-64 Compilation, Top
+@node SUNBMC Driver Compilation, Installing FreeIPMI on FreeBSD, x86-64 Compilation, Top
 @section SUNBMC Driver Compilation
 
 In order to compile the sunbmc driver, the bmc_intf.h header file must
@@ -338,5 +339,17 @@ If the file is not on your system, the bmc_intf.h file may simply be
 downloaded from 
 (@uref{http://opensolaris.org/}) 
 and installed into any location.
+
+@node Installing FreeIPMI on FreeBSD, , SUNBMC Driver Compilation, Top
+@section Installing FreeIPMI on FreeBSD
+
+You can install a binary package of freeipmi or use the port,
+located in ports/sysutils/freeipmi, to build it from the source. See
+ports(7) and 'Packages and Ports' section
+(@uref{http://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/ports.html})
+in The FreeBSD Handbook.
+
+Please contact port maintainer (MAINTAINER line in the port's Makefile),
+if You have problems building from the port.
 
 @bye

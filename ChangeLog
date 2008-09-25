@@ -1,3 +1,7 @@
+2008-09-24 Dmitry Frolov <frolov@riss-telecom.ru>
+
+	* doc/freeipmi-faq.texi: Add FreeBSD information.
+
 2008-09-24 Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/: Fix incorrect port usage on
