@@ -16,11 +16,12 @@
 # All sensors currently supported by libipmimonitoring(3) (at last
 # check this is: temperature, voltage, current, fan, physical
 # security, platform security violation attempt, processor, power
-# supply, power unit, memory, drive slot, syste firmware progress,
+# supply, power unit, memory, drive slot, system firmware progress,
 # event logging disabled, system event, critical interrupt, module
 # board, slot connector, watchdog2, entity presence, management
-# subsystem health, battery, fru state) will have their sensor state
-# (Nominal, Warning, or Critical) monitored.
+# subsystem health, battery, fru state, cable interconnect, boot
+# error) will have their sensor state (Nominal, Warning, or Critical)
+# monitored.
 #
 # Only the actual sensor reading values for temperature, fan, and voltage
 # sensors will be monitored.
