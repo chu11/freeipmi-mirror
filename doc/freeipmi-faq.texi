@@ -350,6 +350,6 @@ ports(7) and 'Packages and Ports' section
 in The FreeBSD Handbook.
 
 Please contact port maintainer (MAINTAINER line in the port's Makefile),
-if You have problems building from the port.
+if you have problems building from the port.
 
 @bye
