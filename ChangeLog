@@ -1,4 +1,8 @@
-2008-09-24 Dmitry Frolov <frolov@riss-telecom.ru>
+2008-09-25 Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Fix freeipmi.conf permissions.
+
+2008-09-25 Dmitry Frolov <frolov@riss-telecom.ru>
 
 	* doc/freeipmi-faq.texi: Add FreeBSD information.
 

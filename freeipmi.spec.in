@@ -170,7 +170,7 @@ fi
 %files
 %defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/freeipmi.conf
+%attr(0600,root,root) %config(noreplace) %{_sysconfdir}/freeipmi.conf
 %doc %{_datadir}/doc/%{name}/AUTHORS
 %doc %{_datadir}/doc/%{name}/COPYING
 %doc %{_datadir}/doc/%{name}/ChangeLog
