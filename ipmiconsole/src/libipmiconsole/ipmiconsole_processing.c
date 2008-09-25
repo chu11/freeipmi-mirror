@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.73 2008-09-24 18:39:33 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.74 2008-09-25 17:09:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1707,6 +1707,8 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
    *
    * Discovered on an ASUS P5M2 motherboard.
    *
+   * Also seen on Intel X38ML motherboard.
+   *
    * The ASUS motherboard reports incorrect settings of anonymous
    * vs. null vs non-null username capabilities.  The workaround is to
    * skip all these checks.
@@ -2064,6 +2066,8 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
   /* IPMI Workaround
    *
    * Discovered on an ASUS P5M2 motherboard.
+   *
+   * Also seen on Intel X38ML motherboard.
    *
    * The ASUS motherboard reports incorrect payload sizes.  Skip the
    * check and assume a reasonable size.

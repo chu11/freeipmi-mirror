@@ -4,6 +4,11 @@ report username capabilities and/or K_g status.  This will likely
 cause "username invalid" or "k_g invalid" errors to occur.  In order
 to work around this issue, the "authcap" workaround must be specified.
 .LP
+Intel X38ML: The motherboard does not properly report username
+capabilities and/or K_g status.  This will likely cause "username
+invalid" or "k_g invalid" errors to occur.  In order to work around
+this issue, the "authcap" workaround must be specified.
+.LP
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): There are a number of Intel IPMI 2.0 bugs which can be
 worked around by specifying the "intel20" workaround.  The workarounds
@@ -25,10 +30,15 @@ include handling invalid lengthed hash keys and invalid cipher suite
 records.  These problems may cause "password invalid" or "bmc error"
 errors to occur
 .LP
-Asus P5M2/RS162-E4/RX4: An incorrect IPMI 2.0 SOL payload sizes are
+Asus P5M2/RS162-E4/RX4: Incorrect IPMI 2.0 SOL payload sizes are
 reported by motherboard SOL packet responses.  This will likely cause
 "BMC Implementation" errors to occur.  In order to work around this
 issue, the "solpayloadsize" workaround must be specified.
+.LP
+Intel X38ML: Incorrect IPMI 2.0 SOL payload sizes are reported by
+motherboard SOL packet responses.  This will likely cause "BMC
+Implementation" errors to occur.  In order to work around this issue,
+the "solpayloadsize" workaround must be specified.
 .LP
 Asus P5MT-R: An invalid IPMI 2.0 SOL port is reported by the
 motherboard.  This may cause "session timeout" errors to occur.  In

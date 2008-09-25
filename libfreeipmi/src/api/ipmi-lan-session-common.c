@@ -1162,6 +1162,8 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
    *
    * Discovered on an ASUS P5M2 motherboard.
    *
+   * Also seen on Intel X38ML motherboard.
+   *
    * The ASUS motherboard reports incorrect settings of anonymous
    * vs. null vs non-null username capabilities.  The workaround is to
    * skip these checks.

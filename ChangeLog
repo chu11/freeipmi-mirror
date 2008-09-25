@@ -2,6 +2,10 @@
 
 	* freeipmi.spec.in: Fix freeipmi.conf permissions.
 
+	* Document Intel x38ml workarounds.
+
+	* Update workaround text/docs.
+
 2008-09-25 Dmitry Frolov <frolov@riss-telecom.ru>
 
 	* doc/freeipmi-faq.texi: Add FreeBSD information.

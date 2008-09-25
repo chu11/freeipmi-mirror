@@ -95,6 +95,10 @@ Sun Fire X4150/X4450: Username capabilities are not reported properly
 by the Get Authentication Capabilities response.  Resolved with a
 workaround ignoring those flags.
 
+Intel X38ML: Username capabilities and/or K_g status are not reported
+properly by the Get Authentication Capabilities response.  Resolved
+with a workaround ignoring those flags.
+
 Session Issues
 --------------
 
@@ -172,6 +176,9 @@ believes it is deactivated, then checks again if it is active.
 Resolved by exiting after a number of failed deactivations.  This
 bug is confirmed to be fixed on newer firmware.
 
+Intel X38ML: SOL payload sizes are reported incorrectly.  Resolved
+with a workaround to skip payload size checks.
+
 bmc-config
 ----------
 
@@ -221,9 +228,17 @@ Dell 2950: Some sensors return sensor states that are invalid
 (i.e. return 0xC0 if only 0x1 through 0x20 are supported).  Resolved by
 ignoring sensor states that are unknown.
 
+Dell 2950: Some sensors return sensor data record not present
+completion codes (0xCB) for unknown reasons.  Resolved by ignoring
+sensors that return this return code.
+
 Sun V20Z: Some sensors return illegal sensor completion codes (0xCD)
 for unknown reasons.  Resolved by ignoring sensors that return this
 return code.
+
+Dell 2650: Some sensors return parameter out of range completion codes
+(0xC9) for unknown reasons.  Resolved by ignoring sensors that return
+this return code.
 
 ipmi-sel
 --------
