@@ -1,4 +1,4 @@
-0.6.9 - XX/XX/XX
+0.6.9 - 09/26/08
 ----------------
 o Handle ipmiconsole/libipmiconsole non-default port corner cases.
 o Fix --debug portability.
