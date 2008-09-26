@@ -1,5 +1,9 @@
 2008-09-25 Albert Chu <chu11@llnl.gov>
 
+	* Document sr1520ml server workarounds.
+	
+2008-09-25 Albert Chu <chu11@llnl.gov>
+
 	* freeipmi.spec.in: Fix freeipmi.conf permissions.
 
 	* Document Intel x38ml workarounds.

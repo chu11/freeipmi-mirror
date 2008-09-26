@@ -95,9 +95,9 @@ Sun Fire X4150/X4450: Username capabilities are not reported properly
 by the Get Authentication Capabilities response.  Resolved with a
 workaround ignoring those flags.
 
-Intel X38ML: Username capabilities and/or K_g status are not reported
-properly by the Get Authentication Capabilities response.  Resolved
-with a workaround ignoring those flags.
+Intel SR1520ML/X38ML: Username capabilities and/or K_g status are not
+reported properly by the Get Authentication Capabilities response.
+Resolved with a workaround ignoring those flags.
 
 Session Issues
 --------------
@@ -176,8 +176,8 @@ believes it is deactivated, then checks again if it is active.
 Resolved by exiting after a number of failed deactivations.  This
 bug is confirmed to be fixed on newer firmware.
 
-Intel X38ML: SOL payload sizes are reported incorrectly.  Resolved
-with a workaround to skip payload size checks.
+Intel SR1520ML/X38ML: SOL payload sizes are reported incorrectly.
+Resolved with a workaround to skip payload size checks.
 
 bmc-config
 ----------
