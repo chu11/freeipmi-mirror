@@ -1,3 +1,7 @@
+2008-09-26 Albert Chu <chu11@llnl.gov>
+
+	* Document sr1520ml/x38ml Intel server workarounds.
+	
 2008-09-24 Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/: Fix incorrect port usage on

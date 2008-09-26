@@ -36,6 +36,11 @@ report username capabilities and/or K_g status.  This will likely
 cause "username invalid" or "k_g invalid" errors to occur.  In order
 to work around this issue, the "authcap" workaround must be specified.
 .LP
+Intel SR1520ML/X38ML: The motherboard does not properly report
+username capabilities and/or K_g status.  This will likely cause
+"username invalid" or "k_g invalid" errors to occur.  In order to work
+around this issue, the "authcap" workaround must be specified.
+.LP
 Sun ILOM 2.0: The session sequence numbers returned for IPMI 1.5
 sessions are the wrong endian on some systems running ILOM 2.0.  The
 incorrect endian depends on the service processor endianness.  This
