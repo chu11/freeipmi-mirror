@@ -1,0 +1,58 @@
+Building/Install from source
+----------------------------
+
+The instructions below (modified from the INSTALL file) should
+work for most people.
+
+  1. `cd' to the directory containing the package's source code and type
+     `./configure' to configure the package for your system.
+
+     Running `configure' takes awhile.  While running, it prints some
+     messages telling which features it is checking for.  If your system
+     requires additional packages and/or libraries in order for FreeIPMI
+     to be built, appropriate messages should be displayed.  These 
+     packages and/or libraries should be installed and `./configure' should
+     be executed again.
+
+  2. Once `./configure' has succeeded, type `make' to compile the
+     package.
+
+  3. Type `make install' to install the programs and any data files and
+     documentation.
+     
+     You may need to be root in order for files to be installed into
+     the proper locations on your system.
+
+Default locations the files will be installed in will typically
+default to /usr/local (binaries in /usr/local/bin, libraries in
+/usr/local/lib, configuration files in /usr/local/etc/, etc.).  To
+install into the more common locations such as /usr/bin, /usr/lib/,
+/etc, etc. the options passed into `./configure' must be adjusted.
+
+The following set of options and settings would suitable for most
+Linux systems.
+
+--program-prefix= --prefix=/usr --exec-prefix=/usr --sysconfdir=/etc
+--localstatedir=/var --mandir=/usr/share/man
+
+Your mileage may vary depending on your system.
+
+Building RPMs
+-------------
+
+For most people you can build RPMs one of two ways.
+
+From the source:
+
+rpmbuild -ta freeipmi-X.Y.Z.tar.gz
+
+From the source rpm:
+
+rpmbuild --rebuild freeipmi-X.Y.Z-1.src.rpm
+
+Depending on your default RPM build environment, you may need to be root
+in order for RPMs to be stored in the default locations.
+
+After the RPMs are built, you may install them the normal way:
+
+rpm -i freeipmi-X.Y.Z.ARCH.rpm

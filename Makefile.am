@@ -38,6 +38,7 @@ EXTRA = \
 	NEWS \
 	README \
 	README.argp \
+	README.build \
 	README.sunbmc \
 	TODO \
 	COPYING.bmc-watchdog \

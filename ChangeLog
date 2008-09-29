@@ -1,3 +1,9 @@
+2008-09-29 Albert Chu <chu11@llnl.gov>
+
+	* README.build: New file.
+
+	* Makefile.am, freeipmi.spec.in: Add new file.
+	
 2008-09-25 Albert Chu <chu11@llnl.gov>
 
 	* Document sr1520ml server workarounds.

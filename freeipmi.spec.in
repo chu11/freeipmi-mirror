@@ -179,6 +179,7 @@ fi
 %doc %{_datadir}/doc/%{name}/NEWS
 %doc %{_datadir}/doc/%{name}/README
 %doc %{_datadir}/doc/%{name}/README.argp
+%doc %{_datadir}/doc/%{name}/README.build
 %doc %{_datadir}/doc/%{name}/README.sunbmc
 %doc %{_datadir}/doc/%{name}/TODO
 %doc %{_infodir}/*
@@ -318,6 +319,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Tue Sep 29 2008 Albert Chu <chu11@llnl.gov> 0.7.0
+- Add README.build
+
 * Tue Aug 12 2008 Albert Chu <chu11@llnl.gov> 0.7.0
 - Add README.sunbmc
 
