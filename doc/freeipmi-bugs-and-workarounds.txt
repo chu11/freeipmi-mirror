@@ -179,6 +179,22 @@ bug is confirmed to be fixed on newer firmware.
 Intel SR1520ML/X38ML: SOL payload sizes are reported incorrectly.
 Resolved with a workaround to skip payload size checks.
 
+Tyan S4811 with SMDC daughter card: During a reboot, SOL packets
+appear to be temporarily internally dropped, leading to large
+increases in sequence numbers once the SOL session is "re-connected".
+While the SOL session is technically alive, the inability to
+predict/handle the sequence number jump makes the SOL session useless.
+To workaround this, libipmiconsole will close a session after a large
+number of consecutive invalid packets are received.
+
+Intel SR1520ML/X38ML: After a reboot, the SOL session appears to
+"disconnect" from the motherboard.  While the SOL session is
+technically alive, and character data input from the user is accepted
+by the remote BMC, no character data is sent back from the remote
+motherboard.  The SOL session is subsequently useless.  There is
+currently no workaround in place to handle this.  The session must be
+closed and restarted.
+
 bmc-config
 ----------
 
