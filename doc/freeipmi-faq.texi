@@ -244,7 +244,8 @@ for Ganglia
 (@uref{http://ganglia.info/}) 
 and Nagios 
 (@uref{http://www.nagios.org/}) 
-have also been developed and made available for download.
+have also been developed and made available for download
+(@uref{http://www.gnu.org/software/freeipmi/download.html}).
 
 The bmc-config, pef-config, ipmi-sensors-config, and
 ipmi-chassis-config configuration file and command-line interface are
