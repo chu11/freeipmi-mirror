@@ -23,14 +23,14 @@ work for most people.
      You may need to be root in order for files to be installed into
      the proper locations on your system.
 
-Default locations the files will be installed in will typically
-default to /usr/local (binaries in /usr/local/bin, libraries in
-/usr/local/lib, configuration files in /usr/local/etc/, etc.).  To
-install into the more common locations such as /usr/bin, /usr/lib/,
-/etc, etc. the options passed into `./configure' must be adjusted.
+By default files will typically be installed in /usr/local (binaries
+in /usr/local/bin, libraries in /usr/local/lib, configuration files in
+/usr/local/etc/, etc.).  To install into the more common locations
+such as /usr/bin, /usr/lib/, /etc, etc. the options passed into
+`./configure' must be adjusted.
 
-The following set of options and settings would suitable for most
-Linux systems.
+The following set of options and settings are suitable for most Linux
+systems.
 
 --program-prefix= --prefix=/usr --exec-prefix=/usr --sysconfdir=/etc
 --localstatedir=/var --mandir=/usr/share/man
