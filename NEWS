@@ -1,3 +1,7 @@
+0.6.10 - XX/XX/08
+----------------
+o Fix ipmi-fru FRU parsing corner case.
+
 0.6.9 - 09/26/08
 ----------------
 o Handle ipmiconsole/libipmiconsole non-default port corner cases.
