@@ -1,3 +1,7 @@
+2008-10-01 Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/ipmiconsole.8.pre.in: Add special workaround notes.
+	
 2008-09-30 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/src/ipmi-fru-multirecord-area.c: Fix record length
