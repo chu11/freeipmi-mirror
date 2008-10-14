@@ -44,6 +44,11 @@ ipmi-sensors-config
 * conf.5 manpage
 * instructions for each section??
 
+IPv6
+----
+- well, IPMI only supports IPv4, so I suppose there is no need for
+this for now.  Just watch for it in the future.
+
 ipmb
 ----
 ipmi 2.0 bridging - untested
