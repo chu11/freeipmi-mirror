@@ -2,6 +2,8 @@
 
 	* bmc-device/bmc-device.8.pre.in: Fix typo.
 
+	* ipmimonitoring/ipmimonitoring.8.pre.in: Fix typo.
+
 2008-11-07  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac, NEWS: Update for release.
