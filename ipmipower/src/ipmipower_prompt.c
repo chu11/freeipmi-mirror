@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.96 2008-08-11 22:05:43 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.97 2008-11-08 00:09:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -215,7 +215,10 @@ static void
 _cmd_k_g(char **argv) 
 {
   int rv = 0;
+#ifndef NDEBUG
   char buf[IPMI_MAX_K_G_LENGTH*2+3];
+#endif /* !NDEBUG */
+
   assert(argv);
 
   if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
@@ -528,7 +531,9 @@ _cmd_debug(char **argv)
 static void 
 _cmd_config(void) 
 {
+#ifndef NDEBUG
   char kgbuf[IPMI_MAX_K_G_LENGTH*2+3];
+#endif /* NDEBUG */
   char strbuf[IPMIPOWER_OUTPUT_BUFLEN];
   char *str;
   int is_first = 0;
@@ -543,14 +548,14 @@ _cmd_config(void)
 
   if (cmd_args.common.hostname) 
     {
-      char buffer[IPMIPOWER_OUTPUT_BUFLEN];
 #ifndef NDEBUG
       int i;
       hostlist_t discovered = NULL;
       hostlist_t undiscovered = NULL;
       hostlist_t badconnection = NULL;
-#endif /* NDEBUG */
+      char buffer[IPMIPOWER_OUTPUT_BUFLEN];
       int rv;
+#endif /* NDEBUG */
 
       cbuf_printf(ttyout, "Hostname:                     %s\n", cmd_args.common.hostname);
 

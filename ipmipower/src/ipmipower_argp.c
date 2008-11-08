@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.2 2008-06-07 16:09:57 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.3 2008-11-08 00:09:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -163,7 +163,7 @@ cmdline_parse (int key,
   struct ipmipower_arguments *cmd_args = state->input;
   char *ptr;
   error_t ret;
-  int tmp;
+  int tmp = 0;
 
   switch (key) 
     {

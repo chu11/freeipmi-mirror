@@ -224,7 +224,7 @@ _dump_rmcpplus_payload_data(int fd,
       if (obj_cmd_len)
         {
           uint8_t ipmb_buf[IPMI_DEBUG_MAX_PKT_LEN];
-          int32_t ipmb_buf_len;
+          int32_t ipmb_buf_len = 0;
 
           FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_cmd);
           
@@ -261,10 +261,10 @@ _dump_rmcpplus_payload_data(int fd,
 
           if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
             {
-              int32_t obj_ipmb_msg_trlr_len;
-              int32_t obj_ipmb_cmd_len;
-              int32_t ipmb_hdr_len;
-              int32_t ipmb_cmd_len;
+              int32_t obj_ipmb_msg_trlr_len = 0;
+              int32_t obj_ipmb_cmd_len = 0;
+              int32_t ipmb_hdr_len = 0;
+              int32_t ipmb_cmd_len = 0;
               
               FIID_TEMPLATE_LEN_BYTES (obj_ipmb_msg_trlr_len, tmpl_ipmb_msg_trlr);
               
