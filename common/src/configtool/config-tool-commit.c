@@ -59,9 +59,8 @@ config_commit_section(pstdout_state_t pstate,
         {
           PSTDOUT_FPRINTF (pstate,
                            stderr, 
-                           "ERROR: Section pre-commit `%s:%s'\n", 
-                           section->section_name,
-                           kv->key->key_name);
+                           "ERROR: Section pre-commit `%s'\n", 
+                           section->section_name);
           ret = CONFIG_ERR_NON_FATAL_ERROR;
         }
     }

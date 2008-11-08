@@ -5,6 +5,10 @@
 	* Tagged Release-0_7_1.
 	
 2008-11-07  Albert Chu <chu11@llnl.gov>
+
+	* Fix compiler warnings.
+	
+2008-11-07  Albert Chu <chu11@llnl.gov>
 	
 	* Tagged Release-0_7_0_base.
 

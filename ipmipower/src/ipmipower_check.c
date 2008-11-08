@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.89 2008-08-12 18:14:40 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.89.4.1 2008-11-08 00:09:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -530,7 +530,7 @@ int
 ipmipower_check_command(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
   uint64_t cmd = 0;
-  uint64_t expected_cmd;
+  uint64_t expected_cmd = 0;
   fiid_obj_t obj_cmd;
 
   assert(ip);
