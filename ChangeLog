@@ -1,3 +1,12 @@
+2008-11-10  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-verbose-display.c
+	(_output_verbose_header),
+	ipmi-sensors/src/ipmi-sensors-very-verbose-display.c
+	(_output_very_verbose_header): Fix semantic issue with verbose
+	output by clearly outputting sensor owner ID vs. slave
+	address/system software ID.
+	
 2008-11-07  Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.8.pre.in: Fix typo.
