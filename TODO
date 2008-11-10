@@ -61,6 +61,10 @@ merge all libs into one?  would aid debian packaging.
 - make .so-naming consistent?
 - merge all except libipmidetect?
 
+snmp
+----
+module for net-snmp to parse ipmi traps?
+
 DCMI functionality
 ------------------
 http://www.intel.com/technology/product/DCMI/index.htm
