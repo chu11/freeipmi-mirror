@@ -90,13 +90,6 @@ additions.
   - these 4 commands seem like the only maybe potentially useful
     additions.
 
-0.7.0 porting ensure works
---------------------------
-BSD
-- gethostbyname_r - still compiles
-- autoconf - no argp-standalone - config errors w/ argp library not found. argp-standalone required
-- autoconf - finds argp-standalone
-
 RELEASE TODOS - Do on every release
 -----------------------------------
 Email freeipmi-users && freeipmi-devel
