@@ -39,7 +39,67 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 
-int
+#define IPMI_OEM_MAX_BYTES 256
+
+static int
+_supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rv = -1;
+  
+  assert(state_data);
+  
+  if (ipmi_cmd_raw (state_data->ipmi_ctx,
+                    0, /* lun */
+                    0, /* network function */
+                    bytes_rq, /* data */
+                    0, /* num bytes */
+                    bytes_rs,
+                    IPMI_OEM_MAX_BYTES) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_raw: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_supermicro (ipmi_oem_state_data_t *state_data)
+{
+  struct ipmi_oem_arguments *args;
+  int rv = -1;
+
+  assert(state_data);
+
+  args = state_data->prog_data->args;
+
+  if (!strcasecmp(args->oem_command, "reset-intrusion"))
+    {
+      if (_supermicro_reset_intrusion (state_data) < 0)
+        goto cleanup;
+    }
+  else
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "OEM Command '%s' unknown\n",
+                       args->oem_command);
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
 run_cmd_args (ipmi_oem_state_data_t *state_data)
 {
   struct ipmi_oem_arguments *args;
@@ -65,15 +125,19 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   
-  pstdout_fprintf (state_data->pstate,
-                   stderr,
-                   "OEM Id '%s' unknown\n",
-                   args->oem_id);
-
-  pstdout_fprintf (state_data->pstate,
-                   stderr,
-                   "OEM Command '%s' unknown\n",
-                   args->oem_command);
+  if (!strcasecmp(args->oem_id, "supermicro"))
+    {
+      if (_supermicro (state_data) < 0)
+        goto cleanup;
+    }
+  else
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "OEM Id '%s' unknown\n",
+                       args->oem_id);
+      goto cleanup;
+    }
  
   rv = 0;
  cleanup:
