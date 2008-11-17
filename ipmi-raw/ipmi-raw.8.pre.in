@@ -3,7 +3,7 @@
 ipmi-raw \- execute IPMI commands by hex values
 .SH "SYNOPSIS"
 .B ipmi-raw
-[\fIOPTION\fR...] <lun> <netfn> [\fICOMMAND-HEX-BYTES\fR...]
+[\fIOPTION\fR...] [\fI<lun> <netfn> COMMAND-HEX-BYTES\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-raw
 is used to execute IPMI commands by hex values.
