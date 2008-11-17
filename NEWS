@@ -4,6 +4,7 @@ o Add Sensor Owner ID output to verbose and very verbose output in
 ipmi-sensors.  Alter previous ipmi-sensors output of slave address and
 system software id to deal with slave address/system software ID
 vs. sensor owner ID semantics.
+o Fix ipmi-raw cmdline parsing corner case.
 o Fix/clarify documentation.
 
 0.7.1 - 11/07/08

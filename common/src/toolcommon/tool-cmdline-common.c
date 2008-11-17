@@ -64,8 +64,6 @@ cmdline_config_file_parse (int key, char *arg, struct argp_state *state)
         }
       break;
     case ARGP_KEY_ARG:
-      /* Too many arguments. */
-      argp_usage (state);
       break;
     case ARGP_KEY_END:
       break;
