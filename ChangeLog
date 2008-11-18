@@ -2,6 +2,14 @@
 
 	* ipmi-oem/: Add supermicro reset-intrusion oem command.
 	
+2008-11-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-raw/src/ipmi-raw-argp.c, ipmi-raw/ipmi-raw.8.pre.in:
+	Clarify usage.
+
+	* common/src/toolcommon/tool-cmdline-common.c
+	(cmdline_config_file_parse): Fix corner case parsing bug.
+	
 2008-11-10  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/src/ipmi-sensors-verbose-display.c

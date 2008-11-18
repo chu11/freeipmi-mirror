@@ -51,7 +51,7 @@ static char cmdline_doc[] =
   "ipmi-raw - execute IPMI commands by hex values";
 
 static char cmdline_args_doc[] = 
-  "[COMMAND-HEX-BYTES]";
+  "[<lun> <netfn> COMMAND-HEX-BYTES]";
 
 static struct argp_option cmdline_options[] = 
   {
