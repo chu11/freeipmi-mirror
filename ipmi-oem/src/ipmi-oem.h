@@ -25,10 +25,16 @@
 #include "tool-cmdline-common.h"
 #include "pstdout.h"
 
+enum ipmi_sensors_argp_option_keys
+  {
+    LIST_KEY = 'L',
+  };
+
 struct ipmi_oem_arguments
 {
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
+  int list;
   char *oem_id;
   char *oem_command;
   char *oem_options[ARG_MAX];
