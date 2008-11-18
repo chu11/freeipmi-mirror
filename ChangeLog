@@ -1,3 +1,9 @@
+2008-11-18  Albert Chu <chu11@llnl.gov>
+	
+	* configure.ac, NEWS: Update for release.
+
+	* Tagged Release-0_7_2.	
+
 2008-11-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/src/ipmi-raw-argp.c, ipmi-raw/ipmi-raw.8.pre.in:
