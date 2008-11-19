@@ -1,5 +1,14 @@
 2008-11-19  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/: Add power unit device install interpretation.
+
+	* ipmimonitoring/src/ipmimonitoring/ipmi_monitoring_sensor_config.c:
+	Fix invalid config option names for slot device installs sensors.
+
+	* ipmimonitoring/ipmimonitoring.8.pre.in: Add extra documentation.
+	
+2008-11-19  Albert Chu <chu11@llnl.gov>
+
 	* bmc-info/src/bmc-info.c (display_get_device_id): Optionally
 	display auxiliary information.
 	

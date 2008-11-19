@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.h,v 1.12 2008-08-27 18:11:46 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.h,v 1.13 2008-11-19 18:49:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -38,6 +38,7 @@ extern struct ipmi_sensor_config ipmi_module_board_state_config[];
 extern struct ipmi_sensor_config ipmi_module_board_device_install_config[];
 extern struct ipmi_sensor_config ipmi_fan_redundancy_config[];
 extern struct ipmi_sensor_config ipmi_power_supply_redundancy_config[];
+extern struct ipmi_sensor_config ipmi_power_unit_device_install_config[];
 extern struct ipmi_sensor_config ipmi_power_unit_redundancy_config[];
 extern struct ipmi_sensor_config ipmi_drive_slot_device_install_config[];
 

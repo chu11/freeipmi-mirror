@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.22 2008-09-19 19:52:20 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.23 2008-11-19 18:49:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -132,10 +132,17 @@ struct ipmi_sensor_config ipmi_power_unit_redundancy_config[] =
     {NULL, -1},
   };
 
+struct ipmi_sensor_config ipmi_power_unit_device_install_config[] =
+  {
+    {"IPMI_Power_Unit_Device_Install_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Power_Unit_Device_Install_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {NULL, -1},
+  };
+
 struct ipmi_sensor_config ipmi_drive_slot_device_install_config[] =
   {
-    {"IPMI_Drive_Slot_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    {"IPMI_Drive_Slot_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Drive_Slot_Device_Install_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Drive_Slot_Device_Install_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     {NULL, -1},
   };
 
@@ -445,6 +452,7 @@ ipmi_monitoring_sensor_config(int *errnum)
   int power_unit_redundancy_flag0, power_unit_redundancy_flag1, power_unit_redundancy_flag2, 
     power_unit_redundancy_flag3, power_unit_redundancy_flag4, power_unit_redundancy_flag5, 
     power_unit_redundancy_flag6, power_unit_redundancy_flag7;
+  int power_unit_device_install_flag0, power_unit_device_install_flag1;
   int drive_slot_device_install_flag0, drive_slot_device_install_flag1; 
   int physical_security_flag0, physical_security_flag1, physical_security_flag2,
     physical_security_flag3, physical_security_flag4, physical_security_flag5, 
@@ -960,6 +968,31 @@ ipmi_monitoring_sensor_config(int *errnum)
         0,
         &power_unit_redundancy_flag7,
         ipmi_power_unit_redundancy_config,
+        0
+      },
+      /* 
+       * IPMI_Power_Unit_Device_Install
+       */
+      {
+        ipmi_power_unit_device_install_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_device_install_flag0,
+        ipmi_power_unit_device_install_config,
+        0
+      },
+      {
+        ipmi_power_unit_device_install_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_device_install_flag1,
+        ipmi_power_unit_device_install_config,
         0
       },
       /* 

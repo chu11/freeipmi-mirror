@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.8.0.alpha0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.155 2008-11-11 00:20:22 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.156 2008-11-19 18:49:28 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -185,7 +185,7 @@ AC_SUBST([LIBIPMICONSOLE_VERSION_INFO])
 # If any interfaces have been removed, set age = 0
 #
 LIBIPMIMONITORING_CURRENT=2
-LIBIPMIMONITORING_REVISION=1
+LIBIPMIMONITORING_REVISION=2
 LIBIPMIMONITORING_AGE=1
 LIBIPMIMONITORING_VERSION_INFO=$LIBIPMIMONITORING_CURRENT:$LIBIPMIMONITORING_REVISION:$LIBIPMIMONITORING_AGE
 AC_SUBST([LIBIPMIMONITORING_VERSION_INFO])
