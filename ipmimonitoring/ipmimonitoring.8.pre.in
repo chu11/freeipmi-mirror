@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.41.2.1 2008-11-08 03:32:45 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.41.2.2 2008-11-19 19:10:59 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -46,8 +46,8 @@ sensor reading use, it is recommended that users use
 Some sensors may not be output by default.  Those sensors may not be
 readable or interpretable for a number of reasons.  The
 \fB\-\-verbose\fR may be used to see what sensors cannot be read or
-interpreted.  Please see KNOWN ISSUES below for interpretation rule
-issues.
+interpreted.  Please see IPMIMONITORING KNOWN ISSUES below for
+interpretation rule issues.
 
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
@@ -148,6 +148,14 @@ Show all sensors on a remote machine using IPMI over LAN.
 .PP
 Show all sensors across a cluster using IPMI over LAN.
 .PP
+.SH "IPMIMONITORING KNOWN ISSUES"
+Interpretation rules have not been written for all sensors
+permutations and types. Users may notice some sensors output in
+.B ipmi-sensors(8)
+do not output in
+.B ipmimonitoring.
+If sensor interpretation rules are needed,
+please contact the FreeIPMI maintainers.
 #include <@top_srcdir@/common/man/manpage-common-known-issues.man>
 .LP
 Interpretation rules have not been written for all sensors

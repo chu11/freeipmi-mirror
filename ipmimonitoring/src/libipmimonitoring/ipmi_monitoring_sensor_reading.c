@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40 2008-09-17 20:50:47 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40.2.1 2008-11-19 19:10:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -295,6 +295,8 @@ _get_digital_sensor_state(ipmi_monitoring_ctx_t c,
     config = ipmi_fan_redundancy_config;
   else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
     config = ipmi_power_supply_redundancy_config;
+  else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
+    config = ipmi_power_unit_device_install_config;
   else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
     config = ipmi_power_unit_redundancy_config;
   else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
