@@ -1,3 +1,8 @@
+2008-11-19  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/src/bmc-info.c (display_get_device_id): Optionally
+	display auxiliary information.
+	
 2008-11-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/src/ipmi-raw-argp.c, ipmi-raw/ipmi-raw.8.pre.in:
