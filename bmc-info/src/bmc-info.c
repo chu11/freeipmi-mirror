@@ -255,6 +255,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
   
   {
     uint64_t manufacturer_id, product_id;
+    int8_t flag;
     
     _FIID_OBJ_GET (cmd_rs, "manufacturer_id.id", &manufacturer_id);
     pstdout_printf(state_data->pstate, "Manufacturer ID:   %Xh\n", (unsigned int) manufacturer_id);
@@ -262,23 +263,31 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     _FIID_OBJ_GET (cmd_rs, "product_id", &product_id);
     pstdout_printf(state_data->pstate, "Product ID:        %Xh\n", (unsigned int) product_id);
     
-    _FIID_OBJ_GET (cmd_rs, "auxiliary_firmware_revision_info", &val);
-    switch (manufacturer_id)
+    _FIID_OBJ_GET_WITH_RETURN_VALUE (cmd_rs,
+                                     "auxiliary_firmware_revision_info",
+                                     &val,
+                                     flag);
+    if (flag)
       {
-      case IPMI_MANUFACTURER_ID_INTEL: 
-	switch (product_id)
-	  {
-	    /* I am assuming all Intel products will decode alike.
-               -- Anand Babu <ab@gnu.org.in>  */
-	  case IPMI_PRODUCT_ID_SR870BN4:
-	  default:
-            if (display_intel(state_data, cmd_rs) < 0)
-              goto cleanup;
+        switch (manufacturer_id)
+          {
+          case IPMI_MANUFACTURER_ID_INTEL: 
+            switch (product_id)
+              {
+                /* I am assuming all Intel products will decode alike.
+                   -- Anand Babu <ab@gnu.org.in>  */
+              case IPMI_PRODUCT_ID_SR870BN4:
+              default:
+                if (display_intel(state_data, cmd_rs) < 0)
+                  goto cleanup;
+                break;
+              }
             break;
-	  }
-	break;
-      default:
-        pstdout_printf(state_data->pstate, "Aux Firmware Revision Info: %Xh\n", (unsigned int) val);
+          default:
+            pstdout_printf(state_data->pstate, 
+                           "Aux Firmware Revision Info: %Xh\n", 
+                           (unsigned int) val);
+          }
       }
   }
 

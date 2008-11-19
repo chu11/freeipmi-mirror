@@ -1,3 +1,7 @@
+0.7.3 - 11/XX/08
+----------------
+o Optionally output auxiliary information in bmc-info.
+
 0.7.2 - 11/18/08
 ----------------
 o Add Sensor Owner ID output to verbose and very verbose output in
