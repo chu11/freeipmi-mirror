@@ -14,8 +14,12 @@
 	(ipmi_sensors_get_thresholds): Workaround motherboards w/o get
 	sensor thresholds command support.
 
+	* ipmi-sensors-config/src/ipmi-sensors-config-threshold-section.c
+	(threshold_checkout): Workaround motherboards w/o get sensor
+	thresholds command support.
+
 	* doc/freeipmi-bugs-and-workarounds.txt: Document new workaround.
-	
+
 2008-11-19  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/: Add power unit device install interpretation.

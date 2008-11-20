@@ -257,7 +257,8 @@ Dell 2650: Some sensors return parameter out of range completion codes
 this return code.
 
 HP DL585: The get sensor thresholds command is not supported on these
-motherboards.  Resolved by reading threshold data from the SDR.
+motherboards.  Resolved by reading threshold data from the SDR or not
+allowing sensor threshold configuration.
 
 ipmi-sel
 --------
