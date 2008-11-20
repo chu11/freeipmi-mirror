@@ -1,3 +1,21 @@
+2008-11-20  Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolcommon/tool-fiid-wrappers.h (_FIID_OBJ_SET): New
+	macro.
+
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+	common/src/toolcommon/tool-sdr-cache-common.c
+	(sdr_cache_get_thresholds_raw): New function.
+	
+	* ipmi-sensors/src/ipmi-sensors-display-common.c
+	(_get_sdr_sensor_thresholds): New function.
+
+	* ipmi-sensors/src/ipmi-sensors-display-common.c
+	(ipmi_sensors_get_thresholds): Workaround motherboards w/o get
+	sensor thresholds command support.
+
+	* doc/freeipmi-bugs-and-workarounds.txt: Document new workaround.
+	
 2008-11-19  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/: Add power unit device install interpretation.
