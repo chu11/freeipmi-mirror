@@ -1,6 +1,9 @@
 0.7.3 - 11/XX/08
 ----------------
-o Add power unit device installation interpretation in ipmimonitoring/libipmimonitoring.
+o Add workaround into ipmi-sensors for motherboards that do not
+support the Get Sensor Thresholds command.
+o Add power unit device installation interpretation in
+ipmimonitoring/libipmimonitoring.
 o Fix config option names in ipmimonitoring/libipmimonitoring.
 o Optionally output auxiliary information in bmc-info.
 o Minor documetation updates.

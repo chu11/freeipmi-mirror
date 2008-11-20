@@ -256,6 +256,9 @@ Dell 2650: Some sensors return parameter out of range completion codes
 (0xC9) for unknown reasons.  Resolved by ignoring sensors that return
 this return code.
 
+HP DL585: The get sensor thresholds command is not supported on these
+motherboards.  Resolved by reading threshold data from the SDR.
+
 ipmi-sel
 --------
 
