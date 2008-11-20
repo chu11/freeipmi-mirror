@@ -493,7 +493,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
   if (lower_non_recoverable_threshold)
     {
       _FIID_OBJ_GET (obj_cmd_rs,
-                     "readable_thresholds.lower_critical_threshold",
+                     "readable_thresholds.lower_non_recoverable_threshold",
                      &val);
       if (val)
         {
@@ -598,7 +598,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
   if (upper_non_recoverable_threshold)
     {
       _FIID_OBJ_GET (obj_cmd_rs,
-                     "readable_thresholds.upper_critical_threshold",
+                     "readable_thresholds.upper_non_recoverable_threshold",
                      &val);
       if (val)
         {
