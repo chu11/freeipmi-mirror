@@ -3,6 +3,10 @@
 	* ipmi-sensors/src/ipmi-sensors-display-common.c
 	(ipmi_sensors_get_thresholds): Fix non-recoverable thresholds
 	output corner case.
+
+	* ipmi-sensors/src/ipmi-sensors-simple-display.c
+	(sensors_display_simple_full_record): Output something other than
+	critical thresholds if critical thresholds are not available.
 	
 2008-11-20  Albert Chu <chu11@llnl.gov>
 

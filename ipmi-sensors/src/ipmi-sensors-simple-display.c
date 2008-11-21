@@ -107,8 +107,12 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
                                     unsigned int event_message_list_len)
 {
   uint8_t event_reading_type_code;
+  double *lower_non_critical_threshold = NULL;
+  double *upper_non_critical_threshold = NULL;
   double *lower_critical_threshold = NULL;
   double *upper_critical_threshold = NULL;
+  double *lower_non_recoverable_threshold = NULL;
+  double *upper_non_recoverable_threshold = NULL;
   int rv = -1;
 
   assert(state_data);
@@ -133,6 +137,8 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
       if (!state_data->prog_data->args->quiet_readings)
         {             
           uint8_t sensor_unit;
+          double *lower_output_threshold = NULL;
+          double *upper_output_threshold = NULL;
 
           if (sdr_cache_get_sensor_unit (state_data->pstate,
                                          sdr_record,
@@ -143,12 +149,12 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
           if (ipmi_sensors_get_thresholds (state_data,
                                            sdr_record,
                                            sdr_record_len,
-                                           NULL,
+                                           &lower_non_critical_threshold,
                                            &lower_critical_threshold,
-                                           NULL,
-                                           NULL,
+                                           &lower_non_recoverable_threshold,
+                                           &upper_non_critical_threshold,
                                            &upper_critical_threshold,
-                                           NULL) < 0)
+                                           &upper_non_recoverable_threshold) < 0)
             goto cleanup;
 
           if (reading)
@@ -159,17 +165,38 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
           else 
             pstdout_printf (state_data->pstate, "NA ");
           
+          /* default output is critical thresholds, if those aren't
+           * available, move to non-recoverable, and if those aren't
+           * available, move on to non-critical.
+           */
+
+          if (lower_critical_threshold || upper_critical_threshold)
+            {
+              lower_output_threshold = lower_critical_threshold;
+              upper_output_threshold = upper_critical_threshold;
+            }
+          else if (lower_non_recoverable_threshold || upper_non_recoverable_threshold)
+            {
+              lower_output_threshold = lower_non_recoverable_threshold;
+              upper_output_threshold = upper_non_recoverable_threshold;
+            }
+          else if (lower_non_critical_threshold || upper_non_critical_threshold)
+            {
+              lower_output_threshold = lower_non_critical_threshold;
+              upper_output_threshold = upper_non_critical_threshold;
+            }
+
           if (lower_critical_threshold)
             pstdout_printf (state_data->pstate,
                             "(%.2f/", 
-                            round_double2 (*lower_critical_threshold));
+                            round_double2 (*lower_output_threshold));
           else 
             pstdout_printf (state_data->pstate, "(NA/");
 
           if (upper_critical_threshold)
             pstdout_printf (state_data->pstate,
                             "%.2f): ", 
-                            round_double2 (*upper_critical_threshold));
+                            round_double2 (*upper_output_threshold));
           else 
             pstdout_printf (state_data->pstate, "NA): ");
         }
@@ -189,10 +216,18 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
+  if (lower_non_critical_threshold)
+    free(lower_non_critical_threshold);
+  if (upper_non_critical_threshold)
+    free(upper_non_critical_threshold);
   if (lower_critical_threshold)
     free(lower_critical_threshold);
   if (upper_critical_threshold)
     free(upper_critical_threshold);
+  if (lower_non_recoverable_threshold)
+    free(lower_non_recoverable_threshold);
+  if (upper_non_recoverable_threshold)
+    free(upper_non_recoverable_threshold);
   return rv;
 }
 
