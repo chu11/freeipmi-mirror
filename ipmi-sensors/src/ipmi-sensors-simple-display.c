@@ -186,14 +186,14 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
               upper_output_threshold = upper_non_critical_threshold;
             }
 
-          if (lower_critical_threshold)
+          if (lower_output_threshold)
             pstdout_printf (state_data->pstate,
                             "(%.2f/", 
                             round_double2 (*lower_output_threshold));
           else 
             pstdout_printf (state_data->pstate, "(NA/");
 
-          if (upper_critical_threshold)
+          if (upper_output_threshold)
             pstdout_printf (state_data->pstate,
                             "%.2f): ", 
                             round_double2 (*upper_output_threshold));
