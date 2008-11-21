@@ -6,6 +6,9 @@ o Add power unit device installation interpretation in
 ipmimonitoring/libipmimonitoring.
 o Fix ipmi-sensors non-recoverable threshold output corner case.
 o Fix config option names in ipmimonitoring/libipmimonitoring.
+o In ipmi-sensors default output, output non-recoverable or
+non-critical thresholds if both non-critical thresholds are not
+available.
 o Optionally output auxiliary information in bmc-info.
 o Minor documetation updates.
 
