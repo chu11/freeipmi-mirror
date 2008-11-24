@@ -2,8 +2,8 @@
 ----------------
 o Add workaround into ipmi-sensors and ipmi-sensors-config for
 motherboards that do not support the Get Sensor Thresholds command.
-o Add power unit device installation interpretation in
-ipmimonitoring/libipmimonitoring.
+o Add power unit device installation and fan transition availability
+interpretation in ipmimonitoring/libipmimonitoring.
 o Fix ipmi-sensors non-recoverable threshold output corner case.
 o Fix config option names in ipmimonitoring/libipmimonitoring.
 o In ipmi-sensors default output, output non-recoverable or

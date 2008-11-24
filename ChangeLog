@@ -4,6 +4,8 @@
 	(ipmi_sensors_get_thresholds): Fix workaround for motherboards w/o
 	get sensor thresholds command support.
 
+	* ipmimonitoring/: Add fan transition availability interpretation.
+  	
 	* ipmimonitoring/: Documentation additions and cleanup.
 	
 2008-11-20  Albert Chu <chu11@llnl.gov>
