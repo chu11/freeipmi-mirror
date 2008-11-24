@@ -363,12 +363,6 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
   
   _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_thresholds_rs);
 
-          if (_get_sdr_sensor_thresholds (state_data,
-                                          sdr_record,
-                                          sdr_record_len,
-                                          obj_cmd_rs) < 0)
-            goto cleanup;
-
   if (ipmi_cmd_get_sensor_thresholds (state_data->ipmi_ctx,
                                       sensor_number,
                                       obj_cmd_rs) < 0)
@@ -415,10 +409,14 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                           sdr_record_len,
                                           obj_cmd_rs) < 0)
             goto cleanup;
+
+          goto continue_get_sensor_thresholds;
         }
 
       goto cleanup;
     } 
+
+ continue_get_sensor_thresholds:
 
   if (lower_non_critical_threshold)
     {
