@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40.2.1 2008-11-19 19:10:59 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40.2.2 2008-11-24 17:53:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -282,7 +282,7 @@ _get_digital_sensor_state(ipmi_monitoring_ctx_t c,
    */
 
   if (event_reading_type_code == 0x03 && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
-    config = ipmi_voltage_assertion_config;
+    config = ipmi_voltage_state_config;
   else if (event_reading_type_code == 0x06 && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
     config = ipmi_voltage_performance_config;
   else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_FAN)

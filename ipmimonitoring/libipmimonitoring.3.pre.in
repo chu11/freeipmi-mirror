@@ -1,5 +1,5 @@
 .\"############################################################################
-.\"  $Id: libipmimonitoring.3.pre.in,v 1.11 2008-08-12 18:14:39 chu11 Exp $
+.\"  $Id: libipmimonitoring.3.pre.in,v 1.11.4.1 2008-11-24 17:53:47 chu11 Exp $
 .\"############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -95,6 +95,16 @@ states returnable by IPMI based sensors can be assigned NOMINAL,
 WARNING, or CRITICAL states to be returned by the libipmimonitoring
 library.  If multiple states are triggered on a sensor reading, the
 more severe state is returned to the user.
+
+Most interpretations can be determined quite easily and can meet the
+needs of most users.  For example, a reading of "Performance_Met" is
+normally better than "Performance_Lags".  However, some sensors can
+be ambiguous and depend completely on the manufacturer.  For
+example, "State_Asserted" vs. "State_Deasserted" are completely at
+the interpretation of the vendor.
+
+Users are advised to adjust the interpretations in the configuration
+as needed.
 
 .SH "FILES"
 @IPMI_MONITORING_SDR_CACHE_DIR@

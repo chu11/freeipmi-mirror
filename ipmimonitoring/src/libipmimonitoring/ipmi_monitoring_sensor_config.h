@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.h,v 1.12.2.1 2008-11-19 19:10:59 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.h,v 1.12.2.2 2008-11-24 17:53:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -31,7 +31,7 @@
 
 extern struct ipmi_sensor_config ipmi_threshold_sensor_config[];
 
-extern struct ipmi_sensor_config ipmi_voltage_assertion_config[];
+extern struct ipmi_sensor_config ipmi_voltage_state_config[];
 extern struct ipmi_sensor_config ipmi_voltage_performance_config[];
 extern struct ipmi_sensor_config ipmi_fan_device_install_config[];
 extern struct ipmi_sensor_config ipmi_module_board_state_config[];
