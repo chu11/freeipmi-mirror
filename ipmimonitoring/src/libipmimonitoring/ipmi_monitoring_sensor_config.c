@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.24 2008-11-24 17:33:32 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.25 2008-11-24 18:32:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -79,18 +79,18 @@ struct ipmi_sensor_config ipmi_fan_device_install_config[] =
     {NULL, -1},
   };
 
-struct ipmi_sensor_config ipmi_module_board_state_config[] = 
+struct ipmi_sensor_config ipmi_fan_transition_availability_config[] =
   {
-    {"IPMI_Module_Board_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    {"IPMI_Module_Board_State_Asserted", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    {NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_module_board_device_install_config[] =
-  {
-    {"IPMI_Module_Board_Device_Install_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    {"IPMI_Module_Board_Device_Install_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    {NULL, -1},
+    {"IPMI_Fan_Transition_Availability_To_Running", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Fan_Transition_Availability_To_In_Test", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_Fan_Transition_Availability_To_Power_Off", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_Fan_Transition_Availability_To_On_Line", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_Fan_Transition_Availability_To_Off_Line", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_Fan_Transition_Availability_To_Off_Duty", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_Fan_Transition_Availability_To_Degraded", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Fan_Transition_Availability_To_Power_Save", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_Fan_Transition_Availability_Install_Error", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {NULL, -1},   
   };
 
 struct ipmi_sensor_config ipmi_fan_redundancy_config[] =
@@ -119,6 +119,13 @@ struct ipmi_sensor_config ipmi_power_supply_redundancy_config[] =
     {NULL, -1},
   };
 
+struct ipmi_sensor_config ipmi_power_unit_device_install_config[] =
+  {
+    {"IPMI_Power_Unit_Device_Install_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Power_Unit_Device_Install_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {NULL, -1},
+  };
+
 struct ipmi_sensor_config ipmi_power_unit_redundancy_config[] =
   {
     {"IPMI_Power_Unit_Redundancy_Fully_Redundant", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
@@ -132,10 +139,17 @@ struct ipmi_sensor_config ipmi_power_unit_redundancy_config[] =
     {NULL, -1},
   };
 
-struct ipmi_sensor_config ipmi_power_unit_device_install_config[] =
+struct ipmi_sensor_config ipmi_module_board_state_config[] = 
   {
-    {"IPMI_Power_Unit_Device_Install_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    {"IPMI_Power_Unit_Device_Install_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Module_Board_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Module_Board_State_Asserted", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_module_board_device_install_config[] =
+  {
+    {"IPMI_Module_Board_Device_Install_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Module_Board_Device_Install_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     {NULL, -1},
   };
 
@@ -441,18 +455,23 @@ ipmi_monitoring_sensor_config(int *errnum)
   int voltage_state_flag0, voltage_state_flag1;
   int voltage_performance_flag0, voltage_performance_flag1;
   int fan_device_install_flag0, fan_device_install_flag1;
-  int module_board_state_flag0, module_board_state_flag1;
-  int module_board_device_install_flag0, module_board_device_install_flag1;
+  int fan_transition_availability_flag0, fan_transition_availability_flag1, 
+    fan_transition_availability_flag2, fan_transition_availability_flag3, 
+    fan_transition_availability_flag4, fan_transition_availability_flag5, 
+    fan_transition_availability_flag6, fan_transition_availability_flag7, 
+    fan_transition_availability_flag8;
   int fan_redundancy_flag0, fan_redundancy_flag1, fan_redundancy_flag2, 
     fan_redundancy_flag3, fan_redundancy_flag4, fan_redundancy_flag5, 
     fan_redundancy_flag6, fan_redundancy_flag7;
   int power_supply_redundancy_flag0, power_supply_redundancy_flag1, power_supply_redundancy_flag2, 
     power_supply_redundancy_flag3, power_supply_redundancy_flag4, power_supply_redundancy_flag5, 
     power_supply_redundancy_flag6, power_supply_redundancy_flag7;
+  int power_unit_device_install_flag0, power_unit_device_install_flag1;
   int power_unit_redundancy_flag0, power_unit_redundancy_flag1, power_unit_redundancy_flag2, 
     power_unit_redundancy_flag3, power_unit_redundancy_flag4, power_unit_redundancy_flag5, 
     power_unit_redundancy_flag6, power_unit_redundancy_flag7;
-  int power_unit_device_install_flag0, power_unit_device_install_flag1;
+  int module_board_state_flag0, module_board_state_flag1;
+  int module_board_device_install_flag0, module_board_device_install_flag1;
   int drive_slot_device_install_flag0, drive_slot_device_install_flag1; 
   int physical_security_flag0, physical_security_flag1, physical_security_flag2,
     physical_security_flag3, physical_security_flag4, physical_security_flag5, 
@@ -648,53 +667,105 @@ ipmi_monitoring_sensor_config(int *errnum)
         0
       },
       /* 
-       * IPMI_Module_Board_State
+       * IPMI_Fan_Transition_Availability
        */
       {
-        ipmi_module_board_state_config[0].option_str,
+        ipmi_fan_transition_availability_config[0].option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
-        &module_board_state_flag0,
-        ipmi_module_board_state_config,
+        &fan_transition_availability_flag0,
+        ipmi_fan_transition_availability_config,
         0
       },
       {
-        ipmi_module_board_state_config[1].option_str,
+        ipmi_fan_transition_availability_config[1].option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
-        &module_board_state_flag1,
-        ipmi_module_board_state_config,
-        0
-      },
-      /* 
-       * IPMI_Module_Board_Device_Install
-       */
-      {
-        ipmi_module_board_device_install_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &module_board_device_install_flag0,
-        ipmi_module_board_device_install_config,
+        &fan_transition_availability_flag1,
+        ipmi_fan_transition_availability_config,
         0
       },
       {
-        ipmi_module_board_device_install_config[1].option_str,
+        ipmi_fan_transition_availability_config[2].option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
-        &module_board_device_install_flag1,
-        ipmi_module_board_device_install_config,
+        &fan_transition_availability_flag2,
+        ipmi_fan_transition_availability_config,
+        0
+      },
+      {
+        ipmi_fan_transition_availability_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_transition_availability_flag3,
+        ipmi_fan_transition_availability_config,
+        0
+      },
+      {
+        ipmi_fan_transition_availability_config[4].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_transition_availability_flag4,
+        ipmi_fan_transition_availability_config,
+        0
+      },
+      {
+        ipmi_fan_transition_availability_config[5].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_transition_availability_flag5,
+        ipmi_fan_transition_availability_config,
+        0
+      },
+      {
+        ipmi_fan_transition_availability_config[6].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_transition_availability_flag6,
+        ipmi_fan_transition_availability_config,
+        0
+      },
+      {
+        ipmi_fan_transition_availability_config[7].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_transition_availability_flag7,
+        ipmi_fan_transition_availability_config,
+        0
+      },
+      {
+        ipmi_fan_transition_availability_config[8].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &fan_transition_availability_flag8,
+        ipmi_fan_transition_availability_config,
         0
       },
       /* 
@@ -880,6 +951,31 @@ ipmi_monitoring_sensor_config(int *errnum)
         0
       },
       /* 
+       * IPMI_Power_Unit_Device_Install
+       */
+      {
+        ipmi_power_unit_device_install_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_device_install_flag0,
+        ipmi_power_unit_device_install_config,
+        0
+      },
+      {
+        ipmi_power_unit_device_install_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_device_install_flag1,
+        ipmi_power_unit_device_install_config,
+        0
+      },
+      /* 
        * IPMI_Power_Unit_Redundancy
        */
       {
@@ -971,28 +1067,53 @@ ipmi_monitoring_sensor_config(int *errnum)
         0
       },
       /* 
-       * IPMI_Power_Unit_Device_Install
+       * IPMI_Module_Board_State
        */
       {
-        ipmi_power_unit_device_install_config[0].option_str,
+        ipmi_module_board_state_config[0].option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
-        &power_unit_device_install_flag0,
-        ipmi_power_unit_device_install_config,
+        &module_board_state_flag0,
+        ipmi_module_board_state_config,
         0
       },
       {
-        ipmi_power_unit_device_install_config[1].option_str,
+        ipmi_module_board_state_config[1].option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
-        &power_unit_device_install_flag1,
-        ipmi_power_unit_device_install_config,
+        &module_board_state_flag1,
+        ipmi_module_board_state_config,
+        0
+      },
+      /* 
+       * IPMI_Module_Board_Device_Install
+       */
+      {
+        ipmi_module_board_device_install_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &module_board_device_install_flag0,
+        ipmi_module_board_device_install_config,
+        0
+      },
+      {
+        ipmi_module_board_device_install_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &module_board_device_install_flag1,
+        ipmi_module_board_device_install_config,
         0
       },
       /* 

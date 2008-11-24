@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.42 2008-11-24 17:33:32 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.43 2008-11-24 18:32:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -287,10 +287,8 @@ _get_digital_sensor_state(ipmi_monitoring_ctx_t c,
     config = ipmi_voltage_performance_config;
   else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_FAN)
     config = ipmi_fan_device_install_config;
-  else if (event_reading_type_code == 0x03 && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
-    config = ipmi_module_board_state_config;
-  else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
-    config = ipmi_module_board_device_install_config;
+  else if (event_reading_type_code == 0x0A && sensor_type == IPMI_SENSOR_TYPE_FAN)
+    config = ipmi_fan_transition_availability_config;
   else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_FAN)
     config = ipmi_fan_redundancy_config;
   else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
@@ -299,6 +297,10 @@ _get_digital_sensor_state(ipmi_monitoring_ctx_t c,
     config = ipmi_power_unit_device_install_config;
   else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
     config = ipmi_power_unit_redundancy_config;
+  else if (event_reading_type_code == 0x03 && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
+    config = ipmi_module_board_state_config;
+  else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
+    config = ipmi_module_board_device_install_config;
   else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     config = ipmi_drive_slot_device_install_config;
   else
