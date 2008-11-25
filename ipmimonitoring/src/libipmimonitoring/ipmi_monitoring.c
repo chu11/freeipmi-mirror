@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.32 2008-08-27 23:19:25 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.33 2008-11-25 03:47:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -898,7 +898,7 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
       switch (bitmask_type)
         {
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_PHYSICAL_SECURITY:
-          sensor_type_code = IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION;
+          sensor_type_code = IPMI_SENSOR_TYPE_PHYSICAL_SECURITY;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT:
           sensor_type_code = IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT;

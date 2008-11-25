@@ -1599,7 +1599,7 @@ _sensor_specific_event_enable_get_event_strings (ipmi_sensors_config_state_data_
 
   switch (sensor_type)
     {
-    case IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION:
+    case IPMI_SENSOR_TYPE_PHYSICAL_SECURITY:
       return &sensor_specific_event_strings_physical_security_chassis_intrusion[0];
     case IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT:
       return &sensor_specific_event_strings_platform_security_violation_attempt[0];
