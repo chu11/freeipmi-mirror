@@ -2,8 +2,9 @@
 ----------------
 o Add workaround into ipmi-sensors and ipmi-sensors-config for
 motherboards that do not support the Get Sensor Thresholds command.
-o Add power unit device installation and fan transition availability
-interpretation in ipmimonitoring/libipmimonitoring.
+o Add the following ipmimonitoring/libipmimonitoring interpretations.
+  power unit device installation
+  fan transition availability
 o Fix typos in macro names and string names for sensor types to
 accurately coincide with IPMI specification.  May lead to slightly
 different inputs/outputs in ipmi-sensors and pef-config.  Altered
