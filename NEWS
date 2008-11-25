@@ -25,7 +25,7 @@ o In ipmi-sensors default output, output non-recoverable or
 non-critical thresholds if both non-critical thresholds are not
 available.
 o Optionally output auxiliary information in bmc-info.
-o Various documetation updates.
+o Various documentation updates.
 
 0.7.2 - 11/18/08
 ----------------
