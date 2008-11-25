@@ -776,8 +776,6 @@ Defaults to Critical.
 \fBIPMI_Boot_Error_Timeout_Waiting_For_User_Selection_Of_Boot_Source\fR
 Defaults to Warning.
 .RE
-.TP
-.LP
 .SH "FILES"
 @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
 
