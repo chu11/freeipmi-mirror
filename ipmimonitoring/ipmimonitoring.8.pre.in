@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.43 2008-11-19 18:49:28 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.44 2008-11-25 19:07:53 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -35,13 +35,17 @@ is an IPMI sensor monitoring tool that utilizes the
 .B libipmimonitoring(3)
 library to interpret sensor readings rather than just report them.
 The tool will output if sensors are in NOMINAL, WARNING, or CRITICAL
-states.  The state interpretations are determined by the configuration
-file @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  The library and
-tool are primarily used for host monitoring activities.  By mapping
-sensor readings into NOMINAL, WARNING, or CRITICAL states, it makes
-monitoring easier across large numbers of nodes.  For more general
-sensor reading use, it is recommended that users use
+states.  The library and tool are primarily used for host monitoring
+activities.  By mapping sensor readings into NOMINAL, WARNING, or
+CRITICAL states, it makes monitoring easier across large numbers of
+nodes.  For more general sensor reading use, it is recommended that
+users use 
 .B ipmi-sensors(8).
+
+The state interpretations are determined by the configuration
+file @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  See
+.B ipmi_monitoring_sensors.conf(5)
+for more information on configuring sensor interpretations.
 
 Some sensors may not be output by default.  Those sensors may not be
 readable or interpretable for a number of reasons.  The
@@ -198,5 +202,5 @@ Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 Copyright (C) 2006-2007 The Regents of the University of California.
 #include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-libipmimonitoring(3), freeipmi(7), ipmi-sensors(8)
+libipmimonitoring(3), ipmi_monitoring_sensors.conf(5), freeipmi(7), ipmi-sensors(8)
 #include <@top_srcdir@/common/man/manpage-common-homepage.man>
