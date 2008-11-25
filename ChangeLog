@@ -8,6 +8,17 @@
   	
 	* ipmimonitoring/: Documentation additions and cleanup.
 	
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-types-spec.h,
+	libfreeipmi/src/spec/ipmi-sensor-types-spec.c,
+	libfreeipmi/include/freeipmi/cmds/ipmi-pef-and-alerting-cmds.h,
+	pef-config/src/pef-config-map.c: Fix typos in sensor types macros
+	and strings.
+
+	* ipmi-sensors/src: Fix corner cases in groups
+	verification/selection.
+
+	* configure.ac: Update library revisions appropriately.
+
 2008-11-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/src/ipmi-sensors-display-common.c

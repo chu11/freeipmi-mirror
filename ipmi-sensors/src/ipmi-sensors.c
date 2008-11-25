@@ -196,6 +196,7 @@ _display_group (ipmi_sensors_state_data_t *state_data)
           return (-1);
         }
       str_replace_char (group, ' ', '_');
+      str_replace_char (group, '/', '_');
       pstdout_printf (state_data->pstate, "%s\n", group);
     }
   if (!(group = strdupa (ipmi_oem_sensor_type)))
@@ -207,6 +208,7 @@ _display_group (ipmi_sensors_state_data_t *state_data)
       return (-1);
     }
   str_replace_char (group, ' ', '_');
+  str_replace_char (group, '/', '_');
   pstdout_printf (state_data->pstate, "%s\n", group);
   
   return 0;
@@ -253,6 +255,7 @@ _sensors_group_specified(ipmi_sensors_state_data_t *state_data,
 
       strcpy(sdr_group_name_subst, sdr_group_name);
       str_replace_char (sdr_group_name_subst, ' ', '_');
+      str_replace_char (sdr_group_name_subst, '/', '_');
       
       for (i = 0; i < state_data->prog_data->args->groups_length; i++)
         {

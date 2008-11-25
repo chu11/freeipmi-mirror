@@ -212,9 +212,9 @@ sensor_type_number (const char *source)
     return IPMI_EVENT_SENSOR_TYPE_CURRENT;
   if (same (source, "fan"))
     return IPMI_EVENT_SENSOR_TYPE_FAN;
-  if (same (source, "platform_chassis_intrusion"))
-    return IPMI_EVENT_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION;
-  if (same (source, "platform_security_violation"))
+  if (same (source, "physical_security"))
+    return IPMI_EVENT_SENSOR_TYPE_PHYSICAL_SECURITY;
+  if (same (source, "platform_security_violation_attempt"))
     return IPMI_EVENT_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
   if (same (source, "processor"))
     return IPMI_EVENT_SENSOR_TYPE_PROCESSOR;
@@ -224,15 +224,15 @@ sensor_type_number (const char *source)
     return IPMI_EVENT_SENSOR_TYPE_POWER_UNIT;
   if (same (source, "cooling_device"))
     return IPMI_EVENT_SENSOR_TYPE_COOLING_DEVICE;
-  if (same (source, "fru_sensor"))
-    return IPMI_EVENT_SENSOR_TYPE_FRU_SENSOR;
+  if (same (source, "other_units_based_sensor"))
+    return IPMI_EVENT_SENSOR_TYPE_OTHER_UNITS_BASED_SENSOR;
   if (same (source, "memory"))
     return IPMI_EVENT_SENSOR_TYPE_MEMORY;
   if (same (source, "drive_slot"))
     return IPMI_EVENT_SENSOR_TYPE_DRIVE_SLOT;
   if (same (source, "post_memory_resize"))
     return IPMI_EVENT_SENSOR_TYPE_POST_MEMORY_RESIZE;
-  if (same (source, "system_firmware"))
+  if (same (source, "system_firmware_progress"))
     return IPMI_EVENT_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS;
   if (same (source, "event_logging_disabled"))
     return IPMI_EVENT_SENSOR_TYPE_EVENT_LOGGING_DISABLED;
@@ -242,11 +242,11 @@ sensor_type_number (const char *source)
     return IPMI_EVENT_SENSOR_TYPE_SYSTEM_EVENT;
   if (same (source, "critical_interrupt"))
     return IPMI_EVENT_SENSOR_TYPE_CRITICAL_INTERRUPT;
-  if (same (source, "button"))
+  if (same (source, "button_switch"))
     return IPMI_EVENT_SENSOR_TYPE_BUTTON_SWITCH;
   if (same (source, "module_board"))
     return IPMI_EVENT_SENSOR_TYPE_MODULE_BOARD;
-  if (same (source, "microcontroller"))
+  if (same (source, "microcontroller_coprocessor"))
     return IPMI_EVENT_SENSOR_TYPE_MICROCONTROLLER_COPROCESSOR;
   if (same (source, "add_in_card"))
     return IPMI_EVENT_SENSOR_TYPE_ADD_IN_CARD;
@@ -270,7 +270,7 @@ sensor_type_number (const char *source)
     return IPMI_EVENT_SENSOR_TYPE_OS_CRITICAL_STOP;
   if (same (source, "slot_connector"))
     return IPMI_EVENT_SENSOR_TYPE_SLOT_CONNECTOR;
-  if (same (source, "acpi_power_state"))
+  if (same (source, "system_acpi_power_state"))
     return IPMI_EVENT_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE;
   if (same (source, "watchdog2"))
     return IPMI_EVENT_SENSOR_TYPE_WATCHDOG2;
@@ -278,7 +278,7 @@ sensor_type_number (const char *source)
     return IPMI_EVENT_SENSOR_TYPE_PLATFORM_ALERT;
   if (same (source, "entity_presence"))
     return IPMI_EVENT_SENSOR_TYPE_ENTITY_PRESENCE;
-  if (same (source, "monitor_asic"))
+  if (same (source, "monitor_asic_ic"))
     return IPMI_EVENT_SENSOR_TYPE_MONITOR_ASIC_IC;
   if (same (source, "lan"))
     return IPMI_EVENT_SENSOR_TYPE_LAN;
@@ -313,10 +313,10 @@ sensor_type_string (uint8_t source)
       return "Current";
     case IPMI_EVENT_SENSOR_TYPE_FAN:
       return "Fan";
-    case IPMI_EVENT_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION:
-      return "Platform_Chassis_Intrusion";
+    case IPMI_EVENT_SENSOR_TYPE_PHYSICAL_SECURITY:
+      return "Physical_Security";
     case IPMI_EVENT_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT:
-      return "Platform_Security_violation";
+      return "Platform_Security_Violation_Attempt";
     case IPMI_EVENT_SENSOR_TYPE_PROCESSOR:
       return "Processor";
     case IPMI_EVENT_SENSOR_TYPE_POWER_SUPPLY:
@@ -325,8 +325,8 @@ sensor_type_string (uint8_t source)
       return "Power_Unit";
     case IPMI_EVENT_SENSOR_TYPE_COOLING_DEVICE:
       return "Cooling_Device";
-    case IPMI_EVENT_SENSOR_TYPE_FRU_SENSOR:
-      return "FRU_Sensor";
+    case IPMI_EVENT_SENSOR_TYPE_OTHER_UNITS_BASED_SENSOR:
+      return "Other_Units_Based_Sensor";
     case IPMI_EVENT_SENSOR_TYPE_MEMORY:
       return "Memory";
     case IPMI_EVENT_SENSOR_TYPE_DRIVE_SLOT:
@@ -334,7 +334,7 @@ sensor_type_string (uint8_t source)
     case IPMI_EVENT_SENSOR_TYPE_POST_MEMORY_RESIZE:
       return "Post_Memory_Resize";
     case IPMI_EVENT_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS:
-      return "System_Firmware";
+      return "System_Firmware_Progress";
     case IPMI_EVENT_SENSOR_TYPE_EVENT_LOGGING_DISABLED:
       return "Event_Logging_Disabled";
     case IPMI_EVENT_SENSOR_TYPE_WATCHDOG1:
@@ -344,11 +344,11 @@ sensor_type_string (uint8_t source)
     case IPMI_EVENT_SENSOR_TYPE_CRITICAL_INTERRUPT:
       return "Critical_interrupt";
     case IPMI_EVENT_SENSOR_TYPE_BUTTON_SWITCH:
-      return "Button";
+      return "Button_Switch";
     case IPMI_EVENT_SENSOR_TYPE_MODULE_BOARD:
       return "Module_Board";
     case IPMI_EVENT_SENSOR_TYPE_MICROCONTROLLER_COPROCESSOR:
-      return "Microcontroller";
+      return "Microcontroller_Coprocessor";
     case IPMI_EVENT_SENSOR_TYPE_ADD_IN_CARD:
       return "Add_In_Card";
     case IPMI_EVENT_SENSOR_TYPE_CHASSIS:
@@ -372,7 +372,7 @@ sensor_type_string (uint8_t source)
     case IPMI_EVENT_SENSOR_TYPE_SLOT_CONNECTOR:
       return "Slot_Connector";
     case IPMI_EVENT_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE:
-      return "ACPI_Power_State";
+      return "System_ACPI_Power_State";
     case IPMI_EVENT_SENSOR_TYPE_WATCHDOG2:
       return "Watchdog2";
     case IPMI_EVENT_SENSOR_TYPE_PLATFORM_ALERT:
@@ -380,7 +380,7 @@ sensor_type_string (uint8_t source)
     case IPMI_EVENT_SENSOR_TYPE_ENTITY_PRESENCE:
       return "Entity_Presence";
     case IPMI_EVENT_SENSOR_TYPE_MONITOR_ASIC_IC:
-      return "Monitor_Asic";
+      return "Monitor_ASIC_IC";
     case IPMI_EVENT_SENSOR_TYPE_LAN:
       return "LAN";
     case IPMI_EVENT_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH:

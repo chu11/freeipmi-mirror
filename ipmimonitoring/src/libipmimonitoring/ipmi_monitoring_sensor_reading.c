@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40.2.3 2008-11-24 18:32:25 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40.2.4 2008-11-25 04:04:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -322,7 +322,7 @@ _get_specific_sensor_state(ipmi_monitoring_ctx_t c,
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
 
-  if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION)
+  if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
     config = ipmi_physical_security_config;
   else if (sensor_type == IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
     config = ipmi_platform_security_violation_attempt_config;
@@ -1012,7 +1012,7 @@ _get_specific_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
 
-  if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION)
+  if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PHYSICAL_SECURITY;
   else if (sensor_type == IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
@@ -1149,7 +1149,7 @@ _get_sensor_group(ipmi_monitoring_ctx_t c,
     return IPMI_MONITORING_SENSOR_GROUP_CURRENT;
   else if (sensor_type == IPMI_SENSOR_TYPE_FAN)
     return IPMI_MONITORING_SENSOR_GROUP_FAN;
-  else if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION)
+  else if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
     return IPMI_MONITORING_SENSOR_GROUP_PHYSICAL_SECURITY;
   else if (sensor_type == IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
     return IPMI_MONITORING_SENSOR_GROUP_PLATFORM_SECURITY_VIOLATION_ATTEMPT;

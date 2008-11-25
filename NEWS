@@ -4,7 +4,22 @@ o Add workaround into ipmi-sensors and ipmi-sensors-config for
 motherboards that do not support the Get Sensor Thresholds command.
 o Add power unit device installation and fan transition availability
 interpretation in ipmimonitoring/libipmimonitoring.
+o Fix typos in macro names and string names for sensor types to
+accurately coincide with IPMI specification.  May lead to slightly
+different inputs/outputs in ipmi-sensors and pef-config.  Altered
+strings include:
+  "Platform Chassis Intrusion" -> "Physical Security"
+  "Platform Security Violation" -> "Platform Security Violation Attempt"
+  "Post Memory Resize" -> "POST Memory Resize"
+  "System Firmware" -> "System Firmware Progress"
+  "Button" -> "Button/Switch"
+  "Microcontroller" -> "Microcontroller/Coprocessor"
+  "Cable Interconnect" -> "Cable/Interconnect"
+  "Slot Connector" -> "Slot/Connector"
+  "ACPI Power State" -> "System ACPI Power State"
+  "Monitor Asic" -> "Monitor ASIC/IC"
 o Fix ipmi-sensors non-recoverable threshold output corner case.
+o Fix ipmi-sensors group selection corner cases.
 o Fix config option names in ipmimonitoring/libipmimonitoring.
 o In ipmi-sensors default output, output non-recoverable or
 non-critical thresholds if both non-critical thresholds are not
