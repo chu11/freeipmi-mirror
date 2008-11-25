@@ -256,6 +256,10 @@ fi
 %{_mandir}/man8/ipmiconsole.8*
 %{_mandir}/man5/ipmiconsole.conf.5*
 %{_mandir}/man8/ipmimonitoring.8*
+%{_mandir}/man5/ipmi_monitoring_sensors.conf.5*
+%{_mandir}/man5/ipmimonitoring_sensors.conf.5*
+%{_mandir}/man5/ipmimonitoring.conf.5*
+%{_mandir}/man5/libipmimonitoring.conf.5*
 %{_mandir}/man8/ipmi-chassis.8*
 %{_mandir}/man8/ipmi-chassis-config.8*
 %{_mandir}/man8/ipmidetect.8*
@@ -319,6 +323,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Tue Nov 25 2008 Albert Chu <chu11@llnl.gov> 0.8.0
+- Add new ipmimonitoring config manpages.
+
 * Tue Sep 29 2008 Albert Chu <chu11@llnl.gov> 0.7.0
 - Add README.build
 
