@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.45 2008-11-26 18:10:19 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.46 2008-11-26 18:37:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -291,6 +291,8 @@ _get_digital_sensor_state(ipmi_monitoring_ctx_t c,
     config = ipmi_fan_transition_availability_config;
   else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_FAN)
     config = ipmi_fan_redundancy_config;
+  else if (event_reading_type_code == 0x03 && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
+    config = ipmi_power_supply_state_config;
   else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
     config = ipmi_power_supply_redundancy_config;
   else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
@@ -301,6 +303,10 @@ _get_digital_sensor_state(ipmi_monitoring_ctx_t c,
     config = ipmi_module_board_state_config;
   else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
     config = ipmi_module_board_device_install_config;
+  else if (event_reading_type_code == 0x03 && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
+    config = ipmi_drive_slot_state_config;
+  else if (event_reading_type_code == 0x04 && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
+    config = ipmi_drive_slot_predictive_failure_config;
   else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     config = ipmi_drive_slot_device_install_config;
   else
