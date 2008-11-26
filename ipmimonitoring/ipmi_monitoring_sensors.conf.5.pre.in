@@ -190,10 +190,10 @@ The following states correspond to Power_Supply sensors that report an
 assertion or deassertion.
 .RS
 .TP
-\fBIPMI_Power_Supply_State_Asserted\fR
-Defaults to Warning.
-.TP
 \fBIPMI_Power_Supply_State_Deasserted\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_State_Asserted\fR
 Defaults to Nominal.
 .RE
 .TP
@@ -298,10 +298,10 @@ The following states correspond to Drive_Slot sensors that report an
 assertion or deassertion.
 .RS
 .TP
-\fBIPMI_Drive_Slot_State_Asserted\fR
+\fBIPMI_Drive_Slot_State_Deasserted\fR
 Defaults to Warning.
 .TP
-\fBIPMI_Drive_Slot_State_Deasserted\fR
+\fBIPMI_Drive_Slot_State_Asserted\fR
 Defaults to Nominal.
 .RE
 .TP
@@ -310,11 +310,11 @@ The following states correspond to Drive_Slot sensors that report a
 predictive failure assertion or deassertion.
 .RS
 .TP
-\fBIPMI_Drive_Slot_Predictive_Failure_Asserted\fR
-Defaults to Warning.
-.TP
 \fBIPMI_Drive_Slot_Predictive_Failure_Deasserted\fR
 Defaults to Nominal.
+.TP
+\fBIPMI_Drive_Slot_Predictive_Failure_Asserted\fR
+Defaults to Critical.
 .RE
 .TP
 .B IPMI_Drive_Slot_Device_Install
