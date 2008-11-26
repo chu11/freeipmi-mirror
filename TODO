@@ -41,13 +41,10 @@ retry/resent code?
 
 ipmimonitoring
 --------------
-power supply state (assert = good)
-drive slot predictive failure (deasserted == good)
-drive slot state (hdd.ok2rm - assert == good?)
 acpi power state
 button
 button state
-entity prescenc3e
+entity prescence
 
 ipmi-senosrs
 ------------
