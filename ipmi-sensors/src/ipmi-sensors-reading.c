@@ -402,11 +402,33 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
       goto cleanup;
     }
 
+  _FIID_OBJ_GET (obj_get_sensor_reading_rs,
+                 "sensor_scanning",
+                 &val);
+
+  if (val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Sensor scanning disabled\n");
+
+      /* make status message "na" so "unknown" isn't output */
+      if (get_msg_message_list (state_data,
+                                event_message_list,
+                                event_message_list_len,
+                                "NA") < 0)
+        goto cleanup;
+      
+      rv = 0;
+      goto cleanup;
+    }
+
   /* achu:
    * 
-   * Note: I don't bother checking the "all_event_messages" or
-   * "sensor_scanning" from the get_sensor_reading response.  If that
-   * stuff is turned off, the bitmasks should be zeroed out.
+   * Note: I don't bother checking the "all_event_messages" flag from
+   * the get_sensor_reading response.  If that stuff is turned off,
+   * the bitmasks should be zeroed out.
    *
    * Hopefully this doesn't bite me later on.
    */
