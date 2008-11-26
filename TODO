@@ -53,6 +53,8 @@ ipmi-senosrs
 ------------
 sensor-scannig disabled
 - is set on sun machine for all sensors on get-sensor-events
+- shouldn't check?
+- should be additional output?
 
 ipmi-sensors-config
 -------------------
