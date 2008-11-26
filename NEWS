@@ -3,7 +3,8 @@
 o Add workaround into ipmi-sensors and ipmi-sensors-config for
 motherboards that do not support the Get Sensor Thresholds command.
 o Output 'NA' on sensors in ipmi-sensors and ipmimonitoring that have
-sensor scanning disabled.
+sensor scanning disabled.  In libipmimonitoring, appropriately handle
+sensors with sensor scanning disabled and return 'unreadable'.
 o Add the following ipmimonitoring/libipmimonitoring interpretations.
   power unit device installation
   fan transition availability
