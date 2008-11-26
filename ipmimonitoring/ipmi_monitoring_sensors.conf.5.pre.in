@@ -20,8 +20,9 @@ sensor type.  For more detailed information on each of the
 individual states listed below, please see the IPMI Specification
 "Sensor and Event Code Tables". 
 .B Ipmi-sensors(8) 
-can be used to determine the sensor types and states/thresholds exist
-on their system.
+can be used to determine the sensor types and the states/thresholds
+that exist on a system by outputting very verbose output and seeing
+what types of Assertion or Deassertion events are possible.
 .LP
 The possible values for all states/thresholds below are:
 .LP
