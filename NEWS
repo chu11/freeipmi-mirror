@@ -8,6 +8,9 @@ sensors with sensor scanning disabled and return 'unreadable'.
 o Add the following ipmimonitoring/libipmimonitoring interpretations.
   power unit device installation
   fan transition availability
+  power supply state
+  drive slot state
+  drive slot predictive failure 
 o Fix typos in macro names and string names for sensor types to
 accurately coincide with IPMI specification.  May lead to slightly
 different inputs/outputs in ipmi-sensors and pef-config.  Altered

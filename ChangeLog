@@ -9,6 +9,9 @@
 	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c
 	(_get_sensor_reading): Return 'unreadable sensor' for sensors
 	where sensor scanning is disabled.
+
+	* ipmimonitoring/: Add new interpretations, power supply state,
+	drive slot state, drive slot predictive failure.
 	
 2008-11-25  Albert Chu <chu11@llnl.gov>
 
