@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.44 2008-11-25 03:47:21 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.45 2008-11-26 18:10:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -591,6 +591,22 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
       IPMI_MONITORING_DEBUG(("sensor reading unavailable"));
       /* sensor reading not available.  Tell the caller to store this
        * as an unreadable sensor
+       */
+      rv = 0;
+      goto cleanup;
+    }
+
+  if (Fiid_obj_get(c,
+                   obj_cmd_rs,
+                   "sensor_scanning",
+                   &val) < 0)
+    goto cleanup;
+  
+  if (val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
+    {
+      IPMI_MONITORING_DEBUG(("sensor scanning disabled"));
+      /* sensor scanning disabled.  Tell the caller to store this as
+       * an unreadable sensor
        */
       rv = 0;
       goto cleanup;
