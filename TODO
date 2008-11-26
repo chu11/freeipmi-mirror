@@ -49,6 +49,11 @@ button
 button state
 entity prescenc3e
 
+ipmi-senosrs
+------------
+sensor-scannig disabled
+- is set on sun machine for all sensors on get-sensor-events
+
 ipmi-sensors-config
 -------------------
 * conf.5 manpage
