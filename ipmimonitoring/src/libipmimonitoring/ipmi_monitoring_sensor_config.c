@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.26 2008-11-26 18:37:48 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.27 2008-11-26 18:47:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -60,8 +60,8 @@ struct ipmi_sensor_config ipmi_threshold_sensor_config[] =
 
 struct ipmi_sensor_config ipmi_voltage_state_config[] =
   {
-    {"IPMI_Voltage_State_Asserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
     {"IPMI_Voltage_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Voltage_State_Asserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
     {NULL, -1},
   };
 
@@ -108,8 +108,8 @@ struct ipmi_sensor_config ipmi_fan_redundancy_config[] =
 
 struct ipmi_sensor_config ipmi_power_supply_state_config[] =
   {
-    {"IPMI_Power_Supply_State_Asserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
     {"IPMI_Power_Supply_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Power_Supply_State_Asserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
     {NULL, -1},
   };
 
@@ -162,15 +162,15 @@ struct ipmi_sensor_config ipmi_module_board_device_install_config[] =
 
 struct ipmi_sensor_config ipmi_drive_slot_state_config[] =
   {
-    {"IPMI_Drive_Slot_State_Asserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    {"IPMI_Drive_Slot_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Drive_Slot_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {"IPMI_Drive_Slot_State_Asserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     {NULL, -1},
   };
 
 struct ipmi_sensor_config ipmi_drive_slot_predictive_failure_config[] =
   {
-    {"IPMI_Drive_Slot_Predictive_Failure_Asserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
     {"IPMI_Drive_Slot_Predictive_Failure_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Drive_Slot_Predictive_Failure_Asserted", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     {NULL, -1},
   };
 
