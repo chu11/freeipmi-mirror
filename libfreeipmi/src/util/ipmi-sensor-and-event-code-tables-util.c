@@ -1982,7 +1982,7 @@ get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   FIID_OBJ_GET_CLEANUP (obj, "previous_state_offset", &val);
   previous_state_offset = val;
 
-  FIID_OBJ_GET_CLEANUP (obj, "cause_os_state_change", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "cause_of_state_change", &val);
   cause_of_state_change = val;
   
   if (cause_of_state_change <= ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc_max)
