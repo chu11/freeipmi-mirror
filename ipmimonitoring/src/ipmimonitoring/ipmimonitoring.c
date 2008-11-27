@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.65 2008-11-27 04:28:36 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.66 2008-11-27 15:38:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -100,6 +100,8 @@ _list_groups(ipmimonitoring_state_data_t *state_data)
   pstdout_printf (state_data->pstate, "%s\n", "fru_state");
   pstdout_printf (state_data->pstate, "%s\n", "cable_interconnect");
   pstdout_printf (state_data->pstate, "%s\n", "boot_error");
+  pstdout_printf (state_data->pstate, "%s\n", "button_switch");
+  pstdout_printf (state_data->pstate, "%s\n", "system_acpi_power_state");
   
   return 0;
 }
@@ -412,6 +414,10 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
         sensor_group_str = "Cable Interconnect";
       else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR)
         sensor_group_str = "Boot Error";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_BUTTON_SWITCH)
+        sensor_group_str = "Button Switch";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE)
+        sensor_group_str = "System ACPI Power State";
       else 
         sensor_group_str = "N/A";
 
@@ -782,6 +788,10 @@ _grab_ipmimonitoring_options(struct ipmimonitoring_arguments *cmd_args)
         n = IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT;
       else if (!strcasecmp(cmd_args->groups[i], "boot_error"))
         n = IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR;
+      else if (!strcasecmp(cmd_args->groups[i], "button_switch"))
+        n = IPMI_MONITORING_SENSOR_GROUP_BUTTON_SWITCH;
+      else if (!strcasecmp(cmd_args->groups[i], "system_acpi_power_state"))
+        n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE;
       else
         {
           fprintf(stderr, "invalid sensor group '%s'\n", cmd_args->groups[i]);
