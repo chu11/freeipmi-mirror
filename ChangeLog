@@ -14,6 +14,16 @@
 	drive slot state, drive slot predictive failure.
 
 	* ipmiconsole/src/ipmiconsole.c (main): Fix workaround bug.
+
+	* common/src/toolcommon/tool-cmdline-common.h,
+	common/src/toolcommon/tool-cmdline-common.c
+	(parse_workaround_flags), common/src/toolcommon/tool-common.c
+	(ipmi_open), ipmiconsole/src/ipmiconsole/ipmiconsole.c (main),
+	ipmipower/src/, libfreeipmi/include/freeipmi/api/ipmi-api.h,
+	libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_outofband_2_0),
+	ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(_grab_ipmimonitoring_options): Remove workaround flags unused in
+	libfreeipmi.  Make tool specific workarounds specific to tools.
 	
 2008-11-25  Albert Chu <chu11@llnl.gov>
 

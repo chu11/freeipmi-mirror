@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.97 2008-11-08 00:09:02 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.98 2008-11-27 04:28:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -340,14 +340,14 @@ _cmd_workaround_flags(char **argv)
     }
   else
     cbuf_printf(ttyout, "workaround_flags must be specified: %s,%s,%s,%s,%s,%s,%s,%s\n",
-                IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR,
-                IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR,
-                IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR,
-                IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
-                IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES_STR,
-                IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR,
-                IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR,
-                IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR);
+                IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR,
+                IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR,
+                IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR,
+                IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
+                IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES_STR,
+                IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR,
+                IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR,
+                IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR);
 }
 
 static void 
@@ -669,36 +669,36 @@ _cmd_config(void)
   memset(strbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN);
   is_first = 0;
   _workarounds_strcat(strbuf, 
-                      IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO,
-                      IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR,
+                      IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO,
+                      IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR,
                       &is_first);
   _workarounds_strcat(strbuf, 
-                      IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION,
-                      IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR,
+                      IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION,
+                      IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR,
                       &is_first);
   _workarounds_strcat(strbuf, 
-                      IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE,
-                      IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR,
+                      IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE,
+                      IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR,
                       &is_first);
   _workarounds_strcat(strbuf, 
-                      IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER,
-                      IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
+                      IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER,
+                      IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
                       &is_first);
   _workarounds_strcat(strbuf, 
-                      IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES,
-                      IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES_STR,
+                      IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES,
+                      IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES_STR,
                       &is_first);
   _workarounds_strcat(strbuf, 
-                      IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION,
-                      IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR,
+                      IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION,
+                      IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR,
                       &is_first);
   _workarounds_strcat(strbuf, 
-                      IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION,
-                      IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR,
+                      IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION,
+                      IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR,
                       &is_first);
   _workarounds_strcat(strbuf, 
-                      IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION,
-                      IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR,
+                      IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION,
+                      IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR,
                       &is_first);
 
   cbuf_printf(ttyout, "WorkaroundFlags:              %s\n", strbuf);

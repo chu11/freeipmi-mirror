@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.102 2008-08-15 16:04:25 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.103 2008-11-27 04:28:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -577,7 +577,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
        * Table 13-11 in the IPMI 2.0 spec.
        */
       if (pkt == RAKP_MESSAGE_1_REQ 
-          && (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION))
+          && (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION))
         {
           memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
           if (username)
@@ -864,7 +864,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
        * same workaround.
        */
 
-      if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+      if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
         name_only_lookup = IPMI_USER_NAME_PRIVILEGE_LOOKUP;
       else
         name_only_lookup = ip->name_only_lookup;
@@ -881,7 +881,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
        * password to 16 bytes when generating keys, hashes, etc.  So we
        * have to do the same when generating keys, hashes, etc.
        */
-      if ((cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION) 
+      if ((cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION) 
           && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
           && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
         password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
