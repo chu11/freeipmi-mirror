@@ -27,6 +27,7 @@ strings include:
   "Monitor Asic" -> "Monitor ASIC/IC"
 o Fix ipmi-sensors non-recoverable threshold output corner case.
 o Fix ipmi-sensors group selection corner cases.
+o Fix ipmiconsole workarounds command line parse corner case.
 o Fix config option names in ipmimonitoring/libipmimonitoring.
 o In ipmi-sensors default output, output non-recoverable or
 non-critical thresholds if both non-critical thresholds are not
