@@ -831,6 +831,77 @@ Defaults to Critical.
 \fBIPMI_Boot_Error_Timeout_Waiting_For_User_Selection_Of_Boot_Source\fR
 Defaults to Warning.
 .RE
+.TP
+.B IPMI_Button_Switch
+The following states correspond to Button Switch sensors w/
+Button Switch specific output states.
+.RS
+.TP
+\fBIPMI_Button_Switch_Power_Button_Pressed\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Button_Switch_Sleep_Button_Pressed\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Button_Switch_Reset_Button_Pressed\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Button_Switch_FRU_Latch_Open\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Button_Switch_FRU_Service_Request_Button\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_System_ACPI_Power_State
+.RS
+.TP
+\fBIPMI_System_ACPI_Power_State_S0_G0\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S1\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S2\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S3\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S4\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S5_G2\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S4_S5_Soft_Off\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_G3_Mechanical_Off\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_Sleeping_in_an_S1_S2_or_S3_States\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_G1_Sleeping\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S5_Entered_By_Override\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_Legacy_ON_State\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_Legacy_OFF_State\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_Unspecified\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_ACPI_Power_State_Unknown\fR
+Defaults to Critical.
+.RE
+
 .SH "FILES"
 @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
 

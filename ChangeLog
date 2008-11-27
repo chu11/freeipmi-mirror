@@ -2,6 +2,10 @@
 
 	* ipmi-sel/src/ipmi-sel-entry.c (ipmi_sel_get_entry): Fix output
 	corner case.
+
+	* ipmimonitoring/: Add system ACPI power state and button switch
+	interpretations.  Add forgotten bitmasks.  Fix config file option
+	names.
 	
 2008-11-26  Albert Chu <chu11@llnl.gov>
 

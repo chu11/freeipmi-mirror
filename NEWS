@@ -6,11 +6,13 @@ o Output 'NA' on sensors in ipmi-sensors and ipmimonitoring that have
 sensor scanning disabled.  In libipmimonitoring, appropriately handle
 sensors with sensor scanning disabled and return 'unreadable'.
 o Add the following ipmimonitoring/libipmimonitoring interpretations.
-  power unit device installation
-  fan transition availability
-  power supply state
-  drive slot state
-  drive slot predictive failure 
+  Power Unit Device Installation
+  Fan Transition Availability
+  Power Supply State
+  Drive Slot State
+  Drive Slot Predictive Failure 
+  System ACPI Power State
+  Button Switch
 o Fix typos in macro names and string names for sensor types to
 accurately coincide with IPMI specification.  May lead to slightly
 different inputs/outputs in ipmi-sensors and pef-config.  Altered
@@ -31,6 +33,7 @@ o Fix ipmiconsole workarounds command line parse corner case.
 o Use a reservation ID on all SEL entry operations to workaround
 some manufacturer compliance issues.
 o Fix config option names in ipmimonitoring/libipmimonitoring.
+o Add forgotten bitmask flags in libipmimonitoring.
 o In ipmi-sensors default output, output non-recoverable or
 non-critical thresholds if both non-critical thresholds are not
 available.

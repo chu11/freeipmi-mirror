@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40.2.6 2008-11-26 18:38:13 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40.2.7 2008-11-27 15:38:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -366,6 +366,10 @@ _get_specific_sensor_state(ipmi_monitoring_ctx_t c,
     config = ipmi_cable_interconnect_config;
   else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
     config = ipmi_boot_error_config;
+  else if (sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+    config = ipmi_button_switch_config;
+  else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
+    config = ipmi_system_acpi_power_state_config;
   else
     {
       IPMI_MONITORING_DEBUG(("sensor_type '0x%X' not supported", sensor_type));
@@ -1074,6 +1078,10 @@ _get_specific_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CABLE_INTERCONNECT;
   else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BOOT_ERROR;
+  else if (sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BUTTON_SWITCH;
+  else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_ACPI_POWER_STATE;
   else
     {
       IPMI_MONITORING_DEBUG(("sensor_type '0x%X' bitmask not supported", sensor_type));
@@ -1211,6 +1219,10 @@ _get_sensor_group(ipmi_monitoring_ctx_t c,
     return IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT;
   else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
     return IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR;
+  else if (sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+    return IPMI_MONITORING_SENSOR_GROUP_BUTTON_SWITCH;
+  else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
+    return IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE;
 
   IPMI_MONITORING_DEBUG(("sensor_type '0x%X' not supported", sensor_type));
   return IPMI_MONITORING_SENSOR_GROUP_UNKNOWN;
