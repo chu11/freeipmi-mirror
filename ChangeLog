@@ -12,6 +12,8 @@
 
 	* ipmimonitoring/: Add new interpretations, power supply state,
 	drive slot state, drive slot predictive failure.
+
+	* ipmiconsole/src/ipmiconsole.c (main): Fix workaround bug.
 	
 2008-11-25  Albert Chu <chu11@llnl.gov>
 
