@@ -1111,7 +1111,7 @@ ipmi_sel_get_entry (ipmi_sel_state_data_t *state_data,
            * message, it's not a real error.
            */
           if (!(record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
-                && ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                && ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
                 && ipmi_check_completion_code(obj_get_sel_entry_rs,
                                               IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
             pstdout_fprintf(state_data->pstate,
