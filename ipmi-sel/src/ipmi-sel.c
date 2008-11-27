@@ -182,7 +182,7 @@ _clear_entries (ipmi_sel_state_data_t *state_data)
   _FIID_OBJ_CREATE(obj_reserve_sel_rs, tmpl_cmd_reserve_sel_rs);
   _FIID_OBJ_CREATE(obj_clear_sel_rs, tmpl_cmd_clear_sel_rs);
 
-  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_reserve_sel_rs) != 0)
+  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_reserve_sel_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,

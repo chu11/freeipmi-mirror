@@ -1060,27 +1060,31 @@ ipmi_sel_get_entry (ipmi_sel_state_data_t *state_data,
        * Since we always use an offset of 00h, presumably we should never
        * need reserve the SEL before the get_sel_entry call.
        *
-       * However, on the HP DL585, it seems we do need a reservation
-       * ID.  I don't think using a reservation ID all of the time
-       * hurts anything, so we'll just use it all of the time.
-       * Hopefully this doesn't mess up any machines.
+       * However, some machines may need it due to compliance issues.
+       * I don't think using a reservation ID all of the time hurts
+       * anything, so we'll just use it all of the time. If there's an
+       * error along the way, we'll just ignore it.
        */
       
       if (record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY || reservation_cancelled)
         {
-          if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_reserve_sel_rs) != 0)
+          if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_reserve_sel_rs) < 0)
             {
-              pstdout_fprintf(state_data->pstate,
-                              stderr,
-                              "ipmi_cmd_reserve_sel: %s\n",
-                              ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-              goto cleanup;
+              if (state_data->prog_data->args->common.debug)
+                pstdout_fprintf(state_data->pstate,
+                                stderr,
+                                "ipmi_cmd_reserve_sel: %s\n",
+                                ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+
+              state_data->reservation_id = 0;
+              goto get_sel_entry;
             }
           
           _FIID_OBJ_GET(obj_reserve_sel_rs, "reservation_id", &val);
           state_data->reservation_id = val;
         }
       
+    get_sel_entry:
       if (ipmi_cmd_get_sel_entry (state_data->ipmi_ctx, 
                                   state_data->reservation_id,
                                   record_id, 

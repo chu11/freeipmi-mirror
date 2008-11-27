@@ -25,8 +25,8 @@
 	(_grab_ipmimonitoring_options): Remove workaround flags unused in
 	libfreeipmi.  Make tool specific workarounds specific to tools.
 
-	* ipmi-sel/src/: When retrieving SEL entries, always obtain a
-	reservation ID no matter what.
+	* ipmi-sel/src/: When retrieving SEL entries, always try to obtain
+	a reservation ID.
 	
 2008-11-25  Albert Chu <chu11@llnl.gov>
 
