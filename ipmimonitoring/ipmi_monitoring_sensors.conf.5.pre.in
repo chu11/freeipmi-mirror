@@ -91,11 +91,11 @@ The following states correspond to Voltage sensors that report an
 assertion or deassertion.
 .RS
 .TP
-\fBIPMI_Voltage_State_Asserted\fR
-Defaults to Warning.
-.TP
 \fBIPMI_Voltage_State_Deasserted\fR
 Defaults to Nominal.
+.TP
+\fBIPMI_Voltage_State_Asserted\fR
+Defaults to Warning.
 .RE
 .TP
 .B IPMI_Voltage_Performance
@@ -183,6 +183,18 @@ Defaults to Warning.
 .TP
 \fBIPMI_Fan_Redundancy_Redundancy_Degraded_From_Non_Redundant\fR
 Defaults to Warning.
+.RE
+.TP
+.B IPMI_Processor_State
+The following states correspond to Processor sensors that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Processor_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Processor_State_Asserted\fR
+Defaults to Critical.
 .RE
 .TP
 .B IPMI_Power_Supply_State
@@ -294,7 +306,7 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Drive_Slot_State
-The following states correspond to Drive_Slot sensors that report an
+The following states correspond to Drive Slot sensors that report an
 assertion or deassertion.
 .RS
 .TP
@@ -330,7 +342,7 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Button_Switch_State
-The following states correspond to Button_Switch sensors that report an
+The following states correspond to Button/Switch sensors that report an
 assertion or deassertion.
 .RS
 .TP
@@ -825,7 +837,7 @@ Defaults to Critical.
 .TP
 .B IPMI_Cable_Interconnect
 The following states correspond to Cable/Interconnect sensors w/
-Cable Interconnect specific output states.
+Cable/Interconnect specific output states.
 .RS
 .TP
 \fBIPMI_Cable_Interconnect_Is_Connected\fR
@@ -857,8 +869,8 @@ Defaults to Warning.
 .RE
 .TP
 .B IPMI_Button_Switch
-The following states correspond to Button Switch sensors w/
-Button Switch specific output states.
+The following states correspond to Button/Switch sensors w/
+Button/Switch specific output states.
 .RS
 .TP
 \fBIPMI_Button_Switch_Power_Button_Pressed\fR

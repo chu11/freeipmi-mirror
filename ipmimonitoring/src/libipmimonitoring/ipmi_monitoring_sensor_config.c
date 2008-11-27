@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.22.2.7 2008-11-27 18:05:58 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.22.2.8 2008-11-27 18:21:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -103,6 +103,13 @@ struct ipmi_sensor_config ipmi_fan_redundancy_config[] =
     {"IPMI_Fan_Redundancy_Non_Redundant_Insufficient_Resources", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     {"IPMI_Fan_Redundancy_Redundancy_Degraded_From_Fully_Redundant", IPMI_MONITORING_SENSOR_STATE_WARNING},
     {"IPMI_Fan_Redundancy_Redundancy_Degraded_From_Non_Redundant", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    {NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_processor_state_config[] =
+  {
+    {"IPMI_Processor_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Processor_State_Asserted", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     {NULL, -1},
   };
 
@@ -531,6 +538,7 @@ ipmi_monitoring_sensor_config(int *errnum)
   int fan_redundancy_flag0, fan_redundancy_flag1, fan_redundancy_flag2, 
     fan_redundancy_flag3, fan_redundancy_flag4, fan_redundancy_flag5, 
     fan_redundancy_flag6, fan_redundancy_flag7;
+  int processor_state_flag0, processor_state_flag1;
   int power_supply_state_flag0, power_supply_state_flag1;
   int power_supply_redundancy_flag0, power_supply_redundancy_flag1, power_supply_redundancy_flag2, 
     power_supply_redundancy_flag3, power_supply_redundancy_flag4, power_supply_redundancy_flag5, 
@@ -940,6 +948,31 @@ ipmi_monitoring_sensor_config(int *errnum)
         0,
         &fan_redundancy_flag7,
         ipmi_fan_redundancy_config,
+        0
+      },
+      /* 
+       * IPMI_Processor_State
+       */
+      {
+        ipmi_processor_state_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &processor_state_flag0,
+        ipmi_processor_state_config,
+        0
+      },
+      {
+        ipmi_processor_state_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &processor_state_flag1,
+        ipmi_processor_state_config,
         0
       },
       /* 

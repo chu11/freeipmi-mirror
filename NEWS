@@ -4,7 +4,7 @@ o Add workaround into ipmi-sensors and ipmi-sensors-config for
 motherboards that do not support the Get Sensor Thresholds command.
 o Output 'NA' on sensors in ipmi-sensors and ipmimonitoring that have
 sensor scanning disabled.  In libipmimonitoring, appropriately handle
-sensors with sensor scanning disabled and return 'unreadable'.
+sensors with sensor scanning disabled and return 'unreadable sensor'.
 o Add the following ipmimonitoring/libipmimonitoring interpretations.
   Power Unit Device Installation
   Fan Transition Availability
@@ -15,6 +15,7 @@ o Add the following ipmimonitoring/libipmimonitoring interpretations.
   Button Switch
   Button Switch State
   Entity Presence Device Install
+  Processor State
 o Fix typos in macro names and string names for sensor types to
 accurately coincide with IPMI specification.  May lead to slightly
 different inputs/outputs in ipmi-sensors and pef-config.  Altered
