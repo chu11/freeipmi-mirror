@@ -384,8 +384,6 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   struct hostent *hptr;
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
   uint32_t flags_mask = (IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES
-                         | IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE
-                         | IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PORT
                          | IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION
                          | IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
                          | IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION);

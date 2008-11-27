@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.53.4.1 2008-11-27 02:37:43 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.53.4.2 2008-11-27 04:29:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -315,17 +315,17 @@ main(int argc, char **argv)
 
   ipmi_config.cipher_suite_id = cmd_args.common.cipher_suite_id;
 
-  if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES;
-  if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE)
+  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE;
-  if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PORT)
+  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PORT)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT;
-  if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION;
-  if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION;
-  if (cmd_args.common.workaround_flags & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION;
 
   memset(&protocol_config, '\0', sizeof(struct ipmiconsole_protocol_config));

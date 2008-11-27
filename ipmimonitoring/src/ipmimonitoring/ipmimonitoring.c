@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.64 2008-08-27 21:23:13 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.64.2.1 2008-11-27 04:29:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -100,7 +100,7 @@ _list_groups(ipmimonitoring_state_data_t *state_data)
   pstdout_printf (state_data->pstate, "%s\n", "fru_state");
   pstdout_printf (state_data->pstate, "%s\n", "cable_interconnect");
   pstdout_printf (state_data->pstate, "%s\n", "boot_error");
-
+  
   return 0;
 }
 
@@ -707,21 +707,21 @@ _grab_ipmimonitoring_options(struct ipmimonitoring_arguments *cmd_args)
   cmd_args->conf.retransmission_timeout_len = cmd_args->common.retransmission_timeout;
 
   cmd_args->conf.workaround_flags = 0;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION;
 
   if (cmd_args->common.debug)
