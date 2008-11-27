@@ -1019,7 +1019,9 @@ ipmi_sel_get_entry (ipmi_sel_state_data_t *state_data,
 {
   uint8_t record_data[IPMI_SEL_RECORD_SIZE];
   uint32_t record_data_len = IPMI_SEL_RECORD_SIZE;
-  fiid_obj_t obj_cmd_rs = NULL;
+  fiid_obj_t obj_reserve_sel_rs = NULL;
+  fiid_obj_t obj_get_sel_entry_rs = NULL;
+  unsigned int reservation_cancelled = 0;
   uint64_t val;
   int32_t len;
   int rv = -1;
@@ -1039,34 +1041,91 @@ ipmi_sel_get_entry (ipmi_sel_state_data_t *state_data,
   *event_message = NULL;
   *event_data2_message = NULL;
   *event_data3_message = NULL;
-
-  _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
   
-  if (ipmi_cmd_get_sel_entry (state_data->ipmi_ctx, 
-                              0,
-                              record_id, 
-                              0,
-                              IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
-                              obj_cmd_rs) < 0)
+  _FIID_OBJ_CREATE(obj_reserve_sel_rs, tmpl_cmd_reserve_sel_rs);
+  _FIID_OBJ_CREATE(obj_get_sel_entry_rs, tmpl_cmd_get_sel_entry_rs);
+ 
+  while (1)
     {
-      /* If the sel is empty, don't bother outputting an error
-       * message, it's not a real error.
+      /*
+       *
+       * IPMI spec states in section 31.4.1:
+       *
+       * "A Requester must issue a 'Reserve SEL' command prior to issuing
+       * any of the following SEL commands. Note that the 'Reserve SEL'
+       * command only needs to be reissued if the reservation is
+       * canceled. ... Get SEL Entry command (if 'get' is from an offset
+       * other than 00h)".
+       *
+       * Since we always use an offset of 00h, presumably we should never
+       * need reserve the SEL before the get_sel_entry call.
+       *
+       * However, on the HP DL585, it seems we do need a reservation
+       * ID.  I don't think using a reservation ID all of the time
+       * hurts anything, so we'll just use it all of the time.
+       * Hopefully this doesn't mess up any machines.
        */
-      if (!(record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
-            && ipmi_check_completion_code(obj_cmd_rs,
-                                          IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_get_sel_entry: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      goto cleanup;
+      
+      if (record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY || reservation_cancelled)
+        {
+          if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_reserve_sel_rs) != 0)
+            {
+              pstdout_fprintf(state_data->pstate,
+                              stderr,
+                              "ipmi_cmd_reserve_sel: %s\n",
+                              ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+              goto cleanup;
+            }
+          
+          _FIID_OBJ_GET(obj_reserve_sel_rs, "reservation_id", &val);
+          state_data->reservation_id = val;
+        }
+      
+      if (ipmi_cmd_get_sel_entry (state_data->ipmi_ctx, 
+                                  state_data->reservation_id,
+                                  record_id, 
+                                  0,
+                                  IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
+                                  obj_get_sel_entry_rs) < 0)
+        {
+          if (ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && ipmi_check_completion_code(obj_get_sel_entry_rs,
+                                            IPMI_COMP_CODE_RESERVATION_CANCELLED) == 1)
+            {
+              if (reservation_cancelled)
+                {
+                  pstdout_fprintf(state_data->pstate,
+                                  stderr,
+                                  "Reservation Cancelled multiple times\n");
+                  goto cleanup;
+                }
+              reservation_cancelled++;
+              continue;
+            }
+          
+          /* If the sel is empty, don't bother outputting an error
+           * message, it's not a real error.
+           */
+          if (!(record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+                && ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                && ipmi_check_completion_code(obj_get_sel_entry_rs,
+                                              IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "ipmi_cmd_get_sel_entry: %s\n",
+                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+          
+          goto cleanup;
+        }
+      
+      break;
     }
   
-  _FIID_OBJ_GET (obj_cmd_rs, "next_record_id", &val);
+  _FIID_OBJ_GET (obj_get_sel_entry_rs, "next_record_id", &val);
   *next_record_id = val;
   
   _FIID_OBJ_GET_DATA_LEN (len,
-                          obj_cmd_rs, 
+                          obj_get_sel_entry_rs, 
                           "record_data", 
                           record_data,
                           record_data_len);
@@ -1085,7 +1144,8 @@ ipmi_sel_get_entry (ipmi_sel_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  _FIID_OBJ_DESTROY(obj_reserve_sel_rs);
+  _FIID_OBJ_DESTROY(obj_get_sel_entry_rs);
   if (rv < 0)
     {
       if (*timestamp)

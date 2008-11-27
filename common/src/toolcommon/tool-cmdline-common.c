@@ -209,8 +209,6 @@ parse_workaround_flags(char *str)
         flags |= IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE;
       else if (!strcasecmp(tok, IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PORT_STR))
         flags |= IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PORT;
-      else if (!strcasecmp(tok, IPMI_TOOL_WORKAROUND_FLAGS_ALWAYS_RESERVE_STR))
-        flags |= IPMI_TOOL_WORKAROUND_FLAGS_ALWAYS_RESERVE;
       tok = strtok(NULL, ",");
     }
   return flags;
