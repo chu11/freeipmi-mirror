@@ -32,6 +32,8 @@ o Fix config option names in ipmimonitoring/libipmimonitoring.
 o In ipmi-sensors default output, output non-recoverable or
 non-critical thresholds if both non-critical thresholds are not
 available.
+o Remove unused libfreeipmi workaround flags/macros.  Contain tool
+specific workaround flags within tools.
 o Optionally output auxiliary information in bmc-info.
 o Add ipmi_monitoring_sensors.conf.5 manpage.
 o Various documentation updates.
