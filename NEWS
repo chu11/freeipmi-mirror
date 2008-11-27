@@ -33,6 +33,7 @@ strings include:
 o Fix ipmi-sensors non-recoverable threshold output corner case.
 o Fix ipmi-sensors group selection corner cases.
 o Fix ipmiconsole workarounds command line parse corner case.
+o Fix ipmi-sel/libfreeipmi event data output corner cases.
 o Use a reservation ID on all SEL entry operations to workaround
 some manufacturer compliance issues.
 o Fix config option names in ipmimonitoring/libipmimonitoring.
