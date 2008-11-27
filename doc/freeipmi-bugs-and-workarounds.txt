@@ -270,6 +270,9 @@ Supermicro H8QME with SIMSO daughter card: It appears that SEL records
 incorrectly report the generator_id slave address.  Resolved with
 special case handling.
 
+HP DL585: The Get SEL entry command and Reserve SEL command do not
+function.  No current resolution.
+
 Misc
 ----
 
