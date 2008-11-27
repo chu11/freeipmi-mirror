@@ -21,6 +21,7 @@ I have worked extensively on:
 
 Intel SR870BN4
 Supermicro H8QME with SIMSO daughter card
+Sun X4140
 
 I have had some temporary access to:
 
@@ -261,7 +262,7 @@ motherboards.  Resolved by reading threshold data from the SDR or not
 allowing sensor threshold configuration.
 
 Sun X4140: The get sensor event enable command always returns "sensor
-scanning disabled" bit.
+scanning disabled" bit.  No current resolution.
 
 ipmi-sel
 --------

@@ -13,6 +13,8 @@ o Add the following ipmimonitoring/libipmimonitoring interpretations.
   Drive Slot Predictive Failure 
   System ACPI Power State
   Button Switch
+  Button Switch State
+  Entity Presence Device Install
 o Fix typos in macro names and string names for sensor types to
 accurately coincide with IPMI specification.  May lead to slightly
 different inputs/outputs in ipmi-sensors and pef-config.  Altered
