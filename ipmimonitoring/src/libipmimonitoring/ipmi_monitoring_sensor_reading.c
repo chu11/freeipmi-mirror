@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40.2.7 2008-11-27 15:38:58 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40.2.8 2008-11-27 18:05:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -309,6 +309,10 @@ _get_digital_sensor_state(ipmi_monitoring_ctx_t c,
     config = ipmi_drive_slot_predictive_failure_config;
   else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     config = ipmi_drive_slot_device_install_config;
+  else if (event_reading_type_code == 0x03 && sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+    config = ipmi_button_switch_state_config;
+  else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
+    config = ipmi_entity_presence_device_install_config;
   else
     {
       IPMI_MONITORING_DEBUG(("event_reading_type_code '0x%X' and sensor_type '0x%X' not supported", event_reading_type_code, sensor_type));

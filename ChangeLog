@@ -7,6 +7,9 @@
 	interpretations.  Add forgotten bitmasks.  Fix config file option
 	names.
 	
+	* ipmimonitoring/: Add new interpretations, button switch state,
+	entity presence device install.
+
 2008-11-26  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/: Additional documentation updates.

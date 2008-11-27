@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.22.2.6 2008-11-27 15:38:58 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.22.2.7 2008-11-27 18:05:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -178,6 +178,23 @@ struct ipmi_sensor_config ipmi_drive_slot_device_install_config[] =
   {
     {"IPMI_Drive_Slot_Device_Install_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     {"IPMI_Drive_Slot_Device_Install_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {NULL, -1},
+  };
+
+/* achu: for a button/switch states, I don't think users really care.
+ * So report Nominal for all states.
+ */
+struct ipmi_sensor_config ipmi_button_switch_state_config[] =
+  {
+    {"IPMI_Button_Switch_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {"IPMI_Button_Switch_State_Asserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    {NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_entity_presence_device_install_config[] =
+  {
+    {"IPMI_Entity_Presence_Device_Install_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    {"IPMI_Entity_Presence_Device_Install_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     {NULL, -1},
   };
 
@@ -527,6 +544,8 @@ ipmi_monitoring_sensor_config(int *errnum)
   int drive_slot_state_flag0, drive_slot_state_flag1;
   int drive_slot_predictive_failure_flag0, drive_slot_predictive_failure_flag1;
   int drive_slot_device_install_flag0, drive_slot_device_install_flag1; 
+  int button_switch_state_flag0, button_switch_state_flag1;
+  int entity_presence_device_install_flag0, entity_presence_device_install_flag1;
   int physical_security_flag0, physical_security_flag1, physical_security_flag2,
     physical_security_flag3, physical_security_flag4, physical_security_flag5, 
     physical_security_flag6;
@@ -1278,6 +1297,56 @@ ipmi_monitoring_sensor_config(int *errnum)
         0,
         &drive_slot_device_install_flag1,
         ipmi_drive_slot_device_install_config,
+        0
+      },
+      /* 
+       * IPMI_Button_Switch_State
+       */
+      {
+        ipmi_button_switch_state_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &button_switch_state_flag0,
+        ipmi_button_switch_state_config,
+        0
+      },
+      {
+        ipmi_button_switch_state_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &button_switch_state_flag1,
+        ipmi_button_switch_state_config,
+        0
+      },
+      /* 
+       * IPMI_Entity_Presence_Device_Install
+       */
+      {
+        ipmi_entity_presence_device_install_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &entity_presence_device_install_flag0,
+        ipmi_entity_presence_device_install_config,
+        0
+      },
+      {
+        ipmi_entity_presence_device_install_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &entity_presence_device_install_flag1,
+        ipmi_entity_presence_device_install_config,
         0
       },
       /* 
