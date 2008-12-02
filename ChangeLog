@@ -1,3 +1,7 @@
+2008-11-01  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/ipmi_monitoring_sensors.conf.5.pre.in: Fix typos.
+
 2008-12-01  Albert Chu <chu11@llnl.gov>
 	
 	* configure.ac, NEWS: Update for release.
