@@ -1,3 +1,7 @@
+0.7.4 - XX/XX/XX
+----------------
+o Fix minor documentation typos.
+
 0.7.3 - 12/01/08
 ----------------
 o Add workaround into ipmi-sensors and ipmi-sensors-config for
