@@ -1,3 +1,7 @@
+2008-11-01  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/ipmi_monitoring_sensors.conf.5.pre.in: Fix typos.
+	
 2008-11-27  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/src/ipmi-sel-entry.c (ipmi_sel_get_entry): Fix output

@@ -27,7 +27,9 @@ what types of Assertion or Deassertion events are possible.
 The possible values for all states/thresholds below are:
 .LP
 Nominal - Signal Nominal reading if state/threshold tripped
+.LP
 Warning - Signal Warning reading if state/treshold tripped
+.LP
 Critical - Signal Critical reading if state/threshold tripped
 .LP
 Not all IPMI sensor types and event types are currently supported.  If
