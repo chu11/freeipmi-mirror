@@ -1,4 +1,4 @@
-0.7.3 - 11/XX/08
+0.7.3 - 12/01/08
 ----------------
 o Add workaround into ipmi-sensors and ipmi-sensors-config for
 motherboards that do not support the Get Sensor Thresholds command.
