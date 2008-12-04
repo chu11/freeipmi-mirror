@@ -226,6 +226,10 @@ Tyan S4811 with SMDC daughter card: The ability to authenticate under
 IPMI 1.5 is tied to it being supported as an OEM authentication type.
 Resolved via different configuration w/ bmc-config.
 
+Sun X4140: Get Username and Get User Payload commands fail with CCh =
+"Invalid data field in request" if a username was not set previously.
+Added workaround for this specific case.
+
 ipmi-fru
 --------
 
