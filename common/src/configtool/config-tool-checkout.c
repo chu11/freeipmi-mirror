@@ -197,24 +197,15 @@ config_checkout_section(pstdout_state_t pstate,
            * snprintf.
            */
           if (kv->key->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT
-              || kv->key->flags & CONFIG_UNDEFINED)
+              || kv->key->flags & CONFIG_UNDEFINED
+              || (kv->key->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY
+                  && !strlen(kv->value_output))
+              || (kv->key->flags & CONFIG_USERNAME_NOT_SET_YET
+                  && !strcasecmp(kv->value_output, CONFIG_USERNAME_NOT_SET_YET_STR)))
             key_len = snprintf(obuf, 
                                CONFIG_OUTPUT_BUFLEN,
                                "\t## %s", 
                                kv->key->key_name);
-          else if (kv->key->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY)
-            {
-              if (kv->value_output && strlen(kv->value_output))
-                key_len = snprintf(obuf, 
-                                   CONFIG_OUTPUT_BUFLEN,
-                                   "\t%s", 
-                                   kv->key->key_name);
-              else
-                key_len = snprintf(obuf, 
-                                   CONFIG_OUTPUT_BUFLEN,
-                                   "\t## %s", 
-                                   kv->key->key_name);
-            }
           else
             key_len = snprintf(obuf, 
                                CONFIG_OUTPUT_BUFLEN,

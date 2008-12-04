@@ -1,4 +1,14 @@
-2008-11-01  Albert Chu <chu11@llnl.gov>
+2008-12-03  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/: Document various issues w/ comments.
+
+	* common/src/configtool/: Support CONFIG_USERNAME_NOT_SET_YET
+	config flag.
+
+	* bmc-config/src/: Support CONFIG_USERNAME_NOT_SET_YET in various
+	fields due to checkout issues with Sun X4140.
+	
+2008-12-01  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/ipmi_monitoring_sensors.conf.5.pre.in: Fix typos.
 	
