@@ -1,5 +1,7 @@
 0.7.4 - XX/XX/XX
 ----------------
+o Support output of "<username-not-set-yet>" in bmc-config for fields
+that require a username to be configured before data may be retrieved.
 o Fix minor documentation typos.
 
 0.7.3 - 12/01/08
