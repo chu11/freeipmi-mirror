@@ -1,3 +1,7 @@
+2008-12-04  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/: Add documentation on <username-not-set-yet>.
+	
 2008-12-04  Dave Love  <fx@gnu.org>
 
 	* freeipmi.spec.in: Require /sbin/chkconfig, not chkconfig, to
