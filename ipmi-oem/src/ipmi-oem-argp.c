@@ -25,11 +25,16 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #if HAVE_ARGP_H
 #include <argp.h>
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <limits.h>
+#include <errno.h>
 
 #include "ipmi-oem.h"
 #include "ipmi-oem-argp.h"
@@ -155,12 +160,28 @@ _ipmi_oem_config_file_parse(struct ipmi_oem_arguments *cmd_args)
 void 
 ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
 {
+  long arg_max;
+
   init_common_cmd_args_user (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->oem_id = NULL;
   cmd_args->oem_command = NULL;
-  memset (cmd_args->oem_options, 0, sizeof(cmd_args->oem_options));
+  errno = 0;
+  if ((arg_max = sysconf(_SC_ARG_MAX)) < 0)
+    {
+      if (errno)
+        {
+          perror("sysconf");
+          exit(1);
+        }
+      arg_max = LONG_MAX;
+    }
+  if (!(cmd_args->oem_options = calloc(arg_max, sizeof(uint8_t))))
+    {
+      perror("calloc");
+      exit(1);
+    }
   cmd_args->oem_options_count = 0;
 
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));

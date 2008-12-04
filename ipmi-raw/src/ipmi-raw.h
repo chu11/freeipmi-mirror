@@ -20,7 +20,6 @@
 #define _IPMI_RAW_H
 
 #include <freeipmi/freeipmi.h>
-#include <limits.h>	/* ARG_MAX */
 
 #include "tool-cmdline-common.h"
 #include "pstdout.h"
@@ -35,7 +34,7 @@ struct ipmi_raw_arguments
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
   char *cmd_file;
-  uint8_t cmd[ARG_MAX];
+  uint8_t *cmd;
   int cmd_length;
 };
 

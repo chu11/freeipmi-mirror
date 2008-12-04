@@ -25,7 +25,11 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <limits.h>
+#include <errno.h>
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
@@ -46,8 +50,10 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
   uint8_t *bytes_rq = NULL;
   int send_len;
   int i;
-  uint8_t bytes_rs[ARG_MAX];
+  uint8_t *bytes_rs = NULL;
+  long arg_max;
   int32_t rs_len;
+  int rv = -1;
 
   assert(state_data);
   assert(state_data->prog_data->args->cmd);
@@ -63,7 +69,24 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
                       "Invalid number of hex bytes\n");
-      return (-1);
+      goto cleanup;
+    }
+
+  errno = 0;
+  if ((arg_max = sysconf(_SC_ARG_MAX)) < 0)
+    {
+      if (errno)
+        {
+          pstdout_perror(state_data->pstate, "sysconf");
+          goto cleanup;
+        }
+      arg_max = LONG_MAX;
+    }
+
+  if (!(bytes_rs = calloc(arg_max, sizeof(uint8_t))))
+    {
+      pstdout_perror(state_data->pstate, "calloc");
+      goto cleanup;
     }
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx, 
@@ -72,7 +95,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
                               &bytes_rq[2],
                               send_len - 2, 
                               bytes_rs, 
-                              ARG_MAX)) >= 0)
+                              arg_max)) >= 0)
     {
       pstdout_printf (state_data->pstate, "rcvd: ");
       for (i = 0; i < rs_len; i++)
@@ -85,10 +108,14 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
                       stderr,
                       "ipmi_cmd_raw: %s\n",
                       ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
-      return -1;
+      goto cleanup;
     }
 
-  return 0;
+  rv = 0;
+ cleanup:
+  if (bytes_rs)
+    free(bytes_rs);
+  return rv;
 }
 
 static int 
