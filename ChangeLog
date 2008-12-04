@@ -1,3 +1,8 @@
+2008-12-04  Dave Love  <fx@gnu.org>
+
+	* freeipmi.spec.in: Require /sbin/chkconfig, not chkconfig, to
+	work on SuSE.
+	
 2008-12-03  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/: Document various issues w/ comments.
