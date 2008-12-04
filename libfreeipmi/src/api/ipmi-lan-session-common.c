@@ -2527,7 +2527,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    *
    * K_g status is reported incorrectly too.  Again, skip the checks.
    */
-  printf("flags = %X\n", ctx->workaround_flags);
   if (!(ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
       if ((!strlen(ctx->io.outofband.username) && !strlen(ctx->io.outofband.password)
