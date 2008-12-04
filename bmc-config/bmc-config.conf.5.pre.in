@@ -288,6 +288,10 @@ of the non-NULL usernames be enabled and the NULL username disabled
 for security reasons.  It is recommeneded that you disable the NULL
 username in section User1, so that users are required to specify a
 username for IPMI over LAN communication.
+.LP
+Some motherboards may require a \fIUsername\fR to be configured prior
+to other fields being read/written.  If this is the case, those fields
+will be set to \fI<username-not-set-yet>\fR.
 
 .SH "Section Lan_Channel"
 The Lan_Channel section configures a variety of IPMI over LAN

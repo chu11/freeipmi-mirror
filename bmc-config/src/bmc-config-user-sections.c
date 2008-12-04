@@ -1587,7 +1587,7 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
 {
   struct config_section *user_section = NULL;
   char section_name[CONFIG_MAX_SECTION_NAME_LEN];
-  char *section_comment = 
+  char *section_comment_text = 
     "In the following User sections, users should configure usernames, "
     "passwords, and access rights for IPMI over LAN communication.  "
     "Usernames can be set to any string with the exception of User1, which "
@@ -1613,7 +1613,12 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
     "this username's ability to access SOL."
     "\n"
     "Please do not forget to uncomment those fields, such as \"Password\", "
-    "that may be commented out during the checkout.";
+    "that may be commented out during the checkout."
+    "\n"
+    "Some motherboards may require a \"Username\" to be configured prior to other "
+    "fields being read/written.  If this is the case, those fields will be set to "
+    "%s.";
+  char section_comment[4096];
   unsigned int verbose_flags = 0;
 
   if (userid <= 0)
@@ -1629,6 +1634,13 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
 
   if (userid == 1)
     {
+      memset(section_comment, '\0', 4096);
+
+      snprintf(section_comment,
+               4096,
+               section_comment_text,
+               CONFIG_USERNAME_NOT_SET_YET_STR);
+
       if (!(user_section = config_section_create(state_data->pstate,
                                                  section_name,
                                                  "UserX",
