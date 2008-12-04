@@ -42,8 +42,8 @@ header files and static libraries.
 Summary: FreeIPMI BMC watchdog
 Group: Applications/System
 Requires: freeipmi = %{version}-%{release}
-Requires(post): chkconfig
-Requires(preun): chkconfig
+Requires(post): /sbin/chkconfig
+Requires(preun): /sbin/chkconfig
 Requires: logrotate
 %description bmc-watchdog
 Provides a watchdog daemon for OS monitoring and recovery.
@@ -52,8 +52,8 @@ Provides a watchdog daemon for OS monitoring and recovery.
 Summary: IPMI node detection monitoring daemon
 Group: Applications/System
 Requires: freeipmi = %{version}-%{release}
-Requires(post): chkconfig
-Requires(preun): chkconfig
+Requires(post): /sbin/chkconfig
+Requires(preun): /sbin/chkconfig
 %description ipmidetectd
 IPMI node detection daemon.
 
