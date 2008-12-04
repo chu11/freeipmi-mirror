@@ -1,3 +1,8 @@
+2008-12-04  Diego "Flameeyes" Petten <flameeyes@gmail.com>
+
+	* ipmi-oem/, ipmi-raw/: Fix portability for glibc 2.8.  Remove use
+	of ARG_MAX and replace with sysconf call to _SC_ARG_MAX.
+	
 2008-12-04  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Add documentation on <username-not-set-yet>.

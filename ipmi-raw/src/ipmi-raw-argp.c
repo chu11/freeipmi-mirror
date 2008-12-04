@@ -25,11 +25,16 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #if HAVE_ARGP_H
 #include <argp.h>
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <limits.h>
+#include <errno.h>
 
 #include "ipmi-raw.h"
 #include "ipmi-raw-argp.h"
@@ -166,11 +171,27 @@ _ipmi_raw_config_file_parse(struct ipmi_raw_arguments *cmd_args)
 void 
 ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
 {
+  long arg_max;
+
   init_common_cmd_args_user (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->cmd_file = NULL;
-  memset (cmd_args->cmd, 0, sizeof(cmd_args->cmd));
+  errno = 0;
+  if ((arg_max = sysconf(_SC_ARG_MAX)) < 0)
+    {
+      if (errno)
+        {
+          perror("sysconf");
+          exit(1);
+        }
+      arg_max = LONG_MAX;
+    }
+  if (!(cmd_args->cmd = calloc(arg_max, sizeof(uint8_t))))
+    {
+      perror("calloc");
+      exit(1);
+    }
   cmd_args->cmd_length = 0;
 
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
