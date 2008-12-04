@@ -1,3 +1,8 @@
+2008-12-04  Albert Chu <chu11@llnl.gov>
+
+	* common/man/manpage-common-workaround-sol-only-text.man,
+	common/man/manpage-common-workaround-text.man: Cleanup text.
+	
 2008-12-04  Diego "Flameeyes" Petten <flameeyes@gmail.com>
 
 	* ipmi-oem/, ipmi-raw/: Fix portability for glibc 2.8.  Remove use
