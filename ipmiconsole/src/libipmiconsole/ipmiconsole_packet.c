@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.26 2008-08-15 16:04:25 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.26.4.1 2008-12-05 18:46:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -960,24 +960,13 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
       obj_cmd_rq = c->connection.obj_open_session_request;
     }
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1)
-    {
-      uint8_t name_only_lookup;
-
-      /* IPMI Workaround
-       *
-       * Intel IPMI 2.0 implementations use this flag incorrectly.
-       */
-      if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION)
-        name_only_lookup = IPMI_USER_NAME_PRIVILEGE_LOOKUP;
-      else
-        name_only_lookup = c->session.name_only_lookup;
-      
+    {     
       if (fill_rmcpplus_rakp_message_1 (c->session.message_tag,
 					managed_system_session_id,
 					c->session.remote_console_random_number,
 					IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
 					c->config.privilege_level,
-                                        name_only_lookup,
+                                        c->session.name_only_lookup,
 					username,
 					username_len,
 					c->connection.obj_rakp_message_1) < 0)
@@ -994,6 +983,16 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
       int32_t managed_system_random_number_len;
       uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
       int32_t key_exchange_authentication_code_len;
+      uint8_t name_only_lookup;
+
+      /* IPMI Workaround
+       *
+       * Intel IPMI 2.0 implementations use this flag incorrectly.
+       */
+      if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION)
+        name_only_lookup = IPMI_USER_NAME_PRIVILEGE_LOOKUP;
+      else
+        name_only_lookup = c->session.name_only_lookup;
       
       if ((managed_system_random_number_len = Fiid_obj_get_data(c,
 								c->connection.obj_rakp_message_2,
@@ -1014,7 +1013,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
 													 managed_system_random_number,
 													 managed_system_random_number_len,
 													 c->session.remote_console_session_id,
-													 c->session.name_only_lookup,
+													 name_only_lookup,
 													 c->config.privilege_level,
 													 username,
                                                                                                          username_len,
