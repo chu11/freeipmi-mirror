@@ -43,18 +43,6 @@ inband code
 -----------
 retry/resent code?
 
-ipmimonitoring
---------------
-button state
-entity prescence
-
-ipmi-senosrs
-------------
-sensor-scannig disabled
-- is set on sun machine for all sensors on get-sensor-events
-- shouldn't check?
-- should be additional output?
-
 ipmi-sensors-config
 -------------------
 * conf.5 manpage
@@ -76,7 +64,6 @@ merge all libs into one?  would aid debian packaging.
 - make package layout simpler?
 - make .so-naming consistent?
 - merge all except libipmidetect?
-
 
 contribs
 --------
