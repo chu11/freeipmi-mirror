@@ -74,11 +74,9 @@ struct ipmi_oem_id oem_cb[] =
   };
 
 static int
-_list (ipmi_oem_state_data_t *state_data)
+_list (void)
 {
   struct ipmi_oem_id *oem_id = oem_cb;
-
-  assert(state_data);
 
   while (oem_id && oem_id->oem_id)
     {
@@ -242,8 +240,8 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (args->list)
-    return _list (state_data);
+  /* XXX: shouldn't be possible at this point */
+  assert(!args->list);
 
   if (!args->oem_id)
     {
@@ -333,6 +331,18 @@ main (int argc, char **argv)
   prog_data.progname = argv[0];
   ipmi_oem_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
+
+  /* Special case, just output list, don't do anything else */
+  if (cmd_args.list)
+    {
+      if (_list() < 0)
+        {
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+      exit_code = EXIT_SUCCESS;
+      goto cleanup;
+    }
 
   if (pstdout_setup(&(prog_data.args->common.hostname),
                     prog_data.args->hostrange.buffer_output,
