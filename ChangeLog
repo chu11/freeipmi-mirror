@@ -1,4 +1,4 @@
-2008-XX-XX  Albert Chu <chu11@llnl.gov>
+2008-12-09  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Add supermicro reset-intrusion oem command.
 	
