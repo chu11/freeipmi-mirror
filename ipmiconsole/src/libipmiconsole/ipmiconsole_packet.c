@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.26.4.2 2008-12-09 00:46:57 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.26.4.3 2008-12-09 18:42:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.

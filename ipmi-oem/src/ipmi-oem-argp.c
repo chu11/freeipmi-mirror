@@ -70,6 +70,8 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
+    {"list", LIST_KEY, 0, 0,
+     "List supported OEM IDs and Commands.", 30},
     { 0 }
   };
 
@@ -93,6 +95,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   
   switch (key)
     {
+    case LIST_KEY:
+      cmd_args->list = 1;
+      break;
     case ARGP_KEY_ARG:
       {
         if (!cmd_args->oem_id)
@@ -165,6 +170,7 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
   init_common_cmd_args_user (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
+  cmd_args->list = 0;
   cmd_args->oem_id = NULL;
   cmd_args->oem_command = NULL;
   errno = 0;
