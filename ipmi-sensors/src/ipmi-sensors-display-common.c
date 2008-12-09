@@ -115,6 +115,126 @@ ipmi_sensors_output_verbose_event_message_list (ipmi_sensors_state_data_t *state
   return 0;
 }
 
+/* emulate a call to ipmi_cmd_get_sensor_thresholds succeeding by
+ * stuffing the response with data from the SDR
+ */
+static int
+_get_sdr_sensor_thresholds (ipmi_sensors_state_data_t *state_data,
+                            uint8_t *sdr_record,
+                            unsigned int sdr_record_len,
+                            fiid_obj_t obj_get_sensor_thresholds_rs)
+{
+  uint8_t lower_non_critical_threshold_readable = 0;
+  uint8_t lower_critical_threshold_readable = 0;
+  uint8_t lower_non_recoverable_threshold_readable = 0;
+  uint8_t upper_non_critical_threshold_readable = 0;
+  uint8_t upper_critical_threshold_readable = 0;
+  uint8_t upper_non_recoverable_threshold_readable = 0;
+  uint8_t lower_non_critical_threshold_temp = 0;
+  uint8_t lower_critical_threshold_temp = 0;
+  uint8_t lower_non_recoverable_threshold_temp = 0;
+  uint8_t upper_non_critical_threshold_temp = 0;
+  uint8_t upper_critical_threshold_temp = 0;
+  uint8_t upper_non_recoverable_threshold_temp = 0;
+  uint8_t lower_non_critical_threshold = 0;
+  uint8_t lower_critical_threshold = 0;
+  uint8_t lower_non_recoverable_threshold = 0;
+  uint8_t upper_non_critical_threshold = 0;
+  uint8_t upper_critical_threshold = 0;
+  uint8_t upper_non_recoverable_threshold = 0;
+  int rv = -1;
+
+  assert(state_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+  assert(obj_get_sensor_thresholds_rs);
+  assert(fiid_obj_template_compare(obj_get_sensor_thresholds_rs, 
+                                   tmpl_cmd_get_sensor_thresholds_rs) > 0);
+  
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, "cmd", IPMI_CMD_GET_SENSOR_THRESHOLDS);
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, "comp_code", IPMI_COMP_CODE_COMMAND_SUCCESS);
+
+  if (sdr_cache_get_threshold_readable (state_data->pstate,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        &lower_non_critical_threshold_readable,
+                                        &lower_critical_threshold_readable,
+                                        &lower_non_recoverable_threshold_readable,
+                                        &upper_non_critical_threshold_readable,
+                                        &upper_critical_threshold_readable,
+                                        &upper_non_recoverable_threshold_readable) < 0)
+    goto cleanup;
+  
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
+                "readable_thresholds.lower_non_critical_threshold", 
+                lower_non_critical_threshold_readable);
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
+                "readable_thresholds.lower_critical_threshold", 
+                lower_critical_threshold_readable);
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
+                "readable_thresholds.lower_non_recoverable_threshold", 
+                lower_non_recoverable_threshold_readable);
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
+                "readable_thresholds.upper_non_critical_threshold", 
+                upper_non_critical_threshold_readable);
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
+                "readable_thresholds.upper_critical_threshold", 
+                upper_critical_threshold_readable);
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
+                "readable_thresholds.upper_non_recoverable_threshold", 
+                upper_non_recoverable_threshold_readable);
+  
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, "reserved", 0);
+  
+  if (sdr_cache_get_thresholds_raw (state_data->pstate,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &lower_non_critical_threshold_temp,
+                                    &lower_critical_threshold_temp,
+                                    &lower_non_recoverable_threshold_temp,
+                                    &upper_non_critical_threshold_temp,
+                                    &upper_critical_threshold_temp,
+                                    &upper_non_recoverable_threshold_temp) < 0)
+    goto cleanup;
+
+  if (lower_non_critical_threshold_readable)
+    lower_non_critical_threshold = lower_non_critical_threshold_temp;
+  if (lower_critical_threshold_readable)
+    lower_critical_threshold = lower_critical_threshold_temp;
+  if (lower_non_recoverable_threshold_readable)
+    lower_non_recoverable_threshold = lower_non_recoverable_threshold_temp;
+  if (upper_non_critical_threshold_readable)
+    upper_non_critical_threshold = upper_non_critical_threshold_temp;
+  if (upper_critical_threshold_readable)
+    upper_critical_threshold = upper_critical_threshold_temp;
+  if (upper_non_recoverable_threshold_readable)
+    upper_non_recoverable_threshold = upper_non_recoverable_threshold_temp;
+
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs,
+                "lower_non_critical_threshold",
+                lower_non_critical_threshold);
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs,
+                "lower_critical_threshold",
+                lower_critical_threshold);
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs,
+                "lower_non_recoverable_threshold",
+                lower_non_recoverable_threshold);
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs,
+                "upper_non_critical_threshold",
+                upper_non_critical_threshold);
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs,
+                "upper_critical_threshold",
+                upper_critical_threshold);
+  _FIID_OBJ_SET(obj_get_sensor_thresholds_rs,
+                "upper_non_recoverable_threshold",
+                upper_non_recoverable_threshold);
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+
 int
 ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                              uint8_t *sdr_record,
@@ -265,8 +385,38 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
           rv = 0;
           goto cleanup;
         }
+
+      /* 
+       * IPMI Workaround (achu)
+       *
+       * Discovered on HP DL585
+       *
+       * Seems that the HP machine doesn't support the "Get Sensor
+       * Thresholds" command.  When this occurs, we assume the
+       * information in the SDR is legit and up to date.  Go get it
+       * and fill in the object respectively.
+       */
+      if ((ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND)
+          && (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID) == 1))
+        {
+          if (state_data->prog_data->args->common.debug)
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "Get Sensor Thresholds failed, using SDR information\n");
+
+          if (_get_sdr_sensor_thresholds (state_data,
+                                          sdr_record,
+                                          sdr_record_len,
+                                          obj_cmd_rs) < 0)
+            goto cleanup;
+
+          goto continue_get_sensor_thresholds;
+        }
+
       goto cleanup;
     } 
+
+ continue_get_sensor_thresholds:
 
   if (lower_non_critical_threshold)
     {
@@ -341,7 +491,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
   if (lower_non_recoverable_threshold)
     {
       _FIID_OBJ_GET (obj_cmd_rs,
-                     "readable_thresholds.lower_critical_threshold",
+                     "readable_thresholds.lower_non_recoverable_threshold",
                      &val);
       if (val)
         {
@@ -446,7 +596,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
   if (upper_non_recoverable_threshold)
     {
       _FIID_OBJ_GET (obj_cmd_rs,
-                     "readable_thresholds.upper_critical_threshold",
+                     "readable_thresholds.upper_non_recoverable_threshold",
                      &val);
       if (val)
         {

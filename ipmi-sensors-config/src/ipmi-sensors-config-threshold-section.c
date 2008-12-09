@@ -271,8 +271,26 @@ threshold_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_sensor_thresholds: %s\n",
                         ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+
       if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+      /*
+       * IPMI Workaround (achu)
+       *
+       * Discovered on HP DL585
+       *
+       * Seems that the HP machine doesn't support the "Get Sensor
+       * Thresholds" command.  99% of the time if a command is invalid
+       * on a remote machine, that's a fatal error and we should exit.
+       * I suppose this is an exception though.  We can continue on
+       * even if this command isn't supported.  The user just doesn't
+       * get to configure these thresholds.
+       */
+      if ((ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND)
+          && (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID) == 1))
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
+
       goto cleanup;
     }
 

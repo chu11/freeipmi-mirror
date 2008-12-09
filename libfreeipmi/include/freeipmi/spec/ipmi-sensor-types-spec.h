@@ -28,13 +28,13 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_VOLTAGE                             0x02 
 #define IPMI_SENSOR_TYPE_CURRENT                             0x03
 #define IPMI_SENSOR_TYPE_FAN                                 0x04
-#define IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION 0x05
+#define IPMI_SENSOR_TYPE_PHYSICAL_SECURITY                   0x05
 #define IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT 0x06
 #define IPMI_SENSOR_TYPE_PROCESSOR                           0x07
 #define IPMI_SENSOR_TYPE_POWER_SUPPLY                        0x08
 #define IPMI_SENSOR_TYPE_POWER_UNIT                          0x09
 #define IPMI_SENSOR_TYPE_COOLING_DEVICE                      0x0A
-#define IPMI_SENSOR_TYPE_FRU_SENSOR                          0x0B
+#define IPMI_SENSOR_TYPE_OTHER_UNITS_BASED_SENSOR            0x0B
 #define IPMI_SENSOR_TYPE_MEMORY                              0x0C
 #define IPMI_SENSOR_TYPE_DRIVE_SLOT                          0x0D
 #define IPMI_SENSOR_TYPE_POST_MEMORY_RESIZE                  0x0E

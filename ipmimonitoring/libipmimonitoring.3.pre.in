@@ -1,5 +1,5 @@
 .\"############################################################################
-.\"  $Id: libipmimonitoring.3.pre.in,v 1.11 2008-08-12 18:14:39 chu11 Exp $
+.\"  $Id: libipmimonitoring.3.pre.in,v 1.11.6.1 2008-12-09 17:27:27 chu11 Exp $
 .\"############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -90,11 +90,10 @@ please contact the developers as listed below.
 
 .SH "STATE CONFIGURATION" 
 The interpretation of sensors is configurable via the configuration
-file stored at @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  Various
-states returnable by IPMI based sensors can be assigned NOMINAL,
-WARNING, or CRITICAL states to be returned by the libipmimonitoring
-library.  If multiple states are triggered on a sensor reading, the
-more severe state is returned to the user.
+file stored at @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  
+See
+.B ipmi_monitoring_sensors.conf(5)
+for more information on configuring sensor interpretations.
 
 .SH "FILES"
 @IPMI_MONITORING_SDR_CACHE_DIR@
@@ -109,5 +108,5 @@ Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 Copyright (C) 2006-2007 The Regents of the University of California.
 #include <@top_srcdir@/common/man/manpage-common-gpl-library-text.man>
 .SH "SEE ALSO"
-ipmimonitoring(8)
+ipmi_monitoring_sensors.conf(5), ipmimonitoring(8)
 #include <@top_srcdir@/common/man/manpage-common-homepage.man>

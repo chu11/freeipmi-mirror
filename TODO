@@ -1,3 +1,7 @@
+freeipmi tools
+--------------
+config via environment variables too - like config file
+
 libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
@@ -60,7 +64,6 @@ merge all libs into one?  would aid debian packaging.
 - make package layout simpler?
 - make .so-naming consistent?
 - merge all except libipmidetect?
-
 
 contribs
 --------

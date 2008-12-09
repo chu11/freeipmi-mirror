@@ -3136,3 +3136,110 @@ sdr_cache_get_threshold_settable (pstdout_state_t pstate,
   _FIID_OBJ_DESTROY(obj_sdr_record_threshold);
   return rv; 
 }
+
+int 
+sdr_cache_get_thresholds_raw (pstdout_state_t pstate,
+                              uint8_t *sdr_record,
+                              unsigned int sdr_record_len,
+                              uint8_t *lower_non_critical_threshold,
+                              uint8_t *lower_critical_threshold,
+                              uint8_t *lower_non_recoverable_threshold,
+                              uint8_t *upper_non_critical_threshold,
+                              uint8_t *upper_critical_threshold,
+                              uint8_t *upper_non_recoverable_threshold)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  fiid_obj_t obj_sdr_record_threshold = NULL;
+  uint32_t acceptable_record_types;
+  uint8_t event_reading_type_code;
+  uint64_t val;
+  int rv = -1;
+
+  assert(sdr_record);
+  assert(sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  
+  if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               acceptable_record_types)))
+    goto cleanup;
+  
+  /* We don't want the generic sdr full record, we need the special
+   * threshold one.
+   */
+
+  if (sdr_cache_get_event_reading_type_code (pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
+    goto cleanup;
+
+  if (!IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
+    {
+      PSTDOUT_FPRINTF(pstate,
+                      stderr,
+                      "Invalid event reading type code passed in: %X\n",
+                      event_reading_type_code);
+      goto cleanup;
+    }
+  
+  _SDR_FIID_OBJ_COPY(obj_sdr_record_threshold,
+                     obj_sdr_record,
+                     tmpl_sdr_full_sensor_record_threshold_based_sensors);
+  
+  if (lower_non_critical_threshold)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "lower_non_critical_threshold",
+                        &val);
+      *lower_non_critical_threshold = val;
+    }
+
+  if (lower_critical_threshold)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "lower_critical_threshold",
+                        &val);
+      *lower_critical_threshold = val;
+    }
+
+  if (lower_non_recoverable_threshold)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "lower_non_recoverable_threshold",
+                        &val);
+      *lower_non_recoverable_threshold = val;
+    }
+
+  if (upper_non_critical_threshold)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "upper_non_critical_threshold",
+                        &val);
+      *upper_non_critical_threshold = val;
+    }
+
+  if (upper_critical_threshold)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "upper_critical_threshold",
+                        &val);
+      *upper_critical_threshold = val;
+    }
+
+  if (upper_non_recoverable_threshold)
+    {
+      _SDR_FIID_OBJ_GET(obj_sdr_record_threshold,
+                        "upper_non_recoverable_threshold",
+                        &val);
+      *upper_non_recoverable_threshold = val;
+    }
+
+  rv = 0;
+ cleanup:
+  _FIID_OBJ_DESTROY(obj_sdr_record);
+  _FIID_OBJ_DESTROY(obj_sdr_record_threshold);
+  return rv; 
+}

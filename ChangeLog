@@ -2,6 +2,187 @@
 
 	* ipmi-oem/: Add supermicro reset-intrusion oem command.
 	
+2008-12-09  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_defs.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
+	(_process_protocol_state_activate_payload): Add workaround for
+	state machine cycle possibility.
+	
+2008-12-08  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_packet.c
+	(ipmiconsole_ipmi_packet_assemble): Add workaround for Intel IPMI
+	2.0 situation.
+
+	* common/man/manpage-common-workaround-sol-only-text.man,
+	common/man/manpage-common-workaround-text.man: Change text for
+	workaround changes.
+	
+2008-12-05  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_packet.c
+	(ipmiconsole_ipmi_packet_assemble): Fix Intel 2.0 workaround.
+	
+2008-12-04  Albert Chu <chu11@llnl.gov>
+
+	* common/man/manpage-common-workaround-sol-only-text.man,
+	common/man/manpage-common-workaround-text.man: Cleanup text.
+	
+2008-12-04  Diego "Flameeyes" Petten <flameeyes@gmail.com>
+
+	* ipmi-oem/, ipmi-raw/: Fix portability for glibc 2.8.  Remove use
+	of ARG_MAX and replace with sysconf call to _SC_ARG_MAX.
+	
+2008-12-04  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/: Add documentation on <username-not-set-yet>.
+	
+2008-12-04  Dave Love  <fx@gnu.org>
+
+	* freeipmi.spec.in: Require /sbin/chkconfig, not chkconfig, to
+	work on SuSE.
+	
+2008-12-03  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/: Document various issues w/ comments.
+
+	* common/src/configtool/: Support CONFIG_USERNAME_NOT_SET_YET
+	config flag.
+
+	* bmc-config/src/: Support CONFIG_USERNAME_NOT_SET_YET in various
+	fields due to checkout issues with Sun X4140.
+	
+2008-12-01  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/ipmi_monitoring_sensors.conf.5.pre.in: Fix typos.
+	
+2008-11-27  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/src/ipmi-sel-entry.c (ipmi_sel_get_entry): Fix output
+	corner case.
+
+	* ipmimonitoring/: Add system ACPI power state and button switch
+	interpretations.  Add forgotten bitmasks.  Fix config file option
+	names.
+	
+	* ipmimonitoring/: Add new interpretations, button switch state,
+	entity presence device install, processor state.
+
+	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c/:
+	Fix event message data2 output corner cases.
+
+2008-11-26  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/: Additional documentation updates.
+
+	* ipmi-sensors/src/ipmi-sensors-reading.c (sensor_reading): Output
+	'NA' is sensor scanning is disabled.
+
+	*
+	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(_get_sensor_reading): Return 'unreadable sensor' for sensors
+	where sensor scanning is disabled.
+
+	* ipmimonitoring/: Add new interpretations, power supply state,
+	drive slot state, drive slot predictive failure.
+
+	* ipmiconsole/src/ipmiconsole.c (main): Fix workaround bug.
+
+	* common/src/toolcommon/tool-cmdline-common.h,
+	common/src/toolcommon/tool-cmdline-common.c
+	(parse_workaround_flags), common/src/toolcommon/tool-common.c
+	(ipmi_open), ipmiconsole/src/ipmiconsole/ipmiconsole.c (main),
+	ipmipower/src/, libfreeipmi/include/freeipmi/api/ipmi-api.h,
+	libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_outofband_2_0),
+	ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(_grab_ipmimonitoring_options): Remove workaround flags unused in
+	libfreeipmi.  Make tool specific workarounds specific to tools.
+
+	* ipmi-sel/src/: When retrieving SEL entries, always try to obtain
+	a reservation ID.
+	
+2008-11-25  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/ipmi_monitoring_sensors.conf.5.pre.in,
+	ipmimonitoring/ipmimonitoring_sensors.conf.5.pre.in,
+	ipmimonitoring/ipmimonitoring.conf.5.pre.in,
+	ipmimonitoring/libipmimonitoring.conf.5.pre.in, : New files.
+
+	* ipmimonitoring/ipmimonitoring.8.pre.in,
+	ipmimonitoring/libipmimonitoring.3.pre.in: Update for new manpage.
+
+	* configure.ac, freeipmi.spec.in, ipmimonitoring/Makefile.am:
+	Adjust for new manpage.
+	
+2008-11-24  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-display-common.c
+	(ipmi_sensors_get_thresholds): Fix workaround for motherboards w/o
+	get sensor thresholds command support.
+
+	* ipmimonitoring/: Add fan transition availability interpretation.
+	
+	* ipmimonitoring/: Documentation additions and cleanup.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-types-spec.h,
+	libfreeipmi/src/spec/ipmi-sensor-types-spec.c,
+	libfreeipmi/include/freeipmi/cmds/ipmi-pef-and-alerting-cmds.h,
+	pef-config/src/pef-config-map.c: Fix typos in sensor types macros
+	and strings.
+
+	* ipmi-sensors/src: Fix corner cases in groups
+	verification/selection.
+
+	* configure.ac: Update library revisions appropriately.
+
+2008-11-20  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-display-common.c
+	(ipmi_sensors_get_thresholds): Fix non-recoverable thresholds
+	output corner case.
+
+	* ipmi-sensors/src/ipmi-sensors-simple-display.c
+	(sensors_display_simple_full_record): Output something other than
+	critical thresholds if critical thresholds are not available.
+	
+2008-11-20  Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolcommon/tool-fiid-wrappers.h (_FIID_OBJ_SET): New
+	macro.
+
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+	common/src/toolcommon/tool-sdr-cache-common.c
+	(sdr_cache_get_thresholds_raw): New function.
+	
+	* ipmi-sensors/src/ipmi-sensors-display-common.c
+	(_get_sdr_sensor_thresholds): New function.
+
+	* ipmi-sensors/src/ipmi-sensors-display-common.c
+	(ipmi_sensors_get_thresholds): Workaround motherboards w/o get
+	sensor thresholds command support.
+
+	* ipmi-sensors-config/src/ipmi-sensors-config-threshold-section.c
+	(threshold_checkout): Workaround motherboards w/o get sensor
+	thresholds command support.
+
+	* doc/freeipmi-bugs-and-workarounds.txt: Document new workaround.
+
+2008-11-19  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/: Add power unit device install interpretation.
+
+	* ipmimonitoring/src/ipmimonitoring/ipmi_monitoring_sensor_config.c:
+	Fix invalid config option names for slot device installs sensors.
+
+	* ipmimonitoring/ipmimonitoring.8.pre.in: Add extra documentation.
+	
+2008-11-19  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/src/bmc-info.c (display_get_device_id): Optionally
+	display auxiliary information.
+	
 2008-11-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/src/ipmi-raw-argp.c, ipmi-raw/ipmi-raw.8.pre.in:

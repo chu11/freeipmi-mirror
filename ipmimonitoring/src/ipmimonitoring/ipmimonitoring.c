@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.64 2008-08-27 21:23:13 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.64.4.1 2008-12-09 17:27:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -100,7 +100,9 @@ _list_groups(ipmimonitoring_state_data_t *state_data)
   pstdout_printf (state_data->pstate, "%s\n", "fru_state");
   pstdout_printf (state_data->pstate, "%s\n", "cable_interconnect");
   pstdout_printf (state_data->pstate, "%s\n", "boot_error");
-
+  pstdout_printf (state_data->pstate, "%s\n", "button_switch");
+  pstdout_printf (state_data->pstate, "%s\n", "system_acpi_power_state");
+  
   return 0;
 }
 
@@ -412,6 +414,10 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
         sensor_group_str = "Cable Interconnect";
       else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR)
         sensor_group_str = "Boot Error";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_BUTTON_SWITCH)
+        sensor_group_str = "Button Switch";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE)
+        sensor_group_str = "System ACPI Power State";
       else 
         sensor_group_str = "N/A";
 
@@ -707,21 +713,21 @@ _grab_ipmimonitoring_options(struct ipmimonitoring_arguments *cmd_args)
   cmd_args->conf.retransmission_timeout_len = cmd_args->common.retransmission_timeout;
 
   cmd_args->conf.workaround_flags = 0;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
-  if (cmd_args->common.workaround_flags & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION;
 
   if (cmd_args->common.debug)
@@ -782,6 +788,10 @@ _grab_ipmimonitoring_options(struct ipmimonitoring_arguments *cmd_args)
         n = IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT;
       else if (!strcasecmp(cmd_args->groups[i], "boot_error"))
         n = IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR;
+      else if (!strcasecmp(cmd_args->groups[i], "button_switch"))
+        n = IPMI_MONITORING_SENSOR_GROUP_BUTTON_SWITCH;
+      else if (!strcasecmp(cmd_args->groups[i], "system_acpi_power_state"))
+        n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE;
       else
         {
           fprintf(stderr, "invalid sensor group '%s'\n", cmd_args->groups[i]);

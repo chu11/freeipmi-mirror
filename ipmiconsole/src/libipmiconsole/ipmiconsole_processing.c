@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.74 2008-09-25 17:09:12 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.74.4.1 2008-12-09 17:27:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -2920,6 +2920,39 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
 
   if (ret)
     {
+      c->session.activate_payloads_count++;
+      
+      /* IPMI Workaround
+       *
+       * Intel IPMI 2.0 implementations may not
+       * activate payloads properly and signal that a proper
+       * activation occurred.  This leads to the state
+       * machine looping forever:
+       *
+       * - Get Activation Status says SOL is not active
+       * - Activate Payload says SOL is active
+       *
+       * - State machine goes back to Get Activation Status, hoping to see
+       * an active SOL, so it can deactivate it, return error, etc. do
+       * whatever is appropriate.
+       *
+       * This workaround is just so we don't loop forever and at some
+       * point the code will return back to the user cleanly.
+       */
+      
+      /* +1 b/c one activate_payloads_count is acceptable */
+      if (c->session.activate_payloads_count > c->config.acceptable_packet_errors_count + 1)
+        {
+          IPMICONSOLE_CTX_DEBUG(c, ("closing with excessive activate payload attempts"));
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_BMC_ERROR);
+
+          c->session.close_session_flag++;
+          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
+            return -1;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+          return 0;
+        }
+
       IPMICONSOLE_CTX_DEBUG(c, ("activate payload race"));
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ) < 0)
         {
@@ -3280,8 +3313,8 @@ _process_protocol_state_deactivate_payload_sent(ipmiconsole_ctx_t c)
           /* IPMI Workaround
            *
            * Supermicro IPMI 2.0 implementations may not
-           * deactivate paylods properly and signal that a proper
-           * deativation occurred.  This leads to the state
+           * deactivate payloads properly and signal that a proper
+           * deactivation occurred.  This leads to the state
            * machine looping forever:
            *
            * - Get Activation Status says SOL is activated
@@ -3293,7 +3326,6 @@ _process_protocol_state_deactivate_payload_sent(ipmiconsole_ctx_t c)
            * And the loop re-begins.  Therefore the need for this
            * workaround.
            */
-
 
           /* +1 b/c one deactivate_active_payloads_count is acceptable and expected */
           if (c->session.deactivate_active_payloads_count > c->config.acceptable_packet_errors_count + 1)

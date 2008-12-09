@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40 2008-09-17 20:50:47 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40.4.1 2008-12-09 17:27:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -282,23 +282,39 @@ _get_digital_sensor_state(ipmi_monitoring_ctx_t c,
    */
 
   if (event_reading_type_code == 0x03 && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
-    config = ipmi_voltage_assertion_config;
+    config = ipmi_voltage_state_config;
   else if (event_reading_type_code == 0x06 && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
     config = ipmi_voltage_performance_config;
   else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_FAN)
     config = ipmi_fan_device_install_config;
+  else if (event_reading_type_code == 0x0A && sensor_type == IPMI_SENSOR_TYPE_FAN)
+    config = ipmi_fan_transition_availability_config;
+  else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_FAN)
+    config = ipmi_fan_redundancy_config;
+  else if (event_reading_type_code == 0x03 && sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
+    config = ipmi_processor_state_config;
+  else if (event_reading_type_code == 0x03 && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
+    config = ipmi_power_supply_state_config;
+  else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
+    config = ipmi_power_supply_redundancy_config;
+  else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
+    config = ipmi_power_unit_device_install_config;
+  else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
+    config = ipmi_power_unit_redundancy_config;
   else if (event_reading_type_code == 0x03 && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
     config = ipmi_module_board_state_config;
   else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
     config = ipmi_module_board_device_install_config;
-  else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_FAN)
-    config = ipmi_fan_redundancy_config;
-  else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
-    config = ipmi_power_supply_redundancy_config;
-  else if (event_reading_type_code == 0x0B && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
-    config = ipmi_power_unit_redundancy_config;
+  else if (event_reading_type_code == 0x03 && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
+    config = ipmi_drive_slot_state_config;
+  else if (event_reading_type_code == 0x04 && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
+    config = ipmi_drive_slot_predictive_failure_config;
   else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     config = ipmi_drive_slot_device_install_config;
+  else if (event_reading_type_code == 0x03 && sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+    config = ipmi_button_switch_state_config;
+  else if (event_reading_type_code == 0x08 && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
+    config = ipmi_entity_presence_device_install_config;
   else
     {
       IPMI_MONITORING_DEBUG(("event_reading_type_code '0x%X' and sensor_type '0x%X' not supported", event_reading_type_code, sensor_type));
@@ -318,7 +334,7 @@ _get_specific_sensor_state(ipmi_monitoring_ctx_t c,
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
 
-  if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION)
+  if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
     config = ipmi_physical_security_config;
   else if (sensor_type == IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
     config = ipmi_platform_security_violation_attempt_config;
@@ -356,6 +372,10 @@ _get_specific_sensor_state(ipmi_monitoring_ctx_t c,
     config = ipmi_cable_interconnect_config;
   else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
     config = ipmi_boot_error_config;
+  else if (sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+    config = ipmi_button_switch_config;
+  else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
+    config = ipmi_system_acpi_power_state_config;
   else
     {
       IPMI_MONITORING_DEBUG(("sensor_type '0x%X' not supported", sensor_type));
@@ -587,6 +607,22 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
       IPMI_MONITORING_DEBUG(("sensor reading unavailable"));
       /* sensor reading not available.  Tell the caller to store this
        * as an unreadable sensor
+       */
+      rv = 0;
+      goto cleanup;
+    }
+
+  if (Fiid_obj_get(c,
+                   obj_cmd_rs,
+                   "sensor_scanning",
+                   &val) < 0)
+    goto cleanup;
+  
+  if (val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
+    {
+      IPMI_MONITORING_DEBUG(("sensor scanning disabled"));
+      /* sensor scanning disabled.  Tell the caller to store this as
+       * an unreadable sensor
        */
       rv = 0;
       goto cleanup;
@@ -1008,7 +1044,7 @@ _get_specific_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
 
-  if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION)
+  if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PHYSICAL_SECURITY;
   else if (sensor_type == IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
@@ -1048,6 +1084,10 @@ _get_specific_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CABLE_INTERCONNECT;
   else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BOOT_ERROR;
+  else if (sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BUTTON_SWITCH;
+  else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_ACPI_POWER_STATE;
   else
     {
       IPMI_MONITORING_DEBUG(("sensor_type '0x%X' bitmask not supported", sensor_type));
@@ -1145,7 +1185,7 @@ _get_sensor_group(ipmi_monitoring_ctx_t c,
     return IPMI_MONITORING_SENSOR_GROUP_CURRENT;
   else if (sensor_type == IPMI_SENSOR_TYPE_FAN)
     return IPMI_MONITORING_SENSOR_GROUP_FAN;
-  else if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_CHASSIS_INTRUSION)
+  else if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
     return IPMI_MONITORING_SENSOR_GROUP_PHYSICAL_SECURITY;
   else if (sensor_type == IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
     return IPMI_MONITORING_SENSOR_GROUP_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
@@ -1185,6 +1225,10 @@ _get_sensor_group(ipmi_monitoring_ctx_t c,
     return IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT;
   else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
     return IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR;
+  else if (sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+    return IPMI_MONITORING_SENSOR_GROUP_BUTTON_SWITCH;
+  else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
+    return IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE;
 
   IPMI_MONITORING_DEBUG(("sensor_type '0x%X' not supported", sensor_type));
   return IPMI_MONITORING_SENSOR_GROUP_UNKNOWN;

@@ -21,6 +21,7 @@ I have worked extensively on:
 
 Intel SR870BN4
 Supermicro H8QME with SIMSO daughter card
+Sun X4140
 
 I have had some temporary access to:
 
@@ -195,6 +196,10 @@ motherboard.  The SOL session is subsequently useless.  There is
 currently no workaround in place to handle this.  The session must be
 closed and restarted.
 
+Intel Unknown Motherboard: The Activate Payload requires the "BMC
+asserts CTS and DCD/DSR to baseboard upon activation" flag to be set.
+Resolved with an Intel specific workaround.
+
 bmc-config
 ----------
 
@@ -224,6 +229,10 @@ implemented.  Worked with vendor to implement fix in firmware.
 Tyan S4811 with SMDC daughter card: The ability to authenticate under
 IPMI 1.5 is tied to it being supported as an OEM authentication type.
 Resolved via different configuration w/ bmc-config.
+
+Sun X4140: Get Username and Get User Payload commands fail with CCh =
+"Invalid data field in request" if a username was not set previously.
+Added workaround for this specific case.
 
 ipmi-fru
 --------
@@ -256,12 +265,22 @@ Dell 2650: Some sensors return parameter out of range completion codes
 (0xC9) for unknown reasons.  Resolved by ignoring sensors that return
 this return code.
 
+HP DL585: The get sensor thresholds command is not supported on these
+motherboards.  Resolved by reading threshold data from the SDR or not
+allowing sensor threshold configuration.
+
+Sun X4140: The get sensor event enable command always returns "sensor
+scanning disabled" bit.  No current resolution.
+
 ipmi-sel
 --------
 
 Supermicro H8QME with SIMSO daughter card: It appears that SEL records
 incorrectly report the generator_id slave address.  Resolved with
 special case handling.
+
+HP DL585: The Get SEL entry command and Reserve SEL command do not
+function.  No current resolution.
 
 Misc
 ----

@@ -431,6 +431,18 @@ config_sections_validate_keyvalue_inputs(pstdout_state_t pstate,
             {
               config_validate_t v;
 
+              if (!strcasecmp(kv->value_input, CONFIG_USERNAME_NOT_SET_YET_STR))
+                {
+                  PSTDOUT_FPRINTF(pstate,
+                                  stderr,
+                                  "Invalid value '%s' for key '%s' in section '%s'\n",
+                                  kv->value_input,
+                                  kv->key->key_name,
+                                  s->section_name);
+                  nonvalid_count++;
+                  goto next_kv;
+                }
+
               if ((v = kv->key->validate(s->section_name,
                                          kv->key->key_name,
                                          kv->value_input,

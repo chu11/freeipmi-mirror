@@ -58,17 +58,17 @@ a comment above the field.  When there are to many options to make it
 practical, they are listed here in the MAN page.
 .TP
 \fB\ Sensor_Type Options\fR 
-Reserved, Temperature, Voltage, Current, Fan,
-Platform_Chassis_Intrusion, Platform_Security_Violation, Processor,
-Power_Supply, Power_Unit, Cooling_Device, FRU_Sensor, Memory,
-Drive_Slot, Post_Memory_Resize, System_Firmware,
+Reserved, Temperature, Voltage, Current, Fan, Physical_Security,
+Platform_Security_Violation_Attempt, Processor, Power_Supply,
+Power_Unit, Cooling_Device, Other_Units_Based_Sensor, Memory,
+Drive_Slot, Post_Memory_Resize, System_Firmware_Progress,
 Event_Logging_Disabled, Watchdog1, System_Event, Critical_Interrupt,
-Button, Module_Board, Microcontroller, Add_In_Card, Chassis, Chip_Set,
-Other_FRU, Cable_Interconnect, Terminator, System_Boot_Initiated,
-Boot_Error, OS_Boot, OS_Critical_Stop, Slot_Connector,
-ACPI_Power_State, Watchdog2, Platform_Alert, Entity_Presence,
-Monitor_Asic, Lan, Management_Subsystem_Health, Battery,
-Session_Audit, Version_Change, FRU_State, and Any
+Button_Switch, Module_Board, Microcontroller_Coprocessor, Add_In_Card,
+Chassis, Chip_Set, Other_FRU, Cable_Interconnect, Terminator,
+System_Boot_Initiated, Boot_Error, OS_Boot, OS_Critical_Stop,
+Slot_Connector, System_ACPI_Power_State, Watchdog2, Platform_Alert,
+Entity_Presence, Monitor_Asic_IC, Lan, Management_Subsystem_Health,
+Battery, Session_Audit, Version_Change, FRU_State, and Any
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>

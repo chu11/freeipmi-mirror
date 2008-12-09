@@ -1,0 +1,957 @@
+.TH IPMI_MONITORING_SENSORS 5 "@ISODATE@" "FreeIPMI @PACKAGE_VERSION@" "Configuration"
+.SH "NAME"
+ipmi_monitoring_sensors.conf \- specify sensor interpretation rules
+.SH "DESCRIPTION"
+The
+.B @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
+defines how IPMI sensors should be
+interpreted.  IPMI based sensors specify a number of
+states/thresholds when they are read.  Based on those
+states/thresholds we can allow the 
+.B libipmimonitoring(3) 
+library and
+.B ipmimonitoring(8) 
+tool to report if a sensor reading is "good" or
+"bad" (or in a NOMINAL, WARNING, or CRITICAL state).
+.LP
+Each of the states listed below are (hopefully) descriptive enough
+to describe the state conditions that may be set/unset for each
+sensor type.  For more detailed information on each of the
+individual states listed below, please see the IPMI Specification
+"Sensor and Event Code Tables". 
+.B Ipmi-sensors(8) 
+can be used to determine the sensor types and the states/thresholds
+that exist on a system by outputting very verbose output and seeing
+what types of Assertion or Deassertion events are possible.
+.LP
+The possible values for all states/thresholds below are:
+.LP
+Nominal - Signal Nominal reading if state/threshold tripped
+.LP
+Warning - Signal Warning reading if state/treshold tripped
+.LP
+Critical - Signal Critical reading if state/threshold tripped
+.LP
+Not all IPMI sensor types and event types are currently supported.  If
+you would like more to be supported, please e-mail the FreeIPMI
+mailing list.
+.LP
+The default values selected for individual states/thresholds being
+tripped are based on best guesses and motherboards being analyzed.
+If you think they should be changed, please e-mail the FreeIPMI
+mailing list to discuss what the defaults should be.
+.LP
+Most default interpretations can be determined quite easily and can
+meet the needs of most users.  For example, a reading of
+"Performance_Met" is normally better than "Performance_Lags".
+However, some sensors can be ambiguous and depend completely on the
+manufacturer.  For example, "State_Asserted" vs. "State_Deasserted"
+are completely at the interpretation of the vendor. Users are advised
+to adjust the interpretations below as needed for their machines.
+.LP
+.SH "FORMAT"
+The configuration options that can be specified in the configuration
+file are listed below.  Each configuration option must be listed on a
+separate line.  Arguments for an option are separated by any amount of
+whitespace.  Multiple arguments are also separated by whitespace.
+Comments can be marked by using the pound sign ("#") character, and
+lines can be continued on the next using backslash ("\\").
+.LP
+Note that it is possible to list the username, password and other
+potentially sensitive information in the configuration file.  If this
+data is stored in a configuration file, system administrators should
+limit access to this file.
+.SH "OPTIONS"
+.TP
+.B IPMI_Threshold_Sensor
+The following states correspond to threshold sensors.  This normally
+applies to sensors that measure non-discrete values, such as
+temperatures, voltages, RPM, etc.
+.RS
+.TP
+\fBIPMI_Threshold_Sensor_At_Or_Below_Lower_Non_Critical_Threshold\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Threshold_Sensor_At_Or_Below_Lower_Critical_Threshold\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Threshold_Sensor_At_Or_Below_Lower_Non_Recoverable_Threshold\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Threshold_Sensor_At_Or_Above_Upper_Non_Critical_Threshold\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Threshold_Sensor_At_Or_Above_Upper_Critical_Threshold\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Threshold_Sensor_At_Or_Above_Upper_Non_Recoverable_Threshold\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Voltage_State
+The following states correspond to Voltage sensors that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Voltage_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Voltage_State_Asserted\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_Voltage_Performance
+The following states correspond to Voltage sensors that report on
+performance.
+.RS
+.TP
+\fBIPMI_Voltage_Performance_Met\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Voltage_Performance_Lags\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Fan_Device_Install
+The following states correspond to Fan sensors that report on
+device installation.
+.RS
+.TP
+\fBIPMI_Fan_Device_Install_Device_Removed_Device_Absent\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Fan_Device_Install_Device_Inserted_Device_Present\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Fan_Transition_Availability
+The following states correspond to Fan sensors that report on
+device availability.
+.RS
+.TP
+\fBIPMI_Fan_Transition_Availability_To_Running\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Fan_Transition_Availability_To_In_Test\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Fan_Transition_Availability_To_Power_Off\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Fan_Transition_Availability_To_On_Line\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Fan_Transition_Availability_To_Off_Line\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Fan_Transition_Availability_To_Off_Duty\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Fan_Transition_Availability_To_Degraded\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Fan_Transition_Availability_To_Power_Save\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Fan_Transition_Availability_Install_Error\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Fan_Redundancy
+The following states correspond to Fan sensors that report on
+redundancy.
+.RS
+.TP
+\fBIPMI_Fan_Redundancy_Fully_Redundant\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Fan_Redundancy_Redundancy_Lost\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Fan_Redundancy_Redundancy_Degraded\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Fan_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Fan_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Fan_Redundancy_Non_Redundant_Insufficient_Resources\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Fan_Redundancy_Redundancy_Degraded_From_Fully_Redundant\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Fan_Redundancy_Redundancy_Degraded_From_Non_Redundant\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_Processor_State
+The following states correspond to Processor sensors that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Processor_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Processor_State_Asserted\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Power_Supply_State
+The following states correspond to Power_Supply sensors that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Power_Supply_State_Deasserted\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_State_Asserted\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Power_Supply_Redundancy
+The following states correspond to Power Supply sensors that report on
+redundancy.
+.RS
+.TP
+\fBIPMI_Power_Supply_Redundancy_Fully_Redundant\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Power_Supply_Redundancy_Redundancy_Lost\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Redundancy_Redundancy_Degraded\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Power_Supply_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Redundancy_Non_Redundant_Insufficient_Resources\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Redundancy_Redundancy_Degraded_From_Fully_Redundant\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Power_Supply_Redundancy_Redundancy_Degraded_From_Non_Redundant\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_Power_Unit_Device_Install
+The following states correspond to Power Unit sensors that report on
+device installation.
+.RS
+.TP
+\fBIPMI_Power_Unit_Device_Install_Device_Removed_Device_Absent\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Unit_Device_Install_Device_Inserted_Device_Present\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Power_Unit_Redundancy
+The following states correspond to Power Unit sensors that report on
+redundancy.
+.RS
+.TP
+\fBIPMI_Power_Unit_Redundancy_Fully_Redundant\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Power_Unit_Redundancy_Redundancy_Lost\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Unit_Redundancy_Redundancy_Degraded\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Power_Unit_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Unit_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Unit_Redundancy_Non_Redundant_Insufficient_Resources\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Unit_Redundancy_Redundancy_Degraded_From_Fully_Redundant\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Power_Unit_Redundancy_Redundancy_Degraded_From_Non_Redundant\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_Module_Board_State
+The following states correspond to Module/Board sensors that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Module_Board_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Module_Board_State_Asserted\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Module_Board_Device_Install
+The following states correspond to Module/Board sensors that report on
+device installation.
+.RS
+.TP
+\fBIPMI_Module_Board_Device_Install_Device_Removed_Device_Absent\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Module_Board_Device_Install_Device_Inserted_Device_Present\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Drive_Slot_State
+The following states correspond to Drive Slot sensors that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Drive_Slot_State_Deasserted\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Drive_Slot_State_Asserted\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Drive_Slot_Predictive_Failure
+The following states correspond to Drive_Slot sensors that report a
+predictive failure assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Drive_Slot_Predictive_Failure_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Drive_Slot_Predictive_Failure_Asserted\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Drive_Slot_Device_Install
+The following states correspond to Drive Slot sensors that report on
+device installation.
+.RS
+.TP
+\fBIPMI_Drive_Slot_Device_Install_Device_Removed_Device_Absent\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Drive_Slot_Device_Install_Device_Inserted_Device_Present\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Button_Switch_State
+The following states correspond to Button/Switch sensors that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Button_Switch_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Button_Switch_State_Asserted\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Entity_Presence_Device_Install
+The following states correspond to Entity Presence sensors that report on
+device installation.
+.RS
+.TP
+\fBIPMI_Entity_Presence_Device_Install_Device_Removed_Device_Absent\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Entity_Presence_Device_Install_Device_Inserted_Device_Present\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Physical_Security
+The following states correspond to Physical Security sensors w/
+Physical Security specific output states.
+.RS
+.TP
+\fBIPMI_Physical_Security_General_Chassis_Intrusion\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Physical_Security_Drive_Bay_Intrusion\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Physical_Security_IO_Card_Intrusion\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Physical_Security_Processor_Area_Intrusion\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Physical_Security_LAN_Leash_Lost\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Physical_Security_Unauthorized_Dock_Undock\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Physical_Security_FAN_Area_Intrusion\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Platform_Security_Violation_Attempt
+The following states correspond to Platform Violation Attempt sensors w/
+Platform Security Violation Attempt specific output states.
+.RS
+.TP
+\fBIPMI_Platform_Security_Violation_Attempt_Secure_Mode_Violation_Attempt\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_User_Password\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_Setup_Password\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_Network_Boot_Password\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Platform_Security_Violation_Attempt_Other_Pre_Boot_Password_Violation\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Platform_Security_Violation_Attempt_Out_Of_Band_Access_Password_Violation\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Processor
+The following states correspond to Processor sensors w/
+Processor specific output states.
+.RS
+.TP
+\fBIPMI_Processor_IERR\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Processor_Thermal_Trip\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Processor_FRB1_BIST_Failure\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Processor_FRB2_Hang_In_POST_Failure\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Processor_FRB3_Processor_Startup_Initialization_Failure\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Processor_Configuration_Error\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Processor_SMBIOS_Uncorrectable_CPU_Complex_Error\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Processor_Processor_Presence_Detected\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Processor_Processor_Disabled\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Processor_Terminator_Presence_Detected\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Processor_Processor_Automatically_Throttled\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_Power_Supply
+The following states correspond to Power Supply sensors w/
+Power Supply specific output states.
+.RS
+.TP
+\fBIPMI_Power_Supply_Presence_Detected\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Power_Supply_Power_Supply_Failure_Detected\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Predictive_Failure\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Power_Supply_Input_Lost_AC_DC\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Power_Supply_Input_Lost_Or_Out_Of_Range\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Power_Supply_Input_Out_Of_Range_But_Present\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Configuration_Error\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Power_Unit
+The following states correspond to Power Unit sensors w/
+Power Unit specific output states.
+.RS
+.TP
+\fBIPMI_Power_Unit_Power_Off_Power_Down\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Power_Unit_Power_Cycle\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Power_Unit_240VA_Power_Down\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Power_Unit_Interlock_Power_Down\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Power_Unit_AC_Lost\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Unit_Soft_Power_Control_Failure\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Unit_Power_Unit_Failure_Detected\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Unit_Predictive_Failure\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Memory
+The following states correspond to Memory sensors w/
+Memory specific output states.
+.RS
+.TP
+\fBIPMI_Memory_Correctable_ECC_Memory_Error\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Memory_Uncorrectable_ECC_Memory_Error\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Memory_Parity\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Memory_Memory_Scrub_Failed\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Memory_Memory_Device_Disabled\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Memory_Correctable_ECC_Memory_Error_Logging_Limit_Reached\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Memory_Presence_Detected\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Memory_Configuration_Error\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Memory_Spare\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Memory_Memory_Automatically_Throttled\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_Drive_Slot
+The following states correspond to Drive Slot sensors w/
+Drive Slot specific output states.
+.RS
+.TP
+\fBIPMI_Drive_Slot_Drive_Presence\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Drive_Slot_Drive_Fault\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Drive_Slot_Predictive_Failure\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Drive_Slot_Hot_Spare\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Drive_Slot_Consistency_Check_Parity_Check_In_Progress\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Drive_Slot_In_Critical_Array\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Drive_Slot_In_Failed_Array\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Drive_Slot_Rebuild_Remap_In_Progress\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Drive_Slot_Rebuild_Remap_Aborted\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_System_Firmware_Progress
+The following states correspond to System Firmware Progress sensors w/
+System Firmware Progress specific output states.
+.RS
+.TP
+\fBIPMI_System_Firmware_Progress_System_Firmware_Error\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_Firmware_Progress_System_Firmware_Hang\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_Firmware_Progress_System_Firmware_Progress\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Event_Logging_Disabled
+The following states correspond to Event Logging Disabled sensors w/
+.RS
+.TP
+\fBIPMI_Event_Logging_Disabled_Correctable_Memory_Logging_Disabled\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Event_Logging_Disabled_Event_Type_Logging_Disabled\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Event_Logging_Disabled_Log_Area_Reset_Cleared\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Event_Logging_Disabled_All_Event_Logging_Disabled\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Event_Logging_Disabled_SEL_Full\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Event_Logging_Disabled_SEL_Almost_Full\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_System_Event
+The following states correspond to System Event sensors w/
+System Event specific output states.
+.RS
+.TP
+\fBIPMI_System_Event_System_Reconfigured\fR
+Defaults to Warning.
+.TP
+\fBIPMI_System_Event_OEM_System_Boot_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_Event_Undetermined_System_Hardware_Failure\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_Event_Entry_Added_To_Auxiliary_Log\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_Event_PEF_Action\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_Event_Timestamp_Clock_Sync\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_Critical_Interrupt
+The following states correspond to Critical Interrupt sensors w/
+Critical Interrupt specific output states.
+.RS
+.TP
+\fBIPMI_Critical_Interrupt_Front_Panel_NMI_Diagnostic_Interrupt\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Critical_Interrupt_Bus_Timeout\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Critical_Interrupt_I_O_Channel_Check_NMI\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Critical_Interrupt_Software_NMI\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Critical_Interrupt_PCI_PERR\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Critical_Interrupt_PCI_SERR\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Critical_Interrupt_EISA_Fail_Safe_Timeout\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Critical_Interrupt_Bus_Correctable_Error\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Critical_Interrupt_Bus_Uncorrectable_Error\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Critical_Interrupt_Fatal_NMI\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Critical_Interrupt_Bus_Fatal_Error\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Slot_Connector
+The following states correspond to Slot Connector sensors w/
+Slot Connector specific output states.
+.RS
+.TP
+\fBIPMI_Slot_Connector_Fault_Status_Asserted\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Slot_Connector_Identify_Status_Asserted\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Slot_Connector_Slot_Connector_Device_Installed_Attached\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Slot_Connector_Slot_Connector_Ready_For_Device_Installation\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Slot_Connector_Slot_Connector_Ready_For_Device_Removal\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Slot_Connector_Slot_Power_Is_Off\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Slot_Connector_Slot_Connector_Device_Removal_Request\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Slot_Connector_Interlock_Asserted\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Slot_Connector_Slot_Is_Disabled\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Slot_Connector_Slot_Holds_Spare_Device\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Watchdog2
+The following states correspond to Watchdog 2 sensors w/
+Watchdog 2 specific output states.
+.RS
+.TP
+\fBIPMI_Watchdog2_Timer_Expired\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Watchdog2_Hard_Reset\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Watchdog2_Power_Down\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Watchdog2_Power_Cycle\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Watchdog2_Reserved1\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Watchdog2_Reserved2\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Watchdog2_Reserved3\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Watchdog2_Reserved4\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Watchdog2_Timer_Interrupt\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_Entity_Presence
+The following states correspond to Entity Presence sensors w/
+Entity Presence specific output states.
+.RS
+.TP
+\fBIPMI_Entity_Presence_Entity_Present\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Entity_Presence_Entity_Absent\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Entity_Presence_Entity_Disabled\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Management_Subsystem_Health
+The following states correspond to Management Subsystem Health sensors w/
+Management Subsystem Health specific output states.
+.RS
+.TP
+\fBIPMI_Management_Subsystem_Health_Sensor_Access_Degraded_Or_Unavailable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Management_Subsystem_Health_Controller_Access_Degraded_Or_Unavailable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Management_Subsystem_Health_Management_Controller_Off_Line\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Management_Subsystem_Health_Management_Controller_Unavailable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Management_Subsystem_Health_Sensor_Failure\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Management_Subsystem_Health_FRU_Failure\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Battery
+The following states correspond to Battery sensors w/
+Battery specific output states.
+.RS
+.TP
+\fBIPMI_Battery_Battery_Low\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Battery_Battery_Failed\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Battery_Battery_Presence_Detected\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_FRU_State
+The following states correspond to FRU State sensors w/
+FRU State specific output states.
+.RS
+.TP
+\fBIPMI_FRU_State_FRU_Not_Installed\fR
+Defaults to Critical.
+.TP
+\fBIPMI_FRU_State_FRU_Inactive\fR
+Defaults to Critical.
+.TP
+\fBIPMI_FRU_State_FRU_Activation_Requested\fR
+Defaults to Warning.
+.TP
+\fBIPMI_FRU_State_FRU_Activation_In_Progress\fR
+Defaults to Warning.
+.TP
+\fBIPMI_FRU_State_FRU_Active\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_FRU_State_FRU_Deactivation_Requested\fR
+Defaults to Warning.
+.TP
+\fBIPMI_FRU_State_FRU_Deactivation_In_Progress\fR
+Defaults to Warning.
+.TP
+\fBIPMI_FRU_State_FRU_Communication_Lost\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Cable_Interconnect
+The following states correspond to Cable/Interconnect sensors w/
+Cable/Interconnect specific output states.
+.RS
+.TP
+\fBIPMI_Cable_Interconnect_Is_Connected\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Cable_Interconnect_Incorrect_Cable_Connected_Incorrect_Interconnection\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Boot_Error
+The following states correspond to Boot Error sensors w/
+Boot Error specific output states.
+.RS
+.TP
+\fBIPMI_Boot_Error_No_Bootable_Media\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Boot_Error_Non_Bootable_Diskette_Left_In_Drive\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Boot_Error_PXE_Server_Not_Found\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Boot_Error_Invalid_Boot_Sector\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Boot_Error_Timeout_Waiting_For_User_Selection_Of_Boot_Source\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_Button_Switch
+The following states correspond to Button/Switch sensors w/
+Button/Switch specific output states.
+.RS
+.TP
+\fBIPMI_Button_Switch_Power_Button_Pressed\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Button_Switch_Sleep_Button_Pressed\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Button_Switch_Reset_Button_Pressed\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Button_Switch_FRU_Latch_Open\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Button_Switch_FRU_Service_Request_Button\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_System_ACPI_Power_State
+.RS
+.TP
+\fBIPMI_System_ACPI_Power_State_S0_G0\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S1\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S2\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S3\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S4\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S5_G2\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S4_S5_Soft_Off\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_G3_Mechanical_Off\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_Sleeping_in_an_S1_S2_or_S3_States\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_G1_Sleeping\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_S5_Entered_By_Override\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_Legacy_ON_State\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_Legacy_OFF_State\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_ACPI_Power_State_Unspecified\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_ACPI_Power_State_Unknown\fR
+Defaults to Critical.
+.RE
+
+.SH "FILES"
+@IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
+
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
+.SH "COPYRIGHT"
+Copyright \(co 2003-2008 FreeIPMI Core Team.  
+
+FreeIPMI is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or (at
+your option) any later version.
+
+.SH "SEE ALSO"
+ipmimonitoring(8), libipmimonitoring(3)
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>

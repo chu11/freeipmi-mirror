@@ -20,7 +20,6 @@
 #define _IPMI_OEM_H
 
 #include <freeipmi/freeipmi.h>
-#include <limits.h>	/* ARG_MAX */
 
 #include "tool-cmdline-common.h"
 #include "pstdout.h"
@@ -37,7 +36,7 @@ struct ipmi_oem_arguments
   int list;
   char *oem_id;
   char *oem_command;
-  char *oem_options[ARG_MAX];
+  char *oem_options;
   unsigned int oem_options_count;
 };
 

@@ -52,11 +52,14 @@
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_LIBRARY_ERROR \
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_INTERNAL_ERROR) ? 1 : 0)
 
-#define CONFIG_CHECKOUT_KEY_COMMENTED_OUT                  0x01
-#define CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x02
-#define CONFIG_DO_NOT_CHECKOUT                             0x04
-#define CONFIG_READABLE_ONLY                               0x08
-#define CONFIG_UNDEFINED                                   0x10
+#define CONFIG_CHECKOUT_KEY_COMMENTED_OUT                       0x01
+#define CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY        0x02
+#define CONFIG_DO_NOT_CHECKOUT                                  0x04
+#define CONFIG_READABLE_ONLY                                    0x08
+#define CONFIG_UNDEFINED                                        0x10
+#define CONFIG_USERNAME_NOT_SET_YET                             0x20
+
+#define CONFIG_USERNAME_NOT_SET_YET_STR     "<username-not-set-yet>"
 
 #define CONFIG_CHECKOUT_LINE_LEN                           45
 

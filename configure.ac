@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.8.0.alpha0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.155 2008-11-11 00:20:22 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.155.2.1 2008-12-09 17:27:13 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -112,6 +112,10 @@ AC_CONFIG_FILES([
 	ipmimonitoring/Makefile
         ipmimonitoring/src/Makefile
 	ipmimonitoring/ipmimonitoring.8.pre
+        ipmimonitoring/ipmi_monitoring_sensors.conf.5.pre
+        ipmimonitoring/ipmimonitoring_sensors.conf.5.pre
+        ipmimonitoring/ipmimonitoring.conf.5.pre
+        ipmimonitoring/libipmimonitoring.conf.5.pre
         ipmimonitoring/libipmimonitoring.3.pre
         ipmimonitoring/src/libipmimonitoring/Makefile 
         ipmimonitoring/src/ipmimonitoring/Makefile
@@ -146,7 +150,7 @@ AC_SUBST([ISODATE])
 # If any interfaces have been removed, set age = 0
 #
 LIBFREEIPMI_CURRENT=7
-LIBFREEIPMI_REVISION=0
+LIBFREEIPMI_REVISION=1
 LIBFREEIPMI_AGE=1
 
 LIBFREEIPMI_VERSION=$LIBFREEIPMI_CURRENT.$LIBFREEIPMI_REVISION.$LIBFREEIPMI_AGE
@@ -185,7 +189,7 @@ AC_SUBST([LIBIPMICONSOLE_VERSION_INFO])
 # If any interfaces have been removed, set age = 0
 #
 LIBIPMIMONITORING_CURRENT=2
-LIBIPMIMONITORING_REVISION=1
+LIBIPMIMONITORING_REVISION=2
 LIBIPMIMONITORING_AGE=1
 LIBIPMIMONITORING_VERSION_INFO=$LIBIPMIMONITORING_CURRENT:$LIBIPMIMONITORING_REVISION:$LIBIPMIMONITORING_AGE
 AC_SUBST([LIBIPMIMONITORING_VERSION_INFO])

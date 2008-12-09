@@ -315,4 +315,15 @@ int sdr_cache_get_threshold_settable (pstdout_state_t pstate,
                                       uint8_t *upper_non_critical_threshold,
                                       uint8_t *upper_critical_threshold,
                                       uint8_t *upper_non_recoverable_threshold);
+
+int sdr_cache_get_thresholds_raw (pstdout_state_t pstate,
+                                  uint8_t *sdr_record,
+                                  unsigned int sdr_record_len,
+                                  uint8_t *lower_non_critical_threshold,
+                                  uint8_t *lower_critical_threshold,
+                                  uint8_t *lower_non_recoverable_threshold,
+                                  uint8_t *upper_non_critical_threshold,
+                                  uint8_t *upper_critical_threshold,
+                                  uint8_t *upper_non_recoverable_threshold);
+
 #endif

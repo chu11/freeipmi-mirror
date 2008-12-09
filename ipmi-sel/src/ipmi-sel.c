@@ -172,7 +172,6 @@ _clear_entries (ipmi_sel_state_data_t *state_data)
   struct ipmi_sel_arguments *args;
   fiid_obj_t obj_reserve_sel_rs = NULL;
   fiid_obj_t obj_clear_sel_rs = NULL;
-  uint16_t reservation_id;
   uint64_t val;
   int rv = -1;
 
@@ -183,7 +182,7 @@ _clear_entries (ipmi_sel_state_data_t *state_data)
   _FIID_OBJ_CREATE(obj_reserve_sel_rs, tmpl_cmd_reserve_sel_rs);
   _FIID_OBJ_CREATE(obj_clear_sel_rs, tmpl_cmd_clear_sel_rs);
 
-  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_reserve_sel_rs) != 0)
+  if (ipmi_cmd_reserve_sel (state_data->ipmi_ctx, obj_reserve_sel_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -193,10 +192,10 @@ _clear_entries (ipmi_sel_state_data_t *state_data)
     }
 
   _FIID_OBJ_GET(obj_reserve_sel_rs, "reservation_id", &val);
-  reservation_id = val;
+  state_data->reservation_id = val;
 
   if (ipmi_cmd_clear_sel (state_data->ipmi_ctx,
-                          reservation_id,
+                          state_data->reservation_id,
                           IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE,
                           obj_clear_sel_rs) < 0)
     {
@@ -221,7 +220,6 @@ _delete_entry (ipmi_sel_state_data_t *state_data,
 {
   fiid_obj_t obj_reserve_sel_rs = NULL;
   fiid_obj_t obj_delete_sel_entry_rs = NULL;
-  uint16_t reservation_id;
   uint64_t val;
   int rv = -1;
 
@@ -241,10 +239,10 @@ _delete_entry (ipmi_sel_state_data_t *state_data,
     }
 
   _FIID_OBJ_GET(obj_reserve_sel_rs, "reservation_id", &val);
-  reservation_id = val;
+  state_data->reservation_id = val;
 
   if (ipmi_cmd_delete_sel_entry (state_data->ipmi_ctx,
-                                 reservation_id,
+                                 state_data->reservation_id,
                                  record_id,
                                  obj_delete_sel_entry_rs) < 0)
     {
@@ -564,6 +562,7 @@ _ipmi_sel (pstdout_state_t pstate,
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
+  state_data.reservation_id = 0;
 
   /* Special case, just flush, don't do an IPMI connection */
   if (!prog_data->args->sdr.flush_cache)

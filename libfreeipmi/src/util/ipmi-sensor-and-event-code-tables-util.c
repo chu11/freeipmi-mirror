@@ -1784,86 +1784,76 @@ get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 static int
 get_21_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
-  assert(buf && buflen);
-
-  if (offset == 0x09)
+  fiid_template_t tmpl_event_data2 = 
     {
-      fiid_template_t tmpl_event_data2 = 
-	{
-	  {7, "slot_connector_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	  {1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	  {0, "", 0}
-	};
-      uint64_t val;
-      fiid_obj_t obj = NULL;
-      int rv = -1;
-     
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
-      
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
-      
-      FIID_OBJ_GET_CLEANUP (obj, "slot_connector_type", &val);
-     
-      if (val <= ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max)
-        rv = _snprintf (buf, buflen, ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc[val]);
-
-    cleanup:
-      FIID_OBJ_DESTROY(obj);
-      return rv;
-    }
+      {7, "slot_connector_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {0, "", 0}
+    };
+  uint64_t val;
+  fiid_obj_t obj = NULL;
+  int rv = -1;
   
-  ERR_EINVAL (0);
+  assert(buf && buflen);
+  
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  
+  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  
+  FIID_OBJ_GET_CLEANUP (obj, "slot_connector_type", &val);
+  
+  if (val <= ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max)
+    rv = _snprintf (buf, buflen, ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc[val]);
+  
+ cleanup:
+  FIID_OBJ_DESTROY(obj);
+  return rv;
 }
 
 static int
 get_23_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
+  fiid_template_t tmpl_event_data2 = 
+    {
+      {4, "timer_at_expiration", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {4, "interrupt_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {0, "", 0}
+    };
+  uint64_t val;
+  uint8_t timer_at_expiration;
+  uint8_t interrupt_type;
+  char *str1 = NULL;
+  char *str2 = NULL;
+  fiid_obj_t obj = NULL;
+  int rv = -1;
+  
   assert(buf && buflen);
 
-  if (offset == 0x08)
-    {
-      fiid_template_t tmpl_event_data2 = 
-	{
-	  {4, "timer_at_expiration", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	  {4, "interrupt_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	  {0, "", 0}
-	};
-      uint64_t val;
-      uint8_t timer_at_expiration;
-      uint8_t interrupt_type;
-      char *str1 = NULL;
-      char *str2 = NULL;
-      fiid_obj_t obj = NULL;
-      int rv = -1;
-
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
-      
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
-      
-      FIID_OBJ_GET_CLEANUP (obj, "timer_at_expiration", &val);
-      timer_at_expiration = val;
-
-      FIID_OBJ_GET_CLEANUP (obj, "interrupt_type", &val);
-      interrupt_type = val;
-
-      if (timer_at_expiration <= ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc_max)
-        str1 = ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc[timer_at_expiration];
-
-      if (interrupt_type <= ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc_max)
-        str2 = ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc[interrupt_type];
-
-      if (str1 || str2)
-	rv = _snprintf (buf, buflen, "%s%s%s", 
-			(str1 ? str1 : ""), 
-			((str1 && str2) ? "; " : ""), 
-			(str2 ? str2 : ""));
-      
-    cleanup:
-      FIID_OBJ_DESTROY(obj);
-      return rv;
-    }
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
   
-  ERR_EINVAL (0);
+  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  
+  FIID_OBJ_GET_CLEANUP (obj, "timer_at_expiration", &val);
+  timer_at_expiration = val;
+
+  FIID_OBJ_GET_CLEANUP (obj, "interrupt_type", &val);
+  interrupt_type = val;
+
+  if (timer_at_expiration <= ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc_max)
+    str1 = ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc[timer_at_expiration];
+  
+  if (interrupt_type <= ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc_max)
+    str2 = ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc[interrupt_type];
+  
+  if (str1 || str2)
+    rv = _snprintf (buf, buflen, "%s%s%s", 
+                    (str1 ? str1 : ""), 
+                    ((str1 && str2) ? "; " : ""), 
+                    (str2 ? str2 : ""));
+  
+ cleanup:
+  FIID_OBJ_DESTROY(obj);
+  return rv;
 }
 
 static int
@@ -1961,7 +1951,7 @@ get_2B_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 {
   assert(buf && buflen);
 
-  if (offset == 0x07 && event_data2 <= ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc_max)
+  if (event_data2 <= ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc_max)
     return _snprintf (buf, buflen, ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc[event_data2]);
   
   ERR_EINVAL (0);
@@ -1970,44 +1960,39 @@ get_2B_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 static int
 get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
+  fiid_template_t tmpl_event_data2 = 
+    {
+      {4, "previous_state_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {4, "cause_of_state_change", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {0, "", 0}
+    };
+  uint64_t val;
+  uint8_t previous_state_offset;
+  uint8_t cause_of_state_change;
+  char *str = NULL;
+  fiid_obj_t obj = NULL;
+  int rv = -1;
+  
   assert(buf && buflen);
 
-  if (offset == 0x07)
-    {
-      fiid_template_t tmpl_event_data2 = 
-	{
-	  {4, "previous_state_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	  {4, "cause_of_state_change", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	  {0, "", 0}
-	};
-      uint64_t val;
-      uint8_t previous_state_offset;
-      uint8_t cause_of_state_change;
-      char *str = NULL;
-      fiid_obj_t obj = NULL;
-      int rv = -1;
-
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
-      
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
-      
-      FIID_OBJ_GET_CLEANUP (obj, "previous_state_offset", &val);
-      previous_state_offset = val;
-
-      FIID_OBJ_GET_CLEANUP (obj, "cause_os_state_change", &val);
-      cause_of_state_change = val;
-      
-      if (cause_of_state_change <= ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc_max)
-	str = ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc[cause_of_state_change];
-
-      rv = _snprintf (buf, buflen, "Previous state offset value = %d; %s", previous_state_offset, str ? str : "");
-
-    cleanup:
-      FIID_OBJ_DESTROY(obj);
-      return rv;
-    }
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
   
-  ERR_EINVAL (0);
+  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  
+  FIID_OBJ_GET_CLEANUP (obj, "previous_state_offset", &val);
+  previous_state_offset = val;
+
+  FIID_OBJ_GET_CLEANUP (obj, "cause_of_state_change", &val);
+  cause_of_state_change = val;
+  
+  if (cause_of_state_change <= ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc_max)
+    str = ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc[cause_of_state_change];
+  
+  rv = _snprintf (buf, buflen, "Previous state offset value = %d; %s", previous_state_offset, str ? str : "");
+  
+ cleanup:
+  FIID_OBJ_DESTROY(obj);
+  return rv;
 }
 
 static int
@@ -2141,10 +2126,7 @@ get_21_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 {
   assert(buf && buflen);
 
-  if (offset == 0x09)
-    return _snprintf (buf, buflen, "Slot/Connector# %d", event_data3);
-  
-  ERR_EINVAL (0);
+  return _snprintf (buf, buflen, "Slot/Connector# %d", event_data3);
 }
 
 static int
@@ -2163,7 +2145,7 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 {
   assert(buf && buflen);
 
-  if (offset == 0x01)
+  if (offset == 0x01 || offset == 0x02)
     {
       fiid_template_t tmpl_event_data3 = 
 	{
@@ -2189,8 +2171,12 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
       FIID_OBJ_GET_CLEANUP (obj, "deactivation_cause", &val);
       deactivation_cause = val;
       
-      if (deactivation_cause <= ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc_max)
-	str = ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc[deactivation_cause];
+      /* output deactivation case only if deactivation offset occurred */
+      if (offset == 0x02)
+        {
+          if (deactivation_cause <= ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc_max)
+            str = ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc[deactivation_cause];
+        }
 
       rv = _snprintf (buf, buflen, "Channel number that session was activated/deactivated = %d%s%s", 
 		      channel_number, (str) ? "; " : "", str ? str : ""); 
