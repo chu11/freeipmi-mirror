@@ -2680,11 +2680,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   API_ERR_CLEANUP (!(ipmi_get_random(remote_console_random_number,
                                      IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0));
   
-  if (strlen(ctx->io.outofband.username))
-    username = ctx->io.outofband.username;
-  else
-    username = NULL;
-
   /* IPMI Workaround (achu)
    *
    * Discovered on SE7520AF2 with Intel Server Management Module
@@ -2703,7 +2698,13 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
-    username_len = (username) ? strlen(username) : 0;
+    {
+      if (strlen(ctx->io.outofband.username))
+        username = ctx->io.outofband.username;
+      else
+        username = NULL;
+      username_len = (username) ? strlen(username) : 0;
+    }
 
   /* achu: Unlike IPMI 1.5, the length of the username must be actual
    * length, it can't be the maximum length.
@@ -2777,34 +2778,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     {
       API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_IPMI_ERROR);
       API_ERR_LOG_CLEANUP(0);
-    }
-
-
-  /* IPMI Workaround (achu)
-   *
-   * Discovered on SE7520AF2 with Intel Server Management Module
-   * (Professional Edition)
-   *
-   * The username must be padded despite explicitly not being
-   * allowed.  "No Null characters (00h) are allowed in the name".
-   * Table 13-11 in the IPMI 2.0 spec.
-   */
-
-  if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-    {
-      memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (strlen(ctx->io.outofband.username))
-        strcpy(username_buf, ctx->io.outofband.username);
-      username = username_buf;
-      username_len = IPMI_MAX_USER_NAME_LENGTH;
-    }
-  else
-    {
-      if (strlen(ctx->io.outofband.username))
-        username = ctx->io.outofband.username;
-      else
-        username = NULL;
-      username_len = (username) ? strlen(username) : 0;
     }
 
   if (strlen(ctx->io.outofband.password))
@@ -2929,33 +2902,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       API_ERR_LOG_CLEANUP(0);
     }
 
-  if (strlen(ctx->io.outofband.username))
-    username = ctx->io.outofband.username;
-  else
-    username = NULL;
-  username_len = (username) ? strlen(username) : 0;
-
-  if (strlen(ctx->io.outofband.password))
-    password = ctx->io.outofband.password;
-  else
-    password = NULL;
-  password_len = (password) ? strlen(password) : 0;
-
-  /* IPMI Workaround (achu)
-   *
-   * Discovered on SE7520AF2 with Intel Server Management Module
-   * (Professional Edition)
-   *
-   * When the authentication algorithm is HMAC-MD5-128 and the
-   * password is greater than 16 bytes, the Intel BMC truncates the
-   * password to 16 bytes when generating keys, hashes, etc.  So we
-   * have to do the same when generating keys, hashes, etc.
-   */
-  if ((ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-      && ctx->io.outofband.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
-      && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
-    password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
-
   /* IPMI Workaround (achu)
    *
    * Discovered on SE7520AF2 with Intel Server Management Module
@@ -3038,8 +2984,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   API_ERR_CLEANUP (!(ipmi_calculate_rmcpplus_session_keys(ctx->io.outofband.authentication_algorithm,
                                                           ctx->io.outofband.integrity_algorithm,
                                                           ctx->io.outofband.confidentiality_algorithm,
-                                                          strlen(ctx->io.outofband.password) ? (uint8_t *)ctx->io.outofband.password : NULL,
-                                                          strlen(ctx->io.outofband.password),
+                                                          (uint8_t *)password,
+                                                          password_len,
                                                           (ctx->io.outofband.k_g_configured) ? ctx->io.outofband.k_g : NULL,
                                                           (ctx->io.outofband.k_g_configured) ? IPMI_MAX_K_G_LENGTH : 0,
                                                           remote_console_random_number,
@@ -3048,8 +2994,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                                           IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH,
                                                           IPMI_NAME_ONLY_LOOKUP,
                                                           ctx->io.outofband.privilege_level,
-                                                          strlen(ctx->io.outofband.username) ? ctx->io.outofband.username : NULL,
-                                                          strlen(ctx->io.outofband.username),
+                                                          username,
+                                                          username_len,
                                                           &(ctx->io.outofband.sik_key_ptr),
                                                           &(ctx->io.outofband.sik_key_len),
                                                           &(ctx->io.outofband.integrity_key_ptr),
