@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.65 2008-06-07 16:09:55 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.66 2008-12-09 17:22:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -347,6 +347,7 @@ struct ipmiconsole_ctx_session {
   uint32_t retransmission_count;
   uint32_t errors_count;
   uint32_t session_sequence_number_errors_count;
+  uint32_t activate_payloads_count;
   uint32_t deactivate_active_payloads_count;
   uint32_t highest_received_sequence_number;
   /* need to also store bytes read from a previous seq num */
