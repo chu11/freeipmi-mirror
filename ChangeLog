@@ -1,3 +1,13 @@
+2008-12-08  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_packet.c
+	(ipmiconsole_ipmi_packet_assemble): Add workaround for Intel IPMI
+	2.0 situation.
+
+	* common/man/manpage-common-workaround-sol-only-text.man,
+	common/man/manpage-common-workaround-text.man: Change text for
+	workaround changes.
+	
 2008-12-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_packet.c
