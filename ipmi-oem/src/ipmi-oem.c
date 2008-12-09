@@ -39,7 +39,8 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 
-#define IPMI_OEM_MAX_BYTES 256
+#define IPMI_OEM_MAX_BYTES   256
+#define IPMI_OEM_ERR_BUFLEN 1024
 
 typedef int (*oem_callback)(ipmi_oem_state_data_t *);
 
@@ -105,20 +106,26 @@ _supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int32_t rs_len;
   int rv = -1;
   
   assert(state_data);
   
-  printf ("reset intrusion\n");
+  /* Supermicro OEM 
+   *
+   * 0x30 - OEM network function
+   * 0x03 - OEM cmd
+   */
 
-#if 0
-  if (ipmi_cmd_raw (state_data->ipmi_ctx,
-                    0, /* lun */
-                    0, /* network function */
-                    bytes_rq, /* data */
-                    0, /* num bytes */
-                    bytes_rs,
-                    IPMI_OEM_MAX_BYTES) < 0)
+  bytes_rq[0] = 0x03;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -126,8 +133,38 @@ _supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
                       ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       goto cleanup;
     }
-#endif
 
+  if (rs_len < 2)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "reset-intrusion invalid response length: %d\n",
+                      rs_len);
+      goto cleanup;
+    }
+
+  if (bytes_rs[1] != IPMI_COMP_CODE_COMMAND_SUCCESS)
+    {
+      char errbuf[IPMI_OEM_ERR_BUFLEN];
+
+      memset(errbuf, '\0', IPMI_OEM_ERR_BUFLEN);
+      if (ipmi_completion_code_strerror_r(0x3,
+                                          0x30,
+                                          bytes_rs[1],
+                                          errbuf,
+                                          IPMI_OEM_ERR_BUFLEN) < 0)
+        {
+          pstdout_perror(state_data->pstate, "ipmi_completion_code_strerror_r");
+          snprintf(errbuf, "completion-code = 0x%X", bytes_rs[1]);
+        }
+      
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "reset-intrusion failed: %s\n",
+                      errbuf);
+      goto cleanup;
+    }
+  
   rv = 0;
  cleanup:
   return (rv);
