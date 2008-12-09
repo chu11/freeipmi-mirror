@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.103 2008-11-27 04:28:36 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.104 2008-12-09 18:24:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.

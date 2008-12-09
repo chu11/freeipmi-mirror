@@ -39,7 +39,198 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 
-int
+#define IPMI_OEM_MAX_BYTES   256
+#define IPMI_OEM_ERR_BUFLEN 1024
+
+typedef int (*oem_callback)(ipmi_oem_state_data_t *);
+
+struct ipmi_oem_command
+{
+  char *oem_command;
+  char *description;
+  oem_callback func;
+};
+
+struct ipmi_oem_id
+{
+  char *oem_id;
+  struct ipmi_oem_command *oem_commands;
+};
+
+static int _supermicro_reset_intrusion (ipmi_oem_state_data_t *);
+
+struct ipmi_oem_command oem_supermicro[] =
+  {
+    {"reset-intrusion",
+     "reset motherboard intrusion flag.",
+     _supermicro_reset_intrusion},
+    {NULL, NULL, NULL},
+  };
+
+struct ipmi_oem_id oem_cb[] =
+  {
+    {"supermicro", oem_supermicro},
+    {NULL, NULL},
+  };
+
+static int
+_list (void)
+{
+  struct ipmi_oem_id *oem_id = oem_cb;
+
+  while (oem_id && oem_id->oem_id)
+    {
+      struct ipmi_oem_command *oem_cmd = oem_cb->oem_commands;
+
+      printf("OEM ID: %s\n", oem_id->oem_id);
+
+      while (oem_cmd && oem_cmd->oem_command)
+        {
+          printf("    Command: %s - %s\n", 
+                 oem_cmd->oem_command,
+                 oem_cmd->description);
+          oem_cmd++;
+        }
+
+      printf("\n");
+      oem_id++;
+    }
+
+  return 0;
+}
+
+static int
+_supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int32_t rs_len;
+  int rv = -1;
+  
+  assert(state_data);
+  
+  /* Supermicro OEM 
+   *
+   * 0x30 - OEM network function
+   * 0x03 - OEM cmd
+   */
+
+  bytes_rq[0] = 0x03;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_raw: %s\n",
+                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  if (rs_len < 2)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "reset-intrusion invalid response length: %d\n",
+                      rs_len);
+      goto cleanup;
+    }
+
+  if (bytes_rs[1] != IPMI_COMP_CODE_COMMAND_SUCCESS)
+    {
+      char errbuf[IPMI_OEM_ERR_BUFLEN];
+
+      memset(errbuf, '\0', IPMI_OEM_ERR_BUFLEN);
+      if (ipmi_completion_code_strerror_r(0x3,
+                                          0x30,
+                                          bytes_rs[1],
+                                          errbuf,
+                                          IPMI_OEM_ERR_BUFLEN) < 0)
+        {
+          pstdout_perror(state_data->pstate, "ipmi_completion_code_strerror_r");
+          snprintf(errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs[1]);
+        }
+      
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "reset-intrusion failed: %s\n",
+                      errbuf);
+      goto cleanup;
+    }
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_run_oem_cmd (ipmi_oem_state_data_t *state_data)
+{
+  struct ipmi_oem_arguments *args;
+  struct ipmi_oem_id *oem_id = oem_cb;
+  int id_found = 0;
+  int rv = -1;
+
+  assert(state_data);
+
+  args = state_data->prog_data->args;
+
+  while (oem_id && oem_id->oem_id)
+    {
+      if (!strcasecmp(oem_id->oem_id, args->oem_id))
+        {
+          struct ipmi_oem_command *oem_cmd = oem_cb->oem_commands;
+          int cmd_found = 0;
+          
+          id_found++;
+
+          while (oem_cmd && oem_cmd->oem_command)
+            {
+              if (!strcasecmp(oem_cmd->oem_command, 
+                              args->oem_command))
+                {
+                  cmd_found++;
+
+                  if (((*oem_cmd->func)(state_data)) < 0)
+                    goto cleanup;
+                }
+
+              oem_cmd++;
+            }
+
+          if (!cmd_found)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "OEM Command '%s' unknown\n",
+                               args->oem_command);
+              goto cleanup;
+            }
+        }
+
+      oem_id++;
+    }
+
+  if (!id_found)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "OEM Id '%s' unknown\n",
+                       args->oem_id);
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
 run_cmd_args (ipmi_oem_state_data_t *state_data)
 {
   struct ipmi_oem_arguments *args;
@@ -48,6 +239,11 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
   assert(state_data);
 
   args = state_data->prog_data->args;
+
+  /* shouldn't be possible at this point, make sure we've already
+   * exitted 
+   */
+  assert(!args->list);
 
   if (!args->oem_id)
     {
@@ -65,15 +261,8 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   
-  pstdout_fprintf (state_data->pstate,
-                   stderr,
-                   "OEM Id '%s' unknown\n",
-                   args->oem_id);
-
-  pstdout_fprintf (state_data->pstate,
-                   stderr,
-                   "OEM Command '%s' unknown\n",
-                   args->oem_command);
+  if (_run_oem_cmd (state_data) < 0)
+    goto cleanup;
  
   rv = 0;
  cleanup:
@@ -140,6 +329,18 @@ main (int argc, char **argv)
   prog_data.progname = argv[0];
   ipmi_oem_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
+
+  /* Special case, just output list, don't do anything else */
+  if (cmd_args.list)
+    {
+      if (_list() < 0)
+        {
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+      exit_code = EXIT_SUCCESS;
+      goto cleanup;
+    }
 
   if (pstdout_setup(&(prog_data.args->common.hostname),
                     prog_data.args->hostrange.buffer_output,

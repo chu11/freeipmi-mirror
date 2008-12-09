@@ -39,13 +39,28 @@ required user privilege will depend on the oem commands executed.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-fanout.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-always-prefix.man>
-.SH "SUPPORTED OEM"
+.SH "IPMI-OEM OPTIONS"
+The following options are specific to
+.B Ipmi-oem.
+.TP
+\fB\-L\fR, \fB\-\-list\fR
+List supported OEM IDs and Commands.
+.SH "SUPPORTED OEM IDS and COMMANDS"
 The currently supported OEM IDs and COMMANDs are:
 .TP
-none currently supported
-\.".RS
-\."none currently supported
+.B supermicro
 .RS
+.TP
+.B reset-intrusion 
+.RS
+On some Supermicro motherboards, the motherboard intrusion flag is not
+reset after it has been triggered.  For example, in
+.B ipmi-sensors
+or
+.B ipmi-sel,
+you may notice a 'General Chassis Intrusion' if the motherboard
+chassis is not open, but was opened in the past.  This command will
+reset the flag back to an untriggered state.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
