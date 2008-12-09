@@ -251,7 +251,9 @@ The bmc-config, pef-config, ipmi-sensors-config, and
 ipmi-chassis-config configuration file and command-line interface are
 used to easily copy the BMC configuration from one node to every other
 node in a cluster quickly.  It has been used to modify the BMC
-configuration across large LLNL clusters in a few minutes.
+configuration across large LLNL clusters in a few minutes.  They also
+have the capability to verify (via the diff option) that the desired
+configuration has been properly stored to firmware.
 
 2) Easy setup
 
