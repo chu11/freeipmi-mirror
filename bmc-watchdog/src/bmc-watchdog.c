@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.109 2008-11-08 00:09:01 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.110 2008-12-09 17:55:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -565,7 +565,7 @@ _ipmi_err_exit(uint8_t cmd, uint8_t netfn, int comp_code, char *str)
                                           comp_code, 
                                           buf, 
                                           BMC_WATCHDOG_ERR_BUFLEN) < 0)
-        _err_exit("ipmi_strerror_r: %s", strerror(errno));     
+        _err_exit("ipmi_completion_code_strerror_r: %s", strerror(errno));     
       _err_exit("%s: %s", str, buf);
     }
 }
