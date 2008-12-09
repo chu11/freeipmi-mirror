@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.26.4.1 2008-12-05 18:46:35 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.26.4.2 2008-12-09 00:46:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1073,8 +1073,20 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
     }
   else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ)
     {
+      uint8_t sol_startup_handshake;
       uint8_t authentication_activation;
       uint8_t encryption_activation;
+
+      /* IPMI Workaround
+       *
+       * Intel IPMI 2.0 specific issue.  I have no idea why this is.
+       * I took it from ipmiutil.  Ipmiutil author Andrew Cress cannot
+       * remember why this is the case either.
+       */
+      if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION)
+        sol_startup_handshake = IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_ASSERTED;
+      else
+        sol_startup_handshake = IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_DEASSERTED;
 
       if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
 	authentication_activation = IPMI_ACTIVATE_PAYLOAD_WITHOUT_AUTHENTICATION;
@@ -1088,7 +1100,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
 
       if (fill_cmd_activate_payload_sol(IPMI_PAYLOAD_TYPE_SOL,
 					c->session.sol_payload_instance,
-					IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_DEASSERTED, 
+					sol_startup_handshake, 
 					IPMI_SERIAL_MODEM_ALERTS_FAIL_WHILE_SOL_ACTIVE, 
 					IPMI_TEST_MODE_DEACTIVATED,
 					authentication_activation, 

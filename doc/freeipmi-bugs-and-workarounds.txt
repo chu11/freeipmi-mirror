@@ -196,6 +196,10 @@ motherboard.  The SOL session is subsequently useless.  There is
 currently no workaround in place to handle this.  The session must be
 closed and restarted.
 
+Intel Unknown Motherboard: The Activate Payload requires the "BMC
+asserts CTS and DCD/DSR to baseboard upon activation" flag to be set.
+Resolved with an Intel specific workaround.
+
 bmc-config
 ----------
 

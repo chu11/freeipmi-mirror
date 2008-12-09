@@ -10,13 +10,15 @@ username capabilities and/or K_g status.  This will likely cause
 around this issue, the "authcap" workaround must be specified.
 .LP
 Intel SE7520AF2 with Intel Server Management Module (Professional
-Edition): There are a number of Intel IPMI 2.0 bugs.  These problems
-may cause "username invalid", "password invalid", or "k_g invalid"
-errors to occur.  They can be worked around by specifying the
-"intel20" workaround.  The workarounds include padding of usernames,
-automatic acceptance of a RAKP 4 response integrity check when using
-the integrity algorithm MD5-128, and password truncation if the
-authentication algorithm is HMAC-MD5-128.
+Edition): There are a number of Intel IPMI 2.0 authentcation and SOL
+connection bugs.  These problems may cause "username invalid",
+"password invalid", "k_g invalid", or "BMC Error" errors to occur.
+They can be worked around by specifying the "intel20" workaround.  The
+workarounds include padding of usernames, automatic acceptance of a
+RAKP 4 response integrity check when using the integrity algorithm
+MD5-128, password truncation if the authentication algorithm is
+HMAC-MD5-128, and specifying Intel IPMI 2.0 specific SOL connection
+parameters.
 .LP
 Supermicro H8QME with SIMSO daughter card: There are several
 Supermicro IPMI 2.0 bugs on early firmware revisions which can be
