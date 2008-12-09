@@ -153,7 +153,7 @@ _supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
                                           IPMI_OEM_ERR_BUFLEN) < 0)
         {
           pstdout_perror(state_data->pstate, "ipmi_completion_code_strerror_r");
-          snprintf(errbuf, "completion-code = 0x%X", bytes_rs[1]);
+          snprintf(errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs[1]);
         }
       
       pstdout_fprintf(state_data->pstate,
@@ -240,7 +240,9 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  /* XXX: shouldn't be possible at this point */
+  /* shouldn't be possible at this point, make sure we've already
+   * exitted 
+   */
   assert(!args->list);
 
   if (!args->oem_id)
@@ -283,22 +285,18 @@ _ipmi_oem (pstdout_state_t pstate,
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 
-  /* Special case, just output list, don't do an IPMI connection */
-  if (!prog_data->args->list)
+  if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
+                                        hostname,
+                                        &(prog_data->args->common),
+                                        errmsg,
+                                        IPMI_OPEN_ERRMSGLEN)))
     {
-      if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
-                                            hostname,
-                                            &(prog_data->args->common),
-                                            errmsg,
-                                            IPMI_OPEN_ERRMSGLEN)))
-        {
-          pstdout_fprintf(pstate,
-                          stderr,
-                          "%s\n",
-                          errmsg);
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+      pstdout_fprintf(pstate,
+                      stderr,
+                      "%s\n",
+                      errmsg);
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
     }
 
   if (run_cmd_args (&state_data) < 0)
