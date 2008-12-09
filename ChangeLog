@@ -1,3 +1,11 @@
+2008-12-09  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_defs.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
+	(_process_protocol_state_activate_payload): Add workaround for
+	state machine cycle possibility.
+	
 2008-12-08  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_packet.c
