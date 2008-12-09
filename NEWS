@@ -2,7 +2,7 @@
 ----------------
 o Support output of "<username-not-set-yet>" in bmc-config for fields
 that require a username to be configured before data may be retrieved.
-o Support supermicr reset-intrusion OEM command ipmi-oem.
+o Support supermicro reset-intrusion OEM ID and command in ipmi-oem.
 o Support --list option in ipmi-oem.
 o Fix Intel IPMI 2.0 workarounds in all tools/libraries.
 o Fix state machine cycle corner case in ipmiconsole/libipmiconsole.
