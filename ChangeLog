@@ -5,6 +5,10 @@
 
 	* bmc-config/src/bmc-config-user-sections.c (enable_user_commit):
 	Fix workaround for enabling a user.
+
+	* libfreeipmi/src/api/ipmi-lan-session-common.c
+	(_ipmi_lan_2_0_cmd_wrapper_verify_packet): Fix ipmi 2.0 error
+	handling corner case for some motherboards.
 	
 2008-12-09  Albert Chu <chu11@llnl.gov>
 

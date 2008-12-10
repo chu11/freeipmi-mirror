@@ -1987,6 +1987,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
     }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
     {
+      uint64_t rmcpplus_status_code;
       uint64_t val;
       
       API_FIID_OBJ_GET_CLEANUP (ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
@@ -1998,16 +1999,6 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 	  goto cleanup;
 	}
 
-      API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs,
-				"remote_console_session_id",
-				&val);
-      
-      if (val != ctx->io.outofband.remote_console_session_id)
-	{
-	  rv = 0;
-	  goto cleanup;
-	}
-      
       if (message_tag)
 	{
 	  API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs,
@@ -2019,9 +2010,31 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 	      goto cleanup;
 	    }
 	}
+
+      /* There is no guarantee that other data (i.e. authentication
+       * keys, session id's, etc.) in the RAKP response will be valid
+       * if there is a status code error.  So we check this status
+       * code along with this stuff.
+       */
+
+      API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs,
+				"rmcpplus_status_code",
+				&rmcpplus_status_code);
+
+      API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs,
+				"remote_console_session_id",
+				&val);
+      
+      if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS
+          && val != ctx->io.outofband.remote_console_session_id)
+	{
+	  rv = 0;
+	  goto cleanup;
+	}     
     }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
     {
+      uint64_t rmcpplus_status_code;
       uint64_t val;
       
       API_FIID_OBJ_GET_CLEANUP (ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
@@ -2033,16 +2046,6 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 	  goto cleanup;
 	}
 
-      API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs,
-				"remote_console_session_id",
-				&val);
-      
-      if (val != ctx->io.outofband.remote_console_session_id)
-	{
-	  rv = 0;
-	  goto cleanup;
-	}
-      
       if (message_tag)
 	{
 	  API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs,
@@ -2054,6 +2057,27 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 	      goto cleanup;
 	    }
 	}
+
+      /* There is no guarantee that other data (i.e. authentication
+       * keys, session id's, etc.) in the RAKP response will be valid
+       * if there is a status code error.  So we check this status
+       * code along with this stuff.
+       */
+
+      API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs,
+				"rmcpplus_status_code",
+				&rmcpplus_status_code);
+
+      API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs,
+				"remote_console_session_id",
+				&val);
+      
+      if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS
+          && val != ctx->io.outofband.remote_console_session_id)
+	{
+	  rv = 0;
+	  goto cleanup;
+	}      
     }
 
   rv = 1;
