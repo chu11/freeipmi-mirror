@@ -2,6 +2,9 @@
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c
 	(ipmi_lan_2_0_open_session): Fix Intel 2.0 workarounds.
+
+	* bmc-config/src/bmc-config-user-sections.c (enable_user_commit):
+	Fix workaround for enabling a user.
 	
 2008-12-09  Albert Chu <chu11@llnl.gov>
 
