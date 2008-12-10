@@ -203,10 +203,10 @@ Resolved with an Intel specific workaround.
 bmc-config
 ----------
 
-Forgotten/Undocumented Motherboard(s): Some BMCs require that a
-password must be passed to the Set User Password command even if you
-are just trying to enable/disable a user.  Resolved by retrying a
-failed Set User Password command with a dummy password.
+Forgotten/Undocumented Motherboard(s) and Sun X4140: Some BMCs require
+that a password must be passed to the Set User Password command even
+if you are just trying to enable/disable a user.  Resolved by retrying
+a failed Set User Password command with a dummy password.
 
 Supermicro H8QME with SIMSO daughter card: Users cannot be
 enabled/disabled via Set User Password.  No workaround in FreeIPMI

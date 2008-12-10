@@ -460,18 +460,34 @@ enable_user_commit (const char *section_name,
                                   0,
                                   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "ipmi_cmd_set_user_password: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+
       /*
-       * Workaround: achu: the IPMI spec says you don't have to set a
-       * password when you enable/disable a user.  But some BMCs care
-       * that you pass in some random password length (even though the
-       * password will be ignored)
+       * IPMI Workaround
+       *
+       * Forgotten/Undocumented Motherboard
+       * Sun X4140
+       *
+       * The IPMI spec says you don't have to set a password when you
+       * enable/disable a user.  But some BMCs care that you pass in
+       * some random password length (even though the password will be
+       * ignored)
        */
 
       if (ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1))
         {
-          _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rq);
+          if (state_data->prog_data->args->config_args.common.debug)
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "ipmi_cmd_set_user_password: attempting workaround\n");
+
+          _FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_user_password_rq);
 
           if (fill_cmd_set_user_password (userid,
                                           user_status,
@@ -511,11 +527,6 @@ enable_user_commit (const char *section_name,
         }
       else
         {
-          if (state_data->prog_data->args->config_args.common.debug)
-            pstdout_fprintf(state_data->pstate,
-                            stderr,
-                            "ipmi_cmd_set_user_password: %s\n",
-                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
           if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
