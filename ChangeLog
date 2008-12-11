@@ -8,6 +8,9 @@
 	
 	* libfreeipmi/, common/src/toolcommon/, ipmi-sensors/, ipmi-sel/,
 	ipmi-sensors-config/, ipmimonitoring/: Update macros as necessary.
+
+	* ipmi-sensors/: Output hex code along with group name in verbose
+	and very verbose modes.
 	
 2008-12-09  Albert Chu <chu11@llnl.gov>
 

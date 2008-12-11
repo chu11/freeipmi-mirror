@@ -9,6 +9,8 @@ Tools - Enhancements/Changes/Bug Fixes
 o ipmi-sensors
   - Output record-type names in addition to record type hex code in
     very-verbose output.
+  - Output hex code of group name in addition to group name in verbose
+    and very-verbose output.
 
 Libraries
 ---------
