@@ -236,8 +236,8 @@ _sensors_group_specified(ipmi_sensors_state_data_t *state_data,
                                        &record_type) < 0)
     return -1;
   
-  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD
-      || record_type == IPMI_SDR_FORMAT_COMPACT_RECORD
+  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+      || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
       || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
     {
       if (sdr_cache_get_sensor_type (state_data->pstate,

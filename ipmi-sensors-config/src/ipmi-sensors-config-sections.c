@@ -98,8 +98,8 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
        * typo.  It shouldn't be there.
        */
 
-       if (record_type != IPMI_SDR_FORMAT_FULL_RECORD
-           && record_type != IPMI_SDR_FORMAT_COMPACT_RECORD)
+       if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+           && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
          {
            if (state_data->prog_data->args->config_args.verbose)
              pstdout_fprintf (state_data->pstate,
@@ -119,7 +119,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
 
       if (sensor_class == SENSOR_CLASS_THRESHOLD)
         {
-          if (record_type != IPMI_SDR_FORMAT_FULL_RECORD)
+          if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
             {
               if (state_data->prog_data->args->config_args.verbose)
                 pstdout_printf (state_data->pstate,

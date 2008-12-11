@@ -283,7 +283,7 @@ ipmi_sensors_display_simple (ipmi_sensors_state_data_t *state_data,
   
   switch (record_type)
     {
-    case IPMI_SDR_FORMAT_FULL_RECORD:
+    case IPMI_SDR_FORMAT_FULL_SENSOR_RECORD:
       return sensors_display_simple_full_record (state_data,
                                                  sdr_record,
                                                  sdr_record_len,
@@ -291,7 +291,7 @@ ipmi_sensors_display_simple (ipmi_sensors_state_data_t *state_data,
                                                  reading,
                                                  event_message_list,
                                                  event_message_list_len);
-    case IPMI_SDR_FORMAT_COMPACT_RECORD:
+    case IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD:
       return sensors_display_simple_compact_record (state_data,
                                                     sdr_record,
                                                     sdr_record_len,

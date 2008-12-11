@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.50 2008-12-09 18:24:33 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.51 2008-12-11 17:32:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1564,7 +1564,7 @@ ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c,
                                   &record_type) < 0)
     return -1;
   
-  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     {
       if (_full_record_sensor_reading(c, 
                                       sensor_reading_flags, 
@@ -1575,7 +1575,7 @@ ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c,
                                       record_id) < 0)
         return -1;
     }
-  else if (record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
+  else if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     {
       if (_compact_record_sensor_reading(c, 
                                          sensor_reading_flags, 

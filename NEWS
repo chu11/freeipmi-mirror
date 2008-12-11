@@ -1,3 +1,25 @@
+0.8.0 - XX/XX/XX
+----------------
+Tools - New Significant Additions/Features
+------------------------------------------
+o BLAH
+
+Tools - Enhancements/Changes/Bug Fixes
+--------------------------------------
+o ipmi-sensors
+  - Output record-type names in addition to record type hex code in
+    very-verbose output.
+
+Libraries
+---------
+o libfreeipmi
+o libipmimonitoring
+
+Contributions
+-------------
+
+
+
 0.7.3 - 12/01/08
 ----------------
 o Add workaround into ipmi-sensors and ipmi-sensors-config for

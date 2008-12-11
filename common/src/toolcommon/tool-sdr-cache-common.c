@@ -58,8 +58,8 @@
 #define MAXIPADDRLEN 128
 
 #define IPMI_SDR_RECORD_TYPE_ALL_RECORDS                                 0x0000
-#define IPMI_SDR_RECORD_TYPE_FULL_RECORD                                 0x0001
-#define IPMI_SDR_RECORD_TYPE_COMPACT_RECORD                              0x0002
+#define IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD                          0x0001
+#define IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD                       0x0002
 #define IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD                           0x0004
 #define IPMI_SDR_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD                   0x0008     
 #define IPMI_SDR_RECORD_TYPE_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD   0x0010
@@ -832,10 +832,10 @@ _sdr_cache_get_common(pstdout_state_t pstate,
                                         &record_type) < 0)
     goto cleanup;
 
-  if (!(((acceptable_record_types & IPMI_SDR_RECORD_TYPE_FULL_RECORD)
-         && record_type == IPMI_SDR_FORMAT_FULL_RECORD)
-        || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_COMPACT_RECORD)
-            && record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
+  if (!(((acceptable_record_types & IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD)
+         && record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
+        || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD)
+            && record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
         || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD)
             && record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
         || ((acceptable_record_types & IPMI_SDR_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD)
@@ -865,9 +865,9 @@ _sdr_cache_get_common(pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_full_sensor_record);
-  else if (record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
+  else if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_compact_sensor_record);
   else if (record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
     _SDR_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_event_only_record);
@@ -914,8 +914,8 @@ sdr_cache_get_sensor_owner_id (pstdout_state_t pstate,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
@@ -957,8 +957,8 @@ sdr_cache_get_sensor_owner_lun (pstdout_state_t pstate,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
@@ -1001,8 +1001,8 @@ sdr_cache_get_entity_id_instance_type (pstdout_state_t pstate,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
@@ -1048,8 +1048,8 @@ sdr_cache_get_sensor_number (pstdout_state_t pstate,
   assert(sdr_record_len);
   assert(sensor_number);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
@@ -1082,8 +1082,8 @@ sdr_cache_get_sensor_type (pstdout_state_t pstate,
   assert(sdr_record_len);
   assert(sensor_type);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
@@ -1125,8 +1125,8 @@ sdr_cache_get_event_reading_type_code (pstdout_state_t pstate,
   assert(sdr_record_len);
   assert(event_reading_type_code);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
@@ -1168,8 +1168,8 @@ sdr_cache_get_sensor_unit (pstdout_state_t pstate,
   assert(sdr_record_len);
   assert(sensor_unit);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,
@@ -1215,8 +1215,8 @@ sdr_cache_get_id_string (pstdout_state_t pstate,
   assert(id_string);
   assert(id_string_len);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
@@ -1291,8 +1291,8 @@ sdr_cache_get_sensor_capabilities (pstdout_state_t pstate,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,
@@ -1367,7 +1367,7 @@ sdr_cache_get_sensor_decoding_data (pstdout_state_t pstate,
   assert(linearization);
   assert(analog_data_format);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,
@@ -1449,7 +1449,7 @@ sdr_cache_get_sensor_reading_ranges (pstdout_state_t pstate,
   if (sensor_minimum_reading)
     *sensor_minimum_reading = NULL;
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,
@@ -1680,8 +1680,8 @@ sdr_cache_get_hysteresis (pstdout_state_t pstate,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,
@@ -2176,8 +2176,8 @@ sdr_cache_get_assertion_supported (pstdout_state_t pstate,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,
@@ -2209,7 +2209,7 @@ sdr_cache_get_assertion_supported (pstdout_state_t pstate,
                                         &record_type) < 0)
     goto cleanup;
 
-  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     _SDR_FIID_OBJ_COPY(obj_sdr_record_discrete,
                        obj_sdr_record,
                        tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
@@ -2376,8 +2376,8 @@ sdr_cache_get_deassertion_supported (pstdout_state_t pstate,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
-  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,
@@ -2409,7 +2409,7 @@ sdr_cache_get_deassertion_supported (pstdout_state_t pstate,
                                         &record_type) < 0)
     goto cleanup;
 
-  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     _SDR_FIID_OBJ_COPY(obj_sdr_record_discrete,
                        obj_sdr_record,
                        tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
@@ -2586,7 +2586,7 @@ sdr_cache_get_threshold_assertion_supported (pstdout_state_t pstate,
    * typo.  It shouldn't be there.
    */
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,
@@ -2761,7 +2761,7 @@ sdr_cache_get_threshold_deassertion_supported (pstdout_state_t pstate,
    * typo.  It shouldn't be there.
    */
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,
@@ -2930,7 +2930,7 @@ sdr_cache_get_threshold_readable (pstdout_state_t pstate,
    * typo.  It shouldn't be there.
    */
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,
@@ -3051,7 +3051,7 @@ sdr_cache_get_threshold_settable (pstdout_state_t pstate,
    * typo.  It shouldn't be there.
    */
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,
@@ -3158,7 +3158,7 @@ sdr_cache_get_thresholds_raw (pstdout_state_t pstate,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_RECORD;
+  acceptable_record_types = IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD;
   
   if (!(obj_sdr_record = _sdr_cache_get_common(pstate,
                                                sdr_record,

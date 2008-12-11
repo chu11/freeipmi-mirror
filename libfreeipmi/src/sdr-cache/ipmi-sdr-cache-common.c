@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.c,v 1.5 2008-06-07 16:10:00 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-common.c,v 1.6 2008-12-11 17:32:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -157,9 +157,9 @@ ipmi_sdr_cache_record_type_str(ipmi_sdr_cache_ctx_t ctx,
   
   FIID_OBJ_GET_CLEANUP(obj_sdr_record_header, "record_type", &record_type);
 
-  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     rv = "SDR Full Sensor Record";
-  else if (record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
+  else if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     rv = "SDR Compact Sensor Record";
   else if (record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
     rv = "SDR Event Only Record";

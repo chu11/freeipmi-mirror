@@ -293,8 +293,8 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
    * though, since this isn't really an error.  The tool will output
    * something appropriate as it sees fit.
    */
-  if (record_type != IPMI_SDR_FORMAT_FULL_RECORD
-      && record_type != IPMI_SDR_FORMAT_COMPACT_RECORD)
+  if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     return 0;
  
   if (sdr_cache_get_sensor_number (state_data->pstate,
@@ -475,7 +475,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
     {
       _FIID_OBJ_GET (obj_get_sensor_reading_rs, "sensor_reading", &val);
 
-      if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+      if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
         {
           int8_t r_exponent, b_exponent;
           int16_t m, b;

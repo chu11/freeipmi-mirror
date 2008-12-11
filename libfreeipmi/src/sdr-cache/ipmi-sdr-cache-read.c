@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.17 2008-08-15 16:04:26 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.18 2008-12-11 17:32:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -368,8 +368,8 @@ ipmi_sdr_cache_search_sensor(ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_number, ui
   
       record_type_current = ptr[IPMI_SDR_CACHE_SDR_RECORD_TYPE_INDEX];
 
-      if (record_type_current == IPMI_SDR_FORMAT_FULL_RECORD
-          || record_type_current == IPMI_SDR_FORMAT_COMPACT_RECORD
+      if (record_type_current == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+          || record_type_current == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
           || record_type_current == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
         {
           uint8_t sensor_number_current;

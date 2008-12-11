@@ -84,9 +84,9 @@ ipmi_dump_sdr_record (int fd,
   FIID_OBJ_GET_CLEANUP(obj_sdr_record_header, "record_type", &val);
   record_type = val;
 
-  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_full_sensor_record);
-  else if (record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
+  else if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_compact_sensor_record);
   else if (record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
     FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_event_only_record);
@@ -114,7 +114,7 @@ ipmi_dump_sdr_record (int fd,
                            sdr_record,
                            sdr_record_len);
 
-  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     {
       uint8_t event_reading_type_code;
       fiid_obj_t obj_temp = NULL;
@@ -140,7 +140,7 @@ ipmi_dump_sdr_record (int fd,
           obj_sdr_record = obj_temp;
         }
     }
-  else if (record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
+  else if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     {
       uint8_t event_reading_type_code;
       fiid_obj_t obj_temp = NULL;

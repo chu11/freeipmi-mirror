@@ -44,18 +44,62 @@
 
 #define IPMI_SENSORS_NONE_MSG     "NONE"
 
+static char *
+_get_record_type_string(ipmi_sensors_state_data_t *state_data,
+                        uint8_t record_type)
+{
+  assert(state_data);
+
+  switch (record_type)
+    {
+    case IPMI_SDR_FORMAT_FULL_SENSOR_RECORD:
+      return IPMI_SDR_FORMAT_FULL_SENSOR_RECORD_NAME;
+    case IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD:
+      return IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD_NAME;
+    case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
+      return IPMI_SDR_FORMAT_EVENT_ONLY_RECORD_NAME;
+    case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
+      return IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD_NAME;
+    case IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD:
+      return IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD_NAME;
+    case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
+      return IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD_NAME;
+    case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
+      return IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD_NAME;
+    case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
+      return IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD_NAME;
+    case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
+      return IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD_NAME;
+    case IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD:
+      return IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD_NAME;
+    case IPMI_SDR_FORMAT_OEM_RECORD:
+      return IPMI_SDR_FORMAT_OEM_RECORD_NAME;
+    default:
+      return "Unknown Record";
+    }
+
+  /* NOT REACHED - avoid compiler warning */
+  return "Unknown Record";
+}
+
 static int
 _output_very_verbose_record_type_and_id (ipmi_sensors_state_data_t *state_data,
                                          uint8_t record_type,
                                          uint16_t record_id)
 {
+  char *record_type_str = NULL;
+
   assert(state_data);
 
   pstdout_printf (state_data->pstate, 
                   "Record ID: %d\n", 
                   record_id);
+
+  record_type_str = _get_record_type_string(state_data, record_type);
+
   pstdout_printf (state_data->pstate, 
-                  "Record Type: %Xh\n", 
+                  "Record Type: %s (%Xh)\n", 
+                  record_type_str,
                   record_type);
 
   return 0;
@@ -277,7 +321,7 @@ _output_very_verbose_hysteresis (ipmi_sensors_state_data_t *state_data,
    * output the integer values?  That's the best guess I can make.
    */
   
-  if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     {
       double positive_going_threshold_hysteresis_real;
       double negative_going_threshold_hysteresis_real;
@@ -1307,7 +1351,7 @@ ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
 
   switch (record_type)
     {
-    case IPMI_SDR_FORMAT_FULL_RECORD:
+    case IPMI_SDR_FORMAT_FULL_SENSOR_RECORD:
       return sensors_display_very_verbose_full_record (state_data,
                                                        sdr_record,
                                                        sdr_record_len,
@@ -1316,7 +1360,7 @@ ipmi_sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
                                                        reading,
                                                        event_message_list,
                                                        event_message_list_len);
-    case IPMI_SDR_FORMAT_COMPACT_RECORD:
+    case IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD:
       return sensors_display_very_verbose_compact_record (state_data,
                                                           sdr_record,
                                                           sdr_record_len,

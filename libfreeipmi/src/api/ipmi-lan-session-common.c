@@ -2716,8 +2716,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (username)
-        strcpy(username_buf, username);
+      if (strlen(ctx->io.outofband.username))
+        strcpy(username_buf, ctx->io.outofband.username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
