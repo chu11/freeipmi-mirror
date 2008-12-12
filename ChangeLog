@@ -1,3 +1,8 @@
+2008-12-12  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/api/ipmi-lan-session-common.c
+	(ipmi_lan_2_0_open_session): Fix Intel 2.0 workarounds.
+	
 2008-12-09  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c
@@ -9,6 +14,9 @@
 	* libfreeipmi/src/api/ipmi-lan-session-common.c
 	(_ipmi_lan_2_0_cmd_wrapper_verify_packet): Fix ipmi 2.0 error
 	handling corner case for some motherboards.
+
+	* libfreeipmi/src/api/ipmi-lan-session-common.c
+	(ipmi_lan_2_0_open_session): Fix ipmi Intel 2.0 workaround.
 	
 2008-12-09  Albert Chu <chu11@llnl.gov>
 
