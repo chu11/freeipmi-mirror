@@ -1,3 +1,8 @@
+2008-12-12  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/api/ipmi-lan-session-common.c
+	(ipmi_lan_2_0_open_session): Fix Intel 2.0 workarounds.
+	
 2008-12-11  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/record-format/ipmi-sdr-record-format.h:

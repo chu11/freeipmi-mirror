@@ -2712,6 +2712,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    * The username must be padded despite explicitly not being
    * allowed.  "No Null characters (00h) are allowed in the name".
    * Table 13-11 in the IPMI 2.0 spec.
+   *
+   * achu: This should only be done for the RAKP 1 message.
    */
   if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     {
@@ -2926,6 +2928,41 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       API_ERR_LOG_CLEANUP(0);
     }
 
+  /* achu: note, for INTEL_2_0 workaround, this must have the username/password adjustments */
+  API_ERR_CLEANUP (!(ipmi_calculate_rmcpplus_session_keys(ctx->io.outofband.authentication_algorithm,
+                                                          ctx->io.outofband.integrity_algorithm,
+                                                          ctx->io.outofband.confidentiality_algorithm,
+                                                          (uint8_t *)password,
+                                                          password_len,
+                                                          (ctx->io.outofband.k_g_configured) ? ctx->io.outofband.k_g : NULL,
+                                                          (ctx->io.outofband.k_g_configured) ? IPMI_MAX_K_G_LENGTH : 0,
+                                                          remote_console_random_number,
+                                                          IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
+                                                          managed_system_random_number,
+                                                          IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH,
+                                                          IPMI_NAME_ONLY_LOOKUP,
+                                                          ctx->io.outofband.privilege_level,
+                                                          username,
+                                                          username_len,
+                                                          &(ctx->io.outofband.sik_key_ptr),
+                                                          &(ctx->io.outofband.sik_key_len),
+                                                          &(ctx->io.outofband.integrity_key_ptr),
+                                                          &(ctx->io.outofband.integrity_key_len),
+                                                          &(ctx->io.outofband.confidentiality_key_ptr),
+                                                          &(ctx->io.outofband.confidentiality_key_len)) < 0));
+  
+  /* achu: If INTEL_2_0 workaround is set, get back to original username &
+   * username_len, because that isn't needed for the RAKP3/4 part.
+   */
+  if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+    {
+      if (strlen(ctx->io.outofband.username))
+        username = ctx->io.outofband.username;
+      else
+        username = NULL;
+      username_len = (username) ? strlen(username) : 0;
+    }
+
   /* IPMI Workaround (achu)
    *
    * Discovered on SE7520AF2 with Intel Server Management Module
@@ -3005,28 +3042,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       API_ERR_LOG_CLEANUP(0);
     }
   
-  API_ERR_CLEANUP (!(ipmi_calculate_rmcpplus_session_keys(ctx->io.outofband.authentication_algorithm,
-                                                          ctx->io.outofband.integrity_algorithm,
-                                                          ctx->io.outofband.confidentiality_algorithm,
-                                                          (uint8_t *)password,
-                                                          password_len,
-                                                          (ctx->io.outofband.k_g_configured) ? ctx->io.outofband.k_g : NULL,
-                                                          (ctx->io.outofband.k_g_configured) ? IPMI_MAX_K_G_LENGTH : 0,
-                                                          remote_console_random_number,
-                                                          IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
-                                                          managed_system_random_number,
-                                                          IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH,
-                                                          IPMI_NAME_ONLY_LOOKUP,
-                                                          ctx->io.outofband.privilege_level,
-                                                          username,
-                                                          username_len,
-                                                          &(ctx->io.outofband.sik_key_ptr),
-                                                          &(ctx->io.outofband.sik_key_len),
-                                                          &(ctx->io.outofband.integrity_key_ptr),
-                                                          &(ctx->io.outofband.integrity_key_len),
-                                                          &(ctx->io.outofband.confidentiality_key_ptr),
-                                                          &(ctx->io.outofband.confidentiality_key_len)) < 0));
-
   /* IPMI Workaround (achu)
    *
    * Discovered on SE7520AF2 with Intel Server Management Module
