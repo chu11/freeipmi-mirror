@@ -29,7 +29,7 @@ enum ipmi_chassis_argp_option_keys
     GET_CAPABILITIES_KEY = 'c',
     GET_STATUS_KEY = 's',
     CHASSIS_CONTROL_KEY = 'O',
-    CHASSIS_IDENTIFY_KEY = 'I',
+    CHASSIS_IDENTIFY_KEY = 'i',
     GET_SYSTEM_RESTART_CAUSE_KEY = 'R',
     GET_POWER_ON_HOURS_COUNTER_KEY = 'H',
     SET_POWER_CYCLE_INTERVAL_KEY = 'S',
