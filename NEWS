@@ -1,5 +1,8 @@
 0.7.4 - XX/XX/XX
 ----------------
+o Change -I short option (for --chassis-identify) to -i in
+  ipmi-chassis to avoid conflicting short option with -I (for
+  --cipher-suite-id).
 o Support output of "<username-not-set-yet>" in bmc-config for fields
 that require a username to be configured before data may be
 read/written.

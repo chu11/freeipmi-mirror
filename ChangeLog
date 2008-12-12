@@ -10,6 +10,10 @@
 
 	* ipmiconsole/ipmiconsole.8.pre.in: Add ipmiconsole
 	troubleshooting notes.
+
+	* ipmi-chassis/src/ipmi-chassis.h: Change -I (--identify) option
+	to -i so it does not conflict with -I from --cipher-suite-id
+	option.
 	
 2008-12-09  Albert Chu <chu11@llnl.gov>
 
