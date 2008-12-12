@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.92 2008-12-09 18:24:33 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.93 2008-12-12 18:54:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1062,6 +1062,9 @@ ipmipower_check_integrity_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
              || pkt == GET_CHASSIS_STATUS_RES
              || pkt == CHASSIS_CONTROL_RES
              || pkt == CLOSE_SESSION_RES));
+
+  if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+    return 1;
 
   if ((rv = ipmi_rmcpplus_check_integrity_pad(ip->obj_rmcpplus_session_trlr_res)) < 0)
     ierr_exit("ipmipower_check_integrity_pad(%s:%d): "
