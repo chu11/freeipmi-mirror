@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.22 2008-06-07 16:09:55 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.22.10.1 2008-12-12 18:55:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -924,6 +924,9 @@ ipmiconsole_check_integrity_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p
 	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
+
+  if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+    return 1;
 
   if ((rv = ipmi_rmcpplus_check_integrity_pad(c->connection.obj_rmcpplus_session_trlr_rs)) < 0)
 

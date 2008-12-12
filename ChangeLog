@@ -2,6 +2,14 @@
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c
 	(ipmi_lan_2_0_open_session): Fix Intel 2.0 workarounds.
+
+	* ipmipower/src/ipmipower_check.c (ipmipower_check_integrity_pad),
+	ipmiconsole/src/libipmiconsole/ipmiconsole_checks.c
+	(ipmiconsole_check_integrity_pad): Fix integrity check corner case
+	for certain cipher suite IDs.
+
+	* ipmiconsole/ipmiconsole.8.pre.in: Add ipmiconsole
+	troubleshooting notes.
 	
 2008-12-09  Albert Chu <chu11@llnl.gov>
 

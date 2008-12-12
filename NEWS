@@ -5,6 +5,8 @@ that require a username to be configured before data may be
 read/written.
 o Support supermicro reset-intrusion OEM ID and command in ipmi-oem.
 o Support --list option in ipmi-oem.
+o Fix ipmipower/ipmiconsole corner case bugs for IPMI 2.0 with certain
+  cipher suite IDs.
 o Fix bmc-config Enable_User workaround bug.
 o Fix Intel IPMI 2.0 workarounds in all tools/libraries.
 o Fix state machine cycle corner case in ipmiconsole/libipmiconsole.
