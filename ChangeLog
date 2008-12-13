@@ -14,6 +14,9 @@
 	* ipmi-chassis/src/ipmi-chassis.h: Change -I (--identify) option
 	to -i so it does not conflict with -I from --cipher-suite-id
 	option.
+
+	* ipmi-fru/src/ipmi-fru-util.c (ipmi-fru/src/ipmi-fru-util.c):
+	Output failed checksums by default.
 	
 2008-12-11  Albert Chu <chu11@llnl.gov>
 
