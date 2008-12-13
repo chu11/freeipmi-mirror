@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.22 2008-08-12 18:14:36 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.22.4.1 2008-12-13 00:04:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -656,12 +656,11 @@ ipmi_fru_check_checksum(ipmi_fru_state_data_t *state_data,
       
       if (checksum)
         {
-          if (state_data->prog_data->args->verbose_count)
-            pstdout_fprintf(state_data->pstate, 
-                            stderr,
-                            "  FRU %s Checksum Invalid: 0x%02X\n", 
-                            str,
-                            checksum);
+          pstdout_fprintf(state_data->pstate, 
+                          stderr,
+                          "  FRU %s Checksum Invalid: 0x%02X\n", 
+                          str,
+                          checksum);
           return FRU_ERR_NON_FATAL_ERROR;
         }
     }
