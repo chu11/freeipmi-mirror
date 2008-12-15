@@ -2,7 +2,6 @@
 ----------------
 Tools - New Significant Additions/Features
 ------------------------------------------
-o BLAH
 
 Tools - Enhancements/Changes/Bug Fixes
 --------------------------------------
@@ -16,11 +15,29 @@ Libraries
 ---------
 o libfreeipmi
   - More detailed KCS debug output with header information.
-o libipmimonitoring
 
 Contributions
 -------------
 
+0.7.4 - 12/15/08
+----------------
+o Change -I short option (for --chassis-identify) to -i in
+  ipmi-chassis to avoid conflicting short option with -I (for
+  --cipher-suite-id).
+o Support output of "<username-not-set-yet>" in bmc-config for fields
+that require a username to be configured before data may be
+read/written.
+o Support supermicro reset-intrusion OEM ID and command in ipmi-oem.
+o Support --list option in ipmi-oem.
+o Output checksum errors by default in ipmi-fru.
+o Fix ipmipower/ipmiconsole corner case bugs for IPMI 2.0 with certain
+  cipher suite IDs.
+o Fix bmc-config Enable_User workaround bug.
+o Fix Intel IPMI 2.0 workarounds in all tools/libraries.
+o Fix state machine cycle corner case in ipmiconsole/libipmiconsole.
+o Fix Suse build issue in spec file.
+o Fix glibc 2.8 build issues.
+o Fix/clarify minor documentation typos/wording.
 
 0.7.3 - 12/01/08
 ----------------
