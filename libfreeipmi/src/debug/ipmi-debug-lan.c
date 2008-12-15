@@ -267,12 +267,6 @@ _ipmi_dump_lan_packet (int fd,
                                    NULL, 
                                    obj_cmd) < 0));
 
-      if (pkt_len <= indx)
-	{
-	  rv = 0;
-	  goto cleanup;
-	}
-
       if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
         {
           int32_t obj_ipmb_msg_trlr_len = 0;
@@ -323,6 +317,12 @@ _ipmi_dump_lan_packet (int fd,
                                        NULL, 
                                        obj_ipmb_msg_trlr) < 0));
         }
+
+      if (pkt_len <= indx)
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
     }
 
   /* Dump trailer */

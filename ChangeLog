@@ -6,6 +6,10 @@
 	libfreeipmi/src/api/ipmi-api.c,
 	libfreeipmi/src/api/ipmi-kcs-interface-api.c: Support detailed KCS
 	debug output.
+
+	* libfreeipmi/src/debug/ipmi-debug-lan.c (_ipmi_dump_lan_packet),
+	libfreeipmi/src/debug/ipmi-debug-rmcpplus.c
+	(_dump_rmcpplus_payload_data): Fix dump corner case.
 	
 2008-12-12  Albert Chu <chu11@llnl.gov>
 
