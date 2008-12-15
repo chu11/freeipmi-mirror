@@ -29,10 +29,14 @@
 #if HAVE_ALLOCA_H
 #include <alloca.h>
 #endif /* HAVE_ALLOCA_H */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
+#include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/driver/ipmi-kcs-driver.h"
 #include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
@@ -47,6 +51,7 @@
 #include "ipmi-kcs-driver-api.h"
 
 #include "freeipmi-portability.h"
+#include "debug-util.h"
 
 /* achu: I dunno what's a good number, ten seems good.  Similar to the
  * inband "TIMEOUT", the purpose is to just not hang any user code
@@ -55,11 +60,157 @@
 #define IPMI_KCS_IPMB_RETRANSMISSION_COUNT   10
 #define IPMI_KCS_IPMB_REREAD_COUNT           10
 
+fiid_template_t tmpl_kcs_raw =
+  {
+    {8192, "raw_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    {0, "", 0}
+  };
+
+static void
+_ipmi_kcs_dump (ipmi_ctx_t ctx,
+                uint8_t *pkt,
+                uint32_t pkt_len,
+                uint8_t cmd,
+                uint8_t net_fn,
+                unsigned int debug_direction,
+                fiid_template_t tmpl_cmd,
+                fiid_template_t tmpl_ipmb_msg_hdr,
+                fiid_template_t tmpl_ipmb_cmd)
+{
+  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+          && pkt
+          && pkt_len
+          && tmpl_cmd
+          && (debug_direction == DEBUG_UTIL_DIRECTION_REQUEST
+              || debug_direction == DEBUG_UTIL_DIRECTION_RESPONSE));
+
+  /* Don't cleanup/return an error here.  It's just debug code. */
+
+  debug_hdr_cmd(DEBUG_UTIL_TYPE_INBAND,
+                debug_direction,
+                net_fn,
+                cmd,
+                hdrbuf,
+                DEBUG_UTIL_HDR_BUFLEN);
+  
+  if (tmpl_ipmb_cmd)
+    ipmi_dump_kcs_packet_ipmb (STDERR_FILENO,
+                               NULL,
+                               hdrbuf,
+                               NULL,
+                               pkt,
+                               pkt_len,
+                               tmpl_cmd,
+                               tmpl_ipmb_msg_hdr,
+                               tmpl_ipmb_cmd);
+  else
+    ipmi_dump_kcs_packet (STDERR_FILENO,
+                          NULL,
+                          hdrbuf,
+                          NULL,
+                          pkt,
+                          pkt_len,
+                          tmpl_cmd);
+  
+}
+
+static void
+_ipmi_kcs_dump_rq (ipmi_ctx_t ctx,
+                   uint8_t *pkt,
+                   uint32_t pkt_len,
+                   uint8_t cmd,
+                   uint8_t net_fn,
+                   fiid_obj_t obj_cmd_rq)
+{
+  fiid_field_t *tmpl_cmd = NULL;
+
+  if ((tmpl_cmd = fiid_obj_template(obj_cmd_rq)))
+    {
+      _ipmi_kcs_dump (ctx,
+                      pkt,
+                      pkt_len,
+                      cmd,
+                      net_fn,
+                      DEBUG_UTIL_DIRECTION_REQUEST,
+                      tmpl_cmd,
+                      tmpl_ipmb_msg_hdr_rq,
+                      ctx->tmpl_ipmb_cmd_rq);
+      fiid_template_free (tmpl_cmd);
+    }
+}
+
+static void
+_ipmi_kcs_dump_rs (ipmi_ctx_t ctx,
+                   uint8_t *pkt,
+                   uint32_t pkt_len,
+                   uint8_t cmd,
+                   uint8_t net_fn,
+                   fiid_obj_t obj_cmd_rs)
+{
+  fiid_field_t *tmpl_cmd = NULL;
+
+  if ((tmpl_cmd = fiid_obj_template(obj_cmd_rs)))
+    {
+      _ipmi_kcs_dump (ctx,
+                      pkt,
+                      pkt_len,
+                      cmd,
+                      net_fn,
+                      DEBUG_UTIL_DIRECTION_RESPONSE,
+                      tmpl_cmd,
+                      tmpl_ipmb_msg_hdr_rs,
+                      ctx->tmpl_ipmb_cmd_rs);
+      fiid_template_free (tmpl_cmd);
+    }
+}
+
+static void
+_ipmi_kcs_dump_raw_rq (ipmi_ctx_t ctx,
+                       uint8_t *pkt,
+                       uint32_t pkt_len,
+                       uint8_t cmd,
+                       uint8_t net_fn)
+{
+  _ipmi_kcs_dump (ctx,
+                  pkt,
+                  pkt_len,
+                  cmd,
+                  net_fn,
+                  DEBUG_UTIL_DIRECTION_REQUEST,
+                  tmpl_kcs_raw,
+                  tmpl_ipmb_msg_hdr_rq,
+                  ctx->tmpl_ipmb_cmd_rq);
+}
+
+static void
+_ipmi_kcs_dump_raw_rs (ipmi_ctx_t ctx,
+                       uint8_t *pkt,
+                       uint32_t pkt_len,
+                       uint8_t cmd,
+                       uint8_t net_fn)
+{
+  _ipmi_kcs_dump (ctx,
+                  pkt,
+                  pkt_len,
+                  cmd,
+                  net_fn,
+                  DEBUG_UTIL_DIRECTION_RESPONSE,
+                  tmpl_kcs_raw,
+                  tmpl_ipmb_msg_hdr_rs,
+                  ctx->tmpl_ipmb_cmd_rs);
+}
+
 int8_t 
 ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 		  fiid_obj_t obj_cmd_rq,
 		  fiid_obj_t obj_cmd_rs)
 {
+  uint64_t cmd = 0;             /* used for debugging */
+
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rq)
@@ -68,6 +219,9 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
   API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
 
   API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_KCS);
+
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
 
   {
     uint8_t *pkt;
@@ -88,6 +242,10 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 				    obj_cmd_rq,
 				    pkt,
 				    pkt_len) > 0);
+
+    if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && pkt_len)
+      _ipmi_kcs_dump_rq (ctx, pkt, pkt_len, cmd, ctx->net_fn, obj_cmd_rq);
+
     API_ERR_KCS (ipmi_kcs_write (ctx->io.inband.kcs_ctx, pkt, pkt_len) != -1);
   }
 
@@ -113,6 +271,9 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
     if (!read_len)
       API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_SYSTEM_ERROR);
+
+    if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && pkt_len)
+      _ipmi_kcs_dump_rs (ctx, pkt, pkt_len, cmd, ctx->net_fn, obj_cmd_rs);
 
     API_ERR_CLEANUP (!(unassemble_ipmi_kcs_pkt (pkt,
 						read_len,
@@ -333,7 +494,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
   API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
   ctx->tmpl_ipmb_cmd_rs = NULL;
   return (rv);
-}
+}               
 
 int32_t
 ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
@@ -348,6 +509,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   int32_t bytes_read = 0;
   int32_t hdr_len;
   int32_t rv = -1;
+  uint64_t cmd = 0;             /* used for debugging */
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
@@ -357,6 +519,9 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
                       && buf_rs_len > 0);
 
   API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_KCS);
+
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    cmd = buf_rq[0];
 
   API_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
   pkt_len = hdr_len + buf_rq_len;
@@ -372,11 +537,17 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   API_FIID_OBJ_GET_ALL(ctx->io.inband.rq.obj_hdr, pkt, pkt_len);
   memcpy(pkt + hdr_len, buf_rq, buf_rq_len);
 
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && pkt_len)
+    _ipmi_kcs_dump_raw_rq (ctx, pkt, pkt_len, cmd, ctx->net_fn);
+
   /* Request Block */
   API_ERR_KCS (ipmi_kcs_write (ctx->io.inband.kcs_ctx, pkt, pkt_len) != -1);
 
   /* Response Block */
   API_ERR_KCS ((bytes_read = ipmi_kcs_read (ctx->io.inband.kcs_ctx, readbuf, buf_rs_len)) != -1);
+
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && pkt_len)
+    _ipmi_kcs_dump_raw_rs (ctx, pkt, pkt_len, cmd, ctx->net_fn);
 
   if (!bytes_read)
     {

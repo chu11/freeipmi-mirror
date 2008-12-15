@@ -15,11 +15,11 @@ o ipmi-sensors
 Libraries
 ---------
 o libfreeipmi
+  - More detailed KCS debug output with header information.
 o libipmimonitoring
 
 Contributions
 -------------
-
 
 
 0.7.3 - 12/01/08

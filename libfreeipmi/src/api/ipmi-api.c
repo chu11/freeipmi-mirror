@@ -764,8 +764,10 @@ ipmi_cmd (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
       /* lan packets are dumped in ipmi lan code */
+      /* kcs packets are dumped in kcs code */
       if (ctx->type != IPMI_DEVICE_LAN
-          && ctx->type != IPMI_DEVICE_LAN_2_0)
+          && ctx->type != IPMI_DEVICE_LAN_2_0
+          && ctx->type != IPMI_DEVICE_KCS)
         {
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint64_t cmd = 0;
@@ -815,8 +817,10 @@ ipmi_cmd (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
       /* lan packets are dumped in ipmi lan code */
+      /* kcs packets are dumped in kcs code */
       if (ctx->type != IPMI_DEVICE_LAN
-          && ctx->type != IPMI_DEVICE_LAN_2_0)
+          && ctx->type != IPMI_DEVICE_LAN_2_0
+          && ctx->type != IPMI_DEVICE_KCS)
         {
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint64_t cmd = 0;

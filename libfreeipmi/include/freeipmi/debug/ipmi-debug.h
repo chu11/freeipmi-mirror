@@ -50,6 +50,24 @@ int8_t ipmi_dump_rmcp_packet (int fd,
                               uint32_t pkt_len,
                               fiid_template_t tmpl_cmd);
 
+int8_t ipmi_dump_kcs_packet (int fd, 
+                             const char *prefix, 
+                             const char *hdr, 
+                             const char *trlr,
+                             uint8_t *pkt, 
+                             uint32_t pkt_len, 
+                             fiid_template_t tmpl_cmd);
+
+int8_t ipmi_dump_kcs_packet_ipmb (int fd, 
+                                  const char *prefix,
+                                  const char *hdr, 
+                                  const char *trlr, 
+                                  uint8_t *pkt, 
+                                  uint32_t pkt_len, 
+                                  fiid_template_t tmpl_cmd, 
+                                  fiid_template_t tmpl_ipmb_msg_hdr, 
+                                  fiid_template_t tmpl_ipmb_cmd);
+
 int8_t ipmi_dump_lan_packet (int fd, 
                              const char *prefix, 
                              const char *hdr, 

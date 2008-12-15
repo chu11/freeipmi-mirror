@@ -13,6 +13,7 @@ libdebug_la_CPPFLAGS = \
 libdebug_la_SOURCES = \
 	ipmi-debug.c \
 	ipmi-debug-common.c \
+	ipmi-debug-kcs.c \
 	ipmi-debug-lan.c \
 	ipmi-debug-rmcp.c \
 	ipmi-debug-rmcpplus.c \
