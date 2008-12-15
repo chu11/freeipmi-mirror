@@ -42,6 +42,7 @@
 #include "freeipmi/interface/ipmi-kcs-interface.h"
 #include "freeipmi/util/ipmi-ipmb-util.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
+#include "freeipmi/spec/ipmi-cmd-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 
@@ -97,7 +98,11 @@ _ipmi_kcs_dump (ipmi_ctx_t ctx,
                 hdrbuf,
                 DEBUG_UTIL_HDR_BUFLEN);
   
-  if (tmpl_ipmb_cmd)
+  if (tmpl_ipmb_cmd
+      && ((cmd == IPMI_CMD_SEND_MESSAGE
+           && debug_direction == DEBUG_UTIL_DIRECTION_REQUEST)
+          || (cmd == IPMI_CMD_GET_MESSAGE
+              && debug_direction == DEBUG_UTIL_DIRECTION_RESPONSE)))
     ipmi_dump_kcs_packet_ipmb (STDERR_FILENO,
                                NULL,
                                hdrbuf,
@@ -272,8 +277,8 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
     if (!read_len)
       API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_SYSTEM_ERROR);
 
-    if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && pkt_len)
-      _ipmi_kcs_dump_rs (ctx, pkt, pkt_len, cmd, ctx->net_fn, obj_cmd_rs);
+    if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && read_len)
+      _ipmi_kcs_dump_rs (ctx, pkt, read_len, cmd, ctx->net_fn, obj_cmd_rs);
 
     API_ERR_CLEANUP (!(unassemble_ipmi_kcs_pkt (pkt,
 						read_len,
@@ -546,8 +551,8 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   /* Response Block */
   API_ERR_KCS ((bytes_read = ipmi_kcs_read (ctx->io.inband.kcs_ctx, readbuf, buf_rs_len)) != -1);
 
-  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && pkt_len)
-    _ipmi_kcs_dump_raw_rs (ctx, pkt, pkt_len, cmd, ctx->net_fn);
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && bytes_read)
+    _ipmi_kcs_dump_raw_rs (ctx, pkt, bytes_read, cmd, ctx->net_fn);
 
   if (!bytes_read)
     {
