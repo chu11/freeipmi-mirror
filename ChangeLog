@@ -1,3 +1,9 @@
+2008-12-15  Albert Chu <chu11@llnl.gov>
+	
+	* configure.ac, NEWS: Update for release.
+
+	* Tagged Release-0_7_4.	
+
 2008-12-12  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c

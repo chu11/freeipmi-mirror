@@ -1,4 +1,4 @@
-0.7.4 - XX/XX/XX
+0.7.4 - 12/15/08
 ----------------
 o Change -I short option (for --chassis-identify) to -i in
   ipmi-chassis to avoid conflicting short option with -I (for
