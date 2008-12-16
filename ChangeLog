@@ -1,4 +1,8 @@
 2008-12-15  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-fru/src/ipmi-fru.c (_output_fru): Cleanup output.
+	
+2008-12-15  Albert Chu <chu11@llnl.gov>
 	
 	* configure.ac, NEWS: Update for release.
 

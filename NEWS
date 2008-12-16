@@ -1,3 +1,8 @@
+0.7.5 - XX/XX/XX
+----------------
+o Do not output error messages for FRU entries that do not exist on a
+motherboard.
+
 0.7.4 - 12/15/08
 ----------------
 o Change -I short option (for --chassis-identify) to -i in
