@@ -2713,7 +2713,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    * allowed.  "No Null characters (00h) are allowed in the name".
    * Table 13-11 in the IPMI 2.0 spec.
    *
-   * achu: This should only be done for the RAKP 1 message.
+   * achu: This should only be done for RAKP 1 message, RAKP 2 check,
+   * and session key creation.
    */
   if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     {
