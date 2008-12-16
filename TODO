@@ -42,6 +42,11 @@ pef-config
 -----------
 * conf.5 manpage
 
+ipmi-sel
+--------
+- display range of records
+- --head, --tail like options?
+
 inband code
 -----------
 retry/resent code?
