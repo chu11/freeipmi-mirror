@@ -15,6 +15,10 @@ sunbmc driver
 -------------
 untested - need solaris hardware
 
+libipmimonitoring
+-----------------
+callback feature - to make output more dynamic
+
 ipmi-chassis-config
 -------------------
 * conf.5 manpage
