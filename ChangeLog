@@ -1,3 +1,8 @@
+2008-12-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/src/ipmi-sel.c (_hex_display_sel_records): Carry over
+	previous fixes into this function.
+	
 2008-12-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/src/ipmi-fru.c (_output_fru): Cleanup output.
