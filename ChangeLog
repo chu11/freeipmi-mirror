@@ -1,4 +1,8 @@
 2008-12-15  Albert Chu <chu11@llnl.gov>
+	
+	* ipmi-fru/src/ipmi-fru.c (_output_fru): Cleanup output.
+	
+2008-12-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/debug/ipmi-debug-kcs.c: New file.
 
@@ -10,7 +14,7 @@
 	* libfreeipmi/src/debug/ipmi-debug-lan.c (_ipmi_dump_lan_packet),
 	libfreeipmi/src/debug/ipmi-debug-rmcpplus.c
 	(_dump_rmcpplus_payload_data): Fix dump corner case.
-	
+
 2008-12-12  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c

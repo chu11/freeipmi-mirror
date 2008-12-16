@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.31 2008-08-28 18:34:03 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.32 2008-12-16 01:05:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -107,10 +107,16 @@ _output_fru(ipmi_fru_state_data_t *state_data,
                                             device_id,
                                             fru_get_inventory_rs) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "  FRU Get FRU Inventory Area Failure: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      /* achu: Assume this completion code means we got a FRU SDR
+       * entry pointed to a device that doesn't exist on this
+       * particular mother board (b/c manufacturers may use the same
+       * SDR for multiple motherboards).
+       */
+      if (ipmi_check_completion_code(fru_get_inventory_rs, IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) != 1)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "  FRU Get FRU Inventory Area Failure: %s\n",
+                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
