@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.32 2008-12-17 01:07:58 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.33 2008-12-17 17:05:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -713,7 +713,7 @@ struct ipmi_monitoring_ipmi_config
 
 typedef struct ipmi_monitoring_ctx *ipmi_monitoring_ctx_t;
 
-typedef void (*Ipmi_Monitoring_Sensor_Readings_Callback)(ipmi_monitoring_ctx_t c, void *cb_data);
+typedef void (*Ipmi_Monitoring_Sensor_Readings_Callback)(ipmi_monitoring_ctx_t c, void *callback_data);
 
 /*
  * ipmi_monitoring_sensor_config_file
