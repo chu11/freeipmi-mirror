@@ -1,6 +1,7 @@
 freeipmi tools
 --------------
 config via environment variables too - like config file
+cleanup - make all funcs that should be static static
 
 libfreeipmi
 -----------
