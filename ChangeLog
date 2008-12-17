@@ -1,5 +1,12 @@
 2008-12-16  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/src/libipmimonitoring/: Support callback function
+	routines in sensor monitoring/reading.
+
+	* configure.ac: Update lib version appropriately.
+	
+2008-12-16  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/src/ipmi-sel.c (_hex_display_sel_records): Carry over
 	previous fixes into this function.
 	

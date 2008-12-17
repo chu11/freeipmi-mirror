@@ -15,6 +15,10 @@ Libraries
 ---------
 o libfreeipmi
   - More detailed KCS debug output with header information.
+o libipmimonitoring
+  - Support new set of callback functions to monitor sensors as they
+    are read/analyzed instead of after all sensors have been
+    read/analyzed.
 
 Contributions
 -------------

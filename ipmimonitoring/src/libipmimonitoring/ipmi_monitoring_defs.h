@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.15 2008-08-25 17:26:24 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.16 2008-12-17 01:07:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -151,6 +151,10 @@ struct ipmi_monitoring_ctx {
   List sensor_readings;
   ListIterator sensor_readings_itr;
   struct ipmi_monitoring_sensor_reading *current_sensor_reading;
+
+  Ipmi_Monitoring_Sensor_Readings_Callback callback;
+  void *callback_data;
+  struct ipmi_monitoring_sensor_reading *callback_sensor_reading;
 };
 
 #endif /* _IPMI_MONITORING_DEFS_H */

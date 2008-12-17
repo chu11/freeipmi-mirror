@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.51 2008-12-11 17:32:17 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.52 2008-12-17 01:07:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -126,6 +126,12 @@ _store_sensor_reading(ipmi_monitoring_ctx_t c,
       goto cleanup;
     }
 
+  if (c->callback)
+    {
+      c->callback_sensor_reading = s;
+      (*c->callback)(c, c->callback_data);
+    }
+
   return 0;
 
  cleanup:
@@ -173,6 +179,12 @@ _store_unreadable_sensor_reading(ipmi_monitoring_ctx_t c,
       IPMI_MONITORING_DEBUG(("list_append: %s", strerror(errno)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
+    }
+
+  if (c->callback)
+    {
+      c->callback_sensor_reading = s;
+      (*c->callback)(c, c->callback_data);
     }
 
   return 0;
