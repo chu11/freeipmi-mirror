@@ -10,6 +10,9 @@ o ipmi-sensors
     very-verbose output.
   - Output hex code of group name in addition to group name in verbose
     and very-verbose output.
+o ipmimonitoring
+  - Utilize libipmimonitoring callback routines to make sensors output
+    as they are read, rather than just at the end.
 
 Libraries
 ---------

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.36 2008-12-17 01:07:58 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.37 2008-12-17 18:19:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -79,6 +79,8 @@ static char *ipmi_monitoring_errmsgs[] =
     "authentication type unavailable for attempted privilege level",
     "ipmi 2.0 unavailable",
     "cipher suite id unavailable",
+    "callback error",
+    "not in callback",
     "BMC busy",
     "out of memory",
     "internal IPMI error",
@@ -706,6 +708,21 @@ ipmi_monitoring_sensor_readings_by_sensor_group_callback(ipmi_monitoring_ctx_t c
 }
 
 int 
+ipmi_monitoring_callback_record_id(ipmi_monitoring_ctx_t c)
+{
+  if (!c || c->magic != IPMI_MONITORING_MAGIC)
+    return -1;
+
+  if (!c->callback_sensor_reading)
+    {
+      c->errnum = IPMI_MONITORING_ERR_NOT_IN_CALLBACK;
+      return -1;
+    }
+
+  return c->callback_sensor_reading->record_id;
+}
+
+int 
 ipmi_monitoring_callback_sensor_group(ipmi_monitoring_ctx_t c)
 {
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
@@ -713,7 +730,7 @@ ipmi_monitoring_callback_sensor_group(ipmi_monitoring_ctx_t c)
 
   if (!c->callback_sensor_reading)
     {
-      c->errnum = IPMI_MONITORING_ERR_SENSOR_NOT_FOUND;
+      c->errnum = IPMI_MONITORING_ERR_NOT_IN_CALLBACK;
       return -1;
     }
 
@@ -728,7 +745,7 @@ ipmi_monitoring_callback_sensor_name(ipmi_monitoring_ctx_t c)
 
   if (!c->callback_sensor_reading)
     {
-      c->errnum = IPMI_MONITORING_ERR_SENSOR_NOT_FOUND;
+      c->errnum = IPMI_MONITORING_ERR_NOT_IN_CALLBACK;
       return NULL;
     }
 
@@ -744,7 +761,7 @@ ipmi_monitoring_callback_sensor_state(ipmi_monitoring_ctx_t c)
 
   if (!c->callback_sensor_reading)
     {
-      c->errnum = IPMI_MONITORING_ERR_SENSOR_NOT_FOUND;
+      c->errnum = IPMI_MONITORING_ERR_NOT_IN_CALLBACK;
       return -1;
     }
 
@@ -759,7 +776,7 @@ ipmi_monitoring_callback_sensor_units(ipmi_monitoring_ctx_t c)
 
   if (!c->callback_sensor_reading)
     {
-      c->errnum = IPMI_MONITORING_ERR_SENSOR_NOT_FOUND;
+      c->errnum = IPMI_MONITORING_ERR_NOT_IN_CALLBACK;
       return -1;
     }
 
@@ -774,7 +791,7 @@ ipmi_monitoring_callback_sensor_reading_type(ipmi_monitoring_ctx_t c)
 
   if (!c->callback_sensor_reading)
     {
-      c->errnum = IPMI_MONITORING_ERR_SENSOR_NOT_FOUND;
+      c->errnum = IPMI_MONITORING_ERR_NOT_IN_CALLBACK;
       return -1;
     }
 
@@ -789,7 +806,7 @@ ipmi_monitoring_callback_sensor_bitmask_type(ipmi_monitoring_ctx_t c)
 
   if (!c->callback_sensor_reading)
     {
-      c->errnum = IPMI_MONITORING_ERR_SENSOR_NOT_FOUND;
+      c->errnum = IPMI_MONITORING_ERR_NOT_IN_CALLBACK;
       return -1;
     }
 
@@ -804,7 +821,7 @@ ipmi_monitoring_callback_sensor_reading(ipmi_monitoring_ctx_t c)
 
   if (!c->callback_sensor_reading)
     {
-      c->errnum = IPMI_MONITORING_ERR_SENSOR_NOT_FOUND;
+      c->errnum = IPMI_MONITORING_ERR_NOT_IN_CALLBACK;
       return NULL;
     }
 

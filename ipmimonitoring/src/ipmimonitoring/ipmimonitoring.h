@@ -81,6 +81,7 @@ typedef struct ipmimonitoring_state_data
   char *hostname;
   ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx;
   ipmi_monitoring_ctx_t ctx;
+  int output_headers;
 } ipmimonitoring_state_data_t;
 
 #endif

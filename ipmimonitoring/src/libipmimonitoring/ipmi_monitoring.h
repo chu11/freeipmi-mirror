@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.33 2008-12-17 17:05:06 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.34 2008-12-17 18:19:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -58,12 +58,14 @@ enum ipmi_monitoring_error_codes
     IPMI_MONITORING_ERR_AUTHENTICATION_TYPE_UNAVAILABLE     = 22,
     IPMI_MONITORING_ERR_IPMI_2_0_UNAVAILABLE                = 23,
     IPMI_MONITORING_ERR_CIPHER_SUITE_ID_UNAVAILABLE         = 24,
-    IPMI_MONITORING_ERR_BMC_BUSY                            = 25,
-    IPMI_MONITORING_ERR_OUT_OF_MEMORY                       = 26,
-    IPMI_MONITORING_ERR_IPMI_ERROR                          = 27,
-    IPMI_MONITORING_ERR_SYSTEM_ERROR                        = 28,
-    IPMI_MONITORING_ERR_INTERNAL_ERROR                      = 29,
-    IPMI_MONITORING_ERR_ERRNUMRANGE                         = 30,
+    IPMI_MONITORING_ERR_CALLBACK_ERROR                      = 25,
+    IPMI_MONITORING_ERR_NOT_IN_CALLBACK                     = 26,
+    IPMI_MONITORING_ERR_BMC_BUSY                            = 27,
+    IPMI_MONITORING_ERR_OUT_OF_MEMORY                       = 28,
+    IPMI_MONITORING_ERR_IPMI_ERROR                          = 29,
+    IPMI_MONITORING_ERR_SYSTEM_ERROR                        = 30,
+    IPMI_MONITORING_ERR_INTERNAL_ERROR                      = 31,
+    IPMI_MONITORING_ERR_ERRNUMRANGE                         = 32,
   };
 
 enum ipmi_monitoring_sensor_group
@@ -713,7 +715,13 @@ struct ipmi_monitoring_ipmi_config
 
 typedef struct ipmi_monitoring_ctx *ipmi_monitoring_ctx_t;
 
-typedef void (*Ipmi_Monitoring_Sensor_Readings_Callback)(ipmi_monitoring_ctx_t c, void *callback_data);
+/* 
+ * Ipmi_Monitoring_Sensor_Readings_Callback
+ *
+ * If callback returns < 0, libipmimonitoring will stop reading
+ * remaining sensors.
+ */
+typedef int (*Ipmi_Monitoring_Sensor_Readings_Callback)(ipmi_monitoring_ctx_t c, void *callback_data);
 
 /*
  * ipmi_monitoring_sensor_config_file
@@ -857,7 +865,7 @@ int ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
                                                     unsigned int sensor_groups_len);
 
 /* 
- * ipmi_monitoring_sensor_readings_by_sensor_group
+ * ipmi_monitoring_sensor_readings_by_sensor_group_callback
  *
  * Identical to ipmi_monitoring_sensor_readings_by_record_id(), but
  * with callback functions that will be called after each sensor is

@@ -1,3 +1,13 @@
+2008-12-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/: Adjust callback function
+	to return integer for whether libipmimonitoring should continue or
+	not.
+
+	* ipmimonitoring/src/ipmimonitoring/: Adjust code to use callback
+	functionality to display sensor readings as they are
+	read/analyzed.
+	
 2008-12-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/libipmimonitoring/: Support callback function
