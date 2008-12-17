@@ -1,5 +1,9 @@
 2008-12-17  Albert Chu <chu11@llnl.gov>
 
+	* Minor documentation updates.
+	
+2008-12-17  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/libipmimonitoring/: Adjust callback function
 	to return integer for whether libipmimonitoring should continue or
 	not.

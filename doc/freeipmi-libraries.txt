@@ -61,7 +61,7 @@ record-format - Provides macros, fiid-templates, and information on
 records used in IPMI.  Utilized by the 'sdr-cache' subsection and
 tools like ipmi-sensors(8).
 
-sdr-cache - Provides and API for creating, caching, reading, and
+sdr-cache - Provides an API for creating, caching, reading, and
 parsing a sensor data repository (SDR).  Utilized by tools such as
 ipmi-sensors(8) and ipmimonitoring(8).
 
