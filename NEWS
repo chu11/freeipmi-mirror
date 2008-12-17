@@ -2,6 +2,7 @@
 ----------------
 o In ipmi-fru, do not output error messages for FRU entries that do
 not exist on a motherboard.
+o Fix/clarify minor documentation typos/wording.
 
 0.7.4 - 12/15/08
 ----------------

@@ -1,3 +1,7 @@
+2008-12-17  Albert Chu <chu11@llnl.gov>
+
+	* Minor documentation updates.
+	
 2008-12-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/src/ipmi-sel.c (_hex_display_sel_records): Carry over
