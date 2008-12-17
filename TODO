@@ -50,6 +50,10 @@ ipmi-sel
 --------
 - display range of records
 - --head, --tail like options?
+- output if event is assertion/deassertion event?
+  - for verbose mode?
+- check if format is correct in record
+- check of 0xFF of 0x0F is event_data2/3 is not valid/unspecified
 
 inband code
 -----------
