@@ -1,3 +1,14 @@
+XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	*
+	libfreeipmi/include/freeipmi/record-format/ipmi-sel-record-format.h:
+	Cleanup macro names and add new macros as needed.
+
+	* libfreeipmi/: Include new sel-parse subsection to libfreeipmi
+	library.
+
+	* Update documentation and manpages appropriately.
+	
 2008-12-15  Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-fru/src/ipmi-fru.c (_output_fru): Cleanup output.

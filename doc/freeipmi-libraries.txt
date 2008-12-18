@@ -65,6 +65,9 @@ sdr-cache - Provides and API for creating, caching, reading, and
 parsing a sensor data repository (SDR).  Utilized by tools such as
 ipmi-sensors(8) and ipmimonitoring(8).
 
+sel-parse - Provides an API for reading and parsing System Event Log
+(SEL) entries.  Utilized by tools such as ipmi-sel(8).
+
 spec - Provides macros and arrays for various other definitions and
 tables in IPMI.  Utilized by tools such as ipmi-sensors(8).
 

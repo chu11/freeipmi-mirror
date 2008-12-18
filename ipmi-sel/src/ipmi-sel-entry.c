@@ -499,7 +499,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
       {
         switch (event_data2_flag)
           {
-          case IPMI_SEL_TRIGGER_READING:
+          case IPMI_SEL_EVENT_DATA_TRIGGER_READING:
             if (sdr_record_found
                 && sdr_record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
                 && sensor_classify (sdr_event_reading_type_code) == SENSOR_CLASS_THRESHOLD)
@@ -552,7 +552,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                   }
               }
             break;
-          case IPMI_SEL_OEM_CODE:
+          case IPMI_SEL_EVENT_DATA_OEM_CODE:
             if (asprintf (event_data2_message, 
                           "OEM code = %02Xh", 
                           event_data2) < 0)
@@ -563,7 +563,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                 goto cleanup;
               }
             break;
-          case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+          case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
             {
               char buffer[1024];
               int rv;
@@ -587,7 +587,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 	
         switch (event_data3_flag)
           {
-          case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
+          case IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE:
             if (sdr_record_found
                 && sdr_record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
                 && sensor_classify (sdr_event_reading_type_code) == SENSOR_CLASS_THRESHOLD)
@@ -640,7 +640,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                   }
               }
             break;
-          case IPMI_SEL_OEM_CODE:
+          case IPMI_SEL_EVENT_DATA_OEM_CODE:
             if (asprintf (event_data3_message, 
                           "OEM code = %02Xh", 
                           event_data3) < 0)
@@ -651,7 +651,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                 goto cleanup;
               }
             break;
-          case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+          case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
             {
               char buffer[1024];
 
@@ -679,7 +679,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
       {
         switch (event_data2_flag)
           {
-          case IPMI_SEL_OEM_CODE:
+          case IPMI_SEL_EVENT_DATA_OEM_CODE:
             if (asprintf (event_data2_message,
                           "OEM code = %02Xh",
                           event_data2) < 0)
@@ -690,8 +690,8 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                 goto cleanup;
               }
             break;
-          case IPMI_SEL_PREV_STATE_SEVERITY:
-          case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+          case IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY:
+          case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
             {
               char buffer[1024];
               
@@ -712,7 +712,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 	
         switch (event_data3_flag)
           {
-          case IPMI_SEL_OEM_CODE:
+          case IPMI_SEL_EVENT_DATA_OEM_CODE:
             if (asprintf (event_data3_message,
                           "OEM code = %02Xh",
                           event_data3) < 0)
@@ -723,7 +723,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
                 goto cleanup;
               }
             break;
-          case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+          case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
             {
               char buffer[1024];
 

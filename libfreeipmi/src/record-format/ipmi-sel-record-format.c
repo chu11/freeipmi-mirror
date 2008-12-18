@@ -72,7 +72,6 @@ fiid_template_t tmpl_sel_system_event_record =
     {0, "", 0}
   };
 
-
 fiid_template_t tmpl_sel_timestamped_oem_record = 
   {
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
