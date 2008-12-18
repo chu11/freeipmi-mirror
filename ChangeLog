@@ -1,3 +1,8 @@
+2008-12-18  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/src/ipmi-sel-entry.c (_get_sel_system_event_record):
+	Fix possible output error corner case.
+	
 2008-12-17  Albert Chu <chu11@llnl.gov>
 
 	* Minor documentation updates.

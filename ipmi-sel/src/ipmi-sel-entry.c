@@ -691,6 +691,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
               }
             break;
           case IPMI_SEL_PREV_STATE_SEVERITY:
+            break;
           case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
             {
               char buffer[1024];
