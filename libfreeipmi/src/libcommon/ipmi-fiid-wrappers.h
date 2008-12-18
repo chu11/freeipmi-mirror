@@ -1557,6 +1557,26 @@ do {                                                                          \
     }                                                                         \
 } while (0)
 
+#define SEL_PARSE_FIID_OBJ_SET_ALL(__obj, __data, __data_len)                 \
+do {                                                                          \
+    if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)               \
+      {                                                                       \
+         __FIID_OBJ_TRACE((__obj));                                           \
+         __FIID_OBJ_ERRNUM_TO_SEL_PARSE_ERRNUM((__obj));                      \
+         return (-1);                                                         \
+      }                                                                       \
+} while (0)
+
+#define SEL_PARSE_FIID_OBJ_SET_ALL_CLEANUP(__obj, __data, __data_len)         \
+do {                                                                          \
+    if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)               \
+      {                                                                       \
+         __FIID_OBJ_TRACE((__obj));                                           \
+         __FIID_OBJ_ERRNUM_TO_SEL_PARSE_ERRNUM((__obj));                      \
+         goto cleanup;                                                        \
+      }                                                                       \
+} while (0)
+
 #define SEL_PARSE_FIID_OBJ_GET(__obj, __field, __val)                         \
 do {                                                                          \
     uint64_t __localval = 0, *__localval_ptr;                                 \
