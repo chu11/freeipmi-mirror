@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.1.2.2 2008-12-18 18:55:45 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.1.2.3 2008-12-18 23:38:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -67,11 +67,15 @@ int ipmi_sel_parse_ctx_set_flags(ipmi_sel_parse_ctx_t ctx, unsigned int flags);
 char *ipmi_sel_parse_ctx_get_debug_prefix(ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_ctx_set_debug_prefix(ipmi_sel_parse_ctx_t ctx, const char *prefix);
 
-/* SEL Parse Functions */
+/* SEL Parse Functions 
+ * 
+ * callback is called after each SEL entry is parsed
+ */
 int ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
                    Ipmi_Sel_Parse_Callback callback,
                    void *callback_data);
 
+/* SEL data retrieval functions after SEL is parsed */
 int ipmi_sel_parse_entry_count(ipmi_sel_parse_ctx_t ctx, uint16_t *entry_count);
 
 int ipmi_sel_parse_first(ipmi_sel_parse_ctx_t ctx);
@@ -79,6 +83,7 @@ int ipmi_sel_parse_next(ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_seek(ipmi_sel_parse_ctx_t ctx, unsigned int index);
 int ipmi_sel_parse_search_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
 
+/* SEL read functions - can be used after sel parsed or within callbacks */
 int ipmi_sel_parse_read_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t *record_id);
 int ipmi_sel_parse_read_record_type(ipmi_sel_parse_ctx_t ctx, uint8_t *record_type);
 int ipmi_sel_parse_read_record_timestamp(ipmi_sel_parse_ctx_t ctx, uint32_t *timestamp);
@@ -102,8 +107,9 @@ int ipmi_sel_parse_read_record_string(ipmi_sel_parse_ctx_t ctx,
                                       uint8_t *buf, 
                                       unsigned int buflen);
 
+/* Utility functions */
 int ipmi_sel_parse_clear_sel(ipmi_sel_parse_ctx_t ctx);
 
-int ipmi_sel_parse_delete_sel_entry(ipmi_sel_parse_ctx_t ctx, uint8_t record_id);
+int ipmi_sel_parse_delete_sel_entry(ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
 
 #endif /* _IPMI_SEL_PARSE_H */
