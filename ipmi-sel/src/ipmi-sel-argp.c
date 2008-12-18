@@ -175,9 +175,25 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	    fprintf (stderr, "invalid delete range\n");
             exit(1);
 	  }
-	
+
 	cmd_args->delete_range2 = value;
 	
+        if (cmd_args->delete_range1 == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+            || cmd_args->delete_range2 == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY)
+          {
+            fprintf (stderr, "invalid delete range: record_id = %d illegal\n", 
+                     IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY);
+            exit(1);
+          }
+
+        if (cmd_args->delete_range1 == IPMI_SEL_GET_RECORD_ID_LAST_ENTRY
+            || cmd_args->delete_range2 == IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
+          {
+            fprintf (stderr, "invalid delete range: record_id = %d illegal\n", 
+                     IPMI_SEL_GET_RECORD_ID_LAST_ENTRY);
+            exit(1);
+          }
+        
 	if (cmd_args->delete_range2 < cmd_args->delete_range1)
 	  {
 	    fprintf (stderr, "invalid delete END range\n");

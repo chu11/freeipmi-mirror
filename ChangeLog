@@ -2,6 +2,9 @@
 
 	* ipmi-sel/src/ipmi-sel-entry.c (_get_sel_system_event_record):
 	Fix possible output error corner case.
+
+	* ipmi-sel/src/ipmi-sel-argp.c (cmdline_parse): Check that record
+	ID inputs are not illegal record_id values.
 	
 2008-12-17  Albert Chu <chu11@llnl.gov>
 
