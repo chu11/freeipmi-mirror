@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.1.2.1 2008-12-18 00:27:29 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.1.2.2 2008-12-18 18:55:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -31,26 +31,25 @@
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/sdr-cache/ipmi-sdr-cache.h>
 
-#define IPMI_SEL_PARSE_CTX_ERR_SUCCESS                                      0
-#define IPMI_SEL_PARSE_CTX_ERR_CONTEXT_NULL                                 1
-#define IPMI_SEL_PARSE_CTX_ERR_CONTEXT_INVALID                              2
-#define IPMI_SEL_PARSE_CTX_ERR_PARAMETERS                                   3
-#define IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY                                4
-#define IPMI_SEL_PARSE_CTX_ERR_FILENAME_INVALID                             5
-#define IPMI_SEL_PARSE_CTX_ERR_FILESYSTEM                                   6
-#define IPMI_SEL_PARSE_CTX_ERR_PERMISSION                                   7
-#define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_FILESYSTEM
-#define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_PERMISSION
-#define IPMI_SEL_PARSE_CTX_ERR_NOT_FOUND                                    20
-#define IPMI_SEL_PARSE_CTX_ERR_CALLBACK_ERROR                                   21
-#define IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR                                   21
-#define IPMI_SEL_PARSE_CTX_ERR_SYSTEM_ERROR                                 22
-#define IPMI_SEL_PARSE_CTX_ERR_OVERFLOW                                     23
-#define IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR                               24
-#define IPMI_SEL_PARSE_CTX_ERR_ERRNUMRANGE                                  25
+#define IPMI_SEL_PARSE_CTX_ERR_SUCCESS                           0
+#define IPMI_SEL_PARSE_CTX_ERR_CONTEXT_NULL                      1
+#define IPMI_SEL_PARSE_CTX_ERR_CONTEXT_INVALID                   2
+#define IPMI_SEL_PARSE_CTX_ERR_PARAMETERS                        3
+#define IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY                     4
+#define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_FILESYSTEM              5
+#define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_PERMISSION              6
+#define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR                   7
+#define IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES                    8
+#define IPMI_SEL_PARSE_CTX_ERR_NOT_FOUND                         9
+#define IPMI_SEL_PARSE_CTX_ERR_CALLBACK_ERROR                   10
+#define IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR                       11 
+#define IPMI_SEL_PARSE_CTX_ERR_SYSTEM_ERROR                     12
+#define IPMI_SEL_PARSE_CTX_ERR_OVERFLOW                         13
+#define IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR                   14
+#define IPMI_SEL_PARSE_CTX_ERR_ERRNUMRANGE                      15
 
-#define IPMI_SEL_PARSE_FLAGS_DEFAULT                   0x0000
-#define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                0x0001
+#define IPMI_SEL_PARSE_FLAGS_DEFAULT                        0x0000
+#define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                     0x0001
 
 typedef struct ipmi_sel_parse_ctx *ipmi_sel_parse_ctx_t;
 
@@ -73,7 +72,7 @@ int ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
                    Ipmi_Sel_Parse_Callback callback,
                    void *callback_data);
 
-int ipmi_sel_parse_entries_count(ipmi_sel_parse_ctx_t ctx, uint16_t *entries_count);
+int ipmi_sel_parse_entry_count(ipmi_sel_parse_ctx_t ctx, uint16_t *entry_count);
 
 int ipmi_sel_parse_first(ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_next(ipmi_sel_parse_ctx_t ctx);
@@ -104,6 +103,7 @@ int ipmi_sel_parse_read_record_string(ipmi_sel_parse_ctx_t ctx,
                                       unsigned int buflen);
 
 int ipmi_sel_parse_clear_sel(ipmi_sel_parse_ctx_t ctx);
+
 int ipmi_sel_parse_delete_sel_entry(ipmi_sel_parse_ctx_t ctx, uint8_t record_id);
 
 #endif /* _IPMI_SEL_PARSE_H */
