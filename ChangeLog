@@ -5,6 +5,10 @@
 
 	* ipmi-sel/src/ipmi-sel-argp.c (cmdline_parse): Check that record
 	ID inputs are not illegal record_id values.
+
+	* ipmi-sensors/src/ipmi-sensors-argp.c,
+	ipmimonitoring/src/ipmimonitoring/ipmimonitoring-argp.c: Check
+	that inputted record IDs are not illegal record ID values.
 	
 2008-12-17  Albert Chu <chu11@llnl.gov>
 

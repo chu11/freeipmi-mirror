@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.21 2008-08-27 21:14:10 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.21.2.1 2008-12-18 22:12:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -119,6 +119,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   struct ipmimonitoring_arguments *cmd_args = state->input;
   char *ptr;
   char *tok;
+  int value;
   error_t ret;
   
   switch (key)
@@ -160,13 +161,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tok = strtok(arg, " ,");
       while (tok && cmd_args->sensors_length < IPMIMONITORING_MAX_RECORD_IDS)
         {
-          unsigned int n = strtoul(tok, &ptr, 10);
-          if (ptr != (tok + strlen(tok)))
+          value = 0;
+          ptr = NULL;
+          errno = 0;
+
+          value = strtol(tok, &ptr, 10);
+
+          if (errno
+              || ptr[0] != '\0'
+              || value < 0
+              || value < IPMI_SDR_RECORD_ID_FIRST
+              || value > IPMI_SDR_RECORD_ID_LAST)
             {
-              fprintf (stderr, "invalid sensor record id\n");
+              fprintf (stderr, "invalid sensor record id: %d\n", value);
               exit(1);
             }
-          cmd_args->sensors[cmd_args->sensors_length] = n;
+
+          cmd_args->sensors[cmd_args->sensors_length] = value;
           cmd_args->sensors_length++;
           tok = strtok(NULL, " ,");
         }

@@ -3,7 +3,8 @@
 o In ipmi-fru, do not output error messages for FRU entries that do
 not exist on a motherboard.
 o In ipmi-sel, fix SEL message output corner case.
-o In ipmi-sel, check that inputted record IDs are illegal record ID values.
+o In ipmi-sel, ipmi-sensors, and ipmimonitoring, check that inputted
+record IDs are not illegal record ID values.
 o Fix/clarify minor documentation typos/wording.
 
 0.7.4 - 12/15/08
