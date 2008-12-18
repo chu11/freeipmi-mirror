@@ -38,7 +38,7 @@
 #include "freeipmi-portability.h"
 #include "tool-common.h"
 
-void 
+static void 
 display_ipmi_locate_info (struct ipmi_locate_info *info)
 {
   printf ("IPMI Version: %d.%d\n", 
@@ -112,7 +112,7 @@ display_ipmi_locate_info (struct ipmi_locate_info *info)
   return;
 }
 
-void 
+static void 
 dmidecode_probe_display (void)
 {
   struct ipmi_locate_info info;
@@ -189,7 +189,7 @@ dmidecode_probe_display (void)
   return;
 }
 
-void 
+static void 
 smbios_probe_display (void)
 {
   struct ipmi_locate_info info;
@@ -266,7 +266,7 @@ smbios_probe_display (void)
   return;
 }
 
-void 
+static void 
 acpi_probe_display (void)
 {
   struct ipmi_locate_info info;
@@ -343,7 +343,7 @@ acpi_probe_display (void)
   return;
 }
 
-void 
+static void 
 pci_probe_display (void)
 {
   struct ipmi_locate_info info;
@@ -420,7 +420,7 @@ pci_probe_display (void)
   return;
 }
 
-void 
+static void 
 defaults_display (void)
 {
   struct ipmi_locate_info info;

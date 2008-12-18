@@ -236,7 +236,7 @@ _ipmi_sensors_config_file_parse(struct ipmi_sensors_arguments *cmd_args)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
 }
 
-void
+static void
 _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 {
   if (cmd_args->groups_length)

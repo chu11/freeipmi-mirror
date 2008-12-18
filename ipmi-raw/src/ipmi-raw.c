@@ -43,7 +43,7 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 
-int
+static int
 ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
 {
   struct ipmi_raw_arguments *args;
@@ -228,7 +228,7 @@ string2bytes (ipmi_raw_state_data_t *state_data,
   return (rv);
 }
 
-int
+static int
 ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
 {
   struct ipmi_raw_arguments *args;

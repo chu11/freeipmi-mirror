@@ -1178,7 +1178,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   return rv;
 }
 
-int
+static int
 run_cmd_args (ipmi_chassis_state_data_t *state_data)
 {
   int rv = -1;

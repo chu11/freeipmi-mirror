@@ -264,7 +264,7 @@ _bmc_device_config_file_parse(struct bmc_device_arguments *cmd_args)
     }
 }
 
-void
+static void
 _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
 { 
   if (!cmd_args->cold_reset 
