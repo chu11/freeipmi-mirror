@@ -57,6 +57,9 @@ extern "C" {
 extern fiid_template_t tmpl_sel_record_header;
 
 extern fiid_template_t tmpl_sel_system_event_record;
+extern fiid_template_t tmpl_sel_system_event_record_threshold;
+extern fiid_template_t tmpl_sel_system_event_record_discrete_previous_state_severity;
+extern fiid_template_t tmpl_sel_system_event_record_discrete_sensor_specific_event_extension;
 extern fiid_template_t tmpl_sel_timestamped_oem_record;
 extern fiid_template_t tmpl_sel_non_timestamped_oem_record;
 

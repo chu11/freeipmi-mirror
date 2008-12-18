@@ -58,6 +58,109 @@ fiid_template_t tmpl_sel_system_event_record =
     {7, "event_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "event_dir", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     
+    /* Event Data */
+    {8, "event_data1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "event_data2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "event_data3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_sel_system_event_record_threshold = 
+  {
+    {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    /* Generator ID */
+    {1, "generator_id.id_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "generator_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    {2, "ipmb_device_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {8, "event_message_format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    /* Event Dir | Event Type */
+    {7, "event_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "event_dir", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    
+    /* Event Data 1 */
+    {4, "offset_from_event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "event_data3_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "event_data2_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    /* Event Data 2 */
+    {8, "event_data2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    /* Event Data 3 */
+    {8, "event_data3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_sel_system_event_record_discrete_previous_state_severity = 
+  {
+    {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    /* Generator ID */
+    {1, "generator_id.id_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "generator_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    {2, "ipmb_device_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {8, "event_message_format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    /* Event Dir | Event Type */
+    {7, "event_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "event_dir", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    
+    /* Event Data 1 */
+    {4, "offset_from_event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "event_data3_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "event_data2_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    /* Event Data 2 */
+    {4, "previous_offset_from_event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "offset_from_severity_event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    /* Event Data 3 */
+    {8, "event_data3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_sel_system_event_record_discrete_sensor_specific_event_extension = 
+  {
+    {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    /* Generator ID */
+    {1, "generator_id.id_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "generator_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+
+    {2, "ipmb_device_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    {8, "event_message_format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    
+    /* Event Dir | Event Type */
+    {7, "event_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "event_dir", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    
     /* Event Data 1 */
     {4, "offset_from_event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {2, "event_data3_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
