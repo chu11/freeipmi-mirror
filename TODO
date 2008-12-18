@@ -1,6 +1,7 @@
 freeipmi tools
 --------------
 config via environment variables too - like config file
+cleanup - make all funcs that should be static static
 
 libfreeipmi
 -----------
@@ -14,6 +15,10 @@ libfreeipmi
 sunbmc driver
 -------------
 untested - need solaris hardware
+
+libipmimonitoring
+-----------------
+callback feature - to make output more dynamic
 
 ipmi-chassis-config
 -------------------
@@ -41,6 +46,15 @@ get auxiliary log status
 pef-config
 -----------
 * conf.5 manpage
+
+ipmi-sel
+--------
+- display range of records
+- --head, --tail like options?
+- output if event is assertion/deassertion event?
+  - for verbose mode?
+- check if format is correct in record
+- check of 0xFF of 0x0F is event_data2/3 is not valid/unspecified
 
 inband code
 -----------

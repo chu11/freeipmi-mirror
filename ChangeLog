@@ -9,10 +9,41 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* Update documentation and manpages appropriately.
 	
+2008-12-18  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/src/ipmi-sel-entry.c (_get_sel_system_event_record):
+	Fix possible output error corner case.
+	
+2008-12-17  Albert Chu <chu11@llnl.gov>
+
+	* Minor documentation updates.
+	
+2008-12-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/: Adjust callback function
+	to return integer for whether libipmimonitoring should continue or
+	not.
+
+	* ipmimonitoring/src/ipmimonitoring/: Adjust code to use callback
+	functionality to display sensor readings as they are
+	read/analyzed.
+	
+2008-12-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/: Support callback function
+	routines in sensor monitoring/reading.
+
+	* configure.ac: Update lib version appropriately.
+	
+2008-12-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/src/ipmi-sel.c (_hex_display_sel_records): Carry over
+	previous fixes into this function.
+	
 2008-12-15  Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-fru/src/ipmi-fru.c (_output_fru): Cleanup output.
-	
+
 2008-12-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/debug/ipmi-debug-kcs.c: New file.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.51 2008-12-11 17:32:17 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.51.2.1 2008-12-18 18:58:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -119,6 +119,18 @@ _store_sensor_reading(ipmi_monitoring_ctx_t c,
   else if (s->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK)
     s->sensor_reading.integer_bitmask_val = *((uint16_t *)sensor_reading);
   
+  /* achu: should come before list_append to avoid having a freed entry on the list */
+  if (c->callback)
+    {
+      c->callback_sensor_reading = s;
+      if ((*c->callback)(c, c->callback_data) < 0)
+        {
+          IPMI_MONITORING_DEBUG(("callback error"));
+          c->errnum = IPMI_MONITORING_ERR_CALLBACK_ERROR;
+          goto cleanup;
+        }
+    }
+
   if (!list_append(c->sensor_readings, s))
     {
       IPMI_MONITORING_DEBUG(("list_append: %s", strerror(errno)));
@@ -167,6 +179,18 @@ _store_unreadable_sensor_reading(ipmi_monitoring_ctx_t c,
   s->sensor_units = sensor_units;
   s->sensor_reading_type = IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN;
   s->sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN;
+
+  /* achu: should come before list_append to avoid having a freed entry on the list */
+  if (c->callback)
+    {
+      c->callback_sensor_reading = s;
+      if ((*c->callback)(c, c->callback_data) < 0)
+        {
+          IPMI_MONITORING_DEBUG(("callback error"));
+          c->errnum = IPMI_MONITORING_ERR_CALLBACK_ERROR;
+          goto cleanup;
+        }
+    }
 
   if (!list_append(c->sensor_readings, s))
     {

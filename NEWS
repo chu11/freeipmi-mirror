@@ -10,11 +10,18 @@ o ipmi-sensors
     very-verbose output.
   - Output hex code of group name in addition to group name in verbose
     and very-verbose output.
+o ipmimonitoring
+  - Utilize libipmimonitoring callback routines to make sensors output
+    as they are read, rather than just at the end.
 
 Libraries
 ---------
 o libfreeipmi
   - More detailed KCS debug output with header information.
+o libipmimonitoring
+  - Support new set of callback functions to monitor sensors as they
+    are read/analyzed instead of after all sensors have been
+    read/analyzed.
 
 Contributions
 -------------
