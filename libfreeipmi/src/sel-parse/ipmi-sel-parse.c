@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.1.2.3 2008-12-18 23:38:34 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.1.2.4 2008-12-19 01:05:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -216,6 +216,150 @@ _sel_reservation_id(ipmi_sel_parse_ctx_t ctx,
  out:
   rv = 0;
  cleanup:
+  SEL_PARSE_FIID_OBJ_DESTROY(obj_cmd_rs);
+  return rv;
+}
+
+int 
+ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
+               Ipmi_Sel_Parse_Callback callback,
+               void *callback_data)
+{
+  uint16_t reservation_id = 0;
+    uint16_t record_id = 0;
+  uint16_t next_record_id = 0;
+  fiid_obj_t obj_cmd_rs = NULL;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+
+  SEL_PARSE_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
+
+  for (record_id = IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY;
+       record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
+       record_id = next_record_id)
+    {
+      struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
+      unsigned int reservation_id_retry_count = 0;
+      unsigned int reservation_canceled = 0;
+      uint64_t val;
+      int len;
+      /*
+       *
+       * IPMI spec states in section 31.4.1:
+       *
+       * "A Requester must issue a 'Reserve SEL' command prior to issuing
+       * any of the following SEL commands. Note that the 'Reserve SEL'
+       * command only needs to be reissued if the reservation is
+       * canceled. ... Get SEL Entry command (if 'get' is from an offset
+       * other than 00h)".
+       *
+       * Since we always use an offset of 00h, presumably we should never
+       * need reserve the SEL before the get_sel_entry call.
+       *
+       * However, some machines may need it due to compliance issues.
+       * I don't think using a reservation ID all of the time hurts
+       * anything, so we'll just use it all of the time.
+       */
+      
+      while (1)
+        {
+          if (record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY || reservation_canceled)
+            {
+              if (_sel_reservation_id(ctx, &reservation_id) < 0)
+                goto cleanup;
+            }
+
+          if (ipmi_cmd_get_sel_entry (ctx->ipmi_ctx,
+                                      reservation_id,
+                                      record_id,
+                                      0,
+                                      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
+                                      obj_cmd_rs) < 0)
+            {
+              if (ipmi_ctx_errnum(ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                  && ipmi_check_completion_code(obj_cmd_rs,
+                                                IPMI_COMP_CODE_RESERVATION_CANCELLED) == 1)
+                {
+                  reservation_id_retry_count++;
+                  reservation_canceled++;
+                  
+                  if (reservation_id_retry_count > IPMI_SEL_PARSE_RESERVATION_ID_RETRY)
+                    {
+                      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR);
+                      goto cleanup;
+                    }
+                  
+                  if (_sel_reservation_id(ctx, &reservation_id) < 0)
+                    goto cleanup;
+                  
+                  continue;
+                }
+              else if (record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+                       && ipmi_ctx_errnum(ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+                       && ipmi_check_completion_code(obj_cmd_rs,
+                                                     IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+                {
+                  /* If the sel is empty, it's not really an error */
+                  goto out;
+                }
+              else
+                {
+                  SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR);
+                  goto cleanup;
+                }
+            }
+
+          /* XXX PUT DEBUG DUMPING IN */
+
+          SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "next_record_id", &val);
+          next_record_id = val;
+    
+          SEL_PARSE_ERR_OUT_OF_MEMORY_CLEANUP ((sel_parse_entry = (struct ipmi_sel_parse_entry *)malloc(sizeof(struct ipmi_sel_parse_entry))));
+
+          SEL_PARSE_FIID_OBJ_GET_DATA_LEN_CLEANUP (len,
+                                                   obj_cmd_rs,
+                                                   "record_data", 
+                                                   sel_parse_entry->sel_event_record,
+                                                   IPMI_SEL_RECORD_LENGTH); 
+          sel_parse_entry->sel_event_record_len = len;
+
+          /* achu: should come before list_append to avoid having a freed entry on the list */
+          if (callback)
+            {
+              ctx->callback_sel_entry = sel_parse_entry;
+              if ((*callback)(ctx, callback_data) < 0)
+                {
+                  ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_CALLBACK_ERROR;
+                  goto cleanup;
+                }
+            }
+          
+          if (!list_append(ctx->sel_entries, sel_parse_entry))
+            {
+              SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+              goto cleanup;
+            }
+          
+          break;
+        }
+    }
+
+ out:
+
+  if ((rv = list_count(ctx->sel_entries)) > 0)
+    {
+      if (!(ctx->sel_entries_itr = list_iterator_create(ctx->sel_entries)))
+        {
+          SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+          goto cleanup;
+        }
+      ctx->current_sel_entry = list_next(ctx->sel_entries_itr);
+    }
+
+  ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  ctx->callback_sel_entry = NULL;
   SEL_PARSE_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }

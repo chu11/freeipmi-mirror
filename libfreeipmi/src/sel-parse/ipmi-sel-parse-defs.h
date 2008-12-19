@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-defs.h,v 1.1.2.2 2008-12-18 23:38:34 chu11 Exp $
+ *  $Id: ipmi-sel-parse-defs.h,v 1.1.2.3 2008-12-19 01:05:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -57,6 +57,7 @@
 
 struct ipmi_sel_parse_entry {
   uint8_t sel_event_record[IPMI_SEL_RECORD_LENGTH];
+  unsigned int sel_event_record_len; /* should always be 16, but just in case */
 };
 
 struct ipmi_sel_parse_ctx {
@@ -72,8 +73,6 @@ struct ipmi_sel_parse_ctx {
   ListIterator sel_entries_itr;
   struct ipmi_sel_parse_entry *current_sel_entry;
 
-  Ipmi_Sel_Parse_Callback callback;
-  void *callback_data;
   struct ipmi_sel_parse_entry *callback_sel_entry;
 };
 
