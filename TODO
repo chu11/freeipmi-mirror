@@ -16,6 +16,10 @@ sunbmc driver
 -------------
 untested - need solaris hardware
 
+sel/sensors/sensors-config
+--------------------------
+handle if ipmi_get_sensor_group returns NULL
+
 libipmimonitoring
 -----------------
 callback feature - to make output more dynamic
