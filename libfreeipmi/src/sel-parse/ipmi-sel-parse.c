@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.1.2.4 2008-12-19 01:05:31 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.1.2.5 2008-12-22 23:04:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -40,7 +40,10 @@
 
 #include "freeipmi/api/ipmi-sel-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
+#include "freeipmi/debug/ipmi-debug.h"
+#include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
+#include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-sel-parse-defs.h"
@@ -49,6 +52,7 @@
 #include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
+#include "debug-util.h"
 
 static char *ipmi_sel_parse_errmsgs[] =
   {
@@ -220,18 +224,349 @@ _sel_reservation_id(ipmi_sel_parse_ctx_t ctx,
   return rv;
 }
 
+static int
+_sel_entries_delete_all(void *x, void *y)
+{
+  return 1;
+}
+
+static void
+_sel_entries_clear(ipmi_sel_parse_ctx_t ctx)
+{
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+
+  list_delete_all(ctx->sel_entries, _sel_entries_delete_all, "dummyvalue");
+
+  if (ctx->sel_entries_itr)
+    {
+      list_iterator_destroy(ctx->sel_entries_itr);
+      ctx->sel_entries_itr = NULL;
+    }
+
+  ctx->current_sel_entry = NULL;
+  ctx->callback_sel_entry = NULL;
+}
+
+/* 
+ * XXX: Handle if sel_event_record not long enough and data not set
+ * XXX: Handle if sel_event_record not long enough and data not set
+ * XXX: Handle if sel_event_record not long enough and data not set
+ */
+
+static int
+_sel_entry_record_id(ipmi_sel_parse_ctx_t ctx,
+                     struct ipmi_sel_parse_entry *sel_parse_entry,
+                     uint16_t *record_id)
+{
+  fiid_obj_t obj_sel_record_header = NULL;
+  uint64_t val;
+  int rv = -1;
+  
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(sel_parse_entry);
+  assert(record_id);
+  
+  SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record_header, tmpl_sel_record_header);
+  
+  SEL_PARSE_FIID_OBJ_SET_ALL_CLEANUP(obj_sel_record_header, 
+                                     sel_parse_entry->sel_event_record,
+                                     sel_parse_entry->sel_event_record_len);
+  
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP(obj_sel_record_header,
+                                 "record_id",
+                                 &val);
+  (*record_id) = val;
+  
+  rv = 0;
+ cleanup:
+  SEL_PARSE_FIID_OBJ_DESTROY(obj_sel_record_header);
+  return rv;
+}
+
+static int
+_sel_entry_record_type(ipmi_sel_parse_ctx_t ctx,
+                       struct ipmi_sel_parse_entry *sel_parse_entry,
+                       uint8_t *record_type)
+{
+  fiid_obj_t obj_sel_record_header = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(sel_parse_entry);
+  assert(record_type);
+
+  SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record_header, tmpl_sel_record_header);
+
+  SEL_PARSE_FIID_OBJ_SET_ALL_CLEANUP(obj_sel_record_header, 
+                                     sel_parse_entry->sel_event_record,
+                                     sel_parse_entry->sel_event_record_len);
+  
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP(obj_sel_record_header,
+                                 "record_type",
+                                 &val);
+  (*record_type) = val;
+  
+  rv = 0;
+ cleanup:
+  SEL_PARSE_FIID_OBJ_DESTROY(obj_sel_record_header);
+  return rv;
+}
+
+static int
+_sel_entry_record_type_class(uint8_t record_type)
+{
+  if (IPMI_SEL_RECORD_TYPE_IS_EVENT(record_type))
+    return IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD;
+
+  if (IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM(record_type))
+    return IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD;
+
+  if (IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM(record_type))
+    return IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD;
+
+  return IPMI_SEL_RECORD_TYPE_CLASS_UNKNOWN_RECORD;
+}
+
+static int
+_sel_entry_system_event_record(ipmi_sel_parse_ctx_t ctx,
+                               struct ipmi_sel_parse_entry *sel_parse_entry,
+                               uint32_t *timestamp,
+                               uint8_t *generator_id,
+                               uint8_t *ipmb_device_lun,
+                               uint8_t *channel_number,
+                               uint8_t *event_message_format_version,
+                               uint8_t *sensor_type,
+                               uint8_t *sensor_number,
+                               uint8_t *event_type_code,
+                               uint8_t *event_direction,
+                               uint8_t *offset_from_event_reading_type_code,
+                               uint8_t *event_data2_flag,
+                               uint8_t *event_data3_flag,
+                               uint8_t *event_data2,
+                               uint8_t *event_data3)
+{
+  fiid_obj_t obj_sel_system_event_record = NULL;
+  int record_type_class;
+  uint8_t record_type;
+  uint8_t generator_id_type;
+  uint8_t generator_id_address;
+  uint64_t val;
+  int rv = -1;
+
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(sel_parse_entry);
+
+  if (_sel_entry_record_type(ctx, sel_parse_entry, &record_type) < 0)
+    goto cleanup;
+
+  record_type_class = _sel_entry_record_type_class(record_type);
+
+  if (record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+    {
+      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
+  SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_system_event_record,
+                                    tmpl_sel_system_event_record);
+
+  if (timestamp)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "timestamp", &val);
+      *timestamp = val;
+    }
+
+  if (generator_id)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "generator_id.id_type", &val);
+      generator_id_type = val;
+      
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "generator_id.id", &val);
+      generator_id_address = val;
+      
+      *generator_id = ((generator_id_address << 1) | generator_id_type);
+    }
+
+  if (ipmb_device_lun)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "ipmb_device_lun", &val);
+      *ipmb_device_lun = val;
+    }
+
+  if (channel_number)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "channel_number", &val);
+      *channel_number = val;
+    }
+
+  if (event_message_format_version)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "event_message_format_version", &val);
+      *event_message_format_version = val;
+    }
+
+  if (sensor_type)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "sensor_type", &val);
+      *sensor_type = val;
+    }
+
+  if (sensor_number)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "sensor_number", &val);
+      *sensor_number = val;
+    }
+
+  if (event_type_code)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "event_type_code", &val);
+      *event_type_code = val;
+    }
+
+  if (event_direction)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "event_dir", &val);
+      *event_direction = val;
+    }
+
+  if (offset_from_event_reading_type_code)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "offset_from_event_reading_type_code", &val);
+      *offset_from_event_reading_type_code = val;
+    }
+
+  if (event_data2_flag)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "event_data2_flag", &val);
+      *event_data2_flag = val;
+    }
+
+  if (event_data3_flag)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "event_data3_flag", &val);
+      *event_data3_flag = val;
+    }
+
+  if (event_data2)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "event_data2", &val);
+      *event_data2 = val;
+    }
+
+  if (event_data3)
+    {
+      SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "event_data3", &val);
+      *event_data3 = val;
+    }
+
+  rv = 0;
+ cleanup:
+  SEL_PARSE_FIID_OBJ_DESTROY(obj_sel_system_event_record);
+  return rv;
+}
+
+static void
+_sel_entry_dump(ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_parse_entry)
+{
+  fiid_obj_t obj_sel_record = NULL;
+  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+  uint8_t record_type;
+  int record_type_class;
+
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(sel_parse_entry);
+
+  if (!(ctx->flags & IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP))
+    return;
+
+  if (_sel_entry_record_type(ctx, sel_parse_entry, &record_type) < 0)
+    goto cleanup;
+
+  record_type_class = _sel_entry_record_type_class(record_type);
+
+  if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+    {
+      uint8_t event_type_code;
+      uint8_t event_data2_flag;
+      int event_type_code_class;
+
+      if (_sel_entry_system_event_record(ctx,
+                                         sel_parse_entry,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         &event_type_code,
+                                         NULL,
+                                         NULL,
+                                         &event_data2_flag,
+                                         NULL,
+                                         NULL,
+                                         NULL) < 0)
+        goto cleanup;
+
+      event_type_code_class = ipmi_event_reading_type_code_class(event_type_code);
+
+      if (event_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
+        SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_system_event_record_event_fields);
+      else if (event_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
+               || event_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
+        {
+          if (event_data2_flag == IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY)
+            SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_system_event_record_discrete_previous_state_severity);
+          else
+            SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_system_event_record_event_fields);
+        }
+      else
+        SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_system_event_record);
+
+    }
+  else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
+    SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_timestamped_oem_record);
+  else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
+    SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_non_timestamped_oem_record);
+  else /* record_type_class == SEL_RECORD_TYPE_UNKNOWN_RECORD */
+    SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_system_event_record);
+ 
+  debug_hdr_str(DEBUG_UTIL_TYPE_NONE,
+                DEBUG_UTIL_DIRECTION_NONE,
+                "SEL Event Record",
+                hdrbuf,
+                DEBUG_UTIL_HDR_BUFLEN);
+  
+  ipmi_obj_dump (STDERR_FILENO,
+                 ctx->debug_prefix,
+                 hdrbuf,
+                 NULL,
+                 obj_sel_record);
+
+ cleanup:
+  SEL_PARSE_FIID_OBJ_DESTROY(obj_sel_record);
+}
+
 int 
 ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
                Ipmi_Sel_Parse_Callback callback,
                void *callback_data)
 {
   uint16_t reservation_id = 0;
-    uint16_t record_id = 0;
+  uint16_t record_id = 0;
   uint16_t next_record_id = 0;
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
 
   ERR(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+
+  _sel_entries_clear(ctx);
 
   SEL_PARSE_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
 
@@ -310,8 +645,6 @@ ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
                 }
             }
 
-          /* XXX PUT DEBUG DUMPING IN */
-
           SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "next_record_id", &val);
           next_record_id = val;
     
@@ -323,6 +656,8 @@ ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
                                                    sel_parse_entry->sel_event_record,
                                                    IPMI_SEL_RECORD_LENGTH); 
           sel_parse_entry->sel_event_record_len = len;
+
+          _sel_entry_dump(ctx, sel_parse_entry);
 
           /* achu: should come before list_append to avoid having a freed entry on the list */
           if (callback)
@@ -356,7 +691,7 @@ ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
         }
       ctx->current_sel_entry = list_next(ctx->sel_entries_itr);
     }
-
+  
   ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   ctx->callback_sel_entry = NULL;

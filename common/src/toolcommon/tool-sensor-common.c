@@ -27,29 +27,10 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 
-#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 
 #include "freeipmi-portability.h"
 #include "tool-sensor-common.h"
-
-int 
-sensor_classify (uint8_t event_reading_type_code)
-{
-  if (IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
-    return SENSOR_CLASS_THRESHOLD;
-  
-  if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code))
-    return SENSOR_CLASS_GENERIC_DISCRETE;
-  
-  if (IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
-    return SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE;
-  
-  if (IPMI_EVENT_READING_TYPE_CODE_IS_OEM(event_reading_type_code))
-    return SENSOR_CLASS_OEM;
-  
-  return SENSOR_CLASS_NOT_AVAILABLE;
-}
 
 const char *
 sensor_group (int sensor_type)

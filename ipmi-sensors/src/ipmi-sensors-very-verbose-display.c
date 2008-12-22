@@ -451,7 +451,7 @@ _output_very_verbose_event_enable (ipmi_sensors_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t sensor_number;
-  int sensor_class;
+  int event_reading_type_code_class;
   uint64_t val;
   uint8_t event_reading_type_code;
   uint8_t sensor_type;
@@ -488,11 +488,11 @@ _output_very_verbose_event_enable (ipmi_sensors_state_data_t *state_data,
                                              &event_reading_type_code) < 0)
     goto cleanup;
 
-  sensor_class = sensor_classify (event_reading_type_code);
+  event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
 
-  if (sensor_class != SENSOR_CLASS_THRESHOLD
-      && sensor_class != SENSOR_CLASS_GENERIC_DISCRETE
-      && sensor_class !=  SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
+  if (event_reading_type_code_class != IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
+      && event_reading_type_code_class != IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
+      && event_reading_type_code_class !=  IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
     {
       if (state_data->prog_data->args->common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -503,7 +503,7 @@ _output_very_verbose_event_enable (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
+  if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
     {
       if (sdr_cache_get_sensor_type (state_data->pstate,
                                      sdr_record,
@@ -580,8 +580,8 @@ _output_very_verbose_event_enable (ipmi_sensors_state_data_t *state_data,
                                    field_len);
   if (field_len)
     {
-      if (sensor_class == SENSOR_CLASS_THRESHOLD
-          || sensor_class == SENSOR_CLASS_GENERIC_DISCRETE)
+      if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
+          || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
         {
           if (get_generic_event_message_list (state_data,
                                               &assertion_event_message_list,
@@ -616,8 +616,8 @@ _output_very_verbose_event_enable (ipmi_sensors_state_data_t *state_data,
                                    field_len);
   if (field_len)
     {
-      if (sensor_class == SENSOR_CLASS_THRESHOLD
-          || sensor_class == SENSOR_CLASS_GENERIC_DISCRETE)
+      if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
+          || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
         {
           if (get_generic_event_message_list (state_data,
                                               &deassertion_event_message_list,
@@ -666,7 +666,7 @@ sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
   int16_t m, b;
   uint8_t linearization, analog_data_format;
   uint8_t event_reading_type_code;
-  int sensor_class;
+  int event_reading_type_code_class;
 
   assert(state_data);
   assert(sdr_record);
@@ -685,9 +685,9 @@ sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                                              &event_reading_type_code) < 0)
     return -1;
 
-  sensor_class = sensor_classify (event_reading_type_code);
+  event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
 
-  if (sensor_class == SENSOR_CLASS_THRESHOLD)
+  if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
     {
       if (sdr_cache_get_sensor_decoding_data(state_data->pstate,
                                              sdr_record,

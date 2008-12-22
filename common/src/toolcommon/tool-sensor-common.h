@@ -22,14 +22,6 @@
 
 #include <stdint.h>
 
-#define SENSOR_CLASS_NOT_AVAILABLE            0x01
-#define SENSOR_CLASS_THRESHOLD                0x02
-#define SENSOR_CLASS_GENERIC_DISCRETE         0x03
-#define SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE 0x04
-#define SENSOR_CLASS_OEM                      0x05
-
-int sensor_classify (uint8_t event_reading_type_code);
-
 const char *sensor_group (int sensor_type);
 
 #endif

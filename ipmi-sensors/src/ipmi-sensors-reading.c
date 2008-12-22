@@ -254,7 +254,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
   uint8_t sensor_number;
   uint8_t sensor_type;
   uint8_t event_reading_type_code;
-  int sensor_class;
+  int event_reading_type_code_class;
   double *tmp_reading = NULL;
   uint64_t val;
   int rv = -1;
@@ -469,9 +469,9 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
       goto cleanup;
     }
   
-  sensor_class = sensor_classify (event_reading_type_code);
+  event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
 
-  if (sensor_class == SENSOR_CLASS_THRESHOLD)
+  if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
     {
       _FIID_OBJ_GET (obj_get_sensor_reading_rs, "sensor_reading", &val);
 
@@ -574,11 +574,11 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
       
       rv = 1;
     }
-  else if (sensor_class == SENSOR_CLASS_GENERIC_DISCRETE
-           || sensor_class ==  SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE
-           || sensor_class == SENSOR_CLASS_OEM)
+  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
+           || event_reading_type_code_class ==  IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+           || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM)
     {               
-      if (sensor_class == SENSOR_CLASS_GENERIC_DISCRETE)
+      if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
         {
           if (get_generic_event_message_list (state_data,
                                               event_message_list,
@@ -590,7 +590,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
 
           rv = 1;
         }
-      else if (sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
+      else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
         {
           if (get_sensor_specific_event_message_list (state_data,
                                                       event_message_list,
@@ -602,7 +602,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
 
           rv = 1;
         }
-      else if (sensor_class == SENSOR_CLASS_OEM)
+      else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM)
         {
           char *event_message = NULL;
           char **tmp_event_message_list = NULL;

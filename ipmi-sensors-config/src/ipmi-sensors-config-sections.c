@@ -61,7 +61,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
       uint8_t record_type;
       uint8_t event_reading_type_code;
       int sdr_record_len;
-      int sensor_class;
+      int event_reading_type_code_class;
       config_err_t ret;
   
       memset(sdr_record, '\0', IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH);
@@ -115,9 +115,9 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
                                                  &event_reading_type_code) < 0)
         goto cleanup;
 
-      sensor_class = sensor_classify (event_reading_type_code);
+      event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
 
-      if (sensor_class == SENSOR_CLASS_THRESHOLD)
+      if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
         {
           if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
             {
@@ -137,8 +137,8 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
               continue;
             }
         }
-      else if (sensor_class == SENSOR_CLASS_GENERIC_DISCRETE
-               || sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
+      else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
+               || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
         {
           if ((ret = ipmi_sensors_config_discrete_section (state_data,
                                                            sdr_record,

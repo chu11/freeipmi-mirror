@@ -25,6 +25,14 @@ extern "C" {
 
 #include <stdint.h>
 
+#define IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD                0x01
+#define IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE         0x02
+#define IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE 0x03
+#define IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM                      0x04
+#define IPMI_EVENT_READING_TYPE_CODE_CLASS_UNKNOWN                  0x05
+
+int ipmi_event_reading_type_code_class(uint8_t event_reading_type_code);
+
 int ipmi_get_generic_event_message (uint8_t event_reading_type_code,
 				    uint16_t offset,
 				    char *buf,

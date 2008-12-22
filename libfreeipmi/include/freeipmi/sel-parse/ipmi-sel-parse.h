@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.1.2.3 2008-12-18 23:38:33 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.1.2.4 2008-12-22 23:04:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -86,18 +86,8 @@ int ipmi_sel_parse_search_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t record_id
 /* SEL read functions - can be used after sel parsed or within callbacks */
 int ipmi_sel_parse_read_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t *record_id);
 int ipmi_sel_parse_read_record_type(ipmi_sel_parse_ctx_t ctx, uint8_t *record_type);
-int ipmi_sel_parse_read_record_timestamp(ipmi_sel_parse_ctx_t ctx, uint32_t *timestamp);
-int ipmi_sel_parse_read_generator_id(ipmi_sel_parse_ctx_t ctx, uint8_t *generator_id);
-int ipmi_sel_parse_read_channel_number(ipmi_sel_parse_ctx_t ctx, uint8_t *channel_number);
-int ipmi_sel_parse_read_ipmb_device_lun(ipmi_sel_parse_ctx_t ctx, uint8_t *ipmb_device_lun);
-int ipmi_sel_parse_read_sensor_type(ipmi_sel_parse_ctx_t ctx, uint8_t *sensor_type);
-int ipmi_sel_parse_read_sensor_number(ipmi_sel_parse_ctx_t ctx, uint8_t *sensor_number);
-int ipmi_sel_parse_read_event_dir(ipmi_sel_parse_ctx_t ctx, uint8_t *event_dir);
-int ipmi_sel_parse_read_event_type(ipmi_sel_parse_ctx_t ctx, uint8_t *event_type);
-int ipmi_sel_parse_read_event_data_1(ipmi_sel_parse_ctx_t ctx, uint8_t *event_data_1);
-int ipmi_sel_parse_read_event_data_2(ipmi_sel_parse_ctx_t ctx, uint8_t *event_data_2);
-int ipmi_sel_parse_read_event_data_3(ipmi_sel_parse_ctx_t ctx, uint8_t *event_data_3);
 
+/* returns length of data written into buffer */
 int ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx, 
                                uint8_t *buf,
                                unsigned int buflen);

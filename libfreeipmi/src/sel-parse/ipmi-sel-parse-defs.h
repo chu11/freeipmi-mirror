@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-defs.h,v 1.1.2.3 2008-12-19 01:05:30 chu11 Exp $
+ *  $Id: ipmi-sel-parse-defs.h,v 1.1.2.4 2008-12-22 23:04:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -54,6 +54,11 @@
 #define IPMI_SEL_PARSE_DEBUG_BUFLEN         256
 
 #define IPMI_SEL_PARSE_RESERVATION_ID_RETRY   4
+
+#define IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD        0x1
+#define IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD     0x2
+#define IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD 0x3
+#define IPMI_SEL_RECORD_TYPE_CLASS_UNKNOWN_RECORD             0x4
 
 struct ipmi_sel_parse_entry {
   uint8_t sel_event_record[IPMI_SEL_RECORD_LENGTH];
