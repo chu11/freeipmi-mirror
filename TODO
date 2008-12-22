@@ -55,6 +55,9 @@ ipmi-sel
   - for verbose mode?
 - check if format is correct in record
 - check of 0xFF of 0x0F is event_data2/3 is not valid/unspecified
+- output severity information
+- output previous threshold/state info
+- output if threshold > or < 
 
 inband code
 -----------
