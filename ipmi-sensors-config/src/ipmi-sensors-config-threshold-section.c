@@ -35,7 +35,6 @@
 #include "pstdout.h"
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
-#include "tool-sensor-common.h"
 
 /* 3% range is what we'll go with right now */
 #define THRESHOLD_RANGE_MIN_MULTIPLIER 0.97
@@ -1212,13 +1211,13 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
     snprintf(description, 
              CONFIG_MAX_DESCRIPTION_LEN,
              "Give valid input for sensor type = %s; units = %s",
-             sensor_group (sensor_type),
+             ipmi_get_sensor_group (sensor_type),
              ipmi_sensor_units[sensor_unit]);
   else
     snprintf(description, 
              CONFIG_MAX_DESCRIPTION_LEN,
              "Give valid input for sensor type = %s",
-             sensor_group (sensor_type));
+             ipmi_get_sensor_group (sensor_type));
 
   if (setup_sensor_event_enable_fields (state_data,
                                         sdr_record,

@@ -36,7 +36,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-sensor-common.h"
 
 static int
 _output_verbose_header (ipmi_sensors_state_data_t *state_data,
@@ -104,7 +103,7 @@ _output_verbose_header (ipmi_sensors_state_data_t *state_data,
                   id_string);
   pstdout_printf (state_data->pstate, 
                   "Group Name: %s (%Xh)\n",
-                  sensor_group (sensor_type),
+                  ipmi_get_sensor_group (sensor_type),
                   sensor_type);
   pstdout_printf (state_data->pstate, 
                   "Sensor Number: %d\n", 

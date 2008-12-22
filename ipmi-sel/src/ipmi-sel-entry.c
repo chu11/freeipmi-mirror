@@ -56,7 +56,6 @@
 #include "freeipmi-portability.h"
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
-#include "tool-sensor-common.h"
 
 #define SEL_RECORD_TYPE_UNKNOWN_RECORD             0x0
 #define SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD        0x1
@@ -431,7 +430,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 
       if (asprintf (sensor_info, 
                     "%s %s", 
-                    sensor_group (sensor_type), 
+                    ipmi_get_sensor_group (sensor_type), 
                     id_string) < 0)
         {
           /* asprintf can leave pointer in an unknown state */
@@ -444,7 +443,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
     {
       if (asprintf (sensor_info, 
                     "%s #%d", 
-                    sensor_group (sensor_type), 
+                    ipmi_get_sensor_group (sensor_type), 
                     sensor_number) < 0)
         {
           /* asprintf can leave pointer in an unknown state */

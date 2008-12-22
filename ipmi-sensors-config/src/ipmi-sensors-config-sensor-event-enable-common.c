@@ -34,7 +34,6 @@
 #include "pstdout.h"
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
-#include "tool-sensor-common.h"
 
 /* event field strings */
 

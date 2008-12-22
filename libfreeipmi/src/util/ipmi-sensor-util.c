@@ -27,6 +27,7 @@
 
 #include "freeipmi/util/ipmi-sensor-util.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
+#include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
@@ -61,6 +62,18 @@ ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen)
   ERR_ENOSPC(!(rv >= (buflen - 1)));
 
   return (0);
+}
+
+const char *
+ipmi_get_sensor_group (unsigned int sensor_type)
+{
+  if (IPMI_SENSOR_TYPE_VALID(sensor_type))
+    return (ipmi_sensor_types[sensor_type]);
+  
+  if (IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
+    return ipmi_oem_sensor_type;
+
+  return NULL;
 }
 
 int

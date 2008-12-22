@@ -4,9 +4,6 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	libfreeipmi/include/freeipmi/record-format/ipmi-sel-record-format.h:
 	Cleanup macro names and add new macros as needed.
 
-	* libfreeipmi/: Include new sel-parse subsection to libfreeipmi
-	library.
-
 	* common/src/tool-sensor-common.h, common/src/tool-sensor-common.c
 	(sensor_classify): Removed function.
 
@@ -18,6 +15,24 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* ipmi-sensors/, ipmi-sensors-config/, ipmi-sel/: Update as
 	necessary for change from sensor_classify to
 	ipmi_event_reading_type_code_class.
+
+	* common/src/tool-sensor-common.h, common/src/tool-sensor-common.c
+	(sensor_group): Removed function.
+
+	*
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-util.h,
+	libfreeipmi/src/util/ipmi-sensor-util.c
+	(ipmi_get_sensor_group): New function.
+
+	* ipmi-sensors/, ipmi-sensors-config/, ipmi-sel/: Update as
+	necessary for change from sensor_classify to
+	ipmi_get_sensor_group.
+
+	* common/src/tool-sensor-common.h,
+	common/src/tool-sensor-common.c: Removed files.
+
+	* libfreeipmi/: Include new sel-parse subsection to libfreeipmi
+	library.
 
 	* Update documentation and manpages appropriately.
 	

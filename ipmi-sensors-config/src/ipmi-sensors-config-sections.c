@@ -36,7 +36,6 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "tool-sdr-cache-common.h"
-#include "tool-sensor-common.h"
 
 struct config_section *
 ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_data)

@@ -44,7 +44,6 @@
 #include "freeipmi-portability.h"
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
-#include "tool-sensor-common.h"
 
 #define IPMI_SENSORS_OK_MSG   "OK"
 

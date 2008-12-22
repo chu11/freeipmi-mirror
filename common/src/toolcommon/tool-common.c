@@ -464,4 +464,3 @@ format_kg(char *outstr, int outsz, const unsigned char *k_g)
 
   return outstr;
 }
-
