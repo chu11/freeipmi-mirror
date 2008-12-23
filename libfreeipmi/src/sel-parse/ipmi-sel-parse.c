@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.1.2.5 2008-12-22 23:04:19 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.1.2.6 2008-12-23 18:46:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -65,6 +65,7 @@ static char *ipmi_sel_parse_errmsgs[] =
     "sdr cache filesystem error",
     "sdr cache error",
     "no sel entries available",
+    "invalid sel entry",
     "not found",
     "callback error",
     "internal IPMI error",
@@ -248,12 +249,6 @@ _sel_entries_clear(ipmi_sel_parse_ctx_t ctx)
   ctx->callback_sel_entry = NULL;
 }
 
-/* 
- * XXX: Handle if sel_event_record not long enough and data not set
- * XXX: Handle if sel_event_record not long enough and data not set
- * XXX: Handle if sel_event_record not long enough and data not set
- */
-
 static int
 _sel_entry_record_id(ipmi_sel_parse_ctx_t ctx,
                      struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -266,6 +261,7 @@ _sel_entry_record_id(ipmi_sel_parse_ctx_t ctx,
   assert(ctx);
   assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
   assert(sel_parse_entry);
+  assert(sel_parse_entry->sel_event_record_len >= IPMI_SEL_RECORD_HEADER_LENGTH);
   assert(record_id);
   
   SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record_header, tmpl_sel_record_header);
@@ -297,6 +293,7 @@ _sel_entry_record_type(ipmi_sel_parse_ctx_t ctx,
   assert(ctx);
   assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
   assert(sel_parse_entry);
+  assert(sel_parse_entry->sel_event_record_len >= IPMI_SEL_RECORD_HEADER_LENGTH);
   assert(record_type);
 
   SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record_header, tmpl_sel_record_header);
@@ -355,11 +352,13 @@ _sel_entry_system_event_record(ipmi_sel_parse_ctx_t ctx,
   uint8_t generator_id_type;
   uint8_t generator_id_address;
   uint64_t val;
+  int8_t flag;
   int rv = -1;
 
   assert(ctx);
   assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
   assert(sel_parse_entry);
+  assert(sel_parse_entry->sel_event_record_len >= IPMI_SEL_RECORD_LENGTH);
 
   if (_sel_entry_record_type(ctx, sel_parse_entry, &record_type) < 0)
     goto cleanup;
@@ -373,8 +372,12 @@ _sel_entry_system_event_record(ipmi_sel_parse_ctx_t ctx,
     }
 
   SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_system_event_record,
-                                    tmpl_sel_system_event_record);
-
+                                    tmpl_sel_system_event_record_event_fields);
+  
+  SEL_PARSE_FIID_OBJ_SET_ALL_CLEANUP(obj_sel_system_event_record, 
+                                     sel_parse_entry->sel_event_record,
+                                     sel_parse_entry->sel_event_record_len);
+  
   if (timestamp)
     {
       SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "timestamp", &val);
@@ -485,12 +488,16 @@ _sel_entry_dump(ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_parse
   if (!(ctx->flags & IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP))
     return;
 
+  if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_HEADER_LENGTH)
+    return;
+
   if (_sel_entry_record_type(ctx, sel_parse_entry, &record_type) < 0)
     goto cleanup;
 
   record_type_class = _sel_entry_record_type_class(record_type);
 
-  if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+  if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
+      && sel_parse_entry->sel_event_record_len >= IPMI_SEL_RECORD_LENGTH)
     {
       uint8_t event_type_code;
       uint8_t event_data2_flag;
@@ -528,7 +535,6 @@ _sel_entry_dump(ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_parse
         }
       else
         SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_system_event_record);
-
     }
   else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
     SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_timestamped_oem_record);
@@ -579,6 +585,7 @@ ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
       unsigned int reservation_canceled = 0;
       uint64_t val;
       int len;
+
       /*
        *
        * IPMI spec states in section 31.4.1:

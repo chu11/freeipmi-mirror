@@ -35,6 +35,13 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	case if ipmi_get_sensor_type_string returns NULL (i.e. sensor_type
 	unrecognized).
 
+	* common/src/tool-fiid-wrappers.h
+	(_FIID_OBJ_GET_WITH_RETURN_VALUE): Rename to _FIID_OBJ_GET_WITH_RV
+	and make interface consistent to others.
+
+	* ipmi-sensors/, ipmi-sensors-config/, bmc-info/, ipmi-chassis/,
+	ipmi-chassis-config/: Adjust for macro name change.
+
 	* libfreeipmi/: Include new sel-parse subsection to libfreeipmi
 	library.
 

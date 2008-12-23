@@ -80,73 +80,73 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs, 
-                                   "front_panel.standby_button_disabled", 
-                                   &val,
-                                   flag);
+  _FIID_OBJ_GET_WITH_RV (flag,
+                         obj_cmd_rs, 
+                         "front_panel.standby_button_disabled", 
+                         &val);
   if (flag)
     data->standby = val;
   else
     data->standby = BUTTON_UNKNOWN;
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs, 
-                                   "front_panel.diagnostic_interrupt_button_disabled", 
-                                   &val,
-                                   flag);
+  _FIID_OBJ_GET_WITH_RV (flag,
+                         obj_cmd_rs, 
+                         "front_panel.diagnostic_interrupt_button_disabled", 
+                         &val);
   if (flag)
     data->diagnostic_interrupt = val;
   else
     data->diagnostic_interrupt = BUTTON_UNKNOWN;
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs, 
-                                   "front_panel.reset_button_disabled", 
-                                   &val,
-                                   flag);
+  _FIID_OBJ_GET_WITH_RV (flag,
+                         obj_cmd_rs, 
+                         "front_panel.reset_button_disabled", 
+                         &val);
   if (flag)
     data->reset = val;
   else
     data->reset = BUTTON_UNKNOWN;
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
-                                   "front_panel.power_off_button_disabled", 
-                                   &val,
-                                   flag);
+  _FIID_OBJ_GET_WITH_RV (flag,
+                         obj_cmd_rs,
+                         "front_panel.power_off_button_disabled", 
+                         &val);
   if (flag)
     data->power_off = val;
   else
     data->power_off = BUTTON_UNKNOWN;
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs, 
-                                   "front_panel.standby_button_disable_allowed", 
-                                   &val,
-                                   flag);
+  _FIID_OBJ_GET_WITH_RV (flag,
+                         obj_cmd_rs, 
+                         "front_panel.standby_button_disable_allowed", 
+                         &val);
   if (flag)
     data->standby_disable_allowed = val;
   else
     data->standby_disable_allowed = BUTTON_DISABLE_UNKNOWN;
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs, 
-                                   "front_panel.diagnostic_interrupt_button_disable_allowed", 
-                                   &val,
-                                   flag);
+  _FIID_OBJ_GET_WITH_RV (flag,
+                         obj_cmd_rs, 
+                         "front_panel.diagnostic_interrupt_button_disable_allowed", 
+                         &val);
   if (flag)
     data->diagnostic_interrupt_disable_allowed = val;
   else
     data->diagnostic_interrupt_disable_allowed = BUTTON_DISABLE_UNKNOWN;
   
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs, 
-                                   "front_panel.reset_button_disable_allowed", 
-                                   &val,
-                                   flag);
+  _FIID_OBJ_GET_WITH_RV (flag,
+                         obj_cmd_rs, 
+                         "front_panel.reset_button_disable_allowed", 
+                         &val);
   if (flag)
     data->reset_disable_allowed = val;
   else
     data->reset_disable_allowed = BUTTON_DISABLE_UNKNOWN;
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs, 
-                                   "front_panel.power_off_button_disable_allowed", 
-                                   &val,
-                                   flag);
+  _FIID_OBJ_GET_WITH_RV (flag,
+                         obj_cmd_rs, 
+                         "front_panel.power_off_button_disable_allowed", 
+                         &val);
   if (flag)
     data->power_off_disable_allowed = val;
   else

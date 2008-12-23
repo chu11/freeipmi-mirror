@@ -573,10 +573,10 @@ _output_very_verbose_event_enable (ipmi_sensors_state_data_t *state_data,
    * disabled.
    */
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
-                                   "assertion_event_bitmask",
-                                   &val,
-                                   field_len);
+  _FIID_OBJ_GET_WITH_RV (field_len,
+                         obj_cmd_rs,
+                         "assertion_event_bitmask",
+                         &val);
   if (field_len)
     {
       if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
@@ -609,10 +609,10 @@ _output_very_verbose_event_enable (ipmi_sensors_state_data_t *state_data,
         goto cleanup;
     }
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
-                                   "deassertion_event_bitmask",
-                                   &val,
-                                   field_len);
+  _FIID_OBJ_GET_WITH_RV (field_len,
+                         obj_cmd_rs,
+                         "deassertion_event_bitmask",
+                         &val);
   if (field_len)
     {
       if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD

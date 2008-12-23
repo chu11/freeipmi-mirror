@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.1.2.4 2008-12-22 23:04:18 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.1.2.5 2008-12-23 18:46:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -40,13 +40,14 @@
 #define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_PERMISSION              6
 #define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR                   7
 #define IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES                    8
-#define IPMI_SEL_PARSE_CTX_ERR_NOT_FOUND                         9
-#define IPMI_SEL_PARSE_CTX_ERR_CALLBACK_ERROR                   10
-#define IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR                       11 
-#define IPMI_SEL_PARSE_CTX_ERR_SYSTEM_ERROR                     12
-#define IPMI_SEL_PARSE_CTX_ERR_OVERFLOW                         13
-#define IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR                   14
-#define IPMI_SEL_PARSE_CTX_ERR_ERRNUMRANGE                      15
+#define IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY                 9
+#define IPMI_SEL_PARSE_CTX_ERR_NOT_FOUND                        10
+#define IPMI_SEL_PARSE_CTX_ERR_CALLBACK_ERROR                   11
+#define IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR                       12 
+#define IPMI_SEL_PARSE_CTX_ERR_SYSTEM_ERROR                     13
+#define IPMI_SEL_PARSE_CTX_ERR_OVERFLOW                         14
+#define IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR                   15
+#define IPMI_SEL_PARSE_CTX_ERR_ERRNUMRANGE                      16
 
 #define IPMI_SEL_PARSE_FLAGS_DEFAULT                        0x0000
 #define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                     0x0001

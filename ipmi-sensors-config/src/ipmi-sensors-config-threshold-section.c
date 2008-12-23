@@ -1155,7 +1155,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   config_err_t ret;
   uint8_t sensor_type, sensor_unit;
   char description[CONFIG_MAX_DESCRIPTION_LEN];
-  char *sensor_type_str = NULL;
+  const char *sensor_type_str = NULL;
 
   assert(state_data);
   assert(sdr_record);
@@ -1208,7 +1208,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                  &sensor_unit) < 0)
     goto cleanup;
 
-  sensor_type_str = ipmi_get_sensor_type_string (sensor_type)
+  sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
 
   memset(description, '\0', CONFIG_MAX_DESCRIPTION_LEN);
   if (IPMI_SENSOR_UNIT_VALID(sensor_unit)

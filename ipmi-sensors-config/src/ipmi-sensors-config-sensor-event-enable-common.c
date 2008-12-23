@@ -503,10 +503,10 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
       goto out;
     }
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
-                                   "assertion_event_bitmask",
-                                   &val,
-                                   field_len);
+  _FIID_OBJ_GET_WITH_RV (field_len,
+                         obj_cmd_rs,
+                         "assertion_event_bitmask",
+                         &val);
 
   /* assertion event bitmask need not be returned */
   if (field_len)
@@ -514,10 +514,10 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
   else
     data->assertion_bits = 0;
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
-                                   "deassertion_event_bitmask",
-                                   &val,
-                                   field_len);
+  _FIID_OBJ_GET_WITH_RV (field_len,
+                         obj_cmd_rs,
+                         "deassertion_event_bitmask",
+                         &val);
 
   /* deassertion event bitmask need not be returned */
   if (field_len)

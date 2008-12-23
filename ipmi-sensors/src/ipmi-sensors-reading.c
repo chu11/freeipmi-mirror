@@ -432,15 +432,15 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
    * Hopefully this doesn't bite me later on.
    */
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_get_sensor_reading_rs,
-                                   "sensor_event_bitmask1",
-                                   &sensor_event_bitmask1,
-                                   sensor_event_bitmask1_len);
+  _FIID_OBJ_GET_WITH_RV (sensor_event_bitmask1_len,
+                         obj_get_sensor_reading_rs,
+                         "sensor_event_bitmask1",
+                         &sensor_event_bitmask1);
   
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_get_sensor_reading_rs,
-                                   "sensor_event_bitmask2",
-                                   &sensor_event_bitmask2,
-                                   sensor_event_bitmask2_len);
+  _FIID_OBJ_GET_WITH_RV (sensor_event_bitmask2_len,
+                         obj_get_sensor_reading_rs,
+                         "sensor_event_bitmask2",
+                         &sensor_event_bitmask2);
  
   /* 
    * IPMI Workaround (achu)

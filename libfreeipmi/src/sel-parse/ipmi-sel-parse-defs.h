@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-defs.h,v 1.1.2.4 2008-12-22 23:04:19 chu11 Exp $
+ *  $Id: ipmi-sel-parse-defs.h,v 1.1.2.5 2008-12-23 18:46:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -50,6 +50,7 @@
 
 /* Table 21-1 */
 #define IPMI_SEL_RECORD_LENGTH               16
+#define IPMI_SEL_RECORD_HEADER_LENGTH         3
 
 #define IPMI_SEL_PARSE_DEBUG_BUFLEN         256
 

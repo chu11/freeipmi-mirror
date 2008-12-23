@@ -104,7 +104,7 @@ do {                                                                    \
     *__localval_ptr = __localval;                                       \
 } while (0)
 
-#define _FIID_OBJ_GET_WITH_RETURN_VALUE(__obj, __field, __val, __rv)    \
+#define _FIID_OBJ_GET_WITH_RV(__rv, __obj, __field, __val)              \
   do {                                                                  \
     uint64_t __localval = 0, *__localval_ptr;                           \
     __localval_ptr = (__val);                                           \

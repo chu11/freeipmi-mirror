@@ -245,7 +245,7 @@ _sensors_group_specified(ipmi_sensors_state_data_t *state_data,
                                      &sensor_type) < 0)
         return -1;
 
-      sdr_group_name = ipmi_get_sensor_group (sensor_type);
+      sdr_group_name = ipmi_get_sensor_type_string (sensor_type);
     }
 
   if (sdr_group_name)

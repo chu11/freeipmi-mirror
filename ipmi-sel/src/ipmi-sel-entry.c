@@ -284,7 +284,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
   fiid_obj_t obj = NULL;
   int8_t rv = -1;
   int sdr_record_found = 0;
-  char *sensor_type_str = NULL;
+  const char *sensor_type_str = NULL;
   char sensor_type_str_buf[IPMI_SEL_SENSOR_TYPE_STR_BUFLEN];
 
   assert (state_data);
@@ -422,7 +422,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
   sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
 
   memset(sensor_type_str_buf, '\0', IPMI_SEL_SENSOR_TYPE_STR_BUFLEN);
-  if (sensor_type_str;
+  if (sensor_type_str)
       snprintf(sensor_type_str_buf, IPMI_SEL_SENSOR_TYPE_STR_BUFLEN, "%s ", sensor_type_str);
   
   if (sdr_record_found)

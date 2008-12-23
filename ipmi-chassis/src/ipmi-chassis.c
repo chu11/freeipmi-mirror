@@ -139,6 +139,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
   uint64_t val = 0, temp_val;
   uint8_t front_panel_capabilities = 0, misc_chassis_status = 0;
   int32_t rv = -1;
+  int8_t flag;
 
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_chassis_status_rs);
 
@@ -342,11 +343,10 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
   if (!misc_chassis_status)
     pstdout_printf (state_data->pstate, "\n");
   
-  rv = 0;
   pstdout_printf (state_data->pstate, 
                   "Front panel capabilities   :");
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (cmd_rs, "front_panel.power_off_button_disabled", &val, rv);
-  if (rv)
+  _FIID_OBJ_GET_WITH_RV (flag, cmd_rs, "front_panel.power_off_button_disabled", &val);
+  if (flag)
     {
       if (val)
         {  
