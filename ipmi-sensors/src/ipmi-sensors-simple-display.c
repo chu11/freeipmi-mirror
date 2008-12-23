@@ -90,7 +90,7 @@ _output_simple_header (ipmi_sensors_state_data_t *state_data,
                       "%d: %s (%s): ", 
                       record_id, 
                       id_string,
-                      ipmi_get_sensor_group (sensor_type));
+                      sensors_get_sensor_group (sensor_type));
     }
 
   return 0;

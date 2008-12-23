@@ -182,7 +182,7 @@ _output_very_verbose_header (ipmi_sensors_state_data_t *state_data,
                   id_string);
   pstdout_printf (state_data->pstate, 
                   "Group Name: %s (%Xh)\n",
-                  ipmi_get_sensor_group (sensor_type),
+                  sensors_get_sensor_group (sensor_type),
                   sensor_type);
   pstdout_printf (state_data->pstate, 
                   "Sensor Number: %d\n", 

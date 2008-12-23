@@ -65,7 +65,7 @@ ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen)
 }
 
 const char *
-ipmi_get_sensor_group (unsigned int sensor_type)
+ipmi_get_sensor_type_string (uint8_t sensor_type)
 {
   if (IPMI_SENSOR_TYPE_VALID(sensor_type))
     return (ipmi_sensor_types[sensor_type]);

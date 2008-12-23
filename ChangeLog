@@ -22,11 +22,11 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	*
 	libfreeipmi/include/freeipmi/util/ipmi-sensor-util.h,
 	libfreeipmi/src/util/ipmi-sensor-util.c
-	(ipmi_get_sensor_group): New function.
+	(ipmi_get_sensor_type_string): New function.
 
 	* ipmi-sensors/, ipmi-sensors-config/, ipmi-sel/: Update as
 	necessary for change from sensor_classify to
-	ipmi_get_sensor_group.
+	ipmi_get_sensor_type_string.
 
 	* common/src/tool-sensor-common.h,
 	common/src/tool-sensor-common.c: Removed files.

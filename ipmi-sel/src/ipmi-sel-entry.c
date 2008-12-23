@@ -62,6 +62,8 @@
 #define SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD     0x2
 #define SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD 0x3
 
+#define IPMI_SEL_SENSOR_TYPE_STR_BUFLEN           1024
+
 static int
 _find_sdr_record(ipmi_sel_state_data_t *state_data,
                  uint8_t sensor_number,
@@ -282,6 +284,8 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
   fiid_obj_t obj = NULL;
   int8_t rv = -1;
   int sdr_record_found = 0;
+  char *sensor_type_str = NULL;
+  char sensor_type_str_buf[IPMI_SEL_SENSOR_TYPE_STR_BUFLEN];
 
   assert (state_data);
   assert (record_data);
@@ -415,6 +419,12 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
         goto cleanup;
     }
 
+  sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
+
+  memset(sensor_type_str_buf, '\0', IPMI_SEL_SENSOR_TYPE_STR_BUFLEN);
+  if (sensor_type_str;
+      snprintf(sensor_type_str_buf, IPMI_SEL_SENSOR_TYPE_STR_BUFLEN, "%s ", sensor_type_str);
+  
   if (sdr_record_found)
     {
       char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
@@ -429,8 +439,8 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
         goto cleanup;
 
       if (asprintf (sensor_info, 
-                    "%s %s", 
-                    ipmi_get_sensor_group (sensor_type), 
+                    "%s%s", 
+                    sensor_type_str_buf, 
                     id_string) < 0)
         {
           /* asprintf can leave pointer in an unknown state */
@@ -442,8 +452,8 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
   else
     {
       if (asprintf (sensor_info, 
-                    "%s #%d", 
-                    ipmi_get_sensor_group (sensor_type), 
+                    "%s#%d", 
+                    sensor_type_str_buf, 
                     sensor_number) < 0)
         {
           /* asprintf can leave pointer in an unknown state */
