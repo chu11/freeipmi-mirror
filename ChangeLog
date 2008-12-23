@@ -31,6 +31,10 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* common/src/tool-sensor-common.h,
 	common/src/tool-sensor-common.c: Removed files.
 
+	* ipmi-sensors/, ipmi-sensors-config/, ipmi-sel/: Handle corner
+	case if ipmi_get_sensor_type_string returns NULL (i.e. sensor_type
+	unrecognized).
+
 	* libfreeipmi/: Include new sel-parse subsection to libfreeipmi
 	library.
 
