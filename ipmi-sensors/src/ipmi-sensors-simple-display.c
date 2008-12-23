@@ -33,6 +33,7 @@
 
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-display-common.h"
+#include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -90,7 +91,7 @@ _output_simple_header (ipmi_sensors_state_data_t *state_data,
                       "%d: %s (%s): ", 
                       record_id, 
                       id_string,
-                      sensors_get_sensor_group (sensor_type));
+                      ipmi_sensors_get_sensor_type_string (sensor_type));
     }
 
   return 0;

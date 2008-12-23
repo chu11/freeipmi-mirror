@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.1.2.6 2008-12-23 18:46:40 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.1.2.7 2008-12-23 19:02:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -352,7 +352,6 @@ _sel_entry_system_event_record(ipmi_sel_parse_ctx_t ctx,
   uint8_t generator_id_type;
   uint8_t generator_id_address;
   uint64_t val;
-  int8_t flag;
   int rv = -1;
 
   assert(ctx);

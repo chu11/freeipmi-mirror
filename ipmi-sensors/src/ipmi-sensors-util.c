@@ -387,9 +387,9 @@ str_replace_char (char *str, char chr, char with)
 }
 
 const char *
-sensors_get_sensor_group (unsigned int sensor_type)
+ipmi_sensors_get_sensor_type_string (unsigned int sensor_type)
 {
-  char *sensor_group;
+  const char *sensor_group;
 
   if ((sensor_group = ipmi_get_sensor_type_string (sensor_type)))
     return sensor_group;
