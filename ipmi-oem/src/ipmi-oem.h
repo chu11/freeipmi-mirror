@@ -36,7 +36,7 @@ struct ipmi_oem_arguments
   int list;
   char *oem_id;
   char *oem_command;
-  char *oem_options;
+  char **oem_options;
   unsigned int oem_options_count;
 };
 

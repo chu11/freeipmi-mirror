@@ -1,3 +1,8 @@
+2008-12-23  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/src/ipmi-oem.h, ipmi-oem/src/ipmi-oem-argp.h: Fix
+	memory allocation bug.
+	
 2008-12-18  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/src/ipmi-sel-entry.c (_get_sel_system_event_record):
