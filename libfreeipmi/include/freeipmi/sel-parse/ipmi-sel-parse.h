@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.1.2.5 2008-12-23 18:46:40 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.1.2.6 2008-12-24 00:44:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -40,14 +40,15 @@
 #define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_PERMISSION              6
 #define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR                   7
 #define IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES                    8
-#define IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY                 9
-#define IPMI_SEL_PARSE_CTX_ERR_NOT_FOUND                        10
-#define IPMI_SEL_PARSE_CTX_ERR_CALLBACK_ERROR                   11
-#define IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR                       12 
-#define IPMI_SEL_PARSE_CTX_ERR_SYSTEM_ERROR                     13
-#define IPMI_SEL_PARSE_CTX_ERR_OVERFLOW                         14
-#define IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR                   15
-#define IPMI_SEL_PARSE_CTX_ERR_ERRNUMRANGE                      16
+#define IPMI_SEL_PARSE_CTX_ERR_SEL_ENTRIES_LIST_END              9
+#define IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY                10
+#define IPMI_SEL_PARSE_CTX_ERR_NOT_FOUND                        11
+#define IPMI_SEL_PARSE_CTX_ERR_CALLBACK_ERROR                   12
+#define IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR                       13 
+#define IPMI_SEL_PARSE_CTX_ERR_SYSTEM_ERROR                     14
+#define IPMI_SEL_PARSE_CTX_ERR_OVERFLOW                         15
+#define IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR                   16
+#define IPMI_SEL_PARSE_CTX_ERR_ERRNUMRANGE                      17
 
 #define IPMI_SEL_PARSE_FLAGS_DEFAULT                        0x0000
 #define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                     0x0001
@@ -71,22 +72,32 @@ int ipmi_sel_parse_ctx_set_debug_prefix(ipmi_sel_parse_ctx_t ctx, const char *pr
 /* SEL Parse Functions 
  * 
  * callback is called after each SEL entry is parsed
+ *
+ * Returns the number of entries parsed
  */
 int ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
                    Ipmi_Sel_Parse_Callback callback,
                    void *callback_data);
 
-/* SEL data retrieval functions after SEL is parsed */
-int ipmi_sel_parse_entry_count(ipmi_sel_parse_ctx_t ctx, uint16_t *entry_count);
-
+/* SEL data retrieval functions after SEL is parsed 
+ *
+ * seek_record_id moves the iterator to the closest record_id >= record_id
+ * search_record_id finds the record id, will return NOT_FOUND if it can't be found
+ */
 int ipmi_sel_parse_first(ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_next(ipmi_sel_parse_ctx_t ctx);
-int ipmi_sel_parse_seek(ipmi_sel_parse_ctx_t ctx, unsigned int index);
+int ipmi_sel_parse_sel_entry_count(ipmi_sel_parse_ctx_t ctx);
+int ipmi_sel_parse_seek_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
 int ipmi_sel_parse_search_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
 
 /* SEL read functions - can be used after sel parsed or within callbacks */
+
+/* record_id & record_type - works with all SEL record types */
 int ipmi_sel_parse_read_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t *record_id);
 int ipmi_sel_parse_read_record_type(ipmi_sel_parse_ctx_t ctx, uint8_t *record_type);
+
+/* timetamp - works with sel event and timestampd OEM record types */
+int ipmi_sel_parse_read_timestamp(ipmi_sel_parse_ctx_t ctx, uint32_t *timestamp);
 
 /* returns length of data written into buffer */
 int ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx, 

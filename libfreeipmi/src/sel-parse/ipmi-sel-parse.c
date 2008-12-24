@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.1.2.7 2008-12-23 19:02:33 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.1.2.8 2008-12-24 00:44:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -66,6 +66,7 @@ static char *ipmi_sel_parse_errmsgs[] =
     "sdr cache error",
     "no sel entries available",
     "invalid sel entry",
+    "end of sel entries list reached",
     "not found",
     "callback error",
     "internal IPMI error",
@@ -101,6 +102,30 @@ ipmi_sel_parse_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ct
   return NULL;
 }
 
+static int
+_sel_entries_delete_all(void *x, void *y)
+{
+  return 1;
+}
+
+static void
+_sel_entries_clear(ipmi_sel_parse_ctx_t ctx)
+{
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+
+  list_delete_all(ctx->sel_entries, _sel_entries_delete_all, "dummyvalue");
+
+  if (ctx->sel_entries_itr)
+    {
+      list_iterator_destroy(ctx->sel_entries_itr);
+      ctx->sel_entries_itr = NULL;
+    }
+
+  ctx->current_sel_entry = NULL;
+  ctx->callback_sel_entry = NULL;
+}
+
 void
 ipmi_sel_parse_ctx_destroy(ipmi_sel_parse_ctx_t ctx)
 {
@@ -110,6 +135,8 @@ ipmi_sel_parse_ctx_destroy(ipmi_sel_parse_ctx_t ctx)
   ctx->magic = ~IPMI_SEL_PARSE_MAGIC;
   if (ctx->debug_prefix)
     free(ctx->debug_prefix);
+  _sel_entries_clear(ctx);
+  list_destroy(ctx->sel_entries);
   free(ctx);
 }
 
@@ -223,30 +250,6 @@ _sel_reservation_id(ipmi_sel_parse_ctx_t ctx,
  cleanup:
   SEL_PARSE_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
-}
-
-static int
-_sel_entries_delete_all(void *x, void *y)
-{
-  return 1;
-}
-
-static void
-_sel_entries_clear(ipmi_sel_parse_ctx_t ctx)
-{
-  assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
-
-  list_delete_all(ctx->sel_entries, _sel_entries_delete_all, "dummyvalue");
-
-  if (ctx->sel_entries_itr)
-    {
-      list_iterator_destroy(ctx->sel_entries_itr);
-      ctx->sel_entries_itr = NULL;
-    }
-
-  ctx->current_sel_entry = NULL;
-  ctx->callback_sel_entry = NULL;
 }
 
 static int
@@ -703,6 +706,211 @@ ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
   ctx->callback_sel_entry = NULL;
   SEL_PARSE_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
+}
+
+int
+ipmi_sel_parse_first(ipmi_sel_parse_ctx_t ctx)
+{
+  ERR(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+
+  if (!ctx->sel_entries_itr)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES;
+      return -1;
+    }
+
+  list_iterator_reset(ctx->sel_entries_itr);
+  ctx->current_sel_entry = list_next(ctx->sel_entries_itr);
+  return 0;
+}
+
+int
+ipmi_sel_parse_next(ipmi_sel_parse_ctx_t ctx)
+{
+  ERR(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+
+  if (!ctx->sel_entries_itr)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES;
+      return -1;
+    }
+
+  ctx->current_sel_entry = list_next(ctx->sel_entries_itr);
+  return ((ctx->current_sel_entry) ? 1 : 0);
+}
+
+int
+ipmi_sel_parse_sel_entry_count(ipmi_sel_parse_ctx_t ctx)
+{
+  ERR(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+
+  if (!ctx->sel_entries_itr)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES;
+      return -1;
+    }
+
+  return list_count(ctx->sel_entries);
+}
+
+static int
+_ipmi_sel_parse_find_record_id(ipmi_sel_parse_ctx_t ctx, 
+                               uint16_t record_id,
+                               unsigned int exact_match_flag)
+{
+  struct ipmi_sel_parse_entry *sel_parse_entry;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+
+  if (!ctx->sel_entries_itr)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES;
+      return -1;
+    }
+
+  list_iterator_reset(ctx->sel_entries_itr);
+
+  while ((sel_parse_entry = list_next(ctx->sel_entries_itr)))
+    {
+      uint16_t current_record_id;
+
+      if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_HEADER_LENGTH)
+        continue;
+      
+      if (_sel_entry_record_id(ctx,
+                               sel_parse_entry,
+                               &current_record_id) < 0)
+        goto cleanup;
+
+      if ((exact_match_flag 
+           && current_record_id == record_id)
+          || (!exact_match_flag
+              && current_record_id >= record_id))
+        {
+          rv = 0;
+          ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SUCCESS;
+          ctx->current_sel_entry = sel_parse_entry;
+          goto cleanup;
+        }
+    }
+
+  ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_NOT_FOUND;
+  list_iterator_reset(ctx->sel_entries_itr);
+ cleanup:
+  return rv;
+}
+
+int
+ipmi_sel_parse_seek_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
+{
+  return _ipmi_sel_parse_find_record_id(ctx,
+                                        record_id,
+                                        0);
+}
+
+int
+ipmi_sel_parse_search_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
+{
+  return _ipmi_sel_parse_find_record_id(ctx,
+                                        record_id,
+                                        1);
+}
+
+int 
+ipmi_sel_parse_read_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t *record_id)
+{
+  ERR(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+
+  SEL_PARSE_ERR_PARAMETERS(record_id);
+
+  if (!ctx->sel_entries_itr)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES;
+      return -1;
+    }
+
+  if (ctx->callback_sel_entry)
+    {
+      if (ctx->callback_sel_entry->sel_event_record_len < IPMI_SEL_RECORD_HEADER_LENGTH)
+        {
+          ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+          return -1;
+        }
+
+      if (_sel_entry_record_id(ctx,
+                               ctx->callback_sel_entry,
+                               record_id) < 0)
+        return -1;
+    }
+
+  if (!ctx->current_sel_entry)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SEL_ENTRIES_LIST_END;
+      return -1;
+    }
+  
+  if (ctx->current_sel_entry->sel_event_record_len < IPMI_SEL_RECORD_HEADER_LENGTH)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      return -1;
+    }
+
+  if (_sel_entry_record_id(ctx,
+                           ctx->current_sel_entry,
+                           record_id) < 0)
+    return -1;
+
+  ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SUCCESS;
+  return 0;
+}
+
+int
+ipmi_sel_parse_read_record_type(ipmi_sel_parse_ctx_t ctx, uint8_t *record_type)
+{
+  ERR(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+
+  SEL_PARSE_ERR_PARAMETERS(record_type);
+
+  if (!ctx->sel_entries_itr)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES;
+      return -1;
+    }
+
+  if (ctx->callback_sel_entry)
+    {
+      if (ctx->callback_sel_entry->sel_event_record_len < IPMI_SEL_RECORD_HEADER_LENGTH)
+        {
+          ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+          return -1;
+        }
+
+      if (_sel_entry_record_type(ctx,
+                                 ctx->callback_sel_entry,
+                                 record_type) < 0)
+        return -1;
+    }
+
+  if (!ctx->current_sel_entry)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SEL_ENTRIES_LIST_END;
+      return -1;
+    }
+  
+  if (ctx->current_sel_entry->sel_event_record_len < IPMI_SEL_RECORD_HEADER_LENGTH)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      return -1;
+    }
+
+  if (_sel_entry_record_type(ctx,
+                             ctx->current_sel_entry,
+                             record_type) < 0)
+    return -1;
+
+  ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SUCCESS;
+  return 0;
 }
 
 int 
