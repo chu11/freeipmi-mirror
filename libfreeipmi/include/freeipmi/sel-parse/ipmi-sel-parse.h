@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.1.2.6 2008-12-24 00:44:22 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.1.2.7 2008-12-24 18:16:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -96,8 +96,11 @@ int ipmi_sel_parse_search_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t record_id
 int ipmi_sel_parse_read_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t *record_id);
 int ipmi_sel_parse_read_record_type(ipmi_sel_parse_ctx_t ctx, uint8_t *record_type);
 
-/* timetamp - works with sel event and timestampd OEM record types */
+/* timetamp - works with sel event and timestamped OEM record types */
 int ipmi_sel_parse_read_timestamp(ipmi_sel_parse_ctx_t ctx, uint32_t *timestamp);
+
+/* timetamp - works with sel timestamped OEM record types */
+int ipmi_sel_parse_read_manufacturer_id(ipmi_sel_parse_ctx_t ctx, uint32_t *manufacturer_id);
 
 /* returns length of data written into buffer */
 int ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx, 
