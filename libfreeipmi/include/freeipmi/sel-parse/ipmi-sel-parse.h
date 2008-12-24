@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.1.2.7 2008-12-24 18:16:59 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.1.2.8 2008-12-24 18:23:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -53,6 +53,11 @@
 #define IPMI_SEL_PARSE_FLAGS_DEFAULT                        0x0000
 #define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                     0x0001
 
+#define IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD        0x0
+#define IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD     0x1
+#define IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD 0x2
+#define IPMI_SEL_RECORD_TYPE_CLASS_UNKNOWN                    0x3
+
 typedef struct ipmi_sel_parse_ctx *ipmi_sel_parse_ctx_t;
 
 typedef int (*Ipmi_Sel_Parse_Callback)(ipmi_sel_parse_ctx_t c, void *callback_data);
@@ -90,8 +95,10 @@ int ipmi_sel_parse_sel_entry_count(ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_seek_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
 int ipmi_sel_parse_search_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
 
-/* SEL read functions - can be used after sel parsed or within callbacks */
-
+/* SEL read functions - can be used after sel parsed or within callbacks 
+ * - will return IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY if current sel entry
+ *   is not appropriate for data requested.
+ */
 /* record_id & record_type - works with all SEL record types */
 int ipmi_sel_parse_read_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t *record_id);
 int ipmi_sel_parse_read_record_type(ipmi_sel_parse_ctx_t ctx, uint8_t *record_type);
@@ -99,7 +106,7 @@ int ipmi_sel_parse_read_record_type(ipmi_sel_parse_ctx_t ctx, uint8_t *record_ty
 /* timetamp - works with sel event and timestamped OEM record types */
 int ipmi_sel_parse_read_timestamp(ipmi_sel_parse_ctx_t ctx, uint32_t *timestamp);
 
-/* timetamp - works with sel timestamped OEM record types */
+/* manufacturer_id - works with sel timestamped OEM record types */
 int ipmi_sel_parse_read_manufacturer_id(ipmi_sel_parse_ctx_t ctx, uint32_t *manufacturer_id);
 
 /* returns length of data written into buffer */
@@ -116,5 +123,7 @@ int ipmi_sel_parse_read_record_string(ipmi_sel_parse_ctx_t ctx,
 int ipmi_sel_parse_clear_sel(ipmi_sel_parse_ctx_t ctx);
 
 int ipmi_sel_parse_delete_sel_entry(ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
+
+int ipmi_sel_record_type_class(uint8_t record_type);
 
 #endif /* _IPMI_SEL_PARSE_H */

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.1.2.9 2008-12-24 18:16:59 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.1.2.10 2008-12-24 18:23:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -208,21 +208,6 @@ ipmi_sel_parse_ctx_set_debug_prefix(ipmi_sel_parse_ctx_t ctx, const char *prefix
 }
 
 static int
-_sel_entry_record_type_class(uint8_t record_type)
-{
-  if (IPMI_SEL_RECORD_TYPE_IS_EVENT(record_type))
-    return IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD;
-
-  if (IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM(record_type))
-    return IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD;
-
-  if (IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM(record_type))
-    return IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD;
-
-  return IPMI_SEL_RECORD_TYPE_CLASS_UNKNOWN_RECORD;
-}
-
-static int
 _sel_reservation_id(ipmi_sel_parse_ctx_t ctx,
                     uint16_t *reservation_id)
 {
@@ -366,7 +351,7 @@ _sel_entry_timestamp(ipmi_sel_parse_ctx_t ctx,
   if (_sel_entry_record_type(ctx, sel_parse_entry, &record_type) < 0)
     goto cleanup;
 
-  record_type_class = _sel_entry_record_type_class(record_type);
+  record_type_class = ipmi_sel_record_type_class(record_type);
 
   if (record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
       && record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
@@ -420,7 +405,7 @@ _sel_entry_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
   if (_sel_entry_record_type(ctx, sel_parse_entry, &record_type) < 0)
     goto cleanup;
 
-  record_type_class = _sel_entry_record_type_class(record_type);
+  record_type_class = ipmi_sel_record_type_class(record_type);
 
   if (record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
     {
@@ -484,7 +469,7 @@ _sel_entry_system_event_record(ipmi_sel_parse_ctx_t ctx,
   if (_sel_entry_record_type(ctx, sel_parse_entry, &record_type) < 0)
     goto cleanup;
   
-  record_type_class = _sel_entry_record_type_class(record_type);
+  record_type_class = ipmi_sel_record_type_class(record_type);
 
   if (record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     {
@@ -612,7 +597,7 @@ _sel_entry_dump(ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_parse
   if (_sel_entry_record_type(ctx, sel_parse_entry, &record_type) < 0)
     goto cleanup;
 
-  record_type_class = _sel_entry_record_type_class(record_type);
+  record_type_class = ipmi_sel_record_type_class(record_type);
 
   if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     {
@@ -665,7 +650,7 @@ _sel_entry_dump(ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_parse
     SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_timestamped_oem_record);
   else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
     SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_non_timestamped_oem_record);
-  else /* record_type_class == SEL_RECORD_TYPE_UNKNOWN_RECORD */
+  else /* record_type_class == SEL_RECORD_TYPE_UNKNOWN */
     SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_system_event_record);
  
  output:
@@ -1207,4 +1192,19 @@ ipmi_sel_parse_delete_sel_entry(ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
  cleanup:
   SEL_PARSE_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
+}
+
+int
+ipmi_sel_record_type_class(uint8_t record_type)
+{
+  if (IPMI_SEL_RECORD_TYPE_IS_EVENT(record_type))
+    return IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD;
+
+  if (IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM(record_type))
+    return IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD;
+
+  if (IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM(record_type))
+    return IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD;
+
+  return IPMI_SEL_RECORD_TYPE_CLASS_UNKNOWN;
 }
