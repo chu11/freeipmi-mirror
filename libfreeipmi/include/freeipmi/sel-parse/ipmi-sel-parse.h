@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.1.2.8 2008-12-24 18:23:02 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.1.2.9 2008-12-29 17:19:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -99,6 +99,7 @@ int ipmi_sel_parse_search_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t record_id
  * - will return IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY if current sel entry
  *   is not appropriate for data requested.
  */
+
 /* record_id & record_type - works with all SEL record types */
 int ipmi_sel_parse_read_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t *record_id);
 int ipmi_sel_parse_read_record_type(ipmi_sel_parse_ctx_t ctx, uint8_t *record_type);
@@ -106,8 +107,34 @@ int ipmi_sel_parse_read_record_type(ipmi_sel_parse_ctx_t ctx, uint8_t *record_ty
 /* timetamp - works with sel event and timestamped OEM record types */
 int ipmi_sel_parse_read_timestamp(ipmi_sel_parse_ctx_t ctx, uint32_t *timestamp);
 
+/* generator_id, event message format version, sensor type, sensor
+ * number, event direction, event type code, and event data available
+ * form system event record type 
+ */
+int ipmi_sel_parse_read_generator_id(ipmi_sel_parse_ctx_t ctx, uint8_t *generator_id);
+int ipmi_sel_parse_read_ipmb_device_lun(ipmi_sel_parse_ctx_t ctx, uint8_t *ipmb_device_lun);
+int ipmi_sel_parse_read_channel_number(ipmi_sel_parse_ctx_t ctx, uint8_t *channel_number);
+int ipmi_sel_parse_read_event_message_format_version(ipmi_sel_parse_ctx_t ctx, uint8_t *event_message_format_version);
+int ipmi_sel_parse_read_sensor_type(ipmi_sel_parse_ctx_t ctx, uint8_t *sensor_type);
+int ipmi_sel_parse_read_sensor_number(ipmi_sel_parse_ctx_t ctx, uint8_t *sensor_number);
+int ipmi_sel_parse_read_event_direction(ipmi_sel_parse_ctx_t ctx, uint8_t *event_direction);
+int ipmi_sel_parse_read_event_type_code(ipmi_sel_parse_ctx_t ctx, uint8_t *event_type_code);
+int ipmi_sel_parse_read_event_data1(ipmi_sel_parse_ctx_t ctx, uint8_t *event_data1);
+int ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code(ipmi_sel_parse_ctx_t ctx, 
+                                                                        uint8_t *event_data1_offset);
+int ipmi_sel_parse_read_event_data1_event_data2_flag(ipmi_sel_parse_ctx_t ctx, 
+                                                     uint8_t *event_data2_flag);
+int ipmi_sel_parse_read_event_data1_event_data3_flag(ipmi_sel_parse_ctx_t ctx, 
+                                                     uint8_t *event_data3_flag);
+int ipmi_sel_parse_read_event_data2(ipmi_sel_parse_ctx_t ctx, uint8_t *event_data2);
+int ipmi_sel_parse_read_event_data3(ipmi_sel_parse_ctx_t ctx, uint8_t *event_data3);
+
 /* manufacturer_id - works with sel timestamped OEM record types */
 int ipmi_sel_parse_read_manufacturer_id(ipmi_sel_parse_ctx_t ctx, uint32_t *manufacturer_id);
+
+/* oem - works with sel timestamped and non-timestamped OEM record types */
+/* will return number of bytes written to buffer on success */
+int ipmi_sel_parse_read_oem(ipmi_sel_parse_ctx_t ctx, uint8_t *buf, unsigned int buflen);
 
 /* returns length of data written into buffer */
 int ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx, 
