@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-defs.h,v 1.1.2.7 2008-12-30 17:59:15 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.h,v 1.1.2.1 2008-12-30 17:59:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -24,61 +24,26 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_SEL_PARSE_DEFS_H
-#define _IPMI_SEL_PARSE_DEFS_H
+#ifndef _IPMI_SEL_PARSE_STRING_H
+#define _IPMI_SEL_PARSE_STRING_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
 #include <stdint.h>
-#include <sys/param.h>
 
 #include "freeipmi/sel-parse/ipmi-sel-parse.h"
 
-#include "list.h"
+#include "ipmi-sel-parse-defs.h"
 
-#ifndef MAXPATHLEN
-#define MAXPATHLEN 4096
-#endif /* MAXPATHLEN */
+int
+sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
+                               char *fmt,
+                               uint8_t *record_buf,
+                               unsigned int record_buflen,
+                               uint8_t *buf,
+                               unsigned int buflen,
+                               unsigned int flags);
 
-#define IPMI_SEL_PARSE_MAGIC 0xAECD1846
-
-/* Table 21-1 */
-#define IPMI_SEL_RECORD_LENGTH               16
-#define IPMI_SEL_RECORD_HEADER_LENGTH         3
-
-#define IPMI_SEL_PARSE_DEBUG_BUFLEN         256
-
-#define IPMI_SEL_PARSE_RESERVATION_ID_RETRY   4
-
-#define IPMI_SEL_PARSE_FLAGS_MASK           (IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP)
-
-#define IPMI_SEL_PARSE_READ_STRING_MASK \
-  (IPMI_SEL_PARSE_READ_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD \
-   | IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE \
-   | IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_USE_SLASH \
-   | IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_MONTH_STRING)
-                                            
-struct ipmi_sel_parse_entry {
-  uint8_t sel_event_record[IPMI_SEL_RECORD_LENGTH];
-  unsigned int sel_event_record_len; /* should always be 16, but just in case */
-};
-
-struct ipmi_sel_parse_ctx {
-  uint32_t magic;
-  unsigned int errnum;
-  unsigned int flags;
-  char *debug_prefix;
-
-  ipmi_ctx_t ipmi_ctx;
-  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
-
-  List sel_entries;
-  ListIterator sel_entries_itr;
-  struct ipmi_sel_parse_entry *current_sel_entry;
-
-  struct ipmi_sel_parse_entry *callback_sel_entry;
-};
-
-#endif /* _IPMI_SEL_PARSE_DEFS_H */
+#endif /* _IPMI_SEL_PARSE_STRING_H */

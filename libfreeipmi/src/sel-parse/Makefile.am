@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.1.2.3 2008-12-18 23:38:33 chu11 Exp $
+## $Id: Makefile.am,v 1.1.2.4 2008-12-30 17:59:15 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -19,4 +19,7 @@ libselparse_la_CPPFLAGS = \
 	-D_REENTRANT
 
 libselparse_la_SOURCES = \
-	ipmi-sel-parse.c
+	ipmi-sel-parse.c \
+	ipmi-sel-parse-common.c \
+	ipmi-sel-parse-string.c \
+	ipmi-sel-parse-util.c

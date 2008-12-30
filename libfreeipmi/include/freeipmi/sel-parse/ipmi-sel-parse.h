@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.1.2.9 2008-12-29 17:19:00 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.1.2.10 2008-12-30 17:59:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -31,32 +31,38 @@
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/sdr-cache/ipmi-sdr-cache.h>
 
-#define IPMI_SEL_PARSE_CTX_ERR_SUCCESS                           0
-#define IPMI_SEL_PARSE_CTX_ERR_CONTEXT_NULL                      1
-#define IPMI_SEL_PARSE_CTX_ERR_CONTEXT_INVALID                   2
-#define IPMI_SEL_PARSE_CTX_ERR_PARAMETERS                        3
-#define IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY                     4
-#define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_FILESYSTEM              5
-#define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_PERMISSION              6
-#define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR                   7
-#define IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES                    8
-#define IPMI_SEL_PARSE_CTX_ERR_SEL_ENTRIES_LIST_END              9
-#define IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY                10
-#define IPMI_SEL_PARSE_CTX_ERR_NOT_FOUND                        11
-#define IPMI_SEL_PARSE_CTX_ERR_CALLBACK_ERROR                   12
-#define IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR                       13 
-#define IPMI_SEL_PARSE_CTX_ERR_SYSTEM_ERROR                     14
-#define IPMI_SEL_PARSE_CTX_ERR_OVERFLOW                         15
-#define IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR                   16
-#define IPMI_SEL_PARSE_CTX_ERR_ERRNUMRANGE                      17
+#define IPMI_SEL_PARSE_CTX_ERR_SUCCESS                                 0
+#define IPMI_SEL_PARSE_CTX_ERR_CONTEXT_NULL                            1
+#define IPMI_SEL_PARSE_CTX_ERR_CONTEXT_INVALID                         2
+#define IPMI_SEL_PARSE_CTX_ERR_PARAMETERS                              3
+#define IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY                           4
+#define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_FILESYSTEM                    5
+#define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_PERMISSION                    6
+#define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR                         7
+#define IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES                          8
+#define IPMI_SEL_PARSE_CTX_ERR_SEL_ENTRIES_LIST_END                    9
+#define IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY                      10
+#define IPMI_SEL_PARSE_CTX_ERR_NOT_FOUND                              11
+#define IPMI_SEL_PARSE_CTX_ERR_CALLBACK_ERROR                         12
+#define IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR                             13 
+#define IPMI_SEL_PARSE_CTX_ERR_SYSTEM_ERROR                           14
+#define IPMI_SEL_PARSE_CTX_ERR_OVERFLOW                               15
+#define IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR                         16
+#define IPMI_SEL_PARSE_CTX_ERR_ERRNUMRANGE                            17
 
-#define IPMI_SEL_PARSE_FLAGS_DEFAULT                        0x0000
-#define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                     0x0001
+#define IPMI_SEL_PARSE_FLAGS_DEFAULT                              0x0000
+#define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                           0x0001
 
-#define IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD        0x0
-#define IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD     0x1
-#define IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD 0x2
-#define IPMI_SEL_RECORD_TYPE_CLASS_UNKNOWN                    0x3
+#define IPMI_SEL_PARSE_READ_STRING_FLAGS_DEFAULT                  0x0000
+#define IPMI_SEL_PARSE_READ_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD 0x0001
+#define IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE     0x0002
+#define IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_USE_SLASH           0x0004
+#define IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_MONTH_STRING        0x0010
+
+#define IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD               0x0
+#define IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD            0x1
+#define IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD        0x2
+#define IPMI_SEL_RECORD_TYPE_CLASS_UNKNOWN                           0x3
 
 typedef struct ipmi_sel_parse_ctx *ipmi_sel_parse_ctx_t;
 
@@ -141,15 +147,68 @@ int ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx,
                                uint8_t *buf,
                                unsigned int buflen);
 
+/*
+ * create a string output of the SEL entry.
+ *
+ * String format - availability for output dependent on SEL record
+ * type.
+ *
+ * %i - record ID in decimal
+ * %t - time in format H:M:S using 24 hour clock
+ * %d - date in format D-M-YEAR
+ * %g - sensor group name
+ * %s - sensor name
+ * %e - offset from event/reading code string
+ * %f - event data 2 string
+ * %h - event data 3 string
+ * %j - event direction
+ * %m - manufacturer id
+ * %o - oem data in hex
+ * %% - percent sign
+ *
+ * flags
+ * 
+ * IGNORE_UNAVAILABLE_FIELD
+ * 
+ * If a field is not available for output (for example, a timestamp field
+ * in a SEL entry w/o a timestamp field), do not return an error.  Output
+ * nothing.
+ *
+ * OUTPUT_NOT_AVAILABLE
+ * 
+ * If a field is not available, do not output an empty string, output "N/A".
+ *
+ * DATE_USE_SLASH
+ *
+ * Use a '/' instead of hyphens when outputting the date.
+ *
+ * DATE_MONTH_STRING
+ *
+ * Output a month name (Jan, Feb, Mar, etc.) instead of the month
+ * number when outputting the date.
+ *
+ * Returns length of data written to buffer.  If >= buflen, no null
+ * termination exists in buffer.
+ */
 int ipmi_sel_parse_read_record_string(ipmi_sel_parse_ctx_t ctx, 
                                       char *fmt, 
                                       uint8_t *buf, 
-                                      unsigned int buflen);
+                                      unsigned int buflen,
+                                      unsigned int flags);
 
 /* Utility functions */
 int ipmi_sel_parse_clear_sel(ipmi_sel_parse_ctx_t ctx);
 
 int ipmi_sel_parse_delete_sel_entry(ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
+
+/* like ipmi_sel_parse_read_record_string - but pass in arbitrary buffer */
+int ipmi_sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
+                                        char *fmt,
+                                        uint8_t *record_buf,
+                                        unsigned int record_buflen,
+                                        uint8_t *buf,
+                                        unsigned int buflen,
+                                        unsigned int flags);
 
 int ipmi_sel_record_type_class(uint8_t record_type);
 
