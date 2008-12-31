@@ -1537,6 +1537,16 @@ do {                                                                          \
   __FIID_ERRNUM_TO_SEL_PARSE_ERRNUM(__obj_errnum);                            \
 } while (0)
 
+#define SEL_PARSE_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                      \
+do {                                                                          \
+  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                     \
+    {                                                                         \
+      __FIID_TRACE;                                                           \
+      __FIID_ERRNO_TO_SEL_PARSE_ERRNUM;                                       \
+      return (-1);                                                            \
+    }                                                                         \
+} while (0)
+
 #define SEL_PARSE_FIID_OBJ_CREATE(__obj, __tmpl)                              \
 do {                                                                          \
   if (!((__obj) = fiid_obj_create(__tmpl)))                                   \

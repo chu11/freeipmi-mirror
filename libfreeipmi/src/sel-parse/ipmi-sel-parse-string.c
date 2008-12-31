@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.1.2.2 2008-12-31 18:26:06 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.1.2.3 2008-12-31 22:20:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -50,8 +50,12 @@
 #include "freeipmi/sel-parse/ipmi-sel-parse.h"
 
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
+#include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
+#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
+#include "freeipmi/util/ipmi-sensor-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-sel-parse-defs.h"
@@ -64,6 +68,8 @@
 #include "freeipmi-portability.h"
 
 #define NA_STRING "N/A"
+
+#define SDR_RECORD_LENGTH 256
 
 static int
 _SNPRINTF(char *buf,
@@ -118,7 +124,207 @@ _invalid_sel_entry_common(ipmi_sel_parse_ctx_t ctx,
     }
   ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
   return -1;
-}                        
+}
+
+/* 
+ * return 1 - parsed fine
+ * return 0 - can't parse info/non-decodable
+ * return -1 - error
+ */
+static int
+_get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
+                    uint8_t *sdr_record,
+                    unsigned int sdr_record_len,
+                    uint8_t raw_data,
+                    double *reading,
+                    uint8_t *sensor_unit)
+{
+  fiid_obj_t obj_sdr_record_header = NULL;
+  fiid_obj_t obj_sdr_record = NULL;
+  int32_t sdr_record_header_len;
+  uint8_t sdr_record_type;
+  uint8_t sdr_event_reading_type_code;
+  int8_t r_exponent;
+  int8_t b_exponent;
+  int16_t m;
+  int16_t b;
+  uint8_t linearization;
+  uint8_t analog_data_format;
+  uint64_t val, val1, val2;
+  int rv = -1;
+
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->sdr_cache_ctx);
+  assert(sdr_record);
+  assert(sdr_record_len);
+  assert(reading);
+  assert(sensor_unit);
+
+  SEL_PARSE_FIID_TEMPLATE_LEN_BYTES(sdr_record_header_len, tmpl_sdr_record_header);
+
+  if (sdr_record_len < sdr_record_header_len)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+  
+  SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sdr_record_header, tmpl_sdr_record_header);
+  
+  SEL_PARSE_FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record_header,
+                                     sdr_record,
+                                     sdr_record_header_len);
+  
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record_header, "record_type", &val);
+  sdr_record_type = val;
+
+  if (sdr_record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+  
+  SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_full_sensor_record);
+
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "event_reading_type_code", &val);
+  sdr_event_reading_type_code = val;
+
+  if (ipmi_event_reading_type_code_class(sdr_event_reading_type_code) != IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "r_exponent", &val);
+  r_exponent = (int8_t) val;
+  if (r_exponent & 0x08)
+    r_exponent |= 0xF0;
+
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "b_exponent", &val);
+  b_exponent = (int8_t) val;
+  if (b_exponent & 0x08)
+    b_exponent |= 0xF0;
+
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "m_ls", &val1);
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "m_ms", &val2);
+  m = (int16_t)val1;
+  m |= ((val2 & 0x3) << 8);
+  if (m & 0x200)
+    m |= 0xFE00;
+
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "b_ls", &val1);
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "b_ms", &val2);
+  b = (int16_t)val1;
+  b |= ((val2 & 0x3) << 8);
+  if (b & 0x200)
+    b |= 0xFE00;
+
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "linearization", &val);
+  linearization = (uint8_t)val;
+
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "sensor_unit1.analog_data_format", &val);
+  analog_data_format = (uint8_t) val;
+
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "sensor_unit2.base_unit", &val);
+
+  if (!IPMI_SENSOR_UNIT_VALID(val))
+    val = IPMI_SENSOR_UNIT_UNSPECIFIED;
+
+  *sensor_unit = (uint8_t)val;
+
+  /* if the sensor is not analog, this is most likely a bug in the
+   * SDR
+   */
+  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  /* We don't currently handle non-linear sensors */
+  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  if (ipmi_sensor_decode_value (r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                raw_data,
+                                reading) < 0)
+    {
+      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
+  rv = 1;
+ cleanup:
+  SEL_PARSE_FIID_OBJ_DESTROY(obj_sdr_record_header);
+  SEL_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+                     
+/* 
+ * return 1 - found record
+ * return 0 - can't find record
+ * return -1 - error
+ */
+static int
+_find_sdr_record(ipmi_sel_parse_ctx_t ctx,
+                 struct ipmi_sel_system_event_record_data *system_event_record_data,
+                 uint8_t *sdr_record,
+                 unsigned int *sdr_record_len)
+{
+  uint8_t tmp_sdr_record[SDR_RECORD_LENGTH];
+  int tmp_sdr_record_len;
+  uint8_t tmp_record_type;
+  uint8_t tmp_event_reading_type_code;
+
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->sdr_cache_ctx);
+  assert(system_event_record_data);
+  assert(sdr_record);
+  assert(sdr_record_len);
+  
+  if (ipmi_sdr_cache_search_sensor(ctx->sdr_cache_ctx,
+                                   system_event_record_data->sensor_number,
+                                   system_event_record_data->generator_id) < 0)
+    {
+      if (ipmi_sdr_cache_ctx_errnum(ctx->sdr_cache_ctx) != IPMI_SDR_CACHE_CTX_ERR_NOT_FOUND)
+        {
+          SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+          return -1;
+        }
+      /* else can't find it */
+      return 0;
+    }
+
+  memset(tmp_sdr_record, '\0', SDR_RECORD_LENGTH);
+
+  if ((tmp_sdr_record_len = ipmi_sdr_cache_record_read(ctx->sdr_cache_ctx,
+                                                       tmp_sdr_record,
+                                                       SDR_RECORD_LENGTH)) < 0)
+    {
+      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+      return -1;
+    }
+  
+  if ((*sdr_record_len) < tmp_sdr_record_len)
+    {
+      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+      return -1;
+    }
+
+  memcpy(sdr_record, tmp_sdr_record, tmp_sdr_record_len);
+  (*sdr_record_len) = tmp_sdr_record_len;
+
+  return 1;
+}
 
 /* output functions
  *
@@ -218,6 +424,43 @@ _output_date(ipmi_sel_parse_ctx_t ctx,
 }
 
 static int
+_output_sensor_group(ipmi_sel_parse_ctx_t ctx,
+                     struct ipmi_sel_parse_entry *sel_parse_entry,
+                     uint8_t record_type,
+                     char *buf,
+                     unsigned int buflen,
+                     unsigned int flags,
+                     unsigned int *wlen)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+  char *sensor_type_str = NULL;
+
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(sel_parse_entry);
+  assert(buf);
+  assert(buflen);
+  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(wlen);
+
+  if (ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+    return _invalid_sel_entry_common(ctx, buf, buflen, flags, wlen);
+
+  if (sel_parse_get_system_event_record(ctx, sel_parse_entry, &system_event_record_data) < 0)
+    return -1;
+  
+  sensor_type_str = ipmi_get_sensor_type_string (system_event_record_data.sensor_type);
+
+  if (sensor_type_str)
+    {
+      if (_SNPRINTF(buf, buflen, wlen, "%s", sensor_type_str))
+        return 1;
+    }
+  
+  return 0;
+}
+
+static int
 _output_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
                         struct ipmi_sel_parse_entry *sel_parse_entry,
                         uint8_t record_type,
@@ -286,7 +529,7 @@ _output_oem(ipmi_sel_parse_ctx_t ctx,
           if (_SNPRINTF(buf, buflen, wlen, " "))
             return 1;
         }
-      if (_SNPRINTF(buf, buflen, wlen, "%Xh", oem_data[oem_index]))
+      if (_SNPRINTF(buf, buflen, wlen, "%02Xh", oem_data[oem_index]))
         return 1;
     }
   
@@ -397,6 +640,16 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         }
       else if (percent_flag && *fmt == 'g') /* sensor group name */
         {
+          if ((ret = _output_sensor_group(ctx, 
+                                          &sel_parse_entry, 
+                                          record_type, 
+                                          buf, 
+                                          buflen, 
+                                          flags,
+                                          &wlen)) < 0)
+            goto cleanup;
+          if (ret)
+            goto out;
           percent_flag = 0;
         }
       else if (percent_flag && *fmt == 's') /* sensor id name */
