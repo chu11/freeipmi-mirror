@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.1.2.10 2008-12-30 17:59:14 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.1.2.11 2008-12-31 18:26:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -68,7 +68,9 @@ typedef struct ipmi_sel_parse_ctx *ipmi_sel_parse_ctx_t;
 
 typedef int (*Ipmi_Sel_Parse_Callback)(ipmi_sel_parse_ctx_t c, void *callback_data);
 
-/* SEL Parse Context Functions */
+/* SEL Parse Context Functions 
+ * - sdr_cache_ctx is optional, sdr won't be used if not available
+ */
 ipmi_sel_parse_ctx_t ipmi_sel_parse_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ctx);
 void ipmi_sel_parse_ctx_destroy(ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_ctx_errnum(ipmi_sel_parse_ctx_t ctx);
@@ -176,7 +178,8 @@ int ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx,
  *
  * OUTPUT_NOT_AVAILABLE
  * 
- * If a field is not available, do not output an empty string, output "N/A".
+ * If a field is not available, do not output an empty string, output
+ * "N/A" (coincides with IGNORE_UNAVAILABLE_FIELD)
  *
  * DATE_USE_SLASH
  *
@@ -192,7 +195,7 @@ int ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx,
  */
 int ipmi_sel_parse_read_record_string(ipmi_sel_parse_ctx_t ctx, 
                                       char *fmt, 
-                                      uint8_t *buf, 
+                                      char *buf, 
                                       unsigned int buflen,
                                       unsigned int flags);
 
@@ -206,7 +209,7 @@ int ipmi_sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
                                         char *fmt,
                                         uint8_t *record_buf,
                                         unsigned int record_buflen,
-                                        uint8_t *buf,
+                                        char *buf,
                                         unsigned int buflen,
                                         unsigned int flags);
 

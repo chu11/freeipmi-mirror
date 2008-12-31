@@ -216,6 +216,16 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define ERR_EINVAL_NULL_RETURN(expr)                                    \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = EINVAL;                                                   \
+      __ERR_TRACE;                                                      \
+      return (NULL);                                                    \
+    }                                                                   \
+} while (0)
+
 #define ERR_ENOSPC(expr)                                                \
 do {                                                                    \
   if (!(expr))                                                          \

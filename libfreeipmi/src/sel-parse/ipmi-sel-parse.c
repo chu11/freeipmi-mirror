@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.1.2.12 2008-12-30 17:59:16 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.1.2.13 2008-12-31 18:26:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -86,6 +86,8 @@ ipmi_sel_parse_ctx_t
 ipmi_sel_parse_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ctx)
 {
   struct ipmi_sel_parse_ctx *ctx = NULL;
+  
+  ERR_EINVAL_NULL_RETURN(ctx);
 
   ERR_CLEANUP((ctx = (ipmi_sel_parse_ctx_t)malloc(sizeof(struct ipmi_sel_parse_ctx))));
   memset(ctx, '\0', sizeof(struct ipmi_sel_parse_ctx));
@@ -1014,7 +1016,7 @@ ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx,
 int
 ipmi_sel_parse_read_record_string(ipmi_sel_parse_ctx_t ctx,
                                   char *fmt,
-                                  uint8_t *buf,
+                                  char *buf,
                                   unsigned int buflen,
                                   unsigned int flags)
 {
