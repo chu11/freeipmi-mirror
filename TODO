@@ -62,6 +62,7 @@ ipmi-sel
 - output severity information
 - output previous threshold/state info
 - output if threshold > or < 
+- hex output - handle OEM types too
 
 inband code
 -----------
