@@ -4,6 +4,14 @@ FreeIPMI - FreeIPMI overview
 .SH "Introduction"
 FreeIPMI provides in-band and out-of-band IPMI software based on the
 IPMI v1.5/2.0 specification.
+.SH "What is IPMI?"
+The IPMI specification defines a set of interfaces for platform
+management.  It is utilized by a wide variety of vendors for system
+management on motherboards.  The features of IPMI that most users will
+be interested in are sensor monitoring, remote power control,
+serial-over-LAN (SOL), and system debugging.  The FreeIPMI tools and
+libraries listed below should provide users with the ability to access
+and utilize these features.
 .SH "Project Tools"
 .B Bmc-info
 .PP
@@ -25,7 +33,7 @@ event of a system crash.
 .B Ipmi-chassis
 .PP
 A tool to manage/monitor a chassis, such as chassis power,
-identification, and status.
+identification (i.e. LED control), and status.
 .PP
 .B Ipmi-fru
 .PP
@@ -140,10 +148,11 @@ installed ahead of time.  However, most systems should automatically
 load these drivers when appropriate.
 .PP
 Under most scenarios, the FreeIPMI tools should automatically discover
-which in-band interface to use and the proper settings to use.
-However, some motherboards may require you to determine driver type,
-addresses, paths, etc. on your own and pass them as command line
-options to the tools.  You may use 
+which in-band interface to use and the proper settings to use.  Users
+may execute the tools on the command line to begin using them.  Some
+motherboards may require you to determine driver type, addresses,
+paths, etc. on your own and pass them as command line options to the
+tools.  You may use
 .B ipmi-locate(8) 
 to help determine
 this information.  Other tools such as 
