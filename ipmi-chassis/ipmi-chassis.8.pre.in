@@ -7,8 +7,8 @@ ipmi-chassis \- IPMI chassis management utility
 .SH "DESCRIPTION"
 .B Ipmi-chassis
 is used for managing/monitoring an IPMI chassis, such as chassis
-power, indentification, and status.  See OPTIONS below for all chassis
-management options available.
+power, indentification (i.e. LED control), and status.  See OPTIONS
+below for all chassis management options available.
 
 To perform IPMI chassis configuration, please see
 .B ipmi-chassis-config(8).

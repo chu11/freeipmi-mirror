@@ -1,3 +1,7 @@
+2009-01-05  Albert Chu <chu11@llnl.gov>
+
+	* Minor documentation cleanup.
+	
 2008-12-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/src/ipmi-oem.h, ipmi-oem/src/ipmi-oem-argp.h: Fix
