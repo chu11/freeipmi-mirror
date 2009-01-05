@@ -1072,9 +1072,8 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
 	}
     }
 
-  /* XXX probably not the best error code, but I need something */
   if (rv < 0)
-    API_ERR_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+    API_ERR_SET_ERRNUM(IPMI_ERR_NOT_FOUND);
  cleanup:
   API_FIID_OBJ_DESTROY(obj_data_rs);
   return (rv);

@@ -122,16 +122,17 @@ static char *ipmi_errmsg[] =
     "bad completion code: request data/parameter invalid", 	      /* 24 */
     "bad completion code",	                                      /* 25 */
     "bad rmcpplus status code",                                       /* 26 */
-    "BMC busy",			                                      /* 27 */
-    "out of memory",		                                      /* 28 */
-    "invalid hostname",                                               /* 29 */
-    "invalid parameters",	                                      /* 30 */
-    "driver path required",                                           /* 31 */
-    "internal IPMI error",	                                      /* 32 */
-    "internal system error",	                                      /* 33 */
-    "internal library error",	                                      /* 34 */
-    "internal error",		                                      /* 35 */
-    "errnum out of range",	                                      /* 36 */
+    "not found",                                                      /* 27 */
+    "BMC busy",			                                      /* 28 */
+    "out of memory",		                                      /* 29 */
+    "invalid hostname",                                               /* 30 */
+    "invalid parameters",	                                      /* 31 */
+    "driver path required",                                           /* 32 */
+    "internal IPMI error",	                                      /* 33 */
+    "internal system error",	                                      /* 34 */
+    "internal library error",	                                      /* 35 */
+    "internal error",		                                      /* 36 */
+    "errnum out of range",	                                      /* 37 */
   };
 
 static void

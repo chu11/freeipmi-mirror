@@ -1,5 +1,8 @@
 2009-01-05  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/: Add new IPMI_ERR_NOT_FOUND error code to
+	libfreeipmi api sub library.
+
 	* libfreeipmi/src/api/ipmi-messaging-support-cmds-api.c
 	(ipmi_get_channel_number): Fix error code corner case bug.
 	
