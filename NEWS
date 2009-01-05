@@ -5,6 +5,7 @@ not exist on a motherboard.
 o In ipmi-sel, fix SEL message output corner case.
 o In ipmi-sel, ipmi-sensors, and ipmimonitoring, check that inputted
 record IDs are not illegal record ID values.
+o In bmc-config, fix "Enable_User" checkout corner case bug.
 o Fix/clarify minor documentation typos/wording.
 
 0.7.4 - 12/15/08
