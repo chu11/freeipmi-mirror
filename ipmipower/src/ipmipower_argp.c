@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.3 2008-11-08 00:09:02 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.3.4.1 2009-01-05 18:53:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -285,7 +285,7 @@ cmdline_parse (int key,
   return 0;
 }
 
-void 
+static void 
 _ipmipower_config_file_parse(struct ipmipower_arguments *cmd_args)
 {
   struct config_file_data_ipmipower config_file_data;
@@ -344,7 +344,7 @@ _ipmipower_config_file_parse(struct ipmipower_arguments *cmd_args)
     cmd_args->ping_consec_count = config_file_data.ping_consec_count;
 }
 
-void 
+static void 
 _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
 {
   if (cmd_args->common.driver_type == IPMI_DEVICE_LAN

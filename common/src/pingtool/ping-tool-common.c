@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.4 2008-08-12 18:14:34 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.4.8.1 2009-01-05 18:53:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -126,7 +126,7 @@ _cleanup(void)
   close(_sockfd);
 }
 
-void
+static void
 _err_init(char *__progname)
 {
   char *ptr = NULL;

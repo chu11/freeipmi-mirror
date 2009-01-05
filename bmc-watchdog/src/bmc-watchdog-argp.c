@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.9 2008-08-12 18:14:32 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.9.8.1 2009-01-05 18:53:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -531,7 +531,7 @@ _bmc_watchdog_config_file_parse(struct bmc_watchdog_arguments *cmd_args)
     cmd_args->no_logging = config_file_data.no_logging;
 }
 
-void
+static void
 _bmc_watchdog_args_validate (struct bmc_watchdog_arguments *cmd_args)
 {
   int count;

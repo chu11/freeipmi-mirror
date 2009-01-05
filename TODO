@@ -16,6 +16,10 @@ sunbmc driver
 -------------
 untested - need solaris hardware
 
+sel/sensors/sensors-config
+--------------------------
+handle if ipmi_get_sensor_group returns NULL
+
 libipmimonitoring
 -----------------
 callback feature - to make output more dynamic
@@ -55,6 +59,10 @@ ipmi-sel
   - for verbose mode?
 - check if format is correct in record
 - check of 0xFF of 0x0F is event_data2/3 is not valid/unspecified
+- output severity information
+- output previous threshold/state info
+- output if threshold > or < 
+- hex output - handle OEM types too
 
 inband code
 -----------
@@ -81,6 +89,11 @@ merge all libs into one?  would aid debian packaging.
 - make package layout simpler?
 - make .so-naming consistent?
 - merge all except libipmidetect?
+
+doc
+---
+what is ipmi in freeipmi(7)
+- more intro text, like how to get started with tools
 
 contribs
 --------

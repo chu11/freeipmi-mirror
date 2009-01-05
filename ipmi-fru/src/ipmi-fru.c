@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.32 2008-12-16 01:05:45 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.32.2.1 2009-01-05 18:53:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -290,7 +290,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
   return (rv);
 }
 
-int
+static int
 run_cmd_args (ipmi_fru_state_data_t *state_data)
 {
   struct ipmi_fru_arguments *args;

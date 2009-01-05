@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.21 2008-08-12 18:14:37 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.21.8.1 2009-01-05 18:53:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -207,7 +207,7 @@ _ipmiconsole_config_file_parse(struct ipmiconsole_arguments *cmd_args)
     cmd_args->lock_memory = config_file_data.lock_memory;
 }
 
-void
+static void
 _ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
 {
   if (!cmd_args->common.hostname)

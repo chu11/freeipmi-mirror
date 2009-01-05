@@ -121,7 +121,7 @@ _ipmi_chassis_config_config_file_parse(struct ipmi_chassis_config_arguments *cmd
     }
 }
 
-void
+static void
 _ipmi_chassis_config_config_args_validate (struct ipmi_chassis_config_arguments *cmd_args)
 {
   if (!cmd_args->config_args.action || cmd_args->config_args.action == -1)

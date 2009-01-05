@@ -130,7 +130,7 @@ _pef_config_config_file_parse(struct pef_config_arguments *cmd_args)
     }
 }
 
-void
+static void
 _pef_config_args_validate (struct pef_config_arguments *cmd_args)
 {
   if ((!cmd_args->config_args.action && !cmd_args->info)

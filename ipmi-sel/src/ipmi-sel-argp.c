@@ -102,6 +102,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   struct ipmi_sel_arguments *cmd_args = state->input;
   char *ptr;
   char *tok;
+  int value;
   error_t ret;
 
   switch (key)
@@ -117,13 +118,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tok = strtok(arg, " ,");
       while (tok && cmd_args->delete_record_list_length < IPMI_SEL_MAX_DELETE_RECORD)
         {
-          unsigned int n = strtoul(tok, &ptr, 10);
-          if (ptr != (tok + strlen(tok)))
+          value = 0;
+          ptr = NULL;	
+          errno = 0;
+
+          value = strtol(tok, &ptr, 10);
+
+          if (errno 
+              || ptr[0] != '\0'
+              || value < 0
+              || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+              || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
             {
-              fprintf (stderr, "invalid delete record number\n");
+              fprintf (stderr, "invalid delete record number: %d\n", value);
               exit(1);
             }
-          cmd_args->delete_record_list[cmd_args->delete_record_list_length] = n;
+
+          cmd_args->delete_record_list[cmd_args->delete_record_list_length] = value;
           cmd_args->delete_record_list_length++;
           tok = strtok(NULL, " ,");
         }
@@ -136,7 +147,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	char *range1_str = NULL;
 	char *range2_str = NULL;
 	int value = 0;
-	char *tail = NULL;
 	
 	range_str = strdupa (arg);
 	if (!(start_ptr = strchr (range_str, '-')))
@@ -149,35 +159,40 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	*start_ptr = '\0';
 	range1_str = range_str;
 	
+	value = 0;
+	ptr = NULL;	
 	errno = 0;
-	value = strtol (range1_str, &tail, 10);
+	value = strtol (range1_str, &ptr, 10);
 
         if (errno 
-            || tail[0] != '\0'
-            || value < 0)
+            || ptr[0] != '\0'
+            || value < 0
+            || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+            || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
 	  {
-	    fprintf (stderr, "invalid delete range\n");
+	    fprintf (stderr, "invalid delete range record number: %d\n", value);
             exit(1);
 	  }
 	
 	cmd_args->delete_range1 = value;
 	
 	value = 0;
-	tail = NULL;
-	
+	ptr = NULL;	
 	errno = 0;
-	value = strtol (range2_str, &tail, 10);
+	value = strtol (range2_str, &ptr, 10);
 
         if (errno 
-            || tail[0] != '\0'
-            || value < 0)
+            || ptr[0] != '\0'
+            || value < 0
+            || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+            || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
 	  {
-	    fprintf (stderr, "invalid delete range\n");
+	    fprintf (stderr, "invalid delete range record number: %d\n", value);
             exit(1);
 	  }
-	
-	cmd_args->delete_range2 = value;
-	
+
+	cmd_args->delete_range2 = value;	
+        
 	if (cmd_args->delete_range2 < cmd_args->delete_range1)
 	  {
 	    fprintf (stderr, "invalid delete END range\n");

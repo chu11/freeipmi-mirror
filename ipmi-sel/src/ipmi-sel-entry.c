@@ -806,6 +806,11 @@ _get_sel_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
   uint64_t val;
   fiid_obj_t obj = NULL;
   int8_t rv = -1;
+  uint8_t buf[1024];
+  int32_t len;
+  char *str = NULL;
+  char *tmp_str = NULL;
+  int i;
 
   assert (state_data);
   assert (record_data);
@@ -829,8 +834,12 @@ _get_sel_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
   _FIID_OBJ_GET (obj, "manufacturer_id", &val);
   manufacturer_id = val;
   
-  _FIID_OBJ_GET (obj, "oem_defined", &val);
-  oem_defined = val;
+  memset(buf, '\0', 1024);
+  _FIID_OBJ_GET_DATA_LEN (len,
+                          obj,
+                          "oem_defined",
+                          buf,
+                          1024);
 
   *stored_record_id = record_id;
 
@@ -854,9 +863,24 @@ _get_sel_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
             "Manufacturer ID %02Xh", 
             manufacturer_id);
 
-  asprintf (event_message, 
-            "OEM Defined = " FI_64 "Xh",
-            oem_defined);
+  for (i = 0; i < len; i++)
+    {
+      tmp_str = str;
+      if (str)
+        {
+          str = NULL;
+          asprintf (&str, "%s %02X", tmp_str, buf[i]);
+          free (tmp_str);
+        }
+      else
+        asprintf (&str, "%02X", buf[i]);
+    }
+
+  if (str)
+    {
+      asprintf (event_message, "OEM defined = %s", str);
+      free (str);
+    }
   
   rv = 0;
  cleanup:

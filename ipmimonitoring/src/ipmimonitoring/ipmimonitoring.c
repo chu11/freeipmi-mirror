@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.67.2.1 2008-12-18 18:58:23 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.67.2.2 2009-01-05 18:53:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -459,7 +459,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
   return rv;
 }
 
-int
+static int
 run_cmd_args (ipmimonitoring_state_data_t *state_data)
 {
   struct ipmimonitoring_arguments *args;
@@ -673,7 +673,7 @@ _ipmimonitoring(pstdout_state_t pstate,
  * cmd_args struct into the ipmimonitoring library equivalent
  * structs.
  */
-void
+static void
 _grab_ipmimonitoring_options(struct ipmimonitoring_arguments *cmd_args)
 {
   int i;

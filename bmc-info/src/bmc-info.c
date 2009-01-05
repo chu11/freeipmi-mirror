@@ -343,7 +343,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
   return rv;
 }
 
-int 
+static int 
 display_channel_info (bmc_info_state_data_t *state_data)
 {
   channel_info_t channel_info_list[NUM_CHANNELS];
@@ -432,7 +432,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
   return 0;
 }
 
-int
+static int
 run_cmd_args (bmc_info_state_data_t *state_data)
 {
   struct bmc_info_arguments *args;

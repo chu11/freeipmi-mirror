@@ -125,7 +125,7 @@ _bmc_config_config_file_parse(struct bmc_config_arguments *cmd_args)
     }
 }
 
-void
+static void
 _bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
 {
   if (!cmd_args->config_args.action || cmd_args->config_args.action == -1)

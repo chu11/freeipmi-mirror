@@ -972,7 +972,7 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
   return (rv);
 }
 
-int
+static int
 run_cmd_args (bmc_device_state_data_t *state_data)
 {
   struct bmc_device_arguments *args;

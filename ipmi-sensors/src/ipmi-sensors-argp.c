@@ -108,6 +108,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   struct ipmi_sensors_arguments *cmd_args = state->input;
   char *ptr;
   char *tok;
+  int value;
   error_t ret;
   
   switch (key)
@@ -150,13 +151,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tok = strtok(arg, " ,");
       while (tok && cmd_args->sensors_length < IPMI_SENSORS_MAX_RECORD_IDS)
         {
-          unsigned int n = strtoul(tok, &ptr, 10);
-          if (ptr != (tok + strlen(tok)))
+          value = 0;
+          ptr = NULL;
+          errno = 0;
+          
+          value = strtol(tok, &ptr, 10);
+          
+          if (errno 
+              || ptr[0] != '\0'
+              || value < 0
+              || value < IPMI_SDR_RECORD_ID_FIRST
+              || value > IPMI_SDR_RECORD_ID_LAST)
             {
-              fprintf (stderr, "invalid sensor record id\n");
+              fprintf (stderr, "invalid sensor record id: %d\n", value);
               exit(1);
             }
-          cmd_args->sensors[cmd_args->sensors_length] = n;
+          
+          cmd_args->sensors[cmd_args->sensors_length] = value;
           cmd_args->sensors_length++;
           tok = strtok(NULL, " ,");
         }
@@ -224,7 +235,7 @@ _ipmi_sensors_config_file_parse(struct ipmi_sensors_arguments *cmd_args)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
 }
 
-void
+static void
 _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 {
   if (cmd_args->groups_length)

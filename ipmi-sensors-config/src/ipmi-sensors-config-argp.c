@@ -124,7 +124,7 @@ _ipmi_sensors_config_config_file_parse(struct ipmi_sensors_config_arguments *cmd
     }
 }
 
-void
+static void
 _ipmi_sensors_config_config_args_validate (struct ipmi_sensors_config_arguments *cmd_args)
 {
   if ((!cmd_args->config_args.action && !cmd_args->sdr.flush_cache)

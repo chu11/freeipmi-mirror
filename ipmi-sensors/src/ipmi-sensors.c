@@ -451,7 +451,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
   return 0;
 }
 
-int 
+static int 
 run_cmd_args (ipmi_sensors_state_data_t *state_data)
 {
   struct ipmi_sensors_arguments *args;

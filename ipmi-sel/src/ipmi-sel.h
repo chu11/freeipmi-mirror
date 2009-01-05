@@ -44,11 +44,11 @@ struct ipmi_sel_arguments
   int info;
   int delete_all;
   int delete;
-  int delete_record_list[IPMI_SEL_MAX_DELETE_RECORD];
-  int delete_record_list_length;
+  unsigned int delete_record_list[IPMI_SEL_MAX_DELETE_RECORD];
+  unsigned int delete_record_list_length;
   int delete_range;
-  int delete_range1;
-  int delete_range2;
+  unsigned int delete_range1;
+  unsigned int delete_range2;
   int hex_dump;
   char *hex_dump_filename;
 };

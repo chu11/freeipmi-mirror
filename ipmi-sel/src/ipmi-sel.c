@@ -570,7 +570,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
   return (0);
 }
 
-int 
+static int 
 run_cmd_args (ipmi_sel_state_data_t *state_data)
 {
   struct ipmi_sel_arguments *args;

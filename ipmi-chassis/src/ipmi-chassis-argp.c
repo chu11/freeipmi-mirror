@@ -507,7 +507,7 @@ _ipmi_chassis_config_file_parse(struct ipmi_chassis_arguments *cmd_args)
     }
 }
 
-void 
+static void 
 _ipmi_chassis_args_validate (struct ipmi_chassis_arguments *args)
 {
   if (args->cmd < 0)

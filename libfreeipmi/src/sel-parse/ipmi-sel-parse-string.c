@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.1.2.3 2008-12-31 22:20:59 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.1.2.4 2009-01-05 18:53:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -461,6 +461,43 @@ _output_sensor_group(ipmi_sel_parse_ctx_t ctx,
 }
 
 static int
+_output_sensor_name(ipmi_sel_parse_ctx_t ctx,
+                    struct ipmi_sel_parse_entry *sel_parse_entry,
+                    uint8_t record_type,
+                    char *buf,
+                    unsigned int buflen,
+                    unsigned int flags,
+                    unsigned int *wlen)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+  char *sensor_type_str = NULL;
+
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(sel_parse_entry);
+  assert(buf);
+  assert(buflen);
+  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(wlen);
+
+  if (ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+    return _invalid_sel_entry_common(ctx, buf, buflen, flags, wlen);
+
+  if (sel_parse_get_system_event_record(ctx, sel_parse_entry, &system_event_record_data) < 0)
+    return -1;
+  
+  sensor_type_str = ipmi_get_sensor_type_string (system_event_record_data.sensor_type);
+
+  if (sensor_type_str)
+    {
+      if (_SNPRINTF(buf, buflen, wlen, "%s", sensor_type_str))
+        return 1;
+    }
+  
+  return 0;
+}
+
+static int
 _output_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
                         struct ipmi_sel_parse_entry *sel_parse_entry,
                         uint8_t record_type,
@@ -652,8 +689,18 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
             goto out;
           percent_flag = 0;
         }
-      else if (percent_flag && *fmt == 's') /* sensor id name */
+      else if (percent_flag && *fmt == 's') /* sensor name */
         {
+          if ((ret = _output_sensor_name(ctx, 
+                                         &sel_parse_entry, 
+                                         record_type, 
+                                         buf, 
+                                         buflen, 
+                                         flags,
+                                         &wlen)) < 0)
+            goto cleanup;
+          if (ret)
+            goto out;
           percent_flag = 0;
         }
       else if (percent_flag && *fmt == 'e') /* event offset */

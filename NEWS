@@ -18,6 +18,8 @@ Libraries
 ---------
 o libfreeipmi
   - More detailed KCS debug output with header information.
+  - New error code IPMI_ERR_NOT_FOUND in libfreeipmi API sub library
+    supported.
 o libipmimonitoring
   - Support new set of callback functions to monitor sensors as they
     are read/analyzed instead of after all sensors have been

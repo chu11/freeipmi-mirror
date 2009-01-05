@@ -1024,7 +1024,7 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
   uint64_t val;
   int i;
     
-  /* XXX channel medium type check? */
+  /* XXX channel medium type check? - OEM channels 0-0xFF possible, so skip */
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
@@ -1072,6 +1072,8 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
 	}
     }
 
+  if (rv < 0)
+    API_ERR_SET_ERRNUM(IPMI_ERR_NOT_FOUND);
  cleanup:
   API_FIID_OBJ_DESTROY(obj_data_rs);
   return (rv);
