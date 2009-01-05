@@ -90,6 +90,11 @@ merge all libs into one?  would aid debian packaging.
 - make .so-naming consistent?
 - merge all except libipmidetect?
 
+doc
+---
+what is ipmi in freeipmi(7)
+- more intro text, like how to get started with tools
+
 contribs
 --------
 module for snmptrapd to parse ipmi traps
