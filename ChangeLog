@@ -1,5 +1,10 @@
 2009-01-05  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/api/ipmi-messaging-support-cmds-api.c
+	(ipmi_get_channel_number): Fix error code corner case bug.
+	
+2009-01-05  Albert Chu <chu11@llnl.gov>
+
 	* bmc-config/src/bmc-config-user-sections.c (_channel_info): Fix
 	Enable_user checkout corner case bug.
 
