@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.1.2.12 2009-01-06 00:06:43 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.1.2.13 2009-01-06 01:19:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -177,6 +177,9 @@ int ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx,
  *
  * - If a sensor does not have a name, output sensor number and
  *   generator id instead of just sensor number.
+ * - If an event offset string cannot be determined (i.e. it is OEM or
+ *   not defined by IPMI), output both the offset and event type code
+ *   instead of just the event offset.
  *
  * IGNORE_UNAVAILABLE_FIELD
  * 
