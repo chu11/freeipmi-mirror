@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.1.2.8 2009-01-06 22:14:57 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.1.2.9 2009-01-06 22:19:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -858,7 +858,7 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
             if (ret)
               snprintf(tmpbuf,
                        EVENT_BUFFER_LENGTH,
-                       "Reading = %.2f %s",
+                       "Trigger Reading = %.2f %s",
                        _round_double2 (reading),
                        ipmi_sensor_units_abbreviated[sensor_unit]);
             else
@@ -1004,6 +1004,153 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
                         wlen,
                         "Event Data2 = %02Xh",
                         system_event_record_data.event_data2))
+            return 1;
+        }
+    }
+  
+  return 0;
+}
+
+static int
+_output_event_data3(ipmi_sel_parse_ctx_t ctx,
+                    struct ipmi_sel_parse_entry *sel_parse_entry,
+                    uint8_t sel_record_type,
+                    char *buf,
+                    unsigned int buflen,
+                    unsigned int flags,
+                    unsigned int *wlen)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+  char tmpbuf[EVENT_BUFFER_LENGTH];
+  int output_flag = 0;
+  int ret;
+
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(sel_parse_entry);
+  assert(buf);
+  assert(buflen);
+  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(wlen);
+
+  if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+    return _invalid_sel_entry_common(ctx, buf, buflen, flags, wlen);
+
+  if (sel_parse_get_system_event_record(ctx, sel_parse_entry, &system_event_record_data) < 0)
+    return -1;
+  
+  memset(tmpbuf, '\0', EVENT_BUFFER_LENGTH);
+
+  switch (ipmi_event_reading_type_code_class (system_event_record_data.event_type_code))
+    {
+    case IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD:
+      switch (system_event_record_data.event_data3_flag)
+        {
+        case IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE:
+          {
+            double reading;
+            uint8_t sensor_unit;
+            
+            if ((ret = _get_sensor_reading(ctx,
+                                           &system_event_record_data,
+                                           system_event_record_data.event_data3,
+                                           &reading,
+                                           &sensor_unit)) < 0)
+              return -1;
+            
+            if (ret)
+              snprintf(tmpbuf,
+                       EVENT_BUFFER_LENGTH,
+                       "Threshold Reading = %.2f %s",
+                       _round_double2 (reading),
+                       ipmi_sensor_units_abbreviated[sensor_unit]);
+            else
+              snprintf(tmpbuf,
+                       EVENT_BUFFER_LENGTH,
+                       "Threshold Reading = %02Xh",
+                       system_event_record_data.event_data3);
+            output_flag++;
+          }
+          break;
+        case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
+          ret = ipmi_get_event_data3_message (system_event_record_data.sensor_type,
+                                              system_event_record_data.offset_from_event_reading_type_code,
+                                              system_event_record_data.event_data3,
+                                              tmpbuf,
+                                              EVENT_BUFFER_LENGTH);
+          if (!ret)
+            output_flag++;
+          break;
+        case IPMI_SEL_EVENT_DATA_OEM_CODE:
+          snprintf(tmpbuf,
+                   EVENT_BUFFER_LENGTH,
+                   "OEM Event Data3 code = %02Xh",
+                   system_event_record_data.event_data3);
+          output_flag++;
+          break;
+        default:
+          break;
+        }
+      break;
+    case IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE:
+    case IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE:
+      switch (system_event_record_data.event_data3_flag)
+        {
+        case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
+          ret = ipmi_get_event_data3_message (system_event_record_data.sensor_type,
+                                              system_event_record_data.offset_from_event_reading_type_code,
+                                              system_event_record_data.event_data3,
+                                              tmpbuf,
+                                              EVENT_BUFFER_LENGTH);
+          if (!ret)
+            output_flag++;
+          break;
+        case IPMI_SEL_EVENT_DATA_OEM_CODE:
+          snprintf(tmpbuf,
+                   EVENT_BUFFER_LENGTH,
+                   "OEM Event Data3 code = %02Xh",
+                   system_event_record_data.event_data3);
+          output_flag++;
+          break;
+        default:
+          break;
+        }
+      break;
+    case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
+      snprintf(tmpbuf,
+               EVENT_BUFFER_LENGTH,
+               "OEM Event Data3 code = %02Xh",
+               system_event_record_data.event_data3);
+      output_flag++;
+      break;
+    default:
+      break;
+    }
+
+  if (output_flag)
+    {
+      if (_SNPRINTF(buf, buflen, wlen, "%s", tmpbuf))
+        return 1;
+    }
+  else
+    {
+      if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE)
+        {
+          if (_SNPRINTF(buf,
+                        buflen,
+                        wlen,
+                        "Event Data3 = %02Xh (Event Type Code = %02Xh)",
+                        system_event_record_data.event_data3,
+                        system_event_record_data.event_type_code))
+            return 1;
+        }
+      else
+        {
+          if (_SNPRINTF(buf,
+                        buflen,
+                        wlen,
+                        "Event Data3 = %02Xh",
+                        system_event_record_data.event_data3))
             return 1;
         }
     }
@@ -1284,6 +1431,16 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         }
       else if (percent_flag && *fmt == 'h') /* event data3 */
         {
+          if ((ret = _output_event_data3(ctx,
+                                         &sel_parse_entry,
+                                         sel_record_type,
+                                         buf,
+                                         buflen,
+                                         flags,
+                                         &wlen)) < 0)
+            goto cleanup;
+          if (ret)
+            goto out;
           percent_flag = 0;
         }
       else if (percent_flag && *fmt == 'j') /* event direction */
