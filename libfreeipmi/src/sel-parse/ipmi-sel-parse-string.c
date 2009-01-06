@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.1.2.9 2009-01-06 22:19:46 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.1.2.10 2009-01-06 22:45:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -761,6 +761,7 @@ _output_event_offset(ipmi_sel_parse_ctx_t ctx,
       output_flag++;
       break;
     default:
+      /* fall through to output default output */
       break;
     }
 
@@ -886,6 +887,8 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
+          /* nothing to output */
+          return 0;
           break;
         }
       break;
@@ -966,6 +969,8 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
+          /* nothing to output */
+          return 0;
           break;
         }
       break;
@@ -977,6 +982,7 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
       output_flag++;
       break;
     default:
+      /* fall through to output default output */
       break;
     }
 
@@ -1075,6 +1081,7 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
         case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
           ret = ipmi_get_event_data3_message (system_event_record_data.sensor_type,
                                               system_event_record_data.offset_from_event_reading_type_code,
+                                              system_event_record_data.event_data2,
                                               system_event_record_data.event_data3,
                                               tmpbuf,
                                               EVENT_BUFFER_LENGTH);
@@ -1089,6 +1096,8 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
+          /* nothing to output */
+          return 0;
           break;
         }
       break;
@@ -1099,6 +1108,7 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
         case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
           ret = ipmi_get_event_data3_message (system_event_record_data.sensor_type,
                                               system_event_record_data.offset_from_event_reading_type_code,
+                                              system_event_record_data.event_data2,
                                               system_event_record_data.event_data3,
                                               tmpbuf,
                                               EVENT_BUFFER_LENGTH);
@@ -1113,6 +1123,8 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
+          /* nothing to output */
+          return 0;
           break;
         }
       break;
@@ -1124,6 +1136,7 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
       output_flag++;
       break;
     default:
+      /* fall through to output default output */
       break;
     }
 
