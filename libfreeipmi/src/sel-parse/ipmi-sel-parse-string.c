@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.1.2.6 2009-01-06 01:19:28 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.1.2.7 2009-01-06 17:13:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -193,12 +193,10 @@ _find_sdr_record(ipmi_sel_parse_ctx_t ctx,
 
   assert(ctx);
   assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->sdr_cache_ctx);   /* must be checked earlier */
   assert(system_event_record_data);
   assert(sdr_record);
   assert(sdr_record_len);
-  
-  if (!ctx->sdr_cache_ctx)
-    return 0;
 
   if (ipmi_sdr_cache_search_sensor(ctx->sdr_cache_ctx,
                                    system_event_record_data->sensor_number,
@@ -261,12 +259,13 @@ fall_through:
  */
 static int
 _get_sdr_id_string(ipmi_sel_parse_ctx_t ctx,
-                   uint8_t *sdr_record,
-                   unsigned int sdr_record_len,
+                   struct ipmi_sel_system_event_record_data *system_event_record_data,
                    char *id_string,
                    unsigned int id_string_len)
 {
   fiid_obj_t obj_sdr_record = NULL;
+  uint8_t sdr_record[SDR_RECORD_LENGTH];
+  unsigned int sdr_record_len = SDR_RECORD_LENGTH;
   uint8_t sdr_record_type;
   int rv = -1;
   int len;
@@ -274,10 +273,25 @@ _get_sdr_id_string(ipmi_sel_parse_ctx_t ctx,
 
   assert(ctx);
   assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
-  assert(sdr_record);
-  assert(sdr_record_len);
+  assert(system_event_record_data);
   assert(id_string);
   assert(id_string_len);
+
+  if (!ctx->sdr_cache_ctx)
+    return 0;
+
+  memset(sdr_record, '\0', SDR_RECORD_LENGTH);
+  if ((ret = _find_sdr_record(ctx,
+                              system_event_record_data,
+                              sdr_record,
+                              &sdr_record_len)) < 0)
+    return -1;
+
+  if (!ret)
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   if ((ret = _get_sdr_record_type(ctx,
                                   sdr_record,
@@ -329,13 +343,14 @@ _get_sdr_id_string(ipmi_sel_parse_ctx_t ctx,
  */
 static int
 _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
-                    uint8_t *sdr_record,
-                    unsigned int sdr_record_len,
+                    struct ipmi_sel_system_event_record_data *system_event_record_data,
                     uint8_t raw_data,
                     double *reading,
                     uint8_t *sensor_unit)
 {
   fiid_obj_t obj_sdr_record = NULL;
+  uint8_t sdr_record[SDR_RECORD_LENGTH];
+  unsigned int sdr_record_len = SDR_RECORD_LENGTH;
   uint8_t sdr_record_type;
   uint8_t sdr_event_reading_type_code;
   int8_t r_exponent;
@@ -350,13 +365,26 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
 
   assert(ctx);
   assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
-  assert(sdr_record);
-  assert(sdr_record_len);
+  assert(system_event_record_data);
+  assert(ipmi_event_reading_type_code_class(system_event_record_data->event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD);
   assert(reading);
   assert(sensor_unit);
 
   if (!ctx->sdr_cache_ctx)
     return 0;
+
+  memset(sdr_record, '\0', SDR_RECORD_LENGTH);
+  if ((ret = _find_sdr_record(ctx,
+                              system_event_record_data,
+                              sdr_record,
+                              &sdr_record_len)) < 0)
+    return -1;
+
+  if (!ret)
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   if ((ret = _get_sdr_record_type(ctx,
                                   sdr_record,
@@ -607,8 +635,7 @@ _output_sensor_name(ipmi_sel_parse_ctx_t ctx,
                     unsigned int *wlen)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  uint8_t sdr_record[SDR_RECORD_LENGTH];
-  unsigned int sdr_record_len = SDR_RECORD_LENGTH;
+  char id_string[ID_STRING_LENGTH];
   int ret;
 
   assert(ctx);
@@ -625,37 +652,24 @@ _output_sensor_name(ipmi_sel_parse_ctx_t ctx,
   if (sel_parse_get_system_event_record(ctx, sel_parse_entry, &system_event_record_data) < 0)
     return -1;
 
-  memset(sdr_record, '\0', SDR_RECORD_LENGTH);
-  if ((ret = _find_sdr_record(ctx,
-                              &system_event_record_data,
-                              sdr_record,
-                              &sdr_record_len)) < 0)
+  memset(id_string, '\0', ID_STRING_LENGTH);
+  if ((ret = _get_sdr_id_string(ctx,
+                                &system_event_record_data,
+                                id_string,
+                                ID_STRING_LENGTH)) < 0)
     return -1;
-
+  
   if (ret)
     {
-      char id_string[ID_STRING_LENGTH];
-      
-      memset(id_string, '\0', ID_STRING_LENGTH);
-      if ((ret = _get_sdr_id_string(ctx,
-                                    sdr_record,
-                                    sdr_record_len,
-                                    id_string,
-                                    ID_STRING_LENGTH)) < 0)
-        return -1;
-
-      if (ret)
-        {
-          if (_SNPRINTF(buf,
-                        buflen,
-                        wlen,
-                        "%s",
-                        id_string))
-            return 1;
-          return 0;
-        }                             
-      /* else fall through */
-    }
+      if (_SNPRINTF(buf,
+                    buflen,
+                    wlen,
+                    "%s",
+                    id_string))
+        return 1;
+      return 0;
+    }                             
+  /* else fall through */
 
   if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE)
     {
