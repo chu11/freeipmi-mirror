@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-common.h,v 1.1.2.3 2008-12-30 17:59:15 chu11 Exp $
+ *  $Id: ipmi-sel-parse-common.h,v 1.1.2.4 2009-01-06 22:14:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -81,5 +81,9 @@ int sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                                       struct ipmi_sel_parse_entry *sel_parse_entry,
                                       struct ipmi_sel_system_event_record_data *system_event_record_data);
 
+int sel_parse_get_previous_state_or_severity(ipmi_sel_parse_ctx_t ctx,
+                                             struct ipmi_sel_parse_entry *sel_parse_entry,
+                                             uint8_t *previous_offset_from_event_reading_type_code,
+                                             uint8_t *offset_from_severity_event_reading_type_code);
 
 #endif /* _IPMI_SEL_PARSE_COMMON_H */

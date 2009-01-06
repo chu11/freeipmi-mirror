@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-common.c,v 1.1.2.3 2008-12-30 17:59:15 chu11 Exp $
+ *  $Id: ipmi-sel-parse-common.c,v 1.1.2.4 2009-01-06 22:14:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -409,6 +409,65 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
 
   SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "event_data3", &val);
   system_event_record_data->event_data3 = val;
+
+  rv = 0;
+ cleanup:
+  SEL_PARSE_FIID_OBJ_DESTROY(obj_sel_system_event_record);
+  return rv;
+}
+
+int
+sel_parse_get_previous_state_or_severity(ipmi_sel_parse_ctx_t ctx,
+                                         struct ipmi_sel_parse_entry *sel_parse_entry,
+                                         uint8_t *previous_offset_from_event_reading_type_code,
+                                         uint8_t *offset_from_severity_event_reading_type_code)
+{
+  fiid_obj_t obj_sel_system_event_record = NULL;
+  int record_type_class;
+  uint8_t record_type;
+  uint8_t generator_id_type;
+  uint8_t generator_id_address;
+  uint64_t val;
+  int rv = -1;
+
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(sel_parse_entry);
+  assert(previous_offset_from_event_reading_type_code);
+  assert(offset_from_severity_event_reading_type_code);
+
+  if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      goto cleanup;
+    }
+  
+  if (sel_parse_get_record_header_info(ctx, 
+                                       sel_parse_entry, 
+                                       NULL, 
+                                       &record_type) < 0)
+    goto cleanup;
+  
+  record_type_class = ipmi_sel_record_type_class(record_type);
+  
+  if (record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      goto cleanup;
+    }
+  
+  SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_system_event_record,
+                                    tmpl_sel_system_event_record_discrete_previous_state_severity);
+  
+  SEL_PARSE_FIID_OBJ_SET_ALL_CLEANUP(obj_sel_system_event_record, 
+                                     sel_parse_entry->sel_event_record,
+                                     sel_parse_entry->sel_event_record_len);
+  
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "previous_offset_from_event_reading_type_code", &val);
+  *previous_offset_from_event_reading_type_code = val;
+
+  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sel_system_event_record, "offset_from_severity_event_reading_type_code", &val);
+  *offset_from_severity_event_reading_type_code = val;
 
   rv = 0;
  cleanup:

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.1.2.7 2009-01-06 17:13:51 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.1.2.8 2009-01-06 22:14:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -501,7 +501,7 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
 static int
 _output_time(ipmi_sel_parse_ctx_t ctx,
              struct ipmi_sel_parse_entry *sel_parse_entry,
-             uint8_t record_type,
+             uint8_t sel_record_type,
              char *buf,
              unsigned int buflen,
              unsigned int flags,
@@ -520,8 +520,8 @@ _output_time(ipmi_sel_parse_ctx_t ctx,
   assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
   assert(wlen);
 
-  if (ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
-      && ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
+  if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
+      && ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
     return _invalid_sel_entry_common(ctx, buf, buflen, flags, wlen);
   
   if (sel_parse_get_timestamp(ctx, sel_parse_entry, &timestamp) < 0)
@@ -540,7 +540,7 @@ _output_time(ipmi_sel_parse_ctx_t ctx,
 static int
 _output_date(ipmi_sel_parse_ctx_t ctx,
              struct ipmi_sel_parse_entry *sel_parse_entry,
-             uint8_t record_type,
+             uint8_t sel_record_type,
              char *buf,
              unsigned int buflen,
              unsigned int flags,
@@ -559,8 +559,8 @@ _output_date(ipmi_sel_parse_ctx_t ctx,
   assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
   assert(wlen);
 
-  if (ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
-      && ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
+  if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
+      && ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
     return _invalid_sel_entry_common(ctx, buf, buflen, flags, wlen);
           
   if (sel_parse_get_timestamp(ctx, sel_parse_entry, &timestamp) < 0)
@@ -591,7 +591,7 @@ _output_date(ipmi_sel_parse_ctx_t ctx,
 static int
 _output_sensor_group(ipmi_sel_parse_ctx_t ctx,
                      struct ipmi_sel_parse_entry *sel_parse_entry,
-                     uint8_t record_type,
+                     uint8_t sel_record_type,
                      char *buf,
                      unsigned int buflen,
                      unsigned int flags,
@@ -608,7 +608,7 @@ _output_sensor_group(ipmi_sel_parse_ctx_t ctx,
   assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
   assert(wlen);
 
-  if (ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+  if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     return _invalid_sel_entry_common(ctx, buf, buflen, flags, wlen);
 
   if (sel_parse_get_system_event_record(ctx, sel_parse_entry, &system_event_record_data) < 0)
@@ -628,7 +628,7 @@ _output_sensor_group(ipmi_sel_parse_ctx_t ctx,
 static int
 _output_sensor_name(ipmi_sel_parse_ctx_t ctx,
                     struct ipmi_sel_parse_entry *sel_parse_entry,
-                    uint8_t record_type,
+                    uint8_t sel_record_type,
                     char *buf,
                     unsigned int buflen,
                     unsigned int flags,
@@ -646,7 +646,7 @@ _output_sensor_name(ipmi_sel_parse_ctx_t ctx,
   assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
   assert(wlen);
 
-  if (ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+  if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     return _invalid_sel_entry_common(ctx, buf, buflen, flags, wlen);
 
   if (sel_parse_get_system_event_record(ctx, sel_parse_entry, &system_event_record_data) < 0)
@@ -676,7 +676,7 @@ _output_sensor_name(ipmi_sel_parse_ctx_t ctx,
       if (_SNPRINTF(buf,
                     buflen,
                     wlen,
-                    "Sensor #%d (Generator ID 0x%X)",
+                    "Sensor #%d (Generator ID %02Xh)",
                     system_event_record_data.sensor_number,
                     system_event_record_data.generator_id))
         return 1;
@@ -697,7 +697,7 @@ _output_sensor_name(ipmi_sel_parse_ctx_t ctx,
 static int
 _output_event_offset(ipmi_sel_parse_ctx_t ctx,
                      struct ipmi_sel_parse_entry *sel_parse_entry,
-                     uint8_t record_type,
+                     uint8_t sel_record_type,
                      char *buf,
                      unsigned int buflen,
                      unsigned int flags,
@@ -705,7 +705,8 @@ _output_event_offset(ipmi_sel_parse_ctx_t ctx,
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
   char tmpbuf[EVENT_BUFFER_LENGTH];
-  int ret = -1;
+  int output_flag = 0;
+  int ret;
 
   assert(ctx);
   assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
@@ -715,7 +716,7 @@ _output_event_offset(ipmi_sel_parse_ctx_t ctx,
   assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
   assert(wlen);
 
-  if (ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+  if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     return _invalid_sel_entry_common(ctx, buf, buflen, flags, wlen);
 
   if (sel_parse_get_system_event_record(ctx, sel_parse_entry, &system_event_record_data) < 0)
@@ -734,12 +735,16 @@ _output_event_offset(ipmi_sel_parse_ctx_t ctx,
                                            system_event_record_data.offset_from_event_reading_type_code,
                                            tmpbuf,
                                            EVENT_BUFFER_LENGTH);
+      if (!ret)
+        output_flag++;
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE:
       ret = ipmi_get_sensor_type_code_message(system_event_record_data.sensor_type,
                                               system_event_record_data.offset_from_event_reading_type_code,
                                               tmpbuf,
                                               EVENT_BUFFER_LENGTH);
+      if (!ret)
+        output_flag++;
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
       if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE)
@@ -753,12 +758,13 @@ _output_event_offset(ipmi_sel_parse_ctx_t ctx,
                  EVENT_BUFFER_LENGTH,
                  "OEM Event Offset = %02Xh",
                  system_event_record_data.offset_from_event_reading_type_code);
-      ret = 0;
+      output_flag++;
+      break;
     default:
       break;
     }
 
-  if (!ret)
+  if (output_flag)
     {
       if (_SNPRINTF(buf, buflen, wlen, "%s", tmpbuf))
         return 1;
@@ -766,16 +772,240 @@ _output_event_offset(ipmi_sel_parse_ctx_t ctx,
   else
     {
       if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE)
-        snprintf(tmpbuf,
-                 EVENT_BUFFER_LENGTH,
-                 "Event Offset = %02Xh (Event Type Code = %02Xh)",
-                 system_event_record_data.offset_from_event_reading_type_code,
-                 system_event_record_data.event_type_code);
+        {
+          if (_SNPRINTF(buf,
+                        buflen,
+                        wlen,
+                        "Event Offset = %02Xh (Event Type Code = %02Xh)",
+                        system_event_record_data.offset_from_event_reading_type_code,
+                        system_event_record_data.event_type_code))
+            return 1;
+        }
       else
-        snprintf(tmpbuf,
-                 EVENT_BUFFER_LENGTH,
-                 "Event Offset = %02Xh",
-                 system_event_record_data.offset_from_event_reading_type_code);
+        {
+          if (_SNPRINTF(buf,
+                        buflen,
+                        wlen,
+                        "Event Offset = %02Xh",
+                        system_event_record_data.offset_from_event_reading_type_code))
+            return 1;
+        }
+    }
+  
+  return 0;
+}
+
+static double
+_round_double2 (double d)
+{
+  double r = 0.0;
+
+  r = (d - (long) d) * 100.0;
+
+  if ((r - (long) r) > 0.5)
+    return ((long) d + (((long) r + 1) / 100.0));
+
+  return ((long) d + ((long) r / 100.0));
+}
+
+static int
+_output_event_data2(ipmi_sel_parse_ctx_t ctx,
+                    struct ipmi_sel_parse_entry *sel_parse_entry,
+                    uint8_t sel_record_type,
+                    char *buf,
+                    unsigned int buflen,
+                    unsigned int flags,
+                    unsigned int *wlen)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+  char tmpbuf[EVENT_BUFFER_LENGTH];
+  int output_flag = 0;
+  int ret;
+
+  assert(ctx);
+  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(sel_parse_entry);
+  assert(buf);
+  assert(buflen);
+  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(wlen);
+
+  if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+    return _invalid_sel_entry_common(ctx, buf, buflen, flags, wlen);
+
+  if (sel_parse_get_system_event_record(ctx, sel_parse_entry, &system_event_record_data) < 0)
+    return -1;
+  
+  memset(tmpbuf, '\0', EVENT_BUFFER_LENGTH);
+
+  switch (ipmi_event_reading_type_code_class (system_event_record_data.event_type_code))
+    {
+    case IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD:
+      switch (system_event_record_data.event_data2_flag)
+        {
+        case IPMI_SEL_EVENT_DATA_TRIGGER_READING:
+          {
+            double reading;
+            uint8_t sensor_unit;
+            
+            if ((ret = _get_sensor_reading(ctx,
+                                           &system_event_record_data,
+                                           system_event_record_data.event_data2,
+                                           &reading,
+                                           &sensor_unit)) < 0)
+              return -1;
+            
+            if (ret)
+              snprintf(tmpbuf,
+                       EVENT_BUFFER_LENGTH,
+                       "Reading = %.2f %s",
+                       _round_double2 (reading),
+                       ipmi_sensor_units_abbreviated[sensor_unit]);
+            else
+              snprintf(tmpbuf,
+                       EVENT_BUFFER_LENGTH,
+                       "Trigger Reading = %02Xh",
+                       system_event_record_data.event_data2);
+            output_flag++;
+          }
+          break;
+        case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
+          ret = ipmi_get_event_data2_message (system_event_record_data.sensor_type,
+                                              system_event_record_data.offset_from_event_reading_type_code,
+                                              system_event_record_data.event_data2,
+                                              tmpbuf,
+                                              EVENT_BUFFER_LENGTH);
+          if (!ret)
+            output_flag++;
+          break;
+        case IPMI_SEL_EVENT_DATA_OEM_CODE:
+          snprintf(tmpbuf,
+                   EVENT_BUFFER_LENGTH,
+                   "OEM Event Data2 code = %02Xh",
+                   system_event_record_data.event_data2);
+          output_flag++;
+          break;
+        default:
+          break;
+        }
+      break;
+    case IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE:
+    case IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE:
+      switch (system_event_record_data.event_data2_flag)
+        {
+        case IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY:
+          {
+            uint8_t previous_offset_from_event_reading_type_code;
+            uint8_t offset_from_severity_event_reading_type_code;
+            char tmppreviousbuf[EVENT_BUFFER_LENGTH];
+            char tmpseveritybuf[EVENT_BUFFER_LENGTH];
+            int previous_output_flag = 0;
+            int severity_output_flag = 0;
+
+            if (sel_parse_get_previous_state_or_severity(ctx,
+                                                         sel_parse_entry,
+                                                         &previous_offset_from_event_reading_type_code,
+                                                         &offset_from_severity_event_reading_type_code) < 0)
+              return -1;
+            if (previous_offset_from_event_reading_type_code != IPMI_SEL_RECORD_UNSPECIFIED_OFFSET)
+              {
+                ret = ipmi_get_event_data2_message (system_event_record_data.sensor_type,
+                                                    system_event_record_data.offset_from_event_reading_type_code,
+                                                    previous_offset_from_event_reading_type_code,
+                                                    tmppreviousbuf,
+                                                    EVENT_BUFFER_LENGTH);
+                if (!ret)
+                  {
+                    snprintf(tmpbuf,
+                             EVENT_BUFFER_LENGTH,
+                             "Previous State = %s",
+                             tmppreviousbuf);
+                    previous_output_flag++;
+                  }
+              }
+            if (offset_from_severity_event_reading_type_code != IPMI_SEL_RECORD_UNSPECIFIED_OFFSET)
+              {
+                ret = ipmi_get_generic_event_message(0x07, /* 0x07 == severity event reading type code */
+                                                     offset_from_severity_event_reading_type_code,
+                                                     tmpseveritybuf,
+                                                     EVENT_BUFFER_LENGTH);
+                if (!ret)
+                  {
+                    snprintf(tmpbuf,
+                             EVENT_BUFFER_LENGTH,
+                             "Severity State = %s",
+                             tmpseveritybuf);
+                    severity_output_flag++;
+                  }
+              }
+            /* achu: special case, we need to combine the outputs into one */
+            if (previous_output_flag && severity_output_flag)
+              snprintf(tmpbuf,
+                       EVENT_BUFFER_LENGTH,
+                       "Previous State = %s; Severity State = %s",
+                       tmppreviousbuf,
+                       tmpseveritybuf);
+            if (previous_output_flag || severity_output_flag)
+              output_flag++;
+          }
+          break;
+        case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
+          ret = ipmi_get_event_data2_message (system_event_record_data.sensor_type,
+                                              system_event_record_data.offset_from_event_reading_type_code,
+                                              system_event_record_data.event_data2,
+                                              tmpbuf,
+                                              EVENT_BUFFER_LENGTH);
+          if (!ret)
+            output_flag++;
+          break;
+        case IPMI_SEL_EVENT_DATA_OEM_CODE:
+          snprintf(tmpbuf,
+                   EVENT_BUFFER_LENGTH,
+                   "OEM Event Data2 code = %02Xh",
+                   system_event_record_data.event_data2);
+          output_flag++;
+          break;
+        default:
+          break;
+        }
+      break;
+    case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
+      snprintf(tmpbuf,
+               EVENT_BUFFER_LENGTH,
+               "OEM Event Data2 code = %02Xh",
+               system_event_record_data.event_data2);
+      output_flag++;
+      break;
+    default:
+      break;
+    }
+
+  if (output_flag)
+    {
+      if (_SNPRINTF(buf, buflen, wlen, "%s", tmpbuf))
+        return 1;
+    }
+  else
+    {
+      if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE)
+        {
+          if (_SNPRINTF(buf,
+                        buflen,
+                        wlen,
+                        "Event Data2 = %02Xh (Event Type Code = %02Xh)",
+                        system_event_record_data.event_data2,
+                        system_event_record_data.event_type_code))
+            return 1;
+        }
+      else
+        {
+          if (_SNPRINTF(buf,
+                        buflen,
+                        wlen,
+                        "Event Data2 = %02Xh",
+                        system_event_record_data.event_data2))
+            return 1;
+        }
     }
   
   return 0;
@@ -784,7 +1014,7 @@ _output_event_offset(ipmi_sel_parse_ctx_t ctx,
 static int
 _output_event_direction(ipmi_sel_parse_ctx_t ctx,
                         struct ipmi_sel_parse_entry *sel_parse_entry,
-                        uint8_t record_type,
+                        uint8_t sel_record_type,
                         char *buf,
                         unsigned int buflen,
                         unsigned int flags,
@@ -801,7 +1031,7 @@ _output_event_direction(ipmi_sel_parse_ctx_t ctx,
   assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
   assert(wlen);
 
-  if (ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+  if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     return _invalid_sel_entry_common(ctx, buf, buflen, flags, wlen);
 
   if (sel_parse_get_system_event_record(ctx, sel_parse_entry, &system_event_record_data) < 0)
@@ -821,7 +1051,7 @@ _output_event_direction(ipmi_sel_parse_ctx_t ctx,
 static int
 _output_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
                         struct ipmi_sel_parse_entry *sel_parse_entry,
-                        uint8_t record_type,
+                        uint8_t sel_record_type,
                         char *buf,
                         unsigned int buflen,
                         unsigned int flags,
@@ -837,7 +1067,7 @@ _output_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
   assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
   assert(wlen);
 
-  if (ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
+  if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
     return _invalid_sel_entry_common(ctx, buf, buflen, flags, wlen);
 
   if (sel_parse_get_manufacturer_id(ctx, sel_parse_entry, &manufacturer_id) < 0)
@@ -852,7 +1082,7 @@ _output_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
 static int
 _output_oem(ipmi_sel_parse_ctx_t ctx,
             struct ipmi_sel_parse_entry *sel_parse_entry,
-            uint8_t record_type,
+            uint8_t sel_record_type,
             char *buf,
             unsigned int buflen,
             unsigned int flags,
@@ -870,8 +1100,8 @@ _output_oem(ipmi_sel_parse_ctx_t ctx,
   assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
   assert(wlen);
 
-  if (ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
-      && ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
+  if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
+      && ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
     return _invalid_sel_entry_common(ctx, buf, buflen, flags, wlen);
 
   if ((oem_len = sel_parse_get_oem(ctx, sel_parse_entry, oem_data, SEL_PARSE_BUFFER_LENGTH)) < 0)
@@ -924,7 +1154,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
 {
   struct ipmi_sel_parse_entry sel_parse_entry;
   uint16_t record_id;
-  uint8_t record_type;
+  uint8_t sel_record_type;
   int percent_flag = 0;
   unsigned int wlen = 0;
   int rv = -1;
@@ -945,7 +1175,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
   if (sel_parse_get_record_header_info(ctx,
                                        &sel_parse_entry,
                                        &record_id,
-                                       &record_type) < 0)
+                                       &sel_record_type) < 0)
     goto cleanup;
 
   while (*fmt)
@@ -972,7 +1202,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         {
           if ((ret = _output_time(ctx, 
                                   &sel_parse_entry, 
-                                  record_type, 
+                                  sel_record_type, 
                                   buf, 
                                   buflen, 
                                   flags,
@@ -986,7 +1216,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         {
           if ((ret = _output_date(ctx, 
                                   &sel_parse_entry, 
-                                  record_type, 
+                                  sel_record_type, 
                                   buf, 
                                   buflen, 
                                   flags,
@@ -1000,7 +1230,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         {
           if ((ret = _output_sensor_group(ctx, 
                                           &sel_parse_entry, 
-                                          record_type, 
+                                          sel_record_type, 
                                           buf, 
                                           buflen, 
                                           flags,
@@ -1014,7 +1244,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         {
           if ((ret = _output_sensor_name(ctx, 
                                          &sel_parse_entry, 
-                                         record_type, 
+                                         sel_record_type, 
                                          buf, 
                                          buflen, 
                                          flags,
@@ -1028,7 +1258,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         {
           if ((ret = _output_event_offset(ctx,
                                           &sel_parse_entry,
-                                          record_type,
+                                          sel_record_type,
                                           buf,
                                           buflen,
                                           flags,
@@ -1040,6 +1270,16 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         }
       else if (percent_flag && *fmt == 'f') /* event data2  */
         {
+          if ((ret = _output_event_data2(ctx,
+                                         &sel_parse_entry,
+                                         sel_record_type,
+                                         buf,
+                                         buflen,
+                                         flags,
+                                         &wlen)) < 0)
+            goto cleanup;
+          if (ret)
+            goto out;
           percent_flag = 0;
         }
       else if (percent_flag && *fmt == 'h') /* event data3 */
@@ -1050,7 +1290,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         {
           if ((ret = _output_event_direction(ctx, 
                                              &sel_parse_entry, 
-                                             record_type, 
+                                             sel_record_type, 
                                              buf, 
                                              buflen, 
                                              flags,
@@ -1065,7 +1305,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         {
           if ((ret = _output_manufacturer_id(ctx, 
                                              &sel_parse_entry, 
-                                             record_type, 
+                                             sel_record_type, 
                                              buf, 
                                              buflen, 
                                              flags,
@@ -1080,7 +1320,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         {
           if ((ret = _output_oem(ctx, 
                                  &sel_parse_entry, 
-                                 record_type, 
+                                 sel_record_type, 
                                  buf, 
                                  buflen, 
                                  flags,
