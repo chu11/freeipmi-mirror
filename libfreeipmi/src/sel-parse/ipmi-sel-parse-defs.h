@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-defs.h,v 1.1.2.7 2008-12-30 17:59:15 chu11 Exp $
+ *  $Id: ipmi-sel-parse-defs.h,v 1.1.2.8 2009-01-06 00:06:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -55,7 +55,8 @@
 #define IPMI_SEL_PARSE_FLAGS_MASK           (IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP)
 
 #define IPMI_SEL_PARSE_READ_STRING_MASK \
-  (IPMI_SEL_PARSE_READ_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD \
+  (IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE \
+   | IPMI_SEL_PARSE_READ_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD \
    | IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE \
    | IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_USE_SLASH \
    | IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_MONTH_STRING)

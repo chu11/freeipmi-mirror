@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.1.2.11 2008-12-31 18:26:05 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.1.2.12 2009-01-06 00:06:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -54,9 +54,10 @@
 #define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                           0x0001
 
 #define IPMI_SEL_PARSE_READ_STRING_FLAGS_DEFAULT                  0x0000
-#define IPMI_SEL_PARSE_READ_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD 0x0001
-#define IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE     0x0002
-#define IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_USE_SLASH           0x0004
+#define IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE                  0x0001
+#define IPMI_SEL_PARSE_READ_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD 0x0002
+#define IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE     0x0004
+#define IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_USE_SLASH           0x0008
 #define IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_MONTH_STRING        0x0010
 
 #define IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD               0x0
@@ -160,7 +161,7 @@ int ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx,
  * %d - date in format D-M-YEAR
  * %g - sensor group name
  * %s - sensor name
- * %e - offset from event/reading code string
+ * %e - offset from event/reading code type string
  * %f - event data 2 string
  * %h - event data 3 string
  * %j - event direction
@@ -170,6 +171,13 @@ int ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx,
  *
  * flags
  * 
+ * VERBOSE
+ *
+ * Output slightly more verbose text for selected fields.  For example:
+ *
+ * - If a sensor does not have a name, output sensor number and
+ *   generator id instead of just sensor number.
+ *
  * IGNORE_UNAVAILABLE_FIELD
  * 
  * If a field is not available for output (for example, a timestamp field
