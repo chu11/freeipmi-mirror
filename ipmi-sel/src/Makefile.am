@@ -1,7 +1,6 @@
 noinst_HEADERS = \
 	ipmi-sel.h \
-	ipmi-sel-argp.h \
-	ipmi-sel-entry.h 
+	ipmi-sel-argp.h
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/toolcommon \
@@ -26,8 +25,7 @@ ipmi_sel_LDADD = \
  
 ipmi_sel_SOURCES = \
 	ipmi-sel.c \
-	ipmi-sel-argp.c \
-	ipmi-sel-entry.c
+	ipmi-sel-argp.c
  
 $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`

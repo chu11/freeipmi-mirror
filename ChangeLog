@@ -42,8 +42,14 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* ipmi-sensors/, ipmi-sensors-config/, bmc-info/, ipmi-chassis/,
 	ipmi-chassis-config/: Adjust for macro name change.
 
+	* ipmi-sel/: Remove optional hex dump to file.
+	
 	* libfreeipmi/: Include new sel-parse subsection to libfreeipmi
 	library.
+
+	* ipmi-sel/src/ipmi-sel-entry.h, ipmi-sel-entry.c: Removed files.
+
+	* ipmi-sel/: Use new sel-parse library for SEL parsing/output.
 
 	* Update documentation and manpages appropriately.
 	

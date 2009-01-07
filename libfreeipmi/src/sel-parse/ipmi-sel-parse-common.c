@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-common.c,v 1.1.2.4 2009-01-06 22:14:57 chu11 Exp $
+ *  $Id: ipmi-sel-parse-common.c,v 1.1.2.5 2009-01-07 01:15:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -425,8 +425,6 @@ sel_parse_get_previous_state_or_severity(ipmi_sel_parse_ctx_t ctx,
   fiid_obj_t obj_sel_system_event_record = NULL;
   int record_type_class;
   uint8_t record_type;
-  uint8_t generator_id_type;
-  uint8_t generator_id_address;
   uint64_t val;
   int rv = -1;
 

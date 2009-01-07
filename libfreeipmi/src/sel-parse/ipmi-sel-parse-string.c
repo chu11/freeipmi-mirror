@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.1.2.10 2009-01-06 22:45:24 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.1.2.11 2009-01-07 01:15:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -222,7 +222,7 @@ _find_sdr_record(ipmi_sel_parse_ctx_t ctx,
 
       if (ipmi_sdr_cache_ctx_errnum(ctx->sdr_cache_ctx) != IPMI_SDR_CACHE_CTX_ERR_NOT_FOUND)
         {
-          SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+          SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR);
           return -1;
         }
       /* else can't find it */
@@ -236,7 +236,7 @@ fall_through:
                                                        tmp_sdr_record,
                                                        SDR_RECORD_LENGTH)) < 0)
     {
-      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR);
       return -1;
     }
   
@@ -887,8 +887,17 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
-          /* nothing to output */
-          return 0;
+          if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+            {
+              snprintf(tmpbuf,
+                       EVENT_BUFFER_LENGTH,
+                       "%s",
+                       NA_STRING);
+              output_flag++;
+            }
+          else
+            /* nothing to output */
+            return 0;
           break;
         }
       break;
@@ -969,8 +978,17 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
-          /* nothing to output */
-          return 0;
+          if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+            {
+              snprintf(tmpbuf,
+                       EVENT_BUFFER_LENGTH,
+                       "%s",
+                       NA_STRING);
+              output_flag++;
+            }
+          else
+            /* nothing to output */
+            return 0;
           break;
         }
       break;
@@ -1096,8 +1114,17 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
-          /* nothing to output */
-          return 0;
+          if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+            {
+              snprintf(tmpbuf,
+                       EVENT_BUFFER_LENGTH,
+                       "%s",
+                       NA_STRING);
+              output_flag++;
+            }
+          else
+            /* nothing to output */
+            return 0;
           break;
         }
       break;
@@ -1123,8 +1150,17 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
-          /* nothing to output */
-          return 0;
+          if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+            {
+              snprintf(tmpbuf,
+                       EVENT_BUFFER_LENGTH,
+                       "%s",
+                       NA_STRING);
+              output_flag++;
+            }
+          else
+            /* nothing to output */
+            return 0;
           break;
         }
       break;
@@ -1233,7 +1269,7 @@ _output_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
   if (sel_parse_get_manufacturer_id(ctx, sel_parse_entry, &manufacturer_id) < 0)
     return -1;
   
-  if (_SNPRINTF(buf, buflen, wlen, "%Xh", manufacturer_id))
+  if (_SNPRINTF(buf, buflen, wlen, "Manufacturer ID = %Xh", manufacturer_id))
     return 1;
   
   return 0;

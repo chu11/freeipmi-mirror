@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.1.2.13 2008-12-31 18:26:06 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.1.2.14 2009-01-07 01:15:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -66,8 +66,6 @@ static char *ipmi_sel_parse_errmsgs[] =
     "context invalid",
     "invalid parameters",
     "out of memory",
-    "sdr cache permission error",
-    "sdr cache filesystem error",
     "sdr cache error",
     "no sel entries available",
     "invalid sel entry",

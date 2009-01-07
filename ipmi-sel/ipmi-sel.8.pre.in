@@ -45,8 +45,8 @@ separated lists.
 \fB\-\-delete-range=START-END\fR
 Delete record ids from START to END in the SEL.
 .TP
-\fB\-x [FILE]\fR, \fB\-\-hex-dump[=FILE]\fR
-Hex-dump SEL entries optionally into a FILE.
+\fB\-x\fR, \fB\-\-hex-dump\fR
+Hex-dump SEL entries.
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-ignore-sdr-cache.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
