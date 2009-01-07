@@ -1,5 +1,11 @@
 2009-01-07  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/sel-parse/: Support LEGACY string output option.
+
+	* ipmi-sel/: Support --legacy-output option.
+	
+2009-01-07  Albert Chu <chu11@llnl.gov>
+
 	*
 	libfreeipmi/include/freeipmi/record-format/ipmi-sel-record-format.h:
 	Cleanup macro names and add new macros as needed.

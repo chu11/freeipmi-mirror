@@ -34,6 +34,7 @@ enum ipmi_sel_argp_option_keys
     DELETE_KEY = 'd', 
     DELETE_RANGE_KEY = 'R',
     HEX_DUMP_KEY = 'x', 
+    LEGACY_OUTPUT_KEY = 'L',
   };
 
 struct ipmi_sel_arguments
@@ -50,7 +51,7 @@ struct ipmi_sel_arguments
   unsigned int delete_range1;
   unsigned int delete_range2;
   int hex_dump;
-  char *hex_dump_filename;
+  int legacy_output;
 };
 
 typedef struct ipmi_sel_prog_data

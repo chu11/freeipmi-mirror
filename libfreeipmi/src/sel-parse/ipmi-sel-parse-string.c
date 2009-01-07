@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.2 2009-01-07 17:43:54 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.3 2009-01-07 18:58:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -115,12 +115,12 @@ _invalid_sel_entry_common(ipmi_sel_parse_ctx_t ctx,
   assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
   assert(buf);
   assert(buflen);
-  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert(wlen);
   
-  if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD)
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD)
     {
-      if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
         {
           if (_SNPRINTF(buf, buflen, wlen, "%s", NA_STRING))
             return 1;
@@ -517,7 +517,7 @@ _output_time(ipmi_sel_parse_ctx_t ctx,
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
-  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert(wlen);
 
   if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
@@ -556,7 +556,7 @@ _output_date(ipmi_sel_parse_ctx_t ctx,
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
-  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert(wlen);
 
   if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
@@ -568,16 +568,16 @@ _output_date(ipmi_sel_parse_ctx_t ctx,
           
   t = timestamp;
   localtime_r (&t, &tmp);
-  if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_MONTH_STRING)
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING)
     {
-      if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_USE_SLASH)
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH)
         strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%d/%b/%Y", &tmp);
       else
         strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%d-%b-%Y", &tmp);
     }
   else
     {
-      if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_USE_SLASH)
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH)
         strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%d/%m/%Y", &tmp);
       else
         strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%d-%m-%Y", &tmp);
@@ -605,7 +605,7 @@ _output_sensor_group(ipmi_sel_parse_ctx_t ctx,
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
-  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert(wlen);
 
   if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
@@ -643,7 +643,7 @@ _output_sensor_name(ipmi_sel_parse_ctx_t ctx,
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
-  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert(wlen);
 
   if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
@@ -671,7 +671,7 @@ _output_sensor_name(ipmi_sel_parse_ctx_t ctx,
     }                             
   /* else fall through */
 
-  if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE)
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
     {
       if (_SNPRINTF(buf,
                     buflen,
@@ -713,7 +713,7 @@ _output_event_offset(ipmi_sel_parse_ctx_t ctx,
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
-  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert(wlen);
 
   if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
@@ -747,17 +747,25 @@ _output_event_offset(ipmi_sel_parse_ctx_t ctx,
         output_flag++;
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
-      if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE)
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
         snprintf(tmpbuf,
                  EVENT_BUFFER_LENGTH,
-                 "OEM Event Offset = %02Xh (Event Type Code = %02Xh)",
-                 system_event_record_data.offset_from_event_reading_type_code,
+                 "Event Type Code = %02Xh",
                  system_event_record_data.event_type_code);
       else
-        snprintf(tmpbuf,
-                 EVENT_BUFFER_LENGTH,
-                 "OEM Event Offset = %02Xh",
-                 system_event_record_data.offset_from_event_reading_type_code);
+        {
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
+            snprintf(tmpbuf,
+                     EVENT_BUFFER_LENGTH,
+                     "OEM Event Offset = %02Xh (Event Type Code = %02Xh)",
+                     system_event_record_data.offset_from_event_reading_type_code,
+                     system_event_record_data.event_type_code);
+          else
+            snprintf(tmpbuf,
+                     EVENT_BUFFER_LENGTH,
+                     "OEM Event Offset = %02Xh",
+                     system_event_record_data.offset_from_event_reading_type_code);
+        }
       output_flag++;
       break;
     default:
@@ -772,7 +780,7 @@ _output_event_offset(ipmi_sel_parse_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE)
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
         {
           if (_SNPRINTF(buf,
                         buflen,
@@ -828,7 +836,7 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
-  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert(wlen);
 
   if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
@@ -857,11 +865,20 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
               return -1;
             
             if (ret)
-              snprintf(tmpbuf,
-                       EVENT_BUFFER_LENGTH,
-                       "Trigger Reading = %.2f %s",
-                       _round_double2 (reading),
-                       ipmi_sensor_units_abbreviated[sensor_unit]);
+              {
+                if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+                  snprintf(tmpbuf,
+                           EVENT_BUFFER_LENGTH,
+                           "Reading = %.2f %s",
+                           _round_double2 (reading),
+                           ipmi_sensor_units_abbreviated[sensor_unit]);
+                else
+                  snprintf(tmpbuf,
+                           EVENT_BUFFER_LENGTH,
+                           "Trigger Reading = %.2f %s",
+                           _round_double2 (reading),
+                           ipmi_sensor_units_abbreviated[sensor_unit]);
+              }
             else
               snprintf(tmpbuf,
                        EVENT_BUFFER_LENGTH,
@@ -887,7 +904,7 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
-          if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
             {
               snprintf(tmpbuf,
                        EVENT_BUFFER_LENGTH,
@@ -978,7 +995,7 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
-          if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
             {
               snprintf(tmpbuf,
                        EVENT_BUFFER_LENGTH,
@@ -993,10 +1010,16 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
         }
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
-      snprintf(tmpbuf,
-               EVENT_BUFFER_LENGTH,
-               "OEM Event Data2 code = %02Xh",
-               system_event_record_data.event_data2);
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+        snprintf(tmpbuf,
+                 EVENT_BUFFER_LENGTH,
+                 "Event data2 = %02Xh",
+                 system_event_record_data.event_data2);
+      else
+        snprintf(tmpbuf,
+                 EVENT_BUFFER_LENGTH,
+                 "OEM Event Data2 code = %02Xh",
+                 system_event_record_data.event_data2);
       output_flag++;
       break;
     default:
@@ -1011,7 +1034,10 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE)
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+        return 0;
+
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
         {
           if (_SNPRINTF(buf,
                         buflen,
@@ -1054,7 +1080,7 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
-  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert(wlen);
 
   if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
@@ -1083,11 +1109,20 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
               return -1;
             
             if (ret)
-              snprintf(tmpbuf,
-                       EVENT_BUFFER_LENGTH,
-                       "Threshold Reading = %.2f %s",
-                       _round_double2 (reading),
-                       ipmi_sensor_units_abbreviated[sensor_unit]);
+              {
+                if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+                  snprintf(tmpbuf,
+                           EVENT_BUFFER_LENGTH,
+                           "Threshold = %.2f %s",
+                           _round_double2 (reading),
+                           ipmi_sensor_units_abbreviated[sensor_unit]);
+                else
+                  snprintf(tmpbuf,
+                           EVENT_BUFFER_LENGTH,
+                           "Threshold Reading = %.2f %s",
+                           _round_double2 (reading),
+                           ipmi_sensor_units_abbreviated[sensor_unit]);
+              }
             else
               snprintf(tmpbuf,
                        EVENT_BUFFER_LENGTH,
@@ -1107,14 +1142,20 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
-          snprintf(tmpbuf,
-                   EVENT_BUFFER_LENGTH,
-                   "OEM Event Data3 code = %02Xh",
-                   system_event_record_data.event_data3);
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+            snprintf(tmpbuf,
+                     EVENT_BUFFER_LENGTH,
+                     "OEM code = %02Xh",
+                     system_event_record_data.event_data3);
+          else
+            snprintf(tmpbuf,
+                     EVENT_BUFFER_LENGTH,
+                     "OEM Event Data3 code = %02Xh",
+                     system_event_record_data.event_data3);
           output_flag++;
           break;
         default:
-          if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
             {
               snprintf(tmpbuf,
                        EVENT_BUFFER_LENGTH,
@@ -1150,7 +1191,7 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
-          if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
             {
               snprintf(tmpbuf,
                        EVENT_BUFFER_LENGTH,
@@ -1165,10 +1206,16 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
         }
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
-      snprintf(tmpbuf,
-               EVENT_BUFFER_LENGTH,
-               "OEM Event Data3 code = %02Xh",
-               system_event_record_data.event_data3);
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+        snprintf(tmpbuf,
+                 EVENT_BUFFER_LENGTH,
+                 "Event data3 = %02Xh",
+                 system_event_record_data.event_data3);
+      else
+        snprintf(tmpbuf,
+                 EVENT_BUFFER_LENGTH,
+                 "OEM Event Data3 code = %02Xh",
+                 system_event_record_data.event_data3);
       output_flag++;
       break;
     default:
@@ -1183,7 +1230,10 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE)
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+        return 0;
+
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
         {
           if (_SNPRINTF(buf,
                         buflen,
@@ -1224,7 +1274,7 @@ _output_event_direction(ipmi_sel_parse_ctx_t ctx,
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
-  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert(wlen);
 
   if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
@@ -1260,7 +1310,7 @@ _output_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
-  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert(wlen);
 
   if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
@@ -1269,7 +1319,7 @@ _output_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
   if (sel_parse_get_manufacturer_id(ctx, sel_parse_entry, &manufacturer_id) < 0)
     return -1;
   
-  if (_SNPRINTF(buf, buflen, wlen, "Manufacturer ID = %Xh", manufacturer_id))
+  if (_SNPRINTF(buf, buflen, wlen, "Manufacturer ID = %02Xh", manufacturer_id))
     return 1;
   
   return 0;
@@ -1293,7 +1343,7 @@ _output_oem(ipmi_sel_parse_ctx_t ctx,
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
-  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert(wlen);
 
   if (ipmi_sel_record_type_class(sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
@@ -1320,25 +1370,6 @@ _output_oem(ipmi_sel_parse_ctx_t ctx,
   return 0;
 }
 
-/*
- * %i - record ID in decimal
- * %t - time in format H:M:S using 24 hour clock
- * %d - date in format D-M-YEAR
- * %g - sensor group name
- * %s - sensor name
- * %e - offset from event/reading code string
- * %f - event data 2 string
- * %h - event data 3 string
- * %j - event direction
- * %m - manufacturer id
- * %o - oem data in hex
- * %% - percent sign
- *
- * IPMI_SEL_PARSE_READ_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD
- * IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE
- * IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_USE_SLASH
- * IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_MONTH_STRING
- */
 int
 sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
                                char *fmt,
@@ -1363,7 +1394,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
   assert(record_buflen >= IPMI_SEL_RECORD_LENGTH);
   assert(buf);
   assert(buflen);
-  assert(!(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+  assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
 
   memcpy(sel_parse_entry.sel_event_record, record_buf, record_buflen);
   sel_parse_entry.sel_event_record_len = record_buflen;

@@ -339,7 +339,9 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
           goto cleanup;
         }
 
-      flags = IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_MONTH_STRING;
+      flags = IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING;
+      if (state_data->prog_data->args->legacy_output)
+        flags |= IPMI_SEL_PARSE_STRING_FLAGS_LEGACY;
 
       if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
         {
@@ -362,9 +364,36 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
                               ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
               goto cleanup;
             }
+
           strcpy(fmtbuf, "%i:%d %t:%g %s:%e");
-          if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-            strcat(fmtbuf, ":%f");
+
+          /* achu: special case, legacy output didn't support previous/severity output */
+          if (state_data->prog_data->args->legacy_output)
+            {
+              uint8_t event_type_code;
+
+              if (ipmi_sel_parse_read_event_type_code(state_data->ipmi_sel_parse_ctx, &event_type_code) < 0)
+                {
+                  pstdout_fprintf(state_data->pstate,
+                                  stderr,
+                                  "ipmi_sel_parse_read_event_data1_event_data3_flag: %s\n",
+                                  ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
+                  goto cleanup;
+                }
+              
+              if (!((ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
+                     || ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
+                    && event_data2_flag == IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY))
+                {
+                  if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
+                    strcat(fmtbuf, ":%f");
+                }
+            }
+          else
+            {
+              if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
+                strcat(fmtbuf, ":%f");
+            }
           if (event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
             strcat(fmtbuf, ":%h");
           fmt = fmtbuf;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.2 2009-01-07 17:43:55 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.3 2009-01-07 18:58:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1027,7 +1027,7 @@ ipmi_sel_parse_read_record_string(ipmi_sel_parse_ctx_t ctx,
   SEL_PARSE_ERR_PARAMETERS(fmt 
                            && buf 
                            && buflen
-                           && !(flags & ~IPMI_SEL_PARSE_READ_STRING_MASK));
+                           && !(flags & ~IPMI_SEL_PARSE_STRING_MASK));
 
   if (_parse_read_common(ctx, &sel_parse_entry) < 0)
     return -1;

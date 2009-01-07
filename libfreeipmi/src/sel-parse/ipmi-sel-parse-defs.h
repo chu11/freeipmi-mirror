@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-defs.h,v 1.2 2009-01-07 17:43:54 chu11 Exp $
+ *  $Id: ipmi-sel-parse-defs.h,v 1.3 2009-01-07 18:58:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -54,12 +54,13 @@
 
 #define IPMI_SEL_PARSE_FLAGS_MASK           (IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP)
 
-#define IPMI_SEL_PARSE_READ_STRING_MASK \
-  (IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE \
-   | IPMI_SEL_PARSE_READ_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD \
-   | IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE \
-   | IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_USE_SLASH \
-   | IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_MONTH_STRING)
+#define IPMI_SEL_PARSE_STRING_MASK \
+  (IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE \
+   | IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD \
+   | IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE \
+   | IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH \
+   | IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING \
+   | IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
                                             
 struct ipmi_sel_parse_entry {
   uint8_t sel_event_record[IPMI_SEL_RECORD_LENGTH];

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.2 2009-01-07 17:43:53 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.3 2009-01-07 18:58:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -51,12 +51,13 @@
 #define IPMI_SEL_PARSE_FLAGS_DEFAULT                              0x0000
 #define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                           0x0001
 
-#define IPMI_SEL_PARSE_READ_STRING_FLAGS_DEFAULT                  0x0000
-#define IPMI_SEL_PARSE_READ_STRING_FLAGS_VERBOSE                  0x0001
-#define IPMI_SEL_PARSE_READ_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD 0x0002
-#define IPMI_SEL_PARSE_READ_STRING_FLAGS_OUTPUT_NOT_AVAILABLE     0x0004
-#define IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_USE_SLASH           0x0008
-#define IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_MONTH_STRING        0x0010
+#define IPMI_SEL_PARSE_STRING_FLAGS_DEFAULT                       0x0000
+#define IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE                       0x0001
+#define IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD      0x0002
+#define IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE          0x0004
+#define IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH                0x0008
+#define IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING             0x0010
+#define IPMI_SEL_PARSE_STRING_FLAGS_LEGACY                        0x1000
 
 #define IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD               0x0
 #define IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD            0x1
@@ -200,6 +201,10 @@ int ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx,
  *
  * Output a month name (Jan, Feb, Mar, etc.) instead of the month
  * number when outputting the date.
+ *
+ * LEGACY
+ *
+ * Output strings in legacy format.
  *
  * Returns length of data written to buffer.  If >= buflen, no null
  * termination exists in buffer.

@@ -20,6 +20,7 @@ o ipmi-sel
     - "OEM code" -> "OEM <more detailed info> code"
     - Output OEM hex code in consistent format.
     - Output hex code more often if translation to string not available.
+  - Support --legacy-output option.
   - Re-work to use new libfreeipmi sel-parse sub library.
   - Remove legacy option to dump hex output to optional filename.
 
