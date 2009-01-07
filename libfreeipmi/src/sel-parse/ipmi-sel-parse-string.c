@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.3 2009-01-07 18:58:04 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.4 2009-01-07 22:27:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -683,12 +683,24 @@ _output_sensor_name(ipmi_sel_parse_ctx_t ctx,
     }
   else
     {
-      if (_SNPRINTF(buf,
-                    buflen,
-                    wlen,
-                    "Sensor #%d",
-                    system_event_record_data.sensor_number))
-        return 1;
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+        {
+          if (_SNPRINTF(buf,
+                        buflen,
+                        wlen,
+                        "#%d",
+                        system_event_record_data.sensor_number))
+            return 1;
+        }
+      else
+        {
+          if (_SNPRINTF(buf,
+                        buflen,
+                        wlen,
+                        "Sensor #%d",
+                        system_event_record_data.sensor_number))
+            return 1;
+        }
     }
   
   return 0;
@@ -897,10 +909,16 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
-          snprintf(tmpbuf,
-                   EVENT_BUFFER_LENGTH,
-                   "OEM Event Data2 code = %02Xh",
-                   system_event_record_data.event_data2);
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+            snprintf(tmpbuf,
+                     EVENT_BUFFER_LENGTH,
+                     "OEM code = %02Xh",
+                     system_event_record_data.event_data2);
+          else
+            snprintf(tmpbuf,
+                     EVENT_BUFFER_LENGTH,
+                     "OEM Event Data2 code = %02Xh",
+                     system_event_record_data.event_data2);
           output_flag++;
           break;
         default:
@@ -988,10 +1006,16 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
-          snprintf(tmpbuf,
-                   EVENT_BUFFER_LENGTH,
-                   "OEM Event Data2 code = %02Xh",
-                   system_event_record_data.event_data2);
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+            snprintf(tmpbuf,
+                     EVENT_BUFFER_LENGTH,
+                     "OEM code = %02Xh",
+                     system_event_record_data.event_data2);
+          else
+            snprintf(tmpbuf,
+                     EVENT_BUFFER_LENGTH,
+                     "OEM Event Data2 code = %02Xh",
+                     system_event_record_data.event_data2);
           output_flag++;
           break;
         default:
@@ -1184,10 +1208,16 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
-          snprintf(tmpbuf,
-                   EVENT_BUFFER_LENGTH,
-                   "OEM Event Data3 code = %02Xh",
-                   system_event_record_data.event_data3);
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+            snprintf(tmpbuf,
+                     EVENT_BUFFER_LENGTH,
+                     "OEM code = %02Xh",
+                     system_event_record_data.event_data3);
+          else
+            snprintf(tmpbuf,
+                     EVENT_BUFFER_LENGTH,
+                     "OEM Event Data3 code = %02Xh",
+                     system_event_record_data.event_data3);
           output_flag++;
           break;
         default:
