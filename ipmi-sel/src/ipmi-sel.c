@@ -341,7 +341,6 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
 
       flags = IPMI_SEL_PARSE_READ_STRING_FLAGS_DATE_MONTH_STRING;
 
-      memset(fmt, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
       if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
         {
           uint8_t event_data2_flag;
@@ -363,11 +362,11 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
                               ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
               goto cleanup;
             }
-          strcpy(fmt, "%i:%d %t:%g %s:%e");
+          strcpy(fmtbuf, "%i:%d %t:%g %s:%e");
           if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-            strcat(fmt, ":%f");
+            strcat(fmtbuf, ":%f");
           if (event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-            strcat(fmt, ":%h");
+            strcat(fmtbuf, ":%h");
           fmt = fmtbuf;
         }
       else if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
@@ -527,11 +526,15 @@ _ipmi_sel (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (!(state_data.ipmi_sel_parse_ctx = ipmi_sel_parse_ctx_create(state_data.ipmi_ctx,
-                                                                   prog_data->args->sdr.ignore_sdr_cache ? NULL : state_data.ipmi_sdr_cache_ctx)))
+  /* Special case, just flush, don't do SEL stuff */
+  if (!prog_data->args->sdr.flush_cache)
     {
-      pstdout_perror (pstate, "ipmi_sel_parse_ctx_create()");
-      goto cleanup;
+      if (!(state_data.ipmi_sel_parse_ctx = ipmi_sel_parse_ctx_create(state_data.ipmi_ctx,
+                                                                      prog_data->args->sdr.ignore_sdr_cache ? NULL : state_data.ipmi_sdr_cache_ctx)))
+        {
+          pstdout_perror (pstate, "ipmi_sel_parse_ctx_create()");
+          goto cleanup;
+        }
     }
 
   if (state_data.prog_data->args->common.debug)

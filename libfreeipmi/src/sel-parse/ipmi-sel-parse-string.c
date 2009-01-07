@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.1.2.11 2009-01-07 01:15:05 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.1.2.12 2009-01-07 17:28:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -171,7 +171,7 @@ _get_sdr_record_type(ipmi_sel_parse_ctx_t ctx,
   SEL_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record_header, "record_type", &val);
   *sdr_record_type = val;
 
-  rv = 0;
+  rv = 1;
  cleanup:
   SEL_PARSE_FIID_OBJ_DESTROY(obj_sdr_record_header);
   return rv;

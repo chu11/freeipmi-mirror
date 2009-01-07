@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.1.2.14 2009-01-07 01:15:06 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.1.2.15 2009-01-07 17:28:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -85,7 +85,7 @@ ipmi_sel_parse_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ct
 {
   struct ipmi_sel_parse_ctx *ctx = NULL;
   
-  ERR_EINVAL_NULL_RETURN(ctx);
+  ERR_EINVAL_NULL_RETURN(ipmi_ctx);
 
   ERR_CLEANUP((ctx = (ipmi_sel_parse_ctx_t)malloc(sizeof(struct ipmi_sel_parse_ctx))));
   memset(ctx, '\0', sizeof(struct ipmi_sel_parse_ctx));
@@ -137,11 +137,11 @@ ipmi_sel_parse_ctx_destroy(ipmi_sel_parse_ctx_t ctx)
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_MAGIC)
     return;
 
-  ctx->magic = ~IPMI_SEL_PARSE_MAGIC;
   if (ctx->debug_prefix)
     free(ctx->debug_prefix);
   _sel_entries_clear(ctx);
   list_destroy(ctx->sel_entries);
+  ctx->magic = ~IPMI_SEL_PARSE_MAGIC;
   free(ctx);
 }
 
@@ -558,16 +558,18 @@ _parse_read_common(ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry **sel_p
   assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
   assert(sel_parse_entry);
 
-  if (!ctx->sel_entries_itr)
-    {
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES;
-      return -1;
-    }
-
   if (ctx->callback_sel_entry)
     *sel_parse_entry = ctx->callback_sel_entry;
   else
-    *sel_parse_entry = ctx->current_sel_entry;
+    {
+      if (!ctx->sel_entries_itr)
+        {
+          ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES;
+          return -1;
+        }
+
+      *sel_parse_entry = ctx->current_sel_entry;
+    }
 
   if (!sel_parse_entry)
     {
