@@ -1,11 +1,13 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.2 2009-01-07 17:43:54 chu11 Exp $
+## $Id: Makefile.am,v 1.3 2009-01-07 22:47:21 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
 
 noinst_HEADERS = \
-	ipmi-sel-parse-defs.h
+	ipmi-sel-parse-defs.h \
+	ipmi-sel-parse-common.h \
+	ipmi-sel-parse-string.h
 
 noinst_LTLIBRARIES = libselparse.la 
 
