@@ -119,6 +119,13 @@ do {                                                                    \
   __TRACE_CTX_OUTPUT;                                                   \
 } while (0)
 
+#define __SEL_PARSE_TRACE                                               \
+do {                                                                    \
+  int __ctxerrnum = ipmi_sel_parse_ctx_errnum(ctx);                     \
+  char *__ctxerrstr = ipmi_sel_parse_ctx_strerror(__ctxerrnum);         \
+  __TRACE_CTX_OUTPUT;                                                   \
+} while (0)
+
 #else
 #define __ERR_TRACE
 #define __KCS_TRACE
@@ -127,6 +134,7 @@ do {                                                                    \
 #define __SUNBMC_TRACE
 #define __LOCATE_TRACE
 #define __SDR_CACHE_TRACE
+#define __SEL_PARSE_TRACE
 #endif /* IPMI_TRACE */
 
 #define ERR_LOG(expr)                                                   \
@@ -205,6 +213,16 @@ do {                                                                    \
       errno = EINVAL;                                                   \
       __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define ERR_EINVAL_NULL_RETURN(expr)                                    \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = EINVAL;                                                   \
+      __ERR_TRACE;                                                      \
+      return (NULL);                                                    \
     }                                                                   \
 } while (0)
 
@@ -1190,6 +1208,135 @@ do {                                                                      \
         goto cleanup;                                                   \
       }                                                                 \
   } while (0)
+
+#define __SEL_PARSE_ERRNO_TO_ERRNUM                                     \
+do {                                                                    \
+  if (errno == 0)                                                       \
+    ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SUCCESS;                       \
+  else if (errno == ENOMEM)                                             \
+    ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY;                 \
+  else if (errno == EINVAL)                                             \
+    ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR;                \
+  else                                                                  \
+    ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SYSTEM_ERROR;                  \
+} while (0)
+
+#define SEL_PARSE_ERR(expr)                                             \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        __SEL_PARSE_ERRNO_TO_ERRNUM;                                    \
+        __SEL_PARSE_TRACE;                                              \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SEL_PARSE_ERR_CLEANUP(expr)                                     \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        __SEL_PARSE_ERRNO_TO_ERRNUM;                                    \
+        __SEL_PARSE_TRACE;                                              \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SEL_PARSE_ERRNUM_SET(__errnum)                                  \
+  do {                                                                  \
+    ctx->errnum = (__errnum);                                           \
+    __SEL_PARSE_TRACE;                                                  \
+  } while (0)
+
+#define SEL_PARSE_ERR_PARAMETERS(expr)                                  \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_PARAMETERS;                \
+        __SEL_PARSE_TRACE;                                              \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SEL_PARSE_ERR_OUT_OF_MEMORY(expr)                               \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY;             \
+        __SEL_PARSE_TRACE;                                              \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SEL_PARSE_ERR_OUT_OF_MEMORY_CLEANUP(expr)                       \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY;             \
+        __SEL_PARSE_TRACE;                                              \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SEL_PARSE_ERR_IPMI_ERROR(expr)                                  \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR;                \
+        __SEL_PARSE_TRACE;                                              \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SEL_PARSE_ERR_IPMI_ERROR_CLEANUP(expr)                          \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR;                \
+        __SEL_PARSE_TRACE;                                              \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SEL_PARSE_ERR_SYSTEM_ERROR(expr)                                \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SYSTEM_ERROR;              \
+        __SEL_PARSE_TRACE;                                              \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SEL_PARSE_ERR_SYSTEM_ERROR_CLEANUP(expr)                        \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SYSTEM_ERROR;              \
+        __SEL_PARSE_TRACE;                                              \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SEL_PARSE_ERR_INTERNAL_ERROR(expr)                              \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR;            \
+        __SEL_PARSE_TRACE;                                              \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SEL_PARSE_ERR_INTERNAL_ERROR_CLEANUP(expr)                      \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR;            \
+        __SEL_PARSE_TRACE;                                              \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
 
 #ifdef __cplusplus
 }

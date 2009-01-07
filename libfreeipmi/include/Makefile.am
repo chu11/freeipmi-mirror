@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.27 2008-08-25 17:26:24 chu11 Exp $
+## $Id: Makefile.am,v 1.28 2009-01-07 17:43:53 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -50,6 +50,7 @@ nobase_include_HEADERS = \
 	freeipmi/record-format/ipmi-sdr-record-format.h \
 	freeipmi/record-format/ipmi-sel-record-format.h \
 	freeipmi/sdr-cache/ipmi-sdr-cache.h \
+	freeipmi/sel-parse/ipmi-sel-parse.h \
 	freeipmi/spec/ipmi-authentication-type-spec.h \
 	freeipmi/spec/ipmi-channel-spec.h \
 	freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h \

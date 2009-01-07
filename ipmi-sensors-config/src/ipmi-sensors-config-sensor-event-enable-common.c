@@ -34,7 +34,6 @@
 #include "pstdout.h"
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
-#include "tool-sensor-common.h"
 
 /* event field strings */
 
@@ -504,10 +503,10 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
       goto out;
     }
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
-                                   "assertion_event_bitmask",
-                                   &val,
-                                   field_len);
+  _FIID_OBJ_GET_WITH_RV (field_len,
+                         obj_cmd_rs,
+                         "assertion_event_bitmask",
+                         &val);
 
   /* assertion event bitmask need not be returned */
   if (field_len)
@@ -515,10 +514,10 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
   else
     data->assertion_bits = 0;
 
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (obj_cmd_rs,
-                                   "deassertion_event_bitmask",
-                                   &val,
-                                   field_len);
+  _FIID_OBJ_GET_WITH_RV (field_len,
+                         obj_cmd_rs,
+                         "deassertion_event_bitmask",
+                         &val);
 
   /* deassertion event bitmask need not be returned */
   if (field_len)
@@ -770,7 +769,7 @@ _threshold_event_enable_verify (ipmi_sensors_config_state_data_t *state_data,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t event_reading_type_code;
-  int sensor_class;
+  int event_reading_type_code_class;
 
   assert(state_data);
   assert(section_name);
@@ -790,9 +789,9 @@ _threshold_event_enable_verify (ipmi_sensors_config_state_data_t *state_data,
                                              &event_reading_type_code) < 0)
     goto cleanup;
   
-  sensor_class = sensor_classify (event_reading_type_code);
+  event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
 
-  if (sensor_class != SENSOR_CLASS_THRESHOLD)
+  if (event_reading_type_code_class != IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -1171,7 +1170,7 @@ _generic_event_enable_verify (ipmi_sensors_config_state_data_t *state_data,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t event_reading_type_code;
-  int sensor_class;
+  int event_reading_type_code_class;
 
   assert(state_data);
   assert(section_name);
@@ -1192,9 +1191,9 @@ _generic_event_enable_verify (ipmi_sensors_config_state_data_t *state_data,
                                             &event_reading_type_code) < 0)
     goto cleanup;
 
-  sensor_class = sensor_classify (event_reading_type_code);
+  event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
 
-  if (sensor_class != SENSOR_CLASS_GENERIC_DISCRETE)
+  if (event_reading_type_code_class != IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -1545,7 +1544,7 @@ _sensor_specific_event_enable_verify (ipmi_sensors_config_state_data_t *state_da
   config_err_t ret;
   uint8_t event_reading_type_code;
   uint8_t sensor_type;
-  int sensor_class;
+  int event_reading_type_code_class;
 
   assert(state_data);
   assert(section_name);
@@ -1566,9 +1565,9 @@ _sensor_specific_event_enable_verify (ipmi_sensors_config_state_data_t *state_da
                                             &event_reading_type_code) < 0)
     goto cleanup;
 
-  sensor_class = sensor_classify (event_reading_type_code);
+  event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
 
-  if (sensor_class != SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
+  if (event_reading_type_code_class != IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -2031,7 +2030,7 @@ setup_sensor_event_enable_fields (ipmi_sensors_config_state_data_t *state_data,
   if (event_message_control_support == IPMI_SDR_PER_EVENT_ENABLE_DISABLE_SUPPORT)
     {
       uint8_t event_reading_type_code;
-      int sensor_class;
+      int event_reading_type_code_class;
 
       if (sdr_cache_get_event_reading_type_code (NULL,
                                                  sdr_record,
@@ -2039,9 +2038,9 @@ setup_sensor_event_enable_fields (ipmi_sensors_config_state_data_t *state_data,
                                                  &event_reading_type_code) < 0)
         goto cleanup;
       
-      sensor_class = sensor_classify (event_reading_type_code);
+      event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
       
-      if (sensor_class == SENSOR_CLASS_THRESHOLD)
+      if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
         {
           if (_setup_threshold_event_enable (state_data,
                                              sdr_record,
@@ -2049,7 +2048,7 @@ setup_sensor_event_enable_fields (ipmi_sensors_config_state_data_t *state_data,
                                              section) < 0)
             goto cleanup;
         }
-      else if (sensor_class == SENSOR_CLASS_GENERIC_DISCRETE)
+      else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
         {
           if (_setup_generic_event_enable (state_data,
                                            sdr_record,
@@ -2058,7 +2057,7 @@ setup_sensor_event_enable_fields (ipmi_sensors_config_state_data_t *state_data,
                                            event_reading_type_code) < 0)
             goto cleanup;
         }
-      else if (sensor_class == SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE)
+      else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
         {
           if (_setup_sensor_specific_event_enable (state_data,
                                                    sdr_record,

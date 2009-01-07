@@ -264,10 +264,10 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     pstdout_printf(state_data->pstate, "Product ID:        %Xh\n", (unsigned int) product_id);
     
     /* auxiliary firmware info is optional */
-    _FIID_OBJ_GET_WITH_RETURN_VALUE (cmd_rs,
-                                     "auxiliary_firmware_revision_info",
-                                     &val,
-                                     flag);
+    _FIID_OBJ_GET_WITH_RV (flag,
+                           cmd_rs,
+                           "auxiliary_firmware_revision_info",
+                           &val);
     if (flag)
       {
         switch (manufacturer_id)

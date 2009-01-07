@@ -13,10 +13,20 @@ o ipmi-sensors
 o ipmimonitoring
   - Utilize libipmimonitoring callback routines to make sensors output
     as they are read, rather than just at the end.
+o ipmi-sel
+  - Alter output to make fields more clear and inline with IPMI spec.
+    - "Reading" -> "Trigger Reading"
+    - "Threshold" -> "Threshold Reading"
+    - "OEM code" -> "OEM <more detailed info> code"
+    - Output OEM hex code in consistent format.
+    - Output hex code more often if translation to string not available.
+  - Re-work to use new libfreeipmi sel-parse sub library.
+  - Remove legacy option to dump hex output to optional filename.
 
 Libraries
 ---------
 o libfreeipmi
+  - Add new sel-parse sub library.
   - More detailed KCS debug output with header information.
   - New error code IPMI_ERR_NOT_FOUND in libfreeipmi API sub library
     supported.

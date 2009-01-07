@@ -28,17 +28,6 @@ extern "C" {
 #define IPMI_V1_0_EVENT_MESSAGE_FORMAT 0x03
 #define IPMI_V1_5_EVENT_MESSAGE_FORMAT 0x04
 
-/* Refer to Table 29-6 */
-#define IPMI_SEL_UNSPECIFIED_BYTE                  0x0
-#define IPMI_SEL_TRIGGER_THRESHOLD_VALUE           0x1
-#define IPMI_SEL_OEM_CODE                          0x2
-#define IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE    0x3
-#define IPMI_SEL_TRIGGER_READING                   0x1
-#define IPMI_SEL_PREV_STATE_SEVERITY               0x1
-
-#define IPMI_SEL_RECORD_ASSERTION_EVENT   0x0
-#define IPMI_SEL_RECORD_DEASSERTION_EVENT 0x1
-
 #define IPMI_SEL_RECORD_TYPE_IS_EVENT(__record_type) \
   (((__record_type) == 0x02) ? 1 : 0)
 
@@ -51,9 +40,25 @@ extern "C" {
   (((__record_type) >= 0xE0 \
     && ((__record_type) <= 0xFE || (__record_type) == 0xFF)) ? 1 : 0)
 
+#define IPMI_SEL_RECORD_ASSERTION_EVENT   0x0
+#define IPMI_SEL_RECORD_DEASSERTION_EVENT 0x1
+
+/* Refer to Table 29-6 */
+#define IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE                        0x0
+#define IPMI_SEL_EVENT_DATA_TRIGGER_READING                         0x1
+#define IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE                 0x1
+#define IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY              0x1
+#define IPMI_SEL_EVENT_DATA_OEM_CODE                                0x2
+#define IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE    0x3
+
+#define IPMI_SEL_RECORD_UNSPECIFIED_EVENT  0xFF
+#define IPMI_SEL_RECORD_UNSPECIFIED_OFFSET 0x0F
+
 extern fiid_template_t tmpl_sel_record_header;
 
 extern fiid_template_t tmpl_sel_system_event_record;
+extern fiid_template_t tmpl_sel_system_event_record_event_fields;
+extern fiid_template_t tmpl_sel_system_event_record_discrete_previous_state_severity;
 extern fiid_template_t tmpl_sel_timestamped_oem_record;
 extern fiid_template_t tmpl_sel_non_timestamped_oem_record;
 

@@ -33,10 +33,10 @@
 
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-display-common.h"
+#include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-sensor-common.h"
 
 static double
 round_double2 (double d)
@@ -91,7 +91,7 @@ _output_simple_header (ipmi_sensors_state_data_t *state_data,
                       "%d: %s (%s): ", 
                       record_id, 
                       id_string,
-                      sensor_group (sensor_type));
+                      ipmi_sensors_get_sensor_type_string (sensor_type));
     }
 
   return 0;
@@ -131,9 +131,9 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
                                              &event_reading_type_code) < 0)
     goto cleanup; 
  
-  switch (sensor_classify (event_reading_type_code))
+  switch (ipmi_event_reading_type_code_class (event_reading_type_code))
     {
-    case SENSOR_CLASS_THRESHOLD:
+    case IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD:
       if (!state_data->prog_data->args->quiet_readings)
         {             
           uint8_t sensor_unit;
@@ -201,9 +201,9 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
             pstdout_printf (state_data->pstate, "NA): ");
         }
       /* fall through and also output event messages */
-    case SENSOR_CLASS_GENERIC_DISCRETE:
-    case SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
-    case SENSOR_CLASS_OEM:
+    case IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE:
+    case IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE:
+    case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
     default:
       if (ipmi_sensors_output_event_message_list(state_data,
                                                  event_message_list,

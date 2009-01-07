@@ -69,9 +69,10 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_VERSION_CHANGE                      0x2B
 #define IPMI_SENSOR_TYPE_FRU_STATE                           0x2C
 
+/* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_SENSOR_TYPE_VALID(__sensor_type) \
-        (((__sensor_type) >= IPMI_SENSOR_TYPE_RESERVED \
-          && (__sensor_type) <= IPMI_SENSOR_TYPE_FRU_STATE) ? 1 : 0)
+        (((__sensor_type + 1) >= (IPMI_SENSOR_TYPE_RESERVED + 1) \
+          && (__sensor_type - 1) <= (IPMI_SENSOR_TYPE_FRU_STATE - 1)) ? 1 : 0)
 
 /* "== 0xFF" to remove warnings */
 #define IPMI_SENSOR_TYPE_IS_OEM(__sensor_type) \

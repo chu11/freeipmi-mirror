@@ -79,8 +79,8 @@ static struct argp_option cmdline_options[] =
      "Delete all SEL records.", 34},
     {"delete-range", DELETE_RANGE_KEY, "START-END", 0, 
      "Delete record ids from START to END in the SEL.", 35},
-    {"hex-dump",   HEX_DUMP_KEY,   "FILE", OPTION_ARG_OPTIONAL, 
-     "Hex-dump SEL records optionally into a FILE.", 36},
+    {"hex-dump",   HEX_DUMP_KEY, 0, 0,
+     "Hex-dump SEL records.", 36},
     { 0 }
   };
 
@@ -148,14 +148,22 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	char *range2_str = NULL;
 	int value = 0;
 	
-	range_str = strdupa (arg);
+	if (!(range_str = strdupa (arg)))
+          {
+            perror("strdupa");
+            exit(1);
+          }
 	if (!(start_ptr = strchr (range_str, '-')))
           {
             /* invalid input */
 	    fprintf (stderr, "invalid delete range\n");
             exit(1);
           }
-	range2_str = strdupa (start_ptr + 1);
+	if (!(range2_str = strdupa (start_ptr + 1)))
+          {
+            perror("strdupa");
+            exit(1);
+          }
 	*start_ptr = '\0';
 	range1_str = range_str;
 	
@@ -202,12 +210,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case HEX_DUMP_KEY:
       cmd_args->hex_dump = 1;
-      if (arg)
-	{
-	  if (cmd_args->hex_dump_filename)
-	    free (cmd_args->hex_dump_filename);
-	  cmd_args->hex_dump_filename = strdup (arg);
-	}
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */

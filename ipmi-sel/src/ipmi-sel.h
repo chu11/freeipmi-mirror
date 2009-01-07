@@ -66,7 +66,7 @@ typedef struct ipmi_sel_state_data
   pstdout_state_t pstate;
   char *hostname;
   ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx;
-  uint16_t reservation_id;
+  ipmi_sel_parse_ctx_t ipmi_sel_parse_ctx;
 } ipmi_sel_state_data_t;
 
 #endif

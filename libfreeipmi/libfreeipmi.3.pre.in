@@ -77,6 +77,11 @@ data repository (SDR).  Utilized by tools such as
 and 
 .B ipmimonitoring(8).
 .TP
+.B sel-parse
+Provides an API for reading and parsing System Event Log (SEL) entries.
+Utilized by tools such as 
+.B ipmi-sel(8).
+.TP
 .B spec
 Provides macros and arrays for various other definitions and tables in
 IPMI.  Utilized by tools such as 

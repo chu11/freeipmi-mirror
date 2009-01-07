@@ -28,6 +28,8 @@ extern "C" {
 
 int ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen);
 
+const char *ipmi_get_sensor_type_string (uint8_t sensor_type);
+
 int ipmi_sensor_decode_value (int8_t r_exponent, 
 			      int8_t b_exponent, 
                               int16_t m,

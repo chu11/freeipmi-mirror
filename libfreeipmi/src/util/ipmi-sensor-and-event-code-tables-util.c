@@ -31,12 +31,31 @@
 #include <errno.h>
 
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/fiid/fiid.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
+
+int 
+ipmi_event_reading_type_code_class(uint8_t event_reading_type_code)
+{
+  if (IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
+    return IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD;
+
+  if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code))
+    return IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE;
+
+  if (IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
+    return IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE;
+
+  if (IPMI_EVENT_READING_TYPE_CODE_IS_OEM(event_reading_type_code))
+    return IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM;
+
+  return IPMI_EVENT_READING_TYPE_CODE_CLASS_UNKNOWN;
+}
 
 /************************************************
  * Generic Event Reading Strings (FULL STRINGS) *

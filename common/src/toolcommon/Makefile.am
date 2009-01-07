@@ -3,8 +3,7 @@ noinst_HEADERS = \
 	tool-config-file-common.h \
 	tool-cmdline-common.h \
 	tool-fiid-wrappers.h \
-	tool-sdr-cache-common.h \
-	tool-sensor-common.h
+	tool-sdr-cache-common.h
 
 noinst_LTLIBRARIES = \
 	libtoolcommon.la
@@ -21,5 +20,4 @@ libtoolcommon_la_SOURCES = \
 	tool-common.c \
 	tool-config-file-common.c \
 	tool-cmdline-common.c \
-	tool-sdr-cache-common.c \
-	tool-sensor-common.c
+	tool-sdr-cache-common.c

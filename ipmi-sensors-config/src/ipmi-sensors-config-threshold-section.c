@@ -35,11 +35,12 @@
 #include "pstdout.h"
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
-#include "tool-sensor-common.h"
 
 /* 3% range is what we'll go with right now */
 #define THRESHOLD_RANGE_MIN_MULTIPLIER 0.97
 #define THRESHOLD_RANGE_MAX_MULTIPLIER 1.03
+
+#define UNRECOGNIZED_SENSOR_TYPE "Unrecognized"
 
 static config_err_t
 _get_sdr_decoding_data(ipmi_sensors_config_state_data_t *state_data,
@@ -1154,6 +1155,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   config_err_t ret;
   uint8_t sensor_type, sensor_unit;
   char description[CONFIG_MAX_DESCRIPTION_LEN];
+  const char *sensor_type_str = NULL;
 
   assert(state_data);
   assert(sdr_record);
@@ -1206,19 +1208,21 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                  &sensor_unit) < 0)
     goto cleanup;
 
+  sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
+
   memset(description, '\0', CONFIG_MAX_DESCRIPTION_LEN);
   if (IPMI_SENSOR_UNIT_VALID(sensor_unit)
       && sensor_unit != IPMI_SENSOR_UNIT_UNSPECIFIED)
     snprintf(description, 
              CONFIG_MAX_DESCRIPTION_LEN,
              "Give valid input for sensor type = %s; units = %s",
-             sensor_group (sensor_type),
+             sensor_type_str ? sensor_type_str : UNRECOGNIZED_SENSOR_TYPE,
              ipmi_sensor_units[sensor_unit]);
   else
     snprintf(description, 
              CONFIG_MAX_DESCRIPTION_LEN,
              "Give valid input for sensor type = %s",
-             sensor_group (sensor_type));
+             sensor_type_str ? sensor_type_str : UNRECOGNIZED_SENSOR_TYPE);
 
   if (setup_sensor_event_enable_fields (state_data,
                                         sdr_record,

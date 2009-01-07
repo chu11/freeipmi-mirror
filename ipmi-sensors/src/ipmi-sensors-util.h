@@ -48,4 +48,6 @@ int get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *stat
 
 void str_replace_char (char *str, char chr, char with);
 
+const char *ipmi_sensors_get_sensor_type_string (unsigned int sensor_type);
+
 #endif
