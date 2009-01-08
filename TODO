@@ -65,6 +65,8 @@ ipmi-sel
 - output previous threshold/state info
 - output if threshold > or < 
 - hex output - handle OEM types too
+- event only option
+- oem output only option
 
 inband code
 -----------
