@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-defs.h,v 1.3 2009-01-07 18:58:04 chu11 Exp $
+ *  $Id: ipmi-sel-parse-defs.h,v 1.4 2009-01-08 23:28:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -54,6 +54,8 @@
 
 #define IPMI_SEL_PARSE_FLAGS_MASK           (IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP)
 
+#define IPMI_SEL_PARSE_SEPARATOR_STRING     " | "
+
 #define IPMI_SEL_PARSE_STRING_MASK \
   (IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE \
    | IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD \
@@ -72,6 +74,7 @@ struct ipmi_sel_parse_ctx {
   unsigned int errnum;
   unsigned int flags;
   char *debug_prefix;
+  char *separator;
 
   ipmi_ctx_t ipmi_ctx;
   ipmi_sdr_cache_ctx_t sdr_cache_ctx;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.3 2009-01-07 18:58:04 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.4 2009-01-08 23:28:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -84,6 +84,13 @@ int ipmi_sel_parse_ctx_set_flags(ipmi_sel_parse_ctx_t ctx, unsigned int flags);
 char *ipmi_sel_parse_ctx_get_debug_prefix(ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_ctx_set_debug_prefix(ipmi_sel_parse_ctx_t ctx, const char *prefix);
 
+/* determines separator between fields in string functions
+ *
+ * defaults to " | "
+ */
+char *ipmi_sel_parse_ctx_get_separator(ipmi_sel_parse_ctx_t ctx);
+int ipmi_sel_parse_ctx_set_separator(ipmi_sel_parse_ctx_t ctx, const char *separator);
+
 /* SEL Parse Functions 
  * 
  * callback is called after each SEL entry is parsed
@@ -157,17 +164,50 @@ int ipmi_sel_parse_read_record(ipmi_sel_parse_ctx_t ctx,
  * String format - availability for output dependent on SEL record
  * type.
  *
+ * Available in all SEL record types
+ *
  * %i - record ID in decimal
+ *
+ * Available in SEL event and timestamped OEM SEL records
+ *
  * %t - time in format H:M:S using 24 hour clock
  * %d - date in format D-M-YEAR
+ *
+ * Available in SEL event records
+ *
  * %g - sensor group name
  * %s - sensor name
  * %e - offset from event/reading code type string
- * %f - event data 2 string
+ * %f - event data 2 string [1]
  * %h - event data 3 string
- * %j - event direction
+ * %c - combined event data 2 and event data 3 string [2]
+ * %p - event data 2 previous state string [3]
+ * %s - event data 2 severity string [3]
+ * %k - event direction
+ *
+ * [1] - if a previous state and a severity state string are available
+ * from a discrete sensor, they are concataneted with the defined
+ * separator in between.
+ *
+ * [2] - most useful for threshold events where trigger and threshold
+ * readings are available.  The combined output can indicate if the
+ * reading has gone greater than, less than, etc. to a threshold.  If a discrete
+ * sensor, event strings will just be put into the same string together with
+ * the defined separator.
+ *
+ * [3] - if event type code indicates a discrete sensor and event data 2
+ * flag indicates a previous state and/or severity state is available.
+ *
+ * Available in timestamped OEM SEL records
+ *
  * %m - manufacturer id
+ *
+ * Available in SEL timestamped and non-timestamped OEM record types
+ *
  * %o - oem data in hex
+ *
+ * Misc
+ *
  * %% - percent sign
  *
  * flags

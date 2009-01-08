@@ -1,3 +1,9 @@
+2009-01-08  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sel-parse/: Various bug fixes.  Offer more output options.
+
+	* ipmi-sel/: Support --verbose output.  Alter default output format.
+
 2009-01-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/: Support LEGACY string output option.

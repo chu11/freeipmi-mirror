@@ -71,18 +71,20 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_IGNORE_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
+    {"verbose",    VERBOSE_KEY,    0, 0,
+     "Increase verbosity in output.", 30},
     {"info",       INFO_KEY,       0, 0, 
-     "Show general information about the SEL.", 30},
+     "Show general information about the SEL.", 31},
     {"delete",     DELETE_KEY,     "REC-LIST", 0, 
-     "Delete SEL records by record ids.", 33},
+     "Delete SEL records by record ids.", 32},
     {"delete-all", DELETE_ALL_KEY, 0, 0, 
-     "Delete all SEL records.", 34},
+     "Delete all SEL records.", 33},
     {"delete-range", DELETE_RANGE_KEY, "START-END", 0, 
-     "Delete record ids from START to END in the SEL.", 35},
+     "Delete record ids from START to END in the SEL.", 34},
     {"hex-dump",   HEX_DUMP_KEY, 0, 0,
-     "Hex-dump SEL records.", 36},
+     "Hex-dump SEL records.", 35},
     {"legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-     "Output SEL entries in legacy format.", 37},
+     "Output SEL entries in legacy format.", 36},
     { 0 }
   };
 
@@ -109,6 +111,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
+    case VERBOSE_KEY:
+      cmd_args->verbose = 1;
+      cmd_args->verbose_count++;
+      break;
     case INFO_KEY:
       cmd_args->info = 1;
       break;
@@ -258,13 +264,15 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
+  cmd_args->verbose = 0;
+  cmd_args->verbose_count = 0;
   cmd_args->info = 0;
   cmd_args->delete_all = 0;
   cmd_args->delete = 0;
   memset(cmd_args->delete_record_list,
          '\0',
          sizeof(int)*IPMI_SEL_MAX_DELETE_RECORD);
-   cmd_args->delete_record_list_length = 0;
+  cmd_args->delete_record_list_length = 0;
   cmd_args->delete_range = 0;
   cmd_args->delete_range1 = 0;
   cmd_args->delete_range2 = 0;

@@ -29,6 +29,7 @@
 
 enum ipmi_sel_argp_option_keys
   { 
+    VERBOSE_KEY = 'v',
     INFO_KEY = 'i', 
     DELETE_ALL_KEY = 'c', 
     DELETE_KEY = 'd', 
@@ -42,6 +43,8 @@ struct ipmi_sel_arguments
   struct common_cmd_args common;
   struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
+  int verbose;
+  int verbose_count;
   int info;
   int delete_all;
   int delete;
@@ -68,6 +71,7 @@ typedef struct ipmi_sel_state_data
   char *hostname;
   ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx;
   ipmi_sel_parse_ctx_t ipmi_sel_parse_ctx;
+  int output_headers;
 } ipmi_sel_state_data_t;
 
 #endif

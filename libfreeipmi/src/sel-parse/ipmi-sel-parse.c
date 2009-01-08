@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.4 2009-01-08 00:44:29 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.5 2009-01-08 23:28:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -92,6 +92,7 @@ ipmi_sel_parse_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ct
   ctx->magic = IPMI_SEL_PARSE_MAGIC;
   ctx->flags = IPMI_SEL_PARSE_FLAGS_DEFAULT;
   ctx->debug_prefix = NULL;
+  ctx->separator = NULL;
 
   ctx->ipmi_ctx = ipmi_ctx;
   ctx->sdr_cache_ctx = sdr_cache_ctx;
@@ -139,6 +140,8 @@ ipmi_sel_parse_ctx_destroy(ipmi_sel_parse_ctx_t ctx)
 
   if (ctx->debug_prefix)
     free(ctx->debug_prefix);
+  if (ctx->separator)
+    free(ctx->separator);
   _sel_entries_clear(ctx);
   list_destroy(ctx->sel_entries);
   ctx->magic = ~IPMI_SEL_PARSE_MAGIC;
@@ -208,6 +211,31 @@ ipmi_sel_parse_ctx_set_debug_prefix(ipmi_sel_parse_ctx_t ctx, const char *prefix
 
   if (prefix)
     SEL_PARSE_ERR_OUT_OF_MEMORY((ctx->debug_prefix = strdup(prefix)));
+
+  return 0;
+}
+
+char *
+ipmi_sel_parse_ctx_get_separator(ipmi_sel_parse_ctx_t ctx)
+{
+  ERR_NULL_RETURN(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+
+  return ctx->separator;
+}
+
+int
+ipmi_sel_parse_ctx_set_separator(ipmi_sel_parse_ctx_t ctx, const char *separator)
+{
+  ERR(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+
+  if (ctx->separator)
+    {
+      free(ctx->separator);
+      ctx->separator = NULL;
+    }
+
+  if (separator)
+    SEL_PARSE_ERR_OUT_OF_MEMORY((ctx->separator = strdup(separator)));
 
   return 0;
 }

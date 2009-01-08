@@ -329,6 +329,27 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
       unsigned int flags;
       uint8_t record_type;
 
+      if (!args->legacy_output && !state_data->output_headers)
+        {
+          pstdout_printf(state_data->pstate,
+                         "Record_ID | Date | Time | Sensor Group | Sensor Name");
+          if (args->verbose)
+            {
+              pstdout_printf(state_data->pstate,
+                             " | Event Direction");
+            }
+          pstdout_printf(state_data->pstate,
+                         " | Event");
+          if (args->verbose)
+            {
+              pstdout_printf(state_data->pstate,
+                             " | Event Detail");
+            }
+          pstdout_printf(state_data->pstate, 
+                         "\n");
+          state_data->output_headers++;
+        }
+
       if (ipmi_sel_parse_read_record_type(state_data->ipmi_sel_parse_ctx,
                                           &record_type) < 0)
         {
@@ -340,6 +361,9 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
         }
 
       flags = IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING;
+      flags |= IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
+      flags |= IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
+
       if (state_data->prog_data->args->legacy_output)
         flags |= IPMI_SEL_PARSE_STRING_FLAGS_LEGACY;
 
@@ -395,14 +419,14 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
               goto cleanup;
             }
 
-          strcpy(fmtbuf, "%i:%d %t:%g %s:%e");
-
-          /* achu: special case, legacy output didn't support
-             previous/severity output and would not output 0xFF for
-             discrete events.
-           */
           if (state_data->prog_data->args->legacy_output)
             {
+              strcpy(fmtbuf, "%i:%d %t:%g %s:%e");
+              
+              /* achu: special case, legacy output didn't support
+                 previous/severity output and would not output 0xFF for
+                 discrete events.
+              */
               if (!(((ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
                       || ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
                      && event_data2_flag == IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY)
@@ -415,15 +439,7 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
                   if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
                     strcat(fmtbuf, ":%f");
                 }
-            }
-          else
-            {
-              if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-                strcat(fmtbuf, ":%f");
-            }
 
-          if (state_data->prog_data->args->legacy_output)
-            {
               if (!((ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
                      || ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
                      || ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
@@ -436,16 +452,47 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
             }
           else
             {
-              if (event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-                strcat(fmtbuf, ":%h");
+              /* note: previously set sel parse library separator to " ; "
+               * so some places where there could be two outputs
+               * would be separated by a semi-colon
+               */
+              if (args->verbose)
+                strcpy(fmtbuf, "%i | %d | %t | %g | %s | %k | %e");
+              else
+                strcpy(fmtbuf, "%i | %d | %t | %g | %s | %e");
+              
+              if (args->verbose)
+                {
+                  if (ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
+                      && event_data2_flag == IPMI_SEL_EVENT_DATA_TRIGGER_READING
+                      && event_data3_flag == IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE)
+                    strcat(fmtbuf, " | %c");
+                  else if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
+                           && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
+                    strcat(fmtbuf, " | %f ; %h");
+                  else if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
+                    strcat(fmtbuf, " | %f");
+                  else if (event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
+                    strcat(fmtbuf, " | %h");
+                }
             }
 
           fmt = fmtbuf;
         }
       else if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
-        fmt = "%i:%d %t:%m:%o";
+        {
+          if (state_data->prog_data->args->legacy_output)
+            fmt = "%i:%d %t:%m:%o";
+          else
+            fmt = "%i | %d | %t | %m | %o";
+        }
       else if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
-        fmt = "%i:o";
+        {
+          if (state_data->prog_data->args->legacy_output)
+            fmt = "%i:o";
+          else
+            fmt = "%i | o";
+        }
       else
         {
           pstdout_fprintf(state_data->pstate,
@@ -509,6 +556,18 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                      args->sdr.sdr_cache_directory) < 0)
         return -1;
       sdr_cache_ctx = state_data->ipmi_sdr_cache_ctx;
+    }
+
+  if (!args->legacy_output)
+    {
+      if (ipmi_sel_parse_ctx_set_separator (state_data->ipmi_sel_parse_ctx, " ; ") < 0)
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "ipmi_sel_parse: %s\n",
+                          ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
+          return -1;
+        }
     }
 
   if (ipmi_sel_parse(state_data->ipmi_sel_parse_ctx,
