@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.4 2009-01-07 22:27:08 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.5 2009-01-08 00:44:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -840,6 +840,7 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
   char tmpbuf[EVENT_BUFFER_LENGTH];
+  int no_output_flag = 0;
   int output_flag = 0;
   int ret;
 
@@ -900,6 +901,13 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
           }
           break;
         case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
+
+          if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+            {
+              no_output_flag++;
+              break;
+            }
+
           ret = ipmi_get_event_data2_message (system_event_record_data.sensor_type,
                                               system_event_record_data.offset_from_event_reading_type_code,
                                               system_event_record_data.event_data2,
@@ -949,11 +957,18 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
             int previous_output_flag = 0;
             int severity_output_flag = 0;
 
+            if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+              {
+                no_output_flag++;
+                break;
+              }
+
             if (sel_parse_get_previous_state_or_severity(ctx,
                                                          sel_parse_entry,
                                                          &previous_offset_from_event_reading_type_code,
                                                          &offset_from_severity_event_reading_type_code) < 0)
               return -1;
+
             if (previous_offset_from_event_reading_type_code != IPMI_SEL_RECORD_UNSPECIFIED_OFFSET)
               {
                 ret = ipmi_get_event_data2_message (system_event_record_data.sensor_type,
@@ -996,7 +1011,14 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
               output_flag++;
           }
           break;
-        case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
+        case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:          
+
+          if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+            {
+              no_output_flag++;
+              break;
+            }
+
           ret = ipmi_get_event_data2_message (system_event_record_data.sensor_type,
                                               system_event_record_data.offset_from_event_reading_type_code,
                                               system_event_record_data.event_data2,
@@ -1061,6 +1083,16 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
         return 0;
 
+      if (no_output_flag)
+        {
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+            {
+              if (_SNPRINTF(buf, buflen, wlen, "%s", NA_STRING))
+                return 1;
+            }
+          return 0;
+        }
+
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
         {
           if (_SNPRINTF(buf,
@@ -1096,6 +1128,7 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
   char tmpbuf[EVENT_BUFFER_LENGTH];
+  int no_output_flag = 0;
   int output_flag = 0;
   int ret;
 
@@ -1156,6 +1189,13 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
           }
           break;
         case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
+
+          if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+            {
+              no_output_flag++;
+              break;
+            }
+
           ret = ipmi_get_event_data3_message (system_event_record_data.sensor_type,
                                               system_event_record_data.offset_from_event_reading_type_code,
                                               system_event_record_data.event_data2,
@@ -1198,6 +1238,11 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
       switch (system_event_record_data.event_data3_flag)
         {
         case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
+          if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+            {
+              no_output_flag++;
+              break;
+            }
           ret = ipmi_get_event_data3_message (system_event_record_data.sensor_type,
                                               system_event_record_data.offset_from_event_reading_type_code,
                                               system_event_record_data.event_data2,
@@ -1263,6 +1308,16 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
         return 0;
 
+      if (no_output_flag)
+        {
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+            {
+              if (_SNPRINTF(buf, buflen, wlen, "%s", NA_STRING))
+                return 1;
+            }
+          return 0;
+        }
+      
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
         {
           if (_SNPRINTF(buf,

@@ -345,8 +345,20 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
 
       if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
         {
+          uint8_t event_type_code;
           uint8_t event_data2_flag;
           uint8_t event_data3_flag;
+          uint8_t event_data2;
+          uint8_t event_data3;
+
+          if (ipmi_sel_parse_read_event_type_code(state_data->ipmi_sel_parse_ctx, &event_type_code) < 0)
+            {
+              pstdout_fprintf(state_data->pstate,
+                              stderr,
+                              "ipmi_sel_parse_read_event_data1_event_data3_flag: %s\n",
+                              ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
+              goto cleanup;
+            }
 
           if (ipmi_sel_parse_read_event_data1_event_data2_flag(state_data->ipmi_sel_parse_ctx, &event_data2_flag) < 0)
             {
@@ -365,25 +377,40 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
               goto cleanup;
             }
 
+          if (ipmi_sel_parse_read_event_data2(state_data->ipmi_sel_parse_ctx, &event_data2) < 0)
+            {
+              pstdout_fprintf(state_data->pstate,
+                              stderr,
+                              "ipmi_sel_parse_read_event_data2: %s\n",
+                              ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
+              goto cleanup;
+            }
+
+          if (ipmi_sel_parse_read_event_data3(state_data->ipmi_sel_parse_ctx, &event_data3) < 0)
+            {
+              pstdout_fprintf(state_data->pstate,
+                              stderr,
+                              "ipmi_sel_parse_read_event_data3: %s\n",
+                              ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
+              goto cleanup;
+            }
+
           strcpy(fmtbuf, "%i:%d %t:%g %s:%e");
 
-          /* achu: special case, legacy output didn't support previous/severity output */
+          /* achu: special case, legacy output didn't support
+             previous/severity output and would not output 0xFF for
+             discrete events.
+           */
           if (state_data->prog_data->args->legacy_output)
             {
-              uint8_t event_type_code;
-
-              if (ipmi_sel_parse_read_event_type_code(state_data->ipmi_sel_parse_ctx, &event_type_code) < 0)
-                {
-                  pstdout_fprintf(state_data->pstate,
-                                  stderr,
-                                  "ipmi_sel_parse_read_event_data1_event_data3_flag: %s\n",
-                                  ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
-                  goto cleanup;
-                }
-              
-              if (!((ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
-                     || ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
-                    && event_data2_flag == IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY))
+              if (!(((ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
+                      || ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
+                     && event_data2_flag == IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY)
+                    || ((ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
+                         || ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
+                         || ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
+                        && event_data2_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
+                        && event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)))
                 {
                   if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
                     strcat(fmtbuf, ":%f");
@@ -394,8 +421,25 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
               if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
                 strcat(fmtbuf, ":%f");
             }
-          if (event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-            strcat(fmtbuf, ":%h");
+
+          if (state_data->prog_data->args->legacy_output)
+            {
+              if (!((ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
+                     || ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
+                     || ipmi_event_reading_type_code_class(event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
+                    && event_data3_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
+                    && event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT))
+                {
+                  if (event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
+                    strcat(fmtbuf, ":%h");
+                }
+            }
+          else
+            {
+              if (event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
+                strcat(fmtbuf, ":%h");
+            }
+
           fmt = fmtbuf;
         }
       else if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)

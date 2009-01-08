@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.3 2009-01-07 18:58:04 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.4 2009-01-08 00:44:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -275,6 +275,10 @@ _sel_entry_dump(ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_parse
   else /* record_type_class == SEL_RECORD_TYPE_UNKNOWN */
     SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_system_event_record);
  
+  SEL_PARSE_FIID_OBJ_SET_ALL_CLEANUP(obj_sel_record, 
+                                     sel_parse_entry->sel_event_record,
+                                     sel_parse_entry->sel_event_record_len);
+
  output:
   debug_hdr_str(DEBUG_UTIL_TYPE_NONE,
                 DEBUG_UTIL_DIRECTION_NONE,
