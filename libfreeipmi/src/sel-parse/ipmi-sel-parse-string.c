@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.5 2009-01-08 00:44:29 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.6 2009-01-08 16:43:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1496,7 +1496,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         {
           if (percent_flag)
             {
-              if (_SNPRINTF(buf, buflen, &wlen, "%"))
+              if (_SNPRINTF(buf, buflen, &wlen, "%%"))
                 goto out;
               percent_flag = 0;
             }
@@ -1654,8 +1654,20 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
         }
       else
         {
-          if (_SNPRINTF(buf, buflen, &wlen, "%c", *fmt))
-            goto out;
+          if (percent_flag)
+            {
+              if (_SNPRINTF(buf, buflen, &wlen, "%%%c", *fmt))
+                {
+                  printf("here\n");
+                goto out;
+                }
+              percent_flag = 0;
+            }
+          else
+            {
+              if (_SNPRINTF(buf, buflen, &wlen, "%c", *fmt))
+                goto out;
+            }
         }
 
     end_loop:
