@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.7 2009-01-08 23:28:49 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.8 2009-01-08 23:43:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1395,13 +1395,28 @@ _output_event_data2_event_data3(ipmi_sel_parse_ctx_t ctx,
             
       if (data2_ret && data3_ret)
         {
+          /* achu:
+           *
+           * IPMI implementations aren't trustworthy for the > or < so
+           * I'm doing an actual math check to determine the output.
+           *
+           * It really should be:
+           *
+           * if assertion_event
+           *   if offset_from_event_reading_type_code & 0x1
+           *     use ">"
+           *   else
+           *     use "<"
+           * else
+           *   < do opposite for deassertion event >
+           */
           if (_SNPRINTF(buf,
                         buflen,
                         wlen,
                         "Sensor Reading = %.2f %s %s Threshold %.2f %s",
                         _round_double2 (trigger_reading),
                         ipmi_sensor_units_abbreviated[trigger_sensor_unit],
-                        system_event_record_data.offset_from_event_reading_type_code & 0x1 ? ">" : "<",
+                        _round_double2 (trigger_reading) < _round_double2 (threshold_reading) ? "<" : ">",
                         _round_double2 (threshold_reading),
                         ipmi_sensor_units_abbreviated[threshold_sensor_unit]))
             return 1;
