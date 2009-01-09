@@ -25,12 +25,14 @@
 #include "tool-sdr-cache-common.h"
 #include "pstdout.h"
 
-#define IPMI_SEL_MAX_DELETE_RECORD 4096
+#define IPMI_SEL_MAX_RECORD 4096
 
 enum ipmi_sel_argp_option_keys
   { 
     VERBOSE_KEY = 'v',
     INFO_KEY = 'i', 
+    DISPLAY_KEY = 'o', 
+    DISPLAY_RANGE_KEY = 'r',
     DELETE_ALL_KEY = 'c', 
     DELETE_KEY = 'd', 
     DELETE_RANGE_KEY = 'R',
@@ -46,9 +48,15 @@ struct ipmi_sel_arguments
   int verbose;
   int verbose_count;
   int info;
+  int display;
+  unsigned int display_record_list[IPMI_SEL_MAX_RECORD];
+  unsigned int display_record_list_length;
+  int display_range;
+  unsigned int display_range1;
+  unsigned int display_range2;
   int delete_all;
   int delete;
-  unsigned int delete_record_list[IPMI_SEL_MAX_DELETE_RECORD];
+  unsigned int delete_record_list[IPMI_SEL_MAX_RECORD];
   unsigned int delete_record_list_length;
   int delete_range;
   unsigned int delete_range1;

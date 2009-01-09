@@ -75,16 +75,20 @@ static struct argp_option cmdline_options[] =
      "Increase verbosity in output.", 30},
     {"info",       INFO_KEY,       0, 0, 
      "Show general information about the SEL.", 31},
+    {"display",     DISPLAY_KEY,     "REC-LIST", 0, 
+     "Display SEL records by record ids.", 32},
+    {"display-range", DISPLAY_RANGE_KEY, "START-END", 0, 
+     "Display record ids from START to END.", 33},
     {"delete",     DELETE_KEY,     "REC-LIST", 0, 
-     "Delete SEL records by record ids.", 32},
+     "Delete SEL records by record ids.", 34},
     {"delete-all", DELETE_ALL_KEY, 0, 0, 
-     "Delete all SEL records.", 33},
+     "Delete all SEL records.", 35},
     {"delete-range", DELETE_RANGE_KEY, "START-END", 0, 
-     "Delete record ids from START to END in the SEL.", 34},
+     "Delete record ids from START to END in the SEL.", 36},
     {"hex-dump",   HEX_DUMP_KEY, 0, 0,
-     "Hex-dump SEL records.", 35},
+     "Hex-dump SEL records.", 37},
     {"legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-     "Output SEL entries in legacy format.", 36},
+     "Output SEL entries in legacy format.", 38},
     { 0 }
   };
 
@@ -100,13 +104,131 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
                                                 cmdline_args_doc,
                                                 cmdline_doc };
 
+static void
+_read_record_list(int *flag,
+                  unsigned int *record_list,
+                  unsigned int *record_list_length,
+                  char *arg)
+{
+  char *ptr;
+  char *tok;
+  int value;
+
+  assert(flag);
+  assert(record_list);
+  assert(record_list_length);
+  assert(arg);
+
+  (*flag) = 1;
+  tok = strtok(arg, " ,");
+  while (tok && (*record_list_length) < IPMI_SEL_MAX_RECORD)
+    {
+      value = 0;
+      ptr = NULL;	
+      errno = 0;
+      
+      value = strtol(tok, &ptr, 10);
+      
+      if (errno 
+          || ptr[0] != '\0'
+          || value < 0
+          || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+          || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
+        {
+          fprintf (stderr, "invalid record number: %d\n", value);
+          exit(1);
+        }
+      
+      record_list[(*record_list_length)] = value;
+      (*record_list_length)++;
+      tok = strtok(NULL, " ,");
+    }
+}
+
+static void
+_read_range(int *flag,
+            unsigned int *range1,
+            unsigned int *range2,
+            char *arg)
+{
+  char *ptr;
+  char *range_str = NULL;
+  char *start_ptr = NULL;
+  char *range1_str = NULL;
+  char *range2_str = NULL;
+  int value = 0;
+  
+  assert(flag);
+  assert(range1);
+  assert(range2);
+  assert(arg);
+
+  (*flag) = 1;
+  
+  if (!(range_str = strdupa (arg)))
+    {
+      perror("strdupa");
+      exit(1);
+    }
+  if (!(start_ptr = strchr (range_str, '-')))
+    {
+      /* invalid input */
+      fprintf (stderr, "invalid range input\n");
+      exit(1);
+    }
+  if (!(range2_str = strdupa (start_ptr + 1)))
+    {
+      perror("strdupa");
+      exit(1);
+    }
+  *start_ptr = '\0';
+  range1_str = range_str;
+	
+  value = 0;
+  ptr = NULL;	
+  errno = 0;
+  value = strtol (range1_str, &ptr, 10);
+
+  if (errno 
+      || ptr[0] != '\0'
+      || value < 0
+      || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+      || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
+    {
+      fprintf (stderr, "invalid range record number: %d\n", value);
+      exit(1);
+    }
+  
+  (*range1) = value;
+  
+  value = 0;
+  ptr = NULL;	
+  errno = 0;
+  value = strtol (range2_str, &ptr, 10);
+
+  if (errno 
+      || ptr[0] != '\0'
+      || value < 0
+      || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+      || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
+    {
+      fprintf (stderr, "invalid range record number: %d\n", value);
+      exit(1);
+    }
+  
+  (*range2) = value;	
+        
+  if ((*range2) < (*range1))
+    {
+      fprintf (stderr, "invalid END range\n");
+      exit(1);
+    }
+}
+
 static error_t 
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_sel_arguments *cmd_args = state->input;
-  char *ptr;
-  char *tok;
-  int value;
   error_t ret;
 
   switch (key)
@@ -118,103 +240,32 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case INFO_KEY:
       cmd_args->info = 1;
       break;
+    case DISPLAY_KEY:
+      _read_record_list(&(cmd_args->display),
+                        cmd_args->display_record_list,
+                        &(cmd_args->display_record_list_length),
+                        arg);
+      break;
+    case DISPLAY_RANGE_KEY:
+      _read_range(&(cmd_args->display_range),
+                  &(cmd_args->display_range1),
+                  &(cmd_args->display_range2),
+                  arg);
+      break;
     case DELETE_ALL_KEY:
       cmd_args->delete_all = 1;
       break;
     case DELETE_KEY:
-      cmd_args->delete = 1;
-      tok = strtok(arg, " ,");
-      while (tok && cmd_args->delete_record_list_length < IPMI_SEL_MAX_DELETE_RECORD)
-        {
-          value = 0;
-          ptr = NULL;	
-          errno = 0;
-
-          value = strtol(tok, &ptr, 10);
-
-          if (errno 
-              || ptr[0] != '\0'
-              || value < 0
-              || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
-              || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
-            {
-              fprintf (stderr, "invalid delete record number: %d\n", value);
-              exit(1);
-            }
-
-          cmd_args->delete_record_list[cmd_args->delete_record_list_length] = value;
-          cmd_args->delete_record_list_length++;
-          tok = strtok(NULL, " ,");
-        }
+      _read_record_list(&(cmd_args->delete),
+                        cmd_args->delete_record_list,
+                        &(cmd_args->delete_record_list_length),
+                        arg);
       break;
     case DELETE_RANGE_KEY:
-      cmd_args->delete_range = 1;
-      {
-	char *range_str = NULL;
-	char *start_ptr = NULL;
-	char *range1_str = NULL;
-	char *range2_str = NULL;
-	int value = 0;
-	
-	if (!(range_str = strdupa (arg)))
-          {
-            perror("strdupa");
-            exit(1);
-          }
-	if (!(start_ptr = strchr (range_str, '-')))
-          {
-            /* invalid input */
-	    fprintf (stderr, "invalid delete range\n");
-            exit(1);
-          }
-	if (!(range2_str = strdupa (start_ptr + 1)))
-          {
-            perror("strdupa");
-            exit(1);
-          }
-	*start_ptr = '\0';
-	range1_str = range_str;
-	
-	value = 0;
-	ptr = NULL;	
-	errno = 0;
-	value = strtol (range1_str, &ptr, 10);
-
-        if (errno 
-            || ptr[0] != '\0'
-            || value < 0
-            || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
-            || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
-	  {
-	    fprintf (stderr, "invalid delete range record number: %d\n", value);
-            exit(1);
-	  }
-	
-	cmd_args->delete_range1 = value;
-	
-	value = 0;
-	ptr = NULL;	
-	errno = 0;
-	value = strtol (range2_str, &ptr, 10);
-
-        if (errno 
-            || ptr[0] != '\0'
-            || value < 0
-            || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
-            || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
-	  {
-	    fprintf (stderr, "invalid delete range record number: %d\n", value);
-            exit(1);
-	  }
-
-	cmd_args->delete_range2 = value;	
-        
-	if (cmd_args->delete_range2 < cmd_args->delete_range1)
-	  {
-	    fprintf (stderr, "invalid delete END range\n");
-            exit(1);
-	  }
-      }
+      _read_range(&(cmd_args->delete_range),
+                  &(cmd_args->delete_range1),
+                  &(cmd_args->delete_range2),
+                  arg);
       break;
     case HEX_DUMP_KEY:
       cmd_args->hex_dump = 1;
@@ -267,11 +318,19 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->verbose = 0;
   cmd_args->verbose_count = 0;
   cmd_args->info = 0;
+  cmd_args->display = 0;
+  memset(cmd_args->display_record_list,
+         '\0',
+         sizeof(int)*IPMI_SEL_MAX_RECORD);
+  cmd_args->display_record_list_length = 0;
+  cmd_args->display_range = 0;
+  cmd_args->display_range1 = 0;
+  cmd_args->display_range2 = 0;
   cmd_args->delete_all = 0;
   cmd_args->delete = 0;
   memset(cmd_args->delete_record_list,
          '\0',
-         sizeof(int)*IPMI_SEL_MAX_DELETE_RECORD);
+         sizeof(int)*IPMI_SEL_MAX_RECORD);
   cmd_args->delete_record_list_length = 0;
   cmd_args->delete_range = 0;
   cmd_args->delete_range1 = 0;
