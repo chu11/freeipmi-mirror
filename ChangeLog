@@ -1,3 +1,7 @@
+2009-01-09  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/: Support very verbose output.
+	
 2009-01-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/: Various bug fixes.  Offer more output options.
