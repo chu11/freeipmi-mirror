@@ -15,7 +15,8 @@ o ipmimonitoring
     as they are read, rather than just at the end.
 o ipmi-sel
   - Alter output to make fields easier to read.
-  - Support --verbose option to offer additional SEL event information.
+  - Support --verbose option to offer verbose and very verbose
+    additional SEL event information.
   - Output OEM hex code in consistent format.
   - Output hex code more often if translation to string not available.
   - Support --legacy-output option.
