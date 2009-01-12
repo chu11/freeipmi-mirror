@@ -1,3 +1,9 @@
+2009-01-12  Albert Chu <chu11@llnl.gov>
+	
+	* configure.ac, NEWS: Update for release.
+
+	* Tagged Release-0_7_5.	
+
 2009-01-05  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-config-user-sections.c (_channel_info): Fix

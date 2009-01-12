@@ -1,4 +1,4 @@
-0.7.5 - XX/XX/XX
+0.7.5 - 01/12/09
 ----------------
 o In ipmi-fru, do not output error messages for FRU entries that do
 not exist on a motherboard.
