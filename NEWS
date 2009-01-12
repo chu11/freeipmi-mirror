@@ -18,9 +18,10 @@ o ipmi-sel
   - Support --verbose option to offer verbose and very verbose
     additional SEL event information.
   - Support --display and --display-range options.
+  - Support --system-event-only and --oem-event-only options.
+  - Support --legacy-output option.
   - Output OEM hex code in consistent format.
   - Output hex code more often if translation to string not available.
-  - Support --legacy-output option.
   - Re-work to use new libfreeipmi sel-parse sub library.
   - Remove legacy option to dump hex output to optional filename.
 

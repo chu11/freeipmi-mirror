@@ -1,3 +1,8 @@
+2009-01-12  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/: Support --system-event-only and --oem-event-only
+	options.
+	
 2009-01-09  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Support very verbose output.

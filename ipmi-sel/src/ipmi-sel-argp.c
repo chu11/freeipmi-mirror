@@ -85,10 +85,14 @@ static struct argp_option cmdline_options[] =
      "Delete all SEL records.", 35},
     {"delete-range", DELETE_RANGE_KEY, "START-END", 0, 
      "Delete record ids from START to END in the SEL.", 36},
+    {"system-event-only", SYSTEM_EVENT_ONLY_KEY, 0, 0,
+     "Output only system event records (i.e. don't output OEM records).", 37},
+    {"oem-event-only", OEM_EVENT_ONLY_KEY, 0, 0,
+     "Output only oem event records.", 38},
     {"hex-dump",   HEX_DUMP_KEY, 0, 0,
-     "Hex-dump SEL records.", 37},
+     "Hex-dump SEL records.", 39},
     {"legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-     "Output SEL entries in legacy format.", 38},
+     "Output SEL entries in legacy format.", 40},
     { 0 }
   };
 
@@ -267,6 +271,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                   &(cmd_args->delete_range2),
                   arg);
       break;
+    case SYSTEM_EVENT_ONLY_KEY:
+      cmd_args->system_event_only = 1;
+      break;
+    case OEM_EVENT_ONLY_KEY:
+      cmd_args->oem_event_only = 1;
+      break;
     case HEX_DUMP_KEY:
       cmd_args->hex_dump = 1;
       break;
@@ -335,6 +345,8 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->delete_range = 0;
   cmd_args->delete_range1 = 0;
   cmd_args->delete_range2 = 0;
+  cmd_args->system_event_only = 0;
+  cmd_args->oem_event_only = 0;
   cmd_args->hex_dump = 0;
   cmd_args->legacy_output = 0;
   

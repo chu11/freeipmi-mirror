@@ -60,6 +60,12 @@ separated lists.
 \fB\-R START-END\fR, \fB\-\-delete-range=START-END\fR
 Delete record ids from START to END in the SEL.
 .TP
+\fB\-N, \fB\-\-system-event-only\fR
+Output only system event records (i.e. don't output OEM records).
+.TP
+\fB\-O, \fB\-\-oem-only\fR
+Output only OEM event records.
+.TP
 \fB\-x\fR, \fB\-\-hex-dump\fR
 Hex-dump SEL entries.
 .TP

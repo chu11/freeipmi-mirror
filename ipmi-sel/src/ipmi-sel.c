@@ -268,9 +268,10 @@ _sel_parse_err_handle(ipmi_sel_state_data_t *state_data, char *func)
   if (ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx) == IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY)
     {
       /* maybe a bad SEL entry returned from remote system, don't error out */
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "Invalid SEL entry read\n");
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Invalid SEL entry read\n");
       return 0;
     }
 
@@ -287,6 +288,7 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
 {
   ipmi_sel_state_data_t *state_data;
   struct ipmi_sel_arguments *args;
+  uint8_t record_type;
   int rv = -1;
 
   assert(ctx);
@@ -333,6 +335,23 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
         goto out;
     }
 
+  if (ipmi_sel_parse_read_record_type(state_data->ipmi_sel_parse_ctx,
+                                      &record_type) < 0)
+    {
+      if (_sel_parse_err_handle(state_data, "ipmi_sel_parse_read_record_type") < 0)
+        goto cleanup;
+      goto out;
+    }
+
+  if (args->system_event_only
+      && ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+    goto out;
+  
+  if (args->oem_event_only
+      && ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
+      && ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
+    goto out;
+
   if (args->hex_dump)
     {
       uint8_t record_data[IPMI_SEL_RECORD_SIZE];
@@ -347,7 +366,8 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
           goto out;
         }
 
-      if (record_data_len < IPMI_SEL_RECORD_SIZE)
+      if (state_data->prog_data->args->common.debug
+          && record_data_len < IPMI_SEL_RECORD_SIZE)
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,
@@ -387,7 +407,6 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
       char *fmt;
       int outbuf_len;
       unsigned int flags;
-      uint8_t record_type;
 
       if (!args->legacy_output && !state_data->output_headers)
         {
@@ -408,14 +427,6 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
           pstdout_printf(state_data->pstate, 
                          "\n");
           state_data->output_headers++;
-        }
-
-      if (ipmi_sel_parse_read_record_type(state_data->ipmi_sel_parse_ctx,
-                                          &record_type) < 0)
-        {
-          if (_sel_parse_err_handle(state_data, "ipmi_sel_parse_read_record_type") < 0)
-            goto cleanup;
-          goto out;
         }
 
       flags = IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;

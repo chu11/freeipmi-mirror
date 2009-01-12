@@ -36,6 +36,8 @@ enum ipmi_sel_argp_option_keys
     DELETE_ALL_KEY = 'c', 
     DELETE_KEY = 'd', 
     DELETE_RANGE_KEY = 'R',
+    SYSTEM_EVENT_ONLY_KEY = 'N',
+    OEM_EVENT_ONLY_KEY = 'O',
     HEX_DUMP_KEY = 'x', 
     LEGACY_OUTPUT_KEY = 'L',
   };
@@ -61,6 +63,8 @@ struct ipmi_sel_arguments
   int delete_range;
   unsigned int delete_range1;
   unsigned int delete_range2;
+  int system_event_only;
+  int oem_event_only;
   int hex_dump;
   int legacy_output;
 };
