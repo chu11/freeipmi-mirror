@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.71 2009-01-13 01:02:21 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.72 2009-01-13 22:28:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -70,6 +70,8 @@
 #endif /* MAXPATHLEN */
 
 #define IPMIMONITORING_BUFLEN         1024
+
+#define NA_STRING                     "N/A"
    
 static int
 _list_groups(ipmimonitoring_state_data_t *state_data)
@@ -263,7 +265,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
   
   if (!sensor_name
       || !strlen(sensor_name))
-    sensor_name = "N/A";
+    sensor_name = NA_STRING;
 
   if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE)
     sensor_group_str = "Temperature";
@@ -318,7 +320,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE)
     sensor_group_str = "System ACPI Power State";
   else 
-    sensor_group_str = "N/A";
+    sensor_group_str = NA_STRING;
 
   if (sensor_state == IPMI_MONITORING_SENSOR_STATE_NOMINAL)
     sensor_state_str = "Nominal";
@@ -327,7 +329,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
   else if (sensor_state == IPMI_MONITORING_SENSOR_STATE_CRITICAL)
     sensor_state_str = "Critical";
   else
-    sensor_state_str = "N/A";
+    sensor_state_str = NA_STRING;
 
   pstdout_printf(state_data->pstate,
                  "%d | %s | %s | %s", 
@@ -351,7 +353,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
       else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_WATTS)
         sensor_units_str = "W";
       else
-        sensor_units_str = "N/A";
+        sensor_units_str = NA_STRING;
       
       pstdout_printf(state_data->pstate,
                      " | %s", 
