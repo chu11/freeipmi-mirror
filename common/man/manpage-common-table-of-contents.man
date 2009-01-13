@@ -1,0 +1,5 @@
+.LP
+Listed below are general IPMI options, tool specific options, trouble
+shooting information, workaround information, examples, and known
+issues.  For a general introduction to FreeIPMI please see
+.B freeipmi(7).

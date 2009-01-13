@@ -46,4 +46,5 @@ EXTRA_DIST = \
 	manpage-common-gpl-program-text.man \
 	manpage-common-ping-options.man \
 	manpage-common-ping-origin.man \
+	manpage-common-table-of-contents.man \
 	manpage-common-homepage.man

@@ -5,6 +5,11 @@
 	appropriately.
 
 	* ipmi-sel/src/: Cleanup.
+
+	* Globally add "table of contents" into manpages to illustrate
+	amount of text in the manpage so users (will hopefully) know what
+	is available in the manpage and how to look for howto information
+	in freeipmi(7).
 	
 2009-01-12  Albert Chu <chu11@llnl.gov>
 

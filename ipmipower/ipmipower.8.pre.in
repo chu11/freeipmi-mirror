@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.46 2009-01-13 01:02:22 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.47 2009-01-13 19:26:49 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -48,7 +48,7 @@ command line interface to enter various commands.  Details of the
 interactive command line interface can be found below under
 INTERACTIVE COMMANDS.
 .LP
-See EXAMPLES below for examples of how ipmipower is commonly used.
+#include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 .TP

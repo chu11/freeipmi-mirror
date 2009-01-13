@@ -7,6 +7,7 @@ ipmi-raw \- execute IPMI commands by hex values
 .SH "DESCRIPTION"
 .B Ipmi-raw
 is used to execute IPMI commands by hex values.
+#include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>

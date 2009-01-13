@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.35 2009-01-13 01:02:14 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.36 2009-01-13 19:26:48 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -33,6 +33,7 @@ ipmi-fru \- display FRU information
 .SH "DESCRIPTION"
 .B Ipmi-fru
 displays Field Replaceable Unit (FRU) Information.
+#include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>

@@ -26,6 +26,7 @@ o ipmimonitoring
   - Utilize libipmimonitoring callback routines to make sensors output
     as they are read, rather than just at the end.  This removes the
     impression that the tool "hangs" on start.
+o Various documentation updates.
 
 Libraries
 ---------

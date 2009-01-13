@@ -53,7 +53,7 @@ or
 .B ipmi-chassis-config(8)
 tools respectively.
 
-.LP
+#include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 See GENERAL USE below for a description on how most will want to use
 .B Ipmi-sensors-config.
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
