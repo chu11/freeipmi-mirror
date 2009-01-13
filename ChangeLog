@@ -1,3 +1,7 @@
+2009-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	* Support --legacy-output option for ipmi-sensors.
+	
 2009-01-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/ipmi-sel-parse.c
