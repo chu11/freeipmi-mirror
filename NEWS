@@ -6,7 +6,8 @@ Tools - New Significant Additions/Features
 Tools - Enhancements/Changes/Bug Fixes
 --------------------------------------
 o ipmi-sel
-  - Alter output to make fields easier to read.
+  - Alter output to make fields easier to read (legacy output option
+    supported).
   - Support --verbose option to offer verbose and very verbose
     additional SEL event information.
   - Support --display and --display-range options.
