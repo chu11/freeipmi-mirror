@@ -3,7 +3,6 @@ noinst_HEADERS = \
 	ipmi-sensors-argp.h \
 	ipmi-sensors-reading.h \
 	ipmi-sensors-simple-display.h \
-	ipmi-sensors-verbose-display.h \
 	ipmi-sensors-very-verbose-display.h \
 	ipmi-sensors-display-common.h \
 	ipmi-sensors-util.h
@@ -32,7 +31,6 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-argp.c \
 	ipmi-sensors-reading.c \
 	ipmi-sensors-simple-display.c \
-	ipmi-sensors-verbose-display.c \
 	ipmi-sensors-very-verbose-display.c \
 	ipmi-sensors-display-common.c \
 	ipmi-sensors-util.c

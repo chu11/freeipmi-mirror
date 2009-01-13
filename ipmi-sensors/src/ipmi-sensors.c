@@ -41,7 +41,6 @@
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-reading.h"
 #include "ipmi-sensors-simple-display.h"
-#include "ipmi-sensors-verbose-display.h"
 #include "ipmi-sensors-very-verbose-display.h"
 #include "ipmi-sensors-util.h"
 
@@ -305,13 +304,6 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                                         event_message_list_len);
       break;
     case 1:
-      rv = ipmi_sensors_display_verbose (state_data, 
-                                         sdr_record,
-                                         sdr_record_len,
-                                         reading,
-                                         event_message_list,
-                                         event_message_list_len);
-      break;
     case 2:
     default:
       rv = ipmi_sensors_display_very_verbose (state_data, 
