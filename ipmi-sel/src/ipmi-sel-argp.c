@@ -92,7 +92,7 @@ static struct argp_option cmdline_options[] =
     {"hex-dump",   HEX_DUMP_KEY, 0, 0,
      "Hex-dump SEL records.", 39},
     {"legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-     "Output SEL entries in legacy format.", 40},
+     "Output in legacy format.", 40},
     { 0 }
   };
 

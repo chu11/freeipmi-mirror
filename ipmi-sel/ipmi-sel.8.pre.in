@@ -68,8 +68,8 @@ Output only OEM event records.
 \fB\-x\fR, \fB\-\-hex-dump\fR
 Hex-dump SEL entries.
 .TP
-\fB\-L\fR, \fB\-\-legacy-output\fR
-Output SEL entries in legacy format.
+\fB\-\-legacy-output\fR
+Output in legacy format.
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-ignore-sdr-cache.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>

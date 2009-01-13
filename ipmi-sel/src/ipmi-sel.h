@@ -39,7 +39,7 @@ enum ipmi_sel_argp_option_keys
     SYSTEM_EVENT_ONLY_KEY = 'N',
     OEM_EVENT_ONLY_KEY = 'O',
     HEX_DUMP_KEY = 'x', 
-    LEGACY_OUTPUT_KEY = 'L',
+    LEGACY_OUTPUT_KEY = 160,
   };
 
 struct ipmi_sel_arguments
