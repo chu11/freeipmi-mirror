@@ -1,3 +1,11 @@
+2009-01-13  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sel-parse/ipmi-sel-parse.c
+	(ipmi_sel_parse_read_channel_number): Check event format version
+	appropriately.
+
+	* ipmi-sel/src/: Cleanup.
+	
 2009-01-12  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Support --system-event-only and --oem-event-only

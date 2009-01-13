@@ -433,10 +433,10 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
       flags |= IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
       flags |= IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING;
 
-      if (args->verbose_count >= 2)
+      if (args->verbose_count >= 2 && !args->legacy_output)
         flags|= IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE;
 
-      if (state_data->prog_data->args->legacy_output)
+      if (args->legacy_output)
         flags |= IPMI_SEL_PARSE_STRING_FLAGS_LEGACY;
 
       if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
@@ -481,7 +481,7 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
               goto out;
             }
 
-          if (state_data->prog_data->args->legacy_output)
+          if (args->legacy_output)
             {
               strcpy(fmtbuf, "%i:%d %t:%g %s:%e");
               
@@ -520,8 +520,6 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
                */
               if (args->verbose_count >= 2)
                 strcpy(fmtbuf, "%i | %d | %t | %g | %s | %k | %e");
-              else if (args->verbose_count)
-                strcpy(fmtbuf, "%i | %d | %t | %g | %s | %e");
               else
                 strcpy(fmtbuf, "%i | %d | %t | %g | %s | %e");
               
@@ -567,14 +565,14 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
         }
       else if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
         {
-          if (state_data->prog_data->args->legacy_output)
+          if (args->legacy_output)
             fmt = "%i:%d %t:%m:%o";
           else
             fmt = "%i | %d | %t | %m | %o";
         }
       else if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
         {
-          if (state_data->prog_data->args->legacy_output)
+          if (args->legacy_output)
             fmt = "%i:o";
           else
             fmt = "%i | o";

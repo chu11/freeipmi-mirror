@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.6 2009-01-13 01:02:41 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.7 2009-01-13 18:22:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -272,7 +272,6 @@ _sel_entry_dump(ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_parse
                                             sel_parse_entry,
                                             &system_event_record_data) < 0)
         {
-          /* output whatever you can */
           if (ctx->errnum == IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY)
             {
               SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sel_record, tmpl_sel_system_event_record);
@@ -748,6 +747,13 @@ ipmi_sel_parse_read_channel_number(ipmi_sel_parse_ctx_t ctx, uint8_t *channel_nu
   
   if (_parse_system_event_common(ctx, &sel_parse_entry, &system_event_record_data) < 0)
     return -1;
+  
+  /* special case */
+  if (system_event_record_data.event_message_format_version == IPMI_V1_0_EVENT_MESSAGE_FORMAT)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      return -1;
+    }
   
   *channel_number = system_event_record_data.channel_number;
 

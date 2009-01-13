@@ -16,10 +16,6 @@ sunbmc driver
 -------------
 untested - need solaris hardware
 
-sel/sensors/sensors-config
---------------------------
-handle if ipmi_get_sensor_group returns NULL
-
 libipmimonitoring
 -----------------
 callback feature - to make output more dynamic
@@ -53,20 +49,7 @@ pef-config
 
 ipmi-sel
 --------
-- display range of records
-- --head, --tail like options?
-- output if event is assertion/deassertion event?
-  - for verbose mode?
-- output very verbose mode
-        - output everything possible
 - check if format is correct in record
-- check of 0xFF of 0x0F is event_data2/3 is not valid/unspecified
-- output severity information
-- output previous threshold/state info
-- output if threshold > or < 
-- hex output - handle OEM types too
-- event only option
-- oem output only option
 
 inband code
 -----------
