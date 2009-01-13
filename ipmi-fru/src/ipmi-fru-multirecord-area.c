@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.16 2008-09-30 20:40:33 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.17 2009-01-13 01:02:14 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

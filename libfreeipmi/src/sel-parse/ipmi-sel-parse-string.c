@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.8 2009-01-08 23:43:44 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.9 2009-01-13 01:02:40 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

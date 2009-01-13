@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.11 2009-01-07 17:43:49 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.12 2009-01-13 01:02:09 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
@@ -49,7 +49,7 @@
 
 const char *argp_program_version = 
   "bmc-watchdog - " PACKAGE_VERSION "\n"
-  "Copyright (C) 2003-2008 FreeIPMI Core Team\n"
+  "Copyright (C) 2003-2009 FreeIPMI Core Team\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
 

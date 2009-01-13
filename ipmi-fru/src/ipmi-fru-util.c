@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.23 2008-12-13 00:04:18 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.24 2009-01-13 01:02:14 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

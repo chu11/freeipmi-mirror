@@ -2,6 +2,8 @@
 
 	* ipmi-sel/: Support --system-event-only and --oem-event-only
 	options.
+
+	* Fix copyright dates globally.
 	
 2009-01-09  Albert Chu <chu11@llnl.gov>
 
