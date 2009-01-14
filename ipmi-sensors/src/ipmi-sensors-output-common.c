@@ -32,7 +32,7 @@
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 
 #include "ipmi-sensors.h"
-#include "ipmi-sensors-display-common.h"
+#include "ipmi-sensors-output-common.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

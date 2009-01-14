@@ -16,8 +16,8 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _IPMI_SENSORS_COMMON_H
-#define _IPMI_SENSORS_COMMON_H
+#ifndef _IPMI_SENSORS_OUTPUT_COMMON_H
+#define _IPMI_SENSORS_OUTPUT_COMMON_H
 
 #include "ipmi-sensors.h"
 

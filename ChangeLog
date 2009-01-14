@@ -18,6 +18,11 @@
 	ipmi-sensors/src/ipmi-sensors-simple-output.h and
 	ipmi-sensors/src/ipmi-sensors-simple-output.c respectively.
 
+	* ipmi-sensors/src/ipmi-sensors-output-common.h,
+	ipmi-sensors/src/ipmi-sensors-output-common.c: Renamed
+	ipmi-sensors/src/ipmi-sensors-output-common.h and
+	ipmi-sensors/src/ipmi-sensors-output-common.c respectively.
+	
 	* ipmi-sensors/src/: Various code cleanup.
 	
 2009-01-13  Albert Chu <chu11@llnl.gov>
