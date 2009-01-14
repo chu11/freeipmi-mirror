@@ -1,3 +1,8 @@
+2009-01-14  Albert Chu <chu11@llnl.gov>
+
+  	* ipmimonitoring/src/ipmimonitoring: For consistency to library
+	and other software, fix sensor group name outputs.
+
 2009-01-14  Dave Love  <d.love@liverpool.ac.uk>
 
 	* bmc-watchdog/freeipmi-bmc-watchdog.init: Make SuSE-compatible,

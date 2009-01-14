@@ -1,5 +1,9 @@
 0.7.6 - XX/XX/09
 ----------------
+o In ipmimonitoring, output sensor group names consistently to other tools.
+  "Cable Interconnect" -> "Cable/Interconnect"
+  "Slot Connector" -> "Slot/Connector"
+  "Module Board" -> "Module/Board"
 o Fix bmc-watchdog init script portability to Suse.
 
 0.7.5 - 01/12/09
