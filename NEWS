@@ -1,3 +1,7 @@
+0.7.6 - XX/XX/09
+----------------
+o Fix bmc-watchdog init script portability to Suse.
+
 0.7.5 - 01/12/09
 ----------------
 o In ipmi-fru, do not output error messages for FRU entries that do
