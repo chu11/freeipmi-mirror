@@ -1,3 +1,8 @@
+2009-01-14  Dave Love  <d.love@liverpool.ac.uk>
+
+	* bmc-watchdog/freeipmi-bmc-watchdog.init: Make SuSE-compatible,
+	like the other init scripts.
+	
 2009-01-12  Albert Chu <chu11@llnl.gov>
 	
 	* configure.ac, NEWS: Update for release.
