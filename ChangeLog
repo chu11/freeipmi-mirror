@@ -4,6 +4,8 @@
 
 	* ipmi-sel/: For consistency to ipmimonitoring, output Sensor Name
 	before Sensor Group.
+
+	* ipmimonitoring/src/ipmimonitoring/: Fix header typo.
 	
 2009-01-14  Dave Love  <d.love@liverpool.ac.uk>
 
