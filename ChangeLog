@@ -1,5 +1,11 @@
 2009-01-14  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/src/ipmimonitoring: For consistency to library
+	and other software, output "Module/Board" instead of "Module
+	Board" for that sensor group.
+	
+2009-01-14  Albert Chu <chu11@llnl.gov>
+
 	* Output and parse "Record ID" instead of "Record_ID" consistently.
 
 	* ipmi-sel/: For consistency to ipmimonitoring, output Sensor Name

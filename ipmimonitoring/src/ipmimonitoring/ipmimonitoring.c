@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.74 2009-01-14 21:53:03 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.75 2009-01-14 22:35:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -298,7 +298,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_CRITICAL_INTERRUPT)
     sensor_group_str = "Critical Interrupt";
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_MODULE_BOARD)
-    sensor_group_str = "Module Board";
+    sensor_group_str = "Module/Board";
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR)
     sensor_group_str = "Slot Connector";
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2)
