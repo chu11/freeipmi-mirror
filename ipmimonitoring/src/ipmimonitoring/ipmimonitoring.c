@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.72 2009-01-13 22:28:16 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.73 2009-01-14 17:21:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -204,7 +204,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
   if (!state_data->output_headers)
     {
       pstdout_printf(state_data->pstate, 
-                     "Record_ID | Sensor Name | Sensor Group | Monitoring Status");
+                     "Record ID | Sensor Name | Sensor Group | Monitoring Status");
       if (!args->quiet_readings)
         pstdout_printf(state_data->pstate, 
                        "| Sensor Units | Sensor Reading");

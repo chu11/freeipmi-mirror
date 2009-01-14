@@ -261,7 +261,8 @@ foreach $line (@IPMIMONITORING_OUTPUT_LINES)
     my $cmd_reading;
 
     # skip header line
-    if ($line =~ "Record_ID")
+    if ($line =~ "Record_ID" 
+        || $line =~ "Record ID")
     {
         next;
     }

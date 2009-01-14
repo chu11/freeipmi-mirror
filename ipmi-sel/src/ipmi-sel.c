@@ -411,7 +411,7 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
       if (!args->legacy_output && !state_data->output_headers)
         {
           pstdout_printf(state_data->pstate,
-                         "Record_ID | Date | Time | Sensor Group | Sensor Name");
+                         "Record ID | Date | Time | Sensor Group | Sensor Name");
           if (args->verbose_count >= 2)
             {
               pstdout_printf(state_data->pstate,

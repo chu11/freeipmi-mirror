@@ -1,3 +1,7 @@
+2009-01-14  Albert Chu <chu11@llnl.gov>
+
+	* Output and parse "Record ID" instead of "Record_ID" consistently.
+	
 2009-01-14  Dave Love  <d.love@liverpool.ac.uk>
 
 	* bmc-watchdog/freeipmi-bmc-watchdog.init: Make SuSE-compatible,
