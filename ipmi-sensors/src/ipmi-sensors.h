@@ -75,6 +75,7 @@ typedef struct ipmi_sensors_state_data
   pstdout_state_t pstate;
   char *hostname;
   ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx;
+  int output_headers;
 } ipmi_sensors_state_data_t;
 
 #endif

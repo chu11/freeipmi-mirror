@@ -22,6 +22,8 @@
 	ipmi-sensors/src/ipmi-sensors-output-common.c: Renamed
 	ipmi-sensors/src/ipmi-sensors-output-common.h and
 	ipmi-sensors/src/ipmi-sensors-output-common.c respectively.
+
+	* ipmi-sensors/: Change default for readability.
 	
 	* ipmi-sensors/src/: Various code cleanup.
 	

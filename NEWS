@@ -18,10 +18,13 @@ o ipmi-sel
   - Re-work to use new libfreeipmi sel-parse sub library.
   - Remove legacy option to dump hex output to optional filename.
 o ipmi-sensors
+  - Alter output to make fields easier to read (legacy output option supported).
+  - Support --legacy-output option.
+  - For consistency to other tools, outputs of "NA" are now "N/A".
   - Output record-type names in addition to record type hex code in
     very-verbose output.
-  - Output hex code of group name in addition to group name in verbose
-    and very-verbose output.
+  - Output hex code of group name in addition to group name in
+    very-verbose output.
 o ipmimonitoring
   - Utilize libipmimonitoring callback routines to make sensors output
     as they are read, rather than just at the end.  This removes the

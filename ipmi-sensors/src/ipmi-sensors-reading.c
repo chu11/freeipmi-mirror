@@ -39,6 +39,7 @@
 #include "freeipmi/util/ipmi-sensor-util.h"
 
 #include "ipmi-sensors.h"
+#include "ipmi-sensors-output-common.h"
 #include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
@@ -181,11 +182,11 @@ _get_sensor_reading_ipmb (struct ipmi_sensors_state_data *state_data,
                                 sensor_number,
                                 record_id);
               
-              /* make status message "na" so "unknown" isn't output */
+              /* make status message "N/A" so "Unknown" isn't output */
               if (get_msg_message_list (state_data,
                                         event_message_list,
                                         event_message_list_len,
-                                        "NA") < 0)
+                                        IPMI_SENSORS_NA_STRING_OUTPUT) < 0)
                 goto cleanup;
               
               rv = 0;
@@ -224,11 +225,11 @@ _get_sensor_reading_ipmb (struct ipmi_sensors_state_data *state_data,
                         sensor_number,
                         record_id);
       
-      /* make status message "na" so "unknown" isn't output */
+      /* make status message "N/A" so "Unknown" isn't output */
       if (get_msg_message_list (state_data,
                                 event_message_list,
                                 event_message_list_len,
-                                "NA") < 0)
+                                IPMI_SENSORS_NA_STRING_OUTPUT) < 0)
         goto cleanup;
       
       rv = 0;
@@ -390,11 +391,11 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                         stderr,
                         "Sensor reading unavailable\n");
 
-      /* make status message "na" so "unknown" isn't output */
+      /* make status message "N/A" so "Unknown" isn't output */
       if (get_msg_message_list (state_data,
                                 event_message_list,
                                 event_message_list_len,
-                                "NA") < 0)
+                                IPMI_SENSORS_NA_STRING_OUTPUT) < 0)
         goto cleanup;
       
       rv = 0;
@@ -412,11 +413,11 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                         stderr,
                         "Sensor scanning disabled\n");
 
-      /* make status message "na" so "unknown" isn't output */
+      /* make status message "N/A" so "Unknown" isn't output */
       if (get_msg_message_list (state_data,
                                 event_message_list,
                                 event_message_list_len,
-                                "NA") < 0)
+                                IPMI_SENSORS_NA_STRING_OUTPUT) < 0)
         goto cleanup;
       
       rv = 0;

@@ -276,24 +276,21 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
   double *reading = NULL;
   char **event_message_list = NULL;
   unsigned int event_message_list_len = 0;
-  int verbose_count;
-  int ret, rv = -1;
+  int rv = -1;
 
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
-          
-  verbose_count = state_data->prog_data->args->verbose_count;
-
-  if ((ret = sensor_reading(state_data,
-                            sdr_record,
-                            sdr_record_len,
-                            &reading,
-                            &event_message_list,
-                            &event_message_list_len)) < 0)
+  
+  if (sensor_reading(state_data,
+                     sdr_record,
+                     sdr_record_len,
+                     &reading,
+                     &event_message_list,
+                     &event_message_list_len) < 0)
     goto cleanup;
-          
-  switch (verbose_count)
+  
+  switch (state_data->prog_data->args->verbose_count)
     {
     case 0:
       rv = ipmi_sensors_simple_output (state_data, 

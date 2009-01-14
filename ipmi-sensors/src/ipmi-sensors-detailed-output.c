@@ -275,7 +275,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate, 
                     "Lower Critical Threshold: %s\n", 
-                    "NA");
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (upper_critical_threshold)
     pstdout_printf (state_data->pstate, 
@@ -285,7 +285,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate, 
                     "Upper Critical Threshold: %s\n", 
-                    "NA");
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (lower_non_critical_threshold)
     pstdout_printf (state_data->pstate, 
@@ -295,7 +295,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate, 
                     "Lower Non-Critical Threshold: %s\n", 
-                    "NA");
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (upper_non_critical_threshold)
     pstdout_printf (state_data->pstate, 
@@ -305,7 +305,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate, 
                     "Upper Non-Critical Threshold: %s\n", 
-                    "NA");
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (lower_non_recoverable_threshold)
     pstdout_printf (state_data->pstate, 
@@ -315,7 +315,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate, 
                     "Lower Non-Recoverable Threshold: %s\n", 
-                    "NA");
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (upper_non_recoverable_threshold)
     pstdout_printf (state_data->pstate, 
@@ -325,7 +325,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate, 
                     "Upper Non-Recoverable Threshold: %s\n", 
-                    "NA");
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
 
   rv = 0;
  cleanup:
@@ -391,7 +391,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Sensor Min. Reading: %s\n",
-                    "NA");
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (sensor_maximum_reading)
     pstdout_printf (state_data->pstate,
@@ -401,7 +401,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Sensor Max. Reading: %s\n",
-                    "NA");
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (normal_minimum)
     pstdout_printf (state_data->pstate,
@@ -411,7 +411,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Normal Min.: %s\n",
-                    "NA");
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (normal_maximum)
     pstdout_printf (state_data->pstate,
@@ -421,7 +421,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Normal Max.: %s\n",
-                    "NA");
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (nominal_reading)
     pstdout_printf (state_data->pstate,
@@ -431,7 +431,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Nominal reading: %s\n",
-                    "NA");
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
 
   rv = 0;
  cleanup:
@@ -631,7 +631,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       else
         pstdout_printf (state_data->pstate,
                         "Positive Hysteresis: %s\n", 
-                        "NA");
+                        IPMI_SENSORS_NA_STRING_OUTPUT);
 
       if (negative_going_threshold_hysteresis_raw)
         pstdout_printf (state_data->pstate, 
@@ -641,7 +641,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       else
         pstdout_printf (state_data->pstate,
                         "Negative Hysteresis: %s\n", 
-                        "NA");
+                        IPMI_SENSORS_NA_STRING_OUTPUT);
     }
   else
     {          
@@ -654,7 +654,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       else
         pstdout_printf (state_data->pstate,
                         "Positive Hysteresis: %s\n", 
-                        "NA");
+                        IPMI_SENSORS_NA_STRING_OUTPUT);
 
       if (negative_going_threshold_hysteresis_raw)
         pstdout_printf (state_data->pstate, 
@@ -664,7 +664,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       else
         pstdout_printf (state_data->pstate,
                         "Negative Hysteresis: %s\n", 
-                        "NA");
+                        IPMI_SENSORS_NA_STRING_OUTPUT);
     }
 
   rv = 0;
@@ -1016,7 +1016,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Sensor Reading: %s\n",
-                    "NA");
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
   
   if (_detailed_output_event_message_list (state_data,
                                            event_message_list,

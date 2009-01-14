@@ -21,6 +21,12 @@
 
 #include "ipmi-sensors.h"
 
+#define IPMI_SENSORS_NA_STRING        "N/A"
+#define IPMI_SENSORS_NA_STRING_LEGACY "NA"
+
+#define IPMI_SENSORS_NA_STRING_OUTPUT \
+  (state_data->prog_data->args->legacy_output ? IPMI_SENSORS_NA_STRING_LEGACY : IPMI_SENSORS_NA_STRING)
+
 int ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                                             char **event_message_list,
                                             unsigned int event_message_list_len,
