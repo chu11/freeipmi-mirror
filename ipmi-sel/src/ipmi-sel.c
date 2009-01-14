@@ -411,7 +411,7 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
       if (!args->legacy_output && !state_data->output_headers)
         {
           pstdout_printf(state_data->pstate,
-                         "Record ID | Date | Time | Sensor Group | Sensor Name");
+                         "Record ID | Date | Time | Sensor Name | Sensor Group");
           if (args->verbose_count >= 2)
             {
               pstdout_printf(state_data->pstate,
@@ -519,9 +519,9 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
                * would be separated by a semi-colon
                */
               if (args->verbose_count >= 2)
-                strcpy(fmtbuf, "%i | %d | %t | %g | %s | %k | %e");
+                strcpy(fmtbuf, "%i | %d | %t | %s | %g | %k | %e");
               else
-                strcpy(fmtbuf, "%i | %d | %t | %g | %s | %e");
+                strcpy(fmtbuf, "%i | %d | %t | %s | %g | %e");
               
               if (args->verbose_count)
                 {
