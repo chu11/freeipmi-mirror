@@ -7,6 +7,18 @@
 
 	* ipmi-sensors/src/ipmi-sensors-verbose-display.h,
 	ipmi-sensors/src/ipmi-sensors-verbose-display.c: Remove files.
+
+	* ipmi-sensors/src/ipmi-sensors-very-verbose-display.h,
+	ipmi-sensors/src/ipmi-sensors-very-verbose-display.c: Renamed
+	ipmi-sensors/src/ipmi-sensors-detailed-output.h and
+	ipmi-sensors/src/ipmi-sensors-detailed-output.c respectively.
+
+	* ipmi-sensors/src/ipmi-sensors-simple-display.h,
+	ipmi-sensors/src/ipmi-sensors-simple-display.c: Renamed
+	ipmi-sensors/src/ipmi-sensors-simple-output.h and
+	ipmi-sensors/src/ipmi-sensors-simple-output.c respectively.
+
+	* ipmi-sensors/src/: Various code cleanup.
 	
 2009-01-13  Albert Chu <chu11@llnl.gov>
 

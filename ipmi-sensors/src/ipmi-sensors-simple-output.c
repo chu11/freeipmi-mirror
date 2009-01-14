@@ -39,7 +39,7 @@
 #include "pstdout.h"
 
 static double
-round_double2 (double d)
+_round_double2 (double d)
 {
   double r = 0.0;
 
@@ -52,7 +52,7 @@ round_double2 (double d)
 }
 
 static int
-_output_simple_header (ipmi_sensors_state_data_t *state_data,
+_simple_output_header (ipmi_sensors_state_data_t *state_data,
                        uint8_t *sdr_record,
                        unsigned int sdr_record_len,
                        uint16_t record_id)
@@ -98,13 +98,13 @@ _output_simple_header (ipmi_sensors_state_data_t *state_data,
 }
 
 static int 
-sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
-                                    uint8_t *sdr_record,
-                                    unsigned int sdr_record_len,
-                                    uint16_t record_id,
-                                    double *reading,
-                                    char **event_message_list,
-                                    unsigned int event_message_list_len)
+_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
+                            uint8_t *sdr_record,
+                            unsigned int sdr_record_len,
+                            uint16_t record_id,
+                            double *reading,
+                            char **event_message_list,
+                            unsigned int event_message_list_len)
 {
   uint8_t event_reading_type_code;
   double *lower_non_critical_threshold = NULL;
@@ -119,7 +119,7 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  if (_output_simple_header (state_data,
+  if (_simple_output_header (state_data,
                              sdr_record,
                              sdr_record_len,
                              record_id) < 0)
@@ -160,7 +160,7 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
           if (reading)
             pstdout_printf (state_data->pstate,
                             "%.2f %s ", 
-                            round_double2 (*reading), 
+                            _round_double2 (*reading), 
                             ipmi_sensor_units_abbreviated[sensor_unit]);
           else 
             pstdout_printf (state_data->pstate, "NA ");
@@ -189,14 +189,14 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
           if (lower_output_threshold)
             pstdout_printf (state_data->pstate,
                             "(%.2f/", 
-                            round_double2 (*lower_output_threshold));
+                            _round_double2 (*lower_output_threshold));
           else 
             pstdout_printf (state_data->pstate, "(NA/");
 
           if (upper_output_threshold)
             pstdout_printf (state_data->pstate,
                             "%.2f): ", 
-                            round_double2 (*upper_output_threshold));
+                            _round_double2 (*upper_output_threshold));
           else 
             pstdout_printf (state_data->pstate, "NA): ");
         }
@@ -232,18 +232,18 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
 }
 
 static int 
-sensors_display_simple_compact_record (ipmi_sensors_state_data_t *state_data,
-                                       uint8_t *sdr_record,
-                                       unsigned int sdr_record_len,
-                                       uint16_t record_id,
-                                       char **event_message_list,
-                                       unsigned int event_message_list_len)
+_simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
+                               uint8_t *sdr_record,
+                               unsigned int sdr_record_len,
+                               uint16_t record_id,
+                               char **event_message_list,
+                               unsigned int event_message_list_len)
 {
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
 
-  if (_output_simple_header (state_data,
+  if (_simple_output_header (state_data,
                              sdr_record,
                              sdr_record_len,
                              record_id) < 0)
@@ -260,12 +260,12 @@ sensors_display_simple_compact_record (ipmi_sensors_state_data_t *state_data,
 }
 
 int 
-ipmi_sensors_display_simple (ipmi_sensors_state_data_t *state_data,
-                             uint8_t *sdr_record,
-                             unsigned int sdr_record_len,
-                             double *reading,
-                             char **event_message_list,
-                             unsigned int event_message_list_len)
+ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
+                            uint8_t *sdr_record,
+                            unsigned int sdr_record_len,
+                            double *reading,
+                            char **event_message_list,
+                            unsigned int event_message_list_len)
 {
   uint16_t record_id;
   uint8_t record_type;
@@ -284,20 +284,20 @@ ipmi_sensors_display_simple (ipmi_sensors_state_data_t *state_data,
   switch (record_type)
     {
     case IPMI_SDR_FORMAT_FULL_SENSOR_RECORD:
-      return sensors_display_simple_full_record (state_data,
-                                                 sdr_record,
-                                                 sdr_record_len,
-                                                 record_id, 
-                                                 reading,
-                                                 event_message_list,
-                                                 event_message_list_len);
+      return _simple_output_full_record (state_data,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         record_id, 
+                                         reading,
+                                         event_message_list,
+                                         event_message_list_len);
     case IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD:
-      return sensors_display_simple_compact_record (state_data,
-                                                    sdr_record,
-                                                    sdr_record_len,
-                                                    record_id, 
-                                                    event_message_list,
-                                                    event_message_list_len);
+      return _simple_output_compact_record (state_data,
+                                            sdr_record,
+                                            sdr_record_len,
+                                            record_id, 
+                                            event_message_list,
+                                            event_message_list_len);
     default:
       /* don't output any other types in simple mode */
       break;
