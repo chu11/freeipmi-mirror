@@ -17,6 +17,7 @@ sensors
 -------
 consistent output to ipmimonitoring/sel
 - verbose more like ipmimonitoring
+descriptiont of output fields and what they mean
 
 monitoring
 ----------
