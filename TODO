@@ -120,7 +120,10 @@ additions.
 RELEASE TODOS - Do on every release
 -----------------------------------
 Email freeipmi-users && freeipmi-devel
+Email info-gnu@gnu.org
 Update savannah announcements
 Update freshmeat.net
 Update freeipmi webpage
 Update fsf directory info.
+Upload to ftp.zresearch.com
+Upload to ftp.gnu.org
