@@ -4,6 +4,8 @@ o In ipmimonitoring, output sensor group names consistently to other tools.
   "Cable Interconnect" -> "Cable/Interconnect"
   "Slot Connector" -> "Slot/Connector"
   "Module Board" -> "Module/Board"
+o In ipmi-sensors, don't output threshold related fields for
+  non-threshold sensors in verbose modes.
 o Fix bmc-watchdog init script portability to Suse.
 
 0.7.5 - 01/12/09

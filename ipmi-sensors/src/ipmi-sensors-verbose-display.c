@@ -142,7 +142,9 @@ sensors_display_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                                      unsigned int event_message_list_len)
 {
   uint8_t sensor_unit;
-  
+  uint8_t event_reading_type_code;
+  int sensor_class;
+
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
@@ -159,15 +161,26 @@ sensors_display_verbose_full_record (ipmi_sensors_state_data_t *state_data,
                                  &sensor_unit) < 0)
     return -1;
 
-  if (ipmi_sensors_output_verbose_thresholds (state_data,
-                                              sdr_record,
-                                              sdr_record_len) < 0)
+  if (sdr_cache_get_event_reading_type_code (state_data->pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
     return -1;
 
-  if (ipmi_sensors_output_verbose_sensor_reading_ranges (state_data,
-                                                         sdr_record,
-                                                         sdr_record_len) < 0)
-    return -1;
+  sensor_class = sensor_classify (event_reading_type_code);
+
+  if (sensor_class == SENSOR_CLASS_THRESHOLD)
+    {
+      if (ipmi_sensors_output_verbose_thresholds (state_data,
+                                                  sdr_record,
+                                                  sdr_record_len) < 0)
+        return -1;
+      
+      if (ipmi_sensors_output_verbose_sensor_reading_ranges (state_data,
+                                                             sdr_record,
+                                                             sdr_record_len) < 0)
+        return -1;
+    }
 
   if (ipmi_sensors_output_verbose_sensor_reading (state_data,
                                                   sdr_record,

@@ -673,17 +673,17 @@ sensors_display_very_verbose_full_record (ipmi_sensors_state_data_t *state_data,
       pstdout_printf (state_data->pstate, 
                       "Analog Data Format: %d\n", 
                       analog_data_format);
-    }
 
-  if (ipmi_sensors_output_verbose_thresholds (state_data,
-                                              sdr_record,
-                                              sdr_record_len) < 0)
-    return -1;
+      if (ipmi_sensors_output_verbose_thresholds (state_data,
+                                                  sdr_record,
+                                                  sdr_record_len) < 0)
+        return -1;
  
-  if (ipmi_sensors_output_verbose_sensor_reading_ranges (state_data,
-                                                         sdr_record,
-                                                         sdr_record_len) < 0)
-    return -1;
+      if (ipmi_sensors_output_verbose_sensor_reading_ranges (state_data,
+                                                             sdr_record,
+                                                             sdr_record_len) < 0)
+        return -1;
+    }
 
   if (_output_very_verbose_hysteresis (state_data,
                                        sdr_record,
