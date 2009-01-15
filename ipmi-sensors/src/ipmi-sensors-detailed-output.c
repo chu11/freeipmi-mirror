@@ -911,6 +911,8 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                               char **event_message_list,
                               unsigned int event_message_list_len)
 {
+  uint8_t event_reading_type_code;
+  int event_reading_type_code_class;
   uint8_t sensor_unit;
  
   assert(state_data);
@@ -925,24 +927,28 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                                record_id) < 0)
     return -1;
 
-  if (state_data->prog_data->args->verbose_count >= 2)
+  if (sdr_cache_get_event_reading_type_code (state_data->pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
+    return -1;
+
+  if (sdr_cache_get_sensor_unit (state_data->pstate,
+                                 sdr_record,
+                                 sdr_record_len,
+                                 &sensor_unit) < 0)
+    return -1;
+
+  event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
+  
+  if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
     {
-      uint8_t event_reading_type_code;
-      int event_reading_type_code_class;
-      int8_t r_exponent, b_exponent;
-      int16_t m, b;
-      uint8_t linearization, analog_data_format;
-
-      if (sdr_cache_get_event_reading_type_code (state_data->pstate,
-                                                 sdr_record,
-                                                 sdr_record_len,
-                                                 &event_reading_type_code) < 0)
-        return -1;
-
-      event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
-      
-      if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
+      if (state_data->prog_data->args->verbose_count >= 2)
         {
+          int8_t r_exponent, b_exponent;
+          int16_t m, b;
+          uint8_t linearization, analog_data_format;
+
           if (sdr_cache_get_sensor_decoding_data(state_data->pstate,
                                                  sdr_record,
                                                  sdr_record_len,
@@ -973,25 +979,19 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                           "Analog Data Format: %d\n", 
                           analog_data_format);
         }
+
+      if (_detailed_output_thresholds (state_data,
+                                       sdr_record,
+                                       sdr_record_len,
+                                       sensor_unit) < 0)
+        return -1;
+      
+      if (_detailed_output_sensor_reading_ranges (state_data,
+                                                  sdr_record,
+                                                  sdr_record_len,
+                                                  sensor_unit) < 0)
+        return -1;
     }
-
-  if (sdr_cache_get_sensor_unit (state_data->pstate,
-                                 sdr_record,
-                                 sdr_record_len,
-                                 &sensor_unit) < 0)
-    return -1;
-
-  if (_detailed_output_thresholds (state_data,
-                                   sdr_record,
-                                   sdr_record_len,
-                                   sensor_unit) < 0)
-    return -1;
- 
-  if (_detailed_output_sensor_reading_ranges (state_data,
-                                              sdr_record,
-                                              sdr_record_len,
-                                              sensor_unit) < 0)
-    return -1;
 
   if (state_data->prog_data->args->verbose_count >= 2)
     {
@@ -1008,15 +1008,32 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
         return -1;
     }
 
-  if (reading)
-    pstdout_printf (state_data->pstate,
-                    "Sensor Reading: %f %s\n",
-                    *reading,
-                    ipmi_sensor_units[sensor_unit]);
+  if (state_data->prog_data->args->legacy_output)
+    {
+      if (reading)
+        pstdout_printf (state_data->pstate,
+                        "Sensor Reading: %f %s\n",
+                        *reading,
+                        ipmi_sensor_units[sensor_unit]);
+      else 
+        pstdout_printf (state_data->pstate,
+                        "Sensor Reading: %s\n",
+                        IPMI_SENSORS_NA_STRING_OUTPUT);
+    }
   else
-    pstdout_printf (state_data->pstate,
-                    "Sensor Reading: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+    {
+      /* no need to output "N/A" for discrete sensors */
+
+      if (reading)
+        pstdout_printf (state_data->pstate,
+                        "Sensor Reading: %f %s\n",
+                        *reading,
+                        ipmi_sensor_units[sensor_unit]);
+      else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
+        pstdout_printf (state_data->pstate,
+                        "Sensor Reading: %s\n",
+                        IPMI_SENSORS_NA_STRING_OUTPUT);
+    }
   
   if (_detailed_output_event_message_list (state_data,
                                            event_message_list,

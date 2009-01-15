@@ -23,7 +23,7 @@
 	ipmi-sensors/src/ipmi-sensors-output-common.h and
 	ipmi-sensors/src/ipmi-sensors-output-common.c respectively.
 
-	* ipmi-sensors/: Change default for readability.
+	* ipmi-sensors/: Change default output for readability.
 	
 	* ipmi-sensors/src/: Various code cleanup.
 	

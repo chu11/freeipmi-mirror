@@ -444,7 +444,7 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
         pstdout_printf(state_data->pstate,
                        " | Sensor Units | Sensor Reading");
       pstdout_printf(state_data->pstate,
-                     " | Sensor State");
+                     " | Sensor Status");
       if (state_data->prog_data->args->verbose_count)
         {
           ;
