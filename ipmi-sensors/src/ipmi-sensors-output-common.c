@@ -72,28 +72,56 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
   if (event_message_list)
     {
       if (event_message_list_len >= 1)
-        pstdout_printf (state_data->pstate,
-                        "[%s]",
-                        event_message_list[0]);
+        {
+          if (state_data->prog_data->args->legacy_output)
+            pstdout_printf (state_data->pstate,
+                            "[%s]",
+                            event_message_list[0]);
+          else
+            {
+              if (!strcmp(event_message_list[0], IPMI_SENSORS_NA_STRING)
+                  || !strcmp(event_message_list[0], IPMI_SENSORS_NONE_STRING))
+                pstdout_printf (state_data->pstate,
+                                "%s",
+                                event_message_list[0]);
+              else
+                pstdout_printf (state_data->pstate,
+                                "'%s'",
+                                event_message_list[0]);
+            }
+        }
 
       for (i = 1; i < event_message_list_len; i++)
         {
           if (each_on_newline)
             pstdout_printf (state_data->pstate,
                             "\n");
-          pstdout_printf (state_data->pstate,
-                          "%s[%s]",
-                          spcbuf,
-                          event_message_list[i]);
+          if (state_data->prog_data->args->legacy_output)
+            pstdout_printf (state_data->pstate,
+                            "%s[%s]",
+                            spcbuf,
+                            event_message_list[i]);
+          else
+            pstdout_printf (state_data->pstate,
+                            "%s'%s'",
+                            spcbuf,
+                            event_message_list[i]);
         }
 
       pstdout_printf (state_data->pstate,
                       "\n");
     }
   else 
-    pstdout_printf (state_data->pstate,
-                    "[%s]\n",
-                    "Unknown"); 
+    {
+      if (state_data->prog_data->args->legacy_output)
+        pstdout_printf (state_data->pstate,
+                        "[%s]\n",
+                        "Unknown"); 
+      else
+        pstdout_printf (state_data->pstate,
+                        "%s\n",
+                        "Unknown"); 
+    }
   
   return 0;
 }

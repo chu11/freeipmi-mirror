@@ -288,7 +288,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
     return -1;
   
   pstdout_printf (state_data->pstate,
-                  "%-5d | %-16s | %-20s", 
+                  "%-9d | %-16s | %-20s", 
                   record_id, 
                   id_string,
                   ipmi_sensors_get_sensor_type_string (sensor_type));
@@ -339,14 +339,14 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 
           if (reading)
             pstdout_printf (state_data->pstate,
-                            " | %-12.2f | %-12s", 
+                            " | %-14.2f | %-12s", 
                             _round_double2 (*reading),
-                            ipmi_sensor_units[sensor_unit]);
+                            ipmi_sensor_units_abbreviated[sensor_unit]);
           else 
             pstdout_printf (state_data->pstate, 
-                            " | %-12s | %-12s", 
+                            " | %-14s | %-12s", 
                             IPMI_SENSORS_NA_STRING,
-                            ipmi_sensor_units[sensor_unit]);
+                            ipmi_sensor_units_abbreviated[sensor_unit]);
           
         }
 
@@ -367,7 +367,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
     default:
 
       pstdout_printf (state_data->pstate, 
-                      " | %-12s | %-12s | ",
+                      " | %-14s | %-12s | ",
                       IPMI_SENSORS_NA_STRING,
                       IPMI_SENSORS_NA_STRING);
 
@@ -439,10 +439,10 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
       && !state_data->output_headers)
     {
       pstdout_printf(state_data->pstate,
-                     "Record ID | Sensor Name | Sensor Group");
+                     "Record ID | Sensor Name      | Sensor Group        ");
       if (!state_data->prog_data->args->quiet_readings)
         pstdout_printf(state_data->pstate,
-                       " | Sensor Units | Sensor Reading");
+                       " | Sensor Reading | Sensor Units");
       pstdout_printf(state_data->pstate,
                      " | Sensor Status");
       if (state_data->prog_data->args->verbose_count)

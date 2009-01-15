@@ -41,8 +41,6 @@
 
 #define IPMI_SENSORS_OEM_DATA_LEN 1024
 
-#define IPMI_SENSORS_NONE_MSG     "NONE"
-
 static char *
 _get_record_type_string(ipmi_sensors_state_data_t *state_data,
                         uint8_t record_type)
@@ -778,10 +776,20 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
   
   if (val == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE)
     {
-      pstdout_printf (state_data->pstate,
-                      "Assertion Events Enabled: [All Event Messages Disabled]\n");
-      pstdout_printf (state_data->pstate,
-                      "Deassertion Events Enabled: [All Event Messages Disabled]\n");
+      if (state_data->prog_data->args->legacy_output)
+        {
+          pstdout_printf (state_data->pstate,
+                          "Assertion Events Enabled: [All Event Messages Disabled]\n");
+          pstdout_printf (state_data->pstate,
+                          "Deassertion Events Enabled: [All Event Messages Disabled]\n");
+        }
+      else
+        {
+          pstdout_printf (state_data->pstate,
+                          "Assertion Events Enabled: All Event Messages Disabled\n");
+          pstdout_printf (state_data->pstate,
+                          "Deassertion Events Enabled: All Event Messages Disabled\n");
+        }
       rv = 0;
       goto cleanup;
     }
@@ -792,10 +800,20 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
 
   if (val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
     {
-      pstdout_printf (state_data->pstate,
-                      "Assertion Events Enabled: [Sensor Scanning Disabled]\n");
-      pstdout_printf (state_data->pstate,
-                      "Deassertion Events Enabled: [Sensor Scanning Disabled]\n");
+      if (state_data->prog_data->args->legacy_output)
+        {
+          pstdout_printf (state_data->pstate,
+                          "Assertion Events Enabled: [Sensor Scanning Disabled]\n");
+          pstdout_printf (state_data->pstate,
+                          "Deassertion Events Enabled: [Sensor Scanning Disabled]\n");
+        }
+      else
+        {
+          pstdout_printf (state_data->pstate,
+                          "Assertion Events Enabled: Sensor Scanning Disabled\n");
+          pstdout_printf (state_data->pstate,
+                          "Deassertion Events Enabled: Sensor Scanning Disabled\n");
+        }
       rv = 0;
       goto cleanup;
     }
@@ -819,7 +837,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                               &assertion_event_message_list_len,
                                               event_reading_type_code,
                                               (uint16_t)val,
-                                              IPMI_SENSORS_NONE_MSG) < 0)
+                                              IPMI_SENSORS_NONE_STRING) < 0)
             goto cleanup;
         }
       else
@@ -829,7 +847,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                                       &assertion_event_message_list_len,
                                                       sensor_type,
                                                       (uint16_t)val,
-                                                      IPMI_SENSORS_NONE_MSG) < 0)
+                                                      IPMI_SENSORS_NONE_STRING) < 0)
             goto cleanup;
         }
 
@@ -855,7 +873,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                               &deassertion_event_message_list_len,
                                               event_reading_type_code,
                                               (uint16_t)val,
-                                              IPMI_SENSORS_NONE_MSG) < 0)
+                                              IPMI_SENSORS_NONE_STRING) < 0)
             goto cleanup;
         }
       else
@@ -865,7 +883,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                                       &deassertion_event_message_list_len,
                                                       sensor_type,
                                                       (uint16_t)val,
-                                                      IPMI_SENSORS_NONE_MSG) < 0)
+                                                      IPMI_SENSORS_NONE_STRING) < 0)
             goto cleanup;
         }
       
