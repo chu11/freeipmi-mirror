@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.76 2009-01-14 22:42:58 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.77 2009-01-15 17:42:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -191,7 +191,8 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
   struct ipmimonitoring_arguments *args;
   int record_id, sensor_group, sensor_state, sensor_units, sensor_reading_type;
   const char *sensor_group_str;
-  char *sensor_state_str, *sensor_units_str;
+  const char *sensor_units_str;
+  char *sensor_state_str;
   char *sensor_name;
   void *sensor_reading;
   int rv = -1;
@@ -342,17 +343,17 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
   if (!args->quiet_readings && sensor_reading)
     {
       if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
-        sensor_units_str = "C";
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_DEGREES_C];
       else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT)
-        sensor_units_str = "F";
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_DEGREES_F];
       else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_VOLTS)
-        sensor_units_str = "V";
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_VOLTS];
       else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_AMPS)
-        sensor_units_str = "A";
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_AMPS];
       else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_RPM)
-        sensor_units_str = "RPM";
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_RPM];
       else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_WATTS)
-        sensor_units_str = "W";
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_WATTS];
       else
         sensor_units_str = NA_STRING;
       

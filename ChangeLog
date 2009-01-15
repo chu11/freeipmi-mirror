@@ -1,3 +1,8 @@
+2009-01-15  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring/: Ensure consistency in units
+	output to other tools.
+	
 2009-01-14  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/src/: Don't output fields not related to
