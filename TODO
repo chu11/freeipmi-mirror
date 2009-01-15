@@ -18,6 +18,12 @@ sensors
 consistent output to ipmimonitoring/sel
 - verbose more like ipmimonitoring
 
+monitoring
+----------
+consinstent output to sensors
+- sensor reading before units
+- legacy output?
+
 sunbmc driver
 -------------
 untested - need solaris hardware
