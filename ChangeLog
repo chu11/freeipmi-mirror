@@ -1,5 +1,10 @@
 2009-01-14  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/src/: Don't output fields not related to
+	non-threshold sensors.
+	
+2009-01-14  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/ipmimonitoring: For consistency to library
 	and other software, fix sensor group name outputs.
 	
