@@ -29,6 +29,12 @@ o ipmi-sensors
     quotes (') or square brackets ([]).
   - Do not output Sensor Reading for discrete sensors under verbose
     mode (the result is always "N/A").
+  - Do not output SDR event records type under verbose output, only in very
+    verbose output.
+  - Under very verbose output, always output a prefix of "Assertion
+    Event Enabled" or "Deassertion Event Enabled" for assertion and
+    deassertion event listings (changed from a single "Assertion
+    Events Enabled" or "Deassertion Events Enabled").
   - Output record-type names in addition to record type hex code in
     very-verbose output.
   - Output hex code of group name in addition to group name in

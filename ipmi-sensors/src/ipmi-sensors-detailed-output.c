@@ -39,6 +39,9 @@
 #include "pstdout.h"
 #include "tool-fiid-wrappers.h"
 
+#define ALL_EVENT_MESSAGES_DISABLED "All Event Messages Disabled"
+#define SENSOR_SCANNING_DISABLED    "Sensor Scanning Disabled"
+
 #define IPMI_SENSORS_OEM_DATA_LEN 1024
 
 static char *
@@ -779,16 +782,24 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       if (state_data->prog_data->args->legacy_output)
         {
           pstdout_printf (state_data->pstate,
-                          "Assertion Events Enabled: [All Event Messages Disabled]\n");
+                          "%s[%s]\n",
+                          IPMI_SENSORS_ASSERTION_EVENT_PREFIX_LEGACY,
+                          ALL_EVENT_MESSAGES_DISABLED);
           pstdout_printf (state_data->pstate,
-                          "Deassertion Events Enabled: [All Event Messages Disabled]\n");
+                          "%s[%s]\n",
+                          IPMI_SENSORS_DEASSERTION_EVENT_PREFIX_LEGACY,
+                          ALL_EVENT_MESSAGES_DISABLED);
         }
       else
         {
           pstdout_printf (state_data->pstate,
-                          "Assertion Events Enabled: All Event Messages Disabled\n");
+                          "%s%s\n",
+                          IPMI_SENSORS_ASSERTION_EVENT_PREFIX,
+                          ALL_EVENT_MESSAGES_DISABLED);
           pstdout_printf (state_data->pstate,
-                          "Deassertion Events Enabled: All Event Messages Disabled\n");
+                          "%s%s\n",
+                          IPMI_SENSORS_DEASSERTION_EVENT_PREFIX,
+                          ALL_EVENT_MESSAGES_DISABLED);
         }
       rv = 0;
       goto cleanup;
@@ -803,16 +814,24 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       if (state_data->prog_data->args->legacy_output)
         {
           pstdout_printf (state_data->pstate,
-                          "Assertion Events Enabled: [Sensor Scanning Disabled]\n");
+                          "%s[%s]\n",
+                          IPMI_SENSORS_ASSERTION_EVENT_PREFIX_LEGACY,
+                          SENSOR_SCANNING_DISABLED);
           pstdout_printf (state_data->pstate,
-                          "Deassertion Events Enabled: [Sensor Scanning Disabled]\n");
+                          "%s[%s]\n",
+                          IPMI_SENSORS_DEASSERTION_EVENT_PREFIX_LEGACY,
+                          SENSOR_SCANNING_DISABLED);
         }
       else
         {
           pstdout_printf (state_data->pstate,
-                          "Assertion Events Enabled: Sensor Scanning Disabled\n");
+                          "%s%s\n",
+                          IPMI_SENSORS_ASSERTION_EVENT_PREFIX,
+                          SENSOR_SCANNING_DISABLED);
           pstdout_printf (state_data->pstate,
-                          "Deassertion Events Enabled: Sensor Scanning Disabled\n");
+                          "%s%s\n",
+                          IPMI_SENSORS_DEASSERTION_EVENT_PREFIX,
+                          SENSOR_SCANNING_DISABLED);
         }
       rv = 0;
       goto cleanup;
@@ -854,7 +873,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       if (ipmi_sensors_output_event_message_list (state_data,
                                                   assertion_event_message_list,
                                                   assertion_event_message_list_len,
-                                                  "Assertion Events Enabled: ",
+                                                  IPMI_SENSORS_ASSERTION_EVENT_PREFIX_OUTPUT,
                                                   1) < 0)
         goto cleanup;
     }
@@ -890,7 +909,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       if (ipmi_sensors_output_event_message_list (state_data,
                                                   deassertion_event_message_list,
                                                   deassertion_event_message_list_len,
-                                                  "Deassertion Events Enabled: ",
+                                                  IPMI_SENSORS_DEASSERTION_EVENT_PREFIX_OUTPUT,
                                                   1) < 0)
         goto cleanup;
     }
@@ -1781,11 +1800,12 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                                                   event_message_list,
                                                   event_message_list_len);
         case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
-          return _detailed_output_event_only_record (state_data,
-                                                     sdr_record,
-                                                     sdr_record_len,
-                                                     record_type,
-                                                     record_id);
+          if (state_data->prog_data->args->legacy_output)
+            return _detailed_output_event_only_record (state_data,
+                                                       sdr_record,
+                                                       sdr_record_len,
+                                                       record_type,
+                                                       record_id);
         default:
           /* don't output any other types in verbose mode */
           break;
