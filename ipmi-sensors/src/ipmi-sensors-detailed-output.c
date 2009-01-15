@@ -822,17 +822,6 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                           IPMI_SENSORS_DEASSERTION_EVENT_PREFIX_LEGACY,
                           SENSOR_SCANNING_DISABLED);
         }
-      else
-        {
-          pstdout_printf (state_data->pstate,
-                          "%s%s\n",
-                          IPMI_SENSORS_ASSERTION_EVENT_PREFIX,
-                          SENSOR_SCANNING_DISABLED);
-          pstdout_printf (state_data->pstate,
-                          "%s%s\n",
-                          IPMI_SENSORS_DEASSERTION_EVENT_PREFIX,
-                          SENSOR_SCANNING_DISABLED);
-        }
       rv = 0;
       goto cleanup;
     }
@@ -931,7 +920,7 @@ _detailed_output_event_message_list (ipmi_sensors_state_data_t *state_data,
   if (ipmi_sensors_output_event_message_list (state_data,
                                               event_message_list,
                                               event_message_list_len,
-                                              "Sensor Status: ",
+                                              IPMI_SENSORS_SENSOR_EVENT_PREFIX_OUTPUT,
                                               1) < 0)
     return -1;
   
@@ -1800,6 +1789,9 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                                                   event_message_list,
                                                   event_message_list_len);
         case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
+          /* only in legacy output, I dond't know why this was output
+           * under verbose before
+           */
           if (state_data->prog_data->args->legacy_output)
             return _detailed_output_event_only_record (state_data,
                                                        sdr_record,

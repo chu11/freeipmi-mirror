@@ -1,14 +1,29 @@
 freeipmi tools
 --------------
 config via environment variables too - like config file
+comma output - support in ipmi-sel, ipmi-sensors, ipmimonitoring
 
 libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
 * abstract FRU parsing into lib?
+* abstract sensors parsing into lib?
+* put more sdr cache parsing into lib?
 * more detailed debug output for ssif interface like KCS interface
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
+
+sensors
+-------
+consistent output to ipmimonitoring/sel
+- verbose more like ipmimonitoring
+descriptiont of output fields and what they mean
+
+monitoring
+----------
+consinstent output to sensors
+- sensor reading before units
+- legacy output?
 
 sunbmc driver
 -------------

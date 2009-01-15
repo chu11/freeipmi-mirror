@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.72 2009-01-13 22:28:16 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.72.2.1 2009-01-15 19:48:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -190,7 +190,9 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
   ipmimonitoring_state_data_t *state_data;
   struct ipmimonitoring_arguments *args;
   int record_id, sensor_group, sensor_state, sensor_units, sensor_reading_type;
-  char *sensor_group_str, *sensor_state_str, *sensor_units_str;
+  const char *sensor_group_str;
+  const char *sensor_units_str;
+  char *sensor_state_str;
   char *sensor_name;
   void *sensor_reading;
   int rv = -1;
@@ -204,10 +206,10 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
   if (!state_data->output_headers)
     {
       pstdout_printf(state_data->pstate, 
-                     "Record_ID | Sensor Name | Sensor Group | Monitoring Status");
+                     "Record ID | Sensor Name | Sensor Group | Monitoring Status");
       if (!args->quiet_readings)
         pstdout_printf(state_data->pstate, 
-                       "| Sensor Units | Sensor Reading");
+                       " | Sensor Units | Sensor Reading");
       pstdout_printf(state_data->pstate, 
                      "\n");
       state_data->output_headers++;
@@ -268,57 +270,57 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
     sensor_name = NA_STRING;
 
   if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE)
-    sensor_group_str = "Temperature";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_TEMPERATURE];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_VOLTAGE)
-    sensor_group_str = "Voltage";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_VOLTAGE];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_CURRENT)
-    sensor_group_str = "Current";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_CURRENT];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_FAN)
-    sensor_group_str = "Fan";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_FAN];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_PHYSICAL_SECURITY)
-    sensor_group_str = "Physical Security";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_PHYSICAL_SECURITY];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
-    sensor_group_str = "Security Violation Attempt";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_PROCESSOR)
-    sensor_group_str = "Group Processor";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_PROCESSOR];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_POWER_SUPPLY)
-    sensor_group_str = "Power Supply";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_POWER_SUPPLY];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_POWER_UNIT)
-    sensor_group_str = "Power Unit";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_POWER_UNIT];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_MEMORY)
-    sensor_group_str = "Memory";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_MEMORY];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_DRIVE_SLOT)
-    sensor_group_str = "Drive Slot";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_DRIVE_SLOT];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SYSTEM_FIRMWARE_PROGRESS)
-    sensor_group_str = "System Firmware Progress";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_EVENT_LOGGING_DISABLED)
-    sensor_group_str = "Event Logging Disabled";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SYSTEM_EVENT)
-    sensor_group_str = "System Event";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_EVENT];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_CRITICAL_INTERRUPT)
-    sensor_group_str = "Critical Interrupt";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_MODULE_BOARD)
-    sensor_group_str = "Module Board";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_MODULE_BOARD];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR)
-    sensor_group_str = "Slot Connector";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_SLOT_CONNECTOR];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2)
-    sensor_group_str = "Watchdog2";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_WATCHDOG2];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_ENTITY_PRESENCE)
-    sensor_group_str = "Entity Presence";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_ENTITY_PRESENCE];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_MANAGEMENT_SUBSYSTEM_HEALTH)
-    sensor_group_str = "Management Subsystem Health";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_BATTERY)
-    sensor_group_str = "Battery";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_BATTERY];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_FRU_STATE)
-    sensor_group_str = "FRU State";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_FRU_STATE];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT)
-    sensor_group_str = "Cable Interconnect";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_CABLE_INTERCONNECT];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR)
-    sensor_group_str = "Boot Error";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_BOOT_ERROR];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_BUTTON_SWITCH)
-    sensor_group_str = "Button Switch";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_BUTTON_SWITCH];
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE)
-    sensor_group_str = "System ACPI Power State";
+    sensor_group_str = ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE];
   else 
     sensor_group_str = NA_STRING;
 
@@ -341,17 +343,17 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
   if (!args->quiet_readings && sensor_reading)
     {
       if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
-        sensor_units_str = "C";
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_DEGREES_C];
       else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT)
-        sensor_units_str = "F";
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_DEGREES_F];
       else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_VOLTS)
-        sensor_units_str = "V";
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_VOLTS];
       else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_AMPS)
-        sensor_units_str = "A";
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_AMPS];
       else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_RPM)
-        sensor_units_str = "RPM";
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_RPM];
       else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_WATTS)
-        sensor_units_str = "W";
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_WATTS];
       else
         sensor_units_str = NA_STRING;
       

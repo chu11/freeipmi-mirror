@@ -46,8 +46,6 @@
 #include "tool-fiid-wrappers.h"
 #include "tool-sdr-cache-common.h"
 
-#define IPMI_SENSORS_OK_MSG   "OK"
-
 int
 _sensor_reading_corner_case_checks (struct ipmi_sensors_state_data *state_data,
                                     uint8_t sensor_number,
@@ -507,7 +505,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                               event_message_list,
                                               event_message_list_len,
                                               sensor_event_bitmask,
-                                              IPMI_SENSORS_OK_MSG) < 0)
+                                              IPMI_SENSORS_NO_EVENT_STRING_OUTPUT) < 0)
                 goto cleanup;
 
               rv = 0;
@@ -529,7 +527,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                               event_message_list,
                                               event_message_list_len,
                                               sensor_event_bitmask,
-                                              IPMI_SENSORS_OK_MSG) < 0)
+                                              IPMI_SENSORS_NO_EVENT_STRING_OUTPUT) < 0)
                 goto cleanup;
 
               rv = 0;
@@ -569,7 +567,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                       event_message_list,
                                       event_message_list_len,
                                       sensor_event_bitmask,
-                                      IPMI_SENSORS_OK_MSG) < 0)
+                                      IPMI_SENSORS_NO_EVENT_STRING_OUTPUT) < 0)
         goto cleanup;
       
       rv = 1;
@@ -585,7 +583,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                               event_message_list_len, 
                                               event_reading_type_code, 
                                               sensor_event_bitmask,
-                                              IPMI_SENSORS_OK_MSG) < 0)
+                                              IPMI_SENSORS_NO_EVENT_STRING_OUTPUT) < 0)
             goto cleanup;
 
           rv = 1;
@@ -597,7 +595,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                                       event_message_list_len,
                                                       sensor_type, 
                                                       sensor_event_bitmask,
-                                                      IPMI_SENSORS_OK_MSG) < 0)
+                                                      IPMI_SENSORS_NO_EVENT_STRING_OUTPUT) < 0)
             goto cleanup;
 
           rv = 1;

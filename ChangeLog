@@ -27,6 +27,35 @@
 	
 	* ipmi-sensors/src/: Various code cleanup.
 	
+2009-01-15  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring/: Ensure consistency in units
+	output to other tools.
+	
+2009-01-14  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/: Don't output fields not related to
+	non-threshold sensors.
+	
+2009-01-14  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring: For consistency to library
+	and other software, fix sensor group name outputs.
+	
+2009-01-14  Albert Chu <chu11@llnl.gov>
+
+	* Output and parse "Record ID" instead of "Record_ID" consistently.
+
+	* ipmi-sel/: For consistency to ipmimonitoring, output Sensor Name
+	before Sensor Group.
+
+	* ipmimonitoring/src/ipmimonitoring/: Fix header typo.
+	
+2009-01-14  Dave Love  <d.love@liverpool.ac.uk>
+
+	* bmc-watchdog/freeipmi-bmc-watchdog.init: Make SuSE-compatible,
+	like the other init scripts.
+
 2009-01-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/ipmi-sel-parse.c

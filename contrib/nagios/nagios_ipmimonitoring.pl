@@ -212,7 +212,8 @@ foreach $line (@IPMIMONITORING_OUTPUT_LINES)
     my $output_str;
 
     # skip header line
-    if ($line =~ "Record_ID")
+    if ($line =~ "Record_ID"
+        || $line =~ "Record ID")
     {
         next;
     }
