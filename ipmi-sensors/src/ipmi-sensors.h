@@ -39,6 +39,7 @@ enum ipmi_sensors_argp_option_keys
     GROUPS_KEY = 'g', 
     SENSORS_KEY = 's', 
     BRIDGE_SENSORS_KEY = 'b',
+    LEGACY_OUTPUT_KEY = 161,
   };
 
 struct ipmi_sensors_arguments
@@ -58,6 +59,7 @@ struct ipmi_sensors_arguments
   unsigned int sensors[IPMI_SENSORS_MAX_RECORD_IDS];
   unsigned int sensors_length;
   int bridge_sensors;
+  int legacy_output;
 };
 
 typedef struct ipmi_sensors_prog_data
@@ -73,6 +75,7 @@ typedef struct ipmi_sensors_state_data
   pstdout_state_t pstate;
   char *hostname;
   ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx;
+  int output_headers;
 } ipmi_sensors_state_data_t;
 
 #endif

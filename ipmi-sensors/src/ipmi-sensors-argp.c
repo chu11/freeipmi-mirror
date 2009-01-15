@@ -87,6 +87,8 @@ static struct argp_option cmdline_options[] =
      "Show sensors by record id.  Accepts space or comma separated lists", 36}, 
     {"bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
      "Bridge addresses to read non-BMC owned sensors.", 37},
+    {"legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
+     "Output in legacy format.", 38},
     { 0 }
   };
 
@@ -174,6 +176,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
+      break;
+    case LEGACY_OUTPUT_KEY:
+      cmd_args->legacy_output = 1;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -299,6 +304,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
          sizeof(unsigned int)*IPMI_SENSORS_MAX_RECORD_IDS);
   cmd_args->sensors_length = 0;
   cmd_args->bridge_sensors = 0;
+  cmd_args->legacy_output = 0;
   
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
 

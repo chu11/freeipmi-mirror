@@ -1,5 +1,34 @@
 2009-01-15  Albert Chu <chu11@llnl.gov>
 
+	* Support --legacy-output option for ipmi-sensors.
+
+	* ipmi-sensors/src/ipmi-sensors-very-verbose-display.c:
+	Consolidate "verbose output" into this file.
+
+	* ipmi-sensors/src/ipmi-sensors-verbose-display.h,
+	ipmi-sensors/src/ipmi-sensors-verbose-display.c: Remove files.
+
+	* ipmi-sensors/src/ipmi-sensors-very-verbose-display.h,
+	ipmi-sensors/src/ipmi-sensors-very-verbose-display.c: Renamed
+	ipmi-sensors/src/ipmi-sensors-detailed-output.h and
+	ipmi-sensors/src/ipmi-sensors-detailed-output.c respectively.
+
+	* ipmi-sensors/src/ipmi-sensors-simple-display.h,
+	ipmi-sensors/src/ipmi-sensors-simple-display.c: Renamed
+	ipmi-sensors/src/ipmi-sensors-simple-output.h and
+	ipmi-sensors/src/ipmi-sensors-simple-output.c respectively.
+
+	* ipmi-sensors/src/ipmi-sensors-output-common.h,
+	ipmi-sensors/src/ipmi-sensors-output-common.c: Renamed
+	ipmi-sensors/src/ipmi-sensors-output-common.h and
+	ipmi-sensors/src/ipmi-sensors-output-common.c respectively.
+
+	* ipmi-sensors/: Change various output for readability and parsability.
+	
+	* ipmi-sensors/src/: Various code cleanup.
+	
+2009-01-15  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/ipmimonitoring/: Ensure consistency in units
 	output to other tools.
 	

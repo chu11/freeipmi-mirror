@@ -1,11 +1,10 @@
 noinst_HEADERS = \
 	ipmi-sensors.h \
 	ipmi-sensors-argp.h \
+	ipmi-sensors-detailed-output.h \
+	ipmi-sensors-output-common.h \
 	ipmi-sensors-reading.h \
-	ipmi-sensors-simple-display.h \
-	ipmi-sensors-verbose-display.h \
-	ipmi-sensors-very-verbose-display.h \
-	ipmi-sensors-display-common.h \
+	ipmi-sensors-simple-output.h \
 	ipmi-sensors-util.h
 
 AM_CPPFLAGS = \
@@ -30,11 +29,10 @@ ipmi_sensors_LDADD = \
 ipmi_sensors_SOURCES = \
 	ipmi-sensors.c \
 	ipmi-sensors-argp.c \
+	ipmi-sensors-detailed-output.c \
+	ipmi-sensors-output-common.c \
 	ipmi-sensors-reading.c \
-	ipmi-sensors-simple-display.c \
-	ipmi-sensors-verbose-display.c \
-	ipmi-sensors-very-verbose-display.c \
-	ipmi-sensors-display-common.c \
+	ipmi-sensors-simple-output.c \
 	ipmi-sensors-util.c
 
 $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check

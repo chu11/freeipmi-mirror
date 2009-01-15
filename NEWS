@@ -6,22 +6,44 @@ Tools - New Significant Additions/Features
 Tools - Enhancements/Changes/Bug Fixes
 --------------------------------------
 o ipmi-sel
-  - Alter output to make fields easier to read (legacy output option
-    supported).
+  - Alter output to make fields easier to read, consistent to other
+    tools, and more consistent to IPMI (legacy output option supported).
+  - Support --legacy-output option.
   - Support --verbose option to offer verbose and very verbose
     additional SEL event information.
   - Support --display and --display-range options.
   - Support --system-event-only and --oem-event-only options.
-  - Support --legacy-output option.
   - Output OEM hex code in consistent format.
   - Output hex code more often if translation to string not available.
   - Re-work to use new libfreeipmi sel-parse sub library.
   - Remove legacy option to dump hex output to optional filename.
 o ipmi-sensors
+  - Alter output to make fields easier to read, consistent to other
+    tools, and more consistent to IPMI (legacy output option supported).
+  - Support --legacy-output option.
+  - For consistency to other tools, outputs of "NA" are now "N/A".
+  - Events are now surrounded by single quotes (') instead of square
+    brackets ([]).
+  - Non-events or indications that sensors can't be read or don't
+    exist (i.e. "N/A", "Unknown", "NONE") are now *not* surrounded by
+    single quotes (') or square brackets ([]).
+  - A sensor event of "NONE" is now output instead of "OK" if no
+    sensor events are indicated.
+  - Do not output Sensor Reading for discrete sensors under verbose
+    mode (the result is always "N/A").
+  - Do not output SDR event records type under verbose output, only in very
+    verbose output.
+  - Under very verbose output, "Sensor Status" is now "Sensor Event".
+  - Under very verbose output, if multiple sensor states are
+    triggered, always output a prefix of "Sensor Event".
+  - Under very verbose output, always output a prefix of "Assertion
+    Event Enabled" or "Deassertion Event Enabled" for assertion and
+    deassertion event listings (changed from a single "Assertion
+    Events Enabled" or "Deassertion Events Enabled").
   - Output record-type names in addition to record type hex code in
     very-verbose output.
-  - Output hex code of group name in addition to group name in verbose
-    and very-verbose output.
+  - Output hex code of group name in addition to group name in
+    very-verbose output.
 o ipmimonitoring
   - Utilize libipmimonitoring callback routines to make sensors output
     as they are read, rather than just at the end.  This removes the
