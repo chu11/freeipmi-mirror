@@ -6,12 +6,12 @@ ipmi-sensors \- display IPMI sensor information
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-sensors
+
 displays current readings of sensors and sensor data repository (SDR)
 information.  The default display outputs each sensor's record id,
-sensor name, group name, sensor reading (if appropriate), thresholds
-(if appropriate), and the current sensor status.  Some sensors are not
-output by default.  More verbose information can be found using the
-verbose options specified below.
+sensor name, sensor group name, sensor reading (if appropriate), and
+the current sensor event.  More verbose information can be found using
+the verbose options specified below.
 
 .B Ipmi-sensors
 does not inform the user if a problem exists with a particular sensor
@@ -19,12 +19,15 @@ because sensor readings are not analyzed.  Users may wish to consider
 .B ipmimonitoring(8)
 for sensor analysis.
 
-Some sensors may have an output reading of "NA" if the sensor reading
-is unavailable.  This is typical of a sensor that is not enabled or
-not owned by a BMC.  Please see \fB\-\-bridge\-sensors\fR option below
-to deal with sensors not owned by a BMC.  Sensors may output a reading
-of "Unknown" if the sensor reading cannot be read.  This is typical of
-a sensor that is busy or a reading that cannot be calculated.
+Some sensors may have an output reading or sensor event of "N/A" if
+the sensor reading is unavailable.  This is typical of a sensor that
+is not enabled or not owned by a BMC.  Please see
+\fB\-\-bridge\-sensors\fR option below to deal with sensors not owned
+by a BMC.  Sensors may output a sensor event of "Unknown" if the
+sensor reading cannot be read.  This is typical of a sensor that is
+busy or a reading that cannot be calculated.  Sensors need not always
+report a sensor event.  When a sensor event is not present, "NONE" is
+reported for the sensor event.
 
 #include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 To perform IPMI sensor configuration, please see
