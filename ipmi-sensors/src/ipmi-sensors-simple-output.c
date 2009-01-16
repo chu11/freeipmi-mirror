@@ -366,10 +366,13 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
     default:
 
-      pstdout_printf (state_data->pstate, 
-                      " | %-14s | %-12s | ",
-                      IPMI_SENSORS_NA_STRING,
-                      IPMI_SENSORS_NA_STRING);
+      if (!state_data->prog_data->args->quiet_readings)
+        pstdout_printf (state_data->pstate, 
+                        " | %-14s | %-12s | ",
+                        IPMI_SENSORS_NA_STRING,
+                        IPMI_SENSORS_NA_STRING);
+      else
+        pstdout_printf (state_data->pstate, " | ");
 
       if (ipmi_sensors_output_event_message_list(state_data,
                                                  event_message_list,
