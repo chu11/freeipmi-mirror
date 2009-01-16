@@ -31,6 +31,7 @@ monitoring
 consinstent output to sensors
 - sensor reading before units
 - legacy output?
+support output of reading and bitmask for all sensors
 
 sunbmc driver
 -------------
