@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.8.0.alpha0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.163 2009-01-07 17:43:49 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.164 2009-01-16 21:22:14 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -241,9 +241,9 @@ AC_ARG_ENABLE(debug,
               AC_HELP_STRING([--enable-debug], [turn on debugging]))
 if test "x${enable_debug}" = "xyes"; then
    if test "$GCC" = "yes"; then 
-      CFLAGS="-ggdb -Wall"
+      CFLAGS="$CFLAGS -ggdb -Wall"
    elif test "$ac_cv_prog_cc_g" = "yes"; then
-      CFLAGS="-g"
+      CFLAGS="$CFLAGS -g"
    fi
    WITH_DEBUG=1
 else
