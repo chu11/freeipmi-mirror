@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.24 2009-01-13 01:02:21 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.25 2009-01-16 01:14:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -98,6 +98,8 @@ static struct argp_option cmdline_options[] =
      "Bridge addresses to read non-BMC owned sensors.", 37},
     {"sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
      "Specify an alternate sensor configuration file.", 38},
+    {"legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
+     "Output in legacy format.", 39},
     { 0 }
   };
 
@@ -194,6 +196,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           exit(1);
         }
       break;
+    case LEGACY_OUTPUT_KEY:
+      cmd_args->legacy_output = 1;
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -281,6 +286,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   cmd_args->sensors_length = 0;
   cmd_args->bridge_sensors = 0;
   cmd_args->sensor_config_file = NULL;
+  cmd_args->legacy_output = 0;
 
   memset(&(cmd_args->conf), '\0', sizeof(struct ipmi_monitoring_ipmi_config));
   cmd_args->ipmimonitoring_flags = 0;

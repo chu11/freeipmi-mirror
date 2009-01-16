@@ -1,5 +1,10 @@
 2009-01-15  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/src/ipmimonitoring/: Begin support of
+	--legacy-output option.
+	
+2009-01-15  Albert Chu <chu11@llnl.gov>
+
 	* Support --legacy-output option for ipmi-sensors.
 
 	* ipmi-sensors/src/ipmi-sensors-very-verbose-display.c:

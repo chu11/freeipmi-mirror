@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.47 2009-01-13 19:26:49 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.48 2009-01-16 01:14:04 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -108,6 +108,9 @@ Bridging may not work on some interfaces/driver types.
 .TP
 \fB\-\-sensor\-config\-file\fR=\fIFILE\fR
 Specify an alternate sensor configuration file.
+.TP
+\fB\-\-legacy-output\fR
+Output in legacy format.
 
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
