@@ -1,6 +1,8 @@
 2009-01-16  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Fix CFLAGS environment variable overwriting bug.
+
+	* ipmimonitoring/src/libipmimonitoring/: Support threshold bitmask type.
 	
 2009-01-15  Albert Chu <chu11@llnl.gov>
 

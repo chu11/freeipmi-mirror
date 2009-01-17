@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.55 2009-01-13 01:02:22 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.56 2009-01-17 01:06:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -951,6 +951,8 @@ _get_digital_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
    * no macros.  We just gotta hard code numbers.
    */
 
+  if (event_reading_type_code == 0x01)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD;
   if (event_reading_type_code == 0x02)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION;
   else if (event_reading_type_code == 0x03)

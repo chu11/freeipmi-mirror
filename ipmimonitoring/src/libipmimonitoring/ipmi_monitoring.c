@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.39 2009-01-13 01:02:21 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.40 2009-01-17 01:06:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1098,7 +1098,7 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
   if (!bitmask)
     return 0;
   
-  if (bitmask_type >= IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION
+  if (bitmask_type >= IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD
       && bitmask_type <= IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_STATE)
     {
       uint8_t event_reading_type_code;
@@ -1110,6 +1110,9 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
 
       switch (bitmask_type)
         {
+        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD:
+          event_reading_type_code = 0x01;
+          break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION:
           event_reading_type_code = 0x02;
           break;
