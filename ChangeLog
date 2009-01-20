@@ -1,3 +1,19 @@
+2009-01-20  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/
+	(ipmi_monitoring_sensor_readings_by_record_id_callback,
+	ipmi_monitoring_sensor_readings_by_sensor_group_callback): Remove
+	functions.  Absorb callback routines into
+	ipmi_monitoring_sensor_readings_by_record_id and
+	ipmi_monitoring_sensor_readings_by_sensor_group.
+
+	* ipmimonitoring/src/libipmimonitoring/: Rename most *iterator*
+	functions to *read* functions.  Remove most *callback* functions.
+	Absorb *callback* functionality into *read* functions.
+
+	* ipmimonitoring/src/libipmimonitoring/: Remove
+	IPMI_MONITORING_ERR_NOT_IN_CALLBACK error code.
+	
 2009-01-16  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Fix CFLAGS environment variable overwriting bug.
