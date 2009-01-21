@@ -30,7 +30,7 @@ o ipmi-sensors
   - A sensor event of "NONE" is now output instead of "OK" if no
     sensor events are indicated.
   - Do not output Sensor Reading for discrete sensors under verbose
-    mode (the result is always "N/A").
+    mode (because the result is always "N/A").
   - Do not output SDR event records type under verbose output, only in very
     verbose output.
   - Under very verbose output, "Sensor Status" is now "Sensor Event".
@@ -45,6 +45,18 @@ o ipmi-sensors
   - Output hex code of group name in addition to group name in
     very-verbose output.
 o ipmimonitoring
+  - Alter output to make fields easier to read, consistent to other
+    tools, and more consistent to IPMI (legacy output option supported).
+  - "Monitoring Status" is now listed as "Sensor State" for
+    consistency to libipmimonitoring library definition.
+  - Sensor events are now output for all sensors.  Sensor readings are
+    only output appropriately for non-discrete sensors.
+  - Support --legacy-output option.
+  - Non-events or indications that sensors can't be read or don't
+    exist (i.e. "N/A", "Unknown", "NONE") are now *not* surrounded by
+    single quotes (').
+  - A sensor event of "NONE" is now output instead of "OK" if no
+    sensor events are indicated.
   - Utilize libipmimonitoring callback routines to make sensors output
     as they are read, rather than just at the end.  This removes the
     impression that the tool "hangs" on start.
@@ -65,9 +77,11 @@ o libipmimonitoring
     read/analyzed.
   - Support new function ipmi_monitoring_read_sensor_bitmask() to read
     bitmask of each sensor.
-  - Remove IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK 
-    sensor reading type.
-  - Variety of API functions reworked for new functionality.  Will
+  - Add IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD bitmask type.
+  - Remove IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK
+    sensor reading type.  Every sensor technically has a bitmask, but
+    not all sensors have a sensor reading.
+  - Variety of API functions reworked or renamed for new functionality.  Will
     require recompile and rework in existing code.
 
 Contributions

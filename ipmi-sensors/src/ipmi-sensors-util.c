@@ -99,8 +99,8 @@ get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
   /* achu: multiple threshold flags can be set (i.e. if we pass the
    * critical threshold, we've also passed the non-critical threshold)
    * but we only want to * output one message at the max.  Luckily for
-   * us (and due to smarts * by the IPMI specification authors) if we
-   * go from high bits to low * bits, we will read the flags in the
+   * us (and due to smarts by the IPMI specification authors) if we
+   * go from high bits to low bits, we will read the flags in the
    * correct order for output.
    *
    * If you're confused why were use 'ipmi_get_threshold_message'

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.56.2.1 2009-01-21 00:50:45 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.56.2.2 2009-01-21 22:37:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -929,7 +929,7 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
                             sensor_state,
                             sensor_units,
                             IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE,
-                            IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN,
+                            IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD,
                             sensor_event_bitmask,
                             &sensor_value) < 0)
     return -1;

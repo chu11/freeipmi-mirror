@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.40.2.2 2009-01-21 00:50:44 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.40.2.3 2009-01-21 22:37:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -857,7 +857,34 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
   if (!bitmask)
     return 0;
   
-  if (bitmask_type >= IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD
+  if (bitmask_type == IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD)
+    {
+      /* IPMI spec has bitmasks as the offset bit number, not the
+       * actual offset.
+       *
+       * i.e. bitmask = 0x0020.  IPMI spec offset = 5.
+       */
+      for (i = 0; i < 16; i++)
+        {
+          if ((0x1 << i) & bitmask)
+            {
+              offset = i;
+              break;
+            }
+        }
+ 
+      if (ipmi_get_threshold_message (offset,
+                                      buffer,
+                                      buflen) < 0)
+        {
+          if (errno == EINVAL)
+            c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+          else
+            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          return -1;
+        }
+    }
+  else if (bitmask_type >= IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION
       && bitmask_type <= IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_STATE)
     {
       uint8_t event_reading_type_code;

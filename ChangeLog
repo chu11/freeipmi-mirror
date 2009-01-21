@@ -24,6 +24,9 @@
 	"primary" sensor reading.
 
 	* ipmimonitoring/src/ipmimonitoring/: Update appropriately for changes.
+
+	* ipmimonitoring/src/ipmimonitoring/: Update output for
+	consistency to ipmi-sensors.  Support --legacy-output option.
 	
 2009-01-16  Albert Chu <chu11@llnl.gov>
 
