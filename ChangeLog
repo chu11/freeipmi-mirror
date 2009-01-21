@@ -1,3 +1,7 @@
+2009-01-21  Albert Chu <chu11@llnl.gov>
+
+	* man/freeipmi.7.pre.in: Fix some text.
+	
 2009-01-16  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Fix CFLAGS environment variable overwriting bug.
