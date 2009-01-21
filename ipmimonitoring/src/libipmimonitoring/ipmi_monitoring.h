@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.37 2009-01-17 01:06:24 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.38 2009-01-21 22:53:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -59,13 +59,12 @@ enum ipmi_monitoring_error_codes
     IPMI_MONITORING_ERR_IPMI_2_0_UNAVAILABLE                = 23,
     IPMI_MONITORING_ERR_CIPHER_SUITE_ID_UNAVAILABLE         = 24,
     IPMI_MONITORING_ERR_CALLBACK_ERROR                      = 25,
-    IPMI_MONITORING_ERR_NOT_IN_CALLBACK                     = 26,
-    IPMI_MONITORING_ERR_BMC_BUSY                            = 27,
-    IPMI_MONITORING_ERR_OUT_OF_MEMORY                       = 28,
-    IPMI_MONITORING_ERR_IPMI_ERROR                          = 29,
-    IPMI_MONITORING_ERR_SYSTEM_ERROR                        = 30,
-    IPMI_MONITORING_ERR_INTERNAL_ERROR                      = 31,
-    IPMI_MONITORING_ERR_ERRNUMRANGE                         = 32,
+    IPMI_MONITORING_ERR_BMC_BUSY                            = 26,
+    IPMI_MONITORING_ERR_OUT_OF_MEMORY                       = 27,
+    IPMI_MONITORING_ERR_IPMI_ERROR                          = 28,
+    IPMI_MONITORING_ERR_SYSTEM_ERROR                        = 29,
+    IPMI_MONITORING_ERR_INTERNAL_ERROR                      = 30,
+    IPMI_MONITORING_ERR_ERRNUMRANGE                         = 31,
   };
 
 enum ipmi_monitoring_sensor_group
@@ -124,8 +123,7 @@ enum ipmi_monitoring_sensor_reading_type
     IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL     = 0x00,
     IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32         = 0x01,
     IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE                     = 0x02,
-    IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK = 0x03,
-    IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN                    = 0x04,
+    IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN                    = 0x03,
   };
 
 enum ipmi_monitoring_sensor_bitmask_type
@@ -234,18 +232,12 @@ enum ipmi_monitoring_sensor_reading_flags
  */
 enum ipmi_monitoring_sensor_bitmask_threshold 
   {
-    IPMI_MONITORING_BITMASK_THRESHOLD_LOWER_NON_CRITICAL_GOING_LOW = 0x0001,
-    IPMI_MONITORING_BITMASK_THRESHOLD_LOWER_NON_CRITICAL_GOING_HIGH = 0x0002,
-    IPMI_MONITORING_BITMASK_THRESHOLD_LOWER_CRITICAL_GOING_LOW = 0x0004,
-    IPMI_MONITORING_BITMASK_THRESHOLD_LOWER_CRITICAL_GOING_HIGH = 0x0008,
-    IPMI_MONITORING_BITMASK_THRESHOLD_LOWER_NON_RECOVERABLE_GOING_LOW = 0x0010,
-    IPMI_MONITORING_BITMASK_THRESHOLD_LOWER_NON_RECOVERABLE_GOING_HIGH = 0x0020,
-    IPMI_MONITORING_BITMASK_THRESHOLD_UPPER_NON_CRITICAL_GOING_LOW = 0x0040,
-    IPMI_MONITORING_BITMASK_THRESHOLD_UPPER_NON_CRITICAL_GOING_HIGH = 0x0080,
-    IPMI_MONITORING_BITMASK_THRESHOLD_UPPER_CRITICAL_GOING_LOW = 0x0100,
-    IPMI_MONITORING_BITMASK_THRESHOLD_UPPER_CRITICAL_GOING_HIGH = 0x0200,
-    IPMI_MONITORING_BITMASK_THRESHOLD_UPPER_NON_RECOVERABLE_GOING_LOW = 0x0400,
-    IPMI_MONITORING_BITMASK_THRESHOLD_UPPER_NON_RECOVERABLE_GOING_HIGH = 0x0800,
+    IPMI_MONITORING_BITMASK_THRESHOLD_AT_OR_BELOW_LOWER_NON_CRITICAL_THRESHOLD = 0x0001,
+    IPMI_MONITORING_BITMASK_THRESHOLD_AT_OR_BELOW_LOWER_CRITICAL_THRESHOLD = 0x0002,
+    IPMI_MONITORING_BITMASK_THRESHOLD_AT_OR_BELOW_LOWER_NON_RECOVERABLE_THRESHOLD = 0x0004,
+    IPMI_MONITORING_BITMASK_THRESHOLD_AT_OR_BELOW_UPPER_NON_CRITICAL_THRESHOLD = 0x0008,
+    IPMI_MONITORING_BITMASK_THRESHOLD_AT_OR_BELOW_UPPER_CRITICAL_THRESHOLD = 0x0010,
+    IPMI_MONITORING_BITMASK_THRESHOLD_AT_OR_BELOW_UPPER_NON_RECOVERABLE_THRESHOLD = 0x0020,
   };
 
 enum ipmi_monitoring_sensor_bitmask_transition 
@@ -833,6 +825,7 @@ char *ipmi_monitoring_ctx_strerror(int errnum);
  * If 'hostname' is NULL, sensors for the current node will be retrieved in-band.
  * If 'record_ids' is NULL, default sensors will be retrieved
  * (default == all sensors unless configured otherwise).
+ * Callback function will be called after each sensor is read and parsed.
  *
  * Returns number of sensors values retrieved on success, -1 on error
  */
@@ -841,25 +834,9 @@ int ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
                                                  struct ipmi_monitoring_ipmi_config *config,
                                                  unsigned int sensor_reading_flags,
                                                  unsigned int *record_ids,
-                                                 unsigned int record_ids_len);
-
-/* 
- * ipmi_monitoring_sensor_readings_by_record_id_callback
- *
- * Identical to ipmi_monitoring_sensor_readings_by_record_id(), but
- * with callback functions that will be called after each sensor is
- * read and parsed.  Callback data retrieval functions listed below
- * can be used to get the current sensor reading information in that
- * callback function.
- */
-int ipmi_monitoring_sensor_readings_by_record_id_callback(ipmi_monitoring_ctx_t c,
-                                                          const char *hostname,
-                                                          struct ipmi_monitoring_ipmi_config *config,
-                                                          unsigned int sensor_reading_flags,
-                                                          unsigned int *record_ids,
-                                                          unsigned int record_ids_len,
-                                                          Ipmi_Monitoring_Sensor_Readings_Callback callback,
-                                                          void *callback_data);
+                                                 unsigned int record_ids_len,
+                                                 Ipmi_Monitoring_Sensor_Readings_Callback callback,
+                                                 void *callback_data);
 
 /* 
  * ipmi_monitoring_sensor_readings_by_sensor_group
@@ -869,6 +846,7 @@ int ipmi_monitoring_sensor_readings_by_record_id_callback(ipmi_monitoring_ctx_t 
  * If 'hostname' is NULL, sensors for the current node will be retrieved in-band.
  * If 'sensor_groups' is NULL, default sensors will be retrieved.
  * (default == all sensors unless configured otherwise).
+ * Callback function will be called after each sensor is read and parsed.
  *
  * Returns number of sensors values retrieved on success, -1 on error
  */
@@ -877,92 +855,9 @@ int ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
                                                     struct ipmi_monitoring_ipmi_config *config,
                                                     unsigned int sensor_reading_flags,
                                                     unsigned int *sensor_groups,
-                                                    unsigned int sensor_groups_len);
-
-/* 
- * ipmi_monitoring_sensor_readings_by_sensor_group_callback
- *
- * Identical to ipmi_monitoring_sensor_readings_by_record_id(), but
- * with callback functions that will be called after each sensor is
- * read and parsed.  Callback data retrieval functions listed below
- * can be used to get the current sensor reading information in that
- * callback function.
- */
-int ipmi_monitoring_sensor_readings_by_sensor_group_callback(ipmi_monitoring_ctx_t c,
-                                                             const char *hostname,
-                                                             struct ipmi_monitoring_ipmi_config *config,
-                                                             unsigned int sensor_reading_flags,
-                                                             unsigned int *sensor_groups,
-                                                             unsigned int sensor_groups_len,
-                                                             Ipmi_Monitoring_Sensor_Readings_Callback callback,
-                                                             void *callback_data);
-
-/* 
- * ipmi_monitoring_callback_record_id
- *
- * Returns the record id of the most recently parsed sensor.  Should
- * only be used inside a callback routine.
- */
-int ipmi_monitoring_callback_record_id(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_callback_sensor_group
- *
- * Returns the sensor group of the most recently parsed sensor.
- * Should only be used inside a callback routine.
- */
-int ipmi_monitoring_callback_sensor_group(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_callback_sensor_name
- *
- * Returns a pointer to the sensor name of the most recently parsed
- * sensor.  Should only be used inside a callback routine.
- */
-char *ipmi_monitoring_callback_sensor_name(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_callback_sensor_state
- *
- * Returns the current sensor state of the most recently parsed
- * sensor.  Should only be used inside a callback routine.
- */
-int ipmi_monitoring_callback_sensor_state(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_callback_sensor_units
- *
- * Returns the sensor units type of the most recently parsed sensor.
- * Should only be used inside a callback routine.
- */
-int ipmi_monitoring_callback_sensor_units(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_callback_sensor_reading_type
- *
- * Returns the sensor reading type of the most recently parsed sensor.
- * Should only be used inside a callback routine.
- */
-int ipmi_monitoring_callback_sensor_reading_type(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_callback_sensor_bitmask_type
- *
- * Returns the bitmask type of the most recently parsed sensor that
- * should be used if the reading type is a bitmask.  Should only be
- * used inside a callback routine.
- */
-int ipmi_monitoring_callback_sensor_bitmask_type(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_callback_sensor_reading
- *
- * Returns a pointer to the sensor reading of the most recently parsed
- * sensor.  It is the responsibility of the user to cast it to the
- * correct type based on the reading type.  Returns NULL if no reading
- * available.  Should only be used inside a callback routine.
- */
-void *ipmi_monitoring_callback_sensor_reading(ipmi_monitoring_ctx_t c);
+                                                    unsigned int sensor_groups_len,
+                                                    Ipmi_Monitoring_Sensor_Readings_Callback callback,
+                                                    void *callback_data);
 
 /* 
  * ipmi_monitoring_iterator_first
@@ -983,77 +878,85 @@ int ipmi_monitoring_iterator_first(ipmi_monitoring_ctx_t c);
 int ipmi_monitoring_iterator_next(ipmi_monitoring_ctx_t c);
 
 /* 
- * ipmi_monitoring_iterator_record_id
- *
- * Returns the record id of the current sensor reading in the
- * iterator.
- */
-int ipmi_monitoring_iterator_record_id(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_iterator_sensor_group
- *
- * Returns the sensor group of the current sensor reading in the
- * iterator.
- */
-int ipmi_monitoring_iterator_sensor_group(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_iterator_sensor_name
- *
- * Returns a pointer to the sensor name of the current sensor reading
- * in the iterator.
- */
-char *ipmi_monitoring_iterator_sensor_name(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_iterator_sensor_state
- *
- * Returns the current sensor state of the current sensor reading in
- * the iterator.
- */
-int ipmi_monitoring_iterator_sensor_state(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_iterator_sensor_units
- *
- * Returns the sensor units type of the current sensor reading in the
- * iterator.
- */
-int ipmi_monitoring_iterator_sensor_units(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_iterator_sensor_reading_type
- *
- * Returns the sensor reading type of the current sensor reading in
- * the iterator.
- */
-int ipmi_monitoring_iterator_sensor_reading_type(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_iterator_sensor_bitmask_type
- *
- * Returns the bitmask type of the current sensor reading in the
- * iterator that should be used if the reading type is a bitmask.
- */
-int ipmi_monitoring_iterator_sensor_bitmask_type(ipmi_monitoring_ctx_t c);
-
-/* 
- * ipmi_monitoring_iterator_sensor_reading
- *
- * Returns a pointer to the sensor reading of the current sensor
- * reading in the iterator.  It is the responsibility of the user to
- * cast it to the correct type based on the reading type.  Returns
- * NULL if no reading available.
- */
-void *ipmi_monitoring_iterator_sensor_reading(ipmi_monitoring_ctx_t c);
-
-/* 
  * ipmi_monitoring_iterator_destroy
  *
  * Destroy all internally stored sensors readings.
  */
 void ipmi_monitoring_iterator_destroy(ipmi_monitoring_ctx_t c);
+
+/* 
+ * ipmi_monitoring_read_record_id
+ *
+ * Returns the record id of the current sensor reading in a callback
+ * or the iterator.
+ */
+int ipmi_monitoring_read_record_id(ipmi_monitoring_ctx_t c);
+
+/* 
+ * ipmi_monitoring_read_sensor_group
+ *
+ * Returns the sensor group of the current sensor reading in a
+ * callback or the iterator.
+ */
+int ipmi_monitoring_read_sensor_group(ipmi_monitoring_ctx_t c);
+
+/* 
+ * ipmi_monitoring_read_sensor_name
+ *
+ * Returns a pointer to the sensor name of the current sensor reading
+ * in a callback or the iterator.
+ */
+char *ipmi_monitoring_read_sensor_name(ipmi_monitoring_ctx_t c);
+
+/* 
+ * ipmi_monitoring_read_sensor_state
+ *
+ * Returns the current sensor state of the current sensor reading in a
+ * callback or the iterator.
+ */
+int ipmi_monitoring_read_sensor_state(ipmi_monitoring_ctx_t c);
+
+/* 
+ * ipmi_monitoring_read_sensor_units
+ *
+ * Returns the sensor units type of the current sensor reading in a
+ * callback or the iterator.
+ */
+int ipmi_monitoring_read_sensor_units(ipmi_monitoring_ctx_t c);
+
+/* 
+ * ipmi_monitoring_read_sensor_reading_type
+ *
+ * Returns the sensor reading type of the current sensor reading in a
+ * callback or the iterator.
+ */
+int ipmi_monitoring_read_sensor_reading_type(ipmi_monitoring_ctx_t c);
+
+/* 
+ * ipmi_monitoring_read_sensor_bitmask_type
+ *
+ * Returns the bitmask type of the current sensor reading in a
+ * callback or the iterator.
+ */
+int ipmi_monitoring_read_sensor_bitmask_type(ipmi_monitoring_ctx_t c);
+
+/* 
+ * ipmi_monitoring_read_sensor_bitmask
+ *
+ * Returns the bitmask of the current sensor reading in a callback or
+ * the iterator.
+ */
+int ipmi_monitoring_read_sensor_bitmask(ipmi_monitoring_ctx_t c);
+
+/* 
+ * ipmi_monitoring_read_sensor_reading
+ *
+ * Returns a pointer to the sensor reading of the current sensor
+ * reading in a callback or the iterator.  It is the responsibility of
+ * the user to cast it to the correct type based on the reading type.
+ * Returns NULL if no reading available.
+ */
+void *ipmi_monitoring_read_sensor_reading(ipmi_monitoring_ctx_t c);
 
 /* 
  * ipmi_monitoring_bitmask_string

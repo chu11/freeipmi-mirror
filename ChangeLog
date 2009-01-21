@@ -1,5 +1,35 @@
 2009-01-21  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/src/libipmimonitoring/
+	(ipmi_monitoring_sensor_readings_by_record_id_callback,
+	ipmi_monitoring_sensor_readings_by_sensor_group_callback): Remove
+	functions.  Absorb callback routines into
+	ipmi_monitoring_sensor_readings_by_record_id and
+	ipmi_monitoring_sensor_readings_by_sensor_group.
+
+	* ipmimonitoring/src/libipmimonitoring/: Rename most *iterator*
+	functions to *read* functions.  Remove most *callback* functions.
+	Absorb *callback* functionality into *read* functions.
+
+	* ipmimonitoring/src/libipmimonitoring/: Remove
+	IPMI_MONITORING_ERR_NOT_IN_CALLBACK error code.
+
+	* ipmimonitoring/src/libipmimonitoring/: Remove
+	IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK
+	sensor reading type.
+
+	* ipmimonitoring/src/libipmimonitoring/: Support
+	ipmi_monitoring_read_sensor_bitmask().  Every sensor technically
+	has a bitmask that can be returned.  Do not differentiate between
+	"primary" sensor reading.
+
+	* ipmimonitoring/src/ipmimonitoring/: Update appropriately for changes.
+
+	* ipmimonitoring/src/ipmimonitoring/: Update output for
+	consistency to ipmi-sensors.  Support --legacy-output option.
+
+2009-01-21  Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.7.pre.in: Fix some text.
 	
 2009-01-16  Albert Chu <chu11@llnl.gov>

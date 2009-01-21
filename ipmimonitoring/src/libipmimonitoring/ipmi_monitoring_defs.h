@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.19 2009-01-17 01:06:25 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.20 2009-01-21 22:53:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -63,7 +63,6 @@
         (((__val) == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL \
           || (__val) == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32 \
           || (__val) == IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE \
-          || (__val) == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK \
           || (__val) == IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN) ? 1 : 0)
 
 /* +1 and -1 to avoid gcc warnings */
@@ -132,11 +131,11 @@ struct ipmi_monitoring_sensor_reading {
   int sensor_units;
   int sensor_reading_type;
   int sensor_bitmask_type;
+  int sensor_bitmask;
   union {
     uint8_t bool_val;
     uint32_t integer_val;
     double double_val;
-    uint16_t integer_bitmask_val;
   } sensor_reading;    
 };
 
