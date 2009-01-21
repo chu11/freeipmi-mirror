@@ -27,6 +27,7 @@ o ipmi-sensors
   - Non-events or indications that sensors can't be read or don't
     exist (i.e. "N/A", "Unknown", "NONE") are now *not* surrounded by
     single quotes (') or square brackets ([]).
+  - Under default output, output units using non-abbreviated form.
   - A sensor event of "NONE" is now output instead of "OK" if no
     sensor events are indicated.
   - Do not output Sensor Reading for discrete sensors under verbose
@@ -57,6 +58,7 @@ o ipmimonitoring
     single quotes (').
   - A sensor event of "NONE" is now output instead of "OK" if no
     sensor events are indicated.
+  - Output units using non-abbreviated form.
   - Utilize libipmimonitoring callback routines to make sensors output
     as they are read, rather than just at the end.  This removes the
     impression that the tool "hangs" on start.

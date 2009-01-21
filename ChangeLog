@@ -1,5 +1,10 @@
 2009-01-21  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/, ipmimonitoring/: Output units in non-abbreviated
+	form by default.
+	
+2009-01-21  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/libipmimonitoring/
 	(ipmi_monitoring_sensor_readings_by_record_id_callback,
 	ipmi_monitoring_sensor_readings_by_sensor_group_callback): Remove

@@ -341,12 +341,12 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
             pstdout_printf (state_data->pstate,
                             " | %-14.2f | %-12s", 
                             _round_double2 (*reading),
-                            ipmi_sensor_units_abbreviated[sensor_unit]);
+                            ipmi_sensor_units[sensor_unit]);
           else 
             pstdout_printf (state_data->pstate, 
                             " | %-14s | %-12s", 
                             IPMI_SENSORS_NA_STRING,
-                            ipmi_sensor_units_abbreviated[sensor_unit]);
+                            ipmi_sensor_units[sensor_unit]);
           
         }
 
