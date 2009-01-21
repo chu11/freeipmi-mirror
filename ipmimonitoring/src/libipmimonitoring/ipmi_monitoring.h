@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.37.2.1 2009-01-20 23:57:40 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.37.2.2 2009-01-21 00:50:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -123,8 +123,7 @@ enum ipmi_monitoring_sensor_reading_type
     IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL     = 0x00,
     IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32         = 0x01,
     IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE                     = 0x02,
-    IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK = 0x03,
-    IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN                    = 0x04,
+    IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN                    = 0x03,
   };
 
 enum ipmi_monitoring_sensor_bitmask_type
@@ -946,6 +945,14 @@ int ipmi_monitoring_read_sensor_reading_type(ipmi_monitoring_ctx_t c);
  * callback or the iterator.
  */
 int ipmi_monitoring_read_sensor_bitmask_type(ipmi_monitoring_ctx_t c);
+
+/* 
+ * ipmi_monitoring_read_sensor_bitmask
+ *
+ * Returns the bitmask of the current sensor reading in a callback or
+ * the iterator.
+ */
+int ipmi_monitoring_read_sensor_bitmask(ipmi_monitoring_ctx_t c);
 
 /* 
  * ipmi_monitoring_read_sensor_reading

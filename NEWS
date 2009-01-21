@@ -63,6 +63,12 @@ o libipmimonitoring
   - Support callback functions in API to monitor sensors as they
     are read/analyzed instead of after all sensors have been
     read/analyzed.
+  - Support new function ipmi_monitoring_read_sensor_bitmask() to read
+    bitmask of each sensor.
+  - Remove IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK 
+    sensor reading type.
+  - Variety of API functions reworked for new functionality.  Will
+    require recompile and rework in existing code.
 
 Contributions
 -------------

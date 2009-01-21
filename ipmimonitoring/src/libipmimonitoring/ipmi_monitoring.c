@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.40.2.1 2009-01-20 23:57:40 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.40.2.2 2009-01-21 00:50:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -638,6 +638,7 @@ ipmi_monitoring_iterator_first(ipmi_monitoring_ctx_t c)
 
   list_iterator_reset(c->sensor_readings_itr);
   c->current_sensor_reading = list_next(c->sensor_readings_itr);
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return 0;
 }
 
@@ -654,6 +655,7 @@ ipmi_monitoring_iterator_next(ipmi_monitoring_ctx_t c)
     }
 
   c->current_sensor_reading = list_next(c->sensor_readings_itr);
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return ((c->current_sensor_reading) ? 1 : 0);
 }
 
@@ -719,6 +721,7 @@ ipmi_monitoring_read_record_id(ipmi_monitoring_ctx_t c)
   if (_ipmi_monitoring_read_common(c, &sensor_reading) < 0)
     return -1;
 
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->record_id;
 }
 
@@ -730,6 +733,7 @@ ipmi_monitoring_read_sensor_group(ipmi_monitoring_ctx_t c)
   if (_ipmi_monitoring_read_common(c, &sensor_reading) < 0)
     return -1;
 
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_group;
 }
 
@@ -741,6 +745,7 @@ ipmi_monitoring_read_sensor_name(ipmi_monitoring_ctx_t c)
   if (_ipmi_monitoring_read_common(c, &sensor_reading) < 0)
     return NULL;
 
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_name;
 }
 
@@ -753,6 +758,7 @@ ipmi_monitoring_read_sensor_state(ipmi_monitoring_ctx_t c)
   if (_ipmi_monitoring_read_common(c, &sensor_reading) < 0)
     return -1;
 
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_state;
 }
 
@@ -764,6 +770,7 @@ ipmi_monitoring_read_sensor_units(ipmi_monitoring_ctx_t c)
   if (_ipmi_monitoring_read_common(c, &sensor_reading) < 0)
     return -1;
 
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_units;
 }
 
@@ -775,6 +782,7 @@ ipmi_monitoring_read_sensor_reading_type(ipmi_monitoring_ctx_t c)
   if (_ipmi_monitoring_read_common(c, &sensor_reading) < 0)
     return -1;
   
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_reading_type;
 }
 
@@ -786,27 +794,40 @@ ipmi_monitoring_read_sensor_bitmask_type(ipmi_monitoring_ctx_t c)
   if (_ipmi_monitoring_read_common(c, &sensor_reading) < 0)
     return -1;
   
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_bitmask_type;
+}
+
+int 
+ipmi_monitoring_read_sensor_bitmask(ipmi_monitoring_ctx_t c)
+{
+  struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
+
+  if (_ipmi_monitoring_read_common(c, &sensor_reading) < 0)
+    return -1;
+  
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
+  return sensor_reading->sensor_bitmask;
 }
 
 void *
 ipmi_monitoring_read_sensor_reading(ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
+  void *rv = NULL;
 
   if (_ipmi_monitoring_read_common(c, &sensor_reading) < 0)
     return NULL;
   
   if (sensor_reading->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
-    return &(sensor_reading->sensor_reading.bool_val);
+    rv = &(sensor_reading->sensor_reading.bool_val);
   else if (sensor_reading->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32)
-    return &(sensor_reading->sensor_reading.integer_val);
+    rv = &(sensor_reading->sensor_reading.integer_val);
   else if (sensor_reading->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE)
-    return &(sensor_reading->sensor_reading.double_val);
-  else if (sensor_reading->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK)
-    return &(sensor_reading->sensor_reading.integer_bitmask_val);
-
-  return NULL;
+    rv = &(sensor_reading->sensor_reading.double_val);
+  
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
+  return rv;
 }
 
 int

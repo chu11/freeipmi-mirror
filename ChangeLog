@@ -14,6 +14,15 @@
 	* ipmimonitoring/src/libipmimonitoring/: Remove
 	IPMI_MONITORING_ERR_NOT_IN_CALLBACK error code.
 
+	* ipmimonitoring/src/libipmimonitoring/: Remove
+	IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK
+	sensor reading type.
+
+	* ipmimonitoring/src/libipmimonitoring/: Support
+	ipmi_monitoring_read_sensor_bitmask().  Every sensor technically
+	has a bitmask that can be returned.  Do not differentiate between
+	"primary" sensor reading.
+
 	* ipmimonitoring/src/ipmimonitoring/: Update appropriately for changes.
 	
 2009-01-16  Albert Chu <chu11@llnl.gov>

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.78.2.1 2009-01-21 00:07:40 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.78.2.2 2009-01-21 00:50:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -373,7 +373,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
         pstdout_printf(state_data->pstate,
                        " | %f ", 
                        *((double *)sensor_reading));
-      else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK)
+      else if (sensor_reading_type == 0) /* XXX */
         {
           int bitmask_type;
           

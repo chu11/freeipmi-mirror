@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.56 2009-01-17 01:06:25 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.56.2.1 2009-01-21 00:50:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -80,6 +80,7 @@ _store_sensor_reading(ipmi_monitoring_ctx_t c,
                       int sensor_units,
                       int sensor_reading_type,
                       int sensor_bitmask_type,
+                      uint16_t sensor_bitmask,
                       void *sensor_reading)
 {
   struct ipmi_monitoring_sensor_reading *s = NULL;
@@ -109,6 +110,7 @@ _store_sensor_reading(ipmi_monitoring_ctx_t c,
   s->sensor_units = sensor_units;
   s->sensor_reading_type = sensor_reading_type;
   s->sensor_bitmask_type = sensor_bitmask_type;
+  s->sensor_bitmask = (int)sensor_bitmask;
 
   if (s->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
     s->sensor_reading.bool_val = *((uint8_t *)sensor_reading);
@@ -116,8 +118,6 @@ _store_sensor_reading(ipmi_monitoring_ctx_t c,
     s->sensor_reading.integer_val = *((uint32_t *)sensor_reading);
   else if (s->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE)
     s->sensor_reading.double_val = *((double *)sensor_reading);
-  else if (s->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK)
-    s->sensor_reading.integer_bitmask_val = *((uint16_t *)sensor_reading);
   
   /* achu: should come before list_append to avoid having a freed entry on the list */
   if (c->callback)
@@ -179,6 +179,7 @@ _store_unreadable_sensor_reading(ipmi_monitoring_ctx_t c,
   s->sensor_units = sensor_units;
   s->sensor_reading_type = IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN;
   s->sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN;
+  s->sensor_bitmask = 0;
 
   /* achu: should come before list_append to avoid having a freed entry on the list */
   if (c->callback)
@@ -929,6 +930,7 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
                             sensor_units,
                             IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE,
                             IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN,
+                            sensor_event_bitmask,
                             &sensor_value) < 0)
     return -1;
 
@@ -1045,7 +1047,7 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
                                                               event_reading_type_code)) < 0)
     return -1;
   
-  /* The sensor "reading" is a bitmask */
+  /* No actual sensor reading, only a sensor state */
   if (_store_sensor_reading(c,
                             sensor_reading_flags,
                             record_id,
@@ -1053,9 +1055,10 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
                             sensor_name,
                             sensor_state,
                             IPMI_MONITORING_SENSOR_UNITS_NONE,
-                            IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK,
+                            IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN,
                             sensor_bitmask_type,
-                            &sensor_event_bitmask) < 0)
+                            sensor_event_bitmask,
+                            NULL) < 0)
     return -1;
   
   return 0;
@@ -1180,7 +1183,7 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
                                                                sensor_type)) < 0)
     return -1;
 
-  /* The sensor "reading" is the bitmask */
+  /* No actual sensor reading, only a sensor state */
   if (_store_sensor_reading(c,
                             sensor_reading_flags,
                             record_id,
@@ -1188,9 +1191,10 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
                             sensor_name,
                             sensor_state,
                             IPMI_MONITORING_SENSOR_UNITS_NONE,
-                            IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK,
+                            IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN,
                             sensor_bitmask_type,
-                            &sensor_event_bitmask) < 0)
+                            sensor_event_bitmask,
+                            NULL) < 0)
     return -1;
   
   return 0;
