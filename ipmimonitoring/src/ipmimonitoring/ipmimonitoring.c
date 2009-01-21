@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.78 2009-01-15 19:58:34 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.78.2.1 2009-01-21 00:07:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -215,55 +215,55 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
       state_data->output_headers++;
     }
 
-  if ((record_id = ipmi_monitoring_callback_record_id(state_data->ctx)) < 0)
+  if ((record_id = ipmi_monitoring_read_record_id(state_data->ctx)) < 0)
     {
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
-                      "ipmi_monitoring_callback_record_id: %s\n", 
+                      "ipmi_monitoring_read_record_id: %s\n", 
                       ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
       goto cleanup;
     }
-  if ((sensor_group = ipmi_monitoring_callback_sensor_group(state_data->ctx)) < 0)
+  if ((sensor_group = ipmi_monitoring_read_sensor_group(state_data->ctx)) < 0)
     {
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
-                      "ipmi_monitoring_callback_sensor_group: %s\n", 
+                      "ipmi_monitoring_read_sensor_group: %s\n", 
                       ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
       goto cleanup;
     }
-  if (!(sensor_name = ipmi_monitoring_callback_sensor_name(state_data->ctx)))
+  if (!(sensor_name = ipmi_monitoring_read_sensor_name(state_data->ctx)))
     {
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
-                      "ipmi_monitoring_callback_sensor_name: %s\n", 
+                      "ipmi_monitoring_read_sensor_name: %s\n", 
                       ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
       goto cleanup;
     }
-  if ((sensor_state = ipmi_monitoring_callback_sensor_state(state_data->ctx)) < 0)
+  if ((sensor_state = ipmi_monitoring_read_sensor_state(state_data->ctx)) < 0)
     {
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
-                      "ipmi_monitoring_callback_sensor_state: %s\n", 
+                      "ipmi_monitoring_read_sensor_state: %s\n", 
                       ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
       goto cleanup;
     }
-  if ((sensor_units = ipmi_monitoring_callback_sensor_units(state_data->ctx)) < 0)
+  if ((sensor_units = ipmi_monitoring_read_sensor_units(state_data->ctx)) < 0)
     {
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
-                      "ipmi_monitoring_callback_sensor_units: %s\n", 
+                      "ipmi_monitoring_read_sensor_units: %s\n", 
                       ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
       goto cleanup;
     }
-  if ((sensor_reading_type = ipmi_monitoring_callback_sensor_reading_type(state_data->ctx)) < 0)
+  if ((sensor_reading_type = ipmi_monitoring_read_sensor_reading_type(state_data->ctx)) < 0)
     {
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
-                      "ipmi_monitoring_callback_sensor_reading_type: %s\n", 
+                      "ipmi_monitoring_read_sensor_reading_type: %s\n", 
                       ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
       goto cleanup;
     }
-  sensor_reading = ipmi_monitoring_callback_sensor_reading(state_data->ctx);
+  sensor_reading = ipmi_monitoring_read_sensor_reading(state_data->ctx);
   
   if (!sensor_name
       || !strlen(sensor_name))
@@ -377,11 +377,11 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
         {
           int bitmask_type;
           
-          if ((bitmask_type = ipmi_monitoring_callback_sensor_bitmask_type(state_data->ctx)) < 0)
+          if ((bitmask_type = ipmi_monitoring_read_sensor_bitmask_type(state_data->ctx)) < 0)
             {
               pstdout_fprintf(state_data->pstate, 
                               stderr, 
-                              "ipmi_monitoring_callback_sensor_bitmask_type: %s\n", 
+                              "ipmi_monitoring_read_sensor_bitmask_type: %s\n", 
                               ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
               goto cleanup;
             }
@@ -523,14 +523,14 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   
   if (!args->sensors_length && !args->ipmimonitoring_groups_length)
     {
-      if (ipmi_monitoring_sensor_readings_by_record_id_callback(state_data->ctx,
-                                                                state_data->hostname,
-                                                                &(args->conf),
-                                                                sensor_reading_flags,
-                                                                NULL,
-                                                                0,
-                                                                _ipmimonitoring_callback,
-                                                                (void *)state_data) < 0)
+      if (ipmi_monitoring_sensor_readings_by_record_id(state_data->ctx,
+                                                       state_data->hostname,
+                                                       &(args->conf),
+                                                       sensor_reading_flags,
+                                                       NULL,
+                                                       0,
+                                                       _ipmimonitoring_callback,
+                                                       (void *)state_data) < 0)
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,
@@ -541,14 +541,14 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
     }
   else if (args->sensors_length)
     {
-      if (ipmi_monitoring_sensor_readings_by_record_id_callback(state_data->ctx,
-                                                                state_data->hostname,
-                                                                &(args->conf),
-                                                                sensor_reading_flags,
-                                                                args->sensors,
-                                                                args->sensors_length,
-                                                                _ipmimonitoring_callback,
-                                                                (void *)state_data) < 0)
+      if (ipmi_monitoring_sensor_readings_by_record_id(state_data->ctx,
+                                                       state_data->hostname,
+                                                       &(args->conf),
+                                                       sensor_reading_flags,
+                                                       args->sensors,
+                                                       args->sensors_length,
+                                                       _ipmimonitoring_callback,
+                                                       (void *)state_data) < 0)
         {
           /* special case error message */
           if (ipmi_monitoring_ctx_errnum(state_data->ctx) == IPMI_MONITORING_ERR_SENSOR_NOT_FOUND)
@@ -565,14 +565,14 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
     }
   else 
     {
-      if (ipmi_monitoring_sensor_readings_by_sensor_group_callback(state_data->ctx,
-                                                                   state_data->hostname,
-                                                                   &(args->conf),
-                                                                   sensor_reading_flags,
-                                                                   args->ipmimonitoring_groups,
-                                                                   args->ipmimonitoring_groups_length,
-                                                                   _ipmimonitoring_callback,
-                                                                   (void *)state_data) < 0)
+      if (ipmi_monitoring_sensor_readings_by_sensor_group(state_data->ctx,
+                                                          state_data->hostname,
+                                                          &(args->conf),
+                                                          sensor_reading_flags,
+                                                          args->ipmimonitoring_groups,
+                                                          args->ipmimonitoring_groups_length,
+                                                          _ipmimonitoring_callback,
+                                                          (void *)state_data) < 0)
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,

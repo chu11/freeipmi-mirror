@@ -13,6 +13,8 @@
 
 	* ipmimonitoring/src/libipmimonitoring/: Remove
 	IPMI_MONITORING_ERR_NOT_IN_CALLBACK error code.
+
+	* ipmimonitoring/src/ipmimonitoring/: Update appropriately for changes.
 	
 2009-01-16  Albert Chu <chu11@llnl.gov>
 
