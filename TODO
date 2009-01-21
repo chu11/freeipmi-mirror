@@ -155,7 +155,7 @@ vendors for system management.  The features of IPMI that most users
 will be interested in are sensor monitoring, system event monitoring,
 power control, and serial-over-LAN (SOL).  The FreeIPMI tools and
 libraries listed provide users with the ability to access
-and utilize these and many other features.
+and utilize these and many other features of IPMI.
 
 More information about FreeIPMI can be found at the FreeIPMI webpage
 at:
