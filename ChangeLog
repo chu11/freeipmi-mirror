@@ -1,3 +1,8 @@
+2009-01-22  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/: Make output formatted for consistency to ipmi-sensors
+	and ipmimonitoring.
+	
 2009-01-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, ipmimonitoring/: Output units in non-abbreviated
