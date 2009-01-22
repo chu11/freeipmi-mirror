@@ -45,6 +45,8 @@ o ipmi-sensors
     very-verbose output.
   - Output linearization in hex in verbose outputs.
   - Output linearization name in verbose outputs.
+  - Output analog data format in hex in verbose outputs.
+  - Output analog data format name in verbose outputs.
   - Output hex code of group name in addition to group name in
     very-verbose output.
 o ipmimonitoring

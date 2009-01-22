@@ -957,10 +957,28 @@ _linearization_string(ipmi_sensors_state_data_t *state_data, uint8_t linearizati
     case IPMI_SDR_LINEARIZATION_CUBERT:
       return IPMI_SDR_LINEARIZATION_CUBERT_STRING;
     default:
-      return IPMI_SDR_LINEARIZATION_NON_LINEAR;
+      return IPMI_SDR_LINEARIZATION_NON_LINEAR_STRING;
     }
 
-  return IPMI_SDR_LINEARIZATION_NON_LINEAR;
+  return IPMI_SDR_LINEARIZATION_NON_LINEAR_STRING;
+}
+
+static char *
+_analog_data_format_string(ipmi_sensors_state_data_t *state_data, uint8_t analog_data_format)
+{
+  switch (analog_data_format)
+    {
+    case IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED:
+      return IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED_STRING;
+    case IPMI_SDR_ANALOG_DATA_FORMAT_1S_COMPLEMENT:
+      return IPMI_SDR_ANALOG_DATA_FORMAT_1S_COMPLEMENT_STRING;
+    case IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT:
+      return IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT_STRING;
+    default:
+      return IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG_STRING;
+    }
+
+  return IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG_STRING;
 }
 
 static int 
@@ -1039,7 +1057,8 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                           _linearization_string(state_data, linearization),
                           linearization);
           pstdout_printf (state_data->pstate, 
-                          "Analog Data Format: %Xh\n", 
+                          "Analog Data Format: %s (%Xh)\n", 
+                          _analog_data_format_string(state_data, analog_data_format),
                           analog_data_format);
         }
 
