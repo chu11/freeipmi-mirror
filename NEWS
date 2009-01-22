@@ -88,6 +88,8 @@ o libipmimonitoring
 
 Contributions
 -------------
+o Update Ganglia and Nagios plugins for changes in ipmi-sensors and
+ipmimonitoring.
 
 0.7.4 - 12/15/08
 ----------------
