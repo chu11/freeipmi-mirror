@@ -43,6 +43,8 @@ o ipmi-sensors
     Events Enabled" or "Deassertion Events Enabled").
   - Output record-type names in addition to record type hex code in
     very-verbose output.
+  - Output linearization in hex in verbose outputs.
+  - Output linearization name in verbose outputs.
   - Output hex code of group name in addition to group name in
     very-verbose output.
 o ipmimonitoring

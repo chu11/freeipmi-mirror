@@ -109,6 +109,20 @@ extern "C" {
 #define IPMI_SDR_LINEARIZATION_SQRT    10
 #define IPMI_SDR_LINEARIZATION_CUBERT  11
 
+#define IPMI_SDR_LINEARIZATION_LINEAR_STRING  "linear"
+#define IPMI_SDR_LINEARIZATION_LN_STRING      "ln"
+#define IPMI_SDR_LINEARIZATION_LOG10_STRING   "log10"
+#define IPMI_SDR_LINEARIZATION_LOG2_STRING    "log2"
+#define IPMI_SDR_LINEARIZATION_E_STRING       "e"
+#define IPMI_SDR_LINEARIZATION_EXP10_STRING   "exp10"
+#define IPMI_SDR_LINEARIZATION_EXP2_STRING    "exp2"
+#define IPMI_SDR_LINEARIZATION_INVERSE_STRING "1/x"
+#define IPMI_SDR_LINEARIZATION_SQR_STRING     "sqr(x)"
+#define IPMI_SDR_LINEARIZATION_CUBE_STRING    "cube(x)"
+#define IPMI_SDR_LINEARIZATION_SQRT_STRING    "sqrt(x)"
+#define IPMI_SDR_LINEARIZATION_CUBERT_STRING  "cube^-1(x)"
+#define IPMI_SDR_LINEARIZATION_NON_LINEAR     "non-linear"
+
 /* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_SDR_LINEARIZATION_IS_LINEAR(__sensor_linearization) \
    ((((__sensor_linearization) + 1) >= IPMI_SDR_LINEARIZATION_LN \

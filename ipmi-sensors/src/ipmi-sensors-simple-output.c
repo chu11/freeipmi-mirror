@@ -74,7 +74,7 @@ _legacy_simple_output_header (ipmi_sensors_state_data_t *state_data,
 
   if (state_data->prog_data->args->quiet_readings)
     pstdout_printf (state_data->pstate,
-                    "%d: %s: ", 
+                    "%u: %s: ", 
                     record_id, 
                     id_string);
   else
@@ -88,7 +88,7 @@ _legacy_simple_output_header (ipmi_sensors_state_data_t *state_data,
         return -1;
 
       pstdout_printf (state_data->pstate,
-                      "%d: %s (%s): ", 
+                      "%u: %s (%s): ", 
                       record_id, 
                       id_string,
                       ipmi_sensors_get_sensor_type_string (sensor_type));
@@ -288,7 +288,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
     return -1;
   
   pstdout_printf (state_data->pstate,
-                  "%-9d | %-16s | %-20s", 
+                  "%-9u | %-16s | %-20s", 
                   record_id, 
                   id_string,
                   ipmi_sensors_get_sensor_type_string (sensor_type));

@@ -92,7 +92,7 @@ _detailed_output_record_type_and_id (ipmi_sensors_state_data_t *state_data,
   assert(state_data->prog_data->args->verbose_count >= 1);
 
   pstdout_printf (state_data->pstate, 
-                  "Record ID: %d\n", 
+                  "Record ID: %u\n", 
                   record_id);
 
   if (state_data->prog_data->args->verbose_count >= 2)
@@ -190,7 +190,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                   ipmi_sensors_get_sensor_type_string (sensor_type),
                   sensor_type);
   pstdout_printf (state_data->pstate, 
-                  "Sensor Number: %d\n", 
+                  "Sensor Number: %u\n", 
                   sensor_number);
   if (sensor_owner_id_type)
     pstdout_printf (state_data->pstate,
@@ -212,10 +212,10 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
   if (state_data->prog_data->args->verbose_count >= 2)
     {
       pstdout_printf (state_data->pstate, 
-                      "Entity ID: %d\n", 
+                      "Entity ID: %u\n", 
                       entity_id);
       pstdout_printf (state_data->pstate, 
-                      "Entity Instance: %d\n", 
+                      "Entity Instance: %u\n", 
                       entity_instance);
     }
   pstdout_printf (state_data->pstate, 
@@ -649,7 +649,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
     output_raw:
       if (positive_going_threshold_hysteresis_raw)
         pstdout_printf (state_data->pstate, 
-                        "Positive Hysteresis: %d %s\n", 
+                        "Positive Hysteresis: %u %s\n", 
                         positive_going_threshold_hysteresis_raw,
                         ipmi_sensor_units[sensor_unit]);
       else
@@ -659,7 +659,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
 
       if (negative_going_threshold_hysteresis_raw)
         pstdout_printf (state_data->pstate, 
-                        "Negative Hysteresis: %d %s\n", 
+                        "Negative Hysteresis: %u %s\n", 
                         negative_going_threshold_hysteresis_raw,
                         ipmi_sensor_units[sensor_unit]);
       else
@@ -927,6 +927,42 @@ _detailed_output_event_message_list (ipmi_sensors_state_data_t *state_data,
   return 0;
 }
 
+static char *
+_linearization_string(ipmi_sensors_state_data_t *state_data, uint8_t linearization)
+{
+  switch (linearization)
+    {
+    case IPMI_SDR_LINEARIZATION_LINEAR:
+      return IPMI_SDR_LINEARIZATION_LINEAR_STRING;
+    case IPMI_SDR_LINEARIZATION_LN:
+      return IPMI_SDR_LINEARIZATION_LN_STRING;
+    case IPMI_SDR_LINEARIZATION_LOG10:
+      return IPMI_SDR_LINEARIZATION_LOG10_STRING;
+    case IPMI_SDR_LINEARIZATION_LOG2:
+      return IPMI_SDR_LINEARIZATION_LOG2_STRING;
+    case IPMI_SDR_LINEARIZATION_E:
+      return IPMI_SDR_LINEARIZATION_E_STRING;
+    case IPMI_SDR_LINEARIZATION_EXP10:
+      return IPMI_SDR_LINEARIZATION_EXP10_STRING;
+    case IPMI_SDR_LINEARIZATION_EXP2:
+      return IPMI_SDR_LINEARIZATION_EXP2_STRING;
+    case IPMI_SDR_LINEARIZATION_INVERSE:
+      return IPMI_SDR_LINEARIZATION_INVERSE_STRING;
+    case IPMI_SDR_LINEARIZATION_SQR:
+      return IPMI_SDR_LINEARIZATION_SQR_STRING;
+    case IPMI_SDR_LINEARIZATION_CUBE:
+      return IPMI_SDR_LINEARIZATION_CUBE_STRING;
+    case IPMI_SDR_LINEARIZATION_SQRT:
+      return IPMI_SDR_LINEARIZATION_SQRT_STRING;
+    case IPMI_SDR_LINEARIZATION_CUBERT:
+      return IPMI_SDR_LINEARIZATION_CUBERT_STRING;
+    default:
+      return IPMI_SDR_LINEARIZATION_NON_LINEAR;
+    }
+
+  return IPMI_SDR_LINEARIZATION_NON_LINEAR;
+}
+
 static int 
 _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                               uint8_t *sdr_record,
@@ -999,10 +1035,11 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                           "B Exponent: %d\n", 
                           b_exponent);
           pstdout_printf (state_data->pstate, 
-                          "Linearization: %d\n", 
+                          "Linearization: %s (%Xh)\n", 
+                          _linearization_string(state_data, linearization),
                           linearization);
           pstdout_printf (state_data->pstate, 
-                          "Analog Data Format: %d\n", 
+                          "Analog Data Format: %Xh\n", 
                           analog_data_format);
         }
 
@@ -1169,10 +1206,10 @@ _detailed_output_entity_association_record (ipmi_sensors_state_data_t *state_dat
     return -1;
 
   pstdout_printf (state_data->pstate, 
-                  "Container Entity ID: %d\n", 
+                  "Container Entity ID: %u\n", 
                   container_entity_id);
   pstdout_printf (state_data->pstate, 
-                  "Container Entity Instance: %d\n", 
+                  "Container Entity Instance: %u\n", 
                   container_entity_instance);
 
   pstdout_printf (state_data->pstate, "\n");
@@ -1208,10 +1245,10 @@ _detailed_output_device_relative_entity_association_record (ipmi_sensors_state_d
     return -1;
 
   pstdout_printf (state_data->pstate, 
-                  "Container Entity ID: %d\n", 
+                  "Container Entity ID: %u\n", 
                   container_entity_id);
   pstdout_printf (state_data->pstate, 
-                  "Container Entity Instance: %d\n", 
+                  "Container Entity Instance: %u\n", 
                   container_entity_instance);
 
   pstdout_printf (state_data->pstate, "\n");
@@ -1306,11 +1343,11 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
     return -1;
 
   pstdout_printf (state_data->pstate, 
-                  "Entity ID: %d\n", 
+                  "Entity ID: %u\n", 
                   entity_id);
   
   pstdout_printf (state_data->pstate, 
-                  "Entity Instance: %d\n", 
+                  "Entity Instance: %u\n", 
                   entity_instance);
 
   return 0;
@@ -1369,7 +1406,7 @@ _detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state
                   "LUN for Master Write-Read Command: %Xh\n", 
                   lun_for_master_write_read_command);
   pstdout_printf (state_data->pstate, 
-                  "Address Span: %d\n", 
+                  "Address Span: %u\n", 
                   address_span);
 
   if (_output_device_type_and_modifier (state_data,
@@ -1464,11 +1501,11 @@ _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_dat
     return -1;
 
   pstdout_printf (state_data->pstate, 
-                  "FRU Entity ID: %d\n", 
+                  "FRU Entity ID: %u\n", 
                   fru_entity_id);
   
   pstdout_printf (state_data->pstate, 
-                  "FRU Entity Instance: %d\n", 
+                  "FRU Entity Instance: %u\n", 
                   fru_entity_instance);
 
     

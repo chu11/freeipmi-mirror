@@ -6,6 +6,12 @@
 	* contrib/ganglia/, contrib/nagios/: Make scripts use
 	--legacy-output to continue working with ipmi-sensors and
 	ipmimonitoring.
+
+	* ipmi-sensors/, ipmimonitoring/: Use %u instead of %d where
+	appropriate.
+
+	* ipmi-sensors/: Output name of linearization on very verbose
+	output.
 	
 2009-01-21  Albert Chu <chu11@llnl.gov>
 
