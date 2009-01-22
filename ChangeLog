@@ -1,7 +1,11 @@
 2009-01-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, ipmimonitoring/: Output units in non-abbreviated
-	form by default.
+	form by default.  Update manpages for output updates.
+
+	* contrib/ganglia/, contrib/nagios/: Make scripts use
+	--legacy-output to continue working with ipmi-sensors and
+	ipmimonitoring.
 	
 2009-01-21  Albert Chu <chu11@llnl.gov>
 

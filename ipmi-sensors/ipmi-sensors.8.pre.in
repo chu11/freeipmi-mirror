@@ -15,12 +15,13 @@ the verbose options specified below.
 
 .B Ipmi-sensors
 does not inform the user if a problem exists with a particular sensor
-because sensor readings are not analyzed.  Users may wish to consider
+because sensor readings and events are not analyzed.  Users may wish
+to consider
 .B ipmimonitoring(8)
 for sensor analysis.
 
-Some sensors may have an output reading or sensor event of "N/A" if
-the sensor reading is unavailable.  This is typical of a sensor that
+Some sensors may have a sensor reading or sensor event of "N/A" if
+the information is unavailable.  This is typical of a sensor that
 is not enabled or not owned by a BMC.  Please see
 \fB\-\-bridge\-sensors\fR option below to deal with sensors not owned
 by a BMC.  Sensors may output a sensor event of "Unknown" if the

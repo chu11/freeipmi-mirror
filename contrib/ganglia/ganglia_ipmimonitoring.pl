@@ -224,11 +224,11 @@ if (!$no_ganglia)
 
 if ($IPMI_HOSTS)
 {
-    $cmd = "$IPMIMONITORING_PATH $IPMIMONITORING_ARGS -h $IPMI_HOSTS --quiet-cache --sdr-cache-recreate --always-prefix";
+    $cmd = "$IPMIMONITORING_PATH $IPMIMONITORING_ARGS -h $IPMI_HOSTS --quiet-cache --sdr-cache-recreate --always-prefix --legacy-output";
 }
 else
 {
-    $cmd = "$IPMIMONITORING_PATH $IPMIMONITORING_ARGS --quiet-cache --sdr-cache-recreate --always-prefix"
+    $cmd = "$IPMIMONITORING_PATH $IPMIMONITORING_ARGS --quiet-cache --sdr-cache-recreate --always-prefix --legacy-output"
 }
 
 if ($debug)

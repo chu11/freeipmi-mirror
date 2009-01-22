@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.48 2009-01-16 01:14:04 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.49 2009-01-22 00:10:21 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -31,21 +31,32 @@ ipmimonitoring \- IPMI monitoring utility
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B ipmimonitoring
-is an IPMI sensor monitoring tool that utilizes the 
-.B libipmimonitoring(3)
-library to interpret sensor readings rather than just report them.
-The tool will output if sensors are in NOMINAL, WARNING, or CRITICAL
-states.  The library and tool are primarily used for host monitoring
-activities.  By mapping sensor readings into NOMINAL, WARNING, or
-CRITICAL states, it makes monitoring easier across large numbers of
-nodes.  For more general sensor reading use, it is recommended that
-users use 
+is an IPMI sensor monitoring tool that reports a sensor's record id,
+sensor name, sensor group name, sensor state, sensor reading (if
+appropriate), and the current sensor event.
+
+Unlike
+.B ipmi-sensors(8),
+.B ipmimonitoring
+will also report a sensor in a NOMINAL, WARNING, or CRITICAL state.
+The sensor state is an interpreted value based on the current sensor
+event.  By mapping sensor readings into NOMINAL, WARNING, or CRITICAL
+states, it makes monitoring easier across large numbers of nodes.  For
+more general sensor reading use, it is recommended that users use
 .B ipmi-sensors(8).
 
-The state interpretations are determined by the configuration
-file @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  See
+The sensor state interpretations are determined by the
+configuration file
+@IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  See
 .B ipmi_monitoring_sensors.conf(5)
 for more information on configuring sensor interpretations.
+
+Some sensors may have a sensor reading or sensor event of "N/A" if
+the information is unavailable.  This is typical of a sensor that
+is not enabled or not owned by a BMC.  Please see
+\fB\-\-bridge\-sensors\fR option below to deal with sensors not owned
+by a BMC.  Sensors need not always report a sensor event.  When a
+sensor event is not present, "NONE" is reported for the sensor event.
 
 Some sensors may not be output by default.  Those sensors may not be
 readable or interpretable for a number of reasons.  The

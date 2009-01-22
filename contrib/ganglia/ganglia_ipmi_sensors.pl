@@ -213,11 +213,11 @@ if (!$no_ganglia)
 
 if ($IPMI_HOSTS)
 {
-    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS -h $IPMI_HOSTS --quiet-cache --sdr-cache-recreate --always-prefix";
+    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS -h $IPMI_HOSTS --quiet-cache --sdr-cache-recreate --always-prefix --legacy-output";
 }
 else
 {
-    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS --quiet-cache --sdr-cache-recreate --always-prefix"
+    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS --quiet-cache --sdr-cache-recreate --always-prefix --legacy-output"
 }
 
 if ($debug)
