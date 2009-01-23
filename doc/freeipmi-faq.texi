@@ -157,17 +157,6 @@ A number of HPC aspects have been added to the tools and/or are
 supported by other HPC software due to the need for FreeIPMI to work
 on LLNL's Linux clusters.
 
-Ipmipower is capable of scaling to large nodes for cluster support.
-It is supported by Powerman (@uref{http://sourceforge.net/projects/powerman})
-for scalable power management.  At LLNL, in conjunction with Powerman,
-ipmipower is used for power control on clusters ranging from sizes of
-4 to 1152.  It is capable of power controlling all of the nodes in the
-largest clusters in under a second.
-
-Ipmiconsole is currently supported by Conman
-(@uref{http://home.gna.org/conman/}) for scalable console management.  Native
-support of IPMI via libipmiconsole is being integrated into Conman.
-
 Scalable parallel execution of many FreeIPMI tools (i.e. ipmi-sensors,
 ipmi-sel, bmc-info, ipmimonitoring, etc.) across a cluster is
 supported through hostranged input and output.  For example:
@@ -228,9 +217,16 @@ In the above example, its clear to see that pwopr[2-4] have different
 firmware than pwopr[0-1,5].  More information about hostrange support
 can be found in the document freeipmi-hostrange.txt.
 
-Ipmidetect can be used to enhance the efficiency of the hostranged
-input by eliminating those nodes in the cluster that have been
-temporarily removed for servicing.
+Ipmipower is capable of scaling to large nodes for cluster support
+and is supported by Powerman (@uref{http://sourceforge.net/projects/powerman})
+for scalable power management.  At LLNL, in conjunction with Powerman,
+ipmipower is used for power control on clusters ranging from sizes of
+4 to 1152.  It is capable of power controlling all of the nodes in the
+largest clusters in under a second.
+
+Ipmiconsole is currently supported by Conman
+(@uref{http://home.gna.org/conman/}) for scalable console management.  Native
+support of IPMI via libipmiconsole is being integrated into Conman.
 
 Ipmimonitoring interprets sensor readings as well as just reporting
 them.  It can be used for host monitoring IPMI on a cluster.  By
@@ -254,6 +250,10 @@ node in a cluster quickly.  It has been used to modify the BMC
 configuration across large LLNL clusters in a few minutes.  They also
 have the capability to verify (via the diff option) that the desired
 configuration has been properly stored to firmware.
+
+Ipmidetect can be used to enhance the efficiency of the hostranged
+input by eliminating those nodes in the cluster that have been
+temporarily removed for servicing.
 
 2) Easy setup
 
