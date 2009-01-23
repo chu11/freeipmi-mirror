@@ -505,7 +505,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                               event_message_list,
                                               event_message_list_len,
                                               sensor_event_bitmask,
-                                              IPMI_SENSORS_NO_EVENT_STRING_OUTPUT) < 0)
+                                              IPMI_SENSORS_NO_EVENT_STRING) < 0)
                 goto cleanup;
 
               rv = 0;
@@ -527,7 +527,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                               event_message_list,
                                               event_message_list_len,
                                               sensor_event_bitmask,
-                                              IPMI_SENSORS_NO_EVENT_STRING_OUTPUT) < 0)
+                                              IPMI_SENSORS_NO_EVENT_STRING) < 0)
                 goto cleanup;
 
               rv = 0;
@@ -567,7 +567,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                       event_message_list,
                                       event_message_list_len,
                                       sensor_event_bitmask,
-                                      IPMI_SENSORS_NO_EVENT_STRING_OUTPUT) < 0)
+                                      IPMI_SENSORS_NO_EVENT_STRING) < 0)
         goto cleanup;
       
       rv = 1;
@@ -583,7 +583,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                               event_message_list_len, 
                                               event_reading_type_code, 
                                               sensor_event_bitmask,
-                                              IPMI_SENSORS_NO_EVENT_STRING_OUTPUT) < 0)
+                                              IPMI_SENSORS_NO_EVENT_STRING) < 0)
             goto cleanup;
 
           rv = 1;
@@ -595,7 +595,7 @@ sensor_reading (struct ipmi_sensors_state_data *state_data,
                                                       event_message_list_len,
                                                       sensor_type, 
                                                       sensor_event_bitmask,
-                                                      IPMI_SENSORS_NO_EVENT_STRING_OUTPUT) < 0)
+                                                      IPMI_SENSORS_NO_EVENT_STRING) < 0)
             goto cleanup;
 
           rv = 1;

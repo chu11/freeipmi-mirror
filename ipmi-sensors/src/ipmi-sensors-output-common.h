@@ -46,11 +46,7 @@
 #define IPMI_SENSORS_SENSOR_EVENT_PREFIX_OUTPUT \
   (state_data->prog_data->args->legacy_output ? IPMI_SENSORS_SENSOR_EVENT_PREFIX_LEGACY : IPMI_SENSORS_SENSOR_EVENT_PREFIX)
 
-#define IPMI_SENSORS_NO_EVENT_STRING        "NONE"
-#define IPMI_SENSORS_NO_EVENT_STRING_LEGACY "OK"
-
-#define IPMI_SENSORS_NO_EVENT_STRING_OUTPUT \
-  (state_data->prog_data->args->legacy_output ? IPMI_SENSORS_NO_EVENT_STRING_LEGACY : IPMI_SENSORS_NO_EVENT_STRING)
+#define IPMI_SENSORS_NO_EVENT_STRING "OK"
 
 int ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                                             char **event_message_list,

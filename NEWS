@@ -24,12 +24,9 @@ o ipmi-sensors
   - For consistency to other tools, outputs of "NA" are now "N/A".
   - Events are now surrounded by single quotes (') instead of square
     brackets ([]).
-  - Non-events or indications that sensors can't be read or don't
-    exist (i.e. "N/A", "Unknown", "NONE") are now *not* surrounded by
-    single quotes (') or square brackets ([]).
+  - Sensors that can't be read or don't exist (i.e. "N/A", "Unknown") are
+    now *not* surrounded by single quotes (') or square brackets ([]).
   - Under default output, output units using non-abbreviated form.
-  - A sensor event of "NONE" is now output instead of "OK" if no
-    sensor events are indicated.
   - Do not output Sensor Reading for discrete sensors under verbose
     mode (because the result is always "N/A").
   - Do not output SDR event records type under verbose output, only in very
@@ -57,9 +54,8 @@ o ipmimonitoring
   - Sensor events are now output for all sensors.  Sensor readings are
     only output appropriately for non-discrete sensors.
   - Support --legacy-output option.
-  - Non-events or indications that sensors can't be read or don't
-    exist (i.e. "N/A", "Unknown", "NONE") are now *not* surrounded by
-    single quotes (').
+  - Sensors that can't be read or don't exist (i.e. "N/A", "Unknown")
+    are now *not* surrounded by single quotes (').
   - A sensor event of "NONE" is now output instead of "OK" if no
     sensor events are indicated.
   - Output units using non-abbreviated form.

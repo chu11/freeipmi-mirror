@@ -79,8 +79,7 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                             event_message_list[0]);
           else
             {
-              if (!strcmp(event_message_list[0], IPMI_SENSORS_NA_STRING)
-                  || !strcmp(event_message_list[0], IPMI_SENSORS_NONE_STRING))
+              if (!strcmp(event_message_list[0], IPMI_SENSORS_NA_STRING))
                 pstdout_printf (state_data->pstate,
                                 "%s",
                                 event_message_list[0]);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.82 2009-01-23 01:01:53 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.83 2009-01-23 18:15:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -72,10 +72,8 @@
 #define IPMIMONITORING_BUFLEN         1024
 
 #define IPMIMONITORING_NA_STRING      "N/A"
-#define IPMIMONITORING_NONE_STRING    "NONE"
 
-#define IPMIMONITORING_NO_EVENT_STRING        "NONE"
-#define IPMIMONITORING_NO_EVENT_STRING_LEGACY "OK"
+#define IPMIMONITORING_NO_EVENT_STRING "OK"
 
 #define IPMIMONITORING_UNRECOGNIZED_STATE     "Unrecognized State"
 
@@ -392,16 +390,9 @@ _output_sensor_bitmask(ipmimonitoring_state_data_t *state_data,
         }
       
       if (!output_count)
-        {
-          if (state_data->prog_data->args->legacy_output)
-            pstdout_printf(state_data->pstate,
-                           " '%s'",
-                           IPMIMONITORING_NO_EVENT_STRING_LEGACY);
-          else
-            pstdout_printf(state_data->pstate,
-                           " %s",
-                           IPMIMONITORING_NO_EVENT_STRING);
-        }
+        pstdout_printf(state_data->pstate,
+                       " '%s'",
+                       IPMIMONITORING_NO_EVENT_STRING);
     }
   else
     pstdout_printf(state_data->pstate,
