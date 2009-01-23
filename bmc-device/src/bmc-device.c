@@ -65,7 +65,7 @@ cold_reset (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_cold_reset: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
   
@@ -90,7 +90,7 @@ warm_reset (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_warm_reset: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
   
@@ -116,7 +116,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_self_test_results: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
   
@@ -229,7 +229,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_acpi_power_state: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
   
@@ -387,7 +387,7 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_set_acpi_power_state: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -415,7 +415,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_get_channel_number: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -427,7 +427,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_ip_udp_rmcp_statistics: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -517,7 +517,7 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_get_channel_number: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -529,7 +529,7 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_ip_udp_rmcp_statistics: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
   
@@ -558,7 +558,7 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_sdr_repository_time: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -618,7 +618,7 @@ set_sdr_repository_time (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_set_sdr_repository_time: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -647,7 +647,7 @@ get_sel_time (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_sel_time: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -707,7 +707,7 @@ set_sel_time (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_set_sel_time: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -739,7 +739,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_auxiliary_log_status: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
   
@@ -803,7 +803,7 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_system_interface_capabilities_ssif: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -889,7 +889,7 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_system_interface_capabilities_kcs: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -932,7 +932,7 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_bt_interface_capabilities: %s\n",
-                      ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 

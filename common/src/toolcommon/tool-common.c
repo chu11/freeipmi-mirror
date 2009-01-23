@@ -139,12 +139,12 @@ ipmi_open(const char *progname,
                          errmsglen,
                          "%s: %s",
                          progname,
-                         ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+                         ipmi_ctx_errormsg(ipmi_ctx));
               else
                 snprintf(errmsg,
                          errmsglen,
                          "ipmi_ctx_open_outofband_2_0: %s",
-                         ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+                         ipmi_ctx_errormsg(ipmi_ctx));
               goto cleanup;
             }
         }
@@ -172,12 +172,12 @@ ipmi_open(const char *progname,
                          errmsglen,
                          "%s: %s",
                          progname,
-                         ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+                         ipmi_ctx_errormsg(ipmi_ctx));
               else
                 snprintf(errmsg,
                          errmsglen,
                          "ipmi_ctx_open_outofband: %s",
-                         ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+                         ipmi_ctx_errormsg(ipmi_ctx));
               goto cleanup;
             }
         }
@@ -299,12 +299,12 @@ ipmi_open(const char *progname,
                          errmsglen,
                          "%s: %s",
                          progname,
-                         ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+                         ipmi_ctx_errormsg(ipmi_ctx));
               else
                 snprintf(errmsg,
                          errmsglen,
                          "ipmi_ctx_open_inband: %s",
-                         ipmi_ctx_strerror(ipmi_ctx_errnum(ipmi_ctx)));
+                         ipmi_ctx_errormsg(ipmi_ctx));
               goto cleanup;
             }
         }

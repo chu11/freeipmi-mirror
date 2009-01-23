@@ -48,7 +48,7 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
         pstdout_fprintf(state_data->pstate,
                         stderr, 
                         "ipmi_get_channel_number: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       return CONFIG_ERR_NON_FATAL_ERROR;
     }
 
@@ -73,7 +73,7 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel
         pstdout_fprintf(state_data->pstate,
                         stderr, 
                         "ipmi_get_channel_number: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       return CONFIG_ERR_NON_FATAL_ERROR;
     }
 
@@ -116,7 +116,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
         pstdout_fprintf(state_data->pstate,
                         stderr, 
                         "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
@@ -173,7 +173,7 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
         pstdout_fprintf(state_data->pstate,
                         stderr, 
                         "ipmi_cmd_get_user_access: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;

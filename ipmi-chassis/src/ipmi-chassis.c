@@ -53,7 +53,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_chassis_capabilities: %s\n", 
-                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -148,7 +148,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_chassis_status: %s\n", 
-                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -460,7 +460,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_chassis_control: %s\n", 
-                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -489,7 +489,7 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_chassis_identify: %s\n", 
-                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -518,7 +518,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_set_power_restore_policy: %s\n", 
-                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -568,7 +568,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_set_power_cycle_interval: %s\n", 
-                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -593,7 +593,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_system_restart_cause: %s\n", 
-                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -680,7 +680,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_power_on_hours_counter: %s\n", 
-                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -723,7 +723,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_get_system_boot_options_boot_flags failed: %s\n", 
-                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -1151,7 +1151,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_set_sytem_boot_option_boot_flags failed: %s\n", 
-                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -1166,7 +1166,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_cmd_set_system_boot_options_boot_info_acknowledge: %s\n", 
-                      ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
 
