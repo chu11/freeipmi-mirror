@@ -20,6 +20,10 @@ new options in config file
 - options
 -legacy
 
+poweredge
+---------
+test sensors/monitoring on poweredge
+
 sensors
 -------
 consistent output to ipmimonitoring/sel
