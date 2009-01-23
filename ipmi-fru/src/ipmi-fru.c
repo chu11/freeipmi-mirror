@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.35 2009-01-13 01:02:14 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.36 2009-01-23 01:01:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -333,7 +333,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
           pstdout_fprintf(state_data->pstate,
                           stderr,
                           "ipmi_sdr_cache_record_count: %s\n",
-                          ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
+                          ipmi_sdr_cache_ctx_errormsg(state_data->ipmi_sdr_cache_ctx));
           return -1;
         }
     }
@@ -365,7 +365,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                   pstdout_fprintf(state_data->pstate,
                                   stderr,
                                   "ipmi_sdr_cache_record_read: %s\n",
-                                  ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
+                                  ipmi_sdr_cache_ctx_errormsg(state_data->ipmi_sdr_cache_ctx));
                   return -1;
                 }
 
@@ -448,7 +448,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
               pstdout_fprintf(state_data->pstate,
                               stderr,
                               "ipmi_sdr_cache_record_read: %s\n",
-                              ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data->ipmi_sdr_cache_ctx)));
+                              ipmi_sdr_cache_ctx_errormsg(state_data->ipmi_sdr_cache_ctx));
               return -1;
             }
           
@@ -550,7 +550,7 @@ _ipmi_fru(pstdout_state_t pstate,
         pstdout_fprintf (pstate, 
                          stderr,
                          "ipmi_sdr_cache_ctx_set_flags: %s\n",
-                         ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+                         ipmi_sdr_cache_ctx_errormsg(state_data.ipmi_sdr_cache_ctx));
 
       if (hostname)
         {
@@ -559,7 +559,7 @@ _ipmi_fru(pstdout_state_t pstate,
             pstdout_fprintf (pstate,
                              stderr,
                              "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
-                             ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+                             ipmi_sdr_cache_ctx_errormsg(state_data.ipmi_sdr_cache_ctx));
         }
     }
 

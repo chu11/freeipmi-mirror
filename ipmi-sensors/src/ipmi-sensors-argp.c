@@ -306,11 +306,22 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->bridge_sensors = 0;
   cmd_args->legacy_output = 0;
   
-  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
+  argp_parse (&cmdline_config_file_argp, 
+              argc,
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              &(cmd_args->common));
 
   _ipmi_sensors_config_file_parse(cmd_args);
 
-  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              cmd_args);
+
   verify_common_cmd_args (&(cmd_args->common));
   verify_sdr_cmd_args (&(cmd_args->sdr));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));

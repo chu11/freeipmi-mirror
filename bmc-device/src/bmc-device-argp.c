@@ -337,11 +337,22 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->get_bt_interface_capabilities = 0;
   cmd_args->verbose = 0;
 
-  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
+  argp_parse (&cmdline_config_file_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              &(cmd_args->common));
 
   _bmc_device_config_file_parse(cmd_args);
 
-  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              cmd_args);
+
   verify_common_cmd_args (&(cmd_args->common));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));
   _bmc_device_args_validate (cmd_args);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.c,v 1.7 2009-01-13 18:22:43 chu11 Exp $
+ *  $Id: ipmi-sel-parse.c,v 1.8 2009-01-23 01:01:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -166,6 +166,12 @@ ipmi_sel_parse_ctx_strerror(int errnum)
     return ipmi_sel_parse_errmsgs[errnum];
   else
     return ipmi_sel_parse_errmsgs[IPMI_SEL_PARSE_CTX_ERR_ERRNUMRANGE];
+}
+
+char *
+ipmi_sel_parse_ctx_errormsg(ipmi_sel_parse_ctx_t ctx)
+{
+  return ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(ctx));
 }
 
 int

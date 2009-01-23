@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.75 2009-01-13 01:02:18 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.76 2009-01-23 01:01:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -647,6 +647,14 @@ int ipmiconsole_ctx_errnum(ipmiconsole_ctx_t c);
  * error code in errnum.
  */
 char *ipmiconsole_ctx_strerror(int errnum);
+
+/* 
+ * ipmiconsole_ctx_errormsg
+ *
+ * Returns a pointer to statically allocated string describing the
+ * most recent error for the context.
+ */
+char *ipmiconsole_ctx_errormsg(ipmiconsole_ctx_t c);
 
 /* 
  * ipmiconsole_ctx_status

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.18 2009-01-13 01:02:21 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.19 2009-01-23 01:01:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -83,13 +83,13 @@ _ipmi_monitoring_sdr_cache_ctx_init(ipmi_monitoring_ctx_t c, const char *hostnam
         {
           /* Don't error out, if this fails we can still continue */
           if (ipmi_sdr_cache_ctx_set_flags(c->sc, IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
-            IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_ctx_set_flags: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+            IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_ctx_set_flags: %s", ipmi_sdr_cache_ctx_errormsg(c->sc)));
 
           if (hostname)
             {
               if (ipmi_sdr_cache_ctx_set_debug_prefix(c->sc, hostname) < 0)
                 IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_ctx_set_debug_prefix: %s",
-                                       ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+                                       ipmi_sdr_cache_ctx_errormsg(c->sc)));
             }
         }
     } 
@@ -229,7 +229,7 @@ _ipmi_monitoring_sdr_cache_retrieve(ipmi_monitoring_ctx_t c,
                             NULL,
                             NULL) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_create: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+      IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_create: %s", ipmi_sdr_cache_ctx_errormsg(c->sc)));
       if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_CTX_ERR_FILESYSTEM)
         c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM;
       else if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_CTX_ERR_PERMISSION)
@@ -260,7 +260,7 @@ _ipmi_monitoring_sdr_cache_delete(ipmi_monitoring_ctx_t c,
     {
       if (ipmi_sdr_cache_ctx_errnum(c->sc) !=  IPMI_SDR_CACHE_CTX_ERR_FILENAME_INVALID)
         {
-          IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_delete: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+          IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_delete: %s", ipmi_sdr_cache_ctx_errormsg(c->sc)));
           if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_CTX_ERR_PERMISSION)
             c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION;
           else 
@@ -318,7 +318,7 @@ ipmi_monitoring_sdr_cache_load(ipmi_monitoring_ctx_t c,
         }
       else
         {
-          IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_open: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+          IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_open: %s", ipmi_sdr_cache_ctx_errormsg(c->sc)));
           c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
@@ -340,7 +340,7 @@ ipmi_monitoring_sdr_cache_load(ipmi_monitoring_ctx_t c,
             }
           else
             {
-              IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_open: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+              IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_open: %s", ipmi_sdr_cache_ctx_errormsg(c->sc)));
               c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
               goto cleanup;
             }

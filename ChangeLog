@@ -5,6 +5,8 @@
 
 	* ipmi-sensors/: Also output analog data format name in very
 	verbose output.
+
+	* Various code cleanup.
 	
 2009-01-21  Albert Chu <chu11@llnl.gov>
 

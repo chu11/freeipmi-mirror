@@ -157,11 +157,22 @@ pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_a
   init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));
   cmd_args->info = 0;
 
-  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->config_args.common));
+  argp_parse (&cmdline_config_file_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              &(cmd_args->config_args.common));
 
   _pef_config_config_file_parse(cmd_args);
 
-  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              cmd_args);
+
   verify_common_cmd_args (&(cmd_args->config_args.common));
   _pef_config_args_validate (cmd_args);
 }

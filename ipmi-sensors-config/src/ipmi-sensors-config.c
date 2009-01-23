@@ -102,7 +102,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_sdr_cache_ctx_set_flags: %s\n",
-                         ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+                         ipmi_sdr_cache_ctx_errormsg(state_data.ipmi_sdr_cache_ctx));
 
       if (hostname)
         {
@@ -111,7 +111,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
             pstdout_fprintf (pstate,
                              stderr,
                              "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
-                             ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+                             ipmi_sdr_cache_ctx_errormsg(state_data.ipmi_sdr_cache_ctx));
         }
     }  
 

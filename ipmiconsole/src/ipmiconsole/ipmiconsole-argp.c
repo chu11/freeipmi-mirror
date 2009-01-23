@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.24 2009-01-13 01:02:18 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.25 2009-01-23 01:01:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -231,11 +231,22 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->common.session_timeout = 60000;
   cmd_args->common.retransmission_timeout = 500;
 
-  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
+  argp_parse (&cmdline_config_file_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              &(cmd_args->common));
 
   _ipmiconsole_config_file_parse(cmd_args);
 
-  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              cmd_args);
+
   verify_common_cmd_args (&(cmd_args->common));
   _ipmiconsole_args_validate (cmd_args);
 }

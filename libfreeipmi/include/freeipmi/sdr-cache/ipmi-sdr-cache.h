@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.h,v 1.8 2009-01-13 01:02:27 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.h,v 1.9 2009-01-23 01:01:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -91,6 +91,7 @@ ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx_create(void);
 void ipmi_sdr_cache_ctx_destroy(ipmi_sdr_cache_ctx_t ctx);
 int ipmi_sdr_cache_ctx_errnum(ipmi_sdr_cache_ctx_t ctx);
 char * ipmi_sdr_cache_ctx_strerror(int errnum);
+char * ipmi_sdr_cache_ctx_errormsg(ipmi_sdr_cache_ctx_t ctx);
 
 /* SDR flag functions */
 int ipmi_sdr_cache_ctx_get_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int *flags);

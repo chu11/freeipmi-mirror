@@ -180,7 +180,7 @@ _clear_entries (ipmi_sel_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_sel_parse_clear_sel: %s\n",
-                      ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
+                      ipmi_sel_parse_ctx_errormsg(state_data->ipmi_sel_parse_ctx));
       goto cleanup;
     }
 
@@ -208,7 +208,7 @@ _delete_entry (ipmi_sel_state_data_t *state_data,
           pstdout_fprintf(state_data->pstate,
                           stderr,
                           "ipmi_sel_parse_delete_sel_entry: %s\n",
-                          ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
+                          ipmi_sel_parse_ctx_errormsg(state_data->ipmi_sel_parse_ctx));
           goto cleanup;
         }
     }
@@ -279,7 +279,7 @@ _sel_parse_err_handle(ipmi_sel_state_data_t *state_data, char *func)
                   stderr,
                   "%s: %s\n",
                   func,
-                  ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
+                  ipmi_sel_parse_ctx_errormsg(state_data->ipmi_sel_parse_ctx));
   return -1;
 }
 
@@ -360,37 +360,47 @@ _get_system_event_record_info(ipmi_sel_state_data_t *state_data,
   assert(event_data2);
   assert(event_data3);
 
-  if (ipmi_sel_parse_read_event_type_code(state_data->ipmi_sel_parse_ctx, event_type_code) < 0)
+  if (ipmi_sel_parse_read_event_type_code(state_data->ipmi_sel_parse_ctx, 
+                                          event_type_code) < 0)
     {
-      if (_sel_parse_err_handle(state_data, "ipmi_sel_parse_read_event_type_code") < 0)
+      if (_sel_parse_err_handle(state_data, 
+                                "ipmi_sel_parse_read_event_type_code") < 0)
         return -1;
       return 0;
     }
   
-  if (ipmi_sel_parse_read_event_data1_event_data2_flag(state_data->ipmi_sel_parse_ctx, event_data2_flag) < 0)
+  if (ipmi_sel_parse_read_event_data1_event_data2_flag(state_data->ipmi_sel_parse_ctx, 
+                                                       event_data2_flag) < 0)
     {
-      if (_sel_parse_err_handle(state_data, "ipmi_sel_parse_read_event_data1_event_data2_flag") < 0)
+      if (_sel_parse_err_handle(state_data, 
+                                "ipmi_sel_parse_read_event_data1_event_data2_flag") < 0)
         return -1;
       return 0;
     }
   
-  if (ipmi_sel_parse_read_event_data1_event_data3_flag(state_data->ipmi_sel_parse_ctx, event_data3_flag) < 0)
+  if (ipmi_sel_parse_read_event_data1_event_data3_flag(state_data->ipmi_sel_parse_ctx, 
+                                                       event_data3_flag) < 0)
     {
-      if (_sel_parse_err_handle(state_data, "ipmi_sel_parse_read_event_data1_event_data3_flag") < 0)
+      if (_sel_parse_err_handle(state_data, 
+                                "ipmi_sel_parse_read_event_data1_event_data3_flag") < 0)
         return -1;
       return 0;
     }
   
-  if (ipmi_sel_parse_read_event_data2(state_data->ipmi_sel_parse_ctx, event_data2) < 0)
+  if (ipmi_sel_parse_read_event_data2(state_data->ipmi_sel_parse_ctx, 
+                                      event_data2) < 0)
     {
-      if (_sel_parse_err_handle(state_data, "ipmi_sel_parse_read_event_data2") < 0)
+      if (_sel_parse_err_handle(state_data, 
+                                "ipmi_sel_parse_read_event_data2") < 0)
         return -1;
       return 0;
     }
   
-  if (ipmi_sel_parse_read_event_data3(state_data->ipmi_sel_parse_ctx, event_data3) < 0)
+  if (ipmi_sel_parse_read_event_data3(state_data->ipmi_sel_parse_ctx, 
+                                      event_data3) < 0)
     {
-      if (_sel_parse_err_handle(state_data, "ipmi_sel_parse_read_event_data3") < 0)
+      if (_sel_parse_err_handle(state_data, 
+                                "ipmi_sel_parse_read_event_data3") < 0)
         return -1;
       return 0;
     }
@@ -406,6 +416,7 @@ _legacy_normal_output(ipmi_sel_state_data_t *state_data, uint8_t record_type)
   char *fmt;
   int outbuf_len;
   unsigned int flags;
+  int record_type_class;
   int rv = -1;
   int ret;
 
@@ -417,7 +428,8 @@ _legacy_normal_output(ipmi_sel_state_data_t *state_data, uint8_t record_type)
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING;
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_LEGACY;
 
-  if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+  record_type_class = ipmi_sel_record_type_class(record_type);
+  if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     {
       uint8_t event_type_code;
       uint8_t event_data2_flag;
@@ -467,9 +479,9 @@ _legacy_normal_output(ipmi_sel_state_data_t *state_data, uint8_t record_type)
 
       fmt = fmtbuf;
     }
-  else if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
+  else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
     fmt = "%i:%d %t:%m:%o";
-  else if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
+  else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
     fmt = "%i:o";
   else
     {
@@ -845,6 +857,7 @@ static int
 _normal_output(ipmi_sel_state_data_t *state_data, uint8_t record_type)
 {
   unsigned int flags;
+  int record_type_class;
   int rv = -1;
   int ret;
 
@@ -878,7 +891,8 @@ _normal_output(ipmi_sel_state_data_t *state_data, uint8_t record_type)
   if (state_data->prog_data->args->verbose_count >= 2)
     flags|= IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE;
   
-  if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+  record_type_class = ipmi_sel_record_type_class(record_type);
+  if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     {
       if ((ret = _normal_output_record_id(state_data, flags)) < 0)
         goto cleanup;
@@ -922,7 +936,7 @@ _normal_output(ipmi_sel_state_data_t *state_data, uint8_t record_type)
             goto newline_out;
         }
     }
-  else if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
+  else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
     {
       if ((ret = _normal_output_record_id(state_data, flags)) < 0)
         goto cleanup;
@@ -948,7 +962,7 @@ _normal_output(ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto newline_out;
     }
-  else if (ipmi_sel_record_type_class(record_type) == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
+  else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
     {
       if ((ret = _normal_output_record_id(state_data, flags)) < 0)
         goto cleanup;
@@ -984,6 +998,7 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
 {
   ipmi_sel_state_data_t *state_data;
   uint8_t record_type;
+  int record_type_class;
   int rv = -1;
 
   assert(ctx);
@@ -1037,13 +1052,15 @@ _sel_parse_callback(ipmi_sel_parse_ctx_t ctx, void *callback_data)
       goto out;
     }
 
+  record_type_class = ipmi_sel_record_type_class(record_type);
+
   if (state_data->prog_data->args->system_event_only
-      && ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+      && record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     goto out;
   
   if (state_data->prog_data->args->oem_event_only
-      && ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
-      && ipmi_sel_record_type_class(record_type) != IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
+      && record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
+      && record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
     goto out;
 
   if (state_data->prog_data->args->hex_dump)
@@ -1101,7 +1118,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           pstdout_fprintf(state_data->pstate,
                           stderr,
                           "ipmi_sel_parse: %s\n",
-                          ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
+                          ipmi_sel_parse_ctx_errormsg(state_data->ipmi_sel_parse_ctx));
           return -1;
         }
     }
@@ -1113,7 +1130,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "ipmi_sel_parse: %s\n",
-                      ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data->ipmi_sel_parse_ctx)));
+                      ipmi_sel_parse_ctx_errormsg(state_data->ipmi_sel_parse_ctx));
       return -1;
     }
 
@@ -1213,7 +1230,7 @@ _ipmi_sel (pstdout_state_t pstate,
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_sdr_cache_ctx_set_flags: %s\n",
-                         ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+                         ipmi_sdr_cache_ctx_errormsg(state_data.ipmi_sdr_cache_ctx));
 
       if (hostname)
         {
@@ -1222,7 +1239,7 @@ _ipmi_sel (pstdout_state_t pstate,
             pstdout_fprintf (pstate,
                              stderr,
                              "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
-                             ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+                             ipmi_sdr_cache_ctx_errormsg(state_data.ipmi_sdr_cache_ctx));
         }
 
       /* Don't error out, if this fails we can still continue */
@@ -1231,7 +1248,7 @@ _ipmi_sel (pstdout_state_t pstate,
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_sel_parse_ctx_set_flags: %s\n",
-                         ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data.ipmi_sel_parse_ctx)));
+                         ipmi_sel_parse_ctx_errormsg(state_data.ipmi_sel_parse_ctx));
 
       if (hostname)
         {
@@ -1240,7 +1257,7 @@ _ipmi_sel (pstdout_state_t pstate,
             pstdout_fprintf (pstate,
                              stderr,
                              "ipmi_sel_parse_ctx_set_debug_prefix: %s\n",
-                             ipmi_sel_parse_ctx_strerror(ipmi_sel_parse_ctx_errnum(state_data.ipmi_sel_parse_ctx)));
+                             ipmi_sel_parse_ctx_errormsg(state_data.ipmi_sel_parse_ctx));
         }
     }
 

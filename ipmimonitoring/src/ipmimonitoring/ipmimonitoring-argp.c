@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.25 2009-01-16 01:14:04 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.26 2009-01-23 01:01:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -296,11 +296,22 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
 
   cmd_args->ipmimonitoring_groups_length = 0;
 
-  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
+  argp_parse (&cmdline_config_file_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              &(cmd_args->common));
 
   _ipmimonitoring_config_file_parse(cmd_args);
 
-  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              cmd_args);
+
   verify_common_cmd_args (&(cmd_args->common));
   verify_sdr_cmd_args (&(cmd_args->sdr));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));

@@ -619,7 +619,7 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "ipmi_sdr_cache_create: %s\n",
-                      ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+                      ipmi_sdr_cache_ctx_errormsg(ctx));
       goto cleanup;
     }
 
@@ -687,7 +687,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                               stderr,
                               "ipmi_sdr_cache_open: %s: %s\n",
                               cachefilenamebuf,
-                              ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+                              ipmi_sdr_cache_ctx_errormsg(ctx));
               goto cleanup;
             }
         }
@@ -715,7 +715,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                           stderr,
                           "ipmi_sdr_cache_open: %s: %s\n",
                           cachefilenamebuf,
-                          ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+                          ipmi_sdr_cache_ctx_errormsg(ctx));
           goto cleanup;
         }
     }
@@ -753,7 +753,7 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "ipmi_sdr_cache_delete: %s\n",
-                      ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx)));
+                      ipmi_sdr_cache_ctx_errormsg(ctx));
       goto cleanup;
     }
 

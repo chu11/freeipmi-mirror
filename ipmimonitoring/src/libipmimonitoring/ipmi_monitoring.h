@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.38 2009-01-21 22:53:40 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.39 2009-01-23 01:01:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -816,6 +816,14 @@ int ipmi_monitoring_ctx_errnum(ipmi_monitoring_ctx_t c);
  * error code in errnum.
  */
 char *ipmi_monitoring_ctx_strerror(int errnum);
+
+/* 
+ * ipmi_monitoring_ctx_errormsg
+ *
+ * Returns a pointer to statically allocated string describing the
+ * most recently caused error.
+ */
+char *ipmi_monitoring_ctx_errormsg(ipmi_monitoring_ctx_t c);
 
 /* 
  * ipmi_monitoring_sensor_readings_by_record_id

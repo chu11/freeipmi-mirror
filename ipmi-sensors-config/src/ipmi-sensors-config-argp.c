@@ -151,11 +151,22 @@ ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_confi
   init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));
   init_sdr_cmd_args (&(cmd_args->sdr));
 
-  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->config_args.common));
+  argp_parse (&cmdline_config_file_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              &(cmd_args->config_args.common));
 
   _ipmi_sensors_config_config_file_parse(cmd_args);
 
-  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              cmd_args);
+
   verify_sdr_cmd_args (&(cmd_args->sdr));
   verify_common_cmd_args (&(cmd_args->config_args.common));
   _ipmi_sensors_config_config_args_validate (cmd_args);

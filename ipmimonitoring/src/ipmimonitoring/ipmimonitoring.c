@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.81 2009-01-22 01:07:55 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.82 2009-01-23 01:01:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -183,7 +183,9 @@ _setup_ipmimonitoring_lib (struct ipmimonitoring_arguments *args)
   
   if (ipmi_monitoring_init(args->ipmimonitoring_flags, &errnum) < 0)
     {
-      fprintf(stderr, "ipmi_monitoring_init: %s\n", ipmi_monitoring_ctx_strerror(errnum));
+      fprintf(stderr, 
+              "ipmi_monitoring_init: %s\n", 
+              ipmi_monitoring_ctx_strerror(errnum));
       return -1;
     }
 
@@ -358,7 +360,7 @@ _output_sensor_bitmask(ipmimonitoring_state_data_t *state_data,
                       pstdout_fprintf(state_data->pstate, 
                                       stderr, 
                                       "ipmi_monitoring_bitmask_string: %s\n", 
-                                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                                      ipmi_monitoring_ctx_errormsg(state_data->ctx));
                       goto cleanup;
                     }
                   
@@ -367,7 +369,7 @@ _output_sensor_bitmask(ipmimonitoring_state_data_t *state_data,
                     pstdout_fprintf(state_data->pstate,
                                     stderr,
                                     "ipmi_monitoring_bitmask_string: %s: invalid bitmask likely: %X\n", 
-                                    ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)),
+                                    ipmi_monitoring_ctx_errormsg(state_data->ctx),
                                     (uint16_t)sensor_bitmask_value);
                   
                   snprintf(buffer, IPMIMONITORING_BUFLEN, "%s", IPMIMONITORING_UNRECOGNIZED_STATE);
@@ -460,7 +462,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
                       "ipmi_monitoring_read_record_id: %s\n", 
-                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                      ipmi_monitoring_ctx_errormsg(state_data->ctx));
       goto cleanup;
     }
   if ((sensor_group = ipmi_monitoring_read_sensor_group(state_data->ctx)) < 0)
@@ -468,7 +470,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
                       "ipmi_monitoring_read_sensor_group: %s\n", 
-                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                      ipmi_monitoring_ctx_errormsg(state_data->ctx));
       goto cleanup;
     }
   if (!(sensor_name = ipmi_monitoring_read_sensor_name(state_data->ctx)))
@@ -476,7 +478,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
                       "ipmi_monitoring_read_sensor_name: %s\n", 
-                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                      ipmi_monitoring_ctx_errormsg(state_data->ctx));
       goto cleanup;
     }
   if ((sensor_state = ipmi_monitoring_read_sensor_state(state_data->ctx)) < 0)
@@ -484,7 +486,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
                       "ipmi_monitoring_read_sensor_state: %s\n", 
-                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                      ipmi_monitoring_ctx_errormsg(state_data->ctx));
       goto cleanup;
     }
   if ((sensor_units = ipmi_monitoring_read_sensor_units(state_data->ctx)) < 0)
@@ -492,7 +494,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
                       "ipmi_monitoring_read_sensor_units: %s\n", 
-                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                      ipmi_monitoring_ctx_errormsg(state_data->ctx));
       goto cleanup;
     }
   if ((sensor_reading_type = ipmi_monitoring_read_sensor_reading_type(state_data->ctx)) < 0)
@@ -500,7 +502,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
                       "ipmi_monitoring_read_sensor_reading_type: %s\n", 
-                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                      ipmi_monitoring_ctx_errormsg(state_data->ctx));
       goto cleanup;
     }
   if ((sensor_bitmask_type = ipmi_monitoring_read_sensor_bitmask_type(state_data->ctx)) < 0)
@@ -508,7 +510,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
                       "ipmi_monitoring_read_sensor_bitmask_type: %s\n", 
-                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                      ipmi_monitoring_ctx_errormsg(state_data->ctx));
       goto cleanup;
     }
   if ((sensor_bitmask = ipmi_monitoring_read_sensor_bitmask(state_data->ctx)) < 0)
@@ -516,7 +518,7 @@ _ipmimonitoring_callback(ipmi_monitoring_ctx_t c, void *callback_data)
       pstdout_fprintf(state_data->pstate, 
                       stderr, 
                       "ipmi_monitoring_read_sensor_bitmask: %s\n", 
-                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                      ipmi_monitoring_ctx_errormsg(state_data->ctx));
       goto cleanup;
     }
 
@@ -713,7 +715,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
           pstdout_fprintf(state_data->pstate,
                           stderr,
                           "ipmi_monitoring_sensor_readings_by_record_id: %s\n",
-                          ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                          ipmi_monitoring_ctx_errormsg(state_data->ctx));
           return -1;
         }
     }
@@ -737,7 +739,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
             pstdout_fprintf(state_data->pstate,
                             stderr,
                             "ipmi_monitoring_sensor_readings_by_record_id: %s\n",
-                            ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                            ipmi_monitoring_ctx_errormsg(state_data->ctx));
           return -1;
         }
     }
@@ -755,7 +757,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
           pstdout_fprintf(state_data->pstate,
                           stderr,
                           "ipmi_monitoring_sensor_readings_by_sensor_group: %s\n",
-                          ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(state_data->ctx)));
+                          ipmi_monitoring_ctx_errormsg(state_data->ctx));
           return -1;
         }
     }
@@ -821,7 +823,7 @@ _ipmimonitoring(pstdout_state_t pstate,
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_sdr_cache_ctx_set_flags: %s\n",
-                         ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(state_data.ipmi_sdr_cache_ctx)));
+                         ipmi_sdr_cache_ctx_errormsg(state_data.ipmi_sdr_cache_ctx));
     }
 
   if (!(state_data.ctx = ipmi_monitoring_ctx_create()))

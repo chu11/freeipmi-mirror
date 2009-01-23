@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.57 2009-01-13 01:02:18 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.58 2009-01-23 01:01:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -197,7 +197,7 @@ _stdin(ipmiconsole_ctx_t c,
 		{
 		  fprintf(stderr, 
                           "ipmiconsole_ctx_generate_break: %s\r\n",
-                          ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+                          ipmiconsole_ctx_errormsg(c));
 		  return -1;
 		}
 	    }
@@ -236,10 +236,10 @@ _stdin(ipmiconsole_ctx_t c,
             {
               if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_STOLEN)
                 printf("\r\n[%s]\r\n", 
-                       ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+                       ipmiconsole_ctx_errormsg(c));
               else
                 printf("\r\n[error received]: %s\r\n", 
-                       ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+                       ipmiconsole_ctx_errormsg(c));
             }
 	  return -1;
 	}
@@ -377,9 +377,9 @@ main(int argc, char **argv)
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SESSION_TIMEOUT
           || ipmiconsole_ctx_errnum(c) ==  IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT
           || ipmiconsole_ctx_errnum(c) ==  IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED)
-        printf("[error received]: %s\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+        printf("[error received]: %s\n", ipmiconsole_ctx_errormsg(c));
       else
-        fprintf(stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+        fprintf(stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg(c));
       goto cleanup;
     }
 
@@ -388,7 +388,7 @@ main(int argc, char **argv)
 
   if ((fd = ipmiconsole_ctx_fd(c)) < 0)
     {
-      fprintf(stderr, "ipmiconsole_ctx_fd: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+      fprintf(stderr, "ipmiconsole_ctx_fd: %s\r\n", ipmiconsole_ctx_errormsg(c));
       goto cleanup;
     }
 
@@ -465,10 +465,10 @@ main(int argc, char **argv)
 	      /* b/c we're exitting */
               if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_STOLEN)
                 printf("\r\n[%s]\r\n", 
-                       ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+                       ipmiconsole_ctx_errormsg(c));
               else
                 printf("\r\n[error received]: %s\r\n", 
-                       ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+                       ipmiconsole_ctx_errormsg(c));
 	      goto cleanup;
 	    }
 

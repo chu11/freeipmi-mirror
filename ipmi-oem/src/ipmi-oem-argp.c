@@ -190,11 +190,22 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
     }
   cmd_args->oem_options_count = 0;
 
-  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
+  argp_parse (&cmdline_config_file_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              &(cmd_args->common));
 
   _ipmi_oem_config_file_parse(cmd_args);
 
-  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              cmd_args);
+
   verify_common_cmd_args (&(cmd_args->common));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }

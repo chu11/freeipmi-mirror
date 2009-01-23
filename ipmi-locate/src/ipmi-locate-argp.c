@@ -79,6 +79,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 void 
 ipmi_locate_argp_parse (int argc, char **argv)
 {
-  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
+  argp_parse (&cmdline_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              NULL);
 }
 

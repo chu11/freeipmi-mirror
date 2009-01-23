@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse.h,v 1.5 2009-01-13 01:02:27 chu11 Exp $
+ *  $Id: ipmi-sel-parse.h,v 1.6 2009-01-23 01:01:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -77,6 +77,7 @@ ipmi_sel_parse_ctx_t ipmi_sel_parse_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cac
 void ipmi_sel_parse_ctx_destroy(ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_ctx_errnum(ipmi_sel_parse_ctx_t ctx);
 char * ipmi_sel_parse_ctx_strerror(int errnum);
+char * ipmi_sel_parse_ctx_errormsg(ipmi_sel_parse_ctx_t ctx);
 
 /* SEL Parse flag functions */
 int ipmi_sel_parse_ctx_get_flags(ipmi_sel_parse_ctx_t ctx, unsigned int *flags);

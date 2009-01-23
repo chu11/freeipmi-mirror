@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.87 2009-01-13 01:02:18 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.88 2009-01-23 01:01:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -585,6 +585,12 @@ ipmiconsole_ctx_strerror(int errnum)
     return ipmiconsole_errmsgs[errnum];
   else
     return ipmiconsole_errmsgs[IPMICONSOLE_ERR_ERRNUMRANGE];
+}
+
+char *
+ipmiconsole_ctx_errormsg(ipmiconsole_ctx_t c)
+{
+  return ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c));
 }
 
 ipmiconsole_ctx_status_t

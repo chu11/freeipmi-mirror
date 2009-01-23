@@ -141,11 +141,22 @@ ipmi_chassis_config_argp_parse (int argc, char **argv, struct ipmi_chassis_confi
   init_common_cmd_args_admin (&(cmd_args->config_args.common));
   init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));
 
-  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->config_args.common));
+  argp_parse (&cmdline_config_file_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              &(cmd_args->config_args.common));
 
   _ipmi_chassis_config_config_file_parse(cmd_args);
 
-  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse (&cmdline_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER, 
+              NULL, 
+              cmd_args);
+
   verify_common_cmd_args (&(cmd_args->config_args.common));
   _ipmi_chassis_config_config_args_validate (cmd_args);
 }

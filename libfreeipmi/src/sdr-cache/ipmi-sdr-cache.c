@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.8 2009-01-13 01:02:40 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.9 2009-01-23 01:01:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -135,6 +135,12 @@ ipmi_sdr_cache_ctx_strerror(int errnum)
     return ipmi_sdr_cache_errmsgs[errnum];
   else
     return ipmi_sdr_cache_errmsgs[IPMI_SDR_CACHE_CTX_ERR_ERRNUMRANGE];
+}
+
+char *
+ipmi_sdr_cache_ctx_errormsg(ipmi_sdr_cache_ctx_t ctx)
+{
+  return ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx));
 }
 
 int

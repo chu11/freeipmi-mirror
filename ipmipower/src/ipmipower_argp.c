@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.6 2009-01-13 01:02:22 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.7 2009-01-23 01:01:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -397,11 +397,21 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
   cmd_args->ping_percent = 50;
   cmd_args->ping_consec_count = 5;
 
-  argp_parse(&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
+  argp_parse(&cmdline_config_file_argp, 
+             argc, 
+             argv, 
+             ARGP_IN_ORDER, 
+             NULL, 
+             &(cmd_args->common));
   
   _ipmipower_config_file_parse(cmd_args);
   
-  argp_parse(&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  argp_parse(&cmdline_argp, 
+             argc, 
+             argv, 
+             ARGP_IN_ORDER, 
+             NULL, 
+             cmd_args);
 
   /* achu: don't do these checks, we don't do inband, so checks aren't appropriate 
    * checks will be done in ipmipower_config_check_values().

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.12 2009-01-13 01:02:09 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.13 2009-01-23 01:01:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -637,11 +637,21 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
   cmd_args->reset_period_val = 0;
   cmd_args->help = 0;
 
-  argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER | ARGP_NO_HELP, NULL, &(cmd_args->common));
+  argp_parse (&cmdline_config_file_argp, 
+              argc,
+              argv, 
+              ARGP_IN_ORDER | ARGP_NO_HELP, 
+              NULL, 
+              &(cmd_args->common));
 
   _bmc_watchdog_config_file_parse(cmd_args);
 
-  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER | ARGP_NO_HELP, NULL, cmd_args);
+  argp_parse (&cmdline_argp, 
+              argc, 
+              argv, 
+              ARGP_IN_ORDER | ARGP_NO_HELP, 
+              NULL, 
+              cmd_args);
 
   verify_common_cmd_args (&(cmd_args->common));
   _bmc_watchdog_args_validate (cmd_args);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.41 2009-01-21 22:53:40 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.42 2009-01-23 01:01:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -206,6 +206,12 @@ ipmi_monitoring_ctx_strerror(int errnum)
     return ipmi_monitoring_errmsgs[IPMI_MONITORING_ERR_ERRNUMRANGE];
 }
 
+char *
+ipmi_monitoring_ctx_errormsg(ipmi_monitoring_ctx_t c)
+{
+  return ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c));
+}
+
 int 
 ipmi_monitoring_init(unsigned int flags, int *errnum)
 {
@@ -361,7 +367,7 @@ _ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
     {
       if (ipmi_sdr_cache_record_count(c->sc, &record_count) < 0)
         {
-          IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_count: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+          IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_count: %s", ipmi_sdr_cache_ctx_errormsg(c->sc)));
           c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
@@ -376,7 +382,7 @@ _ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
                                                            sdr_record,
                                                            IPMI_MONITORING_MAX_SDR_RECORD_LENGTH)) < 0)
             {
-              IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_read: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+              IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_read: %s", ipmi_sdr_cache_ctx_errormsg(c->sc)));
               c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
@@ -404,7 +410,7 @@ _ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
                   c->errnum = IPMI_MONITORING_ERR_SENSOR_NOT_FOUND;
                   goto cleanup;
                 }
-              IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_search_record_id: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+              IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_search_record_id: %s", ipmi_sdr_cache_ctx_errormsg(c->sc)));
               c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
@@ -414,7 +420,7 @@ _ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
                                                            sdr_record,
                                                            IPMI_MONITORING_MAX_SDR_RECORD_LENGTH)) < 0)
             {
-              IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_read: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+              IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_read: %s", ipmi_sdr_cache_ctx_errormsg(c->sc)));
               c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
@@ -528,7 +534,7 @@ _ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
       
   if (ipmi_sdr_cache_record_count(c->sc, &record_count) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_count: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+      IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_count: %s", ipmi_sdr_cache_ctx_errormsg(c->sc)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
@@ -543,7 +549,7 @@ _ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
                                                        sdr_record,
                                                        IPMI_MONITORING_MAX_SDR_RECORD_LENGTH)) < 0)
         {
-          IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_read: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
+          IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_read: %s", ipmi_sdr_cache_ctx_errormsg(c->sc)));
           c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
