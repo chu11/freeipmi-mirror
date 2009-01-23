@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.24 2009-01-13 01:02:14 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.25 2009-01-23 19:29:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -102,7 +102,7 @@ ipmi_fru_read_fru_data (ipmi_fru_state_data_t *state_data,
             pstdout_fprintf(state_data->pstate, 
                             stderr,
                             "  FRU Read FRU Failure: %s\n",
-                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                            ipmi_ctx_errormsg(state_data->ipmi_ctx));
           rv = FRU_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }

@@ -51,7 +51,7 @@ pef_info (pef_config_state_data_t *state_data)
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "ipmi_cmd_get_pef_capabilities: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       pstdout_fprintf (state_data->pstate,
                        stderr, 
                        "Failure Retrieving PEF info\n");
@@ -125,7 +125,7 @@ pef_info (pef_config_state_data_t *state_data)
             pstdout_fprintf(state_data->pstate,
                             stderr,
                             "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters: %s\n",
-                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                            ipmi_ctx_errormsg(state_data->ipmi_ctx));
           pstdout_fprintf (state_data->pstate,
                            stderr, 
                            "Failure Retrieving PEF info\n");
@@ -153,7 +153,7 @@ pef_info (pef_config_state_data_t *state_data)
             pstdout_fprintf(state_data->pstate,
                             stderr,
                             "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries: %s\n",
-                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                            ipmi_ctx_errormsg(state_data->ipmi_ctx));
           pstdout_fprintf (state_data->pstate,
                            stderr, 
                            "Failure Retrieving PEF info\n");
@@ -181,7 +181,7 @@ pef_info (pef_config_state_data_t *state_data)
             pstdout_fprintf(state_data->pstate,
                             stderr,
                             "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings: %s\n",
-                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                            ipmi_ctx_errormsg(state_data->ipmi_ctx));
           pstdout_fprintf (state_data->pstate,
                            stderr, 
                            "Failure Retrieving PEF info\n");

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.36 2009-01-23 01:01:50 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.37 2009-01-23 19:29:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -116,7 +116,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "  FRU Get FRU Inventory Area Failure: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

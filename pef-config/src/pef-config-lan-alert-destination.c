@@ -90,7 +90,7 @@ _get_destination_type(pef_config_state_data_t *state_data,
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_destination_type: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
@@ -152,7 +152,7 @@ _set_destination_type(pef_config_state_data_t *state_data,
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_destination_type: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
@@ -384,7 +384,7 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_destination_addresses: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
@@ -478,7 +478,7 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_destination_addresses: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;

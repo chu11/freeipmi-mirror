@@ -159,15 +159,6 @@ ipmi_ctx_create(void)
   return dev;
 }
 
-char *
-ipmi_ctx_strerror(int errnum)
-{
-  if (errnum >= IPMI_ERR_SUCCESS && errnum <= IPMI_ERR_ERRNUMRANGE)
-    return ipmi_errmsg[errnum];
-  else
-    return ipmi_errmsg[IPMI_ERR_ERRNUMRANGE];
-}
-
 int
 ipmi_ctx_errnum(ipmi_ctx_t ctx)
 {
@@ -177,6 +168,21 @@ ipmi_ctx_errnum(ipmi_ctx_t ctx)
     return (IPMI_ERR_CTX_INVALID);
   else
     return (ctx->errnum);
+}
+
+char *
+ipmi_ctx_strerror(int errnum)
+{
+  if (errnum >= IPMI_ERR_SUCCESS && errnum <= IPMI_ERR_ERRNUMRANGE)
+    return ipmi_errmsg[errnum];
+  else
+    return ipmi_errmsg[IPMI_ERR_ERRNUMRANGE];
+}
+
+char *
+ipmi_ctx_errormsg(ipmi_ctx_t ctx)
+{
+  return ipmi_ctx_strerror(ipmi_ctx_errnum(ctx));
 }
 
 static void 

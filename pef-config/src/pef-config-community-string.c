@@ -65,7 +65,7 @@ community_string_checkout (const char *section_name,
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_community_string: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
@@ -117,7 +117,7 @@ community_string_commit (const char *section_name,
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_community_string: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;

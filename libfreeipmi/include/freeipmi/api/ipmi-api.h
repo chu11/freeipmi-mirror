@@ -114,9 +114,11 @@ typedef struct ipmi_ctx *ipmi_ctx_t;
  
 ipmi_ctx_t ipmi_ctx_create(void);
 
+int ipmi_ctx_errnum(ipmi_ctx_t ctx);
+
 char *ipmi_ctx_strerror(int errnum);
 
-int ipmi_ctx_errnum(ipmi_ctx_t ctx);
+char *ipmi_ctx_errormsg(ipmi_ctx_t ctx);
 
 int ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                              const char *hostname,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.23 2009-01-13 01:02:21 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.24 2009-01-23 19:29:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -120,7 +120,7 @@ _inband_init(ipmi_monitoring_ctx_t c,
                                     workaround_flags,
                                     flags) < 0)
             {
-              IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->ipmi_ctx))));
+              IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_errormsg(c->ipmi_ctx)));
               
               if (ipmi_ctx_open_inband (c->ipmi_ctx,
                                         IPMI_DEVICE_KCS,
@@ -131,7 +131,7 @@ _inband_init(ipmi_monitoring_ctx_t c,
                                         workaround_flags,
                                         flags) < 0)
                 {
-                  IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->ipmi_ctx))));
+                  IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_errormsg(c->ipmi_ctx)));
                   
                   if (ipmi_ctx_open_inband (c->ipmi_ctx,
                                             IPMI_DEVICE_SSIF,
@@ -142,7 +142,7 @@ _inband_init(ipmi_monitoring_ctx_t c,
                                             workaround_flags,
                                             flags) < 0)
                     {
-                      IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->ipmi_ctx))));
+                      IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_errormsg(c->ipmi_ctx)));
                       
                       if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BMC_BUSY)
                         c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
@@ -190,7 +190,7 @@ _inband_init(ipmi_monitoring_ctx_t c,
                                 workaround_flags,
                                 flags) < 0)
         {
-          IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->ipmi_ctx))));
+          IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_ctx_errormsg(c->ipmi_ctx)));
 
           if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_BMC_BUSY)
             c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
@@ -330,7 +330,7 @@ _ipmi_1_5_init(ipmi_monitoring_ctx_t c,
                                workaround_flags,
                                flags) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_ctx_open_outofband: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->ipmi_ctx))));
+      IPMI_MONITORING_DEBUG(("ipmi_ctx_open_outofband: %s", ipmi_ctx_errormsg(c->ipmi_ctx)));
       if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_USERNAME_INVALID)
         c->errnum = IPMI_MONITORING_ERR_USERNAME_INVALID;
       else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID)
@@ -478,7 +478,7 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
                                    workaround_flags,
                                    flags) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_ctx_open_outofband_2_0: %s", ipmi_ctx_strerror(ipmi_ctx_errnum(c->ipmi_ctx))));
+      IPMI_MONITORING_DEBUG(("ipmi_ctx_open_outofband_2_0: %s", ipmi_ctx_errormsg(c->ipmi_ctx)));
       if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_USERNAME_INVALID)
         c->errnum = IPMI_MONITORING_ERR_USERNAME_INVALID;
       else if (ipmi_ctx_errnum(c->ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID)

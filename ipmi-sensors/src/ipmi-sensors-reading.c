@@ -135,7 +135,7 @@ _get_sensor_reading (struct ipmi_sensors_state_data *state_data,
         pstdout_fprintf(state_data->pstate,
                         stderr,
                         "ipmi_cmd_get_sensor_reading: %s\n",
-                        ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
       goto cleanup;
     }
   
@@ -210,7 +210,7 @@ _get_sensor_reading_ipmb (struct ipmi_sensors_state_data *state_data,
             pstdout_fprintf(state_data->pstate,
                             stderr,
                             "ipmi_cmd_get_sensor_reading_ipmb: %s\n",
-                            ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+                            ipmi_ctx_errormsg(state_data->ipmi_ctx));
           goto cleanup;
         }
     }
