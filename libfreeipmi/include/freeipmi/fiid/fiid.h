@@ -365,6 +365,13 @@ int8_t fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl);
  */
 fiid_err_t fiid_obj_errnum(fiid_obj_t obj);
 
+/* 
+ * fiid_obj_errormsg
+ *
+ * Returns the error string for the most recently occurring error.
+ */
+char *fiid_obj_errormsg(fiid_obj_t obj);
+
 /*  
  * fiid_obj_len
  * 
@@ -565,6 +572,13 @@ void fiid_iterator_destroy(fiid_iterator_t iter);
  * Returns the error code for the most recently occurring error.
  */
 fiid_err_t fiid_iterator_errnum(fiid_iterator_t iter);
+
+/*
+ * fiid_iterator_errormsg
+ *
+ * Returns the error string for the most recently occurring error.
+ */
+char *fiid_iterator_errormsg(fiid_iterator_t iter);
 
 /*  
  * fiid_iterator_reset

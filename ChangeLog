@@ -2,6 +2,8 @@
 
 	* ipmi-sensors/, ipmimonitoring/: Revert no-event output back to
 	"OK".
+
+	* Support "errormsg" functions libfreeipmi API and fiid.
 	
 2009-01-22  Albert Chu <chu11@llnl.gov>
 

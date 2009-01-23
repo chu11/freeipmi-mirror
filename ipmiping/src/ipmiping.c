@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.57 2009-01-13 01:02:22 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.58 2009-01-23 23:19:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -71,7 +71,7 @@ _fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
 
   if (fiid_obj_get(obj, field, val) < 0)
     ipmi_ping_err_exit("fiid_obj_get: %s", 
-                       fiid_strerror(fiid_obj_errnum(obj)));
+                       fiid_obj_errormsg(obj));
 }
 
 int 

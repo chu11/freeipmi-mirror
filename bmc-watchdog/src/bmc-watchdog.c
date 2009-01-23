@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.111 2009-01-13 01:02:09 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.112 2009-01-23 23:19:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -83,7 +83,7 @@
        { \
          _bmclog("%s: fiid_obj_get: %s", \
                  (__func), \
-                 fiid_strerror(fiid_obj_errnum((__obj))));    \
+                 fiid_obj_errormsg((__obj))); \
          if (fiid_obj_errnum((__obj)) == FIID_ERR_SUCCESS) \
            errno = 0; \
          else if (fiid_obj_errnum((__obj)) == FIID_ERR_OUT_OF_MEMORY)  \

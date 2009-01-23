@@ -100,7 +100,7 @@ _get_pef_control (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
   pc->enable_pef = val;
@@ -110,7 +110,7 @@ _get_pef_control (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
   pc->enable_pef_event_messages = val;
@@ -120,7 +120,7 @@ _get_pef_control (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
   pc->enable_pef_startup_delay = val;
@@ -130,7 +130,7 @@ _get_pef_control (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
   pc->enable_pef_alert_startup_delay = val;
@@ -405,7 +405,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
   gc->enable_alert_action = val;
@@ -415,7 +415,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
   gc->enable_power_down_action = val;
@@ -425,7 +425,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
   gc->enable_reset_action = val;
@@ -435,7 +435,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
   gc->enable_power_cycle_action = val;
@@ -445,7 +445,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
   gc->enable_oem_action = val;
@@ -455,7 +455,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
   gc->enable_diagnostic_interrupt = val;
@@ -817,7 +817,7 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
 
@@ -920,7 +920,7 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_cmd_rs)));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
 

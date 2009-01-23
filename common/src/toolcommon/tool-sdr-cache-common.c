@@ -112,7 +112,7 @@
         PSTDOUT_FPRINTF(pstate,                                          \
                         stderr,                                          \
                         "fiid_obj_copy: %s\n",                           \
-                        fiid_strerror(fiid_obj_errnum((__obj_src))));    \
+                        fiid_obj_errormsg((__obj_src)));                 \
         goto cleanup;                                                    \
       }                                                                  \
   } while (0)
@@ -126,7 +126,7 @@
         PSTDOUT_FPRINTF(pstate,                                          \
                         stderr,                                          \
                         "fiid_obj_get: %s\n",                            \
-                        fiid_strerror(fiid_obj_errnum((__obj))));        \
+                        fiid_obj_errormsg((__obj)));                     \
         goto cleanup;                                                    \
       }                                                                  \
     *__val_ptr = __tmp_val;                                              \
@@ -142,7 +142,7 @@
         PSTDOUT_FPRINTF(pstate,                                          \
                         stderr,                                          \
                         "fiid_obj_get_data: %s\n",                       \
-                        fiid_strerror(fiid_obj_errnum((__obj))));        \
+                        fiid_obj_errormsg((__obj)));                     \
         goto cleanup;                                                    \
       }                                                                  \
   } while (0)
@@ -157,7 +157,7 @@
         PSTDOUT_FPRINTF(pstate,                                              \
                         stderr,                                              \
                         "fiid_obj_get_data: %s\n",                           \
-                        fiid_strerror(fiid_obj_errnum((__obj))));            \
+                        fiid_obj_errormsg((__obj)));                         \
         goto cleanup;                                                        \
       }                                                                      \
   } while (0)
@@ -171,7 +171,7 @@
         PSTDOUT_FPRINTF(pstate,                                          \
                         stderr,                                          \
                         "fiid_obj_set_all: %s\n",                        \
-                        fiid_strerror(fiid_obj_errnum((__obj))));        \
+                        fiid_obj_errormsg((__obj)));                     \
         goto cleanup;                                                    \
       }                                                                  \
   } while (0)
@@ -1099,7 +1099,7 @@ sdr_cache_get_sensor_type (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
+                      fiid_obj_errormsg(obj_sdr_record));
       goto cleanup;
     }
   *sensor_type = val;
@@ -1142,7 +1142,7 @@ sdr_cache_get_event_reading_type_code (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
+                      fiid_obj_errormsg(obj_sdr_record));
       goto cleanup;
     }
   *event_reading_type_code = val;
@@ -1184,7 +1184,7 @@ sdr_cache_get_sensor_unit (pstdout_state_t pstate,
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "fiid_obj_get: %s\n",
-                      fiid_strerror(fiid_obj_errnum(obj_sdr_record)));
+                      fiid_obj_errormsg(obj_sdr_record));
       goto cleanup;
     }
   

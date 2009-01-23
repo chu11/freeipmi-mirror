@@ -1125,6 +1125,12 @@ fiid_obj_errnum(fiid_obj_t obj)
     return (obj->errnum);
 }
 
+char *
+fiid_obj_errormsg(fiid_obj_t obj)
+{
+  return fiid_strerror(fiid_obj_errnum(obj));
+}
+
 static int32_t 
 _fiid_obj_lookup_field_index(fiid_obj_t obj, char *field)
 {
@@ -2397,6 +2403,12 @@ fiid_iterator_errnum(fiid_iterator_t iter)
     return (FIID_ERR_ITERATOR_INVALID);
   else
     return (iter->errnum);
+}
+
+char *
+fiid_iterator_errormsg(fiid_iterator_t iter)
+{
+  return fiid_strerror(fiid_iterator_errnum(iter));
 }
 
 int8_t

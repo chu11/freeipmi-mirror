@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.58 2009-01-23 01:01:54 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.59 2009-01-23 23:19:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -697,7 +697,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
     {
       IPMI_MONITORING_DEBUG(("fiid_obj_get: field=%s; %s", 
                              "sensor_event_bitmask1", 
-                             fiid_strerror(fiid_obj_errnum(obj_cmd_rs))));
+                             fiid_obj_errormsg(obj_cmd_rs)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
@@ -708,7 +708,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
     {
       IPMI_MONITORING_DEBUG(("fiid_obj_get: field=%s; %s", 
                              "sensor_event_bitmask2", 
-                             fiid_strerror(fiid_obj_errnum(obj_cmd_rs))));
+                             fiid_obj_errormsg(obj_cmd_rs)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
