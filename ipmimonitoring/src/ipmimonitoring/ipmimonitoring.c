@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.84 2009-01-24 00:02:42 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.85 2009-01-24 00:15:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -880,6 +880,29 @@ _ipmimonitoring(pstdout_state_t pstate,
   return exit_code;
 }
 
+static int
+_groupcmp(char *group_input, 
+          uint8_t sensor_type)
+{
+  char *group;
+
+  assert(group_input);
+  assert(IPMI_SENSOR_TYPE_VALID(sensor_type));
+  
+  if (!(group = strdupa (ipmi_sensor_types[sensor_type])))
+    {
+      fprintf (stderr, 
+               "strdupa: %s\n", 
+               strerror(errno));
+      exit(1);
+    }
+  
+  _str_replace_char (group, ' ', '_');
+  _str_replace_char (group, '/', '_');
+
+  return (!strcasecmp(group_input, group)) ? 1 : 0;
+}
+
 /* For some ipmimonitoring library functions, we need to convert
  * cmd_args struct into the ipmimonitoring library equivalent
  * structs.
@@ -973,57 +996,83 @@ _grab_ipmimonitoring_options(struct ipmimonitoring_arguments *cmd_args)
     { 
       int n = -1;
 
-      if (!strcasecmp(cmd_args->groups[i], "temperature"))
+      if (_groupcmp(cmd_args->groups[i], 
+                    IPMI_SENSOR_TYPE_TEMPERATURE))
         n = IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE;
-      else if (!strcasecmp(cmd_args->groups[i], "voltage"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_VOLTAGE))
         n = IPMI_MONITORING_SENSOR_GROUP_VOLTAGE;
-      else if (!strcasecmp(cmd_args->groups[i], "current"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_CURRENT))
         n = IPMI_MONITORING_SENSOR_GROUP_CURRENT;
-      else if (!strcasecmp(cmd_args->groups[i], "fan"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_FAN))
         n = IPMI_MONITORING_SENSOR_GROUP_FAN;
-      else if (!strcasecmp(cmd_args->groups[i], "physical_security"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_PHYSICAL_SECURITY))
         n = IPMI_MONITORING_SENSOR_GROUP_PHYSICAL_SECURITY;
-      else if (!strcasecmp(cmd_args->groups[i], "platform_security_violation_attempt"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT))
         n = IPMI_MONITORING_SENSOR_GROUP_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
-      else if (!strcasecmp(cmd_args->groups[i], "processor"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_PROCESSOR))
         n = IPMI_MONITORING_SENSOR_GROUP_PROCESSOR;
-      else if (!strcasecmp(cmd_args->groups[i], "power_supply"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_POWER_SUPPLY))
         n = IPMI_MONITORING_SENSOR_GROUP_POWER_SUPPLY;
-      else if (!strcasecmp(cmd_args->groups[i], "power_unit"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_POWER_UNIT))
         n = IPMI_MONITORING_SENSOR_GROUP_POWER_UNIT;
-      else if (!strcasecmp(cmd_args->groups[i], "memory"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_MEMORY))
         n = IPMI_MONITORING_SENSOR_GROUP_MEMORY;
-      else if (!strcasecmp(cmd_args->groups[i], "drive_slot"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_DRIVE_SLOT))
         n = IPMI_MONITORING_SENSOR_GROUP_DRIVE_SLOT;
-      else if (!strcasecmp(cmd_args->groups[i], "system_firmware_progress"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS))
         n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_FIRMWARE_PROGRESS;
-      else if (!strcasecmp(cmd_args->groups[i], "event_logging_disabled"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED))
         n = IPMI_MONITORING_SENSOR_GROUP_EVENT_LOGGING_DISABLED;
-      else if (!strcasecmp(cmd_args->groups[i], "system_event"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_SYSTEM_EVENT))
         n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_EVENT;
-      else if (!strcasecmp(cmd_args->groups[i], "critical_interrupt"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT))
         n = IPMI_MONITORING_SENSOR_GROUP_CRITICAL_INTERRUPT;
-      else if (!strcasecmp(cmd_args->groups[i], "module_board"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_MODULE_BOARD))
         n = IPMI_MONITORING_SENSOR_GROUP_MODULE_BOARD;
-      else if (!strcasecmp(cmd_args->groups[i], "slot_connector"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_SLOT_CONNECTOR))
         n = IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR;
-      else if (!strcasecmp(cmd_args->groups[i], "watchdog2"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_WATCHDOG2))
         n = IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2;
-      else if (!strcasecmp(cmd_args->groups[i], "entity_presence"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_ENTITY_PRESENCE))
         n = IPMI_MONITORING_SENSOR_GROUP_ENTITY_PRESENCE;
-      else if (!strcasecmp(cmd_args->groups[i], "management_subsystem_health"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH))
         n = IPMI_MONITORING_SENSOR_GROUP_MANAGEMENT_SUBSYSTEM_HEALTH;
-      else if (!strcasecmp(cmd_args->groups[i], "battery"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_BATTERY))
         n = IPMI_MONITORING_SENSOR_GROUP_BATTERY;
-      else if (!strcasecmp(cmd_args->groups[i], "fru_state"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_FRU_STATE))
         n = IPMI_MONITORING_SENSOR_GROUP_FRU_STATE;
-      else if (!strcasecmp(cmd_args->groups[i], "cable_interconnect"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_CABLE_INTERCONNECT))
         n = IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT;
-      else if (!strcasecmp(cmd_args->groups[i], "boot_error"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_BOOT_ERROR))
         n = IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR;
-      else if (!strcasecmp(cmd_args->groups[i], "button_switch"))
+      else if (_groupcmp(cmd_args->groups[i], 
+                         IPMI_SENSOR_TYPE_BUTTON_SWITCH))
         n = IPMI_MONITORING_SENSOR_GROUP_BUTTON_SWITCH;
-      else if (!strcasecmp(cmd_args->groups[i], "system_acpi_power_state"))
+      else if (_groupcmp(cmd_args->groups[i],
+                         IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE))
         n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE;
       else
         {
