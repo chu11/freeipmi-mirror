@@ -144,7 +144,7 @@ do {                                                                            
                          stderr,                                                        \
                          "fiid_obj_get_data: %s: %s\n",                                 \
                          __field,                                                       \
-                         fiid_strerror(fiid_obj_errnum((__obj))));                      \
+                         fiid_obj_errormsg((__obj)));                                   \
          goto cleanup;                                                                  \
       }                                                                                 \
 } while (0)
@@ -156,7 +156,7 @@ do {                                                                        \
          pstdout_fprintf(state_data->pstate,                                \
                          stderr,                                            \
                          "fiid_obj_set: %s\n",                              \
-                         fiid_strerror(fiid_obj_errnum((__obj))));          \
+                         fiid_obj_errormsg((__obj)));                       \
          goto cleanup;                                                      \
       }                                                                     \
 } while (0)
@@ -168,7 +168,7 @@ do {                                                                        \
          pstdout_fprintf(state_data->pstate,                                \
                          stderr,                                            \
                          "fiid_obj_set_data: %s\n",                         \
-                         fiid_strerror(fiid_obj_errnum((__obj))));          \
+                         fiid_obj_errormsg((__obj)));                       \
          goto cleanup;                                                      \
       }                                                                     \
 } while (0)
@@ -180,7 +180,7 @@ do {                                                                        \
          pstdout_fprintf(state_data->pstate,                                \
                          stderr,                                            \
                          "fiid_obj_set_all: %s\n",                          \
-                         fiid_strerror(fiid_obj_errnum((__obj))));          \
+                         fiid_obj_errormsg((__obj)));                       \
          goto cleanup;                                                      \
       }                                                                     \
 } while (0)

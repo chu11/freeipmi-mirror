@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.83 2009-01-23 18:15:05 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.84 2009-01-24 00:02:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -77,37 +77,73 @@
 
 #define IPMIMONITORING_UNRECOGNIZED_STATE     "Unrecognized State"
 
+static void
+_str_replace_char (char *str, char chr, char with)
+{
+  char *p = NULL;
+  char *s = NULL;
+  
+  assert(str);
+  
+  for (s = str;
+       (p = strchr (s, chr));
+       s = p + 1)
+    *p = with;
+}
+
+static void
+_display_group(ipmimonitoring_state_data_t *state_data, uint8_t sensor_type)
+{
+  char *group;
+
+  assert(state_data);
+  assert(IPMI_SENSOR_TYPE_VALID(sensor_type));
+  
+  if (!(group = strdupa (ipmi_sensor_types[sensor_type])))
+    {
+      pstdout_fprintf (state_data->pstate, 
+                       stderr, 
+                       "strdupa: %s\n", 
+                       strerror(errno));
+      exit(1);
+    }
+  
+  _str_replace_char (group, ' ', '_');
+  _str_replace_char (group, '/', '_');
+  pstdout_printf (state_data->pstate, "%s\n", group);
+}
+
 static int
 _list_groups(ipmimonitoring_state_data_t *state_data)
 {
   assert(state_data);
 
-  pstdout_printf (state_data->pstate, "%s\n", "temperature");
-  pstdout_printf (state_data->pstate, "%s\n", "voltage");
-  pstdout_printf (state_data->pstate, "%s\n", "current");
-  pstdout_printf (state_data->pstate, "%s\n", "fan");
-  pstdout_printf (state_data->pstate, "%s\n", "physical_security");
-  pstdout_printf (state_data->pstate, "%s\n", "platform_security_violation_attempt");
-  pstdout_printf (state_data->pstate, "%s\n", "processor");
-  pstdout_printf (state_data->pstate, "%s\n", "power_supply");
-  pstdout_printf (state_data->pstate, "%s\n", "power_unit");
-  pstdout_printf (state_data->pstate, "%s\n", "memory");
-  pstdout_printf (state_data->pstate, "%s\n", "drive_slot");
-  pstdout_printf (state_data->pstate, "%s\n", "system_firmware_progress");
-  pstdout_printf (state_data->pstate, "%s\n", "event_logging_disabled");
-  pstdout_printf (state_data->pstate, "%s\n", "system_event");
-  pstdout_printf (state_data->pstate, "%s\n", "critical_interrupt");
-  pstdout_printf (state_data->pstate, "%s\n", "module_board");
-  pstdout_printf (state_data->pstate, "%s\n", "slot_connector");
-  pstdout_printf (state_data->pstate, "%s\n", "watchdog2");
-  pstdout_printf (state_data->pstate, "%s\n", "entity_presence");
-  pstdout_printf (state_data->pstate, "%s\n", "management_subsystem_health");
-  pstdout_printf (state_data->pstate, "%s\n", "battery");
-  pstdout_printf (state_data->pstate, "%s\n", "fru_state");
-  pstdout_printf (state_data->pstate, "%s\n", "cable_interconnect");
-  pstdout_printf (state_data->pstate, "%s\n", "boot_error");
-  pstdout_printf (state_data->pstate, "%s\n", "button_switch");
-  pstdout_printf (state_data->pstate, "%s\n", "system_acpi_power_state");
+  _display_group (state_data, IPMI_SENSOR_TYPE_TEMPERATURE);
+  _display_group (state_data, IPMI_SENSOR_TYPE_VOLTAGE);
+  _display_group (state_data, IPMI_SENSOR_TYPE_CURRENT);
+  _display_group (state_data, IPMI_SENSOR_TYPE_FAN);
+  _display_group (state_data, IPMI_SENSOR_TYPE_PHYSICAL_SECURITY);
+  _display_group (state_data, IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT);
+  _display_group (state_data, IPMI_SENSOR_TYPE_PROCESSOR);
+  _display_group (state_data, IPMI_SENSOR_TYPE_POWER_SUPPLY);
+  _display_group (state_data, IPMI_SENSOR_TYPE_POWER_UNIT);
+  _display_group (state_data, IPMI_SENSOR_TYPE_MEMORY);
+  _display_group (state_data, IPMI_SENSOR_TYPE_DRIVE_SLOT);
+  _display_group (state_data, IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS);
+  _display_group (state_data, IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED);
+  _display_group (state_data, IPMI_SENSOR_TYPE_SYSTEM_EVENT);
+  _display_group (state_data, IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT);
+  _display_group (state_data, IPMI_SENSOR_TYPE_MODULE_BOARD);
+  _display_group (state_data, IPMI_SENSOR_TYPE_SLOT_CONNECTOR);
+  _display_group (state_data, IPMI_SENSOR_TYPE_WATCHDOG2);
+  _display_group (state_data, IPMI_SENSOR_TYPE_ENTITY_PRESENCE);
+  _display_group (state_data, IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH);
+  _display_group (state_data, IPMI_SENSOR_TYPE_BATTERY);
+  _display_group (state_data, IPMI_SENSOR_TYPE_FRU_STATE);
+  _display_group (state_data, IPMI_SENSOR_TYPE_CABLE_INTERCONNECT);
+  _display_group (state_data, IPMI_SENSOR_TYPE_BOOT_ERROR);
+  _display_group (state_data, IPMI_SENSOR_TYPE_BUTTON_SWITCH);
+  _display_group (state_data, IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE);
   
   return 0;
 }

@@ -4,6 +4,9 @@
 	"OK".
 
 	* Support "errormsg" functions libfreeipmi API and fiid.
+
+	* ipmimonitoring/src/ipmimonitoring/: Output groups based on
+	ipmi_sensor_types array.
 	
 2009-01-22  Albert Chu <chu11@llnl.gov>
 
