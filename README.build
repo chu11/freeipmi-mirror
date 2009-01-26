@@ -32,7 +32,7 @@ such as /usr/bin, /usr/lib/, /etc, etc. the options passed into
 The following set of options and settings are suitable for most Linux
 systems.
 
---program-prefix= --prefix=/usr --exec-prefix=/usr --sysconfdir=/etc
+--prefix=/usr --exec-prefix=/usr --sysconfdir=/etc
 --localstatedir=/var --mandir=/usr/share/man
 
 Your mileage may vary depending on your system.
