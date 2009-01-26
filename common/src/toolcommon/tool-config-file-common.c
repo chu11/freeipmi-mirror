@@ -987,6 +987,9 @@ config_file_parse(const char *filename,
   struct config_file_data_ipmi_fru ipmi_fru_data;
   struct config_file_data_ipmi_fru *ipmi_fru_data_ptr;
 
+  struct config_file_data_ipmi_sel ipmi_sel_data;
+  struct config_file_data_ipmi_sel *ipmi_sel_data_ptr;
+
   struct config_file_data_ipmi_sensors ipmi_sensors_data;
   struct config_file_data_ipmi_sensors *ipmi_sensors_data_ptr;
 
@@ -2111,6 +2114,17 @@ config_file_parse(const char *filename,
         &cmd_args_config,
         0
       },
+      {
+        "ipmi-sel-legacy-output",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sel_data.legacy_output_count),
+        &(ipmi_sel_data.legacy_output),
+        0,
+      },
     };
 
   /* 
@@ -2227,6 +2241,17 @@ config_file_parse(const char *filename,
         0,
         &(ipmi_sensors_data.bridge_sensors_count),
         &(ipmi_sensors_data.bridge_sensors),
+        0,
+      },
+      {
+        "ipmi-sensors-legacy-output",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.legacy_output_count),
+        &(ipmi_sensors_data.legacy_output),
         0,
       },
     };
@@ -2600,6 +2625,17 @@ config_file_parse(const char *filename,
         &(ipmimonitoring_data.sensor_config_file_count),
         &(ipmimonitoring_data.sensor_config_file),
         0
+      },
+      {
+        "ipmimonitoring-legacy-output",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmimonitoring_data.legacy_output_count),
+        &(ipmimonitoring_data.legacy_output),
+        0,
       },
     };
 
@@ -3059,7 +3095,7 @@ config_file_parse(const char *filename,
              || ((tool_support & CONFIG_FILE_TOOL_IPMI_FRU) && tool_data)
              || ((tool_support & CONFIG_FILE_TOOL_IPMI_OEM) && !tool_data)
              || ((tool_support & CONFIG_FILE_TOOL_IPMI_RAW) && !tool_data)
-             || ((tool_support & CONFIG_FILE_TOOL_IPMI_SEL) && !tool_data)
+             || ((tool_support & CONFIG_FILE_TOOL_IPMI_SEL) && tool_data)
              || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS) && tool_data)
              || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG) && !tool_data)
              || ((tool_support & CONFIG_FILE_TOOL_IPMICONSOLE) && tool_data)
@@ -3408,6 +3444,13 @@ config_file_parse(const char *filename,
       memcpy(ipmi_fru_data_ptr, 
              &ipmi_fru_data,
              sizeof(struct config_file_data_ipmi_fru));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_SEL)
+    {
+      ipmi_sel_data_ptr = (struct config_file_data_ipmi_sel *)tool_data;
+      memcpy(ipmi_sel_data_ptr, 
+             &ipmi_sel_data,
+             sizeof(struct config_file_data_ipmi_sel));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS)
     {

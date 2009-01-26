@@ -238,6 +238,8 @@ _ipmi_sensors_config_file_parse(struct ipmi_sensors_arguments *cmd_args)
     }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
+  if (config_file_data.legacy_output_count)
+    cmd_args->legacy_output = config_file_data.legacy_output;
 }
 
 static void

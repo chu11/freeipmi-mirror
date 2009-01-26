@@ -304,6 +304,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 static void
 _ipmi_sel_config_file_parse(struct ipmi_sel_arguments *cmd_args)
 {
+  struct config_file_data_ipmi_sel config_file_data;
+
+  memset(&config_file_data,
+         '\0',
+         sizeof(struct config_file_data_ipmi_sel));
+
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
@@ -311,11 +317,14 @@ _ipmi_sel_config_file_parse(struct ipmi_sel_arguments *cmd_args)
                          &(cmd_args->hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_SEL,
-                         NULL) < 0)
+                         &config_file_data) < 0)
     {
       fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
       exit(1);
     }
+
+  if (config_file_data.legacy_output_count)
+    cmd_args->legacy_output = config_file_data.legacy_output;
 }
 
 

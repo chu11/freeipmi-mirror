@@ -70,6 +70,12 @@ struct config_file_data_ipmi_fru
   int skip_checks_count;
 };
 
+struct config_file_data_ipmi_sel
+{
+  int legacy_output;
+  int legacy_output_count;
+};
+
 struct config_file_data_ipmi_sensors
 {
   int quiet_readings;
@@ -79,6 +85,8 @@ struct config_file_data_ipmi_sensors
   int groups_count;
   int bridge_sensors;
   int bridge_sensors_count;
+  int legacy_output;
+  int legacy_output_count;
 };
 
 struct config_file_data_ipmiconsole
@@ -102,6 +110,8 @@ struct config_file_data_ipmimonitoring
   int bridge_sensors_count;
   char *sensor_config_file;
   int sensor_config_file_count;
+  int legacy_output;
+  int legacy_output_count;
 };
 
 struct config_file_data_ipmipower

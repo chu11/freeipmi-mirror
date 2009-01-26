@@ -709,6 +709,9 @@ above.  Multiple workarounds can be specified separated by whitespace.
 Please see 
 .B ipmi-sel(8) 
 manpage for available workarounds.
+.TP
+\fBipmi-sel-legacy-output\fR \fIENABLE|DISABLE\fR
+Specify if output should be in legacy format or not.
 
 .SH "IPMI-SENSORS OPTIONS"
 The following options are specific to 
@@ -783,6 +786,9 @@ option to see possible groups.
 .TP
 \fBipmi-sensors-bridge-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.
+.TP
+\fBipmi-sensors-legacy-output\fR \fIENABLE|DISABLE\fR
+Specify if output should be in legacy format or not.
 
 .SH "IPMI-SENSORS-CONFIG OPTIONS"
 The following options are specific to 
@@ -989,6 +995,9 @@ Specify if non-BMC sensors should be bridged by default or not.
 .TP
 \fBipmimonitoring-sensor-config-file\fR \fIFILE\fR
 Specify the default sensor configuration file.
+.TP
+\fBipmimonitoring-legacy-output\fR \fIENABLE|DISABLE\fR
+Specify if output should be in legacy format or not.
 
 .SH "IPMIPOWER OPTIONS"
 The following options are specific to

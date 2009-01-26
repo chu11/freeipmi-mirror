@@ -1,3 +1,8 @@
+2009-01-26  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/, ipmimonitoring/, ipmi-sensors/: Fix new output corner
+	cases.  Support --legacy-output in config file.
+
 2009-01-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, ipmimonitoring/: Revert no-event output back to

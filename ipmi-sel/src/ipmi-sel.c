@@ -631,7 +631,7 @@ _normal_output_sensor_name_and_group(ipmi_sel_state_data_t *state_data, unsigned
     }
   
   if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %-20s", outbuf);
+    pstdout_printf (state_data->pstate, " | %-24s", outbuf);
 
   return 1;
 }
@@ -867,7 +867,7 @@ _normal_output(ipmi_sel_state_data_t *state_data, uint8_t record_type)
   if (!state_data->output_headers)
     {
       pstdout_printf(state_data->pstate,
-                     "Record ID | Date        | Time     | Sensor Name      | Sensor Group        ");
+                     "Record ID | Date        | Time     | Sensor Name      | Sensor Group            ");
       if (state_data->prog_data->args->verbose_count >= 2)
         {
           pstdout_printf(state_data->pstate,

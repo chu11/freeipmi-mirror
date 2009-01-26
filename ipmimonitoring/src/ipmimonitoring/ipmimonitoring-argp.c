@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.26 2009-01-23 01:01:53 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.27 2009-01-26 23:44:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -259,6 +259,8 @@ _ipmimonitoring_config_file_parse(struct ipmimonitoring_arguments *cmd_args)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
   if (config_file_data.sensor_config_file_count)
     cmd_args->sensor_config_file = config_file_data.sensor_config_file;
+  if (config_file_data.legacy_output_count)
+    cmd_args->legacy_output = config_file_data.legacy_output;
 }
 
 void 
