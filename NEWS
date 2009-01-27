@@ -1,6 +1,7 @@
 0.7.6 - XX/XX/09
 ----------------
-o In ipmimonitoring, output sensor group names consistently to other tools.
+o In ipmimonitoring, output sensor group names consistently to other
+  tools:
   "Cable Interconnect" -> "Cable/Interconnect"
   "Slot Connector" -> "Slot/Connector"
   "Module Board" -> "Module/Board"
