@@ -13,6 +13,10 @@ libfreeipmi
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
 
+sel-parse
+---------
+most common manufacturer ids
+
 sel/sensors/monitoring
 ----------------------
 new options in config file
