@@ -1,5 +1,9 @@
 2009-01-26  Albert Chu <chu11@llnl.gov>
 
+	* Suppot --config-file option in all tools.
+	
+2009-01-26  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/, ipmimonitoring/, ipmi-sensors/: Fix new output corner
 	cases.  Support --legacy-output in config file.
 
