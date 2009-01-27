@@ -6,6 +6,9 @@ o In ipmimonitoring, output sensor group names consistently to other tools.
   "Module Board" -> "Module/Board"
 o In ipmi-sensors, don't output threshold related fields for
   non-threshold sensors in verbose modes.
+o In bmc-config, ipmi-chassis-config, ipmi-sensors,
+  ipmi-sensors-config, ipmimonitoring, and pef-config, support
+  --config-file option.
 o Fix bmc-watchdog init script portability to Suse.
 
 0.7.5 - 01/12/09
