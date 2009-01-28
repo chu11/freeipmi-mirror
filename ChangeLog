@@ -9,6 +9,9 @@
 
 	* libfreeipmi/src/spec/enterprise-numbers.txt: Currently used
 	database used to generate enterprise numbers.
+
+	* bmc-info/src/bmc-info.c (display_get_device_id): Output
+	manufacturer name as well as ID.
 	
 2009-01-26  Albert Chu <chu11@llnl.gov>
 
