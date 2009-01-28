@@ -13,6 +13,7 @@ o ipmi-sel
     additional SEL event information.
   - Support --display and --display-range options.
   - Support --system-event-only and --oem-event-only options.
+  - Output manufacturer name with "Manufacturer ID" if name available.
   - Output OEM hex code in consistent format.
   - Output hex code more often if translation to string not available.
   - Re-work to use new libfreeipmi sel-parse sub library.
@@ -44,6 +45,7 @@ o ipmi-sensors
   - Output linearization name in verbose outputs.
   - Output analog data format in hex in verbose outputs.
   - Output analog data format name in verbose outputs.
+  - Output manufacturer name with "Manufacturer ID" if name available.
   - Output hex code of group name in addition to group name in
     very-verbose output.
 o ipmimonitoring
@@ -64,6 +66,12 @@ o ipmimonitoring
     impression that the tool "hangs" on start.
   - Fix inconsistency in output, header output of "Record_ID" now
     "Record ID".
+o ipmi-fru
+  - Output hex with 'h' suffix instead of '0x' prefix for consistency to
+    other FreeIPMI tools.
+  - Output manufacturer name with "Manufacturer ID" if name available.
+o bmc-info
+  - Output manufacturer name with "Manufacturer ID" if name available.
 o Various documentation updates.
 
 Libraries

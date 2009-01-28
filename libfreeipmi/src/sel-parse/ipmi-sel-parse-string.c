@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sel-parse-string.c,v 1.9 2009-01-13 01:02:40 chu11 Exp $
+ *  $Id: ipmi-sel-parse-string.c,v 1.10 2009-01-28 22:57:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -53,6 +53,7 @@
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
@@ -1728,8 +1729,35 @@ _output_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
   if (sel_parse_get_manufacturer_id(ctx, sel_parse_entry, &manufacturer_id) < 0)
     return -1;
   
-  if (_SNPRINTF(buf, buflen, wlen, "Manufacturer ID = %02Xh", manufacturer_id))
-    return 1;
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+    {
+      if (_SNPRINTF(buf, buflen, wlen, "Manufacturer ID = %02Xh", manufacturer_id))
+        return 1;
+    }
+  else
+    {
+      if (IPMI_IANA_ENTERPRISE_ID_VALID(manufacturer_id)
+          && ipmi_iana_enterprise_numbers[manufacturer_id])
+        {
+          if (_SNPRINTF(buf,
+                        buflen,
+                        wlen,
+                        "Manufacturer ID = %s (%02Xh)",
+                        ipmi_iana_enterprise_numbers[manufacturer_id],
+                        manufacturer_id))
+            return 1;
+          
+        }
+      else
+        {
+          if (_SNPRINTF(buf,
+                        buflen,
+                        wlen,
+                        "Manufacturer ID = %02Xh",
+                        manufacturer_id))
+            return 1;
+        }
+    }
   
   return 0;
 }

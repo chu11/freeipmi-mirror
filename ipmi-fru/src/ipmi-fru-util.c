@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.25 2009-01-23 19:29:34 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.26 2009-01-28 22:57:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -335,7 +335,7 @@ _bcd_to_ascii(ipmi_fru_state_data_t *state_data,
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,
-                          "  FRU Unknown BCD Character: 0x%02X\n",
+                          "  FRU Unknown BCD Character: %02Xh\n",
                           typebuf[i]);
           goto cleanup;
         }
@@ -380,7 +380,7 @@ ipmi_fru_output_type_length_field(ipmi_fru_state_data_t *state_data,
   if (state_data->prog_data->args->verbose_count >= 2)
     {
       pstdout_printf(state_data->pstate, 
-                     "  FRU %s Type/Length: 0x%02X\n",
+                     "  FRU %s Type/Length: %02Xh\n",
                      str,
                      type_length);
     }
@@ -419,7 +419,7 @@ ipmi_fru_output_type_length_field(ipmi_fru_state_data_t *state_data,
             pstdout_printf(state_data->pstate, "\n  ");
 
           pstdout_printf(state_data->pstate,
-                         " 0x%02X",
+                         " %02Xh",
                          typebuf[i]);
         }
 
@@ -469,7 +469,7 @@ ipmi_fru_output_type_length_field(ipmi_fru_state_data_t *state_data,
           && *language_code != IPMI_FRU_LANGUAGE_CODE_ENGLISH)
         {
           pstdout_printf(state_data->pstate, 
-                         "  FRU %s: Unsupported Language Code: 0x%02X\n",
+                         "  FRU %s: Unsupported Language Code: %02Xh\n",
                          str,
                          *language_code);
           rv = FRU_ERR_NON_FATAL_ERROR;
@@ -551,7 +551,7 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
   if (state_data->prog_data->args->verbose_count >= 2)
     {
       pstdout_printf(state_data->pstate, 
-                     "  FRU %s Info Area Format Version: 0x%02X\n",
+                     "  FRU %s Info Area Format Version: %02Xh\n",
                      str,
                      format_version);
       pstdout_printf(state_data->pstate,
@@ -564,7 +564,7 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
     {
       pstdout_fprintf(state_data->pstate, 
                       stderr,
-                      "  FRU %s Area Format Unknown: 0x%02X\n", 
+                      "  FRU %s Area Format Unknown: %02Xh\n", 
                       str,
                       format_version);
       rv = FRU_ERR_NON_FATAL_ERROR;
@@ -623,7 +623,7 @@ ipmi_fru_dump_hex(ipmi_fru_state_data_t *state_data,
 
           pstdout_fprintf(state_data->pstate,
                           stderr,
-                          "0x%02X ",
+                          "%02Xh ",
                           frubuf[i]);
         }
       pstdout_fprintf(state_data->pstate,
@@ -658,7 +658,7 @@ ipmi_fru_check_checksum(ipmi_fru_state_data_t *state_data,
         {
           pstdout_fprintf(state_data->pstate, 
                           stderr,
-                          "  FRU %s Checksum Invalid: 0x%02X\n", 
+                          "  FRU %s Checksum Invalid: %02Xh\n", 
                           str,
                           checksum);
           return FRU_ERR_NON_FATAL_ERROR;
