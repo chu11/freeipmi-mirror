@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.28 2009-01-07 17:43:53 chu11 Exp $
+## $Id: Makefile.am,v 1.29 2009-01-28 00:08:38 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -59,6 +59,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-event-reading-type-code-spec.h \
 	freeipmi/spec/ipmi-fru-chassis-types-spec.h \
 	freeipmi/spec/ipmi-fru-language-codes-spec.h \
+	freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h \
 	freeipmi/spec/ipmi-ipmb-lun-spec.h \
 	freeipmi/spec/ipmi-lan-parameter-spec.h \
 	freeipmi/spec/ipmi-netfn-spec.h \

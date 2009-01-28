@@ -1,3 +1,15 @@
+2009-01-27  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/spec/ipmi-iana-enterprise-numbers-spec.c,
+	libfreeipmi/include/freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h:
+	New files.
+
+	* libfreeipmi/src/spec/enterprise-numbers.pl: Script to generate
+	ipmi-iana-enterprise-numbers-spec.c.
+
+	* libfreeipmi/src/spec/enterprise-numbers.txt: Currently used
+	database used to generate enterprise numbers.
+	
 2009-01-26  Albert Chu <chu11@llnl.gov>
 
 	* Suppot --config-file option in all tools.

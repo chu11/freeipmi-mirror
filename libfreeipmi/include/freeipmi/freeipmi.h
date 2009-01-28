@@ -78,6 +78,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-event-reading-type-code-spec.h>
 #include <freeipmi/spec/ipmi-fru-chassis-types-spec.h>
 #include <freeipmi/spec/ipmi-fru-language-codes-spec.h>
+#include <freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h>
 #include <freeipmi/spec/ipmi-ipmb-lun-spec.h>
 #include <freeipmi/spec/ipmi-lan-parameter-spec.h>
 #include <freeipmi/spec/ipmi-netfn-spec.h>
