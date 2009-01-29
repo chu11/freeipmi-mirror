@@ -1,3 +1,12 @@
+2009-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Include new sensor-read subsection to libfreeipmi
+	library.
+
+	* ipmi-sensors/: Use new sensor-read library.
+
+	* Update documentation and manpages appropriately.
+
 2009-01-26  Albert Chu <chu11@llnl.gov>
 
 	* Suppot --config-file option in all tools.

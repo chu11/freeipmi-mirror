@@ -70,6 +70,7 @@ extern "C" {
 #include <freeipmi/record-format/ipmi-sel-record-format.h>
 #include <freeipmi/sdr-cache/ipmi-sdr-cache.h>
 #include <freeipmi/sel-parse/ipmi-sel-parse.h>
+#include <freeipmi/sensor-read/ipmi-sensor-read.h>
 #include <freeipmi/spec/ipmi-authentication-type-spec.h>
 #include <freeipmi/spec/ipmi-channel-spec.h>
 #include <freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h>

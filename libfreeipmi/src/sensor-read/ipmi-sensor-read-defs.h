@@ -17,26 +17,38 @@
 
 */
 
-#ifndef _IPMI_SEL_PARSE_STRING_H
-#define _IPMI_SEL_PARSE_STRING_H
+#ifndef _IPMI_SENSOR_READ_DEFS_H
+#define _IPMI_SENSOR_READ_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
 #include <stdint.h>
+#include <sys/param.h>
 
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sensor-read/ipmi-sensor-read.h"
 
-#include "ipmi-sel-parse-defs.h"
+#include "list.h"
 
-int
-sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
-                               char *fmt,
-                               uint8_t *record_buf,
-                               unsigned int record_buflen,
-                               char *buf,
-                               unsigned int buflen,
-                               unsigned int flags);
+#ifndef MAXPATHLEN
+#define MAXPATHLEN 4096
+#endif /* MAXPATHLEN */
 
-#endif /* _IPMI_SEL_PARSE_STRING_H */
+#define IPMI_SENSOR_READ_MAGIC 0xABCD1246
+
+#define IPMI_SENSOR_READ_FLAGS_MASK \
+  (IPMI_SENSOR_READ_FLAGS_DEBUG_DUMP \
+   | IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS)
+
+struct ipmi_sensor_read_ctx {
+  uint32_t magic;
+  unsigned int errnum;
+  unsigned int flags;
+  char *debug_prefix;
+
+  ipmi_ctx_t ipmi_ctx;
+  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
+};
+
+#endif /* _IPMI_SENSOR_READ_DEFS_H */
