@@ -59,9 +59,8 @@ typedef struct ipmi_sensor_read_ctx *ipmi_sensor_read_ctx_t;
 
 /* Sensor Read Context Functions 
  * - ipmi_ctx assumes ipmi opened and ready to go
- * - sdr_cache_ctx assumed ready for reading
  */
-ipmi_sensor_read_ctx_t ipmi_sensor_read_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ctx);
+ipmi_sensor_read_ctx_t ipmi_sensor_read_ctx_create(ipmi_ctx_t ipmi_ctx);
 void ipmi_sensor_read_ctx_destroy(ipmi_sensor_read_ctx_t ctx);
 int ipmi_sensor_read_ctx_errnum(ipmi_sensor_read_ctx_t ctx);
 char * ipmi_sensor_read_ctx_strerror(int errnum);

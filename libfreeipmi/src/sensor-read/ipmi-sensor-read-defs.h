@@ -47,7 +47,6 @@ struct ipmi_sensor_read_ctx {
   unsigned int flags;
 
   ipmi_ctx_t ipmi_ctx;
-  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
 };
 
 #endif /* _IPMI_SENSOR_READ_DEFS_H */

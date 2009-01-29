@@ -80,12 +80,11 @@ static char *ipmi_sensor_read_errmsgs[] =
   };
 
 ipmi_sensor_read_ctx_t
-ipmi_sensor_read_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ctx)
+ipmi_sensor_read_ctx_create(ipmi_ctx_t ipmi_ctx)
 {
   struct ipmi_sensor_read_ctx *ctx = NULL;
   
   ERR_EINVAL_NULL_RETURN(ipmi_ctx);
-  ERR_EINVAL_NULL_RETURN(sdr_cache_ctx);
 
   ERR_CLEANUP((ctx = (ipmi_sensor_read_ctx_t)malloc(sizeof(struct ipmi_sensor_read_ctx))));
   memset(ctx, '\0', sizeof(struct ipmi_sensor_read_ctx));
@@ -93,7 +92,6 @@ ipmi_sensor_read_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_
   ctx->flags = IPMI_SENSOR_READ_FLAGS_DEFAULT;
 
   ctx->ipmi_ctx = ipmi_ctx;
-  ctx->sdr_cache_ctx = sdr_cache_ctx;
 
   return ctx;
 
@@ -327,7 +325,6 @@ _get_sdr_record_sensor_info(ipmi_sensor_read_ctx_t ctx,
                             unsigned int sdr_record_len,
                             uint8_t record_type,
                             uint8_t *sensor_number,
-                            uint8_t *sensor_type,
                             uint8_t *event_reading_type_code,
                             uint8_t *sensor_owner_id_type,
                             uint8_t *sensor_owner_id,
@@ -344,7 +341,6 @@ _get_sdr_record_sensor_info(ipmi_sensor_read_ctx_t ctx,
   assert(record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
          || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD);
   assert(sensor_number);
-  assert(sensor_type);
   assert(event_reading_type_code);
   assert(sensor_owner_id_type);
   assert(sensor_owner_id);
@@ -362,9 +358,6 @@ _get_sdr_record_sensor_info(ipmi_sensor_read_ctx_t ctx,
   
   SENSOR_READ_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_number", &val);
   *sensor_number = val;
-
-  SENSOR_READ_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_type", &val);
-  *sensor_type = val;
 
   SENSOR_READ_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "event_reading_type_code", &val);
   *event_reading_type_code = val;
@@ -491,7 +484,6 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
   uint16_t record_id = 0;
   uint8_t record_type = 0;
   uint8_t sensor_number = 0;
-  uint8_t sensor_type = 0;
   uint8_t event_reading_type_code = 0;
   uint8_t sensor_owner_id_type = 0;
   uint8_t sensor_owner_id = 0;
@@ -533,7 +525,6 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                                   sdr_record_len,
                                   record_type,
                                   &sensor_number,
-                                  &sensor_type,
                                   &event_reading_type_code,
                                   &sensor_owner_id_type,
                                   &sensor_owner_id,
@@ -700,8 +691,8 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
             }
           
           *sensor_reading = tmp_sensor_reading;
-          rv = 1;
         }
+      rv = 1;
     }
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
            || event_reading_type_code_class ==  IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE

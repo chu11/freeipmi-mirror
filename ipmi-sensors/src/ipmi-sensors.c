@@ -39,9 +39,9 @@
 
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
-#include "ipmi-sensors-reading.h"
 #include "ipmi-sensors-simple-output.h"
 #include "ipmi-sensors-detailed-output.h"
+#include "ipmi-sensors-output-common.h"
 #include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
@@ -273,7 +273,10 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                 uint8_t *sdr_record,
                 unsigned int sdr_record_len)
 {
-  double *reading = NULL;
+  double *sensor_reading = NULL;
+  unsigned int sensor_event_bitmask = 0;
+  uint8_t event_reading_type_code;
+  int event_reading_type_code_class;
   char **event_message_list = NULL;
   unsigned int event_message_list_len = 0;
   int rv = -1;
@@ -282,21 +285,156 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
   assert(sdr_record);
   assert(sdr_record_len);
   
-  if (sensor_reading(state_data,
-                     sdr_record,
-                     sdr_record_len,
-                     &reading,
-                     &event_message_list,
-                     &event_message_list_len) < 0)
-    goto cleanup;
+  if (ipmi_sensor_read (state_data->ipmi_sensor_read_ctx,
+                        sdr_record,
+                        sdr_record_len,
+                        &sensor_reading,
+                        &sensor_event_bitmask) < 0)
+    {
+      int errnum = ipmi_sensor_read_ctx_errnum(state_data->ipmi_sensor_read_ctx);
+      
+      if (errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_ANALOG
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_LINEAR)
+        {
+          if (state_data->prog_data->args->common.debug)
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "Sensor reading cannot be calculated: %s\n",
+                            ipmi_sensor_read_ctx_errormsg(state_data->ipmi_sensor_read_ctx));
+          
+          goto get_events;
+        }
+
+      if (errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_UNAVAILABLE
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_SCANNING_DISABLED
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_ANALOG
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_LINEAR
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NOT_OWNED_BY_BMC
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_CANNOT_BE_BRIDGED)
+        {
+          if (state_data->prog_data->args->common.debug)
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "Sensor reading/event bitmask not available: %s\n",
+                            ipmi_sensor_read_ctx_errormsg(state_data->ipmi_sensor_read_ctx));
+
+          if (get_msg_message_list (state_data,
+                                    &event_message_list,
+                                    &event_message_list_len,
+                                    IPMI_SENSORS_NA_STRING_OUTPUT) < 0)
+            goto cleanup;
+
+          goto output;
+        }
+      if (errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_IS_SYSTEM_SOFTWARE
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_CANNOT_BE_OBTAINED
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_NODE_BUSY
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_INVALID_SDR_RECORD_TYPE)
+        {
+          if (state_data->prog_data->args->common.debug)
+            pstdout_fprintf(state_data->pstate,
+                            stderr,
+                            "Sensor reading/event_bitmask retrieval error: %s\n",
+                            ipmi_sensor_read_ctx_errormsg(state_data->ipmi_sensor_read_ctx));
+
+          /* output unknown by not setting/creating an
+           * event_message_list if sensor can't be read/obtained.  For
+           * an invalid SDR type, fall through to output.
+           * detailed-output will output SDR information if it
+           * pleases, simple-output will ignore this SDR type.
+           */
+          goto output;
+        }
+
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_sensor_read: %s\n",
+                      ipmi_sensor_read_ctx_errormsg(state_data->ipmi_sensor_read_ctx));
+      goto cleanup;
+    }
+
+ get_events:
   
+  if (sdr_cache_get_event_reading_type_code (state_data->pstate,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &event_reading_type_code) < 0)
+    goto cleanup;
+
+  event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
+
+  if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
+    {
+      if (get_threshold_message_list (state_data,
+                                      &event_message_list,
+                                      &event_message_list_len,
+                                      sensor_event_bitmask,
+                                      IPMI_SENSORS_NO_EVENT_STRING) < 0)
+        goto cleanup;
+    }
+  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
+    {
+      if (get_generic_event_message_list (state_data,
+                                          &event_message_list,
+                                          &event_message_list_len,
+                                          event_reading_type_code,
+                                          sensor_event_bitmask,
+                                          IPMI_SENSORS_NO_EVENT_STRING) < 0)
+        goto cleanup;
+    }
+  else if (event_reading_type_code_class ==  IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
+    {
+      uint8_t sensor_type;
+
+      if (sdr_cache_get_sensor_type (state_data->pstate,
+                                     sdr_record,
+                                     sdr_record_len,
+                                     &sensor_type) < 0)
+        goto cleanup;
+
+      if (get_sensor_specific_event_message_list (state_data,
+                                                  &event_message_list,
+                                                  &event_message_list_len,
+                                                  sensor_type,
+                                                  sensor_event_bitmask,
+                                                  IPMI_SENSORS_NO_EVENT_STRING) < 0)
+        goto cleanup;
+    }
+  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM)
+    {
+      char *event_message = NULL;
+      char **tmp_event_message_list = NULL;
+
+      if (asprintf (&event_message,
+                    "OEM Event = %04Xh",
+                    (uint16_t) sensor_event_bitmask) < 0)
+        {
+          pstdout_perror(state_data->pstate, "asprintf");
+          goto cleanup;
+        }
+      
+      if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * 2)))
+        {
+          pstdout_perror(state_data->pstate, "malloc");
+          goto cleanup;
+        }
+      
+      tmp_event_message_list[0] = event_message;
+      tmp_event_message_list[1] = NULL;
+
+      event_message_list = tmp_event_message_list;
+      event_message_list_len = 1;
+    }
+  /* else unknown event_reading_type_code, output "unknown" ultimately */
+
+ output:  
   switch (state_data->prog_data->args->verbose_count)
     {
     case 0:
       rv = ipmi_sensors_simple_output (state_data, 
                                        sdr_record,
                                        sdr_record_len,
-                                       reading,
+                                       sensor_reading,
                                        event_message_list,
                                        event_message_list_len);
       break;
@@ -306,15 +444,15 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
       rv = ipmi_sensors_detailed_output (state_data, 
                                          sdr_record,
                                          sdr_record_len,
-                                         reading,
+                                         sensor_reading,
                                          event_message_list,
                                          event_message_list_len);
       break;
     }
   
  cleanup:
-  if (reading)
-    free(reading);
+  if (sensor_reading)
+    free(sensor_reading);
   if (event_message_list)
     {
       int j;
@@ -538,6 +676,23 @@ _ipmi_sensors (pstdout_state_t pstate,
         }
     }
 
+  if (!(state_data.ipmi_sensor_read_ctx = ipmi_sensor_read_ctx_create(state_data.ipmi_ctx)))
+    {
+      pstdout_perror (pstate, "ipmi_sensor_read_ctx_create()");
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+  
+  if (state_data.prog_data->args->common.debug)
+    {
+      if (ipmi_sensor_read_ctx_set_flags(state_data.ipmi_sensor_read_ctx,
+                                         IPMI_SENSOR_READ_FLAGS_DEBUG_DUMP) < 0)
+        pstdout_fprintf (pstate,
+                         stderr,
+                         "ipmi_sensor_read_ctx_set_flags: %s\n",
+                         ipmi_sensor_read_ctx_strerror(ipmi_sensor_read_ctx_errnum(state_data.ipmi_sensor_read_ctx)));
+    }
+
   if (run_cmd_args (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;
@@ -548,6 +703,8 @@ _ipmi_sensors (pstdout_state_t pstate,
  cleanup:
   if (state_data.ipmi_sdr_cache_ctx)
     ipmi_sdr_cache_ctx_destroy(state_data.ipmi_sdr_cache_ctx);
+  if (state_data.ipmi_sensor_read_ctx)
+    ipmi_sensor_read_ctx_destroy(state_data.ipmi_sensor_read_ctx);
   if (state_data.ipmi_ctx)
     {
       ipmi_ctx_close (state_data.ipmi_ctx);

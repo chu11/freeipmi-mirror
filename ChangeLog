@@ -3,6 +3,9 @@
 	* libfreeipmi/: Include new sensor-read subsection to libfreeipmi
 	library.
 
+	* ipmi-sensors/src/ipmi-sensors-reading.h,
+	ipmi-sensors/src/ipmi-sensors-reading.c: Removed files.
+
 	* ipmi-sensors/: Use new sensor-read library.
 
 	* Update documentation and manpages appropriately.
