@@ -17,6 +17,10 @@ libfreeipmi
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
 
+sdr-cache-common lib
+--------------------
+fiid_obj_get should check is ret != 0
+
 sel-parse
 ---------
 most common manufacturer ids
