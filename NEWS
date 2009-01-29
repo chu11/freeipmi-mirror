@@ -46,6 +46,7 @@ o ipmi-sensors
   - Output analog data format name in verbose outputs.
   - Output hex code of group name in addition to group name in
     very-verbose output.
+  - Re-work to use new libfreeipmi sensor-read sub library.
 o ipmimonitoring
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
