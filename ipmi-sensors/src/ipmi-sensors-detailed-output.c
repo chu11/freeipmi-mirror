@@ -1598,15 +1598,23 @@ _output_manufacturer_id (ipmi_sensors_state_data_t *state_data,
                                      &manufacturer_id) < 0)
     return -1;
 
-  pstdout_printf (state_data->pstate,
-                  "Manufacturer ID: %Xh\n", 
-                  manufacturer_id);
-
+  if (IPMI_IANA_ENTERPRISE_ID_VALID(manufacturer_id)
+      && ipmi_iana_enterprise_numbers[manufacturer_id])
+    pstdout_printf(state_data->pstate,
+                   "Manufacturer ID: %s (%Xh)\n",
+                   ipmi_iana_enterprise_numbers[manufacturer_id],
+                   manufacturer_id);
+  
+  else
+    pstdout_printf (state_data->pstate,
+                    "Manufacturer ID: %Xh\n", 
+                    manufacturer_id);
+  
   return 0;
 }
 
 static int 
-_detailed_output_management_controller_information_record (ipmi_sensors_state_data_t *state_data,
+_detailed_output_management_controller_confirmation_record (ipmi_sensors_state_data_t *state_data,
                                                            uint8_t *sdr_record,
                                                            unsigned int sdr_record_len,
                                                            uint8_t record_type,
@@ -1796,11 +1804,11 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                                                                                record_type,
                                                                                record_id);
         case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
-          return _detailed_output_management_controller_information_record (state_data,
-                                                                            sdr_record,
-                                                                            sdr_record_len,
-                                                                            record_type,
-                                                                            record_id);
+          return _detailed_output_management_controller_confirmation_record (state_data,
+                                                                             sdr_record,
+                                                                             sdr_record_len,
+                                                                             record_type,
+                                                                             record_id);
           break;
         case IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD:
           return _detailed_output_bmc_message_channel_info_record (state_data,

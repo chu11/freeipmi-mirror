@@ -1,4 +1,6 @@
-2009-XX-XX  Albert Chu <chu11@llnl.gov>
+2009-01-30  Albert Chu <chu11@llnl.gov>
+
+	From branch sensors_read_branch.
 
 	* libfreeipmi/: Include new sensor-read subsection to libfreeipmi
 	library.
@@ -13,6 +15,29 @@
 
 	* Update documentation and manpages appropriately.
 
+2009-01-28  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-fru/, ipmi-sensors/, libfreeipmi/src/sel-parse/, bmc-info/:
+	Output manufacturer name as well as ID in output.
+
+	* ipmi-fru/: Output with 'h' suffix instead of '0x' prefix for
+	consistency to other tools.
+	
+2009-01-27  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/spec/ipmi-iana-enterprise-numbers-spec.c,
+	libfreeipmi/include/freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h:
+	New files.
+
+	* libfreeipmi/src/spec/enterprise-numbers.pl: Script to generate
+	ipmi-iana-enterprise-numbers-spec.c.
+
+	* libfreeipmi/src/spec/enterprise-numbers.txt: Currently used
+	database used to generate enterprise numbers.
+
+	* bmc-info/src/bmc-info.c (display_get_device_id): Output
+	manufacturer name as well as ID.
+	
 2009-01-26  Albert Chu <chu11@llnl.gov>
 
 	* Suppot --config-file option in all tools.

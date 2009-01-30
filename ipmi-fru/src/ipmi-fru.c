@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.37 2009-01-23 19:29:34 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.37.2.1 2009-01-30 17:53:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -97,7 +97,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
     pstdout_printf(state_data->pstate, "\n");
   (*output_count)++;
   pstdout_printf(state_data->pstate, 
-                 "FRU Inventory Device: %s (ID 0x%02X)\n",
+                 "FRU Inventory Device: %s (ID %02Xh)\n",
                  device_id_str,
                  device_id);
 
@@ -198,22 +198,22 @@ _output_fru(ipmi_fru_state_data_t *state_data,
   if (state_data->prog_data->args->verbose_count >= 2)
     {
       pstdout_printf(state_data->pstate, 
-                     "  FRU Common Header Format Version: 0x%02X\n",
+                     "  FRU Common Header Format Version: %02Xh\n",
                      format_version);
       pstdout_printf(state_data->pstate, 
-                     "  Internal Use Area Starting Offset: 0x%02X\n",
+                     "  Internal Use Area Starting Offset: %02Xh\n",
                      internal_use_area_starting_offset);
       pstdout_printf(state_data->pstate, 
-                     "  Chassis Info Area Starting Offset: 0x%02X\n",
+                     "  Chassis Info Area Starting Offset: %02Xh\n",
                      chassis_info_area_starting_offset);
       pstdout_printf(state_data->pstate, 
-                     "  Board Info Area Starting Offset: 0x%02X\n",
+                     "  Board Info Area Starting Offset: %02Xh\n",
                      board_info_area_starting_offset);
       pstdout_printf(state_data->pstate, 
-                     "  Product Info Area Starting Offset: 0x%02X\n",
+                     "  Product Info Area Starting Offset: %02Xh\n",
                      product_info_area_starting_offset);
       pstdout_printf(state_data->pstate, 
-                     "  Multirecord Area Starting Offset: 0x%02X\n",
+                     "  Multirecord Area Starting Offset: %02Xh\n",
                      multirecord_area_starting_offset);
     }
 
@@ -222,7 +222,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
       if (state_data->prog_data->args->verbose_count)
         pstdout_fprintf(state_data->pstate, 
                         stderr,
-                        "  FRU Common Header Format Unknown: 0x%02X\n", 
+                        "  FRU Common Header Format Unknown: %02Xh\n", 
                         format_version);
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;

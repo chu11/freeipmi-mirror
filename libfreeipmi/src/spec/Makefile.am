@@ -10,5 +10,6 @@ libspec_la_CPPFLAGS = \
 libspec_la_SOURCES = \
 	ipmi-fru-chassis-types-spec.c \
 	ipmi-fru-language-codes-spec.c \
+	ipmi-iana-enterprise-numbers-spec.c \
 	ipmi-sensor-types-spec.c \
 	ipmi-sensor-units-spec.c

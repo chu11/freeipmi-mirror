@@ -9,9 +9,21 @@ libfreeipmi
 * abstract FRU parsing into lib?
 * abstract sensors parsing into lib?
 * put more sdr cache parsing into lib?
+  - fix all tools
+  - use in sel-parse lib
+  - use in sensor-read lib
+  - use in everywhere
 * more detailed debug output for ssif interface like KCS interface
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
+
+sdr-cache-common lib
+--------------------
+fiid_obj_get should check is ret != 0
+
+sel-parse
+---------
+most common manufacturer ids
 
 sel/sensors/monitoring
 ----------------------
@@ -29,6 +41,7 @@ sensors
 consistent output to ipmimonitoring/sel
 - verbose more like ipmimonitoring
 descriptiont of output fields and what they mean
+make sure bridging still works w/ sensor-read lib
 
 monitoring
 ----------

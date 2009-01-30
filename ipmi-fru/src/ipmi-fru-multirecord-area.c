@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.17 2009-01-13 01:02:14 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.17.6.1 2009-01-30 17:53:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -599,7 +599,7 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
             pstdout_printf(state_data->pstate, "\n    ");
           
           pstdout_printf(state_data->pstate,
-                         " 0x%02X",
+                         " %02Xh",
                          managementaccessbuf[i]);
         }
       pstdout_printf(state_data->pstate, "\n");
@@ -607,14 +607,14 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
   else
     {
       pstdout_printf(state_data->pstate,
-                     "  FRU Management Access Record: Unknown Sub Record Type:\n");
+                     "  FRU Management Access Record: Unknown Sub Record Type:");
       for (i = 0; i < len; i++)
         {
           if ((i % 8) == 0)
             pstdout_printf(state_data->pstate, "\n    ");
           
           pstdout_printf(state_data->pstate,
-                         " 0x%02X",
+                         " %02Xh",
                          managementaccessbuf[i]);
         }
       pstdout_printf(state_data->pstate, "\n");
@@ -703,17 +703,25 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
                          codemaskbuf,
                          FRU_BUF_LEN);
 
+  if (IPMI_IANA_ENTERPRISE_ID_VALID(manufacturer_id)
+      && ipmi_iana_enterprise_numbers[manufacturer_id])
+    pstdout_printf(state_data->pstate,
+                   "  FRU Base Compatibility Manufacturer ID: %s (%Xh)\n",
+                   ipmi_iana_enterprise_numbers[manufacturer_id],
+                   manufacturer_id);
+  else
+    pstdout_printf(state_data->pstate,
+                   "  FRU Base Compatibility Manufacturer ID: %Xh\n",
+                   manufacturer_id);
+
   pstdout_printf(state_data->pstate,
-                 "  FRU Base Compatibility Manufacturer ID: 0x%X\n",
-                 manufacturer_id);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Base Compatibility Entity ID: 0x%X\n",
+                 "  FRU Base Compatibility Entity ID: %Xh\n",
                  entity_id_code);
   pstdout_printf(state_data->pstate,
-                 "  FRU Base Compatibility Comptability Base: 0x%X\n",
+                 "  FRU Base Compatibility Comptability Base: %Xh\n",
                  compatibility_base);
   pstdout_printf(state_data->pstate,
-                 "  FRU Base Compatibility Comptability Code Start Value: 0x%X\n",
+                 "  FRU Base Compatibility Comptability Code Start Value: %Xh\n",
                  compatibility_code_start_value);
       
   if (len)
@@ -729,7 +737,7 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
             pstdout_printf(state_data->pstate, "\n    ");
           
           pstdout_printf(state_data->pstate,
-                         " 0x%02X",
+                         " %02Xh",
                          codemaskbuf[i]);
         }
       pstdout_printf(state_data->pstate, "\n");
@@ -819,17 +827,17 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
                          FRU_BUF_LEN);
 
   pstdout_printf(state_data->pstate,
-                 "  FRU Extended Compatibility Manufacturer ID: 0x%X\n",
+                 "  FRU Extended Compatibility Manufacturer ID: %Xh\n",
                  manufacturer_id);
 
   pstdout_printf(state_data->pstate,
-                 "  FRU Extended Compatibility Entity ID: 0x%X\n",
+                 "  FRU Extended Compatibility Entity ID: %Xh\n",
                  entity_id_code);
   pstdout_printf(state_data->pstate,
-                 "  FRU Extended Compatibility Comptability Base: 0x%X\n",
+                 "  FRU Extended Compatibility Comptability Base: %Xh\n",
                  compatibility_base);
   pstdout_printf(state_data->pstate,
-                 "  FRU Extended Compatibility Comptability Code Start Value: 0x%X\n",
+                 "  FRU Extended Compatibility Comptability Code Start Value: %Xh\n",
                  compatibility_code_start_value);
   
   if (len)
@@ -845,7 +853,7 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
             pstdout_printf(state_data->pstate, "\n    ");
           
           pstdout_printf(state_data->pstate,
-                         " 0x%02X",
+                         " %02Xh",
                          codemaskbuf[i]);
         }
       pstdout_printf(state_data->pstate, "\n");
@@ -920,7 +928,7 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
                          FRU_BUF_LEN);
 
   pstdout_printf(state_data->pstate,
-                 "  FRU OEM Manufacturer ID: 0x%X\n",
+                 "  FRU OEM Manufacturer ID: %Xh\n",
                  manufacturer_id);
 
   if (len)
@@ -936,7 +944,7 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
             pstdout_printf(state_data->pstate, "\n    ");
           
           pstdout_printf(state_data->pstate,
-                         " 0x%02X",
+                         " %02Xh",
                          oemdatabuf[i]);
         }
       pstdout_printf(state_data->pstate, "\n");
@@ -1051,13 +1059,13 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
       if (state_data->prog_data->args->verbose_count >= 2)
         {
           pstdout_printf(state_data->pstate, 
-                         "  FRU Multirecord Info Area Record Type ID: 0x%02X\n",
+                         "  FRU Multirecord Info Area Record Type ID: %02Xh\n",
                          record_type_id);
           pstdout_printf(state_data->pstate, 
-                         "  FRU Multirecord Info Area Record Format Version: 0x%02X\n",
+                         "  FRU Multirecord Info Area Record Format Version: %02Xh\n",
                          record_format_version);
           pstdout_printf(state_data->pstate, 
-                         "  FRU Multirecord Info Area End Of List: 0x%02X\n",
+                         "  FRU Multirecord Info Area End Of List: %02Xh\n",
                          end_of_list);
           pstdout_printf(state_data->pstate,
                          "  FRU Multirecord Info Area Record Length: %u\n", 
@@ -1071,7 +1079,7 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
         {
           pstdout_fprintf(state_data->pstate, 
                           stderr,
-                          "  FRU Multirecord Area Format Unknown: 0x%02X\n", 
+                          "  FRU Multirecord Area Format Unknown: %02Xh\n", 
                           record_format_version);
           continue;
         }
@@ -1229,7 +1237,7 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
       else
         pstdout_fprintf(state_data->pstate,
                         stderr,
-                        "  FRU Multirecord Record ID Type Unknown: 0x%02X\n",
+                        "  FRU Multirecord Record ID Type Unknown: %02Xh\n",
                         record_type_id);
 
       multirecord_offset += record_length;

@@ -258,10 +258,18 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     int8_t flag;
     
     _FIID_OBJ_GET (cmd_rs, "manufacturer_id.id", &manufacturer_id);
-    pstdout_printf(state_data->pstate, 
-                   "Manufacturer ID:   %Xh\n", 
-                   (unsigned int) manufacturer_id);
     
+    if (IPMI_IANA_ENTERPRISE_ID_VALID(manufacturer_id)
+        && ipmi_iana_enterprise_numbers[manufacturer_id])
+      pstdout_printf(state_data->pstate,
+                     "Manufacturer ID:   %s (%Xh)\n",
+                     ipmi_iana_enterprise_numbers[manufacturer_id],
+                     (unsigned int) manufacturer_id);
+    else
+      pstdout_printf(state_data->pstate, 
+                     "Manufacturer ID:   %Xh\n", 
+                     (unsigned int) manufacturer_id);
+
     _FIID_OBJ_GET (cmd_rs, "product_id", &product_id);
     pstdout_printf(state_data->pstate, 
                    "Product ID:        %Xh\n", 
