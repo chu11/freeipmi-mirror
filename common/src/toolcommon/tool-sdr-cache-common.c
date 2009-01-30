@@ -120,13 +120,22 @@
 #define _SDR_FIID_OBJ_GET(__obj, __field, __val)                         \
   do {                                                                   \
     uint64_t __tmp_val = 0, *__val_ptr;                                  \
+    int8_t __ret;                                                        \
     __val_ptr = (__val);                                                 \
-    if (fiid_obj_get ((__obj), (__field), &__tmp_val) < 0)               \
+    if ((__ret = fiid_obj_get ((__obj), (__field), &__tmp_val)) < 0)     \
       {                                                                  \
         PSTDOUT_FPRINTF(pstate,                                          \
                         stderr,                                          \
                         "fiid_obj_get: %s\n",                            \
                         fiid_obj_errormsg((__obj)));                     \
+        goto cleanup;                                                    \
+      }                                                                  \
+    if (!__ret)                                                          \
+      {                                                                  \
+        PSTDOUT_FPRINTF(pstate,                                          \
+                        stderr,                                          \
+                        "fiid_obj_get: field %s: no data\n",             \
+                        __field);                                        \
         goto cleanup;                                                    \
       }                                                                  \
     *__val_ptr = __tmp_val;                                              \
