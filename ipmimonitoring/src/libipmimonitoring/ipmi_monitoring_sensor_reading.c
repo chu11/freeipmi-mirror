@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.60 2009-01-30 18:04:12 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.61 2009-01-30 22:11:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -46,6 +46,52 @@
 #include "ipmi_monitoring_sensor_reading.h"
 
 #include "freeipmi-portability.h"
+
+static void
+_sensor_reading_cleanup(ipmi_monitoring_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMI_MONITORING_MAGIC);
+
+  if (c->sensor_read_ctx)
+    {
+      ipmi_sensor_read_ctx_destroy(c->sensor_read_ctx);
+      c->sensor_read_ctx = NULL;
+    }
+}
+
+
+int
+ipmi_monitoring_sensor_reading_init(ipmi_monitoring_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMI_MONITORING_MAGIC);
+  assert(c->ipmi_ctx);
+  assert(!c->sensor_read_ctx);
+
+  if (!(c->sensor_read_ctx = ipmi_sensor_read_ctx_create(c->ipmi_ctx)))
+    {
+      IPMI_MONITORING_DEBUG(("ipmi_sensor_read_ctx_create: %s", strerror(errno)));
+      c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
+      goto cleanup;
+    }
+
+  return 0;
+
+ cleanup:
+  _sensor_reading_cleanup(c);
+  return -1;
+}
+
+int
+ipmi_monitoring_sensor_reading_cleanup(ipmi_monitoring_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMI_MONITORING_MAGIC);
+
+  _sensor_reading_cleanup(c);
+  return 0;
+}
 
 static struct ipmi_monitoring_sensor_reading *
 _allocate_sensor_reading(ipmi_monitoring_ctx_t c)

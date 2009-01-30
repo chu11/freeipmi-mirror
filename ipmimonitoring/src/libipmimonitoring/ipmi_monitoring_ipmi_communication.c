@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.25 2009-01-30 18:04:12 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.26 2009-01-30 22:11:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -63,11 +63,6 @@ _ipmi_communication_cleanup(ipmi_monitoring_ctx_t c)
       ipmi_ctx_close(c->ipmi_ctx);
       ipmi_ctx_destroy(c->ipmi_ctx);
       c->ipmi_ctx = NULL;
-    }
-  if (c->sensor_read_ctx)
-    {
-      ipmi_sensor_read_ctx_destroy(c->sensor_read_ctx);
-      c->sensor_read_ctx = NULL;
     }
 }
 
@@ -593,13 +588,6 @@ ipmi_monitoring_ipmi_communication_init(ipmi_monitoring_ctx_t c,
     {
       if (_outofband_init(c, hostname, config) < 0)
         goto cleanup;
-    }
-
-  if (!(c->sensor_read_ctx = ipmi_sensor_read_ctx_create(c->ipmi_ctx)))
-    {
-      IPMI_MONITORING_DEBUG(("ipmi_sensor_read_ctx_create: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-      goto cleanup;
     }
 
   return 0;

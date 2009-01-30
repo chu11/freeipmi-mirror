@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.h,v 1.8 2009-01-13 01:02:22 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.h,v 1.9 2009-01-30 22:11:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -28,6 +28,10 @@
 #define _IPMI_MONITORING_SENSOR_READING_H
 
 #include "ipmi_monitoring.h"
+
+int ipmi_monitoring_sensor_reading_init(ipmi_monitoring_ctx_t c);
+
+int ipmi_monitoring_sensor_reading_cleanup(ipmi_monitoring_ctx_t c);
 
 int ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c, 
                                        unsigned int sensor_reading_flags,

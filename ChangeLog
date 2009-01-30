@@ -2,6 +2,8 @@
 
 	* common/src/toolcommon/tool-sdr-common.c: Check return value from
 	fiid_obj_get.
+
+	* ipmimonitoring/src/libipmimonitoring/: Code cleanup.
 	
 2009-01-30  Albert Chu <chu11@llnl.gov>
 
