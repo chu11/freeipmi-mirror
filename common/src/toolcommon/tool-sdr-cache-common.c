@@ -57,7 +57,6 @@
 
 #define MAXIPADDRLEN 128
 
-#define IPMI_SDR_RECORD_TYPE_ALL_RECORDS                                 0x0000
 #define IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD                          0x0001
 #define IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD                       0x0002
 #define IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD                           0x0004

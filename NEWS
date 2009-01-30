@@ -79,6 +79,7 @@ Libraries
 ---------
 o libfreeipmi
   - Add new sel-parse sub library.
+  - Add new sdr-parse sub library.
   - More detailed KCS debug output with header information.
   - New error code IPMI_ERR_NOT_FOUND in libfreeipmi API sub library
     supported.

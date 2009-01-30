@@ -78,6 +78,12 @@ data repository (SDR).  Utilized by tools such as
 and 
 .B ipmimonitoring(8).
 .TP
+.B sdr-parse
+Provides an API for parsing SDR records.  Utilized by tools such as
+.B ipmi-fru(8)
+and
+.B ipmi-sensors(8)
+.TP
 .B sel-parse
 Provides an API for reading and parsing System Event Log (SEL) entries.
 Utilized by tools such as 

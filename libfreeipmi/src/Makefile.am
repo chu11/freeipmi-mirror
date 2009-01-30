@@ -9,6 +9,7 @@ SUBDIRS = \
 	locate \
 	record-format \
 	sdr-cache \
+	sdr-parse \
 	sel-parse \
 	sensor-read \
 	spec \
@@ -45,6 +46,7 @@ libfreeipmi_la_LIBADD = \
 	$(top_builddir)/libfreeipmi/src/locate/liblocate.la \
 	$(top_builddir)/libfreeipmi/src/record-format/librecordformat.la \
 	$(top_builddir)/libfreeipmi/src/sdr-cache/libsdrcache.la \
+	$(top_builddir)/libfreeipmi/src/sdr-parse/libsdrparse.la \
 	$(top_builddir)/libfreeipmi/src/sel-parse/libselparse.la \
 	$(top_builddir)/libfreeipmi/src/sensor-read/libsensorread.la \
 	$(top_builddir)/libfreeipmi/src/spec/libspec.la \
@@ -87,6 +89,9 @@ $(top_builddir)/libfreeipmi/src/record-format/librecordformat.la : force-depende
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/sdr-cache/libsdrcache.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/libfreeipmi/src/sdr-parse/libsdrparse.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/sel-parse/libselparse.la : force-dependency-check

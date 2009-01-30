@@ -1,3 +1,12 @@
+2009-XX-XX  Albert Chu <chu11@llnl.gov>
+	
+	From branch sdr_parse_branch.
+
+	* libfreeipmi/: Include new sdr-parse subsection to libfreeipmi
+	library.
+
+	* Update documentation and manpages appropriately.
+
 2009-01-30  Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolcommon/tool-sdr-common.c: Check return value from
