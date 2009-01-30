@@ -52,8 +52,7 @@
 #define IPMI_SENSOR_READ_CTX_ERR_ERRNUMRANGE                            20
 
 #define IPMI_SENSOR_READ_FLAGS_DEFAULT                              0x0000
-#define IPMI_SENSOR_READ_FLAGS_DEBUG_DUMP                           0x0001
-#define IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS                       0x0002
+#define IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS                       0x0001
 
 typedef struct ipmi_sensor_read_ctx *ipmi_sensor_read_ctx_t;
 
