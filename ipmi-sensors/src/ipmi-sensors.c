@@ -683,10 +683,17 @@ _ipmi_sensors (pstdout_state_t pstate,
       goto cleanup;
     }
   
-  if (state_data.prog_data->args->common.debug)
+  if (state_data.prog_data->args->common.debug
+      || state_data.prog_data->args->bridge_sensors)
     {
-      if (ipmi_sensor_read_ctx_set_flags(state_data.ipmi_sensor_read_ctx,
-                                         IPMI_SENSOR_READ_FLAGS_DEBUG_DUMP) < 0)
+      unsigned int flags = 0;
+
+      if (state_data.prog_data->args->common.debug)
+        flags |= IPMI_SENSOR_READ_FLAGS_DEBUG_DUMP;
+      if (state_data.prog_data->args->bridge_sensors)
+        flags |= IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS;
+
+      if (ipmi_sensor_read_ctx_set_flags(state_data.ipmi_sensor_read_ctx, flags) < 0)
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_sensor_read_ctx_set_flags: %s\n",
