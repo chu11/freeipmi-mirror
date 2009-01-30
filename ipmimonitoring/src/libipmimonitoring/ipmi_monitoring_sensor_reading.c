@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.59 2009-01-23 23:19:03 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.59.2.1 2009-01-30 17:46:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -461,40 +461,28 @@ _get_sensor_name(ipmi_monitoring_ctx_t c,
   return 0;
 }
 
-static int
-_sensor_reading_corner_case_checks(ipmi_monitoring_ctx_t c, fiid_obj_t obj_cmd_rs)
+static void
+_sensor_read_ctx_error_convert(ipmi_monitoring_ctx_t c)
 {
+  int errnum;
+
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(obj_cmd_rs);
+  assert(c->ipmi_ctx);
+  assert(c->sensor_read_ctx);
 
-  /* Tell the caller to store as an unreadable sensor b/c:
-   *
-   * IPMI_COMP_CODE_NODE_BUSY: The sensor is busy.  
-   *
-   * IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT: A sensor listed by the SDR is not present.
-   *
-   * IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE: The
-   * sensor data cannot be retrieved.  Probably a motherboard error.
-   *
-   * IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE or
-   * IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD: The sdr seems to have
-   * invalid data.
-   */
-  
-  if (ipmi_check_completion_code(obj_cmd_rs,
-                                 IPMI_COMP_CODE_NODE_BUSY) == 1
-      || ipmi_check_completion_code(obj_cmd_rs, 
-                                    IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1
-      || ipmi_check_completion_code(obj_cmd_rs,
-                                    IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
-      || ipmi_check_completion_code(obj_cmd_rs,
-                                    IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1
-      || ipmi_check_completion_code(obj_cmd_rs,
-                                    IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1)
-    return 0;
+  errnum = ipmi_sensor_read_ctx_errnum(c->sensor_read_ctx);
 
-  return -1;
+  if (errnum == IPMI_SENSOR_READ_CTX_ERR_NODE_BUSY)
+    c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
+  else if (errnum == IPMI_SENSOR_READ_CTX_ERR_IPMI_ERROR)
+    c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
+  else if (errnum == IPMI_SENSOR_READ_CTX_ERR_OUT_OF_MEMORY)
+    c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
+  else if (errnum == IPMI_SENSOR_READ_CTX_ERR_SYSTEM_ERROR)
+    c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
+  else
+    c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
 }
 
 /*
@@ -503,236 +491,58 @@ _sensor_reading_corner_case_checks(ipmi_monitoring_ctx_t c, fiid_obj_t obj_cmd_r
 static int
 _get_sensor_reading(ipmi_monitoring_ctx_t c,
                     unsigned int sensor_reading_flags,
-                    fiid_obj_t obj_sdr_record,
-                    uint8_t *sensor_number,
-                    uint8_t *sensor_reading,
+                    uint8_t *sdr_record,
+                    unsigned int sdr_record_len,
+                    double *sensor_reading,
                     uint16_t *sensor_event_bitmask)
 {
-  fiid_obj_t obj_cmd_rs = NULL;
+  double *l_sensor_reading = NULL;
   int rv = -1;
-  uint64_t val;
-  uint64_t sensor_event_bitmask1;
-  uint64_t sensor_event_bitmask2;
-  int8_t sensor_event_bitmask1_len, sensor_event_bitmask2_len;
-  uint8_t sensor_owner_id_type;
-  uint8_t sensor_owner_id;
-  uint8_t sensor_owner_lun;
-  uint8_t channel_number;
-  uint8_t slave_address;
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->sensor_readings);
-  assert(fiid_obj_valid(obj_sdr_record));
-  assert(sensor_number);
+  assert(sdr_record);
+  assert(sdr_record_len);
   assert(sensor_reading);
   assert(sensor_event_bitmask);
-  
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "sensor_owner_id.type",
-                   &val) < 0)
-    return -1;
-  sensor_owner_id_type = val;
 
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "sensor_owner_id",
-                   &val) < 0)
-    return -1;
-  sensor_owner_id = val;
-
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "sensor_owner_lun",
-                   &val) < 0)
-    return -1;
-  sensor_owner_lun = val;
-
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "channel_number",
-                   &val) < 0)
-    return -1;
-  channel_number = val;
-
-  if (sensor_owner_id_type == IPMI_SDR_SENSOR_OWNER_ID_TYPE_SYSTEM_SOFTWARE_ID)
+  if (ipmi_sensor_read (c->sensor_read_ctx,
+                        sdr_record,
+                        sdr_record_len,
+                        &l_sensor_reading,
+                        sensor_event_bitmask) <= 0)
     {
-      /* sensor reading not available.  Tell the caller to store this
-       * as an unreadable sensor
-       */
-      IPMI_MONITORING_DEBUG(("sensor is system software sensor"));
-      rv = 0;
-      goto cleanup;
-    }
+      int errnum = ipmi_sensor_read_ctx_errnum(c->sensor_read_ctx);
 
-  slave_address = (sensor_owner_id << 1) | sensor_owner_id_type;
-
-  if (!(obj_cmd_rs = Fiid_obj_create(c, tmpl_cmd_get_sensor_reading_rs)))
-    goto cleanup;
-     
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "sensor_number",
-                   &val) < 0)
-    return -1;
-  *sensor_number = val;
-
-  if (slave_address == IPMI_SLAVE_ADDRESS_BMC)
-    {
-      if (ipmi_cmd_get_sensor_reading(c->ipmi_ctx, 
-                                      *sensor_number, 
-                                      obj_cmd_rs) < 0)
+      IPMI_MONITORING_DEBUG(("ipmi_sensor_read: %s", ipmi_sensor_read_ctx_errormsg(c->sensor_read_ctx)));
+      if (errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_ANALOG
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_LINEAR
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_UNAVAILABLE
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_SCANNING_DISABLED
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_ANALOG
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_LINEAR
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NOT_OWNED_BY_BMC
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_CANNOT_BE_BRIDGED
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_IS_SYSTEM_SOFTWARE
+          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_CANNOT_BE_OBTAINED)
         {
-          if (!_sensor_reading_corner_case_checks(c, obj_cmd_rs))
-            {
-              rv = 0;
-              goto cleanup;
-            }
-
-          ipmi_monitoring_ipmi_ctx_error_convert(c);
+          rv = 0;
           goto cleanup;
         }
-    }
-  else if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS
-           && channel_number == IPMI_CHANNEL_NUMBER_PRIMARY_IPMB)
-    {
-      if (ipmi_cmd_get_sensor_reading_ipmb (c->ipmi_ctx,
-                                            slave_address,
-                                            sensor_owner_lun,
-                                            *sensor_number,
-                                            obj_cmd_rs) < 0)
-        {
-          if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE)
-            {
-              /* sensor cannot be reached, consider it an unreadable sensor */
-              IPMI_MONITORING_DEBUG(("sensor slave address cannot be reached"));
-              rv = 0;
-              goto cleanup;
-            }
 
-          if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
-            {
-              /* ipmb message timed out, but we can still continue, not a fatal error */
-              IPMI_MONITORING_DEBUG(("sensor ipmb message timed out"));
-              rv = 0;
-              goto cleanup;
-            }
-          
-          if (!_sensor_reading_corner_case_checks(c, obj_cmd_rs))
-            {
-              rv = 0;
-              goto cleanup;
-            }
-          
-          ipmi_monitoring_ipmi_ctx_error_convert(c);
-          goto cleanup;
-        }
-    }
-  else
-    {
-      /* sensor reading not available.  Tell the caller to store this
-       * as an unreadable sensor
-       */
-      IPMI_MONITORING_DEBUG(("sensor slave address is not BMC"));
-      rv = 0;
+      _sensor_read_ctx_error_convert(c);
       goto cleanup;
     }
 
-
-  if (Fiid_obj_get(c,
-                   obj_cmd_rs,
-                   "reading_state",
-                   &val) < 0)
-    goto cleanup;
-  
-  if (val == IPMI_SENSOR_READING_STATE_UNAVAILABLE)
+  if (l_sensor_reading)
     {
-      IPMI_MONITORING_DEBUG(("sensor reading unavailable"));
-      /* sensor reading not available.  Tell the caller to store this
-       * as an unreadable sensor
-       */
-      rv = 0;
-      goto cleanup;
-    }
-
-  if (Fiid_obj_get(c,
-                   obj_cmd_rs,
-                   "sensor_scanning",
-                   &val) < 0)
-    goto cleanup;
-  
-  if (val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
-    {
-      IPMI_MONITORING_DEBUG(("sensor scanning disabled"));
-      /* sensor scanning disabled.  Tell the caller to store this as
-       * an unreadable sensor
-       */
-      rv = 0;
-      goto cleanup;
-    }
-
-  if (Fiid_obj_get(c,
-                   obj_cmd_rs,
-                   "sensor_reading",
-                   &val) < 0)
-    goto cleanup;
-  *sensor_reading = val;
-
-  /* 
-   * IPMI Workaround (achu)
-   *
-   * Discovered on Dell 2950.
-   *
-   * It seems the sensor_event_bitmask may not be returned by the server
-   * at all for some sensors.  Under this situation, there's not
-   * much that can be done.  Since there is no sensor_event_bitmask, we
-   * just assume that no states have been asserted and the
-   * sensor_event_bitmask = 0;
-   */
-  /* Don't use wrapper, we need the return value */
-  if ((sensor_event_bitmask1_len = fiid_obj_get(obj_cmd_rs, 
-                                                "sensor_event_bitmask1", 
-                                                &sensor_event_bitmask1)) < 0)
-    {
-      IPMI_MONITORING_DEBUG(("fiid_obj_get: field=%s; %s", 
-                             "sensor_event_bitmask1", 
-                             fiid_obj_errormsg(obj_cmd_rs)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      goto cleanup;
-    }
-
-  if ((sensor_event_bitmask2_len = fiid_obj_get(obj_cmd_rs, 
-                                                "sensor_event_bitmask2", 
-                                                &sensor_event_bitmask2)) < 0)
-    {
-      IPMI_MONITORING_DEBUG(("fiid_obj_get: field=%s; %s", 
-                             "sensor_event_bitmask2", 
-                             fiid_obj_errormsg(obj_cmd_rs)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      goto cleanup;
-    }
-
-  if (!sensor_event_bitmask1_len && !sensor_event_bitmask2_len)
-    {
-      IPMI_MONITORING_DEBUG(("assume sensor_event_bitmask = 0"));
-      *sensor_event_bitmask = 0;
-    }
-  else if (sensor_event_bitmask1_len && sensor_event_bitmask2_len)
-    *sensor_event_bitmask = sensor_event_bitmask1 | (sensor_event_bitmask2 << 8);
-  else if (sensor_event_bitmask1_len && !sensor_event_bitmask2_len)
-    *sensor_event_bitmask = sensor_event_bitmask1;
-  else
-    {
-      IPMI_MONITORING_DEBUG(("invalid sensor_event_bitmask conditions"));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      goto cleanup;
+      (*sensor_reading) = (*l_sensor_reading);
+      free(l_sensor_reading);
     }
 
   rv = 1;
  cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
   return rv;
 }
 
@@ -740,43 +550,32 @@ static int
 _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
                           unsigned int sensor_reading_flags,
                           uint16_t record_id,
-                          uint8_t sensor_type,
                           int sensor_group,
-                          fiid_obj_t obj_sdr_record)
+                          char *sensor_name,
+                          fiid_obj_t obj_sdr_record,
+                          uint8_t *sdr_record,
+                          unsigned int sdr_record_len)
 {
-  uint8_t sensor_number;
-  uint8_t analog_data_format;
   uint8_t rate_unit;
   uint8_t modifier_unit;
   uint8_t sensor_base_unit;
   uint8_t sensor_modifier_unit;
-  uint8_t linearization;
-  int16_t m;
-  int16_t b;
-  int8_t r_exponent;
-  int8_t b_exponent;
-  char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
-  uint8_t sensor_reading;
+  double sensor_reading;
   uint16_t sensor_event_bitmask;
   uint64_t val;
   int sensor_units;
   int sensor_state;
-  double sensor_value;
   int ret;
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->sensor_readings);
   assert(IPMI_MONITORING_SENSOR_GROUP_VALID(sensor_group));
-  assert(fiid_obj_valid(obj_sdr_record));
+  assert(sensor_name);
+  assert(obj_sdr_record);
   assert(fiid_obj_template_compare(obj_sdr_record, tmpl_sdr_full_sensor_record));
-
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "sensor_unit1.analog_data_format",
-                   &val) < 0)
-    return -1;
-  analog_data_format = val;
+  assert(sdr_record);
+  assert(sdr_record_len);
 
   if (Fiid_obj_get(c,
                    obj_sdr_record,
@@ -806,69 +605,6 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
     return -1;
   sensor_modifier_unit = val;
 
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "linearization",
-                   &val) < 0)
-    return -1;
-  linearization = val;
-
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "m_ls",
-                   &val) < 0)
-    return -1;
-  m = val;
-  
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "m_ms",
-                   &val) < 0)
-    return -1;
-  m |= ((val & 0x3) << 8);
-  if (m & 0x200)
-    m |= 0xFE00;
-
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "b_ls",
-                   &val) < 0)
-    return -1;
-  b = val;
-  
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "b_ms",
-                   &val) < 0)
-    return -1;
-  b |= ((val & 0x3) << 8);
-  if (b & 0x200)
-    b |= 0xFE00;
-  
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "r_exponent",
-                   &val) < 0)
-    return -1;
-  r_exponent = val;
-  if (r_exponent & 0x08)
-    r_exponent |= 0xF0;
-
-  if (Fiid_obj_get(c,
-                   obj_sdr_record,
-                   "b_exponent",
-                   &val) < 0)
-    return -1;
-  b_exponent = val;
-  if (b_exponent & 0x08)
-    b_exponent |= 0xF0;
-
-  if (_get_sensor_name(c,
-                       obj_sdr_record,
-                       sensor_name,
-                       IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH) < 0)
-    return -1;
-
   if ((sensor_units = _get_sensor_units(c,
                                         modifier_unit,
                                         rate_unit,
@@ -876,36 +612,10 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
                                         sensor_modifier_unit)) < 0)
     return -1;
 
-  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
-    {
-      IPMI_MONITORING_DEBUG(("non-analog sensors not currently supported: '0x%X'", analog_data_format));
-      if (_store_unreadable_sensor_reading(c, 
-                                           sensor_reading_flags, 
-                                           record_id,
-                                           sensor_group,
-                                           sensor_name,
-                                           sensor_units) < 0)
-        return -1;
-      return 0;
-    }
-
-  if (IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(linearization))
-    {
-      IPMI_MONITORING_DEBUG(("non-linear sensors not currently supported: '0x%X'", linearization));
-      if (_store_unreadable_sensor_reading(c, 
-                                           sensor_reading_flags, 
-                                           record_id,
-                                           sensor_group,
-                                           sensor_name,
-                                           sensor_units) < 0)
-        return -1;
-      return 0;
-    }
-
   if ((ret = _get_sensor_reading(c,
                                  sensor_reading_flags,
-                                 obj_sdr_record,
-                                 &sensor_number,
+                                 sdr_record,
+                                 sdr_record_len,
                                  &sensor_reading,
                                  &sensor_event_bitmask)) < 0)
     return -1;
@@ -923,20 +633,6 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
       return 0;
     }
 
-  if (ipmi_sensor_decode_value(r_exponent,
-                               b_exponent,
-                               m,
-                               b,
-                               linearization,
-                               analog_data_format,
-                               sensor_reading,
-                               &sensor_value) < 0)
-    {
-      IPMI_MONITORING_DEBUG(("ipmi_sensor_decode_value: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      return -1;
-    }
-
   if ((sensor_state = _get_threshold_sensor_state(c, sensor_event_bitmask)) < 0)
     return -1;
 
@@ -950,7 +646,7 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
                             IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE,
                             IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD,
                             sensor_event_bitmask,
-                            &sensor_value) < 0)
+                            &sensor_reading) < 0)
     return -1;
 
   return 0;
@@ -1012,11 +708,11 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
                         uint8_t event_reading_type_code,
                         uint8_t sensor_type,
                         int sensor_group,
-                        fiid_obj_t obj_sdr_record)
+                        char *sensor_name,
+                        uint8_t *sdr_record,
+                        unsigned int sdr_record_len)
 {
-  uint8_t sensor_number;
-  char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
-  uint8_t sensor_reading;
+  double sensor_reading;
   uint16_t sensor_event_bitmask;
   int sensor_state;
   int sensor_bitmask_type;
@@ -1027,18 +723,14 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
   assert(c->sensor_readings);
   assert(IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code));
   assert(IPMI_MONITORING_SENSOR_GROUP_VALID(sensor_group));
-  assert(fiid_obj_valid(obj_sdr_record));
-
-  if (_get_sensor_name(c,
-                       obj_sdr_record,
-                       sensor_name,
-                       IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH) < 0)
-    return -1;
+  assert(sensor_name);
+  assert(sdr_record);
+  assert(sdr_record_len);
 
   if ((ret = _get_sensor_reading(c,
                                  sensor_reading_flags,
-                                 obj_sdr_record,
-                                 &sensor_number,
+                                 sdr_record,
+                                 sdr_record_len,
                                  &sensor_reading,
                                  &sensor_event_bitmask)) < 0)
     return -1;
@@ -1066,7 +758,7 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
                                                               event_reading_type_code)) < 0)
     return -1;
   
-  /* No actual sensor reading, only a sensor state */
+  /* No actual sensor reading, only a sensor event bitmask */
   if (_store_sensor_reading(c,
                             sensor_reading_flags,
                             record_id,
@@ -1151,11 +843,11 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
                          uint16_t record_id,
                          uint8_t sensor_type,
                          int sensor_group,
-                         fiid_obj_t obj_sdr_record)
+                         char *sensor_name,
+                         uint8_t *sdr_record,
+                         unsigned int sdr_record_len)
 {
-  uint8_t sensor_number;
-  char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
-  uint8_t sensor_reading;
+  double sensor_reading;
   uint16_t sensor_event_bitmask;
   int sensor_state;
   int sensor_bitmask_type;
@@ -1164,18 +856,14 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->sensor_readings);
-  assert(fiid_obj_valid(obj_sdr_record));
-
-  if (_get_sensor_name(c,
-                       obj_sdr_record,
-                       sensor_name,
-                       IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH) < 0)
-    return -1;
+  assert(sensor_name);
+  assert(sdr_record);
+  assert(sdr_record_len);
 
   if ((ret = _get_sensor_reading(c,
                                  sensor_reading_flags,
-                                 obj_sdr_record,
-                                 &sensor_number,
+                                 sdr_record,
+                                 sdr_record_len,
                                  &sensor_reading,
                                  &sensor_event_bitmask)) < 0)
     return -1;
@@ -1202,7 +890,7 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
                                                                sensor_type)) < 0)
     return -1;
 
-  /* No actual sensor reading, only a sensor state */
+  /* No actual sensor reading, only a sensor event bitmask */
   if (_store_sensor_reading(c,
                             sensor_reading_flags,
                             record_id,
@@ -1292,6 +980,7 @@ _full_record_sensor_reading(ipmi_monitoring_ctx_t c,
                             unsigned int sensor_groups_len,
                             uint16_t record_id)
 {
+  char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
   fiid_obj_t obj_sdr_record = NULL;
   uint8_t event_reading_type_code;
   uint8_t sensor_type;
@@ -1342,6 +1031,12 @@ _full_record_sensor_reading(ipmi_monitoring_ctx_t c,
         goto out;
     }
                                    
+  if (_get_sensor_name(c,
+                       obj_sdr_record,
+                       sensor_name,
+                       IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH) < 0)
+    return -1;
+
   if (Fiid_obj_get(c,
                    obj_sdr_record,
                    "event_reading_type_code",
@@ -1354,9 +1049,11 @@ _full_record_sensor_reading(ipmi_monitoring_ctx_t c,
       if (_threshold_sensor_reading(c, 
                                     sensor_reading_flags, 
                                     record_id, 
-                                    sensor_type,
                                     sensor_group,
-                                    obj_sdr_record) < 0)
+                                    sensor_name,
+                                    obj_sdr_record,
+                                    sdr_record,
+                                    sdr_record_len) < 0)
         goto cleanup;
     }
   else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code))
@@ -1367,7 +1064,9 @@ _full_record_sensor_reading(ipmi_monitoring_ctx_t c,
                                   event_reading_type_code,
                                   sensor_type,
                                   sensor_group,
-                                  obj_sdr_record) < 0)
+                                  sensor_name,
+                                  sdr_record,
+                                  sdr_record_len) < 0)
         goto cleanup;
     }
   else if (IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
@@ -1377,21 +1076,15 @@ _full_record_sensor_reading(ipmi_monitoring_ctx_t c,
                                    record_id,
                                    sensor_type,
                                    sensor_group,
-                                   obj_sdr_record) < 0)
+                                   sensor_name,
+                                   sdr_record,
+                                   sdr_record_len) < 0)
         goto cleanup;
     }
   else
     {
-      char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
-  
       IPMI_MONITORING_DEBUG(("full_record event_reading_type_code '0x%X' not supported", 
                              event_reading_type_code));
-
-      if (_get_sensor_name(c,
-                           obj_sdr_record,
-                           sensor_name,
-                           IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH) < 0)
-        return -1;
 
       if (_store_unreadable_sensor_reading(c, 
                                            sensor_reading_flags, 
@@ -1420,6 +1113,7 @@ _compact_record_sensor_reading(ipmi_monitoring_ctx_t c,
                                unsigned int sensor_groups_len,
                                uint16_t record_id)
 {
+  char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
   fiid_obj_t obj_sdr_record = NULL;
   uint8_t event_reading_type_code;
   uint8_t sensor_type;
@@ -1470,6 +1164,12 @@ _compact_record_sensor_reading(ipmi_monitoring_ctx_t c,
         goto out;
     }
 
+  if (_get_sensor_name(c,
+                       obj_sdr_record,
+                       sensor_name,
+                       IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH) < 0)
+    return -1;
+
   if (Fiid_obj_get(c,
                    obj_sdr_record,
                    "event_reading_type_code",
@@ -1485,7 +1185,9 @@ _compact_record_sensor_reading(ipmi_monitoring_ctx_t c,
                                   event_reading_type_code,
                                   sensor_type,
                                   sensor_group,
-                                  obj_sdr_record) < 0)
+                                  sensor_name,
+                                  sdr_record,
+                                  sdr_record_len) < 0)
         goto cleanup;
     }
   else if (IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
@@ -1495,21 +1197,15 @@ _compact_record_sensor_reading(ipmi_monitoring_ctx_t c,
                                    record_id,
                                    sensor_type,
                                    sensor_group,
-                                   obj_sdr_record) < 0)
+                                   sensor_name,
+                                   sdr_record,
+                                   sdr_record_len) < 0)
         goto cleanup;
     }
   else
     {
-      char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
-  
       IPMI_MONITORING_DEBUG(("compact_record event_reading_type_code '0x%X' not supported", 
                              event_reading_type_code));
-
-      if (_get_sensor_name(c,
-                           obj_sdr_record,
-                           sensor_name,
-                           IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH) < 0)
-        return -1;
 
       if (_store_unreadable_sensor_reading(c, 
                                            sensor_reading_flags, 
@@ -1604,6 +1300,7 @@ ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c,
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->sensor_readings);
   assert(c->ipmi_ctx);
+  assert(c->sensor_read_ctx);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(!sensor_groups || sensor_groups_len);

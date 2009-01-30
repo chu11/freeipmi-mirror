@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.42 2009-01-23 01:01:54 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.42.2.1 2009-01-30 17:46:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -359,6 +359,16 @@ _ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
       if (ipmi_monitoring_sdr_cache_flush(c, hostname) < 0)
         goto cleanup;
     }
+
+  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS)
+    {
+      if (ipmi_sensor_read_ctx_set_flags(c->sensor_read_ctx, IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS) < 0)
+        {
+          IPMI_MONITORING_DEBUG(("ipmi_sensor_read_ctx_set_flags: %s", ipmi_sensor_read_ctx_errormsg(c->sensor_read_ctx)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          goto cleanup;
+        }
+    }
       
   if (ipmi_monitoring_sdr_cache_load(c, hostname) < 0)
     goto cleanup;
@@ -529,6 +539,16 @@ _ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
         goto cleanup;
     }
       
+  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS)
+    {
+      if (ipmi_sensor_read_ctx_set_flags(c->sensor_read_ctx, IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS) < 0)
+        {
+          IPMI_MONITORING_DEBUG(("ipmi_sensor_read_ctx_set_flags: %s", ipmi_sensor_read_ctx_errormsg(c->sensor_read_ctx)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          goto cleanup;
+        }
+    }
+
   if (ipmi_monitoring_sdr_cache_load(c, hostname) < 0)
     goto cleanup;
       

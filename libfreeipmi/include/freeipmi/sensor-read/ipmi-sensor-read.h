@@ -88,6 +88,6 @@ int ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                      uint8_t *sdr_record,
                      unsigned int sdr_record_len,
                      double **sensor_reading,
-                     unsigned int *sensor_event_bitmask);
+                     uint16_t *sensor_event_bitmask);
 
 #endif /* _IPMI_SENSOR_READ_H */

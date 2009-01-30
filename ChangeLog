@@ -8,6 +8,9 @@
 
 	* ipmi-sensors/: Use new sensor-read library.
 
+	* ipmimonitoring/src/libipmimonitoring/: Use new sensor-read
+	library.
+
 	* Update documentation and manpages appropriately.
 
 2009-01-26  Albert Chu <chu11@llnl.gov>

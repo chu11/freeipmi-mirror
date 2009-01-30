@@ -274,7 +274,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                 unsigned int sdr_record_len)
 {
   double *sensor_reading = NULL;
-  unsigned int sensor_event_bitmask = 0;
+  uint16_t sensor_event_bitmask = 0;
   uint8_t event_reading_type_code;
   int event_reading_type_code_class;
   char **event_message_list = NULL;

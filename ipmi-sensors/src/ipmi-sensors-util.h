@@ -29,7 +29,7 @@ int get_msg_message_list (struct ipmi_sensors_state_data *state_data,
 int get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
                                 char ***event_message_list,
                                 unsigned int *event_message_list_len,
-                                uint8_t sensor_event_bitmask,
+                                uint16_t sensor_event_bitmask,
                                 char *no_event_msg);
 
 int get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
