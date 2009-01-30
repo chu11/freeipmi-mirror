@@ -1,3 +1,20 @@
+2009-01-30  Albert Chu <chu11@llnl.gov>
+
+	From branch sensors_read_branch.
+
+	* libfreeipmi/: Include new sensor-read subsection to libfreeipmi
+	library.
+
+	* ipmi-sensors/src/ipmi-sensors-reading.h,
+	ipmi-sensors/src/ipmi-sensors-reading.c: Removed files.
+
+	* ipmi-sensors/: Use new sensor-read library.
+
+	* ipmimonitoring/src/libipmimonitoring/: Use new sensor-read
+	library.
+
+	* Update documentation and manpages appropriately.
+
 2009-01-28  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/, ipmi-sensors/, libfreeipmi/src/sel-parse/, bmc-info/:

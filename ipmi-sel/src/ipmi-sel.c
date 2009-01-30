@@ -1092,7 +1092,6 @@ static int
 _display_sel_records (ipmi_sel_state_data_t *state_data)
 {
   struct ipmi_sel_arguments *args;
-  ipmi_sdr_cache_ctx_t sdr_cache_ctx = NULL;
   
   assert(state_data);
 
@@ -1108,7 +1107,6 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                      state_data->hostname,
                                      args->sdr.sdr_cache_directory) < 0)
         return -1;
-      sdr_cache_ctx = state_data->ipmi_sdr_cache_ctx;
     }
 
   if (!args->legacy_output)
@@ -1211,17 +1209,6 @@ _ipmi_sel (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  /* Special case, just flush, don't do SEL stuff */
-  if (!prog_data->args->sdr.flush_cache)
-    {
-      if (!(state_data.ipmi_sel_parse_ctx = ipmi_sel_parse_ctx_create(state_data.ipmi_ctx,
-                                                                      prog_data->args->sdr.ignore_sdr_cache ? NULL : state_data.ipmi_sdr_cache_ctx)))
-        {
-          pstdout_perror (pstate, "ipmi_sel_parse_ctx_create()");
-          goto cleanup;
-        }
-    }
-
   if (state_data.prog_data->args->common.debug)
     {
       /* Don't error out, if this fails we can still continue */
@@ -1241,23 +1228,37 @@ _ipmi_sel (pstdout_state_t pstate,
                              "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
                              ipmi_sdr_cache_ctx_errormsg(state_data.ipmi_sdr_cache_ctx));
         }
+    }
 
-      /* Don't error out, if this fails we can still continue */
-      if (ipmi_sel_parse_ctx_set_flags(state_data.ipmi_sel_parse_ctx,
-                                       IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP) < 0)
-        pstdout_fprintf (pstate,
-                         stderr,
-                         "ipmi_sel_parse_ctx_set_flags: %s\n",
-                         ipmi_sel_parse_ctx_errormsg(state_data.ipmi_sel_parse_ctx));
-
-      if (hostname)
+  /* Special case, just flush, don't do SEL stuff */
+  if (!prog_data->args->sdr.flush_cache)
+    {
+      if (!(state_data.ipmi_sel_parse_ctx = ipmi_sel_parse_ctx_create(state_data.ipmi_ctx,
+                                                                      prog_data->args->sdr.ignore_sdr_cache ? NULL : state_data.ipmi_sdr_cache_ctx)))
         {
-          if (ipmi_sel_parse_ctx_set_debug_prefix(state_data.ipmi_sel_parse_ctx,
-                                                  hostname) < 0)
+          pstdout_perror (pstate, "ipmi_sel_parse_ctx_create()");
+          goto cleanup;
+        }
+      
+      if (state_data.prog_data->args->common.debug)
+        {
+          /* Don't error out, if this fails we can still continue */
+          if (ipmi_sel_parse_ctx_set_flags(state_data.ipmi_sel_parse_ctx,
+                                           IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP) < 0)
             pstdout_fprintf (pstate,
                              stderr,
-                             "ipmi_sel_parse_ctx_set_debug_prefix: %s\n",
+                             "ipmi_sel_parse_ctx_set_flags: %s\n",
                              ipmi_sel_parse_ctx_errormsg(state_data.ipmi_sel_parse_ctx));
+          
+          if (hostname)
+            {
+              if (ipmi_sel_parse_ctx_set_debug_prefix(state_data.ipmi_sel_parse_ctx,
+                                                      hostname) < 0)
+                pstdout_fprintf (pstate,
+                                 stderr,
+                                 "ipmi_sel_parse_ctx_set_debug_prefix: %s\n",
+                                 ipmi_sel_parse_ctx_errormsg(state_data.ipmi_sel_parse_ctx));
+            }
         }
     }
 

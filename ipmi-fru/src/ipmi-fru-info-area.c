@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.17 2009-01-28 22:57:17 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.18 2009-01-30 18:04:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.

@@ -17,21 +17,35 @@
 
 */
 
-#ifndef _IPMI_SENSORS_READING_H
-#define _IPMI_SENSORS_READING_H
+#ifndef _IPMI_SENSOR_READ_DEFS_H
+#define _IPMI_SENSOR_READ_DEFS_H
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif /* HAVE_CONFIG_H */
 
 #include <stdint.h>
+#include <sys/param.h>
 
-#include "freeipmi/api/ipmi-api.h"
-#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/sensor-read/ipmi-sensor-read.h"
 
-#include "ipmi-sensors.h"
+#include "list.h"
 
-int sensor_reading (struct ipmi_sensors_state_data *state_data,
-                    uint8_t *sdr_record,
-                    unsigned int sdr_record_len,
-                    double **reading,
-                    char ***event_message_list,
-                    unsigned int *event_message_list_len);
+#ifndef MAXPATHLEN
+#define MAXPATHLEN 4096
+#endif /* MAXPATHLEN */
 
-#endif
+#define IPMI_SENSOR_READ_MAGIC 0xABCD1246
+
+#define IPMI_SENSOR_READ_FLAGS_MASK \
+  (IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS)
+
+struct ipmi_sensor_read_ctx {
+  uint32_t magic;
+  unsigned int errnum;
+  unsigned int flags;
+
+  ipmi_ctx_t ipmi_ctx;
+};
+
+#endif /* _IPMI_SENSOR_READ_DEFS_H */
