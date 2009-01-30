@@ -255,53 +255,84 @@ Several programmers have asked us why we have chosen a relatively
 unpopular/different method to marshall/unmarshall IPMI packets and
 build network packets.
 
-First, there are several classic methods for marshalling/unmarshalling
-data when using structs to represent a packet.
+First, lets discuss several classic methods for
+marshalling/unmarshalling data when using structs to represent a
+packet.
 
 Method A: Marshall/Unmarshall "manually":
 -----------------------------------------
 
 struct packet
 {
-  int field_1; /* 1 bit */
-  int field_2; /* 3 bits */
-  int field_3; /* 4 bits */
-  int field_4; /* 16 bits */
+  uint8_t field_1; /* 1 bit */
+  uint8_t field_2; /* 3 bits */
+  uint8_t field_3; /* 4 bits */
+  uint16_t field_4; /* 16 bits */
 };
 
-char packet_buffer[1024];
-struct packet pkt;
+my_marshall_function(struct packet *pkt, char *buf, unsigned int buflen)
+{
+   buf[0] |= pkt->field_1 & 0x1;
+   buf[0] |= (pkt->field_2 << 1) & 0x0E;
+   buf[0] |= (pkt->field_3 << 4) & 0xF0;
+   /* assuming network byte order here */
+   buf[1] |= (pkt->field_4 & 0xFF00) >> 8;
+   buf[2] |= pkt->field_4 & 0x00FF;
+}
 
-/* receive data from the network into packet_buffer */
-
-pkt.field_1 = packet_buffer[0] & 0x01;
-pkt.field_2 = packet_buffer[0] & 0x0E >> 1;
-pkt.field_3 = packet_buffer[0] & 0xF0 >> 4;
+my_unmarshall_function(struct packet *pkt, char *buf, unsigned int buflen)
+{
+   pkt->field_1 = buf[0] & 0x01;
+   pkt->field_2 = buf[0] & 0x0E >> 1;
+   pkt->field_3 = buf[0] & 0xF0 >> 4;
 #if LITTLE_ENDIAN_HOST
-pkt.field_4 = packet_buffer[2] | packet_buffer[1] << 8;;
+   pkt->field_4 = buf[2] | buf[1] << 8;;
 #else
-pkt.field_4 = packet_buffer[1] | packet_buffer[2] << 8;;
+   pkt->field_4 = buf[1] | buf[2] << 8;;
 #endif
+}
+
+general_usage_example()
+{
+   struct packet pkt;
+   char buf[1024];
+   int len;
+ 
+   pkt.field_1 = 1;
+   pkt.field_2 = 2;
+   pkt.field_3 = 3;
+   pkt.field_4 = 5;
+
+   my_marshall_function(&pkt, buf, 1024);
+   /* then do something with the buffer */
+
+   len = my_receive_data_function(buf);
+   my_unmarshall_function(&pkt, buf, len);
+
+   printf("field_1 is: %u\n", pkt.field_1);
+}
 
 Pros:
 
 A) No need to deal with struct packing issues in the compiler.
-B) The struct definition describes packets exactly.
+B) The struct definition describes packets closely and is relatively
+   easy to use and understand.
 C) Relatively efficient.
+D) General usage code size is relatively small.
 
 Cons:
 
 A) Have to deal with endian problems.
-B) Lots of code.  Structs and marshalling/unmarshalling functions are
-required for each packet type.
+B) Lots of marshalling and unmarshalling code are required for each
+packet type.
 C) Relatively difficult to deal with optional fields. (You'll need
-flags in the struct to indicate if a field was set/unset.)
+flags in the struct to indicate if a field was set/unset, or validate
+the fields via protocol definition knowledge.)
 D) Relatively difficult to deal with variable length fields. (You'll
 need a length parameter in the struct to indicate the length of a
 field.)
-E) Difficult to do large packet dumps (you only get hex, or you have
-to create a separate debug function for each struct or packet type if
-you want nicer output).
+E) Packet dumps/debugging is relatively poor (you only get hex) or you
+have to create debug functions to handle each packet type.
 
 Method B: Cast a buffer to a packed struct:
 -------------------------------------------
@@ -310,58 +341,76 @@ For Example:
 
 struct packet
 {
-  int field_1 : 1;
-  int field_2 : 3;
-  int field_3 : 4;
-  int field_4 : 16; 
+  uint8_t field_1 : 1;
+  uint8_t field_2 : 3;
+  uint8_t field_3 : 4;
+  uint16_t field_4; 
 };
 
-char my_packet_buffer[1024];
-
-struct packet *pkt = (struct packet *)my_packet_buffer_ptr;
-
+my_marshall_function(struct packet *pkt, char *buf, unsigned int buflen)
+{
+   memcpy(buf, pkt, sizeof(struct packet));
 #if LITTLE_ENDIAN_HOST
-pkt->field_4 = ntohs(pkt->field_4);
+    swap(&buf[1], &buf[2]);
 #endif
+}
+
+my_unmarshall_function(struct packet *pkt, char *buf, unsigned int buflen)
+{
+   *pkt = *((struct packet *)buf);
+#if LITTLE_ENDIAN_HOST
+    pkt->field_4 = ntohs(pkt->field_4);
+#endif
+}
+
+general_usage_example()
+{
+   struct packet pkt;
+   char buf[1024];
+   int len;
+ 
+   pkt.field_1 = 1;
+   pkt.field_2 = 2;
+   pkt.field_3 = 3;
+   pkt.field_4 = 5;
+
+   my_marshall_function(&pkt, buf, 1024);
+   /* then do something with the buffer */
+
+   len = my_receive_data_function(buf);
+   my_unmarshall_function(&pkt, buf, len);
+
+   printf("field_1 is: %u\n", pkt.field_1);
+}
 
 Pros:
 
-A) Less code.  You may not need to create specific functions for
-marshalling/unmarshalling each packet type.
-B) The struct definition describes packets exactly.
-C) Very efficient (little actual marshalling/unmarshalling needs to be done.)
+A) Not too much marshalling and unmarshalling code is required.
+B) General usage code size is relatively small.
+C) The struct definition describes packets exactly and is relatively
+   easy to use and understand.
+D) Very efficient (little actual marshalling/unmarshalling needs to be done.)
 
 Cons:
 
 A) Have to deal with endian problems.
 B) Have to deal with portability of struct packing techniques (there
 are differences in compilers, but nowadays, this may be
-easier/portable than I originally believed it to be).
-C) No mechanism to deal with optional fields (how do you know if
-something is set?)
-D) No mechanism to deal with variable length fields (how do you know
-how long the field is?)
-E) Difficult to do large packet dumps (you only get hex, or you have
-to create a separate debug function for each struct or packet type if
-you want nicer output).
+easier/more portable than I originally believed it to be).
+C) Difficult to deal with optional fields (no flags can be put
+in the struct to indicate if a field was set/unset, can only
+validate the fields via protocol definition knowledge.)
+D) No mechanism to deal with variable length fields (no length
+field can be put in the struct to indicate the field length.)
+E) Packet dumps/debugging is relatively poor (you only get hex) or you
+have to create debug functions to handle each packet type.
 
 Our Method C: string_name -> bitmask mapping
 --------------------------------------------
 
 The "FreeIPMI Interface Definition" or 'fiid' API in libfreeipmi uses
 a string_name/bit_count template and an API to get and set values in a
-packet to handle marshalling/unmarshalling.  The following is an
-example of this template:
-
-fiid_template_t tmpl_cmd_set_channel_security_keys_rs =
-  {
-    {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {2,   "lock_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {6,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {160, "key_value", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
-    {0, "", 0}
-  };
+packet to handle marshalling/unmarshalling.
 
 The following are a few of the API functions used for FIID to give you
 an idea for the fiid API:
@@ -373,6 +422,41 @@ int8_t fiid_obj_set (fiid_obj_t obj, char *field, uint64_t val);
 int8_t fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
 int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
 int32_t fiid_obj_set_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
+
+The following is the fiid equivalent in the previous examples:
+
+fiid_template_t tmpl_example =
+  {
+    {1, "field_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "field_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "field_3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "field_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+general_usage_example()
+{
+   fiid_obj_t obj;
+   char buf[1024];
+   int len;
+   uint64_t val;
+
+   obj = fiid_obj_create(tmpl_example);
+   fiid_obj_set(obj, "field_1", 1);
+   fiid_obj_set(obj, "field_2", 2);
+   fiid_obj_set(obj, "field_3", 3);
+   fiid_obj_set(obj, "field_4", 5);
+
+   fiid_obj_get_all(obj, buf, 1024);
+   /* then do something with the buffer */
+
+   fiid_obj_clear(obj);
+   len = my_receive_data_function(buf);
+   fiid_obj_set_all(obj, buf, len);
+  
+   fiid_obj_get(obj, "field_1", &val);   
+   printf("field_1 is: %u\n", (unsigned int)val);
+}
 
 The pros and cons of the fiid method are:
 
@@ -386,36 +470,47 @@ read the api can identify if a field is set or not).
 D) Easier to deal with variable length fields (set whatever length you
 want, on a read the api can identify the length of the field).
 E) Templates describe the packets exactly.
-F) Easy to do large packet dumps (fields and values easily output and identified).
-G) Significantly reduce the amount of marshalling/unmarshalling/debug
-code needed.
+F) Easy to do large packet dumps and debug (fields and values easily
+output and identified).
+G) Significantly reduce the amount of marshalling, unmarshalling, and
+debug code needed (the API "handles" it all already).
 
 Cons:
 
-A) Need to learn/use a reasonably sized API.
+A) Need to learn/use a reasonably large API and learn/use all the
+templates.
 B) Pretty inefficient (lots of string comparisons).
 C) Lots of duplicate templates (relative inability to "inherit"
 structs without #define mangling/hackery).
+D) General usage code size is increased.
 
-The authors acknowledge that the fiid interface is far less efficient
-than the traditional methods and may annoy some.  However, some of
-the below are the big reasons why this was developed and chosen over
-traditional methods.
+(Side Comment: some other networking APIs do something similar to
+this, but use macros/enums for the field names rather than strings.
+Many of the above benefits are identical, except the debug dump output
+capabilities is weaker in exchange for better performance.)
+
+The big reasons why this was developed and chosen over traditional
+methods.
 
 A) The IPMI specification is very large, so reducing code size weighed
 in as an important factor for the authors.  This allowed there to be
 fewer marshalling/unmarshalling/debug functions.  By one authors
-counting in the specification, there are 304 different payloads in the
-IPMI specification.  (This doesn't count bitmask mapping, per packet
-unique completion codes, header/trailer packet construction,
-authentication, encryption, and all that other good stuff.)
+counting in the specification, there are 304 different base payloads
+in the IPMI specification.  This does not include permutations of
+payloads due to different versions, optional fields, headers,
+trailers, encryption, oem extensions, record formats data is stored
+in, etc.
 
-B) Although IPMI has a specification, the lack of IPMI compliance from
-vendors is a well known problem in the open-source community.  The
-templates have saved developers countless hours of tcpdump debugging
-time due to the easy method by which packets can be dumped with their
-fields and values identified.  It is very easy to find vendor IPMI
-compliance problems quickly.
+B) There are a relatively large number of optional fields and variable
+length fields in the IPMI specification.  As stated above, the
+traditional struct based marshalling/unmarshalling have issues
+with handling these.
+
+C) The lack of IPMI compliance from vendors is a well known problem in
+the open-source community.  The templates have saved developers
+countless hours of debugging time due to the easy method by which
+packets can be dumped with their fields and values quickly identified.
+It is very easy to find vendor IPMI compliance problems very quickly.
 
 Here's an example of a dump:
 
@@ -453,11 +548,6 @@ pwopr2: [               0h] = reserved2[ 4b]
 pwopr2: : IPMI Trailer:
 pwopr2: : --------------
 pwopr2: [              1Fh] = checksum2[ 8b]
-
-C) There are a relatively large number of optional fields and variable
-length fields in the IPMI specification.  As stated above, the
-traditional struct based marshalling/unmarshalling could have issues
-with it.
 
 7) Non-generic error messages
 -----------------------------

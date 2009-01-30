@@ -7,7 +7,6 @@ libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
 * abstract FRU parsing into lib?
-* abstract sensors parsing into lib?
 * put more sdr cache parsing into lib?
   - fix all tools
   - use in sel-parse lib
@@ -17,42 +16,9 @@ libfreeipmi
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
 
-sdr-cache-common lib
---------------------
-fiid_obj_get should check is ret != 0
-
-sel-parse
----------
-most common manufacturer ids
-
-sel/sensors/monitoring
-----------------------
-new options in config file
-- ranges
-- options
--legacy
-
-poweredge
----------
-test sensors/monitoring on poweredge
-
-sensors
--------
-consistent output to ipmimonitoring/sel
-- verbose more like ipmimonitoring
-descriptiont of output fields and what they mean
+sensors/monitoring
+------------------
 make sure bridging still works w/ sensor-read lib
-
-monitoring
-----------
-consinstent output to sensors
-- sensor reading before units
-- legacy output?
-support output of reading and bitmask for all sensors
-- need API rework
-        - add threshold bitmask option
-        - need bitmask get option
-        - collapse iterator and callback functions into "get" functions
 
 sunbmc driver
 -------------
