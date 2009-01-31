@@ -1567,6 +1567,26 @@ do {                                                                          \
     }                                                                         \
 } while (0)
 
+#define SDR_PARSE_FIID_OBJ_COPY(__obj_dest, __obj_src, __alt_tmpl)            \
+do {                                                                          \
+    if (!((__obj_dest) = fiid_obj_copy((__obj_src),(__alt_tmpl))))            \
+       {                                                                      \
+         __FIID_OBJ_TRACE((__obj_src));                                       \
+         __FIID_OBJ_ERRNUM_TO_SDR_PARSE_ERRNUM((__obj));                      \
+         return (-1);                                                         \
+       }                                                                      \
+} while (0)
+
+#define SDR_PARSE_FIID_OBJ_COPY_CLEANUP(__obj_dest, __obj_src, __alt_tmpl)    \
+do {                                                                          \
+    if (!((__obj_dest) = fiid_obj_copy((__obj_src), (__alt_tmpl))))           \
+       {                                                                      \
+         __FIID_OBJ_TRACE((__obj_src));                                       \
+         __FIID_OBJ_ERRNUM_TO_SDR_PARSE_ERRNUM((__obj));                      \
+         goto cleanup;                                                        \
+       }                                                                      \
+} while (0)
+
 #define SDR_PARSE_FIID_OBJ_SET_ALL(__obj, __data, __data_len)                 \
 do {                                                                          \
     if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)               \

@@ -68,6 +68,7 @@ static char *ipmi_sdr_parse_errmsgs[] =
     "out of memory",
     "invalid sdr record",
     "incomplete sdr record",
+    "cannot parse or calculate",
     "internal system error",
     "internal error",
     "errnum out of range",
@@ -195,6 +196,7 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_parse_ctx_t ctx,
     }
   
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record_header);
   return rv;
@@ -286,7 +288,7 @@ _sdr_record_get_common(ipmi_sdr_parse_ctx_t ctx,
 }
 
 int
-ipmi_sdr_parse_sensor_owner_id (pstdout_state_t pstate,
+ipmi_sdr_parse_sensor_owner_id (ipmi_sdr_parse_ctx_t ctx,
                                 uint8_t *sdr_record,
                                 unsigned int sdr_record_len,
                                 uint8_t *sensor_owner_id_type,
@@ -305,7 +307,7 @@ ipmi_sdr_parse_sensor_owner_id (pstdout_state_t pstate,
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
@@ -324,13 +326,14 @@ ipmi_sdr_parse_sensor_owner_id (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
 int
-ipmi_sdr_parse_sensor_owner_lun (pstdout_state_t pstate,
+ipmi_sdr_parse_sensor_owner_lun (ipmi_sdr_parse_ctx_t ctx,
                                  uint8_t *sdr_record,
                                  unsigned int sdr_record_len,
                                  uint8_t *sensor_owner_lun,
@@ -349,7 +352,7 @@ ipmi_sdr_parse_sensor_owner_lun (pstdout_state_t pstate,
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
@@ -368,13 +371,52 @@ ipmi_sdr_parse_sensor_owner_lun (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
 int
-ipmi_sdr_parse_entity_id_instance_type (pstdout_state_t pstate,
+ipmi_sdr_parse_sensor_number (ipmi_sdr_parse_ctx_t ctx,
+                              uint8_t *sdr_record,
+                              unsigned int sdr_record_len,
+                              uint8_t *sensor_number)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (sensor_number)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_number", &val);
+      *sensor_number = val;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_entity_id_instance_type (ipmi_sdr_parse_ctx_t ctx,
                                         uint8_t *sdr_record,
                                         unsigned int sdr_record_len,
                                         uint8_t *entity_id,
@@ -394,7 +436,7 @@ ipmi_sdr_parse_entity_id_instance_type (pstdout_state_t pstate,
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
@@ -417,50 +459,14 @@ ipmi_sdr_parse_entity_id_instance_type (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
 int
-ipmi_sdr_parse_sensor_number (pstdout_state_t pstate,
-                              uint8_t *sdr_record,
-                              unsigned int sdr_record_len,
-                              uint8_t *sensor_number)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
-  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
-  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (sensor_number)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_number", &val);
-      *sensor_number = val;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_sensor_type (pstdout_state_t pstate,
+ipmi_sdr_parse_sensor_type (ipmi_sdr_parse_ctx_t ctx,
                             uint8_t *sdr_record,
                             unsigned int sdr_record_len,
                             uint8_t *sensor_type)
@@ -478,7 +484,7 @@ ipmi_sdr_parse_sensor_type (pstdout_state_t pstate,
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
@@ -491,13 +497,14 @@ ipmi_sdr_parse_sensor_type (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
 int
-ipmi_sdr_parse_event_reading_type_code (pstdout_state_t pstate,
+ipmi_sdr_parse_event_reading_type_code (ipmi_sdr_parse_ctx_t ctx,
                                         uint8_t *sdr_record,
                                         unsigned int sdr_record_len,
                                         uint8_t *event_reading_type_code)
@@ -515,7 +522,7 @@ ipmi_sdr_parse_event_reading_type_code (pstdout_state_t pstate,
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
@@ -528,53 +535,14 @@ ipmi_sdr_parse_event_reading_type_code (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
 int
-ipmi_sdr_parse_sensor_unit (pstdout_state_t pstate,
-                            uint8_t *sdr_record,
-                            unsigned int sdr_record_len,
-                            uint8_t *sensor_unit)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
-  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (sensor_unit)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_unit2.base_unit", &val);
-      
-      if (!IPMI_SENSOR_UNIT_VALID(val))
-        val = IPMI_SENSOR_UNIT_UNSPECIFIED;
-      
-      *sensor_unit = val;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_id_string (pstdout_state_t pstate,
+ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
                           uint8_t *sdr_record,
                           unsigned int sdr_record_len,
                           char *id_string,
@@ -592,7 +560,7 @@ ipmi_sdr_parse_id_string (pstdout_state_t pstate,
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
@@ -607,52 +575,55 @@ ipmi_sdr_parse_id_string (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
 int
-ipmi_sdr_parse_device_id_string (pstdout_state_t pstate,
-                                 uint8_t *sdr_record,
-                                 unsigned int sdr_record_len,
-                                 char *device_id_string,
-                                 unsigned int device_id_string_len)
+ipmi_sdr_parse_sensor_unit (ipmi_sdr_parse_ctx_t ctx,
+                            uint8_t *sdr_record,
+                            unsigned int sdr_record_len,
+                            uint8_t *sensor_unit)
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
+  uint64_t val;
   int rv = -1;
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
   SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
 
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
-  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
-  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
     goto cleanup;
 
-  if (device_id_string && device_id_string_len)
+  if (sensor_unit)
     {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP_DATA(obj_sdr_record,
-                                          "device_id_string",
-                                          (uint8_t *)device_id_string,
-                                          device_id_string_len);
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_unit2.base_unit", &val);
+      
+      if (!IPMI_SENSOR_UNIT_VALID(val))
+        val = IPMI_SENSOR_UNIT_UNSPECIFIED;
+      
+      *sensor_unit = val;
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
 int
-ipmi_sdr_parse_sensor_capabilities (pstdout_state_t pstate,
+ipmi_sdr_parse_sensor_capabilities (ipmi_sdr_parse_ctx_t ctx,
                                     uint8_t *sdr_record,
                                     unsigned int sdr_record_len,
                                     uint8_t *event_message_control_support,
@@ -673,7 +644,7 @@ ipmi_sdr_parse_sensor_capabilities (pstdout_state_t pstate,
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
@@ -716,847 +687,14 @@ ipmi_sdr_parse_sensor_capabilities (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
 int
-ipmi_sdr_parse_sensor_decoding_data (pstdout_state_t pstate,
-                                     uint8_t *sdr_record,
-                                     unsigned int sdr_record_len,
-                                     int8_t *r_exponent,
-                                     int8_t *b_exponent,
-                                     int16_t *m,
-                                     int16_t *b,
-                                     uint8_t *linearization,
-                                     uint8_t *analog_data_format)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val, val1, val2;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (r_exponent)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "r_exponent", &val);
-      *r_exponent = (int8_t) val;
-      if (*r_exponent & 0x08)
-        *r_exponent |= 0xF0;
-    }
-
-  if (b_exponent)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "b_exponent", &val);
-      *b_exponent = (int8_t) val;
-      if (*b_exponent & 0x08)
-        *b_exponent |= 0xF0;
-    }
-
-  if (m)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "m_ls", &val1);
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "m_ms", &val2);
-      *m = (int16_t)val1;
-      *m |= ((val2 & 0x3) << 8);
-      if (*m & 0x200)
-        *m |= 0xFE00;
-    }
-
-  if (b)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "b_ls", &val1);
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "b_ms", &val2);
-      *b = (int16_t)val1;
-      *b |= ((val2 & 0x3) << 8);
-      if (*b & 0x200)
-        *b |= 0xFE00;
-    }
-
-  if (linearization)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "linearization", &val);
-      *linearization = (uint8_t)val;
-    }
-
-  if (analog_data_format)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "sensor_unit1.analog_data_format", &val);
-      *analog_data_format = (uint8_t) val;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_sensor_reading_ranges (pstdout_state_t pstate,
-                                      uint8_t *sdr_record,
-                                      unsigned int sdr_record_len,
-                                      double **nominal_reading,
-                                      double **normal_maximum,
-                                      double **normal_minimum,
-                                      double **sensor_maximum_reading,
-                                      double **sensor_minimum_reading)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  int8_t r_exponent, b_exponent;
-  int16_t m, b;
-  uint8_t linearization, analog_data_format;
-  double *tmp_nominal_reading = NULL;
-  double *tmp_normal_maximum = NULL;
-  double *tmp_normal_minimum = NULL;
-  double *tmp_sensor_maximum_reading = NULL;
-  double *tmp_sensor_minimum_reading = NULL;
-  uint64_t val;
-  double reading;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  if (nominal_reading)
-    *nominal_reading = NULL;
-  if (normal_maximum)
-    *normal_maximum = NULL;
-  if (normal_minimum)
-    *normal_minimum = NULL;
-  if (sensor_maximum_reading)
-    *sensor_maximum_reading = NULL;
-  if (sensor_minimum_reading)
-    *sensor_minimum_reading = NULL;
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (ipmi_sdr_parse_sensor_decoding_data(pstate,
-                                          sdr_record,
-                                          sdr_record_len,
-                                          &r_exponent,
-                                          &b_exponent,
-                                          &m,
-                                          &b,
-                                          &linearization,
-                                          &analog_data_format) < 0)
-    goto cleanup;
-
-  /* if the sensor is not analog, this is most likely a bug in the
-   * SDR, since we shouldn't be decoding a non-threshold sensor.
-   *
-   * Don't return an error.  Allow code to output "NA" or something.
-   */
-  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
-    {
-      rv = 0;
-      goto cleanup;
-    }
-
-  /* if the sensor is non-linear, I just don't know what to do
-   *
-   * Don't return an error.  Allow code to output "NA" or something.
-   */
-  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
-    {
-      rv = 0;
-      goto cleanup;
-    }
-
-  if (nominal_reading)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
-                                     "nominal_reading",
-                                     &val);
-
-      if (ipmi_sensor_decode_value (r_exponent,
-                                    b_exponent,
-                                    m,
-                                    b,
-                                    linearization,
-                                    analog_data_format,
-                                    val,
-                                    &reading) < 0)
-        {
-          PSTDOUT_FPRINTF (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
-          goto cleanup;
-        }
-
-      if (!(tmp_nominal_reading = (double *)malloc(sizeof(double))))
-        {
-          PSTDOUT_PERROR(pstate, "malloc");
-          goto cleanup;
-        }
-      *tmp_nominal_reading = reading;
-    }
-  if (normal_maximum)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
-                                     "normal_maximum",
-                                     &val);
-
-      if (ipmi_sensor_decode_value (r_exponent,
-                                    b_exponent,
-                                    m,
-                                    b,
-                                    linearization,
-                                    analog_data_format,
-                                    val,
-                                    &reading) < 0)
-        {
-          PSTDOUT_FPRINTF (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
-          goto cleanup;
-        }
-
-      if (!(tmp_normal_maximum = (double *)malloc(sizeof(double))))
-        {
-          PSTDOUT_PERROR(pstate, "malloc");
-          goto cleanup;
-        }
-      *tmp_normal_maximum = reading;
-    }
-  if (normal_minimum)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
-                                     "normal_minimum",
-                                     &val);
-
-      if (ipmi_sensor_decode_value (r_exponent,
-                                    b_exponent,
-                                    m,
-                                    b,
-                                    linearization,
-                                    analog_data_format,
-                                    val,
-                                    &reading) < 0)
-        {
-          PSTDOUT_FPRINTF (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
-          goto cleanup;
-        }
-
-      if (!(tmp_normal_minimum = (double *)malloc(sizeof(double))))
-        {
-          PSTDOUT_PERROR(pstate, "malloc");
-          goto cleanup;
-        }
-      *tmp_normal_minimum = reading;
-    }
-  if (sensor_maximum_reading)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
-                                     "sensor_maximum_reading",
-                                     &val);
-
-      if (ipmi_sensor_decode_value (r_exponent,
-                                    b_exponent,
-                                    m,
-                                    b,
-                                    linearization,
-                                    analog_data_format,
-                                    val,
-                                    &reading) < 0)
-        {
-          PSTDOUT_FPRINTF (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
-          goto cleanup;
-        }
-
-      if (!(tmp_sensor_maximum_reading = (double *)malloc(sizeof(double))))
-        {
-          PSTDOUT_PERROR(pstate, "malloc");
-          goto cleanup;
-        }
-      *tmp_sensor_maximum_reading = reading;
-    }
-  if (sensor_minimum_reading)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
-                                     "sensor_minimum_reading",
-                                     &val);
-
-      if (ipmi_sensor_decode_value (r_exponent,
-                                    b_exponent,
-                                    m,
-                                    b,
-                                    linearization,
-                                    analog_data_format,
-                                    val,
-                                    &reading) < 0)
-        {
-          PSTDOUT_FPRINTF (pstate,
-                           stderr,
-                           "ipmi_sensor_decode_value: %s\n",
-                           strerror(errno));
-          goto cleanup;
-        }
-
-      if (!(tmp_sensor_minimum_reading = (double *)malloc(sizeof(double))))
-        {
-          PSTDOUT_PERROR(pstate, "malloc");
-          goto cleanup;
-        }
-      *tmp_sensor_minimum_reading = reading;
-    }
-
-  if (nominal_reading)
-    *nominal_reading = tmp_nominal_reading;
-  if (normal_maximum)
-    *normal_maximum = tmp_normal_maximum;
-  if (normal_minimum)
-    *normal_minimum = tmp_normal_minimum;
-  if (sensor_maximum_reading)
-    *sensor_maximum_reading = tmp_sensor_maximum_reading;
-  if (sensor_minimum_reading)
-    *sensor_minimum_reading = tmp_sensor_minimum_reading;
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  if (rv < 0)
-    {
-      if (tmp_nominal_reading)
-        free(nominal_reading);
-      if (tmp_normal_maximum)
-        free(normal_maximum);
-      if (tmp_normal_minimum)
-        free(normal_minimum);
-      if (tmp_sensor_maximum_reading)
-        free(sensor_maximum_reading);
-      if (tmp_sensor_minimum_reading)
-        free(sensor_minimum_reading);
-    }
-  return rv;
-}
-
-int
-ipmi_sdr_parse_hysteresis (pstdout_state_t pstate,
-                           uint8_t *sdr_record,
-                           unsigned int sdr_record_len,
-                           uint8_t *positive_going_threshold_hysteresis,
-                           uint8_t *negative_going_threshold_hysteresis)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
-  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (positive_going_threshold_hysteresis)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
-                                     "positive_going_threshold_hysteresis",
-                                     &val);
-      *positive_going_threshold_hysteresis = val;
-    }
-  if (negative_going_threshold_hysteresis)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
-                                     "negative_going_threshold_hysteresis",
-                                     &val);
-      *negative_going_threshold_hysteresis = val;
-    }
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_container_entity (pstdout_state_t pstate,
-                                 uint8_t *sdr_record,
-                                 unsigned int sdr_record_len,
-                                 uint8_t *container_entity_id,
-                                 uint8_t *container_entity_instance)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD;
-  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (container_entity_id)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "container_entity_id", &val);
-      *container_entity_id = val;
-    }
-
-  if (container_entity_instance)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "container_entity_instance", &val);
-      *container_entity_instance = val;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_general_device_locator_parameters (pstdout_state_t pstate,
-                                                  uint8_t *sdr_record,
-                                                  unsigned int sdr_record_len,
-                                                  uint8_t *direct_access_address,
-                                                  uint8_t *channel_number,
-                                                  uint8_t *device_slave_address,
-                                                  uint8_t *private_bus_id,
-                                                  uint8_t *lun_for_master_write_read_command,
-                                                  uint8_t *address_span)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val1, val2;
-  uint64_t val;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (direct_access_address)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "direct_access_address", &val);
-      *direct_access_address = val;
-    }
-  if (channel_number)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "channel_number_ls", &val1);
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "channel_number_ms", &val2);
-      *channel_number = (val1 << 3) | val2;
-    }
-  if (device_slave_address)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "device_slave_address", &val);
-      *device_slave_address = val;
-    }
-  if (private_bus_id)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "private_bus_id", &val);
-      *private_bus_id = val;
-    }
-  if (lun_for_master_write_read_command)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "lun_for_master_write_read_command", &val);
-      *lun_for_master_write_read_command = val;
-    }
-  if (address_span)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "address_span", &val);
-      *address_span = val;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_fru_device_locator_parameters (pstdout_state_t pstate,
-                                              uint8_t *sdr_record,
-                                              unsigned int sdr_record_len,
-                                              uint8_t *direct_access_address,
-                                              uint8_t *logical_fru_device_device_slave_address,
-                                              uint8_t *private_bus_id,
-                                              uint8_t *lun_for_master_write_read_fru_command,
-                                              uint8_t *logical_physical_fru_device,
-                                              uint8_t *channel_number)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (direct_access_address)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "direct_access_address", &val);
-      *direct_access_address = val;
-    }
-  if (logical_fru_device_device_slave_address)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "logical_fru_device_device_slave_address", &val);
-      *logical_fru_device_device_slave_address = val;
-    }
-  if (private_bus_id)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "private_bus_id", &val);
-      *private_bus_id = val;
-    }
-  if (lun_for_master_write_read_fru_command)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "lun_for_master_write_read_fru_command", &val);
-      *lun_for_master_write_read_fru_command = val;
-    }
-  if (logical_physical_fru_device)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "logical_physical_fru_device", &val);
-      *logical_physical_fru_device = val;
-    }
-  if (channel_number)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "channel_number", &val);
-      *channel_number = val;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_management_controller_device_locator_parameters (pstdout_state_t pstate,
-                                                                uint8_t *sdr_record,
-                                                                unsigned int sdr_record_len,
-                                                                uint8_t *device_slave_address,
-                                                                uint8_t *channel_number)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (device_slave_address)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "device_slave_address", &val);
-      *device_slave_address = val;
-    }
-  if (channel_number)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "channel_number", &val);
-      *channel_number = val;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_device_type (pstdout_state_t pstate,
-                            uint8_t *sdr_record,
-                            unsigned int sdr_record_len,
-                            uint8_t *device_type,
-                            uint8_t *device_type_modifier)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
-  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (device_type)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "device_type", &val);
-      *device_type = val;
-    }
-  if (device_type_modifier)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "device_type_modifier", &val);
-      *device_type_modifier = val;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_entity_id_and_instance (pstdout_state_t pstate,
-                                       uint8_t *sdr_record,
-                                       unsigned int sdr_record_len,
-                                       uint8_t *entity_id,
-                                       uint8_t *entity_instance)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
-  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (entity_id)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "entity_id", &val);
-      *entity_id = val;
-    }
-  if (entity_instance)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "entity_instance", &val);
-      *entity_instance = val;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_fru_entity_id_and_instance (pstdout_state_t pstate,
-                                           uint8_t *sdr_record,
-                                           unsigned int sdr_record_len,
-                                           uint8_t *fru_entity_id,
-                                           uint8_t *fru_entity_instance)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (fru_entity_id)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "fru_entity_id", &val);
-      *fru_entity_id = val;
-    }
-  if (fru_entity_instance)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "fru_entity_instance", &val);
-      *fru_entity_instance = val;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_manufacturer_id (pstdout_state_t pstate,
-                                uint8_t *sdr_record,
-                                unsigned int sdr_record_len,
-                                uint32_t *manufacturer_id)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD;
-  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_OEM_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (manufacturer_id)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "manufacturer_id", &val);
-      *manufacturer_id = val;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_product_id (pstdout_state_t pstate,
-                           uint8_t *sdr_record,
-                           unsigned int sdr_record_len,
-                           uint16_t *product_id)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  uint64_t val;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (product_id)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "product_id", &val);
-      *product_id = val;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_oem_data (pstdout_state_t pstate,
-                         uint8_t *sdr_record,
-                         unsigned int sdr_record_len,
-                         uint8_t *oem_data,
-                         unsigned int *oem_data_len)
-{
-  fiid_obj_t obj_sdr_record = NULL;
-  uint32_t acceptable_record_types;
-  int32_t len;
-  int rv = -1;
-
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
-
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_OEM_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
-                                                sdr_record,
-                                                sdr_record_len,
-                                                acceptable_record_types)))
-    goto cleanup;
-
-  if (oem_data && oem_data_len && *oem_data_len)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP_DATA_LEN(len,
-                                              obj_sdr_record,
-                                              "oem_data",
-                                              oem_data,
-                                              *oem_data_len);
-      *oem_data_len = len;
-    }
-
-  rv = 0;
- cleanup:
-  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
-  return rv;
-}
-
-int
-ipmi_sdr_parse_assertion_supported (pstdout_state_t pstate,
+ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
                                     uint8_t *sdr_record,
                                     unsigned int sdr_record_len,
                                     uint8_t *event_state_0,
@@ -1590,13 +728,13 @@ ipmi_sdr_parse_assertion_supported (pstdout_state_t pstate,
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
     goto cleanup;
 
-  if (ipmi_sdr_parse_event_reading_type_code (pstate,
+  if (ipmi_sdr_parse_event_reading_type_code (ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               &event_reading_type_code) < 0)
@@ -1605,15 +743,12 @@ ipmi_sdr_parse_assertion_supported (pstdout_state_t pstate,
   if (!IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code)
       && !IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
     {
-      PSTDOUT_FPRINTF(pstate,
-                      stderr,
-                      "Invalid event reading type code passed in: %X\n",
-                      event_reading_type_code);
-      goto cleanup;
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD)
+        goto cleanup;
     }
 
   /* convert obj_sdr_record to appropriate format we care about */
-  if (ipmi_sdr_parse_record_id_and_type (pstate,
+  if (ipmi_sdr_parse_record_id_and_type (ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          NULL,
@@ -1621,13 +756,13 @@ ipmi_sdr_parse_assertion_supported (pstdout_state_t pstate,
     goto cleanup;
 
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
-    _SDR_FIID_OBJ_COPY(obj_sdr_record_discrete,
-                       obj_sdr_record,
-                       tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
+    SDR_PARSE_FIID_OBJ_COPY_CLEANUP(obj_sdr_record_discrete,
+                                    obj_sdr_record,
+                                    tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
   else
-    _SDR_FIID_OBJ_COPY(obj_sdr_record_discrete,
-                       obj_sdr_record,
-                       tmpl_sdr_compact_sensor_record_non_threshold_based_sensors);
+    SDR_PARSE_FIID_OBJ_COPY_CLEANUP(obj_sdr_record_discrete,
+                                    obj_sdr_record,
+                                    tmpl_sdr_compact_sensor_record_non_threshold_based_sensors);
 
   if (event_state_0)
     {
@@ -1750,6 +885,7 @@ ipmi_sdr_parse_assertion_supported (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record_discrete);
@@ -1757,7 +893,7 @@ ipmi_sdr_parse_assertion_supported (pstdout_state_t pstate,
 }
 
 int
-ipmi_sdr_parse_deassertion_supported (pstdout_state_t pstate,
+ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
                                       uint8_t *sdr_record,
                                       unsigned int sdr_record_len,
                                       uint8_t *event_state_0,
@@ -1791,13 +927,13 @@ ipmi_sdr_parse_deassertion_supported (pstdout_state_t pstate,
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
     goto cleanup;
 
-  if (ipmi_sdr_parse_event_reading_type_code (pstate,
+  if (ipmi_sdr_parse_event_reading_type_code (ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               &event_reading_type_code) < 0)
@@ -1806,15 +942,12 @@ ipmi_sdr_parse_deassertion_supported (pstdout_state_t pstate,
   if (!IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code)
       && !IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
     {
-      PSTDOUT_FPRINTF(pstate,
-                      stderr,
-                      "Invalid event reading type code passed in: %X\n",
-                      event_reading_type_code);
-      goto cleanup;
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD)
+        goto cleanup;
     }
 
   /* convert obj_sdr_record to appropriate format we care about */
-  if (ipmi_sdr_parse_record_id_and_type (pstate,
+  if (ipmi_sdr_parse_record_id_and_type (ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          NULL,
@@ -1822,13 +955,13 @@ ipmi_sdr_parse_deassertion_supported (pstdout_state_t pstate,
     goto cleanup;
 
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
-    _SDR_FIID_OBJ_COPY(obj_sdr_record_discrete,
-                       obj_sdr_record,
-                       tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
+    SDR_PARSE_FIID_OBJ_COPY_CLEANUP(obj_sdr_record_discrete,
+                                    obj_sdr_record,
+                                    tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
   else
-    _SDR_FIID_OBJ_COPY(obj_sdr_record_discrete,
-                       obj_sdr_record,
-                       tmpl_sdr_compact_sensor_record_non_threshold_based_sensors);
+    SDR_PARSE_FIID_OBJ_COPY_CLEANUP(obj_sdr_record_discrete,
+                                    obj_sdr_record,
+                                    tmpl_sdr_compact_sensor_record_non_threshold_based_sensors);
 
   if (event_state_0)
     {
@@ -1951,6 +1084,7 @@ ipmi_sdr_parse_deassertion_supported (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record_discrete);
@@ -1958,7 +1092,7 @@ ipmi_sdr_parse_deassertion_supported (pstdout_state_t pstate,
 }
 
 int
-ipmi_sdr_parse_threshold_assertion_supported (pstdout_state_t pstate,
+ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
                                               uint8_t *sdr_record,
                                               unsigned int sdr_record_len,
                                               uint8_t *lower_non_critical_going_low,
@@ -2001,7 +1135,7 @@ ipmi_sdr_parse_threshold_assertion_supported (pstdout_state_t pstate,
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
@@ -2011,7 +1145,7 @@ ipmi_sdr_parse_threshold_assertion_supported (pstdout_state_t pstate,
    * threshold one.
    */
 
-  if (ipmi_sdr_parse_event_reading_type_code (pstate,
+  if (ipmi_sdr_parse_event_reading_type_code (ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               &event_reading_type_code) < 0)
@@ -2019,16 +1153,13 @@ ipmi_sdr_parse_threshold_assertion_supported (pstdout_state_t pstate,
 
   if (!IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
     {
-      PSTDOUT_FPRINTF(pstate,
-                      stderr,
-                      "Invalid event reading type code passed in: %X\n",
-                      event_reading_type_code);
-      goto cleanup;
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD)
+        goto cleanup;
     }
 
-  _SDR_FIID_OBJ_COPY(obj_sdr_record_threshold,
-                     obj_sdr_record,
-                     tmpl_sdr_full_sensor_record_threshold_based_sensors);
+  SDR_PARSE_FIID_OBJ_COPY_CLEANUP(obj_sdr_record_threshold,
+                                  obj_sdr_record,
+                                  tmpl_sdr_full_sensor_record_threshold_based_sensors);
 
   if (lower_non_critical_going_low)
     {
@@ -2127,6 +1258,7 @@ ipmi_sdr_parse_threshold_assertion_supported (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record_threshold);
@@ -2134,7 +1266,7 @@ ipmi_sdr_parse_threshold_assertion_supported (pstdout_state_t pstate,
 }
 
 int
-ipmi_sdr_parse_threshold_deassertion_supported (pstdout_state_t pstate,
+ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
                                                 uint8_t *sdr_record,
                                                 unsigned int sdr_record_len,
                                                 uint8_t *lower_non_critical_going_low,
@@ -2177,7 +1309,7 @@ ipmi_sdr_parse_threshold_deassertion_supported (pstdout_state_t pstate,
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
@@ -2187,7 +1319,7 @@ ipmi_sdr_parse_threshold_deassertion_supported (pstdout_state_t pstate,
    * threshold one.
    */
 
-  if (ipmi_sdr_parse_event_reading_type_code (pstate,
+  if (ipmi_sdr_parse_event_reading_type_code (ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               &event_reading_type_code) < 0)
@@ -2195,16 +1327,13 @@ ipmi_sdr_parse_threshold_deassertion_supported (pstdout_state_t pstate,
 
   if (!IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
     {
-      PSTDOUT_FPRINTF(pstate,
-                      stderr,
-                      "Invalid event reading type code passed in: %X\n",
-                      event_reading_type_code);
-      goto cleanup;
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD)
+        goto cleanup;
     }
 
-  _SDR_FIID_OBJ_COPY(obj_sdr_record_threshold,
-                     obj_sdr_record,
-                     tmpl_sdr_full_sensor_record_threshold_based_sensors);
+  SDR_PARSE_FIID_OBJ_COPY_CLEANUP(obj_sdr_record_threshold,
+                                  obj_sdr_record,
+                                  tmpl_sdr_full_sensor_record_threshold_based_sensors);
 
   if (lower_non_critical_going_low)
     {
@@ -2303,6 +1432,7 @@ ipmi_sdr_parse_threshold_deassertion_supported (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record_threshold);
@@ -2310,7 +1440,7 @@ ipmi_sdr_parse_threshold_deassertion_supported (pstdout_state_t pstate,
 }
 
 int
-ipmi_sdr_parse_threshold_readable (pstdout_state_t pstate,
+ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
                                    uint8_t *sdr_record,
                                    unsigned int sdr_record_len,
                                    uint8_t *lower_non_critical_threshold,
@@ -2347,7 +1477,7 @@ ipmi_sdr_parse_threshold_readable (pstdout_state_t pstate,
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
@@ -2357,7 +1487,7 @@ ipmi_sdr_parse_threshold_readable (pstdout_state_t pstate,
    * threshold one.
    */
 
-  if (ipmi_sdr_parse_event_reading_type_code (pstate,
+  if (ipmi_sdr_parse_event_reading_type_code (ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               &event_reading_type_code) < 0)
@@ -2365,16 +1495,13 @@ ipmi_sdr_parse_threshold_readable (pstdout_state_t pstate,
 
   if (!IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
     {
-      PSTDOUT_FPRINTF(pstate,
-                      stderr,
-                      "Invalid event reading type code passed in: %X\n",
-                      event_reading_type_code);
-      goto cleanup;
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD)
+        goto cleanup;
     }
 
-  _SDR_FIID_OBJ_COPY(obj_sdr_record_threshold,
-                     obj_sdr_record,
-                     tmpl_sdr_full_sensor_record_threshold_based_sensors);
+  SDR_PARSE_FIID_OBJ_COPY_CLEANUP(obj_sdr_record_threshold,
+                                  obj_sdr_record,
+                                  tmpl_sdr_full_sensor_record_threshold_based_sensors);
 
   if (lower_non_critical_threshold)
     {
@@ -2425,6 +1552,7 @@ ipmi_sdr_parse_threshold_readable (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record_threshold);
@@ -2432,7 +1560,7 @@ ipmi_sdr_parse_threshold_readable (pstdout_state_t pstate,
 }
 
 int
-ipmi_sdr_parse_threshold_settable (pstdout_state_t pstate,
+ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
                                    uint8_t *sdr_record,
                                    unsigned int sdr_record_len,
                                    uint8_t *lower_non_critical_threshold,
@@ -2469,7 +1597,7 @@ ipmi_sdr_parse_threshold_settable (pstdout_state_t pstate,
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
@@ -2479,7 +1607,7 @@ ipmi_sdr_parse_threshold_settable (pstdout_state_t pstate,
    * threshold one.
    */
 
-  if (ipmi_sdr_parse_event_reading_type_code (pstate,
+  if (ipmi_sdr_parse_event_reading_type_code (ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               &event_reading_type_code) < 0)
@@ -2487,16 +1615,13 @@ ipmi_sdr_parse_threshold_settable (pstdout_state_t pstate,
 
   if (!IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
     {
-      PSTDOUT_FPRINTF(pstate,
-                      stderr,
-                      "Invalid event reading type code passed in: %X\n",
-                      event_reading_type_code);
-      goto cleanup;
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD)
+        goto cleanup;
     }
 
-  _SDR_FIID_OBJ_COPY(obj_sdr_record_threshold,
-                     obj_sdr_record,
-                     tmpl_sdr_full_sensor_record_threshold_based_sensors);
+  SDR_PARSE_FIID_OBJ_COPY_CLEANUP(obj_sdr_record_threshold,
+                                  obj_sdr_record,
+                                  tmpl_sdr_full_sensor_record_threshold_based_sensors);
 
   if (lower_non_critical_threshold)
     {
@@ -2547,6 +1672,7 @@ ipmi_sdr_parse_threshold_settable (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record_threshold);
@@ -2554,7 +1680,530 @@ ipmi_sdr_parse_threshold_settable (pstdout_state_t pstate,
 }
 
 int
-ipmi_sdr_parse_thresholds_raw (pstdout_state_t pstate,
+ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
+                                     uint8_t *sdr_record,
+                                     unsigned int sdr_record_len,
+                                     int8_t *r_exponent,
+                                     int8_t *b_exponent,
+                                     int16_t *m,
+                                     int16_t *b,
+                                     uint8_t *linearization,
+                                     uint8_t *analog_data_format)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val, val1, val2;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (r_exponent)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "r_exponent", &val);
+      *r_exponent = (int8_t) val;
+      if (*r_exponent & 0x08)
+        *r_exponent |= 0xF0;
+    }
+
+  if (b_exponent)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "b_exponent", &val);
+      *b_exponent = (int8_t) val;
+      if (*b_exponent & 0x08)
+        *b_exponent |= 0xF0;
+    }
+
+  if (m)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "m_ls", &val1);
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "m_ms", &val2);
+      *m = (int16_t)val1;
+      *m |= ((val2 & 0x3) << 8);
+      if (*m & 0x200)
+        *m |= 0xFE00;
+    }
+
+  if (b)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "b_ls", &val1);
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "b_ms", &val2);
+      *b = (int16_t)val1;
+      *b |= ((val2 & 0x3) << 8);
+      if (*b & 0x200)
+        *b |= 0xFE00;
+    }
+
+  if (linearization)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "linearization", &val);
+      *linearization = (uint8_t)val;
+    }
+
+  if (analog_data_format)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "sensor_unit1.analog_data_format", &val);
+      *analog_data_format = (uint8_t) val;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+static int
+_sensor_decode_value (ipmi_sdr_parse_ctx_t ctx,
+                      int8_t r_exponent,
+                      int8_t b_exponent,
+                      int16_t m, 
+                      int16_t b, 
+                      uint8_t linearization, 
+                      uint8_t analog_data_format, 
+                      uint8_t raw_data,
+                      double **value_ptr)
+{
+  double reading;
+  int rv = -1;
+  
+  assert(ctx);
+  assert(ctx->magic == IPMI_SDR_PARSE_MAGIC);
+  assert(value_ptr);
+  
+  if (ipmi_sensor_decode_value (r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                val,
+                                &reading) < 0)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+  
+  if (!((*value_ptr) = (double *)malloc(sizeof(double))))
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  (**value_ptr) = reading;
+  
+  rv = 0;
+ cleanup:
+  return rv;
+}
+
+int
+ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
+                                      uint8_t *sdr_record,
+                                      unsigned int sdr_record_len,
+                                      double **nominal_reading,
+                                      double **normal_maximum,
+                                      double **normal_minimum,
+                                      double **sensor_maximum_reading,
+                                      double **sensor_minimum_reading)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  int8_t r_exponent, b_exponent;
+  int16_t m, b;
+  uint8_t linearization, analog_data_format;
+  double *tmp_nominal_reading = NULL;
+  double *tmp_normal_maximum = NULL;
+  double *tmp_normal_minimum = NULL;
+  double *tmp_sensor_maximum_reading = NULL;
+  double *tmp_sensor_minimum_reading = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  if (nominal_reading)
+    *nominal_reading = NULL;
+  if (normal_maximum)
+    *normal_maximum = NULL;
+  if (normal_minimum)
+    *normal_minimum = NULL;
+  if (sensor_maximum_reading)
+    *sensor_maximum_reading = NULL;
+  if (sensor_minimum_reading)
+    *sensor_minimum_reading = NULL;
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (ipmi_sdr_parse_sensor_decoding_data(ctx,
+                                          sdr_record,
+                                          sdr_record_len,
+                                          &r_exponent,
+                                          &b_exponent,
+                                          &m,
+                                          &b,
+                                          &linearization,
+                                          &analog_data_format) < 0)
+    goto cleanup;
+
+  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_CANNOT_PARSE_OR_CALCULATE);
+      goto cleanup;
+    }
+
+  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_CANNOT_PARSE_OR_CALCULATE);
+      goto cleanup;
+    }
+ 
+  if (nominal_reading)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "nominal_reading",
+                                     &val);
+
+      if (_sensor_decode_value (ctx,
+                                r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                val,
+                                &tmp_nominal_reading) < 0)
+        goto cleanup;
+    }
+  if (normal_maximum)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "normal_maximum",
+                                     &val);
+
+      if (_sensor_decode_value (ctx,
+                                r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                val,
+                                &tmp_normal_maximum) < 0)
+        goto cleanup;
+    }
+  if (normal_minimum)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "normal_minimum",
+                                     &val);
+
+      if (_sensor_decode_value (ctx,
+                                r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                val,
+                                &tmp_normal_minimum) < 0)
+        goto cleanup;
+    }
+  if (sensor_maximum_reading)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "sensor_maximum_reading",
+                                     &val);
+
+      if (_sensor_decode_value (ctx,
+                                r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                val,
+                                &tmp_sensor_maximum_reading) < 0)
+        goto cleanup;
+    }
+  if (sensor_minimum_reading)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "sensor_minimum_reading",
+                                     &val);
+
+      if (_sensor_decode_value (ctx,
+                                r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                val,
+                                &tmp_sensor_minimum_reading) < 0)
+        goto cleanup;
+    }
+
+  if (nominal_reading)
+    *nominal_reading = tmp_nominal_reading;
+  if (normal_maximum)
+    *normal_maximum = tmp_normal_maximum;
+  if (normal_minimum)
+    *normal_minimum = tmp_normal_minimum;
+  if (sensor_maximum_reading)
+    *sensor_maximum_reading = tmp_sensor_maximum_reading;
+  if (sensor_minimum_reading)
+    *sensor_minimum_reading = tmp_sensor_minimum_reading;
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  if (rv < 0)
+    {
+      if (tmp_nominal_reading)
+        free(nominal_reading);
+      if (tmp_normal_maximum)
+        free(normal_maximum);
+      if (tmp_normal_minimum)
+        free(normal_minimum);
+      if (tmp_sensor_maximum_reading)
+        free(sensor_maximum_reading);
+      if (tmp_sensor_minimum_reading)
+        free(sensor_minimum_reading);
+    }
+  return rv;
+}
+
+int
+ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
+                           uint8_t *sdr_record,
+                           unsigned int sdr_record_len,
+                           double **lower_non_critical_threshold,
+                           double **lower_critical_threshold,
+                           double **lower_non_recoverable_threshold,
+                           double **upper_non_critical_threshold,
+                           double **upper_critical_threshold,
+                           double **upper_non_recoverable_threshold)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  int8_t r_exponent, b_exponent;
+  int16_t m, b;
+  uint8_t linearization, analog_data_format;
+  double *tmp_lower_non_critical_threshold = NULL;
+  double *tmp_lower_critical_threshold = NULL;
+  double *tmp_lower_non_recoverable_threshold = NULL;
+  double *tmp_upper_non_critical_threshold = NULL;
+  double *tmp_upper_critical_threshold = NULL;
+  double *tmp_upper_non_recoverable_threshold = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  if (lower_non_critical_threshold)
+    *lower_non_critical_threshold = NULL;
+  if (lower_critical_threshold)
+    *lower_critical_threshold = NULL;
+  if (lower_non_recoverable_threshold)
+    *lower_non_recoverable_threshold = NULL;
+  if (upper_non_critical_threshold)
+    *upper_non_critical_threshold = NULL;
+  if (upper_critical_threshold)
+    *upper_critical_threshold = NULL;
+  if (upper_non_recoverable_threshold)
+    *upper_non_recoverable_threshold = NULL;
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (ipmi_sdr_parse_sensor_decoding_data(ctx,
+                                          sdr_record,
+                                          sdr_record_len,
+                                          &r_exponent,
+                                          &b_exponent,
+                                          &m,
+                                          &b,
+                                          &linearization,
+                                          &analog_data_format) < 0)
+    goto cleanup;
+
+  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_CANNOT_PARSE_OR_CALCULATE);
+      goto cleanup;
+    }
+
+  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_CANNOT_PARSE_OR_CALCULATE);
+      goto cleanup;
+    }
+ 
+  if (lower_non_critical_threshold)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "lower_non_critical_threshold",
+                                     &val);
+
+      if (_sensor_decode_value (ctx,
+                                r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                val,
+                                &tmp_lower_non_critical_threshold) < 0)
+        goto cleanup;
+    }
+  if (lower_critical_threshold)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "lower_critical_threshold",
+                                     &val);
+
+      if (_sensor_decode_value (ctx,
+                                r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                val,
+                                &tmp_lower_critical_threshold) < 0)
+        goto cleanup;
+    }
+  if (lower_non_recoverable_threshold)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "lower_non_recoverable_threshold",
+                                     &val);
+
+      if (_sensor_decode_value (ctx,
+                                r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                val,
+                                &tmp_lower_non_recoverable_threshold) < 0)
+        goto cleanup;
+    }
+  if (upper_non_critical_threshold)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "upper_non_critical_threshold",
+                                     &val);
+
+      if (_sensor_decode_value (ctx,
+                                r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                val,
+                                &tmp_upper_non_critical_threshold) < 0)
+        goto cleanup;
+    }
+  if (upper_critical_threshold)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "upper_critical_threshold",
+                                     &val);
+
+      if (_sensor_decode_value (ctx,
+                                r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                val,
+                                &tmp_upper_critical_threshold) < 0)
+        goto cleanup;
+    }
+  if (upper_non_recoverable_threshold)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "upper_non_recoverable_threshold",
+                                     &val);
+
+      if (_sensor_decode_value (ctx,
+                                r_exponent,
+                                b_exponent,
+                                m,
+                                b,
+                                linearization,
+                                analog_data_format,
+                                val,
+                                &tmp_upper_non_recoverable_threshold) < 0)
+        goto cleanup;
+    }
+
+  if (lower_non_critical_threshold)
+    *lower_non_critical_threshold = tmp_lower_non_critical_threshold;
+  if (lower_critical_threshold)
+    *lower_critical_threshold = tmp_lower_critical_threshold;
+  if (lower_non_recoverable_threshold)
+    *lower_non_recoverable_threshold = tmp_lower_non_recoverable_threshold;
+  if (upper_non_critical_threshold)
+    *upper_non_critical_threshold = tmp_upper_non_critical_threshold;
+  if (upper_critical_threshold)
+    *upper_critical_threshold = tmp_upper_critical_threshold;
+  if (upper_non_recoverable_threshold)
+    *upper_non_recoverable_threshold = tmp_upper_non_recoverable_threshold;
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  if (rv < 0)
+    {
+      if (tmp_lower_non_critical_threshold)
+        free(lower_non_critical_threshold);
+      if (tmp_lower_critical_threshold)
+        free(lower_critical_threshold);
+      if (tmp_lower_non_recoverable_threshold)
+        free(lower_non_recoverable_threshold);
+      if (tmp_upper_non_critical_threshold)
+        free(upper_non_critical_threshold);
+      if (tmp_upper_critical_threshold)
+        free(upper_critical_threshold);
+      if (tmp_upper_non_recoverable_threshold)
+        free(upper_non_recoverable_threshold);
+    }
+  return rv;
+}
+
+int
+ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
                                uint8_t *sdr_record,
                                unsigned int sdr_record_len,
                                uint8_t *lower_non_critical_threshold,
@@ -2577,7 +2226,7 @@ ipmi_sdr_parse_thresholds_raw (pstdout_state_t pstate,
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
-  if (!(obj_sdr_record = _sdr_record_get_common(pstate,
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 acceptable_record_types)))
@@ -2587,7 +2236,7 @@ ipmi_sdr_parse_thresholds_raw (pstdout_state_t pstate,
    * threshold one.
    */
 
-  if (ipmi_sdr_parse_event_reading_type_code (pstate,
+  if (ipmi_sdr_parse_event_reading_type_code (ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               &event_reading_type_code) < 0)
@@ -2595,16 +2244,13 @@ ipmi_sdr_parse_thresholds_raw (pstdout_state_t pstate,
 
   if (!IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
     {
-      PSTDOUT_FPRINTF(pstate,
-                      stderr,
-                      "Invalid event reading type code passed in: %X\n",
-                      event_reading_type_code);
-      goto cleanup;
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD)
+        goto cleanup;
     }
 
-  _SDR_FIID_OBJ_COPY(obj_sdr_record_threshold,
-                     obj_sdr_record,
-                     tmpl_sdr_full_sensor_record_threshold_based_sensors);
+  SDR_PARSE_FIID_OBJ_COPY_CLEANUP(obj_sdr_record_threshold,
+                                  obj_sdr_record,
+                                  tmpl_sdr_full_sensor_record_threshold_based_sensors);
 
   if (lower_non_critical_threshold)
     {
@@ -2655,8 +2301,557 @@ ipmi_sdr_parse_thresholds_raw (pstdout_state_t pstate,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record_threshold);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_hysteresis (ipmi_sdr_parse_ctx_t ctx,
+                           uint8_t *sdr_record,
+                           unsigned int sdr_record_len,
+                           uint8_t *positive_going_threshold_hysteresis,
+                           uint8_t *negative_going_threshold_hysteresis)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (positive_going_threshold_hysteresis)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "positive_going_threshold_hysteresis",
+                                     &val);
+      *positive_going_threshold_hysteresis = val;
+    }
+  if (negative_going_threshold_hysteresis)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record,
+                                     "negative_going_threshold_hysteresis",
+                                     &val);
+      *negative_going_threshold_hysteresis = val;
+    }
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_container_entity (ipmi_sdr_parse_ctx_t ctx,
+                                 uint8_t *sdr_record,
+                                 unsigned int sdr_record_len,
+                                 uint8_t *container_entity_id,
+                                 uint8_t *container_entity_instance)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD;
+  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (container_entity_id)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "container_entity_id", &val);
+      *container_entity_id = val;
+    }
+
+  if (container_entity_instance)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "container_entity_instance", &val);
+      *container_entity_instance = val;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_device_id_string (ipmi_sdr_parse_ctx_t ctx,
+                                 uint8_t *sdr_record,
+                                 unsigned int sdr_record_len,
+                                 char *device_id_string,
+                                 unsigned int device_id_string_len)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (device_id_string && device_id_string_len)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP_DATA(obj_sdr_record,
+                                          "device_id_string",
+                                          (uint8_t *)device_id_string,
+                                          device_id_string_len);
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_device_type (ipmi_sdr_parse_ctx_t ctx,
+                            uint8_t *sdr_record,
+                            unsigned int sdr_record_len,
+                            uint8_t *device_type,
+                            uint8_t *device_type_modifier)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (device_type)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "device_type", &val);
+      *device_type = val;
+    }
+  if (device_type_modifier)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "device_type_modifier", &val);
+      *device_type_modifier = val;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
+                                       uint8_t *sdr_record,
+                                       unsigned int sdr_record_len,
+                                       uint8_t *entity_id,
+                                       uint8_t *entity_instance)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (entity_id)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "entity_id", &val);
+      *entity_id = val;
+    }
+  if (entity_instance)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "entity_instance", &val);
+      *entity_instance = val;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_general_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
+                                                  uint8_t *sdr_record,
+                                                  unsigned int sdr_record_len,
+                                                  uint8_t *direct_access_address,
+                                                  uint8_t *channel_number,
+                                                  uint8_t *device_slave_address,
+                                                  uint8_t *private_bus_id,
+                                                  uint8_t *lun_for_master_write_read_command,
+                                                  uint8_t *address_span)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val1, val2;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (direct_access_address)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "direct_access_address", &val);
+      *direct_access_address = val;
+    }
+  if (channel_number)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "channel_number_ls", &val1);
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "channel_number_ms", &val2);
+      *channel_number = (val1 << 3) | val2;
+    }
+  if (device_slave_address)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "device_slave_address", &val);
+      *device_slave_address = val;
+    }
+  if (private_bus_id)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "private_bus_id", &val);
+      *private_bus_id = val;
+    }
+  if (lun_for_master_write_read_command)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "lun_for_master_write_read_command", &val);
+      *lun_for_master_write_read_command = val;
+    }
+  if (address_span)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "address_span", &val);
+      *address_span = val;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_fru_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
+                                              uint8_t *sdr_record,
+                                              unsigned int sdr_record_len,
+                                              uint8_t *direct_access_address,
+                                              uint8_t *logical_fru_device_device_slave_address,
+                                              uint8_t *private_bus_id,
+                                              uint8_t *lun_for_master_write_read_fru_command,
+                                              uint8_t *logical_physical_fru_device,
+                                              uint8_t *channel_number)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (direct_access_address)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "direct_access_address", &val);
+      *direct_access_address = val;
+    }
+  if (logical_fru_device_device_slave_address)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "logical_fru_device_device_slave_address", &val);
+      *logical_fru_device_device_slave_address = val;
+    }
+  if (private_bus_id)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "private_bus_id", &val);
+      *private_bus_id = val;
+    }
+  if (lun_for_master_write_read_fru_command)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "lun_for_master_write_read_fru_command", &val);
+      *lun_for_master_write_read_fru_command = val;
+    }
+  if (logical_physical_fru_device)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "logical_physical_fru_device", &val);
+      *logical_physical_fru_device = val;
+    }
+  if (channel_number)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "channel_number", &val);
+      *channel_number = val;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_fru_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
+                                           uint8_t *sdr_record,
+                                           unsigned int sdr_record_len,
+                                           uint8_t *fru_entity_id,
+                                           uint8_t *fru_entity_instance)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (fru_entity_id)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "fru_entity_id", &val);
+      *fru_entity_id = val;
+    }
+  if (fru_entity_instance)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "fru_entity_instance", &val);
+      *fru_entity_instance = val;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
+                                                                uint8_t *sdr_record,
+                                                                unsigned int sdr_record_len,
+                                                                uint8_t *device_slave_address,
+                                                                uint8_t *channel_number)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (device_slave_address)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "device_slave_address", &val);
+      *device_slave_address = val;
+    }
+  if (channel_number)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "channel_number", &val);
+      *channel_number = val;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_manufacturer_id (ipmi_sdr_parse_ctx_t ctx,
+                                uint8_t *sdr_record,
+                                unsigned int sdr_record_len,
+                                uint32_t *manufacturer_id)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD;
+  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_OEM_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (manufacturer_id)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "manufacturer_id", &val);
+      *manufacturer_id = val;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_product_id (ipmi_sdr_parse_ctx_t ctx,
+                           uint8_t *sdr_record,
+                           unsigned int sdr_record_len,
+                           uint16_t *product_id)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (product_id)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "product_id", &val);
+      *product_id = val;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
+  return rv;
+}
+
+int
+ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
+                         uint8_t *sdr_record,
+                         unsigned int sdr_record_len,
+                         uint8_t *oem_data,
+                         unsigned int *oem_data_len)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  int32_t len;
+  int rv = -1;
+
+  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
+
+  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_OEM_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common(ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                acceptable_record_types)))
+    goto cleanup;
+
+  if (oem_data && oem_data_len && *oem_data_len)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP_DATA_LEN(len,
+                                              obj_sdr_record,
+                                              "oem_data",
+                                              oem_data,
+                                              *oem_data_len);
+      *oem_data_len = len;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
+ cleanup:
+  SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
