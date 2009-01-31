@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.43 2009-01-30 18:04:12 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.43.2.1 2009-01-31 00:02:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -354,6 +354,9 @@ _ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
   if (ipmi_monitoring_ipmi_communication_init(c, hostname, config) < 0)
     goto cleanup;
 
+  if (ipmi_monitoring_sensor_reading_init(c) < 0)
+    goto cleanup;
+
   if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE)
     {
       if (ipmi_monitoring_sdr_cache_flush(c, hostname) < 0)
@@ -458,6 +461,7 @@ _ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
 
   ipmi_monitoring_sdr_cache_unload(c);
   ipmi_monitoring_ipmi_communication_cleanup(c);
+  ipmi_monitoring_sensor_reading_cleanup(c);
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return rv;
 
@@ -465,6 +469,7 @@ _ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
   ipmi_monitoring_sdr_cache_unload(c);
   ipmi_monitoring_iterator_destroy(c);
   ipmi_monitoring_ipmi_communication_cleanup(c);
+  ipmi_monitoring_sensor_reading_cleanup(c);
   return -1;
 }
 
@@ -533,6 +538,9 @@ _ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
   if (ipmi_monitoring_ipmi_communication_init(c, hostname, config) < 0)
     goto cleanup;
 
+  if (ipmi_monitoring_sensor_reading_init(c) < 0)
+    goto cleanup;
+
   if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE)
     {
       if (ipmi_monitoring_sdr_cache_flush(c, hostname) < 0)
@@ -596,6 +604,7 @@ _ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
 
   ipmi_monitoring_sdr_cache_unload(c);
   ipmi_monitoring_ipmi_communication_cleanup(c);
+  ipmi_monitoring_sensor_reading_cleanup(c);
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return rv;
 
@@ -603,6 +612,7 @@ _ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
   ipmi_monitoring_sdr_cache_unload(c);
   ipmi_monitoring_iterator_destroy(c);
   ipmi_monitoring_ipmi_communication_cleanup(c);
+  ipmi_monitoring_sensor_reading_cleanup(c);
   return -1;
 }
 

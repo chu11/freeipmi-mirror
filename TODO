@@ -37,6 +37,8 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
+clean up wrappers
+- how many of these are actually being used now
 
 config
 ------
