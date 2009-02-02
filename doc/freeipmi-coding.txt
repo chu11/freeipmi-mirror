@@ -434,7 +434,7 @@ fiid_template_t tmpl_example =
     {1, "field_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {3, "field_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "field_3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "field_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {16, "field_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -462,7 +462,7 @@ general_usage_example()
    fiid_obj_set_all(obj, buf, len);
   
    fiid_obj_get(obj, "field_1", &val);   
-   printf("field_1 is: %d\n", (int)val);
+   printf("field_1 is: %d\n", (int16_t)val);
 }
 
 The pros and cons of the fiid method are:
