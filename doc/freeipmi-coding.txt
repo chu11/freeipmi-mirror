@@ -447,11 +447,14 @@ general_usage_example()
    fiid_obj_set(obj, "field_3", 3);
    fiid_obj_set(obj, "field_4", 5);
 
+   /* "marshall" the packet */
    fiid_obj_get_all(obj, buf, 1024);
    /* then do something with the buffer */
 
    fiid_obj_clear(obj);
    len = my_receive_data_function(buf);
+
+   /* "unmarshall" the packet */
    fiid_obj_set_all(obj, buf, len);
   
    fiid_obj_get(obj, "field_1", &val);   
