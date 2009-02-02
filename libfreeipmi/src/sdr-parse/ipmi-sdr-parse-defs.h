@@ -37,7 +37,7 @@
 
 #define IPMI_SDR_PARSE_MAGIC 0xFECD18B6
 
-#define IPMI_SDR_PARSE_FLAGS_MASK           (IPMI_SDR_PARSE_FLAGS_DEBUG_DUMP)
+#define IPMI_SDR_PARSE_FLAGS_MASK           (0)
 
 struct ipmi_sdr_parse_ctx {
   uint32_t magic;

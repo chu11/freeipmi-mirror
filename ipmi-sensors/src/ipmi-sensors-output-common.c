@@ -164,16 +164,22 @@ _get_sdr_sensor_thresholds (ipmi_sensors_state_data_t *state_data,
   _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, "cmd", IPMI_CMD_GET_SENSOR_THRESHOLDS);
   _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, "comp_code", IPMI_COMP_CODE_COMMAND_SUCCESS);
 
-  if (sdr_cache_get_threshold_readable (state_data->pstate,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        &lower_non_critical_threshold_readable,
-                                        &lower_critical_threshold_readable,
-                                        &lower_non_recoverable_threshold_readable,
-                                        &upper_non_critical_threshold_readable,
-                                        &upper_critical_threshold_readable,
-                                        &upper_non_recoverable_threshold_readable) < 0)
-    goto cleanup;
+  if (ipmi_sdr_parse_threshold_readable (state_data->sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &lower_non_critical_threshold_readable,
+                                         &lower_critical_threshold_readable,
+                                         &lower_non_recoverable_threshold_readable,
+                                         &upper_non_critical_threshold_readable,
+                                         &upper_critical_threshold_readable,
+                                         &upper_non_recoverable_threshold_readable) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_threshold_readable: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
   
   _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
                 "readable_thresholds.lower_non_critical_threshold", 
@@ -196,16 +202,22 @@ _get_sdr_sensor_thresholds (ipmi_sensors_state_data_t *state_data,
   
   _FIID_OBJ_SET(obj_get_sensor_thresholds_rs, "reserved", 0);
   
-  if (sdr_cache_get_thresholds_raw (state_data->pstate,
-                                    sdr_record,
-                                    sdr_record_len,
-                                    &lower_non_critical_threshold_temp,
-                                    &lower_critical_threshold_temp,
-                                    &lower_non_recoverable_threshold_temp,
-                                    &upper_non_critical_threshold_temp,
-                                    &upper_critical_threshold_temp,
-                                    &upper_non_recoverable_threshold_temp) < 0)
-    goto cleanup;
+  if (ipmi_sdr_parse_thresholds_raw (state_data->sdr_parse_ctx,
+                                     sdr_record,
+                                     sdr_record_len,
+                                     &lower_non_critical_threshold_temp,
+                                     &lower_critical_threshold_temp,
+                                     &lower_non_recoverable_threshold_temp,
+                                     &upper_non_critical_threshold_temp,
+                                     &upper_critical_threshold_temp,
+                                     &upper_non_recoverable_threshold_temp) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_thresholds_raw: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
 
   if (lower_non_critical_threshold_readable)
     lower_non_critical_threshold = lower_non_critical_threshold_temp;
@@ -290,15 +302,21 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
     *upper_non_recoverable_threshold = NULL;
 
   /* achu: first lets check if we have anything to output */
-  if (sdr_cache_get_sensor_capabilities (state_data->pstate,
-                                         sdr_record,
-                                         sdr_record_len,
-                                         NULL,
-                                         &threshold_access_support,
-                                         NULL,
-                                         NULL,
-                                         NULL) < 0)
-    goto cleanup;
+  if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_parse_ctx,
+                                          sdr_record,
+                                          sdr_record_len,
+                                          NULL,
+                                          &threshold_access_support,
+                                          NULL,
+                                          NULL,
+                                          NULL) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_capabilities: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
 
   if (threshold_access_support == IPMI_SDR_NO_THRESHOLDS_SUPPORT
       || threshold_access_support == IPMI_SDR_FIXED_UNREADABLE_THRESHOLDS_SUPPORT)
@@ -325,22 +343,34 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
    * 
    */
 
-  if (sdr_cache_get_sensor_number (state_data->pstate,
-                                   sdr_record,
-                                   sdr_record_len,
-                                   &sensor_number) < 0)
-    goto cleanup;
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &sensor_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_number: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
 
-  if (sdr_cache_get_sensor_decoding_data(state_data->pstate,
-                                         sdr_record,
-                                         sdr_record_len,
-                                         &r_exponent,
-                                         &b_exponent,
-                                         &m,
-                                         &b,
-                                         &linearization,
-                                         &analog_data_format) < 0)
-    goto cleanup;
+  if (ipmi_sdr_parse_sensor_decoding_data (state_data->sdr_parse_ctx,
+                                           sdr_record,
+                                           sdr_record_len,
+                                           &r_exponent,
+                                           &b_exponent,
+                                           &m,
+                                           &b,
+                                           &linearization,
+                                           &analog_data_format) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_decoding_data: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
 
   /* if the sensor is not analog, this is most likely a bug in the
    * SDR, since we shouldn't be decoding a non-threshold sensor.

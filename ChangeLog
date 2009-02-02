@@ -5,6 +5,8 @@
 	* libfreeipmi/: Include new sdr-parse subsection to libfreeipmi
 	library.
 
+	* ipmi-sensors/: Use new sdr-parse library.
+
 	* Update documentation and manpages appropriately.
 
 2009-01-30  Albert Chu <chu11@llnl.gov>

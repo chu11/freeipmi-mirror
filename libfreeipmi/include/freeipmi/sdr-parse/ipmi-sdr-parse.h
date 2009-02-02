@@ -358,6 +358,6 @@ int ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
                              uint8_t *sdr_record,
                              unsigned int sdr_record_len,
                              uint8_t *oem_data,
-                             unsigned int *oem_data_len)
+                             unsigned int *oem_data_len);
 
 #endif /* _IPMI_SDR_PARSE_H */
