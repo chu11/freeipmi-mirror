@@ -18,6 +18,10 @@ libfreeipmi
 * document templates in .h files or something
   - split up and make '-template" .h files"
 
+sensors/sel/monitoring
+----------------------
+--compacted option? squeeze output together?
+
 sensors/monitoring
 ------------------
 make sure bridging still works w/ sensor-read lib
