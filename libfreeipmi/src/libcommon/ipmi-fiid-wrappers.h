@@ -1582,7 +1582,7 @@ do {                                                                          \
     if (!((__obj_dest) = fiid_obj_copy((__obj_src), (__alt_tmpl))))           \
        {                                                                      \
          __FIID_OBJ_TRACE((__obj_src));                                       \
-         __FIID_OBJ_ERRNUM_TO_SDR_PARSE_ERRNUM((__obj));                      \
+         __FIID_OBJ_ERRNUM_TO_SDR_PARSE_ERRNUM((__obj_src));                  \
          goto cleanup;                                                        \
        }                                                                      \
 } while (0)
@@ -1592,7 +1592,7 @@ do {                                                                          \
     if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)               \
       {                                                                       \
          __FIID_OBJ_TRACE((__obj));                                           \
-         __FIID_OBJ_ERRNUM_TO_SDR_PARSE_ERRNUM((__obj));                      \
+         __FIID_OBJ_ERRNUM_TO_SDR_PARSE_ERRNUM((__obj_src));                  \
          return (-1);                                                         \
       }                                                                       \
 } while (0)
@@ -1783,6 +1783,26 @@ do {                                                                          \
          goto cleanup;                                                        \
       }                                                                       \
     *__localval_ptr = __localval;                                             \
+} while (0)
+
+#define SDR_PARSE_FIID_OBJ_GET_DATA(__obj, __field, __data, __data_len)                    \
+do {                                                                                       \
+    if (((__len) = fiid_obj_get_data ((__obj), (__field), (__data), (__data_len))) < 0)    \
+      {                                                                                    \
+         __FIID_OBJ_TRACE((__obj));                                                        \
+         __FIID_OBJ_ERRNUM_TO_SDR_PARSE_ERRNUM((__obj));                                   \
+         return (-1);                                                                      \
+      }                                                                                    \
+} while (0)
+
+#define SDR_PARSE_FIID_OBJ_GET_DATA_CLEANUP(__obj, __field, __data, __data_len)            \
+do {                                                                                       \
+    if (fiid_obj_get_data ((__obj), (__field), (__data), (__data_len)) < 0)                \
+      {                                                                                    \
+         __FIID_OBJ_TRACE((__obj));                                                        \
+         __FIID_OBJ_ERRNUM_TO_SDR_PARSE_ERRNUM((__obj));                                   \
+         goto cleanup;                                                                     \
+      }                                                                                    \
 } while (0)
 
 #define SEL_PARSE_FIID_OBJ_GET_DATA_LEN(__len, __obj, __field, __data, __data_len)         \
