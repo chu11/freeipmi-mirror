@@ -7,11 +7,6 @@ libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
 * abstract FRU parsing into lib?
-* put more sdr cache parsing into lib?
-  - fix all tools
-  - use in sel-parse lib
-  - use in sensor-read lib
-  - use in everywhere
 * more detailed debug output for ssif interface like KCS interface
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
