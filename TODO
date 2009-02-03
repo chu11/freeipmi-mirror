@@ -17,6 +17,8 @@ libfreeipmi
     system I can test on?
 * document templates in .h files or something
   - split up and make '-template" .h files"
+- cleanup
+  - make all macros do goto cleanup, make all funcs do it?
 
 units
 -----
