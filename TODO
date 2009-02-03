@@ -22,7 +22,7 @@ libfreeipmi
 
 units
 -----
-support modifier unit/rate unit in sensor output
+support modifier unit/rate unit in sensor output/monitoring/sel 
 
 sensors/sel/monitoring
 ----------------------
