@@ -8,6 +8,10 @@
 	* ipmi-sensors/, ipmi-fru/, ipmi-sensors-config/: Use new
 	sdr-parse library.
 
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+	common/src/toolcommon/tool-sdr-cache-common.c: Removed unused
+	functions.
+
 	* Update documentation and manpages appropriately.
 
 	* Various code cleanup.

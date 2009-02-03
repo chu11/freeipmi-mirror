@@ -404,7 +404,7 @@ struct sensor_event_enable_data {
 
 #define KEY_NAME_MAX_LEN 1024
 
-typedef int (*Sdr_event_flags_func)(pstdout_state_t pstate,
+typedef int (*Sdr_event_flags_func)(ipmi_sdr_parse_ctx_t ctx,
                                     uint8_t *sdr_record,
                                     unsigned int sdr_record_len,
                                     uint8_t *event_state_0,
@@ -423,7 +423,7 @@ typedef int (*Sdr_event_flags_func)(pstdout_state_t pstate,
                                     uint8_t *event_state_13,
                                     uint8_t *event_state_14);
 
-typedef int (*Sdr_threshold_event_flags_func)(pstdout_state_t pstate,
+typedef int (*Sdr_threshold_event_flags_func)(ipmi_sdr_parse_ctx_t ctx,
                                               uint8_t *sdr_record,
                                               unsigned int sdr_record_len,
                                               uint8_t *lower_non_critical_going_low,
@@ -1016,7 +1016,7 @@ _setup_threshold_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_d
   assert(type_str);
   assert(sdr_call);
 
-  if (((*sdr_call)(state_data->pstate,
+  if (((*sdr_call)(state_data->sdr_parse_ctx,
                    sdr_record,
                    sdr_record_len,
                    &lower_non_critical_going_low,
@@ -1090,7 +1090,7 @@ _setup_threshold_event_enable (ipmi_sensors_config_state_data_t *state_data,
                                              sdr_record_len,
                                              section,
                                              "Assertion",
-                                             &sdr_cache_get_threshold_assertion_supported) < 0)
+                                             &ipmi_sdr_parse_threshold_assertion_supported) < 0)
     goto cleanup;
 
   if (_setup_threshold_event_enable_wrapper (state_data,
@@ -1098,7 +1098,7 @@ _setup_threshold_event_enable (ipmi_sensors_config_state_data_t *state_data,
                                              sdr_record_len,
                                              section,
                                              "Deassertion",
-                                             &sdr_cache_get_threshold_deassertion_supported) < 0)
+                                             &ipmi_sdr_parse_threshold_deassertion_supported) < 0)
     goto cleanup;
 
   rv = 0;
@@ -1136,7 +1136,7 @@ _get_event_state_bitmask (ipmi_sensors_config_state_data_t *state_data,
   assert(sdr_call);
   assert(bitmask);
 
-  if (((*sdr_call)(state_data->pstate,
+  if (((*sdr_call)(state_data->sdr_parse_ctx,
                    sdr_record,
                    sdr_record_len,
                    &event_state_0,
@@ -1539,7 +1539,7 @@ _setup_generic_event_enable (ipmi_sensors_config_state_data_t *state_data,
                                            sdr_record_len,
                                            section,
                                            "Assertion",
-                                           &sdr_cache_get_assertion_supported,
+                                           &ipmi_sdr_parse_assertion_supported,
                                            event_reading_type_code) < 0)
     goto cleanup;
 
@@ -1548,7 +1548,7 @@ _setup_generic_event_enable (ipmi_sensors_config_state_data_t *state_data,
                                            sdr_record_len,
                                            section,
                                            "Deassertion",
-                                           &sdr_cache_get_deassertion_supported,
+                                           &ipmi_sdr_parse_deassertion_supported,
                                            event_reading_type_code) < 0)
     goto cleanup;
 
@@ -2000,7 +2000,7 @@ _setup_sensor_specific_event_enable (ipmi_sensors_config_state_data_t *state_dat
                                                    sdr_record_len,
                                                    section,
                                                    "Assertion",
-                                                   &sdr_cache_get_assertion_supported) < 0)
+                                                   &ipmi_sdr_parse_assertion_supported) < 0)
     goto cleanup;
 
   if (_setup_sensor_specific_event_enable_wrapper (state_data,
@@ -2008,7 +2008,7 @@ _setup_sensor_specific_event_enable (ipmi_sensors_config_state_data_t *state_dat
                                                    sdr_record_len,
                                                    section,
                                                    "Deassertion",
-                                                   &sdr_cache_get_deassertion_supported) < 0)
+                                                   &ipmi_sdr_parse_deassertion_supported) < 0)
     goto cleanup;
 
   rv = 0;
