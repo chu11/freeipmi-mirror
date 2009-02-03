@@ -107,8 +107,8 @@ int ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
 int ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
                                  uint8_t *sdr_record,
                                  unsigned int sdr_record_len,
-                                 uint8_t *sensor_units_rate,
                                  uint8_t *sensor_units_modifier,
+                                 uint8_t *sensor_units_rate,
                                  uint8_t *sensor_base_unit_type,
                                  uint8_t *sensor_modifier_unit_type);
 
@@ -361,6 +361,6 @@ int ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
                              uint8_t *sdr_record,
                              unsigned int sdr_record_len,
                              uint8_t *oem_data,
-                             unsigned int *oem_data_len);
+                             unsigned int oem_data_len);
 
 #endif /* _IPMI_SDR_PARSE_H */

@@ -1868,30 +1868,30 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
                              uint16_t record_id)
 {
   uint8_t oem_data[IPMI_SENSORS_OEM_DATA_LEN];
-  unsigned int oem_data_len = IPMI_SENSORS_OEM_DATA_LEN;
+  int len = 0;
   int i;
   
   assert(state_data);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(state_data->prog_data->args->verbose_count >= 2);
-
+  
   if (_detailed_output_record_type_and_id (state_data,
                                            record_type,
                                            record_id) < 0)
     return -1;
-
-
+  
+  
   if (_output_manufacturer_id (state_data,
                                sdr_record,
                                sdr_record_len) < 0)
     return -1;
-
-  if (ipmi_sdr_parse_oem_data (state_data->sdr_parse_ctx,
-                               sdr_record,
-                               sdr_record_len,
-                               oem_data,
-                               &oem_data_len) < 0)
+  
+  if ((len = ipmi_sdr_parse_oem_data (state_data->sdr_parse_ctx,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      oem_data,
+                                      IPMI_SENSORS_OEM_DATA_LEN)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1899,16 +1899,16 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
                        ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
       return -1;
     }
-
+  
   pstdout_printf (state_data->pstate, 
                   "OEM Data: ");
   
-  for (i = 0; i < oem_data_len; i++)
+  for (i = 0; i < len; i++)
     pstdout_printf (state_data->pstate, 
                     "%02X ", 
                     oem_data[i]);
   pstdout_printf (state_data->pstate, "\n");
-
+  
   pstdout_printf (state_data->pstate, "\n");
   
   return 0;

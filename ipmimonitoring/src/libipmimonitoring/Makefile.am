@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.14 2008-09-17 22:56:04 chu11 Exp $
+## $Id: Makefile.am,v 1.14.14.1 2009-02-03 19:24:04 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -7,7 +7,6 @@
 noinst_HEADERS = \
 	ipmi_monitoring_debug.h \
 	ipmi_monitoring_defs.h \
-	ipmi_monitoring_fiid_wrappers.h \
 	ipmi_monitoring_ipmi_communication.h \
 	ipmi_monitoring_sdr_cache.h \
 	ipmi_monitoring_sensor_reading.h \
@@ -35,7 +34,6 @@ libipmimonitoring_la_LIBADD = \
 libipmimonitoring_la_SOURCES = \
 	ipmi_monitoring.c \
 	ipmi_monitoring_debug.c \
-	ipmi_monitoring_fiid_wrappers.c \
 	ipmi_monitoring_ipmi_communication.c \
 	ipmi_monitoring_sdr_cache.c \
 	ipmi_monitoring_sensor_reading.c \

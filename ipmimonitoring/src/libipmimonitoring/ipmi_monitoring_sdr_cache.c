@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.19.4.1 2009-02-03 17:13:12 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.19.4.2 2009-02-03 19:24:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -42,7 +42,6 @@
 #include "ipmi_monitoring.h"
 #include "ipmi_monitoring_debug.h"
 #include "ipmi_monitoring_defs.h"
-#include "ipmi_monitoring_fiid_wrappers.h"
 #include "ipmi_monitoring_ipmi_communication.h"
 #include "ipmi_monitoring_sdr_cache.h"
 

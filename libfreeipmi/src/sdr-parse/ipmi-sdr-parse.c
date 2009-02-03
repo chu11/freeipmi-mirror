@@ -548,6 +548,7 @@ ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
+  int32_t len = 0;
   int rv = -1;
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
@@ -566,13 +567,14 @@ ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
 
   if (id_string && id_string_len)
     {
-      SDR_PARSE_FIID_OBJ_GET_DATA_CLEANUP(obj_sdr_record,
-                                          "id_string",
-                                          (uint8_t *)id_string,
-                                          id_string_len);
+      SDR_PARSE_FIID_OBJ_GET_DATA_LEN_CLEANUP(len,
+                                              obj_sdr_record,
+                                              "id_string",
+                                              (uint8_t *)id_string,
+                                              id_string_len);
     }
 
-  rv = 0;
+  rv = len;
   ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
@@ -583,8 +585,8 @@ int
 ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
                              uint8_t *sdr_record,
                              unsigned int sdr_record_len,
-                             uint8_t *sensor_units_rate,
                              uint8_t *sensor_units_modifier,
+                             uint8_t *sensor_units_rate,
                              uint8_t *sensor_base_unit_type,
                              uint8_t *sensor_modifier_unit_type)
 {
@@ -606,18 +608,18 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
                                                 acceptable_record_types)))
     goto cleanup;
 
-  if (sensor_units_rate)
-    {
-      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_unit1.rate_unit", &val);
-      
-      *sensor_units_rate = val;
-    }
-
   if (sensor_units_modifier)
     {
       SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_unit1.modifier_unit", &val);
       
       *sensor_units_modifier = val;
+    }
+
+  if (sensor_units_rate)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_unit1.rate_unit", &val);
+      
+      *sensor_units_rate = val;
     }
 
   if (sensor_base_unit_type)
@@ -2432,6 +2434,7 @@ ipmi_sdr_parse_device_id_string (ipmi_sdr_parse_ctx_t ctx,
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
+  int32_t len = 0;
   int rv = -1;
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
@@ -2450,13 +2453,14 @@ ipmi_sdr_parse_device_id_string (ipmi_sdr_parse_ctx_t ctx,
 
   if (device_id_string && device_id_string_len)
     {
-      SDR_PARSE_FIID_OBJ_GET_DATA_CLEANUP(obj_sdr_record,
-                                          "device_id_string",
-                                          (uint8_t *)device_id_string,
-                                          device_id_string_len);
+      SDR_PARSE_FIID_OBJ_GET_DATA_LEN_CLEANUP(len,
+                                              obj_sdr_record,
+                                              "device_id_string",
+                                              (uint8_t *)device_id_string,
+                                              device_id_string_len);
     }
 
-  rv = 0;
+  rv = len;
   ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
@@ -2845,11 +2849,11 @@ ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
                          uint8_t *sdr_record,
                          unsigned int sdr_record_len,
                          uint8_t *oem_data,
-                         unsigned int *oem_data_len)
+                         unsigned int oem_data_len)
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
-  int32_t len;
+  int32_t len = 0;
   int rv = -1;
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
@@ -2864,17 +2868,16 @@ ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
                                                 acceptable_record_types)))
     goto cleanup;
 
-  if (oem_data && oem_data_len && *oem_data_len)
+  if (oem_data && oem_data_len)
     {
       SDR_PARSE_FIID_OBJ_GET_DATA_LEN_CLEANUP(len,
                                               obj_sdr_record,
                                               "oem_data",
                                               oem_data,
-                                              *oem_data_len);
-      *oem_data_len = len;
+                                              oem_data_len);
     }
 
-  rv = 0;
+  rv = len;
   ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;
  cleanup:
   SDR_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
