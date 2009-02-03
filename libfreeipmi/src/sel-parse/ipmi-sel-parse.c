@@ -38,6 +38,7 @@
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
+#include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-util.h"
@@ -90,8 +91,9 @@ ipmi_sel_parse_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ct
   ctx->ipmi_ctx = ipmi_ctx;
   ctx->sdr_cache_ctx = sdr_cache_ctx;
 
-  if (!(ctx->sel_entries = list_create((ListDelF)free)))
-    goto cleanup;
+  ERR_CLEANUP((ctx->sel_entries = list_create((ListDelF)free)));
+
+  ERR_CLEANUP((ctx->sdr_parse_ctx = ipmi_sdr_parse_ctx_create()));
 
   return ctx;
 
@@ -137,6 +139,7 @@ ipmi_sel_parse_ctx_destroy(ipmi_sel_parse_ctx_t ctx)
     free(ctx->separator);
   _sel_entries_clear(ctx);
   list_destroy(ctx->sel_entries);
+  ipmi_sdr_parse_ctx_destroy(ctx->sdr_parse_ctx);
   ctx->magic = ~IPMI_SEL_PARSE_MAGIC;
   free(ctx);
 }
@@ -538,7 +541,7 @@ _ipmi_sel_parse_find_record_id(ipmi_sel_parse_ctx_t ctx,
 
       if (sel_parse_get_record_header_info(ctx, 
                                            sel_parse_entry, 
-                                           &record_id, 
+                                           &current_record_id, 
                                            NULL) < 0)
         {
           /* if it was an invalid SEL entry, continue on */
