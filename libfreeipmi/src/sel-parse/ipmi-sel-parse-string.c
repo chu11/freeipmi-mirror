@@ -127,51 +127,6 @@ _invalid_sel_entry_common(ipmi_sel_parse_ctx_t ctx,
 }
 
 /* 
- * return 1 - parsed fine
- * return 0 - can't parse info/non-decodable
- * return -1 - error
- */
-static int
-_get_sdr_record_type(ipmi_sel_parse_ctx_t ctx,
-                     uint8_t *sdr_record,
-                     unsigned int sdr_record_len,
-                     uint8_t *sdr_record_type)
-{
-  fiid_obj_t obj_sdr_record_header = NULL;
-  int32_t sdr_record_header_len;
-  uint64_t val;
-  int rv = -1;
-
-  assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(sdr_record_type);
-
-  SEL_PARSE_FIID_TEMPLATE_LEN_BYTES(sdr_record_header_len, tmpl_sdr_record_header);
-
-  if (sdr_record_len < sdr_record_header_len)
-    {
-      rv = 0;
-      goto cleanup;
-    }
-  
-  SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sdr_record_header, tmpl_sdr_record_header);
-  
-  SEL_PARSE_FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record_header,
-                                     sdr_record,
-                                     sdr_record_header_len);
-  
-  SEL_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record_header, "record_type", &val);
-  *sdr_record_type = val;
-
-  rv = 1;
- cleanup:
-  SEL_PARSE_FIID_OBJ_DESTROY(obj_sdr_record_header);
-  return rv;
-}
-                    
-/* 
  * return 1 - found record
  * return 0 - can't find record
  * return -1 - error
@@ -257,12 +212,9 @@ _get_sdr_id_string(ipmi_sel_parse_ctx_t ctx,
                    char *id_string,
                    unsigned int id_string_len)
 {
-  fiid_obj_t obj_sdr_record = NULL;
   uint8_t sdr_record[SDR_RECORD_LENGTH];
   unsigned int sdr_record_len = SDR_RECORD_LENGTH;
-  uint8_t sdr_record_type;
   int rv = -1;
-  int len;
   int ret;
 
   assert(ctx);
@@ -287,46 +239,20 @@ _get_sdr_id_string(ipmi_sel_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if ((ret = _get_sdr_record_type(ctx,
-                                  sdr_record,
-                                  sdr_record_len,
-                                  &sdr_record_type)) < 0)
-    goto cleanup;
-
-  if (!ret)
+  if (ipmi_sdr_parse_id_string (ctx->sdr_parse_ctx,
+                                sdr_record,
+                                sdr_record_len,
+                                (char *)id_string,
+                                id_string_len) < 0)
     {
-      rv = 0;
+      if (ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD
+          || ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INCOMPLETE_SDR_RECORD)
+        rv = 0;
       goto cleanup;
     }
-  
-  if (sdr_record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
-      && sdr_record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
-      && sdr_record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
-    {
-      rv = 0;
-      goto cleanup;
-    }
-
-  if (sdr_record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
-    SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_full_sensor_record);
-  else if (sdr_record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
-    SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_compact_sensor_record);
-  else
-    SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_event_only_record);
-  
-  SEL_PARSE_FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record,
-                                     sdr_record,
-                                     sdr_record_len);
-
-  SEL_PARSE_FIID_OBJ_GET_DATA_LEN_CLEANUP(len,
-                                          obj_sdr_record,
-                                          "id_string",
-                                          (uint8_t *)id_string,
-                                          id_string_len);
 
   rv = 1;
  cleanup:
-  SEL_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 
@@ -342,10 +268,8 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
                     double *reading,
                     uint8_t *sensor_unit)
 {
-  fiid_obj_t obj_sdr_record = NULL;
   uint8_t sdr_record[SDR_RECORD_LENGTH];
   unsigned int sdr_record_len = SDR_RECORD_LENGTH;
-  uint8_t sdr_record_type;
   uint8_t sdr_event_reading_type_code;
   int8_t r_exponent;
   int8_t b_exponent;
@@ -353,7 +277,7 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
   int16_t b;
   uint8_t linearization;
   uint8_t analog_data_format;
-  uint64_t val, val1, val2;
+  uint8_t sensor_base_unit_type;
   int rv = -1;
   int ret;
 
@@ -380,32 +304,16 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if ((ret = _get_sdr_record_type(ctx,
-                                  sdr_record,
-                                  sdr_record_len,
-                                  &sdr_record_type)) < 0)
-    goto cleanup;
-
-  if (!ret)
+  if (ipmi_sdr_parse_event_reading_type_code (ctx->sdr_parse_ctx,
+                                              sdr_record,
+                                              sdr_record_len,
+                                              &sdr_event_reading_type_code) < 0)
     {
-      rv = 0;
+      if (ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD
+          || ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INCOMPLETE_SDR_RECORD)
+        rv = 0;
       goto cleanup;
     }
-
-  if (sdr_record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
-    {
-      rv = 0;
-      goto cleanup;
-    }
-  
-  SEL_PARSE_FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_full_sensor_record);
-
-  SEL_PARSE_FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record,
-                                     sdr_record,
-                                     sdr_record_len);
-
-  SEL_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "event_reading_type_code", &val);
-  sdr_event_reading_type_code = val;
 
   if (ipmi_event_reading_type_code_class(sdr_event_reading_type_code) != IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
     {
@@ -413,42 +321,37 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "r_exponent", &val);
-  r_exponent = (int8_t) val;
-  if (r_exponent & 0x08)
-    r_exponent |= 0xF0;
+  if (ipmi_sdr_parse_sensor_decoding_data (ctx->sdr_parse_ctx,
+                                           sdr_record,
+                                           sdr_record_len,
+                                           &r_exponent,
+                                           &b_exponent,
+                                           &m,
+                                           &b,
+                                           &linearization,
+                                           &analog_data_format) < 0)
+    {
+      if (ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD
+          || ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INCOMPLETE_SDR_RECORD)
+        rv = 0;
+      goto cleanup;
+    }
 
-  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "b_exponent", &val);
-  b_exponent = (int8_t) val;
-  if (b_exponent & 0x08)
-    b_exponent |= 0xF0;
-
-  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "m_ls", &val1);
-  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "m_ms", &val2);
-  m = (int16_t)val1;
-  m |= ((val2 & 0x3) << 8);
-  if (m & 0x200)
-    m |= 0xFE00;
-
-  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "b_ls", &val1);
-  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "b_ms", &val2);
-  b = (int16_t)val1;
-  b |= ((val2 & 0x3) << 8);
-  if (b & 0x200)
-    b |= 0xFE00;
-
-  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "linearization", &val);
-  linearization = (uint8_t)val;
-
-  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "sensor_unit1.analog_data_format", &val);
-  analog_data_format = (uint8_t) val;
-
-  SEL_PARSE_FIID_OBJ_GET_CLEANUP (obj_sdr_record, "sensor_unit2.base_unit", &val);
-
-  if (!IPMI_SENSOR_UNIT_VALID(val))
-    val = IPMI_SENSOR_UNIT_UNSPECIFIED;
-
-  *sensor_unit = (uint8_t)val;
+  if (ipmi_sdr_parse_sensor_units (ctx->sdr_parse_ctx,
+                                   sdr_record,
+                                   sdr_record_len,
+                                   NULL,
+                                   NULL,
+                                   &sensor_base_unit_type,
+                                   NULL) < 0)
+    {
+      if (ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD
+          || ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INCOMPLETE_SDR_RECORD)
+        rv = 0;
+      goto cleanup;
+    }
+   
+  *sensor_unit = sensor_base_unit_type;
 
   /* if the sensor is not analog, this is most likely a bug in the
    * SDR
@@ -481,7 +384,6 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
 
   rv = 1;
  cleanup:
-  SEL_PARSE_FIID_OBJ_DESTROY(obj_sdr_record);
   return rv;
 }
 

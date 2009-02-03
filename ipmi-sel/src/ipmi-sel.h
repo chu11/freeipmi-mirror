@@ -81,8 +81,8 @@ typedef struct ipmi_sel_state_data
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   char *hostname;
-  ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx;
-  ipmi_sel_parse_ctx_t ipmi_sel_parse_ctx;
+  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
+  ipmi_sel_parse_ctx_t sel_parse_ctx;
   int output_headers;
 } ipmi_sel_state_data_t;
 

@@ -1,3 +1,33 @@
+2009-02-03  Albert Chu <chu11@llnl.gov>
+	
+	From branch sdr_parse_branch.
+
+	* libfreeipmi/: Include new sdr-parse subsection to libfreeipmi
+	library.
+
+	* ipmi-sensors/, ipmi-fru/, ipmi-sensors-config/: Use new
+	sdr-parse library.
+
+	* ipmimonitoring/src/libipmimonitoring/: Use new sdr-parse
+	library.
+
+	*
+	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_fiid_wrapppers.h,
+	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_fiid_wrapppers.c:
+	Remove files.
+
+	* libfreeipmi/src/sel-parse/: Use new sdr-parse library.
+	
+	* libfreeipmi/src/sensor-read/: Use new sdr-parse library.
+
+	* common/src/toolcommon/tool-sdr-cache-common.h,
+	common/src/toolcommon/tool-sdr-cache-common.c: Removed unused
+	functions.
+
+	* Update documentation and manpages appropriately.
+
+	* Various code cleanup.
+
 2009-02-02  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/libipmimonitoring/: Code cleanup.

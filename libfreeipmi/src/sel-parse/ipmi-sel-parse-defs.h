@@ -27,6 +27,7 @@
 #include <stdint.h>
 #include <sys/param.h>
 
+#include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
 #include "freeipmi/sel-parse/ipmi-sel-parse.h"
 
 #include "list.h"
@@ -77,6 +78,8 @@ struct ipmi_sel_parse_ctx {
   struct ipmi_sel_parse_entry *current_sel_entry;
 
   struct ipmi_sel_parse_entry *callback_sel_entry;
+
+  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 };
 
 #endif /* _IPMI_SEL_PARSE_DEFS_H */

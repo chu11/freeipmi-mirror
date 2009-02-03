@@ -119,6 +119,13 @@ do {                                                                    \
   __TRACE_CTX_OUTPUT;                                                   \
 } while (0)
 
+#define __SDR_PARSE_TRACE                                               \
+do {                                                                    \
+  int __ctxerrnum = ipmi_sel_parse_ctx_errnum(ctx);                     \
+  char *__ctxerrstr = ipmi_sel_parse_ctx_strerror(__ctxerrnum);         \
+  __TRACE_CTX_OUTPUT;                                                   \
+} while (0)
+
 #define __SEL_PARSE_TRACE                                               \
 do {                                                                    \
   int __ctxerrnum = ipmi_sel_parse_ctx_errnum(ctx);                     \
@@ -141,6 +148,7 @@ do {                                                                    \
 #define __SUNBMC_TRACE
 #define __LOCATE_TRACE
 #define __SDR_CACHE_TRACE
+#define __SDR_PARSE_TRACE
 #define __SEL_PARSE_TRACE
 #define __SENSOR_READ_TRACE
 #endif /* IPMI_TRACE */
@@ -1213,6 +1221,114 @@ do {                                                                      \
       {                                                                 \
         ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;            \
         __SDR_CACHE_TRACE;                                              \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define __SDR_PARSE_ERRNO_TO_ERRNUM                                     \
+do {                                                                    \
+  if (errno == 0)                                                       \
+    ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;                       \
+  else if (errno == ENOMEM)                                             \
+    ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_OUT_OF_MEMORY;                 \
+  else if (errno == EINVAL)                                             \
+    ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_INTERNAL_ERROR;                \
+  else                                                                  \
+    ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SYSTEM_ERROR;                  \
+} while (0)
+
+#define SDR_PARSE_ERR(expr)                                             \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        __SDR_PARSE_ERRNO_TO_ERRNUM;                                    \
+        __SDR_PARSE_TRACE;                                              \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SDR_PARSE_ERR_CLEANUP(expr)                                     \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        __SDR_PARSE_ERRNO_TO_ERRNUM;                                    \
+        __SDR_PARSE_TRACE;                                              \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SDR_PARSE_ERRNUM_SET(__errnum)                                  \
+  do {                                                                  \
+    ctx->errnum = (__errnum);                                           \
+    __SDR_PARSE_TRACE;                                                  \
+  } while (0)
+
+#define SDR_PARSE_ERR_PARAMETERS(expr)                                  \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_PARAMETERS;                \
+        __SDR_PARSE_TRACE;                                              \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SDR_PARSE_ERR_OUT_OF_MEMORY(expr)                               \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_OUT_OF_MEMORY;             \
+        __SDR_PARSE_TRACE;                                              \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SDR_PARSE_ERR_OUT_OF_MEMORY_CLEANUP(expr)                       \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_OUT_OF_MEMORY;             \
+        __SDR_PARSE_TRACE;                                              \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SDR_PARSE_ERR_SYSTEM_ERROR(expr)                                \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SYSTEM_ERROR;              \
+        __SDR_PARSE_TRACE;                                              \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SDR_PARSE_ERR_SYSTEM_ERROR_CLEANUP(expr)                        \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SYSTEM_ERROR;              \
+        __SDR_PARSE_TRACE;                                              \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define SDR_PARSE_ERR_INTERNAL_ERROR(expr)                              \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_INTERNAL_ERROR;            \
+        __SDR_PARSE_TRACE;                                              \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define SDR_PARSE_ERR_INTERNAL_ERROR_CLEANUP(expr)                      \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_INTERNAL_ERROR;            \
+        __SDR_PARSE_TRACE;                                              \
         goto cleanup;                                                   \
       }                                                                 \
   } while (0)

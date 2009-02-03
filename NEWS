@@ -78,6 +78,7 @@ o Various documentation updates.
 Libraries
 ---------
 o libfreeipmi
+  - Add new sdr-parse sub library.
   - Add new sel-parse sub library.
   - Add new sensor-read sub library.
   - More detailed KCS debug output with header information.

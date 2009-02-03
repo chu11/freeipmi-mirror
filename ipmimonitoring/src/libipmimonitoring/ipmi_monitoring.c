@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.45 2009-02-03 00:07:52 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.46 2009-02-03 22:48:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.

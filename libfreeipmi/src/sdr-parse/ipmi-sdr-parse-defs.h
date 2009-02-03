@@ -17,8 +17,8 @@
 
 */
 
-#ifndef _IPMI_SENSOR_READ_DEFS_H
-#define _IPMI_SENSOR_READ_DEFS_H
+#ifndef _IPMI_SDR_PARSE_DEFS_H
+#define _IPMI_SDR_PARSE_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -28,7 +28,6 @@
 #include <sys/param.h>
 
 #include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
-#include "freeipmi/sensor-read/ipmi-sensor-read.h"
 
 #include "list.h"
 
@@ -36,18 +35,14 @@
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
 
-#define IPMI_SENSOR_READ_MAGIC 0xABCD1246
+#define IPMI_SDR_PARSE_MAGIC 0xFECD18B6
 
-#define IPMI_SENSOR_READ_FLAGS_MASK \
-  (IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS)
+#define IPMI_SDR_PARSE_FLAGS_MASK           (0)
 
-struct ipmi_sensor_read_ctx {
+struct ipmi_sdr_parse_ctx {
   uint32_t magic;
   unsigned int errnum;
   unsigned int flags;
-
-  ipmi_ctx_t ipmi_ctx;
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 };
 
-#endif /* _IPMI_SENSOR_READ_DEFS_H */
+#endif /* _IPMI_SDR_PARSE_DEFS_H */

@@ -28,6 +28,8 @@
 #include <errno.h>
 #include <assert.h>
 
+#include <freeipmi/freeipmi.h>
+
 #include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
