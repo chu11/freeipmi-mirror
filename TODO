@@ -18,6 +18,10 @@ libfreeipmi
 * document templates in .h files or something
   - split up and make '-template" .h files"
 
+units
+-----
+support modifier unit/rate unit in sensor output
+
 sensors/sel/monitoring
 ----------------------
 --compacted option? squeeze output together?
