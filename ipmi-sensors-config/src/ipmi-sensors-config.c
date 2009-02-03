@@ -86,7 +86,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
         }
     }
 
-  if (!(state_data.ipmi_sdr_cache_ctx = ipmi_sdr_cache_ctx_create()))
+  if (!(state_data.sdr_cache_ctx = ipmi_sdr_cache_ctx_create()))
     {
       pstdout_perror (pstate, 
                       "ipmi_sdr_cache_ctx_create()");
@@ -97,27 +97,35 @@ _ipmi_sensors_config (pstdout_state_t pstate,
   if (state_data.prog_data->args->config_args.common.debug)
     {
       /* Don't error out, if this fails we can still continue */
-      if (ipmi_sdr_cache_ctx_set_flags(state_data.ipmi_sdr_cache_ctx,
+      if (ipmi_sdr_cache_ctx_set_flags(state_data.sdr_cache_ctx,
                                        IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_sdr_cache_ctx_set_flags: %s\n",
-                         ipmi_sdr_cache_ctx_errormsg(state_data.ipmi_sdr_cache_ctx));
+                         ipmi_sdr_cache_ctx_errormsg(state_data.sdr_cache_ctx));
 
       if (hostname)
         {
-          if (ipmi_sdr_cache_ctx_set_debug_prefix(state_data.ipmi_sdr_cache_ctx,
+          if (ipmi_sdr_cache_ctx_set_debug_prefix(state_data.sdr_cache_ctx,
                                                   hostname) < 0)
             pstdout_fprintf (pstate,
                              stderr,
                              "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
-                             ipmi_sdr_cache_ctx_errormsg(state_data.ipmi_sdr_cache_ctx));
+                             ipmi_sdr_cache_ctx_errormsg(state_data.sdr_cache_ctx));
         }
     }  
 
+  if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create()))
+    {
+      pstdout_perror (pstate, 
+                      "ipmi_sdr_parse_ctx_create()");
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
   if (prog_data->args->sdr.flush_cache)
     {
-      if (sdr_cache_flush_cache(state_data.ipmi_sdr_cache_ctx,
+      if (sdr_cache_flush_cache(state_data.sdr_cache_ctx,
                                 NULL,
                                 state_data.prog_data->args->sdr.quiet_cache,
                                 hostname,
@@ -130,7 +138,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (sdr_cache_create_and_load (state_data.ipmi_sdr_cache_ctx,
+  if (sdr_cache_create_and_load (state_data.sdr_cache_ctx,
                                  NULL,
                                  state_data.ipmi_ctx,
                                  prog_data->args->sdr.quiet_cache,
@@ -368,8 +376,8 @@ _ipmi_sensors_config (pstdout_state_t pstate,
   
   exit_code = 0;
  cleanup:
-  if (state_data.ipmi_sdr_cache_ctx)
-    ipmi_sdr_cache_ctx_destroy(state_data.ipmi_sdr_cache_ctx);
+  if (state_data.sdr_cache_ctx)
+    ipmi_sdr_cache_ctx_destroy(state_data.sdr_cache_ctx);
   if (state_data.ipmi_ctx)
     {
       ipmi_ctx_close (state_data.ipmi_ctx);
