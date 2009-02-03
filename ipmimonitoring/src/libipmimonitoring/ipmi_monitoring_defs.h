@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.21.2.1 2009-02-03 17:13:12 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.21.2.2 2009-02-03 17:59:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -147,6 +147,7 @@ struct ipmi_monitoring_ctx {
 
   ipmi_ctx_t ipmi_ctx;
   ipmi_sensor_read_ctx_t sensor_read_ctx;
+  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 
   List sensor_readings;
   ListIterator sensor_readings_itr;

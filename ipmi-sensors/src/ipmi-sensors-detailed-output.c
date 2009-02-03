@@ -271,7 +271,7 @@ static int
 _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
                              uint8_t *sdr_record,
                              unsigned int sdr_record_len,
-                             uint8_t sensor_unit)
+                             uint8_t sensor_base_unit_type)
 {
   double *lower_non_critical_threshold = NULL;
   double *lower_critical_threshold = NULL;
@@ -313,7 +313,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate,
                     "Lower Critical Threshold: %f %s\n", 
                     *lower_critical_threshold, 
-                    ipmi_sensor_units[sensor_unit]);
+                    ipmi_sensor_units[sensor_base_unit_type]);
   else
     pstdout_printf (state_data->pstate, 
                     "Lower Critical Threshold: %s\n", 
@@ -323,7 +323,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate, 
                     "Upper Critical Threshold: %f %s\n", 
                     *upper_critical_threshold, 
-                    ipmi_sensor_units[sensor_unit]);
+                    ipmi_sensor_units[sensor_base_unit_type]);
   else
     pstdout_printf (state_data->pstate, 
                     "Upper Critical Threshold: %s\n", 
@@ -333,7 +333,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate, 
                     "Lower Non-Critical Threshold: %f %s\n", 
                     *lower_non_critical_threshold, 
-                    ipmi_sensor_units[sensor_unit]);
+                    ipmi_sensor_units[sensor_base_unit_type]);
   else
     pstdout_printf (state_data->pstate, 
                     "Lower Non-Critical Threshold: %s\n", 
@@ -343,7 +343,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate, 
                     "Upper Non-Critical Threshold: %f %s\n", 
                     *upper_non_critical_threshold, 
-                    ipmi_sensor_units[sensor_unit]);
+                    ipmi_sensor_units[sensor_base_unit_type]);
   else
     pstdout_printf (state_data->pstate, 
                     "Upper Non-Critical Threshold: %s\n", 
@@ -353,7 +353,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate, 
                     "Lower Non-Recoverable Threshold: %f %s\n", 
                     *lower_non_recoverable_threshold, 
-                    ipmi_sensor_units[sensor_unit]);
+                    ipmi_sensor_units[sensor_base_unit_type]);
   else
     pstdout_printf (state_data->pstate, 
                     "Lower Non-Recoverable Threshold: %s\n", 
@@ -363,7 +363,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate, 
                     "Upper Non-Recoverable Threshold: %f %s\n", 
                     *upper_non_recoverable_threshold, 
-                    ipmi_sensor_units[sensor_unit]);
+                    ipmi_sensor_units[sensor_base_unit_type]);
   else
     pstdout_printf (state_data->pstate, 
                     "Upper Non-Recoverable Threshold: %s\n", 
@@ -390,7 +390,7 @@ static int
 _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
                                         uint8_t *sdr_record,
                                         unsigned int sdr_record_len,
-                                        uint8_t sensor_unit)
+                                        uint8_t sensor_base_unit_type)
 {
   double *nominal_reading = NULL;
   double *normal_maximum = NULL;
@@ -441,7 +441,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate,
                     "Sensor Min. Reading: %f %s\n",
                     *sensor_minimum_reading,
-                    ipmi_sensor_units[sensor_unit]);
+                    ipmi_sensor_units[sensor_base_unit_type]);
   else
     pstdout_printf (state_data->pstate,
                     "Sensor Min. Reading: %s\n",
@@ -451,7 +451,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate,
                     "Sensor Max. Reading: %f %s\n",
                     *sensor_maximum_reading,
-                    ipmi_sensor_units[sensor_unit]);
+                    ipmi_sensor_units[sensor_base_unit_type]);
   else
     pstdout_printf (state_data->pstate,
                     "Sensor Max. Reading: %s\n",
@@ -461,7 +461,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate,
                     "Normal Min.: %f %s\n",
                     *normal_minimum,
-                    ipmi_sensor_units[sensor_unit]);
+                    ipmi_sensor_units[sensor_base_unit_type]);
   else
     pstdout_printf (state_data->pstate,
                     "Normal Min.: %s\n",
@@ -471,7 +471,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate,
                     "Normal Max.: %f %s\n",
                     *normal_maximum,
-                    ipmi_sensor_units[sensor_unit]);
+                    ipmi_sensor_units[sensor_base_unit_type]);
   else
     pstdout_printf (state_data->pstate,
                     "Normal Max.: %s\n",
@@ -481,7 +481,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate,
                     "Nominal reading: %f %s\n",
                     *nominal_reading,
-                    ipmi_sensor_units[sensor_unit]);
+                    ipmi_sensor_units[sensor_base_unit_type]);
   else
     pstdout_printf (state_data->pstate,
                     "Nominal reading: %s\n",
@@ -512,7 +512,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
   uint8_t positive_going_threshold_hysteresis_raw = 0;
   uint8_t negative_going_threshold_hysteresis_raw = 0;
   uint8_t sensor_number;
-  uint8_t sensor_unit;
+  uint8_t sensor_base_unit_type;
   uint8_t hysteresis_support;
   uint64_t val;
   int rv = -1;
@@ -568,14 +568,17 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_unit (state_data->sdr_parse_ctx,
-                                  sdr_record,
-                                  sdr_record_len,
-                                  &sensor_unit) < 0)
+  if (ipmi_sdr_parse_sensor_units (state_data->sdr_parse_ctx,
+                                   sdr_record,
+                                   sdr_record_len,
+                                   NULL,
+                                   NULL,
+                                   &sensor_base_unit_type,
+                                   NULL) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_sdr_parse_sensor_unit: %s\n",
+                       "ipmi_sdr_parse_sensor_units: %s\n",
                        ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
       goto cleanup;
     }
@@ -705,7 +708,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
         pstdout_printf (state_data->pstate, 
                         "Positive Hysteresis: %f %s\n", 
                         positive_going_threshold_hysteresis_real,
-                        ipmi_sensor_units[sensor_unit]);
+                        ipmi_sensor_units[sensor_base_unit_type]);
       else
         pstdout_printf (state_data->pstate,
                         "Positive Hysteresis: %s\n", 
@@ -715,7 +718,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
         pstdout_printf (state_data->pstate, 
                         "Negative Hysteresis: %f %s\n", 
                         negative_going_threshold_hysteresis_real,
-                        ipmi_sensor_units[sensor_unit]);
+                        ipmi_sensor_units[sensor_base_unit_type]);
       else
         pstdout_printf (state_data->pstate,
                         "Negative Hysteresis: %s\n", 
@@ -728,7 +731,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
         pstdout_printf (state_data->pstate, 
                         "Positive Hysteresis: %u %s\n", 
                         positive_going_threshold_hysteresis_raw,
-                        ipmi_sensor_units[sensor_unit]);
+                        ipmi_sensor_units[sensor_base_unit_type]);
       else
         pstdout_printf (state_data->pstate,
                         "Positive Hysteresis: %s\n", 
@@ -738,7 +741,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
         pstdout_printf (state_data->pstate, 
                         "Negative Hysteresis: %u %s\n", 
                         negative_going_threshold_hysteresis_raw,
-                        ipmi_sensor_units[sensor_unit]);
+                        ipmi_sensor_units[sensor_base_unit_type]);
       else
         pstdout_printf (state_data->pstate,
                         "Negative Hysteresis: %s\n", 
@@ -1088,7 +1091,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
 {
   uint8_t event_reading_type_code;
   int event_reading_type_code_class;
-  uint8_t sensor_unit;
+  uint8_t sensor_base_unit_type;
  
   assert(state_data);
   assert(sdr_record);
@@ -1114,14 +1117,17 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
       return -1;
     }
 
-  if (ipmi_sdr_parse_sensor_unit (state_data->sdr_parse_ctx,
-                                  sdr_record,
-                                  sdr_record_len,
-                                  &sensor_unit) < 0)
+  if (ipmi_sdr_parse_sensor_units (state_data->sdr_parse_ctx,
+                                   sdr_record,
+                                   sdr_record_len,
+                                   NULL,
+                                   NULL,
+                                   &sensor_base_unit_type,
+                                   NULL) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_sdr_parse_sensor_unit: %s\n",
+                       "ipmi_sdr_parse_sensor_units: %s\n",
                        ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
       return -1;
     }
@@ -1178,13 +1184,13 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
       if (_detailed_output_thresholds (state_data,
                                        sdr_record,
                                        sdr_record_len,
-                                       sensor_unit) < 0)
+                                       sensor_base_unit_type) < 0)
         return -1;
       
       if (_detailed_output_sensor_reading_ranges (state_data,
                                                   sdr_record,
                                                   sdr_record_len,
-                                                  sensor_unit) < 0)
+                                                  sensor_base_unit_type) < 0)
         return -1;
     }
 
@@ -1209,7 +1215,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
         pstdout_printf (state_data->pstate,
                         "Sensor Reading: %f %s\n",
                         *reading,
-                        ipmi_sensor_units[sensor_unit]);
+                        ipmi_sensor_units[sensor_base_unit_type]);
       else 
         pstdout_printf (state_data->pstate,
                         "Sensor Reading: %s\n",
@@ -1223,7 +1229,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
         pstdout_printf (state_data->pstate,
                         "Sensor Reading: %f %s\n",
                         *reading,
-                        ipmi_sensor_units[sensor_unit]);
+                        ipmi_sensor_units[sensor_base_unit_type]);
       else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
         pstdout_printf (state_data->pstate,
                         "Sensor Reading: %s\n",

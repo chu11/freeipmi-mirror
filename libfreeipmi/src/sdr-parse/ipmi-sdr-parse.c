@@ -580,10 +580,13 @@ ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
 }
 
 int
-ipmi_sdr_parse_sensor_unit (ipmi_sdr_parse_ctx_t ctx,
-                            uint8_t *sdr_record,
-                            unsigned int sdr_record_len,
-                            uint8_t *sensor_unit)
+ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
+                             uint8_t *sdr_record,
+                             unsigned int sdr_record_len,
+                             uint8_t *sensor_units_rate,
+                             uint8_t *sensor_units_modifier,
+                             uint8_t *sensor_base_unit_type,
+                             uint8_t *sensor_modifier_unit_type)
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
@@ -603,14 +606,38 @@ ipmi_sdr_parse_sensor_unit (ipmi_sdr_parse_ctx_t ctx,
                                                 acceptable_record_types)))
     goto cleanup;
 
-  if (sensor_unit)
+  if (sensor_units_rate)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_unit1.rate_unit", &val);
+      
+      *sensor_units_rate = val;
+    }
+
+  if (sensor_units_modifier)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_unit1.modifier_unit", &val);
+      
+      *sensor_units_modifier = val;
+    }
+
+  if (sensor_base_unit_type)
     {
       SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_unit2.base_unit", &val);
       
       if (!IPMI_SENSOR_UNIT_VALID(val))
         val = IPMI_SENSOR_UNIT_UNSPECIFIED;
       
-      *sensor_unit = val;
+      *sensor_base_unit_type = val;
+    }
+
+  if (sensor_modifier_unit_type)
+    {
+      SDR_PARSE_FIID_OBJ_GET_CLEANUP(obj_sdr_record, "sensor_unit3.modifier_unit", &val);
+      
+      if (!IPMI_SENSOR_UNIT_VALID(val))
+        val = IPMI_SENSOR_UNIT_UNSPECIFIED;
+      
+      *sensor_modifier_unit_type = val;
     }
 
   rv = 0;

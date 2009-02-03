@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.60.2.1 2009-01-31 00:02:17 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.60.2.2 2009-02-03 17:59:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -58,8 +58,12 @@ _sensor_reading_cleanup(ipmi_monitoring_ctx_t c)
       ipmi_sensor_read_ctx_destroy(c->sensor_read_ctx);
       c->sensor_read_ctx = NULL;
     }
+  if (c->sdr_parse_ctx)
+    {
+      ipmi_sdr_parse_ctx_destroy(c->sdr_parse_ctx);
+      c->sdr_parse_ctx = NULL;
+    }
 }
-
 
 int
 ipmi_monitoring_sensor_reading_init(ipmi_monitoring_ctx_t c)
@@ -68,10 +72,18 @@ ipmi_monitoring_sensor_reading_init(ipmi_monitoring_ctx_t c)
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->ipmi_ctx);
   assert(!c->sensor_read_ctx);
+  assert(!c->sdr_parse_ctx);
 
   if (!(c->sensor_read_ctx = ipmi_sensor_read_ctx_create(c->ipmi_ctx)))
     {
       IPMI_MONITORING_DEBUG(("ipmi_sensor_read_ctx_create: %s", strerror(errno)));
+      c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
+      goto cleanup;
+    }
+
+  if (!(c->sdr_parse_ctx = ipmi_sdr_parse_ctx_create()))
+    {
+      IPMI_MONITORING_DEBUG(("ipmi_sdr_parse_ctx_create: %s", strerror(errno)));
       c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }

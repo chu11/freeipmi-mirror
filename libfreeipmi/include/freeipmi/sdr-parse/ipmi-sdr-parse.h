@@ -104,10 +104,13 @@ int ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
                               unsigned int id_string_len);
 
 /* For Full, Compact SDR records */
-int ipmi_sdr_parse_sensor_unit (ipmi_sdr_parse_ctx_t ctx,
-                                uint8_t *sdr_record,
-                                unsigned int sdr_record_len,
-                                uint8_t *sensor_unit);
+int ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
+                                 uint8_t *sdr_record,
+                                 unsigned int sdr_record_len,
+                                 uint8_t *sensor_units_rate,
+                                 uint8_t *sensor_units_modifier,
+                                 uint8_t *sensor_base_unit_type,
+                                 uint8_t *sensor_modifier_unit_type);
 
 /* For Full, Compact SDR records */
 int ipmi_sdr_parse_sensor_capabilities (ipmi_sdr_parse_ctx_t ctx,

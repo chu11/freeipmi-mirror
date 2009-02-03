@@ -1001,7 +1001,7 @@ _setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
                          unsigned int sdr_record_len,
                          struct config_section *section,
                          const char *description,
-                         uint8_t sensor_unit)
+                         uint8_t sensor_base_unit_type)
 {
   uint8_t lower_non_critical_threshold_settable = 0;
   uint8_t lower_critical_threshold_settable = 0;
@@ -1029,7 +1029,7 @@ _setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
    * even though its unrealistic for IPMI's sake.  Others, I'm just
    * not sure about.
    */
-  if (sensor_unit == IPMI_SENSOR_UNIT_RPM)
+  if (sensor_base_unit_type == IPMI_SENSOR_UNIT_RPM)
     threshold_validate_ptr = threshold_validate_positive;
   else
     threshold_validate_ptr = threshold_validate;
@@ -1133,7 +1133,7 @@ _setup_threshold_hysteresis_fields (ipmi_sensors_config_state_data_t *state_data
                                     unsigned int sdr_record_len,
                                     struct config_section *section,
                                     const char *description,
-                                    uint8_t sensor_unit,
+                                    uint8_t sensor_base_unit_type,
                                     uint8_t hysteresis_support)
 {
   unsigned int flags = 0;
@@ -1171,7 +1171,7 @@ _setup_threshold_hysteresis_fields (ipmi_sensors_config_state_data_t *state_data
    * even though its unrealistic for IPMI's sake.  Others, I'm just
    * not sure about.
    */
-  if (sensor_unit == IPMI_SENSOR_UNIT_RPM)
+  if (sensor_base_unit_type == IPMI_SENSOR_UNIT_RPM)
     hysteresis_threshold_validate_ptr = hysteresis_threshold_validate_positive;
   else
     hysteresis_threshold_validate_ptr = hysteresis_threshold_validate;
@@ -1213,7 +1213,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   uint8_t hysteresis_support = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  uint8_t sensor_type, sensor_unit;
+  uint8_t sensor_type, sensor_base_unit_type;
   char description[CONFIG_MAX_DESCRIPTION_LEN];
   const char *sensor_type_str = NULL;
 
@@ -1274,10 +1274,13 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_unit (state_data->sdr_parse_ctx,
-                                  sdr_record,
-                                  sdr_record_len,
-                                  &sensor_unit) < 0)
+  if (ipmi_sdr_parse_sensor_units (state_data->sdr_parse_ctx,
+                                   sdr_record,
+                                   sdr_record_len,
+                                   NULL,
+                                   NULL,
+                                   &sensor_base_unit_type,
+                                   NULL) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -1289,13 +1292,13 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
 
   memset(description, '\0', CONFIG_MAX_DESCRIPTION_LEN);
-  if (IPMI_SENSOR_UNIT_VALID(sensor_unit)
-      && sensor_unit != IPMI_SENSOR_UNIT_UNSPECIFIED)
+  if (IPMI_SENSOR_UNIT_VALID(sensor_base_unit_type)
+      && sensor_base_unit_type != IPMI_SENSOR_UNIT_UNSPECIFIED)
     snprintf(description, 
              CONFIG_MAX_DESCRIPTION_LEN,
              "Give valid input for sensor type = %s; units = %s",
              sensor_type_str ? sensor_type_str : UNRECOGNIZED_SENSOR_TYPE,
-             ipmi_sensor_units[sensor_unit]);
+             ipmi_sensor_units[sensor_base_unit_type]);
   else
     snprintf(description, 
              CONFIG_MAX_DESCRIPTION_LEN,
@@ -1317,7 +1320,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                    sdr_record_len,
                                    section,
                                    description,
-                                   sensor_unit) < 0)
+                                   sensor_base_unit_type) < 0)
         goto cleanup;
     }
 
@@ -1330,7 +1333,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                               sdr_record_len,
                                               section,
                                               description,
-                                              sensor_unit,
+                                              sensor_base_unit_type,
                                               hysteresis_support) < 0)
         goto cleanup;
     }
