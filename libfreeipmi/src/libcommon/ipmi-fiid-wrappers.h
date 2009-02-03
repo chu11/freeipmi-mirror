@@ -1759,7 +1759,7 @@ do {                                                                          \
     if (!__ret)                                                               \
       {                                                                       \
          __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
-         ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR;                \
+         ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR;                 \
          return (-1);                                                         \
       }                                                                       \
     *__localval_ptr = __localval;                                             \
@@ -1779,7 +1779,7 @@ do {                                                                          \
     if (!__ret)                                                               \
       {                                                                       \
          __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
-         ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR;                \
+         ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR;                 \
          goto cleanup;                                                        \
       }                                                                       \
     *__localval_ptr = __localval;                                             \
@@ -1917,7 +1917,7 @@ do {                                                                          \
     if (!__ret)                                                               \
       {                                                                       \
          __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
-         ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_SDR_CACHE_ERROR;              \
+         ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_INTERNAL_ERROR;               \
          return (-1);                                                         \
       }                                                                       \
     *__localval_ptr = __localval;                                             \
@@ -1937,7 +1937,7 @@ do {                                                                          \
     if (!__ret)                                                               \
       {                                                                       \
          __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
-         ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_SDR_CACHE_ERROR;              \
+         ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_INTERNAL_ERROR;               \
          goto cleanup;                                                        \
       }                                                                       \
     *__localval_ptr = __localval;                                             \

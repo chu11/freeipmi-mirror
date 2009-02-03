@@ -44,7 +44,7 @@
 #define IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_CANNOT_BE_OBTAINED      12
 #define IPMI_SENSOR_READ_CTX_ERR_NODE_BUSY                              13
 #define IPMI_SENSOR_READ_CTX_ERR_INVALID_SDR_RECORD_TYPE                14
-#define IPMI_SENSOR_READ_CTX_ERR_SDR_CACHE_ERROR                        15
+#define IPMI_SENSOR_READ_CTX_ERR_SDR_ENTRY_ERROR                        15
 #define IPMI_SENSOR_READ_CTX_ERR_IPMI_ERROR                             16 
 #define IPMI_SENSOR_READ_CTX_ERR_SYSTEM_ERROR                           17
 #define IPMI_SENSOR_READ_CTX_ERR_OVERFLOW                               18
