@@ -31,6 +31,7 @@ sensors/sel/monitoring
 sensors/monitoring
 ------------------
 make sure bridging still works w/ sensor-read lib
+make sure oem still outputs fine
 
 sunbmc driver
 -------------
