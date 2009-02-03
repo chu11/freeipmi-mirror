@@ -267,7 +267,7 @@ struct packet
   uint8_t field_1; /* 1 bit */
   uint8_t field_2; /* 3 bits */
   uint8_t field_3; /* 4 bits */
-  uint16_t field_4; /* 16 bits */
+  int16_t field_4; /* 16 bits */
 };
 
 my_marshall_function(struct packet *pkt, char *buf, unsigned int buflen)
@@ -309,7 +309,7 @@ general_usage_example()
    len = my_receive_data_function(buf);
    my_unmarshall_function(&pkt, buf, len);
 
-   printf("field_1 is: %u\n", pkt.field_1);
+   printf("field_1 is: %d\n", pkt.field_1);
 }
 
 Pros:
@@ -319,6 +319,8 @@ B) The struct definition describes packets closely and is relatively
    easy to use and understand.
 C) Relatively efficient.
 D) General usage code size is relatively small.
+E) General usage need not determine field type (i.e. is it an unsigned
+   or signed integer).
 
 Cons:
 
@@ -344,7 +346,7 @@ struct packet
   uint8_t field_1 : 1;
   uint8_t field_2 : 3;
   uint8_t field_3 : 4;
-  uint16_t field_4; 
+  int16_t field_4; 
 };
 
 my_marshall_function(struct packet *pkt, char *buf, unsigned int buflen)
@@ -380,7 +382,7 @@ general_usage_example()
    len = my_receive_data_function(buf);
    my_unmarshall_function(&pkt, buf, len);
 
-   printf("field_1 is: %u\n", pkt.field_1);
+   printf("field_1 is: %d\n", pkt.field_1);
 }
 
 Pros:
@@ -390,6 +392,8 @@ B) General usage code size is relatively small.
 C) The struct definition describes packets exactly and is relatively
    easy to use and understand.
 D) Very efficient (little actual marshalling/unmarshalling needs to be done.)
+E) General usage need not determine field type (i.e. is it an unsigned
+   or signed integer).
 
 Cons:
 
@@ -430,7 +434,7 @@ fiid_template_t tmpl_example =
     {1, "field_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {3, "field_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "field_3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "field_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {16, "field_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -447,15 +451,18 @@ general_usage_example()
    fiid_obj_set(obj, "field_3", 3);
    fiid_obj_set(obj, "field_4", 5);
 
+   /* "marshall" the packet */
    fiid_obj_get_all(obj, buf, 1024);
    /* then do something with the buffer */
 
    fiid_obj_clear(obj);
    len = my_receive_data_function(buf);
+
+   /* "unmarshall" the packet */
    fiid_obj_set_all(obj, buf, len);
   
    fiid_obj_get(obj, "field_1", &val);   
-   printf("field_1 is: %u\n", (unsigned int)val);
+   printf("field_1 is: %d\n", (int16_t)val);
 }
 
 The pros and cons of the fiid method are:
@@ -465,10 +472,11 @@ Pros:
 A) No need to deal with endian problems (handled internally in the API).
 B) No need to deal with struct packing issues (bit shifts are handled
 internally in the API).
-C) Easier to deal with optional fields (just don't set a field, on a
-read the api can identify if a field is set or not).
-D) Easier to deal with variable length fields (set whatever length you
-want, on a read the api can identify the length of the field).
+C) Easier to deal with optional fields (For marshalling, don't set a
+field.  For unmarshalling, the api can identify if a field is set or not).
+D) Easier to deal with variable length fields (For marshalling, set
+whatever length you want.  For unmarshalling, the api can identify the
+length of the field read).
 E) Templates describe the packets exactly.
 F) Easy to do large packet dumps and debug (fields and values easily
 output and identified).
@@ -483,11 +491,20 @@ B) Pretty inefficient (lots of string comparisons).
 C) Lots of duplicate templates (relative inability to "inherit"
 structs without #define mangling/hackery).
 D) General usage code size is increased.
+E) General usage must determine and cast field to appropriate type
+   (i.e. is it an unsigned or signed integer).
 
-(Side Comment: some other networking APIs do something similar to
-this, but use macros/enums for the field names rather than strings.
-Many of the above benefits are identical, except the debug dump output
-capabilities is weaker in exchange for better performance.)
+(Side Comments: 
+
+Some other networking APIs have a similar API, but use
+macros/enums for the field names rather than strings.  Many of the
+above benefits are identical, except the debug dump output
+capabilities are weaker in exchange for better performance.
+
+Some other networking APIs may return a type of a field (i.e. signed
+vs unsigned, 16bit vs 32bit, etc.).  That would remove need to
+determine casting in general usage in exchange for larger general
+usage code size.)
 
 The big reasons why this was developed and chosen over traditional
 methods.

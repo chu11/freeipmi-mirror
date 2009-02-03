@@ -16,6 +16,10 @@
 
 	* Various code cleanup.
 
+2009-02-02  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/: Code cleanup.
+	
 2009-01-30  Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolcommon/tool-sdr-common.c: Check return value from

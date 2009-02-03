@@ -114,6 +114,6 @@ int8_t fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd_rq);
 }
 #endif
 
-#endif /* ipmi-watchdog.h */
+#endif /* ipmi-bmc-watchdog-timer-cmds.h */
 
 
