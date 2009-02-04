@@ -81,7 +81,11 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 				    pkt,
 				    pkt_len) > 0);
 
-    API_ERR_SSIF (ipmi_ssif_write (ctx->io.inband.ssif_ctx, pkt, pkt_len) != -1);
+    if (ipmi_ssif_write (ctx->io.inband.ssif_ctx, pkt, pkt_len) < 0)
+      {
+        API_ERR_SET_VIA_SSIF_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
+        return (-1);
+      }
   }
 
   {
@@ -100,7 +104,11 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
     API_ERR_CLEANUP ((pkt = alloca (pkt_len)));
     memset (pkt, 0, pkt_len);
 
-    API_ERR_SSIF_CLEANUP (!((read_len = ipmi_ssif_read (ctx->io.inband.ssif_ctx, pkt, pkt_len)) < 0));
+    if ((read_len = ipmi_ssif_read (ctx->io.inband.ssif_ctx, pkt, pkt_len)) < 0)
+      {
+        API_ERR_SET_VIA_SSIF_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
+        goto cleanup;
+      }
 
     if (!read_len)
       API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_SYSTEM_ERROR);
@@ -159,11 +167,19 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
   memcpy(pkt + hdr_len, buf_rq, buf_rq_len);
   
   /* Request Block */
-  API_ERR_SSIF (ipmi_ssif_write (ctx->io.inband.ssif_ctx, pkt, pkt_len) != -1);
+  if (ipmi_ssif_write (ctx->io.inband.ssif_ctx, pkt, pkt_len) < 0)
+    {
+      API_ERR_SET_VIA_SSIF_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
+      return (-1);
+    }
   
   /* Response Block */
-  API_ERR_SSIF ((bytes_read = ipmi_ssif_read (ctx->io.inband.ssif_ctx,
-					      readbuf, buf_rs_len)) != -1);
+  if ((bytes_read = ipmi_ssif_read (ctx->io.inband.ssif_ctx,
+                                    readbuf, buf_rs_len)) < 0)
+    {
+      API_ERR_SET_VIA_SSIF_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
+      return (-1);
+    }
 
   if (!bytes_read)
     {

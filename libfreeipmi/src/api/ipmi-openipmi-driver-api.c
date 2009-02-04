@@ -58,11 +58,15 @@ ipmi_openipmi_cmd_api (ipmi_ctx_t ctx,
 
   API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_OPENIPMI);
 
-  API_ERR_OPENIPMI (!(ipmi_openipmi_cmd (ctx->io.inband.openipmi_ctx,
-					 ctx->lun,
-					 ctx->net_fn,
-					 obj_cmd_rq,
-					 obj_cmd_rs) < 0));
+  if (ipmi_openipmi_cmd (ctx->io.inband.openipmi_ctx,
+                         ctx->lun,
+                         ctx->net_fn,
+                         obj_cmd_rq,
+                         obj_cmd_rs) < 0)
+    {
+      API_ERR_SET_VIA_OPENIPMI_ERRNUM(ipmi_openipmi_ctx_errnum(ctx->io.inband.openipmi_ctx));
+      return (-1);
+    }
 
   return (0);
 }
@@ -81,12 +85,16 @@ ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx,
 
   API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_OPENIPMI);
 
-  API_ERR_OPENIPMI (!(ipmi_openipmi_cmd_ipmb (ctx->io.inband.openipmi_ctx,
-					      ctx->rs_addr,
-					      ctx->lun,
-					      ctx->net_fn,
-					      obj_cmd_rq,
-					      obj_cmd_rs) < 0));
+  if (ipmi_openipmi_cmd_ipmb (ctx->io.inband.openipmi_ctx,
+                              ctx->rs_addr,
+                              ctx->lun,
+                              ctx->net_fn,
+                              obj_cmd_rq,
+                              obj_cmd_rs) < 0)
+    {
+      API_ERR_SET_VIA_OPENIPMI_ERRNUM(ipmi_openipmi_ctx_errnum(ctx->io.inband.openipmi_ctx));
+      return -1;
+    }
 
   return (0);
 }
@@ -117,11 +125,15 @@ ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_SET_ALL_CLEANUP(obj_cmd_rq, buf_rq, buf_rq_len);
 
-  API_ERR_OPENIPMI_CLEANUP (!(ipmi_openipmi_cmd (ctx->io.inband.openipmi_ctx,
-						 ctx->lun,
-						 ctx->net_fn,
-						 obj_cmd_rq,
-						 obj_cmd_rs) < 0));
+  if (ipmi_openipmi_cmd (ctx->io.inband.openipmi_ctx,
+                         ctx->lun,
+                         ctx->net_fn,
+                         obj_cmd_rq,
+                         obj_cmd_rs) < 0)
+    {
+      API_ERR_SET_VIA_OPENIPMI_ERRNUM(ipmi_openipmi_ctx_errnum(ctx->io.inband.openipmi_ctx));
+      goto cleanup;
+    }
 
   API_FIID_OBJ_GET_ALL_LEN_CLEANUP(len, obj_cmd_rs, buf_rs, buf_rs_len);
 

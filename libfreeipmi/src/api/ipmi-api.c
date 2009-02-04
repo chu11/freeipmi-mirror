@@ -550,6 +550,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
   struct ipmi_locate_info locate_info;
   unsigned int seedp;
   uint32_t temp_flags = 0;
+  int errnum;
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
@@ -601,8 +602,11 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 	}
       else 
 	{
-	  API_ERR_LOCATE_CLEANUP (ipmi_locate_get_device_info (IPMI_INTERFACE_KCS, 
-                                                               &locate_info));
+	  if ((errnum = ipmi_locate_get_device_info (IPMI_INTERFACE_KCS, &locate_info)))
+            {
+              API_ERR_SET_VIA_LOCATE_ERRNUM(errnum);
+              goto cleanup;
+            }
 	  if (driver_device)
 	    {
 	      strncpy(locate_info.driver_device, 
@@ -623,21 +627,41 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
       
       API_ERR_CLEANUP ((ctx->io.inband.kcs_ctx = ipmi_kcs_ctx_create()));
       
-      API_ERR_KCS_CLEANUP (!(ipmi_kcs_ctx_set_driver_address(ctx->io.inband.kcs_ctx, 
-							     locate_info.driver_address) < 0));
+      if (ipmi_kcs_ctx_set_driver_address(ctx->io.inband.kcs_ctx, 
+                                          locate_info.driver_address) < 0)
+        {
+          API_ERR_SET_VIA_KCS_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
+          goto cleanup;
+        }
 
-      API_ERR_KCS_CLEANUP (!(ipmi_kcs_ctx_set_register_spacing(ctx->io.inband.kcs_ctx, 
-                                                               locate_info.register_spacing) < 0));
+      if (ipmi_kcs_ctx_set_register_spacing(ctx->io.inband.kcs_ctx, 
+                                            locate_info.register_spacing) < 0)
+        {
+          API_ERR_SET_VIA_KCS_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
+          goto cleanup;
+        }
       
-      API_ERR_KCS_CLEANUP (!(ipmi_kcs_ctx_set_poll_interval(ctx->io.inband.kcs_ctx, 
-							    IPMI_POLL_INTERVAL_USECS) < 0));
+      if (ipmi_kcs_ctx_set_poll_interval(ctx->io.inband.kcs_ctx, 
+                                         IPMI_POLL_INTERVAL_USECS) < 0)
+        {
+          API_ERR_SET_VIA_KCS_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
+          goto cleanup;
+        }
       
       if (ctx->flags & IPMI_FLAGS_NONBLOCKING)
         temp_flags |= IPMI_KCS_FLAGS_NONBLOCKING;
       
-      API_ERR_KCS_CLEANUP (!(ipmi_kcs_ctx_set_flags(ctx->io.inband.kcs_ctx, temp_flags) < 0));
+      if (ipmi_kcs_ctx_set_flags(ctx->io.inband.kcs_ctx, temp_flags) < 0)
+        {
+          API_ERR_SET_VIA_KCS_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
+          goto cleanup;
+        }
       
-      API_ERR_KCS_CLEANUP (!(ipmi_kcs_ctx_io_init(ctx->io.inband.kcs_ctx) < 0));
+      if (ipmi_kcs_ctx_io_init(ctx->io.inband.kcs_ctx) < 0)
+        {
+          API_ERR_SET_VIA_KCS_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
+          goto cleanup;
+        }
 
       break;
     case IPMI_DEVICE_SMIC:
@@ -666,8 +690,12 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 	}
       else 
 	{
-	  API_ERR_LOCATE_CLEANUP (ipmi_locate_get_device_info (IPMI_INTERFACE_SSIF, 
-                                                               &locate_info));
+	  if ((errnum = ipmi_locate_get_device_info (IPMI_INTERFACE_SSIF, 
+                                                     &locate_info)))
+            {
+              API_ERR_SET_VIA_LOCATE_ERRNUM(errnum);
+              goto cleanup;
+            }
 	  if (driver_device)
 	    {
 	      strncpy(locate_info.driver_device, 
@@ -685,18 +713,36 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
       API_ERR_CLEANUP ((ctx->io.inband.ssif_ctx = ipmi_ssif_ctx_create()));
       
       if (driver_device)
-        API_ERR_SSIF_CLEANUP (!(ipmi_ssif_ctx_set_driver_device(ctx->io.inband.ssif_ctx, 
-                                                                locate_info.driver_device) < 0));
+        {
+          if (ipmi_ssif_ctx_set_driver_device(ctx->io.inband.ssif_ctx, 
+                                              locate_info.driver_device) < 0)
+            {
+              API_ERR_SET_VIA_SSIF_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
+              goto cleanup;
+            }
+        }
  
-      API_ERR_SSIF_CLEANUP (!(ipmi_ssif_ctx_set_driver_address(ctx->io.inband.ssif_ctx, 
-                                                               locate_info.driver_address) < 0));
+      if (ipmi_ssif_ctx_set_driver_address(ctx->io.inband.ssif_ctx, 
+                                           locate_info.driver_address) < 0)
+        {
+          API_ERR_SET_VIA_SSIF_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
+          goto cleanup;
+        }
 
       if (ctx->flags & IPMI_FLAGS_NONBLOCKING)
         temp_flags |= IPMI_SSIF_FLAGS_NONBLOCKING;
       
-      API_ERR_SSIF_CLEANUP (!(ipmi_ssif_ctx_set_flags(ctx->io.inband.ssif_ctx, temp_flags) < 0));
+      if (ipmi_ssif_ctx_set_flags(ctx->io.inband.ssif_ctx, temp_flags) < 0)
+        {
+          API_ERR_SET_VIA_SSIF_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
+          goto cleanup;
+        }
 
-      API_ERR_SSIF_CLEANUP (!(ipmi_ssif_ctx_io_init(ctx->io.inband.ssif_ctx) < 0));
+      if (ipmi_ssif_ctx_io_init(ctx->io.inband.ssif_ctx) < 0)
+        {
+          API_ERR_SET_VIA_SSIF_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
+          goto cleanup;
+        }
 
       break;
 
@@ -706,10 +752,20 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
       API_ERR_CLEANUP ((ctx->io.inband.openipmi_ctx = ipmi_openipmi_ctx_create()));
       
       if (driver_device)
-        API_ERR_OPENIPMI_CLEANUP (!(ipmi_openipmi_ctx_set_driver_device(ctx->io.inband.openipmi_ctx,
-                                                                        driver_device) < 0));
+        {
+          if (ipmi_openipmi_ctx_set_driver_device(ctx->io.inband.openipmi_ctx,
+                                                  driver_device) < 0)
+            {
+              API_ERR_SET_VIA_OPENIPMI_ERRNUM(ipmi_openipmi_ctx_errnum(ctx->io.inband.openipmi_ctx));
+              goto cleanup;
+            }
+        }
       
-      API_ERR_OPENIPMI_CLEANUP (!(ipmi_openipmi_ctx_io_init(ctx->io.inband.openipmi_ctx) < 0));
+      if (ipmi_openipmi_ctx_io_init(ctx->io.inband.openipmi_ctx) < 0)
+        {
+          API_ERR_SET_VIA_OPENIPMI_ERRNUM(ipmi_openipmi_ctx_errnum(ctx->io.inband.openipmi_ctx));
+          goto cleanup;
+        }
 
       break;
 
@@ -719,10 +775,20 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
       API_ERR_CLEANUP ((ctx->io.inband.sunbmc_ctx = ipmi_sunbmc_ctx_create()));
       
       if (driver_device)
-        API_ERR_SUNBMC_CLEANUP (!(ipmi_sunbmc_ctx_set_driver_device(ctx->io.inband.sunbmc_ctx,
-                                                                    driver_device) < 0));
+        {
+          if (ipmi_sunbmc_ctx_set_driver_device(ctx->io.inband.sunbmc_ctx,
+                                                driver_device) < 0)
+            {
+              API_ERR_SET_VIA_SUNBMC_ERRNUM(ipmi_sunbmc_ctx_errnum(ctx->io.inband.sunbmc_ctx));
+              goto cleanup;
+            }
+        }
       
-      API_ERR_SUNBMC_CLEANUP (!(ipmi_sunbmc_ctx_io_init(ctx->io.inband.sunbmc_ctx) < 0));
+      if (ipmi_sunbmc_ctx_io_init(ctx->io.inband.sunbmc_ctx) < 0)
+        {
+          API_ERR_SET_VIA_SUNBMC_ERRNUM(ipmi_sunbmc_ctx_errnum(ctx->io.inband.sunbmc_ctx));
+          goto cleanup;
+        }
 
       break;
 

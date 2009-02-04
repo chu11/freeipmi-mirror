@@ -94,7 +94,7 @@ do {                                                                         \
 
 #define __API_LOCATE_TRACE                                                   \
 do {                                                                         \
-  int __ctxerrnum = __locate_errnum;                                         \
+  int __ctxerrnum = ___locate_errnum;                                        \
   char *__ctxerrstr = ipmi_locate_strerror(__ctxerrnum);                     \
   __TRACE_CTX_OUTPUT;                                                        \
 } while (0)
@@ -395,7 +395,7 @@ do {                                                                            
     }                                                                                                      \
 } while (0)
 
-/* Note: ctx->errnum set in call to ipmi_cmd() - don't call wrapper */
+/* Note: ctx->errnum set in call to ipmi_cmd_ipmb() - don't call wrapper */
 #define API_ERR_IPMI_CMD_IPMB_CLEANUP(__ctx, __slave_address, __lun, __netfn, __rq, __rs)                  \
 do {                                                                                                       \
   int8_t __rv;                                                                                             \
@@ -414,211 +414,136 @@ do {                                                                            
     }                                                                                                      \
 } while (0)
 
-#define __KCS_ERRNUM_TO_API_ERRNUM                                \
-do {                                                              \
-  int32_t __errnum = ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx); \
-  if (__errnum == IPMI_KCS_CTX_ERR_SUCCESS)                       \
-    ctx->errnum = IPMI_ERR_SUCCESS;                               \
-  else if (__errnum == IPMI_KCS_CTX_ERR_OUT_OF_MEMORY)            \
-    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;                         \
-  else if (__errnum == IPMI_KCS_CTX_ERR_PERMISSION)               \
-    ctx->errnum = IPMI_ERR_PERMISSION;                            \
-  else if (__errnum == IPMI_KCS_CTX_ERR_PARAMETERS)               \
-    ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                         \
-  else if (__errnum == IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND)         \
-    ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                      \
-  else if (__errnum == IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT)           \
-    ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;                        \
-  else if (__errnum == IPMI_KCS_CTX_ERR_BUSY)                     \
-    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                          \
-  else if (__errnum == IPMI_KCS_CTX_ERR_SYSTEM_ERROR)             \
-    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                          \
-  else                                                            \
-    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                        \
-} while (0)
-
-#define API_ERR_KCS(expr)                                               \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __KCS_ERRNUM_TO_API_ERRNUM;                                       \
-      __API_KCS_TRACE;                                                  \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define API_ERR_KCS_CLEANUP(expr)                                       \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __KCS_ERRNUM_TO_API_ERRNUM;                                       \
-      __API_KCS_TRACE;                                                  \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define __SSIF_ERRNUM_TO_API_ERRNUM                                 \
+#define __KCS_ERRNUM_TO_API_ERRNUM(__kcs_errnum)                    \
 do {                                                                \
-  int32_t __errnum = ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx); \
-  if (__errnum == IPMI_SSIF_CTX_ERR_SUCCESS)                        \
+  if ((__kcs_errnum) == IPMI_KCS_CTX_ERR_SUCCESS)                   \
     ctx->errnum = IPMI_ERR_SUCCESS;                                 \
-  else if (__errnum == IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY)             \
+  else if ((__kcs_errnum) == IPMI_KCS_CTX_ERR_OUT_OF_MEMORY)        \
     ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;                           \
-  else if (__errnum == IPMI_SSIF_CTX_ERR_PERMISSION)                \
+  else if ((__kcs_errnum) == IPMI_KCS_CTX_ERR_PERMISSION)           \
     ctx->errnum = IPMI_ERR_PERMISSION;                              \
-  else if (__errnum == IPMI_SSIF_CTX_ERR_PARAMETERS)                \
+  else if ((__kcs_errnum) == IPMI_KCS_CTX_ERR_PARAMETERS)           \
     ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                           \
-  else if (__errnum == IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND)          \
+  else if ((__kcs_errnum) == IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND)     \
     ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                        \
-  else if (__errnum == IPMI_SSIF_CTX_ERR_DRIVER_TIMEOUT)            \
+  else if ((__kcs_errnum) == IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT)       \
     ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;                          \
-  else if (__errnum == IPMI_SSIF_CTX_ERR_BUSY)                      \
+  else if ((__kcs_errnum) == IPMI_KCS_CTX_ERR_BUSY)                 \
     ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                            \
-  else if (__errnum == IPMI_SSIF_CTX_ERR_SYSTEM_ERROR)              \
+  else if ((__kcs_errnum) == IPMI_KCS_CTX_ERR_SYSTEM_ERROR)         \
     ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                            \
   else                                                              \
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                          \
 } while (0)
 
-#define API_ERR_SSIF(expr)                                              \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __SSIF_ERRNUM_TO_API_ERRNUM;                                      \
-      __API_SSIF_TRACE;                                                 \
-      return (-1);                                                      \
-    }                                                                   \
+#define API_ERR_SET_VIA_KCS_ERRNUM(__errnum)                        \
+do {                                                                \
+  __KCS_ERRNUM_TO_API_ERRNUM(__errnum);                             \
+  __API_KCS_TRACE;                                                  \
+} while (0)   
+
+#define __SSIF_ERRNUM_TO_API_ERRNUM(__ssif_errnum)                  \
+do {                                                                \
+  if ((__ssif_errnum) == IPMI_SSIF_CTX_ERR_SUCCESS)                 \
+    ctx->errnum = IPMI_ERR_SUCCESS;                                 \
+  else if ((__ssif_errnum) == IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY)      \
+    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;                           \
+  else if ((__ssif_errnum) == IPMI_SSIF_CTX_ERR_PERMISSION)         \
+    ctx->errnum = IPMI_ERR_PERMISSION;                              \
+  else if ((__ssif_errnum) == IPMI_SSIF_CTX_ERR_PARAMETERS)         \
+    ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                           \
+  else if ((__ssif_errnum) == IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND)   \
+    ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                        \
+  else if ((__ssif_errnum) == IPMI_SSIF_CTX_ERR_DRIVER_TIMEOUT)     \
+    ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;                          \
+  else if ((__ssif_errnum) == IPMI_SSIF_CTX_ERR_BUSY)               \
+    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                            \
+  else if ((__ssif_errnum) == IPMI_SSIF_CTX_ERR_SYSTEM_ERROR)       \
+    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                            \
+  else                                                              \
+    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                          \
 } while (0)
 
-#define API_ERR_SSIF_CLEANUP(expr)                                      \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __SSIF_ERRNUM_TO_API_ERRNUM;                                      \
-      __API_SSIF_TRACE;                                                 \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
+#define API_ERR_SET_VIA_SSIF_ERRNUM(__errnum)                       \
+do {                                                                \
+  __SSIF_ERRNUM_TO_API_ERRNUM(__errnum);                            \
+  __API_SSIF_TRACE;                                                 \
+} while (0)   
 
-#define __OPENIPMI_ERRNUM_TO_API_ERRNUM                                     \
+#define __OPENIPMI_ERRNUM_TO_API_ERRNUM(__openipmi_errnum)                  \
 do {                                                                        \
-  int32_t __errnum = ipmi_openipmi_ctx_errnum(ctx->io.inband.openipmi_ctx); \
-  if (__errnum == IPMI_OPENIPMI_CTX_ERR_SUCCESS)                            \
+  if ((__openipmi_errnum) == IPMI_OPENIPMI_CTX_ERR_SUCCESS)                 \
     ctx->errnum = IPMI_ERR_SUCCESS;                                         \
-  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY)                 \
+  else if ((__openipmi_errnum) == IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY)      \
     ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;                                   \
-  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PERMISSION)                    \
+  else if ((__openipmi_errnum) == IPMI_OPENIPMI_CTX_ERR_PERMISSION)         \
     ctx->errnum = IPMI_ERR_PERMISSION;                                      \
-  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)                    \
+  else if ((__openipmi_errnum) == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)         \
     ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                                   \
-  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND)              \
+  else if ((__openipmi_errnum) == IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND)   \
     ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                                \
-  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_DRIVER_TIMEOUT)                \
+  else if ((__openipmi_errnum) == IPMI_OPENIPMI_CTX_ERR_DRIVER_TIMEOUT)     \
     ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;                                  \
-  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR)                  \
+  else if ((__openipmi_errnum) == IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR)       \
     ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                                    \
   else                                                                      \
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                                  \
 } while (0)
 
-#define API_ERR_OPENIPMI(expr)                                          \
+#define API_ERR_SET_VIA_OPENIPMI_ERRNUM(__errnum)                       \
 do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __OPENIPMI_ERRNUM_TO_API_ERRNUM;                                  \
-      __API_OPENIPMI_TRACE;                                             \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
+  __OPENIPMI_ERRNUM_TO_API_ERRNUM(__errnum);                            \
+  __API_OPENIPMI_TRACE;                                                 \
+} while (0)   
 
-#define API_ERR_OPENIPMI_CLEANUP(expr)                                  \
+#define __SUNBMC_ERRNUM_TO_API_ERRNUM(__sunbmc_errnum)                  \
 do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __OPENIPMI_ERRNUM_TO_API_ERRNUM;                                  \
-      __API_OPENIPMI_TRACE;                                             \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define __SUNBMC_ERRNUM_TO_API_ERRNUM                                       \
-do {                                                                        \
-  int32_t __errnum = ipmi_sunbmc_ctx_errnum(ctx->io.inband.sunbmc_ctx);     \
-  if (__errnum == IPMI_SUNBMC_CTX_ERR_SUCCESS)                              \
-    ctx->errnum = IPMI_ERR_SUCCESS;                                         \
-  else if (__errnum == IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY)                   \
-    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;                                   \
-  else if (__errnum == IPMI_SUNBMC_CTX_ERR_PERMISSION)                      \
-    ctx->errnum = IPMI_ERR_PERMISSION;                                      \
-  else if (__errnum == IPMI_SUNBMC_CTX_ERR_PARAMETERS)                      \
-    ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                                   \
-  else if (__errnum == IPMI_SUNBMC_CTX_ERR_DEVICE_NOT_FOUND)                \
-    ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                                \
-  else if (__errnum == IPMI_SUNBMC_CTX_ERR_DRIVER_TIMEOUT)                  \
-    ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;                                  \
-  else if (__errnum == IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR)                    \
-    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                                    \
-  else                                                                      \
-    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                                  \
-} while (0)
-
-#define API_ERR_SUNBMC(expr)                                            \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __SUNBMC_ERRNUM_TO_API_ERRNUM;                                    \
-      __API_SUNBMC_TRACE;                                               \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define API_ERR_SUNBMC_CLEANUP(expr)                                    \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __SUNBMC_ERRNUM_TO_API_ERRNUM;                                    \
-      __API_SUNBMC_TRACE;                                               \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define __LOCATE_ERRNUM_TO_API_ERRNUM(__errnum)                         \
-do {                                                                    \
-  if ((__errnum) == IPMI_LOCATE_ERR_SUCCESS)                            \
+  if ((__sunbmc_errnum) == IPMI_SUNBMC_CTX_ERR_SUCCESS)                 \
     ctx->errnum = IPMI_ERR_SUCCESS;                                     \
-  else if ((__errnum) == IPMI_LOCATE_ERR_OUT_OF_MEMORY)                 \
+  else if ((__sunbmc_errnum) == IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY)      \
     ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;                               \
-  else if ((__errnum) == IPMI_LOCATE_ERR_PERMISSION)                    \
+  else if ((__sunbmc_errnum) == IPMI_SUNBMC_CTX_ERR_PERMISSION)         \
     ctx->errnum = IPMI_ERR_PERMISSION;                                  \
-  else if ((__errnum) == IPMI_LOCATE_ERR_PARAMETERS)                    \
+  else if ((__sunbmc_errnum) == IPMI_SUNBMC_CTX_ERR_PARAMETERS)         \
     ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                               \
-  else if ((__errnum) == IPMI_LOCATE_ERR_SYSTEM_ERROR)                  \
+  else if ((__sunbmc_errnum) == IPMI_SUNBMC_CTX_ERR_DEVICE_NOT_FOUND)   \
+    ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                            \
+  else if ((__sunbmc_errnum) == IPMI_SUNBMC_CTX_ERR_DRIVER_TIMEOUT)     \
+    ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;                              \
+  else if ((__sunbmc_errnum) == IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR)       \
     ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                                \
   else                                                                  \
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                              \
 } while (0)
 
-#define API_ERR_LOCATE(expr)                                            \
+#define API_ERR_SET_VIA_SUNBMC_ERRNUM(__errnum)                         \
 do {                                                                    \
-  int __locate_errnum;                                                  \
-  if ((__locate_errnum = (expr)))                                       \
-    {                                                                   \
-      __LOCATE_ERRNUM_TO_API_ERRNUM(__locate_errnum);                   \
-      __API_LOCATE_TRACE;                                               \
-      return (-1);                                                      \
-    }                                                                   \
+  __SUNBMC_ERRNUM_TO_API_ERRNUM(__errnum);                              \
+  __API_SUNBMC_TRACE;                                                   \
+} while (0)   
+
+#define __LOCATE_ERRNUM_TO_API_ERRNUM(__locate_errnum)                  \
+do {                                                                    \
+  if ((__locate_errnum) == IPMI_LOCATE_ERR_SUCCESS)                     \
+    ctx->errnum = IPMI_ERR_SUCCESS;                                     \
+  else if ((__locate_errnum) == IPMI_LOCATE_ERR_OUT_OF_MEMORY)          \
+    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;                               \
+  else if ((__locate_errnum) == IPMI_LOCATE_ERR_PERMISSION)             \
+    ctx->errnum = IPMI_ERR_PERMISSION;                                  \
+  else if ((__locate_errnum) == IPMI_LOCATE_ERR_PARAMETERS)             \
+    ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                               \
+  else if ((__locate_errnum) == IPMI_LOCATE_ERR_SYSTEM_ERROR)           \
+    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                                \
+  else                                                                  \
+    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                              \
 } while (0)
 
-#define API_ERR_LOCATE_CLEANUP(expr)                                    \
+#define API_ERR_SET_VIA_LOCATE_ERRNUM(__errnum)                         \
 do {                                                                    \
-  int __locate_errnum;                                                  \
-  if ((__locate_errnum = (expr)))                                       \
-    {                                                                   \
-      __LOCATE_ERRNUM_TO_API_ERRNUM(__locate_errnum);                   \
-      __API_LOCATE_TRACE;                                               \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
+  int ___locate_errnum = __errnum;                                      \
+  __LOCATE_ERRNUM_TO_API_ERRNUM(__errnum);                              \
+  __API_LOCATE_TRACE;                                                   \
+} while (0)   
 
 #ifdef __cplusplus
 }

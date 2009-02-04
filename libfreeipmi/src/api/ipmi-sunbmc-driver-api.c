@@ -56,11 +56,15 @@ ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
 
-  API_ERR_SUNBMC (!(ipmi_sunbmc_cmd (ctx->io.inband.sunbmc_ctx,
-                                     ctx->lun,
-                                     ctx->net_fn,
-                                     obj_cmd_rq,
-                                     obj_cmd_rs) < 0));
+  if (ipmi_sunbmc_cmd (ctx->io.inband.sunbmc_ctx,
+                       ctx->lun,
+                       ctx->net_fn,
+                       obj_cmd_rq,
+                       obj_cmd_rs) < 0)
+    {
+      API_ERR_SET_VIA_SUNBMC_ERRNUM(ipmi_sunbmc_ctx_errnum(ctx->io.inband.sunbmc_ctx));
+      return (-1);
+    }
 
   return (0);
 }
@@ -89,11 +93,15 @@ ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_SET_ALL_CLEANUP(obj_cmd_rq, buf_rq, buf_rq_len);
 
-  API_ERR_SUNBMC_CLEANUP (!(ipmi_sunbmc_cmd (ctx->io.inband.sunbmc_ctx,
-                                             ctx->lun,
-                                             ctx->net_fn,
-                                             obj_cmd_rq,
-                                             obj_cmd_rs) < 0));
+  if (ipmi_sunbmc_cmd (ctx->io.inband.sunbmc_ctx,
+                       ctx->lun,
+                       ctx->net_fn,
+                       obj_cmd_rq,
+                       obj_cmd_rs) < 0)
+    {
+      API_ERR_SET_VIA_SUNBMC_ERRNUM(ipmi_sunbmc_ctx_errnum(ctx->io.inband.sunbmc_ctx));
+      goto cleanup;
+     }
 
   API_FIID_OBJ_GET_ALL_LEN_CLEANUP(len, obj_cmd_rs, buf_rs, buf_rs_len);
 
