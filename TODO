@@ -12,8 +12,6 @@ libfreeipmi
     system I can test on?
 * document templates in .h files or something
   - split up and make '-template" .h files"
-- cleanup
-  - make all macros do goto cleanup, make all funcs do it?
 
 units
 -----
@@ -45,8 +43,6 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
-clean up wrappers
-- how many of these are actually being used now
 
 config
 ------
