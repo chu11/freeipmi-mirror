@@ -289,16 +289,6 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define API_ERR_PARAMETERS_CLEANUP(expr)                                \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_PARAMETERS;                                \
-      __API_TRACE;                                                      \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
 #define API_ERR_MESSAGE_TIMEOUT(expr)                                   \
 do {                                                                    \
   if (!(expr))                                                          \
@@ -319,26 +309,6 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define API_ERR_DRIVER_PATH_REQUIRED(expr)                              \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_DRIVER_PATH_REQUIRED;                      \
-      __API_TRACE;                                                      \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define API_ERR_DRIVER_PATH_REQUIRED_CLEANUP(expr)                      \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_DRIVER_PATH_REQUIRED;                      \
-      __API_TRACE;                                                      \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
 #define API_ERR_SYSTEM_ERROR(expr)                                      \
 do {                                                                    \
   if (!(expr))                                                          \
@@ -354,26 +324,6 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                              \
-      __API_TRACE;                                                      \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define API_ERR_LIBRARY_ERROR(expr)                                     \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                             \
-      __API_TRACE;                                                      \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define API_ERR_LIBRARY_ERROR_CLEANUP(expr)                             \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_LIBRARY_ERROR;                             \
       __API_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
