@@ -260,7 +260,11 @@ ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
     free(ctx->driver_device);
   ctx->driver_device = NULL;
 
-  OPENIPMI_ERR_OUT_OF_MEMORY((ctx->driver_device = strdup(device)));
+  if (!(ctx->driver_device = strdup(device)))
+    {
+      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY);
+      return (-1);
+    }
 
   ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;
   return (0);
@@ -340,9 +344,13 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
    */
   memset(rq_buf_temp, '\0', IPMI_OPENIPMI_BUFLEN);
 
-  OPENIPMI_ERR_INTERNAL_ERROR(!((len = fiid_obj_get_all(obj_cmd_rq, 
-                                                        rq_buf_temp, 
-                                                        IPMI_OPENIPMI_BUFLEN)) <= 0));
+  if ((len = fiid_obj_get_all(obj_cmd_rq, 
+                              rq_buf_temp, 
+                              IPMI_OPENIPMI_BUFLEN)) <= 0)
+    {
+      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   rq_cmd = rq_buf_temp[0];
   if (len > 1)
@@ -440,9 +448,13 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
     rs_packet.msg.data_len = IPMI_OPENIPMI_BUFLEN - 1;
   memcpy(rs_buf + 1, rs_buf_temp, rs_packet.msg.data_len);
 
-  OPENIPMI_ERR_INTERNAL_ERROR(!(fiid_obj_set_all(obj_cmd_rs, 
-                                                 rs_buf, 
-                                                 rs_packet.msg.data_len + 1) < 0));
+  if (fiid_obj_set_all(obj_cmd_rs, 
+                       rs_buf, 
+                       rs_packet.msg.data_len + 1) < 0)
+    {
+      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   return (0);
 }
@@ -462,7 +474,11 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
                           && fiid_obj_valid(obj_cmd_rs)
                           && fiid_obj_packet_valid(obj_cmd_rq));
   
-  OPENIPMI_ERR_IO_NOT_INITIALIZED(ctx->io_init);
+  if (!ctx->io_init)
+    {
+      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED);
+      return (-1);
+    }
 
   if (_openipmi_write(ctx,
 		      0,
@@ -495,7 +511,11 @@ ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
                           && fiid_obj_valid(obj_cmd_rs)
                           && fiid_obj_packet_valid(obj_cmd_rq));
   
-  OPENIPMI_ERR_IO_NOT_INITIALIZED(ctx->io_init);
+  if (!ctx->io_init)
+    {
+      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED);
+      return (-1);
+    }
 
   if (_openipmi_write(ctx,
 		      rs_addr,

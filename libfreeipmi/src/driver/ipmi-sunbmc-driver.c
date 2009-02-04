@@ -210,7 +210,11 @@ ipmi_sunbmc_ctx_set_driver_device(ipmi_sunbmc_ctx_t ctx, char *device)
     free(ctx->driver_device);
   ctx->driver_device = NULL;
 
-  SUNBMC_ERR_OUT_OF_MEMORY((ctx->driver_device = strdup(device)));
+  if (!(ctx->driver_device = strdup(device)))
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY);
+      return (-1);
+    }
 
   ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
   return (0);
@@ -268,7 +272,10 @@ ipmi_sunbmc_ctx_io_init(ipmi_sunbmc_ctx_t ctx)
   if (ioctl (ctx->device_fd, I_STR, &istr) < 0)
     {
       if (errno != EINVAL)
-        SUNBMC_ERR_SYSTEM_ERROR(0);
+        {
+          SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
+          return (-1);
+        }
       /* achu: assume ioctl method */
       ctx->putmsg_intf = 0;
       goto out;
@@ -282,7 +289,8 @@ ipmi_sunbmc_ctx_io_init(ipmi_sunbmc_ctx_t ctx)
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
   /* otherwise, we always return a system error */
-  SUNBMC_ERR_SYSTEM_ERROR(0);
+  SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
+  return (-1);
 
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
@@ -332,9 +340,13 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
    */
   memset(rq_buf_temp, '\0', IPMI_SUNBMC_BUFLEN);
 
-  SUNBMC_ERR_INTERNAL_ERROR(!((len = fiid_obj_get_all(obj_cmd_rq, 
-                                                      rq_buf_temp, 
-                                                      IPMI_SUNBMC_BUFLEN)) <= 0));
+  if ((len = fiid_obj_get_all(obj_cmd_rq, 
+                              rq_buf_temp, 
+                              IPMI_SUNBMC_BUFLEN)) <= 0)
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
 
   rq_cmd = rq_buf_temp[0];
   if (len > 1)
@@ -350,7 +362,11 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
   msg_len += sizeof(bmc_req_t);
   msg_len += (rq_buf_len > SEND_MAX_PAYLOAD_SIZE) ? (rq_buf_len - SEND_MAX_PAYLOAD_SIZE) : 0;
   
-  SUNBMC_ERR_OUT_OF_MEMORY_CLEANUP((msg = (bmc_msg_t *)malloc(msg_len)));
+  if (!(msg = (bmc_msg_t *)malloc(msg_len)))
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
 
   msg->m_type = BMC_MSG_REQUEST;
   msg->m_id = ctx->putmsg_intf_msg_id;
@@ -365,13 +381,16 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
   sbuf.len = msg_len;
   sbuf.buf = (char *)msg;
   
-  SUNBMC_ERR_SYSTEM_ERROR_CLEANUP(!(putmsg(ctx->device_fd, NULL, &sbuf, 0) < 0));
+  if (putmsg(ctx->device_fd, NULL, &sbuf, 0) < 0)
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
   
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   /* otherwise, we always return an internal error - we shouldn't reach this point */
-  SUNBMC_ERR_INTERNAL_ERROR(0);
-
-  goto cleanup;                 /* to remove warnings */
+  SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+  goto cleanup;
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
   rv = 0;
@@ -411,7 +430,8 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   sbuf.buf = (char *)rs_buf_temp;
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   /* otherwise, we always return an internal error - we shouldn't reach this point */
-  SUNBMC_ERR_INTERNAL_ERROR(0);
+  SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+  return (-1);
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
   FD_ZERO(&read_fds);
@@ -434,8 +454,11 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
     }
 
 #if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
-  SUNBMC_ERR_SYSTEM_ERROR(!(getmsg(ctx->device_fd, NULL, &sbuf, &flags) < 0));
-  
+  if (getmsg(ctx->device_fd, NULL, &sbuf, &flags) < 0)
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
   msg = (bmc_msg_t *)&(sbuf.buf[0]);
   
   if (msg->m_type == BMC_MSG_ERROR)
@@ -443,8 +466,16 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
       errno = msg->msg[0];
       SUNBMC_ERR(0);
     }
-  SUNBMC_ERR_SYSTEM_ERROR(msg->m_type == BMC_MSG_RESPONSE);
-  SUNBMC_ERR_SYSTEM_ERROR(msg->m_id == ctx->putmsg_intf_msg_id);
+  if (msg->m_type != BMC_MSG_RESPONSE)
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
+  if (msg->m_id != ctx->putmsg_intf_msg_id)
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
 
   rsp = (bmc_rsp_t *)&(msg->msg[0]);
   
@@ -458,14 +489,18 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   memcpy(&(rs_buf[2]), rsp->data, rsp->datalength);
   rs_buf_len += rsp->datalength;
 
-  SUNBMC_ERR_INTERNAL_ERROR(!(fiid_obj_set_all(obj_cmd_rs, 
-                                               rs_buf, 
-                                               rs_buf_len) < 0));
+  if (fiid_obj_set_all(obj_cmd_rs, 
+                       rs_buf, 
+                       rs_buf_len) < 0)
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
   
-
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   /* otherwise, we always return an internal error - we shouldn't reach this point */
-  SUNBMC_ERR_INTERNAL_ERROR(0);
+  SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+  return (-1);
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
   return (0);
@@ -486,7 +521,11 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
                         && fiid_obj_valid(obj_cmd_rs)
                         && fiid_obj_packet_valid(obj_cmd_rq));
   
-  SUNBMC_ERR_IO_NOT_INITIALIZED(ctx->io_init);
+  if (!ctx->io_init)
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_IO_NOT_INITIALIZED);
+      return (-1);
+    }
 
   if (ctx->putmsg_intf)
     {
@@ -520,9 +559,13 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
        */
       memset(rq_buf_temp, '\0', IPMI_SUNBMC_BUFLEN);
       
-      SUNBMC_ERR_INTERNAL_ERROR(!((len = fiid_obj_get_all(obj_cmd_rq, 
-                                                          rq_buf_temp, 
-                                                          IPMI_SUNBMC_BUFLEN)) <= 0));
+      if ((len = fiid_obj_get_all(obj_cmd_rq, 
+                                  rq_buf_temp, 
+                                  IPMI_SUNBMC_BUFLEN)) <= 0)
+        {
+          SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+          return (-1);
+        }
 
       rq_cmd = rq_buf_temp[0];
       if (len > 1)
@@ -562,12 +605,17 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
         reqrsp.rsp.datalength = 0;
       memcpy(rs_buf + 2, reqrsp.rsp.data, reqrsp.rsp.datalength);
       
-      SUNBMC_ERR_INTERNAL_ERROR(!(fiid_obj_set_all(obj_cmd_rs, 
-                                                   rs_buf, 
-                                                   reqrsp.rsp.datalength + 2) < 0));
+      if (fiid_obj_set_all(obj_cmd_rs, 
+                           rs_buf, 
+                           reqrsp.rsp.datalength + 2) < 0)
+        { 
+          SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+          return (-1);
+       }
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
       /* otherwise, we always return an internal error - we shouldn't reach this point */
-      SUNBMC_ERR_INTERNAL_ERROR(0);
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+      return (-1);
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
     }
       

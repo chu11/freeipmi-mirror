@@ -467,7 +467,11 @@ ipmi_ssif_ctx_set_driver_device(ipmi_ssif_ctx_t ctx, char* driver_device)
     free(ctx->driver_device);
   ctx->driver_device = NULL;
   
-  SSIF_ERR_OUT_OF_MEMORY((ctx->driver_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));
+  if (!(ctx->driver_device = strdup(driver_device)))
+    {
+      SSIF_ERRNUM_SET(IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY);
+      return (-1);
+    }
   
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (0);
@@ -535,7 +539,11 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 
   SSIF_ERR_PARAMETERS(buf && buf_len);
 
-  SSIF_ERR_IO_NOT_INITIALIZED(ctx->io_init);
+  if (!ctx->io_init)
+    {
+      SSIF_ERRNUM_SET(IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED);
+      return (-1);
+    }
 
   if (!(ctx->flags & IPMI_SSIF_FLAGS_NONBLOCKING))
     SSIF_ERR_CLEANUP(!(ipmi_mutex_lock(ctx->semid) < 0));
@@ -573,7 +581,11 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
 
   SSIF_ERR_PARAMETERS_CLEANUP(buf && buf_len);
 
-  SSIF_ERR_IO_NOT_INITIALIZED_CLEANUP(ctx->io_init);
+  if (!ctx->io_init)
+    {
+      SSIF_ERRNUM_SET(IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED);
+      goto cleanup;
+    }
   
   if (buf_len > IPMI_I2C_SMBUS_BLOCK_MAX)
     buf_len = IPMI_I2C_SMBUS_BLOCK_MAX;
@@ -616,18 +628,30 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
   
   pkt_len = hdr_len + cmd_len;
 
-  SSIF_ERR_OUT_OF_MEMORY_CLEANUP((pkt = (uint8_t *)malloc (pkt_len)));
+  if (!(pkt = (uint8_t *)malloc (pkt_len)))
+    {
+      SSIF_ERRNUM_SET(IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
 
   memset (pkt, 0, pkt_len);
     
-  SSIF_ERR_INTERNAL_ERROR_CLEANUP(!(fill_hdr_ipmi_kcs (lun,
-                                                       net_fn,
-                                                       obj_hdr) < 0));
+  if (fill_hdr_ipmi_kcs (lun,
+                         net_fn,
+                         obj_hdr) < 0)
+    {
+      SSIF_ERRNUM_SET(IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
   
-  SSIF_ERR_INTERNAL_ERROR_CLEANUP(!(assemble_ipmi_kcs_pkt (obj_hdr,
-                                                           obj_cmd_rq,
-                                                           pkt,
-                                                           pkt_len) < 0));
+  if (assemble_ipmi_kcs_pkt (obj_hdr,
+                             obj_cmd_rq,
+                             pkt,
+                             pkt_len) < 0)
+    {
+      SSIF_ERRNUM_SET(IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
   
   if (ipmi_ssif_write (ctx, pkt, pkt_len) < 0)
     goto cleanup;
@@ -665,7 +689,11 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
 
   pkt_len = hdr_len + cmd_len;
   
-  SSIF_ERR_OUT_OF_MEMORY_CLEANUP((pkt = (uint8_t *)malloc(pkt_len)));
+  if (!(pkt = (uint8_t *)malloc(pkt_len)))
+    {
+      SSIF_ERRNUM_SET(IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
 
   memset (pkt, 0, pkt_len);
 
@@ -675,12 +703,19 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
     goto cleanup;
   
   if (!read_len)
-    SSIF_ERRNUM_SET_CLEANUP(IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
+    {
+      SSIF_ERRNUM_SET(IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
 
-  SSIF_ERR_INTERNAL_ERROR_CLEANUP(!(unassemble_ipmi_kcs_pkt (pkt,
-                                                             read_len,
-                                                             obj_hdr,
-                                                             obj_cmd_rs) < 0));
+  if (unassemble_ipmi_kcs_pkt (pkt,
+                               read_len,
+                               obj_hdr,
+                               obj_cmd_rs) < 0)
+    {
+      SSIF_ERRNUM_SET(IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
@@ -706,13 +741,17 @@ ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
                        && fiid_obj_valid(obj_cmd_rs)
                        && fiid_obj_packet_valid(obj_cmd_rq));
   
-  SSIF_ERR_IO_NOT_INITIALIZED(ctx->io_init);
+  if (!ctx->io_init)
+    {
+      SSIF_ERRNUM_SET(IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED);
+      return (-1);
+    }
 
   if (_ipmi_ssif_cmd_write(ctx, lun, net_fn, obj_cmd_rq) < 0)
-    return -1;
+    return (-1);
 
   if (_ipmi_ssif_cmd_read(ctx, obj_cmd_rs) < 0)
-    return -1;
+    return (-1);
 
   return (0);
 }

@@ -204,14 +204,6 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define ERR_NO_RETURN(expr)                                             \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __ERR_TRACE;                                                      \
-    }                                                                   \
-} while (0)
-
 #define ERR_EINVAL(expr)                                                \
 do {                                                                    \
   if (!(expr))                                                          \
@@ -332,13 +324,6 @@ do {                                                                    \
     __KCS_TRACE;                                                        \
   } while (0)
 
-#define KCS_ERRNUM_SET_CLEANUP(__errnum)                                \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __KCS_TRACE;                                                        \
-    goto cleanup;                                                       \
-  } while (0)
-
 #define KCS_ERR_PARAMETERS(expr)                                        \
   do {                                                                  \
     if (!(expr))                                                        \
@@ -354,126 +339,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;                      \
-        __KCS_TRACE;                                                    \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_IO_NOT_INITIALIZED(expr)                                \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;              \
-        __KCS_TRACE;                                                    \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_IO_NOT_INITIALIZED_CLEANUP(expr)                        \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;              \
-        __KCS_TRACE;                                                    \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_BUSY(expr)                                              \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;                            \
-        __KCS_TRACE;                                                    \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_BUSY_CLEANUP(expr)                                      \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;                            \
-        __KCS_TRACE;                                                    \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_OUT_OF_MEMORY(expr)                                     \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                   \
-        __KCS_TRACE;                                                    \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_OUT_OF_MEMORY_CLEANUP(expr)                             \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                   \
-        __KCS_TRACE;                                                    \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_DRIVER_TIMEOUT(expr)                                    \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT;                  \
-        __KCS_TRACE;                                                    \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_DRIVER_TIMEOUT_CLEANUP(expr)                            \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT;                  \
-        __KCS_TRACE;                                                    \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_SYSTEM_ERROR(expr)                                      \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR;                    \
-        __KCS_TRACE;                                                    \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_SYSTEM_ERROR_CLEANUP(expr)                              \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR;                    \
-        __KCS_TRACE;                                                    \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_INTERNAL_ERROR(expr)                                    \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                  \
-        __KCS_TRACE;                                                    \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_INTERNAL_ERROR_CLEANUP(expr)                            \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                  \
         __KCS_TRACE;                                                    \
         goto cleanup;                                                   \
       }                                                                 \
@@ -533,13 +398,6 @@ do {                                                                    \
     __KCS_TRACE;                                                        \
   } while (0)
 
-#define SSIF_ERRNUM_SET_CLEANUP(__errnum)                               \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __SSIF_TRACE;                                                       \
-    goto cleanup;                                                       \
-  } while (0)
-
 #define SSIF_ERR_PARAMETERS(expr)                                       \
   do {                                                                  \
     if (!(expr))                                                        \
@@ -555,66 +413,6 @@ do {                                                                    \
     if (!(expr))                                                        \
       {                                                                 \
         ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;                     \
-        __SSIF_TRACE;                                                   \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define SSIF_ERR_IO_NOT_INITIALIZED(expr)                               \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;             \
-        __SSIF_TRACE;                                                   \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define SSIF_ERR_IO_NOT_INITIALIZED_CLEANUP(expr)                       \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;             \
-        __SSIF_TRACE;                                                   \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define SSIF_ERR_OUT_OF_MEMORY(expr)                                    \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                  \
-        __SSIF_TRACE;                                                   \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define SSIF_ERR_OUT_OF_MEMORY_CLEANUP(expr)                            \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                  \
-        __SSIF_TRACE;                                                   \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define SSIF_ERR_INTERNAL_ERROR(expr)                                   \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                 \
-        __SSIF_TRACE;                                                   \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define SSIF_ERR_INTERNAL_ERROR_CLEANUP(expr)                           \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                 \
         __SSIF_TRACE;                                                   \
         goto cleanup;                                                   \
       }                                                                 \
@@ -666,13 +464,6 @@ do {                                                                    \
     __OPENIPMI_TRACE;                                                   \
   } while (0)
 
-#define OPENIPMI_ERRNUM_SET_CLEANUP(__errnum)                           \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __OPENIPMI_TRACE;                                                   \
-    goto cleanup;                                                       \
-  } while (0)
-
 #define OPENIPMI_ERR_PARAMETERS(expr)                                   \
   do {                                                                  \
     if (!(expr))                                                        \
@@ -680,76 +471,6 @@ do {                                                                    \
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PARAMETERS;                 \
         __OPENIPMI_TRACE;                                               \
         return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define OPENIPMI_ERR_PARAMETERS_CLEANUP(expr)                           \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PARAMETERS;                 \
-        __OPENIPMI_TRACE;                                               \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define OPENIPMI_ERR_IO_NOT_INITIALIZED(expr)                           \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED;         \
-        __OPENIPMI_TRACE;                                               \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define OPENIPMI_ERR_IO_NOT_INITIALIZED_CLEANUP(expr)                   \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED;         \
-        __OPENIPMI_TRACE;                                               \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define OPENIPMI_ERR_OUT_OF_MEMORY(expr)                                \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY;              \
-        __OPENIPMI_TRACE;                                               \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define OPENIPMI_ERR_OUT_OF_MEMORY_CLEANUP(expr)                        \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY;              \
-        __OPENIPMI_TRACE;                                               \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define OPENIPMI_ERR_INTERNAL_ERROR(expr)                               \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR;             \
-        __OPENIPMI_TRACE;                                               \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define OPENIPMI_ERR_INTERNAL_ERROR_CLEANUP(expr)                       \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR;             \
-        __OPENIPMI_TRACE;                                               \
-        goto cleanup;                                                   \
       }                                                                 \
   } while (0)
 
@@ -799,13 +520,6 @@ do {                                                                    \
     __SUNBMC_TRACE;                                                     \
   } while (0)
 
-#define SUNBMC_ERRNUM_SET_CLEANUP(__errnum)                             \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __SUNBMC_TRACE;                                                     \
-    goto cleanup;                                                       \
-  } while (0)
-
 #define SUNBMC_ERR_PARAMETERS(expr)                                     \
   do {                                                                  \
     if (!(expr))                                                        \
@@ -813,96 +527,6 @@ do {                                                                    \
         ctx->errnum = IPMI_SUNBMC_CTX_ERR_PARAMETERS;                   \
         __SUNBMC_TRACE;                                                 \
         return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define SUNBMC_ERR_PARAMETERS_CLEANUP(expr)                             \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SUNBMC_CTX_ERR_PARAMETERS;                   \
-        __SUNBMC_TRACE;                                                 \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define SUNBMC_ERR_IO_NOT_INITIALIZED(expr)                             \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SUNBMC_CTX_ERR_IO_NOT_INITIALIZED;           \
-        __SUNBMC_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define SUNBMC_ERR_IO_NOT_INITIALIZED_CLEANUP(expr)                     \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SUNBMC_CTX_ERR_IO_NOT_INITIALIZED;           \
-        __SUNBMC_TRACE;                                                 \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define SUNBMC_ERR_OUT_OF_MEMORY(expr)                                  \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY;                \
-        __SUNBMC_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define SUNBMC_ERR_OUT_OF_MEMORY_CLEANUP(expr)                          \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY;                \
-        __SUNBMC_TRACE;                                                 \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define SUNBMC_ERR_SYSTEM_ERROR(expr)                                   \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR;                 \
-        __SUNBMC_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define SUNBMC_ERR_SYSTEM_ERROR_CLEANUP(expr)                           \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR;                 \
-        __SUNBMC_TRACE;                                                 \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define SUNBMC_ERR_INTERNAL_ERROR(expr)                                 \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR;               \
-        __SUNBMC_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define SUNBMC_ERR_INTERNAL_ERROR_CLEANUP(expr)                         \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR;               \
-        __SUNBMC_TRACE;                                                 \
-        goto cleanup;                                                   \
       }                                                                 \
   } while (0)
 
