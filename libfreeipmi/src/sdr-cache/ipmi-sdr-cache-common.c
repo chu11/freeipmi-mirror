@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.c,v 1.9 2009-02-04 18:06:12 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-common.c,v 1.10 2009-02-04 21:56:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -147,7 +147,7 @@ ipmi_sdr_cache_record_type_str(ipmi_sdr_cache_ctx_t ctx,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  FIID_TEMPLATE_LEN_BYTES(sdr_record_header_len, tmpl_sdr_record_header);
+  FIID_TEMPLATE_LEN_BYTES_CLEANUP(sdr_record_header_len, tmpl_sdr_record_header);
 
   if (sdr_record_len < sdr_record_header_len)
     goto cleanup;

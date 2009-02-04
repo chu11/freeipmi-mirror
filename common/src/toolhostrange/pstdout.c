@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.2 2009-01-13 01:02:12 chu11 Exp $
+ *  $Id: pstdout.c,v 1.3 2009-02-04 21:56:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1267,7 +1267,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
   int h_count = 0;
   char *host = NULL;
   int exit_code = -1;
-  sighandler_t sighandler_save;
+  sighandler_t sighandler_save = NULL;
   int sighandler_set = 0;
   int rc;
   int i;
