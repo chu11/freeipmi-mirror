@@ -760,26 +760,6 @@ do {                                                   \
       }                                                \
 } while (0)
 
-#define FIID_OBJ_TEMPLATE(__ptr, __obj)                \
-do {                                                   \
-    if (!(__ptr = fiid_obj_template((__obj))))         \
-      {                                                \
-        __FIID_OBJ_TRACE((__obj));                     \
-	__FIID_OBJ_SET_ERRNO((__obj));                 \
-        return (-1);                                   \
-      }                                                \
-} while (0)
-
-#define FIID_OBJ_TEMPLATE_CLEANUP(__ptr, __obj)        \
-do {                                                   \
-    if (!(__ptr = fiid_obj_template((__obj))))         \
-      {                                                \
-        __FIID_OBJ_TRACE((__obj));                     \
-	__FIID_OBJ_SET_ERRNO((__obj));                 \
-        goto cleanup;                                  \
-      }                                                \
-} while (0)
-
 #define FIID_OBJ_TEMPLATE_COMPARE(__obj, __tmpl)                     \
 do {                                                                 \
     int __ret;                                                       \
@@ -795,24 +775,6 @@ do {                                                                 \
          __FIID_OBJ_TRACE((__obj));                                  \
          __FIID_OBJ_SET_ERRNO((__obj));                              \
 	return (-1);                                                 \
-      }                                                              \
-} while (0)
-
-#define FIID_OBJ_TEMPLATE_COMPARE_CLEANUP(__obj, __tmpl)             \
-do {                                                                 \
-    int __ret;                                                       \
-    if ((__ret = fiid_obj_template_compare ((__obj), (__tmpl))) < 0) \
-      {                                                              \
-         __FIID_OBJ_TRACE((__obj));                                  \
-         __FIID_OBJ_SET_ERRNO((__obj));                              \
-         goto cleanup;                                               \
-      }                                                              \
-    if (!__ret)                                                      \
-      {                                                              \
-	errno = EINVAL;                                              \
-         __FIID_OBJ_TRACE((__obj));                                  \
-         __FIID_OBJ_SET_ERRNO((__obj));                              \
-	goto cleanup;                                                \
       }                                                              \
 } while (0)
 
@@ -838,31 +800,6 @@ do {                                                                   \
          __FIID_OBJ_TRACE((__obj));                                    \
          __FIID_OBJ_SET_ERRNO((__obj));                                \
 	return (-1);                                                   \
-      }                                                                \
-} while (0)
-
-#define FIID_OBJ_TEMPLATE_COMPARE2_CLEANUP(__obj, __tmpl1, __tmpl2)    \
-do {                                                                   \
-    int __ret1;                                                        \
-    int __ret2;                                                        \
-    if ((__ret1 = fiid_obj_template_compare ((__obj), (__tmpl1))) < 0) \
-      {                                                                \
-         __FIID_OBJ_TRACE((__obj));                                    \
-         __FIID_OBJ_SET_ERRNO((__obj));                                \
-         goto cleanup;                                                 \
-      }                                                                \
-    if ((__ret2 = fiid_obj_template_compare ((__obj), (__tmpl2))) < 0) \
-      {                                                                \
-         __FIID_OBJ_TRACE((__obj));                                    \
-         __FIID_OBJ_SET_ERRNO((__obj));                                \
-         goto cleanup;                                                 \
-      }                                                                \
-    if (!__ret1 && !__ret2)                                            \
-      {                                                                \
-	errno = EINVAL;                                                \
-         __FIID_OBJ_TRACE((__obj));                                    \
-         __FIID_OBJ_SET_ERRNO((__obj));                                \
-	goto cleanup;                                                  \
       }                                                                \
 } while (0)
 

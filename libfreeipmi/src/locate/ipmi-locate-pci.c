@@ -170,7 +170,7 @@ _ipmi_locate_pci_get_device_info (int *locate_errnum,
 		    &base_address[0], &base_address[1], &base_address[2], &base_address[3], &base_address[4], &base_address[5]);
     linfo.intr_num = (uint16_t)irq;
     
-    LOCATE_ERR_INTERNAL_ERROR_CLEANUP (items == 9);
+    LOCATE_ERR_SYSTEM_ERROR_CLEANUP (items == 9);
 
     bus = dfn >> 8U;
     dev = PCI_SLOT(dfn & 0xff);

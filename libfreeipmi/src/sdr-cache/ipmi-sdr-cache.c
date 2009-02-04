@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.9 2009-01-23 01:01:55 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.10 2009-02-04 18:06:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -185,7 +185,13 @@ ipmi_sdr_cache_ctx_set_debug_prefix(ipmi_sdr_cache_ctx_t ctx, const char *prefix
     }
 
   if (prefix)
-    SDR_CACHE_ERR_OUT_OF_MEMORY((ctx->debug_prefix = strdup(prefix)));
+    {
+      if (!(ctx->debug_prefix = strdup(prefix)))
+        {
+          SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY);
+          return -1;
+        }
+    }
 
   return 0;
 }

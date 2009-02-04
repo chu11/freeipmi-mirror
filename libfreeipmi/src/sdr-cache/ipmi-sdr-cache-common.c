@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.c,v 1.8 2009-02-04 01:10:29 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-common.c,v 1.9 2009-02-04 18:06:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -90,8 +90,11 @@ ipmi_sdr_cache_info(ipmi_sdr_cache_ctx_t ctx,
   SDR_CACHE_FIID_OBJ_CREATE(obj_cmd_rs, 
                                     tmpl_cmd_get_sdr_repository_info_rs);
 
-  SDR_CACHE_ERR_IPMI_ERROR_CLEANUP(!(ipmi_cmd_get_sdr_repository_info (ipmi_ctx, 
-                                                                       obj_cmd_rs) < 0));
+  if (ipmi_cmd_get_sdr_repository_info (ipmi_ctx, obj_cmd_rs) < 0)
+    {
+      SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_IPMI_ERROR);
+      goto cleanup;
+    }
 
   *sdr_version = 0;
   SDR_CACHE_FIID_OBJ_GET(obj_cmd_rs,

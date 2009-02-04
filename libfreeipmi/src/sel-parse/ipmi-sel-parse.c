@@ -212,7 +212,13 @@ ipmi_sel_parse_ctx_set_debug_prefix(ipmi_sel_parse_ctx_t ctx, const char *prefix
     }
 
   if (prefix)
-    SEL_PARSE_ERR_OUT_OF_MEMORY((ctx->debug_prefix = strdup(prefix)));
+    {
+      if (!(ctx->debug_prefix = strdup(prefix)))
+        {
+          SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY);
+          return -1;
+        }
+    }
 
   return 0;
 }
@@ -237,7 +243,13 @@ ipmi_sel_parse_ctx_set_separator(ipmi_sel_parse_ctx_t ctx, const char *separator
     }
 
   if (separator)
-    SEL_PARSE_ERR_OUT_OF_MEMORY((ctx->separator = strdup(separator)));
+    {
+      if (!(ctx->separator = strdup(separator)))
+        {
+          SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY);
+          return -1;
+        }
+    }
 
   return 0;
 }
@@ -421,7 +433,11 @@ ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
           SEL_PARSE_FIID_OBJ_GET (obj_cmd_rs, "next_record_id", &val);
           next_record_id = val;
     
-          SEL_PARSE_ERR_OUT_OF_MEMORY_CLEANUP ((sel_parse_entry = (struct ipmi_sel_parse_entry *)malloc(sizeof(struct ipmi_sel_parse_entry))));
+          if (!(sel_parse_entry = (struct ipmi_sel_parse_entry *)malloc(sizeof(struct ipmi_sel_parse_entry))))
+            {
+              SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY);
+              goto cleanup;
+            }
 
           SEL_PARSE_FIID_OBJ_GET_DATA_LEN (len,
                                            obj_cmd_rs,
