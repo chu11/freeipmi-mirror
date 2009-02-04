@@ -685,7 +685,7 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
   
   KCS_FIID_OBJ_LEN_BYTES(cmd_len, obj_cmd_rq);
   
-  KCS_FIID_OBJ_CREATE_CLEANUP(obj_hdr, tmpl_hdr_kcs);
+  KCS_FIID_OBJ_CREATE(obj_hdr, tmpl_hdr_kcs);
   
   pkt_len = hdr_len + cmd_len;
 
@@ -730,11 +730,11 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
 
   KCS_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
 
-  KCS_FIID_OBJ_TEMPLATE_CLEANUP(tmpl, obj_cmd_rs);
+  KCS_FIID_OBJ_TEMPLATE(tmpl, obj_cmd_rs);
 
   KCS_FIID_TEMPLATE_LEN_BYTES_CLEANUP(cmd_len, tmpl);
   
-  KCS_FIID_OBJ_CREATE_CLEANUP(obj_hdr, tmpl_hdr_kcs);
+  KCS_FIID_OBJ_CREATE(obj_hdr, tmpl_hdr_kcs);
 
   pkt_len = hdr_len + cmd_len;
   

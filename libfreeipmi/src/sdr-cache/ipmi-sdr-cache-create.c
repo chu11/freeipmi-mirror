@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.20 2009-01-13 01:02:40 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.21 2009-02-04 01:10:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -158,14 +158,14 @@ _sdr_cache_reservation_id(ipmi_sdr_cache_ctx_t ctx,
   assert(ipmi_ctx);
   assert(reservation_id);
 
-  SDR_CACHE_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_reserve_sdr_repository_rs);
+  SDR_CACHE_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sdr_repository_rs);
 
   SDR_CACHE_ERR_IPMI_ERROR_CLEANUP(!(ipmi_cmd_reserve_sdr_repository (ipmi_ctx, obj_cmd_rs) < 0));
 
   *reservation_id = 0;
-  SDR_CACHE_FIID_OBJ_GET_CLEANUP(obj_cmd_rs,
-                                 "reservation_id",
-                                 &val);
+  SDR_CACHE_FIID_OBJ_GET(obj_cmd_rs,
+                         "reservation_id",
+                         &val);
   *reservation_id = val;
 
   rv = 0;
@@ -201,11 +201,11 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
   assert(reservation_id);
   assert(next_record_id);
 
-  SDR_CACHE_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_get_sdr_rs);
+  SDR_CACHE_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sdr_rs);
 
-  SDR_CACHE_FIID_OBJ_CREATE_CLEANUP(obj_sdr_record_header, tmpl_sdr_record_header);
+  SDR_CACHE_FIID_OBJ_CREATE(obj_sdr_record_header, tmpl_sdr_record_header);
 
-  SDR_CACHE_FIID_TEMPLATE_LEN_BYTES_CLEANUP(sdr_record_header_length, tmpl_sdr_record_header);
+  SDR_CACHE_FIID_TEMPLATE_LEN_BYTES(sdr_record_header_length, tmpl_sdr_record_header);
 
   reservation_id_retry_count = 0;
   while (!record_length)
@@ -227,9 +227,9 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
             }
           else
             {
-              SDR_CACHE_FIID_OBJ_GET_CLEANUP(obj_cmd_rs, 
-                                             "comp_code",
-                                             &val);
+              SDR_CACHE_FIID_OBJ_GET(obj_cmd_rs, 
+                                     "comp_code",
+                                     &val);
               
               if (val == IPMI_COMP_CODE_RESERVATION_CANCELLED
                   && (reservation_id_retry_count < IPMI_SDR_CACHE_MAX_RESERVATION_ID_RETRY))
@@ -247,29 +247,29 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
             }
         }
 
-      SDR_CACHE_FIID_OBJ_GET_DATA_LEN_CLEANUP(sdr_record_header_len,
-                                              obj_cmd_rs,
-                                              "record_data",
-                                              record_header_buf,
-                                              IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH);
+      SDR_CACHE_FIID_OBJ_GET_DATA_LEN(sdr_record_header_len,
+                                      obj_cmd_rs,
+                                      "record_data",
+                                      record_header_buf,
+                                      IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH);
       SDR_CACHE_ERR_IPMI_ERROR_CLEANUP(!(sdr_record_header_len < sdr_record_header_length));
 
-      SDR_CACHE_FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record_header,
-                                         record_header_buf,
-                                         sdr_record_header_len);
+      SDR_CACHE_FIID_OBJ_SET_ALL(obj_sdr_record_header,
+                                 record_header_buf,
+                                 sdr_record_header_len);
 
-      SDR_CACHE_FIID_OBJ_GET_CLEANUP(obj_sdr_record_header,
-                                     "record_length",
-                                     &val);
+      SDR_CACHE_FIID_OBJ_GET(obj_sdr_record_header,
+                             "record_length",
+                             &val);
       
       record_length = val + sdr_record_header_length;
     }
 
   SDR_CACHE_ERR_INTERNAL_ERROR_CLEANUP(!(record_length > record_buf_len));
 
-  SDR_CACHE_FIID_OBJ_GET_CLEANUP(obj_cmd_rs,
-                                 "next_record_id",
-                                 &val);
+  SDR_CACHE_FIID_OBJ_GET(obj_cmd_rs,
+                         "next_record_id",
+                         &val);
   *next_record_id = val;
 
   reservation_id_retry_count = 0;
@@ -294,9 +294,9 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
             }
           else
             {
-              SDR_CACHE_FIID_OBJ_GET_CLEANUP(obj_cmd_rs, 
-                                             "comp_code", 
-                                             &val);
+              SDR_CACHE_FIID_OBJ_GET(obj_cmd_rs, 
+                                     "comp_code", 
+                                     &val);
               
               if (val == IPMI_COMP_CODE_RESERVATION_CANCELLED
                   && (reservation_id_retry_count < IPMI_SDR_CACHE_MAX_RESERVATION_ID_RETRY))
@@ -322,11 +322,11 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
             }
         }
 
-      SDR_CACHE_FIID_OBJ_GET_DATA_LEN_CLEANUP(record_data_len,
-                                              obj_cmd_rs,
-                                              "record_data",
-                                              record_buf + offset_into_record,
-                                              record_buf_len - offset_into_record);
+      SDR_CACHE_FIID_OBJ_GET_DATA_LEN(record_data_len,
+                                      obj_cmd_rs,
+                                      "record_data",
+                                      record_buf + offset_into_record,
+                                      record_buf_len - offset_into_record);
       
       offset_into_record += record_data_len;
     }

@@ -612,7 +612,7 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
   
   SSIF_FIID_OBJ_LEN_BYTES(cmd_len, obj_cmd_rq);
   
-  SSIF_FIID_OBJ_CREATE_CLEANUP(obj_hdr, tmpl_hdr_kcs);
+  SSIF_FIID_OBJ_CREATE(obj_hdr, tmpl_hdr_kcs);
   
   pkt_len = hdr_len + cmd_len;
 
@@ -657,11 +657,11 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
 
   SSIF_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
 
-  SSIF_FIID_OBJ_TEMPLATE_CLEANUP(tmpl, obj_cmd_rs);
+  SSIF_FIID_OBJ_TEMPLATE(tmpl, obj_cmd_rs);
 
-  SSIF_FIID_TEMPLATE_LEN_BYTES_CLEANUP(cmd_len, tmpl);
+  SSIF_FIID_TEMPLATE_LEN_BYTES(cmd_len, tmpl);
 
-  SSIF_FIID_OBJ_CREATE_CLEANUP(obj_hdr, tmpl_hdr_kcs);
+  SSIF_FIID_OBJ_CREATE(obj_hdr, tmpl_hdr_kcs);
 
   pkt_len = hdr_len + cmd_len;
   

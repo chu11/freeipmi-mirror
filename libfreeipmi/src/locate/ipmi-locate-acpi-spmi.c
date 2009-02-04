@@ -907,6 +907,7 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
 	}
     }
   
+ cleanup:
   return (-1);
 }
 
@@ -954,19 +955,19 @@ _ipmi_acpi_get_table (int *locate_errnum,
           && acpi_table 
           && acpi_table_length);
 
-  LOCATE_FIID_TEMPLATE_FIELD_LEN_BYTES_CLEANUP(len, 
-                                               tmpl_acpi_table_hdr, 
-                                               "signature");
-
+  LOCATE_FIID_TEMPLATE_FIELD_LEN_BYTES(len, 
+                                       tmpl_acpi_table_hdr, 
+                                       "signature");
+  
   table_signature_length = len + 1;
   table_signature = alloca (table_signature_length);
   memset (table_signature, 0, table_signature_length);
   
-  LOCATE_FIID_TEMPLATE_LEN_BYTES_CLEANUP (acpi_table_hdr_length,
-                                          tmpl_acpi_table_hdr);
+  LOCATE_FIID_TEMPLATE_LEN_BYTES (acpi_table_hdr_length,
+                                  tmpl_acpi_table_hdr);
 
-  LOCATE_FIID_OBJ_CREATE_CLEANUP(obj_acpi_table_hdr, 
-                                 tmpl_acpi_table_hdr);
+  LOCATE_FIID_OBJ_CREATE(obj_acpi_table_hdr, 
+                         tmpl_acpi_table_hdr);
 
   acpi_table_buf = alloca (acpi_table_hdr_length);
 
@@ -978,20 +979,20 @@ _ipmi_acpi_get_table (int *locate_errnum,
                                    acpi_table_buf) < 0)
     goto cleanup;
   
-  LOCATE_FIID_OBJ_SET_ALL_CLEANUP(obj_acpi_table_hdr,
-                                  acpi_table_buf,
-                                  acpi_table_hdr_length);
+  LOCATE_FIID_OBJ_SET_ALL(obj_acpi_table_hdr,
+                          acpi_table_buf,
+                          acpi_table_hdr_length);
 
-  LOCATE_FIID_OBJ_GET_DATA_CLEANUP(obj_acpi_table_hdr, 
-                                   "signature", 
-                                   (uint8_t *)table_signature, 
-                                   table_signature_length);
+  LOCATE_FIID_OBJ_GET_DATA(obj_acpi_table_hdr, 
+                           "signature", 
+                           (uint8_t *)table_signature, 
+                           table_signature_length);
 
   LOCATE_ERR_SYSTEM_ERROR_CLEANUP (!strcmp (table_signature, signature));
   
-  LOCATE_FIID_OBJ_GET_CLEANUP (obj_acpi_table_hdr, 
-                               "length", 
-                               &val);
+  LOCATE_FIID_OBJ_GET (obj_acpi_table_hdr, 
+                       "length", 
+                       &val);
   table_length = val;
   
   table = alloca (table_length);
@@ -1089,14 +1090,14 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
   LOCATE_FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_table_hdr, 
                                    tmpl_acpi_table_hdr);
 
-  LOCATE_FIID_TEMPLATE_LEN_BYTES_CLEANUP (acpi_table_hdr_length, 
-                                          tmpl_acpi_table_hdr);
+  LOCATE_FIID_TEMPLATE_LEN_BYTES (acpi_table_hdr_length, 
+                                  tmpl_acpi_table_hdr);
 
-  LOCATE_FIID_OBJ_CREATE_CLEANUP(obj_acpi_rsdp_descriptor, 
-                                 tmpl_acpi_rsdp_descriptor);
+  LOCATE_FIID_OBJ_CREATE(obj_acpi_rsdp_descriptor, 
+                         tmpl_acpi_rsdp_descriptor);
 
-  LOCATE_FIID_TEMPLATE_LEN_BYTES_CLEANUP (acpi_rsdp_descriptor_length, 
-                                          tmpl_acpi_rsdp_descriptor);
+  LOCATE_FIID_TEMPLATE_LEN_BYTES (acpi_rsdp_descriptor_length, 
+                                  tmpl_acpi_rsdp_descriptor);
 
   if (_ipmi_acpi_get_rsdp (locate_errnum,
                            IPMI_ACPI_LO_RSDP_WINDOW_BASE,
@@ -1110,23 +1111,23 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
         goto cleanup;
     }
   
-  LOCATE_FIID_OBJ_GET_CLEANUP (obj_acpi_rsdp_descriptor, 
-                               "revision", 
-                               &val);
+  LOCATE_FIID_OBJ_GET (obj_acpi_rsdp_descriptor, 
+                       "revision", 
+                       &val);
 
   revision = val;
   if (revision < 2)
     { 
-      LOCATE_FIID_OBJ_GET_CLEANUP (obj_acpi_rsdp_descriptor, 
-                                   "rsdt_physical_address", 
-                                   &rsdt_xsdt_address);
+      LOCATE_FIID_OBJ_GET (obj_acpi_rsdp_descriptor, 
+                           "rsdt_physical_address", 
+                           &rsdt_xsdt_address);
       rsdt_xsdt_signature = IPMI_ACPI_RSDT_SIG;
     }
   else 
     {
-      LOCATE_FIID_OBJ_GET_CLEANUP (obj_acpi_rsdp_descriptor, 
-                                   "xsdt_physical_address", 
-                                   &rsdt_xsdt_address);
+      LOCATE_FIID_OBJ_GET (obj_acpi_rsdp_descriptor, 
+                           "xsdt_physical_address", 
+                           &rsdt_xsdt_address);
       rsdt_xsdt_signature = IPMI_ACPI_XSDT_SIG;
     }
   
@@ -1157,19 +1158,19 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
       else
 	tmpl_table_address = &tmpl_table_address_64[0];
       
-      LOCATE_FIID_OBJ_CREATE_CLEANUP(obj_table, 
-                                     tmpl_table_address);
+      LOCATE_FIID_OBJ_CREATE(obj_table, 
+                             tmpl_table_address);
       
-      LOCATE_FIID_TEMPLATE_LEN_BYTES_CLEANUP (len_table, 
-                                              tmpl_table_address);
+      LOCATE_FIID_TEMPLATE_LEN_BYTES (len_table, 
+                                      tmpl_table_address);
 	  
-      LOCATE_FIID_OBJ_SET_ALL_CLEANUP(obj_table,
-                                      (rsdt_xsdt_table_data + (i * 4)),
-                                      len_table);
+      LOCATE_FIID_OBJ_SET_ALL(obj_table,
+                              (rsdt_xsdt_table_data + (i * 4)),
+                              len_table);
 
-      LOCATE_FIID_OBJ_GET_CLEANUP (obj_table,
-                                   "table_address", 
-                                   &table_address);
+      LOCATE_FIID_OBJ_GET (obj_table,
+                           "table_address", 
+                           &table_address);
       
       LOCATE_FIID_OBJ_DESTROY(obj_table);
 
@@ -1270,8 +1271,8 @@ _ipmi_acpi_get_spmi_table (int *locate_errnum,
 	      instance, IPMI_ACPI_SPMI_SIG);
 #endif
 
-      LOCATE_FIID_TEMPLATE_LEN_BYTES_CLEANUP (acpi_spmi_table_descriptor_len, 
-                                              tmpl_acpi_spmi_table_descriptor);
+      LOCATE_FIID_TEMPLATE_LEN_BYTES (acpi_spmi_table_descriptor_len, 
+                                      tmpl_acpi_spmi_table_descriptor);
 
       if (acpi_spmi_table_descriptor_len < table_data_length)
 	copy_length = acpi_spmi_table_descriptor_len;
@@ -1285,17 +1286,17 @@ _ipmi_acpi_get_spmi_table (int *locate_errnum,
 		table_data_length, acpi_spmi_table_descriptor_len);
 #endif
       
-      LOCATE_FIID_OBJ_SET_ALL_CLEANUP(obj_acpi_spmi_table_descriptor,
-                                      table_data,
-                                      copy_length);
+      LOCATE_FIID_OBJ_SET_ALL(obj_acpi_spmi_table_descriptor,
+                              table_data,
+                              copy_length);
       
       free (table_data);
       table_data = NULL;
       table_data_length = 0;
       
-      LOCATE_FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor, 
-                                   "interface_type", 
-                                   &val);
+      LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor, 
+                           "interface_type", 
+                           &val);
 
       table_interface_type = val;
       if (table_interface_type == interface_type)
@@ -1331,11 +1332,11 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
     }
   linfo.locate_driver_type = IPMI_LOCATE_DRIVER_ACPI;
 
-  LOCATE_FIID_OBJ_CREATE_CLEANUP (obj_acpi_table_hdr, 
-                                  tmpl_acpi_table_hdr);
+  LOCATE_FIID_OBJ_CREATE (obj_acpi_table_hdr, 
+                          tmpl_acpi_table_hdr);
 
-  LOCATE_FIID_OBJ_CREATE_CLEANUP (obj_acpi_spmi_table_descriptor, 
-                                  tmpl_acpi_spmi_table_descriptor);
+  LOCATE_FIID_OBJ_CREATE (obj_acpi_spmi_table_descriptor, 
+                          tmpl_acpi_spmi_table_descriptor);
 
   if (_ipmi_acpi_get_spmi_table (locate_errnum,
                                  type,
@@ -1362,13 +1363,13 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
   {
     uint64_t ipmi_version_major, ipmi_version_minor;
 
-    LOCATE_FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor, 
-                                 "specification_revision.major", 
-                                 &ipmi_version_major);
+    LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor, 
+                         "specification_revision.major", 
+                         &ipmi_version_major);
 
-    LOCATE_FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor,
-                                 "specification_revision.minor", 
-                                 &ipmi_version_minor);
+    LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor,
+                         "specification_revision.minor", 
+                         &ipmi_version_minor);
 
     linfo.ipmi_version_major = ipmi_version_major;
     linfo.ipmi_version_minor = ipmi_version_minor;
@@ -1378,9 +1379,9 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
   {
     uint64_t interface_type;
 
-    LOCATE_FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor, 
-                                 "interface_type", 
-                                 &interface_type);
+    LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor, 
+                         "interface_type", 
+                         &interface_type);
     
     LOCATE_ERR_SYSTEM_ERROR_CLEANUP(IPMI_INTERFACE_TYPE_VALID(interface_type));
 
@@ -1392,13 +1393,13 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
     uint64_t address_space_id;
     uint64_t base_address;
 
-    LOCATE_FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor, 
-                                 "base_address.address_space_id", 
-                                 &address_space_id);
+    LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor, 
+                         "base_address.address_space_id", 
+                         &address_space_id);
 
-    LOCATE_FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor, 
-                                 "base_address.address", 
-                                 &base_address);
+    LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor, 
+                         "base_address.address", 
+                         &base_address);
 
     switch (address_space_id)
       {
@@ -1429,9 +1430,9 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
   {
     uint64_t reg_bit_width;
 
-    LOCATE_FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor, 
-                                 "base_address.register_bit_width", 
-                                 &reg_bit_width);
+    LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor, 
+                         "base_address.register_bit_width", 
+                         &reg_bit_width);
     linfo.register_spacing = (reg_bit_width / 8);
   }
 

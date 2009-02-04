@@ -178,7 +178,7 @@ _find_sdr_record(ipmi_sel_parse_ctx_t ctx,
       return 0;
     }
 
-fall_through:
+ fall_through:
   memset(tmp_sdr_record, '\0', SDR_RECORD_LENGTH);
 
   if ((tmp_sdr_record_len = ipmi_sdr_cache_record_read(ctx->sdr_cache_ctx,
@@ -1945,10 +1945,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
           if (percent_flag)
             {
               if (_SNPRINTF(buf, buflen, &wlen, "%%%c", *fmt))
-                {
-                  printf("here\n");
                 goto out;
-                }
               percent_flag = 0;
             }
           else
