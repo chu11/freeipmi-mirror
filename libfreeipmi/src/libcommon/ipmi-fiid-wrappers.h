@@ -872,21 +872,11 @@ do {                                                                 \
     {                                                                \
       __FIID_OBJ_TRACE((__obj));                                     \
       __FIID_OBJ_SET_ERRNO((__obj));                                 \
-      return (-1);                                                   \
+      goto cleanup;                                                  \
     }                                                                \
 } while (0)
 
 #define FIID_ITERATOR_KEY(__key, __iter)                             \
-do {                                                                 \
-  if (!((__key) = fiid_iterator_key((__iter))))                      \
-    {                                                                \
-      __FIID_ITER_TRACE((__iter));                                   \
-      __FIID_ITER_SET_ERRNO((__iter));                               \
-      return (-1);                                                   \
-    }                                                                \
-} while (0)
-
-#define FIID_ITERATOR_KEY_CLEANUP(__key, __iter)                     \
 do {                                                                 \
   if (!((__key) = fiid_iterator_key((__iter))))                      \
     {                                                                \
@@ -902,16 +892,6 @@ do {                                                                 \
     {                                                                \
       __FIID_ITER_TRACE((__iter));                                   \
       __FIID_ITER_SET_ERRNO((__iter));                               \
-      return (-1);                                                   \
-    }                                                                \
-} while (0)
-
-#define FIID_ITERATOR_FIELD_LEN_CLEANUP(__field_len, __iter)         \
-do {                                                                 \
-  if (((__field_len) = fiid_iterator_field_len((__iter))) < 0)       \
-    {                                                                \
-      __FIID_ITER_TRACE((__iter));                                   \
-      __FIID_ITER_SET_ERRNO((__iter));                               \
       goto cleanup;                                                  \
     }                                                                \
 } while (0)
@@ -922,51 +902,11 @@ do {                                                                 \
     {                                                                \
       __FIID_ITER_TRACE((__iter));                                   \
       __FIID_ITER_SET_ERRNO((__iter));                               \
-      return (-1);                                                   \
-    }                                                                \
-} while (0)
-
-#define FIID_ITERATOR_GET_CLEANUP(__iter, __val)                     \
-do {                                                                 \
-  if (fiid_iterator_get((__iter), (__val)) < 0)                      \
-    {                                                                \
-      __FIID_ITER_TRACE((__iter));                                   \
-      __FIID_ITER_SET_ERRNO((__iter));                               \
       goto cleanup;                                                  \
     }                                                                \
 } while (0)
 
-#define FIID_ITERATOR_GET_DATA(__iter, __data, __data_len)           \
-do {                                                                 \
-  if (fiid_iterator_get_data((__iter), (__data), (__data_len)) < 0)  \
-    {                                                                \
-      __FIID_ITER_TRACE((__iter));                                   \
-      __FIID_ITER_SET_ERRNO((__iter));                               \
-      return (-1);                                                   \
-    }                                                                \
-} while (0)
-
-#define FIID_ITERATOR_GET_DATA_CLEANUP(__iter, __data, __data_len)   \
-do {                                                                 \
-  if (fiid_iterator_get_data((__iter), (__data), (__data_len)) < 0)  \
-    {                                                                \
-      __FIID_ITER_TRACE((__iter));                                   \
-      __FIID_ITER_SET_ERRNO((__iter));                               \
-      goto cleanup;                                                  \
-    }                                                                \
-} while (0)
-
-#define FIID_ITERATOR_GET_DATA_LEN(__len, __iter, __data, __data_len)            \
-do {                                                                             \
-  if (((__len) = fiid_iterator_get_data((__iter), (__data), (__data_len))) < 0)  \
-    {                                                                            \
-      __FIID_ITER_TRACE((__iter));                                               \
-      __FIID_ITER_SET_ERRNO((__iter));                                           \
-      return (-1);                                                               \
-    }                                                                            \
-} while (0)
-
-#define FIID_ITERATOR_GET_DATA_LEN_CLEANUP(__len, __iter, __data, __data_len)    \
+#define FIID_ITERATOR_GET_DATA_LEN(__len, __iter, __data, __data_len)   \
 do {                                                                             \
   if (((__len) = fiid_iterator_get_data((__iter), (__data), (__data_len))) < 0)  \
     {                                                                            \

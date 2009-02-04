@@ -91,9 +91,9 @@ ipmi_obj_dump (int fd,
       int32_t field_len;
       char *key = NULL;
 
-      FIID_ITERATOR_KEY_CLEANUP(key, iter);
+      FIID_ITERATOR_KEY(key, iter);
 
-      FIID_ITERATOR_FIELD_LEN_CLEANUP(field_len, iter);
+      FIID_ITERATOR_FIELD_LEN(field_len, iter);
     
       if (!field_len)
         {
@@ -108,7 +108,7 @@ ipmi_obj_dump (int fd,
         {
           uint64_t val = 0;
 
-	  FIID_ITERATOR_GET_CLEANUP (iter, &val);
+	  FIID_ITERATOR_GET (iter, &val);
 
           IPMI_DEBUG_DPRINTF_CLEANUP ((fd, "[%16"PRIX64"h] = %s[%2db]\n", (uint64_t) val, key, field_len));
         }
@@ -119,7 +119,7 @@ ipmi_obj_dump (int fd,
 
           IPMI_DEBUG_DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(field_len)));
 
-	  FIID_ITERATOR_GET_DATA_LEN_CLEANUP(len, iter, buf, IPMI_DEBUG_MAX_BUF_LEN);
+	  FIID_ITERATOR_GET_DATA_LEN(len, iter, buf, IPMI_DEBUG_MAX_BUF_LEN);
        
           ERR_CLEANUP (!(ipmi_debug_output_byte_array(fd, prefix_buf, buf, len) < 0));
         }
