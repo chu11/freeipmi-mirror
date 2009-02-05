@@ -1285,7 +1285,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
         API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_USERNAME_INVALID);
       else
         API_BAD_COMPLETION_CODE_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      API_ERR_LOG_CLEANUP(0);
+      goto cleanup;
     }
   
   API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
@@ -1342,7 +1342,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
         API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else
         API_BAD_COMPLETION_CODE_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      API_ERR_LOG_CLEANUP(0);
+      goto cleanup;
     }
 
   API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
@@ -1420,9 +1420,10 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 	{
 	  if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER) == 1
 	      || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT) == 1)
-	    API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+	    API_ERR_SET_ERRNUM(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
 	}
-      API_ERR_LOG_CLEANUP(0);
+      API_TRACE(ipmi_ctx_strerror(ctx->errnum), ctx->errnum);
+      goto cleanup;
     }
 
   rv = 0;
@@ -2576,8 +2577,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       if ((!ctx->io.outofband.k_g_configured && authentication_status_k_g)
           || (ctx->io.outofband.k_g_configured && !authentication_status_k_g))
         {
-          API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_K_G_INVALID);
-          API_ERR_LOG_CLEANUP(0);
+          API_ERR_SET_ERRNUM(IPMI_ERR_K_G_INVALID);
+          goto cleanup;
         }
     }
 
@@ -2654,13 +2655,13 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
     {
       if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
-        API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE);
+        API_ERR_SET_ERRNUM(IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
                || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
-        API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_BMC_BUSY);
+        API_ERR_SET_ERRNUM(IPMI_ERR_BMC_BUSY);
       else
-        API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
-      API_ERR_LOG_CLEANUP(0);
+        API_ERR_SET_ERRNUM(IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
+      goto cleanup;
     }
 
   /* Check if we can eventually authentication at the privilege we want */
@@ -2694,8 +2695,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
         || ((ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
             && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL))))
     {
-      API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
-      API_ERR_LOG_CLEANUP(0);
+      API_ERR_SET_ERRNUM(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+      goto cleanup;
     }
 
   API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs,
@@ -2785,15 +2786,15 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
     {
       if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
-        API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_USERNAME_INVALID);
+        API_ERR_SET_ERRNUM(IPMI_ERR_USERNAME_INVALID);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED)
-        API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+        API_ERR_SET_ERRNUM(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
                || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
-        API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_BMC_BUSY);
+        API_ERR_SET_ERRNUM(IPMI_ERR_BMC_BUSY);
       else
-        API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
-      API_ERR_LOG_CLEANUP(0);
+        API_ERR_SET_ERRNUM(IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
+      goto cleanup;
     }
 
   API_FIID_OBJ_GET_DATA_LEN_CLEANUP (managed_system_random_number_len,
@@ -2811,8 +2812,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   if (managed_system_random_number_len != IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH
       || managed_system_guid_len != IPMI_MANAGED_SYSTEM_GUID_LENGTH)
     {
-      API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_IPMI_ERROR);
-      API_ERR_LOG_CLEANUP(0);
+      API_ERR_SET_ERRNUM(IPMI_ERR_IPMI_ERROR);
+      goto cleanup;
     }
 
   if (strlen(ctx->io.outofband.password))
@@ -2933,8 +2934,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
        * tell me I can authenticate at a high privilege level, that in
        * reality is not allowed).  Dunno how to deal with this.
        */
-      API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_PASSWORD_INVALID);
-      API_ERR_LOG_CLEANUP(0);
+      API_ERR_SET_ERRNUM(IPMI_ERR_PASSWORD_INVALID);
+      goto cleanup;
     }
 
   /* achu: note, for INTEL_2_0 workaround, this must have the username/password adjustments */
@@ -3045,10 +3046,10 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     {
       if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
           || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
-        API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_BMC_BUSY);
+        API_ERR_SET_ERRNUM(IPMI_ERR_BMC_BUSY);
       else
-        API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
-      API_ERR_LOG_CLEANUP(0);
+        API_ERR_SET_ERRNUM(IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
+      goto cleanup;
     }
   
   /* IPMI Workaround (achu)
@@ -3097,8 +3098,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       
       if (!ret)
         {
-          API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_K_G_INVALID);
-          API_ERR_LOG_CLEANUP(0);
+          API_ERR_SET_ERRNUM(IPMI_ERR_K_G_INVALID);
+          goto cleanup;
         }
     }
   
@@ -3120,9 +3121,10 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 	{
 	  if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER) == 1
 	      || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT) == 1)
-	    API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+	    API_ERR_SET_ERRNUM(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
 	}
-      API_ERR_LOG_CLEANUP(0);
+      API_TRACE(ipmi_ctx_strerror(ctx->errnum), ctx->errnum);
+      goto cleanup;
     }
 
   rv = 0;

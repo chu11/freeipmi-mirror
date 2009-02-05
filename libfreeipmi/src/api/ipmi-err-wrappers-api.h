@@ -44,6 +44,13 @@ extern "C" {
 #include "libcommon/ipmi-err-wrappers.h"
 
 #if defined (IPMI_TRACE)
+#define __API_MSG_TRACE(__tracemsgstr, __tracemsgnum)                        \
+do {                                                                         \
+  int __ctxerrnum = __tracemsgnum;                                           \
+  char *__ctxerrstr = __tracemsgstr;                                         \
+  __TRACE_CTX;                                                               \
+} while (0)
+
 #define __API_CTX_TRACE                                                      \
 do {                                                                         \
   int __ctxerrnum = ctx->errnum;                                             \
@@ -51,7 +58,7 @@ do {                                                                         \
   __TRACE_CTX;                                                               \
 } while (0)
 
-#define __API_TRACE_ERRMSG_CLEANUP(___ctx, ___rs)                            \
+#define __API_TRACE_COMP_CODE_ERRMSG(___ctx, ___rs)                          \
 do {                                                                         \
   int __ctxerrnum = 0;                                                       \
   char __ctxerrstr[IPMI_ERR_STR_MAX_LEN];                                    \
@@ -61,7 +68,6 @@ do {                                                                         \
 		                       __ctxerrstr,                          \
 		                       IPMI_ERR_STR_MAX_LEN);                \
   __TRACE_CTX;                                                               \
-  goto cleanup;                                                              \
 } while (0) 
 
 #define __API_KCS_TRACE                                                      \
@@ -99,11 +105,9 @@ do {                                                                         \
   __TRACE_CTX;                                                               \
 } while (0)
 #else
+#define __API_MSG_TRACE(__msgstr, __msgnum)
 #define __API_CTX_TRACE
-#define __API_TRACE_ERRMSG_CLEANUP(__ctx, __rs)                              \
-do {                                                                         \
-  goto cleanup;                                                              \
-} while (0) 
+#define __API_TRACE_COMP_CODE_ERRMSG(__ctx, __rs)
 #define __API_KCS_TRACE
 #define __API_SSIF_TRACE
 #define __API_OPENIPMI_TRACE
@@ -148,15 +152,9 @@ do {                                                                    \
   goto cleanup;                                                         \
 } while (0)   
 
-#define API_ERR_LOG(expr)                                               \
+#define API_TRACE(__msgstr, __msgnum)                                   \
 do {                                                                    \
-  __API_CTX_TRACE;                                                      \
-} while (0)   
-
-#define API_ERR_LOG_CLEANUP(expr)                                       \
-do {                                                                    \
-  __API_CTX_TRACE;                                                      \
-  goto cleanup;                                                         \
+  __API_MSG_TRACE(__msgstr, __msgnum);                                  \
 } while (0)   
 
 #define API_ERR(expr)                                                   \
@@ -179,7 +177,7 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define API_BAD_COMPLETION_CODE_TO_API_ERRNUM(__ctx, __rs)                                                         \
+#define __BAD_COMPLETION_CODE_TO_API_ERRNUM(__ctx, __rs)                                                           \
 do {                                                                                                               \
   if (ipmi_check_completion_code((__rs), IPMI_COMP_CODE_NODE_BUSY) == 1                                            \
       || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_OUT_OF_SPACE) == 1                                      \
@@ -207,6 +205,12 @@ do {                                                                            
     (__ctx)->errnum = IPMI_ERR_BAD_COMPLETION_CODE;                                                                \
 } while (0)
 
+#define API_BAD_COMPLETION_CODE_TO_API_ERRNUM(__ctx, __rs) \
+do {                                                       \
+  __BAD_COMPLETION_CODE_TO_API_ERRNUM(__ctx, __rs);        \
+  __API_CTX_TRACE;                                         \
+} while (0)
+
 /* Note: ctx->errnum set in call to ipmi_cmd() - don't call wrapper */
 #define API_ERR_IPMI_CMD_CLEANUP(__ctx, __lun, __netfn, __rq, __rs)                                        \
 do {                                                                                                       \
@@ -220,8 +224,9 @@ do {                                                                            
   API_ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));                           \
   if (!__rv)                                                                                               \
     {                                                                                                      \
-      API_BAD_COMPLETION_CODE_TO_API_ERRNUM((__ctx), (__rs));                                              \
-      __API_TRACE_ERRMSG_CLEANUP(__ctx, __rs);                                                             \
+      __BAD_COMPLETION_CODE_TO_API_ERRNUM((__ctx), (__rs));                                                \
+      __API_TRACE_COMP_CODE_ERRMSG(__ctx, __rs);                                                           \
+      goto cleanup;                                                                                        \
     }                                                                                                      \
 } while (0)
 
@@ -239,8 +244,9 @@ do {                                                                            
   API_ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));                           \
   if (!__rv)                                                                                               \
     {                                                                                                      \
-      API_BAD_COMPLETION_CODE_TO_API_ERRNUM((__ctx), (__rs));                                              \
-      __API_TRACE_ERRMSG_CLEANUP(__ctx, __rs);                                                             \
+      __BAD_COMPLETION_CODE_TO_API_ERRNUM((__ctx), (__rs));                                                \
+      __API_TRACE_COMP_CODE_ERRMSG(__ctx, __rs);                                                           \
+      goto cleanup;                                                                                        \
     }                                                                                                      \
 } while (0)
 
