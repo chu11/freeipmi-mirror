@@ -129,32 +129,21 @@ do {                                               \
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;         \
 } while (0)
 
-#define API_ERR_CTX_CHECK(expr)                                         \
+#define API_TRACE(__msgstr, __msgnum)                                   \
 do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = EINVAL;                                                   \
-      __TRACE_ERRNO;                                                    \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
+  __API_MSG_TRACE(__msgstr, __msgnum);                                  \
+} while (0)   
+
+#define API_ERR_SET_ERRNO(__errno)                                      \
+do {                                                                    \
+  errno = __errno;                                                      \
+  __TRACE_ERRNO;                                                        \
+} while (0)   
 
 #define API_ERR_SET_ERRNUM(__errnum)                                    \
 do {                                                                    \
   ctx->errnum = (__errnum);                                             \
   __API_CTX_TRACE;                                                      \
-} while (0)   
-
-#define API_ERR_SET_ERRNUM_CLEANUP(__errnum)                            \
-do {                                                                    \
-  ctx->errnum = (__errnum);                                             \
-  __API_CTX_TRACE;                                                      \
-  goto cleanup;                                                         \
-} while (0)   
-
-#define API_TRACE(__msgstr, __msgnum)                                   \
-do {                                                                    \
-  __API_MSG_TRACE(__msgstr, __msgnum);                                  \
 } while (0)   
 
 #define API_ERR(expr)                                                   \

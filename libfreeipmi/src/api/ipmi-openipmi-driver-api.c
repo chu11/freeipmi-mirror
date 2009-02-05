@@ -49,7 +49,7 @@ ipmi_openipmi_cmd_api (ipmi_ctx_t ctx,
                        fiid_obj_t obj_cmd_rq,
                        fiid_obj_t obj_cmd_rs)
 {
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
 
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -84,7 +84,11 @@ ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx,
 			    fiid_obj_t obj_cmd_rq,
 			    fiid_obj_t obj_cmd_rs)
 {
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -127,7 +131,11 @@ ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx,
   int32_t len;
   int32_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!buf_rq 
       || !buf_rq_len

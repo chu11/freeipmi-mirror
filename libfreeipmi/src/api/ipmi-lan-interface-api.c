@@ -59,7 +59,11 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
   uint8_t authentication_type;
   uint32_t internal_workaround_flags = 0;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_LAN)
     {
@@ -123,7 +127,11 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
   uint8_t authentication_type;
   uint32_t internal_workaround_flags = 0;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_LAN)
     {
@@ -192,7 +200,11 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
   uint8_t payload_authenticated;
   uint8_t payload_encrypted;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_LAN_2_0)
     {
@@ -262,7 +274,11 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
   int retval = -1;
   int32_t len;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_LAN_2_0)
     {

@@ -216,7 +216,11 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 {
   uint64_t cmd = 0;             /* used for debugging */
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -291,7 +295,10 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
       }
 
     if (!read_len)
-      API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_SYSTEM_ERROR);
+      {
+        API_ERR_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+        goto cleanup;
+      }
 
     if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && read_len)
       _ipmi_kcs_dump_rs (ctx, pkt, read_len, cmd, ctx->net_fn, obj_cmd_rs);
@@ -436,7 +443,11 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
   int8_t rv = -1;
   int ret;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -546,7 +557,11 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   int32_t rv = -1;
   uint64_t cmd = 0;             /* used for debugging */
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!buf_rq 
       || !buf_rq_len

@@ -348,7 +348,11 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                          | IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER
                          | IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES);
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!hostname
       || strlen(hostname) > MAXHOSTNAMELEN
@@ -449,7 +453,11 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                          | IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
                          | IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION);
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!hostname
       || strlen(hostname) > MAXHOSTNAMELEN
@@ -575,7 +583,11 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
   uint32_t temp_flags = 0;
   int errnum;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   /* No workaround flags currently supported */
   if ((driver_type != IPMI_DEVICE_KCS
@@ -852,7 +864,11 @@ ipmi_cmd (ipmi_ctx_t ctx,
 {
   int8_t status = 0;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (ctx->type == IPMI_DEVICE_UNKNOWN)
     {
@@ -990,7 +1006,11 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
    * had trouble figuring out a few chunks of the bridging code.
    */
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (ctx->type == IPMI_DEVICE_UNKNOWN)
     {
@@ -1052,7 +1072,11 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 {
   int8_t status = 0;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!in
       || !in_len
@@ -1141,7 +1165,11 @@ _ipmi_inband_close (ipmi_ctx_t ctx)
 int 
 ipmi_ctx_close (ipmi_ctx_t ctx)
 {
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (ctx->type == IPMI_DEVICE_UNKNOWN)
     {
@@ -1176,7 +1204,11 @@ ipmi_ctx_close (ipmi_ctx_t ctx)
 void
 ipmi_ctx_destroy (ipmi_ctx_t ctx)
 {
-  ERR_VOID_RETURN (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC);
+    {
+      API_TRACE("invalid ctx", 0);
+      return;
+    }
 
   if (ctx->type != IPMI_DEVICE_UNKNOWN)
     ipmi_ctx_close(ctx);

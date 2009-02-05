@@ -44,7 +44,11 @@ ipmi_cmd_get_device_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
@@ -76,7 +80,11 @@ ipmi_cmd_cold_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
@@ -108,7 +116,11 @@ ipmi_cmd_warm_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
@@ -145,7 +157,11 @@ ipmi_cmd_set_acpi_power_state (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_ACPI_SET_SYSTEM_POWER_STATE_VALID(set_system_power_state)
       || (set_system_power_state == IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE
@@ -187,7 +203,11 @@ ipmi_cmd_get_acpi_power_state (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
@@ -219,7 +239,11 @@ ipmi_cmd_get_self_test_results (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
@@ -251,7 +275,11 @@ ipmi_cmd_get_device_guid (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {

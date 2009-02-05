@@ -47,7 +47,11 @@ ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_BMC_LUN_VALID(event_receiver_lun)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -86,7 +90,11 @@ ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
@@ -121,7 +129,11 @@ ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {

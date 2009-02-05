@@ -67,7 +67,11 @@ ipmi_cmd_clear_message_flags (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (ctx->type == IPMI_DEVICE_LAN
       || ctx->type == IPMI_DEVICE_LAN_2_0)
@@ -118,7 +122,11 @@ ipmi_cmd_get_message_flags (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (ctx->type == IPMI_DEVICE_LAN
       || ctx->type == IPMI_DEVICE_LAN_2_0)
@@ -160,7 +168,11 @@ ipmi_cmd_enable_message_channel_receive (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (ctx->type == IPMI_DEVICE_LAN
       || ctx->type == IPMI_DEVICE_LAN_2_0)
@@ -204,7 +216,11 @@ ipmi_cmd_get_message (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (ctx->type == IPMI_DEVICE_LAN
       || ctx->type == IPMI_DEVICE_LAN_2_0)
@@ -250,7 +266,11 @@ ipmi_cmd_send_message (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_SEND_MESSAGE_AUTHENTICATION_VALID(message_authentication)
@@ -295,7 +315,11 @@ ipmi_cmd_read_event_message_buffer (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (ctx->type == IPMI_DEVICE_LAN
       || ctx->type == IPMI_DEVICE_LAN_2_0)
@@ -336,7 +360,11 @@ ipmi_cmd_get_system_interface_capabilities (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_SYSTEM_INTERFACE_VALID(system_interface)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -370,7 +398,11 @@ ipmi_cmd_get_system_interface_capabilities_ssif (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
@@ -403,7 +435,11 @@ ipmi_cmd_get_system_interface_capabilities_kcs (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
@@ -436,7 +472,11 @@ ipmi_cmd_get_bt_interface_capabilities (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
@@ -472,7 +512,11 @@ ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
@@ -511,7 +555,11 @@ ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
@@ -552,7 +600,11 @@ ipmi_cmd_get_session_challenge (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
       || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
@@ -595,7 +647,11 @@ ipmi_cmd_activate_session (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
       || !IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
@@ -638,7 +694,11 @@ ipmi_cmd_set_session_privilege_level (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_PRIVILEGE_LEVEL_VALID(privilege_level)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -674,7 +734,11 @@ ipmi_cmd_close_session (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
@@ -715,7 +779,11 @@ ipmi_cmd_set_channel_access (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_MESSAGING_ACCESS_MODE_VALID(ipmi_messaging_access_mode)
@@ -766,7 +834,11 @@ ipmi_cmd_get_channel_access (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_CHANNEL_ACCESS_GET_VALID(channel_access_get)
@@ -804,7 +876,11 @@ ipmi_cmd_get_channel_info (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -843,7 +919,11 @@ ipmi_cmd_set_channel_security_keys (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_CHANNEL_SECURITY_KEYS_OPERATION_VALID(operation)
@@ -897,7 +977,11 @@ ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_USER_IPMI_MESSAGING_VALID(user_ipmi_messaging)
@@ -944,7 +1028,11 @@ ipmi_cmd_get_user_access (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -981,7 +1069,11 @@ ipmi_cmd_set_user_name (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if ((user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -1019,7 +1111,11 @@ ipmi_cmd_get_user_name (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
@@ -1056,7 +1152,11 @@ ipmi_cmd_set_user_password (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_PASSWORD_OPERATION_VALID(operation)
       || (password && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
@@ -1100,7 +1200,11 @@ ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_PASSWORD_OPERATION_VALID(operation)
       && !IPMI_PASSWORD_SIZE_VALID(password_size)
@@ -1149,7 +1253,11 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
   int i;
     
   /* XXX channel medium type check? - OEM channels 0-0xFF possible, so skip */
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
     {

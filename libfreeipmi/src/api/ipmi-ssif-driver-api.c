@@ -51,7 +51,11 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 		   fiid_obj_t obj_cmd_rq,
 		   fiid_obj_t obj_cmd_rs)
 {
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -119,7 +123,10 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
       }
 
     if (!read_len)
-      API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_SYSTEM_ERROR);
+      {
+        API_ERR_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+        goto cleanup;
+      }
 
     API_ERR_CLEANUP (!(unassemble_ipmi_kcs_pkt (pkt,
 						read_len,
@@ -150,7 +157,11 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
   int32_t hdr_len;
   int32_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!buf_rq 
       || !buf_rq_len

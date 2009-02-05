@@ -50,7 +50,11 @@ ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_SOL_SOL_ENABLE_VALID(sol_enable)
@@ -91,7 +95,11 @@ ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_PRIVILEGE_LEVEL_VALID(sol_privilege_level)
@@ -135,7 +143,11 @@ ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
 
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -175,7 +187,11 @@ ipmi_cmd_set_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -214,7 +230,11 @@ ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_SOL_BIT_RATE_VALID(bit_rate)
@@ -253,7 +273,11 @@ ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_SOL_BIT_RATE_VALID(bit_rate)
@@ -292,7 +316,11 @@ ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_cmd_rs))
@@ -332,7 +360,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
@@ -376,7 +408,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
@@ -420,7 +456,11 @@ ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
@@ -464,7 +504,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
@@ -508,7 +552,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
@@ -552,7 +600,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
@@ -596,7 +648,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
@@ -640,7 +696,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
   
-  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      API_TRACE("invalid ctx", 0);
+      return (-1);
+    }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
