@@ -76,13 +76,17 @@ ipmi_cmd_clear_message_flags (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_ERR_PARAMETERS (IPMI_MESSAGE_FLAGS_VALID(receive_message_queue)
-                      && IPMI_MESSAGE_FLAGS_VALID(event_message_buffer)
-                      && IPMI_MESSAGE_FLAGS_VALID(watchdog_pre_timeout_interrupt_flag)
-                      && IPMI_MESSAGE_FLAGS_VALID(oem_0)
-                      && IPMI_MESSAGE_FLAGS_VALID(oem_1)
-                      && IPMI_MESSAGE_FLAGS_VALID(oem_2)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_MESSAGE_FLAGS_VALID(receive_message_queue)
+      || !IPMI_MESSAGE_FLAGS_VALID(event_message_buffer)
+      || !IPMI_MESSAGE_FLAGS_VALID(watchdog_pre_timeout_interrupt_flag)
+      || !IPMI_MESSAGE_FLAGS_VALID(oem_0)
+      || !IPMI_MESSAGE_FLAGS_VALID(oem_1)
+      || !IPMI_MESSAGE_FLAGS_VALID(oem_2)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_clear_message_flags_rs);
   
@@ -123,7 +127,11 @@ ipmi_cmd_get_message_flags (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_message_flags_rs);
   
@@ -161,9 +169,13 @@ ipmi_cmd_enable_message_channel_receive (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_CHANNEL_OPERATION_VALID (channel_operation)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_CHANNEL_OPERATION_VALID (channel_operation)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_enable_message_channel_receive_rs);
   
@@ -201,7 +213,11 @@ ipmi_cmd_get_message (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_message_rs);
   
@@ -236,13 +252,17 @@ ipmi_cmd_send_message (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_SEND_MESSAGE_AUTHENTICATION_VALID(message_authentication)
-                      && IPMI_SEND_MESSAGE_ENCRYPTION_VALID(message_encryption)
-                      && IPMI_SEND_MESSAGE_TRACKING_VALID(tracking_operation)
-                      && message_data
-                      && message_data_len
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_SEND_MESSAGE_AUTHENTICATION_VALID(message_authentication)
+      || !IPMI_SEND_MESSAGE_ENCRYPTION_VALID(message_encryption)
+      || !IPMI_SEND_MESSAGE_TRACKING_VALID(tracking_operation)
+      || !message_data
+      || !message_data_len
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_send_message_rs);
   
@@ -284,7 +304,11 @@ ipmi_cmd_read_event_message_buffer (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_read_event_message_buffer_rs);
   
@@ -314,8 +338,12 @@ ipmi_cmd_get_system_interface_capabilities (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_SYSTEM_INTERFACE_VALID(system_interface)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_SYSTEM_INTERFACE_VALID(system_interface)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_system_interface_capabilities_rs);
   
@@ -344,7 +372,11 @@ ipmi_cmd_get_system_interface_capabilities_ssif (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_system_interface_capabilities_ssif_rs);
   
@@ -373,7 +405,11 @@ ipmi_cmd_get_system_interface_capabilities_kcs (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_system_interface_capabilities_kcs_rs);
   
@@ -402,7 +438,11 @@ ipmi_cmd_get_bt_interface_capabilities (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_bt_interface_capabilities_rs);
   
@@ -434,9 +474,13 @@ ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_channel_authentication_capabilities_rs);
   
@@ -469,11 +513,15 @@ ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
-                      && IPMI_GET_IPMI_DATA_VALID(get_ipmi_v20_extended_data)
-                      && fiid_obj_valid(obj_cmd_rs));
-
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
+      || !IPMI_GET_IPMI_DATA_VALID(get_ipmi_v20_extended_data)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+  
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_channel_authentication_capabilities_v20_rs);
   
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_channel_authentication_capabilities_v20_rq);
@@ -506,9 +554,13 @@ ipmi_cmd_get_session_challenge (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
-                      && !(user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
+      || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_session_challenge_rs);
   
@@ -545,11 +597,15 @@ ipmi_cmd_activate_session (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
-                      && IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
-                      && challenge_string
-                      && !(challenge_string_len > IPMI_CHALLENGE_STRING_LENGTH)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
+      || !IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
+      || !challenge_string
+      || (challenge_string_len > IPMI_CHALLENGE_STRING_LENGTH)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_activate_session_rs);
   
@@ -584,9 +640,13 @@ ipmi_cmd_set_session_privilege_level (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_PRIVILEGE_LEVEL_VALID(privilege_level)
-                      && fiid_obj_valid(obj_cmd_rs));
-
+  if (!IPMI_PRIVILEGE_LEVEL_VALID(privilege_level)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+  
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_session_privilege_level_rs);
   
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_session_privilege_level_rq);
@@ -616,7 +676,11 @@ ipmi_cmd_close_session (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_close_session_rs);
   
@@ -653,15 +717,19 @@ ipmi_cmd_set_channel_access (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_MESSAGING_ACCESS_MODE_VALID(ipmi_messaging_access_mode)
-                      && IPMI_USER_LEVEL_AUTHENTICATION_VALID(user_level_authentication)
-                      && IPMI_PER_MESSAGE_AUTHENTICATION_VALID(per_message_authentication)
-                      && IPMI_PEF_ALERTING_VALID(pef_alerting)
-                      && IPMI_CHANNEL_ACCESS_VALID(channel_access_set)
-                      && IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(channel_privilege_level_limit)
-                      && IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VALID(channel_privilege_level_limit_set)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_MESSAGING_ACCESS_MODE_VALID(ipmi_messaging_access_mode)
+      || !IPMI_USER_LEVEL_AUTHENTICATION_VALID(user_level_authentication)
+      || !IPMI_PER_MESSAGE_AUTHENTICATION_VALID(per_message_authentication)
+      || !IPMI_PEF_ALERTING_VALID(pef_alerting)
+      || !IPMI_CHANNEL_ACCESS_VALID(channel_access_set)
+      || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(channel_privilege_level_limit)
+      || !IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VALID(channel_privilege_level_limit_set)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_channel_access_rs);
   
@@ -700,9 +768,13 @@ ipmi_cmd_get_channel_access (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_CHANNEL_ACCESS_GET_VALID(channel_access_get)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_CHANNEL_ACCESS_GET_VALID(channel_access_get)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_channel_access_rs);
   
@@ -734,8 +806,12 @@ ipmi_cmd_get_channel_info (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_channel_info_rs);
   
@@ -769,16 +845,20 @@ ipmi_cmd_set_channel_security_keys (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_CHANNEL_SECURITY_KEYS_OPERATION_VALID(operation)
-                      && IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_VALID(key_id)
-                      && !((key_id == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
-                            && key_value)
-                           && key_value_len > IPMI_MAX_K_R_LENGTH)
-                      && !((key_id == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G
-                            && key_value)
-                           && key_value_len > IPMI_MAX_K_G_LENGTH)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_CHANNEL_SECURITY_KEYS_OPERATION_VALID(operation)
+      || !IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_VALID(key_id)
+      || ((key_id == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
+           && key_value)
+          && key_value_len > IPMI_MAX_K_R_LENGTH)
+      || ((key_id == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G
+           && key_value)
+          && key_value_len > IPMI_MAX_K_G_LENGTH)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_channel_security_keys_rs);
   
@@ -819,12 +899,16 @@ ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_USER_IPMI_MESSAGING_VALID(user_ipmi_messaging)
-                      && IPMI_USER_LINK_AUTHENTICATION_VALID(user_link_authentication)
-                      && IPMI_USER_RESTRICTED_TO_CALLBACK_VALID(user_restricted_to_callback)
-                      && IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(user_privilege_level_limit)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_USER_IPMI_MESSAGING_VALID(user_ipmi_messaging)
+      || !IPMI_USER_LINK_AUTHENTICATION_VALID(user_link_authentication)
+      || !IPMI_USER_RESTRICTED_TO_CALLBACK_VALID(user_restricted_to_callback)
+      || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(user_privilege_level_limit)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_user_access_rs);
   
@@ -862,8 +946,12 @@ ipmi_cmd_get_user_access (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_user_access_rs);
   
@@ -895,8 +983,12 @@ ipmi_cmd_set_user_name (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (!(user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if ((user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_user_name_rs);
   
@@ -929,7 +1021,11 @@ ipmi_cmd_get_user_name (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_user_name_rs);
   
@@ -962,9 +1058,13 @@ ipmi_cmd_set_user_password (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_PASSWORD_OPERATION_VALID(operation)
-                      && !(password && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_PASSWORD_OPERATION_VALID(operation)
+      || (password && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
   
@@ -1002,15 +1102,19 @@ ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_PASSWORD_OPERATION_VALID(operation)
-                      && IPMI_PASSWORD_SIZE_VALID(password_size)
-                      && !(password
-                           && password_size == IPMI_PASSWORD_SIZE_16_BYTES
-                           && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
-                      && !(password
-                           && password_size == IPMI_PASSWORD_SIZE_20_BYTES
-                           && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_PASSWORD_OPERATION_VALID(operation)
+      && !IPMI_PASSWORD_SIZE_VALID(password_size)
+      && (password
+          && password_size == IPMI_PASSWORD_SIZE_16_BYTES
+          && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
+      && (password
+          && password_size == IPMI_PASSWORD_SIZE_20_BYTES
+          && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
+      && !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
   

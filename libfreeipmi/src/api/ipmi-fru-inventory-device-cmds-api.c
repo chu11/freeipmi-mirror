@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.6 2009-01-13 01:02:33 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.7 2009-02-05 18:47:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -58,7 +58,11 @@ ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_fru_inventory_area_info_rs);
 
@@ -91,7 +95,11 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_read_fru_data_rs);
 

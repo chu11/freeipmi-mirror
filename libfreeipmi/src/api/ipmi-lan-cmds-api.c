@@ -76,33 +76,37 @@ ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_none)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_md2)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_md5)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_straight_password)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_oem_proprietary)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_none)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_md2)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_md5)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_straight_password)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_oem_proprietary)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_none)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_md2)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_md5)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_straight_password)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_oem_proprietary)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_none)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_md2)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_md5)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_straight_password)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_oem_proprietary)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_none)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_md2)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_md5)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_straight_password)
-                      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_oem_proprietary)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_oem_proprietary)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -159,8 +163,12 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -193,8 +201,12 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -227,8 +239,12 @@ ipmi_cmd_set_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -261,8 +277,12 @@ ipmi_cmd_set_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -296,10 +316,14 @@ ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(bmc_generated_gratuitous_arps)
-                      && IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(bmc_generated_arp_responses)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(bmc_generated_gratuitous_arps)
+      || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(bmc_generated_arp_responses)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -333,8 +357,12 @@ ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -367,8 +395,12 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -401,8 +433,12 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -435,8 +471,12 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -469,8 +509,12 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -504,10 +548,14 @@ ipmi_cmd_set_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && !(community_string
-                           && community_string_len > IPMI_MAX_COMMUNITY_STRING_LENGTH)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || (community_string
+          && community_string_len > IPMI_MAX_COMMUNITY_STRING_LENGTH)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -545,12 +593,16 @@ ipmi_cmd_set_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_DESTINATION_SELECTOR_VALID(destination_selector)
-                      && IPMI_DESTINATION_TYPE_VALID(destination_type)
-                      && IPMI_ALERT_VALID(alert_acknowledge)
-                      && (retries <= IPMI_ALERT_RETRIES_MAX)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_DESTINATION_SELECTOR_VALID(destination_selector)
+      || !IPMI_DESTINATION_TYPE_VALID(destination_type)
+      || !IPMI_ALERT_VALID(alert_acknowledge)
+      || (retries > IPMI_ALERT_RETRIES_MAX)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -590,8 +642,12 @@ ipmi_cmd_set_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -630,9 +686,13 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_VLAN_ID_ENABLE_VALID(vlan_id_enable)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_VLAN_ID_ENABLE_VALID(vlan_id_enable)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -666,8 +726,12 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
@@ -715,41 +779,45 @@ ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_1)
-                          || !maximum_privilege_for_cipher_suite_1)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_2)
-                          || !maximum_privilege_for_cipher_suite_2)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_3)
-                          || !maximum_privilege_for_cipher_suite_3)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_4)
-                          || !maximum_privilege_for_cipher_suite_4)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_5)
-                          || !maximum_privilege_for_cipher_suite_5)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_6)
-                          || !maximum_privilege_for_cipher_suite_6)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_7)
-                          || !maximum_privilege_for_cipher_suite_7)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_8)
-                          || !maximum_privilege_for_cipher_suite_8)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_9)
-                          || !maximum_privilege_for_cipher_suite_9)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_10)
-                          || !maximum_privilege_for_cipher_suite_10)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_11)
-                          || !maximum_privilege_for_cipher_suite_11)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_12)
-                          || !maximum_privilege_for_cipher_suite_12)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_13)
-                          || !maximum_privilege_for_cipher_suite_13)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_14)
-                          || !maximum_privilege_for_cipher_suite_14)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_15)
-                          || !maximum_privilege_for_cipher_suite_15)
-                      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_16)
-                          || !maximum_privilege_for_cipher_suite_16)
-                      && fiid_obj_valid(obj_cmd_rs));
-
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_1)
+          && maximum_privilege_for_cipher_suite_1)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_2)
+          && maximum_privilege_for_cipher_suite_2)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_3)
+          && maximum_privilege_for_cipher_suite_3)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_4)
+          && maximum_privilege_for_cipher_suite_4)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_5)
+          && maximum_privilege_for_cipher_suite_5)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_6)
+          && maximum_privilege_for_cipher_suite_6)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_7)
+          && maximum_privilege_for_cipher_suite_7)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_8)
+          && maximum_privilege_for_cipher_suite_8)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_9)
+          && maximum_privilege_for_cipher_suite_9)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_10)
+          && maximum_privilege_for_cipher_suite_10)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_11)
+          && maximum_privilege_for_cipher_suite_11)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_12)
+          && maximum_privilege_for_cipher_suite_12)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_13)
+          && maximum_privilege_for_cipher_suite_13)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_14)
+          && maximum_privilege_for_cipher_suite_14)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_15)
+          && maximum_privilege_for_cipher_suite_15)
+      || (!IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_16)
+          && maximum_privilege_for_cipher_suite_16)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+  
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
  
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rq);
@@ -800,10 +868,14 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (ipmi_ctx_
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
-  
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs);
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
@@ -840,9 +912,13 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs);
 
@@ -880,9 +956,13 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_ip_address_rs);
 
@@ -920,9 +1000,13 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs);
 
@@ -960,9 +1044,13 @@ ipmi_cmd_get_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_mac_address_rs);
 
@@ -1000,9 +1088,13 @@ ipmi_cmd_get_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs);
 
@@ -1040,9 +1132,13 @@ ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs);
 
@@ -1080,9 +1176,13 @@ ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs);
 
@@ -1120,9 +1220,13 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs);
 
@@ -1160,9 +1264,13 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_mac_address_rs);
 
@@ -1200,9 +1308,13 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs);
 
@@ -1240,9 +1352,13 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_mac_address_rs);
 
@@ -1280,9 +1396,13 @@ ipmi_cmd_get_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_community_string_rs);
 
@@ -1320,9 +1440,13 @@ ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (ipmi_ctx_t ctx
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs);
 
@@ -1360,10 +1484,14 @@ ipmi_cmd_get_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && IPMI_DESTINATION_SELECTOR_VALID(set_selector)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !IPMI_DESTINATION_SELECTOR_VALID(set_selector)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_destination_type_rs);
 
@@ -1401,10 +1529,14 @@ ipmi_cmd_get_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && IPMI_DESTINATION_SELECTOR_VALID(set_selector)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !IPMI_DESTINATION_SELECTOR_VALID(set_selector)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs);
 
@@ -1442,9 +1574,13 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs);
 
@@ -1482,9 +1618,13 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs);
   
@@ -1522,9 +1662,13 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs);
   
@@ -1562,9 +1706,13 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entrie
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs);
   
@@ -1602,9 +1750,13 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs);
   
@@ -1641,10 +1793,14 @@ ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(gratuitous_arp_suspend)
-                      && IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(arp_response_suspend)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(gratuitous_arp_suspend)
+      || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(arp_response_suspend)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
    
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_suspend_bmc_arps_rs);
 
@@ -1678,9 +1834,13 @@ ipmi_cmd_get_ip_udp_rmcp_statistics (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_CLEAR_ALL_STATISTICS_VALID(clear_all_statistics)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_CLEAR_ALL_STATISTICS_VALID(clear_all_statistics)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
    
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_ip_udp_rmcp_statistics_rs);
 

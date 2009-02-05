@@ -44,11 +44,11 @@ extern "C" {
 #include "libcommon/ipmi-err-wrappers.h"
 
 #if defined (IPMI_TRACE)
-#define __API_TRACE                                                          \
+#define __API_CTX_TRACE                                                      \
 do {                                                                         \
   int __ctxerrnum = ctx->errnum;                                             \
   char *__ctxerrstr = ipmi_ctx_strerror(__ctxerrnum);                        \
-  __TRACE_CTX_OUTPUT;                                                        \
+  __TRACE_CTX;                                                               \
 } while (0)
 
 #define __API_TRACE_ERRMSG_CLEANUP(___ctx, ___rs)                            \
@@ -60,7 +60,7 @@ do {                                                                         \
 		                       (___ctx)->net_fn,                     \
 		                       __ctxerrstr,                          \
 		                       IPMI_ERR_STR_MAX_LEN);                \
-  __TRACE_CTX_OUTPUT;                                                        \
+  __TRACE_CTX;                                                               \
   goto cleanup;                                                              \
 } while (0) 
 
@@ -68,38 +68,38 @@ do {                                                                         \
 do {                                                                         \
   int __ctxerrnum = ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx);             \
   char *__ctxerrstr = ipmi_kcs_ctx_strerror(__ctxerrnum);                    \
-  __TRACE_CTX_OUTPUT;                                                        \
+  __TRACE_CTX;                                                               \
 } while (0)
 
 #define __API_SSIF_TRACE                                                     \
 do {                                                                         \
   int __ctxerrnum = ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx);           \
   char *__ctxerrstr = ipmi_ssif_ctx_strerror(__ctxerrnum);                   \
-  __TRACE_CTX_OUTPUT;                                                        \
+  __TRACE_CTX;                                                               \
 } while (0)
 
 #define __API_OPENIPMI_TRACE                                                 \
 do {                                                                         \
   int __ctxerrnum = ipmi_openipmi_ctx_errnum(ctx->io.inband.openipmi_ctx);   \
   char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);               \
-  __TRACE_CTX_OUTPUT;                                                        \
+  __TRACE_CTX;                                                               \
 } while (0)
 
 #define __API_SUNBMC_TRACE                                                   \
 do {                                                                         \
   int __ctxerrnum = ipmi_sunbmc_ctx_errnum(ctx->io.inband.sunbmc_ctx);       \
   char *__ctxerrstr = ipmi_sunbmc_ctx_strerror(__ctxerrnum);                 \
-  __TRACE_CTX_OUTPUT;                                                        \
+  __TRACE_CTX;                                                               \
 } while (0)
 
 #define __API_LOCATE_TRACE                                                   \
 do {                                                                         \
   int __ctxerrnum = ___locate_errnum;                                        \
   char *__ctxerrstr = ipmi_locate_strerror(__ctxerrnum);                     \
-  __TRACE_CTX_OUTPUT;                                                        \
+  __TRACE_CTX;                                                               \
 } while (0)
 #else
-#define __API_TRACE
+#define __API_CTX_TRACE
 #define __API_TRACE_ERRMSG_CLEANUP(__ctx, __rs)                              \
 do {                                                                         \
   goto cleanup;                                                              \
@@ -130,7 +130,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -138,24 +138,24 @@ do {                                                                    \
 #define API_ERR_SET_ERRNUM(__errnum)                                    \
 do {                                                                    \
   ctx->errnum = (__errnum);                                             \
-  __API_TRACE;                                                          \
+  __API_CTX_TRACE;                                                      \
 } while (0)   
 
 #define API_ERR_SET_ERRNUM_CLEANUP(__errnum)                            \
 do {                                                                    \
   ctx->errnum = (__errnum);                                             \
-  __API_TRACE;                                                          \
+  __API_CTX_TRACE;                                                      \
   goto cleanup;                                                         \
 } while (0)   
 
 #define API_ERR_LOG(expr)                                               \
 do {                                                                    \
-  __API_TRACE;                                                          \
+  __API_CTX_TRACE;                                                      \
 } while (0)   
 
 #define API_ERR_LOG_CLEANUP(expr)                                       \
 do {                                                                    \
-  __API_TRACE;                                                          \
+  __API_CTX_TRACE;                                                      \
   goto cleanup;                                                         \
 } while (0)   
 
@@ -164,7 +164,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       __ERRNO_TO_API_ERRNUM;                                            \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -174,42 +174,12 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       __ERRNO_TO_API_ERRNUM;                                            \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
 
-#define API_ERR_HOSTNAME_INVALID(expr)                                  \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_HOSTNAME_INVALID;                          \
-      __API_TRACE;                                                      \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define API_ERR_HOSTNAME_INVALID_CLEANUP(expr)                          \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_HOSTNAME_INVALID;                          \
-      __API_TRACE;                                                      \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define API_ERR_PARAMETERS(expr)                                        \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_PARAMETERS;                                \
-      __API_TRACE;                                                      \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define API_BAD_COMPLETION_CODE_TO_API_ERRNUM(__ctx, __rs)                                                       \
+#define API_BAD_COMPLETION_CODE_TO_API_ERRNUM(__ctx, __rs)                                                         \
 do {                                                                                                               \
   if (ipmi_check_completion_code((__rs), IPMI_COMP_CODE_NODE_BUSY) == 1                                            \
       || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_OUT_OF_SPACE) == 1                                      \

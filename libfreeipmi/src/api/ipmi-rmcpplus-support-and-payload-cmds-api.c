@@ -76,24 +76,28 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && IPMI_SET_USER_PAYLOAD_OPERATION_VALID(operation)
-                      && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_1)
-                      && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_2)
-                      && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_3)
-                      && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_4)
-                      && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_5)
-                      && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_6)
-                      && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_7)
-                      && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_0)
-                      && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_1)
-                      && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_2)
-                      && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_3)
-                      && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_4)
-                      && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_5)
-                      && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_6)
-                      && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_7)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_SET_USER_PAYLOAD_OPERATION_VALID(operation)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_1)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_2)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_3)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_4)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_5)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_6)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_7)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_0)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_1)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_2)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_3)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_4)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_5)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_6)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_7)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_user_payload_access_rs);
 
@@ -142,8 +146,12 @@ ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_user_payload_access_rs);
   

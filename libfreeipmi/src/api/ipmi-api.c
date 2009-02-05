@@ -350,21 +350,23 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
+  if (!hostname
+      || strlen(hostname) > MAXHOSTNAMELEN
+      || (username && strlen (username) > IPMI_MAX_USER_NAME_LENGTH)
+      || (password && strlen (password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
+      || !IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type)
+      || !IPMI_PRIVILEGE_LEVEL_VALID (privilege_level)
+      || (workaround_flags & ~flags_mask))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
   if (ctx->type != IPMI_DEVICE_UNKNOWN)
     {
       API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_ALREADY_OPEN);
       return (-1);
     }
-
-  API_ERR_PARAMETERS(hostname
-                     && !(username && strlen (username) > IPMI_MAX_USER_NAME_LENGTH)
-                     && !(password && strlen (password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
-                     && IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type)
-                     && IPMI_PRIVILEGE_LEVEL_VALID (privilege_level));
-
-  API_ERR_PARAMETERS(!(strlen(hostname) > MAXHOSTNAMELEN));
-   
-  API_ERR_PARAMETERS(!(workaround_flags & ~flags_mask));
 
   ctx->type = IPMI_DEVICE_LAN;
   ctx->workaround_flags = workaround_flags;
@@ -387,7 +389,11 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   ctx->io.outofband.session_timeout = (session_timeout ? session_timeout : IPMI_SESSION_TIMEOUT);
   ctx->io.outofband.retransmission_timeout = (retransmission_timeout ? retransmission_timeout : IPMI_RETRANSMISSION_TIMEOUT);
 
-  API_ERR_PARAMETERS(ctx->io.outofband.retransmission_timeout < ctx->io.outofband.session_timeout);
+  if (ctx->io.outofband.retransmission_timeout >= ctx->io.outofband.session_timeout)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   memset(&ctx->io.outofband.last_send, '\0', sizeof(struct timeval));
   memset(&ctx->io.outofband.last_received, '\0', sizeof(struct timeval));
@@ -445,22 +451,24 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
+  if (!hostname
+      || strlen(hostname) > MAXHOSTNAMELEN
+      || (username && strlen (username) > IPMI_MAX_USER_NAME_LENGTH)
+      || (password && strlen (password) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+      || (k_g && k_g_len > IPMI_MAX_K_G_LENGTH)
+      || !IPMI_PRIVILEGE_LEVEL_VALID (privilege_level)
+      || !IPMI_CIPHER_SUITE_ID_SUPPORTED (cipher_suite_id)
+      || (workaround_flags & ~flags_mask))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
   if (ctx->type != IPMI_DEVICE_UNKNOWN)
     {
       API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_ALREADY_OPEN);
       return (-1);
     }
-
-  API_ERR_PARAMETERS(hostname
-                     && !(username && strlen (username) > IPMI_MAX_USER_NAME_LENGTH)
-                     && !(password && strlen (password) > IPMI_2_0_MAX_PASSWORD_LENGTH)
-                     && !(k_g && k_g_len > IPMI_MAX_K_G_LENGTH)
-                     && IPMI_PRIVILEGE_LEVEL_VALID (privilege_level)
-                     && IPMI_CIPHER_SUITE_ID_SUPPORTED(cipher_suite_id));
-   
-  API_ERR_PARAMETERS(!(strlen(hostname) > MAXHOSTNAMELEN));
-
-  API_ERR_PARAMETERS(!(workaround_flags & ~flags_mask));
 
   API_ERR_CLEANUP (!(ipmi_rmcpplus_init() < 0));
 
@@ -487,7 +495,11 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   ctx->io.outofband.session_timeout = (session_timeout ? session_timeout : IPMI_SESSION_TIMEOUT);
   ctx->io.outofband.retransmission_timeout = (retransmission_timeout ? retransmission_timeout : IPMI_RETRANSMISSION_TIMEOUT);
 
-  API_ERR_PARAMETERS(ctx->io.outofband.retransmission_timeout < ctx->io.outofband.session_timeout);
+  if (ctx->io.outofband.retransmission_timeout >= ctx->io.outofband.session_timeout)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   memset(ctx->io.outofband.k_g, '\0', IPMI_MAX_K_G_LENGTH);
   ctx->io.outofband.k_g_configured = 0;
@@ -565,21 +577,24 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
+  /* No workaround flags currently supported */
+  if ((driver_type != IPMI_DEVICE_KCS
+       && driver_type != IPMI_DEVICE_SMIC
+       && driver_type != IPMI_DEVICE_BT
+       && driver_type != IPMI_DEVICE_SSIF
+       && driver_type != IPMI_DEVICE_OPENIPMI
+       && driver_type != IPMI_DEVICE_SUNBMC)
+      || workaround_flags)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
   if (ctx->type != IPMI_DEVICE_UNKNOWN)
     {
       API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_ALREADY_OPEN);
       return (-1);
     }
-
-  API_ERR_PARAMETERS(driver_type == IPMI_DEVICE_KCS
-                     || driver_type == IPMI_DEVICE_SMIC
-                     || driver_type == IPMI_DEVICE_BT
-                     || driver_type == IPMI_DEVICE_SSIF
-                     || driver_type == IPMI_DEVICE_OPENIPMI
-                     || driver_type == IPMI_DEVICE_SUNBMC);
-
-  /* No workaround flags currently supported */
-  API_ERR_PARAMETERS(!(workaround_flags));
 
   ctx->workaround_flags = workaround_flags;
   ctx->flags = flags;
@@ -1039,6 +1054,15 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
+  if (!in
+      || !in_len
+      || !out
+      || !out_len)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
   if (ctx->type == IPMI_DEVICE_UNKNOWN)
     {
       API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
@@ -1056,11 +1080,6 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_ERR_PARAMETERS(in
-                     && in_len > 0
-                     && out
-                     && out_len > 0);
-
   ctx->lun = lun;
   ctx->net_fn = net_fn;
 

@@ -41,7 +41,7 @@ extern "C" {
 
 #if defined (IPMI_TRACE)
 
-#define __TRACE_OUTPUT                                                  \
+#define __TRACE_ERRNO                                                   \
 do {                                                                    \
   extern int errno;                                                     \
   int __save_errno = errno;                                             \
@@ -49,99 +49,86 @@ do {                                                                    \
   memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                   \
   strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
   fprintf (stderr,                                                      \
-           "%s: %d: %s: errno %s (%d)\n",                               \
+           "%s: %d: %s: errno '%s' (%d)\n",                             \
            __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
            __errnostr, __save_errno);                                   \
   fflush (stderr);                                                      \
   errno = __save_errno;                                                 \
 } while (0)
 
-#define __TRACE_CTX_OUTPUT                                              \
+#define __TRACE_CTX                                                     \
 do {                                                                    \
-  extern int errno;                                                     \
-  int __save_errno = errno;                                             \
-  char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                             \
-  memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                   \
-  strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
   fprintf (stderr,                                                      \
-           "%s: %d: %s: errno %s (%d), error %s (%d)\n",                \
+           "%s: %d: %s: error '%s' (%d)\n",                             \
            __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
-           __errnostr, __save_errno,                                    \
            __ctxerrstr, __ctxerrnum);                                   \
   fflush (stderr);                                                      \
-  errno = __save_errno;                                                 \
-} while (0)
-
-#define __ERR_TRACE                                                     \
-do {                                                                    \
-  __TRACE_OUTPUT;                                                       \
 } while (0)
 
 #define __KCS_TRACE                                                     \
 do {                                                                    \
   int __ctxerrnum = ipmi_kcs_ctx_errnum(ctx);                           \
   char *__ctxerrstr = ipmi_kcs_ctx_strerror(__ctxerrnum);               \
-  __TRACE_CTX_OUTPUT;                                                   \
+  __TRACE_CTX;                                                          \
 } while (0)
 
 #define __SSIF_TRACE                                                    \
 do {                                                                    \
   int __ctxerrnum = ipmi_ssif_ctx_errnum(ctx);                          \
   char *__ctxerrstr = ipmi_ssif_ctx_strerror(__ctxerrnum);              \
-  __TRACE_CTX_OUTPUT;                                                   \
+  __TRACE_CTX;                                                          \
 } while (0)
 
 #define __OPENIPMI_TRACE                                                \
 do {                                                                    \
   int __ctxerrnum = ipmi_openipmi_ctx_errnum(ctx);                      \
   char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);          \
-  __TRACE_CTX_OUTPUT;                                                   \
+  __TRACE_CTX;                                                          \
 } while (0)
 
 #define __SUNBMC_TRACE                                                  \
 do {                                                                    \
   int __ctxerrnum = ipmi_sunbmc_ctx_errnum(ctx);                        \
   char *__ctxerrstr = ipmi_sunbmc_ctx_strerror(__ctxerrnum);            \
-  __TRACE_CTX_OUTPUT;                                                   \
+  __TRACE_CTX;                                                          \
 } while (0)
 
 #define __LOCATE_TRACE                                                  \
 do {                                                                    \
   int __ctxerrnum = *locate_errnum;                                     \
   char *__ctxerrstr = ipmi_locate_strerror(__ctxerrnum);                \
-  __TRACE_CTX_OUTPUT;                                                   \
+  __TRACE_CTX;                                                          \
 } while (0)
 
 #define __SDR_CACHE_TRACE                                               \
 do {                                                                    \
   int __ctxerrnum = ipmi_sdr_cache_ctx_errnum(ctx);                     \
   char *__ctxerrstr = ipmi_sdr_cache_ctx_strerror(__ctxerrnum);         \
-  __TRACE_CTX_OUTPUT;                                                   \
+  __TRACE_CTX;                                                          \
 } while (0)
 
 #define __SDR_PARSE_TRACE                                               \
 do {                                                                    \
   int __ctxerrnum = ipmi_sel_parse_ctx_errnum(ctx);                     \
   char *__ctxerrstr = ipmi_sel_parse_ctx_strerror(__ctxerrnum);         \
-  __TRACE_CTX_OUTPUT;                                                   \
+  __TRACE_CTX;                                                          \
 } while (0)
 
 #define __SEL_PARSE_TRACE                                               \
 do {                                                                    \
   int __ctxerrnum = ipmi_sel_parse_ctx_errnum(ctx);                     \
   char *__ctxerrstr = ipmi_sel_parse_ctx_strerror(__ctxerrnum);         \
-  __TRACE_CTX_OUTPUT;                                                   \
+  __TRACE_CTX;                                                          \
 } while (0)
 
 #define __SENSOR_READ_TRACE                                             \
 do {                                                                    \
   int __ctxerrnum = ipmi_sensor_read_ctx_errnum(ctx);                   \
   char *__ctxerrstr = ipmi_sensor_read_ctx_strerror(__ctxerrnum);       \
-  __TRACE_CTX_OUTPUT;                                                   \
+  __TRACE_CTX;                                                          \
 } while (0)
 
 #else
-#define __ERR_TRACE
 #define __KCS_TRACE
 #define __SSIF_TRACE
 #define __OPENIPMI_TRACE
@@ -155,7 +142,7 @@ do {                                                                    \
 
 #define ERR_LOG(expr)                                                   \
 do {                                                                    \
-  __ERR_TRACE;                                                          \
+  __TRACE_ERRNO;                                                        \
   expr;                                                                 \
 } while (0)   
 
@@ -163,7 +150,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -172,7 +159,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -181,7 +168,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       exit(1);                                                          \
     }                                                                   \
 } while (0)
@@ -190,7 +177,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       return (NULL);                                                    \
     }                                                                   \
 } while (0)
@@ -199,7 +186,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       return;                                                           \
     }                                                                   \
 } while (0)
@@ -209,7 +196,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -219,7 +206,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -229,7 +216,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       return (NULL);                                                    \
     }                                                                   \
 } while (0)
@@ -239,7 +226,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENOSPC;                                                   \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -249,7 +236,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENOSPC;                                                   \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -259,7 +246,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EMSGSIZE;                                                 \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -269,7 +256,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EMSGSIZE;                                                 \
-      __ERR_TRACE;                                                      \
+      __TRACE_ERRNO;                                                    \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)

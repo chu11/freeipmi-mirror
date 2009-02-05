@@ -47,7 +47,11 @@ ipmi_cmd_get_sel_info (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sel_info_rs);
 
@@ -76,7 +80,11 @@ ipmi_cmd_get_sel_allocation_info (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sel_allocation_info_rs);
 
@@ -105,7 +113,11 @@ ipmi_cmd_reserve_sel (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
 
@@ -138,7 +150,11 @@ ipmi_cmd_get_sel_entry (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
 
@@ -173,7 +189,11 @@ ipmi_cmd_delete_sel_entry (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_delete_sel_entry_rs);
 
@@ -206,8 +226,12 @@ ipmi_cmd_clear_sel (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_SEL_CLEAR_OPERATION_VALID(operation)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_SEL_CLEAR_OPERATION_VALID(operation)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_clear_sel_rs);
 
@@ -238,7 +262,11 @@ ipmi_cmd_get_sel_time (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sel_time_rs);
   
@@ -268,7 +296,11 @@ ipmi_cmd_set_sel_time (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_sel_time_rs);
   
@@ -298,8 +330,12 @@ ipmi_cmd_get_auxiliary_log_status (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_auxiliary_log_status_rs);
   
@@ -332,10 +368,14 @@ ipmi_cmd_set_auxiliary_log_status (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
-                      && log_data
-                      && log_data_len
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
+      || !log_data
+      || !log_data_len
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_auxiliary_log_status_rs);
   

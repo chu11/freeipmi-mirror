@@ -46,7 +46,11 @@ ipmi_cmd_get_device_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_device_id_rs);
 
@@ -74,7 +78,11 @@ ipmi_cmd_cold_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_cold_reset_rs);
 
@@ -102,7 +110,11 @@ ipmi_cmd_warm_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_warm_reset_rs);
 
@@ -135,13 +147,17 @@ ipmi_cmd_set_acpi_power_state (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (IPMI_ACPI_SET_SYSTEM_POWER_STATE_VALID(set_system_power_state)
-                      && !(set_system_power_state == IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE
-                           && !IPMI_ACPI_SYSTEM_POWER_STATE_VALID(system_power_state_enumeration))
-                      && IPMI_ACPI_SET_DEVICE_POWER_STATE_VALID(set_device_power_state)
-                      && !(set_device_power_state == IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE
-                           && !IPMI_ACPI_DEVICE_POWER_STATE_VALID(device_power_state_enumeration))
-                      && fiid_obj_valid(obj_cmd_rs));
+  if (!IPMI_ACPI_SET_SYSTEM_POWER_STATE_VALID(set_system_power_state)
+      || (set_system_power_state == IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE
+          && !IPMI_ACPI_SYSTEM_POWER_STATE_VALID(system_power_state_enumeration))
+      || !IPMI_ACPI_SET_DEVICE_POWER_STATE_VALID(set_device_power_state)
+      || (set_device_power_state == IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE
+          && !IPMI_ACPI_DEVICE_POWER_STATE_VALID(device_power_state_enumeration))
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_acpi_power_state_rs);
 
@@ -173,7 +189,11 @@ ipmi_cmd_get_acpi_power_state (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_acpi_power_state_rs);
 
@@ -201,7 +221,11 @@ ipmi_cmd_get_self_test_results (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_self_test_results_rs);
 
@@ -229,7 +253,11 @@ ipmi_cmd_get_device_guid (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
   
   API_FIID_OBJ_TEMPLATE_COMPARE2(obj_cmd_rs, 
                                  tmpl_cmd_get_device_guid_rs,
