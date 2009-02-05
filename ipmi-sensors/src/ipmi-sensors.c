@@ -707,22 +707,26 @@ _ipmi_sensors (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (!(state_data.sensor_read_ctx = ipmi_sensor_read_ctx_create(state_data.ipmi_ctx)))
+  if (!prog_data->args->sdr.flush_cache
+      && !prog_data->args->list_groups)
     {
-      pstdout_perror (pstate, "ipmi_sensor_read_ctx_create()");
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+      if (!(state_data.sensor_read_ctx = ipmi_sensor_read_ctx_create(state_data.ipmi_ctx)))
+        {
+          pstdout_perror (pstate, "ipmi_sensor_read_ctx_create()");
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
   
-  if (state_data.prog_data->args->bridge_sensors)
-    {
-      /* Don't error out, if this fails we can still continue */
-      if (ipmi_sensor_read_ctx_set_flags(state_data.sensor_read_ctx,
-                                         IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS) < 0)
-        pstdout_fprintf (pstate,
-                         stderr,
-                         "ipmi_sensor_read_ctx_set_flags: %s\n",
-                         ipmi_sensor_read_ctx_strerror(ipmi_sensor_read_ctx_errnum(state_data.sensor_read_ctx)));
+      if (state_data.prog_data->args->bridge_sensors)
+        {
+          /* Don't error out, if this fails we can still continue */
+          if (ipmi_sensor_read_ctx_set_flags(state_data.sensor_read_ctx,
+                                             IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS) < 0)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sensor_read_ctx_set_flags: %s\n",
+                             ipmi_sensor_read_ctx_strerror(ipmi_sensor_read_ctx_errnum(state_data.sensor_read_ctx)));
+        }
     }
 
   if (run_cmd_args (&state_data) < 0)
