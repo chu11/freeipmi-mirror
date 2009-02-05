@@ -58,7 +58,11 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
 
-  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_SSIF);
+  if (ctx->type != IPMI_DEVICE_SSIF)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   {
     uint8_t *pkt;
@@ -83,7 +87,7 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 
     if (ipmi_ssif_write (ctx->io.inband.ssif_ctx, pkt, pkt_len) < 0)
       {
-        API_ERR_SET_VIA_SSIF_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
+        API_SSIF_ERRNUM_TO_API_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
         return (-1);
       }
   }
@@ -106,7 +110,7 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 
     if ((read_len = ipmi_ssif_read (ctx->io.inband.ssif_ctx, pkt, pkt_len)) < 0)
       {
-        API_ERR_SET_VIA_SSIF_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
+        API_SSIF_ERRNUM_TO_API_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
         goto cleanup;
       }
 
@@ -149,7 +153,11 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
                       && buf_rs 
                       && buf_rs_len > 0);
 
-  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_SSIF);
+  if (ctx->type != IPMI_DEVICE_SSIF)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   API_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
   pkt_len = hdr_len + buf_rq_len;
@@ -169,7 +177,7 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
   /* Request Block */
   if (ipmi_ssif_write (ctx->io.inband.ssif_ctx, pkt, pkt_len) < 0)
     {
-      API_ERR_SET_VIA_SSIF_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
+      API_SSIF_ERRNUM_TO_API_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
       return (-1);
     }
   
@@ -177,7 +185,7 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
   if ((bytes_read = ipmi_ssif_read (ctx->io.inband.ssif_ctx,
                                     readbuf, buf_rs_len)) < 0)
     {
-      API_ERR_SET_VIA_SSIF_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
+      API_SSIF_ERRNUM_TO_API_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
       return (-1);
     }
 

@@ -223,7 +223,11 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
 
-  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_KCS);
+  if (ctx->type != IPMI_DEVICE_KCS)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
@@ -253,7 +257,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
     if (ipmi_kcs_write (ctx->io.inband.kcs_ctx, pkt, pkt_len) < 0)
       {
-        API_ERR_SET_VIA_KCS_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
+        API_KCS_ERRNUM_TO_API_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
         return (-1);
       }
   }
@@ -278,7 +282,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
                                    pkt, 
                                    pkt_len)) < 0)
       {
-        API_ERR_SET_VIA_KCS_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
+        API_KCS_ERRNUM_TO_API_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
         goto cleanup;
       }
 
@@ -388,7 +392,7 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
   if (ipmi_cmd_get_message (ctx, obj_get_cmd_rs) < 0)
     {
       if (ipmi_check_completion_code (obj_get_cmd_rs, IPMI_COMP_CODE_DATA_NOT_AVAILABLE) == 1)
-	API_ERR_MESSAGE_TIMEOUT_CLEANUP(0);
+        API_ERR_SET_ERRNUM(IPMI_ERR_MESSAGE_TIMEOUT);
       else
 	API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_get_cmd_rs);
       goto cleanup;
@@ -435,7 +439,11 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
 
-  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_KCS);
+  if (ctx->type != IPMI_DEVICE_KCS)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rs, tmpl_ipmb_msg_hdr_rs);
   API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
@@ -459,7 +467,10 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 	      reread_count++;
 	      
 	      if (reread_count > IPMI_KCS_IPMB_REREAD_COUNT)
-		API_ERR_MESSAGE_TIMEOUT_CLEANUP(0);
+                {
+                  API_ERR_SET_ERRNUM(IPMI_ERR_MESSAGE_TIMEOUT);
+                  goto cleanup;
+                }
 	      
 	      continue;
             }
@@ -484,7 +495,10 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 	  retransmission_count++;
 	  
 	  if (retransmission_count > IPMI_KCS_IPMB_RETRANSMISSION_COUNT)
-	    API_ERR_MESSAGE_TIMEOUT_CLEANUP(0);
+            {
+              API_ERR_SET_ERRNUM(IPMI_ERR_MESSAGE_TIMEOUT);
+              goto cleanup;
+            }
 	  
 	  ctx->io.inband.rq_seq = ((ctx->io.inband.rq_seq) + 1) % (IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
 
@@ -531,7 +545,11 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
                       && buf_rs 
                       && buf_rs_len > 0);
 
-  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_KCS);
+  if (ctx->type != IPMI_DEVICE_KCS)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     cmd = buf_rq[0];
@@ -556,14 +574,14 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   /* Request Block */
   if (ipmi_kcs_write (ctx->io.inband.kcs_ctx, pkt, pkt_len) < 0)
     {
-      API_ERR_SET_VIA_KCS_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
+      API_KCS_ERRNUM_TO_API_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
       return (-1);
     }
 
   /* Response Block */
   if ((bytes_read = ipmi_kcs_read (ctx->io.inband.kcs_ctx, readbuf, buf_rs_len)) < 0)
     {
-      API_ERR_SET_VIA_KCS_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
+      API_KCS_ERRNUM_TO_API_ERRNUM(ipmi_kcs_ctx_errnum(ctx->io.inband.kcs_ctx));
       return (-1);
     }
 

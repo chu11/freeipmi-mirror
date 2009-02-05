@@ -69,7 +69,11 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
   
   API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
   
-  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_LAN);
+  if (ctx->type != IPMI_DEVICE_LAN)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   ipmi_lan_cmd_get_session_parameters (ctx,
 				       &authentication_type,
@@ -116,7 +120,11 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
                       && buf_rs
                       && buf_rs_len > 0);
 
-  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_LAN);
+  if (ctx->type != IPMI_DEVICE_LAN)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_lan_raw);
   API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_lan_raw);
@@ -168,7 +176,11 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
   
   API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
   
-  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_LAN_2_0);
+  if (ctx->type != IPMI_DEVICE_LAN_2_0)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   ipmi_lan_2_0_cmd_get_session_parameters (ctx,
 					   &payload_authenticated,
@@ -221,7 +233,11 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
                       && buf_rs
                       && buf_rs_len > 0);
 
-  API_ERR_INTERNAL_ERROR(ctx->type == IPMI_DEVICE_LAN_2_0);
+  if (ctx->type != IPMI_DEVICE_LAN_2_0)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_lan_raw);
   API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_lan_raw);

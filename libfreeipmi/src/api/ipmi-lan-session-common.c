@@ -836,16 +836,24 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
               s->next = sockets;
               sockets = s;
               
-              API_ERR_SYSTEM_ERROR_CLEANUP (!((ctx->io.outofband.sockfd = socket (AF_INET, SOCK_DGRAM, 0)) < 0));
+              if ((ctx->io.outofband.sockfd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+                {
+                  API_ERR_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+                  goto cleanup;
+                }
               
               memset (&addr, 0, sizeof (struct sockaddr_in));
               addr.sin_family = AF_INET;
               addr.sin_port = htons (0);
               addr.sin_addr.s_addr = htonl (INADDR_ANY);
 
-              API_ERR_SYSTEM_ERROR_CLEANUP (!(bind(ctx->io.outofband.sockfd,
-                                                   (struct sockaddr *)&addr,
-                                                   sizeof(struct sockaddr_in)) < 0));
+              if (bind(ctx->io.outofband.sockfd,
+                       (struct sockaddr *)&addr,
+                       sizeof(struct sockaddr_in)) < 0)
+                {
+                  API_ERR_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+                  goto cleanup;
+                }
             }
 
           if (_ipmi_lan_cmd_send (ctx, 

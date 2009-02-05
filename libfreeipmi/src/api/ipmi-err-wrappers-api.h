@@ -289,66 +289,6 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define API_ERR_MESSAGE_TIMEOUT(expr)                                   \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_MESSAGE_TIMEOUT;                           \
-      __API_TRACE;                                                      \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define API_ERR_MESSAGE_TIMEOUT_CLEANUP(expr)                           \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_MESSAGE_TIMEOUT;                           \
-      __API_TRACE;                                                      \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define API_ERR_SYSTEM_ERROR(expr)                                      \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                              \
-      __API_TRACE;                                                      \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define API_ERR_SYSTEM_ERROR_CLEANUP(expr)                              \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;                              \
-      __API_TRACE;                                                      \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define API_ERR_INTERNAL_ERROR(expr)                                    \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                            \
-      __API_TRACE;                                                      \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define API_ERR_INTERNAL_ERROR_CLEANUP(expr)                            \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                            \
-      __API_TRACE;                                                      \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
 #define API_BAD_COMPLETION_CODE_TO_API_ERRNUM(__ctx, __rs)                                                       \
 do {                                                                                                               \
   if (ipmi_check_completion_code((__rs), IPMI_COMP_CODE_NODE_BUSY) == 1                                            \
@@ -436,7 +376,7 @@ do {                                                                \
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                          \
 } while (0)
 
-#define API_ERR_SET_VIA_KCS_ERRNUM(__errnum)                        \
+#define API_KCS_ERRNUM_TO_API_ERRNUM(__errnum)                      \
 do {                                                                \
   __KCS_ERRNUM_TO_API_ERRNUM(__errnum);                             \
   __API_KCS_TRACE;                                                  \
@@ -464,7 +404,7 @@ do {                                                                \
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                          \
 } while (0)
 
-#define API_ERR_SET_VIA_SSIF_ERRNUM(__errnum)                       \
+#define API_SSIF_ERRNUM_TO_API_ERRNUM(__errnum)                     \
 do {                                                                \
   __SSIF_ERRNUM_TO_API_ERRNUM(__errnum);                            \
   __API_SSIF_TRACE;                                                 \
@@ -490,7 +430,7 @@ do {                                                                        \
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                                  \
 } while (0)
 
-#define API_ERR_SET_VIA_OPENIPMI_ERRNUM(__errnum)                       \
+#define API_OPENIPMI_ERRNUM_TO_API_ERRNUM(__errnum)                     \
 do {                                                                    \
   __OPENIPMI_ERRNUM_TO_API_ERRNUM(__errnum);                            \
   __API_OPENIPMI_TRACE;                                                 \
@@ -516,7 +456,7 @@ do {                                                                    \
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                              \
 } while (0)
 
-#define API_ERR_SET_VIA_SUNBMC_ERRNUM(__errnum)                         \
+#define API_SUNBMC_ERRNUM_TO_API_ERRNUM(__errnum)                       \
 do {                                                                    \
   __SUNBMC_ERRNUM_TO_API_ERRNUM(__errnum);                              \
   __API_SUNBMC_TRACE;                                                   \
@@ -538,7 +478,7 @@ do {                                                                    \
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;                              \
 } while (0)
 
-#define API_ERR_SET_VIA_LOCATE_ERRNUM(__errnum)                         \
+#define API_LOCATE_ERRNUM_TO_API_ERRNUM(__errnum)                       \
 do {                                                                    \
   int ___locate_errnum = __errnum;                                      \
   __LOCATE_ERRNUM_TO_API_ERRNUM(__errnum);                              \
