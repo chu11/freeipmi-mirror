@@ -104,7 +104,7 @@ ipmi_cmd_clear_message_flags (ipmi_ctx_t ctx,
                                     oem_2,
                                     obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -152,7 +152,7 @@ ipmi_cmd_get_message_flags (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_message_flags (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -206,7 +206,7 @@ ipmi_cmd_enable_message_channel_receive (ipmi_ctx_t ctx,
                                                channel_operation,
                                                obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -254,7 +254,7 @@ ipmi_cmd_get_message (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_message (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -313,7 +313,7 @@ ipmi_cmd_send_message (ipmi_ctx_t ctx,
                              message_data_len,
                              obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -361,7 +361,7 @@ ipmi_cmd_read_event_message_buffer (ipmi_ctx_t ctx,
 
   if (fill_cmd_read_event_message_buffer (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -405,7 +405,7 @@ ipmi_cmd_get_system_interface_capabilities (ipmi_ctx_t ctx,
   if (fill_cmd_get_system_interface_capabilities (system_interface,
                                                   obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -447,7 +447,7 @@ ipmi_cmd_get_system_interface_capabilities_ssif (ipmi_ctx_t ctx,
   if (fill_cmd_get_system_interface_capabilities (IPMI_SYSTEM_INTERFACE_SSIF,
                                                   obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -489,7 +489,7 @@ ipmi_cmd_get_system_interface_capabilities_kcs (ipmi_ctx_t ctx,
   if (fill_cmd_get_system_interface_capabilities (IPMI_SYSTEM_INTERFACE_KCS,
                                                   obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -530,7 +530,7 @@ ipmi_cmd_get_bt_interface_capabilities (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_bt_interface_capabilities (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -578,7 +578,7 @@ ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx,
                                                         maximum_privilege_level,
                                                         obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -628,7 +628,7 @@ ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
                                                             get_ipmi_v20_extended_data,
                                                             obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -677,7 +677,7 @@ ipmi_cmd_get_session_challenge (ipmi_ctx_t ctx,
                                       user_name_len,
                                       obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -732,7 +732,7 @@ ipmi_cmd_activate_session (ipmi_ctx_t ctx,
                                  initial_outbound_sequence_number,
                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -776,7 +776,7 @@ ipmi_cmd_set_session_privilege_level (ipmi_ctx_t ctx,
   if (fill_cmd_set_session_privilege_level (privilege_level, 
                                             obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -818,7 +818,7 @@ ipmi_cmd_close_session (ipmi_ctx_t ctx,
 
   if (fill_cmd_close_session (close_session_id, obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -883,7 +883,7 @@ ipmi_cmd_set_channel_access (ipmi_ctx_t ctx,
                                    channel_privilege_level_limit_set,
                                    obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -930,7 +930,7 @@ ipmi_cmd_get_channel_access (ipmi_ctx_t ctx,
                                    channel_access_get,
                                    obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -973,7 +973,7 @@ ipmi_cmd_get_channel_info (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_channel_info (channel_number, obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1033,7 +1033,7 @@ ipmi_cmd_set_channel_security_keys (ipmi_ctx_t ctx,
                                           key_value_len,
                                           obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -1093,7 +1093,7 @@ ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
                                 user_session_number_limit,
                                 obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1137,7 +1137,7 @@ ipmi_cmd_get_user_access (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_user_access (channel_number, user_id, obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1185,7 +1185,7 @@ ipmi_cmd_set_user_name (ipmi_ctx_t ctx,
                               user_name_len,
                               obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1227,7 +1227,7 @@ ipmi_cmd_get_user_name (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_user_name (user_id, obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1278,7 +1278,7 @@ ipmi_cmd_set_user_password (ipmi_ctx_t ctx,
                                   password_len,
                                   obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1337,7 +1337,7 @@ ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
                                       password_len,
                                       obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 

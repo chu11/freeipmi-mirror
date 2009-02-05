@@ -62,7 +62,7 @@ ipmi_cmd_get_device_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (fill_cmd_get_device_id (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -102,7 +102,7 @@ ipmi_cmd_cold_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (fill_cmd_cold_reset (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -142,7 +142,7 @@ ipmi_cmd_warm_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (fill_cmd_warm_reset (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -197,7 +197,7 @@ ipmi_cmd_set_acpi_power_state (ipmi_ctx_t ctx,
                                      set_device_power_state,
                                      obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -237,7 +237,7 @@ ipmi_cmd_get_acpi_power_state (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (fill_cmd_get_acpi_power_state (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -277,7 +277,7 @@ ipmi_cmd_get_self_test_results (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (fill_cmd_get_self_test_results (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -319,7 +319,7 @@ ipmi_cmd_get_device_guid (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (fill_cmd_get_device_guid (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 

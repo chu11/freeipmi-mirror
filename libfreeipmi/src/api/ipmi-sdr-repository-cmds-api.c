@@ -64,7 +64,7 @@ ipmi_cmd_get_sdr_repository_info (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_repository_info (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -105,7 +105,7 @@ ipmi_cmd_get_sdr_repository_allocation_info (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_repository_allocation_info (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -146,7 +146,7 @@ ipmi_cmd_reserve_sdr_repository (ipmi_ctx_t ctx,
 
   if (fill_cmd_reserve_sdr_repository (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -195,7 +195,7 @@ ipmi_cmd_get_sdr (ipmi_ctx_t ctx,
                         bytes_to_read,
                         obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -236,7 +236,7 @@ ipmi_cmd_get_sdr_repository_time (ipmi_ctx_t ctx,
   
   if (fill_cmd_get_sdr_repository_time (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -278,7 +278,7 @@ ipmi_cmd_set_sdr_repository_time (ipmi_ctx_t ctx,
   
   if (fill_cmd_set_sdr_repository_time (time, obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   

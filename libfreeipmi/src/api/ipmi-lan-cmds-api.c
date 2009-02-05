@@ -144,7 +144,7 @@ ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
                                                                              oem_level_oem_proprietary,
                                                                              obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -190,7 +190,7 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
                                                             ip_address,
                                                             obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -236,7 +236,7 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
                                                                    ip_address_source,
                                                                    obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -282,7 +282,7 @@ ipmi_cmd_set_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
                                                              mac_address,
                                                              obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -328,7 +328,7 @@ ipmi_cmd_set_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
                                                              subnet_mask,
                                                              obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -378,7 +378,7 @@ ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
                                                                            bmc_generated_arp_responses,
                                                                            obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -424,7 +424,7 @@ ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
                                                                          gratuitous_arp_interval,
                                                                          obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -470,7 +470,7 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
                                                                          ip_address,
                                                                          obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -516,7 +516,7 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
                                                                              mac_address,
                                                                              obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -562,7 +562,7 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
                                                                         ip_address,
                                                                         obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -608,7 +608,7 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
                                                                             mac_address,
                                                                             obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -658,7 +658,7 @@ ipmi_cmd_set_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
                                                                   community_string_len,
                                                                   obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -716,7 +716,7 @@ ipmi_cmd_set_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
                                                                   retries,
                                                                   obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -768,7 +768,7 @@ ipmi_cmd_set_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
                                                                        alerting_mac_address,
                                                                        obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -819,7 +819,7 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
                                                          vlan_id_enable,
                                                          obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -865,7 +865,7 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
                                                                vlan_priority,
                                                                obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -973,7 +973,7 @@ ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
                                                                                                  maximum_privilege_for_cipher_suite_16,
                                                                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1027,7 +1027,7 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (ipmi_ctx_
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1079,7 +1079,7 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1131,7 +1131,7 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1183,7 +1183,7 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1235,7 +1235,7 @@ ipmi_cmd_get_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1287,7 +1287,7 @@ ipmi_cmd_get_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1339,7 +1339,7 @@ ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1391,7 +1391,7 @@ ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1443,7 +1443,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1495,7 +1495,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1547,7 +1547,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1599,7 +1599,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1651,7 +1651,7 @@ ipmi_cmd_get_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1703,7 +1703,7 @@ ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (ipmi_ctx_t ctx
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -1756,7 +1756,7 @@ ipmi_cmd_get_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1809,7 +1809,7 @@ ipmi_cmd_get_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1861,7 +1861,7 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1913,7 +1913,7 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1965,7 +1965,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -2017,7 +2017,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entrie
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -2069,7 +2069,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -2119,7 +2119,7 @@ ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
                                  arp_response_suspend,
                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -2166,7 +2166,7 @@ ipmi_cmd_get_ip_udp_rmcp_statistics (ipmi_ctx_t ctx,
                                            clear_all_statistics,
                                            obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 

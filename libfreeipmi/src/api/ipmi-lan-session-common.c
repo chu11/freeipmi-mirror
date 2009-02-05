@@ -57,6 +57,7 @@
 #include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
+#include "freeipmi/spec/ipmi-comp-code-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
@@ -148,7 +149,7 @@ _session_timed_out(ipmi_ctx_t ctx)
 
   if (gettimeofday(&current, NULL) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -177,7 +178,7 @@ _calculate_timeout(ipmi_ctx_t ctx,
 
   if (gettimeofday(&current, NULL) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -487,14 +488,14 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
   pkt = alloca (pkt_len);
   if (!pkt)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
   memset (pkt, 0, pkt_len);
     
   if (fill_rmcp_hdr_ipmi (ctx->io.outofband.rq.obj_rmcp_hdr) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -504,7 +505,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                         rq_seq,
                         ctx->io.outofband.rq.obj_lan_msg_hdr) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -513,7 +514,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                             session_id,
                             ctx->io.outofband.rq.obj_lan_session_hdr) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -526,7 +527,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                                          pkt,
                                          pkt_len)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -540,13 +541,13 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                        (struct sockaddr *)&(ctx->io.outofband.remote_host), 
                        sizeof(struct sockaddr_in)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
   if (gettimeofday(&ctx->io.outofband.last_send, NULL) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
   
@@ -597,7 +598,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                             NULL, 
                             &timeout)) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           return (-1);
         }
 
@@ -612,7 +613,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                                      (struct sockaddr *) &from, 
                                      &fromlen)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
   
@@ -632,7 +633,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                               obj_cmd_rs,
                               ctx->io.outofband.rs.obj_lan_msg_trlr) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -695,7 +696,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                       obj_cmd_rs,
                                       ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -725,7 +726,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                                          (uint8_t *)password,
                                                          password_len)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -740,7 +741,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                                              (uint8_t *)password,
                                                              password_len)) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
     }
@@ -760,7 +761,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
       if ((ret = _ipmi_check_session_sequence_number(ctx, 
                                                      (uint32_t)rs_session_sequence_number)) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
       
@@ -774,7 +775,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
   if ((ret = ipmi_lan_check_rq_seq(ctx->io.outofband.rs.obj_lan_msg_hdr, 
                                    (rq_seq) ? *rq_seq : 0)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -829,7 +830,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
     {
       if (gettimeofday(&ctx->io.outofband.last_received, NULL) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           return (-1);
         }
     }
@@ -971,7 +972,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 
       if (gettimeofday(&(ctx->io.outofband.last_received), NULL) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
       retval = recv_len;
@@ -1027,7 +1028,7 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
                          ctx->io.outofband.rq_seq,
                          obj_ipmb_msg_hdr_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1035,7 +1036,7 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
                               obj_cmd_rq,
                               obj_ipmb_msg_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1055,7 +1056,7 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
 			     len,
 			     obj_send_cmd_rs) < 0)
     {
-      API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_send_cmd_rs);
+      API_BAD_RESPONSE_TO_API_ERRNUM(ctx, obj_send_cmd_rs);
       goto cleanup;
     }
 
@@ -1066,7 +1067,7 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
   /* "pretend" a request was just sent */
   if (gettimeofday(&ctx->io.outofband.last_send, NULL) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1190,7 +1191,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
       if (gettimeofday(&(ctx->io.outofband.last_received), NULL) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
       retval = recv_len;
@@ -1249,7 +1250,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                                                         ctx->io.outofband.privilege_level,
                                                         obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1371,7 +1372,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                                       IPMI_MAX_USER_NAME_LENGTH,
                                       obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1391,7 +1392,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 
   if ((ret = ipmi_check_completion_code_success (obj_cmd_rs)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1401,7 +1402,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED) == 1)
         API_SET_ERRNUM(IPMI_ERR_USERNAME_INVALID);
       else
-        API_BAD_COMPLETION_CODE_TO_API_ERRNUM (ctx, obj_cmd_rs);
+        API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
   
@@ -1429,7 +1430,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                                  initial_outbound_sequence_number,
                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1453,7 +1454,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 
   if ((ret = ipmi_check_completion_code_success (obj_cmd_rs)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1466,7 +1467,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
       else if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL) == 1)
         API_SET_ERRNUM(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else
-        API_BAD_COMPLETION_CODE_TO_API_ERRNUM(ctx, obj_cmd_rs);
+        API_BAD_RESPONSE_TO_API_ERRNUM(ctx, obj_cmd_rs);
       goto cleanup;
     }
 
@@ -1808,14 +1809,14 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
   pkt = alloca (pkt_len);
   if (!pkt)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
   memset (pkt, 0, pkt_len);
     
   if (fill_rmcp_hdr_ipmi (ctx->io.outofband.rq.obj_rmcp_hdr) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -1828,7 +1829,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                                  session_sequence_number,
                                  ctx->io.outofband.rq.obj_rmcpplus_session_hdr) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -1838,13 +1839,13 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                         rq_seq,
                         ctx->io.outofband.rq.obj_lan_msg_hdr) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
   if (fill_rmcpplus_session_trlr(ctx->io.outofband.rq.obj_rmcpplus_session_trlr) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -1865,7 +1866,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                                              pkt,
                                              pkt_len)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -1891,13 +1892,13 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                        (struct sockaddr *)&(ctx->io.outofband.remote_host), 
                        sizeof(struct sockaddr_in)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
   if (gettimeofday(&ctx->io.outofband.last_send, NULL) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -1960,7 +1961,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                             NULL, 
                             &timeout)) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           return (-1);
         }
 
@@ -1975,7 +1976,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                                      (struct sockaddr *) &from, 
                                      &fromlen)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -2011,7 +2012,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                                     ctx->io.outofband.rs.obj_lan_msg_trlr,
                                     ctx->io.outofband.rs.obj_rmcpplus_session_trlr) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
@@ -2084,7 +2085,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                           obj_cmd_rs,
                                           ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
 
@@ -2103,7 +2104,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                                                          password_len,
                                                                          ctx->io.outofband.rs.obj_rmcpplus_session_trlr)) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
       
@@ -2122,7 +2123,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 	  if ((ret = _ipmi_check_session_sequence_number(ctx, 
                                                          (uint32_t)rs_session_sequence_number)) < 0)
             {
-              API_ERRNO_TO_API_ERRNUM(errno);
+              API_ERRNO_TO_API_ERRNUM(ctx, errno);
               goto cleanup;
             }
 	  
@@ -2136,7 +2137,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
       if ((ret = ipmi_lan_check_rq_seq(ctx->io.outofband.rs.obj_lan_msg_hdr, 
                                        (rq_seq) ? *rq_seq : 0)) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
       
@@ -2336,7 +2337,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
     {
       if (gettimeofday(&ctx->io.outofband.last_received, NULL) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           return (-1);
         }
     }
@@ -2471,7 +2472,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
      
       if (gettimeofday(&ctx->io.outofband.last_received, NULL) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
 
@@ -2618,7 +2619,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
       if (gettimeofday(&(ctx->io.outofband.last_received), NULL) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
 
@@ -2706,7 +2707,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                                             IPMI_GET_IPMI_V20_EXTENDED_DATA,
                                                             obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -2804,7 +2805,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       if (ipmi_get_random((uint8_t *)&(ctx->io.outofband.remote_console_session_id),
                           sizeof(ctx->io.outofband.remote_console_session_id)) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
     } while (!ctx->io.outofband.remote_console_session_id);
@@ -2814,7 +2815,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                          &(ctx->io.outofband.integrity_algorithm),
                                          &(ctx->io.outofband.confidentiality_algorithm)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -2840,7 +2841,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                   ctx->io.outofband.confidentiality_algorithm,
                                   obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -2933,7 +2934,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   if (ipmi_get_random(remote_console_random_number,
                       IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -2979,7 +2980,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                     username_len,
                                     obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -3154,7 +3155,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                                                           username_len,
                                                                           obj_cmd_rs)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -3193,7 +3194,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                            &(ctx->io.outofband.confidentiality_key_ptr),
                                            &(ctx->io.outofband.confidentiality_key_len)) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -3237,7 +3238,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                                                                                      key_exchange_authentication_code,
                                                                                                      IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
   
@@ -3254,7 +3255,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                    key_exchange_authentication_code_len,
                                    obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -3340,7 +3341,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                                                   managed_system_guid_len,
                                                                   obj_cmd_rs)) < 0)
         {
-          API_ERRNO_TO_API_ERRNUM(errno);
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
       

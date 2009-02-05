@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.9 2009-02-05 22:12:16 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.10 2009-02-05 23:17:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -75,7 +75,7 @@ ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
   if (fill_cmd_get_fru_inventory_area_info (fru_device_id, 
                                             obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -122,7 +122,7 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
                               count_to_read,
                               obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 

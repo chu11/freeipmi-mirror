@@ -76,7 +76,7 @@ ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
                        obj_cmd_rq,
                        obj_cmd_rs) < 0)
     {
-      API_SUNBMC_ERRNUM_TO_API_ERRNUM(ipmi_sunbmc_ctx_errnum(ctx->io.inband.sunbmc_ctx));
+      API_SUNBMC_ERRNUM_TO_API_ERRNUM(ctx, ipmi_sunbmc_ctx_errnum(ctx->io.inband.sunbmc_ctx));
       return (-1);
     }
 
@@ -127,7 +127,7 @@ ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
                        obj_cmd_rq,
                        obj_cmd_rs) < 0)
     {
-      API_SUNBMC_ERRNUM_TO_API_ERRNUM(ipmi_sunbmc_ctx_errnum(ctx->io.inband.sunbmc_ctx));
+      API_SUNBMC_ERRNUM_TO_API_ERRNUM(ctx, ipmi_sunbmc_ctx_errnum(ctx->io.inband.sunbmc_ctx));
       goto cleanup;
      }
 

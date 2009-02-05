@@ -127,7 +127,7 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
                                         oem_payload_7,
                                         obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -173,7 +173,7 @@ ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
                                         user_id,
                                         obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 

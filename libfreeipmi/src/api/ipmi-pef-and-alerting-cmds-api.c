@@ -64,7 +64,7 @@ ipmi_cmd_get_pef_capabilities (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (fill_cmd_get_pef_capabilities (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -107,7 +107,7 @@ ipmi_cmd_arm_pef_postpone_timer (ipmi_ctx_t ctx,
   if (fill_cmd_arm_pef_postpone_timer (pef_postpone_timeout,
                                        obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -159,7 +159,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
                                                              pef_alert_startup_delay,
                                                              obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -217,7 +217,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
                                                                            diagnostic_interrupt,
                                                                            obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -260,7 +260,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
   if (fill_cmd_set_pef_configuration_parameters_pef_startup_delay (pef_startup_delay,
                                                                    obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -303,7 +303,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
   if (fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (pef_alert_startup_delay,
                                                                          obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -410,7 +410,7 @@ ipmi_cmd_set_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
                                                                     event_data3_compare2,
                                                                     obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -459,7 +459,7 @@ ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
                                                                           filter_configuration_filter,
                                                                           obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -520,7 +520,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
                                                                     event_specific_alert_string, 
                                                                     obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -569,7 +569,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
                                                                    set_number_for_string,
                                                                    obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -622,7 +622,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
                                                                string_data_len, 
                                                                obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -671,7 +671,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -720,7 +720,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -769,7 +769,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -818,7 +818,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -867,7 +867,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (ipmi_ctx_t ct
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -916,7 +916,7 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -965,7 +965,7 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1014,7 +1014,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_c
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1063,7 +1063,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (ipmi_ctx_t ct
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1112,7 +1112,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1161,7 +1161,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1210,7 +1210,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -1257,7 +1257,7 @@ ipmi_cmd_set_last_processed_event_id (ipmi_ctx_t ctx,
                                             record_id,
                                             obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1297,7 +1297,7 @@ ipmi_cmd_get_last_processed_event_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (fill_cmd_get_last_processed_event_id (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1349,7 +1349,7 @@ ipmi_cmd_alert_immediate (ipmi_ctx_t ctx,
                                 send_alert_string,
                                 obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -1402,7 +1402,7 @@ ipmi_cmd_pet_acknowledge (ipmi_ctx_t ctx,
                                 event_data,
                                 obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 

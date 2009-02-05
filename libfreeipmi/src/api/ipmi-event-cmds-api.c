@@ -68,7 +68,7 @@ ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
                                    event_receiver_lun,
                                    obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -114,7 +114,7 @@ ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
                                    event_receiver_lun,
                                    obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -155,7 +155,7 @@ ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (fill_cmd_get_event_receiver (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 

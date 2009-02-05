@@ -63,7 +63,7 @@ ipmi_cmd_get_sel_info (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_sel_info (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -104,7 +104,7 @@ ipmi_cmd_get_sel_allocation_info (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_sel_allocation_info (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -145,7 +145,7 @@ ipmi_cmd_reserve_sel (ipmi_ctx_t ctx,
 
   if (fill_cmd_reserve_sel (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -194,7 +194,7 @@ ipmi_cmd_get_sel_entry (ipmi_ctx_t ctx,
                               bytes_to_read,
                               obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -239,7 +239,7 @@ ipmi_cmd_delete_sel_entry (ipmi_ctx_t ctx,
                                  record_id,
                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -285,7 +285,7 @@ ipmi_cmd_clear_sel (ipmi_ctx_t ctx,
                           operation,
                           obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -326,7 +326,7 @@ ipmi_cmd_get_sel_time (ipmi_ctx_t ctx,
   
   if (fill_cmd_get_sel_time (obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -368,7 +368,7 @@ ipmi_cmd_set_sel_time (ipmi_ctx_t ctx,
   
   if (fill_cmd_set_sel_time (time, obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -412,7 +412,7 @@ ipmi_cmd_get_auxiliary_log_status (ipmi_ctx_t ctx,
   if (fill_cmd_get_auxiliary_log_status (log_type,
                                          obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   
@@ -462,7 +462,7 @@ ipmi_cmd_set_auxiliary_log_status (ipmi_ctx_t ctx,
                                          log_data_len,
                                          obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
   

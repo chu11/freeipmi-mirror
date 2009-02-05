@@ -73,7 +73,7 @@ ipmi_cmd_set_sensor_hysteresis (ipmi_ctx_t ctx,
                                       negative_going_threshold_hysteresis_value,
                                       obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -120,7 +120,7 @@ ipmi_cmd_get_sensor_hysteresis (ipmi_ctx_t ctx,
                                       hysteresis_mask,
                                       obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -175,7 +175,7 @@ ipmi_cmd_set_sensor_thresholds (ipmi_ctx_t ctx,
                                       upper_non_recoverable_threshold,
                                       obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -218,7 +218,7 @@ ipmi_cmd_get_sensor_thresholds (ipmi_ctx_t ctx,
   if (fill_cmd_get_sensor_thresholds (sensor_number,
                                       obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -274,7 +274,7 @@ ipmi_cmd_set_sensor_event_enable (ipmi_ctx_t ctx,
                                         deassertion_event_bitmask,
                                         obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -398,7 +398,7 @@ ipmi_cmd_set_sensor_event_enable_threshold (ipmi_ctx_t ctx,
                                                   deassertion_event_upper_non_recoverable_going_high,
                                                   obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -540,7 +540,7 @@ ipmi_cmd_set_sensor_event_enable_discrete (ipmi_ctx_t ctx,
                                                  deassertion_event_state_bit_14,
                                                  obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -583,7 +583,7 @@ ipmi_cmd_get_sensor_event_enable (ipmi_ctx_t ctx,
   if (fill_cmd_get_sensor_event_enable (sensor_number,
                                         obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -626,7 +626,7 @@ ipmi_cmd_get_sensor_event_enable_threshold (ipmi_ctx_t ctx,
   if (fill_cmd_get_sensor_event_enable (sensor_number,
                                         obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -669,7 +669,7 @@ ipmi_cmd_get_sensor_event_enable_discrete (ipmi_ctx_t ctx,
   if (fill_cmd_get_sensor_event_enable (sensor_number,
                                         obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -713,7 +713,7 @@ ipmi_cmd_get_sensor_reading (ipmi_ctx_t ctx,
   if (fill_cmd_get_sensor_reading (sensor_number,
                                    obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -758,7 +758,7 @@ ipmi_cmd_get_sensor_reading_ipmb (ipmi_ctx_t ctx,
   if (fill_cmd_get_sensor_reading (sensor_number,
                                    obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -802,7 +802,7 @@ ipmi_cmd_get_sensor_reading_threshold (ipmi_ctx_t ctx,
   if (fill_cmd_get_sensor_reading (sensor_number,
                                    obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -845,7 +845,7 @@ ipmi_cmd_get_sensor_reading_discrete (ipmi_ctx_t ctx,
   if (fill_cmd_get_sensor_reading (sensor_number,
                                    obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(errno);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
