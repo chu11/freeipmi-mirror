@@ -69,9 +69,13 @@ ipmi_cmd_clear_message_flags (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE (ctx->type != IPMI_DEVICE_LAN
-                                                  && ctx->type != IPMI_DEVICE_LAN_2_0);
-
+  if (ctx->type == IPMI_DEVICE_LAN
+      || ctx->type == IPMI_DEVICE_LAN_2_0)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+      return (-1);
+    }
+  
   API_ERR_PARAMETERS (IPMI_MESSAGE_FLAGS_VALID(receive_message_queue)
                       && IPMI_MESSAGE_FLAGS_VALID(event_message_buffer)
                       && IPMI_MESSAGE_FLAGS_VALID(watchdog_pre_timeout_interrupt_flag)
@@ -112,8 +116,12 @@ ipmi_cmd_get_message_flags (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE (ctx->type != IPMI_DEVICE_LAN
-                                                  && ctx->type != IPMI_DEVICE_LAN_2_0);
+  if (ctx->type == IPMI_DEVICE_LAN
+      || ctx->type == IPMI_DEVICE_LAN_2_0)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+      return (-1);
+    }
 
   API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
 
@@ -146,8 +154,12 @@ ipmi_cmd_enable_message_channel_receive (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE (ctx->type != IPMI_DEVICE_LAN
-                                                  && ctx->type != IPMI_DEVICE_LAN_2_0);
+  if (ctx->type == IPMI_DEVICE_LAN
+      || ctx->type == IPMI_DEVICE_LAN_2_0)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+      return (-1);
+    }
 
   API_ERR_PARAMETERS (IPMI_CHANNEL_NUMBER_VALID(channel_number)
                       && IPMI_CHANNEL_OPERATION_VALID (channel_operation)
@@ -182,8 +194,12 @@ ipmi_cmd_get_message (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE (ctx->type != IPMI_DEVICE_LAN
-                                                  && ctx->type != IPMI_DEVICE_LAN_2_0);
+  if (ctx->type == IPMI_DEVICE_LAN
+      || ctx->type == IPMI_DEVICE_LAN_2_0)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+      return (-1);
+    }
 
   API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
 
@@ -261,8 +277,12 @@ ipmi_cmd_read_event_message_buffer (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE (ctx->type != IPMI_DEVICE_LAN
-                                                  && ctx->type != IPMI_DEVICE_LAN_2_0);
+  if (ctx->type == IPMI_DEVICE_LAN
+      || ctx->type == IPMI_DEVICE_LAN_2_0)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+      return (-1);
+    }
 
   API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rs));
 

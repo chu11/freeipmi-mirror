@@ -255,7 +255,11 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_DEVICE_ALREADY_OPEN(ctx->type == IPMI_DEVICE_UNKNOWN);
+  if (ctx->type != IPMI_DEVICE_UNKNOWN)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_ALREADY_OPEN);
+      return (-1);
+    }
 
   API_ERR_PARAMETERS(hostname
                      && !(username && strlen (username) > IPMI_MAX_USER_NAME_LENGTH)
@@ -273,27 +277,47 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
 
   memset(&hent, '\0', sizeof(struct hostent));
 #if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
-  API_ERR_HOSTNAME_INVALID_CLEANUP(!gethostbyname_r(hostname,
-                                                    &hent,
-                                                    buf,
-                                                    GETHOSTBYNAME_AUX_BUFLEN,
-                                                    &hptr,
-                                                    &h_errnop));
-  API_ERR_HOSTNAME_INVALID_CLEANUP(hptr);
+  if (gethostbyname_r(hostname,
+                      &hent,
+                      buf,
+                      GETHOSTBYNAME_AUX_BUFLEN,
+                      &hptr,
+                      &h_errnop))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_HOSTNAME_INVALID);
+      goto cleanup;
+    }
+  if (!hptr)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_HOSTNAME_INVALID);
+      goto cleanup;
+    }
 #elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
-  API_ERR_HOSTNAME_INVALID_CLEANUP(!gethostbyname_r(hostname,
-                                                    &hent,
-                                                    buf,
-                                                    GETHOSTBYNAME_AUX_BUFLEN,
-                                                    &h_errnop));
+  if (gethostbyname_r(hostname,
+                      &hent,
+                      buf,
+                      GETHOSTBYNAME_AUX_BUFLEN,
+                      &h_errnop))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_HOSTNAME_INVALID);
+      goto cleanup;
+    }
 #else  /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  API_ERR_HOSTNAME_INVALID_CLEANUP(!freeipmi_gethostbyname_r(hostname,
-                                                             &hent,
-                                                             buf,
-                                                             GETHOSTBYNAME_AUX_BUFLEN,
-                                                             &hptr,
-                                                             &h_errnop));
-  API_ERR_HOSTNAME_INVALID_CLEANUP(hptr);
+  if (freeipmi_gethostbyname_r(hostname,
+                               &hent,
+                               buf,
+                               GETHOSTBYNAME_AUX_BUFLEN,
+                               &hptr,
+                               &h_errnop))
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_HOSTNAME_INVALID);
+      goto cleanup;
+    }
+  if (!hptr)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_HOSTNAME_INVALID);
+      goto cleanup;
+    }
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
 
   strncpy(ctx->io.outofband.hostname,
@@ -405,7 +429,11 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_DEVICE_ALREADY_OPEN(ctx->type == IPMI_DEVICE_UNKNOWN);
+  if (ctx->type != IPMI_DEVICE_UNKNOWN)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_ALREADY_OPEN);
+      return (-1);
+    }
 
   API_ERR_PARAMETERS(hostname
                      && !(username && strlen (username) > IPMI_MAX_USER_NAME_LENGTH)
@@ -570,7 +598,11 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_DEVICE_ALREADY_OPEN(ctx->type == IPMI_DEVICE_UNKNOWN);
+  if (ctx->type != IPMI_DEVICE_UNKNOWN)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_ALREADY_OPEN);
+      return (-1);
+    }
 
   API_ERR_PARAMETERS(driver_type == IPMI_DEVICE_KCS
                      || driver_type == IPMI_DEVICE_SMIC
@@ -639,7 +671,11 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
       
       /* At this point we only support SYSTEM_IO, i.e. inb/outb style IO. 
 	 If we cant find the bass address, we better exit. -- Anand Babu */
-      API_ERR_DEVICE_NOT_SUPPORTED_CLEANUP (locate_info.address_space_id == IPMI_ADDRESS_SPACE_ID_SYSTEM_IO);
+      if (locate_info.address_space_id != IPMI_ADDRESS_SPACE_ID_SYSTEM_IO)
+        {
+          API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_SUPPORTED);
+          return (-1);
+        }
       
       API_ERR_CLEANUP ((ctx->io.inband.kcs_ctx = ipmi_kcs_ctx_create()));
       
@@ -836,7 +872,11 @@ ipmi_cmd (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_DEVICE_NOT_OPEN(ctx->type != IPMI_DEVICE_UNKNOWN);
+  if (ctx->type == IPMI_DEVICE_UNKNOWN)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_LAN
       && ctx->type != IPMI_DEVICE_LAN_2_0
@@ -970,7 +1010,11 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_DEVICE_NOT_OPEN(ctx->type != IPMI_DEVICE_UNKNOWN);
+  if (ctx->type == IPMI_DEVICE_UNKNOWN)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_LAN
       && ctx->type != IPMI_DEVICE_LAN_2_0
@@ -1006,7 +1050,10 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
 					 obj_cmd_rq,
 					 obj_cmd_rs);
   else
-    API_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE(0);
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+      return (-1);
+    }
                          
   /* errnum set in ipmi_*_cmd functions */
   return (status);
@@ -1025,7 +1072,11 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_DEVICE_NOT_OPEN(ctx->type != IPMI_DEVICE_UNKNOWN);
+  if (ctx->type == IPMI_DEVICE_UNKNOWN)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_LAN
       && ctx->type != IPMI_DEVICE_LAN_2_0
@@ -1106,7 +1157,11 @@ ipmi_ctx_close (ipmi_ctx_t ctx)
 {
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_DEVICE_NOT_OPEN(ctx->type != IPMI_DEVICE_UNKNOWN);
+  if (ctx->type == IPMI_DEVICE_UNKNOWN)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_LAN
       && ctx->type != IPMI_DEVICE_LAN_2_0

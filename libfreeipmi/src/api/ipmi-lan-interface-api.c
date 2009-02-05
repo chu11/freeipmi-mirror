@@ -61,8 +61,17 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_DEVICE_NOT_OPEN(ctx->type == IPMI_DEVICE_LAN);
-  API_ERR_DEVICE_NOT_OPEN(ctx->io.outofband.sockfd); 
+  if (ctx->type != IPMI_DEVICE_LAN)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
+
+  if (!ctx->io.outofband.sockfd)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
 
   API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rq)
                       && fiid_obj_valid(obj_cmd_rs));
@@ -112,8 +121,17 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_DEVICE_NOT_OPEN(ctx->type == IPMI_DEVICE_LAN);
-  API_ERR_DEVICE_NOT_OPEN(ctx->io.outofband.sockfd); 
+  if (ctx->type != IPMI_DEVICE_LAN)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
+
+  if (!ctx->io.outofband.sockfd)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
 
   API_ERR_PARAMETERS (buf_rq
                       && buf_rq_len > 0
@@ -168,8 +186,17 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_DEVICE_NOT_OPEN(ctx->type == IPMI_DEVICE_LAN_2_0);
-  API_ERR_DEVICE_NOT_OPEN(ctx->io.outofband.sockfd); 
+  if (ctx->type != IPMI_DEVICE_LAN_2_0)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
+
+  if (!ctx->io.outofband.sockfd)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
 
   API_ERR_PARAMETERS (fiid_obj_valid(obj_cmd_rq)
                       && fiid_obj_valid(obj_cmd_rs));
@@ -225,8 +252,17 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
 
   API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_ERR_DEVICE_NOT_OPEN(ctx->type == IPMI_DEVICE_LAN_2_0);
-  API_ERR_DEVICE_NOT_OPEN(ctx->io.outofband.sockfd); 
+  if (ctx->type != IPMI_DEVICE_LAN_2_0)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
+
+  if (!ctx->io.outofband.sockfd)
+    {
+      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
 
   API_ERR_PARAMETERS (buf_rq
                       && buf_rq_len > 0
