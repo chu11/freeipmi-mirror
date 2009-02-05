@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.8 2009-02-05 19:28:27 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.9 2009-02-05 22:12:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -64,7 +64,7 @@ ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -72,8 +72,12 @@ ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_fru_inventory_area_info_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_fru_inventory_area_info (fru_device_id, 
-                                                           obj_cmd_rq) < 0));
+  if (fill_cmd_get_fru_inventory_area_info (fru_device_id, 
+                                            obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -105,7 +109,7 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -113,10 +117,14 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_read_fru_data_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_read_fru_data (fru_device_id, 
-                                             fru_inventory_offset_to_read,
-                                             count_to_read,
-                                             obj_cmd_rq) < 0));
+  if (fill_cmd_read_fru_data (fru_device_id, 
+                              fru_inventory_offset_to_read,
+                              count_to_read,
+                              obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 

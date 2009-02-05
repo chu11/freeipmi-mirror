@@ -67,20 +67,20 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
 
   if (ctx->type != IPMI_DEVICE_LAN)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
   if (!ctx->io.outofband.sockfd)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -88,7 +88,7 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
   
   if (ctx->type != IPMI_DEVICE_LAN)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -135,13 +135,13 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
 
   if (ctx->type != IPMI_DEVICE_LAN)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
   if (!ctx->io.outofband.sockfd)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
@@ -150,13 +150,13 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
       || !buf_rs
       || !buf_rs_len)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_LAN)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -208,20 +208,20 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
 
   if (ctx->type != IPMI_DEVICE_LAN_2_0)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
   if (!ctx->io.outofband.sockfd)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
  
@@ -229,7 +229,7 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
   
   if (ctx->type != IPMI_DEVICE_LAN_2_0)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -282,13 +282,13 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
 
   if (ctx->type != IPMI_DEVICE_LAN_2_0)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
   if (!ctx->io.outofband.sockfd)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
@@ -297,13 +297,13 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
       || !buf_rs
       || !buf_rs_len)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }   
 
   if (ctx->type != IPMI_DEVICE_LAN_2_0)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 

@@ -60,7 +60,7 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -68,32 +68,45 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 
   if (ctx->type != IPMI_DEVICE_SSIF)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
   {
     uint8_t *pkt;
     uint32_t pkt_len;
-    int32_t hdr_len, cmd_len;
+    int32_t hdr_len, cmd_len, send_len;
 
     API_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
     API_FIID_OBJ_LEN_BYTES (cmd_len, obj_cmd_rq);
     pkt_len = hdr_len + cmd_len;
 
     pkt = alloca (pkt_len);
+    if (!pkt)
+      {
+        API_ERRNO_TO_API_ERRNUM(errno);
+        return (-1);
+      }
     memset (pkt, 0, pkt_len);
-    API_ERR (pkt);
 
-    API_ERR (fill_hdr_ipmi_kcs (ctx->lun,
-				ctx->net_fn,
-				ctx->io.inband.rq.obj_hdr) == 0);
-    API_ERR (assemble_ipmi_kcs_pkt (ctx->io.inband.rq.obj_hdr,
-				    obj_cmd_rq,
-				    pkt,
-				    pkt_len) > 0);
+    if (fill_hdr_ipmi_kcs (ctx->lun,
+                           ctx->net_fn,
+                           ctx->io.inband.rq.obj_hdr) < 0)
+      {
+        API_ERRNO_TO_API_ERRNUM(errno);
+        return (-1);
+      }
 
-    if (ipmi_ssif_write (ctx->io.inband.ssif_ctx, pkt, pkt_len) < 0)
+    if ((send_len = assemble_ipmi_kcs_pkt (ctx->io.inband.rq.obj_hdr,
+                                           obj_cmd_rq,
+                                           pkt,
+                                           pkt_len)) < 0)
+      {
+        API_ERRNO_TO_API_ERRNUM(errno);
+        return (-1);
+      }
+
+    if (ipmi_ssif_write (ctx->io.inband.ssif_ctx, pkt, send_len) < 0)
       {
         API_SSIF_ERRNUM_TO_API_ERRNUM(ipmi_ssif_ctx_errnum(ctx->io.inband.ssif_ctx));
         return (-1);
@@ -113,7 +126,11 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
     API_FIID_TEMPLATE_LEN_BYTES_CLEANUP(cmd_len, tmpl);
     pkt_len = hdr_len + cmd_len;
 
-    API_ERR_CLEANUP ((pkt = alloca (pkt_len)));
+    if (!(pkt = alloca (pkt_len)))
+      {
+        API_ERRNO_TO_API_ERRNUM(errno);
+        goto cleanup;
+      }
     memset (pkt, 0, pkt_len);
 
     if ((read_len = ipmi_ssif_read (ctx->io.inband.ssif_ctx, pkt, pkt_len)) < 0)
@@ -124,14 +141,18 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 
     if (!read_len)
       {
-        API_ERR_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+        API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
 
-    API_ERR_CLEANUP (!(unassemble_ipmi_kcs_pkt (pkt,
-						read_len,
-						ctx->io.inband.rs.obj_hdr,
-						obj_cmd_rs) < 0));
+    if (unassemble_ipmi_kcs_pkt (pkt,
+                                 read_len,
+                                 ctx->io.inband.rs.obj_hdr,
+                                 obj_cmd_rs) < 0)
+      {
+        API_ERRNO_TO_API_ERRNUM(errno);
+        goto cleanup;
+      }
 
     rv = 0;
   cleanup:
@@ -168,13 +189,13 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
       || !buf_rs 
       || !buf_rs_len)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_SSIF)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -182,13 +203,26 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
   pkt_len = hdr_len + buf_rq_len;
 
   pkt = alloca(pkt_len);
-  API_ERR (pkt);
-  readbuf = alloca(buf_rs_len);
-  API_ERR (readbuf);
+  if (!pkt)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      return (-1);
+    }
 
-  API_ERR (fill_hdr_ipmi_kcs (ctx->lun,
-			      ctx->net_fn,
-			      ctx->io.inband.rq.obj_hdr) == 0);
+  readbuf = alloca(buf_rs_len);
+  if (!readbuf)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      return (-1);
+    }
+
+  if (fill_hdr_ipmi_kcs (ctx->lun,
+                         ctx->net_fn,
+                         ctx->io.inband.rq.obj_hdr) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      return (-1);
+    }
   
   API_FIID_OBJ_GET_ALL(ctx->io.inband.rq.obj_hdr, pkt, pkt_len);
   memcpy(pkt + hdr_len, buf_rq, buf_rq_len);
@@ -210,7 +244,7 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
 
   if (!bytes_read)
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+      API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
       return -1;
     }
 

@@ -53,7 +53,7 @@ ipmi_cmd_get_sel_info (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -61,7 +61,11 @@ ipmi_cmd_get_sel_info (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sel_info_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_sel_info (obj_cmd_rq) < 0));
+  if (fill_cmd_get_sel_info (obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -90,7 +94,7 @@ ipmi_cmd_get_sel_allocation_info (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -98,7 +102,11 @@ ipmi_cmd_get_sel_allocation_info (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sel_allocation_info_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_sel_allocation_info (obj_cmd_rq) < 0));
+  if (fill_cmd_get_sel_allocation_info (obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -127,7 +135,7 @@ ipmi_cmd_reserve_sel (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -135,7 +143,11 @@ ipmi_cmd_reserve_sel (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_reserve_sel_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_reserve_sel (obj_cmd_rq) < 0));
+  if (fill_cmd_reserve_sel (obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -168,7 +180,7 @@ ipmi_cmd_get_sel_entry (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -176,11 +188,15 @@ ipmi_cmd_get_sel_entry (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sel_entry_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_sel_entry (reservation_id,
-					     record_id,
-					     offset_into_record,
-					     bytes_to_read,
-					     obj_cmd_rq) < 0));
+  if (fill_cmd_get_sel_entry (reservation_id,
+                              record_id,
+                              offset_into_record,
+                              bytes_to_read,
+                              obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -211,7 +227,7 @@ ipmi_cmd_delete_sel_entry (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -219,9 +235,13 @@ ipmi_cmd_delete_sel_entry (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_delete_sel_entry_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_delete_sel_entry (reservation_id, 
-						record_id,
-						obj_cmd_rq) < 0));
+  if (fill_cmd_delete_sel_entry (reservation_id, 
+                                 record_id,
+                                 obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
   
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -253,7 +273,7 @@ ipmi_cmd_clear_sel (ipmi_ctx_t ctx,
   if (!IPMI_SEL_CLEAR_OPERATION_VALID(operation)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -261,9 +281,13 @@ ipmi_cmd_clear_sel (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_clear_sel_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_clear_sel (reservation_id, 
-					 operation,
-					 obj_cmd_rq) < 0));
+  if (fill_cmd_clear_sel (reservation_id, 
+                          operation,
+                          obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -292,7 +316,7 @@ ipmi_cmd_get_sel_time (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -300,7 +324,11 @@ ipmi_cmd_get_sel_time (ipmi_ctx_t ctx,
   
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sel_time_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_get_sel_time (obj_cmd_rq) < 0));
+  if (fill_cmd_get_sel_time (obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
   
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -330,7 +358,7 @@ ipmi_cmd_set_sel_time (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -338,7 +366,11 @@ ipmi_cmd_set_sel_time (ipmi_ctx_t ctx,
   
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sel_time_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_set_sel_time (time, obj_cmd_rq) < 0));
+  if (fill_cmd_set_sel_time (time, obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
   
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -369,7 +401,7 @@ ipmi_cmd_get_auxiliary_log_status (ipmi_ctx_t ctx,
   if (!IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -377,8 +409,12 @@ ipmi_cmd_get_auxiliary_log_status (ipmi_ctx_t ctx,
   
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_auxiliary_log_status_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_get_auxiliary_log_status (log_type,
-                                                        obj_cmd_rq) < 0));
+  if (fill_cmd_get_auxiliary_log_status (log_type,
+                                         obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
   
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -413,7 +449,7 @@ ipmi_cmd_set_auxiliary_log_status (ipmi_ctx_t ctx,
       || !log_data_len
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -421,10 +457,14 @@ ipmi_cmd_set_auxiliary_log_status (ipmi_ctx_t ctx,
   
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_auxiliary_log_status_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_set_auxiliary_log_status (log_type,
-                                                        log_data,
-                                                        log_data_len,
-                                                        obj_cmd_rq) < 0));
+  if (fill_cmd_set_auxiliary_log_status (log_type,
+                                         log_data,
+                                         log_data_len,
+                                         obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
   
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 

@@ -115,56 +115,36 @@ do {                                                                         \
 #define __API_LOCATE_TRACE
 #endif /* IPMI_TRACE */
 
-#define __ERRNO_TO_API_ERRNUM                      \
-do {                                               \
-  if (errno == 0)                                  \
-    ctx->errnum = IPMI_ERR_SUCCESS;                \
-  else if (errno == ENOMEM)                        \
-    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
-  else if (errno == ENODEV)                        \
-    ctx->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;   \
-  else if (errno == EINVAL)                        \
-    ctx->errnum = IPMI_ERR_LIBRARY_ERROR;          \
-  else                                             \
-    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;         \
-} while (0)
-
 #define API_TRACE(__msgstr, __msgnum)                                   \
 do {                                                                    \
   __API_MSG_TRACE(__msgstr, __msgnum);                                  \
 } while (0)   
 
-#define API_ERR_SET_ERRNO(__errno)                                      \
-do {                                                                    \
-  errno = __errno;                                                      \
-  __TRACE_ERRNO;                                                        \
-} while (0)   
-
-#define API_ERR_SET_ERRNUM(__errnum)                                    \
+#define API_SET_ERRNUM(__errnum)                                        \
 do {                                                                    \
   ctx->errnum = (__errnum);                                             \
   __API_CTX_TRACE;                                                      \
 } while (0)   
 
-#define API_ERR(expr)                                                   \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __ERRNO_TO_API_ERRNUM;                                            \
-      __TRACE_ERRNO;                                                    \
-      return (-1);                                                      \
-    }                                                                   \
+#define __ERRNO_TO_API_ERRNUM(___errno)            \
+do {                                               \
+  if ((___errno) == 0)                             \
+    ctx->errnum = IPMI_ERR_SUCCESS;                \
+  else if ((___errno) == ENOMEM)                   \
+    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
+  else if ((___errno) == ENODEV)                   \
+    ctx->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;   \
+  else if ((___errno) == EINVAL)                   \
+    ctx->errnum = IPMI_ERR_LIBRARY_ERROR;          \
+  else                                             \
+    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;         \
 } while (0)
 
-#define API_ERR_CLEANUP(expr)                                           \
+#define API_ERRNO_TO_API_ERRNUM(__errno)                                \
 do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __ERRNO_TO_API_ERRNUM;                                            \
-      __TRACE_ERRNO;                                                    \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
+  __ERRNO_TO_API_ERRNUM(__errno);                                       \
+  __TRACE_ERRNO;                                                        \
+} while (0)   
 
 #define __BAD_COMPLETION_CODE_TO_API_ERRNUM(__ctx, __rs)                                                           \
 do {                                                                                                               \
@@ -210,7 +190,11 @@ do {                                                                            
                 (__rq),                                                                                    \
                 (__rs)) < 0)                                                                               \
     goto cleanup;                                                                                          \
-  API_ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));                           \
+  if ((__rv = ipmi_check_completion_code_success ((__rs))) < 0)                                            \
+    {                                                                                                      \
+      API_ERRNO_TO_API_ERRNUM(errno);                                                                      \
+      goto cleanup;                                                                                        \
+    }                                                                                                      \
   if (!__rv)                                                                                               \
     {                                                                                                      \
       __BAD_COMPLETION_CODE_TO_API_ERRNUM((__ctx), (__rs));                                                \
@@ -230,7 +214,11 @@ do {                                                                            
                      (__rq),                                                                               \
                      (__rs)) < 0)                                                                          \
     goto cleanup;                                                                                          \
-  API_ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));                           \
+  if ((__rv = ipmi_check_completion_code_success ((__rs))) < 0)                                            \
+    {                                                                                                      \
+      API_ERRNO_TO_API_ERRNUM(errno);                                                                      \
+      goto cleanup;                                                                                        \
+    }                                                                                                      \
   if (!__rv)                                                                                               \
     {                                                                                                      \
       __BAD_COMPLETION_CODE_TO_API_ERRNUM((__ctx), (__rs));                                                \

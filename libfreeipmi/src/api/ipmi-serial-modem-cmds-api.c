@@ -65,7 +65,7 @@ ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
       || !IPMI_CONNECT_MODE_VALID(connect_mode)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -73,12 +73,16 @@ ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_connection_mode_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_set_serial_modem_configuration_connection_mode (channel_number, 
-									      basic_mode, 
-									      ppp_mode, 
-									      terminal_mode, 
-									      connect_mode,
-									      obj_cmd_rq) < 0));
+  if (fill_cmd_set_serial_modem_configuration_connection_mode (channel_number, 
+                                                               basic_mode, 
+                                                               ppp_mode, 
+                                                               terminal_mode, 
+                                                               connect_mode,
+                                                               obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -115,7 +119,7 @@ ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
       || !IPMI_BIT_RATE_VALID(bit_rate)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -123,11 +127,15 @@ ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (channel_number, 
-											   dtr_hangup,
-											   flow_control,
-											   bit_rate,
-											   obj_cmd_rq) < 0));
+  if (fill_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (channel_number, 
+                                                                            dtr_hangup,
+                                                                            flow_control,
+                                                                            bit_rate,
+                                                                            obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -159,7 +167,7 @@ ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -167,9 +175,13 @@ ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_page_blackout_interval_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_serial_modem_configuration_page_blackout_interval (channel_number, 
-										     page_blackout_interval,
-										     obj_cmd_rq) < 0));
+  if (fill_cmd_set_serial_modem_configuration_page_blackout_interval (channel_number, 
+                                                                      page_blackout_interval,
+                                                                      obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -201,7 +213,7 @@ ipmi_cmd_set_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -209,9 +221,13 @@ ipmi_cmd_set_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_call_retry_interval_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_serial_modem_configuration_call_retry_interval (channel_number, 
-										  call_retry_interval,
-										  obj_cmd_rq) < 0));
+  if (fill_cmd_set_serial_modem_configuration_call_retry_interval (channel_number, 
+                                                                   call_retry_interval,
+                                                                   obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -246,7 +262,7 @@ ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
       || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -254,12 +270,16 @@ ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_serial_modem_configuration_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_serial_modem_configuration (channel_number, 
-							      get_parameter, 
-							      IPMI_SERIAL_MODEM_PARAMETER_CONNECTION_MODE, 
-							      set_selector, 
-							      block_selector,
-							      obj_cmd_rq) < 0));
+  if (fill_cmd_get_serial_modem_configuration (channel_number, 
+                                               get_parameter, 
+                                               IPMI_SERIAL_MODEM_PARAMETER_CONNECTION_MODE, 
+                                               set_selector, 
+                                               block_selector,
+                                               obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -294,7 +314,7 @@ ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
       || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -302,12 +322,16 @@ ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_serial_modem_configuration_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_serial_modem_configuration (channel_number, 
-							      get_parameter, 
-							      IPMI_SERIAL_MODEM_PARAMETER_IPMI_MESSAGING_COMM_SETTINGS, 
-							      set_selector, 
-							      block_selector,
-							      obj_cmd_rq) < 0));
+  if (fill_cmd_get_serial_modem_configuration (channel_number, 
+                                               get_parameter, 
+                                               IPMI_SERIAL_MODEM_PARAMETER_IPMI_MESSAGING_COMM_SETTINGS, 
+                                               set_selector, 
+                                               block_selector,
+                                               obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -342,7 +366,7 @@ ipmi_cmd_get_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
       || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -350,12 +374,16 @@ ipmi_cmd_get_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_serial_modem_configuration_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_serial_modem_configuration (channel_number, 
-							      get_parameter, 
-							      IPMI_SERIAL_MODEM_PARAMETER_CALL_RETRY_INTERVAL, 
-							      set_selector, 
-							      block_selector,
-							      obj_cmd_rq) < 0));
+  if (fill_cmd_get_serial_modem_configuration (channel_number, 
+                                               get_parameter, 
+                                               IPMI_SERIAL_MODEM_PARAMETER_CALL_RETRY_INTERVAL, 
+                                               set_selector, 
+                                               block_selector,
+                                               obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -390,7 +418,7 @@ ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
       || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -398,12 +426,16 @@ ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_serial_modem_configuration_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_serial_modem_configuration (channel_number, 
-							      get_parameter, 
-							      IPMI_SERIAL_MODEM_PARAMETER_PAGE_BLACKOUT_INTERVAL, 
-							      set_selector, 
-							      block_selector,
-							      obj_cmd_rq) < 0));
+  if (fill_cmd_get_serial_modem_configuration (channel_number, 
+                                               get_parameter, 
+                                               IPMI_SERIAL_MODEM_PARAMETER_PAGE_BLACKOUT_INTERVAL, 
+                                               set_selector, 
+                                               block_selector,
+                                               obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
   
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 

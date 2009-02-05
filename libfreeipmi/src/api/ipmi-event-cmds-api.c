@@ -56,7 +56,7 @@ ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
   if (!IPMI_BMC_LUN_VALID(event_receiver_lun)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -64,9 +64,13 @@ ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_event_receiver_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_event_receiver (event_receiver_slave_address,
-                                                  event_receiver_lun,
-                                                  obj_cmd_rq) < 0));
+  if (fill_cmd_set_event_receiver (event_receiver_slave_address,
+                                   event_receiver_lun,
+                                   obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -98,7 +102,7 @@ ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -106,9 +110,13 @@ ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_event_receiver_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_set_event_receiver (event_receiver_slave_address,
-                                                  event_receiver_lun,
-						  obj_cmd_rq) < 0));
+  if (fill_cmd_set_event_receiver (event_receiver_slave_address,
+                                   event_receiver_lun,
+                                   obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_IPMB_CLEANUP (ctx, 
                                  slave_address,
@@ -137,7 +145,7 @@ ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -145,7 +153,11 @@ ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_event_receiver_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_event_receiver (obj_cmd_rq) < 0));
+  if (fill_cmd_get_event_receiver (obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 

@@ -56,7 +56,7 @@ ipmi_cmd_get_chassis_capabilities (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -64,7 +64,11 @@ ipmi_cmd_get_chassis_capabilities (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_chassis_capabilities_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_chassis_capabilities (obj_cmd_rq) < 0));
+  if (fill_cmd_get_chassis_capabilities (obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -93,7 +97,7 @@ ipmi_cmd_get_chassis_status (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -101,7 +105,11 @@ ipmi_cmd_get_chassis_status (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_chassis_status_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_chassis_status (obj_cmd_rq) < 0));
+  if (fill_cmd_get_chassis_status (obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -132,7 +140,7 @@ ipmi_cmd_chassis_control (ipmi_ctx_t ctx,
   if (!IPMI_CHASSIS_CONTROL_VALID (chassis_control)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -140,7 +148,11 @@ ipmi_cmd_chassis_control (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_chassis_control_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_chassis_control (chassis_control, obj_cmd_rq) < 0));
+  if (fill_cmd_chassis_control (chassis_control, obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -173,7 +185,7 @@ ipmi_cmd_chassis_identify (ipmi_ctx_t ctx,
        && !IPMI_CHASSIS_FORCE_IDENTIFY_VALID (*force_identify))
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -181,9 +193,13 @@ ipmi_cmd_chassis_identify (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_chassis_identify_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_chassis_identify (identify_interval, 
-                                                force_identify, 
-                                                obj_cmd_rq) < 0));
+  if (fill_cmd_chassis_identify (identify_interval, 
+                                 force_identify, 
+                                 obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -220,7 +236,7 @@ ipmi_cmd_set_front_panel_enables (ipmi_ctx_t ctx,
       || !IPMI_CHASSIS_BUTTON_VALID(disable_standby_button_for_entering_standby)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -228,11 +244,15 @@ ipmi_cmd_set_front_panel_enables (ipmi_ctx_t ctx,
   
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_front_panel_enables_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_set_front_panel_enables (disable_power_off_button_for_power_off_only,
-                                                       disable_reset_button,
-                                                       disable_diagnostic_interrupt_button,
-                                                       disable_standby_button_for_entering_standby,
-                                                       obj_cmd_rq) < 0));
+  if (fill_cmd_set_front_panel_enables (disable_power_off_button_for_power_off_only,
+                                        disable_reset_button,
+                                        disable_diagnostic_interrupt_button,
+                                        disable_standby_button_for_entering_standby,
+                                        obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
   
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -263,7 +283,7 @@ ipmi_cmd_set_power_restore_policy (ipmi_ctx_t ctx,
   if (!IPMI_POWER_RESTORE_POLICY_VALID (power_restore_policy)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -271,8 +291,12 @@ ipmi_cmd_set_power_restore_policy (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_power_restore_policy_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_power_restore_policy (power_restore_policy, 
-                                                        obj_cmd_rq) < 0));
+  if (fill_cmd_set_power_restore_policy (power_restore_policy, 
+                                         obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -302,7 +326,7 @@ ipmi_cmd_set_power_cycle_interval (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -310,7 +334,11 @@ ipmi_cmd_set_power_cycle_interval (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_power_cycle_interval_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_power_cycle_interval (interval, obj_cmd_rq) < 0));
+  if (fill_cmd_set_power_cycle_interval (interval, obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -338,7 +366,7 @@ ipmi_cmd_get_system_restart_cause (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -346,7 +374,11 @@ ipmi_cmd_get_system_restart_cause (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_restart_cause_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_system_restart_cause (obj_cmd_rq) < 0));
+  if (fill_cmd_get_system_restart_cause (obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -378,17 +410,22 @@ ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   API_FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_rq);
 
-  API_ERR_CLEANUP (!fill_cmd_set_system_boot_options (parameter_selector,
-                                                      configuration_parameter_data,
-                                                      data_len,  
-                                                      obj_cmd_rq) < 0);
+  if (fill_cmd_set_system_boot_options (parameter_selector,
+                                        configuration_parameter_data,
+                                        data_len,  
+                                        obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
+
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
                             IPMI_NET_FN_CHASSIS_RQ, 
@@ -416,7 +453,7 @@ ipmi_cmd_set_system_boot_options_set_in_progress (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -424,7 +461,11 @@ ipmi_cmd_set_system_boot_options_set_in_progress (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_set_in_progress_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_system_boot_options_set_in_progress (value, obj_cmd_rq) < 0));
+  if (fill_cmd_set_system_boot_options_set_in_progress (value, obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -465,9 +506,9 @@ ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
           && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*sms_handled_boot_info))
       || (oem_handled_boot_info 
           && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*oem_handled_boot_info))
-      && fiid_obj_valid(obj_cmd_rs))
+      || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -475,12 +516,16 @@ ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_system_boot_options_boot_info_acknowledge (bios_or_post_handled_boot_info,
-                                                                             os_loader_handled_boot_info, 
-                                                                             os_or_service_partition_handled_boot_info, 
-                                                                             sms_handled_boot_info,
-                                                                             oem_handled_boot_info,
-                                                                             obj_cmd_rq) < 0));
+  if (fill_cmd_set_system_boot_options_boot_info_acknowledge (bios_or_post_handled_boot_info,
+                                                              os_loader_handled_boot_info, 
+                                                              os_or_service_partition_handled_boot_info, 
+                                                              sms_handled_boot_info,
+                                                              oem_handled_boot_info,
+                                                              obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -518,7 +563,7 @@ ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
       || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_PEF)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -526,12 +571,16 @@ ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (dont_clear_on_power_up,
-                                                                                        dont_clear_on_pushbutton_rest_soft_reset,
-                                                                                        dont_clear_on_watchdog_timeout,
-                                                                                        dont_clear_on_chassis_control,
-                                                                                        dont_clear_on_PEF,
-                                                                                        obj_cmd_rq) < 0));
+  if (fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (dont_clear_on_power_up,
+                                                                         dont_clear_on_pushbutton_rest_soft_reset,
+                                                                         dont_clear_on_watchdog_timeout,
+                                                                         dont_clear_on_chassis_control,
+                                                                         dont_clear_on_PEF,
+                                                                         obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -591,7 +640,7 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
       || !IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_BIOS_MUX_CONTROL_OVERRIDE_VALID (bios_mux_control_override)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -599,23 +648,27 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_flags_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_system_boot_options_boot_flags (bios_boot_type,
-                                                                  boot_flags_persistent,
-                                                                  boot_flags_valid,
-                                                                  lock_out_reset_button,
-                                                                  screen_blank,
-                                                                  boot_device,
-                                                                  lock_keyboard,
-                                                                  cmos_clear,
-                                                                  console_redirection,
-                                                                  lock_out_sleep_button,
-                                                                  user_password_bypass,
-                                                                  force_progress_event_traps,
-                                                                  firmware_bios_verbosity,
-                                                                  lock_out_via_power_button,
-                                                                  bios_mux_control_override,
-                                                                  bios_shared_mode_override,
-                                                                  obj_cmd_rq) < 0));
+  if (fill_cmd_set_system_boot_options_boot_flags (bios_boot_type,
+                                                   boot_flags_persistent,
+                                                   boot_flags_valid,
+                                                   lock_out_reset_button,
+                                                   screen_blank,
+                                                   boot_device,
+                                                   lock_keyboard,
+                                                   cmos_clear,
+                                                   console_redirection,
+                                                   lock_out_sleep_button,
+                                                   user_password_bypass,
+                                                   force_progress_event_traps,
+                                                   firmware_bios_verbosity,
+                                                   lock_out_via_power_button,
+                                                   bios_mux_control_override,
+                                                   bios_shared_mode_override,
+                                                   obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
   
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -646,7 +699,7 @@ ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -654,10 +707,14 @@ ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_boot_options_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_system_boot_options (parameter_selector, 
-                                                       set_selector, 
-                                                       block_selector, 
-                                                       obj_cmd_rq) < 0));
+  if (fill_cmd_get_system_boot_options (parameter_selector, 
+                                        set_selector, 
+                                        block_selector, 
+                                        obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -687,7 +744,7 @@ ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -695,10 +752,14 @@ ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_boot_options_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_system_boot_options (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING, 
-                                                       set_selector, 
-                                                       block_selector, 
-                                                       obj_cmd_rq) < 0));
+  if (fill_cmd_get_system_boot_options (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING, 
+                                        set_selector, 
+                                        block_selector, 
+                                        obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -728,7 +789,7 @@ ipmi_cmd_get_system_boot_options_boot_flags (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -736,10 +797,14 @@ ipmi_cmd_get_system_boot_options_boot_flags (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_boot_options_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_system_boot_options (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_FLAGS, 
-                                                       set_selector, 
-                                                       block_selector, 
-                                                       obj_cmd_rq) < 0));
+  if (fill_cmd_get_system_boot_options (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_FLAGS, 
+                                        set_selector, 
+                                        block_selector, 
+                                        obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 
@@ -767,7 +832,7 @@ ipmi_cmd_get_power_on_hours_counter (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -775,7 +840,11 @@ ipmi_cmd_get_power_on_hours_counter (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_power_on_hours_counter_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_power_on_hours_counter (obj_cmd_rq) < 0));
+  if (fill_cmd_get_power_on_hours_counter (obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
                             IPMI_BMC_IPMB_LUN_BMC, 

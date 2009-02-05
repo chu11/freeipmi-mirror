@@ -99,7 +99,7 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
       || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_7)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -107,25 +107,29 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_user_payload_access_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_user_payload_access (channel_number,
-						       user_id,
-						       operation,
-						       standard_payload_1,
-						       standard_payload_2,
-						       standard_payload_3,
-						       standard_payload_4,
-						       standard_payload_5,
-						       standard_payload_6,
-						       standard_payload_7,
-						       oem_payload_0,
-						       oem_payload_1,
-						       oem_payload_2,
-						       oem_payload_3,
-						       oem_payload_4,
-						       oem_payload_5,
-						       oem_payload_6,
-						       oem_payload_7,
-						       obj_cmd_rq) < 0));
+  if (fill_cmd_set_user_payload_access (channel_number,
+                                        user_id,
+                                        operation,
+                                        standard_payload_1,
+                                        standard_payload_2,
+                                        standard_payload_3,
+                                        standard_payload_4,
+                                        standard_payload_5,
+                                        standard_payload_6,
+                                        standard_payload_7,
+                                        oem_payload_0,
+                                        oem_payload_1,
+                                        oem_payload_2,
+                                        oem_payload_3,
+                                        oem_payload_4,
+                                        oem_payload_5,
+                                        oem_payload_6,
+                                        oem_payload_7,
+                                        obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx,
 			    IPMI_BMC_IPMB_LUN_BMC,
@@ -157,7 +161,7 @@ ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -165,9 +169,13 @@ ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
   
   API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_user_payload_access_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_get_user_payload_access (channel_number,
-						       user_id,
-						       obj_cmd_rq) < 0));
+  if (fill_cmd_get_user_payload_access (channel_number,
+                                        user_id,
+                                        obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx,
 			    IPMI_BMC_IPMB_LUN_BMC,

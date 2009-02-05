@@ -60,7 +60,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
       || !IPMI_SOL_SOL_ENABLE_VALID(sol_enable)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -68,9 +68,13 @@ ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_sol_configuration_parameters_sol_enable (channel_number, 
-									   sol_enable,
-									   obj_cmd_rq) < 0));
+  if (fill_cmd_set_sol_configuration_parameters_sol_enable (channel_number, 
+                                                            sol_enable,
+                                                            obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -107,7 +111,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
       || !IPMI_SOL_FORCE_SOL_PAYLOAD_ENCRYPTION_VALID(force_sol_payload_encryption)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -115,11 +119,15 @@ ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_sol_configuration_parameters_sol_authentication (channel_number, 
-										   sol_privilege_level,
-										   force_sol_payload_authentication,
-										   force_sol_payload_encryption,
-										   obj_cmd_rq) < 0));
+  if (fill_cmd_set_sol_configuration_parameters_sol_authentication (channel_number, 
+                                                                    sol_privilege_level,
+                                                                    force_sol_payload_authentication,
+                                                                    force_sol_payload_encryption,
+                                                                    obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -152,7 +160,7 @@ ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -160,10 +168,14 @@ ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (channel_number, 
-														 character_accumulate_interval,
-														 character_send_threshold,
-														 obj_cmd_rq) < 0));
+  if (fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (channel_number, 
+                                                                                                  character_accumulate_interval,
+                                                                                                  character_send_threshold,
+                                                                                                  obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
   
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -196,7 +208,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -204,10 +216,14 @@ ipmi_cmd_set_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
   
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_retry_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_set_sol_configuration_parameters_sol_retry (channel_number, 
-									  retry_count,
-									  retry_interval,
-									  obj_cmd_rq) < 0));
+  if (fill_cmd_set_sol_configuration_parameters_sol_retry (channel_number, 
+                                                           retry_count,
+                                                           retry_interval,
+                                                           obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
   
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -240,7 +256,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
       || !IPMI_SOL_BIT_RATE_VALID(bit_rate)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -248,10 +264,14 @@ ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
   
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (channel_number, 
-											  bit_rate,
-											  obj_cmd_rq) < 0));
-  
+  if (fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (channel_number, 
+                                                                           bit_rate,
+                                                                           obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
+
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
 			    IPMI_NET_FN_TRANSPORT_RQ, 
@@ -283,7 +303,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
       || !IPMI_SOL_BIT_RATE_VALID(bit_rate)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -291,9 +311,13 @@ ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
   
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (channel_number, 
-										      bit_rate,
-										      obj_cmd_rq) < 0));
+  if (fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (channel_number, 
+                                                                       bit_rate,
+                                                                       obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
   
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -325,7 +349,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -333,9 +357,13 @@ ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
   
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (channel_number, 
-											port_number,
-											obj_cmd_rq) < 0));
+  if (fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (channel_number, 
+                                                                         port_number,
+                                                                         obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
   
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -370,7 +398,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -378,12 +406,16 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
 
-  API_ERR_CLEANUP (!(fill_cmd_get_sol_configuration_parameters (channel_number, 
-								get_parameter, 
-								IPMI_SOL_PARAMETER_SOL_ENABLE, 
-								set_selector, 
-								block_selector,
-								obj_cmd_rq) < 0));
+  if (fill_cmd_get_sol_configuration_parameters (channel_number, 
+                                                 get_parameter, 
+                                                 IPMI_SOL_PARAMETER_SOL_ENABLE, 
+                                                 set_selector, 
+                                                 block_selector,
+                                                 obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -418,7 +450,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -426,12 +458,16 @@ ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_get_sol_configuration_parameters (channel_number, 
-								get_parameter, 
-								IPMI_SOL_PARAMETER_SOL_AUTHENTICATION, 
-								set_selector, 
-								block_selector,
-								obj_cmd_rq) < 0));
+  if (fill_cmd_get_sol_configuration_parameters (channel_number, 
+                                                 get_parameter, 
+                                                 IPMI_SOL_PARAMETER_SOL_AUTHENTICATION, 
+                                                 set_selector, 
+                                                 block_selector,
+                                                 obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -466,7 +502,7 @@ ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -474,12 +510,16 @@ ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_get_sol_configuration_parameters (channel_number, 
-								get_parameter, 
-								IPMI_SOL_PARAMETER_CHARACTER_ACCUMULATE_INTERVAL_AND_SEND_THRESHOLD, 
-								set_selector, 
-								block_selector,
-								obj_cmd_rq) < 0));
+  if (fill_cmd_get_sol_configuration_parameters (channel_number, 
+                                                 get_parameter, 
+                                                 IPMI_SOL_PARAMETER_CHARACTER_ACCUMULATE_INTERVAL_AND_SEND_THRESHOLD, 
+                                                 set_selector, 
+                                                 block_selector,
+                                                 obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -514,7 +554,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -522,12 +562,16 @@ ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_get_sol_configuration_parameters (channel_number, 
-								get_parameter, 
-								IPMI_SOL_PARAMETER_SOL_RETRY, 
-								set_selector, 
-								block_selector,
-								obj_cmd_rq) < 0));
+  if (fill_cmd_get_sol_configuration_parameters (channel_number, 
+                                                 get_parameter, 
+                                                 IPMI_SOL_PARAMETER_SOL_RETRY, 
+                                                 set_selector, 
+                                                 block_selector,
+                                                 obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -562,7 +606,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -570,12 +614,16 @@ ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_get_sol_configuration_parameters (channel_number, 
-								get_parameter, 
-								IPMI_SOL_PARAMETER_SOL_NON_VOLATILE_BIT_RATE, 
-								set_selector, 
-								block_selector,
-								obj_cmd_rq) < 0));
+  if (fill_cmd_get_sol_configuration_parameters (channel_number, 
+                                                 get_parameter, 
+                                                 IPMI_SOL_PARAMETER_SOL_NON_VOLATILE_BIT_RATE, 
+                                                 set_selector, 
+                                                 block_selector,
+                                                 obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -610,7 +658,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -618,12 +666,16 @@ ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_get_sol_configuration_parameters (channel_number, 
-								get_parameter, 
-								IPMI_SOL_PARAMETER_SOL_VOLATILE_BIT_RATE, 
-								set_selector, 
-								block_selector,
-								obj_cmd_rq) < 0));
+  if (fill_cmd_get_sol_configuration_parameters (channel_number, 
+                                                 get_parameter, 
+                                                 IPMI_SOL_PARAMETER_SOL_VOLATILE_BIT_RATE, 
+                                                 set_selector, 
+                                                 block_selector,
+                                                 obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -658,7 +710,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_ctx_t ctx,
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -666,12 +718,16 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_ctx_t ctx,
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_get_sol_configuration_parameters (channel_number, 
-								get_parameter, 
-								IPMI_SOL_PARAMETER_SOL_PAYLOAD_CHANNEL, 
-								set_selector, 
-								block_selector,
-								obj_cmd_rq) < 0));
+  if (fill_cmd_get_sol_configuration_parameters (channel_number, 
+                                                 get_parameter, 
+                                                 IPMI_SOL_PARAMETER_SOL_PAYLOAD_CHANNEL, 
+                                                 set_selector, 
+                                                 block_selector,
+                                                 obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
@@ -706,7 +762,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_ERR_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -714,12 +770,16 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
-  API_ERR_CLEANUP (!(fill_cmd_get_sol_configuration_parameters (channel_number, 
-								get_parameter, 
-								IPMI_SOL_PARAMETER_SOL_PAYLOAD_PORT_NUMBER, 
-								set_selector, 
-								block_selector,
-								obj_cmd_rq) < 0));
+  if (fill_cmd_get_sol_configuration_parameters (channel_number, 
+                                                 get_parameter, 
+                                                 IPMI_SOL_PARAMETER_SOL_PAYLOAD_PORT_NUMBER, 
+                                                 set_selector, 
+                                                 block_selector,
+                                                 obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(errno);
+      goto cleanup;
+    }
  
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
