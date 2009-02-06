@@ -180,7 +180,11 @@ ipmi_sunbmc_ctx_get_driver_device(ipmi_sunbmc_ctx_t ctx, char **driver_device)
 {
   ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
 
-  SUNBMC_ERR_PARAMETERS(driver_device);
+  if (!driver_device)
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   *driver_device = ctx->driver_device;
   ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
@@ -192,7 +196,11 @@ ipmi_sunbmc_ctx_get_flags(ipmi_sunbmc_ctx_t ctx, uint32_t *flags)
 {
   ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
 
-  SUNBMC_ERR_PARAMETERS(flags);
+  if (!flags)
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   *flags = ctx->flags;
   ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
@@ -204,7 +212,11 @@ ipmi_sunbmc_ctx_set_driver_device(ipmi_sunbmc_ctx_t ctx, char *device)
 {
   ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
 
-  SUNBMC_ERR_PARAMETERS(device);
+  if (!device)
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   if (ctx->driver_device)
     free(ctx->driver_device);
@@ -225,7 +237,11 @@ ipmi_sunbmc_ctx_set_flags(ipmi_sunbmc_ctx_t ctx, uint32_t flags)
 {
   ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
 
-  SUNBMC_ERR_PARAMETERS(!(flags & ~IPMI_SUNBMC_FLAGS_MASK));
+  if (flags & ~IPMI_SUNBMC_FLAGS_MASK)
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
   
   ctx->flags = flags;
   ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
@@ -515,11 +531,15 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
 {
   ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
  
-  SUNBMC_ERR_PARAMETERS(IPMI_BMC_LUN_VALID(lun)
-                        && IPMI_NET_FN_RQ_VALID(net_fn)
-                        && fiid_obj_valid(obj_cmd_rq)
-                        && fiid_obj_valid(obj_cmd_rs)
-                        && fiid_obj_packet_valid(obj_cmd_rq));
+  if (!IPMI_BMC_LUN_VALID(lun)
+      || !IPMI_NET_FN_RQ_VALID(net_fn)
+      || !fiid_obj_valid(obj_cmd_rq)
+      || !fiid_obj_valid(obj_cmd_rs)
+      || !fiid_obj_packet_valid(obj_cmd_rq))
+    {
+      SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
   
   if (!ctx->io_init)
     {

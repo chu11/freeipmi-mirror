@@ -134,7 +134,11 @@ ipmi_sdr_parse_ctx_get_flags(ipmi_sdr_parse_ctx_t ctx, unsigned int *flags)
 {
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(flags);
+  if (!flags)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   *flags = ctx->flags;
   return 0;
@@ -145,7 +149,11 @@ ipmi_sdr_parse_ctx_set_flags(ipmi_sdr_parse_ctx_t ctx, unsigned int flags)
 {
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(!(flags & ~IPMI_SDR_PARSE_FLAGS_MASK));
+  if (flags & ~IPMI_SDR_PARSE_FLAGS_MASK)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   ctx->flags = flags;
   return 0;
@@ -165,7 +173,11 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   SDR_PARSE_FIID_TEMPLATE_LEN_BYTES(sdr_record_header_len, tmpl_sdr_record_header);
 
@@ -299,7 +311,11 @@ ipmi_sdr_parse_sensor_owner_id (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -344,7 +360,11 @@ ipmi_sdr_parse_sensor_owner_lun (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -388,7 +408,11 @@ ipmi_sdr_parse_sensor_number (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -428,7 +452,11 @@ ipmi_sdr_parse_entity_id_instance_type (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -476,7 +504,11 @@ ipmi_sdr_parse_sensor_type (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -514,7 +546,11 @@ ipmi_sdr_parse_event_reading_type_code (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -553,7 +589,11 @@ ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -597,7 +637,11 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -666,7 +710,11 @@ ipmi_sdr_parse_sensor_capabilities (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -750,7 +798,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -949,7 +1001,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -1144,7 +1200,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   /* achu:
    *
@@ -1318,7 +1378,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   /* achu:
    *
@@ -1486,7 +1550,11 @@ ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   /* achu:
    *
@@ -1606,7 +1674,11 @@ ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   /* achu:
    *
@@ -1724,7 +1796,11 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
@@ -1857,7 +1933,11 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   if (nominal_reading)
     *nominal_reading = NULL;
@@ -2045,7 +2125,11 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   if (lower_non_critical_threshold)
     *lower_non_critical_threshold = NULL;
@@ -2249,7 +2333,11 @@ ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
@@ -2349,7 +2437,11 @@ ipmi_sdr_parse_hysteresis (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -2395,7 +2487,11 @@ ipmi_sdr_parse_container_entity (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD;
@@ -2439,7 +2535,11 @@ ipmi_sdr_parse_device_id_string (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
@@ -2481,7 +2581,11 @@ ipmi_sdr_parse_device_type (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
@@ -2524,7 +2628,11 @@ ipmi_sdr_parse_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
@@ -2572,7 +2680,11 @@ ipmi_sdr_parse_general_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
 
@@ -2639,7 +2751,11 @@ ipmi_sdr_parse_fru_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
 
@@ -2701,7 +2817,11 @@ ipmi_sdr_parse_fru_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
 
@@ -2743,7 +2863,11 @@ ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_parse_c
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
 
@@ -2784,7 +2908,11 @@ ipmi_sdr_parse_manufacturer_id (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_OEM_RECORD;
@@ -2821,7 +2949,11 @@ ipmi_sdr_parse_product_id (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD;
 
@@ -2858,7 +2990,11 @@ ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_SDR_PARSE_MAGIC);
 
-  SDR_PARSE_ERR_PARAMETERS(sdr_record && sdr_record_len);
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_ERRNUM_SET(IPMI_SDR_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_OEM_RECORD;
 

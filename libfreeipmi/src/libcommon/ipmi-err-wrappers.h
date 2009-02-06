@@ -326,26 +326,6 @@ do {                                                                    \
     __KCS_TRACE;                                                        \
   } while (0)
 
-#define KCS_ERR_PARAMETERS(expr)                                        \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;                      \
-        __KCS_TRACE;                                                    \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_PARAMETERS_CLEANUP(expr)                                \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;                      \
-        __KCS_TRACE;                                                    \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
 #define __SSIF_ERRNO_TO_ERRNUM                                          \
 do {                                                                    \
   if (errno == 0)                                                       \
@@ -400,26 +380,6 @@ do {                                                                    \
     __SSIF_TRACE;                                                       \
   } while (0)
 
-#define SSIF_ERR_PARAMETERS(expr)                                       \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;                     \
-        __SSIF_TRACE;                                                   \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define SSIF_ERR_PARAMETERS_CLEANUP(expr)                               \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;                     \
-        __SSIF_TRACE;                                                   \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
 #define __OPENIPMI_ERRNO_TO_ERRNUM                                      \
 do {                                                                    \
   if (errno == 0)                                                       \
@@ -466,16 +426,6 @@ do {                                                                    \
     __OPENIPMI_TRACE;                                                   \
   } while (0)
 
-#define OPENIPMI_ERR_PARAMETERS(expr)                                   \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PARAMETERS;                 \
-        __OPENIPMI_TRACE;                                               \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
 #define __SUNBMC_ERRNO_TO_ERRNUM                                        \
 do {                                                                    \
   if (errno == 0)                                                       \
@@ -520,16 +470,6 @@ do {                                                                    \
   do {                                                                  \
     ctx->errnum = (__errnum);                                           \
     __SUNBMC_TRACE;                                                     \
-  } while (0)
-
-#define SUNBMC_ERR_PARAMETERS(expr)                                     \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SUNBMC_CTX_ERR_PARAMETERS;                   \
-        __SUNBMC_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
   } while (0)
 
 #define __LOCATE_ERRNO_TO_ERRNUM                                        \
@@ -684,30 +624,10 @@ do {                                                                      \
     __SDR_CACHE_TRACE;                                                  \
   } while (0)
 
-#define SDR_CACHE_ERR_PARAMETERS(expr)                                  \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_PARAMETERS;                \
-        __SDR_CACHE_TRACE;                                              \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
 #define SDR_PARSE_ERRNUM_SET(__errnum)                                  \
   do {                                                                  \
     ctx->errnum = (__errnum);                                           \
     __SDR_PARSE_TRACE;                                                  \
-  } while (0)
-
-#define SDR_PARSE_ERR_PARAMETERS(expr)                                  \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_PARAMETERS;                \
-        __SDR_PARSE_TRACE;                                              \
-        return (-1);                                                    \
-      }                                                                 \
   } while (0)
 
 #define SEL_PARSE_ERRNUM_SET(__errnum)                                  \

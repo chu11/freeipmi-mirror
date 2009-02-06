@@ -263,7 +263,11 @@ ipmi_kcs_ctx_get_driver_address(ipmi_kcs_ctx_t ctx, uint16_t *driver_address)
 {
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  KCS_ERR_PARAMETERS(driver_address);
+  if (!driver_address)
+    {
+      KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
   
   *driver_address = ctx->driver_address;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
@@ -275,7 +279,11 @@ ipmi_kcs_ctx_get_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t *register_spacing)
 {
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  KCS_ERR_PARAMETERS(register_spacing);
+  if (!register_spacing)
+    {
+      KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
   
   *register_spacing = ctx->register_spacing;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
@@ -287,7 +295,11 @@ ipmi_kcs_ctx_get_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t *poll_interval)
 {
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  KCS_ERR_PARAMETERS(poll_interval);
+  if (!poll_interval)
+    {
+      KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   *poll_interval = ctx->poll_interval;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
@@ -299,7 +311,11 @@ ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, uint32_t *flags)
 {
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  KCS_ERR_PARAMETERS(flags);
+  if (!flags)
+    {
+      KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   *flags = ctx->flags;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
@@ -341,7 +357,11 @@ ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, uint32_t flags)
 {
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  KCS_ERR_PARAMETERS(!(flags & ~IPMI_KCS_FLAGS_MASK));
+  if (flags & ~IPMI_KCS_FLAGS_MASK)
+    {
+      KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
   
   ctx->flags = flags;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
@@ -539,7 +559,11 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
 
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
  
-  KCS_ERR_PARAMETERS(buf && buf_len);
+  if (!buf || !buf_len)
+    {
+      KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
   
   if (!ctx->io_init)
     {
@@ -650,7 +674,11 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
 
   ERR_CLEANUP(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
   
-  KCS_ERR_PARAMETERS_CLEANUP(buf && buf_len);
+  if (!buf || !buf_len)
+    {
+      KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_PARAMETERS);
+      goto cleanup;
+    }
   
   if (!ctx->io_init)
     {
@@ -852,11 +880,15 @@ ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
 {
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
  
-  KCS_ERR_PARAMETERS(IPMI_BMC_LUN_VALID(lun)
-                     && IPMI_NET_FN_RQ_VALID(net_fn)
-                     && fiid_obj_valid(obj_cmd_rq)
-                     && fiid_obj_valid(obj_cmd_rs)
-                     && fiid_obj_packet_valid(obj_cmd_rq));
+  if (!IPMI_BMC_LUN_VALID(lun)
+      || !IPMI_NET_FN_RQ_VALID(net_fn)
+      || !fiid_obj_valid(obj_cmd_rq)
+      || !fiid_obj_valid(obj_cmd_rs)
+      || !fiid_obj_packet_valid(obj_cmd_rq))
+    {
+      KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
   
   if (!ctx->io_init)
     {

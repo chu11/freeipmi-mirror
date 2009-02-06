@@ -230,7 +230,11 @@ ipmi_openipmi_ctx_get_driver_device(ipmi_openipmi_ctx_t ctx, char **driver_devic
 {
   ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
-  OPENIPMI_ERR_PARAMETERS(driver_device);
+  if (!driver_device)
+    {
+      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   *driver_device = ctx->driver_device;
   ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;
@@ -242,7 +246,11 @@ ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, uint32_t *flags)
 {
   ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
-  OPENIPMI_ERR_PARAMETERS(flags);
+  if (!flags)
+    {
+      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   *flags = ctx->flags;
   ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;
@@ -254,7 +262,11 @@ ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
 {
   ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
-  OPENIPMI_ERR_PARAMETERS(device);
+  if (!device)
+    {
+      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   if (ctx->driver_device)
     free(ctx->driver_device);
@@ -275,7 +287,11 @@ ipmi_openipmi_ctx_set_flags(ipmi_openipmi_ctx_t ctx, uint32_t flags)
 {
   ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
-  OPENIPMI_ERR_PARAMETERS(!(flags & ~IPMI_OPENIPMI_FLAGS_MASK));
+  if (flags & ~IPMI_OPENIPMI_FLAGS_MASK)
+    {
+      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
   
   ctx->flags = flags;
   ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;
@@ -468,11 +484,15 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
 {
   ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
  
-  OPENIPMI_ERR_PARAMETERS(IPMI_BMC_LUN_VALID(lun)
-                          && IPMI_NET_FN_RQ_VALID(net_fn)
-                          && fiid_obj_valid(obj_cmd_rq)
-                          && fiid_obj_valid(obj_cmd_rs)
-                          && fiid_obj_packet_valid(obj_cmd_rq));
+  if (!IPMI_BMC_LUN_VALID(lun)
+      || !IPMI_NET_FN_RQ_VALID(net_fn)
+      || !fiid_obj_valid(obj_cmd_rq)
+      || !fiid_obj_valid(obj_cmd_rs)
+      || !fiid_obj_packet_valid(obj_cmd_rq))
+    {
+      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
   
   if (!ctx->io_init)
     {
@@ -505,11 +525,15 @@ ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
 {
   ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
  
-  OPENIPMI_ERR_PARAMETERS(IPMI_BMC_LUN_VALID(lun)
-                          && IPMI_NET_FN_RQ_VALID(net_fn)
-                          && fiid_obj_valid(obj_cmd_rq)
-                          && fiid_obj_valid(obj_cmd_rs)
-                          && fiid_obj_packet_valid(obj_cmd_rq));
+  if (!IPMI_BMC_LUN_VALID(lun)
+      || !IPMI_NET_FN_RQ_VALID(net_fn)
+      || !fiid_obj_valid(obj_cmd_rq)
+      || !fiid_obj_valid(obj_cmd_rs)
+      || !fiid_obj_packet_valid(obj_cmd_rq))
+    {
+      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
   
   if (!ctx->io_init)
     {
