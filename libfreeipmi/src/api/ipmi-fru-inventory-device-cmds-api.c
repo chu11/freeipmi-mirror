@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.11.2.1 2009-02-06 12:40:48 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.11.2.2 2009-02-06 17:00:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -44,7 +44,6 @@
 
 #include "ipmi-ctx.h"
 #include "ipmi-err-wrappers-api.h"
-#include "ipmi-fiid-wrappers-api.h"
 
 #include "freeipmi-portability.h"
 

@@ -35,7 +35,6 @@
 
 #include "ipmi-ctx.h"
 #include "ipmi-err-wrappers-api.h"
-#include "ipmi-fiid-wrappers-api.h"
 
 #include "freeipmi-portability.h"
 

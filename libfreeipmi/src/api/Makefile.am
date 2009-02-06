@@ -1,6 +1,5 @@
 noinst_HEADERS = \
 	ipmi-err-wrappers-api.h \
-	ipmi-fiid-wrappers-api.h \
 	ipmi-ctx.h \
 	ipmi-lan-interface-api.h \
 	ipmi-lan-session-common.h \
@@ -23,7 +22,6 @@ libapi_la_CPPFLAGS = \
 libapi_la_SOURCES = \
 	ipmi-api.c \
 	ipmi-err-wrappers-api.c \
-	ipmi-fiid-wrappers-api.c \
 	ipmi-kcs-driver-api.c \
 	ipmi-openipmi-driver-api.c \
 	ipmi-ssif-driver-api.c \

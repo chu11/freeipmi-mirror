@@ -72,7 +72,6 @@
 
 #include "ipmi-ctx.h"
 #include "ipmi-err-wrappers-api.h"
-#include "ipmi-fiid-wrappers-api.h"
 #include "ipmi-lan-interface-api.h"
 #include "ipmi-lan-session-common.h"
 #include "ipmi-kcs-driver-api.h"

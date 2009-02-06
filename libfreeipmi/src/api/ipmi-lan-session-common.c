@@ -69,7 +69,6 @@
 
 #include "ipmi-ctx.h"
 #include "ipmi-err-wrappers-api.h"
-#include "ipmi-fiid-wrappers-api.h"
 #include "ipmi-lan-session-common.h"
 
 #include "freeipmi-portability.h"
