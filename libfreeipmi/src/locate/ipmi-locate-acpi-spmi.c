@@ -1321,7 +1321,11 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
 
   assert(locate_errnum);
 
-  LOCATE_ERR_PARAMETERS(IPMI_INTERFACE_TYPE_VALID(type) && info);
+  if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
+    {
+      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_PARAMETERS);
+      return (-1);
+    }
 
   memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
   linfo.interface_type = type;
