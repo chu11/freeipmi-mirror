@@ -894,14 +894,22 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
               return (-1);
 	    
 	    /* check RSDP signature */
-	    LOCATE_ERR_SYSTEM_ERROR (!strncmp ((char *)memdata, 
-                                               IPMI_ACPI_RSDP_SIG, 
-                                               strlen (IPMI_ACPI_RSDP_SIG)));
+	    if (strncmp ((char *)memdata, 
+                         IPMI_ACPI_RSDP_SIG, 
+                         strlen (IPMI_ACPI_RSDP_SIG)))
+              {
+                LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+                return (-1);
+              }
 	    
 	    /* now check the checksum */
-	    LOCATE_ERR_SYSTEM_ERROR (!(_ipmi_acpi_table_checksum (locate_errnum,
-                                                                  memdata, 
-                                                                  IPMI_ACPI_RSDP_CHECKSUM_LENGTH) != 0));
+	    if (_ipmi_acpi_table_checksum (locate_errnum,
+                                           memdata, 
+                                           IPMI_ACPI_RSDP_CHECKSUM_LENGTH) != 0)
+              {
+                LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+                return (-1);
+              }
 	    
 	    /* we found another RSDP */
 	    memcpy (obj_acpi_rsdp_descriptor, memdata, acpi_rsdp_descriptor_len);
@@ -992,7 +1000,11 @@ _ipmi_acpi_get_table (int *locate_errnum,
                            (uint8_t *)table_signature, 
                            table_signature_length);
 
-  LOCATE_ERR_SYSTEM_ERROR_CLEANUP (!strcmp (table_signature, signature));
+  if (strcmp (table_signature, signature))
+    {
+      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
   
   LOCATE_FIID_OBJ_GET (obj_acpi_table_hdr, 
                        "length", 
@@ -1007,11 +1019,19 @@ _ipmi_acpi_get_table (int *locate_errnum,
                                    table) < 0)
     goto cleanup;
   
-  LOCATE_ERR_SYSTEM_ERROR_CLEANUP(!(_ipmi_acpi_table_checksum (locate_errnum,
-                                                               table, 
-                                                               table_length) != 0));
+  if (_ipmi_acpi_table_checksum (locate_errnum,
+                                 table, 
+                                 table_length) != 0)
+    {
+      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
   
-  LOCATE_ERR_OUT_OF_MEMORY_CLEANUP((*acpi_table = malloc (table_length)));
+  if (!(*acpi_table = malloc (table_length)))
+    {
+      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
   memcpy (*acpi_table, table, table_length);
   *acpi_table_length = table_length;
   
@@ -1197,11 +1217,19 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
   free (rsdt_xsdt_table);
   rsdt_xsdt_table = NULL;
 
-  LOCATE_ERR_SYSTEM_ERROR_CLEANUP (acpi_table);
+  if (!acpi_table)
+    {
+      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
   
   memcpy (obj_acpi_table_hdr, acpi_table, acpi_table_hdr_length);
   *sign_table_data_length = acpi_table_length - acpi_table_hdr_length;
-  LOCATE_ERR_OUT_OF_MEMORY_CLEANUP((*sign_table_data = malloc (*sign_table_data_length)));
+  if (!(*sign_table_data = malloc (*sign_table_data_length)))
+    {
+      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
   memcpy (*sign_table_data, 
           (acpi_table + acpi_table_hdr_length), 
           *sign_table_data_length);
@@ -1391,7 +1419,11 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
                          "interface_type", 
                          &interface_type);
     
-    LOCATE_ERR_SYSTEM_ERROR_CLEANUP(IPMI_INTERFACE_TYPE_VALID(interface_type));
+    if (!IPMI_INTERFACE_TYPE_VALID(interface_type))
+      {
+        LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+        goto cleanup;
+    }
 
     linfo.interface_type = interface_type;
   }
@@ -1430,7 +1462,8 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
 	  break;
 	}
       default:
-	LOCATE_ERR_SYSTEM_ERROR_CLEANUP(0);
+        LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+        goto cleanup;
       }
   }
   

@@ -436,7 +436,11 @@ _ipmi_locate_smbios_get_device_info (int *locate_errnum,
   linfo.ipmi_version_minor = version & 0xf;
 
   linfo.interface_type = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET];
-  LOCATE_ERR_SYSTEM_ERROR_CLEANUP(linfo.interface_type == type);
+  if (linfo.interface_type != type)
+    {
+      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
 
   strobed = address = *(uint64_t*)(bufp+IPMI_SMBIOS_IPMI_DEV_INFO_ADDRESS_OFFSET);
   if (bufp[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET] >= IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET)

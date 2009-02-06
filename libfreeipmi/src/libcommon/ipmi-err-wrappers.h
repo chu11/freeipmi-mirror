@@ -514,26 +514,6 @@ do {                                                                    \
     __LOCATE_TRACE;                                                     \
   } while (0)
 
-#define LOCATE_ERR_SYSTEM_ERROR(expr)                                   \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        (*locate_errnum) = IPMI_LOCATE_ERR_SYSTEM_ERROR;                \
-        __LOCATE_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERR_SYSTEM_ERROR_CLEANUP(expr)                           \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        (*locate_errnum) = IPMI_LOCATE_ERR_SYSTEM_ERROR;                \
-        __LOCATE_TRACE;                                                 \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
 #define __SDR_CACHE_ERRNO_TO_ERRNUM                                       \
 do {                                                                      \
   if (errno == 0)                                                         \

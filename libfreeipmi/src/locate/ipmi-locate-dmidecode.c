@@ -454,8 +454,12 @@ _ipmi_locate_dmidecode_get_device_info (int *locate_errnum,
    * Linux up to 2.6.6-rc2: /proc/efi/systab
    * Linux 2.6.6-rc3 and up: /sys/firmware/efi/systab
    */
-  LOCATE_ERR_SYSTEM_ERROR(!((!(efi_systab = fopen (filename = "/proc/efi/systab", "r"))) 
-                            && (!(efi_systab = fopen (filename = "/sys/firmware/efi/systab", "r")))));
+  if ((!(efi_systab = fopen (filename = "/proc/efi/systab", "r"))) 
+      && (!(efi_systab = fopen (filename = "/sys/firmware/efi/systab", "r"))))
+    {
+      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
   
   fp = 0;
   while ((fgets (linebuf, sizeof (linebuf) - 1, efi_systab)) != NULL)
@@ -467,8 +471,12 @@ _ipmi_locate_dmidecode_get_device_info (int *locate_errnum,
     }
   fclose(efi_systab);
 
-  LOCATE_ERR_SYSTEM_ERROR(fp);
-  
+  if (!fp)
+    {
+      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
+
   if (!(buf = _mem_chunk (locate_errnum, fp, 0x20, DEFAULT_MEM_DEV)))
     return -1;
   
