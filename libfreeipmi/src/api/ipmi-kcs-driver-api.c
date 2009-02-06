@@ -244,7 +244,11 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
-    API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
+    {
+      /* ignore error, continue on */
+      if (api_fiid_obj_get(ctx, obj_cmd_rq, "cmd", &cmd) < 0)
+        API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+    }
 
   {
     uint8_t *pkt;

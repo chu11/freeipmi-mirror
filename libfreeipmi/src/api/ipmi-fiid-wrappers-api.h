@@ -39,22 +39,6 @@ extern "C" {
 
 #include "ipmi-err-wrappers-api.h"
 
-#define __FIID_ERRNUM_SET_API_ERRNUM(___errnum)    \
-do {                                               \
-  if ((___errnum) == FIID_ERR_SUCCESS)             \
-    ctx->errnum = IPMI_ERR_SUCCESS;                \
-  else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)  \
-    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
-  else                                             \
-    ctx->errnum = IPMI_ERR_LIBRARY_ERROR;          \
-} while (0)
-
-#define __FIID_OBJ_SET_API_ERRNUM(___obj)          \
-do {                                               \
-  int32_t __objerrnum = fiid_obj_errnum((___obj)); \
-  __FIID_ERRNUM_SET_API_ERRNUM(__objerrnum);       \
-} while (0)
-
 #define API_FIID_OBJ_GET(__obj, __field, __val)                         \
 do {                                                                    \
     uint64_t __localval = 0, *__localval_ptr;                           \
@@ -121,6 +105,8 @@ void ipmi_set_api_errnum_by_fiid_object(ipmi_ctx_t ctx, fiid_obj_t obj);
 int api_fiid_obj_packet_valid(ipmi_ctx_t ctx, fiid_obj_t obj);
 
 int api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tmpl);
+
+int api_fiid_obj_get(ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
 
 #ifdef __cplusplus
 }

@@ -1604,9 +1604,23 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
       if (ipmi_cmd_get_device_id (ctx, obj_data_rs) < 0)
 	goto cleanup;
       
-      API_FIID_OBJ_GET_CLEANUP (obj_data_rs, "manufacturer_id.id", &manufacturer_id);
+      if (api_fiid_obj_get(ctx,
+                           obj_data_rs,
+                           "manufacturer_id.id",
+                           &manufacturer_id) < 0)
+        {
+          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
-      API_FIID_OBJ_GET_CLEANUP (obj_data_rs, "product_id", &product_id);
+      if (api_fiid_obj_get(ctx,
+                           obj_data_rs,
+                           "product_id",
+                           &product_id) < 0)
+        {
+          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          goto cleanup;
+        }
       
       switch (manufacturer_id)
 	{
@@ -1635,11 +1649,25 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
       if (ipmi_cmd_get_channel_info (ctx, i, obj_data_rs) != 0)
 	continue;
 	
-      API_FIID_OBJ_GET_CLEANUP (obj_data_rs, "channel_medium_type", &val);
+      if (api_fiid_obj_get(ctx,
+                           obj_data_rs,
+                           "channel_medium_type",
+                           &val) < 0)
+        {
+          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          goto cleanup;
+        }
       
       if ((uint8_t) val == channel_medium_type)
 	{
-	  API_FIID_OBJ_GET_CLEANUP (obj_data_rs, "actual_channel_number", &val);
+	  if (api_fiid_obj_get(ctx,
+                               obj_data_rs,
+                               "actual_channel_number",
+                               &val) < 0)
+            {
+              API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+              goto cleanup;
+            }
 	  
 	  rv = (int8_t) val;
 	  break;

@@ -1015,7 +1015,12 @@ ipmi_cmd (ipmi_ctx_t ctx,
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint64_t cmd = 0;
 
-          API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
+          /* ignore error, continue on */
+          if (api_fiid_obj_get(ctx,
+                               obj_cmd_rq,
+                               "cmd",
+                               &cmd) < 0)
+            API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
 
           debug_hdr_cmd(DEBUG_UTIL_TYPE_INBAND,
                         DEBUG_UTIL_DIRECTION_REQUEST,
@@ -1068,7 +1073,12 @@ ipmi_cmd (ipmi_ctx_t ctx,
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint64_t cmd = 0;
           
-          API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
+          /* ignore error, continue on */
+          if (api_fiid_obj_get(ctx,
+                               obj_cmd_rq,
+                               "cmd",
+                               &cmd) < 0)
+            API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
 
 	  /* its ok to use the "request" net_fn */
           debug_hdr_cmd(DEBUG_UTIL_TYPE_INBAND,
