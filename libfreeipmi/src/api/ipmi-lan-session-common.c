@@ -3109,7 +3109,14 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 
       if (ctx->io.outofband.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
           && keybuf_len == 1)
-        API_FIID_OBJ_CLEAR_FIELD_CLEANUP (obj_cmd_rs, "key_exchange_authentication_code");
+        {
+          if (fiid_obj_clear_field (obj_cmd_rs, 
+                                    "key_exchange_authentication_code") < 0)
+            {
+              API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+              goto cleanup;
+            }
+        }
       else if (ctx->io.outofband.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
                && keybuf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
         {
@@ -3163,8 +3170,13 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 
       if (buf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
         {
-          API_FIID_OBJ_CLEAR_FIELD_CLEANUP (obj_cmd_rs,
-                                            "key_exchange_authentication_code");
+          if (fiid_obj_clear_field (obj_cmd_rs, 
+                                    "key_exchange_authentication_code") < 0)
+            {
+              API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+              goto cleanup;
+            }
+
           if (fiid_obj_set_data (obj_cmd_rs,
                                  "key_exchange_authentication_code",
                                  buf,
