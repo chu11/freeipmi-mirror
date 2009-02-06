@@ -303,7 +303,11 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
         goto cleanup;
       }
 
-    API_FIID_OBJ_TEMPLATE_CLEANUP(tmpl, obj_cmd_rs);
+    if (!(tmpl = fiid_obj_template(obj_cmd_rs)))
+      {
+        API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+        goto cleanup;
+      }
 
     if ((cmd_len = fiid_template_len_bytes (tmpl)) < 0)
       {
@@ -399,10 +403,13 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
     }
   
   memset(buf, '\0', IPMI_MAX_PKT_LEN);
-  API_FIID_OBJ_GET_ALL_LEN_CLEANUP (len,
-				    obj_ipmb_msg_rq,
-				    buf,
-				    IPMI_MAX_PKT_LEN);
+  if ((len = fiid_obj_get_all (obj_ipmb_msg_rq,
+                               buf,
+                               IPMI_MAX_PKT_LEN)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_ipmb_msg_rq);
+      goto cleanup;
+    }
   
   if (ipmi_cmd_send_message (ctx,
 			     IPMI_CHANNEL_NUMBER_PRIMARY_IPMB,
@@ -456,15 +463,22 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_FIID_OBJ_GET_DATA_LEN_CLEANUP (len,
-				     obj_get_cmd_rs,
-				     "message_data",
-				     buf,
-				     IPMI_MAX_PKT_LEN);
-
-  API_FIID_OBJ_SET_ALL_CLEANUP (obj_ipmb_msg_rs,
-				buf,
-				len);
+  if ((len = fiid_obj_get_data(obj_get_cmd_rs,
+                               "message_data",
+                               buf,
+                               IPMI_MAX_PKT_LEN)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_get_cmd_rs);
+      goto cleanup;
+    }
+  
+  if (fiid_obj_set_all (obj_ipmb_msg_rs,
+                        buf,
+                        len) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_ipmb_msg_rs);
+      goto cleanup;
+    }
 
   if (unassemble_ipmi_ipmb_msg (obj_ipmb_msg_rs,
                                 obj_ipmb_msg_hdr_rs,
@@ -669,7 +683,11 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_GET_ALL(ctx->io.inband.rq.obj_hdr, pkt, pkt_len);
+  if (fiid_obj_get_all(ctx->io.inband.rq.obj_hdr, pkt, pkt_len) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, ctx->io.inband.rq.obj_hdr);
+      return (-1);
+    }
   memcpy(pkt + hdr_len, buf_rq, buf_rq_len);
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && pkt_len)

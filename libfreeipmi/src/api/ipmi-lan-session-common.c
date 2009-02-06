@@ -804,7 +804,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                       fiid_obj_t obj_cmd_rq,
                       fiid_obj_t obj_cmd_rs)
 {
-  int retval = -1;
+  int rv = -1;
   int ret;
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
@@ -856,7 +856,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
       if (_session_timed_out(ctx))
         {
 	  API_SET_ERRNUM (IPMI_ERR_SESSION_TIMEOUT);
-          retval = -1;
+          rv = -1;
           break;
         }
      
@@ -870,7 +870,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 					  net_fn, /* for debug dumping */
                                           obj_cmd_rs)) < 0)
         {
-          retval = -1;
+          rv = -1;
           break;
         }
 
@@ -975,7 +975,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
           API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
-      retval = recv_len;
+      rv = recv_len;
       break;
     }
   
@@ -989,7 +989,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
       close(sockets->fd);
       sockets = sockets->next;
     }
-  return (retval);
+  return (rv);
 }
 
 int8_t
@@ -1041,11 +1041,13 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
     }
 
   memset(tbuf, '\0', IPMI_MAX_PKT_LEN);
-  API_FIID_OBJ_GET_ALL_LEN_CLEANUP (len,
-				    obj_ipmb_msg_rq,
-				    tbuf,
-				    IPMI_MAX_PKT_LEN);
-  
+  if ((len = fiid_obj_get_all(obj_ipmb_msg_rq,
+                              tbuf,
+                              IPMI_MAX_PKT_LEN)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_ipmb_msg_rq);
+      goto cleanup;
+    }
 
   if (ipmi_cmd_send_message (ctx,
 			     IPMI_CHANNEL_NUMBER_PRIMARY_IPMB,
@@ -1084,7 +1086,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 			   fiid_obj_t obj_cmd_rq,
 			   fiid_obj_t obj_cmd_rs)
 {
-  int retval = -1;
+  int rv = -1;
   int ret;
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
@@ -1129,7 +1131,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       if (_session_timed_out(ctx))
         {
 	  API_SET_ERRNUM (IPMI_ERR_SESSION_TIMEOUT);
-          retval = -1;
+          rv = -1;
           break;
         }
      
@@ -1143,7 +1145,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 					  ctx->net_fn, /* for debug dumping */
                                           obj_cmd_rs)) < 0)
         {
-          retval = -1;
+          rv = -1;
           break;
         }
 
@@ -1194,7 +1196,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
           API_ERRNO_TO_API_ERRNUM(ctx, errno);
           goto cleanup;
         }
-      retval = recv_len;
+      rv = recv_len;
       break;
     }
   
@@ -1206,7 +1208,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
   ctx->tmpl_ipmb_cmd_rs = NULL;
 
-  return (retval);
+  return (rv);
 }
 
 int8_t 
@@ -1410,10 +1412,14 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 			    "temp_session_id", 
 			    &temp_session_id);
   
-  API_FIID_OBJ_GET_DATA_CLEANUP (obj_cmd_rs, 
-				 "challenge_string", 
-				 challenge_string,
-				 IPMI_CHALLENGE_STRING_LENGTH);
+  if (fiid_obj_get_data (obj_cmd_rs, 
+                         "challenge_string", 
+                         challenge_string,
+                         IPMI_CHALLENGE_STRING_LENGTH) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+      goto cleanup;
+    }
 
   API_FIID_OBJ_DESTROY(obj_cmd_rq);
   API_FIID_OBJ_DESTROY(obj_cmd_rs);
@@ -2305,7 +2311,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                           fiid_obj_t obj_cmd_rq,
                           fiid_obj_t obj_cmd_rs)
 {
-  int retval = -1;
+  int rv = -1;
   int ret;
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
@@ -2372,7 +2378,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
       if (_session_timed_out(ctx))
         {
 	  API_SET_ERRNUM (IPMI_ERR_SESSION_TIMEOUT);
-          retval = -1;
+          rv = -1;
           break;
         }
      
@@ -2393,7 +2399,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
 					      net_fn, /* for debug dumping */
                                               obj_cmd_rs)) < 0)
         {
-          retval = -1;
+          rv = -1;
           break;
         }
 
@@ -2421,7 +2427,11 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                * and rakp 3 messages have the message tags in a
                * non-header field.  So this is a special case.
                */
-              API_FIID_OBJ_SET_CLEANUP(obj_cmd_rq, "message_tag", (*message_tag));
+              if (fiid_obj_set(obj_cmd_rq, "message_tag", (*message_tag)) < 0)
+                {
+                  API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rq);
+                  goto cleanup;
+                }
             }
 
           if (_ipmi_lan_2_0_cmd_send (ctx, 
@@ -2476,7 +2486,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
           goto cleanup;
         }
 
-      retval = recv_len;
+      rv = recv_len;
       break;
     }
 
@@ -2492,7 +2502,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
     }
   if (rq_seq)
     *rq_seq = ((*rq_seq) + 1) % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
-  return (retval);
+  return (rv);
 }
 
 int8_t 
@@ -2500,7 +2510,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 			       fiid_obj_t obj_cmd_rq,
 			       fiid_obj_t obj_cmd_rs)
 {
-  int retval = -1;
+  int rv = -1;
   int ret;
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
@@ -2544,7 +2554,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       if (_session_timed_out(ctx))
         {
 	  API_SET_ERRNUM (IPMI_ERR_SESSION_TIMEOUT);
-          retval = -1;
+          rv = -1;
           break;
         }
      
@@ -2565,7 +2575,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 					      ctx->net_fn, /* for debug dumping */
                                               obj_cmd_rs)) < 0)
         {
-          retval = -1;
+          rv = -1;
           break;
         }
 
@@ -2623,7 +2633,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
           goto cleanup;
         }
 
-      retval = recv_len;
+      rv = recv_len;
       break;
     }
   
@@ -2635,7 +2645,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
   ctx->tmpl_ipmb_cmd_rs = NULL;
 
-  return (retval);
+  return (rv);
 }
 
 int8_t 
@@ -3026,17 +3036,23 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
 
-  API_FIID_OBJ_GET_DATA_LEN_CLEANUP (managed_system_random_number_len,
-                                     obj_cmd_rs,
-                                     "managed_system_random_number",
-                                     managed_system_random_number,
-                                     IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+  if ((managed_system_random_number_len = fiid_obj_get_data(obj_cmd_rs,
+                                                            "managed_system_random_number",
+                                                            managed_system_random_number,
+                                                            IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+      goto cleanup;
+    }
 
-  API_FIID_OBJ_GET_DATA_LEN_CLEANUP (managed_system_guid_len,
-                                     obj_cmd_rs,
-                                     "managed_system_guid",
-                                     managed_system_guid,
-                                     IPMI_MANAGED_SYSTEM_GUID_LENGTH);
+  if ((managed_system_guid_len = fiid_obj_get_data(obj_cmd_rs,
+                                                   "managed_system_guid",
+                                                   managed_system_guid,
+                                                   IPMI_MANAGED_SYSTEM_GUID_LENGTH)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+      goto cleanup;
+    }
 
   if (managed_system_random_number_len != IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH
       || managed_system_guid_len != IPMI_MANAGED_SYSTEM_GUID_LENGTH)
@@ -3082,27 +3098,42 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
        * We fix/adjust for the situation here.
        */
 
-      API_FIID_OBJ_GET_DATA_LEN_CLEANUP (keybuf_len,
-                                         obj_cmd_rs,
-                                         "key_exchange_authentication_code",
-                                         keybuf,
-                                         IPMI_MAX_PKT_LEN);
+      if ((keybuf_len = fiid_obj_get_data(obj_cmd_rs,
+                                          "key_exchange_authentication_code",
+                                          keybuf,
+                                          IPMI_MAX_PKT_LEN)) < 0)
+        {
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+          goto cleanup;
+        }
 
       if (ctx->io.outofband.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
           && keybuf_len == 1)
         API_FIID_OBJ_CLEAR_FIELD_CLEANUP (obj_cmd_rs, "key_exchange_authentication_code");
       else if (ctx->io.outofband.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
                && keybuf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
-        API_FIID_OBJ_SET_DATA_CLEANUP (obj_cmd_rs,
-                                       "key_exchange_authentication_code",
-                                       keybuf,
-                                       IPMI_HMAC_SHA1_DIGEST_LENGTH);
+        {
+          if (fiid_obj_set_data (obj_cmd_rs,
+                                 "key_exchange_authentication_code",
+                                 keybuf,
+                                 IPMI_HMAC_SHA1_DIGEST_LENGTH) < 0)
+            {
+              API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+              goto cleanup;
+            }
+        }
       else if (ctx->io.outofband.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
                && keybuf_len == (IPMI_HMAC_MD5_DIGEST_LENGTH + 1))
-        API_FIID_OBJ_SET_DATA_CLEANUP (obj_cmd_rs,
-                                       "key_exchange_authentication_code",
-                                       keybuf,
-                                       IPMI_HMAC_MD5_DIGEST_LENGTH);
+        {
+          if (fiid_obj_set_data (obj_cmd_rs,
+                                 "key_exchange_authentication_code",
+                                 keybuf,
+                                 IPMI_HMAC_MD5_DIGEST_LENGTH) < 0)
+            {
+              API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+              goto cleanup;
+            }
+        }
     }
 
   /* IPMI Workaround (achu)
@@ -3121,20 +3152,27 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
       int32_t buf_len;
 
-      API_FIID_OBJ_GET_DATA_LEN_CLEANUP (buf_len,
-                                         obj_cmd_rs,
-                                         "key_exchange_authentication_code",
-                                         buf,
-                                         IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
+      if ((buf_len = fiid_obj_get_data(obj_cmd_rs,
+                                       "key_exchange_authentication_code",
+                                       buf,
+                                       IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
+        {
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+          goto cleanup;
+        }
 
       if (buf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
         {
           API_FIID_OBJ_CLEAR_FIELD_CLEANUP (obj_cmd_rs,
                                             "key_exchange_authentication_code");
-          API_FIID_OBJ_SET_DATA_CLEANUP (obj_cmd_rs,
-                                         "key_exchange_authentication_code",
-                                         buf,
-                                         IPMI_HMAC_SHA1_DIGEST_LENGTH);
+          if (fiid_obj_set_data (obj_cmd_rs,
+                                 "key_exchange_authentication_code",
+                                 buf,
+                                 IPMI_HMAC_SHA1_DIGEST_LENGTH) < 0)
+            {
+              API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+              goto cleanup;
+            }
         }
     }
 

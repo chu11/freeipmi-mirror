@@ -28,18 +28,32 @@
 #include <errno.h>
 
 #include "freeipmi/api/ipmi-api.h"
-#include "freeipmi/locate/ipmi-locate.h"
-#include "freeipmi/spec/ipmi-comp-code-spec.h"
-#include "freeipmi/driver/ipmi-kcs-driver.h"
-#include "freeipmi/driver/ipmi-openipmi-driver.h"
-#include "freeipmi/driver/ipmi-ssif-driver.h"
-#include "freeipmi/driver/ipmi-sunbmc-driver.h"
-#include "freeipmi/util/ipmi-util.h"
+#include "freeipmi/fiid/fiid.h"
 
 #include "ipmi-ctx.h"
 #include "ipmi-err-wrappers-api.h"
 
 #include "freeipmi-portability.h"
+
+void
+ipmi_set_api_errnum_by_fiid_object(ipmi_ctx_t ctx, fiid_obj_t obj)
+{
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    return;
+
+  if (!fiid_obj_valid(obj))
+    {
+      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return;
+    }
+
+  if (fiid_obj_errnum(obj) == FIID_ERR_SUCCESS)
+    ctx->errnum = IPMI_ERR_SUCCESS;
+  else if (fiid_obj_errnum(obj) == FIID_ERR_OUT_OF_MEMORY)
+    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
+  else
+    ctx->errnum = IPMI_ERR_LIBRARY_ERROR;
+}
 
 int
 api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tmpl)

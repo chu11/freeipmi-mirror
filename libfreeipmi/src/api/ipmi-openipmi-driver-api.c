@@ -155,7 +155,13 @@ ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx,
   API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_openipmi_raw);
   API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_openipmi_raw);
 
-  API_FIID_OBJ_SET_ALL_CLEANUP(obj_cmd_rq, buf_rq, buf_rq_len);
+  if (fiid_obj_set_all (obj_cmd_rq,
+                        buf_rq,
+                        buf_rq_len) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rq);
+      goto cleanup;
+    }
 
   if (ipmi_openipmi_cmd (ctx->io.inband.openipmi_ctx,
                          ctx->lun,
@@ -167,7 +173,13 @@ ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_FIID_OBJ_GET_ALL_LEN_CLEANUP(len, obj_cmd_rs, buf_rs, buf_rs_len);
+  if ((len = fiid_obj_get_all (obj_cmd_rs,
+                               buf_rs,
+                               buf_rs_len)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+      goto cleanup;
+    }
 
   rv = len;
  cleanup:

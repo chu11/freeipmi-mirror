@@ -122,7 +122,7 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  int retval = -1;
+  int rv = -1;
   int32_t len;
   uint8_t authentication_type;
   uint32_t internal_workaround_flags = 0;
@@ -163,7 +163,13 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
   API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_lan_raw);
   API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_lan_raw);
 
-  API_FIID_OBJ_SET_ALL_CLEANUP (obj_cmd_rq, buf_rq, buf_rq_len);
+  if (fiid_obj_set_all (obj_cmd_rq,
+                        buf_rq,
+                        buf_rq_len) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rq);
+      goto cleanup;
+    }
 
   ipmi_lan_cmd_get_session_parameters (ctx,
 				       &authentication_type,
@@ -183,13 +189,19 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
                             obj_cmd_rs) < 0)
     goto cleanup;
 
-  API_FIID_OBJ_GET_ALL_LEN_CLEANUP (len, obj_cmd_rs, buf_rs, buf_rs_len);
-  retval = len;
+  if ((len = fiid_obj_get_all (obj_cmd_rs,
+                               buf_rs,
+                               buf_rs_len)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+      goto cleanup;
+    }
+  rv = len;
 
  cleanup:
   API_FIID_OBJ_DESTROY (obj_cmd_rq);
   API_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return (retval);
+  return (rv);
 }
 
 int8_t 
@@ -271,7 +283,7 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
   uint8_t payload_encrypted;
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  int retval = -1;
+  int rv = -1;
   int32_t len;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
@@ -310,7 +322,13 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
   API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_lan_raw);
   API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_lan_raw);
 
-  API_FIID_OBJ_SET_ALL_CLEANUP (obj_cmd_rq, buf_rq, buf_rq_len);
+  if (fiid_obj_set_all (obj_cmd_rq,
+                        buf_rq,
+                        buf_rq_len) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rq);
+      goto cleanup;
+    }
 
   ipmi_lan_2_0_cmd_get_session_parameters (ctx,
 					   &payload_authenticated,
@@ -339,11 +357,17 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
                                 obj_cmd_rs) < 0)
     goto cleanup;
 
-  API_FIID_OBJ_GET_ALL_LEN_CLEANUP (len, obj_cmd_rs, buf_rs, buf_rs_len);
-  retval = len;
+  if ((len = fiid_obj_get_all (obj_cmd_rs,
+                               buf_rs,
+                               buf_rs_len)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+      goto cleanup;
+    }
+  rv = len;
 
  cleanup:
   API_FIID_OBJ_DESTROY (obj_cmd_rq);
   API_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return (retval);
+  return (rv);
 }

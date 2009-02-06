@@ -132,7 +132,11 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
         goto cleanup;
       }
 
-    API_FIID_OBJ_TEMPLATE_CLEANUP(tmpl, obj_cmd_rs);
+    if (!(tmpl = fiid_obj_template(obj_cmd_rs)))
+      {
+        API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rs);
+        goto cleanup;
+      }
 
     if ((cmd_len = fiid_template_len_bytes (tmpl)) < 0)
       {
@@ -244,7 +248,11 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_GET_ALL(ctx->io.inband.rq.obj_hdr, pkt, pkt_len);
+  if (fiid_obj_get_all(ctx->io.inband.rq.obj_hdr, pkt, pkt_len) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, ctx->io.inband.rq.obj_hdr);
+      return (-1);
+    }
   memcpy(pkt + hdr_len, buf_rq, buf_rq_len);
   
   /* Request Block */

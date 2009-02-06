@@ -167,146 +167,6 @@ do {                                                                    \
     *__localval_ptr = __localval;                                       \
 } while (0)
 
-#define API_FIID_OBJ_SET(__obj, __field, __val)               \
-do {                                                          \
-    if (fiid_obj_set ((__obj), (__field), (__val)) < 0)       \
-      {                                                       \
-         __FIID_OBJ_TRACE((__obj));                           \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                  \
-         return (-1);                                         \
-      }                                                       \
-} while (0)
-
-#define API_FIID_OBJ_SET_CLEANUP(__obj, __field, __val)       \
-do {                                                          \
-    if (fiid_obj_set ((__obj), (__field), (__val)) < 0)       \
-      {                                                       \
-         __FIID_OBJ_TRACE((__obj));                           \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                  \
-         goto cleanup;                                        \
-      }                                                       \
-} while (0)
-
-#define API_FIID_OBJ_SET_DATA(__obj, __field, __data, __data_len)           \
-do {                                                                        \
-    if (fiid_obj_set_data ((__obj), (__field), (__data), (__data_len)) < 0) \
-      {                                                                     \
-         __FIID_OBJ_TRACE((__obj));                                         \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                                \
-         return (-1);                                                       \
-      }                                                                     \
-} while (0)
-
-#define API_FIID_OBJ_SET_DATA_CLEANUP(__obj, __field, __data, __data_len)   \
-do {                                                                        \
-    if (fiid_obj_set_data ((__obj), (__field), (__data), (__data_len)) < 0) \
-      {                                                                     \
-         __FIID_OBJ_TRACE((__obj));                                         \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                                \
-         goto cleanup;                                                      \
-      }                                                                     \
-} while (0)
-
-#define API_FIID_OBJ_GET_DATA(__obj, __field, __data, __data_len)            \
-do {                                                                         \
-    if (fiid_obj_get_data ((__obj), (__field), (__data), (__data_len)) < 0)  \
-      {                                                                      \
-         __FIID_OBJ_TRACE((__obj));                                          \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                                 \
-         return (-1);                                                        \
-      }                                                                      \
-} while (0)
-
-#define API_FIID_OBJ_GET_DATA_CLEANUP(__obj, __field, __data, __data_len)    \
-do {                                                                         \
-    if (fiid_obj_get_data ((__obj), (__field), (__data), (__data_len)) < 0)  \
-      {                                                                      \
-         __FIID_OBJ_TRACE((__obj));                                          \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                                 \
-         goto cleanup;                                                       \
-      }                                                                      \
-} while (0)
-
-#define API_FIID_OBJ_GET_DATA_LEN(__len, __obj, __field, __data, __data_len)            \
-do {                                                                                    \
-    if (((__len) = fiid_obj_get_data ((__obj), (__field), (__data), (__data_len))) < 0) \
-      {                                                                                 \
-         __FIID_OBJ_TRACE((__obj));                                                     \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                                            \
-         return (-1);                                                                   \
-      }                                                                                 \
-} while (0)
-
-#define API_FIID_OBJ_GET_DATA_LEN_CLEANUP(__len, __obj, __field, __data, __data_len)    \
-do {                                                                                    \
-    if (((__len) = fiid_obj_get_data ((__obj), (__field), (__data), (__data_len))) < 0) \
-      {                                                                                 \
-         __FIID_OBJ_TRACE((__obj));                                                     \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                                            \
-         goto cleanup;                                                                  \
-      }                                                                                 \
-} while (0)
-
-#define API_FIID_OBJ_SET_ALL(__obj, __data, __data_len)                     \
-do {                                                                        \
-    if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)             \
-      {                                                                     \
-         __FIID_OBJ_TRACE((__obj));                                         \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                                \
-         return (-1);                                                       \
-      }                                                                     \
-} while (0)
-
-#define API_FIID_OBJ_SET_ALL_CLEANUP(__obj, __data, __data_len)             \
-do {                                                                        \
-    if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)             \
-      {                                                                     \
-         __FIID_OBJ_TRACE((__obj));                                         \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                                \
-         goto cleanup;                                                      \
-      }                                                                     \
-} while (0)
-
-#define API_FIID_OBJ_GET_ALL(__obj, __data, __data_len)                      \
-do {                                                                         \
-    if (fiid_obj_get_all ((__obj), (__data), (__data_len)) < 0)              \
-      {                                                                      \
-         __FIID_OBJ_TRACE((__obj));                                          \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                                 \
-         return (-1);                                                        \
-      }                                                                      \
-} while (0)
-
-#define API_FIID_OBJ_GET_ALL_CLEANUP(__obj, __data, __data_len)              \
-do {                                                                         \
-    if (fiid_obj_get_all ((__obj), (__data), (__data_len)) < 0)              \
-      {                                                                      \
-         __FIID_OBJ_TRACE((__obj));                                          \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                                 \
-         goto cleanup;                                                       \
-      }                                                                      \
-} while (0)
-
-#define API_FIID_OBJ_GET_ALL_LEN(__len, __obj, __data, __data_len)          \
-do {                                                                        \
-    if (((__len) = fiid_obj_get_all ((__obj), (__data), (__data_len))) < 0) \
-      {                                                                     \
-         __FIID_OBJ_TRACE((__obj));                                         \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                                \
-         return (-1);                                                       \
-      }                                                                     \
-} while (0)
-
-#define API_FIID_OBJ_GET_ALL_LEN_CLEANUP(__len, __obj, __data, __data_len)  \
-do {                                                                        \
-    if (((__len) = fiid_obj_get_all ((__obj), (__data), (__data_len))) < 0) \
-      {                                                                     \
-         __FIID_OBJ_TRACE((__obj));                                         \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                                \
-         goto cleanup;                                                      \
-      }                                                                     \
-} while (0)
-
 #define API_FIID_OBJ_PACKET_VALID(__obj)               \
 do {                                                   \
     int __ret;                                         \
@@ -324,45 +184,6 @@ do {                                                   \
       }                                                \
 } while (0)
 
-#define API_FIID_OBJ_TEMPLATE(__ptr, __obj)            \
-do {                                                   \
-    if (!(__ptr = fiid_obj_template((__obj))))         \
-      {                                                \
-        __FIID_OBJ_TRACE((__obj));                     \
-	__FIID_OBJ_SET_API_ERRNUM((__obj));            \
-        return (-1);                                   \
-      }                                                \
-} while (0)
-
-#define API_FIID_OBJ_TEMPLATE_CLEANUP(__ptr, __obj)    \
-do {                                                   \
-    if (!(__ptr = fiid_obj_template((__obj))))         \
-      {                                                \
-        __FIID_OBJ_TRACE((__obj));                     \
-	__FIID_OBJ_SET_API_ERRNUM((__obj));            \
-        goto cleanup;                                  \
-      }                                                \
-} while (0)
-
-#define API_FIID_OBJ_TEMPLATE_COMPARE(__obj, __tmpl)                 \
-do {                                                                 \
-    int __ret;                                                       \
-    if ((__ret = fiid_obj_template_compare ((__obj), (__tmpl))) < 0) \
-      {                                                              \
-         __FIID_OBJ_TRACE((__obj));                                  \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));                         \
-         return (-1);                                                \
-      }                                                              \
-    if (!__ret)                                                      \
-      {                                                              \
-	errno = EINVAL;                                              \
-        __FIID_OBJ_TRACE((__obj));                                   \
-	/* set via errno */                                          \
-	ipmi_set_api_errnum_by_errno(ctx, errno);                    \
-	return (-1);                                                 \
-      }                                                              \
-} while (0)
-
 /* Special one used for debug dumping */
 #define API_FIID_OBJ_GET_NO_RETURN(__obj, __field, __val)             \
 do {                                                                  \
@@ -377,6 +198,14 @@ do {                                                                  \
     if (__rv > 0)                                                     \
       *__localval_ptr = __localval;                                   \
 } while (0)
+
+#define API_FIID_OBJECT_ERROR_TO_API_ERRNUM(__ctx, __obj)                \
+do {                                                                     \
+  ipmi_set_api_errnum_by_fiid_object((__ctx), (__obj));                  \
+  __API_MSG_TRACE(fiid_obj_errormsg((__obj)), fiid_obj_errnum((__obj))); \
+} while (0)   
+
+void ipmi_set_api_errnum_by_fiid_object(ipmi_ctx_t ctx, fiid_obj_t obj);
 
 int api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tmpl);
 
