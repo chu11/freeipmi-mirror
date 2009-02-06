@@ -23,6 +23,7 @@ libapi_la_CPPFLAGS = \
 libapi_la_SOURCES = \
 	ipmi-api.c \
 	ipmi-err-wrappers-api.c \
+	ipmi-fiid-wrappers-api.c \
 	ipmi-kcs-driver-api.c \
 	ipmi-openipmi-driver-api.c \
 	ipmi-ssif-driver-api.c \

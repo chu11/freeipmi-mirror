@@ -63,13 +63,13 @@ api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t t
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return (-1);
 
-  if (!fiid_obj_valid(obj_cmd_rs))
+  if (!fiid_obj_valid(obj))
     {
       API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
-  if (!fiid_obj_valid(obj_cmd_rs))
+  if (!fiid_obj_valid(obj))
     {
       API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
       return (-1);
@@ -81,7 +81,7 @@ api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t t
       return (-1);
     }
 
-  if (!__ret)
+  if (!ret)
     {
       ctx->errnum = IPMI_ERR_PARAMETERS;
       return (-1);
