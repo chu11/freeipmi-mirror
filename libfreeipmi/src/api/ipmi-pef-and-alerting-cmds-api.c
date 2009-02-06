@@ -66,7 +66,11 @@ ipmi_cmd_get_pef_capabilities (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_pef_capabilities_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_capabilities_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_pef_capabilities (obj_cmd_rq) < 0)
     {
@@ -82,7 +86,7 @@ ipmi_cmd_get_pef_capabilities (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -114,7 +118,11 @@ ipmi_cmd_arm_pef_postpone_timer (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_arm_pef_postpone_timer_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_arm_pef_postpone_timer_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_arm_pef_postpone_timer (pef_postpone_timeout,
                                        obj_cmd_rq) < 0)
@@ -131,7 +139,7 @@ ipmi_cmd_arm_pef_postpone_timer (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }  
 
@@ -169,7 +177,11 @@ ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_control_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_pef_control_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_pef_configuration_parameters_pef_control (pef, 
                                                              pef_event_messages,
@@ -189,7 +201,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -231,7 +243,11 @@ ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_action_global_control_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_pef_action_global_control_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_pef_configuration_parameters_pef_action_global_control (alert_action, 
                                                                            power_down_action,
@@ -253,7 +269,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -285,7 +301,11 @@ ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_startup_delay_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_pef_startup_delay_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_pef_configuration_parameters_pef_startup_delay (pef_startup_delay,
                                                                    obj_cmd_rq) < 0)
@@ -302,7 +322,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -334,7 +354,11 @@ ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_alert_startup_delay_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_pef_alert_startup_delay_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (pef_alert_startup_delay,
                                                                          obj_cmd_rq) < 0)
@@ -351,7 +375,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -420,7 +444,11 @@ ipmi_cmd_set_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_event_filter_table_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_event_filter_table_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_pef_configuration_parameters_event_filter_table (filter_number,
                                                                     filter_configuration_type,
@@ -464,7 +492,7 @@ ipmi_cmd_set_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -500,7 +528,11 @@ ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_event_filter_table_data1_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_event_filter_table_data1_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (filter_number,
                                                                           filter_configuration_type,
@@ -519,7 +551,7 @@ ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -561,8 +593,11 @@ ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE (obj_cmd_rq, 
-		       tmpl_cmd_set_pef_configuration_parameters_alert_policy_table_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_alert_policy_table_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_pef_configuration_parameters_alert_policy_table (alert_policy_entry_number, 
                                                                     policy_type, 
@@ -586,7 +621,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY (obj_cmd_rq);
+  FIID_OBJ_DESTROY (obj_cmd_rq);
   return (rv);
 }
 
@@ -621,8 +656,11 @@ ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, 
-                       tmpl_cmd_set_pef_configuration_parameters_alert_string_keys_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_alert_string_keys_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_pef_configuration_parameters_alert_string_keys (string_selector, 
                                                                    filter_number, 
@@ -641,7 +679,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY (obj_cmd_rq);
+  FIID_OBJ_DESTROY (obj_cmd_rq);
   return (rv);
 }
 
@@ -679,8 +717,11 @@ ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, 
-                       tmpl_cmd_set_pef_configuration_parameters_alert_strings_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_alert_strings_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_pef_configuration_parameters_alert_strings (string_selector, 
                                                                block_selector, 
@@ -700,7 +741,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY (obj_cmd_rq);
+  FIID_OBJ_DESTROY (obj_cmd_rq);
   return (rv);
 }
 
@@ -735,7 +776,11 @@ ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_PEF_CONTROL,
                                                  get_parameter, 
@@ -755,7 +800,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -790,7 +835,11 @@ ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_PEF_ACTION_GLOBAL_CONTROL,
                                                  get_parameter, 
@@ -810,7 +859,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -845,7 +894,11 @@ ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_PEF_STARTUP_DELAY,
                                                  get_parameter, 
@@ -865,7 +918,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -900,7 +953,11 @@ ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_PEF_ALERT_STARTUP_DELAY,
                                                  get_parameter, 
@@ -920,7 +977,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -955,7 +1012,11 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (ipmi_ctx_t ct
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_NUMBER_OF_EVENT_FILTERS,
                                                  get_parameter, 
@@ -975,7 +1036,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1010,7 +1071,11 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_EVENT_FILTER_TABLE,
                                                  get_parameter, 
@@ -1030,7 +1095,7 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1065,7 +1130,11 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_EVENT_FILTER_TABLE_DATA_1,
                                                  get_parameter,
@@ -1085,7 +1154,7 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1120,7 +1189,11 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_c
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_NUMBER_OF_ALERT_POLICY_ENTRIES,
                                                  get_parameter,
@@ -1140,7 +1213,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_c
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1175,7 +1248,11 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (ipmi_ctx_t ct
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_NUMBER_OF_ALERT_STRINGS, 
                                                  get_parameter, 
@@ -1195,7 +1272,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1230,7 +1307,11 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_ALERT_STRING_KEYS,
                                                  get_parameter,
@@ -1250,7 +1331,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1285,7 +1366,11 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_ALERT_STRINGS,
                                                  get_parameter,
@@ -1305,7 +1390,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1340,7 +1425,11 @@ ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_ALERT_POLICY_TABLE,
                                                  get_parameter, 
@@ -1360,7 +1449,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY (obj_cmd_rq);
+  FIID_OBJ_DESTROY (obj_cmd_rq);
   return (rv);
 }
 
@@ -1395,7 +1484,11 @@ ipmi_cmd_set_last_processed_event_id (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_last_processed_event_id_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_last_processed_event_id_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_last_processed_event_id (set_record_id_for_last_record,
                                             record_id,
@@ -1413,7 +1506,7 @@ ipmi_cmd_set_last_processed_event_id (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1443,7 +1536,11 @@ ipmi_cmd_get_last_processed_event_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_last_processed_event_id_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_last_processed_event_id_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_last_processed_event_id (obj_cmd_rq) < 0)
     {
@@ -1459,7 +1556,7 @@ ipmi_cmd_get_last_processed_event_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1496,7 +1593,11 @@ ipmi_cmd_alert_immediate (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_alert_immediate_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_alert_immediate_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_alert_immediate (channel_number,
                                 destination_selector,
@@ -1517,7 +1618,7 @@ ipmi_cmd_alert_immediate (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1554,7 +1655,11 @@ ipmi_cmd_pet_acknowledge (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_pet_acknowledge_rq); 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_pet_acknowledge_rq))) 
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_pet_acknowledge (sequence_number,
                                 local_timestamp,
@@ -1576,7 +1681,7 @@ ipmi_cmd_pet_acknowledge (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 

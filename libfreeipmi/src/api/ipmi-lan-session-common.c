@@ -1087,9 +1087,9 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rq);
-  API_FIID_OBJ_DESTROY(obj_ipmb_msg_rq);
-  API_FIID_OBJ_DESTROY(obj_send_cmd_rs);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rq);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_rq);
+  FIID_OBJ_DESTROY(obj_send_cmd_rs);
   return (rv);
 }
 
@@ -1383,8 +1383,8 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
 
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
-  API_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
 
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_session_challenge_rq)))
     {
@@ -1449,8 +1449,8 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
 
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
-  API_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
 
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_activate_session_rq)))
     {
@@ -1571,8 +1571,8 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
       && val != IPMI_AUTHENTICATION_TYPE_NONE)
     ctx->io.outofband.per_msg_auth_disabled = 0;
 
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
-  API_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
 
   /* achu: At this point in time, the session is actually setup
    * legitimately, so we can use the actual set session privilege
@@ -1600,8 +1600,8 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
-  API_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -1617,7 +1617,11 @@ ipmi_lan_close_session (ipmi_ctx_t ctx)
               || ctx->type == IPMI_DEVICE_LAN_2_0)
           && ctx->io.outofband.sockfd);
 
-  API_FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_close_session_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_close_session_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      return (-1);
+    }
 
   if (ctx->type == IPMI_DEVICE_LAN)
     {
@@ -1636,7 +1640,7 @@ ipmi_lan_close_session (ipmi_ctx_t ctx)
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -2849,8 +2853,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
         }
     }
 
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
-  API_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
 
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_rmcpplus_open_session_request)))
     {
@@ -2991,8 +2995,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                             &val);
   ctx->io.outofband.managed_system_session_id = val;
 
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
-  API_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
 
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_rmcpplus_rakp_message_1)))
     {
@@ -3356,8 +3360,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
   
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
-  API_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
 
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_rmcpplus_rakp_message_3)))
     {
@@ -3474,8 +3478,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
         }
     }
   
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
-  API_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
 
   /* achu: At this point in time, the session is actually setup
    * legitimately, so we can use the actual set session privilege
@@ -3504,8 +3508,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
-  API_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -3520,7 +3524,11 @@ ipmi_lan_2_0_close_session (ipmi_ctx_t ctx)
           && ctx->type == IPMI_DEVICE_LAN_2_0
           && ctx->io.outofband.sockfd);
 
-  API_FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_close_session_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_close_session_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      return (-1);
+    }
 
   if (ipmi_cmd_close_session(ctx,
                              ctx->io.outofband.managed_system_session_id,
@@ -3529,6 +3537,6 @@ ipmi_lan_2_0_close_session (ipmi_ctx_t ctx)
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }

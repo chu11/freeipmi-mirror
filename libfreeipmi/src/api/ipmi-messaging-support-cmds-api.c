@@ -100,7 +100,11 @@ ipmi_cmd_clear_message_flags (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_clear_message_flags_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_clear_message_flags_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_clear_message_flags (receive_message_queue,
                                     event_message_buffer,
@@ -122,7 +126,7 @@ ipmi_cmd_clear_message_flags (ipmi_ctx_t ctx,
                        
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -160,7 +164,11 @@ ipmi_cmd_get_message_flags (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_message_flags_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_message_flags_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_message_flags (obj_cmd_rq) < 0)
     {
@@ -176,7 +184,7 @@ ipmi_cmd_get_message_flags (ipmi_ctx_t ctx,
                        
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -218,7 +226,11 @@ ipmi_cmd_enable_message_channel_receive (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_enable_message_channel_receive_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_enable_message_channel_receive_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_enable_message_channel_receive (channel_number,
                                                channel_operation,
@@ -236,7 +248,7 @@ ipmi_cmd_enable_message_channel_receive (ipmi_ctx_t ctx,
                        
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -274,7 +286,11 @@ ipmi_cmd_get_message (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_message_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_message_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_message (obj_cmd_rq) < 0)
     {
@@ -290,7 +306,7 @@ ipmi_cmd_get_message (ipmi_ctx_t ctx,
                        
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -333,7 +349,11 @@ ipmi_cmd_send_message (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_send_message_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_send_message_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_send_message (channel_number,
                              message_authentication,
@@ -355,7 +375,7 @@ ipmi_cmd_send_message (ipmi_ctx_t ctx,
                        
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -393,7 +413,11 @@ ipmi_cmd_read_event_message_buffer (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_read_event_message_buffer_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_read_event_message_buffer_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_read_event_message_buffer (obj_cmd_rq) < 0)
     {
@@ -409,7 +433,7 @@ ipmi_cmd_read_event_message_buffer (ipmi_ctx_t ctx,
                        
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -442,7 +466,11 @@ ipmi_cmd_get_system_interface_capabilities (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_interface_capabilities_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_system_interface_capabilities_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_system_interface_capabilities (system_interface,
                                                   obj_cmd_rq) < 0)
@@ -459,7 +487,7 @@ ipmi_cmd_get_system_interface_capabilities (ipmi_ctx_t ctx,
                        
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -490,7 +518,11 @@ ipmi_cmd_get_system_interface_capabilities_ssif (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_interface_capabilities_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_system_interface_capabilities_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_system_interface_capabilities (IPMI_SYSTEM_INTERFACE_SSIF,
                                                   obj_cmd_rq) < 0)
@@ -507,7 +539,7 @@ ipmi_cmd_get_system_interface_capabilities_ssif (ipmi_ctx_t ctx,
                        
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -538,7 +570,11 @@ ipmi_cmd_get_system_interface_capabilities_kcs (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_interface_capabilities_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_system_interface_capabilities_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_system_interface_capabilities (IPMI_SYSTEM_INTERFACE_KCS,
                                                   obj_cmd_rq) < 0)
@@ -555,7 +591,7 @@ ipmi_cmd_get_system_interface_capabilities_kcs (ipmi_ctx_t ctx,
                        
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -586,7 +622,11 @@ ipmi_cmd_get_bt_interface_capabilities (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_bt_interface_capabilities_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_bt_interface_capabilities_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_bt_interface_capabilities (obj_cmd_rq) < 0)
     {
@@ -602,7 +642,7 @@ ipmi_cmd_get_bt_interface_capabilities (ipmi_ctx_t ctx,
                        
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -638,7 +678,11 @@ ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_channel_authentication_capabilities_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_channel_authentication_capabilities (channel_number,
                                                         maximum_privilege_level,
@@ -656,7 +700,7 @@ ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx,
                        
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -693,7 +737,11 @@ ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_channel_authentication_capabilities_v20_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_v20_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_channel_authentication_capabilities_v20 (channel_number,
                                                             maximum_privilege_level,
@@ -712,7 +760,7 @@ ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
                        
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -748,7 +796,11 @@ ipmi_cmd_get_session_challenge (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_session_challenge_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_session_challenge_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_session_challenge (authentication_type, 
                                       user_name,
@@ -767,7 +819,7 @@ ipmi_cmd_get_session_challenge (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -807,7 +859,11 @@ ipmi_cmd_activate_session (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_activate_session_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_activate_session_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_activate_session (authentication_type,
                                  maximum_privilege_level,
@@ -828,7 +884,7 @@ ipmi_cmd_activate_session (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -861,7 +917,11 @@ ipmi_cmd_set_session_privilege_level (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_session_privilege_level_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_session_privilege_level_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_session_privilege_level (privilege_level, 
                                             obj_cmd_rq) < 0)
@@ -878,7 +938,7 @@ ipmi_cmd_set_session_privilege_level (ipmi_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -910,7 +970,11 @@ ipmi_cmd_close_session (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_close_session_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_close_session_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_close_session (close_session_id, obj_cmd_rq) < 0)
     {
@@ -926,7 +990,7 @@ ipmi_cmd_close_session (ipmi_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -973,7 +1037,11 @@ ipmi_cmd_set_channel_access (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_channel_access_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_channel_access_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_channel_access (channel_number, 
                                    ipmi_messaging_access_mode, 
@@ -997,7 +1065,7 @@ ipmi_cmd_set_channel_access (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1032,7 +1100,7 @@ ipmi_cmd_get_channel_access (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_channel_access_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_channel_access_rq)))
 
   if (fill_cmd_get_channel_access (channel_number, 
                                    channel_access_get,
@@ -1050,7 +1118,7 @@ ipmi_cmd_get_channel_access (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1083,7 +1151,7 @@ ipmi_cmd_get_channel_info (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_channel_info_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_channel_info_rq)))
 
   if (fill_cmd_get_channel_info (channel_number, obj_cmd_rq) < 0)
     {
@@ -1099,7 +1167,7 @@ ipmi_cmd_get_channel_info (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1144,7 +1212,7 @@ ipmi_cmd_set_channel_security_keys (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_channel_security_keys_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_channel_security_keys_rq)))
 
   if (fill_cmd_set_channel_security_keys (channel_number,
                                           operation,
@@ -1165,7 +1233,7 @@ ipmi_cmd_set_channel_security_keys (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1208,7 +1276,7 @@ ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_user_access_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_access_rq)))
 
   if (fill_cmd_set_user_access (channel_number,
                                 user_ipmi_messaging,
@@ -1231,7 +1299,7 @@ ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1265,7 +1333,7 @@ ipmi_cmd_get_user_access (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_user_access_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_user_access_rq)))
 
   if (fill_cmd_get_user_access (channel_number, user_id, obj_cmd_rq) < 0)
     {
@@ -1281,7 +1349,7 @@ ipmi_cmd_get_user_access (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1316,7 +1384,7 @@ ipmi_cmd_set_user_name (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_user_name_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_name_rq)))
 
   if (fill_cmd_set_user_name (user_id, 
                               user_name, 
@@ -1335,7 +1403,7 @@ ipmi_cmd_set_user_name (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1367,7 +1435,7 @@ ipmi_cmd_get_user_name (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_user_name_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_user_name_rq)))
 
   if (fill_cmd_get_user_name (user_id, obj_cmd_rq) < 0)
     {
@@ -1383,7 +1451,7 @@ ipmi_cmd_get_user_name (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1420,7 +1488,7 @@ ipmi_cmd_set_user_password (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_user_password_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_password_rq)))
 
   if (fill_cmd_set_user_password (user_id, 
                                   operation, 
@@ -1440,7 +1508,7 @@ ipmi_cmd_set_user_password (ipmi_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1484,7 +1552,7 @@ ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_user_password_v20_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_password_v20_rq)))
   
   if (fill_cmd_set_user_password_v20 (user_id, 
                                       password_size,
@@ -1505,7 +1573,7 @@ ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1552,7 +1620,7 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
 	    }
 	}
 
-      API_FIID_OBJ_DESTROY(obj_data_rs);
+      FIID_OBJ_DESTROY(obj_data_rs);
     }
   
   if (!(obj_data_rs = fiid_obj_create(tmpl_cmd_get_channel_info_rs)))
@@ -1581,7 +1649,7 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
   if (rv < 0)
     API_SET_ERRNUM(IPMI_ERR_NOT_FOUND);
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_data_rs);
+  FIID_OBJ_DESTROY(obj_data_rs);
   return (rv);
 }
 

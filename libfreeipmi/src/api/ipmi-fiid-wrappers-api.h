@@ -57,17 +57,6 @@ do {                                               \
 
 #define API_FIID_TEMPLATE_FREE(__tmpl)   FIID_TEMPLATE_FREE((__tmpl))
 
-#define API_FIID_OBJ_CREATE(__obj, __tmpl)                  \
-do {                                                        \
-  if (!((__obj) = fiid_obj_create((__tmpl))))               \
-    {                                                       \
-      API_ERRNO_TO_API_ERRNUM(ctx, errno);                  \
-      return (-1);                                          \
-    }                                                       \
-} while (0)
-
-#define API_FIID_OBJ_DESTROY(__obj) FIID_OBJ_DESTROY(__obj)
-
 #define API_FIID_OBJ_LEN_BYTES(__len, __obj)             \
 do {                                                     \
     if (((__len) = fiid_obj_len_bytes ((__obj))) < 0)    \

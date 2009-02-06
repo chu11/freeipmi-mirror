@@ -111,7 +111,7 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_user_payload_access_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_payload_access_rq)))
 
   if (fill_cmd_set_user_payload_access (channel_number,
                                         user_id,
@@ -145,7 +145,7 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -179,7 +179,7 @@ ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_user_payload_access_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_user_payload_access_rq)))
   
   if (fill_cmd_get_user_payload_access (channel_number,
                                         user_id,
@@ -197,6 +197,6 @@ ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }

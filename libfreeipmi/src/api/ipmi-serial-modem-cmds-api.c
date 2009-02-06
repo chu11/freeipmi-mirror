@@ -77,7 +77,7 @@ ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_connection_mode_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_connection_mode_rq)))
   
   if (fill_cmd_set_serial_modem_configuration_connection_mode (channel_number, 
                                                                basic_mode, 
@@ -98,7 +98,7 @@ ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -137,7 +137,7 @@ ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings_rq)))
 
   if (fill_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (channel_number, 
                                                                             dtr_hangup,
@@ -157,7 +157,7 @@ ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -191,7 +191,7 @@ ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_page_blackout_interval_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_page_blackout_interval_rq)))
 
   if (fill_cmd_set_serial_modem_configuration_page_blackout_interval (channel_number, 
                                                                       page_blackout_interval,
@@ -209,7 +209,7 @@ ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -243,7 +243,7 @@ ipmi_cmd_set_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_call_retry_interval_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_call_retry_interval_rq)))
 
   if (fill_cmd_set_serial_modem_configuration_call_retry_interval (channel_number, 
                                                                    call_retry_interval,
@@ -261,7 +261,7 @@ ipmi_cmd_set_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -298,7 +298,7 @@ ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_serial_modem_configuration_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_rq)))
 
   if (fill_cmd_get_serial_modem_configuration (channel_number, 
                                                get_parameter, 
@@ -319,7 +319,7 @@ ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -356,7 +356,7 @@ ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_serial_modem_configuration_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_rq)))
 
   if (fill_cmd_get_serial_modem_configuration (channel_number, 
                                                get_parameter, 
@@ -377,7 +377,7 @@ ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -414,7 +414,7 @@ ipmi_cmd_get_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_serial_modem_configuration_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_rq)))
 
   if (fill_cmd_get_serial_modem_configuration (channel_number, 
                                                get_parameter, 
@@ -435,7 +435,7 @@ ipmi_cmd_get_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -472,7 +472,7 @@ ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_serial_modem_configuration_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_rq)))
 
   if (fill_cmd_get_serial_modem_configuration (channel_number, 
                                                get_parameter, 
@@ -493,7 +493,7 @@ ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 

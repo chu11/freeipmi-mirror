@@ -191,19 +191,19 @@ _ipmi_outofband_free (ipmi_ctx_t ctx)
   /* Function Note: No need to set errnum - just return */
   assert(ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  API_FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_rmcp_hdr);
-  API_FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_lan_session_hdr);
-  API_FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_rmcpplus_session_hdr);
-  API_FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_lan_msg_hdr);
-  API_FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_rmcpplus_session_trlr);
+  FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_rmcp_hdr);
+  FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_lan_session_hdr);
+  FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_rmcpplus_session_hdr);
+  FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_lan_msg_hdr);
+  FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_rmcpplus_session_trlr);
 
-  API_FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_rmcp_hdr);
-  API_FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_lan_session_hdr);
-  API_FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_rmcpplus_session_hdr);
-  API_FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_lan_msg_hdr);
-  API_FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_rmcpplus_payload);
-  API_FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_lan_msg_trlr);
-  API_FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_rmcpplus_session_trlr);
+  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_rmcp_hdr);
+  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_lan_session_hdr);
+  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_rmcpplus_session_hdr);
+  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_lan_msg_hdr);
+  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_rmcpplus_payload);
+  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_lan_msg_trlr);
+  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_rmcpplus_session_trlr);
 }
 
 static void 
@@ -221,8 +221,8 @@ _ipmi_inband_free (ipmi_ctx_t ctx)
   if (ctx->type == IPMI_DEVICE_SUNBMC && ctx->io.inband.sunbmc_ctx)
     ipmi_sunbmc_ctx_destroy(ctx->io.inband.sunbmc_ctx);
 
-  API_FIID_OBJ_DESTROY (ctx->io.inband.rq.obj_hdr);
-  API_FIID_OBJ_DESTROY (ctx->io.inband.rs.obj_hdr);
+  FIID_OBJ_DESTROY (ctx->io.inband.rq.obj_hdr);
+  FIID_OBJ_DESTROY (ctx->io.inband.rs.obj_hdr);
 }
 
 static int
@@ -597,11 +597,7 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
-  
-    {
-      API_ERRNO_TO_API_ERRNUM(ctx, errno);
-      goto cleanup;
-    }
+ 
   if (!(ctx->io.outofband.rs.obj_rmcp_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
     {
       API_ERRNO_TO_API_ERRNUM(ctx, errno);

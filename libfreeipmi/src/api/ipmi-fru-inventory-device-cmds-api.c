@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.11 2009-02-06 00:27:21 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.11.2.1 2009-02-06 12:40:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -76,7 +76,11 @@ ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_fru_inventory_area_info_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_fru_inventory_area_info_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_fru_inventory_area_info (fru_device_id, 
                                             obj_cmd_rq) < 0)
@@ -93,7 +97,7 @@ ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -127,7 +131,11 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_read_fru_data_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_read_fru_data_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_read_fru_data (fru_device_id, 
                               fru_inventory_offset_to_read,
@@ -146,6 +154,6 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }

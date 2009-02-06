@@ -72,7 +72,11 @@ ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_sol_configuration_parameters_sol_enable (channel_number, 
                                                             sol_enable,
@@ -90,7 +94,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -129,7 +133,11 @@ ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_sol_configuration_parameters_sol_authentication (channel_number, 
                                                                     sol_privilege_level,
@@ -149,7 +157,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -184,7 +192,11 @@ ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (channel_number, 
                                                                                                   character_accumulate_interval,
@@ -203,7 +215,7 @@ ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -238,7 +250,11 @@ ipmi_cmd_set_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_retry_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_sol_retry_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_set_sol_configuration_parameters_sol_retry (channel_number, 
                                                            retry_count,
@@ -257,7 +273,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -292,7 +308,11 @@ ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (channel_number, 
                                                                            bit_rate,
@@ -310,7 +330,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -345,7 +365,11 @@ ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (channel_number, 
                                                                        bit_rate,
@@ -363,7 +387,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -397,7 +421,11 @@ ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (channel_number, 
                                                                          port_number,
@@ -415,7 +443,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -452,7 +480,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_sol_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -473,7 +505,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -510,7 +542,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_get_sol_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -531,7 +567,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -568,7 +604,11 @@ ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_get_sol_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -589,7 +629,7 @@ ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -626,7 +666,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_get_sol_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -647,7 +691,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -684,7 +728,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_get_sol_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -705,7 +753,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -742,7 +790,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_get_sol_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -763,7 +815,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -800,7 +852,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_get_sol_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -821,7 +877,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -858,7 +914,11 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_get_sol_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -879,6 +939,6 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }

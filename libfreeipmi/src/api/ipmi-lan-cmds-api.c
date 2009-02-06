@@ -120,7 +120,11 @@ ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_authentication_type_enables_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_authentication_type_enables_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_authentication_type_enables (channel_number, 
                                                                              callback_level_none,
@@ -162,7 +166,7 @@ ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -196,7 +200,11 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ip_address_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_ip_address_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_ip_address (channel_number, 
                                                             ip_address,
@@ -214,7 +222,7 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -248,7 +256,11 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ip_address_source_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_ip_address_source_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_ip_address_source (channel_number, 
                                                                    ip_address_source,
@@ -266,7 +278,7 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -300,7 +312,11 @@ ipmi_cmd_set_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_mac_address_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_mac_address_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_mac_address (channel_number, 
                                                              mac_address,
@@ -318,7 +334,7 @@ ipmi_cmd_set_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -352,7 +368,11 @@ ipmi_cmd_set_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_subnet_mask_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_subnet_mask_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_subnet_mask (channel_number, 
                                                              subnet_mask,
@@ -370,7 +390,7 @@ ipmi_cmd_set_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -407,7 +427,11 @@ ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_bmc_generated_arp_control_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_bmc_generated_arp_control_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (channel_number, 
                                                                            bmc_generated_gratuitous_arps, 
@@ -426,7 +450,7 @@ ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -460,7 +484,11 @@ ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_gratuitous_arp_interval_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_gratuitous_arp_interval_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (channel_number, 
                                                                          gratuitous_arp_interval,
@@ -478,7 +506,7 @@ ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -512,7 +540,11 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ip_address_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_ip_address_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_default_gateway_address (channel_number, 
                                                                          ip_address,
@@ -530,7 +562,7 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -564,7 +596,11 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_mac_address_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_mac_address_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_default_gateway_mac_address (channel_number, 
                                                                              mac_address,
@@ -582,7 +618,7 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -616,7 +652,11 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ip_address_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_ip_address_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_backup_gateway_address (channel_number, 
                                                                         ip_address,
@@ -634,7 +674,7 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -668,7 +708,11 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_mac_address_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_mac_address_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (channel_number, 
                                                                             mac_address,
@@ -686,7 +730,7 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -723,7 +767,11 @@ ipmi_cmd_set_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_community_string_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_community_string_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_community_string (channel_number, 
                                                                   community_string,
@@ -742,7 +790,7 @@ ipmi_cmd_set_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -784,7 +832,11 @@ ipmi_cmd_set_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_destination_type_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_destination_type_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_destination_type (channel_number, 
                                                                   destination_selector,
@@ -806,7 +858,7 @@ ipmi_cmd_set_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -843,7 +895,11 @@ ipmi_cmd_set_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_destination_addresses_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_destination_addresses_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_destination_addresses (channel_number, 
                                                                        destination_selector,
@@ -864,7 +920,7 @@ ipmi_cmd_set_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -902,7 +958,11 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_vlan_id_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_vlan_id_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_vlan_id (channel_number,
                                                          vlan_id,
@@ -921,7 +981,7 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -955,7 +1015,11 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_vlan_priority_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_vlan_priority_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_lan_configuration_parameters_vlan_priority (channel_number,
                                                                vlan_priority,
@@ -973,7 +1037,7 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1054,7 +1118,11 @@ ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(channel_number,
                                                                                                  maximum_privilege_for_cipher_suite_1,
@@ -1087,7 +1155,7 @@ ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 
 
@@ -1126,7 +1194,11 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (ipmi_ctx_
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1147,7 +1219,7 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (ipmi_ctx_
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1184,7 +1256,11 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1205,7 +1281,7 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1242,7 +1318,11 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1263,7 +1343,7 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1300,7 +1380,11 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1321,7 +1405,7 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1358,7 +1442,11 @@ ipmi_cmd_get_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1379,7 +1467,7 @@ ipmi_cmd_get_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1416,7 +1504,11 @@ ipmi_cmd_get_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1437,7 +1529,7 @@ ipmi_cmd_get_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1474,7 +1566,11 @@ ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1495,7 +1591,7 @@ ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1532,7 +1628,11 @@ ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1553,7 +1653,7 @@ ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1590,7 +1690,11 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1611,7 +1715,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1648,7 +1752,11 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1669,7 +1777,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1706,7 +1814,11 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1727,7 +1839,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1764,7 +1876,11 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1785,7 +1901,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1822,7 +1938,11 @@ ipmi_cmd_get_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1843,7 +1963,7 @@ ipmi_cmd_get_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1880,7 +2000,11 @@ ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (ipmi_ctx_t ctx
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1901,7 +2025,7 @@ ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (ipmi_ctx_t ctx
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1939,7 +2063,11 @@ ipmi_cmd_get_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -1960,7 +2088,7 @@ ipmi_cmd_get_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -1998,7 +2126,11 @@ ipmi_cmd_get_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -2019,7 +2151,7 @@ ipmi_cmd_get_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -2056,7 +2188,11 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -2077,7 +2213,7 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -2114,7 +2250,11 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -2135,7 +2275,7 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -2172,7 +2312,11 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -2193,7 +2337,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -2230,7 +2374,11 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entrie
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -2251,7 +2399,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entrie
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -2288,7 +2436,11 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
       return (-1);
     }
   
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
                                                  get_parameter, 
@@ -2309,7 +2461,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -2346,7 +2498,11 @@ ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_suspend_bmc_arps_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_suspend_bmc_arps (channel_number, 
                                  gratuitous_arp_suspend, 
@@ -2365,7 +2521,7 @@ ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
  
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -2400,7 +2556,11 @@ ipmi_cmd_get_ip_udp_rmcp_statistics (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_ip_udp_rmcp_statistics_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_ip_udp_rmcp_statistics_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_ip_udp_rmcp_statistics (channel_number, 
                                            clear_all_statistics,
@@ -2418,6 +2578,6 @@ ipmi_cmd_get_ip_udp_rmcp_statistics (ipmi_ctx_t ctx,
  
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
