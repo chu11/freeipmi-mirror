@@ -55,8 +55,6 @@ do {                                               \
   __FIID_ERRNUM_SET_API_ERRNUM(__objerrnum);       \
 } while (0)
 
-#define API_FIID_TEMPLATE_FREE(__tmpl)   FIID_TEMPLATE_FREE((__tmpl))
-
 #define API_FIID_OBJ_GET(__obj, __field, __val)                         \
 do {                                                                    \
     uint64_t __localval = 0, *__localval_ptr;                           \
@@ -97,23 +95,6 @@ do {                                                                    \
     *__localval_ptr = __localval;                                       \
 } while (0)
 
-#define API_FIID_OBJ_PACKET_VALID(__obj)               \
-do {                                                   \
-    int __ret;                                         \
-    if ((__ret = fiid_obj_packet_valid((__obj))) < 0)  \
-      {                                                \
-        __FIID_OBJ_TRACE((__obj));                     \
-	__FIID_OBJ_SET_API_ERRNUM((__obj));            \
-        return (-1);                                   \
-      }                                                \
-    if (!__ret)                                        \
-      {                                                \
-        __FIID_OBJ_TRACE((__obj));                     \
-        ctx->errnum = IPMI_ERR_PARAMETERS;             \
-	return (-1);                                   \
-      }                                                \
-} while (0)
-
 /* Special one used for debug dumping */
 #define API_FIID_OBJ_GET_NO_RETURN(__obj, __field, __val)             \
 do {                                                                  \
@@ -136,6 +117,8 @@ do {                                                                     \
 } while (0)   
 
 void ipmi_set_api_errnum_by_fiid_object(ipmi_ctx_t ctx, fiid_obj_t obj);
+
+int api_fiid_obj_packet_valid(ipmi_ctx_t ctx, fiid_obj_t obj);
 
 int api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tmpl);
 

@@ -32,6 +32,7 @@
 
 #include "ipmi-ctx.h"
 #include "ipmi-err-wrappers-api.h"
+#include "ipmi-fiid-wrappers-api.h"
 
 #include "freeipmi-portability.h"
 
@@ -56,7 +57,30 @@ ipmi_set_api_errnum_by_fiid_object(ipmi_ctx_t ctx, fiid_obj_t obj)
 }
 
 int
-api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tmpl)
+api_fiid_obj_packet_valid(ipmi_ctx_t ctx, fiid_obj_t obj)
+{
+  int ret;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    return (-1);
+
+  if ((ret = fiid_obj_valid(obj)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj);
+      return (-1);
+    }
+
+  if (!ret)
+    {
+      ctx->errnum = IPMI_ERR_PARAMETERS;
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+api_fiid_obj_template_compare(ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tmpl)
 {
   int ret;
 
@@ -89,3 +113,4 @@ api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t t
 
   return (0);
 }
+

@@ -1243,9 +1243,9 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
  cleanup:
   ctx->io.outofband.session_sequence_number++;
   /* rq_seq already incremented via _ipmi_cmd_send_ipmb call */
-  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
+  FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
   ctx->tmpl_ipmb_cmd_rq = NULL;
-  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
+  FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
   ctx->tmpl_ipmb_cmd_rs = NULL;
 
   return (rv);
@@ -2752,9 +2752,9 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
  cleanup:
   ctx->io.outofband.session_sequence_number++;
   /* rq_seq already incremented via _ipmi_cmd_send_ipmb call */
-  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
+  FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
   ctx->tmpl_ipmb_cmd_rq = NULL;
-  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
+  FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
   ctx->tmpl_ipmb_cmd_rs = NULL;
 
   return (rv);

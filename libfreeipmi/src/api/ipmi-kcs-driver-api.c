@@ -231,7 +231,11 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
+  if (api_fiid_obj_packet_valid(ctx, obj_cmd_rq) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_KCS)
     {
@@ -360,7 +364,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
     rv = 0;
   cleanup:
-    API_FIID_TEMPLATE_FREE(tmpl);
+    FIID_TEMPLATE_FREE(tmpl);
     if (rv < 0)
       return (rv);
   }
@@ -548,7 +552,11 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
+  if (api_fiid_obj_packet_valid(ctx, obj_cmd_rq) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_KCS)
     {
@@ -643,9 +651,9 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
   ctx->io.inband.rq_seq = ((ctx->io.inband.rq_seq) + 1) % (IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
   FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rs);
   FIID_OBJ_DESTROY(obj_ipmb_msg_trlr);
-  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
+  FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
   ctx->tmpl_ipmb_cmd_rq = NULL;
-  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
+  FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
   ctx->tmpl_ipmb_cmd_rs = NULL;
   return (rv);
 }               
