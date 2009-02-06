@@ -2,6 +2,11 @@
 
 	* libfreeipmi/: Massive code cleanup;
 
+	* libfreeipmi/src/api/ipmi-fiid-wrappers-api.h,
+	  libfreeipmi/src/api/ipmi-fiid-wrappers-api.c: Removed files,
+	  collapse into libfreeipmi/src/api/ipmi-err-wrappers-api.h and
+	  libfreeipmi/src/api/ipmi-err-wrappers-api.c.
+
 2009-02-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/ipmi-err-wrappers-api.c: New file.

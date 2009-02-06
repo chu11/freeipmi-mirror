@@ -121,29 +121,6 @@ do {                                                                     \
   __MSG_TRACE(ipmi_locate_strerror(__errnum), __errnum);                 \
 } while (0)   
 
-/* Note: ctx->errnum set in call to ipmi_cmd() - don't call wrapper */
-#define API_ERR_IPMI_CMD_CLEANUP(__ctx, __lun, __netfn, __rq, __rs)                                        \
-do {                                                                                                       \
-  int8_t __rv;                                                                                             \
-  if (ipmi_cmd ((__ctx),                                                                                   \
-                (__lun),                                                                                   \
-                (__netfn),                                                                                 \
-                (__rq),                                                                                    \
-                (__rs)) < 0)                                                                               \
-    goto cleanup;                                                                                          \
-  if ((__rv = ipmi_check_completion_code_success ((__rs))) < 0)                                            \
-    {                                                                                                      \
-      API_ERRNO_TO_API_ERRNUM((__ctx), errno);                                                             \
-      goto cleanup;                                                                                        \
-    }                                                                                                      \
-  if (!__rv)                                                                                               \
-    {                                                                                                      \
-      ipmi_set_api_errnum_by_bad_response((__ctx), (__rs));                                                \
-      __API_TRACE_COMP_CODE_ERRMSG(__ctx, __rs);                                                           \
-      goto cleanup;                                                                                        \
-    }                                                                                                      \
-} while (0)
-
 /* Note: ctx->errnum set in call to ipmi_cmd_ipmb() - don't call wrapper */
 #define API_ERR_IPMI_CMD_IPMB_CLEANUP(__ctx, __slave_address, __lun, __netfn, __rq, __rs)                  \
 do {                                                                                                       \
@@ -189,6 +166,19 @@ int api_fiid_obj_packet_valid(ipmi_ctx_t ctx, fiid_obj_t obj);
 int api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tmpl);
 
 int api_fiid_obj_get(ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
+
+int api_ipmi_cmd(ipmi_ctx_t ctx,
+                 uint8_t lun,
+                 uint8_t net_fn,
+                 fiid_obj_t obj_cmd_rq,
+                 fiid_obj_t obj_cmd_rs);
+
+int api_ipmi_cmd_ipmb(ipmi_ctx_t ctx,
+                      uint8_t rs_addr,
+                      uint8_t lun,
+                      uint8_t net_fn,
+                      fiid_obj_t obj_cmd_rq,
+                      fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

@@ -79,11 +79,15 @@ ipmi_cmd_get_chassis_capabilities (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-			    IPMI_BMC_IPMB_LUN_BMC, 
-			    IPMI_NET_FN_CHASSIS_RQ, 
-			    obj_cmd_rq, 
-			    obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
@@ -130,12 +134,16 @@ ipmi_cmd_get_chassis_status (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-			    IPMI_BMC_IPMB_LUN_BMC, 
-			    IPMI_NET_FN_CHASSIS_RQ, 
-			    obj_cmd_rq, 
-			    obj_cmd_rs);
-
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
+ 
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY(obj_cmd_rq);
@@ -183,11 +191,15 @@ ipmi_cmd_chassis_control (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
@@ -240,11 +252,15 @@ ipmi_cmd_chassis_identify (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
@@ -303,11 +319,15 @@ ipmi_cmd_set_front_panel_enables (ipmi_ctx_t ctx,
       goto cleanup;
     }
   
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
@@ -357,11 +377,15 @@ ipmi_cmd_set_power_restore_policy (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
@@ -409,11 +433,16 @@ ipmi_cmd_set_power_cycle_interval (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_cmd_rq);
@@ -459,11 +488,15 @@ ipmi_cmd_get_system_restart_cause (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
@@ -516,11 +549,16 @@ ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_cmd_rq);
@@ -567,11 +605,16 @@ ipmi_cmd_set_system_boot_options_set_in_progress (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_cmd_rq);
@@ -637,11 +680,16 @@ ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_cmd_rq);
@@ -702,11 +750,16 @@ ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_cmd_rq);
@@ -800,11 +853,16 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
       goto cleanup;
     }
   
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_cmd_rq);
@@ -856,11 +914,16 @@ ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_cmd_rq);
@@ -911,11 +974,16 @@ ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_cmd_rq);
@@ -966,11 +1034,16 @@ ipmi_cmd_get_system_boot_options_boot_flags (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_cmd_rq);
@@ -1016,11 +1089,15 @@ ipmi_cmd_get_power_on_hours_counter (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_CHASSIS_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_CHASSIS_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:

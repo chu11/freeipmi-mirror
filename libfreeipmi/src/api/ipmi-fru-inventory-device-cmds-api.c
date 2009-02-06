@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.11.2.3 2009-02-06 17:25:44 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.11.2.4 2009-02-06 18:37:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -87,12 +87,16 @@ ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
-
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_STORAGE_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
+  
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_STORAGE_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
@@ -109,13 +113,13 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t rv = -1;
-
+  
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
       ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
-
+  
   if (!fiid_obj_valid(obj_cmd_rs))
     {
       API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
@@ -129,13 +133,13 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
       ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
-
+  
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_read_fru_data_rq)))
     {
       API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
-
+  
   if (fill_cmd_read_fru_data (fru_device_id, 
                               fru_inventory_offset_to_read,
                               count_to_read,
@@ -144,13 +148,17 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
     }
-
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-                            IPMI_BMC_IPMB_LUN_BMC, 
-                            IPMI_NET_FN_STORAGE_RQ, 
-                            obj_cmd_rq, 
-                            obj_cmd_rs);
-  
+    
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_STORAGE_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
+    
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY(obj_cmd_rq);

@@ -81,11 +81,15 @@ ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-			    IPMI_BMC_IPMB_LUN_BMC, 
-			    IPMI_NET_FN_APP_RQ, 
-			    obj_cmd_rq, 
-			    obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_APP_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
@@ -137,13 +141,17 @@ ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_IPMB_CLEANUP (ctx, 
-                                 slave_address,
-                                 IPMI_BMC_IPMB_LUN_BMC, 
-                                 IPMI_NET_FN_SENSOR_EVENT_RQ, 
-                                 obj_cmd_rq, 
-                                 obj_cmd_rs);
-
+  if (api_ipmi_cmd_ipmb (ctx, 
+                         slave_address,
+                         IPMI_BMC_IPMB_LUN_BMC, 
+                         IPMI_NET_FN_SENSOR_EVENT_RQ, 
+                         obj_cmd_rq, 
+                         obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
+  
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY(obj_cmd_rq);
@@ -188,11 +196,15 @@ ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx, 
-			    IPMI_BMC_IPMB_LUN_BMC, 
-			    IPMI_NET_FN_APP_RQ, 
-			    obj_cmd_rq, 
-			    obj_cmd_rs);
+  if (api_ipmi_cmd (ctx, 
+                    IPMI_BMC_IPMB_LUN_BMC, 
+                    IPMI_NET_FN_APP_RQ, 
+                    obj_cmd_rq, 
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:

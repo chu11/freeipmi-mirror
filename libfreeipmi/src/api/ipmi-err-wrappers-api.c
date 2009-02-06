@@ -325,3 +325,99 @@ api_fiid_obj_get(ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val)
   *val = lval;
   return (0);
 }
+
+int
+api_ipmi_cmd(ipmi_ctx_t ctx,
+             uint8_t lun,
+             uint8_t net_fn,
+             fiid_obj_t obj_cmd_rq,
+             fiid_obj_t obj_cmd_rs)
+{
+  int8_t ret;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    return (-1);
+
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  /* Note: ctx->errnum set in call to ipmi_cmd() */
+  if (ipmi_cmd(ctx,
+               lun,
+               net_fn,
+               obj_cmd_rq,
+               obj_cmd_rs) < 0)
+    return (-1);
+
+  if ((ret = ipmi_check_completion_code_success(obj_cmd_rs)) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      return (-1);
+    }
+
+  if (!ret)
+    {
+      API_BAD_RESPONSE_TO_API_ERRNUM(ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+api_ipmi_cmd_ipmb(ipmi_ctx_t ctx,
+                  uint8_t rs_addr,
+                  uint8_t lun,
+                  uint8_t net_fn,
+                  fiid_obj_t obj_cmd_rq,
+                  fiid_obj_t obj_cmd_rs)
+{
+  int8_t ret;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    return (-1);
+
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  if (!fiid_obj_valid(obj_cmd_rs))
+    {
+      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  /* Note: ctx->errnum set in call to ipmi_cmd_ipmb() */
+  if (ipmi_cmd_ipmb(ctx,
+                    rs_addr,
+                    lun,
+                    net_fn,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    return (-1);
+
+  if ((ret = ipmi_check_completion_code_success(obj_cmd_rs)) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      return (-1);
+    }
+
+  if (!ret)
+    {
+      API_BAD_RESPONSE_TO_API_ERRNUM(ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  return (0);
+}
