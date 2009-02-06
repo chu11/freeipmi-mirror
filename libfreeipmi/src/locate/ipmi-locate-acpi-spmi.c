@@ -636,7 +636,7 @@ _ipmi_physical_address_valid(int *locate_errnum,
       && (physical_address + length) < physical_memory_size)
     return 1;
   else
-    return 0;
+    return (0);
 #else /* !(_SC_PAGESIZE && _SC_PHYS_PAGES) */
   /* achu: For now we return 1.  Later we can maybe read /dev/meminfo
    * or something.
@@ -699,7 +699,7 @@ _ipmi_ioremap (int *locate_errnum,
   if (!_ipmi_physical_address_valid (locate_errnum,
                                      physical_address, 
                                      physical_address_len))
-    return -1;
+    return (-1);
     
   LOCATE_ERR_CLEANUP (!((mem_fd = open ("/dev/mem", 
                                         O_RDONLY|O_SYNC)) < 0));
@@ -754,13 +754,13 @@ _ipmi_get_physical_mem_data (int *locate_errnum,
                      &virtual_address,
                      &mapped_address, 
                      &mapped_address_len) < 0)
-    return -1;
+    return (-1);
 
   memcpy (data, virtual_address, length);
 
   _ipmi_iounmap (locate_errnum, mapped_address, mapped_address_len);
 
-  return 0;
+  return (0);
 }
 
 /*******************************************************************************
@@ -812,7 +812,7 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
                                    rsdp_window_base_address, 
                                    rsdp_window_size, 
                                    memdata) < 0)
-    return -1;
+    return (-1);
   
   /* Search from given start address for the requested length  */
   for (i = 0; i < rsdp_window_size; i += IPMI_ACPI_RSDP_SCAN_STEP)
@@ -872,7 +872,7 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
 	      {
 		/* we found RSDT/XSDT */
 		free (rsdt_xsdt_table);
-		return 0;
+		return (0);
 	      }
 	    free (rsdt_xsdt_table);
 	    
@@ -881,13 +881,17 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
                                  "rsdt_physical_address", 
                                  &rsdt_xsdt_address);
             
-	    LOCATE_ERR_OUT_OF_MEMORY((memdata = alloca (acpi_rsdp_descriptor_len)));
+	    if (!(memdata = alloca (acpi_rsdp_descriptor_len)))
+              {
+                LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+                return (-1);
+              }
 	    memset (memdata, 0, acpi_rsdp_descriptor_len);
 	    if (_ipmi_get_physical_mem_data (locate_errnum,
                                              rsdt_xsdt_address, 
                                              acpi_rsdp_descriptor_len, 
                                              memdata) < 0)
-              return -1;
+              return (-1);
 	    
 	    /* check RSDP signature */
 	    LOCATE_ERR_SYSTEM_ERROR (!strncmp ((char *)memdata, 
@@ -903,7 +907,7 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
 	    memcpy (obj_acpi_rsdp_descriptor, memdata, acpi_rsdp_descriptor_len);
 	  }
 	  
-	  return 0;
+	  return (0);
 	}
     }
   
@@ -1030,7 +1034,7 @@ _ipmi_acpi_get_table (int *locate_errnum,
  *   sign_table_data_length  - ACPI table DATA length
  *
  * RETURN:
- *   Return 0 for success. ACPI table header and firmware table DATA are
+ *   return (0) for success. ACPI table header and firmware table DATA are
  *   returned through obj_acpi_table_hdr and signed_table_data
  *   parameters.
  *
@@ -1224,7 +1228,7 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
  *   acpi_table_firmware      - Initialized ACPI firmware table
  *
  * RETURN:
- *   Return 0 for success. ACPI table header and SPMI table is
+ *   return (0) for success. ACPI table header and SPMI table is
  *   returned through obj_acpi_table_hdr and obj_acpi_spmi_table_descriptor
  *   parameters.
  *
@@ -1463,5 +1467,5 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_interface_type_t type,
         LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_INTERNAL_ERROR);
       return errnum;
     }
-  return 0;
+  return (0);
 }

@@ -196,7 +196,11 @@ _mem_chunk (int *locate_errnum,
 
   LOCATE_ERR_CLEANUP(!((fd = open (devmem, O_RDONLY)) < 0));
   
-  LOCATE_ERR_OUT_OF_MEMORY_CLEANUP((p = malloc (len)));
+  if (!(p = malloc (len)))
+    {
+      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
   
 #ifdef HAVE_MMAP
 #ifdef _SC_PAGESIZE

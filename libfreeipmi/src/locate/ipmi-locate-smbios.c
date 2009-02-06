@@ -363,7 +363,11 @@ _copy_ipmi_dev_info (int *locate_errnum,
 
               if (flag)
                 {
-                  LOCATE_ERR_OUT_OF_MEMORY_CLEANUP ((result = malloc (size)));
+                  if (!(result = malloc (size)))
+                    {
+                      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+                      goto cleanup;
+                    }
                   memcpy (result, dev_info_p, size);
                   rv = result;
                   break;
