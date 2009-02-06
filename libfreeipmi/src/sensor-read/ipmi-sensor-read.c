@@ -147,9 +147,17 @@ ipmi_sensor_read_ctx_errormsg(ipmi_sensor_read_ctx_t ctx)
 int
 ipmi_sensor_read_ctx_get_flags(ipmi_sensor_read_ctx_t ctx, unsigned int *flags)
 {
-  ERR(ctx && ctx->magic == IPMI_SENSOR_READ_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SENSOR_READ_MAGIC)
+    {
+      ERR_TRACE(ipmi_sensor_read_ctx_errormsg(ctx), ipmi_sensor_read_ctx_errnum(ctx));
+      return (-1);
+    }
 
-  SENSOR_READ_ERR_PARAMETERS(flags);
+  if (!flags)
+    {
+      SENSOR_READ_ERRNUM_SET(IPMI_SENSOR_READ_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   *flags = ctx->flags;
   return 0;
@@ -158,9 +166,17 @@ ipmi_sensor_read_ctx_get_flags(ipmi_sensor_read_ctx_t ctx, unsigned int *flags)
 int
 ipmi_sensor_read_ctx_set_flags(ipmi_sensor_read_ctx_t ctx, unsigned int flags)
 {
-  ERR(ctx && ctx->magic == IPMI_SENSOR_READ_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SENSOR_READ_MAGIC)
+    {
+      ERR_TRACE(ipmi_sensor_read_ctx_errormsg(ctx), ipmi_sensor_read_ctx_errnum(ctx));
+      return (-1);
+    }
 
-  SENSOR_READ_ERR_PARAMETERS(!(flags & ~IPMI_SENSOR_READ_FLAGS_MASK));
+  if (flags & ~IPMI_SENSOR_READ_FLAGS_MASK)
+    {
+      SENSOR_READ_ERRNUM_SET(IPMI_SENSOR_READ_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   ctx->flags = flags;
   return 0;
@@ -302,12 +318,20 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
   uint8_t slave_address = 0;
   int event_reading_type_code_class = 0;
 
-  ERR(ctx && ctx->magic == IPMI_SENSOR_READ_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SENSOR_READ_MAGIC)
+    {
+      ERR_TRACE(ipmi_sensor_read_ctx_errormsg(ctx), ipmi_sensor_read_ctx_errnum(ctx));
+      return (-1);
+    }
 
-  SENSOR_READ_ERR_PARAMETERS(sdr_record
-                             && sdr_record_len
-                             && sensor_reading
-                             && sensor_event_bitmask); 
+  if (!sdr_record
+      || !sdr_record_len
+      || !sensor_reading
+      || !sensor_event_bitmask)
+    {
+      SENSOR_READ_ERRNUM_SET(IPMI_SENSOR_READ_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   *sensor_reading = NULL;
   *sensor_event_bitmask = 0;

@@ -54,7 +54,11 @@ ipmi_sel_parse_clear_sel(ipmi_sel_parse_ctx_t ctx)
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_MAGIC)
+    {
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   SEL_PARSE_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_clear_sel_rs);
 
@@ -110,10 +114,18 @@ ipmi_sel_parse_delete_sel_entry(ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_MAGIC)
+    {
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
-  SEL_PARSE_ERR_PARAMETERS(record_id > IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
-                           && record_id < IPMI_SEL_GET_RECORD_ID_LAST_ENTRY);
+  if (!(record_id > IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+        && record_id < IPMI_SEL_GET_RECORD_ID_LAST_ENTRY))
+    {
+      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
 
   SEL_PARSE_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_delete_sel_entry_rs);
 
@@ -177,15 +189,23 @@ ipmi_sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
                                     unsigned int buflen,
                                     unsigned int flags)
 {
-  ERR(ctx && ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_MAGIC)
+    {
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
+      return (-1);
+    }
   
-  SEL_PARSE_ERR_PARAMETERS(fmt 
-                           && record_buf
-                           && record_buflen
-                           && buf 
-                           && buflen
-                           && !(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  
+  if (!fmt 
+      || !record_buf
+      || !record_buflen
+      || !buf 
+      || !buflen
+      || (flags & ~IPMI_SEL_PARSE_STRING_MASK))
+    {
+      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_PARAMETERS);
+      return (-1);
+    }
+
   if (record_buflen < IPMI_SEL_RECORD_LENGTH)
     {
       ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;

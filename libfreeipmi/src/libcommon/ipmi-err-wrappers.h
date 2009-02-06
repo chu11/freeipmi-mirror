@@ -41,6 +41,15 @@ extern "C" {
 
 #if defined (IPMI_TRACE)
 
+#define __MSG_TRACE(__msgtracestr, __msgtracenum)                       \
+do {                                                                    \
+  fprintf (stderr,                                                      \
+           "%s: %d: %s: error '%s' (%d)\n",                             \
+           __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
+           __msgtracestr, __msgtracenum);                               \
+  fflush (stderr);                                                      \
+} while (0)
+
 #define __TRACE_ERRNO                                                   \
 do {                                                                    \
   extern int errno;                                                     \
@@ -109,8 +118,8 @@ do {                                                                    \
 
 #define __SDR_PARSE_TRACE                                               \
 do {                                                                    \
-  int __ctxerrnum = ipmi_sel_parse_ctx_errnum(ctx);                     \
-  char *__ctxerrstr = ipmi_sel_parse_ctx_strerror(__ctxerrnum);         \
+  int __ctxerrnum = ipmi_sdr_parse_ctx_errnum(ctx);                     \
+  char *__ctxerrstr = ipmi_sdr_parse_ctx_strerror(__ctxerrnum);         \
   __TRACE_CTX;                                                          \
 } while (0)
 
@@ -129,6 +138,7 @@ do {                                                                    \
 } while (0)
 
 #else
+#define __MSG_TRACE(__msgtracestr, __msgtracenum)
 #define __KCS_TRACE
 #define __SSIF_TRACE
 #define __OPENIPMI_TRACE
@@ -139,6 +149,11 @@ do {                                                                    \
 #define __SEL_PARSE_TRACE
 #define __SENSOR_READ_TRACE
 #endif /* IPMI_TRACE */
+
+#define ERR_TRACE(__str, __num)                                         \
+do {                                                                    \
+  __MSG_TRACE(__str, __num);                                            \
+} while (0)
 
 #define ERR_LOG(expr)                                                   \
 do {                                                                    \
@@ -382,7 +397,7 @@ do {                                                                    \
 #define SSIF_ERRNUM_SET(__errnum)                                       \
   do {                                                                  \
     ctx->errnum = (__errnum);                                           \
-    __KCS_TRACE;                                                        \
+    __SSIF_TRACE;                                                       \
   } while (0)
 
 #define SSIF_ERR_PARAMETERS(expr)                                       \
@@ -701,30 +716,10 @@ do {                                                                      \
     __SEL_PARSE_TRACE;                                                  \
   } while (0)
 
-#define SEL_PARSE_ERR_PARAMETERS(expr)                                  \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_PARAMETERS;                \
-        __SEL_PARSE_TRACE;                                              \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
 #define SENSOR_READ_ERRNUM_SET(__errnum)                                \
   do {                                                                  \
     ctx->errnum = (__errnum);                                           \
     __SENSOR_READ_TRACE;                                                \
-  } while (0)
-
-#define SENSOR_READ_ERR_PARAMETERS(expr)                                \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_PARAMETERS;              \
-        __SENSOR_READ_TRACE;                                            \
-        return (-1);                                                    \
-      }                                                                 \
   } while (0)
 
 #ifdef __cplusplus

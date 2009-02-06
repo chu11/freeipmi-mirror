@@ -701,7 +701,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                        "session_id",
                        &rs_session_id) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
 
@@ -793,7 +793,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                            "session_sequence_number",
                            &rs_session_sequence_number) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       
@@ -881,7 +881,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                            obj_cmd_rq,
                            "cmd",
                            &cmd) < 0)
-        API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+        ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
     }
 
   if (_ipmi_lan_cmd_send (ctx, 
@@ -1168,7 +1168,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
                            obj_cmd_rq,
                            "cmd",
                            &cmd) < 0)
-        API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+        ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
     }
 
   /* for debugging */
@@ -1366,7 +1366,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                            "authentication_status.anonymous_login",
                            &authentication_status_anonymous_login) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       if (api_fiid_obj_get(ctx,
@@ -1374,7 +1374,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                            "authentication_status.null_username",
                            &authentication_status_null_username) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       if (api_fiid_obj_get(ctx,
@@ -1382,7 +1382,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                            "authentication_status.non_null_username",
                            &authentication_status_non_null_username) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       
@@ -1413,7 +1413,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                            "authentication_status.per_message_authentication",
                            &val) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       ctx->io.outofband.per_msg_auth_disabled = val;
@@ -1429,7 +1429,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                            "authentication_type.none", 
                            &supported_authentication_type) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       break;
@@ -1439,7 +1439,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                            "authentication_type.md2", 
                            &supported_authentication_type) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       break;
@@ -1449,7 +1449,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                            "authentication_type.md5", 
                            &supported_authentication_type) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       break;
@@ -1459,7 +1459,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                            "authentication_type.straight_password_key", 
                            &supported_authentication_type) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       break;
@@ -1469,7 +1469,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                            "authentication_type.oem_prop", 
                            &supported_authentication_type) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       break;
@@ -1539,7 +1539,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                        "temp_session_id", 
                        &temp_session_id) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
   
@@ -1621,7 +1621,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                        "session_id", 
                        &session_id) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
 
@@ -1637,7 +1637,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                        "session_sequence_number",
                        &val) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
   ctx->io.outofband.highest_received_sequence_number = val;
@@ -1665,7 +1665,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                        "initial_inbound_sequence_number", 
                        &session_sequence_number) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
 
@@ -1676,7 +1676,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                        "authentication_type",
                        &val) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
 
@@ -1717,7 +1717,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 	      || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT) == 1)
 	    API_SET_ERRNUM(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
 	}
-      API_TRACE(ipmi_ctx_strerror(ctx->errnum), ctx->errnum);
+      ERR_TRACE(ipmi_ctx_strerror(ctx->errnum), ctx->errnum);
       goto cleanup;
     }
 
@@ -2280,7 +2280,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                            "payload_type",
                            &payload_type) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       if (payload_type != IPMI_PAYLOAD_TYPE_IPMI)
@@ -2294,7 +2294,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                            "session_id",
                            &val) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
           
@@ -2344,7 +2344,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                "session_sequence_number",
                                &rs_session_sequence_number) < 0)
             {
-              API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+              ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
               goto cleanup;
             }
 	  
@@ -2384,7 +2384,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                            "payload_type",
                            &val) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       if (val != IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
@@ -2398,7 +2398,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                            "remote_console_session_id",
                            &val) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
           
@@ -2415,7 +2415,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                "message_tag",
                                &val) < 0)
             {
-              API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+              ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
               goto cleanup;
             }
 	  if (val != *message_tag)
@@ -2435,7 +2435,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                            "payload_type",
                            &val) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       if (val != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)
@@ -2451,7 +2451,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                "message_tag",
                                &val) < 0)
             {
-              API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+              ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
               goto cleanup;
             }
 	  if (val != *message_tag)
@@ -2472,7 +2472,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                            "rmcpplus_status_code",
                            &rmcpplus_status_code) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
 
@@ -2481,7 +2481,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                            "remote_console_session_id",
                            &val) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       
@@ -2502,7 +2502,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                            "payload_type",
                            &val) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       if (val != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
@@ -2518,7 +2518,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                "message_tag",
                                &val) < 0)
             {
-              API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+              ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
               goto cleanup;
             }
 	  if (val != *message_tag)
@@ -2539,7 +2539,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                            "rmcpplus_status_code",
                            &rmcpplus_status_code) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
 
@@ -2548,7 +2548,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                            "remote_console_session_id",
                            &val) < 0)
         {
-          API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+          ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
           goto cleanup;
         }
       
@@ -2632,7 +2632,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                            obj_cmd_rq,
                            "cmd",
                            &cmd) < 0)
-        API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+        ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
     }
 
   if (_ipmi_lan_2_0_cmd_send (ctx, 
@@ -2817,7 +2817,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
                            obj_cmd_rq,
                            "cmd",
                            &cmd) < 0)
-        API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+        ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
     }
 
   /* for debugging */
@@ -3045,7 +3045,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                        "authentication_status.anonymous_login",
                        &authentication_status_anonymous_login) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
   if (api_fiid_obj_get(ctx,
@@ -3053,7 +3053,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                        "authentication_status.null_username",
                        &authentication_status_null_username) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
   if (api_fiid_obj_get(ctx,
@@ -3061,7 +3061,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                        "authentication_status.non_null_username",
                        &authentication_status_non_null_username) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
   if (api_fiid_obj_get(ctx,
@@ -3069,7 +3069,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                        "authentication_status.k_g",
                        &authentication_status_k_g) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
   if (api_fiid_obj_get(ctx,
@@ -3077,7 +3077,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                        "authentication_type.ipmi_v2.0_extended_capabilities_available",
                        &ipmi_v20_extended_capabilities_available) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
   if (api_fiid_obj_get(ctx,
@@ -3085,7 +3085,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                        "channel_supports_ipmi_v2.0_connections",
                        &channel_supports_ipmi_v20_connections) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
 
@@ -3220,7 +3220,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                        "rmcpplus_status_code",
                        &val) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
   rmcpplus_status_code = val;
@@ -3243,7 +3243,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                        "maximum_privilege_level",
                        &val) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
   maximum_privilege_level = val;
@@ -3282,7 +3282,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                        "managed_system_session_id",
                        &val) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
   ctx->io.outofband.managed_system_session_id = val;
@@ -3382,7 +3382,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                        "rmcpplus_status_code",
                        &val) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
   rmcpplus_status_code = val;
@@ -3710,7 +3710,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                        "rmcpplus_status_code",
                        &val) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       goto cleanup;
     }
   rmcpplus_status_code = val;
@@ -3804,7 +3804,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 	      || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT) == 1)
 	    API_SET_ERRNUM(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
 	}
-      API_TRACE(ipmi_ctx_strerror(ctx->errnum), ctx->errnum);
+      ERR_TRACE(ipmi_ctx_strerror(ctx->errnum), ctx->errnum);
       goto cleanup;
     }
 

@@ -349,7 +349,7 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -486,7 +486,7 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -668,7 +668,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -973,7 +973,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -996,7 +996,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
 
   if (api_fiid_obj_packet_valid(ctx, obj_cmd_rq) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -1019,7 +1019,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
                                obj_cmd_rq,
                                "cmd",
                                &cmd) < 0)
-            API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+            ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
 
           debug_hdr_cmd(DEBUG_UTIL_TYPE_INBAND,
                         DEBUG_UTIL_DIRECTION_REQUEST,
@@ -1077,7 +1077,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
                                obj_cmd_rq,
                                "cmd",
                                &cmd) < 0)
-            API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+            ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
 
 	  /* its ok to use the "request" net_fn */
           debug_hdr_cmd(DEBUG_UTIL_TYPE_INBAND,
@@ -1129,7 +1129,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -1152,7 +1152,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
 
   if (api_fiid_obj_packet_valid(ctx, obj_cmd_rq) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -1199,7 +1199,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -1292,7 +1292,7 @@ ipmi_ctx_close (ipmi_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -1331,7 +1331,7 @@ ipmi_ctx_destroy (ipmi_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return;
     }
 

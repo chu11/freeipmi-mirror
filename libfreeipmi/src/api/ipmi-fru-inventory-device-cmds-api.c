@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.11.2.2 2009-02-06 17:00:23 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.11.2.3 2009-02-06 17:25:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -57,7 +57,7 @@ ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -71,7 +71,7 @@ ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
                                     obj_cmd_rs,
                                     tmpl_cmd_get_fru_inventory_area_info_rs) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -112,7 +112,7 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -126,7 +126,7 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
                                     obj_cmd_rs, 
                                     tmpl_cmd_read_fru_data_rs) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
