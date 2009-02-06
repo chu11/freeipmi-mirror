@@ -44,33 +44,28 @@ extern "C" {
 #include "libcommon/ipmi-fiid-wrappers.h"
 
 #if defined (IPMI_TRACE)
-#define __API_CTX_TRACE                                                      \
-do {                                                                         \
-  int __ctxerrnum = ctx->errnum;                                             \
-  char *__ctxerrstr = ipmi_ctx_strerror(__ctxerrnum);                        \
-  __TRACE_CTX;                                                               \
-} while (0)
-
-#define __API_TRACE_COMP_CODE_ERRMSG(___ctx, ___rs)                          \
-do {                                                                         \
-  int __ctxerrnum = 0;                                                       \
-  char __ctxerrstr[IPMI_ERR_STR_MAX_LEN];                                    \
-  memset(__ctxerrstr, '\0', IPMI_ERR_STR_MAX_LEN);                           \
-  ipmi_completion_code_strerror_cmd_r ((___rs),                              \
-		                       (___ctx)->net_fn,                     \
-		                       __ctxerrstr,                          \
-		                       IPMI_ERR_STR_MAX_LEN);                \
-  __TRACE_CTX;                                                               \
+#define __API_BAD_RESPONSE_TRACE(___ctx, ___rs)                          \
+do {                                                                     \
+  int __rserrnum = 0;                                                    \
+  uint64_t __rsval = 0;                                                  \
+  char __rserrstr[IPMI_ERR_STR_MAX_LEN];                                 \
+  fiid_obj_get(___rs, "comp_code", &__rsval);                            \
+  __rserrnum = (int)__rsval;                                             \
+  memset(__rserrstr, '\0', IPMI_ERR_STR_MAX_LEN);                        \
+  ipmi_completion_code_strerror_cmd_r ((___rs),                          \
+		                       (___ctx)->net_fn,                 \
+		                       __rserrstr,                       \
+		                       IPMI_ERR_STR_MAX_LEN);            \
+  __MSG_TRACE(__rserrstr, __rserrnum);                                   \
 } while (0) 
 #else
-#define __API_CTX_TRACE
-#define __API_TRACE_COMP_CODE_ERRMSG(__ctx, __rs)
+#define __API_BAD_RESPONSE_TRACE(__ctx, __rs)
 #endif /* IPMI_TRACE */
 
 #define API_SET_ERRNUM(__errnum)                                         \
 do {                                                                     \
   ctx->errnum = (__errnum);                                              \
-  __API_CTX_TRACE;                                                       \
+  __MSG_TRACE(ipmi_ctx_strerror(__errnum), __errnum);                    \
 } while (0)   
 
 #define API_ERRNO_TO_API_ERRNUM(__ctx, __errno)                          \
@@ -88,7 +83,7 @@ do {                                                                     \
 #define API_BAD_RESPONSE_TO_API_ERRNUM(__ctx, __obj_rs)                  \
 do {                                                                     \
   ipmi_set_api_errnum_by_bad_response(__ctx, __obj_rs);                  \
-  __API_CTX_TRACE;                                                       \
+  __API_BAD_RESPONSE_TRACE(__ctx, __obj_rs);                             \
 } while (0)
 
 #define API_KCS_ERRNUM_TO_API_ERRNUM(__ctx, __errnum)                    \
@@ -120,30 +115,6 @@ do {                                                                     \
   ipmi_set_api_errnum_by_locate_errnum(__ctx, __errnum);                 \
   __MSG_TRACE(ipmi_locate_strerror(__errnum), __errnum);                 \
 } while (0)   
-
-/* Note: ctx->errnum set in call to ipmi_cmd_ipmb() - don't call wrapper */
-#define API_ERR_IPMI_CMD_IPMB_CLEANUP(__ctx, __slave_address, __lun, __netfn, __rq, __rs)                  \
-do {                                                                                                       \
-  int8_t __rv;                                                                                             \
-  if (ipmi_cmd_ipmb ((__ctx),                                                                              \
-                     (__slave_address),                                                                    \
-                     (__lun),                                                                              \
-                     (__netfn),                                                                            \
-                     (__rq),                                                                               \
-                     (__rs)) < 0)                                                                          \
-    goto cleanup;                                                                                          \
-  if ((__rv = ipmi_check_completion_code_success ((__rs))) < 0)                                            \
-    {                                                                                                      \
-      API_ERRNO_TO_API_ERRNUM((__ctx), errno);                                                             \
-      goto cleanup;                                                                                        \
-    }                                                                                                      \
-  if (!__rv)                                                                                               \
-    {                                                                                                      \
-      ipmi_set_api_errnum_by_bad_response((__ctx), (__rs));                                                \
-      __API_TRACE_COMP_CODE_ERRMSG(__ctx, __rs);                                                           \
-      goto cleanup;                                                                                        \
-    }                                                                                                      \
-} while (0)
 
 void ipmi_set_api_errnum_by_errno(ipmi_ctx_t ctx, int __errno);
 
