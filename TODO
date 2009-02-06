@@ -1,3 +1,7 @@
+cleanup
+-------
+- make sure all SYSTEM_ERROR have errno tracing
+
 freeipmi tools
 --------------
 config via environment variables too - like config file
