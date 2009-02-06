@@ -546,7 +546,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                                         (uint8_t) val,
                                         tmp_sensor_reading) < 0)
             {
-              SENSOR_READ_ERRNUM_SET(IPMI_SENSOR_READ_CTX_ERR_SYSTEM_ERROR);
+              SENSOR_READ_ERRNUM_SET(IPMI_SENSOR_READ_CTX_ERR_INTERNAL_ERROR);
               goto cleanup;
             }
           

@@ -306,8 +306,11 @@ _setup_socket (ipmi_ctx_t ctx)
   /* Open client (local) UDP socket */
   /* achu: ephemeral ports are > 1023, so no way we will bind to an IPMI port */
   
-  if ((ctx->io.outofband.sockfd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+  if ((ctx->io.outofband.sockfd = socket (AF_INET, 
+                                          SOCK_DGRAM, 
+                                          0)) < 0)
     {
+      ERRNO_TRACE(errno);
       API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
       return (-1);
     }
@@ -321,6 +324,7 @@ _setup_socket (ipmi_ctx_t ctx)
            (struct sockaddr *)&addr,
            sizeof(struct sockaddr_in)) < 0)
     {
+      ERRNO_TRACE(errno);
       API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
       return (-1);
     }

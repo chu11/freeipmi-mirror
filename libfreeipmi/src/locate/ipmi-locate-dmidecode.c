@@ -457,6 +457,7 @@ _ipmi_locate_dmidecode_get_device_info (int *locate_errnum,
   if ((!(efi_systab = fopen (filename = "/proc/efi/systab", "r"))) 
       && (!(efi_systab = fopen (filename = "/sys/firmware/efi/systab", "r"))))
     {
+      ERRNO_TRACE(errno);
       LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
       return (-1);
     }

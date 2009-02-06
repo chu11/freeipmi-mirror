@@ -964,8 +964,11 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
               s->next = sockets;
               sockets = s;
               
-              if ((ctx->io.outofband.sockfd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+              if ((ctx->io.outofband.sockfd = socket (AF_INET, 
+                                                      SOCK_DGRAM, 
+                                                      0)) < 0)
                 {
+                  ERRNO_TRACE(errno);
                   API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
                   goto cleanup;
                 }
@@ -979,7 +982,8 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                        (struct sockaddr *)&addr,
                        sizeof(struct sockaddr_in)) < 0)
                 {
-                  API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+                  ERRNO_TRACE(errno);
+      API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
                   goto cleanup;
                 }
             }

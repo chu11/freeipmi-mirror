@@ -289,6 +289,7 @@ ipmi_sunbmc_ctx_io_init(ipmi_sunbmc_ctx_t ctx)
     {
       if (errno != EINVAL)
         {
+          ERRNO_TRACE(errno);
           SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
           return (-1);
         }
@@ -399,6 +400,7 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
   
   if (putmsg(ctx->device_fd, NULL, &sbuf, 0) < 0)
     {
+      ERRNO_TRACE(errno);
       SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
@@ -472,6 +474,7 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
 #if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
   if (getmsg(ctx->device_fd, NULL, &sbuf, &flags) < 0)
     {
+      ERRNO_TRACE(errno);
       SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
       return (-1);
     }

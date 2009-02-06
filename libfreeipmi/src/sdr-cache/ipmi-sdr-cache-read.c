@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.20.2.1 2009-02-06 18:02:34 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.20.2.2 2009-02-06 23:20:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -116,6 +116,7 @@ ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t ctx,
                                    0);
   if (!ctx->sdr_cache || ctx->sdr_cache == ((void *) -1))
     {
+      ERRNO_TRACE(errno);
       SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
