@@ -1016,9 +1016,21 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
 	 && fiid_obj_valid(obj_cmd_rq)
 	 && fiid_obj_packet_valid(obj_cmd_rq));
 
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rq, tmpl_ipmb_msg_hdr_rq);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_rq, tmpl_ipmb_msg);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_send_cmd_rs, tmpl_cmd_send_message_rs);
+  if (!(obj_ipmb_msg_hdr_rq = fiid_obj_create(tmpl_ipmb_msg_hdr_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_ipmb_msg_rq = fiid_obj_create(tmpl_ipmb_msg)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_send_cmd_rs = fiid_obj_create(tmpl_cmd_send_message_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_ipmb_msg_hdr (rs_addr,
                          net_fn,
@@ -1245,8 +1257,16 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 
   ctx->io.outofband.rq_seq = (double)(IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand()/(RAND_MAX + 1.0));
   
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_cmd_get_channel_authentication_capabilities_rq);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_get_channel_authentication_capabilities_rs);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                                         ctx->io.outofband.privilege_level,
@@ -1366,8 +1386,16 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   API_FIID_OBJ_DESTROY(obj_cmd_rq);
   API_FIID_OBJ_DESTROY(obj_cmd_rs);
 
-  API_FIID_OBJ_CREATE_CLEANUP (obj_cmd_rq, tmpl_cmd_get_session_challenge_rq);
-  API_FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_session_challenge_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_session_challenge_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_get_session_challenge (ctx->io.outofband.authentication_type,
                                       ctx->io.outofband.username,
@@ -1424,8 +1452,16 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   API_FIID_OBJ_DESTROY(obj_cmd_rq);
   API_FIID_OBJ_DESTROY(obj_cmd_rs);
 
-  API_FIID_OBJ_CREATE_CLEANUP (obj_cmd_rq, tmpl_cmd_activate_session_rq);
-  API_FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_activate_session_rs);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_activate_session_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_activate_session_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   initial_outbound_sequence_number = rand ();
 
@@ -1542,7 +1578,11 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
    * legitimately, so we can use the actual set session privilege
    * level API function.
    */
-  API_FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_set_session_privilege_level_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_session_privilege_level_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_session_privilege_level (ctx, 
                                             ctx->io.outofband.privilege_level,
@@ -2709,8 +2749,16 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     
   ctx->io.outofband.rq_seq = (uint8_t)((double)(IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand()/(RAND_MAX + 1.0)));
   
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_cmd_get_channel_authentication_capabilities_v20_rq);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_get_channel_authentication_capabilities_v20_rs);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_v20_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_v20_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_get_channel_authentication_capabilities_v20 (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                                             ctx->io.outofband.privilege_level,
@@ -2804,8 +2852,16 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   API_FIID_OBJ_DESTROY(obj_cmd_rq);
   API_FIID_OBJ_DESTROY(obj_cmd_rs);
 
-  API_FIID_OBJ_CREATE_CLEANUP (obj_cmd_rq, tmpl_rmcpplus_open_session_request);
-  API_FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_rmcpplus_open_session_response);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_rmcpplus_open_session_request)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_rmcpplus_open_session_response)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   message_tag = (uint8_t)rand();
 
@@ -2938,8 +2994,16 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   API_FIID_OBJ_DESTROY(obj_cmd_rq);
   API_FIID_OBJ_DESTROY(obj_cmd_rs);
 
-  API_FIID_OBJ_CREATE_CLEANUP (obj_cmd_rq, tmpl_rmcpplus_rakp_message_1);
-  API_FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_rmcpplus_rakp_message_2);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_rmcpplus_rakp_message_1)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_rmcpplus_rakp_message_2)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (ipmi_get_random(remote_console_random_number,
                       IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
@@ -3287,16 +3351,24 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                                                                                      username_len,
                                                                                                      key_exchange_authentication_code,
                                                                                                      IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
-        {
-          API_ERRNO_TO_API_ERRNUM(ctx, errno);
-          goto cleanup;
-        }
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   API_FIID_OBJ_DESTROY(obj_cmd_rq);
   API_FIID_OBJ_DESTROY(obj_cmd_rs);
 
-  API_FIID_OBJ_CREATE_CLEANUP (obj_cmd_rq, tmpl_rmcpplus_rakp_message_3);
-  API_FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_rmcpplus_rakp_message_4);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_rmcpplus_rakp_message_3)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_rmcpplus_rakp_message_4)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_rmcpplus_rakp_message_3(message_tag,
                                    RMCPPLUS_STATUS_NO_ERRORS,
@@ -3410,7 +3482,11 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    * level API function.
    */
 
-  API_FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_set_session_privilege_level_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_session_privilege_level_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_session_privilege_level (ctx, 
                                             ctx->io.outofband.privilege_level,

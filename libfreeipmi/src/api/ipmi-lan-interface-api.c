@@ -160,8 +160,16 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_lan_raw);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_lan_raw);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_lan_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_lan_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all (obj_cmd_rq,
                         buf_rq,
@@ -319,8 +327,16 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_lan_raw);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_lan_raw);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_lan_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_lan_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all (obj_cmd_rq,
                         buf_rq,

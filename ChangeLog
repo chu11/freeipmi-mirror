@@ -1,3 +1,7 @@
+2009-02-XX  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Massive code cleanup;
+
 2009-02-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/ipmi-err-wrappers-api.c: New file.

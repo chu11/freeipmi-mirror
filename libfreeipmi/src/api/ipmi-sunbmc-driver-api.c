@@ -116,8 +116,16 @@ ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_sunbmc_raw);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_sunbmc_raw);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_sunbmc_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_sunbmc_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all (obj_cmd_rq,
                         buf_rq,

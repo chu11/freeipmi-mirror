@@ -407,14 +407,46 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
  
   ctx->io.outofband.authentication_type = authentication_type;
 
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rq.obj_rmcp_hdr, tmpl_rmcp_hdr);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rq.obj_lan_session_hdr, tmpl_lan_session_hdr);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rq.obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq);
+  if (!(ctx->io.outofband.rq.obj_rmcp_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rq.obj_lan_session_hdr = fiid_obj_create(tmpl_lan_session_hdr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rq.obj_lan_msg_hdr = fiid_obj_create(tmpl_lan_msg_hdr_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rs.obj_rmcp_hdr, tmpl_rmcp_hdr);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rs.obj_lan_session_hdr, tmpl_lan_session_hdr);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rs.obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rs.obj_lan_msg_trlr, tmpl_lan_msg_trlr);
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rs.obj_rmcp_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rs.obj_lan_session_hdr = fiid_obj_create(tmpl_lan_session_hdr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rs.obj_lan_msg_hdr = fiid_obj_create(tmpl_lan_msg_hdr_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rs.obj_lan_msg_trlr = fiid_obj_create(tmpl_lan_msg_trlr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
    
   if (_setup_socket (ctx) < 0)
     goto cleanup;
@@ -540,19 +572,71 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   ctx->io.outofband.highest_received_sequence_number = 0;
   ctx->io.outofband.previously_received_list = 0xFF;
 
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rq.obj_rmcp_hdr, tmpl_rmcp_hdr);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rq.obj_lan_session_hdr, tmpl_lan_session_hdr);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rq.obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rq.obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rq.obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
+  if (!(ctx->io.outofband.rq.obj_rmcp_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rq.obj_lan_session_hdr = fiid_obj_create(tmpl_lan_session_hdr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rq.obj_rmcpplus_session_hdr = fiid_obj_create(tmpl_rmcpplus_session_hdr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rq.obj_lan_msg_hdr = fiid_obj_create(tmpl_lan_msg_hdr_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rq.obj_rmcpplus_session_trlr = fiid_obj_create(tmpl_rmcpplus_session_trlr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rs.obj_rmcp_hdr, tmpl_rmcp_hdr);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rs.obj_lan_session_hdr, tmpl_lan_session_hdr);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rs.obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rs.obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rs.obj_rmcpplus_payload, tmpl_rmcpplus_payload);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rs.obj_lan_msg_trlr, tmpl_lan_msg_trlr);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.outofband.rs.obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rs.obj_rmcp_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rs.obj_lan_session_hdr = fiid_obj_create(tmpl_lan_session_hdr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rs.obj_rmcpplus_session_hdr = fiid_obj_create(tmpl_rmcpplus_session_hdr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rs.obj_lan_msg_hdr = fiid_obj_create(tmpl_lan_msg_hdr_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rs.obj_rmcpplus_payload = fiid_obj_create(tmpl_rmcpplus_payload)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rs.obj_lan_msg_trlr = fiid_obj_create(tmpl_lan_msg_trlr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.outofband.rs.obj_rmcpplus_session_trlr = fiid_obj_create(tmpl_rmcpplus_session_trlr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (_setup_socket (ctx) < 0)
     goto cleanup;
@@ -863,8 +947,16 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
     }
   
   /* Prepare in-band headers */
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.inband.rq.obj_hdr, tmpl_hdr_kcs);
-  API_FIID_OBJ_CREATE_CLEANUP (ctx->io.inband.rs.obj_hdr, tmpl_hdr_kcs);
+  if (!(ctx->io.inband.rq.obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(ctx->io.inband.rs.obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   ctx->errnum = IPMI_ERR_SUCCESS;
   return (0);

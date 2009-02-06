@@ -1527,7 +1527,11 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
 
   if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
     {
-      API_FIID_OBJ_CREATE_CLEANUP(obj_data_rs, tmpl_cmd_get_device_id_rs);
+      if (!(obj_data_rs = fiid_obj_create(tmpl_cmd_get_device_id_rs)))
+        {
+          API_ERRNO_TO_API_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
       
       if (ipmi_cmd_get_device_id (ctx, obj_data_rs) < 0)
 	goto cleanup;
@@ -1551,7 +1555,11 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
       API_FIID_OBJ_DESTROY(obj_data_rs);
     }
   
-  API_FIID_OBJ_CREATE_CLEANUP(obj_data_rs, tmpl_cmd_get_channel_info_rs);
+  if (!(obj_data_rs = fiid_obj_create(tmpl_cmd_get_channel_info_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   /* Channel numbers range from 0 - 7 */
   for (i = 0; i < 8; i++)

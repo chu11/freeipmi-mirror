@@ -378,9 +378,21 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
 	  && fiid_obj_valid(obj_cmd_rq)
 	  && fiid_obj_packet_valid(obj_cmd_rq));
 
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rq, tmpl_ipmb_msg_hdr_rq);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_rq, tmpl_ipmb_msg);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_send_cmd_rs, tmpl_cmd_send_message_rs);
+  if (!(obj_ipmb_msg_hdr_rq = fiid_obj_create(tmpl_ipmb_msg_hdr_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_ipmb_msg_rq = fiid_obj_create(tmpl_ipmb_msg)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_send_cmd_rs = fiid_obj_create(tmpl_cmd_send_message_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_ipmb_msg_hdr (ctx->rs_addr,
                          ctx->net_fn,
@@ -451,8 +463,16 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
 	  && fiid_obj_valid(obj_ipmb_msg_trlr)
 	  && fiid_obj_valid(obj_cmd_rs));
 
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_rs, tmpl_ipmb_msg);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_get_cmd_rs, tmpl_cmd_get_message_rs);
+  if (!(obj_ipmb_msg_rs = fiid_obj_create(tmpl_ipmb_msg)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_get_cmd_rs = fiid_obj_create(tmpl_cmd_get_message_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_message (ctx, obj_get_cmd_rs) < 0)
     {
@@ -529,8 +549,16 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rs, tmpl_ipmb_msg_hdr_rs);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
+  if (!(obj_ipmb_msg_hdr_rs = fiid_obj_create(tmpl_ipmb_msg_hdr_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_ipmb_msg_trlr = fiid_obj_create(tmpl_ipmb_msg_trlr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   /* for debugging */
   ctx->tmpl_ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
