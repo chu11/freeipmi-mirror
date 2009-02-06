@@ -1423,7 +1423,7 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
       {
         LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
         goto cleanup;
-    }
+      }
 
     linfo.interface_type = interface_type;
   }

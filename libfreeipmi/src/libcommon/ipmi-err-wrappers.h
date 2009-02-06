@@ -50,10 +50,10 @@ do {                                                                    \
   fflush (stderr);                                                      \
 } while (0)
 
-#define __TRACE_ERRNO                                                   \
+#define __TRACE_ERRNO(__errno_orig)                                     \
 do {                                                                    \
   extern int errno;                                                     \
-  int __save_errno = errno;                                             \
+  int __save_errno = __errno_orig;                                      \
   char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                             \
   memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                   \
   strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
@@ -62,7 +62,7 @@ do {                                                                    \
            __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
            __errnostr, __save_errno);                                   \
   fflush (stderr);                                                      \
-  errno = __save_errno;                                                 \
+  __errno_orig = __save_errno;                                          \
 } while (0)
 
 #define __TRACE_CTX                                                     \
@@ -139,6 +139,7 @@ do {                                                                    \
 
 #else
 #define __MSG_TRACE(__msgtracestr, __msgtracenum)
+#define __TRACE_ERRNO(__errno_orig)
 #define __KCS_TRACE
 #define __SSIF_TRACE
 #define __OPENIPMI_TRACE
@@ -155,9 +156,14 @@ do {                                                                    \
   __MSG_TRACE(__str, __num);                                            \
 } while (0)
 
+#define ERRNO_TRACE(__errno)                                            \
+do {                                                                    \
+  __TRACE_ERRNO(__errno);                                               \
+} while (0)
+
 #define ERR_LOG(expr)                                                   \
 do {                                                                    \
-  __TRACE_ERRNO;                                                        \
+  __TRACE_ERRNO(errno);                                                 \
   expr;                                                                 \
 } while (0)   
 
@@ -165,7 +171,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __TRACE_ERRNO;                                                    \
+      __TRACE_ERRNO(errno);                                             \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -174,7 +180,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __TRACE_ERRNO;                                                    \
+      __TRACE_ERRNO(errno);                                             \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -183,7 +189,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __TRACE_ERRNO;                                                    \
+      __TRACE_ERRNO(errno);                                             \
       exit(1);                                                          \
     }                                                                   \
 } while (0)
@@ -192,7 +198,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __TRACE_ERRNO;                                                    \
+      __TRACE_ERRNO(errno);                                             \
       return (NULL);                                                    \
     }                                                                   \
 } while (0)
@@ -201,7 +207,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __TRACE_ERRNO;                                                    \
+      __TRACE_ERRNO(errno);                                             \
       return;                                                           \
     }                                                                   \
 } while (0)
@@ -211,7 +217,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __TRACE_ERRNO;                                                    \
+      __TRACE_ERRNO(errno);                                             \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -221,7 +227,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __TRACE_ERRNO;                                                    \
+      __TRACE_ERRNO(errno);                                             \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -231,7 +237,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __TRACE_ERRNO;                                                    \
+      __TRACE_ERRNO(errno);                                             \
       return (NULL);                                                    \
     }                                                                   \
 } while (0)
@@ -241,7 +247,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENOSPC;                                                   \
-      __TRACE_ERRNO;                                                    \
+      __TRACE_ERRNO(errno);                                             \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -251,7 +257,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENOSPC;                                                   \
-      __TRACE_ERRNO;                                                    \
+      __TRACE_ERRNO(errno);                                             \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -261,7 +267,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EMSGSIZE;                                                 \
-      __TRACE_ERRNO;                                                    \
+      __TRACE_ERRNO(errno);                                             \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -271,7 +277,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EMSGSIZE;                                                 \
-      __TRACE_ERRNO;                                                    \
+      __TRACE_ERRNO(errno);                                             \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
