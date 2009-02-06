@@ -57,36 +57,6 @@ do {                                               \
 
 #define API_FIID_TEMPLATE_FREE(__tmpl)   FIID_TEMPLATE_FREE((__tmpl))
 
-#define API_FIID_OBJ_LEN_BYTES(__len, __obj)             \
-do {                                                     \
-    if (((__len) = fiid_obj_len_bytes ((__obj))) < 0)    \
-      {                                                  \
-         __FIID_OBJ_TRACE((__obj));                      \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));             \
-         return (-1);                                    \
-      }                                                  \
-} while (0)
-
-#define API_FIID_OBJ_LEN_BYTES_CLEANUP(__len, __obj)     \
-do {                                                     \
-    if (((__len) = fiid_obj_len_bytes ((__obj))) < 0)    \
-      {                                                  \
-         __FIID_OBJ_TRACE((__obj));                      \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));             \
-         goto cleanup;                                   \
-      }                                                  \
-} while (0)
-
-#define API_FIID_OBJ_CLEAR(__obj)                        \
-do {                                                     \
-    if (fiid_obj_clear ((__obj)) < 0)                    \
-      {                                                  \
-         __FIID_OBJ_TRACE((__obj));                      \
-         __FIID_OBJ_SET_API_ERRNUM((__obj));             \
-         return (-1);                                    \
-      }                                                  \
-} while (0)
-
 #define API_FIID_OBJ_GET(__obj, __field, __val)                         \
 do {                                                                    \
     uint64_t __localval = 0, *__localval_ptr;                           \

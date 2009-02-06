@@ -252,8 +252,15 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
         API_ERRNO_TO_API_ERRNUM(ctx, errno);
         return (-1);
       }
-    API_FIID_OBJ_LEN_BYTES (cmd_len, obj_cmd_rq);
+
+    if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
+      {
+        API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rq);
+        return (-1);
+      }
+
     pkt_len = hdr_len + cmd_len;
+
     pkt = alloca (pkt_len);
     if (!pkt)
       {
