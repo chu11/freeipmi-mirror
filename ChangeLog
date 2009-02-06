@@ -2,6 +2,8 @@
 
 	* libfreeipmi/src/api/ipmi-err-wrappers-api.c: New file.
 
+	* libfreeipmi/src/api/ipmi-fiid-wrappers-api.c: New file.
+
 	* Continue code cleanup.
 	
 2009-02-04  Albert Chu <chu11@llnl.gov>

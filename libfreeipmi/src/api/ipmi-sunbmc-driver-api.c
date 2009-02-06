@@ -51,7 +51,7 @@ ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -97,7 +97,7 @@ ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 

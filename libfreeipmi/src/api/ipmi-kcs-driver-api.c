@@ -220,7 +220,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -247,7 +247,11 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
     uint32_t pkt_len;
     int32_t hdr_len, cmd_len, send_len;
 
-    API_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
+    if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
+      {
+        API_ERRNO_TO_API_ERRNUM(ctx, errno);
+        return (-1);
+      }
     API_FIID_OBJ_LEN_BYTES (cmd_len, obj_cmd_rq);
     pkt_len = hdr_len + cmd_len;
     pkt = alloca (pkt_len);
@@ -293,9 +297,20 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
     fiid_field_t *tmpl = NULL;
     int8_t rv = -1;
 
-    API_FIID_TEMPLATE_LEN_BYTES_CLEANUP(hdr_len, tmpl_hdr_kcs);
+    if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
+      {
+        API_ERRNO_TO_API_ERRNUM(ctx, errno);
+        goto cleanup;
+      }
+
     API_FIID_OBJ_TEMPLATE_CLEANUP(tmpl, obj_cmd_rs);
-    API_FIID_TEMPLATE_LEN_BYTES_CLEANUP(cmd_len, tmpl);
+
+    if ((cmd_len = fiid_template_len_bytes (tmpl)) < 0)
+      {
+        API_ERRNO_TO_API_ERRNUM(ctx, errno);
+        goto cleanup;
+      }
+
     pkt_len = hdr_len + cmd_len;
 
     if (!(pkt = alloca (pkt_len)))
@@ -481,7 +496,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -603,7 +618,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -625,7 +640,11 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     cmd = buf_rq[0];
 
-  API_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
+  if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      return (-1);
+    }
   pkt_len = hdr_len + buf_rq_len;
 
   pkt = alloca(pkt_len);

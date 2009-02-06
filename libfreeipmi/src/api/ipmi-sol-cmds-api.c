@@ -52,7 +52,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -64,7 +64,13 @@ ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs,
+                                    tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq);
 
@@ -101,7 +107,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -115,7 +121,13 @@ ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq);
 
@@ -153,7 +165,7 @@ ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -164,7 +176,13 @@ ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
       return (-1);
     }
 
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq);
 
@@ -201,7 +219,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -212,8 +230,14 @@ ipmi_cmd_set_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
-  
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
+
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_retry_rq);
   
   if (fill_cmd_set_sol_configuration_parameters_sol_retry (channel_number, 
@@ -248,7 +272,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -260,7 +284,13 @@ ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
       return (-1);
     }
 
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
   
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq);
   
@@ -295,7 +325,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -307,7 +337,13 @@ ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
   
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_rq);
   
@@ -342,7 +378,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -353,7 +389,13 @@ ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
       return (-1);
     }
   
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
   
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number_rq);
   
@@ -390,7 +432,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -402,7 +444,13 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
 
@@ -442,7 +490,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -454,7 +502,13 @@ ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
@@ -494,7 +548,7 @@ ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -506,7 +560,13 @@ ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send
       return (-1);
     }
 
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
@@ -546,7 +606,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -558,7 +618,13 @@ ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
@@ -598,7 +664,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -610,7 +676,13 @@ ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
       return (-1);
     }
 
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
@@ -650,7 +722,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -662,7 +734,13 @@ ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
@@ -702,7 +780,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_ctx_t ctx,
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -714,7 +792,13 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   
@@ -754,7 +838,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -766,7 +850,13 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
       return (-1);
     }
 
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
   

@@ -46,7 +46,7 @@ ipmi_cmd_get_device_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -56,7 +56,13 @@ ipmi_cmd_get_device_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
       return (-1);
     }
   
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_device_id_rs);
+  if (api_fiid_obj_template_compare(ctx,
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_get_device_id_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_device_id_rq);
 
@@ -86,7 +92,7 @@ ipmi_cmd_cold_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -96,7 +102,13 @@ ipmi_cmd_cold_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
       return (-1);
     }
   
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_cold_reset_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_cold_reset_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_cold_reset_rq);
 
@@ -126,7 +138,7 @@ ipmi_cmd_warm_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -136,7 +148,13 @@ ipmi_cmd_warm_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
       return (-1);
     }
   
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_warm_reset_rs);
+  if (api_fiid_obj_template_compare(ctx, 
+                                    obj_cmd_rs, 
+                                    tmpl_cmd_warm_reset_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_warm_reset_rq);
 
@@ -171,7 +189,7 @@ ipmi_cmd_set_acpi_power_state (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -187,7 +205,13 @@ ipmi_cmd_set_acpi_power_state (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_acpi_power_state_rs);
+  if (api_fiid_obj_template_compare(ctx,
+                                    obj_cmd_rs,
+                                    tmpl_cmd_set_acpi_power_state_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_acpi_power_state_rq);
 
@@ -221,7 +245,7 @@ ipmi_cmd_get_acpi_power_state (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -231,7 +255,13 @@ ipmi_cmd_get_acpi_power_state (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
       return (-1);
     }
   
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_acpi_power_state_rs);
+  if (api_fiid_obj_template_compare(ctx,
+                                    obj_cmd_rs,
+                                    tmpl_cmd_get_acpi_power_state_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_acpi_power_state_rq);
 
@@ -261,7 +291,7 @@ ipmi_cmd_get_self_test_results (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -271,7 +301,13 @@ ipmi_cmd_get_self_test_results (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
       return (-1);
     }
   
-  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_self_test_results_rs);
+  if (api_fiid_obj_template_compare(ctx,
+                                    obj_cmd_rs,
+                                    tmpl_cmd_get_self_test_results_rs) < 0)
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_self_test_results_rq);
 
@@ -301,7 +337,7 @@ ipmi_cmd_get_device_guid (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE("invalid ctx", 0);
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -311,9 +347,16 @@ ipmi_cmd_get_device_guid (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
       return (-1);
     }
   
-  API_FIID_OBJ_TEMPLATE_COMPARE2(obj_cmd_rs, 
-                                 tmpl_cmd_get_device_guid_rs,
-                                 tmpl_cmd_get_device_guid_format_rs);
+  if ((api_fiid_obj_template_compare(ctx,
+                                     obj_cmd_rs,
+                                     tmpl_cmd_get_device_guid_rs) < 0)
+      && (api_fiid_obj_template_compare(ctx,
+                                        obj_cmd_rs,
+                                        tmpl_cmd_get_device_guid_format_rs) < 0))
+    {
+      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   API_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_device_guid_rq);
 
