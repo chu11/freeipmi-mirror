@@ -37,7 +37,7 @@
 #include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-ctx.h"
-#include "ipmi-err-wrappers-api.h"
+#include "ipmi-trace-wrappers-api.h"
 
 #include "freeipmi-portability.h"
 
@@ -67,7 +67,7 @@ ipmi_set_api_errnum_by_fiid_object(ipmi_ctx_t ctx, fiid_obj_t obj)
 
   if (!fiid_obj_valid(obj))
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return;
     }
 
@@ -87,7 +87,7 @@ ipmi_set_api_errnum_by_bad_response(ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return;
     }
   
@@ -270,13 +270,13 @@ api_fiid_obj_template_compare(ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tm
 
   if (!fiid_obj_valid(obj))
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
   if (!fiid_obj_valid(obj))
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
  
@@ -306,7 +306,7 @@ api_fiid_obj_get(ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val)
 
   if (!fiid_obj_valid(obj))
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -340,13 +340,13 @@ api_ipmi_cmd(ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rq))
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -388,13 +388,13 @@ api_ipmi_cmd_ipmb(ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rq))
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 

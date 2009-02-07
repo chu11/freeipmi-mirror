@@ -68,7 +68,7 @@
 #include "freeipmi/util/ipmi-rmcpplus-util.h"
 
 #include "ipmi-ctx.h"
-#include "ipmi-err-wrappers-api.h"
+#include "ipmi-trace-wrappers-api.h"
 #include "ipmi-lan-session-common.h"
 
 #include "freeipmi-portability.h"
@@ -901,7 +901,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
     {
       if (_session_timed_out(ctx))
         {
-	  API_SET_ERRNUM (IPMI_ERR_SESSION_TIMEOUT);
+	  API_SET_ERRNUM (ctx, IPMI_ERR_SESSION_TIMEOUT);
           rv = -1;
           break;
         }
@@ -957,7 +957,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 
               if (!(s = (struct socket_to_close *)malloc(sizeof(struct socket_to_close))))
                 {
-                  API_SET_ERRNUM(IPMI_ERR_OUT_OF_MEMORY);
+                  API_SET_ERRNUM(ctx, IPMI_ERR_OUT_OF_MEMORY);
                   goto cleanup;
                 }
               s->fd = ctx->io.outofband.sockfd;
@@ -969,7 +969,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                                                       0)) < 0)
                 {
                   ERRNO_TRACE(errno);
-                  API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+                  API_SET_ERRNUM(ctx, IPMI_ERR_SYSTEM_ERROR);
                   goto cleanup;
                 }
               
@@ -983,7 +983,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                        sizeof(struct sockaddr_in)) < 0)
                 {
                   ERRNO_TRACE(errno);
-      API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_SYSTEM_ERROR);
                   goto cleanup;
                 }
             }
@@ -1199,7 +1199,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
       if (_session_timed_out(ctx))
         {
-	  API_SET_ERRNUM (IPMI_ERR_SESSION_TIMEOUT);
+	  API_SET_ERRNUM (ctx, IPMI_ERR_SESSION_TIMEOUT);
           rv = -1;
           break;
         }
@@ -1348,7 +1348,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
     {
       /* at this point in the protocol, we set a connection timeout */
       if (ctx->errnum == IPMI_ERR_SESSION_TIMEOUT)
-        API_SET_ERRNUM (IPMI_ERR_CONNECTION_TIMEOUT);
+        API_SET_ERRNUM (ctx, IPMI_ERR_CONNECTION_TIMEOUT);
       goto cleanup;
     }
 
@@ -1481,7 +1481,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 
   if (!supported_authentication_type)
     {
-      API_SET_ERRNUM(IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE);
+      API_SET_ERRNUM(ctx, IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE);
       goto cleanup;
     }
 
@@ -1532,7 +1532,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
     {
       if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_INVALID_USERNAME) == 1
           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED) == 1)
-        API_SET_ERRNUM(IPMI_ERR_USERNAME_INVALID);
+        API_SET_ERRNUM(ctx, IPMI_ERR_USERNAME_INVALID);
       else
         API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
@@ -1597,7 +1597,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             obj_cmd_rs) < 0)
     {
       if (ctx->errnum == IPMI_ERR_SESSION_TIMEOUT)
-        API_SET_ERRNUM(IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT);
+        API_SET_ERRNUM(ctx, IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT);
       goto cleanup;
     }
 
@@ -1612,9 +1612,9 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
       if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE) == 1
           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER) == 1
           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER) == 1)
-        API_SET_ERRNUM(IPMI_ERR_BMC_BUSY);
+        API_SET_ERRNUM(ctx, IPMI_ERR_BMC_BUSY);
       else if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL) == 1)
-        API_SET_ERRNUM(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+        API_SET_ERRNUM(ctx, IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else
         API_BAD_RESPONSE_TO_API_ERRNUM(ctx, obj_cmd_rs);
       goto cleanup;
@@ -1719,7 +1719,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 	{
 	  if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER) == 1
 	      || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT) == 1)
-	    API_SET_ERRNUM(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+	    API_SET_ERRNUM(ctx, IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
 	}
       ERR_TRACE(ipmi_ctx_strerror(ctx->errnum), ctx->errnum);
       goto cleanup;
@@ -2665,7 +2665,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
     {
       if (_session_timed_out(ctx))
         {
-	  API_SET_ERRNUM (IPMI_ERR_SESSION_TIMEOUT);
+	  API_SET_ERRNUM (ctx, IPMI_ERR_SESSION_TIMEOUT);
           rv = -1;
           break;
         }
@@ -2848,7 +2848,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
       if (_session_timed_out(ctx))
         {
-	  API_SET_ERRNUM (IPMI_ERR_SESSION_TIMEOUT);
+	  API_SET_ERRNUM (ctx, IPMI_ERR_SESSION_TIMEOUT);
           rv = -1;
           break;
         }
@@ -3040,7 +3040,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     {
       /* at this point in the protocol, we set a connection timeout */
       if (ctx->errnum == IPMI_ERR_SESSION_TIMEOUT)
-        API_SET_ERRNUM (IPMI_ERR_CONNECTION_TIMEOUT);
+        API_SET_ERRNUM (ctx, IPMI_ERR_CONNECTION_TIMEOUT);
       goto cleanup;
     }
 
@@ -3129,7 +3129,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       if ((!ctx->io.outofband.k_g_configured && authentication_status_k_g)
           || (ctx->io.outofband.k_g_configured && !authentication_status_k_g))
         {
-          API_SET_ERRNUM(IPMI_ERR_K_G_INVALID);
+          API_SET_ERRNUM(ctx, IPMI_ERR_K_G_INVALID);
           goto cleanup;
         }
     }
@@ -3232,12 +3232,12 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
     {
       if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
-        API_SET_ERRNUM(IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE);
+        API_SET_ERRNUM(ctx, IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
                || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
-        API_SET_ERRNUM(IPMI_ERR_BMC_BUSY);
+        API_SET_ERRNUM(ctx, IPMI_ERR_BMC_BUSY);
       else
-        API_SET_ERRNUM(IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
+        API_SET_ERRNUM(ctx, IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
       goto cleanup;
     }
 
@@ -3277,7 +3277,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
         || ((ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
             && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL))))
     {
-      API_SET_ERRNUM(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       goto cleanup;
     }
 
@@ -3394,14 +3394,14 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
     {
       if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
-        API_SET_ERRNUM(IPMI_ERR_USERNAME_INVALID);
+        API_SET_ERRNUM(ctx, IPMI_ERR_USERNAME_INVALID);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED)
-        API_SET_ERRNUM(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+        API_SET_ERRNUM(ctx, IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
                || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
-        API_SET_ERRNUM(IPMI_ERR_BMC_BUSY);
+        API_SET_ERRNUM(ctx, IPMI_ERR_BMC_BUSY);
       else
-        API_SET_ERRNUM(IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
+        API_SET_ERRNUM(ctx, IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
       goto cleanup;
     }
 
@@ -3426,7 +3426,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   if (managed_system_random_number_len != IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH
       || managed_system_guid_len != IPMI_MANAGED_SYSTEM_GUID_LENGTH)
     {
-      API_SET_ERRNUM(IPMI_ERR_IPMI_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_IPMI_ERROR);
       goto cleanup;
     }
 
@@ -3586,7 +3586,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
        * tell me I can authenticate at a high privilege level, that in
        * reality is not allowed).  Dunno how to deal with this.
        */
-      API_SET_ERRNUM(IPMI_ERR_PASSWORD_INVALID);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PASSWORD_INVALID);
       goto cleanup;
     }
 
@@ -3723,9 +3723,9 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     {
       if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
           || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
-        API_SET_ERRNUM(IPMI_ERR_BMC_BUSY);
+        API_SET_ERRNUM(ctx, IPMI_ERR_BMC_BUSY);
       else
-        API_SET_ERRNUM(IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
+        API_SET_ERRNUM(ctx, IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
       goto cleanup;
     }
   
@@ -3779,7 +3779,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       
       if (!ret)
         {
-          API_SET_ERRNUM(IPMI_ERR_K_G_INVALID);
+          API_SET_ERRNUM(ctx, IPMI_ERR_K_G_INVALID);
           goto cleanup;
         }
     }
@@ -3806,7 +3806,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 	{
 	  if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER) == 1
 	      || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT) == 1)
-	    API_SET_ERRNUM(IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+	    API_SET_ERRNUM(ctx, IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
 	}
       ERR_TRACE(ipmi_ctx_strerror(ctx->errnum), ctx->errnum);
       goto cleanup;

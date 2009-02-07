@@ -71,7 +71,7 @@
 #include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-ctx.h"
-#include "ipmi-err-wrappers-api.h"
+#include "ipmi-trace-wrappers-api.h"
 #include "ipmi-lan-interface-api.h"
 #include "ipmi-lan-session-common.h"
 #include "ipmi-kcs-driver-api.h"
@@ -249,12 +249,12 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
                       &hptr,
                       &h_errnop))
     {
-      API_SET_ERRNUM(IPMI_ERR_HOSTNAME_INVALID);
+      API_SET_ERRNUM(ctx, IPMI_ERR_HOSTNAME_INVALID);
       return (-1);
     }
   if (!hptr)
     {
-      API_SET_ERRNUM(IPMI_ERR_HOSTNAME_INVALID);
+      API_SET_ERRNUM(ctx, IPMI_ERR_HOSTNAME_INVALID);
       return (-1);
     }
 #elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
@@ -264,7 +264,7 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
                       GETHOSTBYNAME_AUX_BUFLEN,
                       &h_errnop))
     {
-      API_SET_ERRNUM(IPMI_ERR_HOSTNAME_INVALID);
+      API_SET_ERRNUM(ctx, IPMI_ERR_HOSTNAME_INVALID);
       return (-1);
     }
 #else  /* !HAVE_FUNC_GETHOSTBYNAME_R */
@@ -275,12 +275,12 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
                                &hptr,
                                &h_errnop))
     {
-      API_SET_ERRNUM(IPMI_ERR_HOSTNAME_INVALID);
+      API_SET_ERRNUM(ctx, IPMI_ERR_HOSTNAME_INVALID);
       return (-1);
     }
   if (!hptr)
     {
-      API_SET_ERRNUM(IPMI_ERR_HOSTNAME_INVALID);
+      API_SET_ERRNUM(ctx, IPMI_ERR_HOSTNAME_INVALID);
       return (-1);
     }
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
@@ -311,7 +311,7 @@ _setup_socket (ipmi_ctx_t ctx)
                                           0)) < 0)
     {
       ERRNO_TRACE(errno);
-      API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_SYSTEM_ERROR);
       return (-1);
     }
   
@@ -325,7 +325,7 @@ _setup_socket (ipmi_ctx_t ctx)
            sizeof(struct sockaddr_in)) < 0)
     {
       ERRNO_TRACE(errno);
-      API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
@@ -365,13 +365,13 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
       || !IPMI_PRIVILEGE_LEVEL_VALID (privilege_level)
       || (workaround_flags & ~flags_mask))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_UNKNOWN)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_ALREADY_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_ALREADY_OPEN);
       return (-1);
     }
 
@@ -398,7 +398,7 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
 
   if (ctx->io.outofband.retransmission_timeout >= ctx->io.outofband.session_timeout)
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -503,13 +503,13 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
       || !IPMI_CIPHER_SUITE_ID_SUPPORTED (cipher_suite_id)
       || (workaround_flags & ~flags_mask))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_UNKNOWN)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_ALREADY_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_ALREADY_OPEN);
       return (-1);
     }
 
@@ -544,7 +544,7 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
 
   if (ctx->io.outofband.retransmission_timeout >= ctx->io.outofband.session_timeout)
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -685,13 +685,13 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
        && driver_type != IPMI_DEVICE_SUNBMC)
       || workaround_flags)
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_UNKNOWN)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_ALREADY_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_ALREADY_OPEN);
       return (-1);
     }
 
@@ -754,7 +754,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 	 If we cant find the bass address, we better exit. -- Anand Babu */
       if (locate_info.address_space_id != IPMI_ADDRESS_SPACE_ID_SYSTEM_IO)
         {
-          API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_SUPPORTED);
+          API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_SUPPORTED);
           return (-1);
         }
       
@@ -983,7 +983,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
 
   if (ctx->type == IPMI_DEVICE_UNKNOWN)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
@@ -994,7 +994,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
       && ctx->type != IPMI_DEVICE_OPENIPMI
       && ctx->type != IPMI_DEVICE_SUNBMC)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -1139,7 +1139,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
 
   if (ctx->type == IPMI_DEVICE_UNKNOWN)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
@@ -1150,7 +1150,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       && ctx->type != IPMI_DEVICE_OPENIPMI
       && ctx->type != IPMI_DEVICE_SUNBMC)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -1182,7 +1182,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
 					 obj_cmd_rs);
   else
     {
-      API_SET_ERRNUM(IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+      API_SET_ERRNUM(ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
       return (-1);
     }
                          
@@ -1212,13 +1212,13 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
       || !out
       || !out_len)
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->type == IPMI_DEVICE_UNKNOWN)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
@@ -1229,7 +1229,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
       && ctx->type != IPMI_DEVICE_OPENIPMI
       && ctx->type != IPMI_DEVICE_SUNBMC)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
   
@@ -1302,7 +1302,7 @@ ipmi_ctx_close (ipmi_ctx_t ctx)
 
   if (ctx->type == IPMI_DEVICE_UNKNOWN)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
@@ -1315,7 +1315,7 @@ ipmi_ctx_close (ipmi_ctx_t ctx)
       && ctx->type != IPMI_DEVICE_OPENIPMI
       && ctx->type != IPMI_DEVICE_SUNBMC)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 

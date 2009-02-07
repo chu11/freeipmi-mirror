@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.11.2.4 2009-02-06 18:37:33 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.11.2.5 2009-02-07 11:29:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -43,7 +43,7 @@
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
 #include "ipmi-ctx.h"
-#include "ipmi-err-wrappers-api.h"
+#include "ipmi-trace-wrappers-api.h"
 
 #include "freeipmi-portability.h"
 
@@ -63,7 +63,7 @@ ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -122,7 +122,7 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
   
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
   

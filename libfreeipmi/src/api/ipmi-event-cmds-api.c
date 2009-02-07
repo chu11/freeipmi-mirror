@@ -33,7 +33,7 @@
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
 #include "ipmi-ctx.h"
-#include "ipmi-err-wrappers-api.h"
+#include "ipmi-trace-wrappers-api.h"
 
 #include "freeipmi-portability.h"
 
@@ -55,7 +55,7 @@ ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
   if (!IPMI_BMC_LUN_VALID(event_receiver_lun)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -115,7 +115,7 @@ ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -172,7 +172,7 @@ ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
   

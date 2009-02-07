@@ -62,10 +62,10 @@ do {                                                                     \
 #define __API_BAD_RESPONSE_TRACE(__ctx, __rs)
 #endif /* IPMI_TRACE */
 
-#define API_SET_ERRNUM(__errnum)                                         \
+#define API_SET_ERRNUM(__ctx, __errnum)                                  \
 do {                                                                     \
-  ctx->errnum = (__errnum);                                              \
-  __MSG_TRACE(ipmi_ctx_strerror(__errnum), __errnum);                    \
+  (__ctx)->errnum = (__errnum);                                          \
+  __MSG_TRACE(ipmi_ctx_errormsg((__ctx)), __errnum);                     \
 } while (0)   
 
 #define API_ERRNO_TO_API_ERRNUM(__ctx, __errno)                          \
@@ -155,5 +155,5 @@ int api_ipmi_cmd_ipmb(ipmi_ctx_t ctx,
 }
 #endif
 
-#endif /* ipmi-err-wrappers-api.h */
+#endif /* ipmi-trace-wrappers-api.h */
 

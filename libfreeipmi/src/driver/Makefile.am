@@ -1,5 +1,5 @@
 noinst_HEADERS = \
-	ipmi-err-wrappers-driver.h \
+	ipmi-trace-wrappers-driver.h \
 	ipmi-semaphores.h
 
 noinst_LTLIBRARIES = libdriver.la

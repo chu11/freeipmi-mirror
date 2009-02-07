@@ -49,7 +49,7 @@
 #include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-ctx.h"
-#include "ipmi-err-wrappers-api.h"
+#include "ipmi-trace-wrappers-api.h"
 #include "ipmi-kcs-driver-api.h"
 
 #include "freeipmi-portability.h"
@@ -226,7 +226,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -238,7 +238,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
   if (ctx->type != IPMI_DEVICE_KCS)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -349,7 +349,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
     if (!read_len)
       {
-        API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+        API_SET_ERRNUM(ctx, IPMI_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
 
@@ -491,7 +491,7 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
   if (ipmi_cmd_get_message (ctx, obj_get_cmd_rs) < 0)
     {
       if (ipmi_check_completion_code (obj_get_cmd_rs, IPMI_COMP_CODE_DATA_NOT_AVAILABLE) == 1)
-        API_SET_ERRNUM(IPMI_ERR_MESSAGE_TIMEOUT);
+        API_SET_ERRNUM(ctx, IPMI_ERR_MESSAGE_TIMEOUT);
       else
 	API_BAD_RESPONSE_TO_API_ERRNUM(ctx, obj_get_cmd_rs);
       goto cleanup;
@@ -551,7 +551,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -563,7 +563,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 
   if (ctx->type != IPMI_DEVICE_KCS)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -598,7 +598,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 	      
 	      if (reread_count > IPMI_KCS_IPMB_REREAD_COUNT)
                 {
-                  API_SET_ERRNUM(IPMI_ERR_MESSAGE_TIMEOUT);
+                  API_SET_ERRNUM(ctx, IPMI_ERR_MESSAGE_TIMEOUT);
                   goto cleanup;
                 }
 	      
@@ -634,7 +634,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 	  
 	  if (retransmission_count > IPMI_KCS_IPMB_RETRANSMISSION_COUNT)
             {
-              API_SET_ERRNUM(IPMI_ERR_MESSAGE_TIMEOUT);
+              API_SET_ERRNUM(ctx, IPMI_ERR_MESSAGE_TIMEOUT);
               goto cleanup;
             }
 	  
@@ -687,13 +687,13 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
       || !buf_rs 
       || !buf_rs_len)
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_KCS)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -758,7 +758,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
 
   if (!bytes_read)
     {
-      API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_SYSTEM_ERROR);
       return -1;
     }
 

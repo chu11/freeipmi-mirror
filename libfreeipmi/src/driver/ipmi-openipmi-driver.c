@@ -58,7 +58,7 @@
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 
-#include "ipmi-err-wrappers-driver.h"
+#include "ipmi-trace-wrappers-driver.h"
 
 #include "freeipmi-portability.h"
 
@@ -259,7 +259,7 @@ ipmi_openipmi_ctx_get_driver_device(ipmi_openipmi_ctx_t ctx, char **driver_devic
 
   if (!driver_device)
     {
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -275,7 +275,7 @@ ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, uint32_t *flags)
 
   if (!flags)
     {
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -291,7 +291,7 @@ ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
 
   if (!device)
     {
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -301,7 +301,7 @@ ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
 
   if (!(ctx->driver_device = strdup(device)))
     {
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY);
       return (-1);
     }
 
@@ -316,7 +316,7 @@ ipmi_openipmi_ctx_set_flags(ipmi_openipmi_ctx_t ctx, uint32_t flags)
 
   if (flags & ~IPMI_OPENIPMI_FLAGS_MASK)
     {
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -400,7 +400,7 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
                               rq_buf_temp, 
                               IPMI_OPENIPMI_BUFLEN)) <= 0)
     {
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -491,7 +491,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   if (!n)
     {
       /* Could be due to a different error, but we assume a timeout */
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_DRIVER_TIMEOUT);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_DRIVER_TIMEOUT);
       return (-1);
     }
 
@@ -506,7 +506,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   /* achu: atleast the completion code should be returned */
   if (!rs_packet.msg.data_len)
     {
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
@@ -520,7 +520,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
                        rs_buf, 
                        rs_packet.msg.data_len + 1) < 0)
     {
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -542,13 +542,13 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
       || !fiid_obj_valid(obj_cmd_rs)
       || !fiid_obj_packet_valid(obj_cmd_rq))
     {
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
       return (-1);
     }
   
   if (!ctx->io_init)
     {
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED);
       return (-1);
     }
 
@@ -583,13 +583,13 @@ ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
       || !fiid_obj_valid(obj_cmd_rs)
       || !fiid_obj_packet_valid(obj_cmd_rq))
     {
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_PARAMETERS);
       return (-1);
     }
   
   if (!ctx->io_init)
     {
-      OPENIPMI_ERRNUM_SET(IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED);
+      OPENIPMI_ERRNUM_SET(ctx, IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED);
       return (-1);
     }
 

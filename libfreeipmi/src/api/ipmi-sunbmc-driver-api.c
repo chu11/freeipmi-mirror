@@ -31,7 +31,7 @@
 #include "freeipmi/driver/ipmi-sunbmc-driver.h"
 
 #include "ipmi-ctx.h"
-#include "ipmi-err-wrappers-api.h"
+#include "ipmi-trace-wrappers-api.h"
 #include "ipmi-sunbmc-driver-api.h"
 
 #include "freeipmi-portability.h"
@@ -57,7 +57,7 @@ ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -69,7 +69,7 @@ ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
 
   if (ctx->type != IPMI_DEVICE_SUNBMC)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -109,13 +109,13 @@ ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
       || !buf_rs 
       || !buf_rs_len)
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_SUNBMC)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 

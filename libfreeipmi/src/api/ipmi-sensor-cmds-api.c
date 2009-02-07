@@ -33,7 +33,7 @@
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
 #include "ipmi-ctx.h"
-#include "ipmi-err-wrappers-api.h"
+#include "ipmi-trace-wrappers-api.h"
 
 #include "freeipmi-portability.h"
 
@@ -58,7 +58,7 @@ ipmi_cmd_set_sensor_hysteresis (ipmi_ctx_t ctx,
   if (hysteresis_mask != IPMI_SENSOR_HYSTERESIS_MASK
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -121,7 +121,7 @@ ipmi_cmd_get_sensor_hysteresis (ipmi_ctx_t ctx,
   if (hysteresis_mask != IPMI_SENSOR_HYSTERESIS_MASK
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -185,7 +185,7 @@ ipmi_cmd_set_sensor_thresholds (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -248,7 +248,7 @@ ipmi_cmd_get_sensor_thresholds (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -313,7 +313,7 @@ ipmi_cmd_set_sensor_event_enable (ipmi_ctx_t ctx,
       || !IPMI_SENSOR_ALL_EVENT_MESSAGES_VALID(all_event_messages)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -429,7 +429,7 @@ ipmi_cmd_set_sensor_event_enable_threshold (ipmi_ctx_t ctx,
       || !IPMI_SENSOR_EVENT_FLAG_VALID(deassertion_event_upper_non_recoverable_going_high)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -579,7 +579,7 @@ ipmi_cmd_set_sensor_event_enable_discrete (ipmi_ctx_t ctx,
       || !IPMI_SENSOR_EVENT_FLAG_VALID(deassertion_event_state_bit_14)
       || !fiid_obj_valid(obj_cmd_rs));
   {
-    API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+    API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
     return (-1);
   }
 
@@ -669,7 +669,7 @@ ipmi_cmd_get_sensor_event_enable (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -726,7 +726,7 @@ ipmi_cmd_get_sensor_event_enable_threshold (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -783,7 +783,7 @@ ipmi_cmd_get_sensor_event_enable_discrete (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -841,7 +841,7 @@ ipmi_cmd_get_sensor_reading (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -900,7 +900,7 @@ ipmi_cmd_get_sensor_reading_ipmb (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -958,7 +958,7 @@ ipmi_cmd_get_sensor_reading_threshold (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -1015,7 +1015,7 @@ ipmi_cmd_get_sensor_reading_discrete (ipmi_ctx_t ctx,
 
   if (!fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
