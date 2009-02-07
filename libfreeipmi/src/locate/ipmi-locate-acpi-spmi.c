@@ -44,8 +44,8 @@
 #include "freeipmi/locate/ipmi-locate.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "ipmi-locate-util.h"
+#include "ipmi-trace-wrappers-locate.h"
 
 #include "freeipmi-portability.h"
 
@@ -883,7 +883,7 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
             
 	    if (!(memdata = alloca (acpi_rsdp_descriptor_len)))
               {
-                LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+                LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
                 return (-1);
               }
 	    memset (memdata, 0, acpi_rsdp_descriptor_len);
@@ -898,7 +898,7 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
                          IPMI_ACPI_RSDP_SIG, 
                          strlen (IPMI_ACPI_RSDP_SIG)))
               {
-                LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+                LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
                 return (-1);
               }
 	    
@@ -907,7 +907,7 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
                                            memdata, 
                                            IPMI_ACPI_RSDP_CHECKSUM_LENGTH) != 0)
               {
-                LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+                LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
                 return (-1);
               }
 	    
@@ -1002,7 +1002,7 @@ _ipmi_acpi_get_table (int *locate_errnum,
 
   if (strcmp (table_signature, signature))
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   
@@ -1023,13 +1023,13 @@ _ipmi_acpi_get_table (int *locate_errnum,
                                  table, 
                                  table_length) != 0)
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   
   if (!(*acpi_table = malloc (table_length)))
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
   memcpy (*acpi_table, table, table_length);
@@ -1219,7 +1219,7 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
 
   if (!acpi_table)
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   
@@ -1227,7 +1227,7 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
   *sign_table_data_length = acpi_table_length - acpi_table_hdr_length;
   if (!(*sign_table_data = malloc (*sign_table_data_length)))
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
   memcpy (*sign_table_data, 
@@ -1355,7 +1355,7 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -1421,7 +1421,7 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
     
     if (!IPMI_INTERFACE_TYPE_VALID(interface_type))
       {
-        LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
 
@@ -1462,7 +1462,7 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
 	  break;
 	}
       default:
-        LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
   }
@@ -1497,7 +1497,7 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_interface_type_t type,
   if (_ipmi_locate_acpi_spmi_get_device_info(&errnum, type, info) < 0)
     {
       if (!errnum)
-        LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_INTERNAL_ERROR);
+        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_INTERNAL_ERROR);
       return errnum;
     }
   return (0);

@@ -32,7 +32,8 @@
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
-#include "ipmi-ctx.h"
+#include "ipmi-api-defs.h"
+#include "ipmi-api-util.h"
 #include "ipmi-trace-wrappers-api.h"
 
 #include "freeipmi-portability.h"

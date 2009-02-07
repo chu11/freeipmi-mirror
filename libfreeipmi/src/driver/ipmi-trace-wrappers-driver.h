@@ -45,50 +45,50 @@ extern "C" {
 
 #define KCS_ERRNO_TO_KCS_ERRNUM(__ctx, __errno)                         \
   do {                                                                  \
-    _set_kcs_ctx_errnum_by_errno(__ctx, __errno);                       \
+    _set_kcs_ctx_errnum_by_errno((__ctx), (__errno));                   \
     __ERRNO_TRACE(__errno);                                             \
   } while (0)   
 
 #define KCS_ERRNUM_SET(__ctx, __errnum)                                 \
   do {                                                                  \
     (__ctx)->errnum = (__errnum);                                       \
-    __MSG_TRACE(ipmi_kcs_ctx_errormsg((__ctx)), __errnum);              \
+    __MSG_TRACE(ipmi_kcs_ctx_errormsg((__ctx)), (__errnum));            \
   } while (0)
 
 #define SSIF_ERRNO_TO_SSIF_ERRNUM(__ctx, __errno)                       \
   do {                                                                  \
-    _set_ssif_ctx_errnum_by_errno(__ctx, __errno);                      \
+    _set_ssif_ctx_errnum_by_errno((__ctx), (__errno));                  \
     __ERRNO_TRACE(__errno);                                             \
   } while (0)   
 
 #define SSIF_ERRNUM_SET(__ctx, __errnum)                                \
   do {                                                                  \
     (__ctx)->errnum = (__errnum);                                       \
-    __MSG_TRACE(ipmi_ssif_ctx_errormsg((__ctx)), __errnum);             \
+    __MSG_TRACE(ipmi_ssif_ctx_errormsg((__ctx)), (__errnum));           \
   } while (0)
 
 #define OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM(__ctx, __errno)               \
   do {                                                                  \
-    _set_openipmi_ctx_errnum_by_errno(__ctx, __errno);                  \
+    _set_openipmi_ctx_errnum_by_errno((__ctx), (__errno));              \
     __ERRNO_TRACE(__errno);                                             \
   } while (0)   
 
 #define OPENIPMI_ERRNUM_SET(__ctx, __errnum)                            \
   do {                                                                  \
     (__ctx)->errnum = (__errnum);                                       \
-    __MSG_TRACE(ipmi_openipmi_ctx_errormsg((__ctx)), __errnum);         \
+    __MSG_TRACE(ipmi_openipmi_ctx_errormsg((__ctx)), (__errnum));       \
   } while (0)
 
 #define SUNBMC_ERRNO_TO_SUNBMC_ERRNUM(__ctx, __errno)                   \
   do {                                                                  \
-    _set_sunbmc_ctx_errnum_by_errno(__ctx, __errno);                    \
+    _set_sunbmc_ctx_errnum_by_errno((__ctx), (__errno));                \
     __ERRNO_TRACE(__errno);                                             \
   } while (0)   
 
 #define SUNBMC_ERRNUM_SET(__ctx, __errnum)                              \
   do {                                                                  \
     (__ctx)->errnum = (__errnum);                                       \
-    __MSG_TRACE(ipmi_sunbmc_ctx_errormsg((__ctx)), __errnum);           \
+    __MSG_TRACE(ipmi_sunbmc_ctx_errormsg((__ctx)), (__errnum));         \
   } while (0)
 
 #ifdef __cplusplus

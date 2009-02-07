@@ -30,7 +30,8 @@
 
 #include "freeipmi/driver/ipmi-openipmi-driver.h"
 
-#include "ipmi-ctx.h"
+#include "ipmi-api-defs.h"
+#include "ipmi-api-util.h"
 #include "ipmi-trace-wrappers-api.h"
 #include "ipmi-openipmi-driver-api.h"
 

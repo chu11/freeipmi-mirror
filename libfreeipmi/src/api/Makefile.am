@@ -1,12 +1,13 @@
 noinst_HEADERS = \
-	ipmi-trace-wrappers-api.h \
-	ipmi-ctx.h \
+	ipmi-api-util.h \
+	ipmi-api-defs.h \
 	ipmi-lan-interface-api.h \
 	ipmi-lan-session-common.h \
 	ipmi-kcs-driver-api.h \
 	ipmi-openipmi-driver-api.h \
 	ipmi-ssif-driver-api.h \
-	ipmi-sunbmc-driver-api.h
+	ipmi-sunbmc-driver-api.h \
+	ipmi-trace-wrappers-api.h
 
 noinst_LTLIBRARIES = libapi.la
 
@@ -21,7 +22,7 @@ libapi_la_CPPFLAGS = \
 
 libapi_la_SOURCES = \
 	ipmi-api.c \
-	ipmi-trace-wrappers-api.c \
+	ipmi-api-util.c \
 	ipmi-kcs-driver-api.c \
 	ipmi-openipmi-driver-api.c \
 	ipmi-ssif-driver-api.c \

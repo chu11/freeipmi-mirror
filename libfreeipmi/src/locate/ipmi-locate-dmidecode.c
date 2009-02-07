@@ -43,7 +43,8 @@
 #include "freeipmi/locate/ipmi-locate.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "ipmi-locate-util.h"
+#include "ipmi-trace-wrappers-locate.h"
 
 #include "freeipmi-portability.h"
 
@@ -148,7 +149,7 @@ _myread (int *locate_errnum,
   
   if (r2 != count)
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       close (fd);
       return -1;
     }
@@ -198,7 +199,7 @@ _mem_chunk (int *locate_errnum,
   
   if (!(p = malloc (len)))
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
   
@@ -444,7 +445,7 @@ _ipmi_locate_dmidecode_get_device_info (int *locate_errnum,
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -458,7 +459,7 @@ _ipmi_locate_dmidecode_get_device_info (int *locate_errnum,
       && (!(efi_systab = fopen (filename = "/sys/firmware/efi/systab", "r"))))
     {
       ERRNO_TRACE(errno);
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       return (-1);
     }
   
@@ -474,7 +475,7 @@ _ipmi_locate_dmidecode_get_device_info (int *locate_errnum,
 
   if (!fp)
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
@@ -527,7 +528,7 @@ _ipmi_locate_dmidecode_get_device_info (int *locate_errnum,
       rv = 0;
     }
   else
-    LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+    LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
   
   return rv;
 }
@@ -544,7 +545,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_interface_type_t type,
   if (_ipmi_locate_dmidecode_get_device_info(&errnum, type, info) < 0)
     {
       if (!errnum)
-        LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_INTERNAL_ERROR);
+        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_INTERNAL_ERROR);
       return errnum;
     }
   return 0;

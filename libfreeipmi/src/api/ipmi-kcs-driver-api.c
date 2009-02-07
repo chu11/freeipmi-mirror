@@ -48,7 +48,8 @@
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/util/ipmi-util.h"
 
-#include "ipmi-ctx.h"
+#include "ipmi-api-defs.h"
+#include "ipmi-api-util.h"
 #include "ipmi-trace-wrappers-api.h"
 #include "ipmi-kcs-driver-api.h"
 

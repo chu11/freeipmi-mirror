@@ -39,7 +39,8 @@
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
 
-#include "ipmi-ctx.h"
+#include "ipmi-api-defs.h"
+#include "ipmi-api-util.h"
 #include "ipmi-trace-wrappers-api.h"
 #include "ipmi-ssif-driver-api.h"
 

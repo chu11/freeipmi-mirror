@@ -17,8 +17,8 @@
 
 */
 
-#ifndef _IPMI_ERR_WRAPPERS_API_H
-#define	_IPMI_ERR_WRAPPERS_API_H
+#ifndef _IPMI_TRACE_WRAPPERS_API_H
+#define	_IPMI_TRACE_WRAPPERS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,6 +42,8 @@ extern "C" {
 
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
+
+#include "ipmi-api-util.h"
 
 #if defined (IPMI_TRACE)
 #define __API_BAD_RESPONSE_TRACE(___ctx, ___rs)                          \
@@ -70,86 +72,51 @@ do {                                                                     \
 
 #define API_ERRNO_TO_API_ERRNUM(__ctx, __errno)                          \
 do {                                                                     \
-  ipmi_set_api_errnum_by_errno(__ctx, __errno);                          \
-  __ERRNO_TRACE(__errno);                                                \
+  api_set_api_errnum_by_errno((__ctx), (__errno));                       \
+  __ERRNO_TRACE((__errno));                                              \
 } while (0)   
 
 #define API_FIID_OBJECT_ERROR_TO_API_ERRNUM(__ctx, __obj)                \
 do {                                                                     \
-  ipmi_set_api_errnum_by_fiid_object((__ctx), (__obj));                  \
+  api_set_api_errnum_by_fiid_object((__ctx), (__obj));                   \
   __MSG_TRACE(fiid_obj_errormsg((__obj)), fiid_obj_errnum((__obj)));     \
 } while (0)   
 
 #define API_BAD_RESPONSE_TO_API_ERRNUM(__ctx, __obj_rs)                  \
 do {                                                                     \
-  ipmi_set_api_errnum_by_bad_response(__ctx, __obj_rs);                  \
-  __API_BAD_RESPONSE_TRACE(__ctx, __obj_rs);                             \
+  api_set_api_errnum_by_bad_response((__ctx), (__obj_rs));               \
+  __API_BAD_RESPONSE_TRACE((__ctx), (__obj_rs));                         \
 } while (0)
 
 #define API_KCS_ERRNUM_TO_API_ERRNUM(__ctx, __errnum)                    \
 do {                                                                     \
-  ipmi_set_api_errnum_by_kcs_errnum(__ctx, __errnum);                    \
-  __MSG_TRACE(ipmi_kcs_ctx_strerror(__errnum), __errnum);                \
+  api_set_api_errnum_by_kcs_errnum((__ctx), (__errnum));                 \
+  __MSG_TRACE(ipmi_kcs_ctx_strerror((__errnum)), (__errnum));            \
 } while (0)   
 
 #define API_SSIF_ERRNUM_TO_API_ERRNUM(__ctx, __errnum)                   \
 do {                                                                     \
-  ipmi_set_api_errnum_by_ssif_errnum(__ctx, __errnum);                   \
-  __MSG_TRACE(ipmi_ssif_ctx_strerror(__errnum), __errnum);               \
+  api_set_api_errnum_by_ssif_errnum((__ctx), (__errnum));                \
+  __MSG_TRACE(ipmi_ssif_ctx_strerror((__errnum)), (__errnum));           \
 } while (0)   
 
 #define API_OPENIPMI_ERRNUM_TO_API_ERRNUM(__ctx, __errnum)               \
 do {                                                                     \
-  ipmi_set_api_errnum_by_openipmi_errnum(__ctx, __errnum);               \
-  __MSG_TRACE(ipmi_openipmi_ctx_strerror(__errnum), __errnum);           \
+  api_set_api_errnum_by_openipmi_errnum((__ctx), (__errnum));            \
+  __MSG_TRACE(ipmi_openipmi_ctx_strerror((__errnum)), (__errnum));       \
 } while (0)   
 
 #define API_SUNBMC_ERRNUM_TO_API_ERRNUM(__ctx, __errnum)                 \
 do {                                                                     \
-  ipmi_set_api_errnum_by_sunbmc_errnum(__ctx, __errnum);                 \
-  __MSG_TRACE(ipmi_sunbmc_ctx_strerror(__errnum), __errnum);             \
+  api_set_api_errnum_by_sunbmc_errnum((__ctx), (__errnum));              \
+  __MSG_TRACE(ipmi_sunbmc_ctx_strerror((__errnum)), (__errnum));         \
 } while (0)   
 
 #define API_LOCATE_ERRNUM_TO_API_ERRNUM(__ctx, __errnum)                 \
 do {                                                                     \
-  ipmi_set_api_errnum_by_locate_errnum(__ctx, __errnum);                 \
-  __MSG_TRACE(ipmi_locate_strerror(__errnum), __errnum);                 \
+  api_set_api_errnum_by_locate_errnum((__ctx), (__errnum));              \
+  __MSG_TRACE(ipmi_locate_strerror((__errnum)), (__errnum));             \
 } while (0)   
-
-void ipmi_set_api_errnum_by_errno(ipmi_ctx_t ctx, int __errno);
-
-void ipmi_set_api_errnum_by_fiid_object(ipmi_ctx_t ctx, fiid_obj_t obj);
-
-void ipmi_set_api_errnum_by_bad_response(ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs);
-
-void ipmi_set_api_errnum_by_locate_errnum(ipmi_ctx_t ctx, int locate_errnum);
-
-void ipmi_set_api_errnum_by_kcs_errnum(ipmi_ctx_t ctx, int kcs_errnum);
-
-void ipmi_set_api_errnum_by_ssif_errnum(ipmi_ctx_t ctx, int ssif_errnum);
-
-void ipmi_set_api_errnum_by_openipmi_errnum(ipmi_ctx_t ctx, int openipmi_errnum);
-
-void ipmi_set_api_errnum_by_sunbmc_errnum(ipmi_ctx_t ctx, int sunbmc_errnum);
-
-int api_fiid_obj_packet_valid(ipmi_ctx_t ctx, fiid_obj_t obj);
-
-int api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tmpl);
-
-int api_fiid_obj_get(ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
-int api_ipmi_cmd(ipmi_ctx_t ctx,
-                 uint8_t lun,
-                 uint8_t net_fn,
-                 fiid_obj_t obj_cmd_rq,
-                 fiid_obj_t obj_cmd_rs);
-
-int api_ipmi_cmd_ipmb(ipmi_ctx_t ctx,
-                      uint8_t rs_addr,
-                      uint8_t lun,
-                      uint8_t net_fn,
-                      fiid_obj_t obj_cmd_rq,
-                      fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

@@ -27,7 +27,8 @@
 #include "freeipmi/locate/ipmi-locate.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "ipmi-locate-util.h"
+#include "ipmi-trace-wrappers-locate.h"
 
 #include "freeipmi-portability.h"
 
@@ -152,7 +153,7 @@ _ipmi_locate_pci_get_device_info (int *locate_errnum,
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -176,7 +177,7 @@ _ipmi_locate_pci_get_device_info (int *locate_errnum,
     
     if (items != 9)
       {
-        LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
     bus = dfn >> 8U;
@@ -232,11 +233,11 @@ _ipmi_locate_pci_get_device_info (int *locate_errnum,
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
-  LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+  LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
   return -1;
 }
 
@@ -254,7 +255,7 @@ ipmi_locate_pci_get_device_info (ipmi_interface_type_t type,
   if (_ipmi_locate_pci_get_device_info(&errnum, type, info) < 0)
     {
       if (!errnum)
-        LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_INTERNAL_ERROR);
+        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_INTERNAL_ERROR);
       return errnum;
     }
   return 0;

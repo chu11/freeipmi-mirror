@@ -286,12 +286,6 @@ do {                                                                    \
       }                                                                 \
   } while (0)
 
-#define LOCATE_ERRNUM_SET(__errnum)                                     \
-  do {                                                                  \
-    (*locate_errnum) = (__errnum);                                      \
-    __LOCATE_TRACE;                                                     \
-  } while (0)
-
 #define __SDR_CACHE_ERRNO_TO_ERRNUM                                       \
 do {                                                                      \
   if (errno == 0)                                                         \

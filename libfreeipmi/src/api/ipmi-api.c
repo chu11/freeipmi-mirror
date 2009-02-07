@@ -70,7 +70,8 @@
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
-#include "ipmi-ctx.h"
+#include "ipmi-api-defs.h"
+#include "ipmi-api-util.h"
 #include "ipmi-trace-wrappers-api.h"
 #include "ipmi-lan-interface-api.h"
 #include "ipmi-lan-session-common.h"

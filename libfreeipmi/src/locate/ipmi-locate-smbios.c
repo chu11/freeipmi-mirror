@@ -46,7 +46,8 @@
 #include "freeipmi/locate/ipmi-locate.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "ipmi-locate-util.h"
+#include "ipmi-trace-wrappers-locate.h"
 
 #include "freeipmi-portability.h"
 
@@ -365,7 +366,7 @@ _copy_ipmi_dev_info (int *locate_errnum,
                 {
                   if (!(result = malloc (size)))
                     {
-                      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+                      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
                       goto cleanup;
                     }
                   memcpy (result, dev_info_p, size);
@@ -385,7 +386,7 @@ _copy_ipmi_dev_info (int *locate_errnum,
         break;
     }
 
-  LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+  LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
  cleanup:
   if (map_entry)
     munmap (map_entry, map_entry_len);
@@ -414,7 +415,7 @@ _ipmi_locate_smbios_get_device_info (int *locate_errnum,
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -438,7 +439,7 @@ _ipmi_locate_smbios_get_device_info (int *locate_errnum,
   linfo.interface_type = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET];
   if (linfo.interface_type != type)
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
@@ -500,7 +501,7 @@ ipmi_locate_smbios_get_device_info (ipmi_interface_type_t type,
   if (_ipmi_locate_smbios_get_device_info(&errnum, type, info) < 0)
     {
       if (!errnum)
-        LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_INTERNAL_ERROR);
+        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_INTERNAL_ERROR);
       return errnum;
     }
   return 0;

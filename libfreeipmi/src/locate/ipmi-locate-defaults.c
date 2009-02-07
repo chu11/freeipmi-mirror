@@ -33,7 +33,8 @@
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "ipmi-locate-util.h"
+#include "ipmi-trace-wrappers-locate.h"
 
 #include "freeipmi-portability.h"
 
@@ -54,7 +55,7 @@ _ipmi_locate_defaults_get_device_info (int *locate_errnum,
        && type != IPMI_INTERFACE_SSIF) 
       || !info)
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -113,7 +114,7 @@ ipmi_locate_defaults_get_device_info (ipmi_interface_type_t type,
   if (_ipmi_locate_defaults_get_device_info(&errnum, type, info) < 0)
     {
       if (!errnum)
-        LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_INTERNAL_ERROR);
+        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_INTERNAL_ERROR);
       return errnum;
     }
   return 0;

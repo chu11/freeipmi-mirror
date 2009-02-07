@@ -36,13 +36,14 @@
 #include "freeipmi/driver/ipmi-sunbmc-driver.h"
 #include "freeipmi/util/ipmi-util.h"
 
-#include "ipmi-ctx.h"
+#include "ipmi-api-defs.h"
+#include "ipmi-api-util.h"
 #include "ipmi-trace-wrappers-api.h"
 
 #include "freeipmi-portability.h"
 
 void
-ipmi_set_api_errnum_by_errno(ipmi_ctx_t ctx, int __errno)
+api_set_api_errnum_by_errno(ipmi_ctx_t ctx, int __errno)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
@@ -60,7 +61,7 @@ ipmi_set_api_errnum_by_errno(ipmi_ctx_t ctx, int __errno)
 }
 
 void
-ipmi_set_api_errnum_by_fiid_object(ipmi_ctx_t ctx, fiid_obj_t obj)
+api_set_api_errnum_by_fiid_object(ipmi_ctx_t ctx, fiid_obj_t obj)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
@@ -80,7 +81,7 @@ ipmi_set_api_errnum_by_fiid_object(ipmi_ctx_t ctx, fiid_obj_t obj)
 }
 
 void
-ipmi_set_api_errnum_by_bad_response(ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
+api_set_api_errnum_by_bad_response(ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
@@ -118,7 +119,7 @@ ipmi_set_api_errnum_by_bad_response(ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 }
 
 void
-ipmi_set_api_errnum_by_locate_errnum(ipmi_ctx_t ctx, int locate_errnum)
+api_set_api_errnum_by_locate_errnum(ipmi_ctx_t ctx, int locate_errnum)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
@@ -138,7 +139,7 @@ ipmi_set_api_errnum_by_locate_errnum(ipmi_ctx_t ctx, int locate_errnum)
 }
 
 void
-ipmi_set_api_errnum_by_kcs_errnum(ipmi_ctx_t ctx, int kcs_errnum)
+api_set_api_errnum_by_kcs_errnum(ipmi_ctx_t ctx, int kcs_errnum)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
@@ -164,7 +165,7 @@ ipmi_set_api_errnum_by_kcs_errnum(ipmi_ctx_t ctx, int kcs_errnum)
 }
 
 void
-ipmi_set_api_errnum_by_ssif_errnum(ipmi_ctx_t ctx, int ssif_errnum)
+api_set_api_errnum_by_ssif_errnum(ipmi_ctx_t ctx, int ssif_errnum)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
@@ -190,7 +191,7 @@ ipmi_set_api_errnum_by_ssif_errnum(ipmi_ctx_t ctx, int ssif_errnum)
 }
 
 void
-ipmi_set_api_errnum_by_openipmi_errnum(ipmi_ctx_t ctx, int openipmi_errnum)
+api_set_api_errnum_by_openipmi_errnum(ipmi_ctx_t ctx, int openipmi_errnum)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
@@ -214,7 +215,7 @@ ipmi_set_api_errnum_by_openipmi_errnum(ipmi_ctx_t ctx, int openipmi_errnum)
 }
 
 void
-ipmi_set_api_errnum_by_sunbmc_errnum(ipmi_ctx_t ctx, int sunbmc_errnum)
+api_set_api_errnum_by_sunbmc_errnum(ipmi_ctx_t ctx, int sunbmc_errnum)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;

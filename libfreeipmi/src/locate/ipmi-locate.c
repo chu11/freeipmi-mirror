@@ -30,7 +30,8 @@
 
 #include "freeipmi/locate/ipmi-locate.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "ipmi-locate-util.h"
+#include "ipmi-trace-wrappers-locate.h"
 
 #include "freeipmi-portability.h"
 
@@ -82,7 +83,7 @@ _ipmi_locate_get_device_info (int *locate_errnum,
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -99,12 +100,12 @@ _ipmi_locate_get_device_info (int *locate_errnum,
 	{
 	  memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
           /* reset errnum if set previously */
-          LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SUCCESS);
+          LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SUCCESS);
 	  return 0;
 	}
     }
 
-  LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_SYSTEM_ERROR);
+  LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
   return (-1);
 }
 
