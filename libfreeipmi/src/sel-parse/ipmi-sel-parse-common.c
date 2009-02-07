@@ -41,8 +41,7 @@
 #include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-common.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "ipmi-trace-wrappers-sel-parse.h"
 
 #include "freeipmi-portability.h"
 
@@ -75,7 +74,7 @@ sel_parse_get_reservation_id(ipmi_sel_parse_ctx_t ctx,
           goto out;
         }
       
-      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR);
+      SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR);
       goto cleanup;
     }
 

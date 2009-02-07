@@ -57,8 +57,7 @@
 #include "ipmi-sel-parse-common.h"
 #include "ipmi-sel-parse-string.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "ipmi-trace-wrappers-sel-parse.h"
 
 #include "freeipmi-portability.h"
 
@@ -171,7 +170,7 @@ _find_sdr_record(ipmi_sel_parse_ctx_t ctx,
 
       if (ipmi_sdr_cache_ctx_errnum(ctx->sdr_cache_ctx) != IPMI_SDR_CACHE_CTX_ERR_NOT_FOUND)
         {
-          SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR);
+          SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR);
           return -1;
         }
       /* else can't find it */
@@ -185,13 +184,13 @@ _find_sdr_record(ipmi_sel_parse_ctx_t ctx,
                                                        tmp_sdr_record,
                                                        SDR_RECORD_LENGTH)) < 0)
     {
-      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR);
+      SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR);
       return -1;
     }
   
   if ((*sdr_record_len) < tmp_sdr_record_len)
     {
-      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+      SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -378,7 +377,7 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
                                 raw_data,
                                 reading) < 0)
     {
-      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+      SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -1341,7 +1340,7 @@ _output_event_data2_event_data3(ipmi_sel_parse_ctx_t ctx,
 
   if (data2_ret || data3_ret)
     {
-      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+      SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
       return -1;
     }
 

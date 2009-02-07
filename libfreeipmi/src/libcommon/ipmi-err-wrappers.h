@@ -302,12 +302,6 @@ do {                                                                      \
     __SDR_CACHE_TRACE;                                                  \
   } while (0)
 
-#define SDR_PARSE_SET_ERRNUM(__errnum)                                  \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __SDR_PARSE_TRACE;                                                  \
-  } while (0)
-
 #ifdef __cplusplus
 }
 #endif
