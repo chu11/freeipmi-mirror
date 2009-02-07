@@ -701,20 +701,28 @@ _ipmi_ioremap (int *locate_errnum,
                                      physical_address_len))
     return (-1);
     
-  LOCATE_ERR_CLEANUP (!((mem_fd = open ("/dev/mem", 
-                                        O_RDONLY|O_SYNC)) < 0));
+  if ((mem_fd = open ("/dev/mem", 
+                      O_RDONLY|O_SYNC)) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
 
   /* XXX: what is the error return for getpagesize??? */
   pad = physical_address % getpagesize ();
   startaddress = physical_address - pad;
   *mapped_address_len = physical_address_len + pad;
 
-  LOCATE_ERR_CLEANUP(!((*mapped_address = mmap (NULL, 
-                                                *mapped_address_len, 
-                                                PROT_READ, 
-                                                MAP_PRIVATE, 
-                                                mem_fd, 
-                                                startaddress)) == MAP_FAILED));
+  if ((*mapped_address = mmap (NULL, 
+                               *mapped_address_len, 
+                               PROT_READ, 
+                               MAP_PRIVATE, 
+                               mem_fd, 
+                               startaddress)) == MAP_FAILED)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
 
   close (mem_fd);
   *virtual_address = (*mapped_address) + pad;

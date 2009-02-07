@@ -98,6 +98,7 @@ _pci_get_regs (int *locate_errnum,
                pci_class_regs_t* pregs)
 {
   FILE* fp = NULL;
+  size_t n;
   char fname[128];
   int rv = -1;
 
@@ -106,13 +107,58 @@ _pci_get_regs (int *locate_errnum,
 
   snprintf (fname, sizeof(fname), "/proc/bus/pci/%02x/%02x.%d", bus, dev, func);
 
-  LOCATE_ERR_CLEANUP((fp = fopen (fname, "r")));
+  if (!(fp = fopen (fname, "r")))
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
 
-  LOCATE_ERR_CLEANUP(!(fseek (fp, PCI_CLASS_REVISION, SEEK_SET) < 0));
-  LOCATE_ERR_CLEANUP(fread (&(pregs->pci_rev), 1, 1, fp) != 1);
-  LOCATE_ERR_CLEANUP(fread (&(pregs->pci_prog_interface), 1, 1, fp) != 1);
-  LOCATE_ERR_CLEANUP(fread (&(pregs->pci_subclass), 1, 1, fp) != 1);
-  LOCATE_ERR_CLEANUP(fread (&(pregs->pci_class), 1, 1, fp) != 1);
+  if (fseek (fp, PCI_CLASS_REVISION, SEEK_SET) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
+
+  if ((n = fread (&(pregs->pci_rev), 1, 1, fp)) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
+  if (n != 1)
+    {
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
+  if ((n = fread (&(pregs->pci_prog_interface), 1, 1, fp)) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
+  if (n != 1)
+    {
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
+  if ((n = fread (&(pregs->pci_subclass), 1, 1, fp)) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
+  if (n != 1)
+    {
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
+  if ((n = fread (&(pregs->pci_class), 1, 1, fp)) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
+  if (n != 1)
+    {
+      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
@@ -165,7 +211,11 @@ _ipmi_locate_pci_get_device_info (int *locate_errnum,
       linfo.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
 
-  LOCATE_ERR_CLEANUP ((fp_devices = fopen ("/proc/bus/pci/devices", "r")));
+  if (!(fp_devices = fopen ("/proc/bus/pci/devices", "r")))
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
 
   while (fgets (buf, sizeof(buf), fp_devices) != NULL) {
     pci_class_regs_t regs;

@@ -140,7 +140,8 @@ _myread (int *locate_errnum,
 	  if (errno != EINTR)
 	    {
 	      close (fd);
-              LOCATE_ERR(0);
+              LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+              return (-1);
 	    }
 	}
       else
@@ -195,7 +196,11 @@ _mem_chunk (int *locate_errnum,
   assert(locate_errnum);
   assert(devmem);
 
-  LOCATE_ERR_CLEANUP(!((fd = open (devmem, O_RDONLY)) < 0));
+  if ((fd = open (devmem, O_RDONLY)) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
   
   if (!(p = malloc (len)))
     {
@@ -206,7 +211,11 @@ _mem_chunk (int *locate_errnum,
 #ifdef HAVE_MMAP
 #ifdef _SC_PAGESIZE
   {
-    LOCATE_ERR_CLEANUP(!((pagesize = sysconf (_SC_PAGESIZE)) < 0));
+    if ((pagesize = sysconf (_SC_PAGESIZE)) < 0)
+      {
+        LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+        goto cleanup;
+      }
     mmoffset = base % pagesize;
   }
 #else
@@ -217,19 +226,27 @@ _mem_chunk (int *locate_errnum,
    * but to workaround problems many people encountered when trying
    * to read from /dev/mem using regular read() calls.
    */
-  LOCATE_ERR_CLEANUP(!((mmp = mmap (0, 
-                                    mmoffset + len, 
-                                    PROT_READ, 
-                                    MAP_SHARED, 
-                                    fd, 
-                                    base - mmoffset)) == MAP_FAILED));
+  if ((mmp = mmap (0, 
+                   mmoffset + len, 
+                   PROT_READ, 
+                   MAP_SHARED, 
+                   fd, 
+                   base - mmoffset)) == MAP_FAILED)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
   
   memcpy (p, (fipmiu8 *) mmp + mmoffset, len);
   rv = p;
   munmap (mmp, mmoffset + len);
 #else /* HAVE_MMAP */
 
-  LOCATE_ERR_CLEANUP(!(lseek (fd, base, SEEK_SET) < 0));
+  if (lseek (fd, base, SEEK_SET) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
   
   if (_myread (locate_errnum, fd, p, len) < 0)
     goto cleanup;

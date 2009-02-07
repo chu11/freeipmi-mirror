@@ -286,13 +286,26 @@ _map_physmem (int *locate_errnum,
   assert(locate_errnum);
   assert(startp && totallen);
 
-  LOCATE_ERR_CLEANUP(!((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) < 0));
+  if ((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
 
   pad = physaddress % sysconf (_SC_PAGESIZE);
   startaddress = physaddress - pad;
   *totallen = len + pad;
 
-  LOCATE_ERR_CLEANUP(!((*startp = mmap (NULL, *totallen, PROT_READ, MAP_PRIVATE, mem_fd, startaddress)) == MAP_FAILED));
+  if ((*startp = mmap (NULL,
+                       *totallen,
+                       PROT_READ, 
+                       MAP_PRIVATE,
+                       mem_fd, 
+                       startaddress)) == MAP_FAILED)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      goto cleanup;
+    }
   
   close (mem_fd);
   return ((uint8_t*)(*startp) + pad);
