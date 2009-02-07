@@ -296,28 +296,16 @@ do {                                                                      \
       }                                                                 \
   } while (0)
 
-#define SDR_CACHE_ERRNUM_SET(__errnum)                                  \
+#define SDR_CACHE_SET_ERRNUM(__errnum)                                  \
   do {                                                                  \
     ctx->errnum = (__errnum);                                           \
     __SDR_CACHE_TRACE;                                                  \
   } while (0)
 
-#define SDR_PARSE_ERRNUM_SET(__errnum)                                  \
+#define SDR_PARSE_SET_ERRNUM(__errnum)                                  \
   do {                                                                  \
     ctx->errnum = (__errnum);                                           \
     __SDR_PARSE_TRACE;                                                  \
-  } while (0)
-
-#define SEL_PARSE_ERRNUM_SET(__errnum)                                  \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __SEL_PARSE_TRACE;                                                  \
-  } while (0)
-
-#define SENSOR_READ_ERRNUM_SET(__errnum)                                \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __SENSOR_READ_TRACE;                                                \
   } while (0)
 
 #ifdef __cplusplus

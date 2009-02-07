@@ -16,6 +16,8 @@
 	  libfreeipmi/src/locate/ipmi-trace-wrappers-locate.h,
 	  libfreeipmi/src/locate/ipmi-locate-util.c,
 	  libfreeipmi/src/locate/ipmi-locate-util.c,
+	  libfreeipmi/src/sel-parse/ipmi-trace-wrappers-sel-parse.h,
+	  libfreeipmi/src/sensor-read/ipmi-trace-wrappers-sensor-read.h,
 	  libfreeipmi/src/api/ipmi-api-defs.h,
 	  libfreeipmi/src/driver/ipmi-trace-wrappers-driver.h: New files.
 

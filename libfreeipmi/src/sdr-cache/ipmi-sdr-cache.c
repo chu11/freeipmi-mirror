@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.10.2.1 2009-02-06 18:02:34 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.10.2.2 2009-02-07 20:43:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -150,7 +150,7 @@ ipmi_sdr_cache_ctx_get_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int *flags)
 
   if (!flags)
     {
-      SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_PARAMETERS);
+      SDR_CACHE_SET_ERRNUM(IPMI_SDR_CACHE_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -165,7 +165,7 @@ ipmi_sdr_cache_ctx_set_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int flags)
 
   if (flags & ~IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP)
     {
-      SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_PARAMETERS);
+      SDR_CACHE_SET_ERRNUM(IPMI_SDR_CACHE_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -196,7 +196,7 @@ ipmi_sdr_cache_ctx_set_debug_prefix(ipmi_sdr_cache_ctx_t ctx, const char *prefix
     {
       if (!(ctx->debug_prefix = strdup(prefix)))
         {
-          SDR_CACHE_ERRNUM_SET(IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY);
+          SDR_CACHE_SET_ERRNUM(IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY);
           return -1;
         }
     }

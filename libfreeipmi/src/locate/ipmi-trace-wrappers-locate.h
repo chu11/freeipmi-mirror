@@ -46,7 +46,7 @@ extern "C" {
     __ERRNO_TRACE((__errno));                                     \
   } while (0)   
 
-#define LOCATE_ERRNUM_SET(__ctx, __errnum)                        \
+#define LOCATE_SET_ERRNUM(__ctx, __errnum)                        \
   do {                                                            \
     (__ctx)->errnum = (__errnum);                                 \
     __MSG_TRACE(ipmi_locate_ctx_errormsg((__ctx)), (__errnum));   \

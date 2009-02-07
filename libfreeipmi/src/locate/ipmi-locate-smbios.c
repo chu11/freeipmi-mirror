@@ -385,7 +385,7 @@ _copy_ipmi_dev_info (ipmi_locate_ctx_t ctx,
                 {
                   if (!(result = malloc (size)))
                     {
-                      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY);
+                      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY);
                       goto cleanup;
                     }
                   memcpy (result, dev_info_p, size);
@@ -405,7 +405,7 @@ _copy_ipmi_dev_info (ipmi_locate_ctx_t ctx,
         break;
     }
 
-  LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+  LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
  cleanup:
   if (map_entry)
     munmap (map_entry, map_entry_len);
@@ -434,7 +434,7 @@ ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -458,7 +458,7 @@ ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
   linfo.interface_type = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET];
   if (linfo.interface_type != type)
     {
-      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 

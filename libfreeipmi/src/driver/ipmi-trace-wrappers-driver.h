@@ -49,7 +49,7 @@ extern "C" {
     __ERRNO_TRACE(__errno);                                             \
   } while (0)   
 
-#define KCS_ERRNUM_SET(__ctx, __errnum)                                 \
+#define KCS_SET_ERRNUM(__ctx, __errnum)                                 \
   do {                                                                  \
     (__ctx)->errnum = (__errnum);                                       \
     __MSG_TRACE(ipmi_kcs_ctx_errormsg((__ctx)), (__errnum));            \
@@ -61,7 +61,7 @@ extern "C" {
     __ERRNO_TRACE(__errno);                                             \
   } while (0)   
 
-#define SSIF_ERRNUM_SET(__ctx, __errnum)                                \
+#define SSIF_SET_ERRNUM(__ctx, __errnum)                                \
   do {                                                                  \
     (__ctx)->errnum = (__errnum);                                       \
     __MSG_TRACE(ipmi_ssif_ctx_errormsg((__ctx)), (__errnum));           \
@@ -73,7 +73,7 @@ extern "C" {
     __ERRNO_TRACE(__errno);                                             \
   } while (0)   
 
-#define OPENIPMI_ERRNUM_SET(__ctx, __errnum)                            \
+#define OPENIPMI_SET_ERRNUM(__ctx, __errnum)                            \
   do {                                                                  \
     (__ctx)->errnum = (__errnum);                                       \
     __MSG_TRACE(ipmi_openipmi_ctx_errormsg((__ctx)), (__errnum));       \
@@ -85,7 +85,7 @@ extern "C" {
     __ERRNO_TRACE(__errno);                                             \
   } while (0)   
 
-#define SUNBMC_ERRNUM_SET(__ctx, __errnum)                              \
+#define SUNBMC_SET_ERRNUM(__ctx, __errnum)                              \
   do {                                                                  \
     (__ctx)->errnum = (__errnum);                                       \
     __MSG_TRACE(ipmi_sunbmc_ctx_errormsg((__ctx)), (__errnum));         \

@@ -233,7 +233,7 @@ _ipmi_i2c_smbus_access (ipmi_ssif_ctx_t ctx,
       if (!n)
         {
           /* Could be due to a different error, but we assume a timeout */
-          SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_DRIVER_TIMEOUT);
+          SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_DRIVER_TIMEOUT);
           return (-1);
         }
     }
@@ -495,7 +495,7 @@ ipmi_ssif_ctx_get_driver_device(ipmi_ssif_ctx_t ctx, char **driver_device)
 
   if (!driver_device)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -511,7 +511,7 @@ ipmi_ssif_ctx_get_driver_address(ipmi_ssif_ctx_t ctx, uint8_t *driver_address)
 
   if (!driver_address)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -527,7 +527,7 @@ ipmi_ssif_ctx_get_flags(ipmi_ssif_ctx_t ctx, unsigned int *flags)
 
   if (!flags)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -543,7 +543,7 @@ ipmi_ssif_ctx_set_driver_device(ipmi_ssif_ctx_t ctx, char* driver_device)
 
   if (!driver_device)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -553,7 +553,7 @@ ipmi_ssif_ctx_set_driver_device(ipmi_ssif_ctx_t ctx, char* driver_device)
   
   if (!(ctx->driver_device = strdup(driver_device)))
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY);
       return (-1);
     }
   
@@ -578,7 +578,7 @@ ipmi_ssif_ctx_set_flags(ipmi_ssif_ctx_t ctx, unsigned int flags)
 
   if (flags & ~IPMI_SSIF_FLAGS_MASK)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -594,7 +594,7 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
   
   if (!ctx->driver_device)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -639,13 +639,13 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 
   if (!buf || !buf_len)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
   if (!ctx->io_init)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED);
       return (-1);
     }
 
@@ -705,13 +705,13 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
 
   if (!buf || !buf_len)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
       goto cleanup;
     }
 
   if (!ctx->io_init)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED);
       goto cleanup;
     }
   
@@ -761,7 +761,7 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
 
   if (!(pkt = (uint8_t *)malloc (pkt_len)))
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
 
@@ -771,7 +771,7 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
                          net_fn,
                          obj_hdr) < 0)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
   
@@ -780,7 +780,7 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
                              pkt,
                              pkt_len) < 0)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
   
@@ -823,7 +823,7 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
   
   if (!(pkt = (uint8_t *)malloc(pkt_len)))
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
 
@@ -836,7 +836,7 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
   
   if (!read_len)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
@@ -845,7 +845,7 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
                                obj_hdr,
                                obj_cmd_rs) < 0)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -873,13 +873,13 @@ ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
       || !fiid_obj_valid(obj_cmd_rs)
       || !fiid_obj_packet_valid(obj_cmd_rq))
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_PARAMETERS);
       return (-1);
     }
   
   if (!ctx->io_init)
     {
-      SSIF_ERRNUM_SET(ctx, IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED);
+      SSIF_SET_ERRNUM(ctx, IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED);
       return (-1);
     }
 
