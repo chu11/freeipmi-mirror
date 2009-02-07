@@ -103,8 +103,8 @@ static char * ipmi_sunbmc_ctx_errmsg[] =
 
 struct ipmi_sunbmc_ctx {
   uint32_t magic;
-  int32_t errnum;
-  uint32_t flags;
+  int errnum;
+  unsigned int flags;
   char *driver_device;
   int device_fd;
   int io_init;
@@ -165,10 +165,11 @@ ipmi_sunbmc_ctx_create(void)
   return (NULL);
 }
 
-int8_t
+void
 ipmi_sunbmc_ctx_destroy(ipmi_sunbmc_ctx_t ctx)
 {
-  ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
+    return;
 
   ctx->magic = ~IPMI_SUNBMC_CTX_MAGIC;
   ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
@@ -179,19 +180,9 @@ ipmi_sunbmc_ctx_destroy(ipmi_sunbmc_ctx_t ctx)
     }
   close(ctx->device_fd);
   free(ctx);
-  return (0);
 }
 
-char *
-ipmi_sunbmc_ctx_strerror(int32_t errnum)
-{
-  if (errnum >= IPMI_SUNBMC_CTX_ERR_SUCCESS && errnum <= IPMI_SUNBMC_CTX_ERR_ERRNUMRANGE)
-    return ipmi_sunbmc_ctx_errmsg[errnum];
-  else
-    return ipmi_sunbmc_ctx_errmsg[IPMI_SUNBMC_CTX_ERR_ERRNUMRANGE];
-}
-
-int32_t
+int
 ipmi_sunbmc_ctx_errnum(ipmi_sunbmc_ctx_t ctx)
 {
   if (!ctx)
@@ -200,6 +191,21 @@ ipmi_sunbmc_ctx_errnum(ipmi_sunbmc_ctx_t ctx)
     return (IPMI_SUNBMC_CTX_ERR_INVALID);
   else
     return (ctx->errnum);
+}
+
+char *
+ipmi_sunbmc_ctx_strerror(int errnum)
+{
+  if (errnum >= IPMI_SUNBMC_CTX_ERR_SUCCESS && errnum <= IPMI_SUNBMC_CTX_ERR_ERRNUMRANGE)
+    return ipmi_sunbmc_ctx_errmsg[errnum];
+  else
+    return ipmi_sunbmc_ctx_errmsg[IPMI_SUNBMC_CTX_ERR_ERRNUMRANGE];
+}
+
+char *
+ipmi_sunbmc_ctx_errormsg(ipmi_sunbmc_ctx_t ctx)
+{
+  return ipmi_sunbmc_ctx_strerror(ipmi_sunbmc_ctx_errnum(ctx));
 }
 
 int8_t 
@@ -219,7 +225,7 @@ ipmi_sunbmc_ctx_get_driver_device(ipmi_sunbmc_ctx_t ctx, char **driver_device)
 }
 
 int8_t 
-ipmi_sunbmc_ctx_get_flags(ipmi_sunbmc_ctx_t ctx, uint32_t *flags)
+ipmi_sunbmc_ctx_get_flags(ipmi_sunbmc_ctx_t ctx, unsigned int *flags)
 {
   ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
 
@@ -260,7 +266,7 @@ ipmi_sunbmc_ctx_set_driver_device(ipmi_sunbmc_ctx_t ctx, char *device)
 }
 
 int8_t 
-ipmi_sunbmc_ctx_set_flags(ipmi_sunbmc_ctx_t ctx, uint32_t flags)
+ipmi_sunbmc_ctx_set_flags(ipmi_sunbmc_ctx_t ctx, unsigned int flags)
 {
   ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
 

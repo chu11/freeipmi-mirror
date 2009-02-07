@@ -47,15 +47,16 @@ extern "C" {
 typedef struct ipmi_sunbmc_ctx *ipmi_sunbmc_ctx_t;
 
 ipmi_sunbmc_ctx_t ipmi_sunbmc_ctx_create(void);
-int8_t ipmi_sunbmc_ctx_destroy(ipmi_sunbmc_ctx_t ctx);
-int32_t ipmi_sunbmc_ctx_errnum(ipmi_sunbmc_ctx_t ctx);
-char *ipmi_sunbmc_ctx_strerror(int32_t errnum);
+void ipmi_sunbmc_ctx_destroy(ipmi_sunbmc_ctx_t ctx);
+int ipmi_sunbmc_ctx_errnum(ipmi_sunbmc_ctx_t ctx);
+char *ipmi_sunbmc_ctx_strerror(int errnum);
+char *ipmi_sunbmc_ctx_errormsg(ipmi_sunbmc_ctx_t ctx);
 
 int8_t ipmi_sunbmc_ctx_get_driver_device(ipmi_sunbmc_ctx_t ctx, char **driver_device);
-int8_t ipmi_sunbmc_ctx_get_flags(ipmi_sunbmc_ctx_t ctx, uint32_t *flags);
+int8_t ipmi_sunbmc_ctx_get_flags(ipmi_sunbmc_ctx_t ctx, unsigned int *flags);
 
 int8_t ipmi_sunbmc_ctx_set_driver_device(ipmi_sunbmc_ctx_t ctx, char *driver_device);
-int8_t ipmi_sunbmc_ctx_set_flags(ipmi_sunbmc_ctx_t ctx, uint32_t flags);
+int8_t ipmi_sunbmc_ctx_set_flags(ipmi_sunbmc_ctx_t ctx, unsigned int flags);
 
 int8_t ipmi_sunbmc_ctx_io_init(ipmi_sunbmc_ctx_t ctx);
 

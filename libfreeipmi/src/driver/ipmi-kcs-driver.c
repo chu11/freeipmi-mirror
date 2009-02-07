@@ -182,11 +182,11 @@ static char * ipmi_kcs_ctx_errmsg[] =
 
 struct ipmi_kcs_ctx {
   uint32_t magic;
-  int32_t errnum;
+  int errnum;
   uint16_t driver_address;
   uint8_t register_spacing;
-  uint32_t flags;
-  uint32_t poll_interval;
+  unsigned int flags;
+  unsigned int poll_interval;
 #ifdef __FreeBSD__
 #ifndef USE_IOPERM
   int dev_fd;
@@ -249,10 +249,11 @@ ipmi_kcs_ctx_create(void)
   return (NULL);
 }
 
-int8_t
+void
 ipmi_kcs_ctx_destroy(ipmi_kcs_ctx_t ctx)
 {
-  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
+    return;
 
   ctx->magic = ~IPMI_KCS_CTX_MAGIC;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
@@ -262,19 +263,9 @@ ipmi_kcs_ctx_destroy(ipmi_kcs_ctx_t ctx)
 #endif
 #endif /* __FreeBSD__ */
   free(ctx);
-  return (0);
 }
 
-char *
-ipmi_kcs_ctx_strerror(int32_t errnum)
-{
-  if (errnum >= IPMI_KCS_CTX_ERR_SUCCESS && errnum <= IPMI_KCS_CTX_ERR_ERRNUMRANGE)
-    return ipmi_kcs_ctx_errmsg[errnum];
-  else
-    return ipmi_kcs_ctx_errmsg[IPMI_KCS_CTX_ERR_ERRNUMRANGE];
-}
-
-int32_t
+int
 ipmi_kcs_ctx_errnum(ipmi_kcs_ctx_t ctx)
 {
   if (!ctx)
@@ -283,6 +274,21 @@ ipmi_kcs_ctx_errnum(ipmi_kcs_ctx_t ctx)
     return (IPMI_KCS_CTX_ERR_INVALID);
   else
     return (ctx->errnum);
+}
+
+char *
+ipmi_kcs_ctx_strerror(int errnum)
+{
+  if (errnum >= IPMI_KCS_CTX_ERR_SUCCESS && errnum <= IPMI_KCS_CTX_ERR_ERRNUMRANGE)
+    return ipmi_kcs_ctx_errmsg[errnum];
+  else
+    return ipmi_kcs_ctx_errmsg[IPMI_KCS_CTX_ERR_ERRNUMRANGE];
+}
+
+char *
+ipmi_kcs_ctx_errormsg(ipmi_kcs_ctx_t ctx)
+{
+  return ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(ctx));
 }
 
 int8_t 
@@ -334,7 +340,7 @@ ipmi_kcs_ctx_get_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t *poll_interval)
 }
 
 int8_t 
-ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, uint32_t *flags)
+ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, unsigned int *flags)
 {
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
@@ -380,7 +386,7 @@ ipmi_kcs_ctx_set_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t poll_interval)
 }
 
 int8_t 
-ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, uint32_t flags)
+ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, unsigned int flags)
 {
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
@@ -606,7 +612,7 @@ _ipmi_kcs_clear_obf (ipmi_kcs_ctx_t ctx)
 int32_t
 ipmi_kcs_write (ipmi_kcs_ctx_t ctx, 
 		uint8_t *buf, 
-		uint32_t buf_len)
+		unsigned int buf_len)
 {
   uint8_t *p = buf;
   int32_t count = 0;
@@ -733,7 +739,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
 int32_t
 ipmi_kcs_read (ipmi_kcs_ctx_t ctx, 
 	       uint8_t* buf, 
-	       uint32_t buf_len)
+	       unsigned int buf_len)
 {
   uint8_t *p = buf;
   int32_t count = 0;

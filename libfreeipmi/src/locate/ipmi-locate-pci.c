@@ -27,6 +27,7 @@
 #include "freeipmi/locate/ipmi-locate.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 
+#include "ipmi-locate-defs.h"
 #include "ipmi-locate-util.h"
 #include "ipmi-trace-wrappers-locate.h"
 
@@ -91,7 +92,7 @@ typedef struct pci_class_regs pci_class_regs_t;
 /* return : pregs if successful, otherwise NULL */
 
 static int
-_pci_get_regs (int *locate_errnum,
+_pci_get_regs (ipmi_locate_ctx_t ctx,
                uint8_t bus, 
                uint8_t dev, 
                uint16_t func, 
@@ -102,61 +103,62 @@ _pci_get_regs (int *locate_errnum,
   char fname[128];
   int rv = -1;
 
-  assert(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_LOCATE_CTX_MAGIC);
   assert(pregs);
 
   snprintf (fname, sizeof(fname), "/proc/bus/pci/%02x/%02x.%d", bus, dev, func);
 
   if (!(fp = fopen (fname, "r")))
     {
-      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
   if (fseek (fp, PCI_CLASS_REVISION, SEEK_SET) < 0)
     {
-      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
   if ((n = fread (&(pregs->pci_rev), 1, 1, fp)) < 0)
     {
-      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
       goto cleanup;
     }
   if (n != 1)
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   if ((n = fread (&(pregs->pci_prog_interface), 1, 1, fp)) < 0)
     {
-      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
       goto cleanup;
     }
   if (n != 1)
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   if ((n = fread (&(pregs->pci_subclass), 1, 1, fp)) < 0)
     {
-      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
       goto cleanup;
     }
   if (n != 1)
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   if ((n = fread (&(pregs->pci_class), 1, 1, fp)) < 0)
     {
-      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
       goto cleanup;
     }
   if (n != 1)
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
@@ -176,10 +178,10 @@ _pci_get_regs (int *locate_errnum,
 /* type = which interface (KCS, SMIC, BT) */
 /* pinfo = pointer to information structure filled in by this function */
 
-static int
-_ipmi_locate_pci_get_device_info (int *locate_errnum,
-                                  ipmi_interface_type_t type,
-                                  struct ipmi_locate_info *info)
+int
+ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
+                                 ipmi_interface_type_t type,
+                                 struct ipmi_locate_info *info)
 {
   unsigned dfn;
   unsigned vendor;
@@ -195,11 +197,11 @@ _ipmi_locate_pci_get_device_info (int *locate_errnum,
   struct ipmi_locate_info linfo;
   int rv = -1;
 
-  assert(locate_errnum);
+  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -213,7 +215,7 @@ _ipmi_locate_pci_get_device_info (int *locate_errnum,
 
   if (!(fp_devices = fopen ("/proc/bus/pci/devices", "r")))
     {
-      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -227,14 +229,14 @@ _ipmi_locate_pci_get_device_info (int *locate_errnum,
     
     if (items != 9)
       {
-        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+        LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
     bus = dfn >> 8U;
     dev = PCI_SLOT(dfn & 0xff);
     func = PCI_FUNC(dfn & 0xff);
 
-    if (_pci_get_regs (locate_errnum, bus, dev, func, &regs) < 0)
+    if (_pci_get_regs (ctx, bus, dev, func, &regs) < 0)
       goto cleanup;
 
     if (regs.pci_class != IPMI_CLASS ||
@@ -274,39 +276,21 @@ _ipmi_locate_pci_get_device_info (int *locate_errnum,
 
 #else  /* __linux */
 
-static int
-_ipmi_locate_pci_get_device_info (int *locate_errnum,
-                                  ipmi_interface_type_t type,
-                                  struct ipmi_locate_info *info)
+int
+ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
+                                 ipmi_interface_type_t type,
+                                 struct ipmi_locate_info *info)
 {
-  assert(locate_errnum);
-
+  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+ 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
-  LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+  LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
   return -1;
 }
 
 #endif /* !__linux */
-
-int
-ipmi_locate_pci_get_device_info (ipmi_interface_type_t type,
-                                 struct ipmi_locate_info *info)
-{
-  int errnum;
-  int *locate_errnum;
-
-  locate_errnum = &errnum;
-
-  if (_ipmi_locate_pci_get_device_info(&errnum, type, info) < 0)
-    {
-      if (!errnum)
-        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_INTERNAL_ERROR);
-      return errnum;
-    }
-  return 0;
-}

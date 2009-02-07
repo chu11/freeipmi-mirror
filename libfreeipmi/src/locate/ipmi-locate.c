@@ -30,14 +30,17 @@
 
 #include "freeipmi/locate/ipmi-locate.h"
 
+#include "ipmi-locate-defs.h"
 #include "ipmi-locate-util.h"
 #include "ipmi-trace-wrappers-locate.h"
 
 #include "freeipmi-portability.h"
 
-typedef int ((*ipmi_locate_func)(ipmi_interface_type_t, struct ipmi_locate_info *));
+typedef int ((*ipmi_locate_func)(ipmi_locate_ctx_t ctx, 
+                                 ipmi_interface_type_t, 
+                                 struct ipmi_locate_info *));
 
-static char * ipmi_locate_errmsg[] =
+static char * ipmi_locate_ctx_errmsg[] =
   {
     "success",
     "locate context null",
@@ -51,17 +54,64 @@ static char * ipmi_locate_errmsg[] =
     NULL,
   };
 
-char *
-ipmi_locate_strerror(int32_t errnum)
+ipmi_locate_ctx_t
+ipmi_locate_ctx_create(void)
 {
-  if (errnum >= IPMI_LOCATE_ERR_SUCCESS && errnum <= IPMI_LOCATE_ERR_ERRNUMRANGE)
-    return ipmi_locate_errmsg[errnum];
+  ipmi_locate_ctx_t ctx = NULL;
+
+  ERR_CLEANUP ((ctx = (ipmi_locate_ctx_t)malloc(sizeof(struct ipmi_locate_ctx))));
+  memset(ctx, '\0', sizeof(struct ipmi_locate_ctx));
+
+  ctx->magic = IPMI_LOCATE_CTX_MAGIC;
+
+  ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;
+  return ctx;
+
+ cleanup:
+  if (ctx)
+    free(ctx);
+  return (NULL);
+}
+
+void
+ipmi_locate_ctx_destroy(ipmi_locate_ctx_t ctx)
+{
+  if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
+    return;
+
+  ctx->magic = ~IPMI_LOCATE_CTX_MAGIC;
+  ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;
+  free(ctx);
+}
+
+int
+ipmi_locate_ctx_errnum(ipmi_locate_ctx_t ctx)
+{
+  if (!ctx)
+    return (IPMI_LOCATE_CTX_ERR_NULL);
+  else if (ctx->magic != IPMI_LOCATE_CTX_MAGIC)
+    return (IPMI_LOCATE_CTX_ERR_INVALID);
   else
-    return ipmi_locate_errmsg[IPMI_LOCATE_ERR_ERRNUMRANGE];
+    return (ctx->errnum);
+}
+
+char *
+ipmi_locate_ctx_strerror(int errnum)
+{
+  if (errnum >= IPMI_LOCATE_CTX_ERR_SUCCESS && errnum <= IPMI_LOCATE_CTX_ERR_ERRNUMRANGE)
+    return ipmi_locate_ctx_errmsg[errnum];
+  else
+    return ipmi_locate_ctx_errmsg[IPMI_LOCATE_CTX_ERR_ERRNUMRANGE];
+}
+
+char *
+ipmi_locate_ctx_errormsg(ipmi_locate_ctx_t ctx)
+{
+  return ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx));
 }
 
 static int 
-_ipmi_locate_get_device_info (int *locate_errnum,
+_ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
                               ipmi_interface_type_t type,
                               struct ipmi_locate_info *info,
                               int try_defaults)
@@ -79,11 +129,11 @@ _ipmi_locate_get_device_info (int *locate_errnum,
   struct ipmi_locate_info linfo;
   int i, rv;
 
-  assert(locate_errnum);
+  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -95,38 +145,32 @@ _ipmi_locate_get_device_info (int *locate_errnum,
   for (i = 0; i < things_to_try_len; i++)
     {
       memset (&linfo, 0, sizeof (struct ipmi_locate_info));
-      rv = (*things_to_try[i])(type, &linfo);
+      rv = (*things_to_try[i])(ctx, type, &linfo);
       if (!rv)
 	{
 	  memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
           /* reset errnum if set previously */
-          LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SUCCESS);
+          ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;
 	  return 0;
 	}
     }
 
-  LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+  LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
   return (-1);
 }
 
 int
-ipmi_locate_get_device_info (ipmi_interface_type_t type,
+ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
+                             ipmi_interface_type_t type,
                              struct ipmi_locate_info *info)
 {
-  int locate_errnum = 0;
-
-  if (_ipmi_locate_get_device_info(&locate_errnum, type, info, 1) < 0)
-    return locate_errnum;
-  return 0;
+  return _ipmi_locate_get_device_info(ctx, type, info, 1);
 }
 
 int
-ipmi_locate_discover_device_info (ipmi_interface_type_t type,
+ipmi_locate_discover_device_info (ipmi_locate_ctx_t ctx,
+                                  ipmi_interface_type_t type,
                                   struct ipmi_locate_info *info)
 {
-  int locate_errnum = 0;
-
-  if (_ipmi_locate_get_device_info(&locate_errnum, type, info, 0) < 0)
-    return locate_errnum;
-  return 0;
+  return _ipmi_locate_get_device_info(ctx, type, info, 0);
 }

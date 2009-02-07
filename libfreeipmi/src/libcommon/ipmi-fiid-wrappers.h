@@ -996,21 +996,21 @@ do {                                                     \
 #define __FIID_ERRNO_TO_LOCATE_ERRNUM                                         \
 do {                                                                          \
   if (errno == 0)                                                             \
-    (*locate_errnum) = IPMI_LOCATE_ERR_SUCCESS;                               \
+    ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;                                \
   else if (errno == ENOMEM)                                                   \
-    (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                         \
+    ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                          \
   else                                                                        \
-    (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;                        \
+    ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                         \
 } while (0)
 
 #define __FIID_ERRNUM_TO_LOCATE_ERRNUM(___errnum)                             \
 do {                                                                          \
   if ((___errnum) == 0)                                                       \
-    (*locate_errnum) = IPMI_LOCATE_ERR_SUCCESS;                               \
+    ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;                                \
   else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
-    (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                         \
+    ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                          \
   else                                                                        \
-    (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;                        \
+    ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                         \
 } while (0)
 
 #define __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM(___obj)                            \
@@ -1063,7 +1063,7 @@ do {                                                                          \
     if (!__ret)                                                               \
       {                                                                       \
         __FIID_OBJ_TRACE((__obj));                                            \
-        (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;                    \
+        ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                     \
 	goto cleanup;                                                         \
       }                                                                       \
 } while (0)
@@ -1092,7 +1092,7 @@ do {                                                                          \
     if (!__ret)                                                               \
       {                                                                       \
          __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
-         (*locate_errnum) = IPMI_LOCATE_ERR_SYSTEM_ERROR;                     \
+         ctx->errnum = IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR;                      \
          goto cleanup;                                                        \
       }                                                                       \
     *__localval_ptr = __localval;                                             \

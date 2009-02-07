@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.112 2009-01-23 23:19:02 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.112.6.1 2009-02-07 17:34:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -221,49 +221,56 @@ _err_exit(char *fmt, ...)
 static int
 _init_kcs_ipmi(void)
 {
-  struct ipmi_locate_info l;
-  
+  ipmi_locate_ctx_t locate_ctx = NULL;
+  struct ipmi_locate_info locate_info;
+  int rv = -1;
+
+  if (!(locate_ctx = ipmi_locate_ctx_create()))
+    {
+      _bmclog("ipmi_locate_ctx_create: %s", strerror(errno));
+      goto cleanup;
+    }
+
   if (!cmd_args.common.disable_auto_probe)
     {
-      int err;
-
-      if ((err = ipmi_locate_get_device_info(IPMI_INTERFACE_KCS,
-                                             &l)))
+      if (ipmi_locate_get_device_info(locate_ctx,
+                                      IPMI_INTERFACE_KCS,
+                                      &locate_info) < 0)
         {
           _bmclog("ipmi_locate_get_device_info: %s",
-                  ipmi_locate_strerror(err));
-          return -1;
+                  ipmi_locate_ctx_errormsg(locate_ctx));
+          goto cleanup;
         }
     }
 
   if (!(kcs_ctx = ipmi_kcs_ctx_create()))
     {
       _bmclog("ipmi_kcs_ctx_create: %s", strerror(errno));
-      return -1;
+      goto cleanup;
     }
 
   if (cmd_args.common.driver_address)
-    l.driver_address = cmd_args.common.driver_address;
+    locate_info.driver_address = cmd_args.common.driver_address;
   if (cmd_args.common.register_spacing)
-    l.register_spacing = cmd_args.common.register_spacing;
+    locate_info.register_spacing = cmd_args.common.register_spacing;
   
   if (!cmd_args.common.disable_auto_probe || cmd_args.common.driver_address)
     {
-      if (ipmi_kcs_ctx_set_driver_address(kcs_ctx, l.driver_address) < 0)
+      if (ipmi_kcs_ctx_set_driver_address(kcs_ctx, locate_info.driver_address) < 0)
         {
           _bmclog("ipmi_kcs_ctx_set_driver_address: %s", 
                   ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
-          return -1;
+          goto cleanup;
         }
     }
   
   if (!cmd_args.common.disable_auto_probe || cmd_args.common.register_spacing)
     {
-      if (ipmi_kcs_ctx_set_register_spacing(kcs_ctx, l.register_spacing) < 0)
+      if (ipmi_kcs_ctx_set_register_spacing(kcs_ctx, locate_info.register_spacing) < 0)
         {
           _bmclog("ipmi_kcs_ctx_set_register_spacing: %s", 
                   ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
-          return -1;
+          goto cleanup;
         }
     }
   
@@ -271,66 +278,78 @@ _init_kcs_ipmi(void)
     {
       _bmclog("ipmi_kcs_ctx_set_flags: %s", 
               ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
-      return -1;
+      goto cleanup;
     }
   
   if (ipmi_kcs_ctx_io_init(kcs_ctx) < 0)
     {
       _bmclog("ipmi_kcs_ctx_io_init: %s", 
               ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
-      return -1;
+      goto cleanup;
     }
 
-  return 0;
+  rv = 0;
+ cleanup:
+  if (locate_ctx)
+    ipmi_locate_ctx_destroy(locate_ctx);
+  return rv;
 }
 
 static int
 _init_ssif_ipmi(void)
 {
-  struct ipmi_locate_info l;
+  ipmi_locate_ctx_t locate_ctx = NULL;
+  struct ipmi_locate_info locate_info;
+  int rv = -1;
+
+  if (!(locate_ctx = ipmi_locate_ctx_create()))
+    {
+      _bmclog("ipmi_locate_ctx_create: %s", strerror(errno));
+      goto cleanup;
+    }
 
   if (!cmd_args.common.disable_auto_probe)
     {
-      int err;
-      if ((err = ipmi_locate_get_device_info(IPMI_INTERFACE_SSIF,
-                                             &l)))
+      if (ipmi_locate_get_device_info(locate_ctx,
+                                      IPMI_INTERFACE_SSIF,
+                                      &locate_info) < 0)
         {
           _bmclog("ipmi_locate_get_device_info: %s",
-                  ipmi_locate_strerror(err));
-          return -1;
+                  ipmi_locate_ctx_errormsg(locate_ctx));
+          goto cleanup;
         }
     }
   if (!(ssif_ctx = ipmi_ssif_ctx_create()))
     {
       _bmclog("ipmi_ssif_ctx_create: %s", strerror(errno));
-      return -1;
+      goto cleanup;
     }
 
   if (cmd_args.common.driver_address)
-    l.driver_address = cmd_args.common.driver_address;
+    locate_info.driver_address = cmd_args.common.driver_address;
   if (cmd_args.common.driver_device)
     {
-      strncpy(l.driver_device, cmd_args.common.driver_device, IPMI_LOCATE_PATH_MAX);
-      l.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+      strncpy(locate_info.driver_device, cmd_args.common.driver_device, IPMI_LOCATE_PATH_MAX);
+      locate_info.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
   
   if (!cmd_args.common.disable_auto_probe || cmd_args.common.driver_address)
     {
-      if (ipmi_ssif_ctx_set_driver_address(ssif_ctx, l.driver_address) < 0)
+      if (ipmi_ssif_ctx_set_driver_address(ssif_ctx, locate_info.driver_address) < 0)
         {
           _bmclog("ipmi_ssif_ctx_set_driver_address: %s",
                   ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
-          return -1;
+          goto cleanup;
         }
     }
   
   if (!cmd_args.common.disable_auto_probe || cmd_args.common.driver_device)
     {
-      if (ipmi_ssif_ctx_set_driver_device(ssif_ctx, l.driver_device) < 0)
+      if (ipmi_ssif_ctx_set_driver_device(ssif_ctx, locate_info.driver_device) < 0)
         {
           _bmclog("ipmi_ssif_ctx_set_driver_device: %s", 
                   ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
-          return -1;
+          goto cleanup;
         }
     }
   
@@ -338,17 +357,21 @@ _init_ssif_ipmi(void)
     {
       _bmclog("ipmi_ssif_ctx_set_flags: %s", 
               ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
-      return -1;
+      goto cleanup;
     }
   
   if (ipmi_ssif_ctx_io_init(ssif_ctx) < 0)
     {
       _bmclog("ipmi_ssif_ctx_io_init: %s", 
               ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
-      return -1;
+      goto cleanup;
     }
 
-  return 0;
+  rv = 0;
+ cleanup:
+  if (locate_ctx)
+    ipmi_locate_ctx_destroy(locate_ctx);
+  return rv;
 }
 
 static int
@@ -415,7 +438,12 @@ _init_sunbmc_ipmi(void)
 static int
 _init_ipmi(void)
 {
+  ipmi_locate_ctx_t locate_ctx = NULL;
+
   assert(err_progname);
+
+  if (!(locate_ctx = ipmi_locate_ctx_create()))
+    _err_exit("Error creating locate_ctx: %s", strerror(errno));
 
   if (!ipmi_is_root())
     _err_exit("Permission denied, must be root.");
@@ -464,7 +492,9 @@ _init_ipmi(void)
        * excessive early probing).  It's a justified cost to me.
        */
 
-      if (!ipmi_locate_discover_device_info (IPMI_INTERFACE_KCS, &locate_info))
+      if (!ipmi_locate_discover_device_info (locate_ctx,
+                                             IPMI_INTERFACE_KCS, 
+                                             &locate_info))
         {
           if (!_init_kcs_ipmi())
             {
@@ -473,7 +503,9 @@ _init_ipmi(void)
             }
         }
 
-      if (!ipmi_locate_discover_device_info (IPMI_INTERFACE_SSIF, &locate_info))
+      if (!ipmi_locate_discover_device_info (locate_ctx,
+                                             IPMI_INTERFACE_SSIF, 
+                                             &locate_info))
         {
           if (!_init_ssif_ipmi())
             {
@@ -504,6 +536,8 @@ _init_ipmi(void)
     }
 
  out:
+  if (locate_ctx)
+    ipmi_locate_ctx_destroy(locate_ctx);
   return 0;
 }
 

@@ -341,14 +341,14 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                          uint8_t privilege_level,
                          unsigned int session_timeout,
                          unsigned int retransmission_timeout,
-                         uint32_t workaround_flags,
-                         uint32_t flags)
+                         unsigned int workaround_flags,
+                         unsigned int flags)
 {
-  uint32_t flags_mask = (IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO
-                         | IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION
-                         | IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE
-                         | IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER
-                         | IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES);
+  unsigned int flags_mask = (IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO
+                             | IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION
+                             | IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE
+                             | IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER
+                             | IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES);
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -425,10 +425,10 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
       goto cleanup;
     }
   
-    {
-      API_ERRNO_TO_API_ERRNUM(ctx, errno);
-      goto cleanup;
-    }
+  {
+    API_ERRNO_TO_API_ERRNUM(ctx, errno);
+    goto cleanup;
+  }
   if (!(ctx->io.outofband.rs.obj_rmcp_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
     {
       API_ERRNO_TO_API_ERRNUM(ctx, errno);
@@ -479,13 +479,13 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                              uint8_t cipher_suite_id,
                              unsigned int session_timeout,
                              unsigned int retransmission_timeout, 
-                             uint32_t workaround_flags,
-                             uint32_t flags)
+                             unsigned int workaround_flags,
+                             unsigned int flags)
 {
-  uint32_t flags_mask = (IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES
-                         | IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION
-                         | IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
-                         | IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION);
+  unsigned int flags_mask = (IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES
+                             | IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION
+                             | IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
+                             | IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION);
   
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -661,13 +661,13 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
                       uint16_t driver_address, 
                       uint8_t register_spacing,
                       char *driver_device, 
-                      uint32_t workaround_flags,
-                      uint32_t flags)
+                      unsigned int workaround_flags,
+                      unsigned int flags)
 {
+  ipmi_locate_ctx_t locate_ctx = NULL;
   struct ipmi_locate_info locate_info;
   unsigned int seedp;
-  uint32_t temp_flags = 0;
-  int errnum;
+  unsigned int temp_flags = 0;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -708,6 +708,12 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 
   ctx->io.inband.rq_seq = (double)(IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand()/(RAND_MAX + 1.0));
 
+  if (!(locate_ctx = ipmi_locate_ctx_create()))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+
   switch (driver_type)
     {
     case IPMI_DEVICE_KCS:
@@ -730,9 +736,11 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 	}
       else 
 	{
-	  if ((errnum = ipmi_locate_get_device_info (IPMI_INTERFACE_KCS, &locate_info)))
+	  if (ipmi_locate_get_device_info (locate_ctx,
+                                           IPMI_INTERFACE_KCS,
+                                           &locate_info) < 0)
             {
-              API_LOCATE_ERRNUM_TO_API_ERRNUM(ctx, errnum);
+              API_LOCATE_ERRNUM_TO_API_ERRNUM(ctx, ipmi_locate_ctx_errnum(locate_ctx));
               goto cleanup;
             }
 	  if (driver_device)
@@ -826,10 +834,11 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 	}
       else 
 	{
-	  if ((errnum = ipmi_locate_get_device_info (IPMI_INTERFACE_SSIF, 
-                                                     &locate_info)))
+	  if (ipmi_locate_get_device_info (locate_ctx,
+                                           IPMI_INTERFACE_SSIF, 
+                                           &locate_info) < 0)
             {
-              API_LOCATE_ERRNUM_TO_API_ERRNUM(ctx, errnum);
+              API_LOCATE_ERRNUM_TO_API_ERRNUM(ctx, ipmi_locate_ctx_errnum(locate_ctx));
               goto cleanup;
             }
 	  if (driver_device)
@@ -956,10 +965,14 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
       goto cleanup;
     }
   
+  if (locate_ctx)
+    ipmi_locate_ctx_destroy(locate_ctx);
   ctx->errnum = IPMI_ERR_SUCCESS;
   return (0);
 
  cleanup:
+  if (locate_ctx)
+    ipmi_locate_ctx_destroy(locate_ctx);
   _ipmi_inband_free (ctx);
   ctx->type = IPMI_DEVICE_UNKNOWN;
   return (-1);
@@ -1235,18 +1248,18 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
   ctx->lun = lun;
   ctx->net_fn = net_fn;
 
- if (ctx->type == IPMI_DEVICE_LAN)
-   status = ipmi_lan_cmd_raw (ctx, in, in_len, out, out_len);
- else if (ctx->type == IPMI_DEVICE_LAN_2_0)
-   status = ipmi_lan_2_0_cmd_raw (ctx, in, in_len, out, out_len);
- else if (ctx->type == IPMI_DEVICE_KCS)
-   status = ipmi_kcs_cmd_raw_api (ctx, in, in_len, out, out_len);
- else if (ctx->type == IPMI_DEVICE_SSIF)
-   status = ipmi_ssif_cmd_raw_api (ctx, in, in_len, out, out_len);
- else if (ctx->type == IPMI_DEVICE_OPENIPMI)
-   status = ipmi_openipmi_cmd_raw_api (ctx, in, in_len, out, out_len);
- else /* ctx->type == IPMI_DEVICE_SUNBMC */
-   status = ipmi_sunbmc_cmd_raw_api (ctx, in, in_len, out, out_len);
+  if (ctx->type == IPMI_DEVICE_LAN)
+    status = ipmi_lan_cmd_raw (ctx, in, in_len, out, out_len);
+  else if (ctx->type == IPMI_DEVICE_LAN_2_0)
+    status = ipmi_lan_2_0_cmd_raw (ctx, in, in_len, out, out_len);
+  else if (ctx->type == IPMI_DEVICE_KCS)
+    status = ipmi_kcs_cmd_raw_api (ctx, in, in_len, out, out_len);
+  else if (ctx->type == IPMI_DEVICE_SSIF)
+    status = ipmi_ssif_cmd_raw_api (ctx, in, in_len, out, out_len);
+  else if (ctx->type == IPMI_DEVICE_OPENIPMI)
+    status = ipmi_openipmi_cmd_raw_api (ctx, in, in_len, out, out_len);
+  else /* ctx->type == IPMI_DEVICE_SUNBMC */
+    status = ipmi_sunbmc_cmd_raw_api (ctx, in, in_len, out, out_len);
 
   /* errnum set in ipmi_*_cmd_raw functions */
   return (status);

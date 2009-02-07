@@ -50,29 +50,30 @@ extern "C" {
 typedef struct ipmi_kcs_ctx *ipmi_kcs_ctx_t;
 
 ipmi_kcs_ctx_t ipmi_kcs_ctx_create(void);
-int8_t ipmi_kcs_ctx_destroy(ipmi_kcs_ctx_t ctx);
-int32_t ipmi_kcs_ctx_errnum(ipmi_kcs_ctx_t ctx);
-char *ipmi_kcs_ctx_strerror(int32_t errnum);
+void ipmi_kcs_ctx_destroy(ipmi_kcs_ctx_t ctx);
+int ipmi_kcs_ctx_errnum(ipmi_kcs_ctx_t ctx);
+char *ipmi_kcs_ctx_strerror(int errnum);
+char *ipmi_kcs_ctx_errormsg(ipmi_kcs_ctx_t ctx);
 
 int8_t ipmi_kcs_ctx_get_driver_address(ipmi_kcs_ctx_t ctx, uint16_t *bmc_iobase_address);
 int8_t ipmi_kcs_ctx_get_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t *register_spacing);
 int8_t ipmi_kcs_ctx_get_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t *poll_interval);
-int8_t ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, uint32_t *flags);
+int8_t ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, unsigned int *flags);
 
 int8_t ipmi_kcs_ctx_set_driver_address(ipmi_kcs_ctx_t ctx, uint16_t bmc_iobase_address);
 int8_t ipmi_kcs_ctx_set_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t register_spacing);
 int8_t ipmi_kcs_ctx_set_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t poll_interval);
-int8_t ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, uint32_t flags);
+int8_t ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, unsigned int flags);
 
 int8_t ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx);
 
 int32_t ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
                         uint8_t *bytes,
-                        uint32_t  bytes_len);
+                        unsigned int bytes_len);
   
 int32_t ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
                        uint8_t* bytes,
-                       uint32_t bytes_len);
+                       unsigned int bytes_len);
 
 int8_t ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
 		     uint8_t lun,

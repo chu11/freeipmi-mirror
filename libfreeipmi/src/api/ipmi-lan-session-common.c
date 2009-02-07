@@ -88,7 +88,7 @@ struct socket_to_close {
 void
 ipmi_lan_cmd_get_session_parameters (ipmi_ctx_t ctx,
 				     uint8_t *authentication_type,
-				     uint32_t *internal_workaround_flags)
+				     unsigned int *internal_workaround_flags)
 {
   assert(ctx 
          && ctx->magic == IPMI_CTX_MAGIC
@@ -674,7 +674,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
  */
 static int8_t
 _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
-				     uint8_t internal_workaround_flags,
+				     unsigned int internal_workaround_flags,
 				     uint8_t authentication_type,
 				     uint32_t *session_sequence_number,
 				     uint32_t session_id,
@@ -832,7 +832,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 
 int8_t 
 ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx, 
-                      uint32_t internal_workaround_flags,
+                      unsigned int internal_workaround_flags,
                       uint8_t lun,
                       uint8_t net_fn,
                       uint8_t authentication_type,
@@ -1194,7 +1194,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   while (1)
     {
       uint8_t authentication_type;
-      uint32_t internal_workaround_flags = 0;
+      unsigned int internal_workaround_flags = 0;
 
       if (_session_timed_out(ctx))
         {

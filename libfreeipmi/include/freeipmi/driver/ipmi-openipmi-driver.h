@@ -47,15 +47,16 @@ extern "C" {
 typedef struct ipmi_openipmi_ctx *ipmi_openipmi_ctx_t;
 
 ipmi_openipmi_ctx_t ipmi_openipmi_ctx_create(void);
-int8_t ipmi_openipmi_ctx_destroy(ipmi_openipmi_ctx_t ctx);
-int32_t ipmi_openipmi_ctx_errnum(ipmi_openipmi_ctx_t ctx);
-char *ipmi_openipmi_ctx_strerror(int32_t errnum);
+void ipmi_openipmi_ctx_destroy(ipmi_openipmi_ctx_t ctx);
+int ipmi_openipmi_ctx_errnum(ipmi_openipmi_ctx_t ctx);
+char *ipmi_openipmi_ctx_strerror(int errnum);
+char *ipmi_openipmi_ctx_errormsg(ipmi_openipmi_ctx_t ctx);
 
 int8_t ipmi_openipmi_ctx_get_driver_device(ipmi_openipmi_ctx_t ctx, char **driver_device);
-int8_t ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, uint32_t *flags);
+int8_t ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, unsigned int *flags);
 
 int8_t ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *driver_device);
-int8_t ipmi_openipmi_ctx_set_flags(ipmi_openipmi_ctx_t ctx, uint32_t flags);
+int8_t ipmi_openipmi_ctx_set_flags(ipmi_openipmi_ctx_t ctx, unsigned int flags);
 
 int8_t ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx);
 

@@ -1,6 +1,6 @@
 noinst_HEADERS = \
-	ipmi-api-util.h \
 	ipmi-api-defs.h \
+	ipmi-api-util.h \
 	ipmi-lan-interface-api.h \
 	ipmi-lan-session-common.h \
 	ipmi-kcs-driver-api.h \

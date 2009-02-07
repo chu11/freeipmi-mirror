@@ -30,6 +30,7 @@
 #include "freeipmi/driver/ipmi-openipmi-driver.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 #include "freeipmi/driver/ipmi-sunbmc-driver.h"
+#include "freeipmi/locate/ipmi-locate.h"
 
 #include "freeipmi/api/ipmi-api.h"
 
@@ -51,8 +52,8 @@ struct ipmi_ctx
   uint32_t           magic;
 
   ipmi_driver_type_t type;
-  uint32_t           workaround_flags;
-  uint32_t           flags;
+  unsigned int       workaround_flags;
+  unsigned int       flags;
 
   uint8_t            rs_addr;	/* for ipmb */
   uint8_t            lun;

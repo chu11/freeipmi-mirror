@@ -44,6 +44,7 @@
 #include "freeipmi/locate/ipmi-locate.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 
+#include "ipmi-locate-defs.h"
 #include "ipmi-locate-util.h"
 #include "ipmi-trace-wrappers-locate.h"
 
@@ -581,25 +582,25 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
     {0,  "", 0}
   };
 
-static uint8_t _ipmi_acpi_table_checksum (int *locate_errnum,
+static uint8_t _ipmi_acpi_table_checksum (ipmi_locate_ctx_t ctx,
                                           uint8_t *buffer, 
                                           size_t len);
-static int _ipmi_acpi_get_rsdp (int *locate_errnum,
+static int _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
                                 uint64_t rsdp_window_base_address, 
                                 size_t rsdp_window_size,
                                 fiid_obj_t obj_acpi_rsdp_descriptor);
-static int _ipmi_acpi_get_table (int *locate_errnum,
+static int _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
                                  uint64_t table_address, 
                                  char *signature,
                                  uint8_t **acpi_table, 
                                  uint32_t *acpi_table_length);
-static int _ipmi_acpi_get_firmware_table (int *locate_errnum,
+static int _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
                                           char *signature, 
                                           int table_instance,
                                           fiid_obj_t obj_acpi_table_hdr,
                                           uint8_t **sign_table_data,
                                           uint32_t *sign_table_data_length);
-static int _ipmi_acpi_get_spmi_table (int *locate_errnum,
+static int _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
                                       uint8_t interface_type,
                                       fiid_obj_t obj_acpi_table_hdr,
                                       fiid_obj_t obj_acpi_spmi_table_descriptor);
@@ -609,11 +610,12 @@ static int _ipmi_acpi_get_spmi_table (int *locate_errnum,
 static uint64_t physical_memory_size = 0; 
 
 static int
-_ipmi_physical_address_valid(int *locate_errnum,
+_ipmi_physical_address_valid(ipmi_locate_ctx_t ctx,
                              uint64_t physical_address, 
                              size_t length)
 {
-  assert(locate_errnum);
+  assert(ctx);
+  assert(ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
   /* achu: Some buggy kernels will crash the system if the physical
    * address is bad.  Yes, I know it's the kernel's fault, but we have
@@ -625,8 +627,16 @@ _ipmi_physical_address_valid(int *locate_errnum,
     {
       long pagesize, physical_pages;
       
-      LOCATE_ERR (!((pagesize = sysconf(_SC_PAGESIZE)) < 0));
-      LOCATE_ERR (!((physical_pages = sysconf(_SC_PHYS_PAGES)) < 0));
+      if ((pagesize = sysconf(_SC_PAGESIZE)) < 0)
+        {
+          LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+          return (-1);
+        }
+      if ((physical_pages = sysconf(_SC_PHYS_PAGES)) < 0)
+        {
+          LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+          return (-1);
+        }
 
       physical_memory_size = pagesize * physical_pages;
     }
@@ -662,14 +672,15 @@ _ipmi_physical_address_valid(int *locate_errnum,
  *
  ******************************************************************************/
 static uint8_t 
-_ipmi_acpi_table_checksum (int *locate_errnum,
+_ipmi_acpi_table_checksum (ipmi_locate_ctx_t ctx,
                            uint8_t *buffer, 
                            size_t len)
 {
   int i = 0;
   uint8_t sum = 0;
  
-  assert(locate_errnum);
+  assert(ctx);
+  assert(ctx->magic == IPMI_LOCATE_CTX_MAGIC);
   assert(buffer);
   
   for (i = 0; i < len; i++)
@@ -679,7 +690,7 @@ _ipmi_acpi_table_checksum (int *locate_errnum,
 }
 
 static int
-_ipmi_ioremap (int *locate_errnum,
+_ipmi_ioremap (ipmi_locate_ctx_t ctx,
                uint64_t physical_address, 
                size_t physical_address_len,
                void **virtual_address,
@@ -690,13 +701,14 @@ _ipmi_ioremap (int *locate_errnum,
   uint32_t pad;
   int mem_fd = -1;
 
-  assert(locate_errnum);
-  assert (physical_address_len 
-          && virtual_address 
-          && mapped_address 
-          && mapped_address_len);
+  assert(ctx);
+  assert(ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(physical_address_len);
+  assert(virtual_address);
+  assert(mapped_address);
+  assert(mapped_address_len);
 
-  if (!_ipmi_physical_address_valid (locate_errnum,
+  if (!_ipmi_physical_address_valid (ctx,
                                      physical_address, 
                                      physical_address_len))
     return (-1);
@@ -704,7 +716,7 @@ _ipmi_ioremap (int *locate_errnum,
   if ((mem_fd = open ("/dev/mem", 
                       O_RDONLY|O_SYNC)) < 0)
     {
-      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -720,7 +732,7 @@ _ipmi_ioremap (int *locate_errnum,
                                mem_fd, 
                                startaddress)) == MAP_FAILED)
     {
-      LOCATE_ERRNO_TO_LOCATE_ERRNUM(locate_errnum, errno);
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
       goto cleanup;
     }
 
@@ -734,17 +746,18 @@ _ipmi_ioremap (int *locate_errnum,
 }
 
 static void
-_ipmi_iounmap (int *locate_errnum,
+_ipmi_iounmap (ipmi_locate_ctx_t ctx,
                void *mapped_address, 
                size_t mapped_address_len)
 {
-  assert(locate_errnum);
+  assert(ctx);
+  assert(ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
   munmap (mapped_address, mapped_address_len);
 }
 
 static int
-_ipmi_get_physical_mem_data (int *locate_errnum,
+_ipmi_get_physical_mem_data (ipmi_locate_ctx_t ctx,
                              uint64_t physical_address,
                              size_t length,
                              uint8_t *data)
@@ -753,10 +766,11 @@ _ipmi_get_physical_mem_data (int *locate_errnum,
   void *mapped_address = NULL;
   size_t mapped_address_len = 0;
 
-  assert(locate_errnum);
+  assert(ctx);
+  assert(ctx->magic == IPMI_LOCATE_CTX_MAGIC);
   assert(data);
 
-  if (_ipmi_ioremap (locate_errnum,
+  if (_ipmi_ioremap (ctx,
                      physical_address,
                      length,
                      &virtual_address,
@@ -766,7 +780,7 @@ _ipmi_get_physical_mem_data (int *locate_errnum,
 
   memcpy (data, virtual_address, length);
 
-  _ipmi_iounmap (locate_errnum, mapped_address, mapped_address_len);
+  _ipmi_iounmap (ctx, mapped_address, mapped_address_len);
 
   return (0);
 }
@@ -795,7 +809,7 @@ _ipmi_get_physical_mem_data (int *locate_errnum,
  *
  ******************************************************************************/
 static int 
-_ipmi_acpi_get_rsdp (int *locate_errnum,
+_ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
                      uint64_t rsdp_window_base_address, 
                      size_t rsdp_window_size, 
                      fiid_obj_t obj_acpi_rsdp_descriptor)
@@ -804,8 +818,9 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
   int acpi_rsdp_descriptor_len;
   int i;
 
-  assert(locate_errnum);
-  assert (fiid_obj_valid(obj_acpi_rsdp_descriptor));
+  assert(ctx);
+  assert(ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(fiid_obj_valid(obj_acpi_rsdp_descriptor));
 
   LOCATE_FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_rsdp_descriptor, 
                                    tmpl_acpi_rsdp_descriptor);
@@ -816,7 +831,7 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
   LOCATE_FIID_TEMPLATE_LEN_BYTES (acpi_rsdp_descriptor_len,
                                   tmpl_acpi_rsdp_descriptor);
   
-  if (_ipmi_get_physical_mem_data (locate_errnum,
+  if (_ipmi_get_physical_mem_data (ctx,
                                    rsdp_window_base_address, 
                                    rsdp_window_size, 
                                    memdata) < 0)
@@ -832,7 +847,7 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
 	continue;
       
       /* now check the checksum */
-      if (!_ipmi_acpi_table_checksum (locate_errnum,
+      if (!_ipmi_acpi_table_checksum (ctx,
                                       &memdata[i], 
                                       IPMI_ACPI_RSDP_CHECKSUM_LENGTH))
 	{
@@ -872,7 +887,7 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
 	      }
 	    
             /* achu: logic of code indicates should check for == 0, not < 0 */
-	    if (_ipmi_acpi_get_table (locate_errnum,
+	    if (_ipmi_acpi_get_table (ctx,
                                       rsdt_xsdt_address, 
                                       rsdt_xsdt_signature, 
                                       &rsdt_xsdt_table, 
@@ -891,11 +906,11 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
             
 	    if (!(memdata = alloca (acpi_rsdp_descriptor_len)))
               {
-                LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+                LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY);
                 return (-1);
               }
 	    memset (memdata, 0, acpi_rsdp_descriptor_len);
-	    if (_ipmi_get_physical_mem_data (locate_errnum,
+	    if (_ipmi_get_physical_mem_data (ctx,
                                              rsdt_xsdt_address, 
                                              acpi_rsdp_descriptor_len, 
                                              memdata) < 0)
@@ -906,16 +921,16 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
                          IPMI_ACPI_RSDP_SIG, 
                          strlen (IPMI_ACPI_RSDP_SIG)))
               {
-                LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+                LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
                 return (-1);
               }
 	    
 	    /* now check the checksum */
-	    if (_ipmi_acpi_table_checksum (locate_errnum,
+	    if (_ipmi_acpi_table_checksum (ctx,
                                            memdata, 
                                            IPMI_ACPI_RSDP_CHECKSUM_LENGTH) != 0)
               {
-                LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+                LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
                 return (-1);
               }
 	    
@@ -951,7 +966,7 @@ _ipmi_acpi_get_rsdp (int *locate_errnum,
  *
  ******************************************************************************/
 static int 
-_ipmi_acpi_get_table (int *locate_errnum,
+_ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
                       uint64_t table_address, 
                       char *signature, 
                       uint8_t **acpi_table, 
@@ -970,10 +985,11 @@ _ipmi_acpi_get_table (int *locate_errnum,
   int32_t len;
   int rv = -1;
 
-  assert(locate_errnum);
-  assert (signature 
-          && acpi_table 
-          && acpi_table_length);
+  assert(ctx);
+  assert(ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(signature);
+  assert(acpi_table);
+  assert(acpi_table_length);
 
   LOCATE_FIID_TEMPLATE_FIELD_LEN_BYTES(len, 
                                        tmpl_acpi_table_hdr, 
@@ -993,7 +1009,7 @@ _ipmi_acpi_get_table (int *locate_errnum,
 
   memset (acpi_table_buf, 0, acpi_table_hdr_length);
   
-  if (_ipmi_get_physical_mem_data (locate_errnum,
+  if (_ipmi_get_physical_mem_data (ctx,
                                    table_address, 
                                    acpi_table_hdr_length, 
                                    acpi_table_buf) < 0)
@@ -1010,7 +1026,7 @@ _ipmi_acpi_get_table (int *locate_errnum,
 
   if (strcmp (table_signature, signature))
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   
@@ -1021,23 +1037,23 @@ _ipmi_acpi_get_table (int *locate_errnum,
   
   table = alloca (table_length);
   memset (table, 0, table_length);
-  if (_ipmi_get_physical_mem_data (locate_errnum,
+  if (_ipmi_get_physical_mem_data (ctx,
                                    table_address, 
                                    table_length, 
                                    table) < 0)
     goto cleanup;
   
-  if (_ipmi_acpi_table_checksum (locate_errnum,
+  if (_ipmi_acpi_table_checksum (ctx,
                                  table, 
                                  table_length) != 0)
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   
   if (!(*acpi_table = malloc (table_length)))
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
   memcpy (*acpi_table, table, table_length);
@@ -1072,7 +1088,7 @@ _ipmi_acpi_get_table (int *locate_errnum,
  *
  ******************************************************************************/
 static int 
-_ipmi_acpi_get_firmware_table (int *locate_errnum,
+_ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
                                char *signature, 
                                int table_instance, 
                                fiid_obj_t obj_acpi_table_hdr, 
@@ -1113,11 +1129,12 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
       {0,  "", 0}
     };
 
-  assert(locate_errnum);
-  assert (signature  
-          && fiid_obj_valid(obj_acpi_table_hdr)
-          && sign_table_data  
-          && sign_table_data_length);
+  assert(ctx);
+  assert(ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(signature);
+  assert(fiid_obj_valid(obj_acpi_table_hdr));
+  assert(sign_table_data);
+  assert(sign_table_data_length);
   
   LOCATE_FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_table_hdr, 
                                    tmpl_acpi_table_hdr);
@@ -1131,12 +1148,12 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
   LOCATE_FIID_TEMPLATE_LEN_BYTES (acpi_rsdp_descriptor_length, 
                                   tmpl_acpi_rsdp_descriptor);
 
-  if (_ipmi_acpi_get_rsdp (locate_errnum,
+  if (_ipmi_acpi_get_rsdp (ctx,
                            IPMI_ACPI_LO_RSDP_WINDOW_BASE,
                            IPMI_ACPI_LO_RSDP_WINDOW_SIZE,
                            obj_acpi_rsdp_descriptor) < 0)
     {
-      if (_ipmi_acpi_get_rsdp (locate_errnum,
+      if (_ipmi_acpi_get_rsdp (ctx,
                                IPMI_ACPI_HI_RSDP_WINDOW_BASE,
                                IPMI_ACPI_HI_RSDP_WINDOW_SIZE,
                                obj_acpi_rsdp_descriptor) < 0)
@@ -1163,7 +1180,7 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
       rsdt_xsdt_signature = IPMI_ACPI_XSDT_SIG;
     }
   
-  if (_ipmi_acpi_get_table (locate_errnum,
+  if (_ipmi_acpi_get_table (ctx,
                             rsdt_xsdt_address, 
                             rsdt_xsdt_signature, 
                             &rsdt_xsdt_table, 
@@ -1206,7 +1223,7 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
       
       LOCATE_FIID_OBJ_DESTROY(obj_table);
 
-      if (_ipmi_acpi_get_table (locate_errnum,
+      if (_ipmi_acpi_get_table (ctx,
                                 table_address, 
                                 signature, 
                                 &acpi_table, 
@@ -1227,7 +1244,7 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
 
   if (!acpi_table)
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   
@@ -1235,7 +1252,7 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
   *sign_table_data_length = acpi_table_length - acpi_table_hdr_length;
   if (!(*sign_table_data = malloc (*sign_table_data_length)))
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
   memcpy (*sign_table_data, 
@@ -1273,7 +1290,7 @@ _ipmi_acpi_get_firmware_table (int *locate_errnum,
  *
  ******************************************************************************/
 static int 
-_ipmi_acpi_get_spmi_table (int *locate_errnum,
+_ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
                            uint8_t interface_type,
                            fiid_obj_t obj_acpi_table_hdr,
                            fiid_obj_t obj_acpi_spmi_table_descriptor)
@@ -1287,9 +1304,10 @@ _ipmi_acpi_get_spmi_table (int *locate_errnum,
   int32_t acpi_spmi_table_descriptor_len;
   int rv = -1;
 
-  assert(locate_errnum);
-  assert (fiid_obj_valid(obj_acpi_table_hdr)
-          && fiid_obj_valid(obj_acpi_spmi_table_descriptor));
+  assert(ctx);
+  assert(ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert(fiid_obj_valid(obj_acpi_table_hdr));
+  assert(fiid_obj_valid(obj_acpi_spmi_table_descriptor));
 
   LOCATE_FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_table_hdr, 
                                    tmpl_acpi_table_hdr);
@@ -1298,7 +1316,7 @@ _ipmi_acpi_get_spmi_table (int *locate_errnum,
 
   for (instance = 0; instance < IPMI_INTERFACE_COUNT; instance++)
     {
-      if (_ipmi_acpi_get_firmware_table (locate_errnum,
+      if (_ipmi_acpi_get_firmware_table (ctx,
                                          IPMI_ACPI_SPMI_SIG,
                                          instance, 
                                          obj_acpi_table_hdr,
@@ -1349,21 +1367,21 @@ _ipmi_acpi_get_spmi_table (int *locate_errnum,
   return (rv);
 }
 
-static int
-_ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
-                                        ipmi_interface_type_t type,
-                                        struct ipmi_locate_info *info)
+int
+ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
+                                       ipmi_interface_type_t type,
+                                       struct ipmi_locate_info *info)
 {
   fiid_obj_t obj_acpi_table_hdr = NULL;
   fiid_obj_t obj_acpi_spmi_table_descriptor = NULL;
   struct ipmi_locate_info linfo;
   int rv = -1;
 
-  assert(locate_errnum);
+  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -1382,7 +1400,7 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
   LOCATE_FIID_OBJ_CREATE (obj_acpi_spmi_table_descriptor, 
                           tmpl_acpi_spmi_table_descriptor);
 
-  if (_ipmi_acpi_get_spmi_table (locate_errnum,
+  if (_ipmi_acpi_get_spmi_table (ctx,
                                  type,
                                  obj_acpi_table_hdr,
                                  obj_acpi_spmi_table_descriptor) < 0)
@@ -1429,7 +1447,7 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
     
     if (!IPMI_INTERFACE_TYPE_VALID(interface_type))
       {
-        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+        LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
 
@@ -1470,7 +1488,7 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
 	  break;
 	}
       default:
-        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+        LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
   }
@@ -1491,22 +1509,4 @@ _ipmi_locate_acpi_spmi_get_device_info (int *locate_errnum,
   LOCATE_FIID_OBJ_DESTROY (obj_acpi_table_hdr);
   LOCATE_FIID_OBJ_DESTROY (obj_acpi_spmi_table_descriptor);
   return (rv);
-}
-
-int
-ipmi_locate_acpi_spmi_get_device_info (ipmi_interface_type_t type,
-                                       struct ipmi_locate_info *info)
-{
-  int errnum;
-  int *locate_errnum;
-  
-  locate_errnum = &errnum;
-  
-  if (_ipmi_locate_acpi_spmi_get_device_info(&errnum, type, info) < 0)
-    {
-      if (!errnum)
-        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_INTERNAL_ERROR);
-      return errnum;
-    }
-  return (0);
 }

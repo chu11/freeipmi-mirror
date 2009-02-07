@@ -65,7 +65,7 @@ struct ipmi_sel_parse_entry {
 
 struct ipmi_sel_parse_ctx {
   uint32_t magic;
-  unsigned int errnum;
+  int errnum;
   unsigned int flags;
   char *debug_prefix;
   char *separator;

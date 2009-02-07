@@ -33,6 +33,7 @@
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 
+#include "ipmi-locate-defs.h"
 #include "ipmi-locate-util.h"
 #include "ipmi-trace-wrappers-locate.h"
 
@@ -41,21 +42,21 @@
 /* achu: Used to be in ipmi-smic-api.h, but that is now removed. */
 #define IPMI_SMIC_SMS_IO_BASE_DEFAULT    0x0CA9
 
-static int
-_ipmi_locate_defaults_get_device_info (int *locate_errnum,
-                                       ipmi_interface_type_t type,
-                                       struct ipmi_locate_info *info)
+int
+ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
+                                      ipmi_interface_type_t type,
+                                      struct ipmi_locate_info *info)
 {
   struct ipmi_locate_info linfo;
 
-  assert(locate_errnum);
+  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
   if ((type != IPMI_INTERFACE_KCS
        && type != IPMI_INTERFACE_SMIC
        && type != IPMI_INTERFACE_SSIF) 
       || !info)
     {
-      LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_ERRNUM_SET(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
       return (-1);
     }
   
@@ -99,23 +100,5 @@ _ipmi_locate_defaults_get_device_info (int *locate_errnum,
     }
 
   memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
-  return 0;
-}
-
-int
-ipmi_locate_defaults_get_device_info (ipmi_interface_type_t type,
-                                      struct ipmi_locate_info *info)
-{
-  int errnum;
-  int *locate_errnum;
-
-  locate_errnum = &errnum;
-
-  if (_ipmi_locate_defaults_get_device_info(&errnum, type, info) < 0)
-    {
-      if (!errnum)
-        LOCATE_ERRNUM_SET(locate_errnum, IPMI_LOCATE_ERR_INTERNAL_ERROR);
-      return errnum;
-    }
   return 0;
 }

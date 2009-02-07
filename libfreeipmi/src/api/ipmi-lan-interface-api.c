@@ -57,7 +57,7 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
 	      fiid_obj_t obj_cmd_rs)
 {
   uint8_t authentication_type;
-  uint32_t internal_workaround_flags = 0;
+  unsigned int internal_workaround_flags = 0;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -129,7 +129,7 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
   int rv = -1;
   int32_t len;
   uint8_t authentication_type;
-  uint32_t internal_workaround_flags = 0;
+  unsigned int internal_workaround_flags = 0;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

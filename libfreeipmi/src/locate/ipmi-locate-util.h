@@ -17,37 +17,34 @@
 
 */
 
-#ifndef _IPMI_SENSOR_READ_DEFS_H
-#define _IPMI_SENSOR_READ_DEFS_H
+#ifndef _IPMI_LOCATE_UTIL_H
+#define	_IPMI_LOCATE_UTIL_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif /* HAVE_CONFIG_H */
 
-#include <stdint.h>
-#include <sys/param.h>
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
 
-#include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
-#include "freeipmi/sensor-read/ipmi-sensor-read.h"
+#include "freeipmi/api/ipmi-api.h"
+#include "freeipmi/locate/ipmi-locate.h"
 
-#include "list.h"
+#include "ipmi-locate-defs.h"
 
-#ifndef MAXPATHLEN
-#define MAXPATHLEN 4096
-#endif /* MAXPATHLEN */
+void locate_set_locate_errnum_by_errno(ipmi_locate_ctx_t ctx, int __errno);
 
-#define IPMI_SENSOR_READ_MAGIC 0xABCD1246
+#ifdef __cplusplus
+}
+#endif
 
-#define IPMI_SENSOR_READ_FLAGS_MASK \
-  (IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS)
+#endif /* ipmi-locate-util.h */
 
-struct ipmi_sensor_read_ctx {
-  uint32_t magic;
-  int errnum;
-  unsigned int flags;
-
-  ipmi_ctx_t ipmi_ctx;
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
-};
-
-#endif /* _IPMI_SENSOR_READ_DEFS_H */

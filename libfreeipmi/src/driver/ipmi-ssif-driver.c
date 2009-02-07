@@ -138,10 +138,10 @@ static char * ipmi_ssif_ctx_errmsg[] =
 
 struct ipmi_ssif_ctx {
   uint32_t magic;
-  int32_t errnum;
+  int errnum;
   char *driver_device;
   uint8_t driver_address;
-  uint32_t flags;
+  unsigned int flags;
   int device_fd;
   int io_init;
   int semid;
@@ -448,10 +448,11 @@ ipmi_ssif_ctx_create(void)
   return (NULL);
 }
 
-int8_t
+void
 ipmi_ssif_ctx_destroy(ipmi_ssif_ctx_t ctx)
 {
-  ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    return;
 
   ctx->magic = ~IPMI_SSIF_CTX_MAGIC;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
@@ -459,19 +460,9 @@ ipmi_ssif_ctx_destroy(ipmi_ssif_ctx_t ctx)
     free(ctx->driver_device);
   close(ctx->device_fd);
   free(ctx);
-  return (0);
 }
 
-char *
-ipmi_ssif_ctx_strerror(int32_t errnum)
-{
-  if (errnum >= IPMI_SSIF_CTX_ERR_SUCCESS && errnum <= IPMI_SSIF_CTX_ERR_ERRNUMRANGE)
-    return ipmi_ssif_ctx_errmsg[errnum];
-  else
-    return ipmi_ssif_ctx_errmsg[IPMI_SSIF_CTX_ERR_ERRNUMRANGE];
-}
-
-int32_t
+int
 ipmi_ssif_ctx_errnum(ipmi_ssif_ctx_t ctx)
 {
   if (!ctx)
@@ -480,6 +471,21 @@ ipmi_ssif_ctx_errnum(ipmi_ssif_ctx_t ctx)
     return (IPMI_SSIF_CTX_ERR_INVALID);
   else
     return (ctx->errnum);
+}
+
+char *
+ipmi_ssif_ctx_strerror(int errnum)
+{
+  if (errnum >= IPMI_SSIF_CTX_ERR_SUCCESS && errnum <= IPMI_SSIF_CTX_ERR_ERRNUMRANGE)
+    return ipmi_ssif_ctx_errmsg[errnum];
+  else
+    return ipmi_ssif_ctx_errmsg[IPMI_SSIF_CTX_ERR_ERRNUMRANGE];
+}
+
+char *
+ipmi_ssif_ctx_errormsg(ipmi_ssif_ctx_t ctx)
+{
+  return ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ctx));
 }
 
 int8_t
@@ -515,7 +521,7 @@ ipmi_ssif_ctx_get_driver_address(ipmi_ssif_ctx_t ctx, uint8_t *driver_address)
 }
 
 int8_t
-ipmi_ssif_ctx_get_flags(ipmi_ssif_ctx_t ctx, uint32_t *flags)
+ipmi_ssif_ctx_get_flags(ipmi_ssif_ctx_t ctx, unsigned int *flags)
 {
   ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
 
@@ -566,7 +572,7 @@ ipmi_ssif_ctx_set_driver_address(ipmi_ssif_ctx_t ctx, uint8_t driver_address)
 }
 
 int8_t
-ipmi_ssif_ctx_set_flags(ipmi_ssif_ctx_t ctx, uint32_t flags)
+ipmi_ssif_ctx_set_flags(ipmi_ssif_ctx_t ctx, unsigned int flags)
 {
   ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
 
@@ -624,7 +630,7 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
 int32_t
 ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 		 uint8_t *buf,
-		 uint32_t buf_len)
+		 unsigned int buf_len)
 {
   int32_t count;
   int lock_flag = 0;
@@ -690,7 +696,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 int32_t
 ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
 		uint8_t* buf,
-		uint32_t buf_len)
+		unsigned int buf_len)
 {
   int32_t count = 0;
   int32_t rv = -1;

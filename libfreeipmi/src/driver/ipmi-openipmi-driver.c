@@ -157,8 +157,8 @@ static char * ipmi_openipmi_ctx_errmsg[] =
 
 struct ipmi_openipmi_ctx {
   uint32_t magic;
-  int32_t errnum;
-  uint32_t flags;
+  int errnum;
+  unsigned int flags;
   char *driver_device;
   int device_fd;
   int io_init;
@@ -215,10 +215,11 @@ ipmi_openipmi_ctx_create(void)
   return (NULL);
 }
 
-int8_t
+void
 ipmi_openipmi_ctx_destroy(ipmi_openipmi_ctx_t ctx)
 {
-  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
+    return;
 
   ctx->magic = ~IPMI_OPENIPMI_CTX_MAGIC;
   ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;
@@ -229,19 +230,9 @@ ipmi_openipmi_ctx_destroy(ipmi_openipmi_ctx_t ctx)
     }
   close(ctx->device_fd);
   free(ctx);
-  return (0);
 }
 
-char *
-ipmi_openipmi_ctx_strerror(int32_t errnum)
-{
-  if (errnum >= IPMI_OPENIPMI_CTX_ERR_SUCCESS && errnum <= IPMI_OPENIPMI_CTX_ERR_ERRNUMRANGE)
-    return ipmi_openipmi_ctx_errmsg[errnum];
-  else
-    return ipmi_openipmi_ctx_errmsg[IPMI_OPENIPMI_CTX_ERR_ERRNUMRANGE];
-}
-
-int32_t
+int
 ipmi_openipmi_ctx_errnum(ipmi_openipmi_ctx_t ctx)
 {
   if (!ctx)
@@ -250,6 +241,21 @@ ipmi_openipmi_ctx_errnum(ipmi_openipmi_ctx_t ctx)
     return (IPMI_OPENIPMI_CTX_ERR_INVALID);
   else
     return (ctx->errnum);
+}
+
+char *
+ipmi_openipmi_ctx_strerror(int errnum)
+{
+  if (errnum >= IPMI_OPENIPMI_CTX_ERR_SUCCESS && errnum <= IPMI_OPENIPMI_CTX_ERR_ERRNUMRANGE)
+    return ipmi_openipmi_ctx_errmsg[errnum];
+  else
+    return ipmi_openipmi_ctx_errmsg[IPMI_OPENIPMI_CTX_ERR_ERRNUMRANGE];
+}
+
+char *
+ipmi_openipmi_ctx_errormsg(ipmi_openipmi_ctx_t ctx)
+{
+  return ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(ctx));
 }
 
 int8_t 
@@ -269,7 +275,7 @@ ipmi_openipmi_ctx_get_driver_device(ipmi_openipmi_ctx_t ctx, char **driver_devic
 }
 
 int8_t 
-ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, uint32_t *flags)
+ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, unsigned int *flags)
 {
   ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
@@ -310,7 +316,7 @@ ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
 }
 
 int8_t 
-ipmi_openipmi_ctx_set_flags(ipmi_openipmi_ctx_t ctx, uint32_t flags)
+ipmi_openipmi_ctx_set_flags(ipmi_openipmi_ctx_t ctx, unsigned int flags)
 {
   ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 

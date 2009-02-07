@@ -41,7 +41,7 @@
 
 struct ipmi_sdr_parse_ctx {
   uint32_t magic;
-  unsigned int errnum;
+  int errnum;
   unsigned int flags;
 };
 

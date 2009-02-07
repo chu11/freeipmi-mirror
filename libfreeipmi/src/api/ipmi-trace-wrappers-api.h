@@ -115,7 +115,7 @@ do {                                                                     \
 #define API_LOCATE_ERRNUM_TO_API_ERRNUM(__ctx, __errnum)                 \
 do {                                                                     \
   api_set_api_errnum_by_locate_errnum((__ctx), (__errnum));              \
-  __MSG_TRACE(ipmi_locate_strerror((__errnum)), (__errnum));             \
+  __MSG_TRACE(ipmi_locate_ctx_errormsg((__ctx)), (__errnum));            \
 } while (0)   
 
 #ifdef __cplusplus

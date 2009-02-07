@@ -124,15 +124,15 @@ api_set_api_errnum_by_locate_errnum(ipmi_ctx_t ctx, int locate_errnum)
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
 
-  if (locate_errnum == IPMI_LOCATE_ERR_SUCCESS)
+  if (locate_errnum == IPMI_LOCATE_CTX_ERR_SUCCESS)
     ctx->errnum = IPMI_ERR_SUCCESS;
-  else if (locate_errnum == IPMI_LOCATE_ERR_OUT_OF_MEMORY)
+  else if (locate_errnum == IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY)
     ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
-  else if (locate_errnum == IPMI_LOCATE_ERR_PERMISSION)
+  else if (locate_errnum == IPMI_LOCATE_CTX_ERR_PERMISSION)
     ctx->errnum = IPMI_ERR_PERMISSION;
-  else if (locate_errnum == IPMI_LOCATE_ERR_PARAMETERS)
+  else if (locate_errnum == IPMI_LOCATE_CTX_ERR_PARAMETERS)
     ctx->errnum = IPMI_ERR_LIBRARY_ERROR;
-  else if (locate_errnum == IPMI_LOCATE_ERR_SYSTEM_ERROR)
+  else if (locate_errnum == IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR)
     ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
   else
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;

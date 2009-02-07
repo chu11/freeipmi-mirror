@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-defs.h,v 1.9 2009-01-13 01:02:40 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-defs.h,v 1.9.10.1 2009-02-07 17:34:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -81,7 +81,7 @@
 
 struct ipmi_sdr_cache_ctx {
   uint32_t magic;
-  unsigned int errnum;
+  int errnum;
   unsigned int operation;
   unsigned int flags;
   char *debug_prefix;
