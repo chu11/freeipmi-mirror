@@ -71,7 +71,7 @@ do {                                                                     \
 #define API_ERRNO_TO_API_ERRNUM(__ctx, __errno)                          \
 do {                                                                     \
   ipmi_set_api_errnum_by_errno(__ctx, __errno);                          \
-  __TRACE_ERRNO(__errno);                                                \
+  __ERRNO_TRACE(__errno);                                                \
 } while (0)   
 
 #define API_FIID_OBJECT_ERROR_TO_API_ERRNUM(__ctx, __obj)                \

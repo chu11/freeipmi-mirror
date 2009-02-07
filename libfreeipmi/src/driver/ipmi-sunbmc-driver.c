@@ -68,8 +68,7 @@
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "ipmi-err-wrappers-driver.h"
 
 #include "freeipmi-portability.h"
 
@@ -112,6 +111,34 @@ struct ipmi_sunbmc_ctx {
   int putmsg_intf;
   uint8_t putmsg_intf_msg_id;
 };
+
+static void
+_set_sunbmc_ctx_errnum_by_errno(ipmi_sunbmc_ctx_t ctx, int __errno)
+{
+  if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
+    return;
+
+  if (errno == 0)
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
+  else if (errno == EPERM)
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_PERMISSION;
+  else if (errno == EACCES)
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_PERMISSION;
+  else if (errno == ENOENT)
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_DEVICE_NOT_FOUND;
+  else if (errno == ENOTDIR)
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_DEVICE_NOT_FOUND;
+  else if (errno == ENAMETOOLONG)
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_DEVICE_NOT_FOUND;
+  else if (errno == ENOMEM)
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY;
+  else if (errno == EINVAL)
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR;
+  else if (errno == ETIMEDOUT)
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_DRIVER_TIMEOUT;
+  else
+    ctx->errnum = IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR;
+}
 
 ipmi_sunbmc_ctx_t
 ipmi_sunbmc_ctx_create(void)
@@ -267,9 +294,13 @@ ipmi_sunbmc_ctx_io_init(ipmi_sunbmc_ctx_t ctx)
   else
     device = IPMI_SUNBMC_DRIVER_DEVICE_DEFAULT;
 
-  SUNBMC_ERR_CLEANUP(!((ctx->device_fd = open (device, 
-                                               O_RDWR)) < 0));
-  
+  if ((ctx->device_fd = open (device, 
+                              O_RDWR)) < 0)
+    {
+      SUNBMC_ERRNO_TO_SUNBMC_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+
 #if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
 
 #ifdef IOCTL_IPMI_INTERFACE_METHOD
@@ -289,9 +320,8 @@ ipmi_sunbmc_ctx_io_init(ipmi_sunbmc_ctx_t ctx)
     {
       if (errno != EINVAL)
         {
-          ERRNO_TRACE(errno);
-          SUNBMC_ERRNUM_SET(IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
-          return (-1);
+          SUNBMC_ERRNO_TO_SUNBMC_ERRNUM(ctx, errno);
+          goto cleanup;
         }
       /* achu: assume ioctl method */
       ctx->putmsg_intf = 0;
@@ -341,7 +371,8 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   int rv = -1;
 
-  assert(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
   assert(IPMI_BMC_LUN_VALID(lun));
   assert(IPMI_NET_FN_RQ_VALID(net_fn));
   assert(fiid_obj_valid(obj_cmd_rq));
@@ -437,9 +468,11 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   struct timeval tv;
   int n;
 
-  assert(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
   assert(ctx->io_init);
   assert(ctx->putmsg_intf);
+  assert(fiid_obj_valid(obj_cmd_rs));
 
 #if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
   memset(&sbuf, '\0', sizeof(struct strbuf));
@@ -458,11 +491,15 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   tv.tv_sec = IPMI_SUNBMC_TIMEOUT;
   tv.tv_usec = 0;
 
-  SUNBMC_ERR(!((n = select(ctx->device_fd + 1, 
-                           &read_fds,
-                           NULL,
-                           NULL,
-                           &tv)) < 0));
+  if ((n = select(ctx->device_fd + 1, 
+                  &read_fds,
+                  NULL,
+                  NULL,
+                  &tv)) < 0)
+    {
+      SUNBMC_ERRNO_TO_SUNBMC_ERRNUM(ctx, errno);
+      return (-1);
+    }
 
   if (!n)
     {
@@ -483,7 +520,8 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   if (msg->m_type == BMC_MSG_ERROR)
     {
       errno = msg->msg[0];
-      SUNBMC_ERR(0);
+      SUNBMC_ERRNO_TO_SUNBMC_ERRNUM(ctx, errno);
+      return (-1);
     }
   if (msg->m_type != BMC_MSG_RESPONSE)
     {
@@ -609,10 +647,14 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
       istr.ic_len = sizeof(struct bmc_reqrsp);
       istr.ic_dp = (char *)&reqrsp;
       
-      SUNBMC_ERR(!(ioctl(ctx->device_fd,
-                         I_STR,
-                         &istr) < 0));
-      
+      if (ioctl(ctx->device_fd,
+                I_STR,
+                &istr) < 0)
+        {
+          SUNBMC_ERRNO_TO_SUNBMC_ERRNUM(ctx, errno);
+          return (-1);
+        }
+
       rs_buf[0] = reqrsp.rsp.cmd;
       rs_buf[1] = reqrsp.rsp.ccode;
       /* -2 b/c of cmd and ccode */

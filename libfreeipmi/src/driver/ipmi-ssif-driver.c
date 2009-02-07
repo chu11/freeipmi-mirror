@@ -61,8 +61,7 @@
 
 #include "ipmi-semaphores.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "ipmi-err-wrappers-driver.h"
 
 #include "freeipmi-portability.h"
 
@@ -114,218 +113,6 @@
 
 #define IPMI_SSIF_TIMEOUT     60
 
-union ipmi_i2c_smbus_data
-{
-  uint8_t  byte;
-  uint16_t word;
-  uint8_t  block[IPMI_I2C_SMBUS_BLOCK_MAX + 3];
-};
-
-struct ipmi_i2c_smbus_ioctl_data
-{
-  uint8_t  read_write;
-  uint8_t  command;
-  uint32_t size;
-  union ipmi_i2c_smbus_data *data;
-};
-/* END: copied from <linux/i2c.h> and <linux/i2c-dev.h>, */
-/*      and prefixed IPMI.                               */
-
-static int 
-_ipmi_i2c_smbus_access (int dev_fd, 
-                        char read_write, 
-                        uint8_t command, 
-                        union ipmi_i2c_smbus_data *data)
-{
-  struct ipmi_i2c_smbus_ioctl_data args;
-  fd_set read_fds;
-  struct timeval tv;
-  int n;
-  int rv;
-
-  if (read_write == IPMI_I2C_SMBUS_READ)
-    {
-      FD_ZERO(&read_fds);
-      FD_SET(dev_fd, &read_fds);
-      
-      tv.tv_sec = IPMI_SSIF_TIMEOUT;
-      tv.tv_usec = 0;
-
-      ERR(!((n = select(dev_fd + 1,
-                        &read_fds,
-                        NULL,
-                        NULL,
-                        &tv)) < 0));
-      
-      if (!n)
-        {
-          /* Could be due to a different error, but we assume a timeout */
-          ERR_LOG(errno = ETIMEDOUT);
-          return (-1);
-        }
-    }
-
-  args.read_write = read_write;
-  args.command = command;
-  args.size = IPMI_I2C_SMBUS_BLOCK_DATA;
-  args.data = data;
-  
-  ERR(!((rv = ioctl (dev_fd, IPMI_I2C_SMBUS, &args)) < 0));
-  return rv;
-}
-
-static ssize_t 
-_ipmi_ssif_single_part_write (int dev_fd, 
-                              uint8_t *buf, 
-                              size_t buf_len)
-{
-
-  union ipmi_i2c_smbus_data data;
-  int i;
-  
-  data.block[0] = buf_len;
-  for (i = 0; i < buf_len; i++)
-    data.block[i + 1] = buf[i];
-  
-  return (_ipmi_i2c_smbus_access (dev_fd, 
-                                  IPMI_I2C_SMBUS_WRITE, 
-                                  IPMI_SSIF_SINGLE_PART_WRITE_SMBUS_CMD, 
-                                  &data));
-}
-
-static ssize_t 
-_ipmi_ssif_multi_part_write (int dev_fd, 
-                             uint8_t *buf, 
-                             size_t buf_len)
-{
-  union ipmi_i2c_smbus_data data;
-  int middle_parts;
-  int i;
-  int mpart;
-  int index;
-  
-  if (buf_len % IPMI_I2C_SMBUS_BLOCK_MAX == 0)
-    {
-#if 0
-      fprintf (stderr, "%s:%s(): "
-	       "PECULIAR IPMI COMMAND: As of this writing, "
-	       "there are no standard IPMI messages to the "
-	       "BMC that are exact multiples of %d.  This "
-	       "command can be OEM/group network functions "
-	       "(network function codes 2Ch:3Fh) in your "
-	       "BMC implementation.  Please report to "
-	       "FreeIPMI mailing list <freeipmi-devel@gnu.org>\n", 
-	       __FILE__, __PRETTY_FUNCTION__, 
-	       IPMI_I2C_SMBUS_BLOCK_MAX);
-#endif
-      errno = EINVAL;
-      return (-1);
-    }
-  
-  middle_parts = (buf_len / IPMI_I2C_SMBUS_BLOCK_MAX) - 1;
-  
-  data.block[0] = IPMI_I2C_SMBUS_BLOCK_MAX;
-  for (i = 0; i < IPMI_I2C_SMBUS_BLOCK_MAX; i++)
-    data.block[i + 1] = buf[i];
-  if (_ipmi_i2c_smbus_access (dev_fd, 
-                              IPMI_I2C_SMBUS_WRITE, 
-                              IPMI_SSIF_MULTI_PART_WRITE_START_SMBUS_CMD, 
-                              &data) < 0)
-    return (-1);
-  
-  for (mpart = 1; mpart <= middle_parts; mpart++)
-    {
-      index = mpart * IPMI_I2C_SMBUS_BLOCK_MAX;
-      data.block[0] = IPMI_I2C_SMBUS_BLOCK_MAX;
-      for (i = 0; i < IPMI_I2C_SMBUS_BLOCK_MAX; i++)
-        data.block[i + 1] = buf[index + i];
-      if (_ipmi_i2c_smbus_access (dev_fd, 
-                                  IPMI_I2C_SMBUS_WRITE, 
-                                  IPMI_SSIF_MULTI_PART_WRITE_MIDDLE_SMBUS_CMD, 
-                                  &data) < 0)
-        return (-1);
-    }
-  
-  index = (middle_parts + 1) * IPMI_I2C_SMBUS_BLOCK_MAX;
-  data.block[0] = buf_len % IPMI_I2C_SMBUS_BLOCK_MAX;
-  for (i = 0; i < data.block[0]; i++)
-    data.block[i + 1] = buf[index + i];
-  return (_ipmi_i2c_smbus_access (dev_fd, 
-                                  IPMI_I2C_SMBUS_WRITE, 
-                                  IPMI_SSIF_MULTI_PART_WRITE_END_SMBUS_CMD, 
-                                  &data));
-}
-
-static ssize_t 
-_ipmi_ssif_read (int dev_fd, 
-		 uint8_t *buf, 
-		 size_t buf_len)
-{
-  union ipmi_i2c_smbus_data data;
-  int bytes_read = 0;
-  int bytes_copied = 0;
-  int length;
-  int block_number;
-  int sindex;
-  int multi_read_start = 0;
-  int i;
-  
-  assert(buf && buf_len);
-  
-  if (_ipmi_i2c_smbus_access (dev_fd, 
-                              IPMI_I2C_SMBUS_READ, 
-                              IPMI_SSIF_SINGLE_PART_READ_SMBUS_CMD, 
-                              &data) == -1)
-    return (-1);
-  
-  if (data.block[0] == IPMI_SSIF_MULTI_PART_READ_START_SIZE && 
-      data.block[1] == IPMI_SSIF_MULTI_PART_READ_START_PATTERN1 && 
-      data.block[2] == IPMI_SSIF_MULTI_PART_READ_START_PATTERN2)
-    {
-      sindex = 3;
-      multi_read_start = 1;
-    }
-  else
-    sindex = 1;
-  
-  length = data.block[0];
-  bytes_read = length;
-  
-  if (bytes_read > buf_len)
-    length = buf_len;
-  
-  for (i = 0; i < length; i++)
-    buf[i] = data.block[sindex + i];
-  
-  bytes_copied = length;
-  
-  while (multi_read_start)
-    {
-      if (_ipmi_i2c_smbus_access (dev_fd, 
-                                  IPMI_I2C_SMBUS_READ, 
-                                  IPMI_SSIF_MULTI_PART_READ_MIDDLE_SMBUS_CMD, 
-                                  &data) < 0)
-        return (-1);
-      
-      length = data.block[0];
-      block_number = data.block[1];
-      bytes_read += length;
-      
-      if ((bytes_copied + length) > buf_len)
-        length = buf_len - bytes_copied;
-      
-      for (i = 0; i < length; i++)
-        buf[bytes_copied + i] = data.block[i + 2];
-      
-      bytes_copied += length;
-      
-      if (block_number == IPMI_SSIF_MULTI_PART_READ_END_PATTERN)
-        break;
-    }
-  
-  return bytes_read;
-}
-
 #define IPMI_SSIF_FLAGS_MASK IPMI_SSIF_FLAGS_NONBLOCKING
 
 #define IPMI_SSIF_CTX_MAGIC 0xaddaabba
@@ -359,6 +146,281 @@ struct ipmi_ssif_ctx {
   int io_init;
   int semid;
 };
+
+static void
+_set_ssif_ctx_errnum_by_errno(ipmi_ssif_ctx_t ctx, int __errno)
+{
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    return;
+
+  if (errno == 0)
+    ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
+  else if (errno == EINTR)
+    ctx->errnum = IPMI_SSIF_CTX_ERR_BUSY;
+  else if (errno == EAGAIN)
+    ctx->errnum = IPMI_SSIF_CTX_ERR_BUSY;
+  else if (errno == EPERM)
+    ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
+  else if (errno == EACCES)
+    ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
+  else if (errno == ENOENT)
+    ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND;
+  else if (errno == ENOTDIR)
+    ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND;
+  else if (errno == ENAMETOOLONG)
+    ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND;
+  else if (errno == ENOMEM)
+    ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;
+  else if (errno == EINVAL)
+    ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;
+  else if (errno == ETIMEDOUT)
+    ctx->errnum = IPMI_SSIF_CTX_ERR_DRIVER_TIMEOUT;
+  else
+    ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR;
+}
+
+union ipmi_i2c_smbus_data
+{
+  uint8_t  byte;
+  uint16_t word;
+  uint8_t  block[IPMI_I2C_SMBUS_BLOCK_MAX + 3];
+};
+
+struct ipmi_i2c_smbus_ioctl_data
+{
+  uint8_t  read_write;
+  uint8_t  command;
+  uint32_t size;
+  union ipmi_i2c_smbus_data *data;
+};
+/* END: copied from <linux/i2c.h> and <linux/i2c-dev.h>, */
+/*      and prefixed IPMI.                               */
+
+static int 
+_ipmi_i2c_smbus_access (ipmi_ssif_ctx_t ctx,
+                        int dev_fd, 
+                        char read_write, 
+                        uint8_t command, 
+                        union ipmi_i2c_smbus_data *data)
+{
+  struct ipmi_i2c_smbus_ioctl_data args;
+  fd_set read_fds;
+  struct timeval tv;
+  int n;
+  int rv;
+
+  assert(ctx);
+  assert(ctx->magic == IPMI_SSIF_CTX_MAGIC);
+
+  if (read_write == IPMI_I2C_SMBUS_READ)
+    {
+      FD_ZERO(&read_fds);
+      FD_SET(dev_fd, &read_fds);
+      
+      tv.tv_sec = IPMI_SSIF_TIMEOUT;
+      tv.tv_usec = 0;
+
+      if ((n = select(dev_fd + 1,
+                      &read_fds,
+                      NULL,
+                      NULL,
+                      &tv)) < 0)
+        {
+          SSIF_ERRNO_TO_SSIF_ERRNUM(ctx, errno);
+          return (-1);
+        }
+      
+      if (!n)
+        {
+          /* Could be due to a different error, but we assume a timeout */
+          SSIF_ERRNUM_SET(IPMI_SSIF_CTX_ERR_DRIVER_TIMEOUT);
+          return (-1);
+        }
+    }
+
+  args.read_write = read_write;
+  args.command = command;
+  args.size = IPMI_I2C_SMBUS_BLOCK_DATA;
+  args.data = data;
+  
+  if ((rv = ioctl (dev_fd, IPMI_I2C_SMBUS, &args)) < 0)
+    {
+      SSIF_ERRNO_TO_SSIF_ERRNUM(ctx, errno);
+      return (-1);
+    }
+
+  return rv;
+}
+
+static ssize_t 
+_ipmi_ssif_single_part_write (ipmi_ssif_ctx_t ctx,
+                              int dev_fd, 
+                              uint8_t *buf, 
+                              size_t buf_len)
+{
+
+  union ipmi_i2c_smbus_data data;
+  int i;
+  
+  assert(ctx);
+  assert(ctx->magic == IPMI_SSIF_CTX_MAGIC);
+
+  data.block[0] = buf_len;
+  for (i = 0; i < buf_len; i++)
+    data.block[i + 1] = buf[i];
+  
+  return (_ipmi_i2c_smbus_access (ctx,
+                                  dev_fd, 
+                                  IPMI_I2C_SMBUS_WRITE, 
+                                  IPMI_SSIF_SINGLE_PART_WRITE_SMBUS_CMD, 
+                                  &data));
+}
+
+static ssize_t 
+_ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
+                             int dev_fd, 
+                             uint8_t *buf, 
+                             size_t buf_len)
+{
+  union ipmi_i2c_smbus_data data;
+  int middle_parts;
+  int i;
+  int mpart;
+  int index;
+  
+  assert(ctx);
+  assert(ctx->magic == IPMI_SSIF_CTX_MAGIC);
+
+  if (buf_len % IPMI_I2C_SMBUS_BLOCK_MAX == 0)
+    {
+#if 0
+      fprintf (stderr, "%s:%s(): "
+	       "PECULIAR IPMI COMMAND: As of this writing, "
+	       "there are no standard IPMI messages to the "
+	       "BMC that are exact multiples of %d.  This "
+	       "command can be OEM/group network functions "
+	       "(network function codes 2Ch:3Fh) in your "
+	       "BMC implementation.  Please report to "
+	       "FreeIPMI mailing list <freeipmi-devel@gnu.org>\n", 
+	       __FILE__, __PRETTY_FUNCTION__, 
+	       IPMI_I2C_SMBUS_BLOCK_MAX);
+#endif
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  middle_parts = (buf_len / IPMI_I2C_SMBUS_BLOCK_MAX) - 1;
+  
+  data.block[0] = IPMI_I2C_SMBUS_BLOCK_MAX;
+  for (i = 0; i < IPMI_I2C_SMBUS_BLOCK_MAX; i++)
+    data.block[i + 1] = buf[i];
+  if (_ipmi_i2c_smbus_access (ctx,
+                              dev_fd, 
+                              IPMI_I2C_SMBUS_WRITE, 
+                              IPMI_SSIF_MULTI_PART_WRITE_START_SMBUS_CMD, 
+                              &data) < 0)
+    return (-1);
+  
+  for (mpart = 1; mpart <= middle_parts; mpart++)
+    {
+      index = mpart * IPMI_I2C_SMBUS_BLOCK_MAX;
+      data.block[0] = IPMI_I2C_SMBUS_BLOCK_MAX;
+      for (i = 0; i < IPMI_I2C_SMBUS_BLOCK_MAX; i++)
+        data.block[i + 1] = buf[index + i];
+      if (_ipmi_i2c_smbus_access (ctx,
+                                  dev_fd, 
+                                  IPMI_I2C_SMBUS_WRITE, 
+                                  IPMI_SSIF_MULTI_PART_WRITE_MIDDLE_SMBUS_CMD, 
+                                  &data) < 0)
+        return (-1);
+    }
+  
+  index = (middle_parts + 1) * IPMI_I2C_SMBUS_BLOCK_MAX;
+  data.block[0] = buf_len % IPMI_I2C_SMBUS_BLOCK_MAX;
+  for (i = 0; i < data.block[0]; i++)
+    data.block[i + 1] = buf[index + i];
+  return (_ipmi_i2c_smbus_access (ctx,
+                                  dev_fd, 
+                                  IPMI_I2C_SMBUS_WRITE, 
+                                  IPMI_SSIF_MULTI_PART_WRITE_END_SMBUS_CMD, 
+                                  &data));
+}
+
+static ssize_t 
+_ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
+                 int dev_fd, 
+		 uint8_t *buf, 
+		 size_t buf_len)
+{
+  union ipmi_i2c_smbus_data data;
+  int bytes_read = 0;
+  int bytes_copied = 0;
+  int length;
+  int block_number;
+  int sindex;
+  int multi_read_start = 0;
+  int i;
+  
+  assert(ctx);
+  assert(ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  assert(buf);
+  assert(buf_len);
+  
+  if (_ipmi_i2c_smbus_access (ctx,
+                              dev_fd, 
+                              IPMI_I2C_SMBUS_READ, 
+                              IPMI_SSIF_SINGLE_PART_READ_SMBUS_CMD, 
+                              &data) < 0)
+    return (-1);
+  
+  if (data.block[0] == IPMI_SSIF_MULTI_PART_READ_START_SIZE && 
+      data.block[1] == IPMI_SSIF_MULTI_PART_READ_START_PATTERN1 && 
+      data.block[2] == IPMI_SSIF_MULTI_PART_READ_START_PATTERN2)
+    {
+      sindex = 3;
+      multi_read_start = 1;
+    }
+  else
+    sindex = 1;
+  
+  length = data.block[0];
+  bytes_read = length;
+  
+  if (bytes_read > buf_len)
+    length = buf_len;
+  
+  for (i = 0; i < length; i++)
+    buf[i] = data.block[sindex + i];
+  
+  bytes_copied = length;
+  
+  while (multi_read_start)
+    {
+      if (_ipmi_i2c_smbus_access (ctx,
+                                  dev_fd, 
+                                  IPMI_I2C_SMBUS_READ, 
+                                  IPMI_SSIF_MULTI_PART_READ_MIDDLE_SMBUS_CMD, 
+                                  &data) < 0)
+        return (-1);
+      
+      length = data.block[0];
+      block_number = data.block[1];
+      bytes_read += length;
+      
+      if ((bytes_copied + length) > buf_len)
+        length = buf_len - bytes_copied;
+      
+      for (i = 0; i < length; i++)
+        buf[bytes_copied + i] = data.block[i + 2];
+      
+      bytes_copied += length;
+      
+      if (block_number == IPMI_SSIF_MULTI_PART_READ_END_PATTERN)
+        break;
+    }
+  
+  return bytes_read;
+}
 
 ipmi_ssif_ctx_t
 ipmi_ssif_ctx_create(void)
@@ -533,12 +595,20 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
   if (ctx->io_init)
     goto out;
 
-  SSIF_ERR_CLEANUP(!((ctx->device_fd = open (ctx->driver_device, 
-                                             O_RDWR)) < 0));
-  
-  SSIF_ERR_CLEANUP(!(ioctl (ctx->device_fd, 
-                            IPMI_I2C_SLAVE, 
-                            ctx->driver_address) < 0));
+  if ((ctx->device_fd = open (ctx->driver_device, 
+                              O_RDWR)) < 0)
+    {
+      SSIF_ERRNO_TO_SSIF_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+
+  if (ioctl (ctx->device_fd, 
+             IPMI_I2C_SLAVE, 
+             ctx->driver_address) < 0)
+    {
+      SSIF_ERRNO_TO_SSIF_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   ctx->io_init = 1;
  out:
@@ -574,19 +644,39 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
     }
 
   if (!(ctx->flags & IPMI_SSIF_FLAGS_NONBLOCKING))
-    SSIF_ERR_CLEANUP(!(ipmi_mutex_lock(ctx->semid) < 0));
+    {
+      if (ipmi_mutex_lock(ctx->semid) < 0)
+        {
+          SSIF_ERRNO_TO_SSIF_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else
-    SSIF_ERR_CLEANUP(!(ipmi_mutex_lock_interruptible(ctx->semid) < 0));
+    {
+      if (ipmi_mutex_lock_interruptible(ctx->semid) < 0)
+        {
+          SSIF_ERRNO_TO_SSIF_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   lock_flag++;
   
   if (buf_len <= IPMI_I2C_SMBUS_BLOCK_MAX)
-    SSIF_ERR_CLEANUP(!((count = _ipmi_ssif_single_part_write (ctx->device_fd, 
-                                                              buf, 
-                                                              buf_len)) < 0));
+    {
+      if ((count = _ipmi_ssif_single_part_write (ctx,
+                                                 ctx->device_fd, 
+                                                 buf, 
+                                                 buf_len)) < 0)
+        goto cleanup;
+    }
   else 
-    SSIF_ERR_CLEANUP(!((count = _ipmi_ssif_multi_part_write (ctx->device_fd, 
-                                                             buf, 
-                                                             buf_len)) < 0));
+    {
+      if ((count = _ipmi_ssif_multi_part_write (ctx,
+                                                ctx->device_fd, 
+                                                buf, 
+                                                buf_len)) < 0)
+        goto cleanup;
+    }
   
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (count);
@@ -622,9 +712,11 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
   if (buf_len > IPMI_I2C_SMBUS_BLOCK_MAX)
     buf_len = IPMI_I2C_SMBUS_BLOCK_MAX;
   
-  SSIF_ERR_CLEANUP(!((count = _ipmi_ssif_read (ctx->device_fd, 
-                                               buf, 
-                                               buf_len)) < 0));
+  if ((count = _ipmi_ssif_read (ctx,
+                                ctx->device_fd, 
+                                buf, 
+                                buf_len)) < 0)
+    goto cleanup;
   
   rv = count;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
@@ -646,7 +738,8 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
   fiid_obj_t obj_hdr = NULL;
   int rv = -1;
 
-  assert(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_SSIF_CTX_MAGIC);
   assert(IPMI_BMC_LUN_VALID(lun));
   assert(IPMI_NET_FN_RQ_VALID(net_fn));
   assert(fiid_obj_valid(obj_cmd_rq));
@@ -708,7 +801,8 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
   fiid_field_t *tmpl = NULL;
   int8_t rv = -1;
 
-  assert(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_SSIF_CTX_MAGIC);
   assert(fiid_obj_valid(obj_cmd_rs));
 
   SSIF_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);

@@ -50,7 +50,7 @@ do {                                                                    \
   fflush (stderr);                                                      \
 } while (0)
 
-#define __TRACE_ERRNO(__errno_orig)                                     \
+#define __ERRNO_TRACE(__errno_orig)                                     \
 do {                                                                    \
   extern int errno;                                                     \
   int __save_errno = __errno_orig;                                      \
@@ -72,34 +72,6 @@ do {                                                                    \
            __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
            __ctxerrstr, __ctxerrnum);                                   \
   fflush (stderr);                                                      \
-} while (0)
-
-#define __KCS_TRACE                                                     \
-do {                                                                    \
-  int __ctxerrnum = ipmi_kcs_ctx_errnum(ctx);                           \
-  char *__ctxerrstr = ipmi_kcs_ctx_strerror(__ctxerrnum);               \
-  __TRACE_CTX;                                                          \
-} while (0)
-
-#define __SSIF_TRACE                                                    \
-do {                                                                    \
-  int __ctxerrnum = ipmi_ssif_ctx_errnum(ctx);                          \
-  char *__ctxerrstr = ipmi_ssif_ctx_strerror(__ctxerrnum);              \
-  __TRACE_CTX;                                                          \
-} while (0)
-
-#define __OPENIPMI_TRACE                                                \
-do {                                                                    \
-  int __ctxerrnum = ipmi_openipmi_ctx_errnum(ctx);                      \
-  char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);          \
-  __TRACE_CTX;                                                          \
-} while (0)
-
-#define __SUNBMC_TRACE                                                  \
-do {                                                                    \
-  int __ctxerrnum = ipmi_sunbmc_ctx_errnum(ctx);                        \
-  char *__ctxerrstr = ipmi_sunbmc_ctx_strerror(__ctxerrnum);            \
-  __TRACE_CTX;                                                          \
 } while (0)
 
 #define __LOCATE_TRACE                                                  \
@@ -139,11 +111,7 @@ do {                                                                    \
 
 #else
 #define __MSG_TRACE(__msgtracestr, __msgtracenum)
-#define __TRACE_ERRNO(__errno_orig)
-#define __KCS_TRACE
-#define __SSIF_TRACE
-#define __OPENIPMI_TRACE
-#define __SUNBMC_TRACE
+#define __ERRNO_TRACE(__errno_orig)
 #define __LOCATE_TRACE
 #define __SDR_CACHE_TRACE
 #define __SDR_PARSE_TRACE
@@ -158,12 +126,12 @@ do {                                                                    \
 
 #define ERRNO_TRACE(__errno)                                            \
 do {                                                                    \
-  __TRACE_ERRNO(__errno);                                               \
+  __ERRNO_TRACE(__errno);                                               \
 } while (0)
 
 #define ERR_LOG(expr)                                                   \
 do {                                                                    \
-  __TRACE_ERRNO(errno);                                                 \
+  __ERRNO_TRACE(errno);                                                 \
   expr;                                                                 \
 } while (0)   
 
@@ -171,7 +139,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __TRACE_ERRNO(errno);                                             \
+      __ERRNO_TRACE(errno);                                             \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -180,7 +148,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __TRACE_ERRNO(errno);                                             \
+      __ERRNO_TRACE(errno);                                             \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -189,7 +157,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __TRACE_ERRNO(errno);                                             \
+      __ERRNO_TRACE(errno);                                             \
       exit(1);                                                          \
     }                                                                   \
 } while (0)
@@ -198,7 +166,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __TRACE_ERRNO(errno);                                             \
+      __ERRNO_TRACE(errno);                                             \
       return (NULL);                                                    \
     }                                                                   \
 } while (0)
@@ -207,7 +175,7 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __TRACE_ERRNO(errno);                                             \
+      __ERRNO_TRACE(errno);                                             \
       return;                                                           \
     }                                                                   \
 } while (0)
@@ -217,7 +185,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __TRACE_ERRNO(errno);                                             \
+      __ERRNO_TRACE(errno);                                             \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -227,7 +195,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __TRACE_ERRNO(errno);                                             \
+      __ERRNO_TRACE(errno);                                             \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -237,7 +205,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __TRACE_ERRNO(errno);                                             \
+      __ERRNO_TRACE(errno);                                             \
       return (NULL);                                                    \
     }                                                                   \
 } while (0)
@@ -247,7 +215,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENOSPC;                                                   \
-      __TRACE_ERRNO(errno);                                             \
+      __ERRNO_TRACE(errno);                                             \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -257,7 +225,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENOSPC;                                                   \
-      __TRACE_ERRNO(errno);                                             \
+      __ERRNO_TRACE(errno);                                             \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -267,7 +235,7 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EMSGSIZE;                                                 \
-      __TRACE_ERRNO(errno);                                             \
+      __ERRNO_TRACE(errno);                                             \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -277,206 +245,10 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EMSGSIZE;                                                 \
-      __TRACE_ERRNO(errno);                                             \
+      __ERRNO_TRACE(errno);                                             \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
-
-#define __KCS_ERRNO_TO_ERRNUM                                           \
-do {                                                                    \
-  if (errno == 0)                                                       \
-    ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;                             \
-  else if (errno == EINTR)                                              \
-    ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;                                \
-  else if (errno == EAGAIN)                                             \
-    ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;                                \
-  else if (errno == EPERM)                                              \
-    ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;                          \
-  else if (errno == EACCES)                                             \
-    ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;                          \
-  else if (errno == ENOENT)                                             \
-    ctx->errnum = IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND;                    \
-  else if (errno == ENOMEM)                                             \
-    ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                       \
-  else if (errno == EINVAL)                                             \
-    ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                      \
-  else if (errno == ETIMEDOUT)                                          \
-    ctx->errnum = IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT;                      \
-  else                                                                  \
-    ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR;                        \
-} while (0)
-
-#define KCS_ERR(expr)                                                   \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        __KCS_ERRNO_TO_ERRNUM;                                          \
-        __KCS_TRACE;                                                    \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERR_CLEANUP(expr)                                           \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        __KCS_ERRNO_TO_ERRNUM;                                          \
-        __KCS_TRACE;                                                    \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define KCS_ERRNUM_SET(__errnum)                                        \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __KCS_TRACE;                                                        \
-  } while (0)
-
-#define __SSIF_ERRNO_TO_ERRNUM                                          \
-do {                                                                    \
-  if (errno == 0)                                                       \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;                            \
-  else if (errno == EINTR)                                              \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_BUSY;                               \
-  else if (errno == EAGAIN)                                             \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_BUSY;                               \
-  else if (errno == EPERM)                                              \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;                         \
-  else if (errno == EACCES)                                             \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;                         \
-  else if (errno == ENOENT)                                             \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND;                   \
-  else if (errno == ENOTDIR)                                            \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND;                   \
-  else if (errno == ENAMETOOLONG)                                       \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND;                   \
-  else if (errno == ENOMEM)                                             \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                      \
-  else if (errno == EINVAL)                                             \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                     \
-  else if (errno == ETIMEDOUT)                                          \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_DRIVER_TIMEOUT;                     \
-  else                                                                  \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR;                       \
-} while (0)
-
-#define SSIF_ERR(expr)                                                  \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        __SSIF_ERRNO_TO_ERRNUM;                                         \
-        __SSIF_TRACE;                                                   \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define SSIF_ERR_CLEANUP(expr)                                          \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        __SSIF_ERRNO_TO_ERRNUM;                                         \
-        __SSIF_TRACE;                                                   \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define SSIF_ERRNUM_SET(__errnum)                                       \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __SSIF_TRACE;                                                       \
-  } while (0)
-
-#define __OPENIPMI_ERRNO_TO_ERRNUM                                      \
-do {                                                                    \
-  if (errno == 0)                                                       \
-    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;                        \
-  else if (errno == EPERM)                                              \
-    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION;                     \
-  else if (errno == EACCES)                                             \
-    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION;                     \
-  else if (errno == ENOENT)                                             \
-    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND;               \
-  else if (errno == ENOMEM)                                             \
-    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY;                  \
-  else if (errno == EINVAL)                                             \
-    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR;                 \
-  else if (errno == ETIMEDOUT)                                          \
-    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DRIVER_TIMEOUT;                 \
-  else                                                                  \
-    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR;                   \
-} while (0)
-
-#define OPENIPMI_ERR(expr)                                              \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        __OPENIPMI_ERRNO_TO_ERRNUM;                                     \
-        __OPENIPMI_TRACE;                                               \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define OPENIPMI_ERR_CLEANUP(expr)                                      \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        __OPENIPMI_ERRNO_TO_ERRNUM;                                     \
-        __OPENIPMI_TRACE;                                               \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define OPENIPMI_ERRNUM_SET(__errnum)                                   \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __OPENIPMI_TRACE;                                                   \
-  } while (0)
-
-#define __SUNBMC_ERRNO_TO_ERRNUM                                        \
-do {                                                                    \
-  if (errno == 0)                                                       \
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;                          \
-  else if (errno == EPERM)                                              \
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_PERMISSION;                       \
-  else if (errno == EACCES)                                             \
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_PERMISSION;                       \
-  else if (errno == ENOENT)                                             \
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_DEVICE_NOT_FOUND;                 \
-  else if (errno == ENOMEM)                                             \
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY;                    \
-  else if (errno == EINVAL)                                             \
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR;                   \
-  else if (errno == ETIMEDOUT)                                          \
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_DRIVER_TIMEOUT;                   \
-  else                                                                  \
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR;                     \
-} while (0)
-
-#define SUNBMC_ERR(expr)                                                \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        __SUNBMC_ERRNO_TO_ERRNUM;                                       \
-        __SUNBMC_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define SUNBMC_ERR_CLEANUP(expr)                                        \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        __SUNBMC_ERRNO_TO_ERRNUM;                                       \
-        __SUNBMC_TRACE;                                                 \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
-
-#define SUNBMC_ERRNUM_SET(__errnum)                                     \
-  do {                                                                  \
-    ctx->errnum = (__errnum);                                           \
-    __SUNBMC_TRACE;                                                     \
-  } while (0)
 
 #define __LOCATE_ERRNO_TO_ERRNUM                                        \
 do {                                                                    \

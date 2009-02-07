@@ -58,8 +58,7 @@
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "ipmi-err-wrappers-driver.h"
 
 #include "freeipmi-portability.h"
 
@@ -164,6 +163,34 @@ struct ipmi_openipmi_ctx {
   int device_fd;
   int io_init;
 };
+
+static void
+_set_openipmi_ctx_errnum_by_errno(ipmi_openipmi_ctx_t ctx, int __errno)
+{
+  if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
+    return;
+
+  if (errno == 0)
+    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;
+  else if (errno == EPERM)
+    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION;
+  else if (errno == EACCES)
+    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION;
+  else if (errno == ENOENT)
+    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND;
+  else if (errno == ENOTDIR)
+    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND;
+  else if (errno == ENAMETOOLONG)
+    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND;
+  else if (errno == ENOMEM)
+    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY;
+  else if (errno == EINVAL)
+    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR;
+  else if (errno == ETIMEDOUT)
+    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DRIVER_TIMEOUT;
+  else
+    ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR;
+}
 
 ipmi_openipmi_ctx_t
 ipmi_openipmi_ctx_create(void)
@@ -314,12 +341,20 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
   else
     device = IPMI_OPENIPMI_DRIVER_DEVICE_DEFAULT;
 
-  OPENIPMI_ERR_CLEANUP(!((ctx->device_fd = open (device, 
-                                                 O_RDWR)) < 0));
+  if ((ctx->device_fd = open (device, 
+                              O_RDWR)) < 0)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
-  OPENIPMI_ERR_CLEANUP(!(ioctl(ctx->device_fd, 
-                               IPMICTL_SET_MY_ADDRESS_CMD, 
-                               &addr) < 0));
+  if (ioctl(ctx->device_fd, 
+            IPMICTL_SET_MY_ADDRESS_CMD, 
+            &addr) < 0)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   ctx->io_init = 1;
  out:
@@ -349,7 +384,8 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
   struct ipmi_ipmb_addr ipmb_addr;
   struct ipmi_req rq_packet;
 
-  assert(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
   assert(IPMI_BMC_LUN_VALID(lun));
   assert(IPMI_NET_FN_RQ_VALID(net_fn));
   assert(fiid_obj_valid(obj_cmd_rq));
@@ -404,9 +440,13 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
   rq_packet.msg.data_len = rq_buf_len;
   rq_packet.msg.data = rq_buf;
 
-  OPENIPMI_ERR(!(ioctl(ctx->device_fd, 
-                       IPMICTL_SEND_COMMAND,
-                       &rq_packet) < 0));
+  if (ioctl(ctx->device_fd, 
+            IPMICTL_SEND_COMMAND,
+            &rq_packet) < 0)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM(ctx, errno);
+      return (-1);
+    }
 
   return (0);
 }
@@ -423,6 +463,10 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   struct timeval tv;
   int n;
 
+  assert(ctx);
+  assert(ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  assert(fiid_obj_valid(obj_cmd_rs));
+
   rs_packet.addr = (unsigned char *)&rs_addr;
   rs_packet.addr_len = sizeof(struct ipmi_system_interface_addr);
   rs_packet.msg.data = rs_buf_temp;
@@ -434,11 +478,15 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   tv.tv_sec = IPMI_OPENIPMI_TIMEOUT;
   tv.tv_usec = 0;
 
-  OPENIPMI_ERR(!((n = select(ctx->device_fd + 1, 
-                             &read_fds,
-                             NULL,
-                             NULL,
-                             &tv)) < 0));
+  if ((n = select(ctx->device_fd + 1, 
+                  &read_fds,
+                  NULL,
+                  NULL,
+                  &tv)) < 0)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM(ctx, errno);
+      return (-1);
+    }
 
   if (!n)
     {
@@ -447,9 +495,13 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
       return (-1);
     }
 
-  OPENIPMI_ERR(!(ioctl(ctx->device_fd, 
-                       IPMICTL_RECEIVE_MSG_TRUNC, 
-                       &rs_packet) < 0)); 
+  if (ioctl(ctx->device_fd, 
+            IPMICTL_RECEIVE_MSG_TRUNC, 
+            &rs_packet) < 0)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM(ctx, errno);
+      return (-1);
+    }
 
   /* achu: atleast the completion code should be returned */
   if (!rs_packet.msg.data_len)
