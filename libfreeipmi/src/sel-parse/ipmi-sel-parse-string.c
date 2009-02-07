@@ -105,7 +105,7 @@ _invalid_sel_entry_common(ipmi_sel_parse_ctx_t ctx,
                           unsigned int *wlen)
 {
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(buf);
   assert(buflen);
   assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
@@ -140,7 +140,7 @@ _find_sdr_record(ipmi_sel_parse_ctx_t ctx,
   int tmp_sdr_record_len;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(ctx->sdr_cache_ctx);   /* must be checked earlier */
   assert(system_event_record_data);
   assert(sdr_record);
@@ -217,7 +217,7 @@ _get_sdr_id_string(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(system_event_record_data);
   assert(id_string);
   assert(id_string_len);
@@ -281,7 +281,7 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(system_event_record_data);
   assert(ipmi_event_reading_type_code_class(system_event_record_data->event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD);
   assert(reading);
@@ -408,7 +408,7 @@ _output_time(ipmi_sel_parse_ctx_t ctx,
   time_t t;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -447,7 +447,7 @@ _output_date(ipmi_sel_parse_ctx_t ctx,
   time_t t;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -496,7 +496,7 @@ _output_sensor_group(ipmi_sel_parse_ctx_t ctx,
   const char *sensor_type_str = NULL;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -534,7 +534,7 @@ _output_sensor_name(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -616,7 +616,7 @@ _output_event_offset(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -740,7 +740,7 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1029,7 +1029,7 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1248,7 +1248,7 @@ _output_event_data2_event_data3(ipmi_sel_parse_ctx_t ctx,
   int data3_ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1397,7 +1397,7 @@ _output_event_data2_previous_state_or_severity(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1574,7 +1574,7 @@ _output_event_direction(ipmi_sel_parse_ctx_t ctx,
   char *str = NULL;
   
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1610,7 +1610,7 @@ _output_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
   uint32_t manufacturer_id;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1670,7 +1670,7 @@ _output_oem(ipmi_sel_parse_ctx_t ctx,
   int oem_index;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1719,7 +1719,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(fmt);
   assert(record_buf);
   assert(record_buflen >= IPMI_SEL_RECORD_LENGTH);

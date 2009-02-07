@@ -87,7 +87,7 @@ ipmi_sensor_read_ctx_create(ipmi_ctx_t ipmi_ctx)
 
   ERR_CLEANUP((ctx = (ipmi_sensor_read_ctx_t)malloc(sizeof(struct ipmi_sensor_read_ctx))));
   memset(ctx, '\0', sizeof(struct ipmi_sensor_read_ctx));
-  ctx->magic = IPMI_SENSOR_READ_MAGIC;
+  ctx->magic = IPMI_SENSOR_READ_CTX_MAGIC;
   ctx->flags = IPMI_SENSOR_READ_FLAGS_DEFAULT;
 
   ctx->ipmi_ctx = ipmi_ctx;
@@ -109,10 +109,10 @@ ipmi_sensor_read_ctx_create(ipmi_ctx_t ipmi_ctx)
 void
 ipmi_sensor_read_ctx_destroy(ipmi_sensor_read_ctx_t ctx)
 {
-  if (!ctx || ctx->magic != IPMI_SENSOR_READ_MAGIC)
+  if (!ctx || ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
     return;
 
-  ctx->magic = ~IPMI_SENSOR_READ_MAGIC;
+  ctx->magic = ~IPMI_SENSOR_READ_CTX_MAGIC;
   ipmi_sdr_parse_ctx_destroy(ctx->sdr_parse_ctx);
   free(ctx);
 }
@@ -122,7 +122,7 @@ ipmi_sensor_read_ctx_errnum(ipmi_sensor_read_ctx_t ctx)
 {
   if (!ctx)
     return IPMI_SENSOR_READ_CTX_ERR_CONTEXT_NULL;
-  else if (ctx->magic != IPMI_SENSOR_READ_MAGIC)
+  else if (ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
     return IPMI_SENSOR_READ_CTX_ERR_CONTEXT_INVALID;
   else
     return ctx->errnum;
@@ -146,7 +146,7 @@ ipmi_sensor_read_ctx_errormsg(ipmi_sensor_read_ctx_t ctx)
 int
 ipmi_sensor_read_ctx_get_flags(ipmi_sensor_read_ctx_t ctx, unsigned int *flags)
 {
-  if (!ctx || ctx->magic != IPMI_SENSOR_READ_MAGIC)
+  if (!ctx || ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
     {
       ERR_TRACE(ipmi_sensor_read_ctx_errormsg(ctx), ipmi_sensor_read_ctx_errnum(ctx));
       return (-1);
@@ -165,7 +165,7 @@ ipmi_sensor_read_ctx_get_flags(ipmi_sensor_read_ctx_t ctx, unsigned int *flags)
 int
 ipmi_sensor_read_ctx_set_flags(ipmi_sensor_read_ctx_t ctx, unsigned int flags)
 {
-  if (!ctx || ctx->magic != IPMI_SENSOR_READ_MAGIC)
+  if (!ctx || ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
     {
       ERR_TRACE(ipmi_sensor_read_ctx_errormsg(ctx), ipmi_sensor_read_ctx_errnum(ctx));
       return (-1);
@@ -186,7 +186,7 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
                                     fiid_obj_t obj_get_sensor_reading_rs)
 {
   assert(ctx);
-  assert(ctx->magic == IPMI_SENSOR_READ_MAGIC);
+  assert(ctx->magic == IPMI_SENSOR_READ_CTX_MAGIC);
   assert(obj_get_sensor_reading_rs);
 
   if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
@@ -220,7 +220,7 @@ _get_sensor_reading (ipmi_sensor_read_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SENSOR_READ_MAGIC);
+  assert(ctx->magic == IPMI_SENSOR_READ_CTX_MAGIC);
   assert(obj_get_sensor_reading_rs);
 
   if (ipmi_cmd_get_sensor_reading (ctx->ipmi_ctx, 
@@ -250,7 +250,7 @@ _get_sensor_reading_ipmb (ipmi_sensor_read_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SENSOR_READ_MAGIC);
+  assert(ctx->magic == IPMI_SENSOR_READ_CTX_MAGIC);
   assert(obj_get_sensor_reading_rs);
 
   if (ctx->flags & IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS
@@ -317,7 +317,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
   uint8_t slave_address = 0;
   int event_reading_type_code_class = 0;
 
-  if (!ctx || ctx->magic != IPMI_SENSOR_READ_MAGIC)
+  if (!ctx || ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
     {
       ERR_TRACE(ipmi_sensor_read_ctx_errormsg(ctx), ipmi_sensor_read_ctx_errnum(ctx));
       return (-1);

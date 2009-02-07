@@ -54,7 +54,7 @@ sel_parse_get_reservation_id(ipmi_sel_parse_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(reservation_id);
 
   SEL_PARSE_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sel_rs);
@@ -101,7 +101,7 @@ sel_parse_get_record_header_info(ipmi_sel_parse_ctx_t ctx,
   int rv = -1;
   
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(record_id || record_type);
   
@@ -151,7 +151,7 @@ sel_parse_get_timestamp(ipmi_sel_parse_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(timestamp);
 
@@ -209,7 +209,7 @@ sel_parse_get_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(manufacturer_id);
 
@@ -263,7 +263,7 @@ sel_parse_get_oem(ipmi_sel_parse_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -324,7 +324,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(system_event_record_data);
 
@@ -421,7 +421,7 @@ sel_parse_get_previous_state_or_severity(ipmi_sel_parse_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(previous_offset_from_event_reading_type_code);
   assert(offset_from_severity_event_reading_type_code);

@@ -17,32 +17,34 @@
 
 */
 
-#ifndef _IPMI_SDR_PARSE_DEFS_H
-#define _IPMI_SDR_PARSE_DEFS_H
+#ifndef _IPMI_SDR_CACHE_UTIL_H
+#define	_IPMI_SDR_CACHE_UTIL_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif /* HAVE_CONFIG_H */
 
-#include <stdint.h>
-#include <sys/param.h>
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
 
-#include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
+#include "freeipmi/api/ipmi-api.h"
+#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
 
-#include "list.h"
+#include "ipmi-sdr-cache-defs.h"
 
-#ifndef MAXPATHLEN
-#define MAXPATHLEN 4096
-#endif /* MAXPATHLEN */
+void sdr_cache_set_sdr_cache_errnum_by_errno(ipmi_sdr_cache_ctx_t ctx, int __errno);
 
-#define IPMI_SDR_PARSE_CTX_MAGIC 0xFECD18B6
+#ifdef __cplusplus
+}
+#endif
 
-#define IPMI_SDR_PARSE_FLAGS_MASK           (0)
+#endif /* ipmi-sdr-cache-util.h */
 
-struct ipmi_sdr_parse_ctx {
-  uint32_t magic;
-  int errnum;
-  unsigned int flags;
-};
-
-#endif /* _IPMI_SDR_PARSE_DEFS_H */

@@ -36,7 +36,7 @@
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
 
-#define IPMI_SEL_PARSE_MAGIC 0xAECD1846
+#define IPMI_SEL_PARSE_CTX_MAGIC 0xAECD1846
 
 /* Table 21-1 */
 #define IPMI_SEL_RECORD_LENGTH               16

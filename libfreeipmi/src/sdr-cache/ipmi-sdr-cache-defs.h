@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-defs.h,v 1.9.10.1 2009-02-07 17:34:51 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-defs.h,v 1.9.10.2 2009-02-07 21:04:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -44,7 +44,7 @@
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
 
-#define IPMI_SDR_CACHE_MAGIC        0xABCD9876
+#define IPMI_SDR_CACHE_CTX_MAGIC        0xABCD9876
 
 /* Why use indexes instead of fiid templates?  B/c that's how it was
  * written before libipmimonitoring's libipmisdrcache was written before
