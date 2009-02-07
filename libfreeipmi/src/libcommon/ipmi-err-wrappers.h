@@ -74,13 +74,6 @@ do {                                                                    \
   fflush (stderr);                                                      \
 } while (0)
 
-#define __LOCATE_TRACE                                                  \
-do {                                                                    \
-  int __ctxerrnum = *locate_errnum;                                     \
-  char *__ctxerrstr = ipmi_locate_strerror(__ctxerrnum);                \
-  __TRACE_CTX;                                                          \
-} while (0)
-
 #define __SDR_CACHE_TRACE                                               \
 do {                                                                    \
   int __ctxerrnum = ipmi_sdr_cache_ctx_errnum(ctx);                     \
@@ -112,7 +105,6 @@ do {                                                                    \
 #else
 #define __MSG_TRACE(__msgtracestr, __msgtracenum)
 #define __ERRNO_TRACE(__errno_orig)
-#define __LOCATE_TRACE
 #define __SDR_CACHE_TRACE
 #define __SDR_PARSE_TRACE
 #define __SEL_PARSE_TRACE
@@ -249,42 +241,6 @@ do {                                                                    \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
-
-#define __LOCATE_ERRNO_TO_ERRNUM                                        \
-do {                                                                    \
-  if (errno == 0)                                                       \
-    (*locate_errnum) = IPMI_LOCATE_ERR_SUCCESS;                         \
-  else if (errno == EPERM)                                              \
-    (*locate_errnum) = IPMI_LOCATE_ERR_PERMISSION;                      \
-  else if (errno == EACCES)                                             \
-    (*locate_errnum) = IPMI_LOCATE_ERR_PERMISSION;                      \
-  else if (errno == ENOMEM)                                             \
-    (*locate_errnum) = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                   \
-  else if (errno == EINVAL)                                             \
-    (*locate_errnum) = IPMI_LOCATE_ERR_INTERNAL_ERROR;                  \
-  else                                                                  \
-    (*locate_errnum) = IPMI_LOCATE_ERR_SYSTEM_ERROR;                    \
-} while (0)
-
-#define LOCATE_ERR(expr)                                                \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        __LOCATE_ERRNO_TO_ERRNUM;                                       \
-        __LOCATE_TRACE;                                                 \
-        return (-1);                                                    \
-      }                                                                 \
-  } while (0)
-
-#define LOCATE_ERR_CLEANUP(expr)                                        \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        __LOCATE_ERRNO_TO_ERRNUM;                                       \
-        __LOCATE_TRACE;                                                 \
-        goto cleanup;                                                   \
-      }                                                                 \
-  } while (0)
 
 #define __SDR_CACHE_ERRNO_TO_ERRNUM                                       \
 do {                                                                      \
