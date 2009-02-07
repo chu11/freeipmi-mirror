@@ -310,8 +310,7 @@ _setup_socket (ipmi_ctx_t ctx)
                                           SOCK_DGRAM, 
                                           0)) < 0)
     {
-      ERRNO_TRACE(errno);
-      API_SET_ERRNUM(ctx, IPMI_ERR_SYSTEM_ERROR);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
   
@@ -324,8 +323,7 @@ _setup_socket (ipmi_ctx_t ctx)
            (struct sockaddr *)&addr,
            sizeof(struct sockaddr_in)) < 0)
     {
-      ERRNO_TRACE(errno);
-      API_SET_ERRNUM(ctx, IPMI_ERR_SYSTEM_ERROR);
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
       return (-1);
     }
 
