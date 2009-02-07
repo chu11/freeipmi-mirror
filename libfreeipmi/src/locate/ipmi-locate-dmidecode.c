@@ -44,8 +44,8 @@
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 
 #include "ipmi-locate-defs.h"
+#include "ipmi-locate-trace.h"
 #include "ipmi-locate-util.h"
-#include "ipmi-trace-wrappers-locate.h"
 
 #include "freeipmi-portability.h"
 

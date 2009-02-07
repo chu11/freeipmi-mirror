@@ -41,7 +41,7 @@
 #include "freeipmi/util/ipmi-sensor-util.h"
 #include "ipmi-sdr-parse-defs.h"
 
-#include "ipmi-trace-wrappers-sdr-parse.h"
+#include "ipmi-sdr-parse-trace.h"
 
 #include "freeipmi-portability.h"
 #include "debug-util.h"

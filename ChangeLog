@@ -10,16 +10,16 @@
 	  libfreeipmi/src/api/ipmi-fiid-wrappers-api.h,
 	  libfreeipmi/src/api/ipmi-fiid-wrappers-api.c: Removed files.
 	
-	* libfreeipmi/src/api/ipmi-trace-wrappers-api.h,
+	* libfreeipmi/src/api/ipmi-api-trace.h,
 	  libfreeipmi/src/api/ipmi-api-util.c,
 	  libfreeipmi/src/api/ipmi-api-util.c,
-	  libfreeipmi/src/locate/ipmi-trace-wrappers-locate.h,
+	  libfreeipmi/src/locate/ipmi-locate-trace.h,
 	  libfreeipmi/src/locate/ipmi-locate-util.c,
 	  libfreeipmi/src/locate/ipmi-locate-util.c,
-	  libfreeipmi/src/sel-parse/ipmi-trace-wrappers-sel-parse.h,
-	  libfreeipmi/src/sensor-read/ipmi-trace-wrappers-sensor-read.h,
-	  libfreeipmi/src/api/ipmi-api-defs.h,
-	  libfreeipmi/src/driver/ipmi-trace-wrappers-driver.h: New files.
+	  libfreeipmi/src/sel-parse/ipmi-sel-parse-trace.h,
+	  libfreeipmi/src/sensor-read/ipmi-sensor-read-trace.h,
+	  libfreeipmi/src/api/ipmi-api-defs-trace.h,
+	  libfreeipmi/src/driver/ipmi-driver-trace.h: New files.
 
 	* libfreeipmi/src/locate/: Rework to use context style API.
 

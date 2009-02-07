@@ -59,9 +59,8 @@
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
+#include "ipmi-driver-trace.h"
 #include "ipmi-semaphores.h"
-
-#include "ipmi-trace-wrappers-driver.h"
 
 #include "freeipmi-portability.h"
 

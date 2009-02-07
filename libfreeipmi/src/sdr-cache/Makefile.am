@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.10.16.1 2009-02-07 21:04:16 chu11 Exp $
+## $Id: Makefile.am,v 1.10.16.2 2009-02-07 21:20:57 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -7,8 +7,8 @@
 noinst_HEADERS = \
 	ipmi-sdr-cache-common.h \
 	ipmi-sdr-cache-defs.h \
-	ipmi-sdr-cache-util.h \
-	ipmi-trace-wrappers-sdr-cache.h
+	ipmi-sdr-cache-trace.h \
+	ipmi-sdr-cache-util.h
 
 noinst_LTLIBRARIES = libsdrcache.la 
 

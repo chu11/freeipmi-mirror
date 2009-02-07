@@ -1,7 +1,7 @@
 noinst_HEADERS = \
 	ipmi-locate-defs.h \
-	ipmi-locate-util.h \
-	ipmi-trace-wrappers-locate.h
+	ipmi-locate-trace.h \
+	ipmi-locate-util.h
 
 noinst_LTLIBRARIES = liblocate.la
 

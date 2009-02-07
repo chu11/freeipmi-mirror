@@ -43,11 +43,10 @@
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
-#include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-common.h"
+#include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-string.h"
-
-#include "ipmi-trace-wrappers-sel-parse.h"
+#include "ipmi-sel-parse-trace.h"
 
 #include "freeipmi-portability.h"
 #include "debug-util.h"

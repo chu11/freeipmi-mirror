@@ -36,8 +36,8 @@
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
 
 #include "ipmi-api-defs.h"
+#include "ipmi-api-trace.h"
 #include "ipmi-api-util.h"
-#include "ipmi-trace-wrappers-api.h"
 
 #include "freeipmi-portability.h"
 

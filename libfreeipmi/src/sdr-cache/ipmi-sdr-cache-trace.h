@@ -17,8 +17,8 @@
 
 */
 
-#ifndef _IPMI_TRACE_WRAPPERS_SDR_PARSE_H
-#define	_IPMI_TRACE_WRAPPERS_SDR_PARSE_H
+#ifndef _IPMI_SDR_CACHE_TRACE_H
+#define	_IPMI_SDR_CACHE_TRACE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,15 +38,23 @@ extern "C" {
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
-#define SDR_PARSE_SET_ERRNUM(__ctx, __errnum)                      \
-  do {                                                             \
-    (__ctx)->errnum = (__errnum);                                  \
-    __MSG_TRACE(ipmi_sdr_parse_ctx_errormsg((__ctx)), (__errnum)); \
+#include "ipmi-sdr-cache-util.h"
+
+#define SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM(__ctx, __errno)          \
+  do {                                                               \
+    sdr_cache_set_sdr_cache_errnum_by_errno((__ctx), (__errno));     \
+    __ERRNO_TRACE((__errno));                                        \
+  } while (0)   
+
+#define SDR_CACHE_SET_ERRNUM(__ctx, __errnum)                        \
+  do {                                                               \
+    (__ctx)->errnum = (__errnum);                                    \
+    __MSG_TRACE(ipmi_sdr_cache_ctx_errormsg((__ctx)), (__errnum));   \
   } while (0)
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ipmi-trace-wrappers-sdr-parse.h */
+#endif /* ipmi-sdr-cache-trace.h */
 

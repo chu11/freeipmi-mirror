@@ -1,13 +1,13 @@
 noinst_HEADERS = \
 	ipmi-api-defs.h \
+	ipmi-api-trace.h \
 	ipmi-api-util.h \
 	ipmi-lan-interface-api.h \
 	ipmi-lan-session-common.h \
 	ipmi-kcs-driver-api.h \
 	ipmi-openipmi-driver-api.h \
 	ipmi-ssif-driver-api.h \
-	ipmi-sunbmc-driver-api.h \
-	ipmi-trace-wrappers-api.h
+	ipmi-sunbmc-driver-api.h
 
 noinst_LTLIBRARIES = libapi.la
 

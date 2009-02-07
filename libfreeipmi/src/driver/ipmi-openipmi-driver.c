@@ -58,7 +58,7 @@
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 
-#include "ipmi-trace-wrappers-driver.h"
+#include "ipmi-driver-trace.h"
 
 #include "freeipmi-portability.h"
 

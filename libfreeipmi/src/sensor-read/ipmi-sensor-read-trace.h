@@ -17,8 +17,8 @@
 
 */
 
-#ifndef _IPMI_TRACE_WRAPPERS_LOCATE_H
-#define	_IPMI_TRACE_WRAPPERS_LOCATE_H
+#ifndef _IPMI_SENSOR_READ_TRACE_H
+#define	_IPMI_SENSOR_READ_TRACE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,23 +38,15 @@ extern "C" {
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
-#include "ipmi-locate-util.h"
-
-#define LOCATE_ERRNO_TO_LOCATE_ERRNUM(__ctx, __errno)             \
-  do {                                                            \
-    locate_set_locate_errnum_by_errno((__ctx), (__errno));        \
-    __ERRNO_TRACE((__errno));                                     \
-  } while (0)   
-
-#define LOCATE_SET_ERRNUM(__ctx, __errnum)                        \
-  do {                                                            \
-    (__ctx)->errnum = (__errnum);                                 \
-    __MSG_TRACE(ipmi_locate_ctx_errormsg((__ctx)), (__errnum));   \
+#define SENSOR_READ_SET_ERRNUM(__ctx, __errnum)                      \
+  do {                                                               \
+    (__ctx)->errnum = (__errnum);                                    \
+    __MSG_TRACE(ipmi_sensor_read_ctx_errormsg((__ctx)), (__errnum)); \
   } while (0)
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ipmi-trace-wrappers-locate.h */
+#endif /* ipmi-sensor-read-trace.h */
 

@@ -17,8 +17,8 @@
 
 */
 
-#ifndef _IPMI_TRACE_WRAPPERS_API_H
-#define	_IPMI_TRACE_WRAPPERS_API_H
+#ifndef _IPMI_API_TRACE_H
+#define	_IPMI_API_TRACE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -122,5 +122,5 @@ do {                                                                     \
 }
 #endif
 
-#endif /* ipmi-trace-wrappers-api.h */
+#endif /* ipmi-api-trace.h */
 

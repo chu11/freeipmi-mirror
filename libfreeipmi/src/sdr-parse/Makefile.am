@@ -1,12 +1,12 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.2.2.1 2009-02-07 20:47:38 chu11 Exp $
+## $Id: Makefile.am,v 1.2.2.2 2009-02-07 21:21:00 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
 
 noinst_HEADERS = \
 	ipmi-sdr-parse-defs.h \
-	ipmi-trace-wrappers-sdr-parse.h
+	ipmi-sdr-parse-trace.h
 
 noinst_LTLIBRARIES = libsdrparse.la 
 

@@ -17,8 +17,8 @@
 
 */
 
-#ifndef _IPMI_ERR_WRAPPERS_DRIVER_H
-#define	_IPMI_ERR_WRAPPERS_DRIVER_H
+#ifndef _IPMI_DRIVER_TRACE_H
+#define	_IPMI_DRIVER_TRACE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -95,5 +95,5 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-trace-wrappers-driver.h */
+#endif /* ipmi-driver-trace.h */
 

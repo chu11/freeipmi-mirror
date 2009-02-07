@@ -32,7 +32,7 @@
 
 #include "ipmi-locate-defs.h"
 #include "ipmi-locate-util.h"
-#include "ipmi-trace-wrappers-locate.h"
+#include "ipmi-locate-trace.h"
 
 #include "freeipmi-portability.h"
 

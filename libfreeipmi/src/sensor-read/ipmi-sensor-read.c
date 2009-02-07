@@ -46,8 +46,7 @@
 #include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-sensor-read-defs.h"
-
-#include "ipmi-trace-wrappers-sensor-read.h"
+#include "ipmi-sensor-read-trace.h"
 
 #include "freeipmi-portability.h"
 #include "debug-util.h"
