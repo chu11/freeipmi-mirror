@@ -64,51 +64,9 @@ do {                                                                    \
   fflush (stderr);                                                      \
   __errno_orig = __save_errno;                                          \
 } while (0)
-
-#define __TRACE_CTX                                                     \
-do {                                                                    \
-  fprintf (stderr,                                                      \
-           "%s: %d: %s: error '%s' (%d)\n",                             \
-           __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
-           __ctxerrstr, __ctxerrnum);                                   \
-  fflush (stderr);                                                      \
-} while (0)
-
-#define __SDR_CACHE_TRACE                                               \
-do {                                                                    \
-  int __ctxerrnum = ipmi_sdr_cache_ctx_errnum(ctx);                     \
-  char *__ctxerrstr = ipmi_sdr_cache_ctx_strerror(__ctxerrnum);         \
-  __TRACE_CTX;                                                          \
-} while (0)
-
-#define __SDR_PARSE_TRACE                                               \
-do {                                                                    \
-  int __ctxerrnum = ipmi_sdr_parse_ctx_errnum(ctx);                     \
-  char *__ctxerrstr = ipmi_sdr_parse_ctx_strerror(__ctxerrnum);         \
-  __TRACE_CTX;                                                          \
-} while (0)
-
-#define __SEL_PARSE_TRACE                                               \
-do {                                                                    \
-  int __ctxerrnum = ipmi_sel_parse_ctx_errnum(ctx);                     \
-  char *__ctxerrstr = ipmi_sel_parse_ctx_strerror(__ctxerrnum);         \
-  __TRACE_CTX;                                                          \
-} while (0)
-
-#define __SENSOR_READ_TRACE                                             \
-do {                                                                    \
-  int __ctxerrnum = ipmi_sensor_read_ctx_errnum(ctx);                   \
-  char *__ctxerrstr = ipmi_sensor_read_ctx_strerror(__ctxerrnum);       \
-  __TRACE_CTX;                                                          \
-} while (0)
-
 #else
 #define __MSG_TRACE(__msgtracestr, __msgtracenum)
 #define __ERRNO_TRACE(__errno_orig)
-#define __SDR_CACHE_TRACE
-#define __SDR_PARSE_TRACE
-#define __SEL_PARSE_TRACE
-#define __SENSOR_READ_TRACE
 #endif /* IPMI_TRACE */
 
 #define ERR_TRACE(__str, __num)                                         \
