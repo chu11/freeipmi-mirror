@@ -90,6 +90,8 @@ o libfreeipmi
     foo_strerror(foo_errnum(ctx)) can be condensed to foo_errormsg(ctx).
   - Various fixes to maintain consistency between sub library APIs.
   - Add IANA Enterprise Numbers support.
+  - Remove IPMI_ERR_LIBRARY_ERROR errnum.  Use iPMI_ERR_INTERNAL_ERROR
+    errnum instead.
 o libipmimonitoring
   - Support callback functions in API to monitor sensors as they
     are read/analyzed instead of after all sensors have been

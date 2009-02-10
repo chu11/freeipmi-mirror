@@ -130,9 +130,8 @@ static char *ipmi_errmsg[] =
     "driver path required",                                           /* 32 */
     "internal IPMI error",	                                      /* 33 */
     "internal system error",	                                      /* 34 */
-    "internal library error",	                                      /* 35 */
-    "internal error",		                                      /* 36 */
-    "errnum out of range",	                                      /* 37 */
+    "internal error",		                                      /* 35 */
+    "errnum out of range",	                                      /* 36 */
   };
 
 static void
