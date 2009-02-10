@@ -59,7 +59,11 @@ ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen)
 
   rv = snprintf(buf, buflen, threshold_comparison_status_desc[offset]);
   /* -1 to account for '\0' */
-  ERR_ENOSPC(!(rv >= (buflen - 1)));
+  if (rv >= (buflen - 1))
+    {
+      SET_ERRNO(ENOSPC);
+      return (-1);
+    }
 
   return (0);
 }

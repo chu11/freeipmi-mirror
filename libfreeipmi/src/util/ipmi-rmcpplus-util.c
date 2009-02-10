@@ -465,7 +465,11 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
                                                    user_name_len,
                                                    sik,
                                                    IPMI_MAX_SIK_KEY_LENGTH)) < 0));
-      ERR_EMSGSIZE_CLEANUP (!(sik_key_buf_len < sik_len));
+      if (sik_key_buf_len < sik_len)
+        {
+          SET_ERRNO(EMSGSIZE);
+          goto cleanup;
+        }
       
       memcpy(sik_key_buf, sik, sik_len);
       sik_key_buf_len = sik_len;
@@ -485,16 +489,24 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
                                                  k1,
                                                  IPMI_MAX_K1_LENGTH)) < 0));
       
-      ERR_EMSGSIZE_CLEANUP (!(integrity_key_buf_len < k1_len));
+      if (integrity_key_buf_len < k1_len)
+        {
+          SET_ERRNO(EMSGSIZE);
+          goto cleanup;
+        }
       
       memcpy(integrity_key_buf, k1, k1_len);
       integrity_key_buf_len = k1_len;
     }
   else /* IPMI_INTEGRITY_ALGORITHM_MD5_128 */
     {
-      ERR_EMSGSIZE_CLEANUP (!(authentication_code_data
-                              && (!authentication_code_data_len
-                                  || integrity_key_buf_len < authentication_code_data_len)));
+      if (authentication_code_data
+          && (!authentication_code_data_len
+              || integrity_key_buf_len < authentication_code_data_len))
+        {
+          SET_ERRNO(EMSGSIZE);
+          goto cleanup;
+        }
       
       memset(integrity_key_buf, '\0', integrity_key_buf_len);
       if (authentication_code_data)
@@ -521,7 +533,11 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
                                                  k2,
                                                  IPMI_MAX_K2_LENGTH)) < 0));
       
-      ERR_EMSGSIZE_CLEANUP (!(confidentiality_key_buf_len < k2_len));
+      if (confidentiality_key_buf_len < k2_len)
+        {
+          SET_ERRNO(EMSGSIZE);
+          goto cleanup;
+        }
       
       memcpy(confidentiality_key_buf, k2, k2_len);
       confidentiality_key_buf_len = k2_len;

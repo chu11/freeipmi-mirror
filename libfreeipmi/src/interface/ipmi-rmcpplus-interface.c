@@ -548,7 +548,11 @@ _construct_payload_buf(uint8_t payload_type,
   
   ERR_EINVAL (!(payload_len > IPMI_MAX_PAYLOAD_LENGTH));
   
-  ERR_ENOSPC_CLEANUP (!(payload_len > payload_buf_len));
+  if (payload_len > payload_buf_len)
+    {
+      SET_ERRNO(ENOSPC);
+      goto cleanup;
+    }
   
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
     {
@@ -673,7 +677,11 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
   /* +1 is for the pad length field */
   pad_len = IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH - ((payload_len + 1) % IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
       
-  ERR_ENOSPC (!((payload_len + pad_len + 1) > IPMI_MAX_PAYLOAD_LENGTH));
+  if ((payload_len + pad_len + 1) > IPMI_MAX_PAYLOAD_LENGTH)
+    {
+      SET_ERRNO(ENOSPC);
+      return (-1);
+    }
   
   if (pad_len)
     {
@@ -991,7 +999,11 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
   
   ERR_CLEANUP (integrity_digest_len == crypt_digest_len);
   
-  ERR_ENOSPC_CLEANUP (!(integrity_digest_len > authentication_code_buf_len));
+  if (integrity_digest_len > authentication_code_buf_len)
+    {
+      SET_ERRNO(ENOSPC);
+      goto cleanup;
+    }
   
   memcpy(authentication_code_buf, integrity_digest, copy_digest_len);
       
@@ -1189,7 +1201,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    */
   indx = 0;
   FIID_OBJ_LEN_BYTES(obj_rmcp_hdr_len, obj_rmcp_hdr);
-  ERR_ENOSPC(!(obj_rmcp_hdr_len > (pkt_len - indx)));
+  if (obj_rmcp_hdr_len > (pkt_len - indx))
+    {
+      SET_ERRNO(ENOSPC);
+      return (-1);
+    }
   FIID_OBJ_GET_ALL_LEN(obj_rmcp_hdr_len, obj_rmcp_hdr, pkt + indx, pkt_len - indx);
   indx += obj_rmcp_hdr_len;
   
@@ -1200,7 +1216,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                            obj_rmcpplus_session_hdr,
                            "authentication_type",
                            "session_sequence_number");
-  ERR_ENOSPC_CLEANUP(!(len > (pkt_len - indx)));
+  if (len > (pkt_len - indx))
+    {
+      SET_ERRNO(ENOSPC);
+      return (-1);;
+    }
   FIID_OBJ_GET_BLOCK_LEN(len,
                          obj_rmcpplus_session_hdr,
                          "authentication_type",
@@ -1236,7 +1256,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                         payload_len);
   
   FIID_OBJ_LEN_BYTES_CLEANUP(obj_len, obj_session_hdr_temp);
-  ERR_ENOSPC_CLEANUP(!(obj_len > (pkt_len - indx)));
+  if (obj_len > (pkt_len - indx))
+    {
+      SET_ERRNO(ENOSPC);
+      goto cleanup;
+    }
   FIID_OBJ_GET_ALL_LEN_CLEANUP(obj_len, obj_session_hdr_temp, pkt + indx, pkt_len - indx);
   indx += obj_len;
 
@@ -1245,7 +1269,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    */
 
   FIID_OBJ_LEN_BYTES_CLEANUP(obj_len, obj_rmcpplus_payload);
-  ERR_ENOSPC_CLEANUP(!(obj_len > (pkt_len - indx)));
+  if (obj_len > (pkt_len - indx))
+    {
+      SET_ERRNO(ENOSPC);
+      goto cleanup;
+    }
   FIID_OBJ_GET_ALL_LEN_CLEANUP(obj_len, obj_rmcpplus_payload, pkt + indx, pkt_len - indx);
   indx += obj_len;
 
@@ -1264,7 +1292,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                                        obj_rmcpplus_session_trlr_temp,
                                        "integrity_pad",
                                        "next_header");
-      ERR_ENOSPC_CLEANUP(!(len > (pkt_len - indx)));
+      if (len > (pkt_len - indx))
+        {
+          SET_ERRNO(ENOSPC);
+          goto cleanup;
+        }
       FIID_OBJ_GET_BLOCK_LEN_CLEANUP(len,
                                      obj_rmcpplus_session_trlr_temp,
                                      "integrity_pad",
@@ -1290,7 +1322,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       
       if (authentication_code_len)
         {
-          ERR_ENOSPC_CLEANUP(!(authentication_code_len > (pkt_len - indx)));
+          if (authentication_code_len > (pkt_len - indx))
+            {
+              SET_ERRNO(ENOSPC);
+              goto cleanup;
+            }
           memcpy(pkt + indx, authentication_code_buf, authentication_code_len);
           indx += authentication_code_len;
         }

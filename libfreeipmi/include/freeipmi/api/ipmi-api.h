@@ -74,9 +74,8 @@ enum ipmi_errnum
     IPMI_ERR_DRIVER_PATH_REQUIRED = 32,
     IPMI_ERR_IPMI_ERROR = 33,
     IPMI_ERR_SYSTEM_ERROR = 34,
-    IPMI_ERR_LIBRARY_ERROR = 35,
-    IPMI_ERR_INTERNAL_ERROR = 36,
-    IPMI_ERR_ERRNUMRANGE = 37,
+    IPMI_ERR_INTERNAL_ERROR = 35,
+    IPMI_ERR_ERRNUMRANGE = 36,
   };
 typedef enum ipmi_errnum ipmi_errnum_type_t;
 

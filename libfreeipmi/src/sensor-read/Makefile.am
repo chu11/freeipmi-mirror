@@ -1,12 +1,13 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.2.4.2 2009-02-07 21:21:07 chu11 Exp $
+## $Id: Makefile.am,v 1.2.4.3 2009-02-10 22:12:29 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
 
 noinst_HEADERS = \
 	ipmi-sensor-read-defs.h \
-	ipmi-sensor-read-trace.h
+	ipmi-sensor-read-trace.h \
+	ipmi-sensor-read-util.h
 
 noinst_LTLIBRARIES = libsensorread.la 
 
@@ -20,4 +21,5 @@ libsensorread_la_CPPFLAGS = \
 	-D_REENTRANT
 
 libsensorread_la_SOURCES = \
-	ipmi-sensor-read.c
+	ipmi-sensor-read.c \
+	ipmi-sensor-read-util.c

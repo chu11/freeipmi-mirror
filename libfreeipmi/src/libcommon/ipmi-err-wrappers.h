@@ -74,6 +74,12 @@ do {                                                                    \
   __MSG_TRACE(__str, __num);                                            \
 } while (0)
 
+#define SET_ERRNO(__errno)                                              \
+do {                                                                    \
+  errno = (__errno);                                                    \
+  __ERRNO_TRACE((__errno));                                             \
+} while (0)
+
 #define ERRNO_TRACE(__errno)                                            \
 do {                                                                    \
   __ERRNO_TRACE(__errno);                                               \
@@ -157,46 +163,6 @@ do {                                                                    \
       errno = EINVAL;                                                   \
       __ERRNO_TRACE(errno);                                             \
       return (NULL);                                                    \
-    }                                                                   \
-} while (0)
-
-#define ERR_ENOSPC(expr)                                                \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = ENOSPC;                                                   \
-      __ERRNO_TRACE(errno);                                             \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define ERR_ENOSPC_CLEANUP(expr)                                        \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = ENOSPC;                                                   \
-      __ERRNO_TRACE(errno);                                             \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define ERR_EMSGSIZE(expr)                                              \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = EMSGSIZE;                                                 \
-      __ERRNO_TRACE(errno);                                             \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define ERR_EMSGSIZE_CLEANUP(expr)                                      \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = EMSGSIZE;                                                 \
-      __ERRNO_TRACE(errno);                                             \
-      goto cleanup;                                                     \
     }                                                                   \
 } while (0)
 

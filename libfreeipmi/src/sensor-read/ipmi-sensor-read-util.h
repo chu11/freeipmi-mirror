@@ -17,8 +17,8 @@
 
 */
 
-#ifndef _IPMI_SENSOR_READ_TRACE_H
-#define	_IPMI_SENSOR_READ_TRACE_H
+#ifndef _IPMI_SENSOR_READ_UTIL_H
+#define	_IPMI_SENSOR_READ_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,24 +35,17 @@ extern "C" {
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "freeipmi/api/ipmi-api.h"
+#include "freeipmi/fiid/fiid.h"
+#include "freeipmi/sensor-read/ipmi-sensor-read.h"
 
-#define SENSOR_READ_SET_ERRNUM(__ctx, __errnum)                            \
-  do {                                                                     \
-    (__ctx)->errnum = (__errnum);                                          \
-    __MSG_TRACE(ipmi_sensor_read_ctx_errormsg((__ctx)), (__errnum));       \
-  } while (0)
+#include "ipmi-sensor-read-defs.h"
 
-#define SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM(__ctx, __obj)  \
-  do {                                                                     \
-    sensor_read_set_sensor_read_errnum_by_fiid_object((__ctx), (__obj));   \
-    __MSG_TRACE(fiid_obj_errormsg((__obj)), fiid_obj_errnum((__obj)));     \
-  } while (0)   
+void sensor_read_set_sensor_read_errnum_by_fiid_object(ipmi_sensor_read_ctx_t ctx, fiid_obj_t obj);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ipmi-sensor-read-trace.h */
+#endif /* ipmi-sensor-read-util.h */
 

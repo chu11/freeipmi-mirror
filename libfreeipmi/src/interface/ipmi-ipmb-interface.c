@@ -158,7 +158,11 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
   FIID_TEMPLATE_LEN_BYTES (len, tmpl_ipmb_msg_trlr);
   required_len += len;
 
-  ERR_EMSGSIZE (!(IPMB_MAX_LEN < required_len));
+  if (IPMB_MAX_LEN < required_len)
+    {
+      SET_ERRNO(EMSGSIZE);
+      return (-1);
+    }
 
   memset(buf, '\0', IPMB_MAX_LEN+1);
 

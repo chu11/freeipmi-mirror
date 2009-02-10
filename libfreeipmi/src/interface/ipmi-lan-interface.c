@@ -268,7 +268,11 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 	      || authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY);
   
   required_len = _ipmi_lan_pkt_rq_min_size((uint8_t)authentication_type, obj_cmd);
-  ERR_EMSGSIZE (!(pkt_len < required_len));
+  if (pkt_len < required_len)
+    {
+      SET_ERRNO(EMSGSIZE);
+      return (-1);
+    }
 
   memset (pkt, 0, pkt_len);
 

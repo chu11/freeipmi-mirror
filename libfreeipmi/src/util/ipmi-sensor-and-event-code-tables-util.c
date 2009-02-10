@@ -1529,7 +1529,11 @@ _snprintf(char *buf, unsigned int buflen, char *fmt, ...)
   va_end(ap);
 
   /* -1 to account for '\0' */
-  ERR_ENOSPC(!(rv >= (buflen - 1)));
+  if (rv >= (buflen - 1))
+    {
+      SET_ERRNO(ENOSPC);
+      return (-1);
+    }
   return (0);
 }
 
@@ -1622,7 +1626,11 @@ _strcat12(char *buf, unsigned int buflen, uint8_t flag, int str_len, int index)
   if (flag)
     {
       str_len += strlen(ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[index]);
-      ERR_ENOSPC (!(str_len < buflen));
+      if (str_len < buflen)
+        {
+          SET_ERRNO(ENOSPC);
+          return (-1);
+        }
 
       if (str_len)
 	strcat(buf, ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[index]);
@@ -2226,7 +2234,11 @@ _get_event_message(uint16_t offset,
   rv = snprintf(buf, buflen, string_array[offset]);
 
   /* -1 to account for '\0' */
-  ERR_ENOSPC(!(rv >= (buflen - 1)));
+  if (rv >= (buflen - 1))
+    {
+      SET_ERRNO(ENOSPC);
+      return (-1);
+    }
 
   return (0);
 }
