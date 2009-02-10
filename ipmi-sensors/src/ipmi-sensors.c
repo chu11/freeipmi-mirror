@@ -305,8 +305,8 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
     {
       int errnum = ipmi_sensor_read_ctx_errnum(state_data->sensor_read_ctx);
       
-      if (errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_ANALOG
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_LINEAR)
+      if (errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_ANALOG
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR)
         {
           if (state_data->prog_data->args->common.debug)
             pstdout_fprintf(state_data->pstate,
@@ -317,12 +317,12 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
           goto get_events;
         }
 
-      if (errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_UNAVAILABLE
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_SCANNING_DISABLED
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_ANALOG
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_LINEAR
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NOT_OWNED_BY_BMC
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_CANNOT_BE_BRIDGED)
+      if (errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_ANALOG
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NOT_OWNED_BY_BMC
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_CANNOT_BE_BRIDGED)
         {
           if (state_data->prog_data->args->common.debug)
             pstdout_fprintf(state_data->pstate,
@@ -338,10 +338,10 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
 
           goto output;
         }
-      if (errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_IS_SYSTEM_SOFTWARE
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_CANNOT_BE_OBTAINED
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_NODE_BUSY
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_INVALID_SDR_RECORD_TYPE)
+      if (errnum == IPMI_SENSOR_READ_ERR_SENSOR_IS_SYSTEM_SOFTWARE
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED
+          || errnum == IPMI_SENSOR_READ_ERR_NODE_BUSY
+          || errnum == IPMI_SENSOR_READ_ERR_INVALID_SDR_RECORD_TYPE)
         {
           if (state_data->prog_data->args->common.debug)
             pstdout_fprintf(state_data->pstate,
@@ -507,7 +507,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
           if (ipmi_sdr_cache_search_record_id(state_data->sdr_cache_ctx,
                                               state_data->prog_data->args->sensors[i]) < 0)
             {
-              if (ipmi_sdr_cache_ctx_errnum(state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_CTX_ERR_NOT_FOUND)
+              if (ipmi_sdr_cache_ctx_errnum(state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
                 {
                   pstdout_printf(state_data->pstate,
                                  "Sensor Record ID '%d' not found\n",

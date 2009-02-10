@@ -31,15 +31,15 @@ extern "C" {
 #define IPMI_ADDRESS_SPACE_ID_SYSTEM_IO     0x01
 #define IPMI_ADDRESS_SPACE_ID_SMBUS         0x04
 
-#define IPMI_LOCATE_CTX_ERR_SUCCESS              0
-#define IPMI_LOCATE_CTX_ERR_NULL                 1
-#define IPMI_LOCATE_CTX_ERR_INVALID              2
-#define IPMI_LOCATE_CTX_ERR_PARAMETERS           3
-#define IPMI_LOCATE_CTX_ERR_PERMISSION           4
-#define IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY        5
-#define IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR         6
-#define IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR       7
-#define IPMI_LOCATE_CTX_ERR_ERRNUMRANGE          8
+#define IPMI_LOCATE_ERR_SUCCESS              0
+#define IPMI_LOCATE_ERR_NULL                 1
+#define IPMI_LOCATE_ERR_INVALID              2
+#define IPMI_LOCATE_ERR_PARAMETERS           3
+#define IPMI_LOCATE_ERR_PERMISSION           4
+#define IPMI_LOCATE_ERR_OUT_OF_MEMORY        5
+#define IPMI_LOCATE_ERR_SYSTEM_ERROR         6
+#define IPMI_LOCATE_ERR_INTERNAL_ERROR       7
+#define IPMI_LOCATE_ERR_ERRNUMRANGE          8
 
 typedef struct ipmi_locate_ctx *ipmi_locate_ctx_t;
 

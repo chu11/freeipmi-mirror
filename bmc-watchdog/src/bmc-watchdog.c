@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.112.6.1 2009-02-07 17:34:46 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.112.6.2 2009-02-10 22:40:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -668,20 +668,20 @@ _cmd(char *str,
 				   cmd_rq, 
 				   cmd_rs)) < 0)
 	    {
-	      if (ipmi_kcs_ctx_errnum(kcs_ctx) != IPMI_KCS_CTX_ERR_BUSY)
+	      if (ipmi_kcs_ctx_errnum(kcs_ctx) != IPMI_KCS_ERR_BUSY)
 		{
 		  _bmclog("%s: ipmi_kcs_cmd: %s", 
 			  str,
                           ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
-		  if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_PARAMETERS)
+		  if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_ERR_PARAMETERS)
 		    errno = EINVAL;
-		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_PERMISSION)
+		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_ERR_PERMISSION)
 		    errno = EPERM;
-		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OUT_OF_MEMORY)
+		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_ERR_OUT_OF_MEMORY)
 		    errno = ENOMEM;
-		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED)
+		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_ERR_IO_NOT_INITIALIZED)
 		    errno = EIO;
-		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OVERFLOW)
+		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_ERR_OVERFLOW)
 		    errno = ENOSPC;
 		  else
 		    errno = EINVAL;
@@ -697,20 +697,20 @@ _cmd(char *str,
 				    cmd_rq, 
 				    cmd_rs)) < 0)
 	    {
-	      if (ipmi_ssif_ctx_errnum(ssif_ctx) != IPMI_SSIF_CTX_ERR_BUSY)
+	      if (ipmi_ssif_ctx_errnum(ssif_ctx) != IPMI_SSIF_ERR_BUSY)
 		{
 		  _bmclog("%s: ipmi_ssif_cmd: %s", 
 			  str, 
                           ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
-		  if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_PARAMETERS)
+		  if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_ERR_PARAMETERS)
 		    errno = EINVAL;
-		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_PERMISSION)
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_ERR_PERMISSION)
 		    errno = EPERM;
-		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY)
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_ERR_OUT_OF_MEMORY)
 		    errno = ENOMEM;
-		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED)
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_ERR_IO_NOT_INITIALIZED)
 		    errno = EIO;
-		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OVERFLOW)
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_ERR_OVERFLOW)
 		    errno = ENOSPC;
 		  else
 		    errno = EINVAL;
@@ -729,13 +729,13 @@ _cmd(char *str,
               _bmclog("%s: ipmi_openipmi_cmd: %s", 
                       str,
                       ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
-              if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)
+              if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_ERR_PARAMETERS)
                 errno = EINVAL;
-              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_PERMISSION)
+              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_ERR_PERMISSION)
                 errno = EPERM;
-              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY)
+              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_ERR_OUT_OF_MEMORY)
                 errno = ENOMEM;
-              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED)
+              else if (ipmi_openipmi_ctx_errnum(openipmi_ctx) == IPMI_OPENIPMI_ERR_IO_NOT_INITIALIZED)
                 errno = EIO;
               else
                 errno = EINVAL;
@@ -753,13 +753,13 @@ _cmd(char *str,
               _bmclog("%s: ipmi_sunbmc_cmd: %s", 
                       str,
                       ipmi_sunbmc_ctx_strerror(ipmi_sunbmc_ctx_errnum(sunbmc_ctx)));
-              if (ipmi_sunbmc_ctx_errnum(sunbmc_ctx) == IPMI_SUNBMC_CTX_ERR_PARAMETERS)
+              if (ipmi_sunbmc_ctx_errnum(sunbmc_ctx) == IPMI_SUNBMC_ERR_PARAMETERS)
                 errno = EINVAL;
-              else if (ipmi_sunbmc_ctx_errnum(sunbmc_ctx) == IPMI_SUNBMC_CTX_ERR_PERMISSION)
+              else if (ipmi_sunbmc_ctx_errnum(sunbmc_ctx) == IPMI_SUNBMC_ERR_PERMISSION)
                 errno = EPERM;
-              else if (ipmi_sunbmc_ctx_errnum(sunbmc_ctx) == IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY)
+              else if (ipmi_sunbmc_ctx_errnum(sunbmc_ctx) == IPMI_SUNBMC_ERR_OUT_OF_MEMORY)
                 errno = ENOMEM;
-              else if (ipmi_sunbmc_ctx_errnum(sunbmc_ctx) == IPMI_SUNBMC_CTX_ERR_IO_NOT_INITIALIZED)
+              else if (ipmi_sunbmc_ctx_errnum(sunbmc_ctx) == IPMI_SUNBMC_ERR_IO_NOT_INITIALIZED)
                 errno = EIO;
               else
                 errno = EINVAL;

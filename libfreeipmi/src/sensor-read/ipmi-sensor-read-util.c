@@ -48,9 +48,9 @@ sensor_read_set_sensor_read_errnum_by_fiid_object(ipmi_sensor_read_ctx_t ctx, fi
     }
 
   if (fiid_obj_errnum(obj) == FIID_ERR_SUCCESS)
-    ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_SUCCESS;
+    ctx->errnum = IPMI_SENSOR_READ_ERR_SUCCESS;
   else if (fiid_obj_errnum(obj) == FIID_ERR_OUT_OF_MEMORY)
-    ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_OUT_OF_MEMORY;
+    ctx->errnum = IPMI_SENSOR_READ_ERR_OUT_OF_MEMORY;
   else
-    ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_INTERNAL_ERROR;
+    ctx->errnum = IPMI_SENSOR_READ_ERR_INTERNAL_ERROR;
 }

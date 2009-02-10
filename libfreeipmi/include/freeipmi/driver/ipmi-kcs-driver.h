@@ -29,20 +29,20 @@ extern "C" {
 
 #define IPMI_KCS_SMS_IO_BASE_DEFAULT          0x0CA2
 
-#define IPMI_KCS_CTX_ERR_SUCCESS              0
-#define IPMI_KCS_CTX_ERR_NULL                 1
-#define IPMI_KCS_CTX_ERR_INVALID              2
-#define IPMI_KCS_CTX_ERR_PARAMETERS           3
-#define IPMI_KCS_CTX_ERR_PERMISSION           4
-#define IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED   5
-#define IPMI_KCS_CTX_ERR_OVERFLOW             6
-#define IPMI_KCS_CTX_ERR_BUSY                 7
-#define IPMI_KCS_CTX_ERR_OUT_OF_MEMORY        8
-#define IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND     9
-#define IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT      10
-#define IPMI_KCS_CTX_ERR_SYSTEM_ERROR        11
-#define IPMI_KCS_CTX_ERR_INTERNAL_ERROR      12
-#define IPMI_KCS_CTX_ERR_ERRNUMRANGE         13
+#define IPMI_KCS_ERR_SUCCESS              0
+#define IPMI_KCS_ERR_NULL                 1
+#define IPMI_KCS_ERR_INVALID              2
+#define IPMI_KCS_ERR_PARAMETERS           3
+#define IPMI_KCS_ERR_PERMISSION           4
+#define IPMI_KCS_ERR_IO_NOT_INITIALIZED   5
+#define IPMI_KCS_ERR_OVERFLOW             6
+#define IPMI_KCS_ERR_BUSY                 7
+#define IPMI_KCS_ERR_OUT_OF_MEMORY        8
+#define IPMI_KCS_ERR_DEVICE_NOT_FOUND     9
+#define IPMI_KCS_ERR_DRIVER_TIMEOUT      10
+#define IPMI_KCS_ERR_SYSTEM_ERROR        11
+#define IPMI_KCS_ERR_INTERNAL_ERROR      12
+#define IPMI_KCS_ERR_ERRNUMRANGE         13
 
 #define IPMI_KCS_FLAGS_DEFAULT       0x00000000
 #define IPMI_KCS_FLAGS_NONBLOCKING   0x00000001

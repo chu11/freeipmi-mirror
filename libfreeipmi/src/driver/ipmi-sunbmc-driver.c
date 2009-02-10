@@ -119,25 +119,25 @@ _set_sunbmc_ctx_errnum_by_errno(ipmi_sunbmc_ctx_t ctx, int __errno)
     return;
 
   if (errno == 0)
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
+    ctx->errnum = IPMI_SUNBMC_ERR_SUCCESS;
   else if (errno == EPERM)
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_PERMISSION;
+    ctx->errnum = IPMI_SUNBMC_ERR_PERMISSION;
   else if (errno == EACCES)
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_PERMISSION;
+    ctx->errnum = IPMI_SUNBMC_ERR_PERMISSION;
   else if (errno == ENOENT)
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_DEVICE_NOT_FOUND;
+    ctx->errnum = IPMI_SUNBMC_ERR_DEVICE_NOT_FOUND;
   else if (errno == ENOTDIR)
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_DEVICE_NOT_FOUND;
+    ctx->errnum = IPMI_SUNBMC_ERR_DEVICE_NOT_FOUND;
   else if (errno == ENAMETOOLONG)
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_DEVICE_NOT_FOUND;
+    ctx->errnum = IPMI_SUNBMC_ERR_DEVICE_NOT_FOUND;
   else if (errno == ENOMEM)
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY;
+    ctx->errnum = IPMI_SUNBMC_ERR_OUT_OF_MEMORY;
   else if (errno == EINVAL)
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR;
+    ctx->errnum = IPMI_SUNBMC_ERR_INTERNAL_ERROR;
   else if (errno == ETIMEDOUT)
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_DRIVER_TIMEOUT;
+    ctx->errnum = IPMI_SUNBMC_ERR_DRIVER_TIMEOUT;
   else
-    ctx->errnum = IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR;
+    ctx->errnum = IPMI_SUNBMC_ERR_SYSTEM_ERROR;
 }
 
 ipmi_sunbmc_ctx_t
@@ -156,7 +156,7 @@ ipmi_sunbmc_ctx_create(void)
   ctx->putmsg_intf = 0;
   ctx->putmsg_intf_msg_id = 0;  /* XXX: randomize? */
 
-  ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_SUNBMC_ERR_SUCCESS;
   return ctx;
 
  cleanup:
@@ -172,7 +172,7 @@ ipmi_sunbmc_ctx_destroy(ipmi_sunbmc_ctx_t ctx)
     return;
 
   ctx->magic = ~IPMI_SUNBMC_CTX_MAGIC;
-  ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_SUNBMC_ERR_SUCCESS;
   if (ctx->driver_device)
     {
       free(ctx->driver_device);
@@ -186,9 +186,9 @@ int
 ipmi_sunbmc_ctx_errnum(ipmi_sunbmc_ctx_t ctx)
 {
   if (!ctx)
-    return (IPMI_SUNBMC_CTX_ERR_NULL);
+    return (IPMI_SUNBMC_ERR_NULL);
   else if (ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
-    return (IPMI_SUNBMC_CTX_ERR_INVALID);
+    return (IPMI_SUNBMC_ERR_INVALID);
   else
     return (ctx->errnum);
 }
@@ -196,10 +196,10 @@ ipmi_sunbmc_ctx_errnum(ipmi_sunbmc_ctx_t ctx)
 char *
 ipmi_sunbmc_ctx_strerror(int errnum)
 {
-  if (errnum >= IPMI_SUNBMC_CTX_ERR_SUCCESS && errnum <= IPMI_SUNBMC_CTX_ERR_ERRNUMRANGE)
+  if (errnum >= IPMI_SUNBMC_ERR_SUCCESS && errnum <= IPMI_SUNBMC_ERR_ERRNUMRANGE)
     return ipmi_sunbmc_ctx_errmsg[errnum];
   else
-    return ipmi_sunbmc_ctx_errmsg[IPMI_SUNBMC_CTX_ERR_ERRNUMRANGE];
+    return ipmi_sunbmc_ctx_errmsg[IPMI_SUNBMC_ERR_ERRNUMRANGE];
 }
 
 char *
@@ -215,12 +215,12 @@ ipmi_sunbmc_ctx_get_driver_device(ipmi_sunbmc_ctx_t ctx, char **driver_device)
 
   if (!driver_device)
     {
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_PARAMETERS);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_PARAMETERS);
       return (-1);
     }
 
   *driver_device = ctx->driver_device;
-  ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_SUNBMC_ERR_SUCCESS;
   return (0);
 }
 
@@ -231,12 +231,12 @@ ipmi_sunbmc_ctx_get_flags(ipmi_sunbmc_ctx_t ctx, unsigned int *flags)
 
   if (!flags)
     {
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_PARAMETERS);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_PARAMETERS);
       return (-1);
     }
 
   *flags = ctx->flags;
-  ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_SUNBMC_ERR_SUCCESS;
   return (0);
 }
 
@@ -247,7 +247,7 @@ ipmi_sunbmc_ctx_set_driver_device(ipmi_sunbmc_ctx_t ctx, char *device)
 
   if (!device)
     {
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_PARAMETERS);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -257,11 +257,11 @@ ipmi_sunbmc_ctx_set_driver_device(ipmi_sunbmc_ctx_t ctx, char *device)
 
   if (!(ctx->driver_device = strdup(device)))
     {
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_OUT_OF_MEMORY);
       return (-1);
     }
 
-  ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_SUNBMC_ERR_SUCCESS;
   return (0);
 }
 
@@ -272,12 +272,12 @@ ipmi_sunbmc_ctx_set_flags(ipmi_sunbmc_ctx_t ctx, unsigned int flags)
 
   if (flags & ~IPMI_SUNBMC_FLAGS_MASK)
     {
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_PARAMETERS);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_PARAMETERS);
       return (-1);
     }
   
   ctx->flags = flags;
-  ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_SUNBMC_ERR_SUCCESS;
   return (0);
 }
 
@@ -342,14 +342,14 @@ ipmi_sunbmc_ctx_io_init(ipmi_sunbmc_ctx_t ctx)
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
   /* otherwise, we always return a system error */
-  SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
+  SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_SYSTEM_ERROR);
   return (-1);
 
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
   ctx->io_init = 1;
  out:
-  ctx->errnum = IPMI_SUNBMC_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_SUNBMC_ERR_SUCCESS;
   return (0);
 
  cleanup:
@@ -398,7 +398,7 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
                               rq_buf_temp, 
                               IPMI_SUNBMC_BUFLEN)) <= 0)
     {
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -418,7 +418,7 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
   
   if (!(msg = (bmc_msg_t *)malloc(msg_len)))
     {
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_OUT_OF_MEMORY);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
 
@@ -443,7 +443,7 @@ _sunbmc_write(ipmi_sunbmc_ctx_t ctx,
   
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   /* otherwise, we always return an internal error - we shouldn't reach this point */
-  SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+  SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
   goto cleanup;
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
@@ -486,7 +486,7 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   sbuf.buf = (char *)rs_buf_temp;
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   /* otherwise, we always return an internal error - we shouldn't reach this point */
-  SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+  SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
   return (-1);
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
@@ -509,7 +509,7 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   if (!n)
     {
       /* Could be due to a different error, but we assume a timeout */
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_DRIVER_TIMEOUT);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_DRIVER_TIMEOUT);
       return (-1);
     }
 
@@ -529,12 +529,12 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
     }
   if (msg->m_type != BMC_MSG_RESPONSE)
     {
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_SYSTEM_ERROR);
       return (-1);
     }
   if (msg->m_id != ctx->putmsg_intf_msg_id)
     {
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_SYSTEM_ERROR);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
@@ -554,13 +554,13 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
                        rs_buf, 
                        rs_buf_len) < 0)
     {
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
       return (-1);
     }
   
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   /* otherwise, we always return an internal error - we shouldn't reach this point */
-  SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+  SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
   return (-1);
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
@@ -582,13 +582,13 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
       || !fiid_obj_valid(obj_cmd_rs)
       || !fiid_obj_packet_valid(obj_cmd_rq))
     {
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_PARAMETERS);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_PARAMETERS);
       return (-1);
     }
   
   if (!ctx->io_init)
     {
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_IO_NOT_INITIALIZED);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_IO_NOT_INITIALIZED);
       return (-1);
     }
 
@@ -628,7 +628,7 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
                                   rq_buf_temp, 
                                   IPMI_SUNBMC_BUFLEN)) <= 0)
         {
-          SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+          SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
           return (-1);
         }
 
@@ -678,12 +678,12 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
                            rs_buf, 
                            reqrsp.rsp.datalength + 2) < 0)
         { 
-          SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+          SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
           return (-1);
        }
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
       /* otherwise, we always return an internal error - we shouldn't reach this point */
-      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_CTX_ERR_INTERNAL_ERROR);
+      SUNBMC_SET_ERRNUM(ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
       return (-1);
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
     }

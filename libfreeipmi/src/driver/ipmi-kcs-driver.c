@@ -202,25 +202,25 @@ _set_kcs_ctx_errnum_by_errno(ipmi_kcs_ctx_t ctx, int __errno)
     return;
 
   if (errno == 0)
-    ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+    ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   else if (errno == EINTR)
-    ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;
+    ctx->errnum = IPMI_KCS_ERR_BUSY;
   else if (errno == EAGAIN)
-    ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;
+    ctx->errnum = IPMI_KCS_ERR_BUSY;
   else if (errno == EPERM)
-    ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
+    ctx->errnum = IPMI_KCS_ERR_PERMISSION;
   else if (errno == EACCES)
-    ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
+    ctx->errnum = IPMI_KCS_ERR_PERMISSION;
   else if (errno == ENOENT)
-    ctx->errnum = IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND;
+    ctx->errnum = IPMI_KCS_ERR_DEVICE_NOT_FOUND;
   else if (errno == ENOMEM)
-    ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;
+    ctx->errnum = IPMI_KCS_ERR_OUT_OF_MEMORY;
   else if (errno == EINVAL)
-    ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;
+    ctx->errnum = IPMI_KCS_ERR_INTERNAL_ERROR;
   else if (errno == ETIMEDOUT)
-    ctx->errnum = IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT;
+    ctx->errnum = IPMI_KCS_ERR_DRIVER_TIMEOUT;
   else
-    ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR;
+    ctx->errnum = IPMI_KCS_ERR_SYSTEM_ERROR;
 }
 
 ipmi_kcs_ctx_t
@@ -239,7 +239,7 @@ ipmi_kcs_ctx_create(void)
   ctx->io_init = 0;
 
   ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init ()) < 0));
-  ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return ctx;
 
  cleanup:
@@ -255,7 +255,7 @@ ipmi_kcs_ctx_destroy(ipmi_kcs_ctx_t ctx)
     return;
 
   ctx->magic = ~IPMI_KCS_CTX_MAGIC;
-  ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
 #ifdef __FreeBSD__
 #ifndef USE_IOPERM
   close(ctx->dev_fd);
@@ -268,9 +268,9 @@ int
 ipmi_kcs_ctx_errnum(ipmi_kcs_ctx_t ctx)
 {
   if (!ctx)
-    return (IPMI_KCS_CTX_ERR_NULL);
+    return (IPMI_KCS_ERR_NULL);
   else if (ctx->magic != IPMI_KCS_CTX_MAGIC)
-    return (IPMI_KCS_CTX_ERR_INVALID);
+    return (IPMI_KCS_ERR_INVALID);
   else
     return (ctx->errnum);
 }
@@ -278,10 +278,10 @@ ipmi_kcs_ctx_errnum(ipmi_kcs_ctx_t ctx)
 char *
 ipmi_kcs_ctx_strerror(int errnum)
 {
-  if (errnum >= IPMI_KCS_CTX_ERR_SUCCESS && errnum <= IPMI_KCS_CTX_ERR_ERRNUMRANGE)
+  if (errnum >= IPMI_KCS_ERR_SUCCESS && errnum <= IPMI_KCS_ERR_ERRNUMRANGE)
     return ipmi_kcs_ctx_errmsg[errnum];
   else
-    return ipmi_kcs_ctx_errmsg[IPMI_KCS_CTX_ERR_ERRNUMRANGE];
+    return ipmi_kcs_ctx_errmsg[IPMI_KCS_ERR_ERRNUMRANGE];
 }
 
 char *
@@ -297,12 +297,12 @@ ipmi_kcs_ctx_get_driver_address(ipmi_kcs_ctx_t ctx, uint16_t *driver_address)
 
   if (!driver_address)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_PARAMETERS);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_PARAMETERS);
       return (-1);
     }
   
   *driver_address = ctx->driver_address;
-  ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return (0);
 }
 
@@ -313,12 +313,12 @@ ipmi_kcs_ctx_get_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t *register_spacing)
 
   if (!register_spacing)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_PARAMETERS);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_PARAMETERS);
       return (-1);
     }
   
   *register_spacing = ctx->register_spacing;
-  ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return (0);
 }
 
@@ -329,12 +329,12 @@ ipmi_kcs_ctx_get_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t *poll_interval)
 
   if (!poll_interval)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_PARAMETERS);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_PARAMETERS);
       return (-1);
     }
 
   *poll_interval = ctx->poll_interval;
-  ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return (0);
 }
 
@@ -345,12 +345,12 @@ ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, unsigned int *flags)
 
   if (!flags)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_PARAMETERS);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_PARAMETERS);
       return (-1);
     }
 
   *flags = ctx->flags;
-  ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return (0);
 }
 
@@ -360,7 +360,7 @@ ipmi_kcs_ctx_set_driver_address(ipmi_kcs_ctx_t ctx, uint16_t driver_address)
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
   ctx->driver_address = driver_address;
-  ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return (0);
 }
 
@@ -370,7 +370,7 @@ ipmi_kcs_ctx_set_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t register_spacing)
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
   ctx->register_spacing = register_spacing;
-  ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return (0);
 }
 
@@ -380,7 +380,7 @@ ipmi_kcs_ctx_set_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t poll_interval)
   ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
   ctx->poll_interval = poll_interval;
-  ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return (0);
 }
 
@@ -391,12 +391,12 @@ ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, unsigned int flags)
 
   if (flags & ~IPMI_KCS_FLAGS_MASK)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_PARAMETERS);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_PARAMETERS);
       return (-1);
     }
   
   ctx->flags = flags;
-  ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return (0);
 }
 
@@ -439,7 +439,7 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
 
   ctx->io_init = 1;
  out:
-  ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return (0);
 }
 
@@ -621,13 +621,13 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
  
   if (!buf || !buf_len)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_PARAMETERS);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_PARAMETERS);
       return (-1);
     }
   
   if (!ctx->io_init)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_IO_NOT_INITIALIZED);
       return (-1);
     }
 
@@ -651,7 +651,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   
   if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
       goto cleanup;
     }
 
@@ -661,13 +661,13 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
 
   if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
       goto cleanup;
     }
 
   if (!_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_BUSY);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_BUSY);
       goto cleanup;
     }
 
@@ -681,13 +681,13 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
 
       if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
         {
-          KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT);
+          KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
           goto cleanup;
         }
 
       if (!_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
         {
-          KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_BUSY);
+          KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_BUSY);
           goto cleanup;
         }
 
@@ -699,13 +699,13 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
 
   if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
       goto cleanup;
     }
 
   if (!_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_BUSY);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_BUSY);
       goto cleanup;
     }
 
@@ -723,7 +723,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   }
 #endif
 
-  ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return (count);
 
  cleanup:
@@ -748,25 +748,25 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   
   if (!buf || !buf_len)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_PARAMETERS);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_PARAMETERS);
       goto cleanup;
     }
   
   if (!ctx->io_init)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_IO_NOT_INITIALIZED);
       goto cleanup;
     }
 
   if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
       goto cleanup;
     }
   
   if (!_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ))
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_BUSY);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_BUSY);
       goto cleanup;
     }
 
@@ -775,7 +775,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
       char c;
       if (_ipmi_kcs_wait_for_obf_set (ctx) < 0)
         {
-          KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT);
+          KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
           goto cleanup;
         }
       c = _ipmi_kcs_read_byte (ctx);
@@ -787,7 +787,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
       _ipmi_kcs_read_next (ctx);
       if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
         {
-          KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT);
+          KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
           goto cleanup;
         }
     }
@@ -797,21 +797,21 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
       /* Clean up */
       if (_ipmi_kcs_wait_for_obf_set (ctx) < 0)
         {
-          KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT);
+          KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
           goto cleanup;
         }
       _ipmi_kcs_read_byte (ctx); /* toss it, ACK */
     }
   else
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_DRIVER_TIMEOUT);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
       goto cleanup;
     }
 
   if (count > buf_len)
-    KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_OVERFLOW);
+    KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_OVERFLOW);
   else
-    ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
+    ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   rv = count;
  cleanup:
   if (ctx && ctx->magic == IPMI_KCS_CTX_MAGIC)
@@ -848,7 +848,7 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
 
   if (!(pkt = (uint8_t *)malloc (pkt_len)))
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_OUT_OF_MEMORY);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
 
@@ -858,7 +858,7 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
                          net_fn,
                          obj_hdr) < 0)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
   
@@ -867,7 +867,7 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
                              pkt,
                              pkt_len) < 0)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
  
@@ -910,7 +910,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
   
   if (!(pkt = (uint8_t *)malloc(pkt_len)))
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_OUT_OF_MEMORY);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
 
@@ -923,7 +923,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
 
   if (!read_len)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
@@ -932,7 +932,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
                                obj_hdr,
                                obj_cmd_rs) < 0)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -960,13 +960,13 @@ ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
       || !fiid_obj_valid(obj_cmd_rs)
       || !fiid_obj_packet_valid(obj_cmd_rq))
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_PARAMETERS);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_PARAMETERS);
       return (-1);
     }
   
   if (!ctx->io_init)
     {
-      KCS_SET_ERRNUM(ctx, IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED);
+      KCS_SET_ERRNUM(ctx, IPMI_KCS_ERR_IO_NOT_INITIALIZED);
       return (-1);
     }
 

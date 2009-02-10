@@ -152,7 +152,7 @@ _myread (ipmi_locate_ctx_t ctx,
   
   if (r2 != count)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       close (fd);
       return -1;
     }
@@ -207,7 +207,7 @@ _mem_chunk (ipmi_locate_ctx_t ctx,
   
   if (!(p = malloc (len)))
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
   
@@ -468,7 +468,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -482,7 +482,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
       && (!(efi_systab = fopen (filename = "/sys/firmware/efi/systab", "r"))))
     {
       ERRNO_TRACE(errno);
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       return (-1);
     }
   
@@ -498,7 +498,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
 
   if (!fp)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
@@ -551,7 +551,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
       rv = 0;
     }
   else
-    LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+    LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
   
   return rv;
 }

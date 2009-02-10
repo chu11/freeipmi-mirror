@@ -667,12 +667,12 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                           ipmi_ctx,
                           cachefilenamebuf) < 0)
     {
-      if (ipmi_sdr_cache_ctx_errnum(ctx) != IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
-          && !((ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_INVALID
-                || ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE)
+      if (ipmi_sdr_cache_ctx_errnum(ctx) != IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
+          && !((ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_INVALID
+                || ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
                && sdr_cache_recreate))
         {
-          if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_INVALID)
+          if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_INVALID)
             {
               PSTDOUT_FPRINTF(pstate,
                               stderr,
@@ -680,7 +680,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                               cachefilenamebuf);
               goto cleanup;
             }
-          else if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE)
+          else if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
             {
               PSTDOUT_FPRINTF(pstate,
                               stderr,
@@ -701,9 +701,9 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
         }
     }
 
-  if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
-      || ((ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_INVALID
-           || ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE)
+  if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
+      || ((ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_INVALID
+           || ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
           && sdr_cache_recreate))
     {
       if (sdr_cache_create (ctx,

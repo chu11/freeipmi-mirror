@@ -35,20 +35,20 @@ extern "C" {
 #define IPMI_DEFAULT_I2C_DEVICE                "/dev/i2c-0"
 #define IPMI_DEFAULT_SSIF_IPMB_ADDR            0x42
 
-#define IPMI_SSIF_CTX_ERR_SUCCESS              0
-#define IPMI_SSIF_CTX_ERR_NULL                 1
-#define IPMI_SSIF_CTX_ERR_INVALID              2
-#define IPMI_SSIF_CTX_ERR_PARAMETERS           3
-#define IPMI_SSIF_CTX_ERR_PERMISSION           4
-#define IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED   5
-#define IPMI_SSIF_CTX_ERR_OVERFLOW             6
-#define IPMI_SSIF_CTX_ERR_BUSY                 7
-#define IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY        8
-#define IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND     9
-#define IPMI_SSIF_CTX_ERR_DRIVER_TIMEOUT      10
-#define IPMI_SSIF_CTX_ERR_SYSTEM_ERROR        11
-#define IPMI_SSIF_CTX_ERR_INTERNAL_ERROR      12
-#define IPMI_SSIF_CTX_ERR_ERRNUMRANGE         13
+#define IPMI_SSIF_ERR_SUCCESS              0
+#define IPMI_SSIF_ERR_NULL                 1
+#define IPMI_SSIF_ERR_INVALID              2
+#define IPMI_SSIF_ERR_PARAMETERS           3
+#define IPMI_SSIF_ERR_PERMISSION           4
+#define IPMI_SSIF_ERR_IO_NOT_INITIALIZED   5
+#define IPMI_SSIF_ERR_OVERFLOW             6
+#define IPMI_SSIF_ERR_BUSY                 7
+#define IPMI_SSIF_ERR_OUT_OF_MEMORY        8
+#define IPMI_SSIF_ERR_DEVICE_NOT_FOUND     9
+#define IPMI_SSIF_ERR_DRIVER_TIMEOUT      10
+#define IPMI_SSIF_ERR_SYSTEM_ERROR        11
+#define IPMI_SSIF_ERR_INTERNAL_ERROR      12
+#define IPMI_SSIF_ERR_ERRNUMRANGE         13
 
 #define IPMI_SSIF_FLAGS_DEFAULT       0x00000000
 #define IPMI_SSIF_FLAGS_NONBLOCKING   0x00000001

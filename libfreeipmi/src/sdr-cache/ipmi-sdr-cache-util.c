@@ -41,33 +41,33 @@ sdr_cache_set_sdr_cache_errnum_by_errno(ipmi_sdr_cache_ctx_t ctx, int __errno)
     return;
 
   if (errno == 0)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
   else if (errno == ENOSPC)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_FILESYSTEM;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
   else if (errno == EMFILE)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_FILESYSTEM;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
   else if (errno == ENFILE)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_FILESYSTEM;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
   else if (errno == EPERM)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_PERMISSION;
   else if (errno == EACCES)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_PERMISSION;
   else if (errno == EISDIR)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_PERMISSION;
   else if (errno == EROFS)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_PERMISSION;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_PERMISSION;
   else if (errno == ENOENT)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST;
   else if (errno == ENOTDIR)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST;
   else if (errno == ENAMETOOLONG)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_FILENAME_INVALID;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_FILENAME_INVALID;
   else if (errno == ELOOP)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_FILENAME_INVALID;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_FILENAME_INVALID;
   else if (errno == ENOMEM)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY;
   else if (errno == EINVAL)
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
   else
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SYSTEM_ERROR;
+    ctx->errnum = IPMI_SDR_CACHE_ERR_SYSTEM_ERROR;
 }

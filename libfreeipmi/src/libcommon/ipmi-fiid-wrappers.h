@@ -856,21 +856,21 @@ do {                                                                            
 #define __FIID_ERRNO_TO_KCS_ERRNUM                                            \
 do {                                                                          \
   if (errno == 0)                                                             \
-    ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;                                   \
+    ctx->errnum = IPMI_KCS_ERR_SUCCESS;                                       \
   else if (errno == ENOMEM)                                                   \
-    ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                             \
+    ctx->errnum = IPMI_KCS_ERR_OUT_OF_MEMORY;                                 \
   else                                                                        \
-    ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                            \
+    ctx->errnum = IPMI_KCS_ERR_INTERNAL_ERROR;                                \
 } while (0)
 
 #define __FIID_ERRNUM_TO_KCS_ERRNUM(___errnum)                                \
 do {                                                                          \
   if ((___errnum) == 0)                                                       \
-    ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;                                   \
+    ctx->errnum = IPMI_KCS_ERR_SUCCESS;                                       \
   else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
-    ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                             \
+    ctx->errnum = IPMI_KCS_ERR_OUT_OF_MEMORY;                                 \
   else                                                                        \
-    ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                            \
+    ctx->errnum = IPMI_KCS_ERR_INTERNAL_ERROR;                                \
 } while (0)
 
 #define __FIID_OBJ_ERRNUM_TO_KCS_ERRNUM(___obj)                               \
@@ -926,21 +926,21 @@ do {                                                     \
 #define __FIID_ERRNO_TO_SSIF_ERRNUM                                           \
 do {                                                                          \
   if (errno == 0)                                                             \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;                                  \
+    ctx->errnum = IPMI_SSIF_ERR_SUCCESS;                                      \
   else if (errno == ENOMEM)                                                   \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                            \
+    ctx->errnum = IPMI_SSIF_ERR_OUT_OF_MEMORY;                                \
   else                                                                        \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                           \
+    ctx->errnum = IPMI_SSIF_ERR_INTERNAL_ERROR;                               \
 } while (0)
 
 #define __FIID_ERRNUM_TO_SSIF_ERRNUM(___errnum)                               \
 do {                                                                          \
   if ((___errnum) == 0)                                                       \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;                                  \
+    ctx->errnum = IPMI_SSIF_ERR_SUCCESS;                                      \
   else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;                            \
+    ctx->errnum = IPMI_SSIF_ERR_OUT_OF_MEMORY;                                \
   else                                                                        \
-    ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR;                           \
+    ctx->errnum = IPMI_SSIF_ERR_INTERNAL_ERROR;                               \
 } while (0)
 
 #define __FIID_OBJ_ERRNUM_TO_SSIF_ERRNUM(___obj)                              \
@@ -996,21 +996,21 @@ do {                                                     \
 #define __FIID_ERRNO_TO_LOCATE_ERRNUM                                         \
 do {                                                                          \
   if (errno == 0)                                                             \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;                                \
+    ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;                                    \
   else if (errno == ENOMEM)                                                   \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                          \
+    ctx->errnum = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                              \
   else                                                                        \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                         \
+    ctx->errnum = IPMI_LOCATE_ERR_INTERNAL_ERROR;                             \
 } while (0)
 
 #define __FIID_ERRNUM_TO_LOCATE_ERRNUM(___errnum)                             \
 do {                                                                          \
   if ((___errnum) == 0)                                                       \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;                                \
+    ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;                                    \
   else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;                          \
+    ctx->errnum = IPMI_LOCATE_ERR_OUT_OF_MEMORY;                              \
   else                                                                        \
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                         \
+    ctx->errnum = IPMI_LOCATE_ERR_INTERNAL_ERROR;                             \
 } while (0)
 
 #define __FIID_OBJ_ERRNUM_TO_LOCATE_ERRNUM(___obj)                            \
@@ -1063,7 +1063,7 @@ do {                                                                          \
     if (!__ret)                                                               \
       {                                                                       \
         __FIID_OBJ_TRACE((__obj));                                            \
-        ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;                     \
+        ctx->errnum = IPMI_LOCATE_ERR_INTERNAL_ERROR;                         \
 	goto cleanup;                                                         \
       }                                                                       \
 } while (0)
@@ -1092,7 +1092,7 @@ do {                                                                          \
     if (!__ret)                                                               \
       {                                                                       \
          __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
-         ctx->errnum = IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR;                      \
+         ctx->errnum = IPMI_LOCATE_ERR_SYSTEM_ERROR;                          \
          goto cleanup;                                                        \
       }                                                                       \
     *__localval_ptr = __localval;                                             \
@@ -1111,21 +1111,21 @@ do {                                                                          \
 #define __FIID_ERRNO_TO_SDR_CACHE_ERRNUM                                      \
 do {                                                                          \
   if (errno == 0)                                                             \
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;                             \
+    ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;                                 \
   else if (errno == ENOMEM)                                                   \
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;                       \
+    ctx->errnum = IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY;                           \
   else                                                                        \
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;                      \
+    ctx->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;                          \
 } while (0)
 
 #define __FIID_ERRNUM_TO_SDR_CACHE_ERRNUM(___errnum)                          \
 do {                                                                          \
   if ((___errnum) == 0)                                                       \
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_SUCCESS;                             \
+    ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;                                 \
   else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_OUT_OF_MEMORY;                       \
+    ctx->errnum = IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY;                           \
   else                                                                        \
-    ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_INTERNAL_ERROR;                      \
+    ctx->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;                          \
 } while (0)
 
 #define __FIID_OBJ_ERRNUM_TO_SDR_CACHE_ERRNUM(___obj)                         \
@@ -1178,7 +1178,7 @@ do {                                                                          \
     if (!__ret)                                                               \
       {                                                                       \
          __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
-         ctx->errnum = IPMI_SDR_CACHE_CTX_ERR_IPMI_ERROR;                     \
+         ctx->errnum = IPMI_SDR_CACHE_ERR_IPMI_ERROR;                         \
          goto cleanup;                                                        \
       }                                                                       \
     *__localval_ptr = __localval;                                             \
@@ -1199,21 +1199,21 @@ do {                                                                            
 #define __FIID_ERRNO_TO_SDR_PARSE_ERRNUM                                      \
 do {                                                                          \
   if (errno == 0)                                                             \
-    ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;                             \
+    ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;                                 \
   else if (errno == ENOMEM)                                                   \
-    ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_OUT_OF_MEMORY;                       \
+    ctx->errnum = IPMI_SDR_PARSE_ERR_OUT_OF_MEMORY;                           \
   else                                                                        \
-    ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_INTERNAL_ERROR;                      \
+    ctx->errnum = IPMI_SDR_PARSE_ERR_INTERNAL_ERROR;                          \
 } while (0)
 
 #define __FIID_ERRNUM_TO_SDR_PARSE_ERRNUM(___errnum)                          \
 do {                                                                          \
   if ((___errnum) == 0)                                                       \
-    ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_SUCCESS;                             \
+    ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;                                 \
   else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
-    ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_OUT_OF_MEMORY;                       \
+    ctx->errnum = IPMI_SDR_PARSE_ERR_OUT_OF_MEMORY;                           \
   else                                                                        \
-    ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_INTERNAL_ERROR;                      \
+    ctx->errnum = IPMI_SDR_PARSE_ERR_INTERNAL_ERROR;                          \
 } while (0)
 
 #define __FIID_OBJ_ERRNUM_TO_SDR_PARSE_ERRNUM(___obj)                         \
@@ -1276,7 +1276,7 @@ do {                                                                          \
     if (!__ret)                                                               \
       {                                                                       \
          __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
-         ctx->errnum = IPMI_SDR_PARSE_CTX_ERR_INCOMPLETE_SDR_RECORD;          \
+         ctx->errnum = IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD;              \
          goto cleanup;                                                        \
       }                                                                       \
     *__localval_ptr = __localval;                                             \
@@ -1297,21 +1297,21 @@ do {                                                                            
 #define __FIID_ERRNO_TO_SEL_PARSE_ERRNUM                                      \
 do {                                                                          \
   if (errno == 0)                                                             \
-    ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SUCCESS;                             \
+    ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;                                 \
   else if (errno == ENOMEM)                                                   \
-    ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY;                       \
+    ctx->errnum = IPMI_SEL_PARSE_ERR_OUT_OF_MEMORY;                           \
   else                                                                        \
-    ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR;                      \
+    ctx->errnum = IPMI_SEL_PARSE_ERR_INTERNAL_ERROR;                          \
 } while (0)
 
 #define __FIID_ERRNUM_TO_SEL_PARSE_ERRNUM(___errnum)                          \
 do {                                                                          \
   if ((___errnum) == 0)                                                       \
-    ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SUCCESS;                             \
+    ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;                                 \
   else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
-    ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY;                       \
+    ctx->errnum = IPMI_SEL_PARSE_ERR_OUT_OF_MEMORY;                           \
   else                                                                        \
-    ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR;                      \
+    ctx->errnum = IPMI_SEL_PARSE_ERR_INTERNAL_ERROR;                          \
 } while (0)
 
 #define __FIID_OBJ_ERRNUM_TO_SEL_PARSE_ERRNUM(___obj)                         \
@@ -1354,7 +1354,7 @@ do {                                                                          \
     if (!__ret)                                                               \
       {                                                                       \
          __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
-         ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR;                 \
+         ctx->errnum = IPMI_SEL_PARSE_ERR_INTERNAL_ERROR;                     \
          goto cleanup;                                                        \
       }                                                                       \
     *__localval_ptr = __localval;                                             \
@@ -1375,21 +1375,21 @@ do {                                                                            
 #define __FIID_ERRNO_TO_SENSOR_READ_ERRNUM                                    \
 do {                                                                          \
   if (errno == 0)                                                             \
-    ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_SUCCESS;                           \
+    ctx->errnum = IPMI_SENSOR_READ_ERR_SUCCESS;                               \
   else if (errno == ENOMEM)                                                   \
-    ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_OUT_OF_MEMORY;                     \
+    ctx->errnum = IPMI_SENSOR_READ_ERR_OUT_OF_MEMORY;                         \
   else                                                                        \
-    ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_INTERNAL_ERROR;                    \
+    ctx->errnum = IPMI_SENSOR_READ_ERR_INTERNAL_ERROR;                        \
 } while (0)
 
 #define __FIID_ERRNUM_TO_SENSOR_READ_ERRNUM(___errnum)                        \
 do {                                                                          \
   if ((___errnum) == 0)                                                       \
-    ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_SUCCESS;                           \
+    ctx->errnum = IPMI_SENSOR_READ_ERR_SUCCESS;                               \
   else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
-    ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_OUT_OF_MEMORY;                     \
+    ctx->errnum = IPMI_SENSOR_READ_ERR_OUT_OF_MEMORY;                         \
   else                                                                        \
-    ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_INTERNAL_ERROR;                    \
+    ctx->errnum = IPMI_SENSOR_READ_ERR_INTERNAL_ERROR;                        \
 } while (0)
 
 #define __FIID_OBJ_ERRNUM_TO_SENSOR_READ_ERRNUM(___obj)                       \
@@ -1422,7 +1422,7 @@ do {                                                                          \
     if (!__ret)                                                               \
       {                                                                       \
          __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
-         ctx->errnum = IPMI_SENSOR_READ_CTX_ERR_INTERNAL_ERROR;               \
+         ctx->errnum = IPMI_SENSOR_READ_ERR_INTERNAL_ERROR;                   \
          goto cleanup;                                                        \
       }                                                                       \
     *__localval_ptr = __localval;                                             \

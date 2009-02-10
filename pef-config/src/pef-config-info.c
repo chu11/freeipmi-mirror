@@ -55,7 +55,7 @@ pef_info (pef_config_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr, 
                        "Failure Retrieving PEF info\n");
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -129,7 +129,7 @@ pef_info (pef_config_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate,
                            stderr, 
                            "Failure Retrieving PEF info\n");
-          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+          if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -157,7 +157,7 @@ pef_info (pef_config_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate,
                            stderr, 
                            "Failure Retrieving PEF info\n");
-          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+          if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -185,7 +185,7 @@ pef_info (pef_config_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate,
                            stderr, 
                            "Failure Retrieving PEF info\n");
-          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+          if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }

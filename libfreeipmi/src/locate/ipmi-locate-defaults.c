@@ -56,7 +56,7 @@ ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
        && type != IPMI_INTERFACE_SSIF) 
       || !info)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
   

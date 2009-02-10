@@ -413,7 +413,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
                                             &sensor_maximum_reading,
                                             &sensor_minimum_reading) < 0)
     {
-      if (ipmi_sdr_parse_ctx_errnum(state_data->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_CANNOT_PARSE_OR_CALCULATE)
+      if (ipmi_sdr_parse_ctx_errnum(state_data->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_CANNOT_PARSE_OR_CALCULATE)
         {
           rv = 0;
           goto cleanup;

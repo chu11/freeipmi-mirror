@@ -41,15 +41,15 @@ locate_set_locate_errnum_by_errno(ipmi_locate_ctx_t ctx, int __errno)
     return;
 
   if (errno == 0)
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;
+    ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
   else if (errno == EPERM)
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_PERMISSION;
+    ctx->errnum = IPMI_LOCATE_ERR_PERMISSION;
   else if (errno == EACCES)
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_PERMISSION;
+    ctx->errnum = IPMI_LOCATE_ERR_PERMISSION;
   else if (errno == ENOMEM)
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY;
+    ctx->errnum = IPMI_LOCATE_ERR_OUT_OF_MEMORY;
   else if (errno == EINVAL)
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_INTERNAL_ERROR;
+    ctx->errnum = IPMI_LOCATE_ERR_INTERNAL_ERROR;
   else
-    ctx->errnum = IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR;
+    ctx->errnum = IPMI_LOCATE_ERR_SYSTEM_ERROR;
 }

@@ -203,7 +203,7 @@ _delete_entry (ipmi_sel_state_data_t *state_data,
                                        record_id) < 0)
     {
       if (!(ignore_missing_sel_entries
-            && (ipmi_sel_parse_ctx_errnum(state_data->sel_parse_ctx) == IPMI_SEL_PARSE_CTX_ERR_NOT_FOUND)))
+            && (ipmi_sel_parse_ctx_errnum(state_data->sel_parse_ctx) == IPMI_SEL_PARSE_ERR_NOT_FOUND)))
         {
           pstdout_fprintf(state_data->pstate,
                           stderr,
@@ -265,7 +265,7 @@ _sel_parse_err_handle(ipmi_sel_state_data_t *state_data, char *func)
   assert(state_data);
   assert(func);
 
-  if (ipmi_sel_parse_ctx_errnum(state_data->sel_parse_ctx) == IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY)
+  if (ipmi_sel_parse_ctx_errnum(state_data->sel_parse_ctx) == IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY)
     {
       /* maybe a bad SEL entry returned from remote system, don't error out */
       if (state_data->prog_data->args->common.debug)

@@ -64,7 +64,7 @@ ipmi_locate_ctx_create(void)
 
   ctx->magic = IPMI_LOCATE_CTX_MAGIC;
 
-  ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
   return ctx;
 
  cleanup:
@@ -80,7 +80,7 @@ ipmi_locate_ctx_destroy(ipmi_locate_ctx_t ctx)
     return;
 
   ctx->magic = ~IPMI_LOCATE_CTX_MAGIC;
-  ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
   free(ctx);
 }
 
@@ -88,9 +88,9 @@ int
 ipmi_locate_ctx_errnum(ipmi_locate_ctx_t ctx)
 {
   if (!ctx)
-    return (IPMI_LOCATE_CTX_ERR_NULL);
+    return (IPMI_LOCATE_ERR_NULL);
   else if (ctx->magic != IPMI_LOCATE_CTX_MAGIC)
-    return (IPMI_LOCATE_CTX_ERR_INVALID);
+    return (IPMI_LOCATE_ERR_INVALID);
   else
     return (ctx->errnum);
 }
@@ -98,10 +98,10 @@ ipmi_locate_ctx_errnum(ipmi_locate_ctx_t ctx)
 char *
 ipmi_locate_ctx_strerror(int errnum)
 {
-  if (errnum >= IPMI_LOCATE_CTX_ERR_SUCCESS && errnum <= IPMI_LOCATE_CTX_ERR_ERRNUMRANGE)
+  if (errnum >= IPMI_LOCATE_ERR_SUCCESS && errnum <= IPMI_LOCATE_ERR_ERRNUMRANGE)
     return ipmi_locate_ctx_errmsg[errnum];
   else
-    return ipmi_locate_ctx_errmsg[IPMI_LOCATE_CTX_ERR_ERRNUMRANGE];
+    return ipmi_locate_ctx_errmsg[IPMI_LOCATE_ERR_ERRNUMRANGE];
 }
 
 char *
@@ -133,7 +133,7 @@ _ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -150,12 +150,12 @@ _ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
 	{
 	  memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
           /* reset errnum if set previously */
-          ctx->errnum = IPMI_LOCATE_CTX_ERR_SUCCESS;
+          ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
 	  return 0;
 	}
     }
 
-  LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+  LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
   return (-1);
 }
 

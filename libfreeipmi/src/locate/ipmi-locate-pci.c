@@ -128,7 +128,7 @@ _pci_get_regs (ipmi_locate_ctx_t ctx,
     }
   if (n != 1)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   if ((n = fread (&(pregs->pci_prog_interface), 1, 1, fp)) < 0)
@@ -138,7 +138,7 @@ _pci_get_regs (ipmi_locate_ctx_t ctx,
     }
   if (n != 1)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   if ((n = fread (&(pregs->pci_subclass), 1, 1, fp)) < 0)
@@ -148,7 +148,7 @@ _pci_get_regs (ipmi_locate_ctx_t ctx,
     }
   if (n != 1)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   if ((n = fread (&(pregs->pci_class), 1, 1, fp)) < 0)
@@ -158,7 +158,7 @@ _pci_get_regs (ipmi_locate_ctx_t ctx,
     }
   if (n != 1)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
@@ -201,7 +201,7 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -229,7 +229,7 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
     
     if (items != 9)
       {
-        LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+        LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
     bus = dfn >> 8U;
@@ -285,11 +285,11 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
  
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
-  LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+  LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
   return -1;
 }
 

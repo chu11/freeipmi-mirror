@@ -120,9 +120,9 @@ int
 ipmi_sensor_read_ctx_errnum(ipmi_sensor_read_ctx_t ctx)
 {
   if (!ctx)
-    return IPMI_SENSOR_READ_CTX_ERR_CONTEXT_NULL;
+    return IPMI_SENSOR_READ_ERR_CONTEXT_NULL;
   else if (ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
-    return IPMI_SENSOR_READ_CTX_ERR_CONTEXT_INVALID;
+    return IPMI_SENSOR_READ_ERR_CONTEXT_INVALID;
   else
     return ctx->errnum;
 }
@@ -130,10 +130,10 @@ ipmi_sensor_read_ctx_errnum(ipmi_sensor_read_ctx_t ctx)
 char *
 ipmi_sensor_read_ctx_strerror(int errnum)
 {
-  if (errnum >= IPMI_SENSOR_READ_CTX_ERR_SUCCESS && errnum <= IPMI_SENSOR_READ_CTX_ERR_ERRNUMRANGE)
+  if (errnum >= IPMI_SENSOR_READ_ERR_SUCCESS && errnum <= IPMI_SENSOR_READ_ERR_ERRNUMRANGE)
     return ipmi_sensor_read_errmsgs[errnum];
   else
-    return ipmi_sensor_read_errmsgs[IPMI_SENSOR_READ_CTX_ERR_ERRNUMRANGE];
+    return ipmi_sensor_read_errmsgs[IPMI_SENSOR_READ_ERR_ERRNUMRANGE];
 }
 
 char *
@@ -153,7 +153,7 @@ ipmi_sensor_read_ctx_get_flags(ipmi_sensor_read_ctx_t ctx, unsigned int *flags)
 
   if (!flags)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_PARAMETERS);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -172,7 +172,7 @@ ipmi_sensor_read_ctx_set_flags(ipmi_sensor_read_ctx_t ctx, unsigned int flags)
 
   if (flags & ~IPMI_SENSOR_READ_FLAGS_MASK)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_PARAMETERS);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -191,7 +191,7 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
   if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
                                  IPMI_COMP_CODE_NODE_BUSY) == 1)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_NODE_BUSY);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_NODE_BUSY);
       return -1;
     }
   else if ((ipmi_check_completion_code(obj_get_sensor_reading_rs,
@@ -204,7 +204,7 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
                                           IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
     {
       /* A sensor listed by the SDR is not present or cannot be obtained for some reason */
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_CANNOT_BE_OBTAINED);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED);
       return -1;
     }
 
@@ -229,7 +229,7 @@ _get_sensor_reading (ipmi_sensor_read_ctx_t ctx,
       if (_sensor_reading_corner_case_checks(ctx, 
                                              obj_get_sensor_reading_rs) < 0)
         goto cleanup;
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_IPMI_ERROR);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_IPMI_ERROR);
       goto cleanup;
     }
   
@@ -263,25 +263,25 @@ _get_sensor_reading_ipmb (ipmi_sensor_read_ctx_t ctx,
         {
           if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE)
             {
-              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SENSOR_CANNOT_BE_BRIDGED);
+              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SENSOR_CANNOT_BE_BRIDGED);
               goto cleanup;
             }
           else if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
             {
-              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_NODE_BUSY);
+              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_NODE_BUSY);
               goto cleanup;
             }
           else if (_sensor_reading_corner_case_checks(ctx, 
                                                       obj_get_sensor_reading_rs) < 0)
             goto cleanup;
           else
-            SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_IPMI_ERROR);
+            SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_IPMI_ERROR);
           goto cleanup;
         }
     }
   else
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SENSOR_NOT_OWNED_BY_BMC);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SENSOR_NOT_OWNED_BY_BMC);
       goto cleanup;
     }
 
@@ -327,7 +327,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
       || !sensor_reading
       || !sensor_event_bitmask)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_PARAMETERS);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -340,14 +340,14 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                                          &record_id,
                                          &record_type) < 0)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SDR_ENTRY_ERROR);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR);
       goto cleanup;
     }
 
   if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
       && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_INVALID_SDR_RECORD_TYPE);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_INVALID_SDR_RECORD_TYPE);
       goto cleanup;
     }
  
@@ -357,7 +357,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                                       &sensor_owner_id_type,
                                       &sensor_owner_id) < 0)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SDR_ENTRY_ERROR);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR);
       goto cleanup;
     }
 
@@ -367,7 +367,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                                        &sensor_owner_lun,
                                        &channel_number) < 0)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SDR_ENTRY_ERROR);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR);
       goto cleanup;
     }
 
@@ -376,7 +376,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                                     sdr_record_len,
                                     &sensor_number) < 0)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SDR_ENTRY_ERROR);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR);
       goto cleanup;
     }
 
@@ -385,13 +385,13 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                                               sdr_record_len,
                                               &event_reading_type_code) < 0)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SDR_ENTRY_ERROR);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR);
       goto cleanup;
     }
 
   if (sensor_owner_id_type == IPMI_SDR_SENSOR_OWNER_ID_TYPE_SYSTEM_SOFTWARE_ID)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SENSOR_IS_SYSTEM_SOFTWARE);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SENSOR_IS_SYSTEM_SOFTWARE);
       goto cleanup;
     }
 
@@ -424,7 +424,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
   
   if (val == IPMI_SENSOR_READING_STATE_UNAVAILABLE)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_UNAVAILABLE);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE);
       goto cleanup;
     }
 
@@ -434,7 +434,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
 
   if (val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SENSOR_SCANNING_DISABLED);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED);
       goto cleanup;
     }
 
@@ -477,7 +477,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
     (*sensor_event_bitmask) = sensor_event_bitmask1;
   else
     {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_IPMI_ERROR);
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_IPMI_ERROR);
       goto cleanup;
     }
   
@@ -505,7 +505,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                                                   &linearization,
                                                   &analog_data_format) < 0)
             {
-              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SDR_ENTRY_ERROR);
+              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR);
               goto cleanup;
             }
           
@@ -514,7 +514,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
            */
           if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
             {
-              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_ANALOG);
+              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SENSOR_NON_ANALOG);
               rv = 0;
               goto cleanup;
             }
@@ -524,14 +524,14 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
            */
           if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
             {
-              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_LINEAR);
+              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR);
               rv = 0;
               goto cleanup;
             }
              
           if (!(tmp_sensor_reading = (double *)malloc(sizeof(double))))
             {
-              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_OUT_OF_MEMORY);
+              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_OUT_OF_MEMORY);
               goto cleanup;
             }
           
@@ -544,7 +544,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                                         (uint8_t) val,
                                         tmp_sensor_reading) < 0)
             {
-              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_CTX_ERR_INTERNAL_ERROR);
+              SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_INTERNAL_ERROR);
               goto cleanup;
             }
           

@@ -906,7 +906,7 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
             
 	    if (!(memdata = alloca (acpi_rsdp_descriptor_len)))
               {
-                LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY);
+                LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
                 return (-1);
               }
 	    memset (memdata, 0, acpi_rsdp_descriptor_len);
@@ -921,7 +921,7 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
                          IPMI_ACPI_RSDP_SIG, 
                          strlen (IPMI_ACPI_RSDP_SIG)))
               {
-                LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+                LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
                 return (-1);
               }
 	    
@@ -930,7 +930,7 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
                                            memdata, 
                                            IPMI_ACPI_RSDP_CHECKSUM_LENGTH) != 0)
               {
-                LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+                LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
                 return (-1);
               }
 	    
@@ -1026,7 +1026,7 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
 
   if (strcmp (table_signature, signature))
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   
@@ -1047,13 +1047,13 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
                                  table, 
                                  table_length) != 0)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   
   if (!(*acpi_table = malloc (table_length)))
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
   memcpy (*acpi_table, table, table_length);
@@ -1244,7 +1244,7 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
 
   if (!acpi_table)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   
@@ -1252,7 +1252,7 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
   *sign_table_data_length = acpi_table_length - acpi_table_hdr_length;
   if (!(*sign_table_data = malloc (*sign_table_data_length)))
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_OUT_OF_MEMORY);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
   memcpy (*sign_table_data, 
@@ -1381,7 +1381,7 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_PARAMETERS);
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -1447,7 +1447,7 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
     
     if (!IPMI_INTERFACE_TYPE_VALID(interface_type))
       {
-        LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+        LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
 
@@ -1488,7 +1488,7 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
 	  break;
 	}
       default:
-        LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_CTX_ERR_SYSTEM_ERROR);
+        LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
   }

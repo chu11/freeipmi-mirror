@@ -90,7 +90,7 @@ _get_pef_control (pstdout_state_t pstate,
                         stderr,
                         "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
                         ipmi_ctx_errormsg(ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -176,7 +176,7 @@ _set_pef_control (pstdout_state_t pstate,
                         stderr,
                         "ipmi_cmd_set_pef_configuration_parameters_pef_control: %s\n",
                         ipmi_ctx_errormsg(ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -395,7 +395,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
                         stderr,
                         "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
                         ipmi_ctx_errormsg(ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -503,7 +503,7 @@ _set_pef_action_global_control (pstdout_state_t pstate,
                         stderr,
                         "ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control: %s\n",
                         ipmi_ctx_errormsg(ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -807,7 +807,7 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
                         stderr,
                         "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
                         ipmi_ctx_errormsg(ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -864,7 +864,7 @@ pef_startup_delay_commit (pstdout_state_t pstate,
                         stderr,
                         "ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay: %s\n",
                         ipmi_ctx_errormsg(ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -910,7 +910,7 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
                         stderr,
                         "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
                         ipmi_ctx_errormsg(ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -967,7 +967,7 @@ pef_alert_startup_delay_commit (pstdout_state_t pstate,
                         stderr,
                         "ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
                         ipmi_ctx_errormsg(ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

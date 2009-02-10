@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.63 2009-02-04 21:56:13 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.63.2.1 2009-02-10 22:40:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -453,13 +453,13 @@ _sensor_read_ctx_error_convert(ipmi_monitoring_ctx_t c)
 
   errnum = ipmi_sensor_read_ctx_errnum(c->sensor_read_ctx);
 
-  if (errnum == IPMI_SENSOR_READ_CTX_ERR_NODE_BUSY)
+  if (errnum == IPMI_SENSOR_READ_ERR_NODE_BUSY)
     c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
-  else if (errnum == IPMI_SENSOR_READ_CTX_ERR_IPMI_ERROR)
+  else if (errnum == IPMI_SENSOR_READ_ERR_IPMI_ERROR)
     c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-  else if (errnum == IPMI_SENSOR_READ_CTX_ERR_OUT_OF_MEMORY)
+  else if (errnum == IPMI_SENSOR_READ_ERR_OUT_OF_MEMORY)
     c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-  else if (errnum == IPMI_SENSOR_READ_CTX_ERR_SYSTEM_ERROR)
+  else if (errnum == IPMI_SENSOR_READ_ERR_SYSTEM_ERROR)
     c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
   else
     c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
@@ -496,16 +496,16 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
       int errnum = ipmi_sensor_read_ctx_errnum(c->sensor_read_ctx);
 
       IPMI_MONITORING_DEBUG(("ipmi_sensor_read: %s", ipmi_sensor_read_ctx_errormsg(c->sensor_read_ctx)));
-      if (errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_ANALOG
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_LINEAR
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_UNAVAILABLE
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_SCANNING_DISABLED
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_ANALOG
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_LINEAR
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_NOT_OWNED_BY_BMC
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_CANNOT_BE_BRIDGED
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_IS_SYSTEM_SOFTWARE
-          || errnum == IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_CANNOT_BE_OBTAINED)
+      if (errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_ANALOG
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_ANALOG
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NOT_OWNED_BY_BMC
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_CANNOT_BE_BRIDGED
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_IS_SYSTEM_SOFTWARE
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED)
         {
           rv = 0;
           goto cleanup;

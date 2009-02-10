@@ -73,7 +73,7 @@ sel_parse_get_reservation_id(ipmi_sel_parse_ctx_t ctx,
           goto out;
         }
       
-      SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR);
+      SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
       goto cleanup;
     }
 
@@ -106,7 +106,7 @@ sel_parse_get_record_header_info(ipmi_sel_parse_ctx_t ctx,
   
   if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_HEADER_LENGTH)
     {
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       goto cleanup;
     }
   
@@ -156,7 +156,7 @@ sel_parse_get_timestamp(ipmi_sel_parse_ctx_t ctx,
 
   if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
     {
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       goto cleanup;
     }
 
@@ -172,7 +172,7 @@ sel_parse_get_timestamp(ipmi_sel_parse_ctx_t ctx,
   if (record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
       && record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
     {
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       goto cleanup;
     }
   
@@ -214,7 +214,7 @@ sel_parse_get_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
 
   if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
     {
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       goto cleanup;
     }
 
@@ -228,7 +228,7 @@ sel_parse_get_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
 
   if (record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
     {
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       goto cleanup;
     }
   
@@ -269,7 +269,7 @@ sel_parse_get_oem(ipmi_sel_parse_ctx_t ctx,
 
   if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
     {
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       goto cleanup;
     }
 
@@ -284,7 +284,7 @@ sel_parse_get_oem(ipmi_sel_parse_ctx_t ctx,
   if (record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
       && record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
     {
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       goto cleanup;
     }
   
@@ -329,7 +329,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
 
   if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
     {
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       goto cleanup;
     }
   
@@ -343,7 +343,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
 
   if (record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     {
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       goto cleanup;
     }
 
@@ -427,7 +427,7 @@ sel_parse_get_previous_state_or_severity(ipmi_sel_parse_ctx_t ctx,
 
   if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
     {
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       goto cleanup;
     }
   
@@ -441,7 +441,7 @@ sel_parse_get_previous_state_or_severity(ipmi_sel_parse_ctx_t ctx,
   
   if (record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     {
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       goto cleanup;
     }
   

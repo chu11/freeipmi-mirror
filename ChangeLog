@@ -24,6 +24,9 @@
 	* libfreeipmi/src/api/: Remove use of IPMI_ERR_LIBRARY_ERROR,
 	replace with IPMI_ERR_INTERNAL_ERROR.
 
+	* Rename all "IPMI_*_CTX_ERR" error codes to "IPMI_*_ERR" for
+	consistency throughout libs.
+
 	* libfreeipmi/src/locate/: Rework to use context style API.
 
 	* common/src/toolcommon/, bmc-watchdog, ipmi-locate/: Adjust for

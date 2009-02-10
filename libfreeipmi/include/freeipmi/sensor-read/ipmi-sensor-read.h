@@ -29,27 +29,27 @@
  * SENSOR_READING_CANNOT_BE_OBTAINED is due to a retrieval error.
  */
 
-#define IPMI_SENSOR_READ_CTX_ERR_SUCCESS                                 0
-#define IPMI_SENSOR_READ_CTX_ERR_CONTEXT_NULL                            1
-#define IPMI_SENSOR_READ_CTX_ERR_CONTEXT_INVALID                         2
-#define IPMI_SENSOR_READ_CTX_ERR_PARAMETERS                              3
-#define IPMI_SENSOR_READ_CTX_ERR_OUT_OF_MEMORY                           4
-#define IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_UNAVAILABLE              5
-#define IPMI_SENSOR_READ_CTX_ERR_SENSOR_SCANNING_DISABLED                6
-#define IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_ANALOG                       7
-#define IPMI_SENSOR_READ_CTX_ERR_SENSOR_NON_LINEAR                       8
-#define IPMI_SENSOR_READ_CTX_ERR_SENSOR_NOT_OWNED_BY_BMC                 9
-#define IPMI_SENSOR_READ_CTX_ERR_SENSOR_IS_SYSTEM_SOFTWARE              10
-#define IPMI_SENSOR_READ_CTX_ERR_SENSOR_CANNOT_BE_BRIDGED               11
-#define IPMI_SENSOR_READ_CTX_ERR_SENSOR_READING_CANNOT_BE_OBTAINED      12
-#define IPMI_SENSOR_READ_CTX_ERR_NODE_BUSY                              13
-#define IPMI_SENSOR_READ_CTX_ERR_INVALID_SDR_RECORD_TYPE                14
-#define IPMI_SENSOR_READ_CTX_ERR_SDR_ENTRY_ERROR                        15
-#define IPMI_SENSOR_READ_CTX_ERR_IPMI_ERROR                             16 
-#define IPMI_SENSOR_READ_CTX_ERR_SYSTEM_ERROR                           17
-#define IPMI_SENSOR_READ_CTX_ERR_OVERFLOW                               18
-#define IPMI_SENSOR_READ_CTX_ERR_INTERNAL_ERROR                         19
-#define IPMI_SENSOR_READ_CTX_ERR_ERRNUMRANGE                            20
+#define IPMI_SENSOR_READ_ERR_SUCCESS                                 0
+#define IPMI_SENSOR_READ_ERR_CONTEXT_NULL                            1
+#define IPMI_SENSOR_READ_ERR_CONTEXT_INVALID                         2
+#define IPMI_SENSOR_READ_ERR_PARAMETERS                              3
+#define IPMI_SENSOR_READ_ERR_OUT_OF_MEMORY                           4
+#define IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE              5
+#define IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED                6
+#define IPMI_SENSOR_READ_ERR_SENSOR_NON_ANALOG                       7
+#define IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR                       8
+#define IPMI_SENSOR_READ_ERR_SENSOR_NOT_OWNED_BY_BMC                 9
+#define IPMI_SENSOR_READ_ERR_SENSOR_IS_SYSTEM_SOFTWARE              10
+#define IPMI_SENSOR_READ_ERR_SENSOR_CANNOT_BE_BRIDGED               11
+#define IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED      12
+#define IPMI_SENSOR_READ_ERR_NODE_BUSY                              13
+#define IPMI_SENSOR_READ_ERR_INVALID_SDR_RECORD_TYPE                14
+#define IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR                        15
+#define IPMI_SENSOR_READ_ERR_IPMI_ERROR                             16 
+#define IPMI_SENSOR_READ_ERR_SYSTEM_ERROR                           17
+#define IPMI_SENSOR_READ_ERR_OVERFLOW                               18
+#define IPMI_SENSOR_READ_ERR_INTERNAL_ERROR                         19
+#define IPMI_SENSOR_READ_ERR_ERRNUMRANGE                            20
 
 #define IPMI_SENSOR_READ_FLAGS_DEFAULT                              0x0000
 #define IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS                       0x0001
