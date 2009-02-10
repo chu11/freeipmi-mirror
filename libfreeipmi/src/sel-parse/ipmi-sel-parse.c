@@ -367,7 +367,7 @@ _sel_entry_dump(ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_parse
                  obj_sel_record);
 
  cleanup:
-  SEL_PARSE_FIID_OBJ_DESTROY(obj_sel_record);
+  FIID_OBJ_DESTROY(obj_sel_record);
 }
 
 int 
@@ -521,7 +521,7 @@ ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
  cleanup:
   ctx->callback_sel_entry = NULL;
-  SEL_PARSE_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 
@@ -1380,7 +1380,7 @@ ipmi_sel_parse_clear_sel(ipmi_sel_parse_ctx_t ctx)
   rv = 0;
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
  cleanup:
-  SEL_PARSE_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }  
 
@@ -1454,7 +1454,7 @@ ipmi_sel_parse_delete_sel_entry(ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
   rv = 0;
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
  cleanup:
-  SEL_PARSE_FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 

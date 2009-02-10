@@ -47,6 +47,7 @@
 
 #include "ipmi-sensor-read-defs.h"
 #include "ipmi-sensor-read-trace.h"
+#include "ipmi-sensor-read-util.h"
 
 #include "freeipmi-portability.h"
 #include "debug-util.h"
@@ -397,8 +398,11 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
 
   slave_address = (sensor_owner_id << 1) | sensor_owner_id_type;
 
-  SENSOR_READ_FIID_OBJ_CREATE(obj_get_sensor_reading_rs, 
-                              tmpl_cmd_get_sensor_reading_rs);
+  if (!(obj_get_sensor_reading_rs = fiid_obj_create(tmpl_cmd_get_sensor_reading_rs)))
+    {
+      SENSOR_READ_ERRNO_TO_SENSOR_READ_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (slave_address == IPMI_SLAVE_ADDRESS_BMC)
     {
@@ -418,9 +422,14 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
         goto cleanup;
     }
 
-  SENSOR_READ_FIID_OBJ_GET (obj_get_sensor_reading_rs,
-                            "reading_state",
-                            &val);
+  if (sensor_read_fiid_obj_get (ctx,
+                                obj_get_sensor_reading_rs,
+                                "reading_state",
+                                &val) < 0)
+    {
+      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM(ctx, obj_get_sensor_reading_rs);
+      goto cleanup;
+    }
   
   if (val == IPMI_SENSOR_READING_STATE_UNAVAILABLE)
     {
@@ -428,9 +437,14 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
-  SENSOR_READ_FIID_OBJ_GET (obj_get_sensor_reading_rs,
-                            "sensor_scanning",
-                            &val);
+  if (sensor_read_fiid_obj_get (ctx,
+                                obj_get_sensor_reading_rs,
+                                "sensor_scanning",
+                                &val) < 0)
+    {
+      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM(ctx, obj_get_sensor_reading_rs);
+      goto cleanup;
+    }
 
   if (val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
     {
@@ -445,17 +459,26 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
    * the bitmasks should be zeroed out.
    *
    * Hopefully this doesn't bite me later on.
+   *
+   * Call the normal fiid_obj_get instead of the wrapper, if the field
+   * isn't set, we want to know and not error out.
    */
 
-  SENSOR_READ_FIID_OBJ_GET_WITH_RV (sensor_event_bitmask1_len,
-                                    obj_get_sensor_reading_rs,
-                                    "sensor_event_bitmask1",
-                                    &sensor_event_bitmask1);
+  if ((sensor_event_bitmask1_len = fiid_obj_get(obj_get_sensor_reading_rs,
+                                                "sensor_event_bitmask1",
+                                                &sensor_event_bitmask1)) < 0)
+    {
+      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM(ctx, obj_get_sensor_reading_rs);
+      goto cleanup;
+    }
   
-  SENSOR_READ_FIID_OBJ_GET_WITH_RV (sensor_event_bitmask2_len,
-                                    obj_get_sensor_reading_rs,
-                                    "sensor_event_bitmask2",
-                                    &sensor_event_bitmask2);
+  if ((sensor_event_bitmask2_len = fiid_obj_get(obj_get_sensor_reading_rs,
+                                                "sensor_event_bitmask2",
+                                                &sensor_event_bitmask2)) < 0)
+    {
+      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM(ctx, obj_get_sensor_reading_rs);
+      goto cleanup;
+    }
  
   /* 
    * IPMI Workaround (achu)
@@ -485,9 +508,14 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
 
   if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
     {
-      SENSOR_READ_FIID_OBJ_GET (obj_get_sensor_reading_rs, 
-                                "sensor_reading", 
-                                &val);
+      if (sensor_read_fiid_obj_get (ctx,
+                                    obj_get_sensor_reading_rs, 
+                                    "sensor_reading", 
+                                    &val) < 0)
+        {
+          SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM(ctx, obj_get_sensor_reading_rs);
+          goto cleanup;
+        }
 
       if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
         {
@@ -561,7 +589,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
     rv = 0;
   
  cleanup:
-  SENSOR_READ_FIID_OBJ_DESTROY(obj_get_sensor_reading_rs);
+  FIID_OBJ_DESTROY(obj_get_sensor_reading_rs);
   if (rv <= 0)
     {
       if (tmp_sensor_reading)

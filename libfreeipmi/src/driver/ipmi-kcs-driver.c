@@ -876,7 +876,7 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  KCS_FIID_OBJ_DESTROY(obj_hdr);
+  FIID_OBJ_DESTROY(obj_hdr);
   if (pkt)
     free(pkt);
   return rv;
@@ -939,7 +939,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
   rv = 0;
  cleanup:
   KCS_FIID_TEMPLATE_FREE(tmpl);
-  KCS_FIID_OBJ_DESTROY(obj_hdr);
+  FIID_OBJ_DESTROY(obj_hdr);
   if (pkt)
     free(pkt);
   return rv;

@@ -901,8 +901,6 @@ do {                                                                          \
     }                                                                         \
 } while (0)
 
-#define KCS_FIID_OBJ_DESTROY(__obj) FIID_OBJ_DESTROY((__obj))
-
 #define KCS_FIID_OBJ_LEN_BYTES(__len, __obj)             \
 do {                                                     \
     if (((__len) = fiid_obj_len_bytes ((__obj))) < 0)    \
@@ -970,8 +968,6 @@ do {                                                                          \
       goto cleanup;                                                           \
     }                                                                         \
 } while (0)
-
-#define SSIF_FIID_OBJ_DESTROY(__obj) FIID_OBJ_DESTROY((__obj))
 
 #define SSIF_FIID_OBJ_LEN_BYTES(__len, __obj)            \
 do {                                                     \
@@ -1048,8 +1044,6 @@ do {                                                                          \
       goto cleanup;                                                           \
     }                                                                         \
 } while (0)
-
-#define LOCATE_FIID_OBJ_DESTROY(__obj) FIID_OBJ_DESTROY((__obj))
 
 #define LOCATE_FIID_OBJ_TEMPLATE_COMPARE(__obj, __tmpl)                       \
 do {                                                                          \
@@ -1194,8 +1188,6 @@ do {                                                                            
       }                                                                                    \
 } while (0)
 
-#define SDR_CACHE_FIID_OBJ_DESTROY(__obj) FIID_OBJ_DESTROY((__obj))
-
 #define __FIID_ERRNO_TO_SDR_PARSE_ERRNUM                                      \
 do {                                                                          \
   if (errno == 0)                                                             \
@@ -1292,8 +1284,6 @@ do {                                                                            
       }                                                                                    \
 } while (0)
 
-#define SDR_PARSE_FIID_OBJ_DESTROY(__obj) FIID_OBJ_DESTROY((__obj))
-
 #define __FIID_ERRNO_TO_SEL_PARSE_ERRNUM                                      \
 do {                                                                          \
   if (errno == 0)                                                             \
@@ -1369,79 +1359,6 @@ do {                                                                            
          goto cleanup;                                                                     \
       }                                                                                    \
 } while (0)
-
-#define SEL_PARSE_FIID_OBJ_DESTROY(__obj) FIID_OBJ_DESTROY((__obj))
-
-#define __FIID_ERRNO_TO_SENSOR_READ_ERRNUM                                    \
-do {                                                                          \
-  if (errno == 0)                                                             \
-    ctx->errnum = IPMI_SENSOR_READ_ERR_SUCCESS;                               \
-  else if (errno == ENOMEM)                                                   \
-    ctx->errnum = IPMI_SENSOR_READ_ERR_OUT_OF_MEMORY;                         \
-  else                                                                        \
-    ctx->errnum = IPMI_SENSOR_READ_ERR_INTERNAL_ERROR;                        \
-} while (0)
-
-#define __FIID_ERRNUM_TO_SENSOR_READ_ERRNUM(___errnum)                        \
-do {                                                                          \
-  if ((___errnum) == 0)                                                       \
-    ctx->errnum = IPMI_SENSOR_READ_ERR_SUCCESS;                               \
-  else if ((___errnum) == FIID_ERR_OUT_OF_MEMORY)                             \
-    ctx->errnum = IPMI_SENSOR_READ_ERR_OUT_OF_MEMORY;                         \
-  else                                                                        \
-    ctx->errnum = IPMI_SENSOR_READ_ERR_INTERNAL_ERROR;                        \
-} while (0)
-
-#define __FIID_OBJ_ERRNUM_TO_SENSOR_READ_ERRNUM(___obj)                       \
-do {                                                                          \
-  int32_t __obj_errnum = fiid_obj_errnum((___obj));                           \
-  __FIID_ERRNUM_TO_SENSOR_READ_ERRNUM(__obj_errnum);                          \
-} while (0)
-
-#define SENSOR_READ_FIID_OBJ_CREATE(__obj, __tmpl)                            \
-do {                                                                          \
-  if (!((__obj) = fiid_obj_create(__tmpl)))                                   \
-    {                                                                         \
-      __FIID_TRACE;                                                           \
-      __FIID_ERRNO_TO_SENSOR_READ_ERRNUM;                                     \
-      goto cleanup;                                                           \
-    }                                                                         \
-} while (0)
-
-#define SENSOR_READ_FIID_OBJ_GET(__obj, __field, __val)                       \
-do {                                                                          \
-    uint64_t __localval = 0, *__localval_ptr;                                 \
-    int8_t __ret;                                                             \
-    __localval_ptr = (__val);                                                 \
-    if ((__ret = fiid_obj_get ((__obj), (__field), &__localval)) < 0)         \
-      {                                                                       \
-         __FIID_OBJ_TRACE((__obj));                                           \
-         __FIID_OBJ_ERRNUM_TO_SENSOR_READ_ERRNUM((__obj));                    \
-         goto cleanup;                                                        \
-      }                                                                       \
-    if (!__ret)                                                               \
-      {                                                                       \
-         __FIID_OBJ_NO_DATA_TRACE((__field));                                 \
-         ctx->errnum = IPMI_SENSOR_READ_ERR_INTERNAL_ERROR;                   \
-         goto cleanup;                                                        \
-      }                                                                       \
-    *__localval_ptr = __localval;                                             \
-} while (0)
-
-#define SENSOR_READ_FIID_OBJ_GET_WITH_RV(__rv, __obj, __field, __val)         \
-do {                                                                          \
-    uint64_t __localval = 0, *__localval_ptr;                                 \
-    __localval_ptr = (__val);                                                 \
-    if (((__rv) = fiid_obj_get ((__obj), (__field), &__localval)) < 0)        \
-      {                                                                       \
-         __FIID_OBJ_TRACE((__obj));                                           \
-         __FIID_OBJ_ERRNUM_TO_SENSOR_READ_ERRNUM((__obj));                    \
-         goto cleanup;                                                        \
-      }                                                                       \
-    *__localval_ptr = __localval;                                             \
-} while (0)
-
-#define SENSOR_READ_FIID_OBJ_DESTROY(__obj) FIID_OBJ_DESTROY((__obj))
 
 #ifdef __cplusplus
 }

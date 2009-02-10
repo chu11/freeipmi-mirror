@@ -788,7 +788,7 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  SSIF_FIID_OBJ_DESTROY(obj_hdr);
+  FIID_OBJ_DESTROY(obj_hdr);
   if (pkt)
     free(pkt);
   return rv;
@@ -851,7 +851,7 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
   rv = 0;
  cleanup:
   SSIF_FIID_TEMPLATE_FREE(tmpl);
-  SSIF_FIID_OBJ_DESTROY(obj_hdr);
+  FIID_OBJ_DESTROY(obj_hdr);
   if (pkt)
     free(pkt);
   return rv;
