@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.22.2.7 2009-02-10 23:29:38 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.22.2.8 2009-02-11 19:18:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -204,7 +204,11 @@ _sdr_cache_reservation_id(ipmi_sdr_cache_ctx_t ctx,
   assert(ipmi_ctx);
   assert(reservation_id);
 
-  SDR_CACHE_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_reserve_sdr_repository_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sdr_repository_rs)))
+    {
+      SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (ipmi_cmd_reserve_sdr_repository (ipmi_ctx, obj_cmd_rs) < 0)
     {
@@ -213,9 +217,14 @@ _sdr_cache_reservation_id(ipmi_sdr_cache_ctx_t ctx,
     }
 
   *reservation_id = 0;
-  SDR_CACHE_FIID_OBJ_GET(obj_cmd_rs,
-                         "reservation_id",
-                         &val);
+  if (sdr_cache_fiid_obj_get(ctx, 
+                             obj_cmd_rs,
+                             "reservation_id",
+                             &val) < 0)
+    {
+      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      goto cleanup;
+    }
   *reservation_id = val;
 
   rv = 0;
@@ -251,11 +260,23 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
   assert(reservation_id);
   assert(next_record_id);
 
-  SDR_CACHE_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sdr_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sdr_rs)))
+    {
+      SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-  SDR_CACHE_FIID_OBJ_CREATE(obj_sdr_record_header, tmpl_sdr_record_header);
+  if (!(obj_sdr_record_header = fiid_obj_create(tmpl_sdr_record_header)))
+    {
+      SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-  SDR_CACHE_FIID_TEMPLATE_LEN_BYTES(sdr_record_header_length, tmpl_sdr_record_header);
+  if ((sdr_record_header_length = fiid_template_len_bytes(tmpl_sdr_record_header)))
+    {
+      SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   reservation_id_retry_count = 0;
   while (!record_length)
@@ -277,9 +298,14 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
             }
           else
             {
-              SDR_CACHE_FIID_OBJ_GET(obj_cmd_rs, 
-                                     "comp_code",
-                                     &val);
+              if (sdr_cache_fiid_obj_get(ctx,
+                                         obj_cmd_rs, 
+                                         "comp_code",
+                                         &val) < 0)
+                {
+                  ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+                  goto cleanup;
+                }
               
               if (val == IPMI_COMP_CODE_RESERVATION_CANCELLED
                   && (reservation_id_retry_count < IPMI_SDR_CACHE_MAX_RESERVATION_ID_RETRY))
@@ -297,11 +323,14 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
             }
         }
 
-      SDR_CACHE_FIID_OBJ_GET_DATA_LEN(sdr_record_header_len,
-                                      obj_cmd_rs,
-                                      "record_data",
-                                      record_header_buf,
-                                      IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH);
+      if ((sdr_record_header_len = fiid_obj_get_data(obj_cmd_rs,
+                                                     "record_data",
+                                                     record_header_buf,
+                                                     IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+        {
+          SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM(ctx, obj_cmd_rs);
+          goto cleanup;
+        }
       
       if (sdr_record_header_len < sdr_record_header_length)
         {
@@ -309,13 +338,22 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
           goto cleanup;
         }
 
-      SDR_CACHE_FIID_OBJ_SET_ALL(obj_sdr_record_header,
-                                 record_header_buf,
-                                 sdr_record_header_len);
+      if (fiid_obj_set_all(obj_sdr_record_header,
+                           record_header_buf,
+                           sdr_record_header_len) < 0)
+        {
+          SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM(ctx, obj_sdr_record_header);
+          goto cleanup;
+        }
 
-      SDR_CACHE_FIID_OBJ_GET(obj_sdr_record_header,
-                             "record_length",
-                             &val);
+      if (sdr_cache_fiid_obj_get(ctx, 
+                                 obj_sdr_record_header,
+                                 "record_length",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+          goto cleanup;
+        }
       
       record_length = val + sdr_record_header_length;
     }
@@ -326,9 +364,14 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
       goto cleanup;
     }
 
-  SDR_CACHE_FIID_OBJ_GET(obj_cmd_rs,
-                         "next_record_id",
-                         &val);
+  if (sdr_cache_fiid_obj_get(ctx,
+                             obj_cmd_rs,
+                             "next_record_id",
+                             &val) < 0)
+    {
+      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      goto cleanup;
+    }
   *next_record_id = val;
 
   reservation_id_retry_count = 0;
@@ -353,9 +396,14 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
             }
           else
             {
-              SDR_CACHE_FIID_OBJ_GET(obj_cmd_rs, 
-                                     "comp_code", 
-                                     &val);
+              if (sdr_cache_fiid_obj_get(ctx,
+                                         obj_cmd_rs, 
+                                         "comp_code", 
+                                         &val) < 0)
+                {
+                  ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+                  goto cleanup;
+                }
               
               if (val == IPMI_COMP_CODE_RESERVATION_CANCELLED
                   && (reservation_id_retry_count < IPMI_SDR_CACHE_MAX_RESERVATION_ID_RETRY))
@@ -381,11 +429,14 @@ _sdr_cache_get_record(ipmi_sdr_cache_ctx_t ctx,
             }
         }
 
-      SDR_CACHE_FIID_OBJ_GET_DATA_LEN(record_data_len,
-                                      obj_cmd_rs,
-                                      "record_data",
-                                      record_buf + offset_into_record,
-                                      record_buf_len - offset_into_record);
+      if ((record_data_len = fiid_obj_get_data(obj_cmd_rs,
+                                               "record_data",
+                                               record_buf + offset_into_record,
+                                               record_buf_len - offset_into_record)) < 0)
+        {
+          SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM(ctx, obj_cmd_rs);
+          goto cleanup;
+        }
       
       offset_into_record += record_data_len;
     }
