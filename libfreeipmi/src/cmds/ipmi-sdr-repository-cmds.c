@@ -142,7 +142,11 @@ fiid_template_t tmpl_cmd_set_sdr_repository_time_rs =
 int8_t 
 fill_cmd_get_repository_info (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sdr_repository_info_rq);
 
@@ -154,7 +158,11 @@ fill_cmd_get_repository_info (fiid_obj_t obj_cmd_rq)
 int8_t 
 fill_cmd_get_repository_allocation_info (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sdr_repository_allocation_info_rq);
 
@@ -166,7 +174,11 @@ fill_cmd_get_repository_allocation_info (fiid_obj_t obj_cmd_rq)
 int8_t 
 fill_cmd_reserve_sdr_repository (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_reserve_sdr_repository_rq);
 
@@ -182,7 +194,11 @@ fill_cmd_get_sdr (uint16_t reservation_id,
                   uint8_t bytes_to_read,
                   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sdr_rq);
 
@@ -198,8 +214,12 @@ fill_cmd_get_sdr (uint16_t reservation_id,
 int8_t
 fill_cmd_get_sdr_repository_time (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
-  
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sdr_repository_time_rq);
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
@@ -211,7 +231,11 @@ fill_cmd_get_sdr_repository_time (fiid_obj_t obj_cmd_rq)
 int8_t
 fill_cmd_set_sdr_repository_time (uint32_t time, fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sdr_repository_time_rq);
   

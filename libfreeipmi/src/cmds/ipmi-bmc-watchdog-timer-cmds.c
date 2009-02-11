@@ -111,8 +111,12 @@ fiid_template_t tmpl_cmd_get_watchdog_timer_rs =
 int8_t
 fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
-  
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_reset_watchdog_timer_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
@@ -176,7 +180,11 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
 int8_t
 fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_watchdog_timer_rq);
 

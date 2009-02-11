@@ -220,7 +220,11 @@ fiid_template_t tmpl_cmd_get_device_guid_format_rs =
 int8_t 
 fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq)
 { 
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_device_id_rq);
 
@@ -232,7 +236,11 @@ fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq)
 int8_t 
 fill_cmd_cold_reset (fiid_obj_t obj_cmd_rq)
 { 
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_cold_reset_rq);
 
@@ -244,7 +252,11 @@ fill_cmd_cold_reset (fiid_obj_t obj_cmd_rq)
 int8_t 
 fill_cmd_warm_reset (fiid_obj_t obj_cmd_rq)
 { 
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_warm_reset_rq);
 
@@ -283,7 +295,11 @@ fill_cmd_set_acpi_power_state (uint8_t system_power_state_enumeration,
 int8_t 
 fill_cmd_get_acpi_power_state (fiid_obj_t obj_cmd_rq)
 { 
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_acpi_power_state_rq);
 
@@ -295,7 +311,11 @@ fill_cmd_get_acpi_power_state (fiid_obj_t obj_cmd_rq)
 int8_t 
 fill_cmd_get_self_test_results (fiid_obj_t obj_cmd_rq)
 { 
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_self_test_results_rq);
 
@@ -307,7 +327,11 @@ fill_cmd_get_self_test_results (fiid_obj_t obj_cmd_rq)
 int8_t
 fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE2(obj_cmd_rq, 
                              tmpl_cmd_get_device_guid_rq,

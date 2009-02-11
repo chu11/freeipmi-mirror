@@ -78,7 +78,11 @@ ipmi_sel_parse_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ct
 {
   struct ipmi_sel_parse_ctx *ctx = NULL;
   
-  ERR_EINVAL_NULL_RETURN(ipmi_ctx);
+  if (!ipmi_ctx)
+    {
+      SET_ERRNO(EINVAL);
+      return NULL;
+    }
 
   ERR_CLEANUP((ctx = (ipmi_sel_parse_ctx_t)malloc(sizeof(struct ipmi_sel_parse_ctx))));
   memset(ctx, '\0', sizeof(struct ipmi_sel_parse_ctx));

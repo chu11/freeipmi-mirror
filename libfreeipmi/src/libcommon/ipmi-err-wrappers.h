@@ -146,26 +146,6 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define ERR_EINVAL_CLEANUP(expr)                                        \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = EINVAL;                                                   \
-      __ERRNO_TRACE(errno);                                             \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define ERR_EINVAL_NULL_RETURN(expr)                                    \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = EINVAL;                                                   \
-      __ERRNO_TRACE(errno);                                             \
-      return (NULL);                                                    \
-    }                                                                   \
-} while (0)
-
 #ifdef __cplusplus
 }
 #endif

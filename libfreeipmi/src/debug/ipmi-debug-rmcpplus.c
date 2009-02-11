@@ -498,15 +498,27 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
   ERR_CLEANUP (!((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0));
   ERR_EXIT (!(cipher_keylen < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
   
-  ERR_EINVAL_CLEANUP (!(confidentiality_key_len < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
+  if (confidentiality_key_len < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH)
+    {
+      SET_ERRNO(EINVAL);
+      goto cleanup;
+    }
   confidentiality_key_len = IPMI_CRYPT_AES_CBC_128_KEY_LENGTH;
   
   ERR_CLEANUP (!((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0));
   ERR_EXIT (cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
-  ERR_EINVAL_CLEANUP (!(ipmi_payload_len < IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH));
+  if (ipmi_payload_len < IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH)
+    {
+      SET_ERRNO(EINVAL);
+      goto cleanup;
+    }
 
   payload_data_len = ipmi_payload_len - IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH;
-  ERR_EINVAL_CLEANUP (!(payload_data_len <= 0));
+  if (payload_data_len <= 0)
+    {
+      SET_ERRNO(EINVAL);
+      goto cleanup;
+    }
 
   memcpy(iv, pkt, IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
   indx += IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH;
@@ -530,10 +542,18 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
   ERR_CLEANUP (!(decrypt_len != payload_data_len));
   
   pad_len = payload_buf[payload_data_len - 1];
-  ERR_EINVAL_CLEANUP (!(pad_len > IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH));
+  if (pad_len > IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH)
+    {
+      SET_ERRNO(EINVAL);
+      goto cleanup;
+    }
   
   cmd_data_len = payload_data_len - pad_len - 1;
-  ERR_EINVAL_CLEANUP (!(cmd_data_len <= 0));
+  if (cmd_data_len <= 0)
+    {
+      SET_ERRNO(EINVAL);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_DATA_CLEANUP(obj_rmcpplus_payload,
 			    "payload_data",
@@ -997,18 +1017,30 @@ _ipmi_dump_rmcpplus_packet (int fd,
     goto dump_extra;
   
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
-    ERR_EINVAL_CLEANUP (tmpl_lan_msg_hdr
-			&& (fiid_template_compare(tmpl_lan_msg_hdr, 
-                                                  tmpl_lan_msg_hdr_rq) == 1
-			    || fiid_template_compare(tmpl_lan_msg_hdr, 
-                                                     tmpl_lan_msg_hdr_rs) == 1));
+    {
+      if (!tmpl_lan_msg_hdr
+          || (fiid_template_compare(tmpl_lan_msg_hdr, 
+                                    tmpl_lan_msg_hdr_rq) != 1
+              && fiid_template_compare(tmpl_lan_msg_hdr, 
+                                       tmpl_lan_msg_hdr_rs) != 1))
+        {
+          SET_ERRNO(EINVAL);
+          goto cleanup;
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_SOL)
-    ERR_EINVAL_CLEANUP ((fiid_template_compare(tmpl_cmd, 
-                                               tmpl_sol_payload_data) == 1
-			 || fiid_template_compare(tmpl_cmd, 
-                                                  tmpl_sol_payload_data_remote_console_to_bmc) == 1
-			 || fiid_template_compare(tmpl_cmd, 
-                                                  tmpl_sol_payload_data_bmc_to_remote_console) == 1));
+    {
+      if (fiid_template_compare(tmpl_cmd, 
+                                tmpl_sol_payload_data) != 1
+          && fiid_template_compare(tmpl_cmd, 
+                                   tmpl_sol_payload_data_remote_console_to_bmc) != 1
+          && fiid_template_compare(tmpl_cmd, 
+                                   tmpl_sol_payload_data_bmc_to_remote_console) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          goto cleanup;
+        }
+    }
 
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
     FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_open_session_request);

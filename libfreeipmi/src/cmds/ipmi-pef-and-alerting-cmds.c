@@ -519,7 +519,11 @@ fiid_template_t tmpl_cmd_pet_acknowledge_rs =
 int8_t 
 fill_cmd_get_pef_capabilities (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));;
+  if (!fiid_obj_valid(obj_cmd_rq));
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_pef_capabilities_rq);
 
@@ -531,7 +535,11 @@ fill_cmd_get_pef_capabilities (fiid_obj_t obj_cmd_rq)
 int8_t
 fill_cmd_arm_pef_postpone_timer (uint8_t pef_postpone_timeout, fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));;
+  if (!fiid_obj_valid(obj_cmd_rq));
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_arm_pef_postpone_timer_rq);
 
@@ -628,7 +636,11 @@ fill_cmd_set_pef_configuration_parameters_pef_action_global_control (uint8_t ale
 int8_t
 fill_cmd_set_pef_configuration_parameters_pef_startup_delay (uint8_t pef_startup_delay, fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_startup_delay_rq);
 
@@ -643,7 +655,11 @@ fill_cmd_set_pef_configuration_parameters_pef_startup_delay (uint8_t pef_startup
 int8_t
 fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (uint8_t pef_alert_startup_delay, fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_alert_startup_delay_rq);
 
@@ -900,7 +916,11 @@ fill_cmd_set_last_processed_event_id (uint8_t set_record_id_for_last_record,
 int8_t
 fill_cmd_get_last_processed_event_id (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_last_processed_event_id_rq);
 
@@ -946,7 +966,11 @@ fill_cmd_pet_acknowledge (uint16_t sequence_number,
                           uint32_t event_data, 
                           fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_pet_acknowledge_rq);
 

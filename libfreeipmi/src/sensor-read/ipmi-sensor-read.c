@@ -83,7 +83,11 @@ ipmi_sensor_read_ctx_create(ipmi_ctx_t ipmi_ctx)
 {
   struct ipmi_sensor_read_ctx *ctx = NULL;
   
-  ERR_EINVAL_NULL_RETURN(ipmi_ctx);
+  if (!ipmi_ctx)
+    {
+      SET_ERRNO(EINVAL);
+      return NULL;
+    }
 
   ERR_CLEANUP((ctx = (ipmi_sensor_read_ctx_t)malloc(sizeof(struct ipmi_sensor_read_ctx))));
   memset(ctx, '\0', sizeof(struct ipmi_sensor_read_ctx));

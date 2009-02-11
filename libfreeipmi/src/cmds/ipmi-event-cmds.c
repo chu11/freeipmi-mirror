@@ -92,7 +92,11 @@ fill_cmd_set_event_receiver (uint8_t event_receiver_slave_address,
 int8_t 
 fill_cmd_get_event_receiver (fiid_obj_t obj_cmd_rq)
 { 
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_event_receiver_rq);
 

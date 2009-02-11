@@ -109,7 +109,11 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
 
   ERR_EXIT (crypt_digest_len == expected_digest_len);
 
-  ERR_EINVAL_CLEANUP (!(sik_len < expected_digest_len));
+  if (sik_len < expected_digest_len)
+    {
+      SET_ERRNO(EINVAL);
+      goto cleanup;
+    }
 
   k_g_len = (k_g_len > IPMI_MAX_SIK_KEY_LENGTH) ? IPMI_MAX_SIK_KEY_LENGTH : k_g_len;
   
@@ -420,17 +424,21 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
           || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
        */
     {
-      ERR_EINVAL_CLEANUP (!(authentication_code_data_len && !authentication_code_data)
-                          && !(authentication_code_data && authentication_code_data_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
-                          && !(k_g_len && !k_g)
-                          && !(k_g && k_g_len > IPMI_MAX_K_G_LENGTH)
-                          && remote_console_random_number
-                          && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
-                          && managed_system_random_number
-                          && !(managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
-                          && IPMI_USER_NAME_LOOKUP_VALID(name_only_lookup)
-                          && IPMI_PRIVILEGE_LEVEL_VALID(requested_privilege_level)
-                          && !(user_name && !user_name_len));
+      if ((authentication_code_data_len && !authentication_code_data)
+          || (authentication_code_data && authentication_code_data_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
+          || (k_g_len && !k_g)
+          || (k_g && k_g_len > IPMI_MAX_K_G_LENGTH)
+          || !remote_console_random_number
+          || (remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
+          || !managed_system_random_number
+          || (managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
+          || !IPMI_USER_NAME_LOOKUP_VALID(name_only_lookup)
+          || !IPMI_PRIVILEGE_LEVEL_VALID(requested_privilege_level)
+          || (user_name && !user_name_len))
+        {
+          SET_ERRNO(EINVAL);
+          goto cleanup;
+        }
 
       if (k_g && k_g_len)
 	{
@@ -603,7 +611,11 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
     }
   else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
-      ERR_EINVAL_CLEANUP (!(key_exchange_authentication_code_len < IPMI_HMAC_SHA1_DIGEST_LENGTH));
+      if (key_exchange_authentication_code_len < IPMI_HMAC_SHA1_DIGEST_LENGTH)
+        {
+          SET_ERRNO(EINVAL);
+          goto cleanup;
+        }
 
       expected_digest_len = IPMI_HMAC_SHA1_DIGEST_LENGTH;
       hash_algorithm = IPMI_CRYPT_HASH_SHA1;
@@ -611,7 +623,11 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
     }
   else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 */
     {
-      ERR_EINVAL_CLEANUP (!(key_exchange_authentication_code_len < IPMI_HMAC_MD5_DIGEST_LENGTH));
+      if (key_exchange_authentication_code_len < IPMI_HMAC_MD5_DIGEST_LENGTH)
+        {
+          SET_ERRNO(EINVAL);
+          goto cleanup;
+        }
 
       expected_digest_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
       hash_algorithm = IPMI_CRYPT_HASH_MD5;

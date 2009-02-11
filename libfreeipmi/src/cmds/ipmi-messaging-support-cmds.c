@@ -702,7 +702,11 @@ fill_cmd_clear_message_flags (uint8_t receive_message_queue,
 int8_t
 fill_cmd_get_message_flags (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_message_flags_rq);
 
@@ -734,7 +738,11 @@ fill_cmd_enable_message_channel_receive (uint8_t channel_number,
 int8_t
 fill_cmd_get_message (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_message_rq);
 
@@ -778,7 +786,11 @@ fill_cmd_send_message (uint8_t channel_number,
 int8_t
 fill_cmd_read_event_message_buffer (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_read_event_message_buffer_rq);
 
@@ -806,7 +818,11 @@ fill_cmd_get_system_interface_capabilities (uint8_t system_interface,
 int8_t
 fill_cmd_get_bt_interface_capabilities (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_bt_interface_capabilities_rq);
 
@@ -976,7 +992,11 @@ int8_t
 fill_cmd_close_session (uint32_t close_session_id, 
 			fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_close_session_rq);
 
@@ -1202,8 +1222,12 @@ fill_cmd_set_user_name (uint8_t user_id,
 int8_t 
 fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
-  
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_user_name_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
