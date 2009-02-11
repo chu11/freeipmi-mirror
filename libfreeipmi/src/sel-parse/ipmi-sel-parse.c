@@ -524,7 +524,7 @@ ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
 
           if (sel_parse_fiid_obj_get (ctx, obj_cmd_rs, "next_record_id", &val) < 0)
             {
-              SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_cmd_rs);
+              ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
               goto cleanup;
             }
           next_record_id = val;

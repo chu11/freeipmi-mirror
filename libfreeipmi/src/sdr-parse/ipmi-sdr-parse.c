@@ -42,6 +42,7 @@
 #include "ipmi-sdr-parse-defs.h"
 
 #include "ipmi-sdr-parse-trace.h"
+#include "ipmi-sdr-parse-util.h"
 
 #include "freeipmi-portability.h"
 #include "debug-util.h"
@@ -178,7 +179,11 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_parse_ctx_t ctx,
       return (-1);
     }
 
-  SDR_PARSE_FIID_TEMPLATE_LEN_BYTES(sdr_record_header_len, tmpl_sdr_record_header);
+  if ((sdr_record_header_len = fiid_template_len_bytes(tmpl_sdr_record_header)) < 0)
+    {
+      SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (sdr_record_len < sdr_record_header_len)
     {
@@ -186,21 +191,43 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  SDR_PARSE_FIID_OBJ_CREATE(obj_sdr_record_header, tmpl_sdr_record_header);
+  if (!(obj_sdr_record_header = fiid_obj_create(tmpl_sdr_record_header)))
+    {
+      SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-  SDR_PARSE_FIID_OBJ_SET_ALL(obj_sdr_record_header,
-                             sdr_record,
-                             sdr_record_header_len);
+  if (fiid_obj_set_all(obj_sdr_record_header,
+                       sdr_record,
+                       sdr_record_header_len) < 0)
+    {
+      SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record_header);
+      goto cleanup;
+    }
 
   if (record_id)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_header, "record_id", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_header, 
+                                 "record_id",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *record_id = val;
     }
   
   if (record_type)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_header, "record_type", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_header, 
+                                 "record_type",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *record_type = val;
     }
   
@@ -263,31 +290,101 @@ _sdr_record_get_common(ipmi_sdr_parse_ctx_t ctx,
     }
   
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
-    SDR_PARSE_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_full_sensor_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_full_sensor_record)))
+        {
+          SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
-    SDR_PARSE_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_compact_sensor_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_compact_sensor_record)))
+        {
+          SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
-    SDR_PARSE_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_event_only_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_event_only_record)))
+        {
+          SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD)
-    SDR_PARSE_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_entity_association_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_entity_association_record)))
+        {
+          SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD)
-    SDR_PARSE_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_device_relative_entity_association_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_device_relative_entity_association_record)))
+        {
+          SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
-    SDR_PARSE_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_generic_device_locator_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_generic_device_locator_record)))
+        {
+          SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
-    SDR_PARSE_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_fru_device_locator_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_fru_device_locator_record)))
+        {
+          SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
-    SDR_PARSE_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_management_controller_device_locator_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_management_controller_device_locator_record)))
+        {
+          SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
-    SDR_PARSE_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_management_controller_confirmation_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_management_controller_confirmation_record)))
+        {
+          SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD)
-    SDR_PARSE_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_bmc_message_channel_info_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_bmc_message_channel_info_record)))
+        {
+          SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_OEM_RECORD)
-    SDR_PARSE_FIID_OBJ_CREATE(obj_sdr_record, tmpl_sdr_oem_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_oem_record)))
+        {
+          SDR_PARSE_ERRNO_TO_SDR_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
 
-  SDR_PARSE_FIID_OBJ_SET_ALL(obj_sdr_record,
-                             sdr_record,
-                             sdr_record_len);
+  if (fiid_obj_set_all(obj_sdr_record,
+                       sdr_record,
+                       sdr_record_len) < 0)
+    {
+      SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+      goto cleanup;
+    }
 
   return obj_sdr_record;
 
@@ -328,13 +425,27 @@ ipmi_sdr_parse_sensor_owner_id (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_owner_id_type)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "sensor_owner_id.type", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record, 
+                                 "sensor_owner_id.type", 
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *sensor_owner_id_type = val;
     }
 
   if (sensor_owner_id)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "sensor_owner_id", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "sensor_owner_id",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *sensor_owner_id = val;
     }
 
@@ -377,13 +488,27 @@ ipmi_sdr_parse_sensor_owner_lun (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_owner_lun)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "sensor_owner_lun", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record, 
+                                 "sensor_owner_lun", 
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *sensor_owner_lun = val;
     }
 
   if (channel_number)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "channel_number", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "channel_number",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *channel_number = val;
     }
 
@@ -425,7 +550,14 @@ ipmi_sdr_parse_sensor_number (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_number)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "sensor_number", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "sensor_number",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *sensor_number = val;
     }
 
@@ -469,17 +601,38 @@ ipmi_sdr_parse_entity_id_instance_type (ipmi_sdr_parse_ctx_t ctx,
 
   if (entity_id)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "entity_id", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record, 
+                                 "entity_id",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *entity_id = val;
     }
   if (entity_instance)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "entity_instance", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "entity_instance",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *entity_instance = val;
     }
   if (entity_instance_type)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "entity_instance.type", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "entity_instance.type",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *entity_instance_type = val;
     }
 
@@ -521,7 +674,14 @@ ipmi_sdr_parse_sensor_type (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_type)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "sensor_type", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "sensor_type",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *sensor_type = val;
     }
 
@@ -563,7 +723,14 @@ ipmi_sdr_parse_event_reading_type_code (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_reading_type_code)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "event_reading_type_code", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "event_reading_type_code",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_reading_type_code = val;
     }
 
@@ -606,11 +773,14 @@ ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
 
   if (id_string && id_string_len)
     {
-      SDR_PARSE_FIID_OBJ_GET_DATA_LEN(len,
-                                      obj_sdr_record,
-                                      "id_string",
-                                      (uint8_t *)id_string,
-                                      id_string_len);
+      if ((len = fiid_obj_get_data(obj_sdr_record,
+                                   "id_string",
+                                   (uint8_t *)id_string,
+                                   id_string_len)) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+          goto cleanup;
+        }
     }
 
   rv = len;
@@ -653,21 +823,41 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_units_modifier)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "sensor_unit1.modifier_unit", &val);
-      
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "sensor_unit1.modifier_unit",
+                                 &val) < 0)      
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *sensor_units_modifier = val;
     }
 
   if (sensor_units_rate)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "sensor_unit1.rate_unit", &val);
-      
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "sensor_unit1.rate_unit", 
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
+
       *sensor_units_rate = val;
     }
 
   if (sensor_base_unit_type)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "sensor_unit2.base_unit", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "sensor_unit2.base_unit",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       
       if (!IPMI_SENSOR_UNIT_VALID(val))
         val = IPMI_SENSOR_UNIT_UNSPECIFIED;
@@ -677,7 +867,14 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_modifier_unit_type)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "sensor_unit3.modifier_unit", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "sensor_unit3.modifier_unit",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       
       if (!IPMI_SENSOR_UNIT_VALID(val))
         val = IPMI_SENSOR_UNIT_UNSPECIFIED;
@@ -726,37 +923,62 @@ ipmi_sdr_parse_sensor_capabilities (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_message_control_support)
     {
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record,
-                              "sensor_capabilities.event_message_control_support",
-                              &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "sensor_capabilities.event_message_control_support",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_message_control_support = val;
     }
   if (threshold_access_support)
     {
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record,
-                              "sensor_capabilities.threshold_access_support",
-                              &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "sensor_capabilities.threshold_access_support",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *threshold_access_support = val;
     }
   if (hysteresis_support)
     {
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record,
-                              "sensor_capabilities.hysteresis_support",
-                              &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "sensor_capabilities.hysteresis_support",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *hysteresis_support = val;
     }
   if (auto_re_arm_support)
     {
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record,
-                              "sensor_capabilities.auto_re_arm_support",
-                              &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "sensor_capabilities.auto_re_arm_support",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *auto_re_arm_support = val;
     }
   if (entity_ignore_support)
     {
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record,
-                              "sensor_capabilities.entity_ignore_support",
-                              &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "sensor_capabilities.entity_ignore_support",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *entity_ignore_support = val;
     }
 
@@ -834,131 +1056,216 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
     goto cleanup;
 
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
-    SDR_PARSE_FIID_OBJ_COPY(obj_sdr_record_discrete,
-                            obj_sdr_record,
-                            tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
+    {
+      if (!(obj_sdr_record_discrete = fiid_obj_copy(obj_sdr_record,
+                                                    tmpl_sdr_full_sensor_record_non_threshold_based_sensors)))
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+          goto cleanup;
+        }
+    }
   else
-    SDR_PARSE_FIID_OBJ_COPY(obj_sdr_record_discrete,
-                            obj_sdr_record,
-                            tmpl_sdr_compact_sensor_record_non_threshold_based_sensors);
+    {
+      if (!(obj_sdr_record_discrete = fiid_obj_copy(obj_sdr_record,
+                                                    tmpl_sdr_compact_sensor_record_non_threshold_based_sensors)))
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+          goto cleanup;
+        }
+    }
 
   if (event_state_0)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_0",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_0",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_0 = val;
     }
 
   if (event_state_1)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_1",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_1",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_1 = val;
     }
 
   if (event_state_2)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_2",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_2",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_2 = val;
     }
 
   if (event_state_3)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_3",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_3",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_3 = val;
     }
 
   if (event_state_4)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_4",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_4",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_4 = val;
     }
 
   if (event_state_5)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_5",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_5",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_5 = val;
     }
 
   if (event_state_6)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_6",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_6",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_6 = val;
     }
 
   if (event_state_7)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_7",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_7",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_7 = val;
     }
 
   if (event_state_8)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_8",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_8",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_8 = val;
     }
 
   if (event_state_9)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_9",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_9",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_9 = val;
     }
 
   if (event_state_10)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_10",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_10",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_10 = val;
     }
 
   if (event_state_11)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_11",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_11",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_11 = val;
     }
 
   if (event_state_12)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_12",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_12",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_12 = val;
     }
 
   if (event_state_13)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_13",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_13",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_13 = val;
     }
 
   if (event_state_14)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "assertion_event_mask.event_offset_14",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "assertion_event_mask.event_offset_14",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_14 = val;
     }
 
@@ -1037,131 +1344,216 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
     goto cleanup;
 
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
-    SDR_PARSE_FIID_OBJ_COPY(obj_sdr_record_discrete,
-                            obj_sdr_record,
-                            tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
+    {
+      if (!(obj_sdr_record_discrete = fiid_obj_copy(obj_sdr_record,
+                                                    tmpl_sdr_full_sensor_record_non_threshold_based_sensors)))
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+          goto cleanup;
+        }
+    }
   else
-    SDR_PARSE_FIID_OBJ_COPY(obj_sdr_record_discrete,
-                            obj_sdr_record,
-                            tmpl_sdr_compact_sensor_record_non_threshold_based_sensors);
+    {
+      if (!(obj_sdr_record_discrete = fiid_obj_copy(obj_sdr_record,
+                                                    tmpl_sdr_compact_sensor_record_non_threshold_based_sensors)))
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+          goto cleanup;
+        }
+    }
 
   if (event_state_0)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_0",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_0",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_0 = val;
     }
 
   if (event_state_1)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_1",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_1",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_1 = val;
     }
 
   if (event_state_2)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_2",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_2",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_2 = val;
     }
 
   if (event_state_3)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_3",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_3",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_3 = val;
     }
 
   if (event_state_4)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_4",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_4",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_4 = val;
     }
 
   if (event_state_5)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_5",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_5",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_5 = val;
     }
 
   if (event_state_6)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_6",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_6",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_6 = val;
     }
 
   if (event_state_7)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_7",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_7",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_7 = val;
     }
 
   if (event_state_8)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_8",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_8",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_8 = val;
     }
 
   if (event_state_9)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_9",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_9",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_9 = val;
     }
 
   if (event_state_10)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_10",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_10",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_10 = val;
     }
 
   if (event_state_11)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_11",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_11",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_11 = val;
     }
 
   if (event_state_12)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_12",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_12",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_12 = val;
     }
 
   if (event_state_13)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_13",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_13",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_13 = val;
     }
 
   if (event_state_14)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_discrete,
-                             "deassertion_event_mask.event_offset_14",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_discrete,
+                                 "deassertion_event_mask.event_offset_14",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *event_state_14 = val;
     }
 
@@ -1243,103 +1635,166 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  SDR_PARSE_FIID_OBJ_COPY(obj_sdr_record_threshold,
-                          obj_sdr_record,
-                          tmpl_sdr_full_sensor_record_threshold_based_sensors);
+  if (!(obj_sdr_record_threshold = fiid_obj_copy(obj_sdr_record,
+                                                 tmpl_sdr_full_sensor_record_threshold_based_sensors)))
+    {
+      SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+      goto cleanup;
+    }
 
   if (lower_non_critical_going_low)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_assertion_event_mask.lower_non_critical_going_low_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_assertion_event_mask.lower_non_critical_going_low_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_critical_going_low = val;
     }
 
   if (lower_non_critical_going_high)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_assertion_event_mask.lower_non_critical_going_high_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_assertion_event_mask.lower_non_critical_going_high_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_critical_going_high = val;
     }
 
   if (lower_critical_going_low)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_assertion_event_mask.lower_critical_going_low_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_assertion_event_mask.lower_critical_going_low_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_critical_going_low = val;
     }
 
   if (lower_critical_going_high)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_assertion_event_mask.lower_critical_going_high_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_assertion_event_mask.lower_critical_going_high_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_critical_going_high = val;
     }
 
   if (lower_non_recoverable_going_low)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_assertion_event_mask.lower_non_recoverable_going_low_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_assertion_event_mask.lower_non_recoverable_going_low_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_recoverable_going_low = val;
     }
 
   if (lower_non_recoverable_going_high)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_assertion_event_mask.lower_non_recoverable_going_high_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_assertion_event_mask.lower_non_recoverable_going_high_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_recoverable_going_high = val;
     }
 
   if (upper_non_critical_going_low)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_assertion_event_mask.upper_non_critical_going_low_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_assertion_event_mask.upper_non_critical_going_low_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_critical_going_low = val;
     }
 
   if (upper_non_critical_going_high)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_assertion_event_mask.upper_non_critical_going_high_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_assertion_event_mask.upper_non_critical_going_high_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_critical_going_high = val;
     }
 
   if (upper_critical_going_low)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_assertion_event_mask.upper_critical_going_low_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_assertion_event_mask.upper_critical_going_low_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_critical_going_low = val;
     }
 
   if (upper_critical_going_high)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_assertion_event_mask.upper_critical_going_high_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_assertion_event_mask.upper_critical_going_high_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_critical_going_high = val;
     }
 
   if (upper_non_recoverable_going_low)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_assertion_event_mask.upper_non_recoverable_going_low_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_assertion_event_mask.upper_non_recoverable_going_low_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_recoverable_going_low = val;
     }
 
   if (upper_non_recoverable_going_high)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_assertion_event_mask.upper_non_recoverable_going_high_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_assertion_event_mask.upper_non_recoverable_going_high_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_recoverable_going_high = val;
     }
 
@@ -1421,103 +1876,166 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  SDR_PARSE_FIID_OBJ_COPY(obj_sdr_record_threshold,
-                          obj_sdr_record,
-                          tmpl_sdr_full_sensor_record_threshold_based_sensors);
+  if (!(obj_sdr_record_threshold = fiid_obj_copy(obj_sdr_record,
+                                                 tmpl_sdr_full_sensor_record_threshold_based_sensors)))
+    {
+      SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+      goto cleanup;
+    }
 
   if (lower_non_critical_going_low)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_deassertion_event_mask.lower_non_critical_going_low_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record_threshold,
+                                 "threshold_deassertion_event_mask.lower_non_critical_going_low_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_critical_going_low = val;
     }
 
   if (lower_non_critical_going_high)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_deassertion_event_mask.lower_non_critical_going_high_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_deassertion_event_mask.lower_non_critical_going_high_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_critical_going_high = val;
     }
 
   if (lower_critical_going_low)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_deassertion_event_mask.lower_critical_going_low_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_deassertion_event_mask.lower_critical_going_low_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_critical_going_low = val;
     }
 
   if (lower_critical_going_high)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_deassertion_event_mask.lower_critical_going_high_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_deassertion_event_mask.lower_critical_going_high_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_critical_going_high = val;
     }
 
   if (lower_non_recoverable_going_low)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_deassertion_event_mask.lower_non_recoverable_going_low_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_deassertion_event_mask.lower_non_recoverable_going_low_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_recoverable_going_low = val;
     }
 
   if (lower_non_recoverable_going_high)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_deassertion_event_mask.lower_non_recoverable_going_high_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_deassertion_event_mask.lower_non_recoverable_going_high_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_recoverable_going_high = val;
     }
 
   if (upper_non_critical_going_low)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_deassertion_event_mask.upper_non_critical_going_low_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_deassertion_event_mask.upper_non_critical_going_low_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_critical_going_low = val;
     }
 
   if (upper_non_critical_going_high)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_deassertion_event_mask.upper_non_critical_going_high_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_deassertion_event_mask.upper_non_critical_going_high_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_critical_going_high = val;
     }
 
   if (upper_critical_going_low)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_deassertion_event_mask.upper_critical_going_low_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_deassertion_event_mask.upper_critical_going_low_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_critical_going_low = val;
     }
 
   if (upper_critical_going_high)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_deassertion_event_mask.upper_critical_going_high_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_deassertion_event_mask.upper_critical_going_high_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_critical_going_high = val;
     }
 
   if (upper_non_recoverable_going_low)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_deassertion_event_mask.upper_non_recoverable_going_low_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_deassertion_event_mask.upper_non_recoverable_going_low_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_recoverable_going_low = val;
     }
 
   if (upper_non_recoverable_going_high)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "threshold_deassertion_event_mask.upper_non_recoverable_going_high_supported",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "threshold_deassertion_event_mask.upper_non_recoverable_going_high_supported",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_recoverable_going_high = val;
     }
 
@@ -1593,55 +2111,88 @@ ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  SDR_PARSE_FIID_OBJ_COPY(obj_sdr_record_threshold,
-                          obj_sdr_record,
-                          tmpl_sdr_full_sensor_record_threshold_based_sensors);
+  if (!(obj_sdr_record_threshold = fiid_obj_copy(obj_sdr_record,
+                                                 tmpl_sdr_full_sensor_record_threshold_based_sensors)))
+    {
+      SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+      goto cleanup;
+    }
 
   if (lower_non_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "readable_threshold_mask.lower_non_critical_threshold_is_readable",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "readable_threshold_mask.lower_non_critical_threshold_is_readable",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_critical_threshold = val;
     }
 
   if (lower_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "readable_threshold_mask.lower_critical_threshold_is_readable",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "readable_threshold_mask.lower_critical_threshold_is_readable",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_critical_threshold = val;
     }
 
   if (lower_non_recoverable_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "readable_threshold_mask.lower_non_recoverable_threshold_is_readable",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "readable_threshold_mask.lower_non_recoverable_threshold_is_readable",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_recoverable_threshold = val;
     }
 
   if (upper_non_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "readable_threshold_mask.upper_non_critical_threshold_is_readable",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "readable_threshold_mask.upper_non_critical_threshold_is_readable",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_critical_threshold = val;
     }
 
   if (upper_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "readable_threshold_mask.upper_critical_threshold_is_readable",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "readable_threshold_mask.upper_critical_threshold_is_readable",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_critical_threshold = val;
     }
 
   if (upper_non_recoverable_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "readable_threshold_mask.upper_non_recoverable_threshold_is_readable",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record_threshold,
+                                 "readable_threshold_mask.upper_non_recoverable_threshold_is_readable",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_recoverable_threshold = val;
     }
 
@@ -1717,55 +2268,88 @@ ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  SDR_PARSE_FIID_OBJ_COPY(obj_sdr_record_threshold,
-                          obj_sdr_record,
-                          tmpl_sdr_full_sensor_record_threshold_based_sensors);
+  if (!(obj_sdr_record_threshold = fiid_obj_copy(obj_sdr_record,
+                                                 tmpl_sdr_full_sensor_record_threshold_based_sensors)))
+    {
+      SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+      goto cleanup;
+    }
 
   if (lower_non_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "settable_threshold_mask.lower_non_critical_threshold_is_settable",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "settable_threshold_mask.lower_non_critical_threshold_is_settable",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_critical_threshold = val;
     }
 
   if (lower_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "settable_threshold_mask.lower_critical_threshold_is_settable",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "settable_threshold_mask.lower_critical_threshold_is_settable",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_critical_threshold = val;
     }
 
   if (lower_non_recoverable_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "settable_threshold_mask.lower_non_recoverable_threshold_is_settable",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "settable_threshold_mask.lower_non_recoverable_threshold_is_settable",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_recoverable_threshold = val;
     }
 
   if (upper_non_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "settable_threshold_mask.upper_non_critical_threshold_is_settable",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "settable_threshold_mask.upper_non_critical_threshold_is_settable",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_critical_threshold = val;
     }
 
   if (upper_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "settable_threshold_mask.upper_critical_threshold_is_settable",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "settable_threshold_mask.upper_critical_threshold_is_settable",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_critical_threshold = val;
     }
 
   if (upper_non_recoverable_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "settable_threshold_mask.upper_non_recoverable_threshold_is_settable",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "settable_threshold_mask.upper_non_recoverable_threshold_is_settable",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_recoverable_threshold = val;
     }
 
@@ -1811,7 +2395,14 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 
   if (r_exponent)
     {
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record, "r_exponent", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record, 
+                                 "r_exponent",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *r_exponent = (int8_t) val;
       if (*r_exponent & 0x08)
         *r_exponent |= 0xF0;
@@ -1819,7 +2410,14 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 
   if (b_exponent)
     {
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record, "b_exponent", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "b_exponent",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *b_exponent = (int8_t) val;
       if (*b_exponent & 0x08)
         *b_exponent |= 0xF0;
@@ -1827,8 +2425,22 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 
   if (m)
     {
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record, "m_ls", &val1);
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record, "m_ms", &val2);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "m_ls",
+                                 &val1) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "m_ms",
+                                 &val2) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *m = (int16_t)val1;
       *m |= ((val2 & 0x3) << 8);
       if (*m & 0x200)
@@ -1837,8 +2449,22 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 
   if (b)
     {
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record, "b_ls", &val1);
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record, "b_ms", &val2);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "b_ls",
+                                 &val1) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "b_ms",
+                                 &val2) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *b = (int16_t)val1;
       *b |= ((val2 & 0x3) << 8);
       if (*b & 0x200)
@@ -1847,13 +2473,27 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 
   if (linearization)
     {
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record, "linearization", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "linearization",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *linearization = (uint8_t)val;
     }
 
   if (analog_data_format)
     {
-      SDR_PARSE_FIID_OBJ_GET (obj_sdr_record, "sensor_unit1.analog_data_format", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "sensor_unit1.analog_data_format",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *analog_data_format = (uint8_t) val;
     }
 
@@ -1982,9 +2622,14 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
  
   if (nominal_reading)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "nominal_reading",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "nominal_reading",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -1999,9 +2644,14 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
     }
   if (normal_maximum)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "normal_maximum",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "normal_maximum",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2016,9 +2666,14 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
     }
   if (normal_minimum)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "normal_minimum",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "normal_minimum",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2033,9 +2688,14 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
     }
   if (sensor_maximum_reading)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "sensor_maximum_reading",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "sensor_maximum_reading",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2050,9 +2710,14 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
     }
   if (sensor_minimum_reading)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "sensor_minimum_reading",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "sensor_minimum_reading",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2176,9 +2841,14 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
  
   if (lower_non_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "lower_non_critical_threshold",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "lower_non_critical_threshold",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2193,9 +2863,14 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
     }
   if (lower_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "lower_critical_threshold",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "lower_critical_threshold",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2210,9 +2885,14 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
     }
   if (lower_non_recoverable_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "lower_non_recoverable_threshold",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "lower_non_recoverable_threshold",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2227,9 +2907,14 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
     }
   if (upper_non_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "upper_non_critical_threshold",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "upper_non_critical_threshold",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2244,9 +2929,14 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
     }
   if (upper_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "upper_critical_threshold",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "upper_critical_threshold",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2261,9 +2951,14 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
     }
   if (upper_non_recoverable_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "upper_non_recoverable_threshold",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "upper_non_recoverable_threshold",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2362,55 +3057,88 @@ ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  SDR_PARSE_FIID_OBJ_COPY(obj_sdr_record_threshold,
-                          obj_sdr_record,
-                          tmpl_sdr_full_sensor_record_threshold_based_sensors);
+  if (!(obj_sdr_record_threshold = fiid_obj_copy(obj_sdr_record,
+                                                 tmpl_sdr_full_sensor_record_threshold_based_sensors)))
+    {
+      SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+      goto cleanup;
+    }
 
   if (lower_non_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "lower_non_critical_threshold",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "lower_non_critical_threshold",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_critical_threshold = val;
     }
 
   if (lower_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "lower_critical_threshold",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "lower_critical_threshold",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_critical_threshold = val;
     }
 
   if (lower_non_recoverable_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "lower_non_recoverable_threshold",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "lower_non_recoverable_threshold",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lower_non_recoverable_threshold = val;
     }
 
   if (upper_non_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "upper_non_critical_threshold",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "upper_non_critical_threshold",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_critical_threshold = val;
     }
 
   if (upper_critical_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "upper_critical_threshold",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "upper_critical_threshold",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_critical_threshold = val;
     }
 
   if (upper_non_recoverable_threshold)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record_threshold,
-                             "upper_non_recoverable_threshold",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record_threshold,
+                                 "upper_non_recoverable_threshold",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *upper_non_recoverable_threshold = val;
     }
 
@@ -2453,16 +3181,26 @@ ipmi_sdr_parse_hysteresis (ipmi_sdr_parse_ctx_t ctx,
 
   if (positive_going_threshold_hysteresis)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "positive_going_threshold_hysteresis",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "positive_going_threshold_hysteresis",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *positive_going_threshold_hysteresis = val;
     }
   if (negative_going_threshold_hysteresis)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record,
-                             "negative_going_threshold_hysteresis",
-                             &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "negative_going_threshold_hysteresis",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *negative_going_threshold_hysteresis = val;
     }
   rv = 0;
@@ -2503,13 +3241,27 @@ ipmi_sdr_parse_container_entity (ipmi_sdr_parse_ctx_t ctx,
 
   if (container_entity_id)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "container_entity_id", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "container_entity_id",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *container_entity_id = val;
     }
 
   if (container_entity_instance)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "container_entity_instance", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "container_entity_instance", 
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *container_entity_instance = val;
     }
 
@@ -2552,11 +3304,14 @@ ipmi_sdr_parse_device_id_string (ipmi_sdr_parse_ctx_t ctx,
 
   if (device_id_string && device_id_string_len)
     {
-      SDR_PARSE_FIID_OBJ_GET_DATA_LEN(len,
-                                      obj_sdr_record,
-                                      "device_id_string",
-                                      (uint8_t *)device_id_string,
-                                      device_id_string_len);
+      if ((len = fiid_obj_get_data(obj_sdr_record,
+                                   "device_id_string",
+                                   (uint8_t *)device_id_string,
+                                   device_id_string_len)) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+          goto cleanup;
+        }
     }
 
   rv = len;
@@ -2597,12 +3352,26 @@ ipmi_sdr_parse_device_type (ipmi_sdr_parse_ctx_t ctx,
 
   if (device_type)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "device_type", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "device_type", 
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *device_type = val;
     }
   if (device_type_modifier)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "device_type_modifier", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record, 
+                                 "device_type_modifier", 
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *device_type_modifier = val;
     }
 
@@ -2644,12 +3413,26 @@ ipmi_sdr_parse_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
 
   if (entity_id)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "entity_id", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "entity_id", 
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *entity_id = val;
     }
   if (entity_instance)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "entity_instance", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "entity_instance",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *entity_instance = val;
     }
 
@@ -2695,33 +3478,82 @@ ipmi_sdr_parse_general_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
 
   if (direct_access_address)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "direct_access_address", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "direct_access_address", 
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *direct_access_address = val;
     }
   if (channel_number)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "channel_number_ls", &val1);
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "channel_number_ms", &val2);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "channel_number_ls",
+                                 &val1) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record, 
+                                 "channel_number_ms", 
+                                 &val2) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *channel_number = (val1 << 3) | val2;
     }
   if (device_slave_address)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "device_slave_address", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record, 
+                                 "device_slave_address",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *device_slave_address = val;
     }
   if (private_bus_id)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "private_bus_id", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "private_bus_id",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *private_bus_id = val;
     }
   if (lun_for_master_write_read_command)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "lun_for_master_write_read_command", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "lun_for_master_write_read_command",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lun_for_master_write_read_command = val;
     }
   if (address_span)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "address_span", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "address_span",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *address_span = val;
     }
 
@@ -2766,32 +3598,74 @@ ipmi_sdr_parse_fru_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
 
   if (direct_access_address)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "direct_access_address", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record, 
+                                 "direct_access_address", 
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *direct_access_address = val;
     }
   if (logical_fru_device_device_slave_address)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "logical_fru_device_device_slave_address", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "logical_fru_device_device_slave_address",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *logical_fru_device_device_slave_address = val;
     }
   if (private_bus_id)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "private_bus_id", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "private_bus_id",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *private_bus_id = val;
     }
   if (lun_for_master_write_read_fru_command)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "lun_for_master_write_read_fru_command", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "lun_for_master_write_read_fru_command",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *lun_for_master_write_read_fru_command = val;
     }
   if (logical_physical_fru_device)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "logical_physical_fru_device", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "logical_physical_fru_device",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *logical_physical_fru_device = val;
     }
   if (channel_number)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "channel_number", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "channel_number",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *channel_number = val;
     }
 
@@ -2832,12 +3706,26 @@ ipmi_sdr_parse_fru_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
 
   if (fru_entity_id)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "fru_entity_id", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "fru_entity_id",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *fru_entity_id = val;
     }
   if (fru_entity_instance)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "fru_entity_instance", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record,
+                                 "fru_entity_instance",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *fru_entity_instance = val;
     }
 
@@ -2878,12 +3766,26 @@ ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_parse_c
 
   if (device_slave_address)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "device_slave_address", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "device_slave_address",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *device_slave_address = val;
     }
   if (channel_number)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "channel_number", &val);
+      if (sdr_parse_fiid_obj_get(ctx,
+                                 obj_sdr_record, 
+                                 "channel_number",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *channel_number = val;
     }
 
@@ -2924,7 +3826,14 @@ ipmi_sdr_parse_manufacturer_id (ipmi_sdr_parse_ctx_t ctx,
 
   if (manufacturer_id)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "manufacturer_id", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "manufacturer_id", 
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *manufacturer_id = val;
     }
 
@@ -2964,7 +3873,14 @@ ipmi_sdr_parse_product_id (ipmi_sdr_parse_ctx_t ctx,
 
   if (product_id)
     {
-      SDR_PARSE_FIID_OBJ_GET(obj_sdr_record, "product_id", &val);
+      if (sdr_parse_fiid_obj_get(ctx, 
+                                 obj_sdr_record,
+                                 "product_id",
+                                 &val) < 0)
+        {
+          ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+          goto cleanup;
+        }
       *product_id = val;
     }
 
@@ -3005,11 +3921,14 @@ ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
 
   if (oem_data && oem_data_len)
     {
-      SDR_PARSE_FIID_OBJ_GET_DATA_LEN(len,
-                                      obj_sdr_record,
-                                      "oem_data",
-                                      oem_data,
-                                      oem_data_len);
+      if ((len = fiid_obj_get_data(obj_sdr_record,
+                                   "oem_data",
+                                   oem_data,
+                                   oem_data_len)) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(ctx, obj_sdr_record);
+          goto cleanup;
+        }
     }
 
   rv = len;

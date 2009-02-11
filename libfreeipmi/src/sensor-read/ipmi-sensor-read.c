@@ -427,7 +427,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                                 "reading_state",
                                 &val) < 0)
     {
-      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM(ctx, obj_get_sensor_reading_rs);
+      ERR_TRACE(ipmi_sensor_read_ctx_errormsg(ctx), ipmi_sensor_read_ctx_errnum(ctx));
       goto cleanup;
     }
   
@@ -442,7 +442,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                                 "sensor_scanning",
                                 &val) < 0)
     {
-      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM(ctx, obj_get_sensor_reading_rs);
+      ERR_TRACE(ipmi_sensor_read_ctx_errormsg(ctx), ipmi_sensor_read_ctx_errnum(ctx));
       goto cleanup;
     }
 
@@ -513,7 +513,7 @@ ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
                                     "sensor_reading", 
                                     &val) < 0)
         {
-          SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM(ctx, obj_get_sensor_reading_rs);
+          ERR_TRACE(ipmi_sensor_read_ctx_errormsg(ctx), ipmi_sensor_read_ctx_errnum(ctx));
           goto cleanup;
         }
 

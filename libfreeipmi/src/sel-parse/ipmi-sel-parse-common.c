@@ -87,7 +87,7 @@ sel_parse_get_reservation_id(ipmi_sel_parse_ctx_t ctx,
                               "reservation_id",
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_cmd_rs);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   *reservation_id = val;
@@ -141,7 +141,7 @@ sel_parse_get_record_header_info(ipmi_sel_parse_ctx_t ctx,
                                   "record_id",
                                   &val) < 0)
         {
-          SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_record_header);
+          ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
           goto cleanup;
         }
       (*record_id) = val;
@@ -154,7 +154,7 @@ sel_parse_get_record_header_info(ipmi_sel_parse_ctx_t ctx,
                                   "record_type",
                                   &val) < 0)
         {
-          SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_record_header);
+          ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
           goto cleanup;
         }
       (*record_type) = val;
@@ -234,7 +234,7 @@ sel_parse_get_timestamp(ipmi_sel_parse_ctx_t ctx,
                               "timestamp",
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   (*timestamp) = val;
@@ -300,7 +300,7 @@ sel_parse_get_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
                               "manufacturer_id",
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   (*manufacturer_id) = val;
@@ -380,7 +380,7 @@ sel_parse_get_oem(ipmi_sel_parse_ctx_t ctx,
                                buf,
                                buflen)) < 0)
   {
-    SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_record);
+    ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
     goto cleanup;
   }
   
@@ -447,7 +447,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "timestamp",
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->timestamp = val;
@@ -457,7 +457,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "generator_id.id_type",
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   generator_id_type = val;
@@ -467,7 +467,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "generator_id.id",
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   generator_id_address = val;
@@ -479,7 +479,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "ipmb_device_lun", 
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->ipmb_device_lun = val;
@@ -489,7 +489,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "channel_number", 
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->channel_number = val;
@@ -499,7 +499,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "event_message_format_version", 
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->event_message_format_version = val;
@@ -509,7 +509,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "sensor_type",
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->sensor_type = val;
@@ -519,7 +519,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "sensor_number",
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->sensor_number = val;
@@ -529,7 +529,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "event_type_code",
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->event_type_code = val;
@@ -539,7 +539,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "event_dir", 
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->event_direction = val;
@@ -549,7 +549,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "offset_from_event_reading_type_code",
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->offset_from_event_reading_type_code = val;
@@ -559,7 +559,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "event_data2_flag",
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->event_data2_flag = val;
@@ -569,7 +569,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "event_data3_flag", 
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->event_data3_flag = val;
@@ -579,7 +579,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "event_data2", 
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->event_data2 = val;
@@ -589,7 +589,7 @@ sel_parse_get_system_event_record(ipmi_sel_parse_ctx_t ctx,
                               "event_data3", 
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   system_event_record_data->event_data3 = val;
@@ -657,7 +657,7 @@ sel_parse_get_previous_state_or_severity(ipmi_sel_parse_ctx_t ctx,
                               "previous_offset_from_event_reading_type_code",
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   *previous_offset_from_event_reading_type_code = val;
@@ -667,7 +667,7 @@ sel_parse_get_previous_state_or_severity(ipmi_sel_parse_ctx_t ctx,
                               "offset_from_severity_event_reading_type_code", 
                               &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_system_event_record);
+      ERR_TRACE(ipmi_sel_parse_ctx_errormsg(ctx), ipmi_sel_parse_ctx_errnum(ctx));
       goto cleanup;
     }
   *offset_from_severity_event_reading_type_code = val;
