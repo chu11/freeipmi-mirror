@@ -92,7 +92,7 @@ sel_parse_fiid_obj_get(ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj, char *field, ui
 
   if (!ret)
     {
-      ctx->errnum = IPMI_SEL_PARSE_ERR_IPMI_ERROR;
+      SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
       return (-1);
     }
 

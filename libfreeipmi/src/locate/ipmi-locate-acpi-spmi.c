@@ -821,15 +821,16 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
   assert(ctx);
   assert(ctx->magic == IPMI_LOCATE_CTX_MAGIC);
   assert(fiid_obj_valid(obj_acpi_rsdp_descriptor));
-
-  LOCATE_FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_rsdp_descriptor, 
-                                   tmpl_acpi_rsdp_descriptor);
+  assert(fiid_obj_template_compare(obj_acpi_rsdp_descriptor, tmpl_acpi_rsdp_descriptor) == 1);
   
   memdata = alloca (rsdp_window_size);
   memset (memdata, 0, rsdp_window_size);
   
-  LOCATE_FIID_TEMPLATE_LEN_BYTES (acpi_rsdp_descriptor_len,
-                                  tmpl_acpi_rsdp_descriptor);
+  if ((acpi_rsdp_descriptor_len = fiid_template_len_bytes(tmpl_acpi_rsdp_descriptor)) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (_ipmi_get_physical_mem_data (ctx,
                                    rsdp_window_base_address, 
@@ -851,9 +852,13 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
                                       &memdata[i], 
                                       IPMI_ACPI_RSDP_CHECKSUM_LENGTH))
 	{
-	  LOCATE_FIID_OBJ_SET_ALL(obj_acpi_rsdp_descriptor,
-                                  &memdata[i], 
-                                  acpi_rsdp_descriptor_len);
+	  if (fiid_obj_set_all(obj_acpi_rsdp_descriptor,
+                               &memdata[i], 
+                               acpi_rsdp_descriptor_len) < 0)
+            {
+              LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM(ctx, obj_acpi_rsdp_descriptor);
+              goto cleanup;
+            }
 	  
 	  /* check this RSDP has RSDT/XSDT */
 	  {
@@ -864,24 +869,39 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
 	    uint8_t *rsdt_xsdt_table = NULL;
 	    uint32_t rsdt_xsdt_table_length;
 	    
-	    LOCATE_FIID_OBJ_GET (obj_acpi_rsdp_descriptor, 
-                                 "revision", 
-                                 &val);
+	    if (locate_fiid_obj_get (ctx, 
+                                     obj_acpi_rsdp_descriptor, 
+                                     "revision", 
+                                     &val) < 0)
+              {
+                ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+                goto cleanup;
+              }
 
 	    revision = val;
 	    if (revision < 2)
 	      { 
-		LOCATE_FIID_OBJ_GET (obj_acpi_rsdp_descriptor, 
-                                     "rsdt_physical_address", 
-                                     &rsdt_xsdt_address);
+		if (locate_fiid_obj_get (ctx, 
+                                         obj_acpi_rsdp_descriptor, 
+                                         "rsdt_physical_address", 
+                                         &rsdt_xsdt_address) < 0)
+                  {
+                    ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+                    goto cleanup;
+                  }
 
 		rsdt_xsdt_signature = IPMI_ACPI_RSDT_SIG;
 	      }
 	    else 
 	      {
-		LOCATE_FIID_OBJ_GET (obj_acpi_rsdp_descriptor, 
-                                     "xsdt_physical_address", 
-                                     &rsdt_xsdt_address);
+		if (locate_fiid_obj_get (ctx,
+                                         obj_acpi_rsdp_descriptor, 
+                                         "xsdt_physical_address", 
+                                         &rsdt_xsdt_address) < 0)
+                  {
+                    ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+                    goto cleanup;
+                  }
 
 		rsdt_xsdt_signature = IPMI_ACPI_XSDT_SIG;
 	      }
@@ -900,9 +920,14 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
 	    free (rsdt_xsdt_table);
 	    
 	    /* This is special case because of EFI */
-	    LOCATE_FIID_OBJ_GET (obj_acpi_rsdp_descriptor, 
-                                 "rsdt_physical_address", 
-                                 &rsdt_xsdt_address);
+	    if (locate_fiid_obj_get (ctx, 
+                                     obj_acpi_rsdp_descriptor, 
+                                     "rsdt_physical_address", 
+                                     &rsdt_xsdt_address) < 0)
+              {
+                ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+                goto cleanup;
+              }
             
 	    if (!(memdata = alloca (acpi_rsdp_descriptor_len)))
               {
@@ -991,19 +1016,27 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
   assert(acpi_table);
   assert(acpi_table_length);
 
-  LOCATE_FIID_TEMPLATE_FIELD_LEN_BYTES(len, 
-                                       tmpl_acpi_table_hdr, 
-                                       "signature");
+  if ((len = fiid_template_field_len_bytes(tmpl_acpi_table_hdr, "signature")) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   table_signature_length = len + 1;
   table_signature = alloca (table_signature_length);
   memset (table_signature, 0, table_signature_length);
   
-  LOCATE_FIID_TEMPLATE_LEN_BYTES (acpi_table_hdr_length,
-                                  tmpl_acpi_table_hdr);
+  if ((acpi_table_hdr_length = fiid_template_len_bytes(tmpl_acpi_table_hdr)) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-  LOCATE_FIID_OBJ_CREATE(obj_acpi_table_hdr, 
-                         tmpl_acpi_table_hdr);
+  if (!(obj_acpi_table_hdr = fiid_obj_create(tmpl_acpi_table_hdr)))
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   acpi_table_buf = alloca (acpi_table_hdr_length);
 
@@ -1015,14 +1048,22 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
                                    acpi_table_buf) < 0)
     goto cleanup;
   
-  LOCATE_FIID_OBJ_SET_ALL(obj_acpi_table_hdr,
-                          acpi_table_buf,
-                          acpi_table_hdr_length);
+  if (fiid_obj_set_all(obj_acpi_table_hdr,
+                       acpi_table_buf,
+                       acpi_table_hdr_length) < 0)
+    {
+      LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM(ctx, obj_acpi_table_hdr);
+      goto cleanup;
+    }
 
-  LOCATE_FIID_OBJ_GET_DATA(obj_acpi_table_hdr, 
-                           "signature", 
-                           (uint8_t *)table_signature, 
-                           table_signature_length);
+  if (fiid_obj_get_data(obj_acpi_table_hdr, 
+                        "signature", 
+                        (uint8_t *)table_signature, 
+                        table_signature_length) < 0)
+    {
+      LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM(ctx, obj_acpi_table_hdr);
+      goto cleanup;
+    }
 
   if (strcmp (table_signature, signature))
     {
@@ -1030,9 +1071,14 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
       goto cleanup;
     }
   
-  LOCATE_FIID_OBJ_GET (obj_acpi_table_hdr, 
-                       "length", 
-                       &val);
+  if (locate_fiid_obj_get (ctx, 
+                           obj_acpi_table_hdr, 
+                           "length", 
+                           &val) < 0)
+    {
+      ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+      goto cleanup;
+    }
   table_length = val;
   
   table = alloca (table_length);
@@ -1135,18 +1181,25 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
   assert(fiid_obj_valid(obj_acpi_table_hdr));
   assert(sign_table_data);
   assert(sign_table_data_length);
-  
-  LOCATE_FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_table_hdr, 
-                                   tmpl_acpi_table_hdr);
+  assert(fiid_obj_template_compare(obj_acpi_table_hdr, tmpl_acpi_table_hdr) == 1);
 
-  LOCATE_FIID_TEMPLATE_LEN_BYTES (acpi_table_hdr_length, 
-                                  tmpl_acpi_table_hdr);
+  if ((acpi_table_hdr_length = fiid_template_len_bytes(tmpl_acpi_table_hdr)) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-  LOCATE_FIID_OBJ_CREATE(obj_acpi_rsdp_descriptor, 
-                         tmpl_acpi_rsdp_descriptor);
+  if (!(obj_acpi_rsdp_descriptor = fiid_obj_create(tmpl_acpi_rsdp_descriptor)))
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-  LOCATE_FIID_TEMPLATE_LEN_BYTES (acpi_rsdp_descriptor_length, 
-                                  tmpl_acpi_rsdp_descriptor);
+  if ((acpi_rsdp_descriptor_length = fiid_template_len_bytes(tmpl_acpi_rsdp_descriptor)) < 0)
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (_ipmi_acpi_get_rsdp (ctx,
                            IPMI_ACPI_LO_RSDP_WINDOW_BASE,
@@ -1160,23 +1213,38 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
         goto cleanup;
     }
   
-  LOCATE_FIID_OBJ_GET (obj_acpi_rsdp_descriptor, 
-                       "revision", 
-                       &val);
+  if (locate_fiid_obj_get (ctx, 
+                           obj_acpi_rsdp_descriptor, 
+                           "revision", 
+                           &val) < 0)
+    {
+      ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   revision = val;
   if (revision < 2)
     { 
-      LOCATE_FIID_OBJ_GET (obj_acpi_rsdp_descriptor, 
-                           "rsdt_physical_address", 
-                           &rsdt_xsdt_address);
+      if (locate_fiid_obj_get (ctx, 
+                               obj_acpi_rsdp_descriptor, 
+                               "rsdt_physical_address", 
+                               &rsdt_xsdt_address) < 0)
+        {
+          ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+          goto cleanup;
+        }
       rsdt_xsdt_signature = IPMI_ACPI_RSDT_SIG;
     }
   else 
     {
-      LOCATE_FIID_OBJ_GET (obj_acpi_rsdp_descriptor, 
-                           "xsdt_physical_address", 
-                           &rsdt_xsdt_address);
+      if (locate_fiid_obj_get (ctx, 
+                               obj_acpi_rsdp_descriptor, 
+                               "xsdt_physical_address", 
+                               &rsdt_xsdt_address) < 0)
+        {
+          ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+          goto cleanup;
+        }
       rsdt_xsdt_signature = IPMI_ACPI_XSDT_SIG;
     }
   
@@ -1207,19 +1275,34 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
       else
 	tmpl_table_address = &tmpl_table_address_64[0];
       
-      LOCATE_FIID_OBJ_CREATE(obj_table, 
-                             tmpl_table_address);
+      if (!(obj_table = fiid_obj_create(tmpl_table_address)))
+        {
+          LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
       
-      LOCATE_FIID_TEMPLATE_LEN_BYTES (len_table, 
-                                      tmpl_table_address);
+      if ((len_table = fiid_template_len_bytes(tmpl_table_address)) < 0)
+        {
+          LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
 	  
-      LOCATE_FIID_OBJ_SET_ALL(obj_table,
-                              (rsdt_xsdt_table_data + (i * 4)),
-                              len_table);
+      if (fiid_obj_set_all(obj_table,
+                           (rsdt_xsdt_table_data + (i * 4)),
+                           len_table) < 0)
+        {
+          LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM(ctx, obj_table);
+          goto cleanup;
+        }
 
-      LOCATE_FIID_OBJ_GET (obj_table,
-                           "table_address", 
-                           &table_address);
+      if (locate_fiid_obj_get (ctx, 
+                               obj_table,
+                               "table_address", 
+                               &table_address) < 0)
+        {
+          ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+          goto cleanup;
+        }
       
       FIID_OBJ_DESTROY(obj_table);
 
@@ -1308,11 +1391,8 @@ _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
   assert(ctx->magic == IPMI_LOCATE_CTX_MAGIC);
   assert(fiid_obj_valid(obj_acpi_table_hdr));
   assert(fiid_obj_valid(obj_acpi_spmi_table_descriptor));
-
-  LOCATE_FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_table_hdr, 
-                                   tmpl_acpi_table_hdr);
-  LOCATE_FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_spmi_table_descriptor, 
-                                   tmpl_acpi_spmi_table_descriptor);
+  assert(fiid_obj_template_compare(obj_acpi_table_hdr, tmpl_acpi_table_hdr) == 1);
+  assert(fiid_obj_template_compare(obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor) == 1);
 
   for (instance = 0; instance < IPMI_INTERFACE_COUNT; instance++)
     {
@@ -1329,8 +1409,11 @@ _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
 	      instance, IPMI_ACPI_SPMI_SIG);
 #endif
 
-      LOCATE_FIID_TEMPLATE_LEN_BYTES (acpi_spmi_table_descriptor_len, 
-                                      tmpl_acpi_spmi_table_descriptor);
+      if ((acpi_spmi_table_descriptor_len = fiid_template_len_bytes(tmpl_acpi_spmi_table_descriptor)) < 0)
+        {
+          LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
 
       if (acpi_spmi_table_descriptor_len < table_data_length)
 	copy_length = acpi_spmi_table_descriptor_len;
@@ -1344,17 +1427,26 @@ _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
 		table_data_length, acpi_spmi_table_descriptor_len);
 #endif
       
-      LOCATE_FIID_OBJ_SET_ALL(obj_acpi_spmi_table_descriptor,
-                              table_data,
-                              copy_length);
+      if (fiid_obj_set_all(obj_acpi_spmi_table_descriptor,
+                           table_data,
+                           copy_length) < 0)
+        {
+          LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM(ctx, obj_acpi_spmi_table_descriptor);
+          goto cleanup;
+        }
       
       free (table_data);
       table_data = NULL;
       table_data_length = 0;
       
-      LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor, 
-                           "interface_type", 
-                           &val);
+      if (locate_fiid_obj_get (ctx, 
+                               obj_acpi_spmi_table_descriptor, 
+                               "interface_type", 
+                               &val) < 0)
+        {
+          ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+          goto cleanup;
+        }
 
       table_interface_type = val;
       if (table_interface_type == interface_type)
@@ -1394,11 +1486,17 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
     }
   linfo.locate_driver_type = IPMI_LOCATE_DRIVER_ACPI;
 
-  LOCATE_FIID_OBJ_CREATE (obj_acpi_table_hdr, 
-                          tmpl_acpi_table_hdr);
+  if (!(obj_acpi_table_hdr = fiid_obj_create(tmpl_acpi_table_hdr)))
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-  LOCATE_FIID_OBJ_CREATE (obj_acpi_spmi_table_descriptor, 
-                          tmpl_acpi_spmi_table_descriptor);
+  if (!(obj_acpi_spmi_table_descriptor = fiid_obj_create(tmpl_acpi_spmi_table_descriptor)))
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (_ipmi_acpi_get_spmi_table (ctx,
                                  type,
@@ -1425,13 +1523,23 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
   {
     uint64_t ipmi_version_major, ipmi_version_minor;
 
-    LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor, 
-                         "specification_revision.major", 
-                         &ipmi_version_major);
+    if (locate_fiid_obj_get (ctx, 
+                             obj_acpi_spmi_table_descriptor, 
+                             "specification_revision.major", 
+                             &ipmi_version_major) < 0)
+      {
+        ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+        goto cleanup;
+      }
 
-    LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor,
-                         "specification_revision.minor", 
-                         &ipmi_version_minor);
+    if (locate_fiid_obj_get (ctx, 
+                             obj_acpi_spmi_table_descriptor,
+                             "specification_revision.minor", 
+                             &ipmi_version_minor) < 0)
+      {
+        ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+        goto cleanup;
+      }
 
     linfo.ipmi_version_major = ipmi_version_major;
     linfo.ipmi_version_minor = ipmi_version_minor;
@@ -1441,9 +1549,14 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
   {
     uint64_t interface_type;
 
-    LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor, 
-                         "interface_type", 
-                         &interface_type);
+    if (locate_fiid_obj_get (ctx, 
+                             obj_acpi_spmi_table_descriptor, 
+                             "interface_type", 
+                             &interface_type) < 0)
+      {
+        ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+        goto cleanup;
+      }
     
     if (!IPMI_INTERFACE_TYPE_VALID(interface_type))
       {
@@ -1459,13 +1572,23 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
     uint64_t address_space_id;
     uint64_t base_address;
 
-    LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor, 
-                         "base_address.address_space_id", 
-                         &address_space_id);
+    if (locate_fiid_obj_get (ctx, 
+                             obj_acpi_spmi_table_descriptor, 
+                             "base_address.address_space_id", 
+                             &address_space_id) < 0)
+      {
+        ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+        goto cleanup;
+      }
 
-    LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor, 
-                         "base_address.address", 
-                         &base_address);
+    if (locate_fiid_obj_get (ctx, 
+                             obj_acpi_spmi_table_descriptor, 
+                             "base_address.address", 
+                             &base_address) < 0)
+      {
+        ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+        goto cleanup;
+      }
 
     switch (address_space_id)
       {
@@ -1497,9 +1620,14 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
   {
     uint64_t reg_bit_width;
 
-    LOCATE_FIID_OBJ_GET (obj_acpi_spmi_table_descriptor, 
-                         "base_address.register_bit_width", 
-                         &reg_bit_width);
+    if (locate_fiid_obj_get (ctx, 
+                             obj_acpi_spmi_table_descriptor, 
+                             "base_address.register_bit_width", 
+                             &reg_bit_width) < 0)
+      {
+        ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+        goto cleanup;
+      }
     linfo.register_spacing = (reg_bit_width / 8);
   }
 

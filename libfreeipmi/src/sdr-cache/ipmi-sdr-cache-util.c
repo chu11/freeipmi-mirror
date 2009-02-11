@@ -116,7 +116,7 @@ sdr_cache_fiid_obj_get(ipmi_sdr_cache_ctx_t ctx, fiid_obj_t obj, char *field, ui
 
   if (!ret)
     {
-      ctx->errnum = IPMI_SDR_CACHE_ERR_IPMI_ERROR;
+      SDR_CACHE_SET_ERRNUM(ctx, IPMI_SDR_CACHE_ERR_IPMI_ERROR);
       return (-1);
     }
 

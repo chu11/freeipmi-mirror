@@ -242,7 +242,7 @@ api_fiid_obj_packet_valid(ipmi_ctx_t ctx, fiid_obj_t obj)
 
   if (!ret)
     {
-      ctx->errnum = IPMI_ERR_PARAMETERS;
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -277,7 +277,7 @@ api_fiid_obj_template_compare(ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tm
 
   if (!ret)
     {
-      ctx->errnum = IPMI_ERR_PARAMETERS;
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -307,7 +307,7 @@ api_fiid_obj_get(ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val)
 
   if (!ret)
     {
-      ctx->errnum = IPMI_ERR_IPMI_ERROR;
+      API_SET_ERRNUM(ctx, IPMI_ERR_IPMI_ERROR);
       return (-1);
     }
 

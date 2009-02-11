@@ -92,7 +92,7 @@ sdr_parse_fiid_obj_get(ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj, char *field, ui
 
   if (!ret)
     {
-      ctx->errnum = IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD;
+      SDR_PARSE_SET_ERRNUM(ctx, IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD);
       return (-1);
     }
 

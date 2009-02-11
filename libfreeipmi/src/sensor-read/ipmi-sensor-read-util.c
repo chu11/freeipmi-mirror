@@ -92,7 +92,7 @@ sensor_read_fiid_obj_get(ipmi_sensor_read_ctx_t ctx, fiid_obj_t obj, char *field
 
   if (!ret)
     {
-      ctx->errnum = IPMI_SENSOR_READ_ERR_IPMI_ERROR;
+      SENSOR_READ_SET_ERRNUM(ctx, IPMI_SENSOR_READ_ERR_IPMI_ERROR);
       return (-1);
     }
 
