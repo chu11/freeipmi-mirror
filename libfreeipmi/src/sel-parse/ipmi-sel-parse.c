@@ -47,6 +47,7 @@
 #include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-string.h"
 #include "ipmi-sel-parse-trace.h"
+#include "ipmi-sel-parse-util.h"
 
 #include "freeipmi-portability.h"
 #include "debug-util.h"
@@ -321,7 +322,11 @@ _sel_entry_dump(ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_parse
         {
           if (ctx->errnum == IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY)
             {
-              SEL_PARSE_FIID_OBJ_CREATE(obj_sel_record, tmpl_sel_system_event_record);
+              if (!(obj_sel_record = fiid_obj_create(tmpl_sel_system_event_record)))
+                {
+                  SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM(ctx, errno);
+                  goto cleanup;
+                }
               goto output;
             }
           goto cleanup;
@@ -330,28 +335,74 @@ _sel_entry_dump(ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_parse
       event_type_code_class = ipmi_event_reading_type_code_class(system_event_record_data.event_type_code);
       
       if (event_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
-        SEL_PARSE_FIID_OBJ_CREATE(obj_sel_record, tmpl_sel_system_event_record_event_fields);
+        {
+          if (!(obj_sel_record = fiid_obj_create(tmpl_sel_system_event_record_event_fields)))
+            {
+              SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM(ctx, errno);
+              goto cleanup;
+            }
+        }
       else if (event_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
                || event_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
         {
           if (system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY)
-            SEL_PARSE_FIID_OBJ_CREATE(obj_sel_record, tmpl_sel_system_event_record_discrete_previous_state_severity);
+            {
+              if (!(obj_sel_record = fiid_obj_create(tmpl_sel_system_event_record_discrete_previous_state_severity)))
+                {
+                  SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM(ctx, errno);
+                  goto cleanup;
+                }
+            }
           else
-            SEL_PARSE_FIID_OBJ_CREATE(obj_sel_record, tmpl_sel_system_event_record_event_fields);
+            {
+              if (!(obj_sel_record = fiid_obj_create(tmpl_sel_system_event_record_event_fields)))
+                {
+                  SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM(ctx, errno);
+                  goto cleanup;
+                }
+            }
         }
       else
-        SEL_PARSE_FIID_OBJ_CREATE(obj_sel_record, tmpl_sel_system_event_record);
+        {
+          if (!(obj_sel_record = fiid_obj_create(tmpl_sel_system_event_record)))
+            {
+              SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM(ctx, errno);
+              goto cleanup;
+            }
+        }
     }
   else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
-    SEL_PARSE_FIID_OBJ_CREATE(obj_sel_record, tmpl_sel_timestamped_oem_record);
+    {
+      if (!(obj_sel_record = fiid_obj_create(tmpl_sel_timestamped_oem_record)))
+        {
+          SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
-    SEL_PARSE_FIID_OBJ_CREATE(obj_sel_record, tmpl_sel_non_timestamped_oem_record);
+    {
+      if (!(obj_sel_record = fiid_obj_create(tmpl_sel_non_timestamped_oem_record)))
+        {
+          SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
   else /* record_type_class == SEL_RECORD_TYPE_UNKNOWN */
-    SEL_PARSE_FIID_OBJ_CREATE(obj_sel_record, tmpl_sel_system_event_record);
+    {
+      if (!(obj_sel_record = fiid_obj_create(tmpl_sel_system_event_record)))
+        {
+          SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM(ctx, errno);
+          goto cleanup;
+        }
+    }
  
-  SEL_PARSE_FIID_OBJ_SET_ALL(obj_sel_record, 
-                             sel_parse_entry->sel_event_record,
-                             sel_parse_entry->sel_event_record_len);
+  if (fiid_obj_set_all(obj_sel_record, 
+                       sel_parse_entry->sel_event_record,
+                       sel_parse_entry->sel_event_record_len) < 0)
+    {
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_sel_record);
+      goto cleanup;
+    }
 
  output:
   debug_hdr_str(DEBUG_UTIL_TYPE_NONE,
@@ -389,7 +440,11 @@ ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
 
   _sel_entries_clear(ctx);
 
-  SEL_PARSE_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sel_entry_rs)))
+    {
+      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   for (record_id = IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY;
        record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
@@ -467,7 +522,11 @@ ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
                 }
             }
 
-          SEL_PARSE_FIID_OBJ_GET (obj_cmd_rs, "next_record_id", &val);
+          if (sel_parse_fiid_obj_get (ctx, obj_cmd_rs, "next_record_id", &val) < 0)
+            {
+              SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_cmd_rs);
+              goto cleanup;
+            }
           next_record_id = val;
     
           if (!(sel_parse_entry = (struct ipmi_sel_parse_entry *)malloc(sizeof(struct ipmi_sel_parse_entry))))
@@ -476,11 +535,15 @@ ipmi_sel_parse(ipmi_sel_parse_ctx_t ctx,
               goto cleanup;
             }
 
-          SEL_PARSE_FIID_OBJ_GET_DATA_LEN (len,
-                                           obj_cmd_rs,
-                                           "record_data", 
-                                           sel_parse_entry->sel_event_record,
-                                           IPMI_SEL_RECORD_LENGTH); 
+          if ((len = fiid_obj_get_data(obj_cmd_rs,
+                                       "record_data", 
+                                       sel_parse_entry->sel_event_record,
+                                       IPMI_SEL_RECORD_LENGTH)) < 0)
+            {
+              SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(ctx, obj_cmd_rs);
+              goto cleanup;
+            }
+
           sel_parse_entry->sel_event_record_len = len;
 
           _sel_entry_dump(ctx, sel_parse_entry);
@@ -1338,7 +1401,11 @@ ipmi_sel_parse_clear_sel(ipmi_sel_parse_ctx_t ctx)
       return (-1);
     }
 
-  SEL_PARSE_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_clear_sel_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_clear_sel_rs)))
+    {
+      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   while (1)
     {
@@ -1405,7 +1472,11 @@ ipmi_sel_parse_delete_sel_entry(ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
       return (-1);
     }
 
-  SEL_PARSE_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_delete_sel_entry_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_delete_sel_entry_rs)))
+    {
+      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   while (1)
     {

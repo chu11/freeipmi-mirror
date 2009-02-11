@@ -57,6 +57,7 @@
 #include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-string.h"
 #include "ipmi-sel-parse-trace.h"
+#include "ipmi-sel-parse-util.h"
 
 #include "freeipmi-portability.h"
 
