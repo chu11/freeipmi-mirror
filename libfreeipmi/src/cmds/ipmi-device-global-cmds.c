@@ -273,13 +273,17 @@ fill_cmd_set_acpi_power_state (uint8_t system_power_state_enumeration,
                                fiid_obj_t obj_cmd_rq)
 { 
   
-  ERR_EINVAL (IPMI_ACPI_SET_SYSTEM_POWER_STATE_VALID(set_system_power_state)
-              && !(set_system_power_state == IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE
-                   && !IPMI_ACPI_SYSTEM_POWER_STATE_VALID(system_power_state_enumeration))
-              && IPMI_ACPI_SET_DEVICE_POWER_STATE_VALID(set_device_power_state)
-              && !(set_device_power_state == IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE
-                   && !IPMI_ACPI_DEVICE_POWER_STATE_VALID(device_power_state_enumeration))
-              && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_ACPI_SET_SYSTEM_POWER_STATE_VALID(set_system_power_state)
+      || (set_system_power_state == IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE
+          && !IPMI_ACPI_SYSTEM_POWER_STATE_VALID(system_power_state_enumeration))
+      || !IPMI_ACPI_SET_DEVICE_POWER_STATE_VALID(set_device_power_state)
+      || (set_device_power_state == IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE
+          && !IPMI_ACPI_DEVICE_POWER_STATE_VALID(device_power_state_enumeration))
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_acpi_power_state_rq);
 

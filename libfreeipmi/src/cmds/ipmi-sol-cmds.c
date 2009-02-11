@@ -310,9 +310,9 @@ fill_sol_payload_data (uint8_t packet_sequence_number,
                        uint32_t character_data_len,
                        fiid_obj_t obj_sol_payload)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_sol_payload));
+  if (!fiid_obj_valid(obj_sol_payload))
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_sol_payload, tmpl_sol_payload_data);
+    FIID_OBJ_TEMPLATE_COMPARE(obj_sol_payload, tmpl_sol_payload_data);
 
   FIID_OBJ_CLEAR (obj_sol_payload);
   FIID_OBJ_SET (obj_sol_payload, "packet_sequence_number", packet_sequence_number);
@@ -345,14 +345,14 @@ fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
                                              uint32_t character_data_len,
                                              fiid_obj_t obj_sol_payload)
 {
-  ERR_EINVAL (IPMI_SOL_FLUSH_OUTBOUND_VALID(flush_outbound)
-              && IPMI_SOL_FLUSH_INBOUND_VALID(flush_inbound)
-              && IPMI_SOL_ASSERT_DCD_DSR_VALID(drop_dcd_dsr)
-              && IPMI_SOL_ASSERT_CTS_VALID(cts_pause)
-              && IPMI_SOL_GENERATE_BREAK_VALID(generate_break)
-	      && IPMI_SOL_ASSERT_RI_VALID(ring_wor)
-              && IPMI_SOL_NACK_VALID(nack)
-	      && fiid_obj_valid(obj_sol_payload));
+  if (!IPMI_SOL_FLUSH_OUTBOUND_VALID(flush_outbound)
+      || !IPMI_SOL_FLUSH_INBOUND_VALID(flush_inbound)
+      || !IPMI_SOL_ASSERT_DCD_DSR_VALID(drop_dcd_dsr)
+      || !IPMI_SOL_ASSERT_CTS_VALID(cts_pause)
+      || !IPMI_SOL_GENERATE_BREAK_VALID(generate_break)
+      || !IPMI_SOL_ASSERT_RI_VALID(ring_wor)
+      || !IPMI_SOL_NACK_VALID(nack)
+      || !fiid_obj_valid(obj_sol_payload));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_sol_payload, tmpl_sol_payload_data_remote_console_to_bmc);
 
@@ -386,10 +386,14 @@ fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
 					   uint8_t configuration_parameter_data_len,
 					   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && configuration_parameter_data
-	      && configuration_parameter_data_len
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !configuration_parameter_data
+      || !configuration_parameter_data_len
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_rq);
 
@@ -412,9 +416,13 @@ fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
                                                       uint8_t sol_enable,
                                                       fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && IPMI_SOL_SOL_ENABLE_VALID(sol_enable)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_SOL_SOL_ENABLE_VALID(sol_enable)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq);
   
@@ -436,11 +444,15 @@ fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_nu
                                                               uint8_t force_sol_payload_encryption,
                                                               fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-              && IPMI_PRIVILEGE_LEVEL_VALID(sol_privilege_level)
-	      && IPMI_SOL_FORCE_SOL_PAYLOAD_AUTHENTICATION_VALID(force_sol_payload_authentication)
-              && IPMI_SOL_FORCE_SOL_PAYLOAD_ENCRYPTION_VALID(force_sol_payload_encryption)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_PRIVILEGE_LEVEL_VALID(sol_privilege_level)
+      || !IPMI_SOL_FORCE_SOL_PAYLOAD_AUTHENTICATION_VALID(force_sol_payload_authentication)
+      || !IPMI_SOL_FORCE_SOL_PAYLOAD_ENCRYPTION_VALID(force_sol_payload_encryption)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq);
   
@@ -463,8 +475,12 @@ fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
                                                                                             uint8_t character_send_threshold,
                                                                                             fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq);
   
@@ -485,8 +501,12 @@ fill_cmd_set_sol_configuration_parameters_sol_retry (uint8_t channel_number,
                                                      uint8_t retry_interval,
                                                      fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_retry_rq);
   
@@ -507,9 +527,13 @@ fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (uint8_t cha
                                                                      uint8_t bit_rate,
                                                                      fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-              && IPMI_SOL_BIT_RATE_VALID(bit_rate)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_SOL_BIT_RATE_VALID(bit_rate)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq);
   
@@ -529,9 +553,13 @@ fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (uint8_t channel
                                                                  uint8_t bit_rate,
                                                                  fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-              && IPMI_SOL_BIT_RATE_VALID(bit_rate)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_SOL_BIT_RATE_VALID(bit_rate)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_rq);
   
@@ -551,8 +579,12 @@ fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t chann
                                                                    uint16_t port_number,
                                                                    fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number_rq);
   
@@ -575,9 +607,13 @@ fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
 					   uint8_t block_selector,
 					   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
 

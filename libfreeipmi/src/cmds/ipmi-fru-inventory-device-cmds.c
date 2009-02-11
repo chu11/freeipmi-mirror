@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.6.10.1 2009-02-11 22:31:18 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.6.10.2 2009-02-11 22:53:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -143,9 +143,13 @@ fill_cmd_write_fru_data (uint8_t fru_device_id,
                          unsigned int data_to_write_len,
                          fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (!(data_to_write
-                && data_to_write_len > IPMI_FRU_DATA_MAX)
-              && fiid_obj_valid(obj_cmd_rq));
+  if ((data_to_write
+       && data_to_write_len > IPMI_FRU_DATA_MAX)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_write_fru_data_rq);
 

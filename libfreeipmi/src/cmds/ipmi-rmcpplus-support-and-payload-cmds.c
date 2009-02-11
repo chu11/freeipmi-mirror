@@ -366,10 +366,14 @@ fill_cmd_activate_payload (uint8_t payload_type,
 			   uint32_t auxiliary_request_data_len,
 			   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL(IPMI_PAYLOAD_TYPE_VALID(payload_type)
-	     && auxiliary_request_data
-	     && auxiliary_request_data_len
-	     && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
+      || !auxiliary_request_data
+      || !auxiliary_request_data_len
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_activate_payload_rq);
 
@@ -397,13 +401,17 @@ fill_cmd_activate_payload_sol (uint8_t payload_type,
 			       uint8_t encryption_activation,
 			       fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL(IPMI_PAYLOAD_TYPE_VALID(payload_type)
-	     && IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_VALID(sol_startup_handshake)
-	     && IPMI_SERIAL_MODEM_ALERTS_VALID(shared_serial_alert_behavior)
-	     && IPMI_TEST_MODE_VALID(test_mode)
-	     && IPMI_AUTHENTICATION_ACTIVATION_VALID(authentication_activation)
-	     && IPMI_ENCRYPTION_ACTIVATION_VALID(encryption_activation)
-	     && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
+      || !IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_VALID(sol_startup_handshake)
+      || !IPMI_SERIAL_MODEM_ALERTS_VALID(shared_serial_alert_behavior)
+      || !IPMI_TEST_MODE_VALID(test_mode)
+      || !IPMI_AUTHENTICATION_ACTIVATION_VALID(authentication_activation)
+      || !IPMI_ENCRYPTION_ACTIVATION_VALID(encryption_activation)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_activate_payload_sol_rq);
 
@@ -431,8 +439,12 @@ fill_cmd_deactivate_payload (uint8_t payload_type,
                              uint32_t payload_auxiliary_data,
                              fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL(IPMI_PAYLOAD_TYPE_VALID(payload_type)
-	     && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_deactivate_payload_rq);
 
@@ -453,9 +465,13 @@ fill_cmd_suspend_resume_payload_encryption (uint8_t payload_type,
                                             uint8_t operation,
                                             fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL(IPMI_PAYLOAD_TYPE_VALID(payload_type)
-             && IPMI_SUSPEND_RESUME_PAYLOAD_ENCRYPTION_OPERATION_VALID(operation)
-	     && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
+      || !IPMI_SUSPEND_RESUME_PAYLOAD_ENCRYPTION_OPERATION_VALID(operation)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_suspend_resume_payload_encryption_rq);
 
@@ -475,8 +491,12 @@ int8_t
 fill_cmd_get_payload_activation_status (uint8_t payload_type,
                                         fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL(IPMI_PAYLOAD_TYPE_VALID(payload_type)
-	     && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_payload_activation_status_rq);
 
@@ -492,8 +512,12 @@ fill_cmd_get_payload_instance_info (uint8_t payload_type,
                                     uint8_t payload_instance,
                                     fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL(IPMI_PAYLOAD_TYPE_VALID(payload_type)
-	     && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_payload_instance_info_rq);
 
@@ -526,24 +550,28 @@ fill_cmd_set_user_payload_access (uint8_t channel_number,
                                   uint8_t oem_payload_7,
                                   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL(IPMI_CHANNEL_NUMBER_VALID(channel_number)
-             && IPMI_SET_USER_PAYLOAD_OPERATION_VALID(operation)
-             && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_1)
-             && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_2)
-             && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_3)
-             && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_4)
-             && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_5)
-             && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_6)
-             && IPMI_PAYLOAD_ACCESS_VALID(standard_payload_7)
-             && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_0)
-             && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_1)
-             && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_2)
-             && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_3)
-             && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_4)
-             && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_5)
-             && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_6)
-             && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_7)
-	     && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_SET_USER_PAYLOAD_OPERATION_VALID(operation)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_1)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_2)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_3)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_4)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_5)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_6)
+      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_7)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_0)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_1)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_2)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_3)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_4)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_5)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_6)
+      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_7)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_user_payload_access_rq);
 
@@ -581,8 +609,12 @@ fill_cmd_get_user_payload_access (uint8_t channel_number,
                                   uint8_t user_id,
                                   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL(IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	     && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_user_payload_access_rq);
 
@@ -600,8 +632,12 @@ int8_t
 fill_cmd_get_channel_payload_support (uint8_t channel_number,
                                       fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL(IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	     && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_payload_support_rq);
 
@@ -618,9 +654,13 @@ fill_cmd_get_channel_payload_version (uint8_t channel_number,
                                       uint8_t payload_type,
                                       fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL(IPMI_CHANNEL_NUMBER_VALID(channel_number)
-             && IPMI_PAYLOAD_TYPE_VALID(payload_type)
-	     && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_PAYLOAD_TYPE_VALID(payload_type)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_payload_version_rq);
 
@@ -640,12 +680,16 @@ fill_cmd_get_channel_oem_payload_info (uint8_t channel_number,
                                        uint16_t oem_payload_id,
                                        fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL(IPMI_CHANNEL_NUMBER_VALID(channel_number)
-             && IPMI_PAYLOAD_TYPE_VALID(payload_type)
-             && !(payload_type == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT
-                  && (oem_iana || oem_payload_id))
-	     && fiid_obj_valid(obj_cmd_rq));
-
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_PAYLOAD_TYPE_VALID(payload_type)
+      || (payload_type == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT
+          && (!oem_iana || !oem_payload_id))
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+    
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_oem_payload_info_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
